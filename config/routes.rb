@@ -1,4 +1,12 @@
 MagicOrders::Application.routes.draw do
+  mount MagicContent::Engine => '/admin/content', :as => 'magic_content'
+
+  devise_for :admins, :controllers => { :sessions => 'magic_admin/sessions' }
+
+  mount MagicAdmin::Engine => '/admin', :as => 'magic_admin'
+
+  
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
