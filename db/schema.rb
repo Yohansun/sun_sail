@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120615051544) do
+ActiveRecord::Schema.define(:version => 20120616040856) do
 
   create_table "admin_profiles", :force => true do |t|
     t.integer  "admin_id"
@@ -59,6 +59,21 @@ ActiveRecord::Schema.define(:version => 20120615051544) do
     t.integer  "group_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+  end
+
+  create_table "areas", :force => true do |t|
+    t.string   "name"
+    t.integer  "parent_id"
+    t.integer  "seller_id"
+    t.datetime "created_at",                        :null => false
+    t.datetime "updated_at",                        :null => false
+    t.boolean  "active",         :default => true
+    t.boolean  "is_1568",        :default => false
+    t.string   "pinyin"
+    t.integer  "children_count", :default => 0
+    t.integer  "lft",            :default => 0
+    t.integer  "rgt",            :default => 0
+    t.integer  "sellers_count",  :default => 0
   end
 
   create_table "banners", :force => true do |t|

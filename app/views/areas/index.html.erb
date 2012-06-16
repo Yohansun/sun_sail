@@ -1,0 +1,50 @@
+<%- content_for :breadcrumb do %>
+  <%= link_to "首页", areas_path %> 
+  <span class="divider">/</span>
+  <li class="active">经销区域管理</li>
+<%- end %>
+<div class="container">
+<p class="well form-search">
+  <%= link_to  new_area_path, class: "btn btn-primary" do %>
+    <i class="icon-plus icon-white"></i> 
+    新建地区
+  <%- end %>
+  <%= link_to  export_areas_path( format: 'xls' ), class: "btn btn-info" do %>
+    <i class="icon-list-alt icon-white"></i> 
+    导出数据
+  <%- end %>
+  <%= link_to remap_sellers_areas_path, class: "btn btn-info" do %>
+    <i class="icon-th-list icon-white"></i> 
+    批量对应经销商
+  <%- end %>
+</p>
+
+<%= form_tag(area_search_areas_path, method: "get", class: "well form-search") do %>  
+  <div class="input-append">
+    <input class="span2" size="16" type="text" name="q" id="area_search">
+    <button class="btn" type="submit">搜索</button>    
+  </div>
+<%- end %>
+
+<table class="table table-bordered table-striped">
+  <tr>
+    <th>名称</th>
+    <th>默认经销机构</th>
+    <th>操作</th>
+  </tr>
+  <%- @areas.each do |area| -%>
+  <tr>
+    <td><%= link_to_if area.children_count > 0, area.name, areas_path(parent_id: area.id) %></td>
+    <td><%#= area.seller.try(:name) %></td>
+    <td>
+      <div class="btn-group">
+        <button class="btn"><%= link_to '设置经销机构'%></button>
+        <button class="btn"><%= link_to "修改", edit_area_path(area) %></button>
+        <button class="btn"><%= link_to "删除", area_path(area), confirm: '确定删除?', method: :delete %></button>
+      </div>
+    </td>
+  </tr>
+  <%- end -%>
+</table>
+
+<%= will_paginate @areas, class: "admin_pagination" %>

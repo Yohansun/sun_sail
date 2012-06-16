@@ -29,6 +29,11 @@ end
 gem "magic_admin", :git => "git@github.com:nioteam/magic_admin.git", :branch => "bootstrap"
 gem "magic_content", :git => "git@github.com:nioteam/magic_content.git"
 
+gem 'inherited_resources'
+gem 'twitter-bootstrap-rails'
+gem "simple_form"
+gem 'awesome_nested_set'
+gem "will_paginate"
 
 
 

@@ -1,0 +1,9 @@
+<%- content_for :breadcrumb do %>
+  <li>
+  	<%= link_to "区域管理", areas_path %>
+  	 <span class="divider">/</span>
+  </li>
+  <li class="active">新建区域</li>
+<%- end %>
+
+<%= render 'form' %>
