@@ -12,4 +12,22 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require twitter/bootstrap
 //= require_tree .
+
+//地区管理中区域自动补全
+$(function () {
+    $("#area_parent_id").tokenInput("/areas/autocomplete.json",{
+    	crossDomain: false,
+    	tokenLimit: 1,
+    	theme: "facebook",
+    	noResultsText: "无对应地区!"
+    });
+
+    $("#area_search").tokenInput("/areas/autocomplete.json",{
+    	crossDomain: false,
+    	theme: "facebook",
+    	noResultsText: "无对应地区!"
+    });
+});
+

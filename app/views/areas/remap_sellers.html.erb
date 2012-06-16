@@ -1,0 +1,24 @@
+<%- content_for :breadcrumb do %>
+  <li>
+    <%= link_to "区域管理", areas_path %>
+    <span class="divider">/</span>
+  </li>
+  <li class="active">
+    批量对应经销商
+  </li>
+<%- end %>
+
+<%= form_tag(remap_sellers_areas_path, method: "post", class: "form-horizontal") do %>
+  <fieldset>
+    <div class="control-group">
+      <label class="control-label" for="textarea">输入数据：</label>
+      <div class="controls">
+        <%= text_area_tag :data, '', size: '10x10', :class => "input-xlarge" %>
+      </div>
+    </div>
+  </fieldset>
+  <div class="form-actions">
+    <%= submit_tag "提交", :class => "btn btn-primary" %>
+    <%= link_to "取消", areas_path, class: "btn"%> 
+  </div>
+<%- end -%>
