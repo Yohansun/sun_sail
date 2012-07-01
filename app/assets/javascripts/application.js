@@ -15,7 +15,7 @@
 //= require twitter/bootstrap
 //= require_tree .
 
-//地区管理中区域自动补全
+// 地区管理中区域自动补全
 $(function () {
     $("#area_parent_id").tokenInput("/areas/autocomplete.json",{
     	crossDomain: false,
@@ -30,4 +30,3 @@ $(function () {
     	noResultsText: "无对应地区!"
     });
 });
-
