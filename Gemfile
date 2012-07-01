@@ -26,6 +26,10 @@ group :development do
   gem "rvm-capistrano"
 end
 
+gem "mongoid", "~> 2.4.11"
+gem "bson", "<= 1.6.2"
+gem "bson_ext", "<= 1.6.2"
+
 gem "inherited_resources"
 gem "devise"
 
