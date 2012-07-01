@@ -15,25 +15,27 @@ end
 gem 'jquery-rails'
 
 group :development do
-  gem "capistrano", "2.11.2"
+  gem 'capistrano', '2.11.2'
   gem 'debugger'
   gem 'quiet_assets'
   gem 'bond'
   gem 'wirble'
-  gem "awesome_print"
-  gem "map_by_method"
-  gem "hirb"
-  gem "rvm-capistrano"
+  gem 'awesome_print'
+  gem 'map_by_method'
+  gem 'hirb'
+  gem 'rvm-capistrano'
 end
 
-gem "mongoid", "~> 2.4.11"
-gem "bson", "<= 1.6.2"
-gem "bson_ext", "<= 1.6.2"
+gem 'mongoid', '~> 2.4.11'
+gem 'bson', '<= 1.6.2'
+gem 'bson_ext', '<= 1.6.2'
 
-gem "inherited_resources"
-gem "devise"
+gem 'inherited_resources'
+gem 'devise'
 
 gem 'twitter-bootstrap-rails'
-gem "simple_form"
+gem 'simple_form'
 gem 'awesome_nested_set'
-gem "will_paginate"
+gem 'will_paginate'
+
+gem 'backbone-on-rails'
