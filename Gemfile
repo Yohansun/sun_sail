@@ -39,3 +39,5 @@ gem 'awesome_nested_set'
 gem 'will_paginate'
 
 gem 'backbone-on-rails'
+
+gem 'taobao_fu_reload'
