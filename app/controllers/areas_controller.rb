@@ -1,7 +1,5 @@
 # -*- encoding : utf-8 -*-
-class AreasController < BaseController
-
-	  
+class AreasController < InheritedResources::Base
 	def remap_sellers
     # if request.post?
     #   data = params[:data]
@@ -48,7 +46,7 @@ class AreasController < BaseController
     end
   end
 
-	def create
+  def create
     @area = Area.new params[:area]
     if @area.save
       redirect_to areas_url
@@ -61,22 +59,22 @@ class AreasController < BaseController
   	areas = Area.select("name,id").where("name like ?", "%#{params[:q]}%")
   	respond_to do |format|
   		format.json {render :json => areas}
-  	end	
- 	end 	
+  	end
+  end
 
- 	def area_search
- 		ids = params[:q].split(",") || ""
- 		@areas = Area.where("id in (?)", ids).paginate(:page => params[:page], :per_page => 50)
- 		render :index
- 	end	
+  def area_search
+    ids = params[:q].split(",") || ""
+    @areas = Area.where("id in (?)", ids).paginate(:page => params[:page], :per_page => 50)
+    render :index
+  end
 
-	protected
-  def collection
-    @areas ||= end_of_association_chain.paginate(:page => params[:page], :per_page => 50).order("pinyin")
-    if request.get? && params[:parent_id]
-      @current_area = Area.find(params[:parent_id])
-      @areas = @areas.where( :parent_id => params[:parent_id] )
-    else
+ protected
+ def collection
+  @areas ||= end_of_association_chain.paginate(:page => params[:page], :per_page => 50).order("pinyin")
+  if request.get? && params[:parent_id]
+    @current_area = Area.find(params[:parent_id])
+    @areas = @areas.where( :parent_id => params[:parent_id] )
+  else
     	#TODO 释放权限验证
       # if current_admin.super_admin?
       #   @areas = @areas.where("parent_id is null")
