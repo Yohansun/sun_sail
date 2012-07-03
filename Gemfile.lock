@@ -214,7 +214,7 @@ DEPENDENCIES
   rvm-capistrano
   sass-rails (~> 3.2.3)
   simple_form
-  taobao_fu_reload (= 1.1)
+  taobao_fu_reload
   twitter-bootstrap-rails
   uglifier (>= 1.0.3)
   will_paginate

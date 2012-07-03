@@ -3,7 +3,6 @@ window.MagicOrders =
   Collections: {}
   Views: {}
   Routers: {}
-  init: -> alert 'Hello from Backbone!'
-
-$(document).ready ->
-  MagicOrders.init()
+  init: ->
+    new MagicOrders.Routers.Areas()
+    Backbone.history.start(pushState: true)
