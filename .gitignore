@@ -1,5 +1,6 @@
 .bundle
 config/database.yml
+config/taobao.yml
 log/*.log
 tmp
 *.swp
@@ -7,6 +8,3 @@ tmp
 .DS_Store
 public/system/
 public/dev-assets/
-public/flash/april_7.3.0406.swf
-.DS_Store
-lib/data/export_data

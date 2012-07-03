@@ -3,14 +3,17 @@ MagicOrders::Application.routes.draw do
 
   devise_for :users
 
-  resources :areas do
-    collection do
-      get :export
-      get :autocomplete
-      match :area_search
-      match :remap_sellers
+  scope 'api' do
+    resources :areas do
+      collection do
+        get :export
+        get :autocomplete
+        match :area_search
+        match :remap_sellers
+      end
     end
   end
 
   root to: "home#index"
+  match "*path", to: "home#index"
 end

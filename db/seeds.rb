@@ -6,6 +6,6 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-u = User.new(email: "admin@doorder.com", password: "doorder", password_confirmation: "doorder")
+u = User.new(email: "admin@doorder.com", password: "doorder", password_confirmation: "doorder", name: 'admin')
 u.is_super_admin = true
 u.save

@@ -51,9 +51,10 @@
               <li id="fat-menu" class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Magic <b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                  <li><a href="#">订单管理</a></li>
+                  <li><a href="/trades">订单管理</a></li>
                   <li><a href="#">仓库管理</a></li>
-                  <li><a href="#">经销商管理</a></li>
+                  <li><a href="/sellers">经销商管理</a></li>
+                  <li><a href="/areas">区域管理</a></li>
                   <li class="divider"></li>
                   <li><a href="#">系统设置</a></li>
                 </ul>
@@ -67,14 +68,14 @@
     </div>
 
     <div class="container">
-      <div class="content">
+      <div class="content" id="content">
         <div class="row">
           <%= yield %>
         </div><!--/row-->
       </div><!--/content-->
 
       <footer>
-        <p>&copy; Doorder/NIO team 2012 遇到问题了? 请联系Magic系统客服：magic@doorder.com</p>
+        <p>&copy; Doorder/NIO team 2012</p>
       </footer>
 
     </div> <!-- /container -->
@@ -83,6 +84,6 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <%= javascript_include_tag "application" %>
-
+    <%= yield :tail -%>
   </body>
 </html>
