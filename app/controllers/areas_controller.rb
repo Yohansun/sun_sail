@@ -7,7 +7,7 @@ class AreasController < ApplicationController
       params[:parent_id] = 1
     end
 
-    @areas = Area.where(parent_id: params[:parent_id]).all
+    @areas = Area.where(parent_id: params[:parent_id])
     respond_with @areas
   end
 

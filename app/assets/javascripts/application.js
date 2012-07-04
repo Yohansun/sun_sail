@@ -39,4 +39,9 @@ $(function () {
     	theme: "facebook",
     	noResultsText: "无对应地区!"
     });
+
+    $(".navbar .nav .areas").on("click", function (event) {
+        event.preventDefault();
+        Backbone.history.navigate('areas', true);
+    });
 });

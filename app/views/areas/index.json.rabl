@@ -1,2 +1,2 @@
 collection @areas
-attributes :id, :name
+attributes :id, :name, :zip
