@@ -27,6 +27,10 @@ group :development do
   gem 'rvm-capistrano'
 end
 
+group :development, :test do
+  gem 'rspec-rails'
+end
+
 gem 'mongoid', '~> 2.4.11'
 gem 'bson', '<= 1.6.2'
 gem 'bson_ext', '<= 1.6.2'
