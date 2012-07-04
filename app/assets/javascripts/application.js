@@ -44,4 +44,8 @@ $(function () {
         event.preventDefault();
         Backbone.history.navigate('areas', true);
     });
+    $(".navbar .nav .trades").on("click", function (event) {
+        event.preventDefault();
+        Backbone.history.navigate('trades', true);
+    });
 });
