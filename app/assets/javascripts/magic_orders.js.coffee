@@ -5,4 +5,5 @@ window.MagicOrders =
   Routers: {}
   init: ->
     new MagicOrders.Routers.Areas()
+    new MagicOrders.Routers.Trades()
     Backbone.history.start(pushState: true)

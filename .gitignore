@@ -1,6 +1,5 @@
 .bundle
-config/database.yml
-config/taobao.yml
+config/*.yml
 log/*.log
 tmp
 *.swp

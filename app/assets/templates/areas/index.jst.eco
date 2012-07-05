@@ -3,6 +3,7 @@
     <thead>
       <tr>
         <th>ID</th>
+        <th>邮编</th>
         <th>名称</th>
         <th>默认经销商</th>
         <th>操作</th>
@@ -12,10 +13,11 @@
       <% for area in @areas.models: %>
       <tr>
         <td><%= area.get('id') %></td>
+        <td><%= area.get('zip') %></td>
         <td><%= area.get('name') %></td>
         <td></td>
         <td>
-          <a class="browse_children" data-id="<%= area.id %>">浏览下级区域</a>
+          <a class="browse_children" data-id="<%= area.id %>" href="/areas/<%= area.id %>">浏览下级区域</a>
         </td>
       </tr>
       <% end %>

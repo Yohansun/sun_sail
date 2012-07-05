@@ -2,12 +2,14 @@
 class AreasController < ApplicationController
   respond_to :json
 
+  before_filter :authenticate_user!
+
   def index
     unless params[:parent_id]
       params[:parent_id] = 1
     end
 
-    @areas = Area.where(parent_id: params[:parent_id]).all
+    @areas = Area.where(parent_id: params[:parent_id])
     respond_with @areas
   end
 

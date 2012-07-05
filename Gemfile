@@ -5,6 +5,7 @@ gem 'rails', '>= 3.2.3'
 gem 'mysql2'
 
 gem 'json'
+gem 'rabl'
 
 group :assets do
   gem 'sass-rails', '~> 3.2.3'
@@ -26,10 +27,14 @@ group :development do
   gem 'rvm-capistrano'
 end
 
+group :development, :test do
+  gem 'rspec-rails'
+end
+
 gem 'mongoid', '~> 2.4.11'
 gem 'bson', '<= 1.6.2'
 gem 'bson_ext', '<= 1.6.2'
-
+gem 'draper'
 gem 'inherited_resources'
 gem 'devise'
 
@@ -41,3 +46,4 @@ gem 'will_paginate'
 gem 'backbone-on-rails'
 
 gem 'taobao_fu_reload'
+gem 'jingdong_fu'

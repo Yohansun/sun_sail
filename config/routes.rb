@@ -4,6 +4,7 @@ MagicOrders::Application.routes.draw do
   devise_for :users
 
   scope 'api' do
+    resources :trades
     resources :areas do
       collection do
         get :export
