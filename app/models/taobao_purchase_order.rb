@@ -42,6 +42,8 @@ class TaobaoPurchaseOrder < Trade
 
   embeds_many :taobao_sub_purchase_orders
 
+  accepts_nested_attributes_for :taobao_sub_purchase_orders
+
   def orders
     self.taobao_sub_purchase_orders
   end

@@ -20,5 +20,5 @@ class TaobaoSubPurchaseOrder < Order
   field :distributor_payment, type: Float
   field :buyer_payment, type: Float
 
-  embedded_in :taobao_purchase_orders
+  embedded_in :taobao_purchase_order
 end
