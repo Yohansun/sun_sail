@@ -73,12 +73,12 @@
       <% for trade in @trades.models: %>
       <tr>
         <td><input type="checkbox" value="option1"></td>
-        <td><%= trade.get('fenxiao_id') %></td>
+        <td><%= trade.get('tid') %></td>
         <td>
           <span class="label label-success"><%= trade.get('status') %></span>
         </td>
         <td><%= trade.get('created') %></td>
-        <td><span class="label label-warning">淘宝</span></td>
+        <td><span class="label label-warning"><%= trade.get('trade_source') %></span></td>
         <td><%= trade.get('receiver').name %></td>
         <td><%= trade.get('receiver').mobile_phone %></td>
         <td><%= trade.get('receiver').state %></td>

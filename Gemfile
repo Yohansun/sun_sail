@@ -6,6 +6,7 @@ gem 'mysql2'
 
 gem 'json'
 gem 'rabl'
+gem 'jbuilder'
 
 group :assets do
   gem 'sass-rails', '~> 3.2.3'
