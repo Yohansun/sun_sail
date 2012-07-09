@@ -1,10 +1,10 @@
 class TradesController < ApplicationController
+  before_filter :authenticate_user!
   respond_to :json
 
-  before_filter :authenticate_user!
-
   def index
-    @trades = Trade.limit(50).order("created_at DESC")
+    @trades = TradeDecorator.decorate(Trade.limit(50).order("created_at DESC"))
+    Rails.logger.debug @trades.inspect
     respond_with @trades
   end
 end
