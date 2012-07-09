@@ -47,4 +47,3 @@ gem 'backbone-on-rails'
 
 gem 'taobao_fu_reload'
 gem 'jingdong_fu'
-gem 'patron'
