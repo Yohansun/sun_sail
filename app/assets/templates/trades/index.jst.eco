@@ -58,10 +58,13 @@
         <th><input id="checkbox_all" type="checkbox" value="option1"></th>
         <th>订单编号</th>
         <th>当前状态</th>
-        <th>历史状态</th>
+        <th>下单时间</th>
         <th>订单来源</th>
         <th>客户姓名</th>
         <th>联系电话</th>
+        <th>省</th>
+        <th>市</th>
+        <th>区</th>
         <th>联系地址</th>
         <th>操作</th>
       </tr>
@@ -71,52 +74,53 @@
       <tr>
         <td><input type="checkbox" value="option1"></td>
         <td><%= trade.get('fenxiao_id') %></td>
-        <td><span class="label label-success"><%= trade.get('status') %></span></td>
         <td>
-          <span class="label label-success">付款06-20 09:32:20</span>
-          <span class="label">下单06-20 09:32:20</span>
-          <span class="label">分流06-20 09:32:20</span></td>
-          <td><span class="label label-warning">淘宝</span></td>
-          <td><%= trade.get('receiver').name %></td>
-          <td><%= trade.get('receiver').mobile_phone %></td>
-          <td><%= trade.get('receiver').address %></td>
-          <td nowrap>
-            <div class="btn-group">
-              <button data-toggle="dropdown" class="btn btn-info dropdown-toggle min_w"><i class="icon-wrench"></i> <span class="caret"></span></button>
-              <ul class="dropdown-menu" style="left:-115px;">
-                <li><a class="ord_branch" data-toggle="modal" href="#ord_branch">订单分流</a></li>
-                <li class="divider"></li>
-                <li><a data-toggle="modal" href="#ord_bill">申请开票</a></li>
-                <li><a data-toggle="modal" href="#ord_service">客服备注</a></li>
-                <li><a data-toggle="modal" href="#ord_colors">申请调色</a></li>
-                <li><a data-toggle="modal" href="#ord_split">订单拆分</a></li>
-                <li><a href="#">订单合并</a></li>
-                <li><a data-toggle="modal" href="#ord_unusual">标注异常</a></li>
-                <li><a data-toggle="modal" href="#ord_to">订单转交</a></li>
-                <li class="divider"></li>
-                <li><a data-toggle="modal" href="#ord_logistics">物流拆分</a></li>
-                <li><a data-toggle="modal" href="#ord_logistics_print">打印物流单</a></li>
-                <li><a data-toggle="modal" href="#ord_deliver_print">打印配货单</a></li>
-                <li><a data-toggle="modal" href="#ord_examine">验货</a></li>
-                <li><a data-toggle="modal" href="#ord_deliver">发货</a></li>
-                <li><a data-toggle="modal" href="#ord_deliver_sure">确认发货</a></li>
-                <li><a data-toggle="modal" href="#ord_bill_sure">确认开票</a></li>
-                <li class="divider"></li>
-                <li><a data-toggle="modal" href="#ord_refund">申请退款</a></li>
-                <li><a data-toggle="modal" href="#ord_refund_sure">确认退款</a></li>
-                <li><a data-toggle="modal" href="#ord_return_goods">申请退货</a></li>
-                <li><a data-toggle="modal" href="#ord_return_goods_sure">确认退货</a></li>
-                <li class="divider"></li>
-                <li><a data-toggle="modal" href="#ord_detail">订单详情</a></li>
-                <li><a data-toggle="modal" href="#ord_log">操作日志</a></li>
-              </ul>
-            </div>
-          </td>
-        </tr>
-        <% end %>
-
-        </tbody>
-      </table>
+          <span class="label label-success"><%= trade.get('status') %></span>
+        </td>
+        <td><%= trade.get('created') %></td>
+        <td><span class="label label-warning">淘宝</span></td>
+        <td><%= trade.get('receiver').name %></td>
+        <td><%= trade.get('receiver').mobile_phone %></td>
+        <td><%= trade.get('receiver').state %></td>
+        <td><%= trade.get('receiver').city %></td>
+        <td><%= trade.get('receiver').district %></td>
+        <td><%= trade.get('receiver').address %></td>
+        <td nowrap>
+          <div class="btn-group">
+            <button data-toggle="dropdown" class="btn btn-info dropdown-toggle min_w"><i class="icon-wrench"></i> <span class="caret"></span></button>
+            <ul class="dropdown-menu" style="left:-115px;">
+              <li><a class="ord_branch" data-toggle="modal" href="#ord_branch">订单分流</a></li>
+              <li class="divider"></li>
+              <li><a data-toggle="modal" href="#ord_bill">申请开票</a></li>
+              <li><a data-toggle="modal" href="#ord_service">客服备注</a></li>
+              <li><a data-toggle="modal" href="#ord_colors">申请调色</a></li>
+              <li><a data-toggle="modal" href="#ord_split">订单拆分</a></li>
+              <li><a href="#">订单合并</a></li>
+              <li><a data-toggle="modal" href="#ord_unusual">标注异常</a></li>
+              <li><a data-toggle="modal" href="#ord_to">订单转交</a></li>
+              <li class="divider"></li>
+              <li><a data-toggle="modal" href="#ord_logistics">物流拆分</a></li>
+              <li><a data-toggle="modal" href="#ord_logistics_print">打印物流单</a></li>
+              <li><a data-toggle="modal" href="#ord_deliver_print">打印配货单</a></li>
+              <li><a data-toggle="modal" href="#ord_examine">验货</a></li>
+              <li><a data-toggle="modal" href="#ord_deliver">发货</a></li>
+              <li><a data-toggle="modal" href="#ord_deliver_sure">确认发货</a></li>
+              <li><a data-toggle="modal" href="#ord_bill_sure">确认开票</a></li>
+              <li class="divider"></li>
+              <li><a data-toggle="modal" href="#ord_refund">申请退款</a></li>
+              <li><a data-toggle="modal" href="#ord_refund_sure">确认退款</a></li>
+              <li><a data-toggle="modal" href="#ord_return_goods">申请退货</a></li>
+              <li><a data-toggle="modal" href="#ord_return_goods_sure">确认退货</a></li>
+              <li class="divider"></li>
+              <li><a data-toggle="modal" href="#ord_detail">订单详情</a></li>
+              <li><a data-toggle="modal" href="#ord_log">操作日志</a></li>
+            </ul>
+          </div>
+        </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
 
       <!--
       <div class="pagination">
@@ -131,6 +135,6 @@
           <li><a href="#">下一页</a></li>
         </ul>
       </div>
-      -->
-      <!-- pagination ends -->
-    </div>
+    -->
+    <!-- pagination ends -->
+</div>

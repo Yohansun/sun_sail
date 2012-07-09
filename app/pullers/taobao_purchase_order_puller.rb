@@ -13,9 +13,8 @@ class TaobaoPurchaseOrderPuller
         page_no: 0, page_size: 1)
 
       total_results = response['fenxiao_orders_get_response']['total_results']
-
       total_pages = total_results / 50
-      p total_pages
+
       (0..total_pages).each do |page|
         response = TaobaoFu.get(method: 'taobao.fenxiao.orders.get',
         start_created: start_time.strftime("%Y-%m-%d %H:%M:%S"),
@@ -24,13 +23,10 @@ class TaobaoPurchaseOrderPuller
 
         trades = response['fenxiao_orders_get_response']['purchase_orders']['purchase_order']
         trades.each do |trade|
-          try_trade = TaobaoPurchaseOrder.where(fenxiao_id: trade['fenxiao_id']).exists?
-          next if try_trade
+          next if TaobaoPurchaseOrder.where(fenxiao_id: trade['fenxiao_id']).exists?
 
           sub_orders = trade.delete('sub_purchase_orders')
-
           purchase_order = TaobaoPurchaseOrder.new(trade)
-
           sub_orders = sub_orders['sub_purchase_order']
           sub_orders.each do |sub_order|
             sub_purchase_order = purchase_order.taobao_sub_purchase_orders.build(sub_order)
