@@ -62,9 +62,6 @@
         <th>订单来源</th>
         <th>客户姓名</th>
         <th>联系电话</th>
-        <th>省</th>
-        <th>市</th>
-        <th>区</th>
         <th>联系地址</th>
         <th>操作</th>
       </tr>
@@ -81,10 +78,10 @@
         <td><span class="label label-warning"><%= trade.get('trade_source') %></span></td>
         <td><%= trade.get('receiver').name %></td>
         <td><%= trade.get('receiver').mobile_phone %></td>
-        <td><%= trade.get('receiver').state %></td>
-        <td><%= trade.get('receiver').city %></td>
-        <td><%= trade.get('receiver').district %></td>
-        <td><%= trade.get('receiver').address %></td>
+        <td>
+          <%= trade.get('receiver').state %> <%= trade.get('receiver').city %> <%= trade.get('receiver').district %> <br/>
+          <%= trade.get('receiver').address %>
+        </td>
         <td nowrap>
           <div class="btn-group">
             <button data-toggle="dropdown" class="btn btn-info dropdown-toggle min_w"><i class="icon-wrench"></i> <span class="caret"></span></button>
