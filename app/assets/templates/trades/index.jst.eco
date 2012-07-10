@@ -4,13 +4,14 @@
       <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">所有订单 <b class="caret"></b></a>
         <ul class="dropdown-menu">
+          <li><a href="#">所有订单</a></li>
           <li><a href="#">淘宝订单</a></li>
           <li><a href="#">淘宝分销采购单</a></li>
           <li><a href="#">官网订单</a></li>
           <li><a href="#">京东商城订单</a></li>
         </ul>
       </li>
-      <li class="dropdown">
+      <!-- <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">出货单 <b class="caret"></b></a>
         <ul class="dropdown-menu">
           <li><a href="#">未付款订单</a></li>
@@ -24,7 +25,7 @@
       <li><a href="#">验货</a></li>
       <li><a href="#">发货</a></li>
       <li><a href="#">配色</a></li>
-      <li><a href="#">发票</a></li>
+      <li><a href="#">发票</a></li> -->
     </ul>
   </div>
 </header>
@@ -56,32 +57,46 @@
     <thead>
       <tr>
         <th><input id="checkbox_all" type="checkbox" value="option1"></th>
+        <th>订单来源</th>
         <th>订单编号</th>
         <th>当前状态</th>
-        <th>下单时间</th>
-        <th>订单来源</th>
-        <th>客户姓名</th>
+        <th>状态历史</th>
+        <th nowrap>客户姓名</th>
         <th>联系电话</th>
         <th>联系地址</th>
+        <th nowrap>客户<br/>留言</th>
+        <th nowrap>客服<br/>备注</th>
+        <th nowrap>发票抬头</th>
         <th>操作</th>
       </tr>
     </thead>
     <tbody>
       <% for trade in @trades.models: %>
-      <tr>
+      <tr data-rowid="<%= trade.id %>">
         <td><input type="checkbox" value="option1"></td>
+        <td><span class="label label-warning"><%= trade.get('trade_source') %></span></td>
         <td><%= trade.get('tid') %></td>
         <td>
           <span class="label label-success"><%= trade.get('status') %></span>
         </td>
-        <td><%= trade.get('created') %></td>
-        <td><span class="label label-warning"><%= trade.get('trade_source') %></span></td>
+        <td>
+          <span class="label">下单 <%= trade.get('created') %></span>
+          <% if trade.get('pay_time'): %>
+            <span class="label label-success">付款 <%= trade.get('pay_time') %></span>
+          <% end %>
+          <% if trade.get('consign_time'): %>
+            <span class="label label-success">发货 <%= trade.get('consign_time') %></span>
+          <% end %>
+        </td>
         <td><%= trade.get('receiver').name %></td>
         <td><%= trade.get('receiver').mobile_phone %></td>
         <td>
           <%= trade.get('receiver').state %> <%= trade.get('receiver').city %> <%= trade.get('receiver').district %> <br/>
           <%= trade.get('receiver').address %>
         </td>
+        <td><i class="icon-comment"></i></td>
+        <td><i class="icon-comment"></i></td>
+        <td></td>
         <td nowrap>
           <div class="btn-group">
             <button data-toggle="dropdown" class="btn btn-info dropdown-toggle min_w"><i class="icon-wrench"></i> <span class="caret"></span></button>
