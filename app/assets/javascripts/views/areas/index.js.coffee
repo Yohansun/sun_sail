@@ -13,6 +13,5 @@ class MagicOrders.Views.AreasIndex extends Backbone.View
     this
 
   browse_children: (event) ->
-    event.preventDefault()
     id = $(event.target).data("id")
     Backbone.history.navigate("areas/#{id}", true)

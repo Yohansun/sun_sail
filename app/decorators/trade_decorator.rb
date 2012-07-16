@@ -29,6 +29,15 @@ class TradeDecorator < Draper::Base
     end
   end
 
+  def orders
+    case trade._type
+    when 'TaobaoPurchaseOrder'
+      trade.taobao_sub_purchase_orders
+    else
+      []
+    end
+  end
+
 
   protected
   def fenxiao_status

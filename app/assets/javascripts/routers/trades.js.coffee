@@ -4,7 +4,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     'trades/:id': 'show'
 
   initialize: ->
-    @collection = new MagicOrders.Collections.Trades()
+    $('#content').html('')
 
   show_top_nav: ->
     $("#top-nav li").hide()
@@ -12,6 +12,17 @@ class MagicOrders.Routers.Trades extends Backbone.Router
 
   index: ->
     @show_top_nav()
-    @collection.fetch()
-    view = new MagicOrders.Views.TradesIndex(collection: @collection)
-    $('#content').html(view.render().el)
+    @collection = new MagicOrders.Collections.Trades()
+    @collection.fetch success: (collection, response) =>
+      view = new MagicOrders.Views.TradesIndex(collection: collection)
+      $('#content').html(view.render().el)
+
+  show: (id) ->
+    @model = new MagicOrders.Models.Trade(id: id)
+    @model.fetch success: (model, response) =>
+      view = new MagicOrders.Views.TradesShow(model: model)
+      $('#trade_detail').html(view.render().el)
+
+      $('#trade_detail').on 'hide', (event) ->
+        Backbone.history.navigate('trades', true);
+      $('#trade_detail').modal('show')

@@ -4,7 +4,11 @@ class TradesController < ApplicationController
 
   def index
     @trades = TradeDecorator.decorate(Trade.limit(50).order_by("created", "DESC"))
-    Rails.logger.debug @trades.inspect
     respond_with @trades
+  end
+
+  def show
+    @trade = TradeDecorator.decorate(Trade.where(id: params[:id].to_i).first)
+    respond_with @trade
   end
 end
