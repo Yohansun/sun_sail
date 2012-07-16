@@ -20,6 +20,15 @@ class TradeDecorator < Draper::Base
     end
   end
 
+  def seller_memo
+    case trade._type
+    when 'TaobaoPurchaseOrder'
+      trade.memo
+    else
+      ''
+    end
+  end
+
   def trade_source
     case trade._type
     when 'TaobaoPurchaseOrder'

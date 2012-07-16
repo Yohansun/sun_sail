@@ -16,6 +16,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     @collection.fetch success: (collection, response) =>
       view = new MagicOrders.Views.TradesIndex(collection: collection)
       $('#content').html(view.render().el)
+      $("a[rel=popover]").popover(placement: 'left')
 
   show: (id) ->
     @model = new MagicOrders.Models.Trade(id: id)

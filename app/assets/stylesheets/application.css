@@ -145,3 +145,8 @@ form .span4{border-right: 1px solid #ddd;}
 .table thead th {
   vertical-align: middle;
 }
+
+#trade_detail {
+  width: 750px;
+  margin-left: -375px;
+}

@@ -65,8 +65,8 @@
         <th>联系电话</th>
         <th>联系地址</th>
         <th nowrap>客户<br/>留言</th>
+        <th nowrap>卖家<br/>备注</th>
         <th nowrap>客服<br/>备注</th>
-        <th nowrap>发票抬头</th>
         <th>操作</th>
       </tr>
     </thead>
@@ -95,8 +95,12 @@
           <%= trade.get('receiver').address %>
         </td>
         <td><i class="icon-comment"></i></td>
+        <td>
+          <% if trade.get 'seller_memo': %>
+          <a href="#" rel="popover" data-content="<%= trade.get 'seller_memo' %>" data-original-title="卖家备注"><i class="icon-comment"></i></a>
+          <% end %>
+        </td>
         <td><i class="icon-comment"></i></td>
-        <td></td>
         <td nowrap>
           <div class="btn-group">
             <button data-toggle="dropdown" class="btn btn-info dropdown-toggle min_w"><i class="icon-wrench"></i> <span class="caret"></span></button>
