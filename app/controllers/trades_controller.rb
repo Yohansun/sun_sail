@@ -3,8 +3,12 @@ class TradesController < ApplicationController
   respond_to :json
 
   def index
-    @trades = TradeDecorator.decorate(Trade.limit(50).order("created_at DESC"))
-    Rails.logger.debug @trades.inspect
+    @trades = TradeDecorator.decorate(Trade.limit(50).order_by("created", "DESC"))
     respond_with @trades
+  end
+
+  def show
+    @trade = TradeDecorator.decorate(Trade.where(id: params[:id].to_i).first)
+    respond_with @trade
   end
 end
