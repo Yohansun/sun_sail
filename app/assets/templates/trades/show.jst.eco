@@ -1,7 +1,8 @@
 <div class="modal-header">
   <button type="button" class="close" data-dismiss="modal">×</button>
-  <h5>订单详情</h5>
+  <h3>订单详情</h3>
 </div><!-- modal-header -->
+<div class="print_content">
 <div class="modal-body">
   <table class="table table-bordered">
     <thead>
@@ -41,7 +42,7 @@
       </tr>
       <tr>
         <td>备注：</td>
-        <td>...</td>
+        <td><%= @trade.get('seller_memo') %></td>
       </tr>
     </tbody>
   </table>
@@ -54,13 +55,13 @@
         <td>支付方式：</td>
         <td>支付宝</td>
       </tr>
-      <tr>
+<!--       <tr>
         <td>配送：</td>
         <td>圆通物流</td>
-      </tr>
+      </tr> -->
     </tbody>
   </table>
-  <table class="table">
+<!--   <table class="table">
     <tbody>
       <tr>
         <th colspan="2">发票信息</th>
@@ -74,7 +75,7 @@
         <td>***</td>
       </tr>
     </tbody>
-  </table>
+  </table> -->
   <table class="table table-bordered">
     <thead>
       <tr>
@@ -82,31 +83,31 @@
       </tr>
       <tr>
         <th>商品名称</th>
-        <th nowrap>调色</th>
+        <th nowrap>特殊属性</th>
         <th nowrap>标价</th>
-        <th nowrap>数量</th>
         <th nowrap>实际单价</th>
-        <th nowrap>总价</th>
+        <th nowrap>数量</th>
+        <th nowrap>小计</th>
       </tr>
     </thead>
     <tbody>
       <% for order in @trade.get('orders'): %>
       <tr>
         <td><%= order.title %></td>
-        <td>***</td>
-        <td><%= order.auction_price %></td>
+        <td><%= order.sku_properties %></td>
+        <td>￥<%= order.auction_price %></td>
+        <td>￥<%= order.price %></td>
         <td><%= order.num %></td>
-        <td><%= order.price %></td>
-        <td><%= order.total_fee %></td>
+        <td>￥<%= order.total_fee %></td>
       </tr>
       <% end %>
       <tr>
-        <th colspan="5">总价：<br>物流费：</th>
+        <th colspan="6">总价：￥<%= @trade.get 'total_fee' %><br>物流费：￥<%= @trade.get 'post_fee' %></th>
       </tr>
     </tbody>
   </table>
   <table class="table table-bordered">
-    <thead>
+<!--     <thead>
       <tr>
         <th colspan="2">活动优惠</th>
       </tr>
@@ -114,18 +115,18 @@
         <th>活动名称</th>
         <th>优惠金额</th>
       </tr>
-    </thead>
+    </thead> -->
     <tbody>
-      <tr>
+<!--       <tr>
         <td>***</td>
         <td>***</td>
-      </tr>
+      </tr> -->
       <tr>
-        <th colspan="2">订单实付金额：</th>
+        <th colspan="2">订单实付金额：￥<%= @trade.get('total_fee') + @trade.get ('post_fee') %></th>
       </tr>
     </tbody>
   </table>
-  <table class="table table-bordered">
+  <!-- <table class="table table-bordered">
     <thead>
       <tr>
         <th colspan="2">出货单</th>
@@ -160,8 +161,9 @@
         <td>***</td>
       </tr>
     </tbody>
-  </table>
+  </table> -->
 </div><!-- modal-body -->
+</div>
 <div class="modal-footer">
   <a href="#" class="btn btn-primary button_print">打印</a>
 </div><!-- modal-footer -->
