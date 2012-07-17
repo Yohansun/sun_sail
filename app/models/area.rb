@@ -1,5 +1,5 @@
 class Area < ActiveRecord::Base
-  acts_as_nested_set
+  acts_as_nested_set counter_cache: :children_count
   attr_accessible :parent_id, :name, :is_1568, :area_type, :zip
 
   def self.sync_from_taobao

@@ -17,7 +17,9 @@
         <td><%= area.get('name') %></td>
         <td></td>
         <td>
+          <% if area.get('children_count') > 0: %>
           <a class="browse_children" data-id="<%= area.id %>" href="/areas/<%= area.id %>">浏览下级区域</a>
+          <% end %>
         </td>
       </tr>
       <% end %>

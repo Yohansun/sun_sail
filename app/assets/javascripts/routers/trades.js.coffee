@@ -1,5 +1,6 @@
 class MagicOrders.Routers.Trades extends Backbone.Router
   routes:
+    '': 'index'
     'trades': 'index'
     'trades/:id': 'show'
 
