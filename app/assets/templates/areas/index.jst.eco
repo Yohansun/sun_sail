@@ -15,7 +15,7 @@
         <td><%= area.get('id') %></td>
         <td><%= area.get('zip') %></td>
         <td><%= area.get('name') %></td>
-        <td></td>
+        <td><%= area.get('seller_name') %></td>
         <td>
           <% if area.get('children_count') > 0: %>
           <a class="browse_children" data-id="<%= area.id %>" href="/areas/<%= area.id %>">浏览下级区域</a>

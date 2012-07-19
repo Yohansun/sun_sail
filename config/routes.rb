@@ -1,10 +1,9 @@
 MagicOrders::Application.routes.draw do
-  get "home/index"
-
   devise_for :users
 
   scope 'api' do
     resources :trades
+    resources :sellers
     resources :areas do
       collection do
         get :export

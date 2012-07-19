@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120701145725) do
+ActiveRecord::Schema.define(:version => 20120719020148) do
 
   create_table "areas", :force => true do |t|
     t.string   "name"
@@ -28,6 +28,21 @@ ActiveRecord::Schema.define(:version => 20120701145725) do
     t.integer  "sellers_count",  :default => 0
     t.integer  "area_type"
     t.string   "zip"
+  end
+
+  create_table "sellers", :force => true do |t|
+    t.string   "name"
+    t.string   "fullname"
+    t.string   "address"
+    t.string   "mobile"
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
+    t.integer  "parent_id"
+    t.integer  "lft"
+    t.integer  "rgt"
+    t.integer  "children_count", :default => 0
+    t.string   "email"
+    t.string   "telephone"
   end
 
   create_table "users", :force => true do |t|
