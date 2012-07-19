@@ -88,12 +88,11 @@
             <span class="label label-success">发货 <%= trade.get('consign_time') %></span>
           <% end %>
         </td>
-        <td><%= trade.get('receiver').name %></td>
-        <td><%= trade.get('receiver').mobile_phone %></td>
+        <td><%= trade.get('receiver_name') %></td>
+        <td><%= trade.get('receiver_mobile_phone') %></td>
         <td>
-          <%= trade.get('receiver').state %> <%= trade.get('receiver').city %> <%= trade.get('receiver').district %> <br/>
-          <%= trade.get('receiver').address %>
-          <%= trade.get('receiver').zip %>
+          <%= trade.get('receiver_state') %> <%= trade.get('receiver_city') %> <%= trade.get('receiver_district') %> <br/>
+          <%= trade.get('receiver_address') %>
         </td>
         <td><i class="icon-comment"></i></td>
         <td>

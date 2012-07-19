@@ -1,9 +1,14 @@
 json.array!(@trades) do |json, trade|
-  json.id trade.id
+  json.id trade._id
   json.tid trade.tid
   json.status trade.status
   json.status_text trade.status_text
-  json.receiver trade.receiver
+  json.receiver_name trade.receiver_name
+  json.receiver_mobile_phone trade.receiver_mobile_phone
+  json.receiver_address trade.receiver_address
+  json.receiver_district trade.receiver_district
+  json.receiver_city trade.receiver_city
+  json.receiver_state trade.receiver_state
   json.seller_memo trade.seller_memo
   json.trade_source trade.trade_source
   json.created trade.created.strftime("%m-%d %H:%M")
