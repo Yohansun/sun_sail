@@ -5,6 +5,7 @@ class MagicOrders.Views.AreasInputs extends Backbone.View
   events:
     'change [name=trade_state]': 'refresh_cities'
     'change [name=trade_city]': 'refresh_districts'
+    'change [name=trade_district]': 'refresh_seller'
 
   initialize: (options) ->
     @state = options.state
@@ -17,22 +18,33 @@ class MagicOrders.Views.AreasInputs extends Backbone.View
 
     @cities = new MagicOrders.Collections.Areas()
     @cities.on("reset", @render, this)
+    @cities.on("reset", @select_city, this)
 
     @districts = new MagicOrders.Collections.Areas()
     @districts.on("reset", @render, this)
+    @districts.on("reset", @refresh_seller, this)
 
   render: ->
-    $(@el).html(@template(states: @states, cities: @cities, districts: @districts,
-      state: @state, city: @city, district: @district))
+    $(@el).html(@template(states: @states, cities: @cities, districts: @districts, state: @state, city: @city, district: @district))
     this
 
   select_state: ->
-    console.log "select_state"
-    console.log @state
-    $("#trade_state").val(@state)
+    @refresh_cities()
 
-  refresh_cities: (event) ->
-    @cities.fetch({data: {parent_id: $(event.target).val()}})
+  select_city: ->
+    @refresh_districts()
 
-  refresh_districts: (event) ->
-    @districts.fetch({data: {parent_id: $(event.target).val()}})
+  refresh_cities: ->
+    newid = $("#trade_state").val()
+    @state = $("#trade_state option[value=#{newid}]").data("name") unless newid == '请选择...'
+    @cities.fetch({data: {parent_id: newid}})
+
+  refresh_districts: ->
+    newid = $("#trade_city").val()
+    @city = $("#trade_city option[value=#{newid}]").data("name") unless newid == '请选择...'
+    @districts.fetch({data: {parent_id: $("#trade_city").val()}})
+
+  refresh_seller: ->
+    unless $("#trade_district").val() == '请选择...'
+      area_id = $("#trade_district").val()
+      $(".trade_seller").html($("#trade_district option[value=#{area_id}]").data("seller-name"))

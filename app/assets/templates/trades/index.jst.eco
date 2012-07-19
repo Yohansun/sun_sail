@@ -106,7 +106,10 @@
             <button data-toggle="dropdown" class="btn btn-info dropdown-toggle min_w"><i class="icon-wrench"></i> <span class="caret"></span></button>
             <ul class="dropdown-menu" style="left:-115px;">
               <li><a data-toggle="modal" href="#" data-type="detail">订单详情</a></li>
-              <li><a data-toggle="modal" href="#" data-type="seller">订单分流</a></li>
+              <% if trade.get('status') == 'WAIT_SELLER_SEND_GOODS': %>
+              <li><a data-toggle="modal" href="#" data-type="seller">订单分流</a>
+              </li>
+              <% end %>
             </ul>
           </div>
         </td>
