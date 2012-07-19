@@ -12,14 +12,11 @@
       </tr>
       <tr>
         <th>订单状态</th>
-        <td><%= @trade.get("status") %></td>
+        <td><%= @trade.get("status_text") %></td>
       </tr>
       <tr>
         <th>订单金额</th>
         <td>￥<%= @trade.get('total_fee') + @trade.get ('post_fee') %></td>
-      </tr>
-      <tr>
-        <th colspan="2">收货人信息</th>
       </tr>
       <tr>
         <td>收货人：</td>
@@ -75,8 +72,10 @@
 
 <div class="modal-footer">
 <% if @trade.get('seller_id'): %>
-<button class="btn btn-primary" type="submit">分流重置</button>
+  <button class="btn btn-primary" type="submit">分流重置</button>
 <% else: %>
-<button class="btn btn-primary" type="submit">分流</button>
+  <% if @trade.get('status') == 'WAIT_SELLER_SEND_GOODS': %>
+    <button class="btn btn-primary" type="submit">分流</button>
+  <% end %>
 <% end %>
 </div><!-- modal-footer -->

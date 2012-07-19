@@ -2,6 +2,7 @@ json.array!(@trades) do |json, trade|
   json.id trade.id
   json.tid trade.tid
   json.status trade.status
+  json.status_text trade.status_text
   json.receiver trade.receiver
   json.seller_memo trade.seller_memo
   json.trade_source trade.trade_source
