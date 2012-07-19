@@ -1,6 +1,18 @@
+# -*- encoding : utf-8 -*-
+require 'hz2py'
+
 class Area < ActiveRecord::Base
-  acts_as_nested_set
+  acts_as_nested_set counter_cache: :children_count
   attr_accessible :parent_id, :name, :is_1568, :area_type, :zip
+
+  has_many :areas, foreign_key: :parent_id
+  belongs_to :seller
+
+  before_save :set_pinyin
+
+  def set_pinyin
+    self.pinyin = Hz2py.do(name).split(" ").map { |name| name[0, 1] }.join
+  end
 
   def self.sync_from_taobao
     Area.skip_callback :save
@@ -17,5 +29,22 @@ class Area < ActiveRecord::Base
       area.save
     end
     Area.rebuild!
+  end
+
+  def self.sync_seller_ids
+    lines = open(File.join(Rails.root, 'tmp', 'areas.csv')).readlines.map { |e| e.strip.split(",") }
+    lines.each do |row|
+      city = row[1]
+      p city
+      p city.size
+      p city[1]
+      if city.size < 3 && city[1] != '市'
+        city = city + '市'
+      end
+      parent = Area.find_by_name city
+      area = parent.areas.where(name: row[0]).first
+      area.seller_id = row[2]
+      area.save
+    end
   end
 end

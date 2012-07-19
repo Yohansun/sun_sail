@@ -48,4 +48,8 @@ $(function () {
         event.preventDefault();
         Backbone.history.navigate('trades', true);
     });
+    $(".navbar .nav .sellers").on("click", function (event) {
+        event.preventDefault();
+        Backbone.history.navigate('sellers', true);
+    });
 });

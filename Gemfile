@@ -17,7 +17,7 @@ end
 gem 'jquery-rails'
 
 group :development do
-  gem 'capistrano', '2.11.2'
+  gem 'capistrano'
   gem 'debugger'
   gem 'quiet_assets'
   gem 'bond'
@@ -48,3 +48,5 @@ gem 'backbone-on-rails'
 
 gem 'taobao_fu_reload'
 gem 'jingdong_fu'
+
+gem 'hz2py'

@@ -1,6 +1,6 @@
-class MagicOrders.Views.AreasIndex extends Backbone.View
+class MagicOrders.Views.SellersIndex extends Backbone.View
 
-  template: JST['areas/index']
+  template: JST['sellers/index']
 
   events:
     'click .browse_children': 'browse_children'
@@ -9,10 +9,10 @@ class MagicOrders.Views.AreasIndex extends Backbone.View
     @collection.on("reset", @render, this)
 
   render: ->
-    $(@el).html(@template(areas: @collection))
+    $(@el).html(@template(sellers: @collection))
     this
 
   browse_children: (event) ->
     event.preventDefault()
     id = $(event.target).data("id")
-    Backbone.history.navigate("areas/#{id}", true)
+    Backbone.history.navigate("sellers/#{id}", true)

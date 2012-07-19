@@ -93,6 +93,7 @@
         <td>
           <%= trade.get('receiver').state %> <%= trade.get('receiver').city %> <%= trade.get('receiver').district %> <br/>
           <%= trade.get('receiver').address %>
+          <%= trade.get('receiver').zip %>
         </td>
         <td><i class="icon-comment"></i></td>
         <td>
