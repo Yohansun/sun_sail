@@ -11,4 +11,14 @@ class TradesController < ApplicationController
     @trade = TradeDecorator.decorate(Trade.where(_id: params[:id]).first)
     respond_with @trade
   end
+
+  def update
+    @trade = Trade.where(_id: params[:id]).first
+    @trade.seller_id = params[:seller_id]
+    @trade.save
+    @trade = TradeDecorator.decorate(@trade)
+    respond_with(@trade) do |format|
+      format.json { render :show }
+    end
+  end
 end

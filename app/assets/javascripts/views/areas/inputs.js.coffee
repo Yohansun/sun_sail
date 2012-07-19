@@ -40,6 +40,7 @@ class MagicOrders.Views.AreasInputs extends Backbone.View
     @cities.fetch({data: {parent_id: newid}})
 
   refresh_districts: ->
+    $("#trade_seller_id").val(-1)
     newid = $("#trade_city").val()
     @city = $("#trade_city option[value=#{newid}]").data("name") unless newid == '请选择...'
     @districts.fetch({data: {parent_id: $("#trade_city").val()}})
@@ -47,4 +48,6 @@ class MagicOrders.Views.AreasInputs extends Backbone.View
   refresh_seller: ->
     unless $("#trade_district").val() == '请选择...'
       area_id = $("#trade_district").val()
+      seller_id = $("#trade_district option[value=#{area_id}]").data("seller-id")
+      $("#trade_seller_id").val(seller_id)
       $(".trade_seller").html($("#trade_district option[value=#{area_id}]").data("seller-name"))
