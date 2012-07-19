@@ -11,7 +11,7 @@
       </tr>
       <tr>
         <th>订单状态</th>
-        <td><%= @trade.get("status") %></td>
+        <td><%= @trade.get("status_text") %></td>
       </tr>
     </thead>
   </table>
@@ -31,7 +31,7 @@
       <tr>
         <td>收货地址：</td>
         <td>
-          <%= @trade.get('receiver').state %> <%= @trade.get('receiver').city %> <%= @trade.get('receiver').district %> <br/>
+          <%= @trade.get('receiver').state %> <%= @trade.get('receiver').city %> <%= @trade.get('receiver').district %>
           <%= @trade.get('receiver').address %>
         </td>
       </tr>

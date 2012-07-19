@@ -11,10 +11,10 @@ class TradeDecorator < Draper::Base
     end
   end
 
-  def status
+  def status_text
     case trade._type
     when 'TaobaoPurchaseOrder'
-      fenxiao_status
+      fenxiao_status_text
     else
       trade.status
     end
@@ -49,7 +49,7 @@ class TradeDecorator < Draper::Base
 
 
   protected
-  def fenxiao_status
+  def fenxiao_status_text
     case trade.status
     when 'WAIT_BUYER_PAY'
       '等待付款'
