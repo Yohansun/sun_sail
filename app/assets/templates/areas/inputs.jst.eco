@@ -1,0 +1,31 @@
+<select class="input-small" id="trade_state" name="trade_state">
+  <option>请选择...</option>
+  <% for area in @states.models: %>
+    <option value="<%= area.get('id') %>" data-name="<%= area.get('name') %>" <%= "selected" if area.get('name') == @state %>><%= area.get('name') %></option>
+  <% end %>
+</select>
+<% if @cities.length > 0: %>
+  <select class="input-small" id="trade_city" name="trade_city">
+    <option>请选择...</option>
+    <% for area in @cities.models: %>
+      <option value="<%= area.get('id') %>"
+        data-seller-id="<%= area.get('seller_id') %>"
+        data-seller-name="<%= area.get('seller_name') %>"
+        data-name="<%= area.get('name') %>" <%= "selected" if area.get('name') == @city %>><%= area.get('name') %></option>
+    <% end %>
+  </select>
+<% end %>
+
+<% if @districts.length > 0: %>
+  <select class="input-small" id="trade_district" name="trade_district">
+    <option>请选择...</option>
+    <% for area in @districts.models: %>
+      <option value="<%= area.get('id') %>"
+        data-seller-id="<%= area.get('seller_id') %>"
+        data-seller-name="<%= area.get('seller_name') %>"
+        data-name="<%= area.get('name') %>" <%= "selected" if area.get('name') == @district %>><%= area.get('name') %></option>
+    <% end %>
+  </select>
+<% end %>
+
+<div class="trade_seller"></div>

@@ -1,6 +1,7 @@
 json.id @trade._id
 json.tid @trade.tid
 json.seller_id @trade.seller_id
+json.seller_name @trade.seller.name if @trade.seller
 json.status @trade.status
 json.status_text @trade.status_text
 json.receiver_name @trade.receiver_name
@@ -23,11 +24,11 @@ json.orders OrderDecorator.decorate(@trade.orders) do |json, order|
   json.title order.title
   json.num order.num
   json.total_fee order.total_fee
-  json.price order.price 
-  json.item_id order.item_id   
-  json.sku_properties order.sku_properties       
-  json.auction_price order.auction_price     
+  json.price order.price
+  json.item_id order.item_id
+  json.sku_properties order.sku_properties
+  json.auction_price order.auction_price
   json.buyer_payment order.buyer_payment
-  json.distributor_payment order.distributor_payment           
+  json.distributor_payment order.distributor_payment
   json.item_outer_id order.item_outer_id
 end

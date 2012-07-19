@@ -31,7 +31,9 @@
       <tr>
         <td>收货地址：</td>
         <td>
-          <%= @trade.get('receiver_state') %> <%= @trade.get('receiver_city') %> <%= @trade.get('receiver_district') %> <br/>
+          <%= @trade.get('receiver_state') %>
+          <%= @trade.get('receiver_city') %>
+          <%= @trade.get('receiver_district') %>
           <%= @trade.get('receiver_address') %>
         </td>
       </tr>

@@ -14,4 +14,7 @@ json.array!(@trades) do |json, trade|
   json.created trade.created.strftime("%m-%d %H:%M")
   json.pay_time trade.pay_time.strftime("%m-%d %H:%M") if trade.pay_time
   json.consign_time trade.consign_time.strftime("%m-%d %H:%M") if trade.consign_time
+
+  json.seller_id trade.seller_id
+  json.seller_name trade.seller.name if trade.seller
 end

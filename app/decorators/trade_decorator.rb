@@ -19,7 +19,7 @@ class TradeDecorator < Draper::Base
     else
       order_status_text
     end
-  end    
+  end
 
   def receiver_name
     case trade._type
@@ -47,7 +47,7 @@ class TradeDecorator < Draper::Base
       trade.receiver_phone
     end
   end
-  
+
   def receiver_address
     case trade._type
     when 'TaobaoPurchaseOrder'
@@ -119,10 +119,13 @@ class TradeDecorator < Draper::Base
     when 'TaobaoTrade'
       trade.taobao_orders
     end
-  end  
+  end
 
-
-   
+  def seller
+    if trade.seller_id
+      Seller.find(trade.seller_id)
+    end
+  end
 
   protected
 
@@ -153,10 +156,10 @@ class TradeDecorator < Draper::Base
       '已付款，待发货'
      when 'WAIT_BUYER_CONFIRM_GOODS'
       '已付款，已发货'
-     when 'TRADE_CLOSED_BY_TAOBAO' 
+     when 'TRADE_CLOSED_BY_TAOBAO'
       '交易被淘宝关闭'
      end
-  end    
+  end
 
   # Accessing Helpers
   #   You can access any helper via a proxy
@@ -186,5 +189,5 @@ class TradeDecorator < Draper::Base
   #     h.content_tag :span, time.strftime("%a %m/%d/%y"),
   #                   :class => 'timestamp'
   #   end
- 
+
 end
