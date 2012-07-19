@@ -39,3 +39,12 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $('#trade_seller').on 'hide', (event) ->
         Backbone.history.navigate('trades', true);
       $('#trade_seller').modal('show')
+
+      states = new MagicOrders.Collections.Areas()
+      states.fetch()
+      view = new MagicOrders.Views.AreasInputs(states: states,
+        state: model.receiver_state, city: model.receiver_city,
+        district: model.receiver_district)
+
+      $('#areas_inputs').html(view.render().el)
+

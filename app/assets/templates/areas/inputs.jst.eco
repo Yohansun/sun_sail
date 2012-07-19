@@ -1,0 +1,24 @@
+<select class="input-small" id="trade_state" name="trade_state">
+  <option>请选择...</option>
+  <% for area in @states.models: %>
+    <option value="<%= area.get('name') %>" data-id="<%= area.get('id') %>"><%= area.get('name') %></option>
+  <% end %>
+</select>
+
+<% if @cities.length > 0: %>
+  <select class="input-small" id="trade_city" name="trade_city">
+    <option>请选择...</option>
+    <% for area in @cities.models: %>
+      <option value="<%= area.get('name') %>" data-id="<%= area.get('id') %>"><%= area.get('name') %></option>
+    <% end %>
+  </select>
+<% end %>
+
+<% if @districts.length > 0: %>
+  <select class="input-small" id="trade_district" name="trade_district">
+    <option>请选择...</option>
+    <% for area in @districts.models: %>
+      <option value="<%= area.get('name') %>" data-id="<%= area.get('id') %>"><%= area.get('name') %></option>
+    <% end %>
+  </select>
+<% end %>

@@ -29,13 +29,12 @@
       <tr>
         <td>收货地址：</td>
         <td>
-          <%= @trade.get('receiver').state %> <%= @trade.get('receiver').city %> <%= @trade.get('receiver').district %>
+          <%= @trade.get('receiver').state %>
+          <%= @trade.get('receiver').city %>
+          <%= @trade.get('receiver').district %>
           <%= @trade.get('receiver').address %>
+          <%= @trade.get('receiver').zip %>
         </td>
-      </tr>
-      <tr>
-        <td>邮编：</td>
-        <td><%= @trade.get('receiver').zip %></td>
       </tr>
       <tr>
         <td>备注：</td>
@@ -44,25 +43,8 @@
       <tr>
         <th>送货经销商</th>
         <td>
-          <div>
-            <select class="input-small">
-              <option>上海</option>
-              <option>上海沪西</option>
-              <option>上海沪西</option>
-            </select>
-
-            <select class="input-small">
-              <option>上海市</option>
-              <option>上海沪西</option>
-              <option>上海沪西</option>
-            </select>
-
-            <select class="input-small">
-              <option>徐汇区</option>
-              <option>上海沪西</option>
-              <option>上海沪西</option>
-            </select>
-         </div>
+          <div id="areas_inputs">
+          </div>
         </td>
       </tr>
     </tbody>
