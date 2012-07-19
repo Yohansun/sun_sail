@@ -3,6 +3,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     '': 'index'
     'trades': 'index'
     'trades/:id': 'show'
+    'trades/:id/seller': 'seller'
 
   initialize: ->
     $('#content').html('')
@@ -28,3 +29,13 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $('#trade_detail').on 'hide', (event) ->
         Backbone.history.navigate('trades', true);
       $('#trade_detail').modal('show')
+
+  seller: (id) ->
+    @model = new MagicOrders.Models.Trade(id: id)
+    @model.fetch success: (model, response) =>
+      view = new MagicOrders.Views.TradesSeller(model: model)
+      $('#trade_seller').html(view.render().el)
+
+      $('#trade_seller').on 'hide', (event) ->
+        Backbone.history.navigate('trades', true);
+      $('#trade_seller').modal('show')

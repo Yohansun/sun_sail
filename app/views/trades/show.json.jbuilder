@@ -1,5 +1,6 @@
 json.id @trade.id
 json.tid @trade.tid
+json.seller_id @trade.seller_id
 json.status @trade.status
 json.receiver @trade.receiver
 json.trade_source @trade.trade_source

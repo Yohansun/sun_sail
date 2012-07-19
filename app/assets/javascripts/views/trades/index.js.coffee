@@ -4,6 +4,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
   events:
     'click [data-type=detail]': 'show_detail'
+    'click [data-type=seller]': 'show_seller'
 
   initialize: ->
     @collection.on("reset", @render, this)
@@ -15,3 +16,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
   show_detail: (e) ->
     id = $(e.target).parents('[data-id]').data('id')
     Backbone.history.navigate('trades/' + id, true);
+
+  show_seller: (e) ->
+    id = $(e.target).parents('[data-id]').data('id')
+    Backbone.history.navigate('trades/' + id + '/seller', true);
