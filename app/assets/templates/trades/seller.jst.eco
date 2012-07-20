@@ -43,7 +43,7 @@
       <tr>
         <th nowrap>送货经销商</th>
         <td>
-          <% if @trade.get('seller_id'): %>
+          <% if @trade.get('seller_id') != null: %>
             <%= @trade.get('seller_name') %>
           <% else: %>
             <div id="areas_inputs">
@@ -59,11 +59,9 @@
 <input type="hidden" id="trade_seller_id">
 
 <div class="modal-footer">
-<% if @trade.get('seller_id'): %>
-  <!-- <button class="btn btn-primary" type="button">分流重置</button> -->
+<% if @trade.get('seller_id') != null: %>
+  <button class="btn btn-primary reset_seller" type="button">分流重置</button>
 <% else: %>
-  <% if @trade.get('status') == 'WAIT_SELLER_SEND_GOODS': %>
-    <a class="btn btn-primary set_seller">分流</a>
-  <% end %>
+  <a class="btn btn-primary set_seller">分流</a>
 <% end %>
 </div><!-- modal-footer -->
