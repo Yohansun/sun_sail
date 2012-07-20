@@ -13,7 +13,16 @@ json.array!(@trades) do |json, trade|
   json.trade_source trade.trade_source
   json.created trade.created.strftime("%m-%d %H:%M")
   json.pay_time trade.pay_time.strftime("%m-%d %H:%M") if trade.pay_time
-  json.consign_time trade.consign_time.strftime("%m-%d %H:%M") if trade.consign_time
+
+  if trade.consign_time
+    json.consign_time trade.consign_time.strftime("%m-%d %H:%M")
+  else
+    if trade.delivered_at
+      json.consign_time trade.delivered_at.strftime("%m-%d %H:%M")
+    end
+  end
+
+  json.dispatched_at trade.dispatched_at.strftime("%m-%d %H:%M") if trade.dispatched_at
 
   json.seller_id trade.seller_id
   json.seller_name trade.seller.name if trade.seller

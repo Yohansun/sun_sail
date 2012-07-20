@@ -4,6 +4,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     'trades': 'index'
     'trades/:id': 'show'
     'trades/:id/seller': 'seller'
+    'trades/:id/deliver': 'deliver'
 
   initialize: ->
     $('#content').html('')
@@ -40,9 +41,13 @@ class MagicOrders.Routers.Trades extends Backbone.Router
         Backbone.history.navigate('trades', true);
       $('#trade_seller').modal('show')
 
-      states = new MagicOrders.Collections.Areas()
-      states.fetch()
-      view = new MagicOrders.Views.AreasInputs(states: states, state: model.get('receiver_state'), city: model.get('receiver_city'), district: model.get('receiver_district'))
+  deliver: (id) ->
+    @model = new MagicOrders.Models.Trade(id: id)
+    @model.fetch success: (model, response) =>
+      view = new MagicOrders.Views.TradesDeliver(model: model)
+      $('#trade_deliver').html(view.render().el)
 
-      $('#areas_inputs').html(view.render().el)
+      $('#trade_deliver').on 'hide', (event) ->
+        Backbone.history.navigate('trades', true)
 
+      $('#trade_deliver').modal('show')

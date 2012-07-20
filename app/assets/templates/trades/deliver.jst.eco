@@ -1,6 +1,6 @@
 <div class="modal-header">
   <button type="button" class="close" data-dismiss="modal">×</button>
-  <h3>订单分流</h3>
+  <h3>订单发货</h3>
 </div><!-- modal-header -->
 <div class="modal-body">
 <fieldset>
@@ -36,32 +36,12 @@
           <%= @trade.get('receiver_zip') %>
         </td>
       </tr>
-      <tr>
-        <td>备注：</td>
-        <td><%= @trade.get('seller_memo') %></td>
-      </tr>
-      <tr>
-        <th nowrap>送货经销商</th>
-        <td>
-          <% if @trade.get('seller_id') != null: %>
-            <%= @trade.get('seller_name') %>
-          <% else: %>
-            <div id="areas_inputs">
-            </div>
-          <% end %>
-        </td>
-      </tr>
     </tbody>
   </table>
 </fieldset>
 </div>
 
-<input type="hidden" id="trade_seller_id">
-
 <div class="modal-footer">
-<% if @trade.get('seller_id') != null: %>
-  <button class="btn btn-primary reset_seller" type="button">分流重置</button>
-<% else: %>
-  <a class="btn btn-primary set_seller">分流</a>
-<% end %>
+  <a class="btn" data-dismiss="modal">取消</a>
+  <a class="btn btn-primary deliver">提交发货</a>
 </div><!-- modal-footer -->
