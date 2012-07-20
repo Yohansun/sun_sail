@@ -6,12 +6,12 @@ class MagicOrders.Views.TradesSeller extends Backbone.View
     'click .set_seller': 'set_seller'
     'click .reset_seller': 'reset_seller'
 
-  initliaze: ->
+  initialize: ->
     @model.on("change", @render, this)
 
   render: ->
     $(@el).html(@template(trade: @model))
-    @render_area_inputs()
+    @render_area_inputs() unless @model.get('seller_id')
     this
 
   render_area_inputs: ->
@@ -23,9 +23,7 @@ class MagicOrders.Views.TradesSeller extends Backbone.View
 
   set_seller: ->
     if $("#trade_seller_id").val() > 0
-      @model.save 'seller_id', $("#trade_seller_id").val(), success: (model, response) =>
-        @render()
+      @model.save 'seller_id', $("#trade_seller_id").val()
 
   reset_seller: ->
-    @model.save 'seller_id', null, success: (model, response) =>
-      @render()
+    @model.save('seller_id', null)

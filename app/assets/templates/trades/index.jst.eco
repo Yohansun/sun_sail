@@ -85,6 +85,9 @@
           <% if trade.get('pay_time'): %>
             <span class="label label-success">付款 <%= trade.get('pay_time') %></span>
           <% end %>
+          <% if trade.get('dispatched_at'): %>
+            <span class="label label-success">分流 <%= trade.get('dispatched_at') %></span>
+          <% end %>
           <% if trade.get('consign_time'): %>
             <span class="label label-success">发货 <%= trade.get('consign_time') %></span>
           <% end %>
@@ -110,6 +113,10 @@
               <li><a data-toggle="modal" href="#" data-type="detail">订单详情</a></li>
               <% if trade.get('status') == 'WAIT_SELLER_SEND_GOODS': %>
               <li><a data-toggle="modal" href="#" data-type="seller">订单分流</a>
+              </li>
+              <% end %>
+              <% if trade.get('seller_id') != null: %>
+              <li><a data-toggle="modal" href="#" data-type="deliver">订单发货</a>
               </li>
               <% end %>
             </ul>

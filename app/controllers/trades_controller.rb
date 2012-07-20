@@ -1,3 +1,5 @@
+# -*- encoding : utf-8 -*-
+
 class TradesController < ApplicationController
   before_filter :authenticate_user!
   respond_to :json
@@ -14,7 +16,22 @@ class TradesController < ApplicationController
 
   def update
     @trade = Trade.where(_id: params[:id]).first
+
     @trade.seller_id = params[:seller_id]
+    if @trade.seller_id_changed?
+      if @trade.seller_id
+        @trade.dispatched_at = Time.now
+      else
+        @trade.dispatched_at = nil
+      end
+    end
+
+    if params[:delivered_at] == true
+      @trade.delivered_at = Time.now
+    end
+
+    Rails.logger.debug @trade.changes.inspect
+
     @trade.save
     @trade = TradeDecorator.decorate(@trade)
     respond_with(@trade) do |format|

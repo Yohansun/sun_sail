@@ -5,7 +5,7 @@ class MagicOrders.Views.TradesShow extends Backbone.View
   events:
     "click .button_print": 'print'
 
-  initliaze: ->
+  initialize: ->
     @model.on("change", @render, this)
 
   render: ->

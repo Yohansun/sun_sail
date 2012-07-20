@@ -5,7 +5,7 @@ class TradeDecorator < Draper::Base
   def tid
     case trade._type
     when 'TaobaoPurchaseOrder'
-      trade.fenxiao_id
+      trade.id || trade.fenxiao_id
     when 'TaobaoTrade'
       trade.tid
     end
