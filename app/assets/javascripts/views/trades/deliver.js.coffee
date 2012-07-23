@@ -15,4 +15,4 @@ class MagicOrders.Views.TradesDeliver extends Backbone.View
   deliver: ->
     @model.save 'delivered_at', true, success: (model, response) =>
       $('#trade_deliver').modal('hide')
-      Backbone.history.navigate('trades', true)
+      window.history.back()

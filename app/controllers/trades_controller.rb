@@ -51,6 +51,10 @@ class TradesController < ApplicationController
       @trade.delivered_at = Time.now
     end
 
+    unless params[:cs_memo].blank?
+      @trade.cs_memo = params[:cs_memo].strip
+    end
+
     Rails.logger.debug @trade.changes.inspect
 
     @trade.save

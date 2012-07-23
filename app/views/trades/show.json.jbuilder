@@ -13,6 +13,7 @@ json.receiver_state @trade.receiver_state
 json.receiver_zip @trade.receiver_zip
 json.trade_source @trade.trade_source
 json.seller_memo @trade.seller_memo
+json.cs_memo @trade.cs_memo
 json.post_fee @trade.post_fee
 json.total_fee @trade.total_fee
 json.created @trade.created.strftime("%m-%d %H:%M")
