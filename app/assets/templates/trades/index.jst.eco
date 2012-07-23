@@ -36,7 +36,7 @@
   <ul class="breadcrumb" style="position:relative;">
     <li class="active">Magic<span class="divider">/</span></li>
     <li class="active">订单管理<span class="divider">/</span></li>
-    <li class="active">所有订单</li>
+    <li class="active trade_nav">所有订单</li>
     <li style="position:absolute;right:15px;top:6px;"><i class="icon-cog"></i><a href="#">订单设置</a></li>
   </ul><!-- breadcrumb -->
 

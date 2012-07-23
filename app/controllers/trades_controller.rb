@@ -14,6 +14,8 @@ class TradesController < ApplicationController
       trade_type = 'TaobaoPurchaseOrder'
     when 'jingdong'
       trade_type = 'JingDongTrade'
+    when 'shop'
+      trade_type = 'ShopTrade'
     else
       trade_type = nil
     end
