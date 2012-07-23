@@ -18,6 +18,26 @@
           </div>
         </td>
       </tr>
+      <tr>
+        <th>商品备注</th>
+        <td>
+          <table>
+            <tbody>
+              <% for order in @trade.get('orders'): %>
+                <tr>
+                  <td>
+                    <%= order.title %> x <%= order.num %>
+                    <br/>
+                    <div class="controls">
+                      <input type="text" placeholder="输入文字..." class="input-xlarge order_cs_memo" data-order-id="<%= order.id %>" value="<%= order.cs_memo %>">
+                    </div>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </td>
+      </tr>
     </tbody>
   </table>
 </fieldset>

@@ -13,7 +13,7 @@ class TradesController < ApplicationController
     when 'taobao_fenxiao'
       trade_type = 'TaobaoPurchaseOrder'
     when 'jingdong'
-      trade_type = 'JingDongTrade'
+      trade_type = 'JingdongTrade'
     when 'shop'
       trade_type = 'ShopTrade'
     else
@@ -55,7 +55,15 @@ class TradesController < ApplicationController
       @trade.cs_memo = params[:cs_memo].strip
     end
 
-    Rails.logger.debug @trade.changes.inspect
+    unless params[:orders].blank?
+      order_cs_memos = {}
+      params[:orders].each do |order|
+        order_cs_memos[order[:id]] = order[:cs_memo]
+      end
+      @trade.orders.each_with_index do |order, index|
+        @trade.orders[index].cs_memo = order_cs_memos[order._id.to_s]
+      end
+    end
 
     @trade.save
     @trade = TradeDecorator.decorate(@trade)

@@ -88,6 +88,8 @@ class TaobaoTrade < Trade
 
   embeds_many :taobao_orders
 
+  accepts_nested_attributes_for :taobao_orders
+
   def orders
     self.taobao_orders
   end

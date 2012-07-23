@@ -112,7 +112,7 @@
         </td>
         <td>
           <% if trade.get 'cs_memo': %>
-          <a href="#" rel="popover" data-content="<%= trade.get 'cs_memo' %>" data-original-title="订单备注"><i class="icon-comment"></i></a>
+          <a href="#" rel="popover" data-content="<%= trade.get 'cs_memo' %><br/><br/><% for order in trade.get('orders'): %><% if order.cs_memo: %><%= order.title %>: <b><%= order.cs_memo %></b><br/><% end %><% end %>" data-original-title="订单备注"><i class="icon-comment"></i></a>
           <% end %>
         </td>
         <td nowrap><%= trade.get('seller_name') %></td>

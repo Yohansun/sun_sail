@@ -28,4 +28,11 @@ json.array!(@trades) do |json, trade|
 
   json.seller_id trade.seller_id
   json.seller_name trade.seller.name if trade.seller
+
+  json.orders OrderDecorator.decorate(trade.orders) do |json, order|
+    json.id order._id
+    json.title order.title
+    json.num order.num
+    json.cs_memo order.cs_memo
+  end
 end

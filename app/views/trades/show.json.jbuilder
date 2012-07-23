@@ -29,6 +29,7 @@ else
 end
 
 json.orders OrderDecorator.decorate(@trade.orders) do |json, order|
+  json.id order._id
   json.title order.title
   json.num order.num
   json.total_fee order.total_fee
@@ -39,4 +40,5 @@ json.orders OrderDecorator.decorate(@trade.orders) do |json, order|
   json.buyer_payment order.buyer_payment
   json.distributor_payment order.distributor_payment
   json.item_outer_id order.item_outer_id
+  json.cs_memo order.cs_memo
 end
