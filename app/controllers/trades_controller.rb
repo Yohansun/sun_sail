@@ -14,6 +14,8 @@ class TradesController < ApplicationController
       trade_type = 'TaobaoPurchaseOrder'
     when 'jingdong'
       trade_type = 'JingDongTrade'
+    when 'shop'
+      trade_type = 'ShopTrade'
     else
       trade_type = nil
     end
@@ -47,6 +49,10 @@ class TradesController < ApplicationController
 
     if params[:delivered_at] == true
       @trade.delivered_at = Time.now
+    end
+
+    unless params[:cs_memo].blank?
+      @trade.cs_memo = params[:cs_memo].strip
     end
 
     Rails.logger.debug @trade.changes.inspect
