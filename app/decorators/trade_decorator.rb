@@ -11,7 +11,6 @@ class TradeDecorator < Draper::Base
     end
   end
 
-
   def status_text
     case trade._type
     when 'TaobaoPurchaseOrder'
@@ -145,20 +144,24 @@ class TradeDecorator < Draper::Base
       '已付款（已分账），已发货'
     when 'WAIT_SELLER_SEND_GOODS_ACOUNTED'
       '已付款（已分账），待发货'
+    else
+      trade.status
     end
   end
 
   def order_status_text
-     case trade.status
-     when 'WAIT_BUYER_PAY'
+    case trade.status
+    when 'WAIT_BUYER_PAY'
       '等待付款'
-     when 'WAIT_SELLER_SEND_GOODS'
+    when 'WAIT_SELLER_SEND_GOODS'
       '已付款，待发货'
-     when 'WAIT_BUYER_CONFIRM_GOODS'
+    when 'WAIT_BUYER_CONFIRM_GOODS'
       '已付款，已发货'
-     when 'TRADE_CLOSED_BY_TAOBAO'
+    when 'TRADE_CLOSED_BY_TAOBAO'
       '交易被淘宝关闭'
-     end
+    else
+      trade.status
+    end
   end
 
   # Accessing Helpers
@@ -189,5 +192,4 @@ class TradeDecorator < Draper::Base
   #     h.content_tag :span, time.strftime("%a %m/%d/%y"),
   #                   :class => 'timestamp'
   #   end
-
 end

@@ -2,7 +2,8 @@ class MagicOrders.Routers.Trades extends Backbone.Router
   routes:
     '': 'index'
     'trades': 'index'
-    'trades/:id': 'show'
+    'trades/:trade_type': 'index'
+    'trades/:id/detail': 'show'
     'trades/:id/seller': 'seller'
     'trades/:id/deliver': 'deliver'
 
@@ -13,10 +14,10 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     $("#top-nav li").hide()
     $("#top-nav li.trades").show()
 
-  index: ->
+  index: (trade_type = null) ->
     @show_top_nav()
     @collection = new MagicOrders.Collections.Trades()
-    @collection.fetch success: (collection, response) =>
+    @collection.fetch data: {trade_type: trade_type}, success: (collection, response) =>
       view = new MagicOrders.Views.TradesIndex(collection: collection)
       $('#content').html(view.render().el)
       $("a[rel=popover]").popover(placement: 'left')
@@ -28,7 +29,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $('#trade_detail').html(view.render().el)
 
       $('#trade_detail').on 'hide', (event) ->
-        Backbone.history.navigate('trades', true);
+        window.history.back()
       $('#trade_detail').modal('show')
 
   seller: (id) ->
@@ -38,7 +39,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $('#trade_seller').html(view.render().el)
 
       $('#trade_seller').on 'hide', (event) ->
-        Backbone.history.navigate('trades', true);
+        window.history.back()
       $('#trade_seller').modal('show')
 
   deliver: (id) ->
@@ -48,6 +49,6 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $('#trade_deliver').html(view.render().el)
 
       $('#trade_deliver').on 'hide', (event) ->
-        Backbone.history.navigate('trades', true)
+        window.history.back()
 
       $('#trade_deliver').modal('show')

@@ -5,7 +5,25 @@ class TradesController < ApplicationController
   respond_to :json
 
   def index
-    @trades = TradeDecorator.decorate(Trade.limit(100).order_by("created", "DESC"))
+    @trades = Trade
+
+    case params[:trade_type]
+    when 'taobao'
+      trade_type = 'TaobaoTrade'
+    when 'taobao_fenxiao'
+      trade_type = 'TaobaoPurchaseOrder'
+    when 'jingdong'
+      trade_type = 'JingDongTrade'
+    else
+      trade_type = nil
+    end
+
+    if trade_type
+      @trades = Trade.where(_type: trade_type)
+    end
+
+    @trades = TradeDecorator.decorate(@trades.limit(100).order_by("created", "DESC"))
+
     respond_with @trades
   end
 
@@ -18,6 +36,7 @@ class TradesController < ApplicationController
     @trade = Trade.where(_id: params[:id]).first
 
     @trade.seller_id = params[:seller_id]
+
     if @trade.seller_id_changed?
       if @trade.seller_id
         @trade.dispatched_at = Time.now

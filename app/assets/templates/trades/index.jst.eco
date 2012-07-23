@@ -4,11 +4,13 @@
       <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">所有订单 <b class="caret"></b></a>
         <ul class="dropdown-menu">
-          <li><a href="#">所有订单</a></li>
-          <li><a href="#">淘宝订单</a></li>
-          <li><a href="#">淘宝分销采购单</a></li>
-          <li><a href="#">官网订单</a></li>
-          <li><a href="#">京东商城订单</a></li>
+          <li><a href="#" data-trade-type="all">所有订单</a></li>
+          <li><a href="#" data-trade-type="taobao">淘宝订单</a></li>
+          <li>
+            <a href="#" data-trade-type="taobao_fenxiao">淘宝分销采购单</a>
+          </li>
+          <li><a href="#" data-trade-type="shop">官网订单</a></li>
+          <li><a href="#" data-trade-type="jingdong">京东商城订单</a></li>
         </ul>
       </li>
       <!-- <li class="dropdown">
@@ -57,7 +59,7 @@
     <thead>
       <tr>
         <th><input id="checkbox_all" type="checkbox" value="option1"></th>
-        <th>订单来源</th>
+        <th nowrap>订单来源</th>
         <th>订单编号</th>
         <th>当前状态</th>
         <th>状态历史</th>
@@ -115,7 +117,7 @@
               <li><a data-toggle="modal" href="#" data-type="seller">订单分流</a>
               </li>
               <% end %>
-              <% if trade.get('seller_id') != null: %>
+              <% if trade.get('seller_id') != null and trade.get('delivered_at') == null: %>
               <li><a data-toggle="modal" href="#" data-type="deliver">订单发货</a>
               </li>
               <% end %>
