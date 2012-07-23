@@ -12,6 +12,7 @@ json.receiver_city @trade.receiver_city
 json.receiver_state @trade.receiver_state
 json.receiver_zip @trade.receiver_zip
 json.trade_source @trade.trade_source
+json.buyer_message @trade.buyer_message
 json.seller_memo @trade.seller_memo
 json.cs_memo @trade.cs_memo
 json.post_fee @trade.post_fee

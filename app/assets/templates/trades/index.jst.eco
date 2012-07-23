@@ -100,7 +100,11 @@
           <%= trade.get('receiver_state') %> <%= trade.get('receiver_city') %> <%= trade.get('receiver_district') %> <br/>
           <%= trade.get('receiver_address') %>
         </td>
-        <td><i class="icon-comment"></i></td>
+        <td>
+          <% if trade.get 'buyer_message': %>
+          <a href="#" rel="popover" data-content="<%= trade.get 'buyer_message' %>" data-original-title="买家留言"><i class="icon-comment"></i></a>
+          <% end %>
+        </td>
         <td>
           <% if trade.get 'seller_memo': %>
           <a href="#" rel="popover" data-content="<%= trade.get 'seller_memo' %>" data-original-title="卖家备注"><i class="icon-comment"></i></a>

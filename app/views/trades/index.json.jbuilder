@@ -9,6 +9,7 @@ json.array!(@trades) do |json, trade|
   json.receiver_district trade.receiver_district
   json.receiver_city trade.receiver_city
   json.receiver_state trade.receiver_state
+  json.buyer_message trade.buyer_message
   json.seller_memo trade.seller_memo
   json.cs_memo trade.cs_memo
   json.trade_source trade.trade_source
