@@ -6,7 +6,9 @@ class OrderDecorator < Draper::Base
 	   when 'TaobaoSubPurchaseOrder'
 	    order.item_id
 	   when 'TaobaoOrder'
-	   	''
+	   	order.oid
+	   when 'JingdongOrder'
+	    order.sku_id	
 	   end
 	 end 
 
@@ -16,6 +18,8 @@ class OrderDecorator < Draper::Base
 	    order.sku_properties
 	   when 'TaobaoOrder'
 	   	order.sku_properties_name  
+	   when 'JingdongOrder'
+	    ''	
 	   end
 	 end 
 
@@ -25,6 +29,8 @@ class OrderDecorator < Draper::Base
 	    order.auction_price
 	   when 'TaobaoOrder'
 	   	order.price
+	   when 'JingdongOrder'
+	    order.jd_price	
 	   end
 	 end 
 
@@ -34,6 +40,8 @@ class OrderDecorator < Draper::Base
 	    order.buyer_payment
 	   when 'TaobaoOrder'
 	    ''
+	   when 'JingdongOrder'
+	    '' 
 	   end
 	 end 
 
@@ -43,6 +51,8 @@ class OrderDecorator < Draper::Base
 	    order.distributor_payment
 	   when 'TaobaoOrder'
 	    ''
+	   when 'JingdongOrder'
+	    '' 
 	   end
 	 end 
 
@@ -52,7 +62,55 @@ class OrderDecorator < Draper::Base
 	    order.item_outer_id
 	   when 'TaobaoOrder'
 	    ''
+	   when 'JingdongOrder'
+	    order.outer_sku_id 
 	   end
 	 end 
+
+	 def title
+	   case order._type	
+	   when 'TaobaoSubPurchaseOrder'
+	    order.title
+	   when 'TaobaoOrder'
+	    order.title
+	   when 'JingdongOrder'
+	    order.sku_name 
+	   end
+	 end 
+
+	 def num
+	   case order._type	
+	   when 'TaobaoSubPurchaseOrder'
+	    order.num
+	   when 'TaobaoOrder'
+	    order.num
+	   when 'JingdongOrder'
+	    order.item_total 
+	   end
+	 end 
+
+	 def total_fee
+	   case order._type	
+	   when 'TaobaoSubPurchaseOrder'
+	    order.total_fee
+	   when 'TaobaoOrder'
+	    order.total_fee
+	   when 'JingdongOrder'
+	    ''
+	   end
+	 end 
+
+	 def price
+	   case order._type	
+	   when 'TaobaoSubPurchaseOrder'
+	    order.price
+	   when 'TaobaoOrder'
+	    order.price
+	   when 'JingdongOrder'
+	    order.jd_price 
+	   end
+	 end 
+
+
 
 end  

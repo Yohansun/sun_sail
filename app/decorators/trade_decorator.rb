@@ -8,15 +8,62 @@ class TradeDecorator < Draper::Base
       trade.id || trade.fenxiao_id
     when 'TaobaoTrade'
       trade.tid
+    when 'JingdongTrade'
+      trade.order_id  
     end
   end
+
+  def status
+    case trade._type
+    when 'TaobaoPurchaseOrder'
+      trade.status
+    when 'TaobaoTrade'
+      trade.status
+    when 'JingdongTrade'
+      trade.order_state  
+    end
+  end  
+
+  def created
+    case trade._type
+    when 'TaobaoPurchaseOrder'
+      trade.created
+    when 'TaobaoTrade'
+      trade.created
+    when 'JingdongTrade'
+      trade.order_start_time
+    end
+  end  
+
+  def pay_time
+    case trade._type
+    when 'TaobaoPurchaseOrder'
+      trade.pay_time
+    when 'TaobaoTrade'
+      trade.pay_time
+    when 'JingdongTrade'
+    end
+  end  
+
+  def consign_time
+    case trade._type
+    when 'TaobaoPurchaseOrder'
+      trade.consign_time
+    when 'TaobaoTrade'
+      trade.consign_time
+    when 'JingdongTrade'
+      trade.order_end_time
+    end
+  end  
 
   def status_text
     case trade._type
     when 'TaobaoPurchaseOrder'
       fenxiao_status_text
-    else
-      order_status_text
+    when 'TaobaoTrade'
+      taobao_order_status_text
+    when 'JingdongTrade'
+      jingdong_order_status_text
     end
   end
 
@@ -26,6 +73,8 @@ class TradeDecorator < Draper::Base
       trade.receiver['name']
     when 'TaobaoTrade'
       trade.receiver_name
+    when 'JingdongTrade'
+      trade.consignee_info['fullname']
     end
   end
 
@@ -35,6 +84,8 @@ class TradeDecorator < Draper::Base
       trade.receiver['mobile_phone']
     when 'TaobaoTrade'
       trade.receiver_mobile
+    when 'JingdongTrade'
+      trade.consignee_info['mobile'] 
     end
   end
 
@@ -44,6 +95,8 @@ class TradeDecorator < Draper::Base
       trade.receiver['phone']
     when 'TaobaoTrade'
       trade.receiver_phone
+    when 'JingdongTrade'
+      trade.consignee_info['telephone']   
     end
   end
 
@@ -53,6 +106,8 @@ class TradeDecorator < Draper::Base
       trade.receiver['address']
     when 'TaobaoTrade'
       trade.receiver_address
+    when 'JingdongTrade'
+      trade.consignee_info['full_address'] 
     end
   end
 
@@ -62,6 +117,8 @@ class TradeDecorator < Draper::Base
       trade.receiver['district']
     when 'TaobaoTrade'
       trade.receiver_district
+    when 'JingdongTrade'
+      trade.consignee_info['province']  
     end
   end
 
@@ -71,6 +128,8 @@ class TradeDecorator < Draper::Base
       trade.receiver['city']
     when 'TaobaoTrade'
       trade.receiver_city
+    when 'JingdongTrade'
+      trade.consignee_info['city']
     end
   end
 
@@ -80,6 +139,8 @@ class TradeDecorator < Draper::Base
       trade.receiver['state']
     when 'TaobaoTrade'
       trade.receiver_state
+    when 'JingdongTrade'
+      trade.consignee_info['county']  
     end
   end
 
@@ -89,6 +150,34 @@ class TradeDecorator < Draper::Base
       trade.receiver['zip']
     when 'TaobaoTrade'
       trade.receiver_zip
+    when 'JingdongTrade'
+      ''  
+    end
+  end
+
+   def post_fee
+    case trade._type
+    when 'TaobaoPurchaseOrder'
+      trade.post_fee
+    when 'TaobaoTrade'
+      trade.post_fee
+    when 'JingdongTrade'
+        unless trade.freight_price.blank?
+          trade.freight_price
+        else 
+          ''
+        end    
+    end
+  end
+
+  def total_fee
+    case trade._type
+    when 'TaobaoPurchaseOrder'
+      trade.total_fee
+    when 'TaobaoTrade'
+      trade.total_fee
+    when 'JingdongTrade'
+      trade.order_total_price
     end
   end
 
@@ -107,6 +196,8 @@ class TradeDecorator < Draper::Base
       trade.memo
     when 'TaobaoTrade'
       trade.seller_memo
+    when 'JingdongTrade'
+      trade.order_remark  
     end
   end
 
@@ -116,6 +207,8 @@ class TradeDecorator < Draper::Base
       '分销平台'
     when 'TaobaoTrade'
       '淘宝'
+    when 'JingdongTrade'
+      '京东'  
     end
   end
 
@@ -125,6 +218,8 @@ class TradeDecorator < Draper::Base
       trade.taobao_sub_purchase_orders
     when 'TaobaoTrade'
       trade.taobao_orders
+    when 'JingdongTrade'
+      trade.jingdong_orders  
     end
   end
 
@@ -157,9 +252,10 @@ class TradeDecorator < Draper::Base
     end
   end
 
-  def order_status_text
-    case trade.status
-    when 'WAIT_BUYER_PAY'
+
+  def taobao_order_status_text
+     case trade.status
+     when 'WAIT_BUYER_PAY'
       '等待付款'
     when 'WAIT_SELLER_SEND_GOODS'
       '已付款，待发货'
@@ -171,6 +267,17 @@ class TradeDecorator < Draper::Base
       trade.status
     end
   end
+
+  def jingdong_order_status_text
+    case trade.order_state  
+    when 'WAIT_SELLER_STOCK_OUT'
+      '已付款，待发货'
+    when 'TRADE_CANCELED'
+      '取消'
+    else
+      trade.order_state  
+    end
+  end    
 
   # Accessing Helpers
   #   You can access any helper via a proxy

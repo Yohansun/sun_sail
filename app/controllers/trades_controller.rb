@@ -24,7 +24,7 @@ class TradesController < ApplicationController
       @trades = Trade.where(_type: trade_type)
     end
 
-    @trades = TradeDecorator.decorate(@trades.limit(100).order_by("created", "DESC"))
+    @trades = TradeDecorator.decorate(@trades.limit(200).order_by("created", "DESC"))
 
     respond_with @trades
   end
