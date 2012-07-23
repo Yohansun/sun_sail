@@ -1,7 +1,7 @@
 class TaobaoSubPurchaseOrder < Order
   field :status, type: String
   field :refund_fee, type: Float
-  field :id, type: Integer
+  # field :id, type: Integer
   field :fenxiao_id, type: Integer
   field :tc_order_id, type: Integer
   field :order_200_status, type: String

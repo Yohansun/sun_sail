@@ -29,6 +29,7 @@ class TaobaoPurchaseOrderPuller
           purchase_order = TaobaoPurchaseOrder.new(trade)
           sub_orders = sub_orders['sub_purchase_order']
           sub_orders.each do |sub_order|
+            sub_order.delete 'id'
             sub_purchase_order = purchase_order.taobao_sub_purchase_orders.build(sub_order)
           end
           purchase_order.save
