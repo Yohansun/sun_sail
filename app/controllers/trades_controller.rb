@@ -60,16 +60,14 @@ class TradesController < ApplicationController
     end
 
     unless params[:orders].blank?
-      order_cs_memos = {}
-      params[:orders].each do |order|
-        order_cs_memos[order[:id]] = order[:cs_memo]
-      end
-      @trade.orders.each_with_index do |order, index|
-        @trade.orders[index].cs_memo = order_cs_memos[order._id.to_s]
+      params[:orders].each do |item|
+        order = @trade.orders.find item[:id]
+        order.cs_memo = item[:cs_memo]
       end
     end
 
     @trade.save
+
     @trade = TradeDecorator.decorate(@trade)
     respond_with(@trade) do |format|
       format.json { render :show }
