@@ -2,17 +2,6 @@
 class TradeDecorator < Draper::Base
   decorates :trade
 
-  def tid
-    case trade._type
-    when 'TaobaoPurchaseOrder'
-      trade.id || trade.fenxiao_id
-    when 'TaobaoTrade'
-      trade.tid
-    when 'JingdongTrade'
-      trade.order_id
-    end
-  end
-
   def status
     case trade._type
     when 'TaobaoPurchaseOrder'

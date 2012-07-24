@@ -1,10 +1,10 @@
 class TaobaoPurchaseOrder < Trade
+  field :tid, type: String,       as: :fenxiao_id
+
   field :supplier_memo, type: String
-  field :fenxiao_id, type: Integer
   field :pay_type, type: String
   field :trade_type, type: String
   field :distributor_from, type: String
-  field :id, type: Integer
 
   field :status, type: String
   field :buyer_nick, type: String

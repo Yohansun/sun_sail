@@ -11,7 +11,7 @@ class JingdongTradePuller
       # get(method: '360buy.order.search',
       # start_date: start_time.strftime("%Y-%m-%d %H:%M:%S"),
       # end_date: end_time.strftime("%Y-%m-%d %H:%M:%S"),
-      # page_no: 1, 
+      # page_no: 1,
       # page_size: 10)
 
 
@@ -28,7 +28,7 @@ class JingdongTradePuller
         # get(method: '360buy.order.search',
         # start_date: start_time.strftime("%Y-%m-%d %H:%M:%S"),
         # end_date: end_time.strftime("%Y-%m-%d %H:%M:%S"),
-        # page_no: page, 
+        # page_no: page,
         # page_size: 10)
 
         trades = response['order_search_response']['order_search']['order_info_list']#['item_info_list']
