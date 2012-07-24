@@ -21,7 +21,11 @@ class TradesController < ApplicationController
     end
 
     if trade_type
-      @trades = Trade.where(_type: trade_type)
+      @trades = @trades.where(_type: trade_type)
+    end
+
+    if params[:search]
+      @trades = @trades.where(Hash[params[:search][:option].to_sym, params[:search][:value]])
     end
 
     @trades = TradeDecorator.decorate(@trades.limit(200).order_by("created", "DESC"))

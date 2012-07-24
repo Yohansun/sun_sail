@@ -188,7 +188,7 @@ class TradeDecorator < Draper::Base
     when 'TaobaoTrade'
       trade.seller_memo
     when 'JingdongTrade'
-      [trade.pay_type, trade.delivery_type, trade.invoice_info].join("<br/>")
+      [trade.pay_type, trade.delivery_type, trade.invoice_info].join("; ")
     end
   end
 
