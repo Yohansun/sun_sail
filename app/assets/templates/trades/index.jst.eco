@@ -40,6 +40,18 @@
     <li style="position:absolute;right:15px;top:6px;"><i class="icon-cog"></i><a href="#">订单设置</a></li>
   </ul><!-- breadcrumb -->
 
+  <form class="well form-search">
+    <fieldset class="form-inline">
+      <div class="controls">
+        <select id="search_option" class="input-large search_option">
+          <option value="tid">订单编号</option>
+        </select>
+        <div class="input-append">
+          <input type="text" id="appendedInputButton" class="input-large search-query search_value" value="<%= @search_value %>"><button type="button" class="btn search">筛选</button>
+        </div>
+      </div>
+    </fieldset>
+  </form>
 
   <div class="controls clearfix">
     <div class="btn-group pull-right">

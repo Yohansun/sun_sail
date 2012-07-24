@@ -1,5 +1,6 @@
 class Trade
   include Mongoid::Document
+  include Mongoid::Timestamps
 
   field :seller_id, type: Integer
   field :dispatched_at, type: DateTime  # 分流时间
