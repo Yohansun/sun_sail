@@ -10,22 +10,28 @@ class MagicOrders.Routers.Trades extends Backbone.Router
 
   initialize: ->
     $('#content').html('')
+    @collection = new MagicOrders.Collections.Trades()
 
   show_top_nav: ->
     $("#top-nav li").hide()
     $("#top-nav li.trades").show()
 
   index: (trade_type = null) ->
+    $("body").spin()
+
     @show_top_nav()
-    @collection = new MagicOrders.Collections.Trades()
     @collection.fetch data: {trade_type: trade_type}, success: (collection, response) =>
       view = new MagicOrders.Views.TradesIndex(collection: collection, trade_type: trade_type)
       $('#content').html(view.render().el)
       $("a[rel=popover]").popover(placement: 'left')
+      $("body").spin(false)
 
   show: (id) ->
+    $("body").spin()
     @model = new MagicOrders.Models.Trade(id: id)
     @model.fetch success: (model, response) =>
+      $("body").spin false
+
       view = new MagicOrders.Views.TradesShow(model: model)
       $('#trade_detail').html(view.render().el)
 
@@ -34,9 +40,13 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $('#trade_detail').modal('show')
 
   seller: (id) ->
+    $("body").spin()
+
     @model = new MagicOrders.Models.Trade(id: id)
     @model.fetch success: (model, response) =>
       view = new MagicOrders.Views.TradesSeller(model: model)
+      $("body").spin(false)
+
       $('#trade_seller').html(view.render().el)
 
       $('#trade_seller').on 'hide', (event) ->
@@ -44,8 +54,12 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $('#trade_seller').modal('show')
 
   deliver: (id) ->
+    $("body").spin()
+
     @model = new MagicOrders.Models.Trade(id: id)
     @model.fetch success: (model, response) =>
+      $("body").spin(false)
+
       view = new MagicOrders.Views.TradesDeliver(model: model)
       $('#trade_deliver').html(view.render().el)
 
@@ -55,8 +69,12 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $('#trade_deliver').modal('show')
 
   cs_memo: (id) ->
+    $("body").spin()
+
     @model = new MagicOrders.Models.Trade(id: id)
     @model.fetch success: (model, response) =>
+      $("body").spin(false)
+
       view = new MagicOrders.Views.TradesCsMemo(model: model)
 
       $('#trade_cs_memo').html(view.render().el)
