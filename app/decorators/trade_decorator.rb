@@ -118,7 +118,7 @@ class TradeDecorator < Draper::Base
     when 'TaobaoTrade'
       trade.receiver_district
     when 'JingdongTrade'
-      trade.consignee_info['province']
+      trade.consignee_info['county']
     end
   end
 
@@ -140,7 +140,7 @@ class TradeDecorator < Draper::Base
     when 'TaobaoTrade'
       trade.receiver_state
     when 'JingdongTrade'
-      trade.consignee_info['county']
+      trade.consignee_info['province']
     end
   end
 
@@ -187,6 +187,8 @@ class TradeDecorator < Draper::Base
       trade.memo
     when 'TaobaoTrade'
       trade.buyer_message
+    when 'JingdongTrade'
+      trade.order_remark
     end
   end
 
@@ -197,7 +199,7 @@ class TradeDecorator < Draper::Base
     when 'TaobaoTrade'
       trade.seller_memo
     when 'JingdongTrade'
-      trade.order_remark
+      [trade.pay_type, trade.delivery_type, trade.invoice_info].join("<br/>")
     end
   end
 
