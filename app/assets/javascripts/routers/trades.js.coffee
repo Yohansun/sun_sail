@@ -17,7 +17,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
 
   update_trade_nav: (trade_type) ->
     navs = {all: '所有订单', 'taobao': '淘宝订单', 'taobao_fenxiao': '淘宝分销采购单', 'jingdong': '京东商城订单', 'shop': '官网订单'}
-    $(".trade_nav").html(navs[trade_type])
+    $(".trade_nav").text(navs[trade_type])
 
   index: (trade_type = null) ->
     @show_top_nav()
