@@ -13,6 +13,8 @@ class MagicOrders.Views.TradesDeliver extends Backbone.View
     this
 
   deliver: ->
+    $("body").spin()
     @model.save 'delivered_at', true, success: (model, response) =>
+      $("body").spin(false)
       $('#trade_deliver').modal('hide')
       window.history.back()
