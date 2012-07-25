@@ -58,5 +58,12 @@ module MagicOrders
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
+
+    config.mongoid.observers = :trade_observer
+
+    config.generators do |g|
+      g.orm :active_record
+    end
+
   end
 end
