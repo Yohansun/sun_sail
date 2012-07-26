@@ -14,11 +14,18 @@ json.receiver_zip @trade.receiver_zip
 json.trade_source @trade.trade_source
 json.buyer_message @trade.buyer_message
 json.seller_memo @trade.seller_memo
-json.cs_memo @trade.cs_memo
 json.post_fee @trade.post_fee
 json.total_fee @trade.total_fee
 json.created @trade.created.strftime("%m-%d %H:%M")
 json.pay_time @trade.pay_time.strftime("%m-%d %H:%M") if @trade.pay_time
+
+json.cs_memo @trade.cs_memo
+
+#json.invoice_type @trade.invoice_type                                          # 发票信息
+#json.invoice_content @trade.invoice_content
+#json.invoice_date @trade.invoice_date
+
+
 
 if @trade.consign_time
   json.consign_time @trade.consign_time.strftime("%m-%d %H:%M")
@@ -41,4 +48,5 @@ json.orders OrderDecorator.decorate(@trade.orders) do |json, order|
   json.distributor_payment order.distributor_payment
   json.item_outer_id order.item_outer_id
   json.cs_memo order.cs_memo
+  json.color_num order.color_num
 end

@@ -7,6 +7,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     'trades/:id/seller': 'seller'
     'trades/:id/deliver': 'deliver'
     'trades/:id/cs_memo': 'cs_memo'
+    'trades/:id/color': 'color'
 
   initialize: ->
     $('#content').html('')
@@ -83,3 +84,18 @@ class MagicOrders.Routers.Trades extends Backbone.Router
         window.history.back()
 
       $('#trade_cs_memo').modal('show')
+
+  color: (id) ->
+    $("body").spin()
+
+    @model = new MagicOrders.Models.Trade(id: id)
+    @model.fetch success: (model, response) =>
+      $("body").spin(false)
+
+      view = new MagicOrders.Views.TradesColor(model: model)
+      
+      $('#trade_color').html(view.render().el)
+      $('#trade_color').on 'hide', (event) ->
+        window.history.back()
+
+      $('#trade_color').modal('show')
