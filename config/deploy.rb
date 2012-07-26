@@ -1,36 +1,24 @@
 # -*- encoding : utf-8 -*-
 require "rvm/capistrano"                  # Load RVM's capistrano plugin.
-set :rvm_ruby_string, '1.9.2'        # Or whatever env you want it to run in.
+set :rvm_ruby_string, '1.9.3'        # Or whatever env you want it to run in.
+set :rvm_type, :user
 
+set :user, "nio"
+set :repository, "git@github.com:nioteam/magic_orders.git"
+set :branch, "master"
+set :deploy_to, "/data/www/magic_orders"
 require 'bundler/capistrano'
 
-set :rvm_path, "/usr/local/rvm"
-set :rvm_bin_path, "/usr/local/rvm/bin"
-set :rvm_trust_rvmrcs_flag, 1
-set :normalize_asset_timestamps, false
-
-set :application, "magic_orders"
+role :web, "magicalpha.doorder.com" # Your HTTP server, Apache/etc
+role :app, "magicalpha.doorder.com" # This may be the same as your `Web` server
+role :db, "magicalpha.doorder.com", :primary => true # This is where Rails migrations will run
 
 set :use_sudo, false
 set :scm, :git
 set :deploy_via, :remote_cache
-
+set :deploy_env, 'production'
 default_run_options[:pty] = true
 ssh_options[:forward_agent] = true
-
-set :keep_releases, 3
-
-set :git_shallow_clone, 1
-set :git_enable_submodules, 1
-
-role :web, "magicbeta.doorder.com" # Your HTTP server, Apache/etc
-role :app, "magicbeta.doorder.com" # This may be the same as your `Web` server
-role :db, "magicbeta.doorder.com", :primary => true # This is where Rails migrations will run
-
-set :user, "root"
-set :repository, "git@github.com:nioteam/magic_orders.git"
-set :branch, "master"
-set :deploy_to, "/var/rails/magic_orders"
 
 # tasks
 namespace :deploy do
