@@ -4,153 +4,153 @@ class TradeDecorator < Draper::Base
 
   def status
     case trade._type
-    when 'TaobaoPurchaseOrder'
-      trade.status
-    when 'TaobaoTrade'
-      trade.status
-    when 'JingdongTrade'
-      trade.order_state
+      when 'TaobaoPurchaseOrder'
+        trade.status
+      when 'TaobaoTrade'
+        trade.status
+      when 'JingdongTrade'
+        trade.order_state
     end
   end
 
   def created
     case trade._type
-    when 'TaobaoPurchaseOrder'
-      trade.created
-    when 'TaobaoTrade'
-      trade.created
-    when 'JingdongTrade'
-      trade.order_start_time
+      when 'TaobaoPurchaseOrder'
+        trade.created
+      when 'TaobaoTrade'
+        trade.created
+      when 'JingdongTrade'
+        trade.order_start_time
     end
   end
 
   def pay_time
     case trade._type
-    when 'TaobaoPurchaseOrder'
-      trade.pay_time
-    when 'TaobaoTrade'
-      trade.pay_time
-    when 'JingdongTrade'
+      when 'TaobaoPurchaseOrder'
+        trade.pay_time
+      when 'TaobaoTrade'
+        trade.pay_time
+      when 'JingdongTrade'
     end
   end
 
   def consign_time
     case trade._type
-    when 'TaobaoPurchaseOrder'
-      trade.consign_time
-    when 'TaobaoTrade'
-      trade.consign_time
-    when 'JingdongTrade'
-      trade.order_end_time
+      when 'TaobaoPurchaseOrder'
+        trade.consign_time
+      when 'TaobaoTrade'
+        trade.consign_time
+      when 'JingdongTrade'
+        trade.order_end_time
     end
   end
 
   def status_text
     case trade._type
-    when 'TaobaoPurchaseOrder'
-      fenxiao_status_text
-    when 'TaobaoTrade'
-      taobao_order_status_text
-    when 'JingdongTrade'
-      jingdong_order_status_text
+      when 'TaobaoPurchaseOrder'
+        fenxiao_status_text
+      when 'TaobaoTrade'
+        taobao_order_status_text
+      when 'JingdongTrade'
+        jingdong_order_status_text
     end
   end
 
   def receiver_name
     case trade._type
-    when 'TaobaoPurchaseOrder'
-      trade.receiver['name']
-    when 'TaobaoTrade'
-      trade.receiver_name
-    when 'JingdongTrade'
-      trade.consignee_info['fullname']
+      when 'TaobaoPurchaseOrder'
+        trade.receiver['name']
+      when 'TaobaoTrade'
+        trade.receiver_name
+      when 'JingdongTrade'
+        trade.consignee_info['fullname']
     end
   end
 
   def receiver_mobile_phone
     case trade._type
-    when 'TaobaoPurchaseOrder'
-      trade.receiver['mobile_phone']
-    when 'TaobaoTrade'
-      trade.receiver_mobile
-    when 'JingdongTrade'
-      trade.consignee_info['mobile']
+      when 'TaobaoPurchaseOrder'
+        trade.receiver['mobile_phone']
+      when 'TaobaoTrade'
+        trade.receiver_mobile
+      when 'JingdongTrade'
+        trade.consignee_info['mobile']
     end
   end
 
   def receiver_phone
     case trade._type
-    when 'TaobaoPurchaseOrder'
-      trade.receiver['phone']
-    when 'TaobaoTrade'
-      trade.receiver_phone
-    when 'JingdongTrade'
-      trade.consignee_info['telephone']
+      when 'TaobaoPurchaseOrder'
+        trade.receiver['phone']
+      when 'TaobaoTrade'
+        trade.receiver_phone
+      when 'JingdongTrade'
+        trade.consignee_info['telephone']
     end
   end
 
   def receiver_address
     case trade._type
-    when 'TaobaoPurchaseOrder'
-      trade.receiver['address']
-    when 'TaobaoTrade'
-      trade.receiver_address
-    when 'JingdongTrade'
-      trade.consignee_info['full_address']
+      when 'TaobaoPurchaseOrder'
+        trade.receiver['address']
+      when 'TaobaoTrade'
+        trade.receiver_address
+      when 'JingdongTrade'
+        trade.consignee_info['full_address']
     end
   end
 
   def receiver_district
     case trade._type
-    when 'TaobaoPurchaseOrder'
-      trade.receiver['district']
-    when 'TaobaoTrade'
-      trade.receiver_district
-    when 'JingdongTrade'
-      trade.consignee_info['county']
+      when 'TaobaoPurchaseOrder'
+        trade.receiver['district']
+      when 'TaobaoTrade'
+        trade.receiver_district
+      when 'JingdongTrade'
+        trade.consignee_info['county']
     end
   end
 
   def receiver_city
     case trade._type
-    when 'TaobaoPurchaseOrder'
-      trade.receiver['city']
-    when 'TaobaoTrade'
-      trade.receiver_city
-    when 'JingdongTrade'
-      trade.consignee_info['city']
+      when 'TaobaoPurchaseOrder'
+        trade.receiver['city']
+      when 'TaobaoTrade'
+        trade.receiver_city
+      when 'JingdongTrade'
+        trade.consignee_info['city']
     end
   end
 
   def receiver_state
     case trade._type
-    when 'TaobaoPurchaseOrder'
-      trade.receiver['state']
-    when 'TaobaoTrade'
-      trade.receiver_state
-    when 'JingdongTrade'
-      trade.consignee_info['province']
+      when 'TaobaoPurchaseOrder'
+        trade.receiver['state']
+      when 'TaobaoTrade'
+        trade.receiver_state
+      when 'JingdongTrade'
+        trade.consignee_info['province']
     end
   end
 
   def receiver_zip
     case trade._type
-    when 'TaobaoPurchaseOrder'
-      trade.receiver['zip']
-    when 'TaobaoTrade'
-      trade.receiver_zip
-    when 'JingdongTrade'
-      ''
+      when 'TaobaoPurchaseOrder'
+        trade.receiver['zip']
+      when 'TaobaoTrade'
+        trade.receiver_zip
+      when 'JingdongTrade'
+        ''
     end
   end
 
-   def post_fee
+  def post_fee
     case trade._type
-    when 'TaobaoPurchaseOrder'
-      trade.post_fee
-    when 'TaobaoTrade'
-      trade.post_fee
-    when 'JingdongTrade'
+      when 'TaobaoPurchaseOrder'
+        trade.post_fee
+      when 'TaobaoTrade'
+        trade.post_fee
+      when 'JingdongTrade'
         unless trade.freight_price.blank?
           trade.freight_price
         else
@@ -161,62 +161,67 @@ class TradeDecorator < Draper::Base
 
   def total_fee
     case trade._type
-    when 'TaobaoPurchaseOrder'
-      trade.total_fee
-    when 'TaobaoTrade'
-      trade.total_fee
-    when 'JingdongTrade'
-      trade.order_total_price
+      when 'TaobaoPurchaseOrder'
+        trade.total_fee
+      when 'TaobaoTrade'
+        trade.payment
+      when 'JingdongTrade'
+        trade.order_total_price
     end
   end
 
   def buyer_message
     case trade._type
-    when 'TaobaoPurchaseOrder'
-      trade.memo
-    when 'TaobaoTrade'
-      trade.buyer_message
-    when 'JingdongTrade'
-      trade.order_remark
+      when 'TaobaoPurchaseOrder'
+        trade.memo
+      when 'TaobaoTrade'
+        trade.buyer_message
+      when 'JingdongTrade'
+        trade.order_remark
     end
   end
 
   def seller_memo
     case trade._type
-    when 'TaobaoPurchaseOrder'
-      trade.memo
-    when 'TaobaoTrade'
-      trade.seller_memo
-    when 'JingdongTrade'
-      [trade.pay_type, trade.delivery_type, trade.invoice_info].join("; ")
+      when 'TaobaoPurchaseOrder'
+        trade.memo
+      when 'TaobaoTrade'
+        trade.seller_memo
+      when 'JingdongTrade'
+        [trade.pay_type, trade.delivery_type, trade.invoice_info].join("; ")
+    end
+  end
+
+  def invoice_name
+    case trade._type
+      when 'TaobaoPurchaseOrder'
+        ''
+      when 'TaobaoTrade'
+        trade.invoice_name
+      when 'JingdongTrade'
+        trade.invoice_info
     end
   end
 
   def trade_source
     case trade._type
-    when 'TaobaoPurchaseOrder'
-      '分销平台'
-    when 'TaobaoTrade'
-      '淘宝'
-    when 'JingdongTrade'
-      '京东'
+      when 'TaobaoPurchaseOrder'
+        '分销平台'
+      when 'TaobaoTrade'
+        '淘宝'
+      when 'JingdongTrade'
+        '京东'
     end
   end
 
   def orders
     case trade._type
-    when 'TaobaoPurchaseOrder'
-      trade.taobao_sub_purchase_orders
-    when 'TaobaoTrade'
-      trade.taobao_orders
-    when 'JingdongTrade'
-      trade.jingdong_orders
-    end
-  end
-
-  def seller
-    if trade.seller_id
-      Seller.find(trade.seller_id)
+      when 'TaobaoPurchaseOrder'
+        trade.taobao_sub_purchase_orders
+      when 'TaobaoTrade'
+        trade.taobao_orders
+      when 'JingdongTrade'
+        trade.jingdong_orders
     end
   end
 
@@ -224,49 +229,49 @@ class TradeDecorator < Draper::Base
 
   def fenxiao_status_text
     case trade.status
-    when 'WAIT_BUYER_PAY'
-      '等待付款'
-    when 'WAIT_SELLER_SEND_GOODS'
-      '已付款，待发货'
-    when 'WAIT_BUYER_CONFIRM_GOODS'
-      '已付款，已发货'
-    when 'TRADE_FINISHED'
-      '交易成功'
-    when 'TRADE_CLOSED'
-      '交易关闭'
-    when 'WAIT_BUYER_CONFIRM_GOODS_ACOUNTED'
-      '已付款（已分账），已发货'
-    when 'WAIT_SELLER_SEND_GOODS_ACOUNTED'
-      '已付款（已分账），待发货'
-    else
-      trade.status
+      when 'WAIT_BUYER_PAY'
+        '等待付款'
+      when 'WAIT_SELLER_SEND_GOODS'
+        '已付款，待发货'
+      when 'WAIT_BUYER_CONFIRM_GOODS'
+        '已付款，已发货'
+      when 'TRADE_FINISHED'
+        '交易成功'
+      when 'TRADE_CLOSED'
+        '交易关闭'
+      when 'WAIT_BUYER_CONFIRM_GOODS_ACOUNTED'
+        '已付款（已分账），已发货'
+      when 'WAIT_SELLER_SEND_GOODS_ACOUNTED'
+        '已付款（已分账），待发货'
+      else
+        trade.status
     end
   end
 
 
   def taobao_order_status_text
-     case trade.status
-     when 'WAIT_BUYER_PAY'
-      '等待付款'
-    when 'WAIT_SELLER_SEND_GOODS'
-      '已付款，待发货'
-    when 'WAIT_BUYER_CONFIRM_GOODS'
-      '已付款，已发货'
-    when 'TRADE_CLOSED_BY_TAOBAO'
-      '交易被淘宝关闭'
-    else
-      trade.status
+    case trade.status
+      when 'WAIT_BUYER_PAY'
+        '等待付款'
+      when 'WAIT_SELLER_SEND_GOODS'
+        '已付款，待发货'
+      when 'WAIT_BUYER_CONFIRM_GOODS'
+        '已付款，已发货'
+      when 'TRADE_CLOSED_BY_TAOBAO'
+        '交易被淘宝关闭'
+      else
+        trade.status
     end
   end
 
   def jingdong_order_status_text
     case trade.order_state
-    when 'WAIT_SELLER_STOCK_OUT'
-      '已付款，待发货'
-    when 'TRADE_CANCELED'
-      '取消'
-    else
-      trade.order_state
+      when 'WAIT_SELLER_STOCK_OUT'
+        '已付款，待发货'
+      when 'TRADE_CANCELED'
+        '取消'
+      else
+        trade.order_state
     end
   end
 

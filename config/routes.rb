@@ -1,4 +1,9 @@
+require 'sidekiq/web'
+
 MagicOrders::Application.routes.draw do
+
+  mount Sidekiq::Web => '/sidekiq'
+
   devise_for :users
 
   scope 'api' do
@@ -16,4 +21,5 @@ MagicOrders::Application.routes.draw do
 
   root to: "home#index"
   match "*path", to: "home#index"
+
 end

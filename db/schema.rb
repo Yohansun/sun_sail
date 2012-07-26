@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120719020148) do
+ActiveRecord::Schema.define(:version => 20120724051407) do
 
   create_table "areas", :force => true do |t|
     t.string   "name"
@@ -43,6 +43,7 @@ ActiveRecord::Schema.define(:version => 20120719020148) do
     t.integer  "children_count", :default => 0
     t.string   "email"
     t.string   "telephone"
+    t.string   "cc_emails"
   end
 
   create_table "users", :force => true do |t|

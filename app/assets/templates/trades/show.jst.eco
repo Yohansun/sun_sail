@@ -103,7 +103,7 @@
       </tr>
       <% end %>
       <tr>
-        <th colspan="6">总价：￥<%= @trade.get 'total_fee' %><br>物流费：￥<%= @trade.get 'post_fee' %></th>
+        <th colspan="6">总价：￥<%= @trade.get('total_fee') - @trade.get ('post_fee') %><br>物流费：￥<%= @trade.get 'post_fee' %></th>
       </tr>
     </tbody>
   </table>
@@ -123,7 +123,7 @@
         <td>***</td>
       </tr> -->
       <tr>
-        <th colspan="2">订单实付金额：￥<%= @trade.get('total_fee') + @trade.get ('post_fee') %></th>
+        <th colspan="2">订单实付金额：￥<%= @trade.get('total_fee') %></th>
       </tr>
     </tbody>
   </table>

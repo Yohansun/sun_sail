@@ -105,7 +105,7 @@ class OrderDecorator < Draper::Base
 	   when 'TaobaoSubPurchaseOrder'
 	    order.price
 	   when 'TaobaoOrder'
-	    order.price
+      (order.total_fee/order.num).to_f.round(2)
 	   when 'JingdongOrder'
 	    order.jd_price
 	   end

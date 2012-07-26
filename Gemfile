@@ -21,6 +21,7 @@ group :development do
   gem 'debugger'
   gem 'quiet_assets'
   gem 'bond'
+  gem 'puma'
   gem 'wirble'
   gem 'awesome_print'
   gem 'map_by_method'
@@ -50,3 +51,11 @@ gem 'taobao_fu_reload'
 gem 'jingdong_fu'
 
 gem 'hz2py'
+
+gem 'sidekiq'
+gem 'slim'
+gem 'sinatra', :require => nil
+
+gem 'httparty'
+gem 'savon'
+gem 'collections'

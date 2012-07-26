@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+</head>
+<body>
+<% if @notify_kind == 'new' %>
+    @trade_info订单，具体信息如下，
+<% else %>
+    @trade_info信息有调整，具体信息如下，请以此封mail信息为准，
+<% end %>
+请及时通知经销商联系客户发货，并让其发货同时在“经销商后台”点击“确认发货”。之后请回复本邮件告知已发货。谢谢。
+<% if @is_1568 %>
+    此订单为1568地区订单，请安排后续服务事宜。
+<% end %>
+<%= render "trade_detail" %>
+<br>买家留言：<%= @trade.buyer_message %> <br>
+<br>发票信息: <%= @trade.invoice_name %> <br>
+<br>客服备注：<%= @trade.cs_memo %> <br>
+</body>
+</html>
