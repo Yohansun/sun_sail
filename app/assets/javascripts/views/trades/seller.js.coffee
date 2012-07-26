@@ -11,7 +11,7 @@ class MagicOrders.Views.TradesSeller extends Backbone.View
 
   render: ->
     $(@el).html(@template(trade: @model))
-    @render_area_inputs() unless @model.get('seller_id')
+    @render_area_inputs() unless @model.get('seller_id') || @model.get('trade_source') == '京东'
     this
 
   render_area_inputs: ->
