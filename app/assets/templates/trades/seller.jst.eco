@@ -46,8 +46,12 @@
           <% if @trade.get('seller_id') != null: %>
             <%= @trade.get('seller_name') %>
           <% else: %>
-            <div id="areas_inputs">
-            </div>
+            <% if @trade.get('trade_source') != '京东': %>
+              <div id="areas_inputs"></div>
+            <% else: %>
+              点击"分流"按钮分流给: 立邦仓库经销商
+              <input type="hidden" id="trade_seller_id" value="1720">
+            <% end %>
           <% end %>
         </td>
       </tr>

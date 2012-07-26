@@ -17,7 +17,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
   render: ->
     $(@el).html(@template(trades: @collection, trade_type: @trade_type, search_value: @search_value))
-    navs = {all: '所有订单', 'taobao': '淘宝订单', 'taobao_fenxiao': '淘宝分销采购单', 'jingdong': '京东商城订单', 'shop': '官网订单'}
+    navs = {'all': '所有订单', 'taobao': '淘宝订单', 'taobao_fenxiao': '淘宝分销采购单', 'jingdong': '京东商城订单', 'shop': '官网订单'}
     $(@el).find(".trade_nav").text(navs[@trade_type])
     this
 
