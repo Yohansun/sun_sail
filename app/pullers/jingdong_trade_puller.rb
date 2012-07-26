@@ -35,13 +35,21 @@ class JingdongTradePuller
 
         trades = response['order_search_response']['order_search']['order_info_list']
         trades.each do |t|
-          next if JingdongTrade.where(tid: t['order_id']).exists?
-          orders = t.delete('item_info_list')
-          trade = JingdongTrade.new(t)
-          orders.each do |order|
-            order = trade.jingdong_orders.build(order)
+          unless JingdongTrade.where(tid: t['order_id']).exists?
+            orders = t.delete('item_info_list')
+            trade = JingdongTrade.new(t)
+            orders.each do |order|
+              order = trade.jingdong_orders.build(order)
+            end
+            trade.save
+          else
+            trade = JingdongTrade.where(tid: t['order_id']).first
+            p t
+            trade.order_state = t['order_state']
+            trade.order_state_remark = t['order_state_remark']
+            trade.order_end_time = t['order_end_time']
+            trade.save
           end
-          trade.save
         end
       end
     end
