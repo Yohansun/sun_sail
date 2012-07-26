@@ -266,10 +266,12 @@ class TradeDecorator < Draper::Base
 
   def jingdong_order_status_text
     case trade.order_state
-      when 'WAIT_SELLER_STOCK_OUT'
+      when 'WAIT_SELLER_DELIVERY'
         '已付款，待发货'
+      when 'WAIT_SELLER_STOCK_OUT'
+        '已付款，待发货'  
       when 'TRADE_CANCELED'
-        '取消'
+        '交易取消'
       else
         trade.order_state
     end

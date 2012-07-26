@@ -8,6 +8,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     'click [data-type=detail]': 'show_detail'
     'click [data-type=seller]': 'show_seller'
     'click [data-type=cs_memo]': 'show_cs_memo'
+    'click [data-type=color]': 'show_color'
 
   initialize: (options) ->
     @trade_type = options.trade_type
@@ -52,3 +53,8 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     e.preventDefault()
     id = $(e.target).parents('[data-id]').data('id')
     Backbone.history.navigate('trades/' + id + '/cs_memo', true)
+
+  show_color: (e) ->
+    e.preventDefault()
+    id = $(e.target).parents('[data-id]').data('id')
+    Backbone.history.navigate('trades/' + id + '/color', true)

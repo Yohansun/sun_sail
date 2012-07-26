@@ -63,6 +63,7 @@ class TradesController < ApplicationController
       params[:orders].each do |item|
         order = @trade.orders.find item[:id]
         order.cs_memo = item[:cs_memo]
+        order.color_num = item[:color_num]
       end
     end
 
