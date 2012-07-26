@@ -7,13 +7,14 @@ class JingdongTradePuller
 
       end_time = start_time + 7.days unless end_time
 
+      order_states = 'WAIT_SELLER_DELIVERY,WAIT_SELLER_STOCK_OUT,WAIT_GOODS_RECEIVE_CONFIRM,FINISHED_L,TRADE_CANCELED'
 
       response = JingdongFu.get(method: '360buy.order.search',
-        order_state:'WAIT_SELLER_DELIVERY,WAIT_SELLER_STOCK_OUT,TRADE_CANCELED',
+        order_state: order_states,
         start_date: start_time.strftime("%Y-%m-%d %H:%M:%S"),
         end_date: end_time.strftime("%Y-%m-%d %H:%M:%S"),
         page: 1,
-        page_size: 10)
+        page_size: 1)
 
       p response
 
@@ -26,7 +27,7 @@ class JingdongTradePuller
       (1..total_pages).each do |page|
 
         response = JingdongFu.get(method: '360buy.order.search',
-          order_state:'WAIT_SELLER_DELIVERY,WAIT_SELLER_STOCK_OUT,TRADE_CANCELED',
+          order_state: order_states,
           start_date: start_time.strftime("%Y-%m-%d %H:%M:%S"),
           end_date: end_time.strftime("%Y-%m-%d %H:%M:%S"),
           page: page,

@@ -7,6 +7,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     'click .search': 'search'
     'click [data-type=detail]': 'show_detail'
     'click [data-type=seller]': 'show_seller'
+    'click [data-type=deliver]': 'show_deliver'
     'click [data-type=cs_memo]': 'show_cs_memo'
     'click [data-type=color]': 'show_color'
 

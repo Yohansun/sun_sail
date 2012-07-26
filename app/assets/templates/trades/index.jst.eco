@@ -145,7 +145,7 @@
               <li><a data-toggle="modal" href="#" data-type="seller">订单分流</a>
               </li>
               <% end %>
-              <% if trade.get('seller_id') != null and trade.get('delivered_at') == null: %>
+              <% if trade.get('seller_id') != undefined and trade.get('delivered_at') == undefined: %>
               <li><a data-toggle="modal" href="#" data-type="deliver">订单发货</a>
               </li>
               <% end %>

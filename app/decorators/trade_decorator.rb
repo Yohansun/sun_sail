@@ -269,7 +269,11 @@ class TradeDecorator < Draper::Base
       when 'WAIT_SELLER_DELIVERY'
         '已付款，待发货'
       when 'WAIT_SELLER_STOCK_OUT'
-        '已付款，待发货'  
+        '已付款，待发货'
+      when 'WAIT_GOODS_RECEIVE_CONFIRM'
+        '已发货'
+      when 'FINISHED_L'
+        '买家已收货'
       when 'TRADE_CANCELED'
         '交易取消'
       else
