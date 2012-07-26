@@ -23,7 +23,7 @@ class TaobaoPurchaseOrderPuller
 
         trades = response['fenxiao_orders_get_response']['purchase_orders']['purchase_order']
         trades.each do |trade|
-          next if TaobaoPurchaseOrder.where(fenxiao_id: trade['fenxiao_id']).exists?
+          next if TaobaoPurchaseOrder.where(tid: trade['fenxiao_id']).exists?
           trade.delete 'id'
           sub_orders = trade.delete('sub_purchase_orders')
           purchase_order = TaobaoPurchaseOrder.new(trade)
