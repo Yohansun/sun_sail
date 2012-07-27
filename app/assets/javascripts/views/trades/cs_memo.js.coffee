@@ -6,7 +6,7 @@ class MagicOrders.Views.TradesCsMemo extends Backbone.View
     'click .save': 'save'
 
   initialize: ->
-    @model.on("change", @render, this)
+    @model.on("fetch", @render, this)
 
   render: ->
     $(@el).html(@template(trade: @model))

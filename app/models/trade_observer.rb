@@ -4,6 +4,12 @@ class TradeObserver < Mongoid::Observer
   observe :trade
 
   def before_save(object)
+    if object.delivered_at_changed? && object.delivered_at.present?
+      # 发货操作
+      object.deliver!
+      return
+    end
+
     if (object.seller_id_changed? && object.seller_id.present?) || (object.dispatched_at_changed? && object.seller_id.present?)
       dispatch_notify(object.id)
     end

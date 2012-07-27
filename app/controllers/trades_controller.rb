@@ -52,6 +52,8 @@ class TradesController < ApplicationController
     end
 
     if params[:delivered_at] == true
+      @trade.logistic_code = params[:logistic_code]
+      @trade.logistic_waybill = params[:logistic_waybill]
       @trade.delivered_at = Time.now
     end
 

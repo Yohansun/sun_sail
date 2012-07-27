@@ -1,3 +1,5 @@
+# -*- encoding : utf-8 -*-
+
 class Trade
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -11,6 +13,23 @@ class Trade
   field :invoice_type, type: String        # 发票信息
   field :invoice_content, type: String
   field :invoice_date, type: String
+
+  field :logistic_code, type: String       # 物流公司代码
+  field :logistic_waybill, type: String    # 物流运单号
+
+  # model 属性方法
+
+  # 物流公司名称
+  def logistic_company
+    case logistic_code
+    when 'YTO'
+      '圆通快递'
+    when 'ZTO'
+      '中通速递'
+    else
+      '其他'
+    end
+  end
 
   def cc_emails
     extra_cc = %W(E-Business@nipponpaint.com.cn chendonglin@nipponpaint.com.cn shenweiyu@nipponpaint.com.cn zhangqin@nipponpaint.com.cn)
@@ -37,5 +56,12 @@ class Trade
   			break
   		end
   	end
+  end
+
+
+  # 操作方法
+
+  def deliver!
+    raise "EMPTY METHOD!"
   end
 end

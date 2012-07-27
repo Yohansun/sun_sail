@@ -7,7 +7,7 @@ class MagicOrders.Views.TradesSeller extends Backbone.View
     'click .reset_seller': 'reset_seller'
 
   initialize: ->
-    @model.on("change", @render, this)
+    @model.on("fetch", @render, this)
 
   render: ->
     $(@el).html(@template(trade: @model))

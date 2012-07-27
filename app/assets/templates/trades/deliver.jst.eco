@@ -36,6 +36,37 @@
           <%= @trade.get('receiver_zip') %>
         </td>
       </tr>
+      <tr>
+        <td>物流公司：</td>
+        <td>
+          <% if @trade.get('logistic_code'): %>
+            <%= @trade.get('logistic_company') %>
+            <input type="hidden" id="logistic_code" value="<%= @trade.get('logistic_code') %>">
+          <% else: %>
+            <div class="control-group">
+              <select class="input-small" id="logistic_code" name="logistic_code">
+              <option value="OTHER">其他</option>
+              <option value="YTO">圆通快递</option>
+              <option value="ZTO">中通速递</option>
+            </select>
+            <span class="help-inline hide">请选择物流公司</span>
+            </div>
+          <% end %>
+        </td>
+      </tr>
+      <tr>
+        <td>物流单号：</td>
+        <td>
+          <% if @trade.get('logistic_waybill'): %>
+            <%= @trade.get('logistic_waybill') %>
+            <input type="hidden" id="logistic_waybill" value="<%= @trade.get('logistic_waybill') %>">
+          <% else: %>
+            <div class="control-group">
+              <input type="text" placeholder="请输入物流单号..." class="input-xlarge logistic_waybill" id="logistic_waybill" name="logistic_waybill">
+            </div>
+          <% end %>
+        </td>
+      </tr>
     </tbody>
   </table>
 </fieldset>
@@ -43,5 +74,7 @@
 
 <div class="modal-footer">
   <a class="btn" data-dismiss="modal">取消</a>
-  <a class="btn btn-primary deliver">提交发货</a>
+  <% if @trade.get('logistic_code') == null: %>
+    <a class="btn btn-primary deliver">提交发货</a>
+  <% end %>
 </div><!-- modal-footer -->
