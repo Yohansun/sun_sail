@@ -24,13 +24,19 @@ class TradesController < ApplicationController
       @trades = @trades.where(_type: trade_type)
     end
 
-    if params[:search]
+    if params[:search] && params[:search][:option] != 'null'
       @trades = @trades.where(Hash[params[:search][:option].to_sym, params[:search][:value]])
     end
 
-    @trades = TradeDecorator.decorate(@trades.limit(200).order_by("created", "DESC"))
+    offset = params[:offset] || 0
 
-    respond_with @trades
+    @trades = TradeDecorator.decorate(@trades.limit(20).offset(offset).order_by("created", "DESC"))
+
+    if @trades.count > 0
+      respond_with @trades
+    else
+      render json: []
+    end
   end
 
   def show

@@ -88,76 +88,7 @@
         <th>操作</th>
       </tr>
     </thead>
-    <tbody>
-      <% for trade in @trades.models: %>
-      <tr data-id="<%= trade.id %>">
-        <td><input type="checkbox" value="option1"></td>
-        <td><span class="label label-warning"><%= trade.get('trade_source') %></span></td>
-        <td><%= trade.get('tid') %></td>
-        <td>
-          <span class="label label-success"><%= trade.get('status_text') %></span>
-        </td>
-        <td>
-          <span class="label">下单 <%= trade.get('created') %></span>
-          <% if trade.get('pay_time'): %>
-            <span class="label label-success">付款 <%= trade.get('pay_time') %></span>
-          <% end %>
-          <% if trade.get('dispatched_at'): %>
-            <span class="label label-success">分流 <%= trade.get('dispatched_at') %></span>
-          <% end %>
-          <% if trade.get('consign_time'): %>
-            <span class="label label-success">发货 <%= trade.get('consign_time') %></span>
-          <% end %>
-        </td>
-        <td><%= trade.get('receiver_name') %></td>
-        <td><%= trade.get('receiver_mobile_phone') %></td>
-        <td>
-          <%= trade.get('receiver_state') %> <%= trade.get('receiver_city') %> <%= trade.get('receiver_district') %> <br/>
-          <%= trade.get('receiver_address') %>
-        </td>
-        <td>
-          <% if trade.get 'buyer_message': %>
-          <a href="#" rel="popover" data-content="<%= trade.get 'buyer_message' %>" data-original-title="买家留言"><i class="icon-comment"></i></a>
-          <% end %>
-        </td>
-        <td>
-          <% if trade.get 'seller_memo': %>
-          <a href="#" rel="popover" data-content="<%= trade.get 'seller_memo' %>" data-original-title="卖家备注"><i class="icon-comment"></i></a>
-          <% end %>
-        </td>
-        <td>
-          <% if trade.get 'cs_memo': %>
-          <a href="#" rel="popover" data-content="<%= trade.get 'cs_memo' %><br/><br/><% for order in trade.get('orders'): %><% if order.cs_memo: %><%= order.title %>: <b><%= order.cs_memo %></b><br/><% end %><% end %>" data-original-title="订单备注"><i class="icon-comment"></i></a>
-          <% end %>
-        </td>
-        <td>
-          <% if trade.get('has_color_info') == true : %>
-          <a href="#" rel="popover" data-content="<% for order in trade.get('orders'): %><% if order.color_num: %><%= order.title %>: <b><%= order.color_num %></b><br/><% end %><% end %>" data-original-title="调色信息"><i class="icon-comment"></i></a>
-          <% end %>
-        </td>
-        <td nowrap><%= trade.get('seller_name') %></td>
-        <td nowrap>
-          <div class="btn-group">
-            <button data-toggle="dropdown" class="btn btn-info dropdown-toggle min_w"><i class="icon-wrench"></i> <span class="caret"></span></button>
-            <ul class="dropdown-menu" style="left:-115px;">
-              <li><a data-toggle="modal" href="#" data-type="detail">订单详情</a></li>
-              <% if trade.get('status_text') == '已付款，待发货': %>
-              <li><a data-toggle="modal" href="#" data-type="seller">订单分流</a>
-              </li>
-              <% end %>
-              <% if trade.get('seller_id') != undefined and trade.get('delivered_at') == undefined: %>
-              <li><a data-toggle="modal" href="#" data-type="deliver">订单发货</a>
-              </li>
-              <% end %>
-              <li><a data-toggle="modal" href="#" data-type="cs_memo">订单备注</a>
-              </li>
-              <li><a data-toggle="modal" href="#" data-type="color">调色信息</a>
-              </li>
-            </ul>
-          </div>
-        </td>
-      </tr>
-      <% end %>
+    <tbody id="trade_rows">
     </tbody>
   </table>
 
@@ -177,3 +108,4 @@
     -->
     <!-- pagination ends -->
 </div>
+<div id="trades_bottom"></div>
