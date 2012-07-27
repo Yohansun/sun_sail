@@ -36,6 +36,8 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     @search_option = $(".search_option").val()
     @search_value = $(".search_value").val()
     return if @search_option == '' or @search_value == ''
+    $("body").spin()
+    $("#trade_rows").html('')
     @collection.fetch data: {search: {option: @search_option, value: @search_value}, trade_type: @trade_type}
 
   change_trade_type: (e) ->
