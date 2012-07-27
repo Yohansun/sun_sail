@@ -17,14 +17,33 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     $("#top-nav li").hide()
     $("#top-nav li.trades").show()
 
+  processScroll: =>
+    console.log 'processScroll'
+    scrollTop = $(window).scrollTop()
+    if scrollTop >= @navTop && !@isFixed
+        @isFixed = true
+        @nav.addClass('subnav-fixed')
+    else
+      if scrollTop <= @navTop && @isFixed
+        @isFixed = false
+        @nav.removeClass('subnav-fixed')
+
   index: (trade_type = null) ->
     $("body").spin()
+    @isFixed = false
 
     @show_top_nav()
     @collection.fetch data: {trade_type: trade_type}, success: (collection, response) =>
       view = new MagicOrders.Views.TradesIndex(collection: collection, trade_type: trade_type)
       $('#content').html(view.render().el)
       $("a[rel=popover]").popover(placement: 'left')
+
+      @nav = $('.subnav')
+      @navTop = $('.subnav').length && $('.subnav').offset().top - 40
+      $(window).off 'scroll'
+      $(window).on 'scroll', @processScroll
+      @processScroll
+
       $("body").spin(false)
 
       $('#trades_bottom').waypoint view.fetch_more_trades, {offset: '100%'}
