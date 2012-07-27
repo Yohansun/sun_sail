@@ -27,6 +27,8 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $("a[rel=popover]").popover(placement: 'left')
       $("body").spin(false)
 
+      $('#trades_bottom').waypoint view.fetch_more_trades, {offset: '100%'}
+
   show: (id) ->
     $("body").spin()
     @model = new MagicOrders.Models.Trade(id: id)
@@ -93,7 +95,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $("body").spin(false)
 
       view = new MagicOrders.Views.TradesColor(model: model)
-      
+
       $('#trade_color').html(view.render().el)
       $('#trade_color').on 'hide', (event) ->
         window.history.back()
