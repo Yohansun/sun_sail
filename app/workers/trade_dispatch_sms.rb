@@ -1,6 +1,7 @@
 # -*- encoding : utf-8 -*-
 class TradeDispatchSms
   include Sidekiq::Worker
+  sidekiq_options :queue => :sms
 
   def perform(id, notify_kind)
     content = nil
