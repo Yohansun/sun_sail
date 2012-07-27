@@ -14,7 +14,7 @@
         <th>备注</th>
         <td>
           <div class="controls">
-            <input type="text" placeholder="输入文字..." class="input-xlarge" id="cs_memo_text">
+            <input type="text" placeholder="输入文字..." class="input-xlarge" id="cs_memo_text" value="<%= @trade.get 'cs_memo' %>">
           </div>
         </td>
       </tr>

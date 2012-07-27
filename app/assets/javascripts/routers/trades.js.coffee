@@ -8,6 +8,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     'trades/:id/deliver': 'deliver'
     'trades/:id/cs_memo': 'cs_memo'
     'trades/:id/color': 'color'
+    'trades/:id/invoice': 'invoice'
 
   initialize: ->
     $('#content').html('')
@@ -100,7 +101,6 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       view = new MagicOrders.Views.TradesCsMemo(model: model)
 
       $('#trade_cs_memo').html(view.render().el)
-      $('#cs_memo_text').val(model.get('cs_memo'))
       $('#trade_cs_memo').on 'hide', (event) ->
         window.history.back()
 
@@ -120,3 +120,22 @@ class MagicOrders.Routers.Trades extends Backbone.Router
         window.history.back()
 
       $('#trade_color').modal('show')
+
+
+  invoice: (id) ->
+    $("body").spin()
+
+    @model = new MagicOrders.Models.Trade(id: id)
+    @model.fetch success: (model, response) =>
+      $("body").spin(false)
+
+      view = new MagicOrders.Views.TradesInvoice(model: model)
+
+      $('#trade_invoice').html(view.render().el)
+      
+      $('#trade_invoice').on 'hide', (event) ->
+        window.history.back()
+
+      $('#trade_invoice').modal('show')
+
+      #$('.datepicker').datepicker(format: 'yyyy-mm-dd')

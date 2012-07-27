@@ -42,6 +42,11 @@
   <a href="#" rel="popover" data-content="<% for order in @trade.get('orders'): %><% if order.color_num: %><%= order.title %>: <b><%= order.color_num %></b><br/><% end %><% end %>" data-original-title="调色信息"><i class="icon-comment"></i></a>
   <% end %>
 </td>
+<td>
+  <% if @trade.get 'invoice_type' : %>
+  <a href="#" rel="popover" data-content="<%= @trade.get 'invoice_type' %><br/><%= @trade.get 'invoice_name' %><br/><%= @trade.get 'invoice_date' %>" data-original-title="发票信息"><i class="icon-comment"></i></a>
+  <% end %>
+</td>
 <td nowrap><%= @trade.get('seller_name') %></td>
 <td nowrap>
   <div class="btn-group">
@@ -59,6 +64,8 @@
       <li><a data-toggle="modal" href="#" data-type="cs_memo">订单备注</a>
       </li>
       <li><a data-toggle="modal" href="#" data-type="color">调色信息</a>
+      </li>
+      <li><a data-toggle="modal" href="#" data-type="invoice">申请开票</a>
       </li>
     </ul>
   </div>

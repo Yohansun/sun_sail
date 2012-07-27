@@ -15,6 +15,7 @@
 //= require twitter/bootstrap
 //= require underscore
 //= require backbone
+//= require bootstrap-datepicker
 //
 //= require .//magic_orders
 //

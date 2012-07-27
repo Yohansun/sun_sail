@@ -10,6 +10,7 @@ class MagicOrders.Views.TradesRow extends Backbone.View
     'click [data-type=deliver]': 'show_deliver'
     'click [data-type=cs_memo]': 'show_cs_memo'
     'click [data-type=color]': 'show_color'
+    'click [data-type=invoice]': 'show_invoice'
 
   initialize: ->
 
@@ -36,3 +37,8 @@ class MagicOrders.Views.TradesRow extends Backbone.View
   show_color: (e) ->
     e.preventDefault()
     Backbone.history.navigate('trades/' + @model.get("id") + '/color', true)
+
+  show_invoice: (e) ->
+    e.preventDefault()
+    Backbone.history.navigate('trades/' + @model.get("id") + '/invoice', true)
+  

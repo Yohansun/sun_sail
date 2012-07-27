@@ -67,6 +67,18 @@ class TradesController < ApplicationController
       @trade.cs_memo = params[:cs_memo].strip
     end
 
+    unless params[:invoice_type].blank?
+      @trade.invoice_type = params[:invoice_type].strip
+    end
+
+    unless params[:invoice_name].blank?
+      @trade.invoice_name = params[:invoice_name].strip
+    end
+
+    unless params[:invoice_date].blank?
+      @trade.invoice_date = params[:invoice_date].strip
+    end
+
     unless params[:orders].blank?
       params[:orders].each do |item|
         order = @trade.orders.find item[:id]

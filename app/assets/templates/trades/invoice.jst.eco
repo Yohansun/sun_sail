@@ -1,0 +1,60 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal">×</button>
+  <h3>发票信息</h3>
+</div><!-- modal-header -->
+<div class="modal-body">
+<fieldset>
+  <table class="table">
+    <tbody>
+      <tr>
+        <th nowrap>订单编号</th>
+        <td><%= @trade.get("tid") %></td>
+      </tr>
+      <tr>
+        <th nowrap>订单金额</th>
+        <td>￥<%= @trade.get("total_fee") %></td>
+      </tr>
+      <tr>
+        <th>发票类型：</th>
+        <td>
+          <div class="controls">   
+            <% if @trade.get('invoice_type') == "公司": %>                   
+            <input type="radio" name="invoice_type" value="公司" checked="checked" >公司
+            <input type="radio" name="invoice_type" value="个人" >个人
+            <% end %>           
+            <% if @trade.get('invoice_type') == "个人": %>
+            <input type="radio" name="invoice_type" value="公司" >公司
+            <input type="radio" name="invoice_type" value="个人" checked="checked" >个人
+            <% end %>     
+            <% if !@trade.get 'invoice_type': %>
+            <input type="radio" name="invoice_type" value="公司" >公司
+            <input type="radio" name="invoice_type" value="个人" >个人
+            <% end %>       
+          </div>
+        </td> 
+      </tr> 
+      <tr>  
+        <th>发票抬头：</th>
+        <td>
+          <div class="controls">
+            <input type="text" placeholder="输入文字..." class="input-xlarge" id="invoice_name_text" value="<%= @trade.get 'invoice_name' %>">
+          </div>          
+        </td>
+      </tr>  
+      <tr>    
+        <th>完成日期：</th>
+        <td>
+          <div class="controls">
+            <input class="input-xlarge" type="text" placeholder="请填写日期(年-月-日)..." id="invoice_date_text" value="<%= @trade.get 'invoice_date' %>">
+          </div>          
+        </td>
+      </tr>    
+    </tbody>
+  </table>
+</fieldset>
+</div>
+
+<div class="modal-footer">
+  <a class="btn" data-dismiss="modal">取消</a>
+  <a class="btn btn-primary save">保存</a>
+</div><!-- modal-footer -->
