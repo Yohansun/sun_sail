@@ -93,4 +93,9 @@ class TaobaoTrade < Trade
   def orders
     self.taobao_orders
   end
+
+  def deliver!
+    TradeTaobaoDeliver.perform_async(self.id)
+  end
+  
 end
