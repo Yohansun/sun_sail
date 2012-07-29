@@ -195,11 +195,11 @@ class TradeDecorator < Draper::Base
   def invoice_name
     case trade._type
       when 'TaobaoPurchaseOrder'
-        ''
+        trade.invoice_name
       when 'TaobaoTrade'
         trade.invoice_name
       when 'JingdongTrade'
-        trade.invoice_info
+        trade.invoice_name
     end
   end
 
@@ -259,6 +259,8 @@ class TradeDecorator < Draper::Base
         '已付款，已发货'
       when 'TRADE_CLOSED_BY_TAOBAO'
         '交易被淘宝关闭'
+      when 'TRADE_FINISHED'
+        '交易已结束'
       else
         trade.status
     end

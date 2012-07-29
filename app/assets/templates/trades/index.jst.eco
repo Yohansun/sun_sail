@@ -84,6 +84,7 @@
         <th nowrap>卖家<br/>备注</th>
         <th nowrap>客服<br/>备注</th>
         <th nowrap>调色<br/>信息</th>
+        <th nowrap>发票<br/>信息</th>
         <th nowrap>送货<br/>经销商</th>
         <th>操作</th>
       </tr>

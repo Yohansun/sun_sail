@@ -30,7 +30,12 @@ class JingdongTrade < Trade
     self.jingdong_orders
   end
 
+
   def deliver!
     TradeJingdongDeliver.perform_async(self.id)
+  end
+
+  def invoice_name
+    self.invoice_name = invoice_info.split(";")[1]
   end
 end

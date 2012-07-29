@@ -11,8 +11,8 @@ class Trade
   field :cs_memo, type: String             # 客服备注
 
   field :invoice_type, type: String        # 发票信息
-  field :invoice_content, type: String
-  field :invoice_date, type: String
+  field :invoice_name, type: String
+  field :invoice_date, type: DateTime
 
   field :logistic_code, type: String       # 物流公司代码
   field :logistic_waybill, type: String    # 物流运单号
