@@ -47,9 +47,9 @@ class TaobaoPurchaseOrder < Trade
   def orders
     self.taobao_sub_purchase_orders
   end
-  
+
   def deliver!
-    TaobaoPurchaseDeliver.perform_async(self.id)
+    TradeTaobaoPurchaseOrderDeliver.perform_async(self.id)
   end
 
 end
