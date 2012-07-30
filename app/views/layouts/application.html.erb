@@ -32,22 +32,22 @@
             <span class="icon-bar"></span>
           </a>
 
-          <div class="btn-group pull-right">
-            <a href="#" class="btn btn-primary"><i class="icon-user icon-white"></i> <%= current_user.display_name %></a>
-            <a href="#" data-toggle="dropdown" class="btn btn-primary dropdown-toggle"><span class="caret"></span></a>
+          <ul class="nav" id="top-nav">
+            <li class="active trades" style="display:none"><a href="#">订单管理</a></li>
+            <li class="active areas" style="display:none"><a href="#">区域管理</a></li>
+            <li class="active sellers" style="display:none"><a href="#">经销商管理</a></li>
+          </ul>
+
+          <div class="btn-group pull-right" style="min-width:100px">
+            <button class="btn btn-primary"><i class="icon-user icon-white"></i> <%= current_user.display_name %></button>
+            <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle"><span class="caret"></span></button>
             <ul class="dropdown-menu">
               <li><%= link_to "注销", destroy_user_session_path, method: :delete %></li>
             </ul>
           </div>
 
-          <div class="nav-collapse">
-            <ul class="nav" id="top-nav">
-              <li class="active trades" style="display:none"><a href="#">订单管理</a></li>
-              <li class="active areas" style="display:none"><a href="#">区域管理</a></li>
-              <li class="active sellers" style="display:none"><a href="#">经销商管理</a></li>
-            </ul>
-
-            <ul class="nav pull-right">
+          <div class="nav-collapse pull-right">
+            <ul class="nav">
               <li id="fat-menu" class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Magic <b class="caret"></b></a>
                 <ul class="dropdown-menu">
@@ -60,10 +60,11 @@
                 </ul>
               </li>
               <li class="divider-vertical"></li>
-            </div><!--/.nav-collapse -->
-          </ul>
+            </ul>
+          <!--/.nav-collapse -->
+          </div>
+          <% end -%>
         </div>
-        <% end -%>
       </div>
     </div>
 
