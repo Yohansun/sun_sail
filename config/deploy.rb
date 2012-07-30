@@ -9,9 +9,9 @@ set :branch, "master"
 set :deploy_to, "/data/www/magic_orders"
 require 'bundler/capistrano'
 
-role :web, "magicalpha.doorder.com" # Your HTTP server, Apache/etc
-role :app, "magicalpha.doorder.com" # This may be the same as your `Web` server
-role :db, "magicalpha.doorder.com", :primary => true # This is where Rails migrations will run
+role :web, "121.11.90.8" # Your HTTP server, Apache/etc
+role :app, "121.11.90.8" # This may be the same as your `Web` server
+role :db, "121.11.90.8", :primary => true # This is where Rails migrations will run
 
 set :use_sudo, false
 set :scm, :git

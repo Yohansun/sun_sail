@@ -21,6 +21,8 @@ json.pay_time @trade.pay_time.strftime("%m-%d %H:%M") if @trade.pay_time
 
 json.cs_memo @trade.cs_memo                                                            # 买家备注
 
+json.has_color_info @trade.has_color_info                                               # 判断调色信息是否存在
+
 json.logistic_code @trade.logistic_code
 json.logistic_company @trade.logistic_company
 json.logistic_waybill @trade.logistic_waybill
@@ -36,6 +38,8 @@ else
     json.consign_time @trade.delivered_at.strftime("%m-%d %H:%M")
   end
 end
+
+json.dispatched_at @trade.dispatched_at.strftime("%m-%d %H:%M") if @trade.dispatched_at
 
 json.orders OrderDecorator.decorate(@trade.orders) do |json, order|
   json.id order._id
