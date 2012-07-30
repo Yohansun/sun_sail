@@ -25,6 +25,9 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
     @first_rendered = true
     @collection.each(@appendTrade)
+
+    $("a[rel=popover]").popover(placement: 'left')
+
     this
 
   appendTrade: (trade) =>
