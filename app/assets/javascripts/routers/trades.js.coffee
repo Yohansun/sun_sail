@@ -11,6 +11,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     'trades/:id/invoice': 'invoice'
 
   initialize: ->
+    @trade_type = null
     $('#content').html('')
     @collection = new MagicOrders.Collections.Trades()
 
@@ -32,7 +33,8 @@ class MagicOrders.Routers.Trades extends Backbone.Router
   index: (trade_type = null) ->
     @isFixed = false
 
-    if @collection.length == 0
+    if @collection.length == 0 || @trade_type != trade_type
+      @trade_type = trade_type
       $("body").spin()
       @show_top_nav()
       @collection.fetch data: {trade_type: trade_type}, success: (collection, response) =>
@@ -133,7 +135,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       view = new MagicOrders.Views.TradesInvoice(model: model)
 
       $('#trade_invoice').html(view.render().el)
-      
+
       $('#trade_invoice').on 'hide', (event) ->
         window.history.back()
 
