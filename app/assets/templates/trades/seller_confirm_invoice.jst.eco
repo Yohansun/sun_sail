@@ -1,0 +1,84 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal">×</button>
+  <h3>订单详情</h3>
+</div><!-- modal-header -->
+<div class="modal-body">
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>订单编号</th>
+        <td><%= @trade.get("tid") %></td>
+      </tr>
+      <tr>
+        <th>订单状态</th>
+        <td><%= @trade.get("status_text") %></td>
+      </tr>
+    </thead>
+  </table>
+  <table class="table">
+    <tbody>
+      <tr>
+        <th colspan="2">收货人信息</th>
+      </tr>
+      <tr>
+        <td nowrap>收货人：</td>
+        <td><%= @trade.get('receiver_name') %></td>
+      </tr>
+      <tr>
+        <td nowrap>联系电话：</td>
+        <td><%= @trade.get('receiver_mobile_phone') %></td>
+      </tr>
+      <tr>
+        <td nowrap>收货地址：</td>
+        <td>
+          <%= @trade.get('receiver_state') %>
+          <%= @trade.get('receiver_city') %>
+          <%= @trade.get('receiver_district') %>
+          <%= @trade.get('receiver_address') %>
+        </td>
+      </tr>
+      <tr>
+        <td>邮编：</td>
+        <td><%= @trade.get('receiver_zip') %></td>
+      </tr>
+      <tr>
+        <td>备注：</td>
+        <td><%= @trade.get('seller_memo') %></td>
+      </tr>
+    </tbody>
+  </table>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th colspan="5">商品清单</th>
+      </tr>
+      <tr>
+        <th>商品名称</th>
+        <th nowrap>特殊属性</th>
+        <th nowrap>标价</th>
+        <th nowrap>实际单价</th>
+        <th nowrap>数量</th>
+        <th nowrap>小计</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for order in @trade.get('orders'): %>
+      <tr>
+        <td><%= order.title %></td>
+        <td><%= order.sku_properties %></td>
+        <td>￥<%= order.auction_price %></td>
+        <td>￥<%= order.price %></td>
+        <td><%= order.num %></td>
+        <td>￥<%= order.total_fee %></td>
+      </tr>
+      <% end %>
+      <tr>
+        <th colspan="6">总价：￥<%= @trade.get('total_fee') - @trade.get ('post_fee') %><br>物流费：￥<%= @trade.get 'post_fee' %></th>
+      </tr>
+    </tbody>
+  </table>
+</div><!-- modal-body -->
+<div class="modal-footer">
+  <a class="btn" data-dismiss="modal">取消</a>
+  <a class="btn btn-primary save">确认开票</a>
+</div><!-- modal-footer -->

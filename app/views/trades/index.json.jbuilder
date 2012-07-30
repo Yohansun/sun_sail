@@ -15,13 +15,16 @@ json.array!(@trades) do |json, trade|
   json.created trade.created.strftime("%m-%d %H:%M") if trade.created
   json.pay_time trade.pay_time.strftime("%m-%d %H:%M") if trade.pay_time
 
-  json.cs_memo trade.cs_memo                                                                  # 买家备注
+  json.cs_memo trade.cs_memo
 
-  json.has_color_info trade.has_color_info                                                    # 判断调色信息是否存在
-  
-  json.invoice_type trade.invoice_type                                                        # 发票信息
+  json.has_color_info trade.has_color_info
+
+  json.invoice_type trade.invoice_type
   json.invoice_name trade.invoice_name
   json.invoice_date trade.invoice_date.strftime("%Y-%m-%d") if trade.invoice_date
+
+  json.seller_confirm_deliver_at trade.seller_confirm_deliver_at.strftime("%m-%d %H:%M") if trade.seller_confirm_deliver_at
+  json.seller_confirm_invoice_at trade.seller_confirm_invoice_at.strftime("%m-%d %H:%M") if trade.seller_confirm_invoice_at
   
   if trade.consign_time
     json.consign_time trade.consign_time.strftime("%m-%d %H:%M")

@@ -5,18 +5,21 @@ class Trade
   include Mongoid::Timestamps
 
   field :seller_id, type: Integer
-  field :dispatched_at, type: DateTime     # 分流时间
-  field :delivered_at, type: DateTime      # 发货时间
+  field :dispatched_at, type: DateTime                    # 分流时间
+  field :delivered_at, type: DateTime                     # 发货时间
 
-  field :cs_memo, type: String             # 客服备注
+  field :cs_memo, type: String                            # 客服备注
 
-  field :invoice_type, type: String        # 发票信息
+  field :invoice_type, type: String                       # 发票信息
   field :invoice_name, type: String
   field :invoice_date, type: DateTime
 
-  field :logistic_code, type: String       # 物流公司代码
-  field :logistic_waybill, type: String    # 物流运单号
+  field :logistic_code, type: String                      # 物流公司代码
+  field :logistic_waybill, type: String                   # 物流运单号
 
+  field :seller_confirm_deliver_at, type: DateTime        # 确认发货
+  field :seller_confirm_invoice_at, type: DateTime        # 确认开票
+  
   # model 属性方法
 
   # 物流公司名称
