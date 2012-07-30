@@ -24,5 +24,10 @@ class MagicOrders.Views.TradesDeliver extends Backbone.View
 
     @model.save 'delivered_at', true, success: (model, response) =>
       $("body").spin(false)
+
+      view = new MagicOrders.Views.TradesRow(model: model)
+      $("#trade_#{model.get('id')}").replaceWith(view.render().el)
+      $("a[rel=popover]").popover(placement: 'left')
+
       $('#trade_deliver').modal('hide')
-      window.history.back()
+      # window.history.back()

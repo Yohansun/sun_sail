@@ -26,12 +26,22 @@ class MagicOrders.Views.TradesSeller extends Backbone.View
     if $("#trade_seller_id").val() > 0
       @model.save 'seller_id', $("#trade_seller_id").val(), success: (model, response) =>
         $("body").spin(false)
+
+        view = new MagicOrders.Views.TradesRow(model: model)
+        $("#trade_#{model.get('id')}").replaceWith(view.render().el)
+        $("a[rel=popover]").popover(placement: 'left')
+
         $('#trade_seller').modal('hide')
-        window.history.back()
+        # window.history.back()
 
   reset_seller: ->
     $("body").spin()
     @model.save 'seller_id', null, success: (model, response) =>
       $("body").spin(false)
+
+      view = new MagicOrders.Views.TradesRow(model: model)
+      $("#trade_#{model.get('id')}").replaceWith(view.render().el)
+      $("a[rel=popover]").popover(placement: 'left')
+
       $('#trade_seller').modal('hide')
-      window.history.back()
+      # window.history.back()
