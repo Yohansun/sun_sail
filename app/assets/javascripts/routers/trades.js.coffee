@@ -11,6 +11,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     'trades/:id/invoice': 'invoice'
 
   initialize: ->
+    @trade_type = null
     $('#content').html('')
     @collection = new MagicOrders.Collections.Trades()
 
@@ -30,24 +31,26 @@ class MagicOrders.Routers.Trades extends Backbone.Router
         @nav.removeClass('subnav-fixed')
 
   index: (trade_type = null) ->
-    $("body").spin()
     @isFixed = false
 
-    @show_top_nav()
-    @collection.fetch data: {trade_type: trade_type}, success: (collection, response) =>
-      view = new MagicOrders.Views.TradesIndex(collection: collection, trade_type: trade_type)
-      $('#content').html(view.render().el)
-      $("a[rel=popover]").popover(placement: 'left')
+    if @collection.length == 0 || @trade_type != trade_type
+      @trade_type = trade_type
+      $("body").spin()
+      @show_top_nav()
+      @collection.fetch data: {trade_type: trade_type}, success: (collection, response) =>
+        view = new MagicOrders.Views.TradesIndex(collection: collection, trade_type: trade_type)
+        $('#content').html(view.render().el)
+        $("a[rel=popover]").popover(placement: 'left')
 
-      @nav = $('.subnav')
-      @navTop = $('.subnav').length && $('.subnav').offset().top - 40
-      $(window).off 'scroll'
-      $(window).on 'scroll', @processScroll
-      @processScroll
+        @nav = $('.subnav')
+        @navTop = $('.subnav').length && $('.subnav').offset().top - 40
+        $(window).off 'scroll'
+        $(window).on 'scroll', @processScroll
+        @processScroll
 
-      $("body").spin(false)
+        $("body").spin(false)
 
-      $('#trades_bottom').waypoint view.fetch_more_trades, {offset: '100%'}
+        $('#trades_bottom').waypoint view.fetch_more_trades, {offset: '100%'}
 
   show: (id) ->
     $("body").spin()
@@ -132,7 +135,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       view = new MagicOrders.Views.TradesInvoice(model: model)
 
       $('#trade_invoice').html(view.render().el)
-      
+
       $('#trade_invoice').on 'hide', (event) ->
         window.history.back()
 

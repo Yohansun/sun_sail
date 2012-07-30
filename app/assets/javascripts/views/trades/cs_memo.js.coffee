@@ -29,5 +29,10 @@ class MagicOrders.Views.TradesCsMemo extends Backbone.View
 
     @model.save {'cs_memo': $("#cs_memo_text").val()}, success: (model, response) =>
       $("body").spin(false)
+
+      view = new MagicOrders.Views.TradesRow(model: model)
+      $("#trade_#{model.get('id')}").replaceWith(view.render().el)
+      $("a[rel=popover]").popover(placement: 'left')
+
       $('#trade_cs_memo').modal('hide')
-      window.history.back()
+      # window.history.back()
