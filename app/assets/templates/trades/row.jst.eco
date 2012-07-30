@@ -15,6 +15,12 @@
   <% if @trade.get('consign_time'): %>
     <span class="label label-success">发货 <%= @trade.get('consign_time') %></span>
   <% end %>
+  <% if @trade.get('seller_confirm_deliver_at'): %>
+    <span class="label label-success">确认发货 <%= @trade.get('seller_confirm_deliver_at') %></span>
+  <% end %>
+  <% if @trade.get('seller_confirm_invoice_at'): %>
+    <span class="label label-success">确认开票 <%= @trade.get('seller_confirm_invoice_at') %></span>
+  <% end %>
 </td>
 <td><%= @trade.get('receiver_name') %></td>
 <td><%= @trade.get('receiver_mobile_phone') %></td>
@@ -66,6 +72,11 @@
       <li><a data-toggle="modal" href="#" data-type="color">调色信息</a>
       </li>
       <li><a data-toggle="modal" href="#" data-type="invoice">申请开票</a>
+      </li>
+      <li class="divider"></li>
+      <li><a data-toggle="modal" href="#" data-type="seller_confirm_deliver">确认发货</a>
+      </li>
+      <li><a data-toggle="modal" href="#" data-type="seller_confirm_invoice">确认开票</a>
       </li>
     </ul>
   </div>

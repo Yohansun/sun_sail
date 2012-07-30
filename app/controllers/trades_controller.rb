@@ -79,6 +79,14 @@ class TradesController < ApplicationController
       @trade.invoice_date = params[:invoice_date].strip
     end
 
+    if params[:seller_confirm_deliver_at] == true
+      @trade.seller_confirm_deliver_at = Time.now
+    end
+
+    if params[:seller_confirm_invoice_at] == true
+      @trade.seller_confirm_invoice_at = Time.now
+    end
+
     unless params[:orders].blank?
       params[:orders].each do |item|
         order = @trade.orders.find item[:id]

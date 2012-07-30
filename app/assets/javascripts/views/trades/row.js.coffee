@@ -11,6 +11,8 @@ class MagicOrders.Views.TradesRow extends Backbone.View
     'click [data-type=cs_memo]': 'show_cs_memo'
     'click [data-type=color]': 'show_color'
     'click [data-type=invoice]': 'show_invoice'
+    'click [data-type=seller_confirm_deliver]':'show_seller_confirm_deliver'
+    'click [data-type=seller_confirm_invoice]':'show_seller_confirm_invoice'
 
   initialize: ->
 
@@ -42,4 +44,13 @@ class MagicOrders.Views.TradesRow extends Backbone.View
   show_invoice: (e) ->
     e.preventDefault()
     Backbone.history.navigate('trades/' + @model.get("id") + '/invoice', true)
+
+  show_seller_confirm_deliver: (e) ->
+    e.preventDefault()
+    Backbone.history.navigate('trades/' + @model.get("id") + '/seller_confirm_deliver', true)
+
+  show_seller_confirm_invoice: (e) ->
+    e.preventDefault()
+    Backbone.history.navigate('trades/' + @model.get("id") + '/seller_confirm_invoice', true)
+        
   

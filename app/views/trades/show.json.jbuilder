@@ -19,15 +19,18 @@ json.total_fee @trade.total_fee
 json.created @trade.created.strftime("%m-%d %H:%M")
 json.pay_time @trade.pay_time.strftime("%m-%d %H:%M") if @trade.pay_time
 
-json.cs_memo @trade.cs_memo                                                            # 买家备注
+json.cs_memo @trade.cs_memo
 
 json.logistic_code @trade.logistic_code
 json.logistic_company @trade.logistic_company
 json.logistic_waybill @trade.logistic_waybill
 
-json.invoice_type @trade.invoice_type                                                  # 发票信息
+json.invoice_type @trade.invoice_type
 json.invoice_name @trade.invoice_name
 json.invoice_date @trade.invoice_date.strftime("%Y-%m-%d") if @trade.invoice_date
+
+json.seller_confirm_deliver_at @trade.seller_confirm_deliver_at.strftime("%m-%d %H:%M") if @trade.seller_confirm_deliver_at
+json.seller_confirm_invoice_at @trade.seller_confirm_invoice_at.strftime("%m-%d %H:%M") if @trade.seller_confirm_invoice_at
 
 if @trade.consign_time
   json.consign_time @trade.consign_time.strftime("%m-%d %H:%M")
