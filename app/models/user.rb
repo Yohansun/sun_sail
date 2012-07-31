@@ -16,4 +16,15 @@ class User < ActiveRecord::Base
   def display_name
     name || email
   end
+
+  class << self
+    def find_for_database_authentication(conditions)
+      user = find(:first, :conditions => conditions)
+      if user.nil?
+        find(:first, :conditions => {:username => conditions[:email]})
+      else
+        user
+      end
+    end
+  end
 end
