@@ -27,4 +27,8 @@ class User < ActiveRecord::Base
       end
     end
   end
+
+  def magic_key
+    Digest::MD5.hexdigest "magic_magic_#{self.username}"
+  end
 end
