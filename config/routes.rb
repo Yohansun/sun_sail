@@ -2,8 +2,7 @@ require 'sidekiq/web'
 
 MagicOrders::Application.routes.draw do
 
-  mount Sidekiq::Web => '/sidekiq'
-
+  get 'autologin', to: 'users#autologin'
   devise_for :users
 
   scope 'api' do
@@ -18,6 +17,8 @@ MagicOrders::Application.routes.draw do
       end
     end
   end
+
+  mount Sidekiq::Web => '/sidekiq'
 
   root to: "home#index"
   match "*path", to: "home#index"

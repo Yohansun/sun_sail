@@ -125,7 +125,7 @@ Devise.setup do |config|
   # The time you want to timeout the user session without activity. After this
   # time the user will be asked for credentials again. Default is 30 minutes.
   # config.timeout_in = 30.minutes
-  
+
   # If true, expires auth token on session timeout.
   # config.expire_auth_token_on_timeout = false
 
@@ -169,6 +169,9 @@ Devise.setup do |config|
   # and :restful_authentication_sha1 (then you should set stretches to 10, and copy
   # REST_AUTH_SITE_KEY to pepper)
   # config.encryptor = :sha512
+  config.encryptor = :bcrypt
+  config.stretches = 10
+  config.pepper = "2bed6aeceef9c65ce5ae91725927b203e907dcb4df0b63fde0329cad97d1e7cfb96532632ee84d7f61ed49606c31a8b381b97bd250fbb6c0470c8a9a396b65be"
 
   # ==> Configuration for :token_authenticatable
   # Defines name of the authentication token params key
