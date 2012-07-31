@@ -31,4 +31,15 @@ class User < ActiveRecord::Base
   def magic_key
     Digest::MD5.hexdigest "magic_magic_#{self.username}"
   end
+
+  def role_key
+    case self.role_level
+    when 0
+      'admin'
+    when 10
+      'seller'
+    when 15
+      'cs'
+    end
+  end
 end
