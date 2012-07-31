@@ -19,6 +19,11 @@ class MagicOrders.Views.TradesRow extends Backbone.View
   render: ->
     $(@el).attr("id", "trade_#{@model.get('id')}")
     $(@el).html(@template(trade: @model))
+    unless MagicOrders.role_key == 'admin'
+      $(@el).find(".trade_pops li").hide()
+      for pop in MagicOrders.trade_pops[MagicOrders.role_key]
+        $(@el).find(".trade_pops li [data-type=#{pop}]").parent().show()
+
     this
 
   show_detail: (e) ->
@@ -52,5 +57,4 @@ class MagicOrders.Views.TradesRow extends Backbone.View
   show_seller_confirm_invoice: (e) ->
     e.preventDefault()
     Backbone.history.navigate('trades/' + @model.get("id") + '/seller_confirm_invoice', true)
-        
-  
+
