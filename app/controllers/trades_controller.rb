@@ -7,6 +7,10 @@ class TradesController < ApplicationController
   def index
     @trades = Trade
 
+    if current_user.role_key == 'seller'
+      @trades = @trades.where seller_id: current_user.seller.id
+    end
+
     case params[:trade_type]
     when 'taobao'
       trade_type = 'TaobaoTrade'

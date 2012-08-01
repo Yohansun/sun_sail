@@ -53,7 +53,11 @@
   <a href="#" rel="popover" data-content="<%= @trade.get 'invoice_type' %><br/><%= @trade.get 'invoice_name' %><br/><%= @trade.get 'invoice_date' %>" data-original-title="发票信息"><i class="icon-comment"></i></a>
   <% end %>
 </td>
-<td nowrap><%= @trade.get('seller_name') %></td>
+<td nowrap>
+  <% if @trade.get 'seller_id' : %>
+    <%= @trade.get('seller_name') %>
+  <% end %>
+</td>
 <td nowrap>
   <div class="btn-group">
     <button data-toggle="dropdown" class="btn btn-info dropdown-toggle min_w"><i class="icon-wrench"></i> <span class="caret"></span></button>
