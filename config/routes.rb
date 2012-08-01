@@ -6,7 +6,12 @@ MagicOrders::Application.routes.draw do
   devise_for :users
 
   scope 'api' do
-    resources :trades
+    resources :trades do
+      collection do
+        get :notifer
+      end
+    end
+
     resources :sellers
     resources :areas do
       collection do
