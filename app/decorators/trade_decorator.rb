@@ -192,17 +192,6 @@ class TradeDecorator < Draper::Base
     end
   end
 
-  def invoice_name
-    case trade._type
-      when 'TaobaoPurchaseOrder'
-        trade.invoice_name
-      when 'TaobaoTrade'
-        trade.invoice_name
-      when 'JingdongTrade'
-        trade.invoice_name
-    end
-  end
-
   def trade_source
     case trade._type
       when 'TaobaoPurchaseOrder'

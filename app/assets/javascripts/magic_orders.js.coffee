@@ -6,7 +6,7 @@ window.MagicOrders =
   init: ->
     @trade_pops = {
       'cs': ['detail', 'seller', 'cs_memo', 'color', 'invoice'],
-      'seller': ['deliver', 'seller_confirm_deliver', 'seller_confirm_invoice'],
+      'seller': ['detail', 'deliver', 'seller_confirm_deliver', 'seller_confirm_invoice'],
       'admin': ['*']
     }
     new MagicOrders.Routers.Areas()

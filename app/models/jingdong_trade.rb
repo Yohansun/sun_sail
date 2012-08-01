@@ -36,6 +36,6 @@ class JingdongTrade < Trade
   end
 
   def invoice_name
-    self.invoice_name = invoice_info.split(";")[1]
+    self[:invoice_name] || self.invoice_info.split(";")[1]
   end
 end
