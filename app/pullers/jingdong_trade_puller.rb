@@ -1,3 +1,5 @@
+# -*- encoding : utf-8 -*-
+
 class JingdongTradePuller
   class << self
     def create(start_time = nil, end_time = nil)
@@ -24,6 +26,8 @@ class JingdongTradePuller
       p total_results
       p total_pages
 
+      default_seller_id = Seller.find_by_name("立邦仓库经销商").id
+
       (1..total_pages).each do |page|
 
         response = JingdongFu.get(method: '360buy.order.search',
@@ -42,6 +46,14 @@ class JingdongTradePuller
               order = trade.jingdong_orders.build(order)
             end
             trade.save
+
+            # auto dispatch
+            p trade.order_remark
+            if trade.order_remark.blank?
+              trade.seller_id = default_seller_id
+              trade.dispatched_at = Time.now
+              trade.save
+            end
           else
             trade = JingdongTrade.where(tid: t['order_id']).first
             p t

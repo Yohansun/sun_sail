@@ -10,7 +10,7 @@ class TradeObserver < Mongoid::Observer
       return
     end
 
-    if (object.seller_id_changed? && object.seller_id.present?) || (object.dispatched_at_changed? && object.seller_id.present?)
+    if object.seller_id_changed? && object.seller_id.present? && object.dispatched_at_changed? && object.dispatched_at.present?
       # 分流操作
       dispatch_notify(object.id)
     end
