@@ -1,8 +1,10 @@
 class User < ActiveRecord::Base
+  belongs_to :area
+  has_one :seller
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable
-  belongs_to :area
+
   devise :database_authenticatable,
          :recoverable, :rememberable, :trackable, :validatable
 
