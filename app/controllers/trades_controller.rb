@@ -33,14 +33,46 @@ class TradesController < ApplicationController
     end
 
     offset = params[:offset] || 0
+    limit = params[:limit] || 20
 
-    @trades = TradeDecorator.decorate(@trades.limit(20).offset(offset).order_by("created", "DESC"))
+    @trades = TradeDecorator.decorate(@trades.limit(limit).offset(offset).order_by("created", "DESC"))
 
     if @trades.count > 0
       respond_with @trades
     else
       render json: []
     end
+  end
+
+  def notifer
+    trade_type = params[:trade_type]
+    timestamp = Time.at(params[:timestamp].to_i)
+
+    @trades = Trade
+
+    if current_user.role_key == 'seller'
+      @trades = @trades.where seller_id: current_user.seller.id
+    end
+
+    case params[:trade_type]
+    when 'taobao'
+      trade_type = 'TaobaoTrade'
+    when 'taobao_fenxiao'
+      trade_type = 'TaobaoPurchaseOrder'
+    when 'jingdong'
+      trade_type = 'JingdongTrade'
+    when 'shop'
+      trade_type = 'ShopTrade'
+    else
+      trade_type = nil
+    end
+
+    if trade_type
+      @trades = @trades.where(_type: trade_type)
+    end
+
+    @new_trades_count = @trades.where(:created.gt => timestamp).count
+    render json: @new_trades_count
   end
 
   def show

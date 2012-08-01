@@ -22,7 +22,6 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     $("#top-nav li.trades").show()
 
   processScroll: =>
-    console.log 'processScroll'
     scrollTop = $(window).scrollTop()
     if scrollTop >= @navTop && !@isFixed
         @isFixed = true
@@ -40,8 +39,8 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $("body").spin()
       @show_top_nav()
       @collection.fetch data: {trade_type: trade_type}, success: (collection, response) =>
-        view = new MagicOrders.Views.TradesIndex(collection: collection, trade_type: trade_type)
-        $('#content').html(view.render().el)
+        @mainView = new MagicOrders.Views.TradesIndex(collection: collection, trade_type: trade_type)
+        $('#content').html(@mainView.render().el)
         $("a[rel=popover]").popover(placement: 'left')
 
         @nav = $('.subnav')
@@ -52,7 +51,28 @@ class MagicOrders.Routers.Trades extends Backbone.Router
 
         $("body").spin(false)
 
-        $('#trades_bottom').waypoint view.fetch_more_trades, {offset: '100%'}
+        # endless刷新相关
+        $('#trades_bottom').waypoint @mainView.fetch_more_trades, {offset: '100%'}
+
+        # 新订单提醒相关
+        if collection.models.length > 0
+          @latest_trade_timestamp = collection.models[0].get('created_timestamp')
+        else
+          @latest_trade_timestamp = -1
+
+        clearInterval @newTradesNotiferInterval if @newTradesNotiferInterval
+        @newTradesNotiferInterval = setInterval @newTradesNotifer, 300000
+
+
+  newTradesNotifer: =>
+    $.get "/api/trades/notifer", {trade_type: @trade_type, timestamp: @latest_trade_timestamp}, (response) =>
+      if response > 0
+        $("#newTradesNotifer span").text(response)
+        $("#newTradesNotifer").show()
+        $("#newTradesNotiferLink").on 'click', (event) =>
+          event.preventDefault()
+          $("#newTradesNotiferLink").off 'click'
+          @mainView.fetch_new_trades()
 
   show: (id) ->
     $("body").spin()
@@ -154,7 +174,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       view = new MagicOrders.Views.TradesSellerConfirmDeliver(model: model)
 
       $('#trade_seller_confirm_deliver').html(view.render().el)
-      
+
       $('#trade_seller_confirm_deliver').on 'hide', (event) ->
         window.history.back()
 
@@ -170,7 +190,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       view = new MagicOrders.Views.TradesSellerConfirmInvoice(model: model)
 
       $('#trade_seller_confirm_invoice').html(view.render().el)
-      
+
       $('#trade_seller_confirm_invoice').on 'hide', (event) ->
         window.history.back()
 
