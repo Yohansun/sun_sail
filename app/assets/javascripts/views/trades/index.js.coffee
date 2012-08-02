@@ -19,7 +19,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     @offset = @collection.length
     @first_rendered = false
 
-    @collection.on("reset", @render, this)
+    # @collection.on("reset", @render, this)
     @collection.on("fetch", @render_update, this)
 
   render: =>
@@ -70,10 +70,17 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     @search_end_date = $(".search_end_date").val()
     @search_start_time = $(".search_start_time").val()
     @search_end_time = $(".search_end_time").val()
-    return if @search_start_date == '' or @search_end_date == '' or @search_start_time == '' or @search_end_time == ''
+    return if @search_start_date == '' or @search_end_date == ''
     $("body").spin()
     $("#trade_rows").html('')
-    @collection.fetch data: {search_time: {@search_start_date, @search_start_time, @search_end_date, @search_end_time}}
+    @collection.fetch data: {search: {option: @search_option, value: @search_value}, trade_type: @trade_type, search_time: {@search_start_date, @search_start_time, @search_end_date, @search_end_time}}, success: (collection) =>
+      if collection.length > 0
+        @offset = @offset + 20
+        @render_update()
+        $('#trades_bottom').waypoint @fetch_more_trades, {offset: '100%'}
+        console.log "waypoint start"
+      else
+        $("body").spin(false)
 
   change_trade_type: (e) ->
     e.preventDefault()
@@ -81,16 +88,21 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     Backbone.history.navigate('trades/' + type, true)
 
   fetch_new_trades: =>
-    console.log $("#newTradesNotifer span").text()
     @collection.fetch add: true, data: {search: {option: @search_option, value: @search_value}, trade_type: @trade_type, offset: 0, limit: $("#newTradesNotifer span").text()}, success: (collection) =>
       @render_new()
       $("#newTradesNotifer").hide()
 
   fetch_more_trades: (event, direction) =>
     if direction == 'down'
-      $("footer").waypoint('remove');
+      $("#trades_bottom").waypoint 'remove'
       $("body").spin()
-      @collection.fetch add: true, data: {search: {option: @search_option, value: @search_value}, trade_type: @trade_type, offset: @offset, search_time: {@search_start_date, @search_start_time, @search_end_date, @search_end_time}}, success: (collection) =>
-          @offset = @offset + 20
-          @render_update()
-          $('#trades_bottom').waypoint @fetch_more_trades, {offset: '100%'}
+      @collection.fetch data: {search: {option: @search_option, value: @search_value}, trade_type: @trade_type, offset: @offset, search_time: {@search_start_date, @search_start_time, @search_end_date, @search_end_time}}, success: (collection) =>
+          console.log "fetch_more_trades succ"
+          console.log collection.length > 0
+          if collection.length > 0
+            @offset = @offset + 20
+            @render_update()
+            $('#trades_bottom').waypoint @fetch_more_trades, {offset: '100%'}
+            console.log "waypoint start"
+          else
+            $("body").spin(false)

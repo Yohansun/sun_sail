@@ -35,6 +35,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     @isFixed = false
 
     if @collection.length == 0 || @trade_type != trade_type
+      $('#content').html ""
       @trade_type = trade_type
       $("body").spin()
       @show_top_nav()
@@ -43,8 +44,8 @@ class MagicOrders.Routers.Trades extends Backbone.Router
         $('#content').html(@mainView.render().el)
         $("a[rel=popover]").popover(placement: 'left')
 
-        $('.datepicker').datepicker(format: 'yyyy-mm-dd')
-        $('.timepicker').timeEntry(show24Hours: true, showSeconds: true, spinnerImage: 'assets/spinnerUpDown.png', spinnerSize: [17, 26, 0], spinnerIncDecOnly: true)
+        $('.form-search .datepicker').datepicker(format: 'yyyy-mm-dd')
+        $('.form-search .timepicker').timeEntry(show24Hours: true, showSeconds: true, spinnerImage: '/assets/spinnerUpDown.png', spinnerSize: [17, 26, 0], spinnerIncDecOnly: true)
 
         @nav = $('.subnav')
         @navTop = $('.subnav').length && $('.subnav').offset().top - 40
@@ -55,6 +56,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
         $("body").spin(false)
 
         # endless刷新相关
+        $("#trades_bottom").waypoint 'remove'
         $('#trades_bottom').waypoint @mainView.fetch_more_trades, {offset: '100%'}
 
         # 新订单提醒相关
@@ -159,13 +161,11 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       view = new MagicOrders.Views.TradesInvoice(model: model)
 
       $('#trade_invoice').html(view.render().el)
-      
+
       $('#trade_invoice').on 'hide', (event) ->
         window.history.back()
 
       $('#trade_invoice').modal('show')
-
-      #$('.datepicker').datepicker(format: 'yyyy-mm-dd')
 
   seller_confirm_deliver: (id) ->
     $("body").spin()
