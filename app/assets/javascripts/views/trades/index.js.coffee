@@ -5,11 +5,16 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
   events:
     'click [data-trade-type]': 'change_trade_type'
     'click .search': 'search'
+    'click .search_time': 'search_time'
 
   initialize: (options) ->
     @trade_type = options.trade_type
     @search_option = null
     @search_value = null
+    @search_start_date = null
+    @search_end_date = null
+    @search_start_time = null
+    @search_end_time = null
 
     @offset = @collection.length
     @first_rendered = false
@@ -20,7 +25,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
   render: =>
     $("body").spin(false)
     if !@first_rendered
-      $(@el).html(@template(trade_type: @trade_type, search_value: @search_value))
+      $(@el).html(@template(trade_type: @trade_type, search_value: @search_value, search_start_date: @search_start_date, search_end_date: @search_end_date, search_start_time: @search_start_time, search_end_time: @search_end_time))
       navs = {'all': '所有订单', 'taobao': '淘宝订单', 'taobao_fenxiao': '淘宝分销采购单', 'jingdong': '京东商城订单', 'shop': '官网订单'}
       $(@el).find(".trade_nav").text(navs[@trade_type])
 
@@ -59,6 +64,17 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     $("#trade_rows").html('')
     @collection.fetch data: {search: {option: @search_option, value: @search_value}, trade_type: @trade_type}
 
+  search_time: (e) ->
+    e.preventDefault()
+    @search_start_date = $(".search_start_date").val()
+    @search_end_date = $(".search_end_date").val()
+    @search_start_time = $(".search_start_time").val()
+    @search_end_time = $(".search_end_time").val()
+    return if @search_start_date == '' or @search_end_date == '' or @search_start_time == '' or @search_end_time == ''
+    $("body").spin()
+    $("#trade_rows").html('')
+    @collection.fetch data: {search_time: {@search_start_date, @search_start_time, @search_end_date, @search_end_time}}
+
   change_trade_type: (e) ->
     e.preventDefault()
     type = $(e.target).data('trade-type')
@@ -74,7 +90,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     if direction == 'down'
       $("footer").waypoint('remove');
       $("body").spin()
-      @collection.fetch add: true, data: {search: {option: @search_option, value: @search_value}, trade_type: @trade_type, offset: @offset}, success: (collection) =>
+      @collection.fetch add: true, data: {search: {option: @search_option, value: @search_value}, trade_type: @trade_type, offset: @offset, search_time: {@search_start_date, @search_start_time, @search_end_date, @search_end_time}}, success: (collection) =>
           @offset = @offset + 20
           @render_update()
           $('#trades_bottom').waypoint @fetch_more_trades, {offset: '100%'}

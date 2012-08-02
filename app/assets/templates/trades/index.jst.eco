@@ -53,6 +53,19 @@
         </div>
       </div>
     </fieldset>
+    <br/>
+    <fieldset class="form-inline">
+      <div class="controls">
+        <label class="control-label">下单时间：</label>
+        <div class="input-append">
+            <input type="text" placeholder="年-月-日" id="appendedInputButton" class="input-small search-query search_start_date datepicker" value="<%= @search_start_date %>">
+            <input type="text" placeholder="00:00:00" id="appendedInputButton" class="input-small search-query search_start_time timepicker" value="<%= @search_start_time %>">
+            <i class="icon-arrow-right"></i>
+            <input type="text" placeholder="年-月-日" id="appendedInputButton" class="input-small search-query search_end_date datepicker" value="<%= @search_end_date %>">
+            <input type="text" placeholder="00:00:00" id="appendedInputButton" class="input-small search-query search_end_time timepicker" value="<%= @search_end_time %>"> <button type="button" class="btn search_time">筛选</button>
+        </div>
+      </div>
+    </fieldset>
   </form>
 <!--
   <div class="controls clearfix">

@@ -250,6 +250,8 @@ class TradeDecorator < Draper::Base
         '交易被淘宝关闭'
       when 'TRADE_FINISHED'
         '交易已结束'
+      when 'TRADE_CLOSED'
+        '交易已关闭'
       else
         trade.status
     end

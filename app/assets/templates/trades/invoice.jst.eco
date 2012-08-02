@@ -45,10 +45,10 @@
         <th>完成日期：</th>
         <td>
           <div class="controls">
-            <input class="input-xlarge" type="text" placeholder="请填写日期(年-月-日)..." id="invoice_date_text" value="<%= @trade.get 'invoice_date' %>">
-          </div>          
+            <input type="text" class="input-large datepicker" placeholder="请填写日期(年-月-日)..." id="invoice_date_text" value="<%= @trade.get 'invoice_date' %>">
+          </div>
         </td>
-      </tr>    
+      </tr>
     </tbody>
   </table>
 </fieldset>

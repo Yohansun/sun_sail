@@ -21,7 +21,7 @@ json.pay_time @trade.pay_time.strftime("%m-%d %H:%M") if @trade.pay_time
 
 json.cs_memo @trade.cs_memo
 
-json.has_color_info @trade.has_color_info                                               # 判断调色信息是否存在
+json.has_color_info @trade.has_color_info
 
 json.logistic_code @trade.logistic_code
 json.logistic_company @trade.logistic_company

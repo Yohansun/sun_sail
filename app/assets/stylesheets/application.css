@@ -150,3 +150,6 @@ form .span4{border-right: 1px solid #ddd;}
   width: 750px;
   margin-left: -375px;
 }
+
+.timeEntry_control { vertical-align: middle; margin-left: -1px; margin-top: 0px; cursor: pointer; }
+* html .timeEntry_control { margin-top: -2px; }
