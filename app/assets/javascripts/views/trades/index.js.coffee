@@ -70,10 +70,17 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     @search_end_date = $(".search_end_date").val()
     @search_start_time = $(".search_start_time").val()
     @search_end_time = $(".search_end_time").val()
-    return if @search_start_date == '' or @search_end_date == '' or @search_start_time == '' or @search_end_time == ''
+    return if @search_start_date == '' or @search_end_date == ''
     $("body").spin()
     $("#trade_rows").html('')
-    @collection.fetch data: {search_time: {@search_start_date, @search_start_time, @search_end_date, @search_end_time}}
+    @collection.fetch data: {search: {option: @search_option, value: @search_value}, trade_type: @trade_type, search_time: {@search_start_date, @search_start_time, @search_end_date, @search_end_time}}, success: (collection) =>
+      if collection.length > 0
+        @offset = @offset + 20
+        @render_update()
+        $('#trades_bottom').waypoint @fetch_more_trades, {offset: '100%'}
+        console.log "waypoint start"
+      else
+        $("body").spin(false)
 
   change_trade_type: (e) ->
     e.preventDefault()
