@@ -59,4 +59,6 @@ json.orders OrderDecorator.decorate(@trade.orders) do |json, order|
   json.item_outer_id order.item_outer_id
   json.cs_memo order.cs_memo
   json.color_num order.color_num
+  json.color_hexcode order.color_hexcode
+  json.color_name order.color_name
 end

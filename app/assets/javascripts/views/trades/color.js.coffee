@@ -27,7 +27,7 @@ class MagicOrders.Views.TradesColor extends Backbone.View
 
     @model.set("orders", orders)
 
-    @model.save {'color': $("#color_text").val()}, success: (model, response) =>
+    @model.save {}, success: (model, response) =>
       $("body").spin(false)
 
       view = new MagicOrders.Views.TradesRow(model: model)
