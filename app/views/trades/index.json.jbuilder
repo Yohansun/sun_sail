@@ -47,5 +47,7 @@ json.array!(@trades) do |json, trade|
     json.num order.num
     json.cs_memo order.cs_memo
     json.color_num order.color_num
+    json.color_hexcode order.color_hexcode
+    json.color_name order.color_name
   end
 end
