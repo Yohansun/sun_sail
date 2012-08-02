@@ -15,7 +15,7 @@ class MagicOrders.Views.TradesSellerConfirmDeliver extends Backbone.View
   save: ->
     $("body").spin()
                 
-    @model.save 'seller_confirm_deliver_at', true, success: (model, response) => 
+    @model.save 'seller_confirm_deliver_at', true, success: (model, response) =>
       $("body").spin(false)
 
       view = new MagicOrders.Views.TradesRow(model: model)

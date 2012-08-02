@@ -32,6 +32,12 @@ class TradesController < ApplicationController
       @trades = @trades.where(Hash[params[:search][:option].to_sym, params[:search][:value]])
     end
 
+    if params[:search_time] && params[:search_time][:search_start_date] && params[:search_time][:search_end_date] != 'null'
+      start_time = (params[:search_time][:search_start_date] + ' ' + params[:search_time][:search_start_time]).to_time(form = :local)
+      end_time = (params[:search_time][:search_end_date] + ' ' + params[:search_time][:search_end_time]).to_time(form = :local)
+      @trades = @trades.where(:created.gte => start_time, :created.lte => end_time)
+    end
+
     offset = params[:offset] || 0
     limit = params[:limit] || 20
 
@@ -111,9 +117,13 @@ class TradesController < ApplicationController
       @trade.invoice_name = params[:invoice_name].strip
     end
 
-    unless params[:invoice_date].blank?
-      @trade.invoice_date = params[:invoice_date].strip
+    unless params[:invoice_content].blank?
+      @trade.invoice_content = params[:invoice_content].strip
     end
+
+    # unless params[:invoice_date].blank?
+    #   @trade.invoice_date = params[:invoice_date].strip
+    # end
 
     if params[:seller_confirm_deliver_at] == true
       @trade.seller_confirm_deliver_at = Time.now

@@ -43,6 +43,9 @@ class MagicOrders.Routers.Trades extends Backbone.Router
         $('#content').html(@mainView.render().el)
         $("a[rel=popover]").popover(placement: 'left')
 
+        $('.datepicker').datepicker(format: 'yyyy-mm-dd')
+        $('.timepicker').timeEntry(show24Hours: true, showSeconds: true, spinnerImage: 'assets/spinnerUpDown.png', spinnerSize: [17, 26, 0], spinnerIncDecOnly: true)
+
         @nav = $('.subnav')
         @navTop = $('.subnav').length && $('.subnav').offset().top - 40
         $(window).off 'scroll'
@@ -156,7 +159,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       view = new MagicOrders.Views.TradesInvoice(model: model)
 
       $('#trade_invoice').html(view.render().el)
-
+      
       $('#trade_invoice').on 'hide', (event) ->
         window.history.back()
 

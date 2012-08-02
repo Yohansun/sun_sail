@@ -150,3 +150,12 @@ form .span4{border-right: 1px solid #ddd;}
   width: 750px;
   margin-left: -375px;
 }
+
+/*Time picker*/
+.timeEntry_control { vertical-align: middle; margin-left: -1px; margin-top: 0px; cursor: pointer; }
+* html .timeEntry_control { margin-top: -2px; }
+
+/*Button dropdown*/
+.btns.btn-group > .btn{float: none;}
+.btns .btn_left4.dropdown-toggle{left:-4px;}
+.btns .btn.btn_mar4{margin-right:-4px;}

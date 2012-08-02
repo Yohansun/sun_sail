@@ -21,7 +21,7 @@ json.pay_time @trade.pay_time.strftime("%m-%d %H:%M") if @trade.pay_time
 
 json.cs_memo @trade.cs_memo
 
-json.has_color_info @trade.has_color_info                                               # 判断调色信息是否存在
+json.has_color_info @trade.has_color_info
 
 json.logistic_code @trade.logistic_code
 json.logistic_company @trade.logistic_company
@@ -29,7 +29,8 @@ json.logistic_waybill @trade.logistic_waybill
 
 json.invoice_type @trade.invoice_type
 json.invoice_name @trade.invoice_name
-json.invoice_date @trade.invoice_date.strftime("%Y-%m-%d") if @trade.invoice_date
+json.invoice_content @trade.invoice_content
+#json.invoice_date @trade.invoice_date.strftime("%Y-%m-%d") if @trade.invoice_date
 
 json.seller_confirm_deliver_at @trade.seller_confirm_deliver_at.strftime("%m-%d %H:%M") if @trade.seller_confirm_deliver_at
 json.seller_confirm_invoice_at @trade.seller_confirm_invoice_at.strftime("%m-%d %H:%M") if @trade.seller_confirm_invoice_at
