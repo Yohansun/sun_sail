@@ -69,16 +69,16 @@
   </form>
 <!--
   <div class="controls clearfix">
-    <div class="btn-group pull-right">
-      <a href="#" class="btn btn-success">显示设置</a>
-      <a href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-success"><span class="caret"></span></a>
+    <div class="btns btn-group pull-right">
+      <a href="#" class="btn btn-success btn_mar4">显示设置</a>
+      <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-success"><span class="caret"></span></button>    
     </div>
 
-    <div class="btn-group pull-left">
+    <div class="btns btn-group pull-left">
       <a href="#" class="btn btn-warning"><i class="icon-user icon-white"></i> 批量操作</a>
-      <a href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-warning"><span class="caret"></span></a>
+      <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-warning btn_left4"><span class="caret"></span></button>    
     </div>
-  </div>
+  </div>  
 -->
 
   <div class="alert alert-info hide" id="newTradesNotifer">有<span>0</span>条新订单, <a href="#" id="newTradesNotiferLink">点击加载新订单数据</a></div>
