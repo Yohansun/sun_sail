@@ -35,6 +35,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     @isFixed = false
 
     if @collection.length == 0 || @trade_type != trade_type
+      $('#content').html ""
       @trade_type = trade_type
       $("body").spin()
       @show_top_nav()
@@ -55,6 +56,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
         $("body").spin(false)
 
         # endless刷新相关
+        $("#trades_bottom").waypoint 'remove'
         $('#trades_bottom').waypoint @mainView.fetch_more_trades, {offset: '100%'}
 
         # 新订单提醒相关
