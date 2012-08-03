@@ -46,7 +46,9 @@
 <td>
   <% if @trade.get('has_color_info') == true : %>
     <% for order in @trade.get('orders'): %>
-      <a href="#" rel="popover" data-content="<% if order.color_num: %><%= order.title %>: <b><%= order.color_num %></b> <b><%= order.color_name %></b> <br/></span><% end %>" data-original-title="调色信息"><% if order.color_num: %><span class="match_color" style="background:#<%= order.color_hexcode %>;"><% end %></a>
+      <% if order.color_num: %>
+      <a href="#" rel="popover" data-content="<%= order.title %> <br/></span>" data-original-title="<b><%= order.color_num %></b> <b><%= order.color_name %></b>"><span class="match_color" style="background:#<%= order.color_hexcode %>;"></a>
+      <% end %>
     <% end %>
   <% end %>
 </td>
