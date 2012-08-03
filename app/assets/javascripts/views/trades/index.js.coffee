@@ -60,9 +60,15 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     @search_option = $(".search_option").val()
     @search_value = $(".search_value").val()
     return if @search_option == '' or @search_value == ''
+
+    $("#trades_bottom").waypoint 'remove'
     $("body").spin()
     $("#trade_rows").html('')
-    @collection.fetch data: {search: {option: @search_option, value: @search_value}, trade_type: @trade_type}
+    @collection.fetch data: {search: {option: @search_option, value: @search_value}, trade_type: @trade_type}, success: (collection) =>
+      if collection.length > 0
+        @render_update()
+        $('#trades_bottom').waypoint @fetch_more_trades, {offset: '100%'}
+        $("body").spin(false)
 
   search_time: (e) ->
     e.preventDefault()
@@ -78,7 +84,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
         @offset = @offset + 20
         @render_update()
         $('#trades_bottom').waypoint @fetch_more_trades, {offset: '100%'}
-        console.log "waypoint start"
       else
         $("body").spin(false)
 
