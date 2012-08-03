@@ -59,3 +59,7 @@ gem 'sinatra', :require => nil
 gem 'httparty'
 gem 'savon'
 gem 'collections'
+
+group :production do
+  gem "exception_notification", "~> 2.6.1"
+end
