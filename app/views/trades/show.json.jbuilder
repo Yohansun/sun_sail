@@ -1,5 +1,6 @@
 json.id @trade._id
 json.tid @trade.tid
+json.splitted_tid @trade.splitted_tid
 json.seller_id @trade.seller_id
 json.seller_name @trade.seller.name if @trade.seller
 json.status @trade.status
