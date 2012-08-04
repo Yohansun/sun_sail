@@ -48,6 +48,10 @@ class TaobaoPurchaseOrder < Trade
     self.taobao_sub_purchase_orders
   end
 
+  def orders=(new_orders)
+    self.taobao_sub_purchase_orders = new_orders
+  end
+
   def deliver!
     TradeTaobaoPurchaseOrderDeliver.perform_async(self.id)
   end

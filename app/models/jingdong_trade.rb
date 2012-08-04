@@ -30,6 +30,9 @@ class JingdongTrade < Trade
     self.jingdong_orders
   end
 
+  def orders=(new_orders)
+    self.jingdong_orders = new_orders
+  end
 
   def deliver!
     TradeJingdongDeliver.perform_async(self.id)

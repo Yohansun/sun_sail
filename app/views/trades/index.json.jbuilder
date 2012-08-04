@@ -1,6 +1,7 @@
 json.array!(@trades) do |json, trade|
   json.id trade._id
   json.tid trade.tid
+  json.splitted_tid trade.splitted_tid
   json.status trade.status
   json.status_text trade.status_text
   json.receiver_name trade.receiver_name

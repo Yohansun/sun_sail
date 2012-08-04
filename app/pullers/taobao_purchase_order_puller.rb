@@ -1,3 +1,5 @@
+# -*- encoding : utf-8 -*-
+
 class TaobaoPurchaseOrderPuller
   class << self
     def create(start_time = nil, end_time = nil)
@@ -33,6 +35,9 @@ class TaobaoPurchaseOrderPuller
             sub_purchase_order = purchase_order.taobao_sub_purchase_orders.build(sub_order)
           end
           purchase_order.save
+
+          # 拆分订单
+          TradeSplitter.new(purchase_order).split!
         end
       end
     end
