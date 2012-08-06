@@ -55,5 +55,4 @@ class TaobaoPurchaseOrder < Trade
   def deliver!
     TradeTaobaoPurchaseOrderDeliver.perform_async(self.id)
   end
-
 end

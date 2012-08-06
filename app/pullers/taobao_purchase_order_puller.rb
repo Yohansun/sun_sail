@@ -42,8 +42,48 @@ class TaobaoPurchaseOrderPuller
       end
     end
 
-    def update
+    def update(start_time = nil, end_time = nil)
+      total_pages = nil
+      i = 0
 
+      if start_time.blank?
+        start_time = Time.now - 7.days
+      end
+
+      end_time = start_time + 7.days unless end_time
+
+      begin
+        response = TaobaoFu.get(method: 'taobao.fenxiao.orders.get',
+          start_created: start_time.strftime("%Y-%m-%d %H:%M:%S"),
+          end_created: end_time.strftime("%Y-%m-%d %H:%M:%S"),
+          page_no: i, page_size: 50)
+
+        puts response.inspect
+        break unless response['fenxiao_orders_get_response']
+        total_results = response['fenxiao_orders_get_response']['total_results']
+        total_pages ||= total_results / 50
+        trades = response['fenxiao_orders_get_response']['purchase_orders']['purchase_order']
+        trades.each do |trade|
+          local_trade = TaobaoPurchaseOrder.where(tid: trade['fenxiao_id']).first
+          next if (local_trade.blank? || trade['status'] == local_trade.status)
+          trade.delete 'id'
+          sub_orders = trade.delete('sub_purchase_orders')
+          local_trade.update_attributes trade
+          local_sub_orders = local_trade.taobao_sub_purchase_orders
+          sub_orders['sub_purchase_order'].each do |sub_order|
+            sub_order.delete 'id'
+            local_sub_order_array = local_sub_orders.select {|o| o.item_id == sub_order['item_id']}
+            local_sub_order = local_sub_order_array.first
+            next if (local_sub_order.blank? || sub_order['status'] == local_sub_order.status)
+            local_sub_order.update_attributes sub_order
+          end
+
+          # 拆分订单
+          # TradeSplitter.new(local_trade).split!
+        end
+
+        i += 1
+      end until i > total_pages
     end
   end
 end
