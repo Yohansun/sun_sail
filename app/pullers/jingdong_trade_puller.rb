@@ -48,8 +48,7 @@ class JingdongTradePuller
             trade.save
 
             # auto dispatch
-            p trade.order_remark
-            if trade.order_remark.blank?
+            if trade.order_remark.blank? && (trade.order_state == "WAIT_SELLER_DELIVERY" || trade.order_state == "WAIT_SELLER_STOCK_OUT")
               trade.seller_id = default_seller_id
               trade.dispatched_at = Time.now
               trade.save
