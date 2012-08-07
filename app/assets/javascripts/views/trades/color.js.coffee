@@ -24,15 +24,19 @@ class MagicOrders.Views.TradesColor extends Backbone.View
     orders = @model.get('orders')
     for order, i in orders
       orders[i].color_num = order_color_nums[order.id]
-
     @model.set("orders", orders)
 
-    @model.save {}, success: (model, response) =>
-      $("body").spin(false)
+    @model.save {},
+      success: (model, response) =>
+        $("body").spin(false)
 
-      view = new MagicOrders.Views.TradesRow(model: model)
-      $("#trade_#{model.get('id')}").replaceWith(view.render().el)
-      $("a[rel=popover]").popover(placement: 'left')
+        view = new MagicOrders.Views.TradesRow(model: model)
+        $("#trade_#{model.get('id')}").replaceWith(view.render().el)
+        $("a[rel=popover]").popover(placement: 'left')
 
-      $('#trade_color').modal('hide')
-      # window.history.back()
+        $('#trade_color').modal('hide')
+        # window.history.back()
+      error: (model, response) =>
+         $("body").spin(false)
+         alert("色号不存在!")
+
