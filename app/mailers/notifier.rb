@@ -11,6 +11,8 @@ class Notifier < ActionMailer::Base
     @trade_from = @trade.trade_source
     @area_name = @trade.receiver_state + @trade.receiver_city + @trade.receiver_district
 
+
+    #@is_1568 = @trade.class == SplitedOrder ? @trade.splitable.is_1568 : @trade.is_1568
     @trade_info = "您好，#{@area_name}地区目前有一张#{@trade_from}订单"
     mail_subject = "#{@trade_from}订单#{@tid}-#{@area_name}（#{Time.now.strftime("%Y/%m/%d")}），请及时发货"
     reply_to = 'E-Business@nipponpaint.com.cn'
