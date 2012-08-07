@@ -17,17 +17,20 @@ class MagicOrders.Views.TradesDeliver extends Backbone.View
       $("#logistic_code").parent().addClass("error")
       $("#logistic_code").parent().find(".help-inline").show()
       return
-
+      
     $("body").spin()
     @model.set('logistic_code', $("#logistic_code").val())
     @model.set('logistic_waybill', $("#logistic_waybill").val())
+    @model.set('delivered_at', true)
+    @model.save {'logistic_code': $("#logistic_code").val()},
+      error: (model, error, response) ->
+        $("body").spin(false)
+        alert(error)
+      success: (model, response) ->
+        $("body").spin(false)
+        view = new MagicOrders.Views.TradesRow(model: model)
+        $("#trade_#{model.get('id')}").replaceWith(view.render().el)
+        $("a[rel=popover]").popover(placement: 'left')
 
-    @model.save 'delivered_at', true, success: (model, response) =>
-      $("body").spin(false)
-
-      view = new MagicOrders.Views.TradesRow(model: model)
-      $("#trade_#{model.get('id')}").replaceWith(view.render().el)
-      $("a[rel=popover]").popover(placement: 'left')
-
-      $('#trade_deliver').modal('hide')
-      # window.history.back()
+        $('#trade_deliver').modal('hide')
+        # window.history.back()
