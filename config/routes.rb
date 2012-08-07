@@ -2,6 +2,8 @@ require 'sidekiq/web'
 
 MagicOrders::Application.routes.draw do
 
+  get "callbacks/jingdong"
+
   get 'autologin', to: 'users#autologin'
   devise_for :users
 
