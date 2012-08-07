@@ -213,6 +213,14 @@ class TradeDecorator < Draper::Base
         trade.jingdong_orders
     end
   end
+  
+  def is_1568
+    if trade.try(:seller).try(:areas).try(:first).nil?
+      false
+    else
+      trade.seller.areas.first.is_1568
+    end
+  end  
 
   protected
 
