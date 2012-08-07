@@ -9,7 +9,22 @@ class Notifier < ActionMailer::Base
     @trade = TradeDecorator.decorate(object)
     @tid = @trade.tid
     @trade_from = @trade.trade_source
-    @area_name = @trade.receiver_state + @trade.receiver_city + @trade.receiver_district
+    @area_name = ' '
+    if @trade.receiver_state
+      @area_name += @trade.receiver_state
+    end
+    if @trade.receiver_city
+      @area_name += @trade.receiver_city
+    end
+    if @trade.receiver_district
+      @area_name += @trade.receiver_district
+    end
+    if @trade.receiver_address
+      @area_full_name = @area_name + @trade.receiver_address
+    else 
+      @area_full_name = @area_name  
+    end
+
 
 
     #@is_1568 = @trade.class == SplitedOrder ? @trade.splitable.is_1568 : @trade.is_1568
