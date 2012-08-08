@@ -38,6 +38,11 @@ class TradesController < ApplicationController
       @trades = @trades.where(:created.gte => start_time, :created.lte => end_time)
     end
 
+    if params[:search_status] && params[:search_status][:option] != 'null'
+      status_array = params[:search_status][:option].split(",")
+      @trades = @trades.where("$or" => [{:status.in => status_array}, {:order_state.in => status_array}])
+    end
+
     offset = params[:offset] || 0
     limit = params[:limit] || 20
 

@@ -235,7 +235,7 @@ class TradeDecorator < Draper::Base
       when 'TRADE_FINISHED'
         '交易成功'
       when 'TRADE_CLOSED'
-        '交易关闭'
+        '交易已关闭'
       when 'WAIT_BUYER_CONFIRM_GOODS_ACOUNTED'
         '已付款（已分账），已发货'
       when 'WAIT_SELLER_SEND_GOODS_ACOUNTED'
@@ -257,7 +257,7 @@ class TradeDecorator < Draper::Base
       when 'TRADE_CLOSED_BY_TAOBAO'
         '交易被淘宝关闭'
       when 'TRADE_FINISHED'
-        '交易已结束'
+        '交易成功'
       when 'TRADE_CLOSED'
         '交易已关闭'
       else
@@ -272,11 +272,11 @@ class TradeDecorator < Draper::Base
       when 'WAIT_SELLER_STOCK_OUT'
         '已付款，待发货'
       when 'WAIT_GOODS_RECEIVE_CONFIRM'
-        '已发货'
+        '已付款，已发货'
       when 'FINISHED_L'
-        '买家已收货'
+        '交易成功'
       when 'TRADE_CANCELED'
-        '交易取消'
+        '交易已关闭'
       else
         trade.order_state
     end
