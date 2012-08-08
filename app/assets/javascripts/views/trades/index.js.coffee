@@ -6,12 +6,14 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     'click [data-trade-type]': 'change_trade_type'
     'click .search': 'search'
     'click .search_time': 'search_time'
+    'click .search_status': 'search_status'
     'click [data-type=loadMoreTrades]': 'forceLoadMoreTrades'
 
   initialize: (options) ->
     @trade_type = options.trade_type
     @search_option = null
     @search_value = null
+    @status_option = null
     @search_start_date = null
     @search_end_date = null
     @search_start_time = null
@@ -71,6 +73,19 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
         $('#trades_bottom').waypoint @fetch_more_trades, {offset: '100%'}
         $.unblockUI()
 
+  search_status: (e) ->
+    e.preventDefault()
+    @status_option = $(".status_option").val()
+    return if @status_option == ''
+    blocktheui()
+    $("#trade_rows").html('')
+    @collection.fetch data: {search_status: {option: @status_option}}, success: (collection) =>
+      if collection.length > 0
+        @render_update()
+        $('#trades_bottom').waypoint @fetch_more_trades, {offset: '100%'}
+      else
+        $.unblockUI()
+
   search_time: (e) ->
     e.preventDefault()
     @search_start_date = $(".search_start_date").val()
@@ -103,7 +118,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
     $("#trades_bottom").waypoint 'remove'
     blocktheui()
-    @collection.fetch data: {search: {option: @search_option, value: @search_value}, trade_type: @trade_type, offset: @offset, search_time: {@search_start_date, @search_start_time, @search_end_date, @search_end_time}}, success: (collection) =>
+    @collection.fetch data: {search: {option: @search_option, value: @search_value}, trade_type: @trade_type, offset: @offset, search_time: {@search_start_date, @search_start_time, @search_end_date, @search_end_time}, search_status: {option: @status_option}}, success: (collection) =>
       console.log "fetch_more_trades succ"
       console.log collection.length > 0
       if collection.length > 0

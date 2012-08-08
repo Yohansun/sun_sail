@@ -49,8 +49,24 @@
           <option value="tid">订单编号</option>
         </select>
         <div class="input-append">
-          <input type="text" id="appendedInputButton" class="input-large search-query search_value" value="<%= @search_value %>"><button type="button" class="btn search">筛选</button>
+          <input type="text" id="appendedInputButton" class="input-large search-query search_value" value="<%= @search_value %>"><button type="button" class="btn btn-info search">筛选</button>
         </div>
+      </div>
+    </fieldset>
+    <br/>
+    <fieldset class="form-inline">
+      <div class="controls">
+        <label class="control-label">订单状态：</label>
+        <select id="status_option" class="input-large status_option">
+          <option value="WAIT_BUYER_PAY">等待付款</option>
+          <option value="WAIT_SELLER_SEND_GOODS,WAIT_SELLER_DELIVERY,WAIT_SELLER_STOCK_OUT">已付款，待发货</option>
+          <option value="WAIT_BUYER_CONFIRM_GOODS,WAIT_GOODS_RECEIVE_CONFIRM">已付款，已发货</option>
+          <option value="TRADE_FINISHED,FINISHED_L">交易成功</option>
+          <option value="TRADE_CLOSED,TRADE_CANCELED">交易已关闭</option>
+          <option value="WAIT_BUYER_CONFIRM_GOODS_ACOUNTED">已付款（已分账），已发货</option>
+          <option value="WAIT_SELLER_SEND_GOODS_ACOUNTED">已付款（已分账），待发货</option>
+          <option value="TRADE_CLOSED_BY_TAOBAO">交易被淘宝关闭</option>
+        </select><button type="button" class="btn btn-info search_status">筛选</button>
       </div>
     </fieldset>
     <br/>
@@ -62,7 +78,7 @@
             <input type="text" placeholder="00:00:00" id="appendedInputButton" class="input-small search-query search_start_time timepicker" value="<%= @search_start_time %>">
             <i class="icon-arrow-right"></i>
             <input type="text" placeholder="年-月-日" id="appendedInputButton" class="input-small search-query search_end_date datepicker" value="<%= @search_end_date %>">
-            <input type="text" placeholder="00:00:00" id="appendedInputButton" class="input-small search-query search_end_time timepicker" value="<%= @search_end_time %>"> <button type="button" class="btn search_time">筛选</button>
+            <input type="text" placeholder="00:00:00" id="appendedInputButton" class="input-small search-query search_end_time timepicker" value="<%= @search_end_time %>"> <button type="button" class="btn btn-info search_time">筛选</button>
         </div>
       </div>
     </fieldset>
