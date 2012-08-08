@@ -13,7 +13,7 @@ class MagicOrders.Views.TradesCsMemo extends Backbone.View
     this
 
   save: ->
-    $("body").spin()
+    blocktheui()
 
     order_cs_memos = {}
     for item in $(".order_cs_memo")
@@ -28,7 +28,7 @@ class MagicOrders.Views.TradesCsMemo extends Backbone.View
     @model.set("orders", orders)
 
     @model.save {'cs_memo': $("#cs_memo_text").val()}, success: (model, response) =>
-      $("body").spin(false)
+      $.unblockUI()
 
       view = new MagicOrders.Views.TradesRow(model: model)
       $("#trade_#{model.get('id')}").replaceWith(view.render().el)

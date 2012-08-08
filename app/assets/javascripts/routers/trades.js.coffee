@@ -37,7 +37,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     if @collection.length == 0 || @trade_type != trade_type
       $('#content').html ""
       @trade_type = trade_type
-      $("body").spin()
+      blocktheui()
       @show_top_nav()
       @collection.fetch data: {trade_type: trade_type}, success: (collection, response) =>
         @mainView = new MagicOrders.Views.TradesIndex(collection: collection, trade_type: trade_type)
@@ -53,7 +53,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
         $(window).on 'scroll', @processScroll
         @processScroll
 
-        $("body").spin(false)
+        $.unblockUI()
 
         # endless刷新相关
         $("#trades_bottom").waypoint 'remove'
@@ -80,7 +80,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
           @mainView.fetch_new_trades()
 
   show: (id) ->
-    $("body").spin()
+    blocktheui()
     @model = new MagicOrders.Models.Trade(id: id)
     @model.fetch success: (model, response) =>
       $("body").spin false
@@ -93,12 +93,12 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $('#trade_detail').modal('show')
 
   seller: (id) ->
-    $("body").spin()
+    blocktheui()
 
     @model = new MagicOrders.Models.Trade(id: id)
     @model.fetch success: (model, response) =>
       view = new MagicOrders.Views.TradesSeller(model: model)
-      $("body").spin(false)
+      $.unblockUI()
 
       $('#trade_seller').html(view.render().el)
 
@@ -107,11 +107,11 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $('#trade_seller').modal('show')
 
   deliver: (id) ->
-    $("body").spin()
+    blocktheui()
 
     @model = new MagicOrders.Models.Trade(id: id)
     @model.fetch success: (model, response) =>
-      $("body").spin(false)
+      $.unblockUI()
 
       view = new MagicOrders.Views.TradesDeliver(model: model)
       $('#trade_deliver').html(view.render().el)
@@ -122,11 +122,11 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $('#trade_deliver').modal('show')
 
   cs_memo: (id) ->
-    $("body").spin()
+    blocktheui()
 
     @model = new MagicOrders.Models.Trade(id: id)
     @model.fetch success: (model, response) =>
-      $("body").spin(false)
+      $.unblockUI()
 
       view = new MagicOrders.Views.TradesCsMemo(model: model)
 
@@ -137,11 +137,11 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $('#trade_cs_memo').modal('show')
 
   color: (id) ->
-    $("body").spin()
+    blocktheui()
 
     @model = new MagicOrders.Models.Trade(id: id)
     @model.fetch success: (model, response) =>
-      $("body").spin(false)
+      $.unblockUI()
 
       view = new MagicOrders.Views.TradesColor(model: model)
 
@@ -152,11 +152,11 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $('#trade_color').modal('show')
 
   invoice: (id) ->
-    $("body").spin()
+    blocktheui()
 
     @model = new MagicOrders.Models.Trade(id: id)
     @model.fetch success: (model, response) =>
-      $("body").spin(false)
+      $.unblockUI()
 
       view = new MagicOrders.Views.TradesInvoice(model: model)
 
@@ -168,11 +168,11 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $('#trade_invoice').modal('show')
 
   seller_confirm_deliver: (id) ->
-    $("body").spin()
+    blocktheui()
 
     @model = new MagicOrders.Models.Trade(id: id)
     @model.fetch success: (model, response) =>
-      $("body").spin(false)
+      $.unblockUI()
 
       view = new MagicOrders.Views.TradesSellerConfirmDeliver(model: model)
 
@@ -184,11 +184,11 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $('#trade_seller_confirm_deliver').modal('show')
 
   seller_confirm_invoice: (id) ->
-    $("body").spin()
+    blocktheui()
 
     @model = new MagicOrders.Models.Trade(id: id)
     @model.fetch success: (model, response) =>
-      $("body").spin(false)
+      $.unblockUI()
 
       view = new MagicOrders.Views.TradesSellerConfirmInvoice(model: model)
 

@@ -22,10 +22,10 @@ class MagicOrders.Views.TradesSeller extends Backbone.View
     $(@el).find('#areas_inputs').html(view.render().el)
 
   set_seller: ->
-    $("body").spin()
+    blocktheui()
     if $("#trade_seller_id").val() > 0
       @model.save 'seller_id', $("#trade_seller_id").val(), success: (model, response) =>
-        $("body").spin(false)
+        $.unblockUI()
 
         view = new MagicOrders.Views.TradesRow(model: model)
         $("#trade_#{model.get('id')}").replaceWith(view.render().el)
@@ -35,9 +35,9 @@ class MagicOrders.Views.TradesSeller extends Backbone.View
         # window.history.back()
 
   reset_seller: ->
-    $("body").spin()
+    blocktheui()
     @model.save 'seller_id', null, success: (model, response) =>
-      $("body").spin(false)
+      $.unblockUI()
 
       view = new MagicOrders.Views.TradesRow(model: model)
       $("#trade_#{model.get('id')}").replaceWith(view.render().el)
