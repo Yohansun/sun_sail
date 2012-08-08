@@ -6,6 +6,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     'click [data-trade-type]': 'change_trade_type'
     'click .search': 'search'
     'click .search_time': 'search_time'
+    'click [data-type=loadMoreTrades]': 'forceLoadMoreTrades'
 
   initialize: (options) ->
     @trade_type = options.trade_type
@@ -23,7 +24,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     @collection.on("fetch", @render_update, this)
 
   render: =>
-    $("body").spin(false)
+    $.unblockUI()
     if !@first_rendered
       $(@el).html(@template(trade_type: @trade_type, search_value: @search_value, search_start_date: @search_start_date, search_end_date: @search_end_date, search_start_time: @search_start_time, search_end_time: @search_end_time))
       navs = {'all': '所有订单', 'taobao': '淘宝订单', 'taobao_fenxiao': '淘宝分销采购单', 'jingdong': '京东商城订单', 'shop': '官网订单'}
@@ -38,7 +39,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
   render_update: =>
     @collection.each(@appendTrade)
     $("a[rel=popover]").popover(placement: 'left')
-    $("body").spin(false)
+    $.unblockUI()
 
   appendTrade: (trade) =>
     if $("#trade_#{trade.get('id')}").length == 0
@@ -48,7 +49,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
   render_new: =>
     @collection.each(@prependTrade)
     $("a[rel=popover]").popover(placement: 'left')
-    $("body").spin(false)
+    $.unblockUI()
 
   prependTrade: (trade) =>
     if $("#trade_#{trade.get('id')}").length == 0
@@ -62,13 +63,13 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     return if @search_option == '' or @search_value == ''
 
     $("#trades_bottom").waypoint 'remove'
-    $("body").spin()
+    blocktheui()
     $("#trade_rows").html('')
     @collection.fetch data: {search: {option: @search_option, value: @search_value}, trade_type: @trade_type}, success: (collection) =>
       if collection.length > 0
         @render_update()
         $('#trades_bottom').waypoint @fetch_more_trades, {offset: '100%'}
-        $("body").spin(false)
+        $.unblockUI()
 
   search_time: (e) ->
     e.preventDefault()
@@ -77,7 +78,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     @search_start_time = $(".search_start_time").val()
     @search_end_time = $(".search_end_time").val()
     return if @search_start_date == '' or @search_end_date == ''
-    $("body").spin()
+    blocktheui()
     $("#trade_rows").html('')
     @collection.fetch data: {search: {option: @search_option, value: @search_value}, trade_type: @trade_type, search_time: {@search_start_date, @search_start_time, @search_end_date, @search_end_time}}, success: (collection) =>
       if collection.length > 0
@@ -85,7 +86,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
         @render_update()
         $('#trades_bottom').waypoint @fetch_more_trades, {offset: '100%'}
       else
-        $("body").spin(false)
+        $.unblockUI()
 
   change_trade_type: (e) ->
     e.preventDefault()
@@ -97,17 +98,22 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
       @render_new()
       $("#newTradesNotifer").hide()
 
+  forceLoadMoreTrades: (event) =>
+    event.preventDefault()
+
+    $("#trades_bottom").waypoint 'remove'
+    blocktheui()
+    @collection.fetch data: {search: {option: @search_option, value: @search_value}, trade_type: @trade_type, offset: @offset, search_time: {@search_start_date, @search_start_time, @search_end_date, @search_end_time}}, success: (collection) =>
+      console.log "fetch_more_trades succ"
+      console.log collection.length > 0
+      if collection.length > 0
+        @offset = @offset + 20
+        @render_update()
+        $('#trades_bottom').waypoint @fetch_more_trades, {offset: '100%'}
+        console.log "waypoint start"
+      else
+        $.unblockUI()
+
   fetch_more_trades: (event, direction) =>
     if direction == 'down'
-      $("#trades_bottom").waypoint 'remove'
-      $("body").spin()
-      @collection.fetch data: {search: {option: @search_option, value: @search_value}, trade_type: @trade_type, offset: @offset, search_time: {@search_start_date, @search_start_time, @search_end_date, @search_end_time}}, success: (collection) =>
-          console.log "fetch_more_trades succ"
-          console.log collection.length > 0
-          if collection.length > 0
-            @offset = @offset + 20
-            @render_update()
-            $('#trades_bottom').waypoint @fetch_more_trades, {offset: '100%'}
-            console.log "waypoint start"
-          else
-            $("body").spin(false)
+      @forceLoadMoreTrades(event)

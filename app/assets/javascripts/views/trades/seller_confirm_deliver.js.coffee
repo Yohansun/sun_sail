@@ -11,12 +11,12 @@ class MagicOrders.Views.TradesSellerConfirmDeliver extends Backbone.View
   render: ->
     $(@el).html(@template(trade: @model))
     this
- 
+
   save: ->
-    $("body").spin()
-                
+    blocktheui()
+
     @model.save 'seller_confirm_deliver_at', true, success: (model, response) =>
-      $("body").spin(false)
+      $.unblockUI()
 
       view = new MagicOrders.Views.TradesRow(model: model)
       $("#trade_#{model.get('id')}").replaceWith(view.render().el)

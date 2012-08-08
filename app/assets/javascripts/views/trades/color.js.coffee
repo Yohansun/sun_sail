@@ -13,7 +13,7 @@ class MagicOrders.Views.TradesColor extends Backbone.View
     this
 
   save: ->
-    $("body").spin()
+    blocktheui()
 
     order_color_nums = {}
     for item in $(".order_color_num")
@@ -28,7 +28,7 @@ class MagicOrders.Views.TradesColor extends Backbone.View
 
     @model.save {},
       success: (model, response) =>
-        $("body").spin(false)
+        $.unblockUI()
 
         view = new MagicOrders.Views.TradesRow(model: model)
         $("#trade_#{model.get('id')}").replaceWith(view.render().el)
@@ -37,6 +37,6 @@ class MagicOrders.Views.TradesColor extends Backbone.View
         $('#trade_color').modal('hide')
         # window.history.back()
       error: (model, response) =>
-         $("body").spin(false)
+         $.unblockUI()
          alert("色号不存在!")
 

@@ -69,3 +69,17 @@ $(function () {
         Backbone.history.navigate('sellers', true);
     });
 });
+
+function blocktheui () {
+    $.blockUI({
+        message: '<h1>loading...</h1>',
+        css: {
+            border: 'none',
+            padding: '15px',
+            backgroundColor: '#000',
+            '-webkit-border-radius': '10px',
+            '-moz-border-radius': '10px',
+            opacity: .5,
+            color: '#fff'
+    } });
+}
