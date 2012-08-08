@@ -28,4 +28,4 @@
   </select>
 <% end %>
 
-<div class="trade_seller"></div>
+<div class="trade_seller"><%= @seller_name %></div>
