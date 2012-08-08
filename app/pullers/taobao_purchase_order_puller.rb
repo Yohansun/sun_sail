@@ -35,9 +35,9 @@ class TaobaoPurchaseOrderPuller
             sub_purchase_order = purchase_order.taobao_sub_purchase_orders.build(sub_order)
           end
           purchase_order.save
-
-          # 拆分订单
-          TradeSplitter.new(purchase_order).split!
+          
+          # 分流 或 拆分订单
+          purchase_order.dispatch! unless TradeSplitter.new(purchase_order).split!
         end
       end
     end
@@ -46,11 +46,8 @@ class TaobaoPurchaseOrderPuller
       total_pages = nil
       i = 0
 
-      if start_time.blank?
-        start_time = Time.now - 7.days
-      end
-
-      end_time = start_time + 7.days unless end_time
+      end_time ||= Time.now
+      start_time ||= end_time - 7.days
 
       begin
         response = TaobaoFu.get(method: 'taobao.fenxiao.orders.get',
@@ -58,7 +55,6 @@ class TaobaoPurchaseOrderPuller
           end_created: end_time.strftime("%Y-%m-%d %H:%M:%S"),
           page_no: i, page_size: 50)
 
-        puts response.inspect
         break unless response['fenxiao_orders_get_response']
         total_results = response['fenxiao_orders_get_response']['total_results']
         total_pages ||= total_results / 50
@@ -77,6 +73,9 @@ class TaobaoPurchaseOrderPuller
             next if (local_sub_order.blank? || sub_order['status'] == local_sub_order.status)
             local_sub_order.update_attributes sub_order
           end
+
+          # 分流 
+          local_trade.dispatch!
 
           # 拆分订单
           # TradeSplitter.new(local_trade).split!

@@ -24,8 +24,11 @@ class TradeSplitter
       # TODO 完善物流费用拆分逻辑
       new_trade.post_fee = splitted_order[:post_fee]
       new_trade.total_fee = splitted_order[:total_fee]
-
       new_trade.save
+
+      # 自动分流
+      new_trade.dispatch!
+
       splitted_trades << new_trade
     end
 

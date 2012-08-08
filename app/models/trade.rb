@@ -73,4 +73,22 @@ class Trade
   def deliver!
     raise "EMPTY METHOD!"
   end
+
+  def area
+    # overwrite this method
+  end
+
+  def dispatch!
+    # overwrite this method
+  end
+
+  def match_seller
+    area = self.area
+    return if area.blank?
+    area.seller
+  end
+
+  def has_match_seller?
+    self.match_seller.blank?
+  end
 end
