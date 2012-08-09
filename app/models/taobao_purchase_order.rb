@@ -1,3 +1,4 @@
+#-*- encoding : utf-8 -*-
 class TaobaoPurchaseOrder < Trade
   field :tid, type: String,       as: :fenxiao_id
 
@@ -57,19 +58,23 @@ class TaobaoPurchaseOrder < Trade
   end
 
   def dispatchable?
-    self.has_match_seller? && self.seller_id.blank? && self.status == 'WAIT_SELLER_SEND_GOODS' && self.memo.blank? && self.supplier_memo.blank
+    seller = self.matched_seller
+    seller.present? && self.seller_id.blank? && self.status == 'WAIT_SELLER_SEND_GOODS' && self.memo.blank? && self.supplier_memo.blank?
   end
 
-  def area
+  def receiver_address
     receiver = self.receiver
-    Area.where(name: [receiver['district'], receiver['city'], receiver['state']]).order("lft DESC").first
+    [receiver['district'], receiver['city'], receiver['state']]
   end
 
   #手动分流应使用此方法
   def dispatch!
-    return false unless self.dispatchable?
-    seller = self.match_seller
+    return unless self.dispatchable?
+    seller = self.matched_seller
     self.update_attributes(seller_id: seller.id, dispatched_at: Time.now)
-    p "auto dispatch #{self.tid}"
+  end
+
+  def out_iids
+    self.orders.map {|o| o.item_outer_id}
   end
 end
