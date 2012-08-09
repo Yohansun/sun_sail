@@ -83,7 +83,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     blocktheui()
     @model = new MagicOrders.Models.Trade(id: id)
     @model.fetch success: (model, response) =>
-      $("body").spin false
+      $.unblockUI()
 
       view = new MagicOrders.Views.TradesShow(model: model)
       $('#trade_detail').html(view.render().el)
