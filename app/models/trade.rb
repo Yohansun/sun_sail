@@ -68,27 +68,29 @@ class Trade
   	end
   end
 
-  # 操作方法
+  def matched_seller
+    SellerMatcher.new(self).matched_seller
+  end
 
+  def area
+    Area.where(name: self.receiver_address).order("lft DESC").first
+  end
+
+  # 操作方法
   def deliver!
     raise "EMPTY METHOD!"
   end
 
-  def area
+  def receiver_address
     # overwrite this method
+    []
   end
 
   def dispatch!
     # overwrite this method
   end
 
-  def match_seller
-    area = self.area
-    return if area.blank?
-    area.seller
-  end
-
-  def has_match_seller?
-    self.match_seller.blank?
+  def out_iids
+    # overwrite this method
   end
 end

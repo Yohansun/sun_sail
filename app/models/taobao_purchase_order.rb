@@ -1,3 +1,4 @@
+#-*- encoding : utf-8 -*-
 class TaobaoPurchaseOrder < Trade
   field :tid, type: String,       as: :fenxiao_id
 
@@ -57,19 +58,28 @@ class TaobaoPurchaseOrder < Trade
   end
 
   def dispatchable?
-    self.has_match_seller? && self.seller_id.blank? && self.status == 'WAIT_SELLER_SEND_GOODS' && self.memo.blank? && self.supplier_memo.blank
+    # 是否有匹配的经销商也是分流的必备条件
+    # 这里的调用会出现重复 在实际分流的时候还要再次调用该函数
+    # 尝试过在这个函数中返回seller 但是觉得不合适
+    seller = self.matched_seller
+    seller.present? && self.seller_id.blank? && self.status == 'WAIT_SELLER_SEND_GOODS' && self.memo.blank? && self.supplier_memo.blank?
   end
 
-  def area
+  def receiver_address
     receiver = self.receiver
-    Area.where(name: [receiver['district'], receiver['city'], receiver['state']]).order("lft DESC").first
+    [receiver['district'], receiver['city'], receiver['state']]
   end
 
   #手动分流应使用此方法
   def dispatch!
-    return false unless self.dispatchable?
-    seller = self.match_seller
+    return unless self.dispatchable?
+    # 重复调用
+    seller = self.matched_seller
     self.update_attributes(seller_id: seller.id, dispatched_at: Time.now)
-    p "auto dispatch #{self.tid}"
   end
+
+  def out_iids
+    self.orders.map {|o| o.item_outer_id}
+  end
+
 end

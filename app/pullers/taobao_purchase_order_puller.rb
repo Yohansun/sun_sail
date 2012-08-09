@@ -3,11 +3,8 @@
 class TaobaoPurchaseOrderPuller
   class << self
     def create(start_time = nil, end_time = nil)
-      if start_time.blank?
-        start_time = Time.now - 7.days
-      end
-
-      end_time = start_time + 7.days unless end_time
+      end_time ||= Time.now
+      start_time ||= end_time - 7.days
 
       response = TaobaoFu.get(method: 'taobao.fenxiao.orders.get',
         start_created: start_time.strftime("%Y-%m-%d %H:%M:%S"),
