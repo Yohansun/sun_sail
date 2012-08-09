@@ -7,6 +7,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     'click .search': 'search'
     'click .search_time': 'search_time'
     'click .search_status': 'search_status'
+    'click #advanced_btn': 'advanced_btn'
     'click [data-type=loadMoreTrades]': 'forceLoadMoreTrades'
 
   initialize: (options) ->
@@ -75,7 +76,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
   search_status: (e) ->
     e.preventDefault()
-    @status_option = $(".status_option").val()
+    @status_option = $("#status_option").val()
     return if @status_option == ''
     blocktheui()
     $("#trade_rows").html('')
@@ -103,6 +104,24 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
       else
         $.unblockUI()
 
+  # search_all: (e) ->
+  #   e.preventDefault()
+  #   @search_buyer_note = $("#search_buyer_note").val()
+  #   @search_invoice = $("#search_invoice").val()
+  #   @search_seller_note = $("#search_seller_note").val()
+  #   @search_color = $("#search_color").val()
+  #   @type_option = $("#type_option").val()
+  #   return if @search_buyer_note == '' or @search_seller_note == '' or @search_color == '' or @type_option == '' or @search_invoice == ''
+  #   blocktheui()
+  #   $("#trade_rows").html('')
+  #   @collection.fetch data: {search: {option: @search_option, value: @search_value}, trade_type: @trade_type, search_time: {@search_start_date, @search_start_time, @search_end_date, @search_end_time} search_all: {@search_buyer_note, @search_invoice, @search_seller_note, @search_color, option: @type_option}}, success: (collection) =>
+  #     if collection.length > 0
+  #       @offset = @offset + 20
+  #       @render_update()
+  #       $('#trades_bottom').waypoint @fetch_more_trades, {offset: '100%'}
+  #     else
+  #       $.unblockUI()
+  
   change_trade_type: (e) ->
     e.preventDefault()
     type = $(e.target).data('trade-type')
@@ -132,3 +151,12 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
   fetch_more_trades: (event, direction) =>
     if direction == 'down'
       @forceLoadMoreTrades(event)
+
+  advanced_btn: (e) ->
+    e.preventDefault()
+    $("#advanced_btn i").toggleClass 'icon-arrow-down'
+    $("#advanced_btn i").toggleClass 'icon-arrow-up'
+    $("#search_toggle").toggle()
+
+
+    

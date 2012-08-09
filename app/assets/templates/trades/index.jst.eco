@@ -43,46 +43,180 @@
   </ul><!-- breadcrumb -->
 
   <form class="well form-search">
-    <fieldset class="form-inline">
-      <div class="controls">
-        <select id="search_option" class="input-large search_option">
-          <option value="tid">订单编号</option>
-        </select>
-        <div class="input-append">
-          <input type="text" id="appendedInputButton" class="input-large search-query search_value" value="<%= @search_value %>"><button type="button" class="btn btn-info search">筛选</button>
+      <fieldset class="form-inline">
+        <div class="controls">
+          <select id="search_option" class="input-large search_option">
+            <option value="tid">订单编号</option>
+          </select>
+          <div class="input-append">
+            <input type="text" id="appendedInputButton" class="input-large search-query search_value" value="<%= @search_value %>"><button type="button" class="btn btn-info search">筛选</button>
+          </div>
         </div>
+      </fieldset>
+      <br/>
+
+      <div class="fieldset_group mar_t" id="search_toggle">
+        <fieldset class="form-inline">
+          <div class="controls">
+            <label class="control-label">订单状态：</label>
+            <select id="status_option" class="input-large">
+              <option value="WAIT_BUYER_PAY">等待付款</option>
+              <option value="WAIT_SELLER_SEND_GOODS,WAIT_SELLER_DELIVERY,WAIT_SELLER_STOCK_OUT">已付款，待发货</option>
+              <option value="WAIT_BUYER_CONFIRM_GOODS,WAIT_GOODS_RECEIVE_CONFIRM">已付款，已发货</option>
+              <option value="TRADE_FINISHED,FINISHED_L">交易成功</option>
+              <option value="TRADE_CLOSED,TRADE_CANCELED">交易已关闭</option>
+              <option value="WAIT_BUYER_CONFIRM_GOODS_ACOUNTED">已付款（已分账），已发货</option>
+              <option value="WAIT_SELLER_SEND_GOODS_ACOUNTED">已付款（已分账），待发货</option>
+              <option value="TRADE_CLOSED_BY_TAOBAO">交易被淘宝关闭</option>
+            </select><button type="button" class="btn btn-info search_status">筛选</button>
+          </div>
+        </fieldset>
+        <br/>
+        <fieldset class="form-inline">
+          <div class="controls">
+            <label class="control-label">下单时间：</label>
+            <div class="input-append">
+              <input type="text" placeholder="年-月-日" id="appendedInputButton" class="input-small search-query search_start_date datepicker" value="<%= @search_start_date %>">
+              <input type="text" placeholder="00:00:00" id="appendedInputButton" class="input-small search-query search_start_time timepicker" value="<%= @search_start_time %>">
+              <i class="icon-arrow-right"></i>
+              <input type="text" placeholder="年-月-日" id="appendedInputButton" class="input-small search-query search_end_date datepicker" value="<%= @search_end_date %>">
+              <input type="text" placeholder="00:00:00" id="appendedInputButton" class="input-small search-query search_end_time timepicker" value="<%= @search_end_time %>"> <button type="button" class="btn btn-info search_time">筛选</button>
+            </div>
+          </div>
+        </fieldset>   
+        <fieldset class="mar_t">
+          <div class="span4">
+            <button class="btn btn-info">属性</button>
+            <div class="controls">
+             <!--  <label class="checkbox inline">
+                <input type="checkbox" value="option1" id="inlineCheckbox1"> 标记
+              </label> -->
+              
+            </div>
+            <div class="controls">
+              <label class="checkbox inline">
+                <input type="checkbox" value="true" id="search_invoice"> 要开票
+              </label>
+              <label class="checkbox inline">
+                <input type="checkbox" value="true" id="search_seller_note"> 客服有备注
+              </label>
+            </div>
+            <div class="controls">
+              <label class="checkbox inline">
+                <input type="checkbox" value="true" id="search_color"> 要配色
+              </label>
+              <label class="checkbox inline">
+                <input type="checkbox" value="true" id="search_buyer_note"> 客户有备注
+              </label> 
+            </div>
+            <div class="controls">
+              <label class="control-label">订单来源：</label>
+              <select id="type_option" class="input-large type_option">
+                <option value="JingdongTrade">京东</option>
+                <option value="TaobaoTrade">淘宝</option>
+                <option value="TaobaoPurchaseOrder">淘宝分销</option>
+              </select>
+            </div>
+            <!-- <div class="controls">
+              <label for="select04" class="control-label">活动：</label>
+              <select id="select04" class="input-medium">
+                <option>something</option>
+              </select>
+            </div> -->
+          </div> 
+
+         <!--  <div class="span4">
+            <button class="btn btn-info">产品</button>
+            <div class="controls">
+              <label for="select05" class="control-label">分类：</label>
+              <select id="select05" class="input-medium">
+                <option>something</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+              </select>
+            </div>
+            <div class="controls">
+              <label for="select06" class="control-label">系列：</label>
+              <select id="select06" class="input-medium">
+                <option>something</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+              </select>
+            </div>
+            <div class="controls">
+              <label for="select07" class="control-label">档次：</label>
+              <select id="select07" class="input-medium">
+                <option>something</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+              </select>
+            </div>
+            <div class="controls">
+              <label for="select08" class="control-label">调色范围：</label>
+              <select id="select08" class="input-medium">
+                <option>something</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+              </select>
+            </div>
+            <div class="controls">
+              <label for="select09" class="control-label">规格：</label>
+              <select id="select09" class="input-medium">
+                <option>something</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="span4 noborder">
+            <button class="btn btn-info">物流配送</button>
+            <div class="controls">
+              <label for="select10" class="control-label">配送商：</label>
+              <input type="text" class="input-xlarge search-query">
+            </div>
+            <div class="controls">
+              <label class="checkbox inline">
+                <input type="checkbox" value="option1" id="inlineCheckbox6"> 实际已经发货
+              </label>
+              <label class="checkbox inline">
+                <input type="checkbox" value="option2" id="inlineCheckbox7"> 附发票
+              </label>
+            </div>
+            <div class="controls">
+              <label class="checkbox inline">
+                <input type="checkbox" value="option1" id="inlineCheckbox8"> 附质保
+              </label>
+              <label class="checkbox inline">
+                <input type="checkbox" value="option2" id="inlineCheckbox9"> 客户已签收
+              </label>
+            </div>
+          </div>
+        </fieldset> -->
+
+        <fieldset>
+          <button class="pull-right btn btn-primary btn-large input-small" type="submit">搜索</button>
+        </fieldset>
       </div>
-    </fieldset>
-    <br/>
-    <fieldset class="form-inline">
-      <div class="controls">
-        <label class="control-label">订单状态：</label>
-        <select id="status_option" class="input-large status_option">
-          <option value="WAIT_BUYER_PAY">等待付款</option>
-          <option value="WAIT_SELLER_SEND_GOODS,WAIT_SELLER_DELIVERY,WAIT_SELLER_STOCK_OUT">已付款，待发货</option>
-          <option value="WAIT_BUYER_CONFIRM_GOODS,WAIT_GOODS_RECEIVE_CONFIRM">已付款，已发货</option>
-          <option value="TRADE_FINISHED,FINISHED_L">交易成功</option>
-          <option value="TRADE_CLOSED,TRADE_CANCELED">交易已关闭</option>
-          <option value="WAIT_BUYER_CONFIRM_GOODS_ACOUNTED">已付款（已分账），已发货</option>
-          <option value="WAIT_SELLER_SEND_GOODS_ACOUNTED">已付款（已分账），待发货</option>
-          <option value="TRADE_CLOSED_BY_TAOBAO">交易被淘宝关闭</option>
-        </select><button type="button" class="btn btn-info search_status">筛选</button>
-      </div>
-    </fieldset>
-    <br/>
-    <fieldset class="form-inline">
-      <div class="controls">
-        <label class="control-label">下单时间：</label>
-        <div class="input-append">
-            <input type="text" placeholder="年-月-日" id="appendedInputButton" class="input-small search-query search_start_date datepicker" value="<%= @search_start_date %>">
-            <input type="text" placeholder="00:00:00" id="appendedInputButton" class="input-small search-query search_start_time timepicker" value="<%= @search_start_time %>">
-            <i class="icon-arrow-right"></i>
-            <input type="text" placeholder="年-月-日" id="appendedInputButton" class="input-small search-query search_end_date datepicker" value="<%= @search_end_date %>">
-            <input type="text" placeholder="00:00:00" id="appendedInputButton" class="input-small search-query search_end_time timepicker" value="<%= @search_end_time %>"> <button type="button" class="btn btn-info search_time">筛选</button>
-        </div>
-      </div>
-    </fieldset>
+
+      <fieldset id="fieldset_advanced">
+         <ul class="the-icons mar_t">
+           <li class="pull-right" id="advanced_btn"><i class="icon-arrow-down"></i><a href="#">高级搜索</a>
+           </li>
+         </ul>
+      </fieldset>
   </form>
+
 <!--
   <div class="controls clearfix">
     <div class="btns btn-group pull-right">
@@ -122,22 +256,6 @@
     <tbody id="trade_rows">
     </tbody>
   </table>
-
-      <!--
-      <div class="pagination">
-        <ul class="pull-right">
-          <li><a href="#">上一页</a></li>
-          <li class="active">
-            <a href="#">1</a>
-          </li>
-          <li><a href="#">2</a></li>
-          <li><a href="#">3</a></li>
-          <li><a href="#">4</a></li>
-          <li><a href="#">下一页</a></li>
-        </ul>
-      </div>
-    -->
-    <!-- pagination ends -->
 
     <a href="#" data-type="loadMoreTrades" class="btn">加载更多订单</a>
 </div>
