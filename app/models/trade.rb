@@ -27,8 +27,11 @@ class Trade
   field :splitted, type: Boolean, default: false
   field :splitted_tid, type: String
 
-  # model 属性方法
+  def initialize
+    @storage = nil
+  end
 
+  # model 属性方法
   # 物流公司名称
   def logistic_company
     case logistic_code
@@ -69,7 +72,7 @@ class Trade
   end
 
   def matched_seller
-    SellerMatcher.new(self).matched_seller
+    @storage ||= SellerMatcher.new(self).matched_seller
   end
 
   def area
