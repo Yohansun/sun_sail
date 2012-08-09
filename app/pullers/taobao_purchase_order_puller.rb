@@ -57,25 +57,26 @@ class TaobaoPurchaseOrderPuller
         total_pages ||= total_results / 50
         trades = response['fenxiao_orders_get_response']['purchase_orders']['purchase_order']
         trades.each do |trade|
-          local_trade = TaobaoPurchaseOrder.where(tid: trade['fenxiao_id']).first
-          next if (local_trade.blank? || trade['status'] == local_trade.status)
-          trade.delete 'id'
-          sub_orders = trade.delete('sub_purchase_orders')
-          local_trade.update_attributes trade
-          local_sub_orders = local_trade.taobao_sub_purchase_orders
-          sub_orders['sub_purchase_order'].each do |sub_order|
-            sub_order.delete 'id'
-            local_sub_order_array = local_sub_orders.select {|o| o.item_id == sub_order['item_id']}
-            local_sub_order = local_sub_order_array.first
-            next if (local_sub_order.blank? || sub_order['status'] == local_sub_order.status)
-            local_sub_order.update_attributes sub_order
+          TaobaoPurchaseOrder.where(tid: trade['fenxiao_id']).each do |local_trade|
+            next if trade['status'] == local_trade.status
+            trade.delete 'id'
+            sub_orders = trade.delete('sub_purchase_orders')
+            local_trade.update_attributes trade
+            local_sub_orders = local_trade.taobao_sub_purchase_orders
+            sub_orders['sub_purchase_order'].each do |sub_order|
+              sub_order.delete 'id'
+              local_sub_order_array = local_sub_orders.select {|o| o.item_id == sub_order['item_id']}
+              local_sub_order = local_sub_order_array.first
+              next if (local_sub_order.blank? || sub_order['status'] == local_sub_order.status)
+              local_sub_order.update_attributes sub_order
+            end
+
+            # 分流 
+            local_trade.dispatch!
+
+            # 拆分订单
+            # TradeSplitter.new(local_trade).split!
           end
-
-          # 分流 
-          local_trade.dispatch!
-
-          # 拆分订单
-          # TradeSplitter.new(local_trade).split!
         end
 
         i += 1
