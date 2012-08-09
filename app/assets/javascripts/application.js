@@ -26,22 +26,6 @@
 //= require_tree .//routers
 //= require_tree .
 
-$.fn.spin = function(opts) {
-  this.each(function() {
-    var $this = $(this),
-        data = $this.data();
-
-    if (data.spinner) {
-      data.spinner.stop();
-      delete data.spinner;
-    }
-    if (opts !== false) {
-      data.spinner = new Spinner($.extend({color: $this.css('color')}, opts)).spin(this);
-    }
-  });
-  return this;
-};
-
 $(function () {
     $("#area_parent_id").tokenInput("/areas/autocomplete.json",{
     	crossDomain: false,
