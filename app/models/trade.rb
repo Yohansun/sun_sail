@@ -27,9 +27,7 @@ class Trade
   field :splitted, type: Boolean, default: false
   field :splitted_tid, type: String
 
-  def initialize
-    @storage = nil
-  end
+  attr_accessor :storage
 
   # model 属性方法
   # 物流公司名称
