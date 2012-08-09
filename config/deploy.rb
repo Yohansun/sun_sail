@@ -40,3 +40,17 @@ namespace :deploy do
 end
 
 after 'deploy:finalize_update', 'deploy:symlink_shared'
+namespace :db do
+  desc "migrate db"
+  task :migrate, :roles => :app do
+    run "cd #{release_path} && RAILS_ENV=production rake db:migrate"
+  end
+end
+
+namespace :sidekiq do
+  desc "restart sidekiq"
+  task :restart, :roles => :app do
+    run "rvmsudo god restart magic_orders"
+  end
+end
+after 'deploy:create_symlink', 'sidekiq:restart'
