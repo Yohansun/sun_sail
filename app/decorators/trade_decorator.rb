@@ -184,7 +184,7 @@ class TradeDecorator < Draper::Base
   def seller_memo
     case trade._type
       when 'TaobaoPurchaseOrder'
-        trade.memo
+        trade.supplier_memo
       when 'TaobaoTrade'
         trade.seller_memo
       when 'JingdongTrade'

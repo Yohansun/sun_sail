@@ -143,9 +143,10 @@ class TradesController < ApplicationController
         order = @trade.orders.find item[:id]
         order.cs_memo = item[:cs_memo]
         order.color_num = item[:color_num]
-        unless order.color_num.blank?
-          order.color_hexcode = Color.where(num: item[:color_num]).first.hexcode
-          order.color_name = Color.where(num: item[:color_num]).first.name
+        color = Color.find_by_num item[:color_num]
+        if order.color_num.present? && color.present?
+          order.color_hexcode = color.hexcode
+          order.color_name = color.name
         end
       end
     end
