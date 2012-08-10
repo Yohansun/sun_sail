@@ -64,7 +64,7 @@ class TaobaoPurchaseOrder < Trade
 
   def receiver_address
     receiver = self.receiver
-    [receiver['district'], receiver['city'], receiver['state']]
+    [receiver['state'], receiver['city'], receiver['district']]
   end
 
   #手动分流应使用此方法

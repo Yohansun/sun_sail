@@ -27,7 +27,7 @@ class Trade
   field :splitted, type: Boolean, default: false
   field :splitted_tid, type: String
 
-  attr_accessor :storage
+  attr_accessor :matched_seller
 
   # model 属性方法
   # 物流公司名称
@@ -70,11 +70,16 @@ class Trade
   end
 
   def matched_seller
-    @storage ||= SellerMatcher.new(self).matched_seller
+    @matched_seller ||= SellerMatcher.new(self).matched_seller
   end
 
   def area
-    Area.where(name: self.receiver_address).order("lft DESC").first
+    address = self.receiver_address
+    state = city = area = nil
+    state = Area.find_by_name address[0]
+    city = state.children.where(name: address[1]).first if state
+    area = city.children.where(name: address[2]).first if city
+    area || city || state
   end
 
   # 操作方法
@@ -84,6 +89,7 @@ class Trade
 
   def receiver_address
     # overwrite this method
+    # 请按照 省市区 的顺序生成array
     []
   end
 
