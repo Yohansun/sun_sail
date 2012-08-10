@@ -1,9 +1,18 @@
 class UsersController < ApplicationController
   def autologin
+  	redirect_url = '/'
     user = User.find_by_name params[:username]
     if user.magic_key == params[:key]
       sign_in :user, user
-      redirect_to root_path
+
+      case params[:source]
+      when 'fenxiao'
+      	redirect_url = '/trades/taobao_fenxiao'
+      when 'jingdong'
+      	redirect_url = '/trades/jingdong'
+      end
+      
+      redirect_to redirect_url
     end
   end
 end
