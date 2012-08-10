@@ -222,7 +222,7 @@ form .span4{border-right: 1px solid #ddd;}
 }
 .magic_person div.clearfix{margin-bottom:20px;}
 .icon_branch{position:absolute;right:0;top:50%;margin-top:-24px;display: inline-block;width: 48px;height: 48px;*margin-right: .3em;line-height: 48px;}
-.icon_branch{background:url("../images/u75_original.png");}
+.icon_branch{background:url("/assets/u75_original.png");}
 
 /*magic list*/
 .well.magic_person img{
@@ -238,3 +238,5 @@ form .span4{border-right: 1px solid #ddd;}
 .magic_person div.clearfix{margin-bottom:20px;}
 .icon_branch{position:absolute;right:0;top:50%;margin-top:-24px;display: inline-block;width: 48px;height: 48px;*margin-right: .3em;line-height: 48px;}
 .icon_branch{background:url("/assets/u75_original.png");}
+
+.fieldset_group{display:none}
