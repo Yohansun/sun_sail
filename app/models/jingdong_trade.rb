@@ -1,6 +1,11 @@
 class JingdongTrade < Trade
-  field :created, type: DateTime, as: :order_start_time
-  field :tid, type: String,       as: :order_id
+  field :created, type: DateTime,       as: :order_start_time
+  field :tid, type: String,             as: :order_id
+  field :buyer_message, type: String,   as: :order_remark
+  field :status,type: String,           as: :order_state
+
+  #field :order_state, type: String
+  #field :order_remark, type: String
 
   field :vender_id, type: String
   field :pay_type, type: String
@@ -8,11 +13,9 @@ class JingdongTrade < Trade
   field :order_payment, type: Float
   field :freight_price, type: Float
   field :seller_discount, type: Float
-  field :order_state, type: String
   field :order_state_remark, type: String
   field :delivery_type, type: String
   field :invoice_info, type: String
-  field :order_remark, type: String
 
   field :order_end_time, type: DateTime
 
@@ -39,6 +42,10 @@ class JingdongTrade < Trade
   end
 
   def invoice_name
-    self[:invoice_name] || self.invoice_info.split(";")[1]
+    unless self[:invoice_name].present?
+    self[:invoice_name] = self.invoice_info.split(";")[1]
+    self.save
+    end
+    return self[:invoice_name]
   end
 end

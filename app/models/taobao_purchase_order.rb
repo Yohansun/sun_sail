@@ -1,15 +1,18 @@
 #-*- encoding : utf-8 -*-
 class TaobaoPurchaseOrder < Trade
-  field :tid, type: String,       as: :fenxiao_id
+  field :tid, type: String,             as: :fenxiao_id
+  field :seller_memo, type: String,     as: :supplier_memo
+  field :buyer_message, type:String,    as: :memo
+  
+  #field :supplier_memo, type: String
+  #field :memo, type: String
 
-  field :supplier_memo, type: String
   field :pay_type, type: String
   field :trade_type, type: String
   field :distributor_from, type: String
 
   field :status, type: String
   field :buyer_nick, type: String
-  field :memo, type: String
   field :tc_order_id, type: Integer
 
   field :receiver_name, type: String
