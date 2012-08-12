@@ -6,6 +6,9 @@ class TaobaoTrade < Trade
   field :title, type: String
   field :type, type: String
 
+  field :seller_memo, type: String
+  field :buyer_message, type: String
+
   field :price, type: Float
   field :seller_cod_fee, type: Float
   field :discount_fee, type: Float
@@ -21,14 +24,13 @@ class TaobaoTrade < Trade
   field :pay_time, type: DateTime
   field :modified, type: DateTime
   field :end_time, type: DateTime
-
-  field :buyer_message, type: String
+  
   field :alipay_id, type: String
   field :alipay_no, type: String
   field :alipay_url, type: String
   field :buyer_memo, type: String
   field :buyer_flag, type: Integer
-  field :seller_memo, type: String
+  
   field :seller_flag, type: Integer
   field :invoice_name, type: String
   field :buyer_nick, type: String

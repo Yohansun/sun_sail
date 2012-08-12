@@ -28,20 +28,65 @@ class TradesController < ApplicationController
       @trades = @trades.where(_type: trade_type)
     end
 
+    
+    ###筛选###
+
+    # 按订单号筛选
     if params[:search] && params[:search][:option] != 'null'
       @trades = @trades.where(Hash[params[:search][:option].to_sym, params[:search][:value]])
     end
 
-    if params[:search_time] && params[:search_time][:search_start_date] && params[:search_time][:search_end_date] != 'null'
-      start_time = (params[:search_time][:search_start_date] + ' ' + params[:search_time][:search_start_time]).to_time(form = :local)
-      end_time = (params[:search_time][:search_end_date] + ' ' + params[:search_time][:search_end_time]).to_time(form = :local)
+    # 按时间筛选
+    if params[:search_all] && params[:search_all][:search_start_date] && params[:search_all][:search_end_date] != 'null'
+      start_time = (params[:search_all][:search_start_date] + ' ' + params[:search_all][:search_start_time]).to_time(form = :local)
+      end_time = (params[:search_all][:search_end_date] + ' ' + params[:search_all][:search_end_time]).to_time(form = :local)
       @trades = @trades.where(:created.gte => start_time, :created.lte => end_time)
     end
 
-    if params[:search_status] && params[:search_status][:option] != 'null'
-      status_array = params[:search_status][:option].split(",")
-      @trades = @trades.where("$or" => [{:status.in => status_array}, {:order_state.in => status_array}])
+    # 按状态筛选
+    if params[:search_all] && params[:search_all][:status_option] != 'null'
+      status_array = params[:search_all][:status_option].split(",")
+      @trades = @trades.where(:status.in => status_array)
     end
+
+    # # 按来源筛选
+    # if params[:search_all] && params[:search_all][:type_option] != 'null'
+    #   @trades = @trades.where(_type: params[:search_all][:type_option])
+    # end
+
+    # 客服有备注
+    if params[:search_all] && params[:search_all][:search_cs_memo] == "true"
+      @trades = @trades.where(:cs_memo.exists => true)
+    end
+
+    # 卖家有备注  ###have not been tested yet
+    if params[:search_all] && params[:search_all][:search_seller_memo] == "true"
+      @trades = @trades.where("$or" => [{:seller_memo.exists => true}, {:delivery_type.exists => true}, {:invoice_info.exists => true}])
+    end
+    
+    # 客户有留言  ###have not been tested yet
+    if params[:search_all] && params[:search_all][:search_buyer_message] == "true"
+      @trades = @trades.where(:buyer_message.exists => true)
+    end
+
+    # 需要开票
+    if params[:search_all] && params[:search_all][:search_invoice] == "true"
+      @trades = @trades.where("$or" => [{:invoice_name.exists => true},{:invoice_type.exists => true},{:invoice_content.exists => true}])
+    end
+
+    # 需要配色
+    if params[:search_all] && params[:search_all][:search_color] == "true"
+      trade_id = []
+      @trades.all.each do |t|
+        if t.has_color_info == true
+          trade_id += t.tid.to_a
+        end
+      end
+      @trades = @trades.where(:tid.in => trade_id)
+    end
+
+    ###筛选结束###
+
 
     offset = params[:offset] || 0
     limit = params[:limit] || 20

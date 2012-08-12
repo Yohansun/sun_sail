@@ -5,9 +5,8 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
   events:
     'click [data-trade-type]': 'change_trade_type'
     'click .search': 'search'
-    'click .search_time': 'search_time'
-    'click .search_status': 'search_status'
     'click #advanced_btn': 'advanced_btn'
+    'click .search_all': 'search_all'
     'click [data-type=loadMoreTrades]': 'forceLoadMoreTrades'
 
   initialize: (options) ->
@@ -19,6 +18,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     @search_end_date = null
     @search_start_time = null
     @search_end_time = null
+    @status_option = null
 
     @offset = @collection.length
     @first_rendered = false
@@ -74,53 +74,48 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
         $('#trades_bottom').waypoint @fetch_more_trades, {offset: '100%'}
         $.unblockUI()
 
-  search_status: (e) ->
+  search_all: (e) ->
     e.preventDefault()
     @status_option = $("#status_option").val()
-    return if @status_option == ''
-    blocktheui()
-    $("#trade_rows").html('')
-    @collection.fetch data: {search_status: {option: @status_option}}, success: (collection) =>
-      if collection.length > 0
-        @render_update()
-        $('#trades_bottom').waypoint @fetch_more_trades, {offset: '100%'}
-      else
-        $.unblockUI()
 
-  search_time: (e) ->
-    e.preventDefault()
     @search_start_date = $(".search_start_date").val()
     @search_end_date = $(".search_end_date").val()
     @search_start_time = $(".search_start_time").val()
     @search_end_time = $(".search_end_time").val()
-    return if @search_start_date == '' or @search_end_date == ''
+
+    @search_buyer_message = $("#search_buyer_message").is(':checked')
+    @search_seller_memo = $("#search_seller_memo").is(':checked')
+    @search_cs_memo = $("#search_cs_memo").is(':checked')
+
+    @search_invoice = $("#search_invoice").is(':checked')
+    @search_color = $("#search_color").is(':checked')
+
+    return if @status_option == '' and (@search_start_date == '' or @search_end_date == '') and @search_buyer_message == false and @search_seller_memo == false and @search_cs_memo == false and @search_color == false and @search_invoice == false
+
     blocktheui()
     $("#trade_rows").html('')
-    @collection.fetch data: {search: {option: @search_option, value: @search_value}, trade_type: @trade_type, search_time: {@search_start_date, @search_start_time, @search_end_date, @search_end_time}}, success: (collection) =>
+    
+    if @search_start_date == '' or @search_end_date == '' or @search_start_date = 'null' or @search_end_date = 'null'
+      @search_start_date = 'null'
+      @search_end_date = 'null'
+      @search_start_time = 'null'
+      @search_end_time = 'null'
+
+    if @search_start_time = ''
+      @search_start_time = 'null'
+    if @search_end_time = ''
+      @search_end_time = 'null'
+
+    if @status_option == ''
+      @status_option = 'null'
+
+    @collection.fetch data: {search: {option: @search_option, value: @search_value}, trade_type: @trade_type, search_all: {@search_start_date, @search_start_time, @search_end_date, @search_end_time, @status_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_invoice, @search_color}}, success: (collection) =>
       if collection.length > 0
         @offset = @offset + 20
         @render_update()
         $('#trades_bottom').waypoint @fetch_more_trades, {offset: '100%'}
       else
         $.unblockUI()
-
-  # search_all: (e) ->
-  #   e.preventDefault()
-  #   @search_buyer_note = $("#search_buyer_note").val()
-  #   @search_invoice = $("#search_invoice").val()
-  #   @search_seller_note = $("#search_seller_note").val()
-  #   @search_color = $("#search_color").val()
-  #   @type_option = $("#type_option").val()
-  #   return if @search_buyer_note == '' or @search_seller_note == '' or @search_color == '' or @type_option == '' or @search_invoice == ''
-  #   blocktheui()
-  #   $("#trade_rows").html('')
-  #   @collection.fetch data: {search: {option: @search_option, value: @search_value}, trade_type: @trade_type, search_time: {@search_start_date, @search_start_time, @search_end_date, @search_end_time} search_all: {@search_buyer_note, @search_invoice, @search_seller_note, @search_color, option: @type_option}}, success: (collection) =>
-  #     if collection.length > 0
-  #       @offset = @offset + 20
-  #       @render_update()
-  #       $('#trades_bottom').waypoint @fetch_more_trades, {offset: '100%'}
-  #     else
-  #       $.unblockUI()
   
   change_trade_type: (e) ->
     e.preventDefault()
@@ -137,7 +132,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
     $("#trades_bottom").waypoint 'remove'
     blocktheui()
-    @collection.fetch data: {search: {option: @search_option, value: @search_value}, trade_type: @trade_type, offset: @offset, search_time: {@search_start_date, @search_start_time, @search_end_date, @search_end_time}, search_status: {option: @status_option}}, success: (collection) =>
+    @collection.fetch data: {search: {option: @search_option, value: @search_value}, trade_type: @trade_type, offset: @offset, search_all: {@search_start_date, @search_start_time, @search_end_date, @search_end_time, @status_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_invoice, @search_color}}, success: (collection) =>
       console.log "fetch_more_trades succ"
       console.log collection.length > 0
       if collection.length > 0
