@@ -56,7 +56,17 @@ class TaobaoPurchaseOrder < Trade
     self.taobao_sub_purchase_orders = new_orders
   end
 
+  def deliverable?
+    # 不限制拆分子订单的个数
+    return false if self.status != "WAIT_SELLER_SEND_GOODS"
+    count = TaobaoPurchaseOrder.where(tid: self.tid).count
+    return true if count == 1
+    status_count = TaobaoPurchaseOrder.where(tid: self.tid, status: self.status).count
+    status_count == count
+  end
+
   def deliver!
+    return unless deliverable?
     TradeTaobaoPurchaseOrderDeliver.perform_async(self.id)
   end
 
