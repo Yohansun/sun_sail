@@ -54,12 +54,12 @@
         </div>
       </fieldset>
 
-      <div class="fieldset_group mar_t" id="search_toggle">
+      <div class="fieldset_group mar_t3" id="search_toggle">
         <fieldset class="form-inline">
           <div class="controls">
             <label class="control-label">订单状态：</label>
             <select id="status_option" class="input-large">
-              <option value="">请选择</option>
+              <option value="null">请选择</option>
               <option value="WAIT_BUYER_PAY">等待付款</option>
               <option value="WAIT_SELLER_SEND_GOODS,WAIT_SELLER_DELIVERY,WAIT_SELLER_STOCK_OUT">已付款，待发货</option>
               <option value="WAIT_BUYER_CONFIRM_GOODS,WAIT_GOODS_RECEIVE_CONFIRM">已付款，已发货</option>
@@ -79,9 +79,9 @@
             </div>
           </div>
         </fieldset>
-        <fieldset class="mar_t">
+        <fieldset class="mar_t3">
           <div class="span4">
-            <button class="btn btn-info">订单属性</button>
+            <h4>订单属性</h4>
             <div class="controls">
               <label class="checkbox inline">
                 <input type="checkbox" id="search_cs_memo"> 客服有备注
@@ -203,12 +203,12 @@
         </fieldset> -->
 
         <fieldset>
-          <button class="pull-right btn btn-primary btn-large input-small search_all" type="button">搜索</button>
+          <button class="pull-right btn btn-primary search_all" type="button">搜索</button>
         </fieldset>
       </div>
 
       <fieldset id="fieldset_advanced">
-         <ul class="the-icons mar_t">
+         <ul class="the-icons mar_t3">
            <li class="pull-right" id="advanced_btn"><i class="icon-arrow-down"></i><a href="#">高级搜索</a>
            </li>
          </ul>
