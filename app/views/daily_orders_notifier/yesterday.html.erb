@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+  <style>
+      .font-blueb{
+          color:#2381D6;
+          font-weight:bold;
+      }
+      .font-gray{
+          color:#999999;
+          font-family:"Arial Unicode MS";
+      }
+      .pro-title{
+          padding:5px 14px 10px;
+      }
+      .pro-title-p{
+          margin-top:5px;
+          padding-left:8px;
+          border-left:3px #2381D6 solid;
+      }
+      .font-blue14b{
+          font-size:14px;
+          color:#2381D6;
+          font-weight:bold;
+      }
+      .order-st-list{
+          padding:17px;
+      }
+
+      .order-st-list td,.order-st-list th{
+          height:29px;
+          border-bottom:1px #EAEAEA solid;
+          padding-left:5px;
+      }
+      .order-st-list th{
+          font-size:14px;
+          font-weight:bold;
+      }
+      .order-st-list .td1{
+          width:429px;
+      }
+      .order-st-list .td2{
+          width:215px;
+          text-align:center;
+      }
+
+      .order-st-list .td3{
+          width:135px;
+      }
+
+      .order-st-total{
+          display:inline;
+          float:right;
+          padding:5px 17px 15px 0;
+          font-size:14px;
+      }
+
+      .order-st-total .l{
+          border-top:1px #EAEAEA solid;
+      }
+      .order-st-btn{
+          background:#F7F7F7;
+          border-top:1px solid #EAEAEA;
+          text-align:center;
+          padding-top:10px;
+          height:38px;
+      }
+  </style>
+</head>
+<body>
+
+<div class="pro-title">
+  <p class="pro-title-p font-blue14b">京东商城</p>
+</div>
+<div class="order-st-list">
+  <table border="0" cellpadding="0" cellspacing="0">
+    <tr>
+      <th class="td1" width="100">总订单量(笔)</th>
+      <th class="td2" width="100">已付款订单(笔)</th>
+      <th class="td2" width="100">已付款订单总额</th>
+    </tr>
+    <tr>
+      <td class="td2"><span class="font-blueb"><%= @jingdong_trades.count %></span></td>
+      <td class="td3"><span class="font-gray"></span> <span class="font-blueb"><%= @jingdong_paid_trades.count %></span></td>
+      <td class="td3"><span class="font-gray">¥</span> <span class="font-blueb"><%= @jingdong_paid %></span></td>
+    </tr>
+  </table>
+</div>
+
+<div class="pro-title">
+  <p class="pro-title-p font-blue14b">淘宝分销</p>
+</div>
+<div class="order-st-list">
+  <table border="0" cellpadding="0" cellspacing="0">
+    <tr>
+      <th class="td1" width="100">总订单量(笔)</th>
+      <th class="td2" width="100">已付款订单(笔)</th>
+      <th class="td2" width="100">已付款订单总额</th>
+    </tr>
+    <tr>
+      <td class="td2"><span class="font-blueb"><%= @taobao_purchase_orders.count %></span></td>
+      <td class="td3"><span class="font-gray"></span> <span class="font-blueb"><%= @taobao_purchase_paid_orders.count %></span></td>
+      <td class="td3"><span class="font-gray">¥</span> <span class="font-blueb"><%= @taobao_purchase_paid %></span></td>
+    </tr>
+  </table>
+</div>
+
+</body>
+</html>
