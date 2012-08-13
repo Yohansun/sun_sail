@@ -135,7 +135,7 @@ table.table td a.btn{margin: 5px;}
 .the-icons{list-style:none;margin-left:0;overflow: hidden;}
 /*form fieldset{margin-bottom:20px;}*/
 form .span4{border-right: 1px solid #ddd;}
-.mar_t .span4 .controls{padding:5px 0;}
+.mar_t3 .span4 .controls{padding:3px 0 0;}
 
 .td_colors td span.match_color{display: block;border-radius:3px;margin:3px;height:13px;width:13px;}
 .icon-arrow-up {
@@ -187,7 +187,10 @@ form .span4{border-right: 1px solid #ddd;}
 #ord_examine.modal,
 #ord_logistics_print.modal,
 #dealer_area.modal,
-#dealer_login.modal{width:890px;margin-left:-445px;}
+#dealer_login .modal-header,
+#ord_logistics_settings .modal-header,
+#logistics_settings .modal-header{padding-bottom:10px;height:25px;}
+
 
 #ord_refund.modal,
 #ord_refund_sure.modal{width:750px;margin-left:-375px;}
@@ -207,6 +210,7 @@ form .span4{border-right: 1px solid #ddd;}
 .w_48{width:48%;}
 .w_55{width:55%;}
 .mar_t{margin-top:20px;}
+.mar_t3{margin-top:3px;}
 .tc{text-align:center;}
 
 /*magic list*/
@@ -240,3 +244,11 @@ form .span4{border-right: 1px solid #ddd;}
 .icon_branch{background:url("/assets/u75_original.png");}
 
 .fieldset_group{display:none}
+
+/*margin&padding of search box*/
+#fieldset_advanced ul{margin-bottom:0px;position: relative;top:5px;}
+.re_margin.re_padding legend{margin-bottom:9px;}
+.re_margin.re_padding legend + .control-group{margin-top:5px;}
+.re_margin.re_padding.well{padding:5px 19px;}
+.re_margin.re_padding.form-horizontal .control-group{margin-bottom:3px;}
+.re_margin.re_padding .form-actions{margin-top:3px;margin-bottom:3px;padding-top:5px;padding-bottom:5px;}

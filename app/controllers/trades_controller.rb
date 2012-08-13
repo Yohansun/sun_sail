@@ -8,7 +8,7 @@ class TradesController < ApplicationController
     @trades = Trade
 
     if current_user.role_key == 'seller'
-      @trades = @trades.where seller_id: current_user.seller.id
+      @trades = @trades.where seller_id: current_user.seller.try(:id)
     end
 
     case params[:trade_type]
@@ -61,12 +61,12 @@ class TradesController < ApplicationController
 
     # 卖家有备注  ###have not been tested yet
     if params[:search_all] && params[:search_all][:search_seller_memo] == "true"
-      @trades = @trades.where("$or" => [{:seller_memo.exists => true}, {:delivery_type.exists => true}, {:invoice_info.exists => true}])
+      @trades = @trades.where("$or" => [{"$and" => [{:seller_memo.exists => true}, {:seller_memo.ne => ''}]}, {:delivery_type.exists => true}, {:invoice_info.exists => true}])
     end
     
     # 客户有留言  ###have not been tested yet
     if params[:search_all] && params[:search_all][:search_buyer_message] == "true"
-      @trades = @trades.where(:buyer_message.exists => true)
+      @trades = @trades.where("$and" => [{:buyer_message.exists => true}, {:buyer_message.ne => ''}])
     end
 
     # 需要开票

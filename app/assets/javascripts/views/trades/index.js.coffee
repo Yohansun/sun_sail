@@ -18,7 +18,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     @search_end_date = null
     @search_start_time = null
     @search_end_time = null
-    @status_option = null
 
     @offset = @collection.length
     @first_rendered = false
@@ -69,10 +68,8 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     blocktheui()
     $("#trade_rows").html('')
     @collection.fetch data: {search: {option: @search_option, value: @search_value}, trade_type: @trade_type}, success: (collection) =>
-      if collection.length > 0
-        @render_update()
-        $('#trades_bottom').waypoint @fetch_more_trades, {offset: '100%'}
-        $.unblockUI()
+      @render_update()
+      $.unblockUI()
 
   search_all: (e) ->
     e.preventDefault()
@@ -90,24 +87,17 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     @search_invoice = $("#search_invoice").is(':checked')
     @search_color = $("#search_color").is(':checked')
 
-    return if @status_option == '' and (@search_start_date == '' or @search_end_date == '') and @search_buyer_message == false and @search_seller_memo == false and @search_cs_memo == false and @search_color == false and @search_invoice == false
-
+    return if @status_option == "null" and (@search_start_date == '' or @search_end_date == '') and @search_buyer_message == false and @search_seller_memo == false and @search_cs_memo == false and @search_color == false and @search_invoice == false
+    
+    @offset = 0
     blocktheui()
     $("#trade_rows").html('')
     
-    if @search_start_date == '' or @search_end_date == '' or @search_start_date = 'null' or @search_end_date = 'null'
+    if @search_start_date == '' or @search_end_date == ''    #权宜之计
       @search_start_date = 'null'
       @search_end_date = 'null'
       @search_start_time = 'null'
       @search_end_time = 'null'
-
-    if @search_start_time = ''
-      @search_start_time = 'null'
-    if @search_end_time = ''
-      @search_end_time = 'null'
-
-    if @status_option == ''
-      @status_option = 'null'
 
     @collection.fetch data: {search: {option: @search_option, value: @search_value}, trade_type: @trade_type, search_all: {@search_start_date, @search_start_time, @search_end_date, @search_end_time, @status_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_invoice, @search_color}}, success: (collection) =>
       if collection.length > 0
@@ -130,7 +120,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
   forceLoadMoreTrades: (event) =>
     event.preventDefault()
 
-    $("#trades_bottom").waypoint 'remove'
+    $("#trades_bottom").waypoint 'destroy'
     blocktheui()
     @collection.fetch data: {search: {option: @search_option, value: @search_value}, trade_type: @trade_type, offset: @offset, search_all: {@search_start_date, @search_start_time, @search_end_date, @search_end_time, @status_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_invoice, @search_color}}, success: (collection) =>
       console.log "fetch_more_trades succ"
