@@ -103,7 +103,11 @@
       </tr>
       <% end %>
       <tr>
-        <th colspan="6">总价：￥<%= @trade.get('total_fee') - @trade.get ('post_fee') %><br>物流费：￥<%= @trade.get 'post_fee' %></th>
+        <th colspan="6">总价：￥<%= @trade.get('total_fee') + @trade.get('seller_discount') - @trade.get ('post_fee') %>
+        <br>物流费：￥<%= @trade.get 'post_fee' %>
+        <% if @trade.get('seller_discount') > 0 : %>
+          <br>订单折扣：￥<%= @trade.get 'seller_discount' %></th>
+        <% end %>  
       </tr>
     </tbody>
   </table>
