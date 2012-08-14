@@ -133,9 +133,6 @@ table.table td a.btn{margin: 5px;}
 
 .row-fluid{min-height:700px;}
 .the-icons{list-style:none;margin-left:0;overflow: hidden;}
-/*form fieldset{margin-bottom:20px;}*/
-form .span4{border-right: 1px solid #ddd;}
-.mar_t3 .span4 .controls{padding:3px 0 0;}
 
 .td_colors td span.match_color{display: block;border-radius:3px;margin:3px;height:13px;width:13px;}
 .icon-arrow-up {
@@ -211,6 +208,7 @@ form .span4{border-right: 1px solid #ddd;}
 .w_55{width:55%;}
 .mar_t{margin-top:20px;}
 .mar_t3{margin-top:3px;}
+.mar_t10{margin-top:10px;}
 .tc{text-align:center;}
 
 /*magic list*/
@@ -228,27 +226,19 @@ form .span4{border-right: 1px solid #ddd;}
 .icon_branch{position:absolute;right:0;top:50%;margin-top:-24px;display: inline-block;width: 48px;height: 48px;*margin-right: .3em;line-height: 48px;}
 .icon_branch{background:url("/assets/u75_original.png");}
 
-/*magic list*/
-.well.magic_person img{
-   border: 1px solid #eee;
-  border: 1px solid rgba(0, 0, 0, 0.3);
-  -webkit-border-radius: 4px;
-     -moz-border-radius: 4px;
-          border-radius: 4px;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
-     -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
-          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
-}
-.magic_person div.clearfix{margin-bottom:20px;}
-.icon_branch{position:absolute;right:0;top:50%;margin-top:-24px;display: inline-block;width: 48px;height: 48px;*margin-right: .3em;line-height: 48px;}
-.icon_branch{background:url("/assets/u75_original.png");}
-
-.fieldset_group{display:none}
-
-/*margin&padding of search box*/
+/*search*/
+.fieldset_group{margin-top:10px;}
+.form-search .span4 .control-group{margin-top:15px;}
+.form-search .span4 .control-group .controls{margin-top:3px;}
+.form-search .span4 .control-group .controls.padding_left{padding-left:75px;}
+.form-search .span4 .control-group .controls.padding_left .checkbox{width:100px;}
+.form-search .span4 .control-group label.control-label{width:70px;}
+.h_specify{height:75px;}
+.w_specify{width:470px;}
 #fieldset_advanced ul{margin-bottom:0px;position: relative;top:5px;}
-.re_margin.re_padding legend{margin-bottom:9px;}
-.re_margin.re_padding legend + .control-group{margin-top:5px;}
-.re_margin.re_padding.well{padding:5px 19px;}
-.re_margin.re_padding.form-horizontal .control-group{margin-bottom:3px;}
-.re_margin.re_padding .form-actions{margin-top:3px;margin-bottom:3px;padding-top:5px;padding-bottom:5px;}
+
+/*code style*/
+code{color:#08C;}
+
+/*toogle*/
+.fieldset_group{display:none}
