@@ -112,7 +112,12 @@ class TradesController < ApplicationController
     @trades = Trade
 
     if current_user.role_key == 'seller'
-      @trades = @trades.where seller_id: current_user.seller.id
+      unless current_user.seller == nil
+        @trades = @trades.where seller_id: current_user.seller.try(:id)
+      else
+        render json: []
+        return
+      end
     end
 
     case params[:trade_type]
