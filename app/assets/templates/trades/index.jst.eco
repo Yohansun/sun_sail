@@ -49,17 +49,16 @@
             <option value="tid">订单编号</option>
           </select>
           <div class="input-append">
-            <input type="text" id="appendedInputButton" class="input-large search-query search_value" value="<%= @search_value %>"><button type="button" class="btn btn-info search">筛选</button>
+            <input type="text" id="appendedInputButton" class="search-query w_specify search_value" value="<%= @search_value %>"><button type="button" class="btn btn-info search">筛选</button>
           </div>
         </div>
       </fieldset>
 
-      <div class="fieldset_group mar_t3" id="search_toggle">
-        <fieldset class="form-inline">
+      <div class="fieldset_group" id="search_toggle">
+        <fieldset>
           <div class="controls">
-            <label class="control-label">订单状态：</label>
             <select id="status_option" class="input-large">
-              <option value="null">请选择</option>
+              <option value="null">订单状态</option>
               <option value="WAIT_BUYER_PAY">等待付款</option>
               <option value="WAIT_SELLER_SEND_GOODS,WAIT_SELLER_DELIVERY,WAIT_SELLER_STOCK_OUT">已付款，待发货</option>
               <option value="WAIT_BUYER_CONFIRM_GOODS,WAIT_GOODS_RECEIVE_CONFIRM">已付款，已发货</option>
@@ -79,32 +78,34 @@
             </div>
           </div>
         </fieldset>
-        <fieldset class="mar_t3">
+        <fieldset class="mar_t10">
           <div class="span4">
-            <h4>订单属性</h4>
-            <div class="controls">
-              <label class="checkbox inline">
-                <input type="checkbox" id="search_cs_memo"> 客服有备注
-              </label>
-             <!--  <label class="checkbox inline">
-                <input type="checkbox" value="option1" id="inlineCheckbox1"> 标记
-              </label> -->
-            </div>
-            <div class="controls">
-              <label class="checkbox inline">
-                <input type="checkbox" id="search_seller_memo"> 卖家有备注
-              </label>
-              <label class="checkbox inline">
-                <input type="checkbox" id="search_invoice"> 需要开票
-              </label>
-            </div>
-            <div class="controls">
-              <label class="checkbox inline">
-                <input type="checkbox" id="search_buyer_message"> 客户有留言
-              </label>
-              <label class="checkbox inline">
-                <input type="checkbox" id="search_color"> 需要配色
-              </label>
+            <code>订单属性</code>
+            <div class="control-group h_specify">
+              <div class="controls">
+                <label class="checkbox inline">
+                  <input type="checkbox" id="search_cs_memo"> 客服有备注
+                </label>
+               <!--  <label class="checkbox inline">
+                  <input type="checkbox" value="option1" id="inlineCheckbox1"> 标记
+                </label> -->
+              </div>
+              <div class="controls">
+                <label class="checkbox inline">
+                  <input type="checkbox" id="search_seller_memo"> 卖家有备注
+                </label>
+                <label class="checkbox inline">
+                  <input type="checkbox" id="search_invoice"> 需要开票
+                </label>
+              </div>
+              <div class="controls">
+                <label class="checkbox inline">
+                  <input type="checkbox" id="search_buyer_message"> 客户有留言
+                </label>
+                <label class="checkbox inline">
+                  <input type="checkbox" id="search_color"> 需要配色
+                </label>
+              </div>
             </div>
             <!-- <div class="controls">
               <label class="control-label">订单来源：</label>
@@ -121,86 +122,8 @@
                 <option>something</option>
               </select>
             </div> -->
-          </div> 
-
-         <!--  <div class="span4">
-            <button class="btn btn-info">产品</button>
-            <div class="controls">
-              <label for="select05" class="control-label">分类：</label>
-              <select id="select05" class="input-medium">
-                <option>something</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
-              </select>
-            </div>
-            <div class="controls">
-              <label for="select06" class="control-label">系列：</label>
-              <select id="select06" class="input-medium">
-                <option>something</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
-              </select>
-            </div>
-            <div class="controls">
-              <label for="select07" class="control-label">档次：</label>
-              <select id="select07" class="input-medium">
-                <option>something</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
-              </select>
-            </div>
-            <div class="controls">
-              <label for="select08" class="control-label">调色范围：</label>
-              <select id="select08" class="input-medium">
-                <option>something</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
-              </select>
-            </div>
-            <div class="controls">
-              <label for="select09" class="control-label">规格：</label>
-              <select id="select09" class="input-medium">
-                <option>something</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
-              </select>
-            </div>
           </div>
-
-          <div class="span4 noborder">
-            <button class="btn btn-info">物流配送</button>
-            <div class="controls">
-              <label for="select10" class="control-label">配送商：</label>
-              <input type="text" class="input-xlarge search-query">
-            </div>
-            <div class="controls">
-              <label class="checkbox inline">
-                <input type="checkbox" value="option1" id="inlineCheckbox6"> 实际已经发货
-              </label>
-              <label class="checkbox inline">
-                <input type="checkbox" value="option2" id="inlineCheckbox7"> 附发票
-              </label>
-            </div>
-            <div class="controls">
-              <label class="checkbox inline">
-                <input type="checkbox" value="option1" id="inlineCheckbox8"> 附质保
-              </label>
-              <label class="checkbox inline">
-                <input type="checkbox" value="option2" id="inlineCheckbox9"> 客户已签收
-              </label>
-            </div>
-          </div>
-        </fieldset> -->
+        </fieldset>
 
         <fieldset>
           <button class="pull-right btn btn-primary search_all" type="button">搜索</button>
