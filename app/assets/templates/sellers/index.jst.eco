@@ -6,7 +6,7 @@
       <!-- <li style="position:absolute;right:15px;top:6px;"><i class="icon-plus"></i><a class="btn_alert" href="#">新增经销商</a></li> -->
     </ul><!-- breadcrumb -->
 
-    <!-- <form class="well form-search">
+    <form class="well form-search">
       <fieldset class="form-inline">
         <div class="controls">
           <select id="select01" class="input-large">
@@ -22,7 +22,7 @@
           </div>
         </div>
       </fieldset>
-    </form> -->
+    </form>
 
 <!--       <div class="controls clearfix">
       <div class="btns btn-group pull-right">
@@ -95,9 +95,8 @@
           <th>联系电话</th>
           <th>联系人</th>
           <th>地址</th>
-          <th>下级经销商</th>
           <!-- <th>状态</th> -->
-          <!-- <th>操作</th> -->
+          <th>操作</th>
         </tr>
       </thead>
       <tbody>
@@ -109,26 +108,23 @@
             <td><%= seller.get('mobile') %></td>
             <td><%= seller.get('address') %></td>
             <td><%= seller.get('seller_name') %></td>
+            <!-- <td>状态</td> -->
             <td>
               <% if seller.get('children_count') > 0: %>
-              <a class="browse_children" data-id="<%= seller.id %>" href="/seller/<%= seller.id %>">浏览下级经销商</a>
-              <% end %>
-            </td>
-            <!-- <td>状态</td> -->
-            <!-- <td>
               <div class="btn-group">
                 <button data-toggle="dropdown" class="btn btn-info dropdown-toggle min_w"><i class="icon-wrench"></i> <span class="caret"></span></button>
                 <ul class="dropdown-menu" style="left:-115px;">
-                  <li><a class="ord_branch" data-toggle="modal" href="#dealer_edit">编辑</a></li>
+                  <!-- <li><a class="ord_branch" data-toggle="modal" href="#dealer_edit">编辑</a></li>
                   <li><a data-toggle="modal" href="#dealer_area">管辖地区</a></li>
                   <li><a data-toggle="modal" href="#dealer_close">关闭</a></li>
                   <li><a data-toggle="modal" href="#dealer_login">登陆账号</a></li>
-                  <li class="divider"></li>
-                  <li><a data-toggle="modal" href="#dealer_manage_child">管理下级</a></li>
-                  <li><a href="#">历史交易</a></li>
+                  <li class="divider"></li> -->
+                  <li><a data-toggle="modal" class="browse_children" data-id="<%= seller.id %>" href="seller#<%= seller.id %>">管理下级</a></li>
+                  <!-- <li><a href="#">历史交易</a></li> -->
                 </ul>
               </div>
-            </td> -->
+              <% end %>
+            </td>
           </tr>
         <% end %>
       </tbody>
