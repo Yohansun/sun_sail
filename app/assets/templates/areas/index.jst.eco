@@ -30,9 +30,8 @@
             <th>邮编</th>
             <th>名称</th>
             <th>默认经销商</th>
-            <th>下级经销商</th>
            <!--  <th>状态</th> -->
-           <!--  <th>操作</th> -->
+            <th>操作</th>
           </tr>
         </thead>
         <tbody>
@@ -42,24 +41,21 @@
               <td><%= area.get('zip') %></td>
               <td><%= area.get('name') %></td>
               <td><%= area.get('seller_name') %></td>
-              <td>
-                  <% if area.get('children_count') > 0: %>
-                  <a class="browse_children" data-id="<%= area.id %>" href="/areas/<%= area.id %>">浏览下级区域</a>
-                  <% end %>
-              </td>
               <!-- <td>状态</td> -->
-              <!-- <td>
+              <td>
+                <% if area.get('children_count') > 0: %>
                 <div class="btn-group">
                   <button data-toggle="dropdown" class="btn btn-info dropdown-toggle min_w"><i class="icon-wrench"></i> <span class="caret"></span></button>
                   <ul class="dropdown-menu" style="left:-115px;">
-                    <li><a class="ord_branch" data-toggle="modal" href="#dealer_edit">编辑</a></li>
+                    <!-- <li><a class="ord_branch" data-toggle="modal" href="#dealer_edit">编辑</a></li>
                     <li><a data-toggle="modal" href="#dealer_close">关闭</a></li>
-                    <li class="divider"></li>
-                    <li><a data-toggle="modal" href="#dealer_manage_child">管理下级</a></li>
-                    <li><a href="#">历史交易</a></li>
+                    <li class="divider"></li> -->
+                    <li><a data-toggle="modal" class="browse_children" data-id="<%= area.id %>" href="areas#<%= area.id %>">管理下级</a></li>
+                    <!-- <li><a href="#">历史交易</a></li> -->
                   </ul>
                 </div>
-              </td> -->
+                <% end %>
+              </td>
             </tr>
           <% end %>
         </tbody>

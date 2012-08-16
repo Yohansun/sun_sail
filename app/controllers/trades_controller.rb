@@ -2,7 +2,7 @@
 
 class TradesController < ApplicationController
   before_filter :authenticate_user!
-  respond_to :json
+  respond_to :json, :xls
 
   def index
     @trades = Trade
@@ -92,10 +92,9 @@ class TradesController < ApplicationController
 
     ###筛选结束###
 
-
     offset = params[:offset] || 0
     limit = params[:limit] || 20
-
+ 
     @trades = TradeDecorator.decorate(@trades.limit(limit).offset(offset).order_by("created", "DESC"))
 
     if @trades.count > 0

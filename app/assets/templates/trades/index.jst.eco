@@ -42,7 +42,8 @@
     -->
   </ul><!-- breadcrumb -->
 
-  <form class="well form-search">
+  <form class="well form-search order_search_form">
+      
       <fieldset class="form-inline">
         <div class="controls">
           <select id="search_option" class="input-large search_option">
@@ -138,19 +139,21 @@
       </fieldset>
   </form>
 
-<!--
+
   <div class="controls clearfix">
-    <div class="btns btn-group pull-right">
+    <!--<div class="btns btn-group pull-right">
       <a href="#" class="btn btn-success btn_mar4">显示设置</a>
       <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-success"><span class="caret"></span></button>
-    </div>
+    </div>-->
 
     <div class="btns btn-group pull-left">
-      <a href="#" class="btn btn-warning"><i class="icon-user icon-white"></i> 批量操作</a>
+      <a href="#" class="btn btn-warning"><i class="icon-user icon-white"></i>批量操作</a>
       <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-warning btn_left4"><span class="caret"></span></button>
+      <ul class="dropdown-menu">
+        <li><a href="#" class="export_orders">导出报表</a></li>
+      </ul>
     </div>
   </div>
--->
 
   <div class="alert alert-info hide" id="newTradesNotifer">有<span>0</span>条新订单, <a href="#" id="newTradesNotiferLink">点击加载新订单数据</a></div>
 
@@ -177,7 +180,6 @@
     <tbody id="trade_rows">
     </tbody>
   </table>
-
     <a href="#" data-type="loadMoreTrades" class="btn">加载更多订单</a>
 </div>
 <div id="trades_bottom"></div>

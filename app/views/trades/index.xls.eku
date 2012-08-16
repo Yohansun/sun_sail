@@ -1,0 +1,39 @@
+__filename = "export.xls"
+sheet1 = xls.create_worksheet
+sheet1[0, 0] = "订单列表"
+sheet1.row(1).concat ["订单来源", "订单编号", "当前状态",
+	                    "下单时间", "付款时间", "分流时间", "发货时间",
+	                    "客户姓名", "联系电话", "联系地址",
+                      "客户留言", "卖家备注", "客服备注",
+                      "调色信息", "发票信息", "送货经销商",
+                      "商品名称", "单价（实际销售）", "数量"]
+
+yellow_format = Spreadsheet::Format.new :pattern_bg_color => "yellow", :color => "black", :pattern_fg_color => "yellow", :pattern => 1
+blue_format = Spreadsheet::Format.new :pattern_bg_color => "blue", :color => "white", :pattern_fg_color => "blue", :pattern => 1
+
+row_number = 2
+
+@trades.each_with_index do |trade,count|
+  OrderDecorator.decorate(trade.orders).each_with_index do |order, i|
+      sheet1.update_row row_number + i, trade.trade_source, trade.tid, trade.status_text,
+      trade.created.try(:strftime,"%Y-%m-%d %H:%M:%S"), trade.pay_time.try(:strftime,"%Y-%m-%d %H:%M:%S"),
+      trade.dispatched_at.try(:strftime,"%Y-%m-%d %H:%M:%S"), trade.delivered_at.try(:strftime,"%Y-%m-%d %H:%M:%S"),
+      trade.receiver_name, trade.receiver_mobile_phone, trade.receiver_address,
+      trade.seller_memo, trade.buyer_message, trade.cs_memo,
+      order.color_num, trade.invoice_name, trade.try(:seller).try(:name),
+      order.title, order.auction_price, order.num
+      if count.even?
+        sheet1.row(row_number + i).default_format = blue_format
+      else
+        sheet1.row(row_number + i).default_format = yellow_format
+      end     
+  end
+  row_number = row_number + trade.orders.count
+end
+
+title_format = Spreadsheet::Format.new :color => "blue", :weight => :bold, :size => 18
+
+sheet1.row(0).set_format(0, title_format)
+
+bold = Spreadsheet::Format.new(:weight => :bold)
+sheet1.row(1).default_format = bold

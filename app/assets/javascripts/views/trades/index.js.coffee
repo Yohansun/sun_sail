@@ -5,9 +5,10 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
   events:
     'click [data-trade-type]': 'change_trade_type'
     'click .search': 'search'
-    'click #advanced_btn': 'advanced_btn'
     'click .search_all': 'search_all'
+    'click #advanced_btn': 'advanced_btn'
     'click [data-type=loadMoreTrades]': 'forceLoadMoreTrades'
+    'click .export_orders': 'export_orders'
 
   initialize: (options) ->
     @trade_type = options.trade_type
@@ -143,5 +144,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     $("#advanced_btn i").toggleClass 'icon-arrow-up'
     $("#search_toggle").toggle()
 
-
-    
+  export_orders: (e) =>
+    e.preventDefault()
+    window.open "/api/trades.xls?trade_type=#{@trade_type}&search%5Bvalue%5D=#{@search_value}&search%5Boption%5D=#{@search_option}&search%5Bvalue%5D=#{@search_value}&trade_type=#{@trade_type}&search_all%5Bsearch_start_date%5D=#{@search_start_date}&search_all%5Bsearch_start_time%5D=#{@search_start_time}&search_all%5Bsearch_end_date%5D=#{@search_end_date}&search_all%5Bsearch_end_time%5D=#{@search_end_time}&search_all%5Bstatus_option%5D=#{@status_option}&search_all%5Bsearch_buyer_message%5D=#{@search_buyer_message}&search_all%5Bsearch_seller_memo%5D=#{@search_seller_memo}&search_all%5Bsearch_cs_memo%5D=#{@search_cs_memo}&search_all%5Bsearch_invoice%5D=#{@search_invoice}&search_all%5Bsearch_color%5D=#{@search_color}&limit=1000000&offset=0"
