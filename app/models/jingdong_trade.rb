@@ -18,7 +18,8 @@ class JingdongTrade < Trade
   field :invoice_info, type: String
 
   field :order_end_time, type: DateTime
-
+  field :consign_time, type: DateTime
+  
   field :consignee_info_fullname, type: String
   field :consignee_info_full_address, type: String
   field :consignee_info_telephone, type: String
