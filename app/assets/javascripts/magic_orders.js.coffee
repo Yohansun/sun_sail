@@ -4,6 +4,8 @@ window.MagicOrders =
   Views: {}
   Routers: {}
   init: ->
+    $.cookie.defaults['expires'] = 365
+
     # 不同角色显示的“操作”弹出项
     @trade_pops = {
       'cs': ['detail', 'seller', 'cs_memo', 'color', 'invoice'],
@@ -28,7 +30,10 @@ window.MagicOrders =
       'seller': '送货经销商'
     }
     # 初始化时需要隐藏的订单列
-    @trade_cols_hidden = []
+    if $.cookie('trade_cols_hidden')
+      @trade_cols_hidden = $.cookie('trade_cols_hidden').split(',')
+    else
+      @trade_cols_hidden = []
 
     new MagicOrders.Routers.Areas()
     new MagicOrders.Routers.Trades()

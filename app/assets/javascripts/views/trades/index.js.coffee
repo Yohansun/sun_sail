@@ -38,7 +38,9 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
       # check column filters
       $(@el).find("#cols_filter input[type=checkbox]").attr("checked", "checked")
       for col in MagicOrders.trade_cols_hidden
+        $(@el).find("#trades_table (th,td)[data-col=#{col}]").hide()
         $(@el).find("#cols_filter input[value=#{col}]").attr("checked", false)
+        $(@el).find("#trades_table input[value=#{col}]").attr("checked", false)
 
     @first_rendered = true
     @collection.each(@appendTrade)
@@ -79,6 +81,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
       MagicOrders.trade_cols_hidden.push($(col).val())
 
     MagicOrders.trade_cols_hidden = _.uniq(MagicOrders.trade_cols_hidden)
+    $.cookie('trade_cols_hidden', MagicOrders.trade_cols_hidden.join(","))
 
   search: (e) ->
     e.preventDefault()
