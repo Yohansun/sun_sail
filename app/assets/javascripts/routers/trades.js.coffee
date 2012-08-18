@@ -57,7 +57,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
 
         # endless刷新相关
         $("#trades_bottom").waypoint 'destroy'
-        $('#trades_bottom').waypoint @mainView.fetch_more_trades, {offset: '100%'}
+        $('#trades_bottom').waypoint @mainView.fetchMoreTrades, {offset: '100%'}
 
         # 新订单提醒相关
         if collection.models.length > 0
