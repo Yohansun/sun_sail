@@ -43,7 +43,7 @@
   </ul><!-- breadcrumb -->
 
   <form class="well form-search order_search_form">
-      
+
       <fieldset class="form-inline">
         <div class="controls">
           <select id="search_option" class="input-large search_option">
@@ -141,10 +141,20 @@
 
 
   <div class="controls clearfix">
-    <!--<div class="btns btn-group pull-right">
+    <div class="btns btn-group pull-right">
       <a href="#" class="btn btn-success btn_mar4">显示设置</a>
-      <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-success"><span class="caret"></span></button>
-    </div>-->
+      <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-success dropdown_check_btn"><span class="caret"></span></button>
+      <ul class="dropdown-menu dropdown_check" id="cols_filter">
+        <% for key in _.keys(window.MagicOrders.trade_cols): %>
+        <li>
+          <label class="checkbox" style="padding-left:35px;">
+            <input type="checkbox" value="<%= key %>">
+            <%= window.MagicOrders.trade_cols[key] %>
+          </label>
+        </li>
+        <% end %>
+      </ul>
+    </div>
 
     <div class="btns btn-group pull-left">
       <a href="#" class="btn btn-warning"><i class="icon-user icon-white"></i>批量操作</a>
@@ -157,23 +167,23 @@
 
   <div class="alert alert-info hide" id="newTradesNotifer">有<span>0</span>条新订单, <a href="#" id="newTradesNotiferLink">点击加载新订单数据</a></div>
 
-  <table class="table table-striped table-bordered table-condensed td_colors mar_t">
+  <table class="table table-striped table-bordered table-condensed td_colors mar_t" id="trades_table">
     <thead>
       <tr>
         <th><input id="checkbox_all" type="checkbox" value="option1"></th>
-        <th nowrap>订单来源</th>
-        <th>订单编号</th>
-        <th>当前状态</th>
-        <th style="max-width:150px">状态历史</th>
-        <th nowrap>客户姓名</th>
-        <th>联系电话</th>
-        <th>联系地址</th>
-        <th nowrap>客户<br/>留言</th>
-        <th nowrap>卖家<br/>备注</th>
-        <th nowrap>客服<br/>备注</th>
-        <th nowrap>调色<br/>信息</th>
-        <th nowrap>发票<br/>信息</th>
-        <th nowrap>送货<br/>经销商</th>
+        <th data-col='trade_source' nowrap>订单来源</th>
+        <th data-col='tid'>订单编号</th>
+        <th data-col='status'>当前状态</th>
+        <th data-col='status_history' style="max-width:150px">状态历史</th>
+        <th data-col='receiver_name' nowrap>客户姓名</th>
+        <th data-col='receiver_mobile_phone'>联系电话</th>
+        <th data-col='receiver_address'>联系地址</th>
+        <th data-col='buyer_message' nowrap>客户<br/>留言</th>
+        <th data-col='seller_memo' nowrap>卖家<br/>备注</th>
+        <th data-col='cs_memo' nowrap>客服<br/>备注</th>
+        <th data-col='color_info' nowrap>调色<br/>信息</th>
+        <th data-col='invoice_info' nowrap>发票<br/>信息</th>
+        <th data-col='seller' nowrap>送货<br/>经销商</th>
         <th>操作</th>
       </tr>
     </thead>

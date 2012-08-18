@@ -9,6 +9,8 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     'click #advanced_btn': 'advanced_btn'
     'click [data-type=loadMoreTrades]': 'forceLoadMoreTrades'
     'click .export_orders': 'export_orders'
+    'click #cols_filter input,label': 'keepColsFilterDropdownOpen'
+    'change #cols_filter input[type=checkbox]': 'filterTradeColumns'
 
   initialize: (options) ->
     @trade_type = options.trade_type
@@ -32,6 +34,13 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
       $(@el).html(@template(trade_type: @trade_type, search_value: @search_value, search_start_date: @search_start_date, search_end_date: @search_end_date, search_start_time: @search_start_time, search_end_time: @search_end_time))
       navs = {'all': '所有订单', 'taobao': '淘宝订单', 'taobao_fenxiao': '淘宝分销采购单', 'jingdong': '京东商城订单', 'shop': '官网订单'}
       $(@el).find(".trade_nav").text(navs[@trade_type])
+
+      # check column filters
+      $(@el).find("#cols_filter input[type=checkbox]").attr("checked", "checked")
+      for col in MagicOrders.trade_cols_hidden
+        $(@el).find("#trades_table (th,td)[data-col=#{col}]").hide()
+        $(@el).find("#cols_filter input[value=#{col}]").attr("checked", false)
+        $(@el).find("#trades_table input[value=#{col}]").attr("checked", false)
 
     @first_rendered = true
     @collection.each(@appendTrade)
@@ -58,6 +67,21 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     if $("#trade_#{trade.get('id')}").length == 0
       view = new MagicOrders.Views.TradesRow(model: trade)
       $(@el).find("#trade_rows").prepend(view.render().el)
+
+  keepColsFilterDropdownOpen: (event) ->
+    event.stopPropagation()
+
+  filterTradeColumns: (event) ->
+    col = event.target
+    if $(col).attr("checked") == 'checked'
+      $("#trades_table (th,td)[data-col=#{$(col).val()}]").show()
+      MagicOrders.trade_cols_hidden = _.without(MagicOrders.trade_cols_hidden, $(col).val())
+    else
+      $("#trades_table (th,td)[data-col=#{$(col).val()}]").hide()
+      MagicOrders.trade_cols_hidden.push($(col).val())
+
+    MagicOrders.trade_cols_hidden = _.uniq(MagicOrders.trade_cols_hidden)
+    $.cookie('trade_cols_hidden', MagicOrders.trade_cols_hidden.join(","))
 
   search: (e) ->
     e.preventDefault()
@@ -89,11 +113,11 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     @search_color = $("#search_color").is(':checked')
 
     return if @status_option == "null" and (@search_start_date == '' or @search_end_date == '') and @search_buyer_message == false and @search_seller_memo == false and @search_cs_memo == false and @search_color == false and @search_invoice == false
-    
+
     @offset = 0
     blocktheui()
     $("#trade_rows").html('')
-    
+
     if @search_start_date == '' or @search_end_date == ''    #权宜之计
       @search_start_date = 'null'
       @search_end_date = 'null'
@@ -107,7 +131,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
         $('#trades_bottom').waypoint @fetch_more_trades, {offset: '100%'}
       else
         $.unblockUI()
-  
+
   change_trade_type: (e) ->
     e.preventDefault()
     type = $(e.target).data('trade-type')
