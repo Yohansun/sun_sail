@@ -89,7 +89,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     @search_value = $(".search_value").val()
     return if @search_option == '' or @search_value == ''
 
-    $("#trades_bottom").waypoint 'remove'
+    $("#trades_bottom").waypoint('destroy')
     blocktheui()
     $("#trade_rows").html('')
     @collection.fetch data: {search: {option: @search_option, value: @search_value}, trade_type: @trade_type}, success: (collection) =>
@@ -128,6 +128,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
       if collection.length > 0
         @offset = @offset + 20
         @render_update()
+        $("#trades_bottom").waypoint('destroy')
         $('#trades_bottom').waypoint @fetch_more_trades, {offset: '100%'}
       else
         $.unblockUI()
@@ -145,16 +146,13 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
   forceLoadMoreTrades: (event) =>
     event.preventDefault()
 
-    $("#trades_bottom").waypoint 'destroy'
+    $("#trades_bottom").waypoint('destroy')
     blocktheui()
     @collection.fetch data: {search: {option: @search_option, value: @search_value}, trade_type: @trade_type, offset: @offset, search_all: {@search_start_date, @search_start_time, @search_end_date, @search_end_time, @status_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_invoice, @search_color}}, success: (collection) =>
-      console.log "fetch_more_trades succ"
-      console.log collection.length > 0
       if collection.length > 0
         @offset = @offset + 20
         @render_update()
         $('#trades_bottom').waypoint @fetch_more_trades, {offset: '100%'}
-        console.log "waypoint start"
       else
         $.unblockUI()
 
