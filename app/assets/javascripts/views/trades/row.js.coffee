@@ -24,6 +24,12 @@ class MagicOrders.Views.TradesRow extends Backbone.View
       for pop in MagicOrders.trade_pops[MagicOrders.role_key]
         $(@el).find(".trade_pops li [data-type=#{pop}]").parent().show()
 
+    # reset cols
+    for col in MagicOrders.trade_cols_hidden
+      $(@el).find("td[data-col=#{col}]").hide()
+    for col in _.difference(_.keys(MagicOrders.trade_cols), MagicOrders.trade_cols_hidden)
+      $(@el).find("td[data-col=#{col}]").show()
+
     this
 
   show_detail: (e) ->
