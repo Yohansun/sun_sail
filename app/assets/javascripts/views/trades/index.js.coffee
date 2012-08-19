@@ -3,12 +3,13 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
   template: JST['trades/index']
 
   events:
-    'click [data-trade-type]': 'change_trade_type'
+    'click [data-trade-type]': 'changeTradeType'
+    'click [data-trade-mode]': 'changeTradeMode'
     'click .search': 'search'
-    'click .search_all': 'search_all'
-    'click #advanced_btn': 'advanced_btn'
+    'click .search_all': 'searchAll'
+    'click #advanced_btn': 'advancedSearch'
     'click [data-type=loadMoreTrades]': 'forceLoadMoreTrades'
-    'click .export_orders': 'export_orders'
+    'click .export_orders': 'exportOrders'
     'click #cols_filter input,label': 'keepColsFilterDropdownOpen'
     'change #cols_filter input[type=checkbox]': 'filterTradeColumns'
 
@@ -26,7 +27,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     @first_rendered = false
 
     # @collection.on("reset", @render, this)
-    @collection.on("fetch", @render_update, this)
+    @collection.on("fetch", @renderUpdate, this)
 
   render: =>
     $.unblockUI()
@@ -40,7 +41,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
       for col in MagicOrders.trade_cols_hidden
         $(@el).find("#trades_table (th,td)[data-col=#{col}]").hide()
         $(@el).find("#cols_filter input[value=#{col}]").attr("checked", false)
-        $(@el).find("#trades_table input[value=#{col}]").attr("checked", false)
 
     @first_rendered = true
     @collection.each(@appendTrade)
@@ -48,7 +48,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
     this
 
-  render_update: =>
+  renderUpdate: =>
     @collection.each(@appendTrade)
     $("a[rel=popover]").popover(placement: 'left')
     $.unblockUI()
@@ -58,7 +58,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
       view = new MagicOrders.Views.TradesRow(model: trade)
       $(@el).find("#trade_rows").append(view.render().el)
 
-  render_new: =>
+  renderNew: =>
     @collection.each(@prependTrade)
     $("a[rel=popover]").popover(placement: 'left')
     $.unblockUI()
@@ -89,14 +89,14 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     @search_value = $(".search_value").val()
     return if @search_option == '' or @search_value == ''
 
-    $("#trades_bottom").waypoint 'remove'
+    $("#trades_bottom").waypoint('destroy')
     blocktheui()
     $("#trade_rows").html('')
     @collection.fetch data: {search: {option: @search_option, value: @search_value}, trade_type: @trade_type}, success: (collection) =>
-      @render_update()
+      @renderUpdate()
       $.unblockUI()
 
-  search_all: (e) ->
+  searchAll: (e) ->
     e.preventDefault()
     @status_option = $("#status_option").val()
 
@@ -127,47 +127,64 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     @collection.fetch data: {search: {option: @search_option, value: @search_value}, trade_type: @trade_type, search_all: {@search_start_date, @search_start_time, @search_end_date, @search_end_time, @status_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_invoice, @search_color}}, success: (collection) =>
       if collection.length > 0
         @offset = @offset + 20
-        @render_update()
-        $('#trades_bottom').waypoint @fetch_more_trades, {offset: '100%'}
+        @renderUpdate()
+        $("#trades_bottom").waypoint('destroy')
+        $('#trades_bottom').waypoint @fetchMoreTrades, {offset: '100%'}
       else
         $.unblockUI()
 
-  change_trade_type: (e) ->
+  changeTradeType: (e) ->
     e.preventDefault()
     type = $(e.target).data('trade-type')
     Backbone.history.navigate('trades/' + type, true)
 
+  changeTradeMode: (e) ->
+    e.preventDefault()
+    @trade_mode = $(e.target).data('trade-mode')
+    $(@el).find(".trade_mode").text(MagicOrders.trade_modes[@trade_mode])
+    # hide some cols
+    visible_cols = MagicOrders.trade_cols_visible_modes[@trade_mode]
+    MagicOrders.trade_cols_hidden = _.difference(MagicOrders.trade_cols_keys, visible_cols)
+    for col in MagicOrders.trade_cols_keys
+      if col in MagicOrders.trade_cols_hidden
+        $("#trades_table (th,td)[data-col=#{col}]").hide()
+      else
+        $("#trades_table (th,td)[data-col=#{col}]").show()
+
+    # reset cols filter checker
+    $(@el).find("#cols_filter input[type=checkbox]").attr("checked", "checked")
+    for col in MagicOrders.trade_cols_hidden
+      $(@el).find("#trades_table (th,td)[data-col=#{col}]").hide()
+      $(@el).find("#cols_filter input[value=#{col}]").attr("checked", false)
+
   fetch_new_trades: =>
     @collection.fetch add: true, data: {search: {option: @search_option, value: @search_value}, trade_type: @trade_type, offset: 0, limit: $("#newTradesNotifer span").text()}, success: (collection) =>
-      @render_new()
+      @renderNew()
       $("#newTradesNotifer").hide()
 
   forceLoadMoreTrades: (event) =>
     event.preventDefault()
 
-    $("#trades_bottom").waypoint 'destroy'
+    $("#trades_bottom").waypoint('destroy')
     blocktheui()
     @collection.fetch data: {search: {option: @search_option, value: @search_value}, trade_type: @trade_type, offset: @offset, search_all: {@search_start_date, @search_start_time, @search_end_date, @search_end_time, @status_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_invoice, @search_color}}, success: (collection) =>
-      console.log "fetch_more_trades succ"
-      console.log collection.length > 0
       if collection.length > 0
         @offset = @offset + 20
-        @render_update()
-        $('#trades_bottom').waypoint @fetch_more_trades, {offset: '100%'}
-        console.log "waypoint start"
+        @renderUpdate()
+        $('#trades_bottom').waypoint @fetchMoreTrades, {offset: '100%'}
       else
         $.unblockUI()
 
-  fetch_more_trades: (event, direction) =>
+  fetchMoreTrades: (event, direction) =>
     if direction == 'down'
       @forceLoadMoreTrades(event)
 
-  advanced_btn: (e) ->
+  advancedSearch: (e) ->
     e.preventDefault()
     $("#advanced_btn i").toggleClass 'icon-arrow-down'
     $("#advanced_btn i").toggleClass 'icon-arrow-up'
     $("#search_toggle").toggle()
 
-  export_orders: (e) =>
+  exportOrders: (e) =>
     e.preventDefault()
     window.open "/api/trades.xls?trade_type=#{@trade_type}&search%5Bvalue%5D=#{@search_value}&search%5Boption%5D=#{@search_option}&search%5Bvalue%5D=#{@search_value}&trade_type=#{@trade_type}&search_all%5Bsearch_start_date%5D=#{@search_start_date}&search_all%5Bsearch_start_time%5D=#{@search_start_time}&search_all%5Bsearch_end_date%5D=#{@search_end_date}&search_all%5Bsearch_end_time%5D=#{@search_end_time}&search_all%5Bstatus_option%5D=#{@status_option}&search_all%5Bsearch_buyer_message%5D=#{@search_buyer_message}&search_all%5Bsearch_seller_memo%5D=#{@search_seller_memo}&search_all%5Bsearch_cs_memo%5D=#{@search_cs_memo}&search_all%5Bsearch_invoice%5D=#{@search_invoice}&search_all%5Bsearch_color%5D=#{@search_color}&limit=1000000&offset=0"
