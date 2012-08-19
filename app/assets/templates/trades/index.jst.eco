@@ -13,21 +13,24 @@
           <li><a href="#" data-trade-type="jingdong">京东商城订单</a></li>
         </ul>
       </li>
-      <!-- <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">出货单 <b class="caret"></b></a>
+
+      <li class="dropdown" id="trade_mode_selector">
+        <a class="dropdown-toggle" data-toggle="dropdown">
+          <span class="trade_mode">订单模式</span>
+          <b class="caret"></b>
+        </a>
         <ul class="dropdown-menu">
-          <li><a href="#">未付款订单</a></li>
-          <li><a href="#">未分流订单</a></li>
-          <li><a href="#">未发货订单</a></li>
-          <li class="divider"></li>
-          <li><a href="#">交易异常订单</a></li>
+          <li><a href="#" data-trade-mode="trades">订单模式</a></li>
+          <li><a href="#" data-trade-mode="deliver">出货单模式</a></li>
+          <li><a href="#" data-trade-mode="logistics">物流单模式</a></li>
+          <li><a href="#" data-trade-mode="check">验货模式</a></li>
+          <li><a href="#" data-trade-mode="send">发货模式</a></li>
+          <li><a href="#" data-trade-mode="return">退货模式</a></li>
+          <li><a href="#" data-trade-mode="refund">退款模式</a></li>
+          <li><a href="#" data-trade-mode="invoice">发票模式</a></li>
         </ul>
       </li>
-      <li><a href="#">物流单</a></li>
-      <li><a href="#">验货</a></li>
-      <li><a href="#">发货</a></li>
-      <li><a href="#">配色</a></li>
-      <li><a href="#">发票</a></li> -->
+
     </ul>
   </div>
 </header>

@@ -29,11 +29,41 @@ window.MagicOrders =
       'invoice_info': '发票信息',
       'seller': '送货经销商'
     }
+    # cache keys
+    @trade_cols_keys = _.keys(@trade_cols)
+
+    # 可见订单列（与订单模式选择有关），默认为全部
+    @trade_cols_visible = @trade_cols_keys
+
     # 初始化时需要隐藏的订单列
     if $.cookie('trade_cols_hidden')
       @trade_cols_hidden = $.cookie('trade_cols_hidden').split(',')
     else
       @trade_cols_hidden = []
+
+    # 订单模式可选项列表
+    @trade_modes = {
+      'trades': '订单模式',
+      'deliver': '出货单模式',
+      'logistics': '物流单模式',
+      'check': '验货模式',
+      'send': '发货模式',
+      'return': '退货模式',
+      'refund': '退款模式',
+      'invoice': '发票模式',
+    }
+
+    # 不同模式下可见订单列
+    @trade_cols_visible_modes = {
+      'trades': ['trade_source', 'tid', 'status', 'status_history', 'receiver_name', 'receiver_mobile_phone', 'receiver_address', 'buyer_message', 'seller_memo', 'cs_memo', 'color_info', 'invoice_info', 'seller'],
+      'deliver': ['trade_source', 'tid', 'status', 'status_history', 'receiver_name', 'receiver_mobile_phone', 'receiver_address', 'buyer_message', 'seller_memo', 'cs_memo', 'color_info', 'invoice_info', 'seller'],
+      'logistics': ['trade_source', 'tid', 'status', 'status_history', 'receiver_name', 'receiver_mobile_phone', 'receiver_address', 'buyer_message', 'seller_memo', 'cs_memo', 'seller'],
+      'check': ['trade_source', 'tid', 'status', 'status_history', 'buyer_message', 'seller_memo', 'cs_memo', 'color_info', 'invoice_info', 'seller'],
+      'send': ['trade_source', 'tid', 'status', 'status_history', 'receiver_name', 'receiver_mobile_phone', 'receiver_address', 'buyer_message', 'seller_memo', 'cs_memo', 'color_info', 'invoice_info', 'seller'],
+      'return': ['trade_source', 'tid', 'status', 'status_history', 'receiver_name', 'receiver_mobile_phone', 'receiver_address', 'buyer_message', 'seller_memo', 'cs_memo', 'color_info', 'invoice_info', 'seller'],
+      'refund': ['trade_source', 'tid', 'status', 'status_history', 'receiver_name', 'receiver_mobile_phone', 'receiver_address', 'buyer_message', 'seller_memo', 'cs_memo', 'color_info', 'invoice_info', 'seller'],
+      'invoice': ['trade_source', 'tid', 'status', 'invoice_info'],
+    }
 
     new MagicOrders.Routers.Areas()
     new MagicOrders.Routers.Trades()

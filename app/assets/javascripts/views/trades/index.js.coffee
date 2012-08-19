@@ -4,6 +4,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
   events:
     'click [data-trade-type]': 'changeTradeType'
+    'click [data-trade-mode]': 'changeTradeMode'
     'click .search': 'search'
     'click .search_all': 'searchAll'
     'click #advanced_btn': 'advancedSearch'
@@ -40,7 +41,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
       for col in MagicOrders.trade_cols_hidden
         $(@el).find("#trades_table (th,td)[data-col=#{col}]").hide()
         $(@el).find("#cols_filter input[value=#{col}]").attr("checked", false)
-        $(@el).find("#trades_table input[value=#{col}]").attr("checked", false)
 
     @first_rendered = true
     @collection.each(@appendTrade)
@@ -137,6 +137,25 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     e.preventDefault()
     type = $(e.target).data('trade-type')
     Backbone.history.navigate('trades/' + type, true)
+
+  changeTradeMode: (e) ->
+    e.preventDefault()
+    @trade_mode = $(e.target).data('trade-mode')
+    $(@el).find(".trade_mode").text(MagicOrders.trade_modes[@trade_mode])
+    # hide some cols
+    visible_cols = MagicOrders.trade_cols_visible_modes[@trade_mode]
+    MagicOrders.trade_cols_hidden = _.difference(MagicOrders.trade_cols_keys, visible_cols)
+    for col in MagicOrders.trade_cols_keys
+      if col in MagicOrders.trade_cols_hidden
+        $("#trades_table (th,td)[data-col=#{col}]").hide()
+      else
+        $("#trades_table (th,td)[data-col=#{col}]").show()
+
+    # reset cols filter checker
+    $(@el).find("#cols_filter input[type=checkbox]").attr("checked", "checked")
+    for col in MagicOrders.trade_cols_hidden
+      $(@el).find("#trades_table (th,td)[data-col=#{col}]").hide()
+      $(@el).find("#cols_filter input[value=#{col}]").attr("checked", false)
 
   fetch_new_trades: =>
     @collection.fetch add: true, data: {search: {option: @search_option, value: @search_value}, trade_type: @trade_type, offset: 0, limit: $("#newTradesNotifer span").text()}, success: (collection) =>
