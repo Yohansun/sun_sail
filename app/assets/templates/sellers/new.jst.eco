@@ -1,0 +1,52 @@
+<div class="row-fluid">
+      <ul class="breadcrumb" style="position:relative;">
+        <li><a href="#">Magic</a><span class="divider">/</span></li>
+        <li><a href='/sellers'>经销机构管理</a><span class="divider">/</span></li>
+        <!--<li><a href="#">经销商</a><span class="divider">/</span></li>-->
+        <li class="active"><a href="#">新增经销商</a></li>
+      </ul><!-- breadcrumb -->
+
+      <form class="well form-horizontal new_seller">
+        <fieldset>
+          <div class="control-group">
+            <label class="control-label">经销商简称：</label>
+            <div class="controls">
+              <input type="text" placeholder="输入文字..." class="input-xlarge search-query" id="seller_name" value="<%= @seller.get 'name' %>">
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label" for="">经销商全称：</label>
+            <div class="controls">
+              <input type="text" placeholder="输入文字..." class="input-xlarge search-query" id="seller_fullname" value="<%= @seller.get 'fullname' %>">
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label" for="">电话：</label>
+            <div class="controls">
+              <input type="text" placeholder="输入文字..." class="input-xlarge search-query" id="seller_mobile" value="<%= @seller.get 'mobile' %>">
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label" for="">地址：</label>
+            <div class="controls">
+              <input type="text" placeholder="输入文字..." class="input-xlarge search-query" id="seller_address" value="<%= @seller.get 'address' %>">
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label" for="">Email：</label>
+            <div class="controls">
+              <input type="text" placeholder="输入文字..." class="input-xlarge search-query" id="seller_email" value="<%= @seller.get 'email' %>">
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <a class="btn" href='/sellers'>取消</a>
+            <button class="btn btn-primary save">新增</button>
+          </div>
+        </fieldset>
+      </form>
+</div>
