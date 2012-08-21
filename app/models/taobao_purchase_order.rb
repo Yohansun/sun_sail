@@ -90,4 +90,8 @@ class TaobaoPurchaseOrder < Trade
   def out_iids
     self.orders.map {|o| o.item_outer_id}
   end
+
+  def cc_emails
+    super << 'zhuyanqing@nipponpaint.com.cn'
+  end  
 end

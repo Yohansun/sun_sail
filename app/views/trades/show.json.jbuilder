@@ -17,6 +17,7 @@ json.buyer_message @trade.buyer_message
 json.seller_memo @trade.seller_memo
 json.post_fee @trade.post_fee
 json.seller_discount @trade.seller_discount
+json.sum_fee @trade.sum_fee
 json.total_fee @trade.total_fee
 json.created @trade.created.strftime("%m-%d %H:%M")
 json.pay_time @trade.pay_time.strftime("%m-%d %H:%M") if @trade.pay_time
