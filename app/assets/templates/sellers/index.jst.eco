@@ -3,7 +3,7 @@
     <ul class="breadcrumb" style="position:relative;">
       <li><a href="#">Magic</a><span class="divider">/</span></li>
       <li class="active">经销机构管理</li>
-      <!-- <li style="position:absolute;right:15px;top:6px;"><i class="icon-plus"></i><a class="btn_alert" href="#">新增经销商</a></li> -->
+      <li style="position:absolute;right:15px;top:6px;"><i class="icon-plus"></i><a class="btn_alert" href="sellers/new">新增经销商</a></li>
     </ul><!-- breadcrumb -->
 
     <form class="well form-search">
@@ -93,7 +93,7 @@
           <th>经销商全称</th>
           <th>经销商简称</th>
           <th>联系电话</th>
-          <th>联系人</th>
+          <th>Email</th>
           <th>地址</th>
           <!-- <th>状态</th> -->
           <th>操作</th>
@@ -103,11 +103,11 @@
         <% for seller in @sellers.models: %>
           <tr>
             <td><%= seller.get('id') %></td>
-            <td><%= seller.get('name') %></td>
             <td><%= seller.get('fullname') %></td>
-            <td><%= seller.get('mobile') %></td>
+            <td><%= seller.get('name') %></td>
+            <td><p style="width:200px;word-wrap:break-word"><%= seller.get('mobile') %></p></td>
+            <td><p style="width:250px;word-wrap:break-word"><%= seller.get('email') %></p></td>
             <td><%= seller.get('address') %></td>
-            <td><%= seller.get('seller_name') %></td>
             <!-- <td>状态</td> -->
             <td>
               <% if seller.get('children_count') > 0: %>
