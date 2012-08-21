@@ -54,10 +54,10 @@ class TradesController < ApplicationController
       @trades = @trades.where(:status.in => status_array)
     end
 
-    # # 按来源筛选
-    # if params[:search_all] && params[:search_all][:type_option] != 'null'
-    #   @trades = @trades.where(_type: params[:search_all][:type_option])
-    # end
+    # 按来源筛选
+    if params[:search_all] && params[:search_all][:type_option] != 'null'
+      @trades = @trades.where(_type: params[:search_all][:type_option])
+    end
 
     # 客服有备注
     if params[:search_all] && params[:search_all][:search_cs_memo] == "true"
