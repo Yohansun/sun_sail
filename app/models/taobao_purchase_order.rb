@@ -92,6 +92,6 @@ class TaobaoPurchaseOrder < Trade
   end
 
   def cc_emails
-    self.cc_emails << 'zhuyanqing@nipponpaint.com.cn'
+    super << 'zhuyanqing@nipponpaint.com.cn'
   end  
 end
