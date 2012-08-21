@@ -1,7 +1,7 @@
 <header class="jumbotron subhead" id="overview">
   <div class="subnav">
     <ul class="nav nav-pills">
-      <li class="dropdown">
+      <!-- <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="trade_nav">所有订单</span> <b class="caret"></b></a>
         <ul class="dropdown-menu">
           <li><a href="#" data-trade-type="all">所有订单</a></li>
@@ -12,7 +12,7 @@
           <li><a href="#" data-trade-type="shop">官网订单</a></li>
           <li><a href="#" data-trade-type="jingdong">京东商城订单</a></li>
         </ul>
-      </li>
+      </li> -->
 
       <li class="dropdown" id="trade_mode_selector">
         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -111,15 +111,15 @@
                 </label>
               </div>
             </div>
-            <!-- <div class="controls">
+            <div class="controls">
               <label class="control-label">订单来源：</label>
               <select id="type_option" class="input-large type_option">
-                <option value="">请选择</option>
+                <option value="null">请选择</option>
                 <option value="JingdongTrade">京东</option>
                 <option value="TaobaoTrade">淘宝</option>
                 <option value="TaobaoPurchaseOrder">分销平台</option>
               </select>
-            </div> -->
+            </div>
             <!-- <div class="controls">
               <label for="select04" class="control-label">活动：</label>
               <select id="select04" class="input-medium">
