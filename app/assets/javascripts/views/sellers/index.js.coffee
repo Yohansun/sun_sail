@@ -4,6 +4,7 @@ class MagicOrders.Views.SellersIndex extends Backbone.View
 
   events:
     'click .browse_children': 'browse_children'
+    'click .edit_seller': 'edit_seller'
 
   initialize: ->
     @collection.on("reset", @render, this)
@@ -16,3 +17,8 @@ class MagicOrders.Views.SellersIndex extends Backbone.View
     event.preventDefault()
     id = $(event.target).data("id")
     Backbone.history.navigate("sellers/#{id}", true)
+
+  edit_seller: (event) ->
+    event.preventDefault()
+    id = $(event.target).data("id")
+    Backbone.history.navigate("sellers/#{id}/edit", true)    
