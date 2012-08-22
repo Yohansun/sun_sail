@@ -3,6 +3,7 @@ class MagicOrders.Routers.Sellers extends Backbone.Router
     'sellers': 'index'
     'sellers/new': 'new'
     'sellers/:id': 'show'
+    'sellers/:id/edit': 'edit'
     
   initialize: ->
     @collection = new MagicOrders.Collections.Sellers()
@@ -28,3 +29,10 @@ class MagicOrders.Routers.Sellers extends Backbone.Router
     @model= new MagicOrders.Models.Seller()
     view = new MagicOrders.Views.SellersNew(model: @model)
     $('#content').html(view.render().el)
+
+  edit: (id) ->
+    @show_top_nav()
+    @model = new MagicOrders.Models.Seller(id: id)
+    @model.fetch success: (model, response) =>
+      view = new MagicOrders.Views.SellersEdit(model: @model)
+      $('#content').html(view.render().el)
