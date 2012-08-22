@@ -173,7 +173,7 @@ class TradeDecorator < Draper::Base
   def total_fee
     case trade._type
       when 'TaobaoPurchaseOrder'
-        trade.distributor_payment
+        self.sum_fee.to_f + self.post_fee.to_f
       when 'TaobaoTrade'
         trade.payment
       when 'JingdongTrade'
@@ -183,7 +183,12 @@ class TradeDecorator < Draper::Base
  
  #总价
   def sum_fee
-    self.total_fee.to_f + self.seller_discount.to_f - self.post_fee.to_f
+    case trade._type
+      when 'TaobaoPurchaseOrder'
+        trade.orders.inject(0) { |sum, order| sum + order.buyer_payment.to_f }
+      else  
+        self.total_fee.to_f + self.seller_discount.to_f - self.post_fee.to_f
+      end  
   end
   
   def buyer_message

@@ -92,7 +92,7 @@ class OrderDecorator < Draper::Base
 	 def total_fee
 	   case order._type
 	   when 'TaobaoSubPurchaseOrder'
-	    order.total_fee
+	    order.auction_price * order.num
 	   when 'TaobaoOrder'
 	    order.total_fee
 	   when 'JingdongOrder'
@@ -103,7 +103,7 @@ class OrderDecorator < Draper::Base
 	 def price
 	   case order._type
 	   when 'TaobaoSubPurchaseOrder'
-	    order.price
+	    order.auction_price
 	   when 'TaobaoOrder'
       (order.total_fee/order.num).to_f.round(2)
 	   when 'JingdongOrder'
