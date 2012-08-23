@@ -66,6 +66,12 @@ class SellersController < ApplicationController
     unless params[:seller_email].blank?
       @seller.email = params[:seller_email]
     end
+    
+    if @seller.active == true
+      @seller.active = false
+    else
+      @seller.active = true
+    end
 
     @seller.save
 

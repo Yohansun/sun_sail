@@ -114,8 +114,14 @@
                 <button data-toggle="dropdown" class="btn btn-info dropdown-toggle min_w"><i class="icon-wrench"></i> <span class="caret"></span></button>
                 <ul class="dropdown-menu" style="left:-115px;">
                   <li><a data-toggle="modal" class="edit_seller" data-id="<%= seller.id %>" href="seller#edit">编辑</a></li>
+                  <li><a data-toggle="modal" class="close_seller" data-id="<%= seller.id %>" href="#">
+                  <% if seller.get('active') == true: %>
+                  关闭
+                  <% else if seller.get('active') == false: %>
+                  启用
+                  <% end %></a>
+                  </li>
                   <!--<li><a data-toggle="modal" href="#dealer_area">管辖地区</a></li>
-                  <li><a data-toggle="modal" href="#dealer_close">关闭</a></li>
                   <li><a data-toggle="modal" href="#dealer_login">登陆账号</a></li>
                   <li class="divider"></li> -->
                   <% if seller.get('children_count') > 0: %>
