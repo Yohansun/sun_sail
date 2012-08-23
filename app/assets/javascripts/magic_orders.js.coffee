@@ -27,7 +27,22 @@ window.MagicOrders =
       'cs_memo': '客服备注',
       'color_info': '调色信息',
       'invoice_info': '发票信息',
-      'seller': '送货经销商'
+      'seller': '送货经销商',
+
+      'receiver_id': '客户ID',             #new add
+      'delivery_bill': '出货单',
+      'delivery_bill_id': '出货单编号',
+      'delivery_bill_status': '出货单状态',
+      'order_goods': '商品详细',
+      'logistic_bill': '物流单',
+      'logistic_waybill': '物流单号',
+      'logistic_company': '物流公司',
+      'invoice_type': '发票类型',
+      'invoice_name': '发票开头',
+      'invoice_value': '开票金额',
+      'invoice_date': '完成日期',
+      'order_split': '拆分',
+      'operator': '操作人'
     }
     # cache keys
     @trade_cols_keys = _.keys(@trade_cols)
@@ -55,14 +70,14 @@ window.MagicOrders =
 
     # 不同模式下可见订单列
     @trade_cols_visible_modes = {
-      'trades': ['trade_source', 'tid', 'status', 'status_history', 'receiver_name', 'receiver_mobile_phone', 'receiver_address', 'buyer_message', 'seller_memo', 'cs_memo', 'color_info', 'invoice_info', 'seller'],
-      'deliver': ['trade_source', 'tid', 'status', 'status_history', 'receiver_name', 'receiver_mobile_phone', 'receiver_address', 'buyer_message', 'seller_memo', 'cs_memo', 'color_info', 'invoice_info', 'seller'],
-      'logistics': ['trade_source', 'tid', 'status', 'status_history', 'receiver_name', 'receiver_mobile_phone', 'receiver_address', 'buyer_message', 'seller_memo', 'cs_memo', 'seller'],
-      'check': ['trade_source', 'tid', 'status', 'status_history', 'buyer_message', 'seller_memo', 'cs_memo', 'color_info', 'invoice_info', 'seller'],
-      'send': ['trade_source', 'tid', 'status', 'status_history', 'receiver_name', 'receiver_mobile_phone', 'receiver_address', 'buyer_message', 'seller_memo', 'cs_memo', 'color_info', 'invoice_info', 'seller'],
-      'return': ['trade_source', 'tid', 'status', 'status_history', 'receiver_name', 'receiver_mobile_phone', 'receiver_address', 'buyer_message', 'seller_memo', 'cs_memo', 'color_info', 'invoice_info', 'seller'],
-      'refund': ['trade_source', 'tid', 'status', 'status_history', 'receiver_name', 'receiver_mobile_phone', 'receiver_address', 'buyer_message', 'seller_memo', 'cs_memo', 'color_info', 'invoice_info', 'seller'],
-      'invoice': ['trade_source', 'tid', 'status', 'invoice_info'],
+      'trades': ['trade_source', 'tid', 'status', 'status_history', 'receiver_id', 'receiver_name', 'receiver_mobile_phone', 'receiver_address', 'buyer_message', 'seller_memo', 'cs_memo', 'color_info', 'invoice_info','delivery_bill','logistic_bill', 'seller','order_split','operator'],
+      'deliver': ['tid', 'delivery_bill_id', 'delivery_bill_status', 'trade_source','order_goods','receiver_name', 'receiver_mobile_phone', 'receiver_address','color_info', 'invoice_info','seller','cs_memo'],
+      'logistics': ['tid','delivery_bill_id','logistic_waybill','logistic_company','trade_source','order_goods','receiver_name', 'receiver_mobile_phone', 'receiver_address', 'invoice_info','seller','cs_memo','operator'],
+      'check': ['tid','delivery_bill_id','status_history','delivery_bill_status','trade_source','order_goods','receiver_name','receiver_mobile_phone', 'receiver_address','color_info', 'invoice_info','seller','cs_memo','operator'],
+      'send': ['tid','delivery_bill_id','status_history','order_goods','receiver_name','receiver_mobile_phone', 'receiver_address','color_info', 'invoice_info','seller','cs_memo','operator'],
+      'return': ['tid','delivery_bill_id','status_history','order_goods','receiver_name','receiver_mobile_phone', 'receiver_address','color_info', 'invoice_info','seller','cs_memo','operator'],
+      'refund': ['tid','delivery_bill_id','status_history','order_goods','receiver_name','receiver_mobile_phone', 'receiver_address','color_info', 'invoice_info','seller','cs_memo','operator'],
+      'invoice': ['tid','delivery_bill_id','status_history','trade_source','order_goods','invoice_type','invoice_name','invoice_value','invoice_date','seller','cs_memo','operator'],
     }
 
     new MagicOrders.Routers.Areas()
