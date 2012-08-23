@@ -13,9 +13,8 @@
           <li><a href="#" data-trade-type="jingdong">京东商城订单</a></li>
         </ul>
       </li> -->
-
       <li class="dropdown" id="trade_mode_selector">
-        <a class="dropdown-toggle" data-toggle="dropdown">
+        <!-- <a class="dropdown-toggle" data-toggle="dropdown">
           <span class="trade_mode">订单模式</span>
           <b class="caret"></b>
         </a>
@@ -28,9 +27,105 @@
           <li><a href="#" data-trade-mode="return">退货模式</a></li>
           <li><a href="#" data-trade-mode="refund">退款模式</a></li>
           <li><a href="#" data-trade-mode="invoice">发票模式</a></li>
-        </ul>
+        </ul> -->
+      <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">
+            订单
+            <b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a a href="#" data-trade-mode="trades">所有订单</a></li>
+            <li><a href="#">未付款订单</a></li>
+            <li><a href="#">未分流订单</a></li>
+            <li><a href="#">未发货订单</a></li>
+            <li><a href="#">已发货订单</a></li>
+            <li><a href="#">退货订单</a></li>
+            <li><a href="#">交易关闭订单</a></li>
+            <li><a href="#">交易异常订单</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">
+            出货单
+            <b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a href="#" data-trade-mode="deliver">所有出货单</a></li>
+            <li><a href="#">未打印</a></li>
+            <li><a href="#">已打印</a></li>
+            <li><a href="#">有物流单号</a></li>
+            <li><a href="#">无物流单号</a></li>
+            <li><a href="#">退货订单</a></li>
+            <li><a href="#">交易关闭订单</a></li>
+            <li><a href="#">交易异常订单</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+            物流单
+            <b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a href="#" data-trade-mode="logistics">所有物流单</a></li>
+            <li><a href="#">未打印</a></li>
+            <li><a href="#">已打印</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+            验货
+            <b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a href="#" data-trade-mode="check">所有验货单</a></li>
+            <li><a href="order_check.html">未验货</a></li>
+            <li><a href="#">已验货</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+            发货
+            <b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a href="#" data-trade-mode="send">所有发货单</a></li>
+            <li><a href="order_deliver.html">未发货</a></li>
+            <li><a href="#">已发货</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+            退货
+            <b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a href="#" data-trade-mode="return">申请退货</a></li>
+            <li><a href="#">退货中</a></li>
+            <li><a href="#">退货完成</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+            退款
+            <b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a href="#" data-trade-mode="refund">申请退款</a></li>
+            <li><a href="#">退款中</a></li>
+            <li><a href="#">退款完成</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+            发票
+            <b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a href="#" data-trade-mode="invoice">所有开票</a></li>
+            <li><a href="#">未开票</a></li>
+            <li><a href="#">已开票</a></li>
+            <li><a href="#">已寄出</a></li>
+          </ul>
       </li>
-
     </ul>
   </div>
 </header>
@@ -176,20 +271,38 @@
   <table class="table table-striped table-bordered table-condensed td_colors mar_t" id="trades_table">
     <thead>
       <tr>
-        <th><input id="checkbox_all" type="checkbox" value="option1"></th>
-        <th data-col='trade_source' nowrap>订单来源</th>
+        <th><!--<input id="checkbox_all" type="checkbox" value="option1">-->选择</th>
+        <th data-col='trade_source'>订单来源</th>
         <th data-col='tid'>订单编号</th>
         <th data-col='status'>当前状态</th>
-        <th data-col='status_history' style="max-width:150px">状态历史</th>
+        <th data-col='status_history' style="max-width:150px">历史状态</th>
+
+        <th data-col='receiver_id'>客户ID</th>                <!--Newly Add-->
+        
         <th data-col='receiver_name' nowrap>客户姓名</th>
         <th data-col='receiver_mobile_phone'>联系电话</th>
         <th data-col='receiver_address'>联系地址</th>
-        <th data-col='buyer_message' nowrap>客户<br/>留言</th>
-        <th data-col='seller_memo' nowrap>卖家<br/>备注</th>
-        <th data-col='cs_memo' nowrap>客服<br/>备注</th>
-        <th data-col='color_info' nowrap>调色<br/>信息</th>
-        <th data-col='invoice_info' nowrap>发票<br/>信息</th>
-        <th data-col='seller' nowrap>送货<br/>经销商</th>
+        <th data-col='buyer_message'>客户<br/>留言</th>
+        <th data-col='seller_memo'>卖家<br/>备注</th>
+        <th data-col='cs_memo'>客服<br/>备注</th>
+        <th data-col='color_info'>调色<br/>信息</th>
+        <th data-col='invoice_info'>发票<br/>信息</th>
+
+        <th data-col='delivery_bill'>出货单</th>              <!--Newly Add-->
+        <th data-col='delivery_bill_id'>出货单编号</th>
+        <th data-col='delivery_bill_status'>出货单状态</th>
+        <th data-col='order_goods'>商品详细</th>
+        <th data-col='logistic_bill'>物流单</th>
+        <th data-col='logistic_waybill'>物流单号</th>
+        <th data-col='logistic_company'>物流公司</th>
+        <th data-col='invoice_type'>发票类型</th>
+        <th data-col='invoice_name'>发票开头</th>
+        <th data-col='invoice_value'>开票金额</th>
+        <th data-col='invoice_date'>完成日期</th>
+        <th data-col='order_split'>拆分</th>
+        <th data-col='operator'>操作人</th>
+        <th data-col='seller' nowrap>配送经销商</th>
+
         <th>操作</th>
       </tr>
     </thead>

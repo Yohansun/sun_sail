@@ -7,11 +7,14 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     'click [data-trade-mode]': 'changeTradeMode'
     'click .search': 'search'
     'click .search_all': 'searchAll'
-    'click #advanced_btn': 'advancedSearch'
     'click [data-type=loadMoreTrades]': 'forceLoadMoreTrades'
     'click .export_orders': 'exportOrders'
     'click #cols_filter input,label': 'keepColsFilterDropdownOpen'
     'change #cols_filter input[type=checkbox]': 'filterTradeColumns'
+
+    #visual effects
+    'click #advanced_btn': 'advancedSearch'
+    'click .dropdown': 'dropdownTurnGray'
 
   initialize: (options) ->
     @trade_type = options.trade_type
@@ -36,7 +39,16 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
       $(@el).html(@template(trade_type: @trade_type, search_value: @search_value, search_start_date: @search_start_date, search_end_date: @search_end_date, search_start_time: @search_start_time, search_end_time: @search_end_time))
       navs = {'all': '所有订单', 'taobao': '淘宝订单', 'taobao_fenxiao': '淘宝分销采购单', 'jingdong': '京东商城订单', 'shop': '官网订单'}
       $(@el).find(".trade_nav").text(navs[@trade_type])
-
+      
+      #initial mode=trades
+      visible_cols = MagicOrders.trade_cols_visible_modes['trades']
+      MagicOrders.trade_cols_hidden = _.difference(MagicOrders.trade_cols_keys, visible_cols)
+      for col in MagicOrders.trade_cols_keys
+        if col in MagicOrders.trade_cols_hidden
+          $("#trades_table (th,td)[data-col=#{col}]").hide()
+        else
+          $("#trades_table (th,td)[data-col=#{col}]").show()
+     
       # check column filters
       $(@el).find("#cols_filter input[type=checkbox]").attr("checked", "checked")
       for col in MagicOrders.trade_cols_hidden
@@ -143,7 +155,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
   changeTradeMode: (e) ->
     e.preventDefault()
     @trade_mode = $(e.target).data('trade-mode')
-    $(@el).find(".trade_mode").text(MagicOrders.trade_modes[@trade_mode])
+    #$(@el).find(".trade_mode").text(MagicOrders.trade_modes[@trade_mode])
     # hide some cols
     visible_cols = MagicOrders.trade_cols_visible_modes[@trade_mode]
     MagicOrders.trade_cols_hidden = _.difference(MagicOrders.trade_cols_keys, visible_cols)
@@ -186,6 +198,13 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     $("#advanced_btn i").toggleClass 'icon-arrow-down'
     $("#advanced_btn i").toggleClass 'icon-arrow-up'
     $("#search_toggle").toggle()
+
+  dropdownTurnGray: (e) ->
+    e.preventDefault()
+    $click_li_dropdown = $("#overview").find("li.dropdown li")
+    $click_li_dropdown.click ->
+      $(this).parents(".dropdown").siblings().removeClass "active"
+      $(this).parents(".dropdown").addClass "active"
 
   exportOrders: (e) =>
     e.preventDefault()
