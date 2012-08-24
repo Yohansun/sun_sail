@@ -5,6 +5,7 @@ class DailyOrdersNotifier < ActionMailer::Base
   def yesterday
     reciever = %w(michelle@doorder.com wynn@doorder.com zhongjing@nipponpaint.com.cn LuJingRNMD@nipponpaint.com.cn QiYun@nipponpaint.com.cn SunYi@nipponpaint.com.cn ZhuYanQing@nipponpaint.com.cn YaoYanMing@nipponpaint.com.cn)
     cc = %w(clover@doorder.com blythe@doorder.com hui@networking.io)
+    bcc = %w(xiaoliang@networking.io)
     # reciever = %w(xiaoliang@networking.io)
     # cc = %w(zxl51@qq.com)
 
@@ -22,6 +23,6 @@ class DailyOrdersNotifier < ActionMailer::Base
     @taobao_purchase_orders =  TaobaoPurchaseOrder.where(:created => yesterday_begin..yesterday_end)
     @taobao_purchase_paid_orders =  TaobaoPurchaseOrder.where(:pay_time => yesterday_begin..yesterday_end)
     @taobao_purchase_paid = @taobao_purchase_paid_orders.sum(:distributor_payment)
-    mail(:to => reciever, :cc => cc,:subject => "#{year}年#{month}月#{day}日立邦(京东,分销)电商数据")
+    mail(:to => reciever, :cc => cc, :bcc => bcc, :subject => "#{year}年#{month}月#{day}日立邦(京东,分销)电商数据")
   end
 end
