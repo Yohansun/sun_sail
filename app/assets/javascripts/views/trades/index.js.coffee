@@ -39,20 +39,21 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
       $(@el).html(@template(trade_type: @trade_type, search_value: @search_value, search_start_date: @search_start_date, search_end_date: @search_end_date, search_start_time: @search_start_time, search_end_time: @search_end_time))
       navs = {'all': '所有订单', 'taobao': '淘宝订单', 'taobao_fenxiao': '淘宝分销采购单', 'jingdong': '京东商城订单', 'shop': '官网订单'}
       $(@el).find(".trade_nav").text(navs[@trade_type])
-      
+
       #initial mode=trades
       visible_cols = MagicOrders.trade_cols_visible_modes['trades']
       MagicOrders.trade_cols_hidden = _.difference(MagicOrders.trade_cols_keys, visible_cols)
       for col in MagicOrders.trade_cols_keys
         if col in MagicOrders.trade_cols_hidden
-          $("#trades_table (th,td)[data-col=#{col}]").hide()
+          $("#trades_table th[data-col=#{col}],td[data-col=#{col}]").hide()
         else
-          $("#trades_table (th,td)[data-col=#{col}]").show()
-     
+          $("#trades_table th[data-col=#{col}],td[data-col=#{col}]").show()
+
       # check column filters
       $(@el).find("#cols_filter input[type=checkbox]").attr("checked", "checked")
       for col in MagicOrders.trade_cols_hidden
-        $(@el).find("#trades_table (th,td)[data-col=#{col}]").hide()
+        $(@el).find("td[data-col=#{col}]").hide()
+        $(@el).find("th[data-col=#{col}]").hide()
         $(@el).find("#cols_filter input[value=#{col}]").attr("checked", false)
 
     @first_rendered = true
@@ -87,10 +88,10 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
   filterTradeColumns: (event) ->
     col = event.target
     if $(col).attr("checked") == 'checked'
-      $("#trades_table (th,td)[data-col=#{$(col).val()}]").show()
+      $("#trades_table th[data-col=#{$(col).val()}],td[data-col=#{$(col).val()}]").show()
       MagicOrders.trade_cols_hidden = _.without(MagicOrders.trade_cols_hidden, $(col).val())
     else
-      $("#trades_table (th,td)[data-col=#{$(col).val()}]").hide()
+      $("#trades_table th[data-col=#{$(col).val()}],td[data-col=#{$(col).val()}]").hide()
       MagicOrders.trade_cols_hidden.push($(col).val())
 
     MagicOrders.trade_cols_hidden = _.uniq(MagicOrders.trade_cols_hidden)
@@ -161,14 +162,14 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     MagicOrders.trade_cols_hidden = _.difference(MagicOrders.trade_cols_keys, visible_cols)
     for col in MagicOrders.trade_cols_keys
       if col in MagicOrders.trade_cols_hidden
-        $("#trades_table (th,td)[data-col=#{col}]").hide()
+        $("#trades_table th[data-col=#{col}],td[data-col=#{col}]").hide()
       else
-        $("#trades_table (th,td)[data-col=#{col}]").show()
+        $("#trades_table th[data-col=#{col}],td[data-col=#{col}]").show()
 
     # reset cols filter checker
     $(@el).find("#cols_filter input[type=checkbox]").attr("checked", "checked")
     for col in MagicOrders.trade_cols_hidden
-      $(@el).find("#trades_table (th,td)[data-col=#{col}]").hide()
+      $(@el).find("#trades_table th[data-col=#{col}],td[data-col=#{col}]").hide()
       $(@el).find("#cols_filter input[value=#{col}]").attr("checked", false)
 
   fetch_new_trades: =>

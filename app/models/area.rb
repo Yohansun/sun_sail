@@ -22,11 +22,20 @@ class Area < ActiveRecord::Base
     areas = response['areas_get_response']['areas']['area']
     areas.each do |taobao_area|
       taobao_area['parent_id'] = nil if taobao_area['parent_id'] == 0
-      area = Area.new(name: taobao_area['name'],
-        area_type: taobao_area['type'], parent_id: taobao_area['parent_id'],
-        zip: taobao_area['zip'])
-      area.id = taobao_area['id']
-      area.save
+      area = Area.find(taobao_area['id'].to_i)
+      if area
+        area.area_type = taobao_area['type']
+        area.parent_id = taobao_area['parent_id']
+        area.zip = taobao_area['zip']
+        area.name = taobao_area['name']
+        area.save
+      else
+        area = Area.new(name: taobao_area['name'],
+          area_type: taobao_area['type'], parent_id: taobao_area['parent_id'],
+          zip: taobao_area['zip'])
+        area.id = taobao_area['id']
+        area.save
+      end
     end
     Area.rebuild!
   end
