@@ -6,6 +6,8 @@ class Trade
   include Mongoid::Versioning
   include Mongoid::Timestamps
 
+  field :trade_source_id, type: Integer
+
   field :seller_id, type: Integer
   field :dispatched_at, type: DateTime                    # 分流时间
   field :delivered_at, type: DateTime                     # 发货时间
@@ -30,6 +32,12 @@ class Trade
   attr_accessor :matched_seller
 
   # model 属性方法
+  def trade_source_name
+    if trade_source_id
+      TradeSource.find(trade_source_id).name
+    end
+  end
+
   # 物流公司名称
   def logistic_company
     case logistic_code

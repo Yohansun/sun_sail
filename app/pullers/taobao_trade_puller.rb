@@ -2,7 +2,16 @@
 
 class TaobaoTradePuller
   class << self
-    def create(start_time = nil, end_time = nil)
+    def create(start_time = nil, end_time = nil, trade_source_id = nil)
+      if trade_source_id
+        source = TradeSource.find(trade_source_id)
+        settings = {}
+        settings['app_key'] = source.app_key
+        settings['secret_key'] = source.secret_key
+        settings['session'] = source.session
+        TaobaoFu.settings = settings
+      end
+
       if start_time.blank?
         start_time = Time.now - 1.days
       end
@@ -36,6 +45,7 @@ class TaobaoTradePuller
           next if TaobaoTrade.where(tid: t['tid']).exists?
           orders = t.delete('orders')
           trade = TaobaoTrade.new(t)
+          trade.trade_source_id = trade_source_id
           orders = orders['order']
           orders.each do |order|
             order = trade.taobao_orders.build(order)
