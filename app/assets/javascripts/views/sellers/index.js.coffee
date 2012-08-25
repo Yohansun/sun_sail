@@ -5,6 +5,7 @@ class MagicOrders.Views.SellersIndex extends Backbone.View
   events:
     'click .browse_children': 'browse_children'
     'click .edit_seller': 'edit_seller'
+    'click .close_seller': 'close_seller'
 
   initialize: ->
     @collection.on("reset", @render, this)
@@ -21,4 +22,11 @@ class MagicOrders.Views.SellersIndex extends Backbone.View
   edit_seller: (event) ->
     event.preventDefault()
     id = $(event.target).data("id")
-    Backbone.history.navigate("sellers/#{id}/edit", true)    
+    Backbone.history.navigate("sellers/#{id}/edit", true)
+
+  close_seller: (event) ->
+    event.preventDefault()
+    id = $(event.target).data("id")
+    @model = new MagicOrders.Models.Seller(id: id)
+    @model.save {'active'},success: (model, response) =>
+      @collection.fetch()
