@@ -19,10 +19,10 @@ class DailyOrdersNotifier < ActionMailer::Base
 
     @jingdong_trades = JingdongTrade.where(:created => yesterday_begin..yesterday_end)
     @jingdong_paid_trades = JingdongTrade.where(:created => yesterday_begin..yesterday_end)
-    @jingdong_paid = @jingdong_paid_trades.sum(:order_payment)
+    @jingdong_paid = TradeDecorator.decorate(@jingdong_paid_trades).inject(0) { |sum, trade| sum + trade.total_fee.to_f }
     @taobao_purchase_orders =  TaobaoPurchaseOrder.where(:created => yesterday_begin..yesterday_end)
     @taobao_purchase_paid_orders =  TaobaoPurchaseOrder.where(:pay_time => yesterday_begin..yesterday_end)
-    @taobao_purchase_paid = @taobao_purchase_paid_orders.sum(:distributor_payment)
+    @taobao_purchase_paid = TradeDecorator.decorate(@taobao_purchase_paid_orders).inject(0) { |sum, trade| sum + trade.total_fee.to_f }
     mail(:to => reciever, :cc => cc, :bcc => bcc, :subject => "#{year}年#{month}月#{day}日立邦(京东,分销)电商数据")
   end
 end
