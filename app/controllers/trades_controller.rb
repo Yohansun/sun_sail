@@ -161,6 +161,7 @@ class TradesController < ApplicationController
     if params[:delivered_at] == true
       @trade.logistic_code = params[:logistic_code]
       @trade.logistic_waybill = params[:logistic_waybill]
+      @trade.status = 'WAIT_BUYER_CONFIRM_GOODS'
       @trade.delivered_at = Time.now
     end
 

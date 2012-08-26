@@ -58,7 +58,7 @@ class TaobaoPurchaseOrderPuller
         trades = response['fenxiao_orders_get_response']['purchase_orders']['purchase_order']
         trades.each do |trade|
           TaobaoPurchaseOrder.where(tid: trade['fenxiao_id']).each do |local_trade|
-            next if trade['status'] == local_trade.status
+            next if trade['status'] == local_trade.status || (trade['status'] == "WAIT_SELLER_SEND_GOODS" && local_trade.delivered_at.present?)
             trade.delete 'id'
             sub_orders = trade.delete('sub_purchase_orders')
             local_trade.update_attributes trade

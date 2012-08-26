@@ -57,12 +57,10 @@ class TaobaoPurchaseOrder < Trade
   end
 
   def deliverable?
-    # 不限制拆分子订单的个数
+    # 支持拆分两单
     return false if self.status != "WAIT_SELLER_SEND_GOODS"
-    count = TaobaoPurchaseOrder.where(tid: self.tid).count
-    return true if count == 1
-    status_count = TaobaoPurchaseOrder.where(tid: self.tid, status: self.status).count
-    status_count == count
+    sibling = (TaobaoPurchaseOrder.where(tid: self.tid).to_a - [self]).first
+    sibling.blank? || (sibling.present? && sibling.delivered_at.present?)
   end
 
   def deliver!
