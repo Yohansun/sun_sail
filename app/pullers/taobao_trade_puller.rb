@@ -1,64 +1,106 @@
-
-
+# encoding : utf-8 -*- 
 class TaobaoTradePuller
   class << self
     def create(start_time = nil, end_time = nil, trade_source_id = nil)
-      if trade_source_id
-        source = TradeSource.find(trade_source_id)
-        settings = {}
-        settings['app_key'] = source.app_key
-        settings['secret_key'] = source.secret_key
-        settings['session'] = source.session
-        TaobaoFu.settings = settings
-      end
+      total_pages = nil
+      page_no = 0
 
-      if start_time.blank?
-        start_time = Time.now - 1.days
-      end
+      end_time ||= Time.now
+      start_time ||= end_time - 1.days
 
-      end_time = start_time + 1.days unless end_time
+      select_source(trade_source_id)
 
-      response = TaobaoFu.get(method: 'taobao.trades.sold.get',
-        fields: 'total_fee, created, tid, status, post_fee, receiver_name, pay_time, receiver_state, receiver_city, receiver_district, receiver_address, receiver_zip, receiver_mobile, receiver_phone, buyer_nick, tile, type, point_fee, is_lgtype, is_brand_sale, is_force_wlb, modified, alipay_id, alipay_no, alipay_url, shipping_type, buyer_obtain_point_fee, cod_fee, cod_status, commission_fee, seller_nick, consign_time, received_payment, payment, timeout_action_time, has_buyer_message, real_point_fee, orders',
-        start_created: start_time.strftime("%Y-%m-%d %H:%M:%S"),
-        end_created: end_time.strftime("%Y-%m-%d %H:%M:%S"),
-        page_no: 0, page_size: 1)
-
-      p response
-
-      total_results = response['trades_sold_get_response']['total_results']#['total_results']#['trades']['trade']#['trades']
-      total_pages = total_results / 50
-
-      p total_results
-      p total_pages
-
-      (0..total_pages).each do |page|
+      begin
         response = TaobaoFu.get(method: 'taobao.trades.sold.get',
-        fields: 'total_fee, created, tid, status, post_fee, receiver_name, pay_time, receiver_state, receiver_city, receiver_district, receiver_address, receiver_zip, receiver_mobile, receiver_phone, buyer_nick, tile, type, point_fee, is_lgtype, is_brand_sale, is_force_wlb, modified, alipay_id, alipay_no, alipay_url, shipping_type, buyer_obtain_point_fee, cod_fee, cod_status, commission_fee, seller_nick, consign_time, received_payment, payment, timeout_action_time, has_buyer_message, real_point_fee, orders',
-        start_created: start_time.strftime("%Y-%m-%d %H:%M:%S"),
-        end_created: end_time.strftime("%Y-%m-%d %H:%M:%S"),
-        page_no: page,
-        page_size: 50)
+          fields: 'total_fee, created, tid, status, post_fee, receiver_name, pay_time, receiver_state, receiver_city, receiver_district, receiver_address, receiver_zip, receiver_mobile, receiver_phone, buyer_nick, tile, type, point_fee, is_lgtype, is_brand_sale, is_force_wlb, modified, alipay_id, alipay_no, alipay_url, shipping_type, buyer_obtain_point_fee, cod_fee, cod_status, commission_fee, seller_nick, consign_time, received_payment, payment, timeout_action_time, has_buyer_message, real_point_fee, orders',
+          start_created: start_time.strftime("%Y-%m-%d %H:%M:%S"), end_created: end_time.strftime("%Y-%m-%d %H:%M:%S"),
+          page_no: page_no, page_size: 50
+        )
+
+        total_results = response['trades_sold_get_response']['total_results']
+        total_pages ||= total_results / 50
 
         trades = response['trades_sold_get_response']['trades']['trade']
-        trades.each do |t|
-          next if TaobaoTrade.where(tid: t['tid']).exists?
-          orders = t.delete('orders')
-          trade = TaobaoTrade.new(t)
+        next if trades.blank?
+
+        trades.each do |trade|
+          next if TaobaoTrade.where(tid: trade['tid']).exists?
+          orders = trade.delete('orders')
+          trade = TaobaoTrade.new(trade)
           trade.trade_source_id = trade_source_id
-          orders = orders['order']
-          orders.each do |order|
+
+          orders['order'].each do |order|
             order = trade.taobao_orders.build(order)
           end
+
           trade.save
 
+          trade.dispatch! unless TradeSplitter.new(local_trade).split!
         end
-      end
+
+        page_no += 1
+      end until page_no > total_pages
     end
 
+    def update(start_time = nil, end_time = nil, trade_source_id = nil)
+      total_pages = nil
+      page_no = 0
 
-    def update
+      end_time ||= Time.now
+      start_time ||= end_time - 1.days
 
+      select_source(trade_source_id)
+
+      begin
+        response = TaobaoFu.get(method: 'taobao.trades.sold.get',
+          fields: 'total_fee, created, tid, status, post_fee, receiver_name, pay_time, receiver_state, receiver_city, receiver_district, receiver_address, receiver_zip, receiver_mobile, receiver_phone, buyer_nick, tile, type, point_fee, is_lgtype, is_brand_sale, is_force_wlb, modified, alipay_id, alipay_no, alipay_url, shipping_type, buyer_obtain_point_fee, cod_fee, cod_status, commission_fee, seller_nick, consign_time, received_payment, payment, timeout_action_time, has_buyer_message, real_point_fee, orders',
+          start_created: start_time.strftime("%Y-%m-%d %H:%M:%S"), end_created: end_time.strftime("%Y-%m-%d %H:%M:%S"),
+          page_no: page_no, page_size: 50
+        )
+
+        total_results = response['trades_sold_get_response']['total_results']
+        total_pages ||= total_results / 50
+
+        trades = response['trades_sold_get_response']['trades']['trade']
+        next if trades.blank?
+
+        trades.each do |trade|
+          TaobaoTrade.where(tid: trade['tid']).each do |local_trade|
+            next unless updatable?(local_trade, trade['status'])
+            orders = trade.delete('orders')
+
+            trade['trade_source_id'] = trade_source_id
+            local_trade.update_attribute(trade)
+
+            # orders['order'].each do |order|
+            #   local_sub_order_array = local_sub_orders.select {|o| o.item_id == sub_order['item_id']}
+            #   local_sub_order = local_sub_order_array.first
+            #   next if (local_sub_order.blank? || sub_order['status'] == local_sub_order.status)
+            #   local_sub_order.update_attributes sub_order
+            # end
+
+            local_trade.dispatch!
+          end 
+        end
+
+        page_no += 1
+      end until page_no > total_pages
     end
+  end
+
+  def select_source(source_id)
+    source = TradeSource.find_by_id(source_id)
+
+    if source
+      settings = {}
+      settings['app_key'] = source.app_key
+      settings['secret_key'] = source.secret_key
+      settings['session'] = source.session
+      TaobaoFu.settings = settings
+    end
+  end
+
+  def updatable?(local_trade, remote_status)
+    remote_status == local_trade.status || (remote_status == "WAIT_SELLER_SEND_GOODS" && local_trade.delivered_at.present?)
   end
 end

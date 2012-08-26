@@ -52,9 +52,8 @@ ActiveRecord::Schema.define(:version => 20120824085719) do
     t.string   "fullname"
     t.string   "address"
     t.string   "mobile"
-    t.string   "phone"
-    t.datetime "created_at",                    :null => false
-    t.datetime "updated_at",                    :null => false
+    t.datetime "created_at",                       :null => false
+    t.datetime "updated_at",                       :null => false
     t.integer  "parent_id"
     t.integer  "lft"
     t.integer  "rgt"
@@ -64,6 +63,7 @@ ActiveRecord::Schema.define(:version => 20120824085719) do
     t.string   "cc_emails"
     t.integer  "user_id"
     t.string   "pinyin"
+    t.boolean  "active",         :default => true
   end
 
   create_table "trade_sources", :force => true do |t|
@@ -78,7 +78,8 @@ ActiveRecord::Schema.define(:version => 20120824085719) do
   end
 
   create_table "users", :force => true do |t|
-    t.string   "username"
+    t.string   "username",                                            :null => false
+    t.string   "name"
     t.string   "email",                               :default => "", :null => false
     t.string   "encrypted_password",   :limit => 128, :default => "", :null => false
     t.string   "password_salt",                       :default => "", :null => false
@@ -99,11 +100,30 @@ ActiveRecord::Schema.define(:version => 20120824085719) do
     t.integer  "children_count",                      :default => 0
     t.integer  "lft",                                 :default => 0
     t.integer  "rgt",                                 :default => 0
-    t.string   "name"
   end
 
   add_index "users", ["email"], :name => "index_admins_on_email", :unique => true
   add_index "users", ["parent_id"], :name => "index_admins_on_parent_id"
   add_index "users", ["reset_password_token"], :name => "index_admins_on_reset_password_token", :unique => true
+
+  create_table "users_bak", :force => true do |t|
+    t.string   "email",                  :default => "",    :null => false
+    t.string   "encrypted_password",     :default => "",    :null => false
+    t.string   "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.integer  "sign_in_count",          :default => 0
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string   "current_sign_in_ip"
+    t.string   "last_sign_in_ip"
+    t.datetime "created_at",                                :null => false
+    t.datetime "updated_at",                                :null => false
+    t.boolean  "is_super_admin",         :default => false
+    t.string   "name"
+  end
+
+  add_index "users_bak", ["email"], :name => "index_users_on_email", :unique => true
+  add_index "users_bak", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
 
 end

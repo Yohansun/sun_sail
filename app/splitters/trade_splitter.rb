@@ -24,6 +24,7 @@ class TradeSplitter
       # TODO 完善物流费用拆分逻辑
       new_trade.post_fee = splitted_order[:post_fee]
       new_trade.total_fee = splitted_order[:total_fee]
+      new_trade.splitted = true
       new_trade.save
 
       # 自动分流
@@ -42,6 +43,8 @@ class TradeSplitter
     case @trade._type
     when 'TaobaoPurchaseOrder'
       TaobaoPurchaseOrderSplitter.split_orders(@trade)
+    when 'TaobaoTrade'
+      TaobaoTradeSplitter.split_orders(@trade)
     else
       [{orders: @trade.orders}]
     end
