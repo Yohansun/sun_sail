@@ -148,7 +148,7 @@
             <option value="tid">订单编号</option>
           </select>
           <div class="input-append">
-            <input type="text" id="appendedInputButton" class="search-query w_specify search_value" value="<%= @search_value %>"><button type="button" class="btn btn-info search">筛选</button>
+            <input type="text" id="appendedInputButton" class="w_specify search_value" value="<%= @search_value %>"><button type="button" class="btn btn-info search">筛选</button>
           </div>
         </div>
       </fieldset>
@@ -169,11 +169,11 @@
             </select>
             <label class="control-label">下单时间：</label>
             <div class="input-append">
-              <input type="text" placeholder="年-月-日" id="appendedInputButton" class="input-small search-query search_start_date datepicker" value="<%= @search_start_date %>">
-              <input type="text" placeholder="00:00:00" id="appendedInputButton" class="input-small search-query search_start_time timepicker" value="<%= @search_start_time %>">
+              <input type="text" placeholder="年-月-日" id="appendedInputButton" class="input-small search_start_date datepicker" value="<%= @search_start_date %>">
+              <input type="text" placeholder="00:00:00" id="appendedInputButton" class="input-small search_start_time timepicker" value="<%= @search_start_time %>">
               <i class="icon-arrow-right"></i>
-              <input type="text" placeholder="年-月-日" id="appendedInputButton" class="input-small search-query search_end_date datepicker" value="<%= @search_end_date %>">
-              <input type="text" placeholder="00:00:00" id="appendedInputButton" class="input-small search-query search_end_time timepicker" value="<%= @search_end_time %>">
+              <input type="text" placeholder="年-月-日" id="appendedInputButton" class="input-small search_end_date datepicker" value="<%= @search_end_date %>">
+              <input type="text" placeholder="00:00:00" id="appendedInputButton" class="input-small search_end_time timepicker" value="<%= @search_end_time %>">
             </div>
           </div>
         </fieldset>
