@@ -59,13 +59,13 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
     @first_rendered = true
     @collection.each(@appendTrade)
-    $("a[rel=popover]").popover(placement: 'left')
+    $("a[rel=popover]").popover(placement: 'left', trigger:'hover')
 
     this
 
   renderUpdate: =>
     @collection.each(@appendTrade)
-    $("a[rel=popover]").popover(placement: 'left')
+    $("a[rel=popover]").popover(placement: 'left', trigger:'hover')
     $.unblockUI()
 
   appendTrade: (trade) =>
@@ -75,7 +75,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
   renderNew: =>
     @collection.each(@prependTrade)
-    $("a[rel=popover]").popover(placement: 'left')
+    $("a[rel=popover]").popover(placement: 'left', trigger:'hover')
     $.unblockUI()
 
   prependTrade: (trade) =>
