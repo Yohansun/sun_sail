@@ -9,10 +9,11 @@ class TradeTaobaoMemoFetcher
     
     TaobaoFu.select_source(trade.trade_source_id)
 
-    response = TaobaoFu.get
-    	:method => 'taobao.trade.get',
-      :fields => 'buyer_message, seller_memo', 
-      :tid => trade.tid
+    response = TaobaoFu.get(
+    	method: 'taobao.trade.get',
+      fields: 'buyer_message',
+      tid: trade.tid
+    )
 
     return unless response && response["trade_get_response"]
     remote_trade = response["trade_get_response"]["trade"]
