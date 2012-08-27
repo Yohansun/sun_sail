@@ -316,7 +316,7 @@ DEPENDENCIES
   slim
   spreadsheet
   taobao_fu_reload (~> 1.1.1)
-  twitter-bootstrap-rails
+  twitter-bootstrap-rails (>= 2.1.2)
   uglifier (>= 1.0.3)
   will_paginate
   wirble
