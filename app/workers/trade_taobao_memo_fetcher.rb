@@ -11,12 +11,12 @@ class TradeTaobaoMemoFetcher
 
     response = TaobaoFu.get
     	:method => 'taobao.trade.get',
-      :fields => 'buyer_message', 
+      :fields => 'buyer_message, seller_memo', 
       :tid => trade.tid
 
     return unless response && response["trade_get_response"]
     remote_trade = response["trade_get_response"]["trade"]
 
-    trade.update_attribute(:buyer_message, remote_trade['buyer_message'])
+    trade.update_attributes(buyer_message: remote_trade['buyer_message'], seller_memo: remote_trade['seller_memo'])
   end
 end
