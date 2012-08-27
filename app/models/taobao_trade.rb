@@ -40,9 +40,7 @@ class TaobaoTrade < Trade
   field :has_yfx, type: Boolean
   field :yfx_fee, type: Float
   field :yfx_id, type: String
-
   field :has_buyer_message, type: Boolean
-
   field :area_id, type: Integer
   field :credit_card_fee, type: Float
   field :nut_feature, type: String
@@ -100,8 +98,35 @@ class TaobaoTrade < Trade
     self.taobao_orders = new_orders
   end
 
+  def deliverable?
+    return false if self.status != "WAIT_SELLER_SEND_GOODS"
+    sibling = (TaobaoTrade.where(tid: self.tid).to_a - [self]).first
+    sibling.blank? || (sibling.present? && sibling.delivered_at.present?)
+  end
+
   def deliver!
+    return unless self.deliverable?
     TradeTaobaoDeliver.perform_async(self.id)
+  end
+
+  def dispatch!
+    return unless self.dispatchable?
+    seller = self.matched_seller
+    self.update_attributes(seller_id: seller.id, dispatched_at: Time.now)
+  end
+
+  def dispatchable?
+    seller = self.matched_seller
+    seller.present? && self.seller_id.blank? && self.status == 'WAIT_SELLER_SEND_GOODS' && self.memo.blank? && self.supplier_memo.blank?
+  end
+
+  def out_iids
+    self.orders.map {|o| o.outer_iid}
+  end
+
+  def receiver_address
+    receiver = self.receiver
+    [receiver['state'], receiver['city'], receiver['district']]
   end
 
 end

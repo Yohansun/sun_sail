@@ -41,7 +41,7 @@ class TaobaoPurchaseOrderPuller
 
     def update(start_time = nil, end_time = nil)
       total_pages = nil
-      i = 0
+      page_no = 0
 
       end_time ||= Time.now
       start_time ||= end_time - 7.days
@@ -50,12 +50,15 @@ class TaobaoPurchaseOrderPuller
         response = TaobaoFu.get(method: 'taobao.fenxiao.orders.get',
           start_created: start_time.strftime("%Y-%m-%d %H:%M:%S"),
           end_created: end_time.strftime("%Y-%m-%d %H:%M:%S"),
-          page_no: i, page_size: 50)
+          page_no: page_no, page_size: 50)
 
         break unless response['fenxiao_orders_get_response']
+
         total_results = response['fenxiao_orders_get_response']['total_results']
         total_pages ||= total_results / 50
+        
         trades = response['fenxiao_orders_get_response']['purchase_orders']['purchase_order']
+
         trades.each do |trade|
           TaobaoPurchaseOrder.where(tid: trade['fenxiao_id']).each do |local_trade|
             next if trade['status'] == local_trade.status
@@ -79,8 +82,8 @@ class TaobaoPurchaseOrderPuller
           end
         end
 
-        i += 1
-      end until i > total_pages
+        page_no += 1
+      end until page_no > total_pages
     end
   end
 end

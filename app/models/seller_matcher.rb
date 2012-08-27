@@ -23,9 +23,8 @@ protected
 
 		special_out_iids = TaobaoPurchaseOrderSplitter.splitable_maps['1720']
 		trade_out_iids = @trade.out_iids || []
-		all_special = trade_out_iids.size > 0 && (trade_out_iids - special_out_iids).size == 0
-		
-		if all_special
+
+		if trade_out_iids.size > 0 && (trade_out_iids - special_out_iids).size == 0
 			seller = Seller.find 1720
 		end
 
