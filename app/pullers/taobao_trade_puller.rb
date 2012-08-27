@@ -8,11 +8,11 @@ class TaobaoTradePuller
       end_time ||= Time.now
       start_time ||= end_time - 1.days
 
-      select_source(trade_source_id)
+      TaobaoFu.select_source(trade_source_id)
 
       begin
         response = TaobaoFu.get(method: 'taobao.trades.sold.get',
-          fields: 'total_fee, created, tid, status, post_fee, receiver_name, pay_time, receiver_state, receiver_city, receiver_district, receiver_address, receiver_zip, receiver_mobile, receiver_phone, buyer_nick, tile, type, point_fee, is_lgtype, is_brand_sale, is_force_wlb, modified, alipay_id, alipay_no, alipay_url, shipping_type, buyer_obtain_point_fee, cod_fee, cod_status, commission_fee, seller_nick, consign_time, received_payment, payment, timeout_action_time, has_buyer_message, real_point_fee, orders',
+          fields: 'has_buyer_message, total_fee, created, tid, status, post_fee, receiver_name, pay_time, receiver_state, receiver_city, receiver_district, receiver_address, receiver_zip, receiver_mobile, receiver_phone, buyer_nick, tile, type, point_fee, is_lgtype, is_brand_sale, is_force_wlb, modified, alipay_id, alipay_no, alipay_url, shipping_type, buyer_obtain_point_fee, cod_fee, cod_status, commission_fee, seller_nick, consign_time, received_payment, payment, timeout_action_time, has_buyer_message, real_point_fee, orders',
           start_created: start_time.strftime("%Y-%m-%d %H:%M:%S"), end_created: end_time.strftime("%Y-%m-%d %H:%M:%S"),
           page_no: page_no, page_size: 50
         )
@@ -35,6 +35,8 @@ class TaobaoTradePuller
 
           trade.save
 
+          TradeTaobaoMemoFetcher.perform_async(trade.id) if trade.has_buyer_message
+
           trade.dispatch! unless TradeSplitter.new(local_trade).split!
         end
 
@@ -49,7 +51,7 @@ class TaobaoTradePuller
       end_time ||= Time.now
       start_time ||= end_time - 1.days
 
-      select_source(trade_source_id)
+      TaobaoFu.select_source(trade_source_id)
 
       begin
         response = TaobaoFu.get(method: 'taobao.trades.sold.get',
@@ -85,18 +87,6 @@ class TaobaoTradePuller
 
         page_no += 1
       end until page_no > total_pages
-    end
-  end
-
-  def select_source(source_id)
-    source = TradeSource.find_by_id(source_id)
-
-    if source
-      settings = {}
-      settings['app_key'] = source.app_key
-      settings['secret_key'] = source.secret_key
-      settings['session'] = source.session
-      TaobaoFu.settings = settings
     end
   end
 

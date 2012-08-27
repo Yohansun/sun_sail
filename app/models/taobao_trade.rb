@@ -40,9 +40,7 @@ class TaobaoTrade < Trade
   field :has_yfx, type: Boolean
   field :yfx_fee, type: Float
   field :yfx_id, type: String
-
   field :has_buyer_message, type: Boolean
-
   field :area_id, type: Integer
   field :credit_card_fee, type: Float
   field :nut_feature, type: String
