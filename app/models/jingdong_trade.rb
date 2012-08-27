@@ -49,4 +49,13 @@ class JingdongTrade < Trade
     end
     return self[:invoice_name]
   end
+
+  def status=(status)
+    case status
+    when 'WAIT_BUYER_CONFIRM_GOODS'
+      self[:status] = 'WAIT_GOODS_RECEIVE_CONFIRM'
+    else
+      super status
+    end
+  end
 end

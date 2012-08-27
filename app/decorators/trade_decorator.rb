@@ -37,7 +37,7 @@ class TradeDecorator < Draper::Base
   def consign_time
     case trade._type
       when 'TaobaoPurchaseOrder'
-        trade.consign_time
+        trade.consign_time || trade.delivered_at
       when 'TaobaoTrade'
         trade.consign_time
       when 'JingdongTrade'
