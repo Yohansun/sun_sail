@@ -41,7 +41,7 @@
         <td><%= @trade.get('seller_memo') %></td>
       </tr>
       <tr>
-        <th nowrap>送货经销商</th>
+        <th nowrap>配送经销商</th>
         <td>
           <% if @trade.get('seller_id') != null: %>
             <%= @trade.get('seller_name') %>

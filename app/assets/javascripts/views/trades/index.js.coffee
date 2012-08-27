@@ -46,8 +46,12 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
       for col in MagicOrders.trade_cols_keys
         if col in MagicOrders.trade_cols_hidden
           $("#trades_table th[data-col=#{col}],td[data-col=#{col}]").hide()
+          $(@el).find("#cols_filter input[value=#{col}]").hide()
+          $(@el).find("#cols_filter input[value=#{col}]").parents('label').hide()
         else
           $("#trades_table th[data-col=#{col}],td[data-col=#{col}]").show()
+          $(@el).find("#cols_filter input[value=#{col}]").show()
+          $(@el).find("#cols_filter input[value=#{col}]").parents('label').show()
 
       # check column filters
       $(@el).find("#cols_filter input[type=checkbox]").attr("checked", "checked")
@@ -163,8 +167,12 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     for col in MagicOrders.trade_cols_keys
       if col in MagicOrders.trade_cols_hidden
         $("#trades_table th[data-col=#{col}],td[data-col=#{col}]").hide()
+        $(@el).find("#cols_filter input[value=#{col}]").hide()
+        $(@el).find("#cols_filter input[value=#{col}]").parents('label').hide()
       else
         $("#trades_table th[data-col=#{col}],td[data-col=#{col}]").show()
+        $(@el).find("#cols_filter input[value=#{col}]").show()
+        $(@el).find("#cols_filter input[value=#{col}]").parents('label').show()
 
     # reset cols filter checker
     $(@el).find("#cols_filter input[type=checkbox]").attr("checked", "checked")

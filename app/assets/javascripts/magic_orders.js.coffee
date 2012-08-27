@@ -27,7 +27,7 @@ window.MagicOrders =
       'cs_memo': '客服备注',
       'color_info': '调色信息',
       'invoice_info': '发票信息',
-      'seller': '送货经销商',
+      'seller': '配送经销商',
 
       'receiver_id': '客户ID',             #new add
       'delivery_bill': '出货单',
