@@ -40,7 +40,7 @@ gem 'draper'
 gem 'inherited_resources'
 gem 'devise'
 
-gem 'twitter-bootstrap-rails'
+gem 'twitter-bootstrap-rails', '>= 2.1.2'
 gem 'simple_form'
 gem 'awesome_nested_set'
 gem 'will_paginate'
@@ -61,6 +61,7 @@ gem 'savon'
 gem 'collections'
 gem 'spreadsheet'
 gem 'ekuseru'
+gem 'thin'
 
 group :production do
   gem "exception_notification", "~> 2.6.1"

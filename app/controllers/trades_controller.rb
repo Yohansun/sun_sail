@@ -37,25 +37,26 @@ class TradesController < ApplicationController
     ###筛选###
 
     # 按订单号筛选
-    if params[:search] && params[:search][:option] != 'null'
+    if params[:search] && !params[:search][:option].blank? && params[:search][:option] != 'null'
       @trades = @trades.where(Hash[params[:search][:option].to_sym, params[:search][:value]])
     end
 
     # 按时间筛选
-    if params[:search_all] && params[:search_all][:search_start_date] && params[:search_all][:search_end_date] != 'null'
+    if params[:search_all] && !params[:search_all][:search_start_date].blank? && params[:search_all][:search_start_date] != 'null' && !params[:search_all][:search_end_date].blank? && params[:search_all][:search_end_date] != 'null'
       start_time = (params[:search_all][:search_start_date] + ' ' + params[:search_all][:search_start_time]).to_time(form = :local)
       end_time = (params[:search_all][:search_end_date] + ' ' + params[:search_all][:search_end_time]).to_time(form = :local)
       @trades = @trades.where(:created.gte => start_time, :created.lte => end_time)
     end
 
     # 按状态筛选
-    if params[:search_all] && params[:search_all][:status_option] != 'null'
+    if params[:search_all] && !params[:search_all][:status_option].blank? && params[:search_all][:status_option] != 'null'
+      status_array = params[:search_all][:status_option].split(",")
       status_array = params[:search_all][:status_option].split(",")
       @trades = @trades.where(:status.in => status_array)
     end
 
     # 按来源筛选
-    if params[:search_all] && params[:search_all][:type_option] != 'null'
+    if params[:search_all] && !params[:search_all][:type_option].blank? && params[:search_all][:type_option] != 'null'
       @trades = @trades.where(_type: params[:search_all][:type_option])
     end
 

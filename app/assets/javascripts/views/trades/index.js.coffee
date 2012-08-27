@@ -16,8 +16,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     'click #advanced_btn': 'advancedSearch'
     'click .dropdown': 'dropdownTurnGray'
 
-  initialize: (options) ->
-    @trade_type = options.trade_type
+  initialize: ->
     @search_option = null
     @search_value = null
     @status_option = null
@@ -36,9 +35,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
   render: =>
     $.unblockUI()
     if !@first_rendered
-      $(@el).html(@template(trade_type: @trade_type, search_value: @search_value, search_start_date: @search_start_date, search_end_date: @search_end_date, search_start_time: @search_start_time, search_end_time: @search_end_time))
-      navs = {'all': '所有订单', 'taobao': '淘宝订单', 'taobao_fenxiao': '淘宝分销采购单', 'jingdong': '京东商城订单', 'shop': '官网订单'}
-      $(@el).find(".trade_nav").text(navs[@trade_type])
+      $(@el).html(@template())
 
       #initial mode=trades
       visible_cols = MagicOrders.trade_cols_visible_modes['trades']
@@ -137,13 +134,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     blocktheui()
     $("#trade_rows").html('')
 
-    if @search_start_date == '' or @search_end_date == ''    #权宜之计
-      @search_start_date = 'null'
-      @search_end_date = 'null'
-      @search_start_time = 'null'
-      @search_end_time = 'null'
-
-    @collection.fetch data: {search: {option: @search_option, value: @search_value}, trade_type: @trade_type, search_all: {@search_start_date, @search_start_time, @search_end_date, @search_end_time, @status_option, @type_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_invoice, @search_color}}, success: (collection) =>
+    @collection.fetch data: {search_all: {@search_start_date, @search_start_time, @search_end_date, @search_end_time, @status_option, @type_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_invoice, @search_color}}, success: (collection) =>
       if collection.length > 0
         @offset = @offset + 20
         @renderUpdate()
@@ -190,7 +181,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
     $("#trades_bottom").waypoint('destroy')
     blocktheui()
-    @collection.fetch data: {search: {option: @search_option, value: @search_value}, trade_type: @trade_type, offset: @offset, search_all: {@search_start_date, @search_start_time, @search_end_date, @search_end_time, @status_option, @type_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_invoice, @search_color}}, success: (collection) =>
+    @collection.fetch data: {offset: @offset, search_all: {@search_start_date, @search_start_time, @search_end_date, @search_end_time, @status_option, @type_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_invoice, @search_color}}, success: (collection) =>
       if collection.length > 0
         @offset = @offset + 20
         @renderUpdate()
@@ -217,4 +208,4 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
   exportOrders: (e) =>
     e.preventDefault()
-    window.open "/api/trades.xls?trade_type=#{@trade_type}&search%5Bvalue%5D=#{@search_value}&search%5Boption%5D=#{@search_option}&search%5Bvalue%5D=#{@search_value}&trade_type=#{@trade_type}&search_all%5Bsearch_start_date%5D=#{@search_start_date}&search_all%5Bsearch_start_time%5D=#{@search_start_time}&search_all%5Bsearch_end_date%5D=#{@search_end_date}&search_all%5Bsearch_end_time%5D=#{@search_end_time}&search_all%5Bstatus_option%5D=#{@status_option}&search_all%5Btype_option%5D=#{@type_option}&search_all%5Bsearch_buyer_message%5D=#{@search_buyer_message}&search_all%5Bsearch_seller_memo%5D=#{@search_seller_memo}&search_all%5Bsearch_cs_memo%5D=#{@search_cs_memo}&search_all%5Bsearch_invoice%5D=#{@search_invoice}&search_all%5Bsearch_color%5D=#{@search_color}&limit=1000000&offset=0"
+    window.open "/api/trades.xls?search_all%5Bsearch_start_date%5D=#{@search_start_date}&search_all%5Bsearch_start_time%5D=#{@search_start_time}&search_all%5Bsearch_end_date%5D=#{@search_end_date}&search_all%5Bsearch_end_time%5D=#{@search_end_time}&search_all%5Bstatus_option%5D=#{@status_option}&search_all%5Btype_option%5D=#{@type_option}&search_all%5Bsearch_buyer_message%5D=#{@search_buyer_message}&search_all%5Bsearch_seller_memo%5D=#{@search_seller_memo}&search_all%5Bsearch_cs_memo%5D=#{@search_cs_memo}&search_all%5Bsearch_invoice%5D=#{@search_invoice}&search_all%5Bsearch_color%5D=#{@search_color}&limit=1000000&offset=0"

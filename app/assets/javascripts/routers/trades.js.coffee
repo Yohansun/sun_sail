@@ -2,7 +2,6 @@ class MagicOrders.Routers.Trades extends Backbone.Router
   routes:
     '': 'index'
     'trades': 'index'
-    'trades/:trade_type': 'index'
     'trades/:id/detail': 'show'
     'trades/:id/seller': 'seller'
     'trades/:id/deliver': 'deliver'
@@ -31,16 +30,15 @@ class MagicOrders.Routers.Trades extends Backbone.Router
         @isFixed = false
         @nav.removeClass('subnav-fixed')
 
-  index: (trade_type = null) ->
+  index: ->
     @isFixed = false
 
-    if @collection.length == 0 || @trade_type != trade_type
+    if @collection.length == 0
       $('#content').html ""
-      @trade_type = trade_type
       blocktheui()
       @show_top_nav()
-      @collection.fetch data: {trade_type: trade_type}, success: (collection, response) =>
-        @mainView = new MagicOrders.Views.TradesIndex(collection: collection, trade_type: trade_type)
+      @collection.fetch success: (collection, response) =>
+        @mainView = new MagicOrders.Views.TradesIndex(collection: collection)
         $('#content').html(@mainView.render().el)
         $("a[rel=popover]").popover(placement: 'left')
 
