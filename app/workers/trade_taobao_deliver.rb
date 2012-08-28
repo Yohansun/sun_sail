@@ -8,9 +8,12 @@ class TradeTaobaoDeliver
 
     TaobaoFu.select_source(trade.trade_source_id)
     
-    response = TaobaoFu.get :method => 'taobao.logistics.offline.send', :tid => trade.tid,
-      :out_sid => trade.logistic_waybill,
-      :company_code => trade.logistic_code 
+    response = TaobaoFu.get(
+      method: 'taobao.logistics.offline.send',
+      tid: trade.tid,
+      out_sid: trade.logistic_waybill,
+      company_code: trade.logistic_code
+    )
 
     if response['delivery_offline_send_response']
       response = response['delivery_offline_send_response']['shipping']
