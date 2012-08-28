@@ -17,7 +17,7 @@ class TaobaoTradeSplitter
         'I1P01L40015C4V03',
         'I1P01L40052C4V04',
         'P1P16L60064C0V00',
-        'test'
+        'test1'
       ]
     }
   end
