@@ -40,7 +40,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       @collection.fetch success: (collection, response) =>
         @mainView = new MagicOrders.Views.TradesIndex(collection: collection)
         $('#content').html(@mainView.render().el)
-        $("a[rel=popover]").popover(placement: 'left')
+        $("a[rel=popover]").popover(placement: 'left', trigger:'hover')
 
         $('.form-search .datepicker').datepicker(format: 'yyyy-mm-dd')
         $('.form-search .timepicker').timeEntry(show24Hours: true, showSeconds: true, spinnerImage: '/assets/spinnerUpDown.png', spinnerSize: [17, 26, 0], spinnerIncDecOnly: true)
