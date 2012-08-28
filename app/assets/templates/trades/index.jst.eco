@@ -244,7 +244,7 @@
       <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-success dropdown_check_btn"><span class="caret"></span></button>
       <ul class="dropdown-menu dropdown_check" id="cols_filter">
         <% for key in _.keys(window.MagicOrders.trade_cols): %>
-        <li>
+        <li data-col="<%= key %>">
           <label class="checkbox" style="padding-left:35px;">
             <input type="checkbox" value="<%= key %>">
             <%= window.MagicOrders.trade_cols[key] %>
@@ -262,7 +262,7 @@
       </ul>
     </div>
   </div>
-  
+
   <div class="alert alert-info hide" id="newTradesNotifer">
     <br />
     有<span>0</span>条新订单, <a href="#" id="newTradesNotiferLink">点击加载新订单数据</a>
@@ -278,7 +278,7 @@
         <th data-col='status_history' style="max-width:150px">历史状态</th>
 
         <th data-col='receiver_id'>客户ID</th>                <!--Newly Add-->
-        
+
         <th data-col='receiver_name' nowrap>客户姓名</th>
         <th data-col='receiver_mobile_phone'>联系电话</th>
         <th data-col='receiver_address'>联系地址</th>
