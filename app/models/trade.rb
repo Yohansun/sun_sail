@@ -82,7 +82,7 @@ class Trade
   end
 
   def area
-    address = self.receiver_address
+    address = self.receiver_address_array
     state = city = area = nil
     state = Area.find_by_name address[0]
     city = state.children.where(name: address[1]).first if state
@@ -95,7 +95,7 @@ class Trade
     raise "EMPTY METHOD!"
   end
 
-  def receiver_address
+  def receiver_address_array
     # overwrite this method
     # 请按照 省市区 的顺序生成array
     []

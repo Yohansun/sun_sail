@@ -73,7 +73,7 @@ class TaobaoPurchaseOrder < Trade
     seller.present? && self.seller_id.blank? && self.status == 'WAIT_SELLER_SEND_GOODS' && self.memo.blank? && self.supplier_memo.blank?
   end
 
-  def receiver_address
+  def receiver_address_array
     receiver = self.receiver
     [receiver['state'], receiver['city'], receiver['district']]
   end

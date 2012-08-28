@@ -124,7 +124,7 @@ class TaobaoTrade < Trade
     self.orders.map {|o| o.outer_iid}
   end
 
-  def receiver_address
+  def receiver_address_array
     [self.receiver_state, self.receiver_city, self.receiver_district]
   end
 end
