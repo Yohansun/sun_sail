@@ -117,7 +117,7 @@ class TaobaoTrade < Trade
 
   def dispatchable?
     seller = self.matched_seller
-    seller.present? && self.seller_id.blank? && self.status == 'WAIT_SELLER_SEND_GOODS' && self.memo.blank? && self.supplier_memo.blank?
+    seller.present? && self.seller_id.blank? && self.status == 'WAIT_SELLER_SEND_GOODS' && !self.has_buyer_message && self.seller_memo.blank?
   end
 
   def out_iids
@@ -125,8 +125,6 @@ class TaobaoTrade < Trade
   end
 
   def receiver_address
-    receiver = self.receiver
-    [receiver['state'], receiver['city'], receiver['district']]
+    [self.receiver_state, self.receiver_city, self.receiver_district]
   end
-
 end

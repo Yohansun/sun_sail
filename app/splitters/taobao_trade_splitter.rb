@@ -25,7 +25,7 @@ class TaobaoTradeSplitter
     # 如果存在特殊商品, 将特殊商品拆分给仓库经销商
     all_orders = trade.orders
     cangku_outer_iids = self.splitable_maps['1720']
-    cangku_orders = all_orders.select {|order| cangku_outer_iids.include? order.outer_id }
+    cangku_orders = all_orders.select {|order| cangku_outer_iids.include? order.outer_iid }
     other_orders = all_orders - cangku_orders
 
     # 快递费拆分给普通经销商（非仓库经销商）
