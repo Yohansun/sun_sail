@@ -13,7 +13,7 @@
           <li><a href="#" data-trade-type="jingdong">京东商城订单</a></li>
         </ul>
       </li> -->
-      <li class="dropdown" id="trade_mode_selector">
+      <li class="dropdown" id="trade_selector">
         <!-- <a class="dropdown-toggle" data-toggle="dropdown">
           <span class="trade_mode">订单模式</span>
           <b class="caret"></b>
@@ -33,14 +33,14 @@
             <b class="caret"></b>
           </a>
           <ul class="dropdown-menu">
-            <li><a a href="#" data-trade-mode="trades">所有订单</a></li>
-            <li><a href="#">未付款订单</a></li>
-            <li><a href="#">未分流订单</a></li>
-            <li><a href="#">未发货订单</a></li>
-            <li><a href="#">已发货订单</a></li>
-            <li><a href="#">退货订单</a></li>
-            <li><a href="#">交易关闭订单</a></li>
-            <li><a href="#">交易异常订单</a></li>
+            <li><a href="#" data-trade-mode="trades">所有订单</a></li>
+            <li><a href="#" data-trade-mode="trades" id ="unpaid_trade">未付款订单</a></li>
+            <li><a href="#" data-trade-mode="trades" id ="undispatched_trade">未分流订单</a></li>
+            <li><a href="#" data-trade-mode="trades" id ="undelivered_trade">未发货订单</a></li>
+            <li><a href="#" data-trade-mode="trades" id ="delivered_trade">已发货订单</a></li>
+            <li><a href="#" data-trade-mode="trades" id ="return_trade">退货订单</a></li>
+            <li><a href="#" data-trade-mode="trades" id ="closed_trade">交易关闭订单</a></li>
+            <li><a href="#" data-trade-mode="trades" id ="unusual_trade">交易异常订单</a></li>
           </ul>
         </li>
         <li class="dropdown">
@@ -50,13 +50,13 @@
           </a>
           <ul class="dropdown-menu">
             <li><a href="#" data-trade-mode="deliver">所有出货单</a></li>
-            <li><a href="#">未打印</a></li>
-            <li><a href="#">已打印</a></li>
-            <li><a href="#">有物流单号</a></li>
-            <li><a href="#">无物流单号</a></li>
-            <li><a href="#">退货订单</a></li>
-            <li><a href="#">交易关闭订单</a></li>
-            <li><a href="#">交易异常订单</a></li>
+            <li><a href="#" data-trade-mode="deliver">未打印</a></li>
+            <li><a href="#" data-trade-mode="deliver">已打印</a></li>
+            <li><a href="#" data-trade-mode="deliver">有物流单号</a></li>
+            <li><a href="#" data-trade-mode="deliver">无物流单号</a></li>
+            <li><a href="#" data-trade-mode="deliver">退货订单</a></li>
+            <li><a href="#" data-trade-mode="deliver">交易关闭订单</a></li>
+            <li><a href="#" data-trade-mode="deliver">交易异常订单</a></li>
           </ul>
         </li>
         <li class="dropdown">
@@ -66,8 +66,8 @@
           </a>
           <ul class="dropdown-menu">
             <li><a href="#" data-trade-mode="logistics">所有物流单</a></li>
-            <li><a href="#">未打印</a></li>
-            <li><a href="#">已打印</a></li>
+            <li><a href="#" data-trade-mode="logistics">未打印</a></li>
+            <li><a href="#" data-trade-mode="logistics">已打印</a></li>
           </ul>
         </li>
         <li class="dropdown">
@@ -281,7 +281,7 @@
 
         <th data-col='receiver_name' nowrap>客户姓名</th>
         <th data-col='receiver_mobile_phone'>联系电话</th>
-        <th data-col='receiver_address'>联系地址</th>
+        <th data-col='receiver_address' style="min-width:200px">联系地址</th>
         <th data-col='buyer_message'>客户<br/>留言</th>
         <th data-col='seller_memo'>卖家<br/>备注</th>
         <th data-col='cs_memo'>客服<br/>备注</th>
