@@ -42,17 +42,15 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
        # $(@el).find(".trade_nav").text(navs[@trade_type])
 
       #initial mode=trades
-      visible_cols = MagicOrders.trade_cols_visible_modes['trades']
+      visible_cols = MagicOrders.trade_cols_visible_modes[MagicOrders.trade_mode]
       MagicOrders.trade_cols_hidden = _.difference(MagicOrders.trade_cols_keys, visible_cols)
       for col in MagicOrders.trade_cols_keys
         if col in MagicOrders.trade_cols_hidden
           $("#trades_table th[data-col=#{col}],td[data-col=#{col}]").hide()
-          $(@el).find("#cols_filter input[value=#{col}]").hide()
-          $(@el).find("#cols_filter input[value=#{col}]").parents('label').hide()
+          $(@el).find("#cols_filter li[data-col=#{col}]").hide()
         else
           $("#trades_table th[data-col=#{col}],td[data-col=#{col}]").show()
-          $(@el).find("#cols_filter input[value=#{col}]").show()
-          $(@el).find("#cols_filter input[value=#{col}]").parents('label').show()
+          $(@el).find("#cols_filter li[data-col=#{col}]").show()
 
       # check column filters
       $(@el).find("#cols_filter input[type=checkbox]").attr("checked", "checked")
@@ -155,33 +153,34 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
   changeTradeMode: (e) ->
     e.preventDefault()
     $('.dropdown.open .dropdown-toggle').dropdown('toggle');
-    @trade_mode = $(e.target).data('trade-mode')
-    #$(@el).find(".trade_mode").text(MagicOrders.trade_modes[@trade_mode])
+    $(@el).find(".trade_pops li").hide()
+    MagicOrders.trade_mode = $(e.target).data('trade-mode')
+    #$(@el).find(".trade_mode").text(MagicOrders.trade_modes[MagicOrders.trade_mode])
 
     # hide some cols
-    visible_cols = MagicOrders.trade_cols_visible_modes[@trade_mode]
+    visible_cols = MagicOrders.trade_cols_visible_modes[MagicOrders.trade_mode]
     MagicOrders.trade_cols_hidden = _.difference(MagicOrders.trade_cols_keys, visible_cols)
 
-    hide_cols = []
-    show_cols = []
     for col in MagicOrders.trade_cols_keys
       if col in MagicOrders.trade_cols_hidden
-        hide_cols.push col
+        $("#trades_table th[data-col=#{col}], #trades_table td[data-col=#{col}]").hide()
+        $("#cols_filter li[data-col=#{col}]").hide()
       else
-        show_cols.push col
-
-    for col in hide_cols
-      $("#trades_table th[data-col=#{col}], #trades_table td[data-col=#{col}]").hide()
-      $("#cols_filter li[data-col=#{col}]").hide()
-
-    for col in show_cols
-      $("#trades_table th[data-col=#{col}], #trades_table td[data-col=#{col}]").show()
-      $("#cols_filter li[data-col=#{col}]").show()
+        $("#trades_table th[data-col=#{col}], #trades_table td[data-col=#{col}]").show()
+        $("#cols_filter li[data-col=#{col}]").show()
 
     # reset cols filter checker
     $("#cols_filter input[type=checkbox]").attr("checked", "checked")
     for col in MagicOrders.trade_cols_hidden
       $("#cols_filter input[value=#{col}]").attr("checked", false)
+    
+    # reset operation
+    for pop in MagicOrders.trade_pops[MagicOrders.trade_mode]
+      unless MagicOrders.role_key == 'admin'
+        if pop in MagicOrders.trade_pops[MagicOrders.role_key]
+          $(@el).find(".trade_pops li [data-type=#{pop}]").parent().show()
+      else
+        $(@el).find(".trade_pops li [data-type=#{pop}]").parent().show()
 
   fetch_new_trades: =>
     @collection.fetch add: true, data: {search: {option: @search_option, value: @search_value}, trade_type: @trade_type, offset: 0, limit: $("#newTradesNotifer span").text()}, success: (collection) =>
