@@ -50,9 +50,14 @@ class TradesController < ApplicationController
 
     # 按状态筛选
     if params[:search_all] && !params[:search_all][:status_option].blank? && params[:search_all][:status_option] != 'null'
-      status_array = params[:search_all][:status_option].split(",")
-      status_array = params[:search_all][:status_option].split(",")
-      @trades = @trades.where(:status.in => status_array)
+      if params[:search_all][:status_option] == 'undispatched_trade'
+        @trades = @trades.where(:dispatched_at.exists => false)
+      elsif params[:search_all][:status_option] == 'unusual_trade'
+        #异常订单
+      else
+        status_array = params[:search_all][:status_option].split(",")
+        @trades = @trades.where(:status.in => status_array)
+      end
     end
 
     # 按来源筛选
