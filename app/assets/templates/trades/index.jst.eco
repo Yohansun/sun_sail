@@ -264,8 +264,8 @@
     </div>
   </div>
 
+  <br />
   <div class="alert alert-info hide" id="newTradesNotifer">
-    <br />
     有<span>0</span>条新订单, <a href="#" id="newTradesNotiferLink">点击加载新订单数据</a>
   </div>
 
@@ -282,7 +282,7 @@
 
         <th data-col='receiver_name' nowrap>客户姓名</th>
         <th data-col='receiver_mobile_phone'>联系电话</th>
-        <th data-col='receiver_address' style="min-width:200px">联系地址</th>
+        <th data-col='receiver_address' style="min-width:100px">联系地址</th>
         <th data-col='buyer_message'>客户<br/>留言</th>
         <th data-col='seller_memo'>卖家<br/>备注</th>
         <th data-col='cs_memo'>客服<br/>备注</th>
