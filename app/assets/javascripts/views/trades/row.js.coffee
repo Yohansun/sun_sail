@@ -19,9 +19,12 @@ class MagicOrders.Views.TradesRow extends Backbone.View
   render: ->
     $(@el).attr("id", "trade_#{@model.get('id')}")
     $(@el).html(@template(trade: @model))
-    unless MagicOrders.role_key == 'admin'
-      $(@el).find(".trade_pops li").hide()
-      for pop in MagicOrders.trade_pops[MagicOrders.role_key]
+    $(@el).find(".trade_pops li").hide()
+    for pop in MagicOrders.trade_pops[MagicOrders.trade_mode]
+      unless MagicOrders.role_key == 'admin'
+        if pop in MagicOrders.trade_pops[MagicOrders.role_key]
+          $(@el).find(".trade_pops li [data-type=#{pop}]").parent().show()
+      else
         $(@el).find(".trade_pops li [data-type=#{pop}]").parent().show()
 
     # reset cols
@@ -29,7 +32,7 @@ class MagicOrders.Views.TradesRow extends Backbone.View
       $(@el).find("td[data-col=#{col}]").hide()
     for col in _.difference(_.keys(MagicOrders.trade_cols), MagicOrders.trade_cols_hidden)
       $(@el).find("td[data-col=#{col}]").show()
-
+      
     this
 
   show_detail: (e) ->
