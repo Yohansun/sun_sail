@@ -90,7 +90,7 @@ class TaobaoTradePuller
     end
 
     def updatable?(local_trade, remote_status)
-      remote_status == local_trade.status || (remote_status == "WAIT_SELLER_SEND_GOODS" && local_trade.delivered_at.present?)
+      remote_status != local_trade.status || (remote_status == "WAIT_SELLER_SEND_GOODS" && local_trade.delivered_at.present?)
     end
   end
 end
