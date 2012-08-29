@@ -2,8 +2,9 @@
 <td data-col='trade_source'><span class="label label-warning"><%= @trade.get('trade_source') %><%= @trade.get('trade_source_name') %></span></td>
 <td data-col='tid'>
   <% if @trade.get('splitted_tid'): %>
-    <span class="label label-info">拆分订单 <%= @trade.get('splitted_tid') %></span>
+    <span class="label label-info">拆分订单</span>
     <br/>
+    <%= @trade.get('splitted_tid') %>
   <% else: %>
     <%= @trade.get('tid') %>
   <% end %>
