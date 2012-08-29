@@ -11,6 +11,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     'click .export_orders': 'exportOrders'
     'click #cols_filter input,label': 'keepColsFilterDropdownOpen'
     'change #cols_filter input[type=checkbox]': 'filterTradeColumns'
+    'click [data-trade-status]': 'selectSameStatusTrade'
     
     #visual effects
     'click #advanced_btn': 'advancedSearch'
@@ -36,9 +37,9 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
   render: =>
     $.unblockUI()
     if !@first_rendered
-       $(@el).html(@template(trade_type: @trade_type, search_value: @search_value, search_start_date: @search_start_date, search_end_date: @search_end_date, search_start_time: @search_start_time, search_end_time: @search_end_time))
-       navs = {'all': '所有订单', 'taobao': '淘宝订单', 'taobao_fenxiao': '淘宝分销采购单', 'jingdong': '京东商城订单', 'shop': '官网订单'}
-       $(@el).find(".trade_nav").text(navs[@trade_type])
+       $(@el).html(@template())
+       # navs = {'all': '所有订单', 'taobao': '淘宝订单', 'taobao_fenxiao': '淘宝分销采购单', 'jingdong': '京东商城订单', 'shop': '官网订单'}
+       # $(@el).find(".trade_nav").text(navs[@trade_type])
 
       #initial mode=trades
       visible_cols = MagicOrders.trade_cols_visible_modes['trades']
@@ -110,7 +111,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     $("#trades_bottom").waypoint('destroy')
     blocktheui()
     $("#trade_rows").html('')
-    @collection.fetch data: {search: {option: @search_option, value: @search_value}, trade_type: @trade_type}, success: (collection) =>
+    @collection.fetch data: {search: {option: @search_option, value: @search_value}}, success: (collection) =>
       @renderUpdate()
       $.unblockUI()
 
@@ -221,12 +222,19 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     e.preventDefault()
     window.open "/api/trades.xls?trade_type=#{@trade_type}&search_all%5Bsearch_start_date%5D=#{@search_start_date}&search_all%5Bsearch_start_time%5D=#{@search_start_time}&search_all%5Bsearch_end_date%5D=#{@search_end_date}&search_all%5Bsearch_end_time%5D=#{@search_end_time}&search_all%5Bstatus_option%5D=#{@status_option}&search_all%5Btype_option%5D=#{@type_option}&search_all%5Bsearch_buyer_message%5D=#{@search_buyer_message}&search_all%5Bsearch_seller_memo%5D=#{@search_seller_memo}&search_all%5Bsearch_cs_memo%5D=#{@search_cs_memo}&search_all%5Bsearch_invoice%5D=#{@search_invoice}&search_all%5Bsearch_color%5D=#{@search_color}&limit=1000000&offset=0"
 
-  # unpaid_trade: (e) =>
-  #   e.preventDefault()
-  #   @collection.fetch data: {search_all: {@status_option}}, success: (collection) =>
-  #    if collection.length > 0
-  #      @offset = @offset + 20
-  #      @renderUpdate()
-  #      $('#trades_bottom').waypoint @fetchMoreTrades, {offset: '100%'}
-  #    else
-  #      $.unblockUI()
+  selectSameStatusTrade: (e) =>
+    e.preventDefault()
+    $('.dropdown.open .dropdown-toggle').dropdown('toggle');
+    @status_option = $(e.target).data('trade-status')
+
+    @offset = 0
+    blocktheui()
+    $("#trade_rows").html('')
+
+    @collection.fetch data: {search_all: {@status_option}}, success: (collection) =>
+     if collection.length > 0
+       @offset = @offset + 20
+       @renderUpdate()
+       $('#trades_bottom').waypoint @fetchMoreTrades, {offset: '100%'}
+     else
+       $.unblockUI()

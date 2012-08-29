@@ -261,6 +261,8 @@ class TradeDecorator < Draper::Base
         '已付款（已分账），已发货'
       when 'WAIT_SELLER_SEND_GOODS_ACOUNTED'
         '已付款（已分账），待发货'
+      when 'TRADE_REFUNDING'
+        '退款中'
       else
         trade.status
     end
