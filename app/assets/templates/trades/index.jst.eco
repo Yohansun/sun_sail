@@ -121,9 +121,9 @@
           </a>
           <ul class="dropdown-menu">
             <li><a href="#" data-trade-mode="invoice">所有开票</a></li>
-            <li><a href="#">未开票</a></li>
-            <li><a href="#">已开票</a></li>
-            <li><a href="#">已寄出</a></li>
+            <li><a href="#" data-trade-mode="invoice">未开票</a></li>
+            <li><a href="#" data-trade-mode="invoice">已开票</a></li>
+            <li><a href="#" data-trade-mode="invoice">已寄出</a></li>
           </ul>
       </li>
     </ul>

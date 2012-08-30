@@ -4,7 +4,7 @@
 </div><!-- modal-header -->
 <div class="modal-body">
 <fieldset>
-  <table class="table">
+  <table class="table pick_invoice_detail">
     <tbody>
       <tr>
         <th nowrap>订单编号</th>
@@ -49,14 +49,14 @@
           </div>
         </td>
       </tr>
-      <!-- <tr>
+      <tr>
         <th>完成日期：</th>
         <td>
           <div class="controls">
             <input type="text" class="input-large datepicker" placeholder="请填写日期(年-月-日)..." id="invoice_date_text" value="<%= @trade.get 'invoice_date' %>">
           </div>
         </td>
-      </tr> -->
+      </tr>
     </tbody>
   </table>
 </fieldset>

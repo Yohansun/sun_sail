@@ -151,7 +151,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
 
       $('#trade_color').modal('show')
 
-  invoice: (id) ->
+  invoice: (id) ->                   #这里的链接跳转正确,链接显示不正确
     blocktheui()
 
     @model = new MagicOrders.Models.Trade(id: id)
@@ -161,12 +161,11 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       view = new MagicOrders.Views.TradesInvoice(model: model)
 
       $('#trade_invoice').html(view.render().el)
-
-      $('#trade_invoice').on 'hide', (event) ->
-        window.history.back()
-
+      $('.pick_invoice_detail .datepicker').datepicker(format: 'yyyy-mm-dd')
+      $('#trade_invoice').hide()
       $('#trade_invoice').modal('show')
-
+      window.history.back()
+      
   seller_confirm_deliver: (id) ->
     blocktheui()
 
