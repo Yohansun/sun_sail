@@ -82,7 +82,7 @@
     ￥<%= @trade.get 'invoice_value' %>
   <% end %>
 </td>
-<td data-col='invoice_date' ><%= @trade.get 'invoice_date' %></td>
+<td data-col='invoice_date' style="min-width:70px"><%= @trade.get 'invoice_date' %></td>
 <td data-col='order_split' ><!--拆分--></td>
 <td data-col='operator' ><!--操作人--></td>
 <td data-col='seller' nowrap>

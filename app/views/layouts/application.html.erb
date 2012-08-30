@@ -38,6 +38,9 @@
             <li class="active trades" style="display:none"><a href="#">订单管理</a></li>
             <li class="active areas" style="display:none"><a href="#">区域管理</a></li>
             <li class="active sellers" style="display:none"><a href="#">经销商管理</a></li>
+            <% if current_user.role_key == 'admin' %>
+            <li class="active users" style="display:none"><a href="#">系统设置</a></li>
+            <% end %>
           </ul>
 
           <ul class="nav pull-right">
@@ -48,15 +51,17 @@
                 <!-- <li><a href="#">仓库管理</a></li> -->
                 <li><a href="/sellers" class="sellers">经销商管理</a></li>
                 <li><a href="/areas" class="areas">区域管理</a></li>
-                <!-- <li class="divider"></li>
-                <li><a href="#">系统设置</a></li> -->
+                <% if current_user.role_key == 'admin' %>
+                <li class= "divider"></li>
+                <li><a href="/users" class="users">系统设置</a></li>
+                <% end %>
               </ul>
             </li>
             <li class="divider-vertical"></li>
           </ul>
           <!--/.nav-collapse -->
 
-          <% end -%>
+          <% end %>
         </div>
       </div>
     </div>
