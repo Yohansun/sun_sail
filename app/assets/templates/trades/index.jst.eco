@@ -120,10 +120,10 @@
             <b class="caret"></b>
           </a>
           <ul class="dropdown-menu">
-            <li><a href="#" data-trade-mode="invoice">所有开票</a></li>
-            <li><a href="#" data-trade-mode="invoice">未开票</a></li>
-            <li><a href="#" data-trade-mode="invoice">已开票</a></li>
-            <li><a href="#" data-trade-mode="invoice">已寄出</a></li>
+            <li><a href="#" data-trade-mode="invoice" data-invoice-status="invoice_all">所有开票</a></li>
+            <li><a href="#" data-trade-mode="invoice" data-invoice-status="invoice_unfilled">未开票</a></li>
+            <li><a href="#" data-trade-mode="invoice" data-invoice-status="invoice_filled">已开票</a></li>
+            <li><a href="#" data-trade-mode="invoice" data-invoice-status="invoice_sent">已寄出</a></li>
           </ul>
       </li>
     </ul>

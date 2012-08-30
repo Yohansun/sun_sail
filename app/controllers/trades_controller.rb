@@ -70,19 +70,27 @@ class TradesController < ApplicationController
       @trades = @trades.where(:cs_memo.exists => true)
     end
 
-    # 卖家有备注  ###have not been tested yet
+    # 卖家有备注
     if params[:search_all] && params[:search_all][:search_seller_memo] == "true"
       @trades = @trades.where("$or" => [{"$and" => [{:seller_memo.exists => true}, {:seller_memo.ne => ''}]}, {:delivery_type.exists => true}, {:invoice_info.exists => true}])
     end
     
-    # 客户有留言  ###have not been tested yet
+    # 客户有留言
     if params[:search_all] && params[:search_all][:search_buyer_message] == "true"
       @trades = @trades.where("$and" => [{:buyer_message.exists => true}, {:buyer_message.ne => ''}])
     end
 
-    # 需要开票
-    if params[:search_all] && params[:search_all][:search_invoice] == "true"
-      @trades = @trades.where("$or" => [{:invoice_name.exists => true},{:invoice_type.exists => true},{:invoice_content.exists => true}])
+    # 需要开票+按发票状态筛选
+    if params[:search_all]
+      if params[:search_all][:search_invoice] == "true" || params[:search_all][:search_invoice] == 'invoice_all'
+        @trades = @trades.where("$or" => [{:invoice_name.exists => true},{:invoice_type.exists => true},{:invoice_content.exists => true}])
+      elsif params[:search_all][:search_invoice] == 'invoice_unfilled'
+        @trades = @trades.where("$or" => [{:invoice_name.exists => false},{:invoice_type.exists => false},{:invoice_content.exists => false},{:invoice_date.exists => false}])
+      elsif params[:search_all][:search_invoice] == 'invoice_filled'
+        @trades = @trades.where(:seller_confirm_invoice_at.exists => true)
+      elsif params[:search_all][:search_invoice] == 'invoice_sent'
+        @trades = @trades.where(:status.in => ["WAIT_BUYER_CONFIRM_GOODS","WAIT_GOODS_RECEIVE_CONFIRM","WAIT_BUYER_CONFIRM_GOODS_ACOUNTED","WAIT_SELLER_SEND_GOODS_ACOUNTED"])
+      end
     end
 
     # 需要配色
