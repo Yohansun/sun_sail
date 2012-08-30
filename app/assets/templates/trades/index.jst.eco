@@ -87,9 +87,8 @@
             <b class="caret"></b>
           </a>
           <ul class="dropdown-menu">
-            <li><a href="#" data-trade-mode="send">所有发货单</a></li>
-            <li><a href="order_deliver.html">未发货</a></li>
-            <li><a href="#">已发货</a></li>
+            <li><a href="#" data-trade-mode="send" data-trade-status="WAIT_SELLER_SEND_GOODS,WAIT_SELLER_DELIVERY,WAIT_SELLER_STOCK_OUT">未发货</a></li>
+            <li><a href="#" data-trade-mode="send" data-trade-status="WAIT_BUYER_CONFIRM_GOODS,WAIT_GOODS_RECEIVE_CONFIRM,WAIT_BUYER_CONFIRM_GOODS_ACOUNTED,WAIT_SELLER_SEND_GOODS_ACOUNTED">已发货</a></li>
           </ul>
         </li>
         <li class="dropdown">
