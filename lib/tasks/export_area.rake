@@ -12,7 +12,7 @@ task :export_area => :environment  do
 		    
         areas.each do |area|
         	
-        	province = nil
+            province = nil
             city = nil
             district = nil
             seller_name = nil

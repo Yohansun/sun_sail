@@ -39,44 +39,50 @@
 </td>
 <td data-col='buyer_message'>
   <% if @trade.get 'buyer_message': %>
-  <a href="#" rel="popover" data-content="<%= @trade.get 'buyer_message' %>" data-original-title="买家留言"><i class="icon-comment"></i></a>
+  <a href="#" rel="popover" data-content="<%= @trade.get 'buyer_message' %>" data-original-title="<b>买家留言</b>"><i class="icon-comment"></i></a>
   <% end %>
 </td>
 <td data-col='seller_memo'>
   <% if @trade.get 'seller_memo': %>
-  <a href="#" rel="popover" data-content="<%= @trade.get 'seller_memo' %>" data-original-title="卖家备注"><i class="icon-comment"></i></a>
+  <a href="#" rel="popover" data-content="<%= @trade.get 'seller_memo' %>" data-original-title="<b>卖家备注</b>"><i class="icon-comment"></i></a>
   <% end %>
 </td>
 <td data-col='cs_memo'>
   <% if @trade.get 'cs_memo': %>
-  <a href="#" rel="popover" data-content="<%= @trade.get 'cs_memo' %><br/><br/><% for order in @trade.get('orders'): %><% if order.cs_memo: %><%= order.title %>: <b><%= order.cs_memo %></b><br/><% end %><% end %>" data-original-title="客服备注"><i class="icon-comment"></i></a>
+  <a href="#" rel="popover" data-content="<%= @trade.get 'cs_memo' %><br/><br/><% for order in @trade.get('orders'): %><% if order.cs_memo: %><%= order.title %>: <b><%= order.cs_memo %></b><br/><% end %><% end %>" data-original-title="<b>客服备注</b>"><i class="icon-comment"></i></a>
   <% end %>
 </td>
 <td data-col='color_info'>
   <% if @trade.get('has_color_info') == true : %>
     <% for order in @trade.get('orders'): %>
       <% if order.color_num: %>
-      <a href="#" rel="popover" data-content="<%= order.title %> <br/></span>" data-original-title="<b><%= order.color_num %></b> <b><%= order.color_name %></b>"><span class="match_color" style="background:#<%= order.color_hexcode %>;"></a>
+      <a href="#" rel="popover" data-content="<%= order.title %> <br/>" data-original-title="<b><%= order.color_num %></b> <b><%= order.color_name %></b>"><span class="match_color" style="background:#<%= order.color_hexcode %>;"></a>
       <% end %>
     <% end %>
   <% end %>
 </td>
 <td data-col='invoice_info'>
   <% if @trade.get 'invoice_name' : %>
-  <a href="#" rel="popover" data-content="<%= @trade.get 'invoice_type' %><br/><%= @trade.get 'invoice_name' %><br/><%= @trade.get 'invoice_content' %>" data-original-title="发票信息"><i class="icon-comment"></i></a>
+  <a href="#" rel="popover" data-content="<%= @trade.get 'invoice_type' %><br/><%= @trade.get 'invoice_name' %><br/><%= @trade.get 'invoice_content' %>" data-original-title="<b>发票信息</b>"><i class="icon-comment"></i></a>
   <% end %>
 </td>
 <td data-col='delivery_bill' ><!--出货单--></td>              <!--Newly Add-->
 <td data-col='delivery_bill_id' ><!--出货单编号--></td>
 <td data-col='delivery_bill_status' ><!--出货单状态--></td>
-<td data-col='order_goods' ><!--商品详细--></td>
+<td data-col='order_goods' >
+    <a href="#" rel="popover" data-content="<% for order in @trade.get('orders'): %> <%= order.title %> <%= order.num %>件<br/> <% end %>" data-original-title="<b>商品详细</b>"><i class="icon-comment"></i></a>
+</td>
 <td data-col='logistic_bill'><!--物流单--></td>
 <td data-col='logistic_waybill' ><!--物流单号--></td>
 <td data-col='logistic_company' ><!--物流公司--></td>
-<td data-col='invoice_type' ><!--发票类型--></td>
-<td data-col='invoice_name' ><!--发票开头--></td>
-<td data-col='invoice_value' ><!--开票金额--></td>
-<td data-col='invoice_date' ><!--完成日期--></td>
+<td data-col='invoice_type' ><%= @trade.get 'invoice_type' %></td>
+<td data-col='invoice_name' ><%= @trade.get 'invoice_name' %></td>
+<td data-col='invoice_value' >
+  <% if @trade.get 'invoice_name' : %>
+    ￥<%= @trade.get 'invoice_value' %>
+  <% end %>
+</td>
+<td data-col='invoice_date' ><%= @trade.get 'invoice_date' %></td>
 <td data-col='order_split' ><!--拆分--></td>
 <td data-col='operator' ><!--操作人--></td>
 <td data-col='seller' nowrap>
@@ -104,22 +110,42 @@
       <li class= "divider"></li>
        
       <!-- <li><a data-toggle="modal" href="#" data-type="">物流拆分</a></li> -->
-      <!-- <li><a data-toggle="modal" href="#" data-type="">验货</a></li> -->
-      <!-- <li><a data-toggle="modal" href="#" data-type="print_logistic_bill">打印物流单</a></li> -->
       <!-- <li><a data-toggle="modal" href="#" data-type="print_deilver_bill">打印出货单</a></li> -->
-      <% if @trade.get('status_text') == '已付款，待发货' : %>
-      <li><a data-toggle="modal" href="#" data-type="deliver">订单发货</a></li>
-      <% end %>
-      <li><a data-toggle="modal" href="#" data-type="seller_confirm_deliver">确认发货</a></li>
-      <li><a data-toggle="modal" href="#" data-type="seller_confirm_invoice">确认开票</a></li>
-      <li class= "divider"></li>
-
-      <!-- <li><a data-toggle="modal" href="#" data-type="">申请退款</a></li>
-      <li><a data-toggle="modal" href="#" data-type="">确认退款</a></li>
-      <li><a data-toggle="modal" href="#" data-type="">申请退货</a></li>
-      <li><a data-toggle="modal" href="#" data-type="">确认退货</a></li>
-      <li class= "divider"></li> -->
+      <!-- <li><a data-toggle="modal" href="#" data-type="print_logistic_bill">打印物流单</a></li> -->
+      <!-- <li><a data-toggle="modal" href="#" data-type="">物流公司</a></li> -->
+      <!-- <li><a data-toggle="modal" href="#" data-type="">物流单号设置</a></li> -->
       
+      
+      <% if @trade.get('status_text') == '已付款，待发货' : %>
+        <li><a data-toggle="modal" href="#" data-type="deliver">订单发货</a></li>
+      <% end %>
+
+      <% if @trade.get 'logistic_waybill' : %>
+        <li><a data-toggle="modal" href="#" data-type="seller_confirm_deliver">确认发货</a></li>
+      <% end %>
+
+      <% if @trade.get 'invoice_name' : %>
+        <li><a data-toggle="modal" href="#" data-type="seller_confirm_invoice">确认开票</a></li>
+      <% end %>
+
+      <li class= "divider"></li>
+      
+      <!-- <li><a data-toggle="modal" href="#" data-type="">验货</a></li>-->
+      <!-- <li><a data-toggle="modal" href="#" data-type="">确认验货</a></li>-->
+      <!-- <li><a data-toggle="modal" href="#" data-type="">申请退款</a></li>-->
+      <!-- <li><a data-toggle="modal" href="#" data-type="">同意退款</a></li>-->
+      <!-- <li><a data-toggle="modal" href="#" data-type="">确认退款</a></li>-->
+      <!-- <li><a data-toggle="modal" href="#" data-type="">申请退货</a></li>-->
+      <!-- <li><a data-toggle="modal" href="#" data-type="">同意退货</a></li>-->
+      <!-- <li><a data-toggle="modal" href="#" data-type="">确认退货</a></li>-->
+      <!-- <li><a data-toggle="modal" href="#" data-type="">开票通知</a></li>-->
+      <!-- <li><a data-toggle="modal" href="#" data-type="">发票号设置</a></li>-->
+      <li class= "divider"></li>
+      
+      <!-- <li><a data-toggle="modal" href="#" data-type="">导出出货单</a></li> -->
+      <!-- <li><a data-toggle="modal" href="#" data-type="">导出物流单</a></li> -->
+      <!-- <li><a data-toggle="modal" href="#" data-type="">导出发票</a></li> -->
+
       <li><a data-toggle="modal" href="#" data-type="detail">订单详情</a></li>
       <!-- <li><a data-toggle="modal" href="#" data-type="operation_log">操作日志</a></li> -->
       

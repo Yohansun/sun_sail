@@ -18,7 +18,7 @@ class MagicOrders.Views.TradesInvoice extends Backbone.View
     @model.set "invoice_type", $('input[name=invoice_type]:checked').val()
     @model.set "invoice_name", $("#invoice_name_text").val()
     @model.set "invoice_content", $("#invoice_content_text").val()
-    #@model.set "invoice_date", $("#invoice_date_text").val()
+    @model.set "invoice_date", $("#invoice_date_text").val()
     @model.save {}, success: (model, response) =>
       $.unblockUI()
 

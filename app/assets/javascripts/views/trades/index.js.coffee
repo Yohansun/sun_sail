@@ -11,7 +11,11 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     'click .export_orders': 'exportOrders'
     'click #cols_filter input,label': 'keepColsFilterDropdownOpen'
     'change #cols_filter input[type=checkbox]': 'filterTradeColumns'
+    
+    #navigation bar function
     'click [data-trade-status]': 'selectSameStatusTrade'
+    'click [data-invoice-status]': 'selectSameStatusInvoice'
+
     
     #visual effects
     'click #advanced_btn': 'advancedSearch'
@@ -231,6 +235,23 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     $("#trade_rows").html('')
 
     @collection.fetch data: {search_all: {@status_option}}, success: (collection) =>
+     if collection.length > 0
+       @offset = @offset + 20
+       @renderUpdate()
+       $('#trades_bottom').waypoint @fetchMoreTrades, {offset: '100%'}
+     else
+       $.unblockUI()
+
+  selectSameStatusInvoice: (e) =>
+    e.preventDefault()
+    $('.dropdown.open .dropdown-toggle').dropdown('toggle');
+    @search_invoice = $(e.target).data('invoice-status')
+
+    @offset = 0
+    blocktheui()
+    $("#trade_rows").html('')
+
+    @collection.fetch data: {search_all: {@search_invoice}}, success: (collection) =>
      if collection.length > 0
        @offset = @offset + 20
        @renderUpdate()

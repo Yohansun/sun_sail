@@ -161,12 +161,12 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       view = new MagicOrders.Views.TradesInvoice(model: model)
 
       $('#trade_invoice').html(view.render().el)
-
-      $('#trade_invoice').on 'hide', (event) ->
+      $('.pick_invoice_detail .datepicker').datepicker(format: 'yyyy-mm-dd')
+      $('#trade_invoice').on 'hidden', (event) ->
         window.history.back()
-
       $('#trade_invoice').modal('show')
-
+      
+      
   seller_confirm_deliver: (id) ->
     blocktheui()
 
