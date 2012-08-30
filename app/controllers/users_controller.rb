@@ -1,4 +1,7 @@
 class UsersController < ApplicationController
+  before_filter :authenticate_user!
+  respond_to :json
+
   def autologin
   	redirect_url = '/'
     user = User.find_by_name params[:username]
@@ -15,4 +18,17 @@ class UsersController < ApplicationController
     
     redirect_to redirect_url
   end
+
+  def index
+  end
+
+  def show
+  end  
+  
+  def create
+  end
+
+  def update      
+  end
+
 end
