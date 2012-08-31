@@ -40,9 +40,9 @@ window.MagicOrders =
       'seller':                  '配送经销商',
 
       'receiver_id':             '客户ID',             #new add
-      'delivery_bill':           '出货单',
-      'delivery_bill_id':        '出货单编号',
-      'delivery_bill_status':    '出货单状态',
+      'deliver_bill':            '出货单',
+      'deliver_bill_id':         '出货单编号',
+      'deliver_bill_status':     '出货单状态',
       'order_goods':             '商品详细',
       'logistic_bill':           '物流单',
       'logistic_waybill':        '物流单号',
@@ -83,14 +83,14 @@ window.MagicOrders =
 
     # 不同模式下可见订单列
     @trade_cols_visible_modes = {
-      'trades':                  ['trade_source','tid','status','status_history','receiver_id','receiver_name','receiver_mobile_phone','receiver_address','buyer_message','seller_memo','cs_memo','color_info','invoice_info','delivery_bill','logistic_bill','seller','order_split','operator'],
-      'deliver':                 ['tid','delivery_bill_id','delivery_bill_status','trade_source','order_goods','receiver_name','receiver_mobile_phone','receiver_address','color_info','invoice_info','seller','cs_memo'],
-      'logistics':               ['tid','delivery_bill_id','logistic_waybill','logistic_company','trade_source','order_goods','receiver_name','receiver_mobile_phone','receiver_address','invoice_info','seller','cs_memo','operator'],
-      'check':                   ['tid','delivery_bill_id','status_history','delivery_bill_status','trade_source','order_goods','receiver_name','receiver_mobile_phone','receiver_address','color_info','invoice_info','seller','cs_memo','operator'],
-      'send':                    ['tid','delivery_bill_id','status_history','order_goods','receiver_name','receiver_mobile_phone','receiver_address','color_info','invoice_info','seller','cs_memo','operator'],
-      'return':                  ['tid','delivery_bill_id','status_history','order_goods','receiver_name','receiver_mobile_phone','receiver_address','color_info','invoice_info','seller','cs_memo','operator'],
-      'refund':                  ['tid','delivery_bill_id','status_history','order_goods','receiver_name','receiver_mobile_phone','receiver_address','color_info','invoice_info','seller','cs_memo','operator'],
-      'invoice':                 ['tid','delivery_bill_id','status_history','trade_source','order_goods','invoice_type','invoice_name','invoice_value','invoice_date','seller','cs_memo','operator'],
+      'trades':                  ['trade_source','tid','status','status_history','receiver_id','receiver_name','receiver_mobile_phone','receiver_address','buyer_message','seller_memo','cs_memo','color_info','invoice_info','deliver_bill','logistic_bill','seller','order_split','operator'],
+      'deliver':                 ['tid','deliver_bill_id','deliver_bill_status','trade_source','order_goods','receiver_name','receiver_mobile_phone','receiver_address','color_info','invoice_info','seller','cs_memo'],
+      'logistics':               ['tid','deliver_bill_id','logistic_waybill','logistic_company','trade_source','order_goods','receiver_name','receiver_mobile_phone','receiver_address','invoice_info','seller','cs_memo','operator'],
+      'check':                   ['tid','deliver_bill_id','status_history','deliver_bill_status','trade_source','order_goods','receiver_name','receiver_mobile_phone','receiver_address','color_info','invoice_info','seller','cs_memo','operator'],
+      'send':                    ['tid','deliver_bill_id','status_history','order_goods','receiver_name','receiver_mobile_phone','receiver_address','color_info','invoice_info','seller','cs_memo','operator'],
+      'return':                  ['tid','deliver_bill_id','status_history','order_goods','receiver_name','receiver_mobile_phone','receiver_address','color_info','invoice_info','seller','cs_memo','operator'],
+      'refund':                  ['tid','deliver_bill_id','status_history','order_goods','receiver_name','receiver_mobile_phone','receiver_address','color_info','invoice_info','seller','cs_memo','operator'],
+      'invoice':                 ['tid','deliver_bill_id','status_history','trade_source','order_goods','invoice_type','invoice_name','invoice_value','invoice_date','seller','cs_memo','operator'],
     }
 
     new MagicOrders.Routers.Areas()

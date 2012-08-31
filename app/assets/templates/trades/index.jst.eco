@@ -50,8 +50,8 @@
           </a>
           <ul class="dropdown-menu">
             <li><a href="#" data-trade-mode="deliver">所有出货单</a></li>
-            <li><a href="#" data-trade-mode="deliver">未打印</a></li>
-            <li><a href="#" data-trade-mode="deliver">已打印</a></li>
+            <li><a href="#" data-trade-mode="deliver" data-deliver-bill-print="deliver_bill_unprinted">未打印</a></li>
+            <li><a href="#" data-trade-mode="deliver" data-deliver-bill-print="deliver_bill_printed">已打印</a></li>
             <li><a href="#" data-trade-mode="deliver">有物流单号</a></li>
             <li><a href="#" data-trade-mode="deliver">无物流单号</a></li>
             <li><a href="#" data-trade-mode="deliver">退货订单</a></li>
@@ -65,9 +65,9 @@
             <b class="caret"></b>
           </a>
           <ul class="dropdown-menu">
-            <li><a href="#" data-trade-mode="logistics">所有物流单</a></li>
-            <li><a href="#" data-trade-mode="logistics">未打印</a></li>
-            <li><a href="#" data-trade-mode="logistics">已打印</a></li>
+            <li><a href="#" data-trade-mode="logistics" data-logistic-status="logistic_all">所有物流单</a></li>
+            <li><a href="#" data-trade-mode="logistics" data-logistic-status="logistic_unprinted">未打印</a></li>
+            <li><a href="#" data-trade-mode="logistics" data-logistic-status="logistic_printed">已打印</a></li>
           </ul>
         </li>
         <li class="dropdown">
@@ -288,9 +288,9 @@
         <th data-col='color_info'>调色<br/>信息</th>
         <th data-col='invoice_info'>发票<br/>信息</th>
 
-        <th data-col='delivery_bill'>出货单</th>              <!--Newly Add-->
-        <th data-col='delivery_bill_id'>出货单编号</th>
-        <th data-col='delivery_bill_status'>出货单状态</th>
+        <th data-col='deliver_bill'>出货单</th>              <!--Newly Add-->
+        <th data-col='deliver_bill_id'>出货单编号</th>
+        <th data-col='deliver_bill_status'>出货单状态</th>
         <th data-col='order_goods'>商品详细</th>
         <th data-col='logistic_bill'>物流单</th>
         <th data-col='logistic_waybill'>物流单号</th>

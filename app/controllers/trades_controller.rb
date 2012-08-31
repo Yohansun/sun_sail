@@ -89,7 +89,7 @@ class TradesController < ApplicationController
       elsif params[:search_all][:search_invoice] == 'invoice_filled'
         @trades = @trades.where(:seller_confirm_invoice_at.exists => true)
       elsif params[:search_all][:search_invoice] == 'invoice_sent'
-        @trades = @trades.where(:status.in => ["WAIT_BUYER_CONFIRM_GOODS","WAIT_GOODS_RECEIVE_CONFIRM","WAIT_BUYER_CONFIRM_GOODS_ACOUNTED","WAIT_SELLER_SEND_GOODS_ACOUNTED"])
+        @trades = @trades.where("$and" =>[{:status.in => ["WAIT_BUYER_CONFIRM_GOODS","WAIT_GOODS_RECEIVE_CONFIRM","WAIT_BUYER_CONFIRM_GOODS_ACOUNTED","WAIT_SELLER_SEND_GOODS_ACOUNTED"]},{:seller_confirm_invoice_at.exists => true}])
       end
     end
 
@@ -102,6 +102,21 @@ class TradesController < ApplicationController
         end
       end
       @trades = @trades.where(:tid.in => trade_id)
+    end
+
+    # 出货单是否已打印
+    if params[:deliver_bill_print] == "deliver_bill_unprinted"
+      @trades = @trades.where("$or" =>[{deliver_bill_printed: false},{deliver_bill_printed: ""}])
+    elsif params[:deliver_bill_print] == "deliver_bill_printed"
+      @trades = @trades.where(deliver_bill_printed: true)
+    end
+  
+    # 物流单是否已打印
+    if params[:logistic_status] == "logistic_all"
+    elsif params[:logistic_status] == "logistic_unprinted"
+      @trades = @trades.where("$or" =>[{logistic_printed: false},{logistic_printed: ""}])
+    elsif params[:logistic_status] == "logistic_printed"
+      @trades = @trades.where(logistic_printed: true)
     end
 
     ###筛选结束###

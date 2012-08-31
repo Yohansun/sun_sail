@@ -15,6 +15,8 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     #navigation bar function
     'click [data-trade-status]': 'selectSameStatusTrade'
     'click [data-invoice-status]': 'selectSameStatusInvoice'
+    'click [data-deliver-bill-print]':'selectSameStatusDeliverBill'
+    'click [data-logistic-status]': 'selectSameStatusLogistic'
 
     
     #visual effects
@@ -252,6 +254,40 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     $("#trade_rows").html('')
 
     @collection.fetch data: {search_all: {@search_invoice}}, success: (collection) =>
+     if collection.length > 0
+       @offset = @offset + 20
+       @renderUpdate()
+       $('#trades_bottom').waypoint @fetchMoreTrades, {offset: '100%'}
+     else
+       $.unblockUI()
+
+  selectSameStatusDeliverBill: (e) =>
+    e.preventDefault()
+    $('.dropdown.open .dropdown-toggle').dropdown('toggle');
+    @deliver_bill_print = $(e.target).data('deliver-bill-print')
+
+    @offset = 0
+    blocktheui()
+    $("#trade_rows").html('')
+
+    @collection.fetch data: {deliver_bill_print: @deliver_bill_print}, success: (collection) =>
+     if collection.length > 0
+       @offset = @offset + 20
+       @renderUpdate()
+       $('#trades_bottom').waypoint @fetchMoreTrades, {offset: '100%'}
+     else
+       $.unblockUI()
+
+  selectSameStatusLogistic: (e) =>
+    e.preventDefault()
+    $('.dropdown.open .dropdown-toggle').dropdown('toggle');
+    @logistic_status = $(e.target).data('logistic-status')
+
+    @offset = 0
+    blocktheui()
+    $("#trade_rows").html('')
+
+    @collection.fetch data: {logistic_status: @logistic_status}, success: (collection) =>
      if collection.length > 0
        @offset = @offset + 20
        @renderUpdate()
