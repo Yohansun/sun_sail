@@ -20,7 +20,7 @@ window.MagicOrders =
       'send':                    ['deliver', 'seller_confirm_deliver'],
       'return':                  ['detail'],
       'refund':                  ['detail'],
-      'invoice':                 ['detail']
+      'invoice':                 ['invoice_number','detail']
     }
 
     # 所有订单列

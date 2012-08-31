@@ -213,6 +213,10 @@ class TradesController < ApplicationController
       @trade.invoice_date = params[:invoice_date].strip
     end
 
+    unless params[:invoice_number].blank?
+      @trade.invoice_number = params[:invoice_number].strip
+    end
+
     if params[:seller_confirm_deliver_at] == true
       @trade.seller_confirm_deliver_at = Time.now
     end
