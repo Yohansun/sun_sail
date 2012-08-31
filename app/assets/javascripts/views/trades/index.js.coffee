@@ -15,7 +15,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     #navigation bar function
     'click [data-trade-status]': 'selectSameStatusTrade'
     'click [data-invoice-status]': 'selectSameStatusInvoice'
-    'click [data-deliver-bill-print]':'selectSameStatusDeliverBill'
+    'click [data-deliver-bill-status]':'selectSameStatusDeliverBill'
     'click [data-logistic-status]': 'selectSameStatusLogistic'
 
     
@@ -198,7 +198,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
     $("#trades_bottom").waypoint('destroy')
     blocktheui()
-    @collection.fetch data: {trade_type: @trade_type, offset: @offset, search_all: {@search_start_date, @search_start_time, @search_end_date, @search_end_time, @status_option, @type_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_invoice, @search_color}}, success: (collection) =>
+    @collection.fetch data: {trade_type: @trade_type, offset: @offset, search_all: {@search_start_date, @search_start_time, @search_end_date, @search_end_time, @status_option, @type_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_invoice, @search_color}, search_deliverbill_status: @search_deliverbill_status, logistic_status: @logistic_status}, success: (collection) =>
       if collection.length > 0
         @offset = @offset + 20
         @renderUpdate()
@@ -225,7 +225,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
   exportOrders: (e) =>
     e.preventDefault()
-    window.open "/api/trades.xls?trade_type=#{@trade_type}&search_all%5Bsearch_start_date%5D=#{@search_start_date}&search_all%5Bsearch_start_time%5D=#{@search_start_time}&search_all%5Bsearch_end_date%5D=#{@search_end_date}&search_all%5Bsearch_end_time%5D=#{@search_end_time}&search_all%5Bstatus_option%5D=#{@status_option}&search_all%5Btype_option%5D=#{@type_option}&search_all%5Bsearch_buyer_message%5D=#{@search_buyer_message}&search_all%5Bsearch_seller_memo%5D=#{@search_seller_memo}&search_all%5Bsearch_cs_memo%5D=#{@search_cs_memo}&search_all%5Bsearch_invoice%5D=#{@search_invoice}&search_all%5Bsearch_color%5D=#{@search_color}&limit=1000000&offset=0"
+    window.open "/api/trades.xls?trade_type=#{@trade_type}&search_all%5Bsearch_start_date%5D=#{@search_start_date}&search_all%5Bsearch_start_time%5D=#{@search_start_time}&search_all%5Bsearch_end_date%5D=#{@search_end_date}&search_all%5Bsearch_end_time%5D=#{@search_end_time}&search_all%5Bstatus_option%5D=#{@status_option}&search_all%5Btype_option%5D=#{@type_option}&search_all%5Bsearch_buyer_message%5D=#{@search_buyer_message}&search_all%5Bsearch_seller_memo%5D=#{@search_seller_memo}&search_all%5Bsearch_cs_memo%5D=#{@search_cs_memo}&search_all%5Bsearch_invoice%5D=#{@search_invoice}&search_all%5Bsearch_color%5D=#{@search_color}&search_deliverbill_status=#{@search_deliverbill_status}&logistic_status=#{@logistic_status}&limit=1000000&offset=0"
 
   selectSameStatusTrade: (e) =>
     e.preventDefault()
@@ -264,13 +264,13 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
   selectSameStatusDeliverBill: (e) =>
     e.preventDefault()
     $('.dropdown.open .dropdown-toggle').dropdown('toggle');
-    @deliver_bill_print = $(e.target).data('deliver-bill-print')
+    @search_deliverbill_status = $(e.target).data('deliver-bill-status')
 
     @offset = 0
     blocktheui()
     $("#trade_rows").html('')
 
-    @collection.fetch data: {deliver_bill_print: @deliver_bill_print}, success: (collection) =>
+    @collection.fetch data: {search_deliverbill_status: @search_deliverbill_status}, success: (collection) =>
      if collection.length > 0
        @offset = @offset + 20
        @renderUpdate()

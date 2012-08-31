@@ -50,8 +50,8 @@
           </a>
           <ul class="dropdown-menu">
             <li><a href="#" data-trade-mode="deliver">所有出货单</a></li>
-            <li><a href="#" data-trade-mode="deliver" data-deliver-bill-print="deliver_bill_unprinted">未打印</a></li>
-            <li><a href="#" data-trade-mode="deliver" data-deliver-bill-print="deliver_bill_printed">已打印</a></li>
+            <li><a href="#" data-trade-mode="deliver" data-deliver-bill-status="deliver_bill_unprinted">未打印</a></li>
+            <li><a href="#" data-trade-mode="deliver" data-deliver-bill-status="deliver_bill_printed">已打印</a></li>
             <li><a href="#" data-trade-mode="deliver">有物流单号</a></li>
             <li><a href="#" data-trade-mode="deliver">无物流单号</a></li>
             <li><a href="#" data-trade-mode="deliver">退货订单</a></li>

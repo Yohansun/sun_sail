@@ -105,12 +105,12 @@ class TradesController < ApplicationController
     end
 
     # 出货单是否已打印
-    if params[:deliver_bill_print] == "deliver_bill_unprinted"
-      @trades = @trades.where("$or" =>[{deliver_bill_printed: false},{deliver_bill_printed: ""}])
-    elsif params[:deliver_bill_print] == "deliver_bill_printed"
-      @trades = @trades.where(deliver_bill_printed: true)
-    end
-  
+      if params[:search_deliverbill_status] == "deliver_bill_unprinted"
+        @trades = @trades.where("$or" =>[{deliver_bill_printed: false},{deliver_bill_printed: ""}])
+      elsif params[:search_deliverbill_status] == "deliver_bill_printed"
+        @trades = @trades.where(deliver_bill_printed: true)
+      end
+ 
     # 物流单是否已打印
     if params[:logistic_status] == "logistic_all"
     elsif params[:logistic_status] == "logistic_unprinted"
