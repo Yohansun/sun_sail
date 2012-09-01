@@ -161,6 +161,8 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     $('.dropdown.open .dropdown-toggle').dropdown('toggle');
     $(@el).find(".trade_pops li").hide()
     MagicOrders.trade_mode = $(e.target).data('trade-mode')
+    if MagicOrders.trade_mode isnt 'trades'
+      $("#fieldset_advanced").hide()
     #$(@el).find(".trade_mode").text(MagicOrders.trade_modes[MagicOrders.trade_mode])
 
     # hide some cols
