@@ -26,7 +26,7 @@ json.pay_time @trade.pay_time.strftime("%m-%d %H:%M") if @trade.pay_time
 json.cs_memo @trade.cs_memo
 
 json.has_color_info @trade.has_color_info
-json.colors @trade.all_colors
+#json.colors @trade.all_colors
 
 json.logistic_code @trade.logistic_code
 json.logistic_company @trade.logistic_company

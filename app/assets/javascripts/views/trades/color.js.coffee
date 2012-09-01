@@ -25,7 +25,8 @@ class MagicOrders.Views.TradesColor extends Backbone.View
     for order, i in orders
       orders[i].color_num = order_color_nums[order.id]
       
-    colors = @model.get('colors')
+    #colors = @model.get('colors')
+    #console.log(colors)
 
     @model.save {'orders': orders},
       success: (model, response) =>
@@ -36,7 +37,7 @@ class MagicOrders.Views.TradesColor extends Backbone.View
         $("a[rel=popover]").popover(placement: 'left', trigger:'hover')
 
         $('#trade_color').modal('hide')
-      error: (model, error, response) =>
+      error: (model, response) =>
         $.unblockUI()
-        alert(error)
+        alert("色号不存在")
 

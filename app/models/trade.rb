@@ -85,14 +85,14 @@ class Trade
   	end
   end
 
-  def all_colors
-    colors = Color.all
-    color_num = []
-    for color in colors
-      color_num += color.num.to_a
-    end
-    return color_num
-  end
+  # def all_colors
+  #   colors = Color.all
+  #   color_num = []
+  #   for color in colors
+  #     color_num += color.num.to_a
+  #   end
+  #   return color_num
+  # end
 
   def matched_seller
     @matched_seller ||= SellerMatcher.new(self).matched_seller

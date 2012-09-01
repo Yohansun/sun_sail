@@ -171,7 +171,6 @@ class TradesController < ApplicationController
 
   def show
     @trade = TradeDecorator.decorate(Trade.where(_id: params[:id]).first)
-    @color_nums = @trade.all_colors
     respond_with @trade
   end
 
@@ -235,6 +234,8 @@ class TradesController < ApplicationController
           order.color_num = color.num
           order.color_hexcode = color.hexcode
           order.color_name = color.name
+        else
+          raise "Blank Color!"
         end
       end
     end
