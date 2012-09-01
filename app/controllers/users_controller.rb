@@ -20,15 +20,39 @@ class UsersController < ApplicationController
   end
 
   def index
+    @users = User.all
+    respond_with @users
   end
 
   def show
-  end  
+    @user = User.find params[:id]
+    respond_with @user
+  end
   
   def create
+    @user = User.new
+    @user.username = params[:username]
+    @user.name = params[:name]
+    @user.email = params[:email]
+    @user.password = params[:password]
+    @user.password_confirmation = params[:password_confirmation]
+
+    @user.save!
+    respond_with @user
   end
 
-  def update      
+  def update
+    @user = User.find params[:id]
+    @user.username = params[:username]
+    @user.name = params[:name]
+    @user.email = params[:email]
+    if params[:password].present?
+      @user.password = params[:password]
+      @user.password_confirmation = params[:password_confirmation]
+    end
+
+    @user.save
+    respond_with @user
   end
 
 end

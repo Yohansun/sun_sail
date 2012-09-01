@@ -1,0 +1,99 @@
+<header class="jumbotron subhead" id="overview">
+  <div class="subnav">
+    <ul class="nav nav-pills">
+      <li class="active"><a href="settings.html">用户管理</a></li>
+      <li><a href="settings_group.html">用户组管理</a></li>
+      <li><a href="area_m2.html">地域管理</a></li>
+    </ul>
+  </div>
+</header>
+<div class="row-fluid">
+  <ul class="breadcrumb" style="position:relative;">
+    <li><a href="#">Magic</a><span class="divider">/</span></li>
+    <li><a href="#">系统设置</a><span class="divider">/</span></li>
+    <li><a href="settings.html">用户管理</a><span class="divider">/</span></li>
+    <li class="active">新增用户</li>
+    <!-- <li style="position:absolute;right:15px;top:6px;"><a class="btn_alert" href="#">新增用户</a></li> -->
+  </ul><!-- breadcrumb -->
+
+  <form class="well form-horizontal">
+    <fieldset class="add_unit">
+      <div class="control-group">
+        <label class="control-label" for="">用户名：</label>
+        <div class="controls">
+          <input type="text" class="input-xlarge" id="user_username">
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="">姓名：</label>
+        <div class="controls">
+          <input type="text" class="input-xlarge" id="user_name">
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="">邮箱：</label>
+        <div class="controls">
+          <input type="text" class="input-xlarge" id="user_email">
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset class="add_unit">
+      <div class="control-group">
+        <label class="control-label" for="">密码：</label>
+        <div class="controls">
+          <input type="password" class="input-xlarge" id="user_password">
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="">确认密码：</label>
+        <div class="controls">
+          <input type="password" class="input-xlarge" id="user_password_confirmation">
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset class="add_unit">
+      <div class="control-group">
+        <label class="control-label" for="">用户组：</label>
+        <div class="controls">
+          <label class="checkbox inline">
+            <input type="checkbox" value="option1" id="">售后服务
+          </label>
+        </div>
+        <div class="controls">
+          <label class="checkbox inline">
+            <input type="checkbox" value="option2" id="">经销商
+          </label>
+        </div>
+        <div class="controls">
+          <label class="checkbox inline">
+            <input type="checkbox" value="option3" id="">销售部联络人
+          </label>
+        </div>
+        <div class="controls">
+          <label class="checkbox inline">
+            <input type="checkbox" value="option4" id="">仓库管理
+          </label>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="">状态：</label>
+        <div class="controls">
+          <select class="width_auto">
+            <option>生效</option>
+          </select>
+        </div>
+      </div>
+    </fieldset>
+
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary save">保存</button>
+    </div>
+  </form>
+</div>
