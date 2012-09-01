@@ -32,8 +32,8 @@ class Trade
   field :splitted_tid, type: String
 
   #单据是否已打印
-  field :deliver_bill_printed, type: Boolean, default: false
-  field :logistic_printed, type: Boolean, default: false
+  field :deliver_bill_printed_at, type: DateTime
+  field :logistic_printed_at, type: DateTime
 
 
 
@@ -83,6 +83,15 @@ class Trade
   			break
   		end
   	end
+  end
+
+  def all_colors
+    colors = Color.all
+    color_num = []
+    for color in colors
+      color_num += color.num.to_a
+    end
+    return color_num
   end
 
   def matched_seller

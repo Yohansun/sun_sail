@@ -7,9 +7,4 @@ task :update_keys => :environment do
    # TaobaoPurchaseOrder.all.each {|t| t.rename(:supplier_memo, :seller_memo);t.save}
    # TaobaoPurchaseOrder.all.each {|t| t.rename(:memo, :buyer_message);t.save}
 
-   Trade.update(deliver_bill_printed: false)
-   Trade.update(logistic_printed: false)
-
-   puts "Succeed!"
-
 end

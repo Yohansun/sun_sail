@@ -106,17 +106,17 @@ class TradesController < ApplicationController
 
     # 出货单是否已打印
       if params[:search_deliverbill_status] == "deliver_bill_unprinted"
-        @trades = @trades.where("$or" =>[{deliver_bill_printed: false},{deliver_bill_printed: ""}])
+        @trades = @trades.where(:deliver_bill_printed_at.exists => false)
       elsif params[:search_deliverbill_status] == "deliver_bill_printed"
-        @trades = @trades.where(deliver_bill_printed: true)
+        @trades = @trades.where(:deliver_bill_printed_at.exists => true)
       end
  
     # 物流单是否已打印
     if params[:logistic_status] == "logistic_all"
     elsif params[:logistic_status] == "logistic_unprinted"
-      @trades = @trades.where("$or" =>[{logistic_printed: false},{logistic_printed: ""}])
+      @trades = @trades.where(:logistic_printed_at.exists => false)
     elsif params[:logistic_status] == "logistic_printed"
-      @trades = @trades.where(logistic_printed: true)
+      @trades = @trades.where(:logistic_printed_at.exists => true)
     end
 
     ###筛选结束###
@@ -171,6 +171,7 @@ class TradesController < ApplicationController
 
   def show
     @trade = TradeDecorator.decorate(Trade.where(_id: params[:id]).first)
+    @color_nums = @trade.all_colors
     respond_with @trade
   end
 
@@ -229,9 +230,9 @@ class TradesController < ApplicationController
       params[:orders].each do |item|
         order = @trade.orders.find item[:id]
         order.cs_memo = item[:cs_memo]
-        order.color_num = item[:color_num]
-        color = Color.find_by_num item[:color_num]
-        if order.color_num.present? && color.present?
+        color = Color.where(num: item[:color_num]).first
+        if color.present?
+          order.color_num = color.num
           order.color_hexcode = color.hexcode
           order.color_name = color.name
         end
