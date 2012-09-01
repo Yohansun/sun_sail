@@ -7,6 +7,7 @@ class TradeObserver < Mongoid::Observer
     if object.delivered_at_changed? && object.delivered_at.present?
       # 发货操作
       object.deliver!
+      object.status = 'WAIT_BUYER_CONFIRM_GOODS'
       return
     end
 

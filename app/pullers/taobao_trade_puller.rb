@@ -35,9 +35,9 @@ class TaobaoTradePuller
 
           trade.save
 
-          TradeTaobaoMemoFetcher.perform_async(trade.id) if trade.has_buyer_message
-
           trade.dispatch! unless TradeSplitter.new(trade).split!
+
+          TradeTaobaoMemoFetcher.perform_async(trade.tid, trade_source_id) if trade.has_buyer_message
         end
 
         page_no += 1
@@ -68,7 +68,7 @@ class TaobaoTradePuller
 
         trades.each do |trade|
           TaobaoTrade.where(tid: trade['tid']).each do |local_trade|
-            next unless updatable?(local_trade, trade['status'])
+            next if unupdatable?(local_trade, trade['status'])
             orders = trade.delete('orders')
 
             trade['trade_source_id'] = trade_source_id
@@ -89,7 +89,7 @@ class TaobaoTradePuller
       end until page_no > total_pages
     end
 
-    def updatable?(local_trade, remote_status)
+    def unupdatable?(local_trade, remote_status)
       remote_status == local_trade.status || (remote_status == "WAIT_SELLER_SEND_GOODS" && local_trade.delivered_at.present?)
     end
   end
