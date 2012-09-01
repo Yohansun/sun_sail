@@ -27,43 +27,48 @@
 //= require_tree .
 
 $(function () {
-    $("#area_parent_id").tokenInput("/areas/autocomplete.json",{
-    	crossDomain: false,
-    	tokenLimit: 1,
-    	theme: "facebook",
-    	noResultsText: "无对应地区!"
-    });
+  $("#area_parent_id").tokenInput("/areas/autocomplete.json",{
+  	crossDomain: false,
+  	tokenLimit: 1,
+  	theme: "facebook",
+  	noResultsText: "无对应地区!"
+  });
 
-    $("#area_search").tokenInput("/areas/autocomplete.json",{
-    	crossDomain: false,
-    	theme: "facebook",
-    	noResultsText: "无对应地区!"
-    });
+  $("#area_search").tokenInput("/areas/autocomplete.json",{
+  	crossDomain: false,
+  	theme: "facebook",
+  	noResultsText: "无对应地区!"
+  });
 
-    $(".navbar .nav .areas").on("click", function (event) {
-        event.preventDefault();
-        Backbone.history.navigate('areas', true);
-    });
-    $(".navbar .nav .trades").on("click", function (event) {
-        event.preventDefault();
-        Backbone.history.navigate('trades', true);
-    });
-    $(".navbar .nav .sellers").on("click", function (event) {
-        event.preventDefault();
-        Backbone.history.navigate('sellers', true);
-    });
+  $(".navbar .nav .areas").on("click", function (event) {
+      event.preventDefault();
+      Backbone.history.navigate('areas', true);
+  });
+  $(".navbar .nav .trades").on("click", function (event) {
+      event.preventDefault();
+      Backbone.history.navigate('trades', true);
+  });
+  $(".navbar .nav .sellers").on("click", function (event) {
+      event.preventDefault();
+      Backbone.history.navigate('sellers', true);
+  });
+  $(".navbar .nav .users").on("click", function (event) {
+      event.preventDefault();
+      Backbone.history.navigate('users', true);
+  });
 });
 
 function blocktheui () {
-    $.blockUI({
-        message: '<h1>loading...</h1>',
-        css: {
-            border: 'none',
-            padding: '15px',
-            backgroundColor: '#000',
-            '-webkit-border-radius': '10px',
-            '-moz-border-radius': '10px',
-            opacity: .5,
-            color: '#fff'
-    } });
+  $.blockUI({
+    message: '<h1>loading...</h1>',
+    css: {
+      border: 'none',
+      padding: '15px',
+      backgroundColor: '#000',
+      '-webkit-border-radius': '10px',
+      '-moz-border-radius': '10px',
+      opacity: .5,
+      color: '#fff'
+    } 
+  });
 }

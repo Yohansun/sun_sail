@@ -14,6 +14,8 @@ class User < ActiveRecord::Base
 
   validates_uniqueness_of :name
   validates_presence_of :name
+  validates_presence_of :password, on: :create
+  validates_confirmation_of :password
 
   def display_name
     name || email
