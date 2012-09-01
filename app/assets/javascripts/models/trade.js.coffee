@@ -11,7 +11,3 @@ class MagicOrders.Models.Trade extends Backbone.Model
     
     if attrs.invoice_name == ""
        return "发票抬头不能为空"
-
-    # for order in attrs.orders
-    #   unless order.color_num in attrs.colors or (order.color_num == null) or (order.color_num == "")
-    #     return "色号不存在"

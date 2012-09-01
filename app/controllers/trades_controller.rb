@@ -36,9 +36,14 @@ class TradesController < ApplicationController
     
     ###筛选###
 
-    # 按订单号筛选
+    # 简单筛选
     if params[:search] && !params[:search][:option].blank? && params[:search][:option] != 'null'
-      @trades = @trades.where(Hash[params[:search][:option].to_sym, params[:search][:value]])
+      if params[:search][:option] == 'seller_id'
+        seller_id = Seller.where(name: params[:search][:value]).first.id
+        @trades = @trades.where(seller_id: seller_id)
+      else
+        @trades = @trades.where(Hash[params[:search][:option].to_sym, params[:search][:value]])
+      end
     end
 
     # 按时间筛选
@@ -229,18 +234,14 @@ class TradesController < ApplicationController
       params[:orders].each do |item|
         order = @trade.orders.find item[:id]
         order.cs_memo = item[:cs_memo]
+        order.color_num = item[:color_num]
         color = Color.where(num: item[:color_num]).first
-        if color.present?
-          order.color_num = color.num
-          order.color_hexcode = color.hexcode
-          order.color_name = color.name
-        else
-          raise "Blank Color!"
-        end
+          order.color_hexcode = color.try(:hexcode)
+          order.color_name = color.try(:name)
       end
     end
 
-    @trade.save
+    @trade.save!
 
     @trade = TradeDecorator.decorate(@trade)
     respond_with(@trade) do |format|

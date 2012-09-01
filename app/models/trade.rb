@@ -35,9 +35,28 @@ class Trade
   field :deliver_bill_printed_at, type: DateTime
   field :logistic_printed_at, type: DateTime
 
-
-
   attr_accessor :matched_seller
+
+  validate :color_num_do_not_exist, :on => :update
+
+  def color_num_do_not_exist
+    color_nums = Color.all.map {|color| color.num}
+    count = 0
+    self.orders.each do |order|
+      for num in color_nums
+        if order.color_num == num
+          count += 1
+          break
+        end
+      end
+      if order.color_num == nil or order.color_num == ""
+        count += 1
+      end
+    end
+    if count != self.orders.count
+      errors.add(:self, "Blank color_num")
+    end
+  end
 
   # model 属性方法
   def trade_source_name
@@ -84,15 +103,6 @@ class Trade
   		end
   	end
   end
-
-  # def all_colors
-  #   colors = Color.all
-  #   color_num = []
-  #   for color in colors
-  #     color_num += color.num.to_a
-  #   end
-  #   return color_num
-  # end
 
   def matched_seller
     @matched_seller ||= SellerMatcher.new(self).matched_seller

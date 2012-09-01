@@ -145,6 +145,9 @@
         <div class="controls">
           <select id="search_option" class="input-large search_option">
             <option value="tid">订单编号</option>
+            <option value="receiver_name">收货人姓名</option>
+            <option value="receiver_mobile">收货人手机</option>
+            <option value="seller_id">经销商</option>
           </select>
           <div class="input-append">
             <input type="text" id="appendedInputButton" class="w_specify search_value" value="<%= @search_value %>"><button type="button" class="btn btn-info search">筛选</button>
