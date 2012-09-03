@@ -39,7 +39,8 @@ class TradesController < ApplicationController
     # 简单筛选
     if params[:search] && !params[:search][:option].blank? && params[:search][:option] != 'null'
       if params[:search][:option] == 'seller_id'
-        seller_id = Seller.where(name: params[:search][:value]).first.id
+        seller = Seller.where(name: params[:search][:value]).first
+        seller_id = seller.nil? ? 0 : seller.id
         @trades = @trades.where(seller_id: seller_id)
       else
         @trades = @trades.where(Hash[params[:search][:option].to_sym, params[:search][:value]])
