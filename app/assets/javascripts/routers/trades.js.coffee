@@ -90,7 +90,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $('#trade_detail').html(view.render().el)
 
       $('#trade_detail').on 'hide', (event) ->
-        window.history.back()
+        Backbone.history.navigate('trades', true)
       $('#trade_detail').modal('show')
 
   seller: (id) ->
@@ -104,7 +104,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $('#trade_seller').html(view.render().el)
 
       $('#trade_seller').on 'hide', (event) ->
-        window.history.back()
+        Backbone.history.navigate('trades', true)
       $('#trade_seller').modal('show')
 
   deliver: (id) ->
@@ -118,7 +118,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $('#trade_deliver').html(view.render().el)
      
       $('#trade_deliver').on 'hide', (event) ->
-        window.history.back()
+        Backbone.history.navigate('trades', true)
       $('#trade_deliver').modal('show')
 
   cs_memo: (id) ->
@@ -132,7 +132,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $('#trade_cs_memo').html(view.render().el)
       
       $('#trade_cs_memo').on 'hide', (event) ->
-        window.history.back()
+        Backbone.history.navigate('trades', true)
       $('#trade_cs_memo').modal('show')
 
   color: (id) ->
@@ -146,7 +146,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $('#trade_color').html(view.render().el)
       
       $('#trade_color').on 'hide', (event) ->
-        window.history.back()
+        Backbone.history.navigate('trades', true)
       $('#trade_color').modal('show')
 
   invoice: (id) ->
@@ -162,7 +162,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $('.pick_invoice_detail .datepicker').datepicker(format: 'yyyy-mm-dd')
 
       $('#trade_invoice').on 'hidden', (event) ->
-        window.history.back()
+        Backbone.history.navigate('trades', true)
       $('#trade_invoice').modal('show')
 
   invoice_number: (id) ->
@@ -176,7 +176,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $('#trade_invoice_number').html(view.render().el)
 
       $('#trade_invoice_number').on 'hide', (event) ->
-        window.history.back()
+        Backbone.history.navigate('trades', true)
       $('#trade_invoice_number').modal('show')
       
       
@@ -191,7 +191,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $('#trade_seller_confirm_deliver').html(view.render().el)
 
       $('#trade_seller_confirm_deliver').on 'hide', (event) ->
-        window.history.back()
+        Backbone.history.navigate('trades', true)
       $('#trade_seller_confirm_deliver').modal('show')
 
   seller_confirm_invoice: (id) ->
@@ -205,5 +205,5 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $('#trade_seller_confirm_invoice').html(view.render().el)
 
       $('#trade_seller_confirm_invoice').on 'hide', (event) ->
-        window.history.back()
+        Backbone.history.navigate('trades', true)
       $('#trade_seller_confirm_invoice').modal('show')
