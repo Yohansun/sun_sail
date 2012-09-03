@@ -35,6 +35,7 @@ json.invoice_type @trade.invoice_type
 json.invoice_name @trade.invoice_name
 json.invoice_content @trade.invoice_content
 json.invoice_date @trade.invoice_date.strftime("%Y-%m-%d") if @trade.invoice_date
+json.invoice_number @trade.invoice_number
 
 json.seller_confirm_deliver_at @trade.seller_confirm_deliver_at.strftime("%m-%d %H:%M") if @trade.seller_confirm_deliver_at
 json.seller_confirm_invoice_at @trade.seller_confirm_invoice_at.strftime("%m-%d %H:%M") if @trade.seller_confirm_invoice_at

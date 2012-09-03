@@ -9,6 +9,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     'trades/:id/cs_memo': 'cs_memo'
     'trades/:id/color': 'color'
     'trades/:id/invoice': 'invoice'
+    'trades/:id/invoice_number': 'invoice_number'
     'trades/:id/seller_confirm_deliver':'seller_confirm_deliver'
     'trades/:id/seller_confirm_invoice':'seller_confirm_invoice'
 
@@ -97,9 +98,9 @@ class MagicOrders.Routers.Trades extends Backbone.Router
 
     @model = new MagicOrders.Models.Trade(id: id)
     @model.fetch success: (model, response) =>
+
       view = new MagicOrders.Views.TradesSeller(model: model)
       $.unblockUI()
-
       $('#trade_seller').html(view.render().el)
 
       $('#trade_seller').on 'hide', (event) ->
@@ -115,10 +116,9 @@ class MagicOrders.Routers.Trades extends Backbone.Router
 
       view = new MagicOrders.Views.TradesDeliver(model: model)
       $('#trade_deliver').html(view.render().el)
-
+     
       $('#trade_deliver').on 'hide', (event) ->
         window.history.back()
-
       $('#trade_deliver').modal('show')
 
   cs_memo: (id) ->
@@ -129,11 +129,10 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $.unblockUI()
 
       view = new MagicOrders.Views.TradesCsMemo(model: model)
-
       $('#trade_cs_memo').html(view.render().el)
+      
       $('#trade_cs_memo').on 'hide', (event) ->
         window.history.back()
-
       $('#trade_cs_memo').modal('show')
 
   color: (id) ->
@@ -144,11 +143,10 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $.unblockUI()
 
       view = new MagicOrders.Views.TradesColor(model: model)
-
       $('#trade_color').html(view.render().el)
+      
       $('#trade_color').on 'hide', (event) ->
         window.history.back()
-
       $('#trade_color').modal('show')
 
   invoice: (id) ->
@@ -159,12 +157,27 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $.unblockUI()
 
       view = new MagicOrders.Views.TradesInvoice(model: model)
-
       $('#trade_invoice').html(view.render().el)
+
       $('.pick_invoice_detail .datepicker').datepicker(format: 'yyyy-mm-dd')
+
       $('#trade_invoice').on 'hidden', (event) ->
         window.history.back()
       $('#trade_invoice').modal('show')
+
+  invoice_number: (id) ->
+    blocktheui()
+
+    @model = new MagicOrders.Models.Trade(id: id)
+    @model.fetch success: (model, response) =>
+      $.unblockUI()
+
+      view = new MagicOrders.Views.TradesInvoiceNumber(model: model)
+      $('#trade_invoice_number').html(view.render().el)
+
+      $('#trade_invoice_number').on 'hide', (event) ->
+        window.history.back()
+      $('#trade_invoice_number').modal('show')
       
       
   seller_confirm_deliver: (id) ->
@@ -175,12 +188,10 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $.unblockUI()
 
       view = new MagicOrders.Views.TradesSellerConfirmDeliver(model: model)
-
       $('#trade_seller_confirm_deliver').html(view.render().el)
 
       $('#trade_seller_confirm_deliver').on 'hide', (event) ->
         window.history.back()
-
       $('#trade_seller_confirm_deliver').modal('show')
 
   seller_confirm_invoice: (id) ->
@@ -191,10 +202,8 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $.unblockUI()
 
       view = new MagicOrders.Views.TradesSellerConfirmInvoice(model: model)
-
       $('#trade_seller_confirm_invoice').html(view.render().el)
 
       $('#trade_seller_confirm_invoice').on 'hide', (event) ->
         window.history.back()
-
       $('#trade_seller_confirm_invoice').modal('show')

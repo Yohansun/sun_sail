@@ -66,9 +66,9 @@
   <a href="#" rel="popover" data-content="<%= @trade.get 'invoice_type' %><br/><%= @trade.get 'invoice_name' %><br/><%= @trade.get 'invoice_content' %>" data-original-title="<b>发票信息</b>"><i class="icon-comment"></i></a>
   <% end %>
 </td>
-<td data-col='delivery_bill' ><!--出货单--></td>              <!--Newly Add-->
-<td data-col='delivery_bill_id' ><!--出货单编号--></td>
-<td data-col='delivery_bill_status' ><!--出货单状态--></td>
+<td data-col='deliver_bill' ><!--出货单--></td>              <!--Newly Add-->
+<td data-col='deliver_bill_id' ><!--出货单编号--></td>
+<td data-col='deliver_bill_status' ><!--出货单状态--></td>
 <td data-col='order_goods' >
     <a href="#" rel="popover" data-content="<% for order in @trade.get('orders'): %> <%= order.title %> <%= order.num %>件<br/> <% end %>" data-original-title="<b>商品详细</b>"><i class="icon-comment"></i></a>
 </td>
@@ -139,7 +139,7 @@
       <!-- <li><a data-toggle="modal" href="#" data-type="">同意退货</a></li>-->
       <!-- <li><a data-toggle="modal" href="#" data-type="">确认退货</a></li>-->
       <!-- <li><a data-toggle="modal" href="#" data-type="">开票通知</a></li>-->
-      <!-- <li><a data-toggle="modal" href="#" data-type="">发票号设置</a></li>-->
+      <li><a data-toggle="modal" href="#" data-type="invoice_number">发票号设置</a></li>
       <li class= "divider"></li>
       
       <!-- <li><a data-toggle="modal" href="#" data-type="">导出出货单</a></li> -->

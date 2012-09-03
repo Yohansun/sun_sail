@@ -1,0 +1,16 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal">×</button>
+  <h3>发票号码设置</h3>
+</div><!-- modal-header -->
+<div class="modal-body">
+<fieldset>
+  <div class="controls">
+    <label class="control-label">发票号码：</label>
+    <input type="text" placeholder="请输入发票号码..." class="input-xlarge" id="invoice_number_text" value="<%= @trade.get 'invoice_number' %>">
+  </div>
+</fieldset>
+</div><!-- modal-body -->
+<div class="modal-footer">
+  <a class="btn" data-dismiss="modal">取消</a>
+  <a class="btn btn-primary save">保存</a>
+</div><!-- modal-footer -->

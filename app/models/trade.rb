@@ -14,10 +14,12 @@ class Trade
 
   field :cs_memo, type: String                            # 客服备注
 
-  field :invoice_type, type: String                       # 发票信息
+  # 发票信息
+  field :invoice_type, type: String
   field :invoice_name, type: String
   field :invoice_content, type: String
   field :invoice_date, type: DateTime
+  field :invoice_number, type: String
 
   field :logistic_code, type: String                      # 物流公司代码
   field :logistic_waybill, type: String                   # 物流运单号
@@ -29,7 +31,32 @@ class Trade
   field :splitted, type: Boolean, default: false
   field :splitted_tid, type: String
 
+  #单据是否已打印
+  field :deliver_bill_printed_at, type: DateTime
+  field :logistic_printed_at, type: DateTime
+
   attr_accessor :matched_seller
+
+  validate :color_num_do_not_exist, :on => :update
+
+  def color_num_do_not_exist
+    color_nums = Color.all.map {|color| color.num}
+    count = 0
+    self.orders.each do |order|
+      for num in color_nums
+        if order.color_num == num
+          count += 1
+          break
+        end
+      end
+      if order.color_num == nil or order.color_num == ""
+        count += 1
+      end
+    end
+    if count != self.orders.count
+      errors.add(:self, "Blank color_num")
+    end
+  end
 
   # model 属性方法
   def trade_source_name

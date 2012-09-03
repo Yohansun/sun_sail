@@ -36,9 +36,14 @@ class TradesController < ApplicationController
     
     ###筛选###
 
-    # 按订单号筛选
+    # 简单筛选
     if params[:search] && !params[:search][:option].blank? && params[:search][:option] != 'null'
-      @trades = @trades.where(Hash[params[:search][:option].to_sym, params[:search][:value]])
+      if params[:search][:option] == 'seller_id'
+        seller_id = Seller.where(name: params[:search][:value]).first.id
+        @trades = @trades.where(seller_id: seller_id)
+      else
+        @trades = @trades.where(Hash[params[:search][:option].to_sym, params[:search][:value]])
+      end
     end
 
     # 按时间筛选
@@ -89,7 +94,7 @@ class TradesController < ApplicationController
       elsif params[:search_all][:search_invoice] == 'invoice_filled'
         @trades = @trades.where(:seller_confirm_invoice_at.exists => true)
       elsif params[:search_all][:search_invoice] == 'invoice_sent'
-        @trades = @trades.where(:status.in => ["WAIT_BUYER_CONFIRM_GOODS","WAIT_GOODS_RECEIVE_CONFIRM","WAIT_BUYER_CONFIRM_GOODS_ACOUNTED","WAIT_SELLER_SEND_GOODS_ACOUNTED"])
+        @trades = @trades.where("$and" =>[{:status.in => ["WAIT_BUYER_CONFIRM_GOODS","WAIT_GOODS_RECEIVE_CONFIRM","WAIT_BUYER_CONFIRM_GOODS_ACOUNTED","WAIT_SELLER_SEND_GOODS_ACOUNTED"]},{:seller_confirm_invoice_at.exists => true}])
       end
     end
 
@@ -102,6 +107,21 @@ class TradesController < ApplicationController
         end
       end
       @trades = @trades.where(:tid.in => trade_id)
+    end
+
+    # 出货单是否已打印
+      if params[:search_deliverbill_status] == "deliver_bill_unprinted"
+        @trades = @trades.where(:deliver_bill_printed_at.exists => false)
+      elsif params[:search_deliverbill_status] == "deliver_bill_printed"
+        @trades = @trades.where(:deliver_bill_printed_at.exists => true)
+      end
+ 
+    # 物流单是否已打印
+    if params[:logistic_status] == "logistic_all"
+    elsif params[:logistic_status] == "logistic_unprinted"
+      @trades = @trades.where(:logistic_printed_at.exists => false)
+    elsif params[:logistic_status] == "logistic_printed"
+      @trades = @trades.where(:logistic_printed_at.exists => true)
     end
 
     ###筛选结束###
@@ -198,6 +218,10 @@ class TradesController < ApplicationController
       @trade.invoice_date = params[:invoice_date].strip
     end
 
+    unless params[:invoice_number].blank?
+      @trade.invoice_number = params[:invoice_number].strip
+    end
+
     if params[:seller_confirm_deliver_at] == true
       @trade.seller_confirm_deliver_at = Time.now
     end
@@ -211,15 +235,13 @@ class TradesController < ApplicationController
         order = @trade.orders.find item[:id]
         order.cs_memo = item[:cs_memo]
         order.color_num = item[:color_num]
-        color = Color.find_by_num item[:color_num]
-        if order.color_num.present? && color.present?
-          order.color_hexcode = color.hexcode
-          order.color_name = color.name
-        end
+        color = Color.where(num: item[:color_num]).first
+          order.color_hexcode = color.try(:hexcode)
+          order.color_name = color.try(:name)
       end
     end
 
-    @trade.save
+    @trade.save!
 
     @trade = TradeDecorator.decorate(@trade)
     respond_with(@trade) do |format|
