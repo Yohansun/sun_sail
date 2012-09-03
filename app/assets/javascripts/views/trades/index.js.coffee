@@ -162,7 +162,12 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     $(@el).find(".trade_pops li").hide()
     MagicOrders.trade_mode = $(e.target).data('trade-mode')
     if MagicOrders.trade_mode isnt 'trades'
+      $("#search_toggle").hide()
       $("#fieldset_advanced").hide()
+      $("#advanced_btn i").toggleClass 'icon-arrow-down'
+      $("#advanced_btn i").toggleClass 'icon-arrow-up'
+    else
+      $("#fieldset_advanced").show()
     #$(@el).find(".trade_mode").text(MagicOrders.trade_modes[MagicOrders.trade_mode])
 
     # hide some cols

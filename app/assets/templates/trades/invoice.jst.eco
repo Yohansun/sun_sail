@@ -1,68 +1,97 @@
 <div class="modal-header">
   <button type="button" class="close" data-dismiss="modal">×</button>
-  <h3>发票信息</h3>
+  <h3>申请开票</h3>
 </div><!-- modal-header -->
 <div class="modal-body">
-<fieldset>
-  <table class="table pick_invoice_detail">
-    <tbody>
-      <tr>
-        <th nowrap>订单编号</th>
-        <td><%= @trade.get("tid") %></td>
-      </tr>
-      <tr>
-        <th nowrap>订单金额</th>
-        <td>￥<%= @trade.get("total_fee") %></td>
-      </tr>
-      <tr>
-        <th>发票类型：</th>
-        <td>
-          <div class="controls">
-            <% if @trade.get('invoice_type') == "普通发票": %>
-            <input type="radio" name="invoice_type" value="普通发票" checked="checked" >普通发票
-            <input type="radio" name="invoice_type" value="增值税发票" >增值税发票
-            <% end %>
-            <% if @trade.get('invoice_type') == "增值税发票": %>
-            <input type="radio" name="invoice_type" value="普通发票" >普通发票
-            <input type="radio" name="invoice_type" value="增值税发票" checked="checked" >增值税发票
-            <% end %>
-            <% if @trade.get('invoice_type') != "普通发票" && @trade.get('invoice_type') != "增值税发票": %>
-            <input type="radio" name="invoice_type" value="普通发票" >普通发票
-            <input type="radio" name="invoice_type" value="增值税发票" >增值税发票
-            <% end %>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <th>发票抬头：</th>
-        <td>
-          <div class="controls">
-            <input type="text" placeholder="输入文字..." class="input-xlarge" id="invoice_name_text" value="<%= @trade.get 'invoice_name' %>">
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <th>发票内容：</th>
-        <td>
-          <div class="controls">
-            <input type="text" placeholder="输入文字..." class="input-xlarge" id="invoice_content_text" value="<%= @trade.get 'invoice_content' %>">
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <th>完成日期：</th>
-        <td>
-          <div class="controls">
-            <input type="text" class="input-large datepicker" placeholder="请填写日期(年-月-日)..." id="invoice_date_text" value="<%= @trade.get 'invoice_date' %>">
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</fieldset>
+  <fieldset>
+    <table class="table table-bordered pick_invoice_detail">
+      <tbody>
+        <tr>
+          <th nowrap>订单编号</th>
+          <td><%= @trade.get("tid") %></td>
+        </tr>
+        <tr>
+          <th nowrap>订单金额</th>
+          <td>￥<%= @trade.get("total_fee") %></td>
+        </tr>
+        <!-- <tr>
+          <th>发票类型：</th>
+          <td>
+            <div class="controls">
+              <% if @trade.get('invoice_type') == "普通发票": %>
+              <input type="radio" name="invoice_type" value="普通发票" checked="checked" >普通发票
+              <input type="radio" name="invoice_type" value="增值税发票" >增值税发票
+              <% end %>
+              <% if @trade.get('invoice_type') == "增值税发票": %>
+              <input type="radio" name="invoice_type" value="普通发票" >普通发票
+              <input type="radio" name="invoice_type" value="增值税发票" checked="checked" >增值税发票
+              <% end %>
+              <% if @trade.get('invoice_type') != "普通发票" && @trade.get('invoice_type') != "增值税发票": %>
+              <input type="radio" name="invoice_type" value="普通发票" >普通发票
+              <input type="radio" name="invoice_type" value="增值税发票" >增值税发票
+              <% end %>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <th>发票抬头：</th>
+          <td>
+            <div class="controls">
+              <input type="text" placeholder="输入文字..." class="input-xlarge" id="invoice_name_text" value="<%= @trade.get 'invoice_name' %>">
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <th>发票内容：</th>
+          <td>
+            <div class="controls">
+              <input type="text" placeholder="输入文字..." class="input-xlarge" id="invoice_content_text" value="<%= @trade.get 'invoice_content' %>">
+            </div>
+          </td>
+        </tr> -->
+        <!-- <tr>
+          <th>完成日期：</th>
+          <td>
+            <div class="controls">
+              <input type="text" class="input-large datepicker" placeholder="请填写日期(年-月-日)..." id="invoice_date_text" value="<%= @trade.get 'invoice_date' %>">
+            </div>
+          </td>
+        </tr> -->
+      </tbody>
+    </table>
+
+    <label class="control-label">发票类型：
+      <% if @trade.get('invoice_type') == "普通发票": %>
+      <input type="radio" name="invoice_type" value="普通发票" checked="checked" >普通发票
+      <input type="radio" name="invoice_type" value="增值税发票" >增值税发票
+      <% end %>
+      <% if @trade.get('invoice_type') == "增值税发票": %>
+      <input type="radio" name="invoice_type" value="普通发票" >普通发票
+      <input type="radio" name="invoice_type" value="增值税发票" checked="checked" >增值税发票
+      <% end %>
+      <% if @trade.get('invoice_type') != "普通发票" && @trade.get('invoice_type') != "增值税发票": %>
+      <input type="radio" name="invoice_type" value="普通发票" >普通发票
+      <input type="radio" name="invoice_type" value="增值税发票" >增值税发票
+      <% end %>
+    </label>
+    <label class="control-label">发票抬头：
+      <div class="controls">
+        <input type="text" placeholder="输入文字..." class="input-xlarge" id="invoice_name_text" value="<%= @trade.get 'invoice_name' %>">
+      </div>
+    </label>
+    <label class="control-label">发票内容：
+      <div class="controls">
+        <input type="text" placeholder="输入文字..." class="input-xlarge" id="invoice_content_text" value="<%= @trade.get 'invoice_content' %>">
+      </div>
+    </label>
+    <label class="control-label">完成日期：
+      <div class="controls">
+        <input type="text" class="input-large datepicker" placeholder="请填写日期(年-月-日)..." id="invoice_date_text" value="<%= @trade.get 'invoice_date' %>">
+      </div>
+    </label>
+  </fieldset>
 </div>
 
 <div class="modal-footer">
-  <a class="btn" data-dismiss="modal">取消</a>
-  <a class="btn btn-primary save">保存</a>
+  <a class="btn btn-primary save">开票申请</a>
 </div><!-- modal-footer -->

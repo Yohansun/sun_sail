@@ -1,41 +1,35 @@
 <div class="modal-header">
   <button type="button" class="close" data-dismiss="modal">×</button>
-  <h3>调色信息</h3>
+  <h3>申请调色</h3>
 </div><!-- modal-header -->
 <div class="modal-body">
-<fieldset>
-  <table class="table">
-    <tbody>
-      <tr>
-        <th nowrap>订单编号</th>
-        <td><%= @trade.get("tid") %></td>
-      </tr>
-      <tr>
-        <th>调色</th>
-        <td>
-          <table>
-            <tbody>
-              <% for order in @trade.get('orders'): %>
-                <tr>
-                  <td>
-                    <%= order.title %> x <%= order.num %>
-                    <br/>
-                    <div class="controls">
-                      <input type="text" placeholder="请输入色号..." class="input-xlarge order_color_num" data-order-id="<%= order.id %>" value="<%= order.color_num %>">
-                    </div>
-                  </td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</fieldset>
+  <fieldset>
+    <table class="table table-bordered">
+      <tbody>
+       <!--  <tr>
+          <th nowrap>订单编号</th>
+          <td><%= @trade.get("tid") %></td>
+        </tr> -->
+        <tr>
+          <th>商品</th>
+          <th>色号</th>
+        </tr>
+        <% for order in @trade.get('orders'): %>
+        <tr>
+          <td><%= order.title %> x <%= order.num %></td>
+          <td>
+            <div class="controls">
+              <input type="text" placeholder="请输入色号..." class="input-xlarge order_color_num" data-order-id="<%= order.id %>" value="<%= order.color_num %>">
+            </div>
+          </td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </fieldset>
 </div>
 
 <div class="modal-footer">
   <a class="btn" data-dismiss="modal">取消</a>
-  <a class="btn btn-primary save">保存</a>
+  <a class="btn btn-primary save">确定调色</a>
 </div><!-- modal-footer -->
