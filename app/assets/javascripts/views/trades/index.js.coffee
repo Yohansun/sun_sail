@@ -232,7 +232,24 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
   exportOrders: (e) =>
     e.preventDefault()
-    window.open "/api/trades.xls?trade_type=#{@trade_type}&search_all%5Bsearch_start_date%5D=#{@search_start_date}&search_all%5Bsearch_start_time%5D=#{@search_start_time}&search_all%5Bsearch_end_date%5D=#{@search_end_date}&search_all%5Bsearch_end_time%5D=#{@search_end_time}&search_all%5Bstatus_option%5D=#{@status_option}&search_all%5Btype_option%5D=#{@type_option}&search_all%5Bsearch_buyer_message%5D=#{@search_buyer_message}&search_all%5Bsearch_seller_memo%5D=#{@search_seller_memo}&search_all%5Bsearch_cs_memo%5D=#{@search_cs_memo}&search_all%5Bsearch_invoice%5D=#{@search_invoice}&search_all%5Bsearch_color%5D=#{@search_color}&search_deliverbill_status=#{@search_deliverbill_status}&logistic_status=#{@logistic_status}&limit=1000000&offset=0"
+
+    @status_option = $("#status_option").val()
+    @type_option = $("#type_option").val()
+
+    @search_start_date = $(".search_start_date").val()
+    @search_end_date = $(".search_end_date").val()
+    @search_start_time = $(".search_start_time").val()
+    @search_end_time = $(".search_end_time").val()
+
+    @search_buyer_message = $("#search_buyer_message").is(':checked')
+    @search_seller_memo = $("#search_seller_memo").is(':checked')
+    @search_cs_memo = $("#search_cs_memo").is(':checked')
+
+    @search_invoice = $("#search_invoice").is(':checked')
+    @search_color = $("#search_color").is(':checked')
+
+    @collection.fetch data: {trade_type: @trade_type, search_all: {@search_start_date, @search_start_time, @search_end_date, @search_end_time, @status_option, @type_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_invoice, @search_color}}, success: (collection) =>
+      window.open "/api/trades.xls?trade_type=#{@trade_type}&search_all%5Bsearch_start_date%5D=#{@search_start_date}&search_all%5Bsearch_start_time%5D=#{@search_start_time}&search_all%5Bsearch_end_date%5D=#{@search_end_date}&search_all%5Bsearch_end_time%5D=#{@search_end_time}&search_all%5Bstatus_option%5D=#{@status_option}&search_all%5Btype_option%5D=#{@type_option}&search_all%5Bsearch_buyer_message%5D=#{@search_buyer_message}&search_all%5Bsearch_seller_memo%5D=#{@search_seller_memo}&search_all%5Bsearch_cs_memo%5D=#{@search_cs_memo}&search_all%5Bsearch_invoice%5D=#{@search_invoice}&search_all%5Bsearch_color%5D=#{@search_color}&search_deliverbill_status=#{@search_deliverbill_status}&logistic_status=#{@logistic_status}&limit=1000000&offset=0"
 
   selectSameStatusTrade: (e) =>
     e.preventDefault()
