@@ -142,7 +142,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     blocktheui()
     $("#trade_rows").html('')
 
-    @collection.fetch data: {trade_type: @trade_type, search_all: {@search_start_date, @search_start_time, @search_end_date, @search_end_time, @status_option, @type_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_invoice, @search_color}}, success: (collection) =>
+    @collection.fetch data: {trade_type: @trade_type, search: {option: @search_option, value: @search_value}, search_all: {@search_start_date, @search_start_time, @search_end_date, @search_end_time, @status_option, @type_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_invoice, @search_color}}, success: (collection) =>
       if collection.length > 0
         @offset = @offset + 20
         @renderUpdate()
@@ -222,6 +222,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     $("#advanced_btn i").toggleClass 'icon-arrow-down'
     $("#advanced_btn i").toggleClass 'icon-arrow-up'
     $("#search_toggle").toggle()
+    $("#simple_search_button").toggleClass 'simple_search'
 
   dropdownTurnGray: (e) ->
     e.preventDefault()

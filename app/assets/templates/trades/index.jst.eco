@@ -150,7 +150,7 @@
             <option value="seller_id">经销商</option>
           </select>
           <div class="input-append">
-            <input type="text" id="appendedInputButton" class="w_specify search_value" value="<%= @search_value %>"><button type="button" class="btn btn-info search">筛选</button>
+            <input type="text" id="appendedInputButton" class="w_specify search_value" value="<%= @search_value %>"><button type="button" class="btn btn-info search" id="simple_search_button">筛选</button>
           </div>
         </div>
       </fieldset>
