@@ -44,7 +44,7 @@ gem 'twitter-bootstrap-rails', '>= 2.1.2'
 gem 'simple_form'
 gem 'awesome_nested_set'
 gem 'will_paginate'
-
+gem 'rolify'
 gem 'backbone-on-rails'
 
 gem 'taobao_fu_reload', "~> 1.1.1"

@@ -32,6 +32,11 @@ class MagicOrders.Views.UsersEdit extends Backbone.View
       alert("Email为空或格式不正确")      
       return
 
+    @model.set('is_support', $('#role_support').attr('checked') == 'checked')
+    @model.set('is_seller', $('#role_seller').attr('checked') == 'checked')
+    @model.set('is_interface', $('#role_interface').attr('checked') == 'checked')
+    @model.set('is_stock_admin', $('#role_stock_admin').attr('checked') == 'checked')
+
     @model.save {},
       success: (model, response) =>
         $.unblockUI()
