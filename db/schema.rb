@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120824085719) do
+ActiveRecord::Schema.define(:version => 20120904160102) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -46,6 +46,17 @@ ActiveRecord::Schema.define(:version => 20120824085719) do
   end
 
   add_index "colors", ["num"], :name => "index_colors_on_num"
+
+  create_table "roles", :force => true do |t|
+    t.string   "name"
+    t.integer  "resource_id"
+    t.string   "resource_type"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  add_index "roles", ["name", "resource_type", "resource_id"], :name => "index_roles_on_name_and_resource_type_and_resource_id"
+  add_index "roles", ["name"], :name => "index_roles_on_name"
 
   create_table "sellers", :force => true do |t|
     t.string   "name"
@@ -125,5 +136,12 @@ ActiveRecord::Schema.define(:version => 20120824085719) do
 
   add_index "users_bak", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users_bak", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
+
+  create_table "users_roles", :id => false, :force => true do |t|
+    t.integer "user_id"
+    t.integer "role_id"
+  end
+
+  add_index "users_roles", ["user_id", "role_id"], :name => "index_users_roles_on_user_id_and_role_id"
 
 end

@@ -38,6 +38,12 @@ class UsersController < ApplicationController
     @user.password_confirmation = params[:password_confirmation]
 
     @user.save!
+
+    @user.add_role(:support) if params[:is_support] == true
+    @user.add_role(:seller) if params[:is_seller] == true
+    @user.add_role(:interface) if params[:is_interface] == true
+    @user.add_role(:stock_admin) if params[:is_stock_admin] == true
+
     respond_with @user
   end
 
@@ -51,7 +57,29 @@ class UsersController < ApplicationController
       @user.password_confirmation = params[:password_confirmation]
     end
 
-    @user.save
+    @user.save!
+
+    if params[:is_support] == true
+      @user.add_role(:support) 
+    else
+      @user.remove_role :support
+    end
+    if params[:is_seller] == true
+      @user.add_role(:seller) 
+    else
+      @user.remove_role(:seller)
+    end 
+    if params[:is_interface] == true
+      @user.add_role(:interface) 
+    else
+      @user.remove_role(:interface) 
+    end
+    if params[:is_stock_admin] == true
+      @user.add_role(:stock_admin)
+    else
+      @user.remove_role(:stock_admin)
+    end
+
     respond_with @user
   end
 

@@ -1,4 +1,5 @@
 class User < ActiveRecord::Base
+  rolify
   belongs_to :area
   has_one :seller
   # Include default devise modules. Others available are:

@@ -60,22 +60,38 @@
         <label class="control-label" for="">用户组：</label>
         <div class="controls">
           <label class="checkbox inline">
-            <input type="checkbox" value="option1" id="">售后服务
+            <input type="checkbox" value="option1" id='role_support'
+              <% if @user.get('is_support') == true : %>
+                checked='checked'
+              <% end %>
+            >售后服务
           </label>
         </div>
         <div class="controls">
           <label class="checkbox inline">
-            <input type="checkbox" value="option2" id="">经销商
+            <input type="checkbox" value="option2" id="role_seller"
+              <% if @user.get('is_seller') == true : %>
+                checked='checked'
+              <% end %>
+            >经销商
           </label>
         </div>
         <div class="controls">
           <label class="checkbox inline">
-            <input type="checkbox" value="option3" id="">销售部联络人
+            <input type="checkbox" value="option3" id="role_interface"
+              <% if @user.get('is_interface') == true : %>
+                checked='checked'
+              <% end %>
+            >销售部联络人
           </label>
         </div>
         <div class="controls">
           <label class="checkbox inline">
-            <input type="checkbox" value="option4" id="">仓库管理
+            <input type="checkbox" value="option4" id="role_stock_admin"
+              <% if @user.get('is_stock_admin') == true : %>
+                checked='checked'
+              <% end %>
+            >仓库管理
           </label>
         </div>
       </div>
