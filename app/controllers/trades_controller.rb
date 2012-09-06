@@ -37,10 +37,14 @@ class TradesController < ApplicationController
     ###筛选###
 
     # 简单筛选
-    if params[:search] && !params[:search][:option].blank? && params[:search][:option] != 'null'
+    if params[:search] && !params[:search][:option].blank? && params[:search][:option] != 'null' && params[:search][:option] != 'null' && !params[:search][:option].blank?
       if params[:search][:option] == 'seller_id'
         seller_id = Seller.where(name: params[:search][:value]).first.id
         @trades = @trades.where(seller_id: seller_id)
+      elsif params[:search][:option] == 'receiver_name'
+        @trades = @trades.where("$or" => [{receiver_name: params[:search][:value]}, {"consignee_info.fullname" => params[:search][:value]}, {"receiver.name" => params[:search][:value]}])
+      elsif params[:search][:option] == 'receiver_mobile'
+        @trades = @trades.where("$or" => [{receiver_mobile: params[:search][:value]}, {"consignee_info.mobile" => /#{params[:search][:value]}/}, {"receiver.mobile_phone" => params[:search][:value]}])
       else
         @trades = @trades.where(Hash[params[:search][:option].to_sym, params[:search][:value]])
       end
