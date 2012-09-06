@@ -134,9 +134,7 @@
     <li class="active">Magic<span class="divider">/</span></li>
     <li class="active">订单管理<span class="divider">/</span></li>
     <li class="active trade_nav">所有订单</li>
-    <!--
-    <li style="position:absolute;right:15px;top:6px;"><i class="icon-cog"></i><a href="#">订单设置</a></li>
-    -->
+    <li style="position:absolute;right:15px;top:6px;"><i class="icon-cog"></i><a href="trade_sources">订单设置</a></li>
   </ul><!-- breadcrumb -->
 
   <form class="well form-search order_search_form">
@@ -144,6 +142,7 @@
       <fieldset class="form-inline">
         <div class="controls">
           <select id="search_option" class="input-large search_option">
+            <option value="">请选择筛选条件</option>
             <option value="tid">订单编号</option>
             <option value="receiver_name">收货人姓名</option>
             <option value="receiver_mobile">收货人手机</option>
