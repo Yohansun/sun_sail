@@ -34,6 +34,7 @@ class UsersController < ApplicationController
     @user.username = params[:username]
     @user.name = params[:name]
     @user.email = params[:email]
+    @user.active = params[:active]
     @user.password = params[:password]
     @user.password_confirmation = params[:password_confirmation]
 
@@ -52,6 +53,7 @@ class UsersController < ApplicationController
     @user.username = params[:username]
     @user.name = params[:name]
     @user.email = params[:email]
+    @user.active = params[:active]
     if params[:password].present?
       @user.password = params[:password]
       @user.password_confirmation = params[:password_confirmation]

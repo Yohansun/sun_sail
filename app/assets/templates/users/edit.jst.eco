@@ -1,7 +1,7 @@
 <header class="jumbotron subhead" id="overview">
   <div class="subnav">
     <ul class="nav nav-pills">
-      <li class="active"><a href="settings.html">用户管理</a></li>
+      <li class="active"><a href="/users">用户管理</a></li>
       <li><a href="/users">用户组管理</a></li>
       <li><a href="area_m2.html">地域管理</a></li>
     </ul>
@@ -99,8 +99,15 @@
       <div class="control-group">
         <label class="control-label" for="">状态：</label>
         <div class="controls">
-          <select class="width_auto">
-            <option>生效</option>
+          <select class="width_auto" id='user_active'>
+            <option value='1'
+            <% if @user.get('active') == true : %>
+            selected
+            <% end %>>生效</option>
+            <option value='0'
+            <% if @user.get('active') == false : %>
+            selected
+            <% end %>>禁用</option>
           </select>
         </div>
       </div>

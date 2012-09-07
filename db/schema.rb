@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120904160102) do
+ActiveRecord::Schema.define(:version => 20120907084825) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -89,11 +89,11 @@ ActiveRecord::Schema.define(:version => 20120904160102) do
   end
 
   create_table "users", :force => true do |t|
-    t.string   "username",                                            :null => false
+    t.string   "username",                                              :null => false
     t.string   "name"
-    t.string   "email",                               :default => "", :null => false
-    t.string   "encrypted_password",   :limit => 128, :default => "", :null => false
-    t.string   "password_salt",                       :default => "", :null => false
+    t.string   "email",                               :default => "",   :null => false
+    t.string   "encrypted_password",   :limit => 128, :default => "",   :null => false
+    t.string   "password_salt",                       :default => "",   :null => false
     t.string   "reset_password_token"
     t.string   "remember_token"
     t.datetime "remember_created_at"
@@ -111,6 +111,7 @@ ActiveRecord::Schema.define(:version => 20120904160102) do
     t.integer  "children_count",                      :default => 0
     t.integer  "lft",                                 :default => 0
     t.integer  "rgt",                                 :default => 0
+    t.boolean  "active",                              :default => true
   end
 
   add_index "users", ["email"], :name => "index_admins_on_email", :unique => true
