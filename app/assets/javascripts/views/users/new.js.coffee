@@ -40,12 +40,13 @@ class MagicOrders.Views.UsersNew extends Backbone.View
     unless @model.set("email": $("#user_email").val()) and (/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)$/.test($("#user_email").val()))
       $.unblockUI()
       alert("Email为空或格式不正确")      
-      return     
+      return   
 
     @model.set('is_support', $('#role_support').attr('checked') == 'checked')
     @model.set('is_seller', $('#role_seller').attr('checked') == 'checked')
     @model.set('is_interface', $('#role_interface').attr('checked') == 'checked')
     @model.set('is_stock_admin', $('#role_stock_admin').attr('checked') == 'checked')
+    @model.set('active', $('#user_active').val())
 
     @model.save {},
       success: (model, response) =>

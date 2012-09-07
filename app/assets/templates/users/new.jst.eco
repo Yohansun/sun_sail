@@ -1,7 +1,7 @@
 <header class="jumbotron subhead" id="overview">
   <div class="subnav">
     <ul class="nav nav-pills">
-      <li class="active"><a href="settings.html">用户管理</a></li>
+      <li class="active"><a href="/users">用户管理</a></li>
       <li><a href="settings_group.html">用户组管理</a></li>
       <li><a href="area_m2.html">地域管理</a></li>
     </ul>
@@ -11,7 +11,7 @@
   <ul class="breadcrumb" style="position:relative;">
     <li><a href="#">Magic</a><span class="divider">/</span></li>
     <li><a href="#">系统设置</a><span class="divider">/</span></li>
-    <li><a href="settings.html">用户管理</a><span class="divider">/</span></li>
+    <li><a href="/users">用户管理</a><span class="divider">/</span></li>
     <li class="active">新增用户</li>
     <!-- <li style="position:absolute;right:15px;top:6px;"><a class="btn_alert" href="#">新增用户</a></li> -->
   </ul><!-- breadcrumb -->
@@ -84,8 +84,9 @@
       <div class="control-group">
         <label class="control-label" for="">状态：</label>
         <div class="controls">
-          <select class="width_auto">
-            <option>生效</option>
+          <select class="width_auto" id='user_active'>
+            <option selected value='1'>生效</option>
+            <option value='0'>禁用</option>
           </select>
         </div>
       </div>

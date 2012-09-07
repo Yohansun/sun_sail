@@ -6,3 +6,4 @@ json.is_support @user.has_role?('support')
 json.is_seller @user.has_role?('seller')
 json.is_interface @user.has_role?('interface')
 json.is_stock_admin @user.has_role?('stock_admin')
+json.active @user.active
