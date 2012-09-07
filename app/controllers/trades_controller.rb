@@ -43,9 +43,9 @@ class TradesController < ApplicationController
         seller_id = seller.nil? ? 0 : seller.id
         @trades = @trades.where(seller_id: seller_id)
       elsif params[:search][:option] == 'receiver_name'
-        @trades = @trades.where("$or" => [{receiver_name: params[:search][:value]}, {"consignee_info.fullname" => params[:search][:value]}, {"receiver.name" => params[:search][:value]}])
+        receiver_name_hash = {"$or" => [{receiver_name: params[:search][:value]}, {"consignee_info.fullname" => params[:search][:value]}, {"receiver.name" => params[:search][:value]}]}
       elsif params[:search][:option] == 'receiver_mobile'
-        @trades = @trades.where("$or" => [{receiver_mobile: params[:search][:value]}, {"consignee_info.mobile" => /#{params[:search][:value]}/}, {"receiver.mobile_phone" => params[:search][:value]}])
+        receiver_mobile_hash = {"$or" => [{receiver_mobile: params[:search][:value]}, {"consignee_info.mobile" => /#{params[:search][:value]}/}, {"receiver.mobile_phone" => params[:search][:value]}]}
       else
         @trades = @trades.where(Hash[params[:search][:option].to_sym, params[:search][:value]])
       end
@@ -82,24 +82,24 @@ class TradesController < ApplicationController
 
     # 卖家有备注
     if params[:search_all] && params[:search_all][:search_seller_memo] == "true"
-      @trades = @trades.where("$or" => [{"$and" => [{:seller_memo.exists => true}, {:seller_memo.ne => ''}]}, {:delivery_type.exists => true}, {:invoice_info.exists => true}])
+      seller_memo_hash = {"$or" => [{"$and" => [{:seller_memo.exists => true}, {:seller_memo.ne => ''}]}, {:delivery_type.exists => true}, {:invoice_info.exists => true}]}
     end
     
     # 客户有留言
     if params[:search_all] && params[:search_all][:search_buyer_message] == "true"
-      @trades = @trades.where("$and" => [{:buyer_message.exists => true}, {:buyer_message.ne => ''}])
+      buyer_message_hash = {"$and" => [{:buyer_message.exists => true}, {:buyer_message.ne => ''}]}
     end
 
     # 需要开票+按发票状态筛选
     if params[:search_all]
       if params[:search_all][:search_invoice] == "true" || params[:search_all][:search_invoice] == 'invoice_all'
-        @trades = @trades.where("$or" => [{:invoice_name.exists => true},{:invoice_type.exists => true},{:invoice_content.exists => true}])
+        invoice_all_hash = {"$or" => [{:invoice_name.exists => true},{:invoice_type.exists => true},{:invoice_content.exists => true}]}
       elsif params[:search_all][:search_invoice] == 'invoice_unfilled'
-        @trades = @trades.where("$or" => [{:invoice_name.exists => false},{:invoice_type.exists => false},{:invoice_content.exists => false},{:invoice_date.exists => false}])
+        @trades = @trades.where(:seller_confirm_invoice_at.exists => false)
       elsif params[:search_all][:search_invoice] == 'invoice_filled'
         @trades = @trades.where(:seller_confirm_invoice_at.exists => true)
       elsif params[:search_all][:search_invoice] == 'invoice_sent'
-        @trades = @trades.where("$and" =>[{:status.in => ["WAIT_BUYER_CONFIRM_GOODS","WAIT_GOODS_RECEIVE_CONFIRM","WAIT_BUYER_CONFIRM_GOODS_ACOUNTED","WAIT_SELLER_SEND_GOODS_ACOUNTED"]},{:seller_confirm_invoice_at.exists => true}])
+        invoice_sent_hash = {"$and" =>[{:status.in => ["WAIT_BUYER_CONFIRM_GOODS","WAIT_GOODS_RECEIVE_CONFIRM","WAIT_BUYER_CONFIRM_GOODS_ACOUNTED","WAIT_SELLER_SEND_GOODS_ACOUNTED"]},{:seller_confirm_invoice_at.exists => true}]}
       end
     end
 
@@ -127,6 +127,11 @@ class TradesController < ApplicationController
       @trades = @trades.where(:logistic_printed_at.exists => false)
     elsif params[:logistic_status] == "logistic_printed"
       @trades = @trades.where(:logistic_printed_at.exists => true)
+    end
+
+    #$or,$and集中筛选
+    if (params[:search_all] || params[:search]) && (params[:search_all][:search_invoice] == "true" || params[:search][:option] == 'receiver_name' || params[:search][:option] == 'receiver_mobile' || params[:search_all][:search_seller_memo] == "true" || params[:search_all][:search_buyer_message] == "true" || params[:search_all][:search_invoice] == 'invoice_all'|| params[:search_all][:search_invoice] == 'invoice_sent')
+      @trades = @trades.where("$and" => [receiver_name_hash, receiver_mobile_hash, seller_memo_hash, buyer_message_hash, invoice_all_hash, invoice_sent_hash].compact)
     end
 
     ###筛选结束###
