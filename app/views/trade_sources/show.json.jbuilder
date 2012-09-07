@@ -1,0 +1,9 @@
+json.id @trade_source.id
+json.account_id @trade_source.account_id
+json.name @trade_source.name
+json.app_key @trade_source.app_key
+json.secret_key @trade_source.secret_key
+json.session @trade_source.session
+json.fetch_quantity @trade_source.fetch_quantity
+json.fetch_time_circle @trade_source.fetch_time_circle
+json.high_pressure_valve @trade_source.high_pressure_valve

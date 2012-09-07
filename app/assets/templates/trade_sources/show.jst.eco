@@ -1,0 +1,910 @@
+<div class="row-fluid">
+  <ul class="breadcrumb" style="position:relative;">
+    <li><a href="#">Magic</a><span class="divider">/</span></li>
+    <li><a href='trades'>订单管理</a><span class="divider">/</span></li>
+    <li><a href='trades'>所有订单</a><span class="divider">/</span></li>
+    <li class="active">订单设置</li>
+  </ul><!-- breadcrumb -->
+
+
+  <ul class="nav nav-tabs nomargin" id="myTab">
+    <li class="active"><a data-toggle="tab" href="#order_source">订单来源</a></li>
+    <!-- <li><a data-toggle="tab" href="#order_deal_rule">订单处理模式</a></li> -->
+    <!-- <li><a data-toggle="tab" href="#order_split_rule">订单拆分规则</a></li> -->
+    <!-- <li><a data-toggle="tab" href="#order_branch_rule">订单分流规则</a></li> -->
+    <!-- <li><a data-toggle="tab" href="#order_out_rule">订单发货规则</a></li> -->
+    <!-- <li><a data-toggle="tab" href="#order_info">订单消息推送</a></li> -->
+    <!-- <li><a data-toggle="tab" href="#exception_msg">异常提示</a></li> -->
+  </ul>
+
+  <div class="tab-content padding_t20 reset_border">
+    <div class="tab-pane active" id="order_source">
+      <div class="table tabs-left">
+        <ul class="nav nav-tabs reset_border span2" id="myTab_sub">
+          <li class="active"><a data-toggle="tab" href="#" data-source="tmall">淘宝天猫</a></li>
+          <li><a data-toggle="tab" href="#" data-source="taobao_market">淘宝集市</a></li>
+          <!-- <li><a href="#buy360" data-toggle="tab">360buy</a></li> -->
+          <!-- <li><a href="#sales_dist" data-toggle="tab">淘宝分销</a></li> -->
+          <!-- <li><a href="#taobao" data-toggle="tab">淘宝c店</a></li> -->
+          <!-- <li><a href="#paipai" data-toggle="tab">拍拍商城</a></li> -->
+          <!-- <li><a href="#official_mall" data-toggle="tab">官方商城</a></li> -->
+        </ul>
+
+        <div class="tab-content reset_border">
+          <div class="tab-pane active" id="tmall">
+            <form class="form-horizontal nomargin">
+              <fsieldset>
+                <div class="control-group">
+                  <label class="control-label" for="">app key：</label>
+                  <div class="controls">
+                    <input type="text" class="input-xlarge" id="app_key" value="<%= @trade_source.get('app_key') %>">
+                  </div>
+                </div>
+
+                <div class="control-group">
+                  <label class="control-label" for="">secret key：</label>
+                  <div class="controls">
+                    <input type="text" class="input-xlarge" id="secret_key" value="<%= @trade_source.get('secret_key') %>">
+                  </div>
+                </div>
+
+                <div class="control-group">
+                  <label class="control-label" for="">session：</label>
+                  <div class="controls">
+                    <input type="text" class="input-xlarge" id="session" value="<%= @trade_source.get('session') %>">
+                  </div>
+                </div>
+
+                <div class="control-group form-inline">
+                  <label class="control-label" for="">获取数量：</label>
+                  <div class="controls">
+                    <select id="set_quantity" class="width_auto">
+                      <option value="20" <% if @trade_source.get('fetch_quantity') == 20 : %> selected ="selected" <% end %>>20</option>
+                      <option value="50" <% if @trade_source.get('fetch_quantity') == 50 : %> selected ="selected" <% end %>>50</option >
+                      <option value="100" <% if @trade_source.get('fetch_quantity') == 100 : %> selected ="selected" <%end %>>100</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="control-group form-inline">
+                  <label class="control-label" for="">抓取频次：</label>
+                  <div class="controls">
+                    <select id="set_time_circle" class="width_auto">
+                      <option value="15" <% if @trade_source.get('fetch_time_circle') == 15 : %> selected ="selected" <% end %>>15分钟</option>
+                      <option value="30" <% if @trade_source.get('fetch_time_circle') == 30 : %> selected ="selected" <% end %>>30分钟</option>
+                      <option value="60" <% if @trade_source.get('fetch_time_circle') == 60 : %> selected ="selected" <% end %>>1小时</option>
+                      
+                    </select>
+                  </div>
+                </div>
+
+                <div class="control-group form-inline">
+                  <label class="control-label" for="">高压阀：</label>
+                  <div class="controls">
+                    <select id="set_valve_state" class="width_auto">	
+                      <option value="true" <% if @trade_source.get('high_pressure_valve') == true : %> selected ="selected" <% end %>>打开</option>
+                      <option value="false" <% if @trade_source.get('high_pressure_valve') == false : %> selected ="selected" <% end %>>关闭</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-actions nomargin">
+                  <button class="btn btn-primary save">保存</button>
+                </div>
+              </fieldset>              
+            </form>
+          </div>
+         <!--  <div class="tab-pane active" id="taobao_market">
+            <form class="form-horizontal nomargin">
+              <fsieldset>
+                <div class="control-group">
+                  <label class="control-label" for="">app key：</label>
+                  <div class="controls">
+                    <input type="text" class="input-xlarge" id="">
+                  </div>
+                </div>
+
+                <div class="control-group">
+                  <label class="control-label" for="">app secret：</label>
+                  <div class="controls">
+                    <input type="text" class="input-xlarge" id="">
+                  </div>
+                </div>
+
+                <div class="control-group">
+                  <label class="control-label" for="">session key：</label>
+                  <div class="controls">
+                    <input type="text" class="input-xlarge" id="">
+                  </div>
+                </div>
+
+                <div class="control-group form-inline">
+                  <label class="control-label" for="">获取数量：</label>
+                  <div class="controls">
+                    <select class="width_auto">
+                      <option>20</option>
+                      <option checked="checked">50</option>
+                      <option>100</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="control-group form-inline">
+                  <label class="control-label" for="">抓取频次：</label>
+                  <div class="controls">
+                    <select class="width_auto">
+                      <option>15分钟</option>
+                      <option>30分钟</option>
+                      <option>1小时</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="control-group form-inline">
+                  <label class="control-label" for="">抓取频次：</label>
+                  <div class="controls">
+                    <select class="width_auto">
+                      <option>15分钟</option>
+                      <option>30分钟</option>
+                      <option>1小时</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="control-group form-inline">
+                  <label class="control-label" for="">高压阀：</label>
+                  <div class="controls">
+                    <select class="width_auto">
+                      <option>打开</option>
+                      <option>关闭</option>
+                    </select>
+                  </div>
+                </div>
+              </fieldset>
+
+              <div class="form-actions nomargin">
+                <button type="submit" class="btn btn-primary">保存</button>
+              </div>
+            </form>
+          </div> -->
+          <!-- <div class="tab-pane" id="buy360">
+            <form class="form-horizontal nomargin">
+              <fieldset>
+                <div class="control-group">
+                  <label class="control-label" for="">app key：</label>
+                  <div class="controls">
+                    <input type="text" class="input-xlarge" id="">
+                  </div>
+                </div>
+
+                <div class="control-group">
+                  <label class="control-label" for="">app secret：</label>
+                  <div class="controls">
+                    <input type="text" class="input-xlarge" id="">
+                  </div>
+                </div>
+
+                <div class="control-group">
+                  <label class="control-label" for="">session key：</label>
+                  <div class="controls">
+                    <input type="text" class="input-xlarge" id="">
+                  </div>
+                </div>
+
+                <div class="control-group form-inline">
+                  <label class="control-label" for="">获取数量：</label>
+                  <div class="controls">
+                    <select class="width_auto">
+                      <option>20</option>
+                      <option checked="checked">50</option>
+                      <option>100</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="control-group form-inline">
+                  <label class="control-label" for="">抓取频次：</label>
+                  <div class="controls">
+                    <select class="width_auto">
+                      <option>15分钟</option>
+                      <option>30分钟</option>
+                      <option>1小时</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="control-group form-inline">
+                  <label class="control-label" for="">抓取频次：</label>
+                  <div class="controls">
+                    <select class="width_auto">
+                      <option>15分钟</option>
+                      <option>30分钟</option>
+                      <option>1小时</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="control-group form-inline">
+                  <label class="control-label" for="">高压阀：</label>
+                  <div class="controls">
+                    <select class="width_auto">
+                      <option>打开</option>
+                      <option>关闭</option>
+                    </select>
+                  </div>
+                </div>
+              </fieldset>
+
+              <div class="form-actions nomargin">
+                <button type="submit" class="btn btn-primary">保存</button>
+              </div>
+            </form>
+          </div> -->
+         <!--  <div class="tab-pane" id="sales_dist">
+            <form class="form-horizontal nomargin">
+              <fieldset>
+                <div class="control-group">
+                  <label class="control-label" for="">app key：</label>
+                  <div class="controls">
+                    <input type="text" class="input-xlarge" id="">
+                  </div>
+                </div>
+
+                <div class="control-group">
+                  <label class="control-label" for="">app secret：</label>
+                  <div class="controls">
+                    <input type="text" class="input-xlarge" id="">
+                  </div>
+                </div>
+
+                <div class="control-group">
+                  <label class="control-label" for="">session key：</label>
+                  <div class="controls">
+                    <input type="text" class="input-xlarge" id="">
+                  </div>
+                </div>
+
+                <div class="control-group form-inline">
+                  <label class="control-label" for="">获取数量：</label>
+                  <div class="controls">
+                    <select class="width_auto">
+                      <option>20</option>
+                      <option checked="checked">50</option>
+                      <option>100</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="control-group form-inline">
+                  <label class="control-label" for="">抓取频次：</label>
+                  <div class="controls">
+                    <select class="width_auto">
+                      <option>15分钟</option>
+                      <option>30分钟</option>
+                      <option>1小时</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="control-group form-inline">
+                  <label class="control-label" for="">抓取频次：</label>
+                  <div class="controls">
+                    <select class="width_auto">
+                      <option>15分钟</option>
+                      <option>30分钟</option>
+                      <option>1小时</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="control-group form-inline">
+                  <label class="control-label" for="">高压阀：</label>
+                  <div class="controls">
+                    <select class="width_auto">
+                      <option>打开</option>
+                      <option>关闭</option>
+                    </select>
+                  </div>
+                </div>
+              </fieldset>
+
+              <div class="form-actions nomargin">
+                <button type="submit" class="btn btn-primary">保存</button>
+              </div>
+            </form>
+          </div> -->
+          <!-- <div class="tab-pane" id="taobao">
+            <form class="form-horizontal nomargin">
+              <fieldset>
+                <div class="control-group">
+                  <label class="control-label" for="">app key：</label>
+                  <div class="controls">
+                    <input type="text" class="input-xlarge" id="">
+                  </div>
+                </div>
+
+                <div class="control-group">
+                  <label class="control-label" for="">app secret：</label>
+                  <div class="controls">
+                    <input type="text" class="input-xlarge" id="">
+                  </div>
+                </div>
+
+                <div class="control-group">
+                  <label class="control-label" for="">session key：</label>
+                  <div class="controls">
+                    <input type="text" class="input-xlarge" id="">
+                  </div>
+                </div>
+
+                <div class="control-group form-inline">
+                  <label class="control-label" for="">获取数量：</label>
+                  <div class="controls">
+                    <select class="width_auto">
+                      <option>20</option>
+                      <option checked="checked">50</option>
+                      <option>100</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="control-group form-inline">
+                  <label class="control-label" for="">抓取频次：</label>
+                  <div class="controls">
+                    <select class="width_auto">
+                      <option>15分钟</option>
+                      <option>30分钟</option>
+                      <option>1小时</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="control-group form-inline">
+                  <label class="control-label" for="">抓取频次：</label>
+                  <div class="controls">
+                    <select class="width_auto">
+                      <option>15分钟</option>
+                      <option>30分钟</option>
+                      <option>1小时</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="control-group form-inline">
+                  <label class="control-label" for="">高压阀：</label>
+                  <div class="controls">
+                    <select class="width_auto">
+                      <option>打开</option>
+                      <option>关闭</option>
+                    </select>
+                  </div>
+                </div>
+              </fieldset>
+
+              <div class="form-actions nomargin">
+                <button type="submit" class="btn btn-primary">保存</button>
+              </div>
+            </form>
+          </div> -->
+          <!-- <div class="tab-pane" id="paipai">
+            <form class="form-horizontal nomargin">
+              <fieldset>
+                <div class="control-group">
+                  <label class="control-label" for="">app key：</label>
+                  <div class="controls">
+                    <input type="text" class="input-xlarge" id="">
+                  </div>
+                </div>
+
+                <div class="control-group">
+                  <label class="control-label" for="">app secret：</label>
+                  <div class="controls">
+                    <input type="text" class="input-xlarge" id="">
+                  </div>
+                </div>
+
+                <div class="control-group">
+                  <label class="control-label" for="">session key：</label>
+                  <div class="controls">
+                    <input type="text" class="input-xlarge" id="">
+                  </div>
+                </div>
+
+                <div class="control-group form-inline">
+                  <label class="control-label" for="">获取数量：</label>
+                  <div class="controls">
+                    <select class="width_auto">
+                      <option>20</option>
+                      <option checked="checked">50</option>
+                      <option>100</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="control-group form-inline">
+                  <label class="control-label" for="">抓取频次：</label>
+                  <div class="controls">
+                    <select class="width_auto">
+                      <option>15分钟</option>
+                      <option>30分钟</option>
+                      <option>1小时</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="control-group form-inline">
+                  <label class="control-label" for="">抓取频次：</label>
+                  <div class="controls">
+                    <select class="width_auto">
+                      <option>15分钟</option>
+                      <option>30分钟</option>
+                      <option>1小时</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="control-group form-inline">
+                  <label class="control-label" for="">高压阀：</label>
+                  <div class="controls">
+                    <select class="width_auto">
+                      <option>打开</option>
+                      <option>关闭</option>
+                    </select>
+                  </div>
+                </div>
+              </fieldset>
+
+              <div class="form-actions nomargin">
+                <button type="submit" class="btn btn-primary">保存</button>
+              </div>
+            </form>
+          </div> -->
+          <!-- <div class="tab-pane" id="official_mall">
+            <form class="form-horizontal nomargin">
+              <fieldset>
+                <div class="control-group">
+                  <label class="control-label" for="">app key：</label>
+                  <div class="controls">
+                    <input type="text" class="input-xlarge" id="">
+                  </div>
+                </div>
+
+                <div class="control-group">
+                  <label class="control-label" for="">app secret：</label>
+                  <div class="controls">
+                    <input type="text" class="input-xlarge" id="">
+                  </div>
+                </div>
+
+                <div class="control-group">
+                  <label class="control-label" for="">session key：</label>
+                  <div class="controls">
+                    <input type="text" class="input-xlarge" id="">
+                  </div>
+                </div>
+
+                <div class="control-group form-inline">
+                  <label class="control-label" for="">获取数量：</label>
+                  <div class="controls">
+                    <select class="width_auto">
+                      <option>20</option>
+                      <option checked="checked">50</option>
+                      <option>100</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="control-group form-inline">
+                  <label class="control-label" for="">抓取频次：</label>
+                  <div class="controls">
+                    <select class="width_auto">
+                      <option>15分钟</option>
+                      <option>30分钟</option>
+                      <option>1小时</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="control-group form-inline">
+                  <label class="control-label" for="">抓取频次：</label>
+                  <div class="controls">
+                    <select class="width_auto">
+                      <option>15分钟</option>
+                      <option>30分钟</option>
+                      <option>1小时</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="control-group form-inline">
+                  <label class="control-label" for="">高压阀：</label>
+                  <div class="controls">
+                    <select class="width_auto">
+                      <option>打开</option>
+                      <option>关闭</option>
+                    </select>
+                  </div>
+                </div>
+              </fieldset>
+
+              <div class="form-actions nomargin">
+                <button type="submit" class="btn btn-primary">保存</button>
+              </div>
+            </form>
+          </div> -->
+        </div>
+      </div>
+    </div>
+    <!-- <div class="tab-pane" id="order_deal_rule">
+      <div class="tabbable tabs-left">
+        <ul class="nav nav-tabs reset_border span2" id="myTab_sub">
+          <li class="active">
+            <h5>说明：</h5>
+            <p>1 经销商配送模式，您需要先对经销商体系进行管理，以便全国相应地区都有可对应的经销商<br>2 非经销商配送模式下，所有订单默认由业务人员做后续业务操作，订单分流功能关闭</p>
+          </li>
+        </ul>
+
+        <div class="tab-content reset_border">
+          <div class="tab-pane active" id="tmall">
+            <form class="form-horizontal nomargin">
+              <fieldset class="re_height237">
+                <div class="control-group form-inline">
+                  <label class="control-label" for="">自然返回发货状态：</label>
+                  <div class="controls">
+                    <button class="btn">开启</button>
+                    <button class="btn">关闭</button>
+                  </div>
+                </div>
+              </fieldset>
+
+              <div class="form-actions nomargin">
+                <button type="submit" class="btn btn-primary">保存</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>-->
+    <!-- <div class="tab-pane" id="order_split_rule">
+      <div class="tabbable tabs-left">
+        <ul class="nav nav-tabs reset_border span2" id="myTab_sub">
+          <li class="active">
+            <h5>说明：</h5>
+               <p>1 经销商配送模式，您需要先对经销商体系进行管理，以便全国相应地区都有可对应的经销商<br>2 非经销商配送模式下，所有订单默认由业务人员做后续业务操作，订单分流功能关闭</p>
+          </li>
+        </ul>
+
+        <div class="tab-content reset_border">
+          <div class="tab-pane active" id="tmall">
+            <form class="form-horizontal nomargin">
+              <fieldset class="re_height237">
+                <div class="control-group form-inline">
+                  <label class="control-label" for="">自动拆分：</label>
+                  <div class="controls">
+                    <button class="btn">开启</button>
+                    <button class="btn">关闭</button>
+                  </div>
+                  <div class="controls clearfix">
+                    <label class="control-label tl" for="">拆分规则：</label>
+                  </div>
+                  <div class="controls">
+                    <label class="checkbox inline">
+                      <input type="checkbox" value="option1" id=""> 商品配送商不同
+                    </label>
+                  </div>
+                  <div class="controls">
+                    <label class="checkbox inline">
+                      <input type="checkbox" value="option1" id=""> 商品发货地不同
+                    </label>
+                  </div>
+                  <div class="controls">
+                    <label class="checkbox inline">
+                      <input type="checkbox" value="option1" id=""> 商品库存缺货
+                    </label>
+                  </div>
+                </div>
+
+                <div class="control-group form-inline">
+                  <label class="control-label" for="">手动拆分：</label>
+                  <!-- <div class="controls clearfix">
+                    <label class="control-label tl" for="">设置当前为默认：</label>
+                  </div> --
+                  <div class="controls">
+                    <label class="checkbox inline">
+                      <input type="checkbox" value="option2" id=""> 申请部分退款订单
+                    </label>
+                  </div>
+                  <div class="controls">
+                    <label class="checkbox inline">
+                      <input type="checkbox" value="option2" id=""> 异常订单
+                    </label>
+                  </div>
+                </div>
+              </fieldset>
+
+              <div class="form-actions nomargin">
+                <button type="submit" class="btn btn-primary">保存</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div> -->
+    <!-- <div class="tab-pane" id="order_branch_rule">
+      <div class="tabbable tabs-left">
+        <ul class="nav nav-tabs reset_border span2" id="myTab_sub">
+          <li class="active">
+            <h5>说明：</h5>
+          </li>
+        </ul>
+
+        <div class="tab-content reset_border">
+          <div class="tab-pane active" id="tmall">
+            <form class="form-horizontal nomargin">
+              <fieldset class="re_height237">
+                <div class="control-group form-inline">
+                  <label class="control-label" for="">自动分流：</label>
+                  <div class="controls">
+                    <button class="btn">开启</button>
+                    <button class="btn">关闭</button>
+                  </div>
+                </div>
+
+                <div class="control-group form-inline">
+                  <label class="control-label" for="">手动分流：</label>
+                  <div class="controls clearfix">
+                    <label class="control-label tl" for="">来源：</label>
+                  </div>
+                  <div class="controls">
+                    <label class="checkbox inline">
+                      <input type="checkbox" value="option1" id=""> 天猫店
+                    </label>
+                  </div>
+                  <div class="controls">
+                    <label class="checkbox inline">
+                      <input type="checkbox" value="option1" id=""> 分销店
+                    </label>
+                  </div>
+
+                  <div class="controls clearfix">
+                    <label class="control-label tl" for="">异常：</label>
+                  </div>
+                  <div class="controls">
+                    <label class="checkbox inline">
+                      <input type="checkbox" value="option1" id=""> 无对应配送商
+                    </label>
+                  </div>
+                  <div class="controls">
+                    <label class="checkbox inline">
+                      <input type="checkbox" value="option1" id=""> 超过两天未分流
+                    </label>
+                  </div>
+                  <div class="controls">
+                    <label class="checkbox inline">
+                      <input type="checkbox" value="option1" id=""> 有客服备注
+                    </label>
+                  </div>
+                  <div class="controls">
+                    <label class="checkbox inline">
+                      <input type="checkbox" value="option1" id=""> 异常订单
+                    </label>
+                  </div>
+                </div>
+              </fieldset>
+
+              <div class="form-actions nomargin">
+                <button type="submit" class="btn btn-primary">保存</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div> -->
+    <!-- <div class="tab-pane" id="order_out_rule">
+      <div class="tabbable tabs-left">
+        <ul class="nav nav-tabs reset_border span2" id="myTab_sub">
+          <li class="active">
+            <h5>说明：</h5>
+            <p>1 可根据订单商品的实际属性，按照数量／重量等规则拆分成多个发货单，便于物流发货</p>
+          </li>
+        </ul>
+        <div class="tab-content reset_border">
+          <div class="tab-pane active" id="tmall">
+            <form class="form-horizontal nomargin">
+              <fieldset class="re_height237">
+                <div class="control-group form-inline re_margin5">
+                  <label class="control-label" for="">发货拆分：</label>
+                  <div class="controls">
+                    <button class="btn">开启</button>
+                    <button class="btn">关闭</button>
+                  </div>
+                  <div class="controls clearfix">
+                    <label class="control-label tl" for="">拆分规则：</label>
+                  </div>
+                  <div class="controls clearfix">
+                    <select id="" class="input-small">
+                      <option>2进制</option>
+                      <option>3进制</option>
+                      <option>其他</option>
+                    </select>
+                  </div>
+
+                  <div class="controls clearfix">
+                    <p>备注： “3进制”意味着任意容量的涂料每满3桶为一个发货单；</p>
+                  </div>
+
+                </div>
+              </fieldset>
+
+              <div class="form-actions nomargin">
+                <button type="submit" class="btn btn-primary">保存</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div> -->
+    <!-- <div class="tab-pane" id="order_info">
+      <div class="tabbable tabs-left">
+        <ul class="nav nav-tabs reset_border span2" id="myTab_sub">
+          <li class="active">
+            <h5>说明：</h5>
+            <p>1 可在订单处理的任何阶段向相关人员推送消息</p>
+          </li>
+        </ul>
+        <div class="tab-content reset_border">
+          <div class="tab-pane active" id="tmall">
+            <form class="form-horizontal nomargin">
+              <fieldset class="re_height237">
+                <div class="control-group">
+                  <label class="control-label" for="">消息推送：</label>
+                  <div class="controls">
+                    <button class="btn">开启</button>
+                    <button class="btn">关闭</button>
+                  </div>
+                  <div class="control-group re_margin5">
+                    <div class="controls">
+                      <label class="control-label tl" for="">拆分规则：</label>
+                      <select id="" class="input-small">
+                        <option>下单</option>
+                        <option>付款</option>
+                        <option>分流</option>
+                        <option>其他</option>
+                      </select>
+                    </div>
+
+                    <div class="controls">
+                      <label class="control-label tl" for="">消息内容：</label>
+                      <textarea rows="6"></textarea>
+                    </div>
+
+                    <div class="controls">
+                      <label class="control-label tl" for="">对象：</label>
+                      <label class="checkbox inline">
+                        <input type="checkbox" value="option1" id=""> 顾客
+                      </label>
+                      <label class="checkbox inline">
+                        <input type="checkbox" value="option1" id=""> 对应客服
+                      </label>
+                      <label class="checkbox inline">
+                        <input type="checkbox" value="option1" id=""> 对应经销商
+                      </label>
+                      <br>
+                      <input type="text" class="noshadow re_border_b" placeholder="其他用户，可输入用户名">
+                    </div>
+
+                    <div class="controls">
+
+                    </div>
+
+                    <div class="controls">
+                      <label class="control-label tl" for="">方式：</label>
+                      <label class="checkbox inline">
+                        <input type="checkbox" value="option1" id=""> 短信
+                      </label>
+                      <label class="checkbox inline">
+                        <input type="checkbox" value="option1" id=""> 邮件
+                      </label>
+                    </div>
+
+                    <div class="controls clearfix">
+                      <p>备注： 消息会有延时</p>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+
+              <div class="form-actions nomargin">
+                <button type="submit" class="btn btn-primary">保存</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div> -->
+    <!-- <div class="tab-pane" id="exception_msg">
+      <div class="tabbable tabs-left">
+        <ul class="nav nav-tabs reset_border span2" id="myTab_sub">
+          <li class="active">
+            <h5>说明：</h5>
+            <p>1 可在订单处理的任何阶段向相关人员推送异常消息</p>
+          </li>
+        </ul>
+        <div class="tab-content reset_border">
+          <div class="tab-pane active" id="tmall">
+            <form class="form-horizontal nomargin">
+              <fieldset class="re_height237">
+                <div class="control-group">
+                  <label class="control-label" for="">异常提醒：</label>
+                  <div class="controls">
+                    <button class="btn">开启</button>
+                    <button class="btn">关闭</button>
+                  </div>
+                  <div class="control-group re_margin5">
+                    <div class="controls">
+                      <label class="control-label tl" for="">订单状态：</label>
+                      <select id="" class="input-small">
+                        <option>下单</option>
+                        <option>付款</option>
+                        <option>分流</option>
+                        <option>其他</option>
+                      </select>
+                    </div>
+
+                    <div class="controls">
+                      <label class="control-label tl" for="">逾期时间：</label>
+                      <select id="" class="input-small">
+                        <option>24小时</option>
+                      </select>
+                    </div>
+
+                    <div class="controls">
+                      <label class="control-label tl" for="">对象：</label>
+                      <label class="checkbox inline">
+                        <input type="checkbox" value="option1" id=""> 顾客
+                      </label>
+                      <label class="checkbox inline">
+                        <input type="checkbox" value="option1" id=""> 对应客服
+                      </label>
+                      <label class="checkbox inline">
+                        <input type="checkbox" value="option1" id=""> 对应经销商
+                      </label>
+                      <br>
+                      <input type="text" class="noshadow re_border_b" placeholder="其他用户，可输入用户名">
+                    </div>
+
+                    <div class="controls">
+
+                    </div>
+
+                    <div class="controls">
+                      <label class="control-label tl" for="">方式：</label>
+                      <label class="checkbox inline">
+                        <input type="checkbox" value="option1" id=""> 短信
+                      </label>
+                      <label class="checkbox inline">
+                        <input type="checkbox" value="option1" id=""> 邮件
+                      </label>
+                      <label class="checkbox inline">
+                        <input type="checkbox" value="option1" id=""> 系统消息
+                      </label>
+                    </div>
+
+                    <div class="controls clearfix">
+                      <p>备注： 消息会有延时</p>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+
+              <div class="form-actions nomargin">
+                <button type="submit" class="btn btn-primary">保存</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div> -->
+  </div>
+</div>
+

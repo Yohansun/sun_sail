@@ -97,4 +97,5 @@ window.MagicOrders =
     new MagicOrders.Routers.Trades()
     new MagicOrders.Routers.Sellers()
     new MagicOrders.Routers.Users()
+    new MagicOrders.Routers.TradeSettings()
     Backbone.history.start(pushState: true)
