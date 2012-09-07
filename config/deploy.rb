@@ -1,56 +1,21 @@
 # -*- encoding : utf-8 -*-
 require "rvm/capistrano"                  # Load RVM's capistrano plugin.
-set :rvm_ruby_string, '1.9.3'        # Or whatever env you want it to run in.
-set :rvm_type, :user
+require "capistrano/ext/multistage"       #多stage部署所需  
+require 'bundler/capistrano'       #添加之后部署时会调用bundle install
 
-set :user, "nio"
-set :repository, "git@github.com:nioteam/magic_orders.git"
-set :branch, "master"
-set :deploy_to, "/data/www/magic_orders"
-require 'bundler/capistrano'
+set :stages, %w(production magica1) 
+set :default_stage, "production" 
 
-role :web, "121.11.90.8" # Your HTTP server, Apache/etc
-role :app, "121.11.90.8" # This may be the same as your `Web` server
-role :db, "121.11.90.8", :primary => true # This is where Rails migrations will run
+set :application, "magic_orders"
 
 set :use_sudo, false
 set :scm, :git
+set :git_shallow_clone, 1
+set :git_enable_submodules, 1 
 set :deploy_via, :remote_cache
 set :deploy_env, 'production'
 default_run_options[:pty] = true
 ssh_options[:forward_agent] = true
 
-# tasks
-namespace :deploy do
 
-  desc "Restart web server"
-  task :restart, roles: :app, except: {no_release: true} do
-    run "touch #{deploy_to}/current/tmp/restart.txt"
-  end
 
-  desc "Symlink shared resources on each release"
-  task :symlink_shared, :roles => :app do
-    run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
-    run "ln -nfs #{shared_path}/config/mailers.yml #{release_path}/config/mailers.yml"
-    run "ln -nfs #{shared_path}/config/taobao.yml #{release_path}/config/taobao.yml"
-    run "ln -nfs #{shared_path}/config/jingdong.yml #{release_path}/config/jingdong.yml"
-    run "ln -nfs #{shared_path}/config/mongoid.yml #{release_path}/config/mongoid.yml"
-    run "ln -nfs #{shared_path}/system #{release_path}/public/system"
-  end
-end
-
-after 'deploy:finalize_update', 'deploy:symlink_shared'
-namespace :db do
-  desc "migrate db"
-  task :migrate, :roles => :app do
-    run "cd #{release_path} && RAILS_ENV=production rake db:migrate"
-  end
-end
-
-namespace :sidekiq do
-  desc "restart sidekiq"
-  task :restart, :roles => :app do
-    run "rvmsudo god restart magic_orders"
-  end
-end
-after 'deploy:create_symlink', 'sidekiq:restart'
