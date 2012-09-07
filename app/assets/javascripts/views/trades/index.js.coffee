@@ -136,7 +136,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     @search_buyer_message = $("#search_buyer_message").is(':checked')
     @search_seller_memo = $("#search_seller_memo").is(':checked')
     @search_cs_memo = $("#search_cs_memo").is(':checked')
-
     @search_invoice = $("#search_invoice").is(':checked')
     @search_color = $("#search_color").is(':checked')
 
