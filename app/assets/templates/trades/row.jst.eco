@@ -39,12 +39,16 @@
 </td>
 <td data-col='buyer_message'>
   <% if @trade.get 'buyer_message': %>
-  <a href="#" rel="popover" data-content="<%= @trade.get 'buyer_message' %>" data-original-title="<b>买家留言</b>"><i class="icon-comment"></i></a>
+  <a href="#" rel="popover" data-content="<%= @trade.get 'buyer_message' %>" data-original-title="<b>买家留言</b>">
+    <i class="icon-comment"></i>
+  </a>
   <% end %>
 </td>
 <td data-col='seller_memo'>
   <% if @trade.get 'seller_memo': %>
-  <a href="#" rel="popover" data-content="<%= @trade.get 'seller_memo' %>" data-original-title="<b>卖家备注</b>"><i class="icon-comment"></i></a>
+  <a href="#" rel="popover" data-content="<%= @trade.get 'seller_memo' %>" data-original-title="<b>卖家备注</b>">
+    <i class="icon-comment"></i>
+  </a>
   <% end %>
 </td>
 <td data-col='cs_memo'>
@@ -92,8 +96,13 @@
 </td>
 <td nowrap>
   <div class="btn-group">
-    <button data-toggle="dropdown" class="btn btn-info dropdown-toggle min_w"><i class="icon-wrench"></i> <span class="caret"></span></button>
+    <button data-toggle="dropdown" class="btn btn-info dropdown-toggle min_w">
+      <i class="icon-wrench"></i>
+      <span class="caret"></span>
+    </button>
     <ul class="dropdown-menu trade_pops" style="left:-115px;">
+      <li><a data-toggle="modal" href="#" data-type="detail">订单详情</a></li>
+
       <% if @trade.get('status_text') == '已付款，待发货': %>
       <li><a data-toggle="modal" href="#" data-type="seller">订单分流</a></li>
       <% end %>
@@ -124,7 +133,7 @@
         <li><a data-toggle="modal" href="#" data-type="seller_confirm_deliver">确认发货</a></li>
       <% end %>
 
-      <% if @trade.get 'invoice_name' : %>
+      <% if @trade.get('invoice_name') : %>
         <li><a data-toggle="modal" href="#" data-type="seller_confirm_invoice">确认开票</a></li>
       <% end %>
 
@@ -146,7 +155,6 @@
       <li><a data-toggle="modal" href="#" data-type="export_deliver_bill">导出出货单</a></li>
       <li><a data-toggle="modal" href="#" data-type="export_logistic_bill">导出物流单</a></li>
       <li><a data-toggle="modal" href="#" data-type="export_invoice">导出发票</a></li>
-      <li><a data-toggle="modal" href="#" data-type="detail">订单详情</a></li>
       <li><a data-toggle="modal" href="#" data-type="operation_log">操作日志</a></li>
     </ul>
   </div>

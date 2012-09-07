@@ -43,6 +43,8 @@ class User < ActiveRecord::Base
       'admin'
     when 10
       'seller'
+    when 12
+      'interface'
     when 15
       'cs'
     end
