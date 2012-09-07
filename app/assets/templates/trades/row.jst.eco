@@ -120,7 +120,7 @@
         <li><a data-toggle="modal" href="#" data-type="deliver">订单发货</a></li>
       <% end %>
 
-      <% if @trade.get 'logistic_waybill' : %>
+      <% if @trade.get('status_text') == '已付款，已发货' : %>
         <li><a data-toggle="modal" href="#" data-type="seller_confirm_deliver">确认发货</a></li>
       <% end %>
 
