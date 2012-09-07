@@ -9,11 +9,11 @@ window.MagicOrders =
     # 不同角色显示的“操作”弹出项
     @trade_pops = {
       #roles
-      'cs':                      ['detail', 'seller', 'cs_memo', 'color', 'invoice'],
-      'seller':                  ['detail', 'deliver', 'seller_confirm_deliver', 'seller_confirm_invoice'],
+      'cs':                      ['detail', 'seller', 'cs_memo', 'color', 'invoice', 'trade_splite', 'trade_unsplite', 'mark', 'reowner', 'refund', 'check_goods'],
+      'seller':                  ['detail', 'deliver', 'seller_confirm_deliver', 'seller_confirm_invoice', 'mark', 'logistic_split', 'print_logistic_bill', 'print_deilver_bill', 'confirm_refund'],
       'admin':                   ['*'],
       #trade_mode
-      'trades':                  ['detail', 'seller', 'cs_memo', 'color', 'invoice', 'deliver', 'seller_confirm_deliver', 'seller_confirm_invoice'],
+      'trades':                  ['detail', 'seller', 'cs_memo', 'color', 'invoice', 'trade_splite', 'trade_unsplite', 'mark', 'reowner', 'refund', 'check_goods', 'deliver', 'seller_confirm_deliver', 'seller_confirm_invoice', 'check_goods', 'logistic_split', 'print_logistic_bill', 'print_deilver_bill', 'confirm_refund', 'operation_log'],
       'deliver':                 ['detail'],
       'logistics':               ['detail'],
       'check':                   ['detail'],
