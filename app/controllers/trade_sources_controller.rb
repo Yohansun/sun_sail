@@ -3,11 +3,6 @@
 class TradeSourcesController < ApplicationController
    respond_to :json
 
-   def index
-      @trade_sources = TradeSource.all
-      respond_with @trade_sources
-   end	
-
    def show
    	@trade_source = TradeSource.where(id: params[:id]).first
    	respond_with @trade_source
