@@ -8,6 +8,7 @@ class MagicOrders.Views.SellersIndex extends Backbone.View
     'click .edit_seller': 'edit_seller'
     'click .close_seller': 'close_seller'
     'click #new_seller': 'new_seller'
+    'click #seller_search': 'search'
 
   initialize: ->
     @collection.on("reset", @render, this)
@@ -53,3 +54,12 @@ class MagicOrders.Views.SellersIndex extends Backbone.View
 
       $('#children_' + id).html(html)
     )
+
+  search: (event) ->
+    event.preventDefault()
+    @collection.fetch(data: {key: $('#select01').val(), value: $('#search_value').val()})
+    view = new MagicOrders.Views.SellersIndex(collection: @collection)
+    $('#content').html(view.render().el)
+
+
+

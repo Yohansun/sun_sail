@@ -3,10 +3,16 @@ class SellersController < ApplicationController
   respond_to :json
 
   def index
+    @sellers = Seller
+
     if params[:parent_id]
-      @sellers = Seller.where(parent_id: params[:parent_id])
+      @sellers = @sellers.where(parent_id: params[:parent_id])
     else
-      @sellers = Seller.roots
+      @sellers = @sellers.roots
+    end
+
+    if params[:key].present? && params[:value].present?
+      @sellers = @sellers.where(params[:key].to_sym => params[:value])
     end
 
     respond_with @sellers

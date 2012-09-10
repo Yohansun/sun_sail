@@ -33,15 +33,15 @@
       <fieldset class="form-inline">
         <div class="controls">
           <select id="select01" class="input-large">
-            <option>名称</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
+            <option value='id'>编号</option>
+            <option value='fullname'>全称</option>
+            <option value='name'>简称</option>
+            <option value='address'>地址</option>
           </select>
 
           <div class="input-append">
-            <input type="text" id="appendedInputButton" class="input-large"><button type="button" class="btn">过滤</button>
+            <input type="text" id="search_value" class="input-large">
+            <button type="button" class="btn" id='seller_search'>过滤</button>
           </div>
         </div>
       </fieldset>
@@ -176,7 +176,7 @@
                     </a>
                   </li>
                   <% end %>
-                  <li><a href="/sellers/<%= seller.id %>/history">历史交易</a></li>
+                  <!-- <li><a href="/sellers/<%= seller.id %>/history">历史交易</a></li> -->
                 </ul>
               </div>
             </td>

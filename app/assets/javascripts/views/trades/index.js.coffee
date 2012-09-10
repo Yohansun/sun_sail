@@ -17,7 +17,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     'click [data-invoice-status]': 'selectSameStatusInvoice'
     'click [data-deliver-bill-status]':'selectSameStatusDeliverBill'
     'click [data-logistic-status]': 'selectSameStatusLogistic'
-
     
     #visual effects
     'click #advanced_btn': 'advancedSearch'
