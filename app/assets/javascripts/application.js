@@ -27,6 +27,17 @@
 //= require_tree .
 
 $(function () {
+  //高级搜索显示/隐藏
+  $('#advanced_btn').click(function(){
+    $('#advanced_btn i').toggleClass('icon-arrow-up');
+    $(this).parents('fieldset').siblings('div.fieldset_group').toggle();
+  })
+  //input多选框全选和全不选
+  $('#checkbox_all').click(function(){
+    var $this = $(this);
+    $('td input:checkbox').attr('checked',!!$this.attr('checked'))
+  })
+
   $("#area_parent_id").tokenInput("/areas/autocomplete.json",{
   	crossDomain: false,
   	tokenLimit: 1,

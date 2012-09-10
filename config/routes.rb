@@ -14,7 +14,12 @@ MagicOrders::Application.routes.draw do
       end
     end
 
-    resources :sellers
+    resources :sellers do
+      member do
+        get :children
+      end
+    end
+
     resources :users
     resources :trade_sources
     resources :areas do

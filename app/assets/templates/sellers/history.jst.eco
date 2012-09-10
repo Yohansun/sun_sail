@@ -1,0 +1,170 @@
+<div class="container-fluid">
+  <header class="jumbotron subhead" id="overview">
+    <div class="subnav">
+      <ul class="nav nav-pills">
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">
+            经销商<b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a href="/sellers">所有经销商</a></li>
+            <li><a href="#">最新经销商</a></li>
+            <li><a href="#">已关闭经销商</a></li>
+            <!-- <li><a href="history.html">历史交易</a></li> -->
+          </ul>
+        </li>
+        <li><a href="/areas">地域管理</a></li>
+        <li class="active"><a>历史交易</a></li>
+      </ul>
+    </div>
+  </header>
+  <div class="row-fluid">
+    <ul class="breadcrumb" style="position:relative;">
+      <li><a href="#">Magic</a><span class="divider">/</span></li>
+      <li><a href="#">经销机构管理</a><span class="divider">/</span></li>
+      <li class="active">历史交易</li>
+    </ul><!-- breadcrumb -->
+
+    <form class="well form-search">
+      <fieldset class="form-inline">
+        <div class="controls">
+          <select id="select01" class="input-large">
+            <option>名称</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+          </select>
+
+          <div class="input-append">
+            <input type="text" id="appendedInputButton" class="search-query w_specify"><button type="button" class="btn">过滤</button>
+          </div>
+
+          <div class="pull-right">
+            <a href="#">历史无交易</a>
+            <a href="#">涨幅最大经销商</a>
+            <a href="#">业绩下滑经销商</a>
+            <a href="#">业绩top10</a>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+
+    <div class="controls clearfix">
+      <div class="btns btn-group pull-right">
+        <a href="#" class="btn btn-success btn_mar4">显示设置</a>
+        <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-success dropdown_check_btn"><span class="caret"></span></button>
+        <ul class="dropdown-menu dropdown_check" id="dropdown_check">
+          <li>
+            <label class="checkbox" style="padding-left:35px;">
+              <input type="checkbox" value="option1">
+              订单编号
+            </label>
+          </li>
+
+          <li>
+            <label class="checkbox" style="padding-left:35px;">
+              <input type="checkbox" value="option1">
+              订单状态
+            </label>
+          </li>
+          <li>
+            <label class="checkbox" style="padding-left:35px;">
+              <input type="checkbox" value="option1">
+              订单金额
+            </label>
+          </li>
+          <li>
+            <label class="checkbox" style="padding-left:35px;">
+              <input type="checkbox" value="option1">
+              客户姓名
+            </label>
+          </li>
+          <li>
+            <label class="checkbox" style="padding-left:35px;">
+              <input type="checkbox" value="option1">
+              联系方式
+            </label>
+          </li>
+
+          <li>
+            <label class="checkbox" style="padding-left:35px;">
+              <input type="checkbox" value="option1">
+              客户留言
+            </label>
+          </li>
+
+          <li>
+            <label class="checkbox" style="padding-left:35px;">
+              <input type="checkbox" value="option1">
+              订单编号
+            </label>
+          </li>
+        </ul>
+      </div>
+
+      <div class="btns btn-group pull-left">
+        <a href="#" class="btn btn-warning"><i class="icon-user icon-white"></i> 批量操作</a>
+        <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-warning btn_left4"><span class="caret"></span></button>
+        <ul class="dropdown-menu">
+          <li><a href="#">批量导出</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <table class="table table-striped table-bordered table-condensed td_colors mar_t">
+      <thead>
+        <tr>
+          <th>选择</th>
+          <th>编号</th>
+          <th>经销商简称</th>
+          <th>经销商全称</th>
+          <th>联系电话</th>
+          <th>历史订单数</th>
+          <th>历史交易金额</th>
+          <th>状态</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><!-- <input id="checkbox_all" type="checkbox" value="option1"> --></td>
+          <td>1368</td>
+          <td>定制销售部</td>
+          <td>定制销售部</td>
+          <td>13818793549</td>
+          <td>15</td>
+          <td>45369</td>
+          <td>有效</td>
+          <td>
+            <div class="btn-group">
+              <button data-toggle="dropdown" class="btn btn-info dropdown-toggle min_w">
+                <i class="icon-wrench"></i> <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" style="left:-115px;">
+                <li><a href="history_detail.html">交易详情</a></li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="pagination">
+      <ul class="pull-right">
+        <li><a href="#">上一页</a></li>
+        <li class="active">
+          <a href="#">1</a>
+        </li>
+        <li><a href="#">2</a></li>
+        <li><a href="#">3</a></li>
+        <li><a href="#">4</a></li>
+        <li><a href="#">下一页</a></li>
+      </ul>
+    </div><!-- pagination ends -->
+  </div>
+  <hr>
+  <footer>
+    © Copyright 2011-2012 Do Order. All rights reserved.
+  </footer>
+</div>

@@ -39,6 +39,14 @@ class SellersController < ApplicationController
       @seller.email = params[:seller_email]
     end
 
+    unless params[:seller_interface].blank?
+      @seller.interface = params[:seller_interface]
+    end
+
+    unless params[:parent_id].blank?
+      @seller.parent_id = params[:parent_id].to_i
+    end
+
     @seller.save
 
     respond_with @seller
@@ -70,15 +78,21 @@ class SellersController < ApplicationController
     unless params[:seller_performance_score].blank?
       @seller.performance_score = params[:seller_performance_score]
     end
-
-    if @seller.active == true
-      @seller.active = false
-    else
-      @seller.active = true
+    
+    unless params[:seller_interface].blank?
+      @seller.interface = params[:seller_interface]
     end
 
-    @seller.save
+    @seller.active = !@seller.active
+
+    @seller.save!
 
     respond_with @seller
+  end
+
+
+  def children
+    @seller = Seller.find params[:id]
+    @children = @seller.children
   end
 end

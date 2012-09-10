@@ -1,12 +1,14 @@
 class MagicOrders.Routers.Sellers extends Backbone.Router
   routes:
     'sellers': 'index'
-    'sellers/new': 'new'
+    'sellers/:id/new': 'new'
     'sellers/:id': 'show'
     'sellers/:id/edit': 'edit'
-    
+    'sellers/:id/history': 'history'
+
   initialize: ->
     @collection = new MagicOrders.Collections.Sellers()
+    @parent_id = 0
 
   show_top_nav: ->
     $("#top-nav li").hide()
@@ -21,12 +23,15 @@ class MagicOrders.Routers.Sellers extends Backbone.Router
   show: (id) ->
     @show_top_nav()
     @collection.fetch({data: {parent_id: id}})
+    @parent_id = id
+    console.log(@parent_id)
     view = new MagicOrders.Views.SellersIndex(collection: @collection)
     $('#content').html(view.render().el)
 
-  new: () ->
+  new: (id) ->
     @show_top_nav()
     @model= new MagicOrders.Models.Seller()
+    @model.set('parent_id', id)
     view = new MagicOrders.Views.SellersNew(model: @model)
     $('#content').html(view.render().el)
 
@@ -35,4 +40,11 @@ class MagicOrders.Routers.Sellers extends Backbone.Router
     @model = new MagicOrders.Models.Seller(id: id)
     @model.fetch success: (model, response) =>
       view = new MagicOrders.Views.SellersEdit(model: @model)
+      $('#content').html(view.render().el)
+
+  history: (id) ->
+    @show_top_nav()
+    @model = new MagicOrders.Models.Seller(id: id)
+    @model.fetch success: (model, response) =>
+      view = new MagicOrders.Views.SellersHistory(model: @model)
       $('#content').html(view.render().el)
