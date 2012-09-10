@@ -7,6 +7,7 @@ class MagicOrders.Views.SellersIndex extends Backbone.View
     'click .preview_children': 'preview_children'
     'click .edit_seller': 'edit_seller'
     'click .close_seller': 'close_seller'
+    'click #new_seller': 'new_seller'
 
   initialize: ->
     @collection.on("reset", @render, this)
@@ -14,6 +15,11 @@ class MagicOrders.Views.SellersIndex extends Backbone.View
   render: ->
     $(@el).html(@template(sellers: @collection))
     this
+
+  new_seller: (event) ->
+    event.preventDefault()
+    parent_id = $('.parent_id').val()
+    Backbone.history.navigate("sellers/#{parent_id}/new", true)
 
   browse_children: (event) ->
     event.preventDefault()

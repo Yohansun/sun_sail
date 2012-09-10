@@ -8,6 +8,7 @@
 
       <form class="well form-horizontal new_seller">
         <fieldset>
+          <input type='hidden' id='parent_id'>
           <div class="control-group">
             <label class="control-label">经销商简称：</label>
             <div class="controls">

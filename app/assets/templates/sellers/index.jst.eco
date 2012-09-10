@@ -25,7 +25,7 @@
       <li><a href="#">Magic</a><span class="divider">/</span></li>
       <li class="active">经销机构管理</li>
       <li style="position:absolute;right:15px;top:6px;">
-        <i class="icon-plus"></i><a class="btn_alert" href="/sellers/new">新增经销商</a>
+        <i class="icon-plus"></i><a class="btn_alert" id='new_seller' href='javascript:void(0)'>新增经销商</a>
       </li>
     </ul><!-- breadcrumb -->
 
@@ -41,7 +41,7 @@
           </select>
 
           <div class="input-append">
-            <input type="text" id="appendedInputButton" class="input-large search-query"><button type="button" class="btn">过滤</button>
+            <input type="text" id="appendedInputButton" class="input-large"><button type="button" class="btn">过滤</button>
           </div>
         </div>
       </fieldset>
@@ -50,12 +50,13 @@
     <div class="controls clearfix">
       <div class="btns btn-group pull-right">
         <a href="#" class="btn btn-success btn_mar4">显示设置</a>
-        <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-success dropdown_check_btn"><span class="caret"></span></button>
+        <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-success dropdown_check_btn">
+          <span class="caret"></span>
+        </button>
         <ul class="dropdown-menu dropdown_check" id="dropdown_check">
           <li>
             <label class="checkbox" style="padding-left:35px;">
-              <input type="checkbox" value="option1">
-              订单编号
+              <input type="checkbox" value="option1">订单编号
             </label>
           </li>
 
@@ -126,7 +127,7 @@
       <tbody>
         <% for seller in @sellers.models: %>
           <tr>
-            <td><%= seller.get('id') %></td>
+            <td><%= seller.get('id') %><input type='hidden' class='parent_id' value="<%= seller.get('parent_id') %>"></td>
             <td><%= seller.get('fullname') %></td>
             <td><%= seller.get('name') %></td>
             <td><p style="width:200px;word-wrap:break-word"><%= seller.get('mobile') %></p></td>

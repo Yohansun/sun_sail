@@ -39,7 +39,13 @@ class SellersController < ApplicationController
       @seller.email = params[:seller_email]
     end
 
-    @seller.interface = params[:seller_interface]
+    unless params[:seller_interface].blank?
+      @seller.interface = params[:seller_interface]
+    end
+
+    unless params[:parent_id].blank?
+      @seller.parent_id = params[:parent_id].to_i
+    end
 
     @seller.save
 
