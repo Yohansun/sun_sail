@@ -1,9 +1,32 @@
 <div class="container-fluid">
+  <header class="jumbotron subhead" id="overview">
+    <div class="subnav">
+      <ul class="nav nav-pills">
+        <li class="dropdown active">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">
+            经销商
+            <b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a href="/sellers">所有经销商</a></li>
+            <li><a>最新经销商</a></li>
+            <li><a href="#">已关闭经销商</a></li>
+            <!-- <li><a href="history.html">历史交易</a></li> -->
+          </ul>
+        </li>
+        <li><a href="area_m.html">地域管理</a></li>
+        <!-- <li><a href="history.html">历史交易</a></li> -->
+      </ul>
+    </div>
+  </header>
+
   <div class="row-fluid">
     <ul class="breadcrumb" style="position:relative;">
       <li><a href="#">Magic</a><span class="divider">/</span></li>
       <li class="active">经销机构管理</li>
-      <li style="position:absolute;right:15px;top:6px;"><i class="icon-plus"></i><a class="btn_alert" href="sellers/new">新增经销商</a></li>
+      <li style="position:absolute;right:15px;top:6px;">
+        <i class="icon-plus"></i><a class="btn_alert" href="/sellers/new">新增经销商</a>
+      </li>
     </ul><!-- breadcrumb -->
 
     <form class="well form-search">
@@ -24,7 +47,7 @@
       </fieldset>
     </form>
 
-<!--       <div class="controls clearfix">
+    <div class="controls clearfix">
       <div class="btns btn-group pull-right">
         <a href="#" class="btn btn-success btn_mar4">显示设置</a>
         <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-success dropdown_check_btn"><span class="caret"></span></button>
@@ -84,7 +107,7 @@
           <li><a href="#">批量导出</a></li>
         </ul>
       </div>
-    </div> -->
+    </div>
 
     <table class="table table-striped table-bordered table-condensed td_colors mar_t">
       <thead>
@@ -93,9 +116,10 @@
           <th>经销商全称</th>
           <th>经销商简称</th>
           <th>联系电话</th>
-          <th>Email</th>
+          <th>联系人</th>
           <th>地址</th>
-          <!-- <th>状态</th> -->
+          <th>下级经销商</th>
+          <th>状态</th>
           <th>操作</th>
         </tr>
       </thead>
@@ -106,28 +130,52 @@
             <td><%= seller.get('fullname') %></td>
             <td><%= seller.get('name') %></td>
             <td><p style="width:200px;word-wrap:break-word"><%= seller.get('mobile') %></p></td>
-            <td><p style="width:250px;word-wrap:break-word"><%= seller.get('email') %></p></td>
+            <td><%= seller.get('interface') %></td>
             <td><%= seller.get('address') %></td>
-            <!-- <td>状态</td> -->
             <td>
               <div class="btn-group">
-                <button data-toggle="dropdown" class="btn btn-info dropdown-toggle min_w"><i class="icon-wrench"></i> <span class="caret"></span></button>
+                <a data-toggle="dropdown" class="dropdown-toggle noshadow min_w preview_children" data-id="<%= seller.id %>" >
+                  <img src="/assets/u741_original.png">
+                </a>
+                <ul class="dropdown-menu" style="left:-115px;" id='children_<%= seller.id %>'>
+                </ul>
+              </div>
+            </td>
+            <td>
+              <% if seller.get('active') == true: %>
+                启用
+              <% else if seller.get('active') == false: %>
+                关闭
+              <% end %>
+            </td>
+            <td>
+              <div class="btn-group">
+                <button data-toggle="dropdown" class="btn btn-info dropdown-toggle min_w">
+                  <i class="icon-wrench"></i> <span class="caret"></span>
+                </button>
                 <ul class="dropdown-menu" style="left:-115px;">
                   <li><a data-toggle="modal" class="edit_seller" data-id="<%= seller.id %>" href="seller#edit">编辑</a></li>
-                  <li><a data-toggle="modal" class="close_seller" data-id="<%= seller.id %>" href="#">
-                  <% if seller.get('active') == true: %>
-                  关闭
-                  <% else if seller.get('active') == false: %>
-                  启用
-                  <% end %></a>
+                  <li>
+                    <a data-toggle="modal" class="close_seller" data-id="<%= seller.id %>" href="#">
+                      <% if seller.get('active') == true: %>
+                      关闭
+                      <% else if seller.get('active') == false: %>
+                      启用
+                      <% end %>
+                    </a>
                   </li>
-                  <!--<li><a data-toggle="modal" href="#dealer_area">管辖地区</a></li>
-                  <li><a data-toggle="modal" href="#dealer_login">登陆账号</a></li>
-                  <li class="divider"></li> -->
+                  <li><a data-toggle="modal" href="#dealer_area">管辖地区</a></li>
+                  <!-- <li><a data-toggle="modal" href="#dealer_login">登陆账号</a></li> -->
+                  
                   <% if seller.get('children_count') > 0: %>
-                  <li><a data-toggle="modal" class="browse_children" data-id="<%= seller.id %>" href="seller#<%= seller.id %>">管理下级</a></li>
+                  <li class="divider"></li> 
+                  <li>
+                    <a data-toggle="modal" class="browse_children" data-id="<%= seller.id %>" href="seller#<%= seller.id %>">
+                      管理下级
+                    </a>
+                  </li>
                   <% end %>
-                  <!-- <li><a href="#">历史交易</a></li> -->
+                  <li><a href="/sellers/<%= seller.id %>/history">历史交易</a></li>
                 </ul>
               </div>
             </td>
@@ -139,77 +187,77 @@
 </div>
 
 <div id="dealer_area" class="modal hide fade">
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal">&times;</button>
-  </div><!-- modal-header -->
-  <div class="modal-body clearfix">
-    <table class="table table-bordered table-striped pull-left w_55">
-      <tbody>
-        <tr>
-          <th>地区编号</th>
-          <th>地区名称</th>
-          <th>操作</th>
-        </tr>
-        <tr>
-          <td class="border_l"></td>
-          <td></td>
-          <td>解除管理</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="modal-header">
+      <h3>管辖地区<button type="button" class="close" data-dismiss="modal">&times;</button></h3>
+    </div><!-- modal-header -->
+    <div class="modal-body clearfix">
+      <table class="table table-bordered table-striped pull-left w_55">
+        <tbody>
+          <tr>
+            <th>地区编号</th>
+            <th>地区名称</th>
+            <th>操作</th>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td>解除管理</td>
+          </tr>
+        </tbody>
+      </table>
 
-    <div class="pull-right well w_35">
-      <label class="checkbox" style="padding-left:35px;">
-        <input type="checkbox" value="option1">
-        一级地区
-      </label>
+      <div class="pull-right well w_35">
+        <label class="checkbox" style="padding-left:35px;">
+          <input type="checkbox" value="option1">
+          一级地区
+        </label>
 
-      <div class="well well_second">
+        <div class="well well_second">
+          <label class="checkbox" style="padding-left:35px;">
+            <input type="checkbox" value="option1">
+            二级地区
+          </label>
+          <label class="checkbox" style="padding-left:35px;">
+            <input type="checkbox" value="option1">
+            二级地区
+          </label>  
+          <label class="checkbox" style="padding-left:35px;">
+            <input type="checkbox" value="option1">
+            二级地区
+          </label>
+        </div>
+
+        <div class="well well_third">
+          <label class="checkbox" style="padding-left:35px;">
+            <input type="checkbox" value="option1">
+            三级地区
+          </label>
+          <label class="checkbox" style="padding-left:35px;">
+            <input type="checkbox" value="option1">
+            三级地区
+          </label>  
+          <label class="checkbox" style="padding-left:35px;">
+            <input type="checkbox" value="option1">
+            三级地区
+          </label>
+        </div>    
+
         <label class="checkbox" style="padding-left:35px;">
           <input type="checkbox" value="option1">
-          二级地区
+          一级地区
         </label>
-        <label class="checkbox" style="padding-left:35px;">
-          <input type="checkbox" value="option1">
-          二级地区
-        </label>
-        <label class="checkbox" style="padding-left:35px;">
-          <input type="checkbox" value="option1">
-          二级地区
-        </label>
+
+        <div class="alert fade in">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <strong>提示：</strong>所选区域已有经销商，是否先解除该地区的经销商
+        </div>
       </div>
-
-      <div class="well well_third">
-        <label class="checkbox" style="padding-left:35px;">
-          <input type="checkbox" value="option1">
-          三级地区
-        </label>
-        <label class="checkbox" style="padding-left:35px;">
-          <input type="checkbox" value="option1">
-          三级地区
-        </label>
-        <label class="checkbox" style="padding-left:35px;">
-          <input type="checkbox" value="option1">
-          三级地区
-        </label>
-      </div>
-
-      <label class="checkbox" style="padding-left:35px;">
-        <input type="checkbox" value="option1">
-        一级地区
-      </label>
-
-      <div class="alert fade in">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <strong>提示：</strong>所选区域已有经销商，是否先解除该地区的经销商
-      </div>
-    </div>
-  </div><!-- modal-body -->
-  <div class="modal-footer">
-    <a href="#" class="btn" data-dismiss="modal" >取消</a>
-    <a href="#" class="btn btn-primary">确定</a>
-  </div><!-- modal-footer -->
-</div><!-- dealer_area -->
+    </div><!-- modal-body -->
+    <div class="modal-footer">
+      <a href="#" class="btn" data-dismiss="modal" >取消</a>
+      <a href="#" class="btn btn-primary">确定</a>
+    </div><!-- modal-footer -->
+  </div><!-- dealer_area -->
 
 <div id="dealer_login" class="modal hide fade">
   <div class="modal-header">

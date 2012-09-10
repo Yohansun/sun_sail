@@ -4,7 +4,8 @@ class MagicOrders.Routers.Sellers extends Backbone.Router
     'sellers/new': 'new'
     'sellers/:id': 'show'
     'sellers/:id/edit': 'edit'
-    
+    'sellers/:id/history': 'history'
+
   initialize: ->
     @collection = new MagicOrders.Collections.Sellers()
 
@@ -36,3 +37,11 @@ class MagicOrders.Routers.Sellers extends Backbone.Router
     @model.fetch success: (model, response) =>
       view = new MagicOrders.Views.SellersEdit(model: @model)
       $('#content').html(view.render().el)
+
+  history: (id) ->
+    @show_top_nav()
+    @model = new MagicOrders.Models.Seller(id: id)
+    @model.fetch success: (model, response) =>
+      view = new MagicOrders.Views.SellersHistory(model: @model)
+      $('#content').html(view.render().el)
+

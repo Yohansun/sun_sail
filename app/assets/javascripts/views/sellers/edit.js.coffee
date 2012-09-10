@@ -18,14 +18,14 @@ class MagicOrders.Views.SellersEdit extends Backbone.View
 
     unless @model.set("seller_name": $("#seller_name").val())
       $.unblockUI()
-      alert("经销商简称不能为空")     
+      alert("经销商简称不能为空")
       return
-        
+
     unless @model.set("seller_fullname": $("#seller_fullname").val())
       $.unblockUI()
-      alert("经销商全称不能为空")     
+      alert("经销商全称不能为空")
       return
-          
+
     unless @model.set("seller_mobile": $("#seller_mobile").val()) and (/^[0-9,]*$/.test($("#seller_mobile").val()))
       $.unblockUI()
       alert("电话为空或格式不正确")
@@ -44,6 +44,11 @@ class MagicOrders.Views.SellersEdit extends Backbone.View
     unless @model.set("seller_performance_score": $("#seller_performance_score").val()) and (/^[0-9]*$/.test($("#seller_performance_score").val()))
       $.unblockUI()
       alert("绩效打分为空或格式不正确")
+      return
+
+    unless @model.set("seller_interface": $("#seller_interface").val())
+      $.unblockUI()
+      alert("联系人不能为空")
       return
 
     @model.save {},

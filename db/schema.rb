@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120907084825) do
+ActiveRecord::Schema.define(:version => 20120909084011) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -63,18 +63,20 @@ ActiveRecord::Schema.define(:version => 20120907084825) do
     t.string   "fullname"
     t.string   "address"
     t.string   "mobile"
-    t.datetime "created_at",                       :null => false
-    t.datetime "updated_at",                       :null => false
+    t.datetime "created_at",                          :null => false
+    t.datetime "updated_at",                          :null => false
     t.integer  "parent_id"
     t.integer  "lft"
     t.integer  "rgt"
-    t.integer  "children_count", :default => 0
+    t.integer  "children_count",    :default => 0
     t.string   "email"
     t.string   "telephone"
     t.string   "cc_emails"
     t.integer  "user_id"
     t.string   "pinyin"
-    t.boolean  "active",         :default => true
+    t.boolean  "active",            :default => true
+    t.string   "interface"
+    t.integer  "performance_score", :default => 0
   end
 
   create_table "trade_sources", :force => true do |t|
@@ -83,9 +85,12 @@ ActiveRecord::Schema.define(:version => 20120907084825) do
     t.string   "app_key"
     t.string   "secret_key"
     t.string   "session"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
     t.string   "trade_type"
+    t.integer  "fetch_quantity",      :default => 20
+    t.integer  "fetch_time_circle",   :default => 15
+    t.boolean  "high_pressure_valve", :default => false
   end
 
   create_table "users", :force => true do |t|

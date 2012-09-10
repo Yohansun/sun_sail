@@ -1,59 +1,65 @@
 <div class="row-fluid">
-      <ul class="breadcrumb" style="position:relative;">
-        <li><a href="#">Magic</a><span class="divider">/</span></li>
-        <li><a href='/sellers'>经销机构管理</a><span class="divider">/</span></li>
-        <!--<li><a href="#">经销商</a><span class="divider">/</span></li>-->
-        <li class="active"><a href="#">编辑经销商</a></li>
-      </ul><!-- breadcrumb -->
+  <ul class="breadcrumb" style="position:relative;">
+    <li><a href="#">Magic</a><span class="divider">/</span></li>
+    <li><a href='/sellers'>经销机构管理</a><span class="divider">/</span></li>
+    <li class="active"><a href="#">编辑经销商</a></li>
+  </ul><!-- breadcrumb -->
 
-      <form class="well form-horizontal">
-        <fieldset>
-          <div class="control-group">
-            <label class="control-label">经销商简称：</label>
-            <div class="controls">
-              <input type="text" placeholder="输入文字..." class="input-xlarge search-query" id="seller_name" value="<%= @seller.get('seller_name')%>">
-            </div>
-          </div>
+  <form class="well form-horizontal">
+    <fieldset>
+      <div class="control-group">
+        <label class="control-label">经销商简称：</label>
+        <div class="controls">
+          <input type="text" placeholder="输入文字..." class="input-xlarge" id="seller_name" value="<%= @seller.get('seller_name')%>">
+        </div>
+      </div>
 
-          <div class="control-group">
-            <label class="control-label" for="">经销商全称：</label>
-            <div class="controls">
-              <input type="text" placeholder="输入文字..." class="input-xlarge search-query" id="seller_fullname" value="<%= @seller.get('seller_fullname') %>">
-            </div>
-          </div>
+      <div class="control-group">
+        <label class="control-label" for="">经销商全称：</label>
+        <div class="controls">
+          <input type="text" placeholder="输入文字..." class="input-xlarge" id="seller_fullname" value="<%= @seller.get('seller_fullname') %>">
+        </div>
+      </div>
 
-          <div class="control-group">
-            <label class="control-label" for="">电话：</label>
-            <div class="controls">
-              <input type="text" placeholder="输入文字..." class="input-xlarge search-query" id="seller_mobile" value="<%= @seller.get('seller_mobile') %>">
-            </div>
-          </div>
+      <div class="control-group">
+        <label class="control-label" for="">手机：</label>
+        <div class="controls">
+          <input type="text" placeholder="输入文字..." class="input-xlarge" id="seller_mobile" value="<%= @seller.get('seller_mobile') %>">
+        </div>
+      </div>
 
-          <div class="control-group">
-            <label class="control-label" for="">地址：</label>
-            <div class="controls">
-              <input type="text" placeholder="输入文字..." class="input-xlarge search-query" id="seller_address" value="<%= @seller.get('seller_address') %>">
-            </div>
-          </div>
+      <div class="control-group">
+        <label class="control-label" for="">联系人：</label>
+        <div class="controls">
+          <input type="text" placeholder="输入文字..." class="input-xlarge" id="seller_interface" value="<%= @seller.get('seller_interface') %>">
+        </div>
+      </div>
 
-          <div class="control-group">
-            <label class="control-label" for="">Email：</label>
-            <div class="controls">
-              <input type="text" placeholder="输入文字..." class="input-xlarge search-query" id="seller_email" value="<%= @seller.get('seller_email') %>">
-            </div>
-          </div>
+      <div class="control-group">
+        <label class="control-label" for="">地址：</label>
+        <div class="controls">
+          <input type="text" placeholder="输入文字..." class="input-xlarge" id="seller_address" value="<%= @seller.get('seller_address') %>">
+        </div>
+      </div>
 
-          <div class="control-group">
-            <label class="control-label" for="">绩效打分：</label>
-            <div class="controls">
-              <input type="text" placeholder="输入文字..." class="input-xlarge search-query" id="seller_performance_score" value="<%= @seller.get('seller_performance_score') %>">
-            </div>
-          </div>
+      <div class="control-group">
+        <label class="control-label" for="">绩效打分：</label>
+        <div class="controls">
+          <input type="text" placeholder="输入文字..." class="input-xlarge search-query" id="seller_performance_score" value="<%= @seller.get('seller_performance_score') %>">
+        </div>
+      </div>
 
-          <div class="form-actions">
-            <a class="btn" href='/sellers'>取消</a>
-            <button class="btn btn-primary edit">编辑</button>
-          </div>
-        </fieldset>
-      </form>
+      <div class="control-group">
+        <label class="control-label" for="">Email：</label>
+        <div class="controls">
+          <input type="text" placeholder="输入文字..." class="input-xlarge" id="seller_email" value="<%= @seller.get('seller_email') %>">
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <a class="btn" href='/sellers'>取消</a>
+        <button class="btn btn-primary edit">编辑</button>
+      </div>
+    </fieldset>
+  </form>
 </div>
