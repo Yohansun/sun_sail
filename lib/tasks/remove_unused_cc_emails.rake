@@ -9,9 +9,13 @@ task :remove_yaoyanming_cc_emails => :environment do
       cc_array = cc_array - [yaoyanming]
       new_cc_emails = cc_array.join(',')
       s.cc_emails = new_cc_emails.strip
-      s.save
-      p "------------------------------------------------------------------------"
-      p s.cc_emails
+      if s.save
+        p "------------------------------------------------------------------------"
+        p s.cc_emails
+      else
+        p "========================================================================="
+        p s.errors 
+      end  
     end
   end
 end
@@ -25,9 +29,13 @@ task :remove_janezhao_cc_emails => :environment do
       cc_array = cc_array - [janezhao]
       new_cc_emails = cc_array.join(',')
       s.cc_emails = new_cc_emails.strip
-      s.save
-      p "------------------------------------------------------------------------"
-      p s.cc_emails
+      if s.save
+        p "------------------------------------------------------------------------"
+        p s.cc_emails
+      else
+        p "========================================================================="
+        p s.errors 
+      end  
     end
   end
 end
@@ -41,9 +49,13 @@ task :remove_menlulu_cc_emails => :environment do
       cc_array = cc_array - [menlulu]
       new_cc_emails = cc_array.join(',')
       s.cc_emails = new_cc_emails.strip
-      s.save
-      p "------------------------------------------------------------------------"
-      p s.cc_emails
+      if s.save
+        p "------------------------------------------------------------------------"
+        p s.cc_emails
+      else
+        p "========================================================================="
+        p s.errors 
+      end  
     end
   end
 end
@@ -58,9 +70,13 @@ task :remove_chendonglin_cc_emails => :environment do
       cc_array = cc_array - [chendonglin]
       new_cc_emails = cc_array.join(',')
       s.cc_emails = new_cc_emails.strip
-      s.save
-      p "------------------------------------------------------------------------"
-      p s.cc_emails
+      if s.save
+        p "------------------------------------------------------------------------"
+        p s.cc_emails
+      else
+        p "========================================================================="
+        p s.errors 
+      end  
     end
   end
 end

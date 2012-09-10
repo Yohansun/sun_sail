@@ -9,8 +9,8 @@ class Seller < ActiveRecord::Base
   has_many :users
   has_many :areas
 
-  validates_uniqueness_of :name
-  validates_presence_of :name, :fullname
+  validates_uniqueness_of :fullname
+  validates_presence_of :fullname
 
   before_save :set_pinyin
 
