@@ -27,7 +27,7 @@ class TradeSourcesController < ApplicationController
       @trade_source.fetch_time_circle = params[:fetch_time_circle].to_i
       @trade_source.high_pressure_valve = params[:high_pressure_valve]
 
-      @trade_source.save!
+      @trade_source.save
 
    	respond_with @trade_source
 

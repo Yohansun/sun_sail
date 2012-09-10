@@ -1,8 +1,8 @@
 <div class="row-fluid">
   <ul class="breadcrumb" style="position:relative;">
     <li><a href="#">Magic</a><span class="divider">/</span></li>
-    <li><a href='trades'>订单管理</a><span class="divider">/</span></li>
-    <li><a href='trades'>所有订单</a><span class="divider">/</span></li>
+    <li><a href='/trades'>订单管理</a><span class="divider">/</span></li>
+    <li><a href='/trades'>所有订单</a><span class="divider">/</span></li>
     <li class="active">订单设置</li>
   </ul><!-- breadcrumb -->
 
@@ -21,8 +21,8 @@
     <div class="tab-pane active" id="order_source">
       <div class="table tabs-left">
         <ul class="nav nav-tabs reset_border span2" id="myTab_sub">
-          <li class="active"><a data-toggle="tab" href="#" data-source="tmall">淘宝天猫</a></li>
-          <li><a data-toggle="tab" href="#" data-source="taobao_market">淘宝集市</a></li>
+          <li <% if @trade_source.get("id") == 1 : %> class="active" <% end %> ><a data-toggle="tab" href="#" data-source="tmall">淘宝天猫</a></li>
+          <li <% if @trade_source.get("id") == 2 : %> class="active" <% end %> ><a data-toggle="tab" href="#" data-source="taobao_market">淘宝集市</a></li>
           <!-- <li><a href="#buy360" data-toggle="tab">360buy</a></li> -->
           <!-- <li><a href="#sales_dist" data-toggle="tab">淘宝分销</a></li> -->
           <!-- <li><a href="#taobao" data-toggle="tab">淘宝c店</a></li> -->

@@ -199,7 +199,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
         $(@el).find(".trade_pops li [data-type=#{pop}]").parent().show()
 
   fetch_new_trades: =>
-    @collection.fetch add: true, data: {search: {option: @search_option, value: @search_value}, trade_type: @trade_type, offset: 0, limit: $("#newTradesNotifer span").text()}, success: (collection) =>
+    @collection.fetch add: true, data: {trade_type: @trade_type, offset: 0, limit: $("#newTradesNotifer span").text()}, success: (collection) =>
       @renderNew()
       $("#newTradesNotifer").hide()
 
@@ -261,13 +261,13 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
   selectSameStatusTrade: (e) =>
     e.preventDefault()
     $('.dropdown.open .dropdown-toggle').dropdown('toggle');
-    @status_option = $(e.target).data('trade-status')
+    @search_trade_status = $(e.target).data('trade-status')
 
     @offset = 0
     blocktheui()
     $("#trade_rows").html('')
 
-    @collection.fetch data: {search_all: {@status_option}}, success: (collection) =>
+    @collection.fetch data: {search_trade_status: @search_trade_status}, success: (collection) =>
      if collection.length > 0
        @offset = @offset + 20
        @renderUpdate()
@@ -278,13 +278,13 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
   selectSameStatusInvoice: (e) =>
     e.preventDefault()
     $('.dropdown.open .dropdown-toggle').dropdown('toggle');
-    @search_invoice = $(e.target).data('invoice-status')
+    @search_invoice_status = $(e.target).data('invoice-status')
 
     @offset = 0
     blocktheui()
     $("#trade_rows").html('')
 
-    @collection.fetch data: {search_all: {@search_invoice}}, success: (collection) =>
+    @collection.fetch data: {search_invoice_status: @search_invoice_status}, success: (collection) =>
      if collection.length > 0
        @offset = @offset + 20
        @renderUpdate()
