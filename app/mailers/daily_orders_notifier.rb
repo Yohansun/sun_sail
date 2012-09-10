@@ -3,7 +3,7 @@ class DailyOrdersNotifier < ActionMailer::Base
   default :from => "E-Business@nipponpaint.com.cn"
 
   def yesterday
-    reciever = %w(michelle@doorder.com wynn@doorder.com zhongjing@nipponpaint.com.cn LuJingRNMD@nipponpaint.com.cn QiYun@nipponpaint.com.cn SunYi@nipponpaint.com.cn ZhuYanQing@nipponpaint.com.cn YaoYanMing@nipponpaint.com.cn)
+    reciever = %w(michelle@doorder.com wynn@doorder.com zhongjing@nipponpaint.com.cn LuJingRNMD@nipponpaint.com.cn QiYun@nipponpaint.com.cn SunYi@nipponpaint.com.cn ZhuYanQing@nipponpaint.com.cn)
     cc = %w(clover@doorder.com blythe@doorder.com hui@networking.io)
     bcc = %w(xiaoliang@networking.io)
     # reciever = %w(xiaoliang@networking.io)
