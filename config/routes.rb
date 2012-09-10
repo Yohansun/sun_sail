@@ -16,6 +16,7 @@ MagicOrders::Application.routes.draw do
 
     resources :sellers
     resources :users
+    resources :trade_sources
     resources :areas do
       collection do
         get :export

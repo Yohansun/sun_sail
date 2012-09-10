@@ -12,7 +12,6 @@
             <label class="control-label">经销商简称：</label>
             <div class="controls">
               <input type="text" placeholder="输入文字..." class="input-xlarge search-query" id="seller_name" value="<%= @seller.get('seller_name')%>">
-              <%= console.log @seller%>
             </div>
           </div>
 
@@ -41,6 +40,13 @@
             <label class="control-label" for="">Email：</label>
             <div class="controls">
               <input type="text" placeholder="输入文字..." class="input-xlarge search-query" id="seller_email" value="<%= @seller.get('seller_email') %>">
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label" for="">绩效打分：</label>
+            <div class="controls">
+              <input type="text" placeholder="输入文字..." class="input-xlarge search-query" id="seller_performance_score" value="<%= @seller.get('seller_performance_score') %>">
             </div>
           </div>
 

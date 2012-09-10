@@ -66,7 +66,11 @@ class SellersController < ApplicationController
     unless params[:seller_email].blank?
       @seller.email = params[:seller_email]
     end
-    
+
+    unless params[:seller_performance_score].blank?
+      @seller.performance_score = params[:seller_performance_score]
+    end
+
     if @seller.active == true
       @seller.active = false
     else
