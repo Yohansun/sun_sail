@@ -302,3 +302,8 @@ code{color:#08C;font-size:14px;margin-bottom:5px;}
 /*base bootstrap2.1.0
 -------------------------------------------------- */
 .form-search .input-append .btn{-webkit-border-radius:  0 3px 3px 0;-moz-border-radius: 0 3px 3px 0;border-radius: 0 3px 3px 0;}
+
+.simple_search{display:none;}
+
+/*toogle*/
+.fieldset_group{display:none}
