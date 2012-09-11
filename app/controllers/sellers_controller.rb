@@ -49,8 +49,8 @@ class SellersController < ApplicationController
       @seller.interface = params[:seller_interface]
     end
 
-    unless params[:parent_id].blank?
-      @seller.parent_id = params[:parent_id].to_i
+    if params[:parent_id].present? && params[:parent_id].to_i != 0 
+      @seller.parent_id = params[:parent_id]
     end
 
     @seller.save

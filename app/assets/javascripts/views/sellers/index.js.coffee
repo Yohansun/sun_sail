@@ -20,6 +20,9 @@ class MagicOrders.Views.SellersIndex extends Backbone.View
   new_seller: (event) ->
     event.preventDefault()
     parent_id = $('.parent_id').val()
+    if parent_id == ''
+      parent_id = 0
+
     Backbone.history.navigate("sellers/#{parent_id}/new", true)
 
   browse_children: (event) ->
@@ -57,7 +60,7 @@ class MagicOrders.Views.SellersIndex extends Backbone.View
 
   search: (event) ->
     event.preventDefault()
-    @collection.fetch(data: {key: $('#select01').val(), value: $('#search_value').val()})
+    @collection.fetch(data: {key: $('#search_key').val(), value: $('#search_value').val()})
     view = new MagicOrders.Views.SellersIndex(collection: @collection)
     $('#content').html(view.render().el)
 

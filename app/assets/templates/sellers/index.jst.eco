@@ -32,7 +32,7 @@
     <form class="well form-search">
       <fieldset class="form-inline">
         <div class="controls">
-          <select id="select01" class="input-large">
+          <select id="search_key" class="input-large">
             <option value='id'>编号</option>
             <option value='fullname'>全称</option>
             <option value='name'>简称</option>
@@ -176,7 +176,6 @@
                     </a>
                   </li>
                   <% end %>
-                  <!-- <li><a href="/sellers/<%= seller.id %>/history">历史交易</a></li> -->
                 </ul>
               </div>
             </td>
