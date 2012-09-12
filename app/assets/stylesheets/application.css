@@ -18,20 +18,21 @@ body {
 }
 
 /*login*/
-.modal.login{ width:323px; height:215px;*width:322px!important;*height:213px!important;background:#F5F5F5 url(../images/loginLogo.png) no-repeat center top;}
+.modal.login{ width:330px; height:265px;*width:329px!important;*height:263px!important;background:#F5F5F5 url(/assets/loginLogo.png) no-repeat center top;}
 .login.modal.fade{margin-left: -161px;margin-top: -105px;}
 .loginLogo{ height:53px;}
 .loginLogo p{ color:#fff; font-size:14px; text-align:right; padding-right:20px; line-height:50px;/* letter-spacing:2px;*/ font-family:"仿宋";}
 .loginPanel{background:#F5F5F5; border:1px solid #E5E5E5; border-top:0;}
 .navbar .brand{padding:0 20px;}
-.login .form-horizontal{ margin-bottom:0;}
-.login .form-horizontal .control-group{border-bottom:1px solid #E5E5E5;/*padding-bottom:10px;*/margin-bottom:10px;}
-.login .form-horizontal .controls {margin-left:85px;*margin-left:10px!important;*padding-left:0!important;}
-.login .form-horizontal .control-label {width:80px;}
-.login .form-horizontal .form-actions {padding-left:0px;padding-top:0; margin:0; text-align:right; background:none; border:none;}
-.iUser { background: url(../images/user.png) no-repeat 12px; }
-.login .loginPanel h5 { font-weight: normal; padding: 9px 12px 9px 35px; float: none; } 
-.modal-backdrop{ opacity:0.1;}
+.login .simple_form{ margin-bottom:0;}
+.login .simple_form .control-group{border-bottom:1px solid #E5E5E5;/*padding-bottom:10px;*/margin-bottom:10px;}
+.login .simple_form .controls {margin-left:85px;*margin-left:10px!important;*padding-left:0!important;}
+.login .simple_form .control-label {width:80px;float:left;text-align:right;}
+.login .simple_form .form-actions {padding:0px 20px 20px; margin:0; text-align:right; background:none; border:none;}
+.iUser { background: url(<%= asset_path "user.png"%>) no-repeat 12px; }
+.login .loginPanel h5 { font-weight: normal; padding: 9px 12px 9px 35px; float: none; }
+.modal-backdrop{ background:none;opacity:0.1;}
+
 
 /*list*/
 .sidebar-nav .nav .nav-header {font-size:12px;}
@@ -260,11 +261,11 @@ table.table td a.btn{margin: 5px;}
 }
 .magic_person div.clearfix{margin-bottom:20px;}
 .icon_branch,.icon_sale,.icon_check,.icon_truck{position:absolute;right:0;top:50%;margin-top:-24px;display: inline-block;width: 48px;height: 48px;*margin-right: .3em;line-height: 48px;}
-.icon_branch{background:url("../images/u75_original.png");}
-.icon_sale{background:url("../images/u77_original.png");}
-.icon_check{background:url("../images/check.png");}
-.icon_truck{background:url("../images/truck.png");}
-.icon_message{padding-left:25px!important;background:url("../images/messages.png") no-repeat left center;}
+.icon_branch{background:url(<%= asset_path "u75_original.png"%>);}
+.icon_sale{background:url(<%= asset_path "u77_original.png"%>);}
+.icon_check{background:url(<%= asset_path "check.png"%>);}
+.icon_truck{background:url(<%= asset_path "truck.png"%>);}
+.icon_message{padding-left:25px!important;background:url(<%= asset_path "messages.png"%>) no-repeat left center;}
 /*storage*/
 .vertical_mid td{vertical-align:middle;}
 /*storage search*/
@@ -283,8 +284,8 @@ table.table td a.btn{margin: 5px;}
 .form-search .reset_width80 .controls{margin-bottom:5px;}
 .tabs-left > .nav-tabs.reset_border{border-right:0;}
 .tabs-left > .tab-content.reset_border{border-left:1px solid #ddd;min-height:300px;}
-.tabs-left > .nav-tabs.reset_border .active > a, .tabs-left > .nav-tabs.reset_border .active > a:hover{border-color:transparent;}
-.tabs-left > .nav-tabs.reset_border.span2{padding-left:15px;}
+/*.tabs-left > .nav-tabs.reset_border .active > a, .tabs-left > .nav-tabs.reset_border .active > a:hover{border-color:transparent;}*/
+.tabs-left > .nav-tabs.reset_border.span2{padding-left:15px;margin-right:0;*position:relative;*left:1px;}
 .tab-content.reset_border fieldset.re_height237{min-height: 237px;}
 .form-horizontal .re_margin5 .controls{margin-bottom: 10px;margin-top:10px;}
 /*chart*/
@@ -307,3 +308,99 @@ code{color:#08C;font-size:14px;margin-bottom:5px;}
 
 /*toogle*/
 .fieldset_group{display:none}
+
+body.yellow_background{/*height:100%;position: relative;*/background:url(/assets/index_bg.jpg);}
+.indexWrap {
+width: 1030px;
+min-height: 145px;
+margin: 0 auto;
+position: absolute;
+left: 50%;
+margin-left: -515px;
+top: 50%;
+margin-top: -80px;
+}
+.indexWrap ul {
+overflow: hidden;
+margin: 0 auto;
+display: block;
+text-align: center;
+display: inline-block;
+}
+.indexWrap ul li {
+float: left;
+}
+.indexWrap .centerT {
+text-align: center;
+}
+.indexWrap .centerT div {
+display: inline-block;
+width: 94px;
+margin: 20px 15px;
+text-align: center;
+position: relative;
+}
+*+ html .indexWrap .centerT div {
+display: inline;
+zoom: 1;
+}
+.indexWrap .centerT div span {
+display: block;
+/*line-height: 190px;*/
+position: relative;
+top:110px;
+}
+.indexWrap .centerT div a {
+display: inline-block;
+width: 94px;
+height: 105px;
+color: #80775e;
+}
+.indexWrap .centerT div a:hover {
+color: #373d41;
+}
+.indexWrap .centerT div a.indexStart1 {
+background: url(/assets/indexStart.png) no-repeat 0 0;
+}
+.indexWrap .centerT div a.indexStart2 {
+background: url(/assets/indexStart.png) no-repeat -120px 0;
+}
+.indexWrap .centerT div a.indexStart3 {
+background: url(/assets/indexStart.png) no-repeat -239px 0;
+}
+.indexWrap .centerT div a.indexStart4 {
+background: url(/assets/indexStart.png) no-repeat -360px 0;
+}
+.indexWrap .centerT div a.indexStart5 {
+background: url(/assets/indexStart.png) no-repeat -477px 0;
+}
+.indexWrap .centerT div a.indexStart6 {
+background: url(/assets/indexStart.png) no-repeat -598px 0;
+}
+.indexWrap .centerT div a.indexStart7 {
+background: url(/assets/indexStart.png) no-repeat -705px 0;
+}
+.indexWrap .centerT div a.indexStart8 {
+background: url(/assets/indexStart.png) no-repeat -812px 0;
+}
+/*.indexWrap .centerT div a.indexStart1:hover {
+background: url(/assets/indexStart.png) no-repeat 0 -80px;
+}
+.indexWrap .centerT div a.indexStart2:hover {
+background: url(/assets/indexStart.png) no-repeat -126px -80px;
+}
+.indexWrap .centerT div a.indexStart3:hover {
+background: url(/assets/indexStart.png) no-repeat -252px -80px;
+}
+.indexWrap .centerT div a.indexStart4:hover {
+background: url(/assets/indexStart.png) no-repeat -379px -80px;
+}
+.indexWrap .centerT div a.indexStart5:hover {
+background: url(/assets/indexStart.png) no-repeat -504px -80px;
+}
+.indexWrap .centerT div a.indexStart6:hover {
+background: url(/assets/indexStart.png) no-repeat -630px -80px
+}
+.indexWrap .centerT div a.indexStart7:hover {
+background: url(/assets/indexStart.png) no-repeat -756px -80px;
+}*/

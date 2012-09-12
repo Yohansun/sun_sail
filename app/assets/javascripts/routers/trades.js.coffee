@@ -1,6 +1,5 @@
 class MagicOrders.Routers.Trades extends Backbone.Router
   routes:
-    '': 'home'
     'trades': 'index'
     'trades/:trade_type': 'index'
     'trades/:id/detail': 'show'
@@ -207,8 +206,3 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $('#trade_seller_confirm_invoice').on 'hide', (event) ->
         Backbone.history.navigate('trades', true)
       $('#trade_seller_confirm_invoice').modal('show')
-
-  home: ->
-    view = new MagicOrders.Views.TradesHome()
-    $('#content').html(view.render().el)
-  

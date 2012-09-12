@@ -3,9 +3,8 @@ require 'sidekiq/web'
 MagicOrders::Application.routes.draw do
 
   get "callbacks/jingdong"
-
   get 'autologin', to: 'users#autologin'
-  devise_for :users
+  devise_for :users, :path => '', :path_names => {:sign_in => 'login'}
 
   scope 'api' do
     resources :trades do
@@ -34,7 +33,7 @@ MagicOrders::Application.routes.draw do
 
   mount Sidekiq::Web => '/sidekiq'
 
-  root to: "home#index"
+  root to: "home#dashboard"
   match "*path", to: "home#index"
 
 end

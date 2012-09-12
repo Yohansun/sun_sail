@@ -45,7 +45,7 @@
       <div class="control-group">
         <label class="control-label" for="">绩效打分：</label>
         <div class="controls">
-          <input type="text" placeholder="输入文字..." class="input-xlarge search-query" id="seller_performance_score" value="<%= @seller.get('seller_performance_score') %>">
+          <input type="text" placeholder="输入文字..." class="input-xlarge" id="seller_performance_score" value="<%= @seller.get('seller_performance_score') %>">
         </div>
       </div>
 
