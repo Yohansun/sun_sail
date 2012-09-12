@@ -1,20 +1,63 @@
-<div class="row-fluid content" id="content">
-<div class="span12">
-  <h2>Sign in</h2>
+<div class="row-fluid">
+  <body class="yellow_background" data-spy="scroll" data-target=".subnav" data-offset="50">
+    <!-- Navbar
+      ================================================== -->
+      <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="navbar-inner">
+          <div class="container-fluid">
+            <a class="brand" href="#"><img src="/assets/logo.png"></a>
+          </div>
+        </div>
+      </div>
+    <!--Navbar ends-->
 
-  <%= simple_form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f| %>
-  <div class="form-inputs">
-    <%= f.input :email, :required => false, :autofocus => true %>
-    <%= f.input :password, :required => false %>
-    <%= f.input :remember_me, :as => :boolean if devise_mapping.rememberable? %>
+    <div class="indexWrap">
+      <div class="centerT" id="centerT">
+        <div>
+          <a class="indexStart1" href=""><span>订单管理</span></a>
+        </div>
+        <div>
+          <a class="indexStart2" href=""><span>客服管理</span></a>
+        </div>
+        <div>
+          <a class="indexStart3" href=""><span>数据魔方</span></a>
+        </div>
+        <div>
+          <a class="indexStart4" href=""><span>仓库管理</span></a>
+        </div>
+        <div>
+          <a class="indexStart5" href=""><span>经销商管理</span></a>
+        </div>
+        <div>
+          <a class="indexStart6" href=""><span>VIP</span></a>
+        </div>
+        <div>
+          <a class="indexStart7" href=""><span>互动中心</span></a>
+        </div>
+        <div>
+          <a class="indexStart8" href=""><span>商品管理</span></a>
+        </div>
+      </div>
+    </div>
   </div>
+</body>
 
-  <div class="form-actions">
-    <%= f.button :submit, "Sign in" %>
+<!--##登录框##-->
+<div id="myModal" class="login modal hide fade">
+  <div class="loginLogo">
+    <p> 用爱心来做事，用感恩的心做人 </p>
   </div>
-  <% end %>
-
-  <%= render "devise/shared/links" %>
-
+  <div class="loginPanel">
+    <h5 class="iUser">登录</h5>
+    <%= simple_form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f| %>
+      <fieldset>
+        <%= f.input :email, :required => false, :autofocus => true, :label => "用户名/邮箱", :input_html =>{ :class => "input-large" } %>
+        <%= f.input :password, :required => false, :label => "密码", :input_html =>{ :class => "input-large" } %>
+        <div class="form-actions">
+          <%= f.button :submit, "登录", :class => "pull-right btn btn-primary" %>
+        </div>
+      </fieldset>
+    <% end %>
+  </div>
 </div>
-</div>
+<!--##登录框完##-->

@@ -156,7 +156,7 @@
             <option value="seller_id">经销商</option>
           </select>
           <div class="input-append">
-            <input type="text" id="appendedInputButton" class="w_specify search_value" value="<%= @search_value %>"><button type="button" class="btn btn-info" id="simple_search_button">筛选</button>
+            <input type="text" id="appendedInputButton" class="w_specify search_value" value="<%= @search_value %>"><button type="button" class="btn btn-info search" id="simple_search_button">筛选</button>
           </div>
         </div>
       </fieldset>
@@ -165,7 +165,7 @@
         <fieldset>
           <div class="controls">
             <select id="status_option" class="input-large">
-              <option value="null">订单状态</option>
+              <option value="">订单状态</option>
               <option value="WAIT_BUYER_PAY">等待付款</option>
               <option value="WAIT_SELLER_SEND_GOODS,WAIT_SELLER_DELIVERY,WAIT_SELLER_STOCK_OUT">已付款，待发货</option>
               <option value="WAIT_BUYER_CONFIRM_GOODS,WAIT_GOODS_RECEIVE_CONFIRM">已付款，已发货</option>
@@ -178,6 +178,7 @@
             </select>
 
             <div class="input-append">
+              <label style="position: relative; top: 5px;">下单时间：</label>
               <input type="text" placeholder="年-月-日" class="input-small search_start_date datepicker" value="<%= @search_start_date %>">
               <input type="text" placeholder="00:00:00" class="input-small search_start_time timepicker" value="<%= @search_start_time %>">
               <i class="icon-arrow-right"></i>
@@ -218,7 +219,7 @@
             <div class="controls">
               <label class="control-label">订单来源：</label>
               <select id="type_option" class="input-large type_option">
-                <option value="null">请选择</option>
+                <option value="">请选择</option>
                 <option value="JingdongTrade">京东</option>
                 <option value="TaobaoTrade">淘宝</option>
                 <option value="TaobaoPurchaseOrder">分销平台</option>

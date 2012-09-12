@@ -60,9 +60,9 @@ class MagicOrders.Views.SellersIndex extends Backbone.View
 
   search: (event) ->
     event.preventDefault()
-    @collection.fetch(data: {key: $('#search_key').val(), value: $('#search_value').val()})
-    view = new MagicOrders.Views.SellersIndex(collection: @collection)
-    $('#content').html(view.render().el)
+    @collection.fetch data: {key: $('#search_key').val(), value: $('#search_value').val()}, success: (collection, response) =>
+      view = new MagicOrders.Views.SellersIndex(collection: collection)
+      $('#content').html(view.render().el)
 
 
 

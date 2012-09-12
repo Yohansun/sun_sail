@@ -79,6 +79,19 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <%= javascript_include_tag "application" %>
+    <script type="text/javascript">
+  
+      $(document).ready(function(e) {
+        
+        $(function(){
+         $('#myModal').modal('toggle');
+         $('#myModal').on('shown',function(){
+           $('.modal-backdrop').unbind('click');
+         });
+       });
+
+      });
+    </script>
     <%= yield :tail -%>
   </body>
 </html>

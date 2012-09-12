@@ -168,6 +168,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
       $("#fieldset_advanced").hide()
       $("#advanced_btn i").toggleClass 'icon-arrow-down'
       $("#advanced_btn i").toggleClass 'icon-arrow-up'
+      $("#simple_search_button").removeClass 'simple_search'
     else
       $("#fieldset_advanced").show()
     #$(@el).find(".trade_mode").text(MagicOrders.trade_modes[MagicOrders.trade_mode])

@@ -166,10 +166,10 @@
                     </a>
                   </li>
                   <li><a data-toggle="modal" href="#dealer_area">管辖地区</a></li>
-                  <!-- <li><a data-toggle="modal" href="#dealer_login">登陆账号</a></li> -->
+                  <!-- <li><a data-toggle="modal" href="#dealer_login">登录账号</a></li> -->
                   
                   <% if seller.get('children_count') > 0: %>
-                  <li class="divider"></li> 
+                  <li class="divider"></li>
                   <li>
                     <a data-toggle="modal" class="browse_children" data-id="<%= seller.id %>" href="seller#<%= seller.id %>">
                       管理下级
