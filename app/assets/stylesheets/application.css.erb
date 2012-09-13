@@ -18,7 +18,7 @@ body {
 }
 
 /*login*/
-.modal.login{ width:330px; height:265px;*width:329px!important;*height:263px!important;background:#F5F5F5 url(/assets/loginLogo.png) no-repeat center top;}
+.modal.login{ width:330px; height:265px;*width:329px!important;*height:263px!important;background:#F5F5F5 url(<%= asset_path "loginLogo.png"%>) no-repeat center top;}
 .login.modal.fade{margin-left: -161px;margin-top: -105px;}
 .loginLogo{ height:53px;}
 .loginLogo p{ color:#fff; font-size:14px; text-align:right; padding-right:20px; line-height:50px;/* letter-spacing:2px;*/ font-family:"仿宋";}
@@ -29,7 +29,7 @@ body {
 .login .simple_form .controls {margin-left:85px;*margin-left:10px!important;*padding-left:0!important;}
 .login .simple_form .control-label {width:80px;float:left;text-align:right;}
 .login .simple_form .form-actions {padding:0px 20px 20px; margin:0; text-align:right; background:none; border:none;}
-.iUser { background: url(/assets/user.png) no-repeat 12px; }
+.iUser { background: url(<%= asset_path "user.png"%>) no-repeat 12px; }
 .login .loginPanel h5 { font-weight: normal; padding: 9px 12px 9px 35px; float: none; }
 .modal-backdrop{ background:none;opacity:0.1;}
 
@@ -261,11 +261,11 @@ table.table td a.btn{margin: 5px;}
 }
 .magic_person div.clearfix{margin-bottom:20px;}
 .icon_branch,.icon_sale,.icon_check,.icon_truck{position:absolute;right:0;top:50%;margin-top:-24px;display: inline-block;width: 48px;height: 48px;*margin-right: .3em;line-height: 48px;}
-.icon_branch{background:url(/assets/u75_original.png);}
-.icon_sale{background:url(/assets/u77_original.png);}
-.icon_check{background:url(/assets/check.png);}
-.icon_truck{background:url(/assets/truck.png);}
-.icon_message{padding-left:25px!important;background:url(/assets/messages.png) no-repeat left center;}
+.icon_branch{background:url(<%= asset_path "u75_original.png"%>);}
+.icon_sale{background:url(<%= asset_path "u77_original.png"%>);}
+.icon_check{background:url(<%= asset_path "check.png"%>);}
+.icon_truck{background:url(<%= asset_path "truck.png"%>);}
+.icon_message{padding-left:25px!important;background:url(<%= asset_path "messages.png"%>) no-repeat left center;}
 /*storage*/
 .vertical_mid td{vertical-align:middle;}
 /*storage search*/
@@ -309,7 +309,7 @@ code{color:#08C;font-size:14px;margin-bottom:5px;}
 /*toogle*/
 .fieldset_group{display:none}
 
-body.yellow_background{/*height:100%;position: relative;*/background:url(/assets/index_bg.jpg);}
+body.yellow_background{/*height:100%;position: relative;*/background:url(<%= asset_path "index_bg.jpg"%>);}
 .indexWrap {
 width: 1030px;
 min-height: 145px;
@@ -360,47 +360,47 @@ color: #80775e;
 color: #373d41;
 }
 .indexWrap .centerT div a.indexStart1 {
-background: url(/assets/indexStart.png) no-repeat 0 0;
+background: url(<%= asset_path "indexStart.png"%>) no-repeat 0 0;
 }
 .indexWrap .centerT div a.indexStart2 {
-background: url(/assets/indexStart.png) no-repeat -120px 0;
+background: url(<%= asset_path "indexStart.png"%>) no-repeat -120px 0;
 }
 .indexWrap .centerT div a.indexStart3 {
-background: url(/assets/indexStart.png) no-repeat -239px 0;
+background: url(<%= asset_path "indexStart.png"%>) no-repeat -239px 0;
 }
 .indexWrap .centerT div a.indexStart4 {
-background: url(/assets/indexStart.png) no-repeat -360px 0;
+background: url(<%= asset_path "indexStart.png"%>) no-repeat -360px 0;
 }
 .indexWrap .centerT div a.indexStart5 {
-background: url(/assets/indexStart.png) no-repeat -477px 0;
+background: url(<%= asset_path "indexStart.png"%>) no-repeat -477px 0;
 }
 .indexWrap .centerT div a.indexStart6 {
-background: url(/assets/indexStart.png) no-repeat -598px 0;
+background: url(<%= asset_path "indexStart.png"%>) no-repeat -598px 0;
 }
 .indexWrap .centerT div a.indexStart7 {
-background: url(/assets/indexStart.png) no-repeat -705px 0;
+background: url(<%= asset_path "indexStart.png"%>) no-repeat -705px 0;
 }
 .indexWrap .centerT div a.indexStart8 {
-background: url(/assets/indexStart.png) no-repeat -812px 0;
+background: url(<%= asset_path "indexStart.png"%>) no-repeat -812px 0;
 }
 /*.indexWrap .centerT div a.indexStart1:hover {
-background: url(/assets/indexStart.png) no-repeat 0 -80px;
+background: url(<%= asset_path "indexStart.png"%>) no-repeat 0 -80px;
 }
 .indexWrap .centerT div a.indexStart2:hover {
-background: url(/assets/indexStart.png) no-repeat -126px -80px;
+background: url(<%= asset_path "indexStart.png"%>) no-repeat -126px -80px;
 }
 .indexWrap .centerT div a.indexStart3:hover {
-background: url(/assets/indexStart.png) no-repeat -252px -80px;
+background: url(<%= asset_path "indexStart.png"%>) no-repeat -252px -80px;
 }
 .indexWrap .centerT div a.indexStart4:hover {
-background: url(/assets/indexStart.png) no-repeat -379px -80px;
+background: url(<%= asset_path "indexStart.png"%>) no-repeat -379px -80px;
 }
 .indexWrap .centerT div a.indexStart5:hover {
-background: url(/assets/indexStart.png) no-repeat -504px -80px;
+background: url(<%= asset_path "indexStart.png"%>) no-repeat -504px -80px;
 }
 .indexWrap .centerT div a.indexStart6:hover {
-background: url(/assets/indexStart.png) no-repeat -630px -80px
+background: url(<%= asset_path "indexStart.png"%>) no-repeat -630px -80px
 }
 .indexWrap .centerT div a.indexStart7:hover {
-background: url(/assets/indexStart.png) no-repeat -756px -80px;
+background: url(<%= asset_path "indexStart.png"%>) no-repeat -756px -80px;
 }*/
