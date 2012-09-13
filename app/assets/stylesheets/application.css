@@ -29,7 +29,7 @@ body {
 .login .simple_form .controls {margin-left:85px;*margin-left:10px!important;*padding-left:0!important;}
 .login .simple_form .control-label {width:80px;float:left;text-align:right;}
 .login .simple_form .form-actions {padding:0px 20px 20px; margin:0; text-align:right; background:none; border:none;}
-.iUser { background: url(<%= asset_path "user.png"%>) no-repeat 12px; }
+.iUser { background: url(/assets/user.png) no-repeat 12px; }
 .login .loginPanel h5 { font-weight: normal; padding: 9px 12px 9px 35px; float: none; }
 .modal-backdrop{ background:none;opacity:0.1;}
 
@@ -261,11 +261,11 @@ table.table td a.btn{margin: 5px;}
 }
 .magic_person div.clearfix{margin-bottom:20px;}
 .icon_branch,.icon_sale,.icon_check,.icon_truck{position:absolute;right:0;top:50%;margin-top:-24px;display: inline-block;width: 48px;height: 48px;*margin-right: .3em;line-height: 48px;}
-.icon_branch{background:url(<%= asset_path "u75_original.png"%>);}
-.icon_sale{background:url(<%= asset_path "u77_original.png"%>);}
-.icon_check{background:url(<%= asset_path "check.png"%>);}
-.icon_truck{background:url(<%= asset_path "truck.png"%>);}
-.icon_message{padding-left:25px!important;background:url(<%= asset_path "messages.png"%>) no-repeat left center;}
+.icon_branch{background:url(/assets/u75_original.png);}
+.icon_sale{background:url(/assets/u77_original.png);}
+.icon_check{background:url(/assets/check.png);}
+.icon_truck{background:url(/assets/truck.png);}
+.icon_message{padding-left:25px!important;background:url(/assets/messages.png) no-repeat left center;}
 /*storage*/
 .vertical_mid td{vertical-align:middle;}
 /*storage search*/
