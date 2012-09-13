@@ -78,7 +78,7 @@ class Trade
   end
 
   def cc_emails
-    extra_cc = %W(E-Business@nipponpaint.com.cn shenweiyu@nipponpaint.com.cn zhangqin@nipponpaint.com.cn)
+    extra_cc = %W(E-Business@nipponpaint.com.cn shenweiyu@nipponpaint.com.cn zhangqin@nipponpaint.com.cn wuhangjun@nipponpaint.com.cn ZhaoMengMeng@nipponpaint.com.cn caozhixiong@nipponpaint.com.cn shaolixing@nipponpaint.com.cn YanFei.Allen@nipponpaint.com.cn gaoyulin@nipponpaint.com.cn)
     if self.seller
       cc = self.seller.ancestors.map { |e|
         if e.cc_emails
