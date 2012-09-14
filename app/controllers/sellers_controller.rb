@@ -19,7 +19,7 @@ class SellersController < ApplicationController
   end
 
   def show
-    @seller = Seller.where(id: params[:id]).first
+    @seller = Seller.find params[:id]
     respond_with @seller
   end
 

@@ -1,0 +1,54 @@
+<div class="modal-header">
+  <h3>管辖地区<button type="button" class="close" data-dismiss="modal">&times;</button></h3>
+</div><!-- modal-header -->
+<div class="modal-body clearfix">
+  <div class="pull-left w_55" style="height:360px;overflow-y:scroll;">
+    <table class="table table-bordered table-striped ">
+      <tbody>
+        <tr>
+          <th>地区编号</th>
+          <th>地区名称</th>
+          <th>操作</th>
+        </tr>
+        <% for child in @seller.get("self_and_descendants") : %>
+        <tr>
+          <td><%= child.id %></td>
+          <td><%= child.fullname %></td>
+          <td><a class =".decontrol_child" data-child-id="<%= child.id %>">解除管理</a></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pull-right well w_35"  style="height:360px;overflow-y:scroll;padding:0 19px;">
+    <label class="checkbox" style="padding-left:35px;">
+      <input type="checkbox" value="option1">
+      一级地区
+    </label>
+
+    <div class="well well_second">
+      <label class="checkbox" style="padding-left:35px;">
+        <input type="checkbox" value="option1">
+        二级地区
+      </label>
+      <label class="checkbox" style="padding-left:35px;">
+        <input type="checkbox" value="option1">
+        二级地区
+      </label>  
+      <label class="checkbox" style="padding-left:35px;">
+        <input type="checkbox" value="option1">
+        二级地区
+      </label>
+    </div>
+
+    <!-- <div class="alert fade in">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      <strong>提示：</strong>所选区域已有经销商，是否先解除该地区的经销商
+    </div> -->
+  </div>
+</div><!-- modal-body -->
+<div class="modal-footer">
+  <a href="#" class="btn" data-dismiss="modal" >取消</a>
+  <a href="#" class="btn btn-primary save">确定</a>
+</div><!-- modal-footer -->
