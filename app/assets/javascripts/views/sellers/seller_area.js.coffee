@@ -2,7 +2,7 @@ class MagicOrders.Views.SellersSellerArea extends Backbone.View
 
   template: JST['sellers/seller_area']
 
-  events:
+  #events:
     # 'click .save': 'save'
     # 'click .decontrol_child': 'decontrol_child'
 
