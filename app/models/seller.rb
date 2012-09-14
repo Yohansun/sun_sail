@@ -29,4 +29,5 @@ class Seller < ActiveRecord::Base
   def interface_name
     self.parent.name if self.parent
   end
+
 end
