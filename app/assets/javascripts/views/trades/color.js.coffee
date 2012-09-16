@@ -15,17 +15,15 @@ class MagicOrders.Views.TradesColor extends Backbone.View
   save: ->
     blocktheui()
 
-    order_color_nums = {}
-    for item in $(".order_color_num")
-      order_id = $(item).data("order-id")
-      order_color_num = $(item).val()
-      order_color_nums[order_id] = order_color_num
+    for order in @model.get('orders')
+      color_num = []
+      console.log order.item_id
+      console.log $(".color_num_" + order.item_id)
+      for item in $(".color_num_" + order.item_id)
+        color_num.push $(item).val()
+      order.color_num = color_num
 
-    orders = @model.get('orders')
-    for order, i in orders
-      orders[i].color_num = order_color_nums[order.id]
-
-    @model.save {'orders': orders},
+    @model.save {},
       success: (model, response) =>
         $.unblockUI()
 

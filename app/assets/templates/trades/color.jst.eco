@@ -18,9 +18,12 @@
         <tr>
           <td><%= order.title %> x <%= order.num %></td>
           <td>
-            <div class="controls">
-              <input type="text" placeholder="请输入色号..." class="input-xlarge order_color_num" data-order-id="<%= order.id %>" value="<%= order.color_num %>">
-            </div>
+            <% for count in [0...order.num] : %>
+              <div class="controls">
+                <input type="text" placeholder="请输入色号..." class="input-xlarge color_num_<%= order.item_id %>" value="<%= order.color_num[count] %>">
+                <% console.log(order.color_num) %>
+              </div>
+            <% end %>
           </td>
         </tr>
         <% end %>
