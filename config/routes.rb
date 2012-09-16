@@ -20,6 +20,7 @@ MagicOrders::Application.routes.draw do
     end
 
     resources :users
+    resources :products
     resources :trade_sources
     resources :areas do
       collection do
