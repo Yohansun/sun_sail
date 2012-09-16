@@ -45,7 +45,7 @@ class AreasController < ApplicationController
 
   def area_search
     ids = params[:q].split(",") || ""
-    @areas = Area.where("id in (?)", ids).paginate(:page => params[:page], :per_page => 50)
+    @areas = Area.where("id in (?)", ids).page(params[:page])
     render :index
   end
 end

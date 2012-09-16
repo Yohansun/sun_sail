@@ -25,7 +25,7 @@ class UsersController < ApplicationController
     elsif params[:seller_id].present?
       @users = User.where(seller_id: params[:seller_id])
     else
-      @users = User.paginate(:page => params[:page], :per_page => 50)
+      @users = User.page(params[:page])
     end
     respond_with @users
   end

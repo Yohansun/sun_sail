@@ -28,6 +28,7 @@ group :development do
   gem 'map_by_method'
   gem 'hirb'
   gem 'rvm-capistrano'
+  gem 'certified'
 end
 
 group :development, :test do
@@ -44,7 +45,8 @@ gem 'devise'
 gem 'twitter-bootstrap-rails', '>= 2.1.2'
 gem 'simple_form'
 gem 'awesome_nested_set'
-gem 'will_paginate'
+gem 'kaminari'
+gem 'bootstrap-kaminari-views'
 gem 'rolify'
 gem 'backbone-on-rails'
 
