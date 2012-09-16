@@ -59,8 +59,11 @@
 <td data-col='color_info'>
   <% if @trade.get('has_color_info') == true : %>
     <% for order in @trade.get('orders'): %>
+      
       <% if order.color_num: %>
-      <a href="#" rel="popover" data-content="<%= order.title %> <br/>" data-original-title="<b><%= order.color_num %></b> <b><%= order.color_name %></b>"><span class="match_color" style="background:#<%= order.color_hexcode %>;"></a>
+      <% for count in [0...order.num] : %>
+      <a href="#" rel="popover"  data-content=" <b><%= order.color_num[count] %></b> <b><%= order.color_name[count] %></b> <br/>" data-original-title="<%= order.title %>"><span class="match_color" style="background:#<%= order.color_hexcode[count] %>;" ></a>
+      <% end %>
       <% end %>
     <% end %>
   <% end %>

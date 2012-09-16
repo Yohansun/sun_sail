@@ -269,14 +269,19 @@ class TradesController < ApplicationController
       params[:orders].each do |item|
         order = @trade.orders.find item[:id]
         order.cs_memo = item[:cs_memo]
-        order.color_num = item[:color_num]
-        color = Color.where(num: item[:color_num]).first
-          order.color_hexcode = color.try(:hexcode)
-          order.color_name = color.try(:name)
+        item[:color_num].each_with_index do |num, index|
+          order.color_num[index] = num
+          color = Color.find_by_num num
+            order.color_hexcode[index] = color.hexcode
+            order.color_name[index] = color.name
+        end
+        order.save
       end
     end
 
-    @trade.save!
+    @trade.save
+
+    Rails.logger.info @trade.orders.inspect
 
     @trade = TradeDecorator.decorate(@trade)
     respond_with(@trade) do |format|
