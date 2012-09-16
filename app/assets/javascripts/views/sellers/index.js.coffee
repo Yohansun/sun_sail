@@ -9,6 +9,10 @@ class MagicOrders.Views.SellersIndex extends Backbone.View
     'click .close_seller': 'close_seller'
     'click #new_seller': 'new_seller'
     'click #seller_search': 'search'
+    'click #search_users': 'search_users'
+    'click #user_setting': 'user_setting'
+    'click .check_user': 'check_user'
+    'click .remove_user': 'remove_user'
 
   initialize: ->
     @collection.on("reset", @render, this)
@@ -68,3 +72,50 @@ class MagicOrders.Views.SellersIndex extends Backbone.View
     @collection.fetch data: {key: $('#search_key').val(), value: $('#search_value').val()}, success: (collection, response) =>
       view = new MagicOrders.Views.SellersIndex(collection: collection)
       $('#content').html(view.render().el)
+
+  search_users: (event) ->
+    event.preventDefault()
+    name = $('#search_users_input').val();
+    collection = new MagicOrders.Collections.Users()
+    collection.fetch data: {name: name}, success: (collection, response) =>
+      view = new MagicOrders.Views.SellersUserList(collection: collection)
+      $('#user_list').html(view.render().el)
+
+  user_setting: (event) ->
+    id = $(event.target).data("id")
+    $('#seller_id_container').html(id)
+    collection = new MagicOrders.Collections.Users()
+    collection.fetch data: {seller_id: id}, success: (collection, response) =>
+      view = new MagicOrders.Views.SellersUserTable(collection: collection)
+      $('#user_table').html(view.render().el)
+
+  check_user: (event) ->
+    id = $(event.target).data("id")
+    @model = new MagicOrders.Models.Seller(id: $('#seller_id_container').html())
+    @model.save {user_id: id, method: 'add'}, 
+      success: (model, response) =>
+        console.log 'model success'
+        user = new MagicOrders.Models.User(id: id)
+        user.fetch success: (model, response) =>
+          console.log user
+          $(event.target).parent().remove()
+          html = "<tr id='" + id + "'>"
+          html += '<td>' + user.get('id') + '</td>'
+          html += '<td>' + user.get('name') + '</td>'
+          html += '<td>' + user.get('roles') + '</td>'
+          html += '<td>' + user.get('active') + '</td>'
+          html += "<td><a class='remove_user' href='javascript:void(0)' data-id='" + id + "'>删除</a></td>"
+          html += '</tr>'
+          $('#user_table table tbody').prepend(html)
+      error: =>
+        $(event.target).removeAttr('checked')
+
+  remove_user: (event)->
+    event.preventDefault()
+    id = $(event.target).data("id");
+    @model = new MagicOrders.Models.Seller(id: $('#seller_id_container').html())
+    @model.save {user_id: id, method: 'remove'}, 
+      success: (model, response) =>
+        $('#' + id).remove()
+      error: =>
+        alert('服务器错误请稍后再试')

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120909084011) do
+ActiveRecord::Schema.define(:version => 20120913114622) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -117,6 +117,7 @@ ActiveRecord::Schema.define(:version => 20120909084011) do
     t.integer  "lft",                                 :default => 0
     t.integer  "rgt",                                 :default => 0
     t.boolean  "active",                              :default => true
+    t.integer  "seller_id"
   end
 
   add_index "users", ["email"], :name => "index_admins_on_email", :unique => true

@@ -1,0 +1,14 @@
+<% for user in @users.models : %>
+<div class='controls'>
+	<div>
+		<input data-id='<%= user.get('id') %>' class='check_user' type='checkbox' style='margin-top:-2px'>
+		<%= user.get('name') %>
+	</div>
+	<div id='data_<%= user.get('id') %>' style='display:none'>
+		<span class='user_id'><%= user.get('id') %></span>
+		<span class='user_name'><%= user.get('name') %></span>
+		<span class='user_active'><%= user.get('active') %></span>
+		<span class='user_roles'><%= user.get('roles') %></span>
+	</div>
+</div>
+<% end %>

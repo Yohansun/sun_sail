@@ -1,0 +1,20 @@
+<thead>
+  <tr>
+    <th>用户编号</th>
+    <th>用户名称</th>
+    <th>所属用户组</th>
+    <th>账户状态</th>
+    <th>操作</th>
+  </tr>
+</thead>
+<tbody>
+<% for user in @users.models : %>
+	<tr id="<%= user.get('id') %>">
+		<td><%= user.get('id') %></td>
+		<td><%= user.get('name') %></td>
+		<td><%= user.get('roles') %></td>
+		<td><%= user.get('active') %></td>
+		<td><a href='javascript:void(0)' class='remove_user' data-id="<%= user.get('id')%>">删除</a></td>
+	</tr>
+<% end %>
+</tbody>
