@@ -2,7 +2,7 @@
 <header class="jumbotron subhead" id="overview">
   <div class="subnav">
     <ul class="nav nav-pills">
-      <li class="active"><a href="settings.html">用户管理</a></li>
+      <li class="active"><a href="#">用户管理</a></li>
       <li><a href="#">用户组管理</a></li>
       <li><a href="#">地域管理</a></li>
     </ul>
@@ -64,7 +64,7 @@
         <td><%= user.get('email') %></td>
         <td>3</td>
         <td>离线</td>
-        
+
         <td>
           <div class="btn-group">
             <button data-toggle="dropdown" class="btn btn-info dropdown-toggle min_w"><i class="icon-wrench"></i> <span class="caret"></span></button>

@@ -27,6 +27,24 @@
 //= require_tree .
 
 $(function () {
+  // fire dashboard icons
+  if ($(".centerDashboard").length > 0) {
+    $("body").addClass("yellow_background");
+
+    $('.centerDashboard a').hide();
+    $(".centerDashboard").show();
+    $(".centerDashboard div").mouseenter(function(event){
+      $(this).delay(1000).stop(true).animate({'top':'-20px'},10)
+      .animate({'top':'0'},100)
+      .animate({'top':'-15px'},100)
+      .animate({'top':'0'},200);
+    });
+
+    $(window).load(function(){
+      dashboardFadeIn();
+    });
+  };
+
   //高级搜索显示/隐藏
   $('#advanced_btn').click(function(){
     $('#advanced_btn i').toggleClass('icon-arrow-up');
@@ -51,21 +69,8 @@ $(function () {
   	noResultsText: "无对应地区!"
   });
 
-  $(".navbar .nav .areas").on("click", function (event) {
-      event.preventDefault();
-      Backbone.history.navigate('areas', true);
-  });
-  $(".navbar .nav .trades").on("click", function (event) {
-      event.preventDefault();
-      Backbone.history.navigate('trades', true);
-  });
-  $(".navbar .nav .sellers").on("click", function (event) {
-      event.preventDefault();
-      Backbone.history.navigate('sellers', true);
-  });
-  $(".navbar .nav .users").on("click", function (event) {
-      event.preventDefault();
-      Backbone.history.navigate('users', true);
+  $('.navbar .dropdown-menu a').click(function(){
+    $('.navbar .dropdown.open .dropdown-toggle').dropdown('toggle');
   });
 });
 
@@ -80,6 +85,12 @@ function blocktheui () {
       '-moz-border-radius': '10px',
       opacity: .5,
       color: '#fff'
-    } 
+    }
+  });
+}
+
+function dashboardFadeIn() {
+  $('.centerDashboard a').each(function(i, el){
+    $(el).delay(300 * i).fadeIn(300);
   });
 }
