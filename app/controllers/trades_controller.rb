@@ -272,14 +272,13 @@ class TradesController < ApplicationController
         item[:color_num].each_with_index do |num, index|
           order.color_num[index] = num
           color = Color.find_by_num num
-            order.color_hexcode[index] = color.hexcode
-            order.color_name[index] = color.name
+            order.color_hexcode[index] = color.try(:hexcode)
+            order.color_name[index] = color.try(:name)
         end
-        order.save
       end
     end
 
-    @trade.save
+    @trade.save!
 
     Rails.logger.info @trade.orders.inspect
 
