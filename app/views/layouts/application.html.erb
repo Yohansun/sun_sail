@@ -36,7 +36,7 @@
 
           <ul class="nav nav-pills" id="top-nav">
             <li class="active trades" style="display:none"><a href="#">订单管理</a></li>
-            <li class="active areas" style="display:none"><a href="#">区域管理</a></li>
+            <li class="areas" style="display:none"><a href="#">区域管理</a></li>
             <li class="active sellers" style="display:none"><a href="#">经销商管理</a></li>
             <% if current_user.role_key == 'admin' %>
             <li class="active users" style="display:none"><a href="#">系统设置</a></li>
@@ -50,8 +50,6 @@
                 <li><a href="/trades" class="trades">订单管理</a></li>
                 <!-- <li><a href="#">仓库管理</a></li> -->
                 <li><a href="/sellers" class="sellers">经销商管理</a></li>
-                <li><a href="/areas" class="areas">区域管理</a></li>
-                <li><a href="/users" class="users">用户管理</a></li>
                 <% if current_user.role_key == 'admin' %>
                 <li class= "divider"></li>
                 <li><a href="/users" class="users">系统设置</a></li>
@@ -80,62 +78,15 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <%= javascript_include_tag "application" %>
     <script type="text/javascript">
-  
+
       $(document).ready(function(e) {
-        
+
         $(function(){
          $('#myModal').modal('toggle');
          $('#myModal').on('shown',function(){
            $('.modal-backdrop').unbind('click');
          });
        });
-
-      });
-    </script>
-    <script type="text/javascript">
-    function dashboardFadeIn() {
-        //var len=$('.centerT a').length;
-        //alert(len)
-        var $a = $('.centerT a');
-        var len = $a.length;
-
-        for( i = 0; i < len; i++) {
-          //var $class = $(".indexStart" + (i + 1));
-          $a.eq(i).delay(300 * i).fadeIn(300);
-        }
-      }
-
-      // function dashboardFadeOut() {
-      //   $('.centerT a').click(function(event) {
-      //     if(!$(this).hasClass('bAlert')) {
-      //       event.preventDefault()
-      //       var $href = $(this).attr('href')
-      //       //alert($href)
-      //       $('.indexWrap').fadeOut(300, function() {
-      //         window.location.href = $href
-      //       });
-      //     } else {
-      //       event.preventDefault()
-      //       //return false;
-      //     }
-      //   })
-      // }
-
-
-        $(document).ready(function(e) {
-          $('.centerT a').css('display', 'none')
-          dashboardFadeIn();
-          // dashboardFadeOut();
-
-        /*hover jump function*/
-
-        var $div = $('#centerT div');
-        $div.mouseenter(function(){
-          $(this).delay(1000).stop(true).animate({'top':'-20px'},10)
-          .animate({'top':'0'},100)
-          .animate({'top':'-15px'},100)
-          .animate({'top':'0'},200);
-        });
 
       });
     </script>
