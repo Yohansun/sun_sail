@@ -2,6 +2,7 @@ require 'sidekiq/web'
 
 MagicOrders::Application.routes.draw do
 
+  get "stocks", to: 'stocks#index'
   get "callbacks/jingdong"
   get 'autologin', to: 'users#autologin'
   devise_for :users, :path => '', :path_names => {:sign_in => 'login'}
