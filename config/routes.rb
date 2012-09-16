@@ -2,10 +2,16 @@ require 'sidekiq/web'
 
 MagicOrders::Application.routes.draw do
 
-  get "stocks", to: 'stocks#index'
+  post "/stock_history", to: 'stock_history#create'
+  get '/stock_history', to: 'stock_history#index'
+  get '/stock_history/:id', to: 'stock_history#show'
+
+  get "/stocks", to: 'stocks#index'
   get "callbacks/jingdong"
-  get 'autologin', to: 'users#autologin'
+  get '/autologin', to: 'users#autologin'
   devise_for :users, :path => '', :path_names => {:sign_in => 'login'}
+
+  resources :stock_products
 
   scope 'api' do
     resources :trades do

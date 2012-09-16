@@ -3,7 +3,7 @@
     <div class="subnav">
       <ul class="nav nav-pills">
         <li class="active"><a href="storage.html">成品仓库</a></li>
-        <li><a href="stocks_records.html">进销记录</a></li>
+        <li><a href="/stock_history">进销记录</a></li>
       </ul>
     </div>
   </header>
@@ -11,7 +11,7 @@
     <ul class="breadcrumb" style="position:relative;">
       <li><a href="/stocks">仓库管理</a><span class="divider">/</span></li>
       <li class="active">成品仓库</li>
-      <li style="position:absolute;right:15px;top:6px;"><a href="stocks_add.html" class="btn_alert">新增商品</a></li>
+      <li style="position:absolute;right:15px;top:6px;"><a href="/stock_products/new" class="btn_alert">新增商品</a></li>
     </ul><!-- breadcrumb -->
 
     <form class="well form-horizontal reset_space">
@@ -81,27 +81,29 @@
         </tr>
       </thead>
       <tbody>
+      	<% @products.each do |product| %>
         <tr>
           <td></td>
-          <td>净享居竹炭五合一 5L</td>
+          <td><%= product.name %></td>
           <td>all</td>
-          <td>I1P18L40062C4V03</td>
-          <td>上架</td>
+          <td><%= product.taobao_id %></td>
+          <td><%= product.status %></td>
           <td>满仓</td>
-          <td>99658</td>
-          <td>0</td>
+          <td><%= product.activity %></td>
+          <td><%= product.actual %></td>
           <td>
-          	<a data-toggle="modal" href="#storage_in">入库</a>
+          	<a href='javascript:void(0)' onclick='show_storage_in(<%= product.id %>)' >入库</a>
           	<a>|</a>
-          	<a data-toggle="modal" href="#storage_out">出库</a>
+          	<a href='javascript:void(0)' onclick='show_storage_out(<%= product.id %>)'>出库</a>
           	<a>|</a>
-          	<a href="stocks_records.html">进销记录</a>
+          	<a href="/stock_history">进销记录</a>
           	<a>|</a>
-          	<a href="stocks_edit.html">编辑</a>
+          	<%= link_to '编辑', edit_stock_product_path(product) %>
           	<a>|</a>
-          	<a href="#">删除</a>
+          	<%= link_to '删除', stock_product_path(product), method: :delete, confirm: '确认删除?' %>
           </td>
         </tr>
+        <% end %>
       </tbody>
     </table>
 
@@ -119,7 +121,10 @@
     </div><!-- pagination ends -->
   </div>
 </div>
-<form class="form-horizontal modal hide fade" id="storage_in">
+
+<%= form_tag '/stock_history', id: 'storage_in', class: 'form-horizontal modal hide fade', remote: true %>
+	<input type='hidden' class='modal_product_id' name='stock_history[stock_product_id]'>
+	<input type='hidden' class='modal_product_operation' name='stock_history[operation]' value='入库'>
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal">×</button>
     <h4>入库操作</h4>
@@ -129,37 +134,37 @@
       <div class="control-group">
         <label class="control-label" for="">商品名称：</label>
         <div class="controls">
-          <span class="input-xlarge uneditable-input">311立邦漆秒杀通行证</span>
+          <span class="input-xlarge uneditable-input modal_product_name"></span>
         </div>
       </div>
 
       <div class="control-group">
         <label class="control-label" for="">实际库存：</label>
         <div class="controls">
-          <span class="input-xlarge uneditable-input">200</span>
+          <span class="input-xlarge uneditable-input modal_product_actual"></span>
         </div>
       </div>
 
       <div class="control-group">
         <label class="control-label" for="">可用库存：</label>
         <div class="controls">
-          <span class="input-xlarge uneditable-input">200</span>
+          <span class="input-xlarge uneditable-input modal_product_activity"></span>
         </div>
       </div>
 
       <div class="control-group">
         <label class="control-label" for="">*入库数量：</label>
         <div class="controls">
-          <input type="text" class="input-small" id="">件
+          <input type="text" class="input-small" name="stock_history[number]">件
         </div>
       </div>
 
       <div class="control-group">
         <label class="control-label" for="">入库原因：</label>
         <div class="controls">
-          <select class="width_auto">
-            <option>生产入库</option>
-            <option>其他原因</option>
+          <select class="width_auto" name='stock_history[reason]'>
+            <option value='i1'>生产入库</option>
+            <option value='i0'>其他原因</option>
           </select>
         </div>
       </div>
@@ -167,18 +172,20 @@
       <div class="control-group">
         <label class="control-label" for="">备注：</label>
         <div class="controls">
-          <input type="text" class="input-xlarge">
+          <input type="text" class="input-xlarge" name='stock_history[note]'>
         </div>
       </div>
     </fieldset>
   </div>
   <div class="modal-footer">
     <!-- <a href="#" class="btn" data-dismiss="modal">Close</a> -->
-    <button href="#" class="btn btn-primary">确定</button>
+    <button type='submit' class="btn btn-primary">确定</button>
   </div>
 </form>
 
-<form class="form-horizontal modal hide fade" id="storage_out">
+<%= form_tag '/stock_history', id: 'storage_out', class: 'form-horizontal modal hide fade', remote: true %>
+	<input type='hidden' class='modal_product_id' name='stock_history[stock_product_id]'>
+	<input type='hidden' class='modal_product_operation' name='stock_history[operation]' value='出库'>
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal">×</button>
     <h4>出库操作</h4>
@@ -188,37 +195,37 @@
       <div class="control-group">
         <label class="control-label" for="">商品名称：</label>
         <div class="controls">
-          <span class="input-xlarge uneditable-input">311立邦漆秒杀通行证</span>
+          <span class="input-xlarge uneditable-input modal_product_name"></span>
         </div>
       </div>
 
       <div class="control-group">
         <label class="control-label" for="">实际库存：</label>
         <div class="controls">
-          <span class="input-xlarge uneditable-input">200</span>
+          <span class="input-xlarge uneditable-input modal_product_actual"></span>
         </div>
       </div>
 
       <div class="control-group">
         <label class="control-label" for="">可用库存：</label>
         <div class="controls">
-          <span class="input-xlarge uneditable-input">200</span>
+          <span class="input-xlarge uneditable-input modal_product_activity"></span>
         </div>
       </div>
 
       <div class="control-group">
         <label class="control-label" for="">*出库数量：</label>
         <div class="controls">
-          <input type="text" class="input-small" id="">件
+          <input type="text" class="input-small" name="stock_history[number]">件
         </div>
       </div>
 
       <div class="control-group">
         <label class="control-label" for="">出库原因：</label>
         <div class="controls">
-          <select class="width_auto">
-            <option>生产入库</option>
-            <option>其他原因</option>
+          <select class="width_auto" name='stock_history[reason]'>
+            <option value='o1'>生产入库</option>
+            <option value='o0'>其他原因</option>
           </select>
         </div>
       </div>
@@ -226,44 +233,12 @@
       <div class="control-group">
         <label class="control-label" for="">备注：</label>
         <div class="controls">
-          <input type="text" class="input-xlarge">
+          <input type="text" class="input-xlarge" name='stock_history[note]'>
         </div>
       </div>
     </fieldset>
   </div>
   <div class="modal-footer">
-    <!-- <a href="#" class="btn" data-dismiss="modal">Close</a> -->
-    <button href="#" class="btn btn-primary">确定</button>
+    <button type='submit' class="btn btn-primary">确定</button>
   </div>
 </form>
-
-
-<style type="text/css">
-  .good_big{ position:absolute; border:1px solid #ccc; padding:3px; background:#fff;}
-  .none{ display:none;}
-</style>
-<script type="text/javascript">
-$(function(){
-  var x = 10;
-  var y = 20;
-  $("img.img_s").mouseover(function(e){
-    //alert(tooltip)
-    var img = $(this).attr('big_img');
-    var tooltip = "<div class='good_big' id='tooltip'>" + img + "<\/div>"; //创建 div 元素
-    $("body").append(tooltip);  //把它追加到文档中             
-    $("#tooltip")
-      .css({
-        "top": (e.pageY+y) + "px",
-        "left":  (e.pageX+x)  + "px"
-      }).show("fast");    //设置x坐标和y坐标，并且显示
-    }).mouseout(function(){
-    $("#tooltip").remove();  //移除 
-    }).mousemove(function(e){
-    $("#tooltip")
-      .css({
-        "top": (e.pageY+y) + "px",
-        "left":  (e.pageX+x)  + "px"
-      });
-  });
-})
-</script>

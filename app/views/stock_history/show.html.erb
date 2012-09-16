@@ -1,0 +1,64 @@
+<div class="container-fluid">
+    <header class="jumbotron subhead" id="overview">
+      <div class="subnav">
+        <ul class="nav nav-pills">
+          <li><a href="/stocks">成品仓库</a></li>
+          <li class="active"><a href="/stock_history">进销记录</a></li>
+        </ul>
+      </div>
+    </header>
+    <div class="row-fluid">
+      <ul class="breadcrumb" style="position:relative;">
+        <li><a href="/stocks">仓库管理</a><span class="divider">/</span></li>
+        <li><a href="/stock_history">进销记录</a><span class="divider">/</span></li>
+        <li class="active">查看</li>
+      </ul><!-- breadcrumb -->
+
+      <form class="well form-horizontal">
+        <fieldset>
+          <legend class="font14">入库操作</legend>
+
+          <div class="control-group">
+            <label class="control-label" for="">商品名称：</label>
+            <div class="controls">
+              <p class="mar_t5"><%= @history.product_name %></p>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label" for="">入库日期：</label>
+            <div class="controls">
+              <p class="mar_t5"><%= @history.created_at %></p>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label" for="">入库数量：</label>
+            <div class="controls">
+              <p class="mar_t5"><%= @history.number %></p>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label" for="">原因：</label>
+            <div class="controls">
+              <p class="mar_t5"><%= @history.reason %></p>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label" for="">备注：</label>
+            <div class="controls">
+              <p class="mar_t5"><%= @history.note %></p>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary button_print">打印</button>
+            <a href="/stock_history" class="btn">返回</a>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+    <hr>
+  </div>
