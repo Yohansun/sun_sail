@@ -15,7 +15,7 @@ class UsersController < ApplicationController
       	redirect_url = '/trades/jingdong'
       end
     end
-    
+
     redirect_to redirect_url
   end
 
@@ -25,7 +25,7 @@ class UsersController < ApplicationController
     elsif params[:seller_id].present?
       @users = User.where(seller_id: params[:seller_id])
     else
-      @users = User.all
+      @users = User.page(params[:page])
     end
     respond_with @users
   end
@@ -34,7 +34,7 @@ class UsersController < ApplicationController
     @user = User.find params[:id]
     respond_with @user
   end
-  
+
   def create
     @user = User.new
     @user.username = params[:username]
@@ -68,19 +68,19 @@ class UsersController < ApplicationController
     @user.save!
 
     if params[:is_support] == true
-      @user.add_role(:support) 
+      @user.add_role(:support)
     else
       @user.remove_role :support
     end
     if params[:is_seller] == true
-      @user.add_role(:seller) 
+      @user.add_role(:seller)
     else
       @user.remove_role(:seller)
-    end 
+    end
     if params[:is_interface] == true
-      @user.add_role(:interface) 
+      @user.add_role(:interface)
     else
-      @user.remove_role(:interface) 
+      @user.remove_role(:interface)
     end
     if params[:is_stock_admin] == true
       @user.add_role(:stock_admin)

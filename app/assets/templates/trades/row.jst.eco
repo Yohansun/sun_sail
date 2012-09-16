@@ -53,7 +53,7 @@
 </td>
 <td data-col='cs_memo'>
   <% if @trade.get 'cs_memo': %>
-  <a href="#" rel="popover" data-content="<%= @trade.get 'cs_memo' %><br/><br/><% for order in @trade.get('orders'): %><% if order.cs_memo: %><%= order.title %>: <b><%= order.cs_memo %></b><br/><% end %><% end %>" data-original-title="<b>客服备注</b>"><i class="icon-comment"></i></a>
+  <a href="javascript:void(0)" rel="popover" data-content="<%= @trade.get 'cs_memo' %><br/><br/><% for order in @trade.get('orders'): %><% if order.cs_memo: %><%= order.title %>: <b><%= order.cs_memo %></b><br/><% end %><% end %>" data-original-title="<b>客服备注</b>"><i class="icon-comment"></i></a>
   <% end %>
 </td>
 <td data-col='color_info'>
@@ -121,7 +121,7 @@
       <li><a data-toggle="modal" href="#" data-type="reowner">订单转交</a></li>
 
       <li class= "divider"></li>
-       
+
       <li><a data-toggle="modal" href="#" data-type="logistic_split">物流拆分</a></li>
       <li><a data-toggle="modal" href="#" data-type="print_deilver_bill">打印出货单</a></li>
       <li><a data-toggle="modal" href="#" data-type="print_logistic_bill">打印物流单</a></li>
