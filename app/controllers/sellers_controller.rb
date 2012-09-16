@@ -89,6 +89,15 @@ class SellersController < ApplicationController
       @seller.interface = params[:seller_interface]
     end
 
+    if params[:user_id].present?
+      @seller.user_ids = case params[:method]
+        when 'add'
+          @seller.user_ids | [params[:user_id].to_i]
+        when 'remove'
+          @seller.user_ids - [params[:user_id].to_i]
+        end
+    end
+
     @seller.active = !@seller.active
 
     @seller.save!

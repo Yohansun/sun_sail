@@ -20,7 +20,13 @@ class UsersController < ApplicationController
   end
 
   def index
-    @users = User.all
+    if params[:name].present?
+      @users = User.where("name LIKE '%#{params[:name]}%'")
+    elsif params[:seller_id].present?
+      @users = User.where(seller_id: params[:seller_id])
+    else
+      @users = User.all
+    end
     respond_with @users
   end
 

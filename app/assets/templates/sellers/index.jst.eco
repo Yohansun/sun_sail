@@ -124,60 +124,88 @@
           <th>操作</th>
         </tr>
       </thead>
-      <tbody id="seller_rows">
+
+      <tbody>
+        <% for seller in @sellers.models: %>
+          <tr>
+            <td><%= seller.get('id') %><input type='hidden' class='parent_id' value="<%= seller.get('parent_id') %>"></td>
+            <td><%= seller.get('fullname') %></td>
+            <td><%= seller.get('name') %></td>
+            <td><p style="width:200px;word-wrap:break-word"><%= seller.get('mobile') %></p></td>
+            <td><%= seller.get('interface') %></td>
+            <td><%= seller.get('address') %></td>
+            <td>
+              <div class="btn-group">
+                <a data-toggle="dropdown" class="dropdown-toggle noshadow min_w preview_children" data-id="<%= seller.id %>" >
+                  <img src="/assets/u741_original.png">
+                </a>
+                <ul class="dropdown-menu" style="left:-115px;" id='children_<%= seller.id %>'>
+                </ul>
+              </div>
+            </td>
+            <td>
+              <% if seller.get('active') == true: %>
+                启用
+              <% else if seller.get('active') == false: %>
+                关闭
+              <% end %>
+            </td>
+            <td>
+              <div class="btn-group">
+                <button data-toggle="dropdown" class="btn btn-info dropdown-toggle min_w">
+                  <i class="icon-wrench"></i> <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" style="left:-115px;">
+                  <li><a data-toggle="modal" class="edit_seller" data-id="<%= seller.id %>" href="seller#edit">编辑</a></li>
+                  <li>
+                    <a data-toggle="modal" class="close_seller" data-id="<%= seller.id %>" href="#">
+                      <% if seller.get('active') == true: %>
+                      关闭
+                      <% else if seller.get('active') == false: %>
+                      启用
+                      <% end %>
+                    </a>
+                  </li>
+                  <li><a data-toggle="modal" href="#dealer_area">管辖地区</a></li>
+                  <li>
+                    <a id='user_setting' data-id="<%= seller.id %>" data-toggle="modal" href="#dealer_login">登录账号</a>
+                  </li>
+
+                  <% if seller.get('children_count') > 0: %>
+                  <li class="divider"></li>
+                  <li>
+                    <a data-toggle="modal" class="browse_children" data-id="<%= seller.id %>" href="seller#<%= seller.id %>">
+                      管理下级
+                    </a>
+                  </li>
+                  <% end %>
+                </ul>
+              </div>
+            </td>
+          </tr>
+        <% end %>
       </tbody>
     </table>
   </div>
 </div>
 
-
-
 <div id="dealer_login" class="modal hide fade">
   <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h3>登录帐号设置
+      <button type="button" class="close" data-dismiss="modal">&times;</button>
+    </h3>
   </div><!-- modal-header -->
   <div class="modal-body clearfix">
-    <table class="table table-bordered table-striped pull-left w_55">
-      <tbody>
-        <tr>
-          <th>用户编号</th>
-          <th>用户名称</th>
-          <th>所属用户组</th>
-          <th>账户状态</th>
-          <th>操作</th>
-        </tr>
-        <tr>
-          <td class="border_l"></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td>解除绑定</td>
-        </tr>
-      </tbody>
-    </table>
-
+    <div id='seller_id_container' style='display:none'></div>
+    <div id='user_table'>
+    </div>
     <div class="pull-right well w_35">
-      <label class="checkbox" style="padding-left:35px;">
-        <input type="checkbox" value="option1">
-        经销商用户组
-      </label>
-
-      <div class="well well_second">
-        <label class="checkbox" style="padding-left:35px;">
-          <input type="checkbox" value="option1">
-          用户一
-        </label>
-        <label class="checkbox" style="padding-left:35px;">
-          <input type="checkbox" value="option1">
-          用户二
-        </label>
-
+      <div class="input-append">
+        <input type="text" id="search_users_input" class="input-large">
+        <button type="button" class="btn btn-primary" id='search_users'>搜索用户</button>
       </div>
-
-      <label class="checkbox" style="padding-left:35px;">
-        <input type="checkbox" value="option1">
-        销售部用户组
-      </label>
+      <div id='user_list'>
+      </div>
     </div>
   </div><!-- modal-body -->
   <div class="modal-footer">
