@@ -37,26 +37,34 @@ class Trade
 
   attr_accessor :matched_seller
 
-  # validate :color_num_do_not_exist, :on => :update
+  validate :color_num_do_not_exist, :on => :update
 
-  # def color_num_do_not_exist
-  #   color_nums = Color.all.map {|color| color.num}
-  #   count = 0
-  #   self.orders.each do |order|
-  #     for num in color_nums
-  #       if order.color_num == num
-  #         count += 1
-  #         break
-  #       end
-  #     end
-  #     if order.color_num == nil or order.color_num == ""
-  #       count += 1
-  #     end
-  #   end
-  #   if count != self.orders.count
-  #     errors.add(:self, "Blank color_num")
-  #   end
-  # end
+  def color_num_do_not_exist
+    color_nums = Color.all.map {|color| color.num}
+    count = 0
+    total_num = 0
+    self.orders.each do |order|
+      num = self._type == "JingdongTrade" ? order.item_total : order.num
+      num.times do |i|
+        if order.color_num[i] == nil || order.color_num[i] == ""
+          count += 1
+        end
+        for color_num in color_nums
+          if order.color_num[i] == color_num
+            count += 1
+            break
+          end
+        end
+      end
+      if order.color_num == nil || order.color_num == []
+        count += num
+      end
+      total_num += num
+    end
+    if count != total_num
+      errors.add(:self, "Blank color_num")
+    end
+  end
 
   # model 属性方法
   def trade_source_name
