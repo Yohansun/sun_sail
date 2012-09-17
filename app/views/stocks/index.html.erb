@@ -96,15 +96,19 @@
           <td><%= product.activity %></td>
           <td><%= product.actual %></td>
           <td>
-          	<a href='javascript:void(0)' onclick='show_storage_in(<%= product.id %>)' >入库</a>
-          	<a>|</a>
-          	<a href='javascript:void(0)' onclick='show_storage_out(<%= product.id %>)'>出库</a>
-          	<a>|</a>
-            <%= link_to '进销记录', seller_stock_history_index_path %>
-          	<a>|</a>
-          	<%= link_to '编辑', edit_seller_stock_product_path(params[:seller_id], product.id) %>
-          	<a>|</a>
-          	<%= link_to '删除', seller_stock_product_path(params[:seller_id], product.id), method: :delete, confirm: '确认删除?' %>
+            <div class="btn-group">
+              <button data-toggle="dropdown" class="btn btn-info dropdown-toggle min_w">
+                <i class="icon-wrench"></i>
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu trade_pops" style="left:-115px;">
+                <li><a href='javascript:void(0)' onclick='show_storage_in(<%= product.id %>)' >入库</a></li>
+                <li><a href='javascript:void(0)' onclick='show_storage_out(<%= product.id %>)'>出库</a></li>
+                <li><%= link_to '进销记录', seller_stock_history_index_path %></li>
+                <li><%= link_to '编辑', edit_seller_stock_product_path(params[:seller_id], product.id) %></li>
+                <li><%= link_to '删除', seller_stock_product_path(params[:seller_id], product.id), method: :delete, confirm: '确认删除?' %></li>
+              </ul>
+            </div>
           </td>
         </tr>
         <% end %>
