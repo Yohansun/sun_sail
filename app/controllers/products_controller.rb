@@ -1,23 +1,19 @@
+# -*- encoding : utf-8 -*-
 class ProductsController < ApplicationController
-  respond_to :json
 
   def index
-    # @products = Product.all
-    # respond_with @products
+    @products = Product.all
   end
 
-  def show
-    # @product = Product.find params[:id]
-    # respond_with @product
-  end
+  # def show
+  #   @product = Product.find params[:id]
+  # end
 
-  def create
-    # @product = Product.create
-    # respond_with @product
-  end
+  # def create
+  #   @product = Product.create
+  # end
 
-  def update
-    # @product = Product.find params[:id]
-    # respond_with @product
-  end
+  # def update
+  #   @product = Product.find params[:id]
+  # end
 end

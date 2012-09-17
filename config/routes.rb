@@ -7,11 +7,13 @@ MagicOrders::Application.routes.draw do
   get '/stock_history/:id', to: 'stock_history#show'
 
   get "/stocks", to: 'stocks#index'
+  get "/products", to: 'products#index'
   get "callbacks/jingdong"
   get '/autologin', to: 'users#autologin'
   devise_for :users, :path => '', :path_names => {:sign_in => 'login'}
 
   resources :stock_products
+  #resources :products
 
   scope 'api' do
     resources :trades do
@@ -27,7 +29,6 @@ MagicOrders::Application.routes.draw do
     end
 
     resources :users
-    resources :products
     resources :trade_sources
     resources :areas do
       collection do
