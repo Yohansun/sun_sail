@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120916122550) do
+ActiveRecord::Schema.define(:version => 20120917070522) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -49,17 +49,17 @@ ActiveRecord::Schema.define(:version => 20120916122550) do
 
   create_table "products", :force => true do |t|
     t.string  "name",           :limit => 100,                               :default => "",  :null => false
-    t.string  "item_num",       :limit => 20,                                :default => "",  :null => false
-    t.string  "product_num",    :limit => 20,                                :default => "",  :null => false
+    t.string  "iid",            :limit => 20,                                :default => "",  :null => false
+    t.string  "taobao_id",      :limit => 20,                                :default => "",  :null => false
     t.string  "storage_num",    :limit => 20,                                :default => "",  :null => false
     t.decimal "price",                         :precision => 8, :scale => 2, :default => 0.0, :null => false
     t.string  "status"
-    t.string  "class"
     t.string  "quantity"
     t.string  "category"
     t.string  "features"
     t.text    "technical_data"
-    t.text    "note"
+    t.text    "description"
+    t.string  "level"
   end
 
   create_table "roles", :force => true do |t|
@@ -104,22 +104,23 @@ ActiveRecord::Schema.define(:version => 20120916122550) do
     t.datetime "updated_at",       :null => false
     t.string   "reason"
     t.string   "note"
+    t.integer  "seller_id"
   end
 
+  add_index "stock_histories", ["seller_id"], :name => "index_stock_histories_on_seller_id"
+
   create_table "stock_products", :force => true do |t|
-    t.integer  "iid"
-    t.string   "name"
-    t.integer  "taobao_id"
-    t.string   "status"
-    t.text     "descript"
-    t.string   "category"
     t.datetime "created_at",                :null => false
     t.datetime "updated_at",                :null => false
     t.integer  "max",        :default => 0
     t.integer  "safe_value", :default => 0
     t.integer  "activity",   :default => 0
     t.integer  "actual",     :default => 0
+    t.integer  "product_id"
+    t.integer  "seller_id"
   end
+
+  add_index "stock_products", ["seller_id"], :name => "index_stock_products_on_seller_id"
 
   create_table "trade_sources", :force => true do |t|
     t.integer  "account_id"

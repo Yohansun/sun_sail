@@ -99,12 +99,12 @@
             <td><%= h.created_at %></td>
             <td><%= h.operation %></td>
             <td><%= h.tid %></td>
-            <td><%= h.product_name %></td>
-            <td><%= h.taobao_id %></td>
+            <td><%#= h.product_name %></td>
+            <td><%#= h.taobao_id %></td>
             <td>全部</td>
             <td><%= h.user.name %></td>
             <td><%= h.number %></td>
-            <td><%= link_to '查看', "/stock_history/#{h.id}" %></td>
+            <td><%= link_to '查看', "/sellers/#{params[:seller_id]}/stock_history/#{h.id}" %></td>
           </tr>
           <% end %>
         </tbody>

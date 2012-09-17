@@ -1,5 +1,6 @@
 class StocksController < ApplicationController
   def index
-  	@products = StockProduct.all
+  	select_sql = "products.name, products.category, products.taobao_id, products.status, stock_products.*"
+  	@products = StockProduct.joins(:product).select(select_sql).where(seller_id: params[:seller_id])
   end
 end

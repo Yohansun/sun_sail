@@ -94,26 +94,3 @@ function dashboardFadeIn() {
     $(el).delay(300 * i).fadeIn(300);
   });
 }
-
-
-function show_storage_in(id) {
-  $.get('/stock_products/' + id, {}, function(data){
-    $('#storage_in .modal_product_id').val(id)
-    $('#storage_in .modal_product_name').text(data.name)
-    $('#storage_in .modal_product_actual').text(data.actual)
-    $('#storage_in .modal_product_activity').text(data.activity)
-
-    $('#storage_in').modal('show')
-  })
-}
-
-function show_storage_out(id) {
-  $.get('/stock_products/' + id, {}, function(data){
-    $('#storage_out .modal_product_id').val(id)
-    $('#storage_out .modal_product_name').text(data.name)
-    $('#storage_out .modal_product_actual').text(data.actual)
-    $('#storage_out .modal_product_activity').text(data.activity)
-
-    $('#storage_out').modal('show')
-  })
-}

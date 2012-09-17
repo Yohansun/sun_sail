@@ -10,9 +10,12 @@
 			<div>
 				<a class="indexStart3" href="#"><span>数据魔方</span></a>
 			</div>
-			<% if current_user.has_role?(:admin) || current_user.has_role?(:seller) %>
+			<% if current_user %>
 			<div>
-				<a class="indexStart4" href="/stocks"><span>仓库管理</span></a>
+				<%= link_to seller_stocks_path(current_user.seller_id), class: 'indexStart4' do %>
+					<span>仓库管理</span>
+				<% end %>
+				<!-- <a class="indexStart4" href="/stocks"></a> -->
 			</div>
 			<% end %>
 			<div>
