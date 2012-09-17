@@ -99,29 +99,18 @@
             <td><%= h.created_at %></td>
             <td><%= h.operation %></td>
             <td><%= h.tid %></td>
-            <td><%= h.product_name %></td>
-            <td><%= h.taobao_id %></td>
+            <td><%#= h.product_name %></td>
+            <td><%#= h.taobao_id %></td>
             <td>全部</td>
             <td><%= h.user.name %></td>
             <td><%= h.number %></td>
-            <td><%= link_to '查看', "/stock_history/#{h.id}" %></td>
+            <td><%= link_to '查看', "/sellers/#{params[:seller_id]}/stock_history/#{h.id}" %></td>
           </tr>
           <% end %>
         </tbody>
       </table>
 
-      <div class="pagination">
-        <ul class="pull-right">
-          <li><a href="#">上一页</a></li>
-          <li class="active">
-            <a href="#">1</a>
-          </li>
-          <li><a href="#">2</a></li>
-          <li><a href="#">3</a></li>
-          <li><a href="#">4</a></li>
-          <li><a href="#">下一页</a></li>
-        </ul>
-      </div><!-- pagination ends -->
+      <%= paginate @history, :theme => 'twitter-bootstrap'%>
     </div>
     <hr>
   </div>

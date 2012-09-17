@@ -1,75 +1,32 @@
-<%= form_for @product, html: {class: 'well form-horizontal'} do |f| %>
-<fieldset>
-  <legend class="font14">商品：</legend>
-
-  <div class="control-group">
-    <%= f.label :name, '商品名称：', class: 'control-label'%>
-    <div class="controls">
-      <%= f.text_field :name, class: 'input-xlarge' %>
+<%= form_for [@seller, @product], html: {class: 'well form-horizontal'} do |f| %>
+  <fieldset>
+    <legend class="font14">添加仓库产品：</legend>
+    <%= f.hidden_field :seller_id, value: params[:seller_id] %>
+    <div class="control-group form-inline">
+      <%= f.label :product_id, '商品：', class: 'control-label'%>
+      <div class="controls">
+        <%= f.select :product_id, options_from_collection_for_select(Product.all, :id, :name), class: 'width_auto' %>
+      </div>
     </div>
-  </div>
 
-  <div class="control-group">
-    <%= f.label :taobao_id, '淘宝ID：', class: 'control-label'%>
-    <div class="controls">
-      <%= f.text_field :taobao_id, class: 'input-xlarge' %>
+    <div class="control-group form-inline">
+      <%= f.label :max, '满仓值：', class: 'control-label'%>
+      <div class="controls">
+        <%= f.text_field :max, class: 'input-small' %>
+        <p class="help-block">(库存最大值)</p>
+      </div>
     </div>
-  </div>
 
-  <div class="control-group">
-    <%= f.label :iid, '商品编码：', class: 'control-label'%>
-    <div class="controls">
-      <%= f.text_field :iid, class: 'input-xlarge' %>
+    <div class="control-group form-inline">
+      <%= f.label :safe_value, '安全值：', class: 'control-label'%>
+      <div class="controls">
+        <%= f.text_field :safe_value, class: 'input-small' %>
+        <p class="help-block">(低于安全值进入报警状态)</p>
+      </div>
     </div>
-  </div>
 
-  <div class="control-group form-inline">
-    <label class="control-label" for="">分类：</label>
-    <div class="controls">
-      <select class="width_auto">
-        <option>全部</option>
-        <option>网络特供商品</option>
-        <option>内墙乳胶漆</option>
-        <option>外墙乳胶漆</option>
-        <option>木器漆</option>
-        <option>DIY色彩系列</option>
-        <option>輔助材料</option>
-      </select>
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">保存</button>
     </div>
-  </div>
-
-  <div class="control-group form-inline">
-    <%= f.label :status, '商品状态：', class: 'control-label'%>
-    <div class="controls">
-      <%= f.select :status, [['上架', 1], ['下架', 0]], class: 'width_auto' %>
-    </div>
-  </div>
-
-  <div class="control-group form-inline">
-    <%= f.label :max, '满仓值：', class: 'control-label'%>
-    <div class="controls">
-      <%= f.text_field :max, class: 'input-small' %>
-      <p class="help-block">(库存最大值)</p>
-    </div>
-  </div>
-
-  <div class="control-group form-inline">
-    <%= f.label :safe_value, '安全值：', class: 'control-label'%>
-    <div class="controls">
-      <%= f.text_field :safe_value, class: 'input-small' %>
-      <p class="help-block">(低于安全值进入报警状态)</p>
-    </div>
-  </div>
-
-  <div class="control-group">
-    <label class="control-label" for="fileInput">商品图片：</label>
-    <div class="controls">
-      <input class="input-file" id="fileInput" type="file">
-    </div>
-  </div>
-
-  <div class="form-actions">
-    <button type="submit" class="btn btn-primary">保存</button>
-  </div>
-</fieldset>
+  </fieldset>
 <% end %>

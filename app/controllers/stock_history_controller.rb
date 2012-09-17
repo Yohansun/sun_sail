@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 class StockHistoryController < ApplicationController
 	def index
-		@history = StockHistory.joins(:stock_product).select("stock_histories.*, stock_products.taobao_id AS taobao_id, stock_products.name AS product_name").all
+		@history = StockHistory.where(seller_id: params[:seller_id]).page params[:page]
 	end
 
   def create
@@ -19,6 +19,7 @@ class StockHistoryController < ApplicationController
   	end
 
   	@history.user_id = current_user.id
+    @history.seller_id = params[:seller_id]
 
   	if @product.save && @history.save
   		@flag = true
@@ -26,6 +27,7 @@ class StockHistoryController < ApplicationController
   end
 
   def show
-  	@history = StockHistory.joins(:stock_product).select("stock_histories.*, stock_products.taobao_id AS taobao_id, stock_products.name AS product_name").find params[:id]
+  	@history = StockHistory.find params[:id]
+    @product = @history.stock_product.product
   end
 end

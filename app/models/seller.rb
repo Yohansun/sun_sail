@@ -7,7 +7,9 @@ class Seller < ActiveRecord::Base
   attr_accessible :mobile, :telephone, :cc_emails, :email, :pinyin, :interface
 
   has_many :users
-  has_many :areas
+  has_many :areass
+  has_many :stock_products
+  has_many :stock_history
 
   validates_uniqueness_of :fullname
   validates_presence_of :fullname

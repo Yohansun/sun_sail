@@ -2,21 +2,25 @@
   <header class="jumbotron subhead" id="overview">
     <div class="subnav">
       <ul class="nav nav-pills">
-        <li class="active"><a href="storage.html">成品仓库</a></li>
-        <li><a href="/stock_history">进销记录</a></li>
+        <li class="active"><%= link_to '仓库管理', seller_stocks_path %></li>
+        <li><%= link_to '进销记录', seller_stock_history_index_path %></li>
       </ul>
     </div>
   </header>
   <div class="row-fluid">
     <ul class="breadcrumb" style="position:relative;">
-      <li><a href="/stocks">仓库管理</a><span class="divider">/</span></li>
+      <li>
+        <%= link_to '仓库管理', seller_stocks_path %>
+        <span class="divider">/</span>
+      </li>
       <li class="active">成品仓库</li>
-      <li style="position:absolute;right:15px;top:6px;"><a href="/stock_products/new" class="btn_alert">新增商品</a></li>
+      <li style="position:absolute;right:15px;top:6px;">
+        <%= link_to '新增商品', new_seller_stock_product_path, class: 'btn_alert' %>
+      </li>
     </ul><!-- breadcrumb -->
 
     <form class="well form-horizontal reset_space">
       <fieldset>
-        <legend class="font14">筛选条件：</legend>
         <div class="control-group form-inline">
           <label class="control-label">库存状态：</label>
           <div class="controls">
@@ -85,44 +89,37 @@
         <tr>
           <td></td>
           <td><%= product.name %></td>
-          <td>all</td>
+          <td><%= product.category %></td>
           <td><%= product.taobao_id %></td>
           <td><%= product.status %></td>
-          <td>满仓</td>
+          <td><%= product.storage_status %></td>
           <td><%= product.activity %></td>
           <td><%= product.actual %></td>
           <td>
-          	<a href='javascript:void(0)' onclick='show_storage_in(<%= product.id %>)' >入库</a>
-          	<a>|</a>
-          	<a href='javascript:void(0)' onclick='show_storage_out(<%= product.id %>)'>出库</a>
-          	<a>|</a>
-          	<a href="/stock_history">进销记录</a>
-          	<a>|</a>
-          	<%= link_to '编辑', edit_stock_product_path(product) %>
-          	<a>|</a>
-          	<%= link_to '删除', stock_product_path(product), method: :delete, confirm: '确认删除?' %>
+            <div class="btn-group">
+              <button data-toggle="dropdown" class="btn btn-info dropdown-toggle min_w">
+                <i class="icon-wrench"></i>
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu trade_pops" style="left:-115px;">
+                <li><a href='javascript:void(0)' onclick='show_storage_in(<%= product.id %>)' >入库</a></li>
+                <li><a href='javascript:void(0)' onclick='show_storage_out(<%= product.id %>)'>出库</a></li>
+                <li><%= link_to '进销记录', seller_stock_history_index_path %></li>
+                <li><%= link_to '编辑', edit_seller_stock_product_path(params[:seller_id], product.id) %></li>
+                <li><%= link_to '删除', seller_stock_product_path(params[:seller_id], product.id), method: :delete, confirm: '确认删除?' %></li>
+              </ul>
+            </div>
           </td>
         </tr>
         <% end %>
       </tbody>
     </table>
 
-    <div class="pagination">
-      <ul class="pull-right">
-        <li><a href="#">上一页</a></li>
-        <li class="active">
-          <a href="#">1</a>
-        </li>
-        <li><a href="#">2</a></li>
-        <li><a href="#">3</a></li>
-        <li><a href="#">4</a></li>
-        <li><a href="#">下一页</a></li>
-      </ul>
-    </div><!-- pagination ends -->
+    <%= paginate @products, :theme => 'twitter-bootstrap'%>
   </div>
 </div>
 
-<%= form_tag '/stock_history', id: 'storage_in', class: 'form-horizontal modal hide fade', remote: true %>
+<%= form_tag "/sellers/#{params[:seller_id]}/stock_history", id: 'storage_in', class: 'form-horizontal modal hide fade', remote: true %>
 	<input type='hidden' class='modal_product_id' name='stock_history[stock_product_id]'>
 	<input type='hidden' class='modal_product_operation' name='stock_history[operation]' value='入库'>
   <div class="modal-header">
@@ -178,12 +175,11 @@
     </fieldset>
   </div>
   <div class="modal-footer">
-    <!-- <a href="#" class="btn" data-dismiss="modal">Close</a> -->
     <button type='submit' class="btn btn-primary">确定</button>
   </div>
 </form>
 
-<%= form_tag '/stock_history', id: 'storage_out', class: 'form-horizontal modal hide fade', remote: true %>
+<%= form_tag "/sellers/#{params[:seller_id]}/stock_history", id: 'storage_out', class: 'form-horizontal modal hide fade', remote: true %>
 	<input type='hidden' class='modal_product_id' name='stock_history[stock_product_id]'>
 	<input type='hidden' class='modal_product_operation' name='stock_history[operation]' value='出库'>
   <div class="modal-header">
@@ -242,3 +238,27 @@
     <button type='submit' class="btn btn-primary">确定</button>
   </div>
 </form>
+
+<script type="text/javascript">
+  function show_storage_in(id) {
+    $.get('/sellers/<%= params[:seller_id]%>/stock_products/' + id, {}, function(data){
+      $('#storage_in .modal_product_id').val(id)
+      $('#storage_in .modal_product_name').text(data.name)
+      $('#storage_in .modal_product_actual').text(data.actual)
+      $('#storage_in .modal_product_activity').text(data.activity)
+
+      $('#storage_in').modal('show')
+    })
+  }
+
+  function show_storage_out(id) {
+    $.get('/sellers/<%= params[:seller_id]%>/stock_products/' + id, {}, function(data){
+      $('#storage_out .modal_product_id').val(id)
+      $('#storage_out .modal_product_name').text(data.name)
+      $('#storage_out .modal_product_actual').text(data.actual)
+      $('#storage_out .modal_product_activity').text(data.activity)
+
+      $('#storage_out').modal('show')
+    })
+  }
+</script>

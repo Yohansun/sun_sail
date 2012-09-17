@@ -2,18 +2,18 @@ require 'sidekiq/web'
 
 MagicOrders::Application.routes.draw do
 
-  post "/stock_history", to: 'stock_history#create'
-  get '/stock_history', to: 'stock_history#index'
-  get '/stock_history/:id', to: 'stock_history#show'
-
-  get "/stocks", to: 'stocks#index'
-  get "/products", to: 'products#index'
   get "callbacks/jingdong"
   get '/autologin', to: 'users#autologin'
   devise_for :users, :path => '', :path_names => {:sign_in => 'login'}
+  
+  match "sellers", to: 'home#index'
 
-  resources :stock_products
   #resources :products
+  resources :sellers do
+    resources :stocks
+    resources :stock_products
+    resources :stock_history
+  end
 
   scope 'api' do
     resources :trades do
@@ -24,6 +24,7 @@ MagicOrders::Application.routes.draw do
 
     resources :sellers do
       member do
+        resources :stocks
         get :children
       end
     end
@@ -44,5 +45,4 @@ MagicOrders::Application.routes.draw do
 
   root to: "home#dashboard"
   match "*path", to: "home#index"
-
 end
