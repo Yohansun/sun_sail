@@ -1,5 +1,7 @@
 # -*- encoding : utf-8 -*-
 class StockProduct < ActiveRecord::Base
+  paginates_per 20
+
   attr_accessible :max, :safe_value, :product_id, :seller_id
 
   validates_numericality_of :safe_value, :actual, :activity, less_than_or_equal_to: :max
@@ -19,5 +21,4 @@ class StockProduct < ActiveRecord::Base
   		'正常'
   	end
   end
-
 end

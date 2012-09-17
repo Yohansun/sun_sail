@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 class StockHistoryController < ApplicationController
 	def index
-		@history = StockHistory.where(seller_id: params[:seller_id]).all
+		@history = StockHistory.where(seller_id: params[:seller_id]).page params[:page]
 	end
 
   def create
