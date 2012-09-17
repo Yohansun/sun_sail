@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120913114622) do
+ActiveRecord::Schema.define(:version => 20120916122550) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -47,6 +47,21 @@ ActiveRecord::Schema.define(:version => 20120913114622) do
 
   add_index "colors", ["num"], :name => "index_colors_on_num"
 
+  create_table "products", :force => true do |t|
+    t.string  "name",           :limit => 100,                               :default => "",  :null => false
+    t.string  "item_num",       :limit => 20,                                :default => "",  :null => false
+    t.string  "product_num",    :limit => 20,                                :default => "",  :null => false
+    t.string  "storage_num",    :limit => 20,                                :default => "",  :null => false
+    t.decimal "price",                         :precision => 8, :scale => 2, :default => 0.0, :null => false
+    t.string  "status"
+    t.string  "class"
+    t.string  "quantity"
+    t.string  "category"
+    t.string  "features"
+    t.text    "technical_data"
+    t.text    "note"
+  end
+
   create_table "roles", :force => true do |t|
     t.string   "name"
     t.integer  "resource_id"
@@ -63,7 +78,6 @@ ActiveRecord::Schema.define(:version => 20120913114622) do
     t.string   "fullname"
     t.string   "address"
     t.string   "mobile"
-    t.string   "phone"
     t.datetime "created_at",                          :null => false
     t.datetime "updated_at",                          :null => false
     t.integer  "parent_id"
@@ -76,8 +90,35 @@ ActiveRecord::Schema.define(:version => 20120913114622) do
     t.integer  "user_id"
     t.string   "pinyin"
     t.boolean  "active",            :default => true
-    t.integer  "performance_score", :default => 0
     t.string   "interface"
+    t.integer  "performance_score", :default => 0
+  end
+
+  create_table "stock_histories", :force => true do |t|
+    t.string   "operation"
+    t.integer  "number"
+    t.integer  "stock_product_id"
+    t.string   "tid"
+    t.integer  "user_id"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+    t.string   "reason"
+    t.string   "note"
+  end
+
+  create_table "stock_products", :force => true do |t|
+    t.integer  "iid"
+    t.string   "name"
+    t.integer  "taobao_id"
+    t.string   "status"
+    t.text     "descript"
+    t.string   "category"
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
+    t.integer  "max",        :default => 0
+    t.integer  "safe_value", :default => 0
+    t.integer  "activity",   :default => 0
+    t.integer  "actual",     :default => 0
   end
 
   create_table "trade_sources", :force => true do |t|
@@ -95,7 +136,8 @@ ActiveRecord::Schema.define(:version => 20120913114622) do
   end
 
   create_table "users", :force => true do |t|
-    t.string   "username"
+    t.string   "username",                                              :null => false
+    t.string   "name"
     t.string   "email",                               :default => "",   :null => false
     t.string   "encrypted_password",   :limit => 128, :default => "",   :null => false
     t.string   "password_salt",                       :default => "",   :null => false
@@ -116,7 +158,6 @@ ActiveRecord::Schema.define(:version => 20120913114622) do
     t.integer  "children_count",                      :default => 0
     t.integer  "lft",                                 :default => 0
     t.integer  "rgt",                                 :default => 0
-    t.string   "name"
     t.boolean  "active",                              :default => true
     t.integer  "seller_id"
   end
@@ -124,6 +165,26 @@ ActiveRecord::Schema.define(:version => 20120913114622) do
   add_index "users", ["email"], :name => "index_admins_on_email", :unique => true
   add_index "users", ["parent_id"], :name => "index_admins_on_parent_id"
   add_index "users", ["reset_password_token"], :name => "index_admins_on_reset_password_token", :unique => true
+
+  create_table "users_bak", :force => true do |t|
+    t.string   "email",                  :default => "",    :null => false
+    t.string   "encrypted_password",     :default => "",    :null => false
+    t.string   "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.integer  "sign_in_count",          :default => 0
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string   "current_sign_in_ip"
+    t.string   "last_sign_in_ip"
+    t.datetime "created_at",                                :null => false
+    t.datetime "updated_at",                                :null => false
+    t.boolean  "is_super_admin",         :default => false
+    t.string   "name"
+  end
+
+  add_index "users_bak", ["email"], :name => "index_users_on_email", :unique => true
+  add_index "users_bak", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
 
   create_table "users_roles", :id => false, :force => true do |t|
     t.integer "user_id"
