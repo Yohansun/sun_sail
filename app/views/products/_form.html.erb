@@ -1,72 +1,21 @@
-<%- if flash[:notice] %>
+<!--<%- if flash[:notice] %>
 <div class='alert alert-error'>
 <button type="button" class="close" data-dismiss="alert">×</button><h4>警告!</h4>
   <h6>表单填写有误<h6><br>
 </div>
-<% end %>
-<%= form_for @product, html: {class: 'well form-horizontal re_padding50'} do |f| %>
+<% end %>-->
+<%= simple_form_for @product, html: {class: 'well form-horizontal re_padding50'} do |f| %>
 <fieldset class="group">
   <div class="w_48 pull-left">
-    <div class="control-group">
-      <%= f.label :iid, '编号：', class: 'control-label tl'%>
-      <div class="controls">
-        <%= f.text_field :iid, class: 'input-xlarge' %>
-      </div>
-    </div>
-
-    <div class="control-group">
-      <%= f.label :name, '商品名称：', class: 'control-label tl'%>
-      <div class="controls">
-        <%= f.text_field :name, class: 'input-xlarge' %>
-      </div>
-    </div>
-
-    <div class="control-group">
-      <%= f.label :taobao_id, '淘宝id：', class: 'control-label tl'%>
-      <div class="controls">
-        <%= f.text_field :taobao_id, class: 'input-xlarge' %>
-      </div>
-    </div>
-
-    <div class="control-group">
-      <%= f.label :storage_num, '仓库编号：', class: 'control-label tl'%>
-      <div class="controls">
-        <%= f.text_field :storage_num, class: 'input-xlarge' %>
-      </div>
-    </div>
-
-    <div class="control-group">
-      <%= f.label :quantity, '规格：', class: 'control-label tl'%>
-      <div class="controls">
-        <%= f.select :quantity, [['5L', "5L"], ['10L', "10L"]], class: 'width_auto' %>
-      </div>
-    </div>
-
-    <div class="control-group">
-      <%= f.label :category, '分类：', class: 'control-label tl'%>
-      <div class="controls">
-        <%= f.select :category, [['全部', "all"], ['网络特供商品', "web_only"],['内墙乳胶漆',"inner_wall"],['外墙乳胶漆',"outer_wall"],['木器漆',"wood"],['DIY色彩系列',"DIY"],['輔助材料',"accessary"]], class: 'width_auto' %>
-      </div>
-    </div>
-    <div class="control-group">
-      <%= f.label :features, '系列：', class: 'control-label tl'%>
-      <div class="controls">
-        <%= f.check_box :features, {}, "dispell_odor" %>净味功能
-        <!--<%= f.check_box :features, {}, "resilience" %>弹性抗裂功能-->
-      </div>
-    </div>
-    <div class="control-group">
-      <%= f.label :level, '档次：', class: 'control-label tl'%>
-      <div class="controls">
-        <%= f.select :level, [['低档', "low"], ['中档', "middle"],['高档',"high"]], class: 'width_auto' %>
-      </div>
-    </div>
-    <div class="control-group">
-      <%= f.label :status, '状态：', class: 'control-label tl'%>
-      <div class="controls">
-        <%= f.select :status, [['上架', "on_sale"], ['下架', "sold_out"]], class: 'width_auto' %>
-      </div>
-    </div>
+       <%= f.input :iid, label: '编号：', :input_html =>{ :class => "input-large" } %>
+       <%= f.input :name, label: '商品名称：', :input_html =>{ :class => "input-large" } %>
+       <%= f.input :taobao_id, label: '淘宝id：', :input_html =>{ :class => "input-large" } %>
+       <%= f.input :storage_num, label: '仓库编号：', :input_html =>{ :class => "input-large" } %>
+       <%= f.input :quantity, collection: [['5L', "5L"], ['10L', "10L"]], label: '规格：', :input_html =>{ :class => "width_auto" } %>
+       <%= f.input :category, collection: [['全部', "all"], ['网络特供商品', "web_only"],['内墙乳胶漆',"inner_wall"],['外墙乳胶漆',"outer_wall"],['木器漆',"wood"],['DIY色彩系列',"DIY"],['輔助材料',"accessary"]], label: '分类：', :input_html =>{ :class => "width_auto" } %>
+       <%= f.input :features, as: :check_boxes, collection:[['净味功能', "dispell_odor"],['弹性抗裂功能',"resilience"]], label: '系列：'%>
+       <%= f.input :level, collection: [['低档', "low"], ['中档', "middle"],['高档',"high"]], label: '档次：', :input_html =>{ :class => "width_auto" } %>
+       <%= f.input :status, collection: [['上架', "on_sale"], ['下架', "sold_out"]], label: '状态：', :input_html =>{ :class => "width_auto" } %>
   </div>
 
   <!-- <div class="w_48 pull-left">
@@ -83,23 +32,12 @@
 </fieldset>
 
 <fieldset>
-  <div class="control-group">
-    <%= f.label :technical_data, '技术参数：', class: 'control-label tl'%>
-    <div class="controls">
-      <%= f.text_area :technical_data, rows: 3, class: 'input-xlarge'%>
-    </div>
-  </div>
-  <div class="control-group">
-    <%= f.label :description, '描述：', class: 'control-label tl'%>
-    <div class="controls">
-      <%= f.text_area :description, rows: 3, class: 'input-xlarge'%>
-    </div>
-  </div>
+  <%= f.input :technical_data, as: :text, label: '技术参数：', :input_html =>{ :class => "input-xlarge" ,rows: 3} %>
+  <%= f.input :description, as: :text, label: '描述：', :input_html =>{ :class => "input-xlarge" ,rows: 3} %>
 </fieldset>
-
-
+  
 <div class="form-actions">
-  <button type="submit" class="btn btn-primary">保存</button>
+  <%= f.button :submit, "保存", :class => "btn btn-primary" %>
   <a href="/products" class="btn">取消</a>
 </div>
 <% end %>
