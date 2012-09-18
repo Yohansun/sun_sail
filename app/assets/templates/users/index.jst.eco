@@ -37,7 +37,7 @@
         </select>
 
         <div class="input-append">
-          <input type="text" id="appendedInputButton" class="search-query w_specify"><button type="button" class="btn">过滤</button>
+          <input type="text" id="appendedInputButton" class="w_specify"><button type="button" class="btn">过滤</button>
         </div>
       </div>
     </fieldset>

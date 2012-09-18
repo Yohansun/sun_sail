@@ -19,7 +19,7 @@
 
   <div class="tab-content padding_t20 reset_border">
     <div class="tab-pane active" id="order_source">
-      <div class="table tabs-left">
+      <div class="tabs-left">
         <ul class="nav nav-tabs reset_border span2" id="myTab_sub">
           <li <% if @trade_source.get("id") == 1 : %> class="active" <% end %> ><a data-toggle="tab" href="#" data-source="tmall">淘宝天猫</a></li>
           <li <% if @trade_source.get("id") == 2 : %> class="active" <% end %> ><a data-toggle="tab" href="#" data-source="taobao_market">淘宝集市</a></li>
