@@ -19,6 +19,8 @@ MagicOrders::Application.routes.draw do
     get :change_status
   end
 
+  resources :users
+
   scope 'api' do
     resources :trades do
       collection do
@@ -33,7 +35,7 @@ MagicOrders::Application.routes.draw do
       end
     end
 
-    resources :users
+    resources :products
     resources :trade_sources
     resources :areas do
       collection do

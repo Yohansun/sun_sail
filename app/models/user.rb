@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class User < ActiveRecord::Base
   rolify
   belongs_to :area
@@ -14,10 +15,9 @@ class User < ActiveRecord::Base
   attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :role_level
   # attr_accessible :title, :body
 
-  validates_uniqueness_of :name
-  validates_presence_of :name
-  validates_presence_of :password, on: :create
-  validates_confirmation_of :password
+  validates_presence_of :name 
+  validates_presence_of :username
+  validates_uniqueness_of :username, on: :create
 
   def display_name
     name || email

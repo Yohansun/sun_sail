@@ -1,0 +1,75 @@
+<%= simple_form_for @user, html: {:class =>'well form-horizontal'} do |f| %>
+  <fieldset class="add_unit">
+    <div class="control-group">
+      <%= f.input :username, :label => "用户名：",class: 'input-xlarge' %>
+    </div>
+    <div class="control-group">
+      <%= f.input :name, :label => "姓名：", class: 'input-xlarge' %>
+    </div>
+
+    <div class="control-group">
+      <%= f.input :email, :label => "邮箱：", class: 'input-xlarge' %>
+    </div>
+  </fieldset>
+
+  <fieldset class="add_unit">
+    <div class="control-group">
+      <%= f.input :password, :label => "密码：", class: 'input-xlarge' %>
+    </div>
+
+    <div class="control-group">
+      <%= f.input :password_confirmation, :label => "确认密码：", class: 'input-xlarge' %>
+    </div>
+  </fieldset>
+
+  <fieldset class="add_unit">
+    <div class="control-group">
+      <label class="control-label" for="">用户组：</label>
+      <div class="controls">
+        <label class="checkbox inline">
+          <%= f.check_box :support, class: 'input-xlarge', :checked => (@user.has_role? :support) ? 'checked' : '' %>
+          售后服务
+        </label>
+      </div>
+      <div class="controls">
+        <label class="checkbox inline">
+          <%= f.check_box :seller, class: 'input-xlarge', :checked => (@user.has_role? :seller) ? 'checked' : '' %>
+          经销商
+        </label>
+      </div>
+      <div class="controls">
+        <label class="checkbox inline">
+          <%= f.check_box :interface, class: 'input-xlarge', :checked => (@user.has_role? :interface) ? 'checked' : '' %>
+          销售部联络人
+        </label>
+      </div>
+      <div class="controls">
+        <label class="checkbox inline">
+          <%= f.check_box :stock_admin, class: 'input-xlarge', :checked => (@user.has_role? :stock_admin) ? 'checked' : '' %>
+          仓库管理
+        </label>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label class="control-label" for="">状态：</label>
+      <div class="controls">
+        <select class="width_auto" id='user_active' name="user[active]">
+          <option value='1'
+          <% if @user.active == true %>
+          selected
+          <% end %>>生效</option>
+          <option value='0'
+          <% if @user.active == false %>
+          selected
+          <% end %>>禁用</option>
+        </select>
+      </div>
+    </div>
+  </fieldset>
+
+
+  <div class="form-actions">
+     <%= f.button :submit, :value => "保存", class: "btn btn-primary edit"%>
+  </div>
+<% end %>

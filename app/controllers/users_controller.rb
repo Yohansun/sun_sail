@@ -1,6 +1,5 @@
 class UsersController < ApplicationController
   before_filter :authenticate_user!, :except => ['autologin']
-  respond_to :json
 
   def autologin
   	redirect_url = '/'
@@ -27,68 +26,73 @@ class UsersController < ApplicationController
     else
       @users = User.page(params[:page])
     end
-    respond_with @users
   end
 
   def show
     @user = User.find params[:id]
-    respond_with @user
+  end
+
+  def new
+    @user = User.new
   end
 
   def create
     @user = User.new
-    @user.username = params[:username]
-    @user.name = params[:name]
-    @user.email = params[:email]
-    @user.active = params[:active]
-    @user.password = params[:password]
-    @user.password_confirmation = params[:password_confirmation]
+    @user.username = params[:user][:username]
+    @user.name = params[:user][:name]
+    @user.email = params[:user][:email]
+    @user.active = params[:user][:active]
+    @user.password = params[:user][:password]
+    @user.password_confirmation = params[:user][:password_confirmation]
 
-    @user.save!
-
-    @user.add_role(:support) if params[:is_support] == true
-    @user.add_role(:seller) if params[:is_seller] == true
-    @user.add_role(:interface) if params[:is_interface] == true
-    @user.add_role(:stock_admin) if params[:is_stock_admin] == true
-
-    respond_with @user
+    if @user.save
+      @user.add_role(:support) if params[:user][:support] == '1'
+      @user.add_role(:seller) if params[:user][:seller] == '1'
+      @user.add_role(:interface) if params[:user][:interface] == '1'
+      @user.add_role(:stock_admin) if params[:user][:stock_admin] == '1'
+      redirect_to users_path
+    else
+      render :new
+    end 
   end
 
   def update
     @user = User.find params[:id]
-    @user.username = params[:username]
-    @user.name = params[:name]
-    @user.email = params[:email]
-    @user.active = params[:active]
-    if params[:password].present?
-      @user.password = params[:password]
-      @user.password_confirmation = params[:password_confirmation]
+    @user.username = params[:user][:username]
+    @user.name = params[:user][:name]
+    @user.email = params[:user][:email]
+    @user.active = params[:user][:active]
+    if params[:user][:password].present?
+      @user.password = params[:user][:password]
+      @user.password_confirmation = params[:user][:password_confirmation]
     end
 
-    @user.save!
+    if @user.save
+      if params[:user][:support] == '1'
+        @user.add_role(:support)
+      else
+        @user.remove_role :support
+      end
+      if params[:user][:seller] == '1'
+        @user.add_role(:seller)
+      else
+        @user.remove_role(:seller)
+      end
+      if params[:user][:interface] == '1'
+        @user.add_role(:interface)
+      else
+        @user.remove_role(:interface)
+      end
+      if params[:user][:stock_admin] == '1'
+        @user.add_role(:stock_admin)
+      else
+        @user.remove_role(:stock_admin)
+      end
+      redirect_to users_path
+    else
+      render :show
+    end
 
-    if params[:is_support] == true
-      @user.add_role(:support)
-    else
-      @user.remove_role :support
-    end
-    if params[:is_seller] == true
-      @user.add_role(:seller)
-    else
-      @user.remove_role(:seller)
-    end
-    if params[:is_interface] == true
-      @user.add_role(:interface)
-    else
-      @user.remove_role(:interface)
-    end
-    if params[:is_stock_admin] == true
-      @user.add_role(:stock_admin)
-    else
-      @user.remove_role(:stock_admin)
-    end
-
-    respond_with @user
   end
 
 end
