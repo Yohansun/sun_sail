@@ -13,6 +13,8 @@ class MagicOrders.Views.SellersIndex extends Backbone.View
     'click #user_setting': 'user_setting'
     'click .check_user': 'check_user'
     'click .remove_user': 'remove_user'
+    'click .goto_stock': 'goto_stock'
+    'click .open_stock': 'open_stock'
 
   initialize: ->
     @collection.on("reset", @render, this)
@@ -94,10 +96,8 @@ class MagicOrders.Views.SellersIndex extends Backbone.View
     @model = new MagicOrders.Models.Seller(id: $('#seller_id_container').html())
     @model.save {user_id: id, method: 'add'}, 
       success: (model, response) =>
-        console.log 'model success'
         user = new MagicOrders.Models.User(id: id)
         user.fetch success: (model, response) =>
-          console.log user
           $(event.target).parent().remove()
           html = "<tr id='" + id + "'>"
           html += '<td>' + user.get('id') + '</td>'
@@ -119,3 +119,18 @@ class MagicOrders.Views.SellersIndex extends Backbone.View
         $('#' + id).remove()
       error: =>
         alert('服务器错误请稍后再试')
+
+  goto_stock: (event) ->
+    event.preventDefault()
+    id = $(event.target).data("id");
+    $('#storage_pop .seller_id_container').html(id)
+
+  open_stock: (event) ->
+    event.preventDefault()
+    $('#storage_pop').modal('hide')
+    @model = new MagicOrders.Models.Seller(id: $('#storage_pop .seller_id_container').html())
+    @model.save {has_stock: true}, 
+      success: (model, response) =>
+        location.reload()
+      error: =>
+        alert('fail')
