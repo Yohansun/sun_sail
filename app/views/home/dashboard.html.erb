@@ -10,12 +10,11 @@
 			<div>
 				<a class="indexStart3" href="#"><span>数据魔方</span></a>
 			</div>
-			<% if current_user %>
+			<% if current_user && current_user.seller_id.present? %>
 			<div>
 				<%= link_to seller_stocks_path(current_user.seller_id), class: 'indexStart4' do %>
 					<span>仓库管理</span>
 				<% end %>
-				<!-- <a class="indexStart4" href="/stocks"></a> -->
 			</div>
 			<% end %>
 			<div>
