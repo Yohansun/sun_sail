@@ -198,26 +198,26 @@
         </tr>
       </thead>
       <tbody>
-         <% for product in @products%>
+         <% for product in @products %>
         <tr>
           <td></td>
           <td><%= product.iid %></td>
-          <td><%= product.name%></td>
-          <td><%= product.taobao_id%></td>
-          <td><%= product.storage_num%></td>
+          <td><%= product.name %></td>
+          <td><%= product.taobao_id %></td>
+          <td><%= product.storage_num %></td>
           <td></td>
-          <td><%= product.quantity%></td>
-          <td><%= product.category%></td>
-          <td><%= product.features%></td>
-          <td><%= product.level%></td>
-          <td><%= product.status%></td>         
-          <td><%= product.technical_data%></td>
-          <td><%= product.description%></td>
+          <td><%= product.quantity %></td>
+          <td><%= product.category %></td>
+          <td><%= product.features %></td>
+          <td><%= product.level %></td>
+          <td><%= product.status %></td>
+          <td><%= product.technical_data %></td>
+          <td><%= product.description %></td>
           <td>
             <div class="btn-group">
               <button data-toggle="dropdown" class="btn btn-info dropdown-toggle min_w"><i class="icon-wrench"></i> <span class="caret"></span></button>
-              <ul class="dropdown-menu" style="left:-115px;">
-                <li><a href="#">编辑</a></li>
+              <ul class="dropdown-menu" style="left:-115px;">        
+                <li><%= link_to '编辑', edit_product_path(product) %></li>
                 <li><a href="#">下架</a></li>
                 <li><a href="#">查看详细</a></li>
               </ul>

@@ -5,16 +5,17 @@ MagicOrders::Application.routes.draw do
   get "callbacks/jingdong"
   get '/autologin', to: 'users#autologin'
   devise_for :users, :path => '', :path_names => {:sign_in => 'login'}
-  
+
   match "sellers", to: 'home#index'
 
-  #resources :products
   resources :sellers do
     resources :stocks
     resources :stock_products do
       resources :stock_history
     end
   end
+
+  resources :products
 
   scope 'api' do
     resources :trades do

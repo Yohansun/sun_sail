@@ -1,0 +1,23 @@
+<div class="container-fluid">
+  <header class="jumbotron subhead" id="overview">
+    <div class="subnav">
+      <ul class="nav nav-pills">
+        <li class=""><!-- active -->
+          <a href="#">渠道分布</a>
+        </li>
+        <li>
+          <a href="#">销售排行</a>
+        </li>
+      </ul>
+    </div>
+  </header>
+  <div class="row-fluid">
+    <ul class="breadcrumb" style="position:relative;">
+      <li><a href="#">Magic</a><span class="divider">/</span></li>
+      <li><a href="/products">商品管理</a><span class="divider">/</span></li>
+      <li class="active">新增商品</li>
+    </ul><!-- breadcrumb -->
+
+    <%= render 'form' %>
+  </div>
+</div>
