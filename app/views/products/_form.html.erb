@@ -1,9 +1,3 @@
-<!--<%- if flash[:notice] %>
-<div class='alert alert-error'>
-<button type="button" class="close" data-dismiss="alert">×</button><h4>警告!</h4>
-  <h6>表单填写有误<h6><br>
-</div>
-<% end %>-->
 <%= simple_form_for @product, html: {class: 'well form-horizontal re_padding50'} do |f| %>
 <fieldset class="group">
   <div class="w_48 pull-left">
@@ -11,11 +5,11 @@
        <%= f.input :name, label: '商品名称：', :input_html =>{ :class => "input-large" } %>
        <%= f.input :taobao_id, label: '淘宝id：', :input_html =>{ :class => "input-large" } %>
        <%= f.input :storage_num, label: '仓库编号：', :input_html =>{ :class => "input-large" } %>
-       <%= f.input :quantity, collection: [['5L', "5L"], ['10L', "10L"]], label: '规格：', :input_html =>{ :class => "width_auto" } %>
-       <%= f.input :category, collection: [['全部', "all"], ['网络特供商品', "web_only"],['内墙乳胶漆',"inner_wall"],['外墙乳胶漆',"outer_wall"],['木器漆',"wood"],['DIY色彩系列',"DIY"],['輔助材料',"accessary"]], label: '分类：', :input_html =>{ :class => "width_auto" } %>
-       <%= f.input :features, as: :check_boxes, collection:[['净味功能', "dispell_odor"],['弹性抗裂功能',"resilience"]], label: '系列：'%>
-       <%= f.input :level, collection: [['低档', "low"], ['中档', "middle"],['高档',"high"]], label: '档次：', :input_html =>{ :class => "width_auto" } %>
-       <%= f.input :status, collection: [['上架', "on_sale"], ['下架', "sold_out"]], label: '状态：', :input_html =>{ :class => "width_auto" } %>
+       <%= f.input :quantity, collection: @product.select_quantity, label: '规格：', :input_html =>{ :class => "width_auto" } %>
+       <%= f.input :category, collection: @product.select_category, label: '分类：', :input_html =>{ :class => "width_auto" } %>
+       <%= f.input :features, as: :check_boxes, collection: @product.select_features, label: '系列：'%>
+       <%= f.input :level, collection: @product.select_level, label: '档次：', :input_html =>{ :class => "width_auto" } %>
+       <%= f.input :status, collection: @product.select_status, label: '状态：', :input_html =>{ :class => "width_auto" } %>
   </div>
 
   <!-- <div class="w_48 pull-left">

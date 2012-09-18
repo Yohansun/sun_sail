@@ -16,23 +16,31 @@ class ProductsController < ApplicationController
 
   def create
     @product = Product.new params[:product]
+    featrues = params[:product].delete('features')
+    featrues.delete("")
+    @product.features = featrues.join(',')
     if @product.save
       redirect_to products_path
     else
-      redirect_to new_product_path
+      render new_product_path
     end
   end
 
   def edit
     @product = Product.find params[:id]
+    @product.features = @product.features.split(',')
   end
 
   def update
     @product = Product.find params[:id]
+    featrues = params[:product].delete('features')
+    featrues.delete("")
     if @product.update_attributes(params[:product])
+      @product.features = featrues.join(',')
+      @product.save
       redirect_to products_path
     else
-      redirect_to action: :edit, :notice => @product.errors.full_messages
+      render action: :edit, :notice => @product.errors.full_messages
     end
   end
 end
