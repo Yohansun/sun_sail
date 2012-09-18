@@ -69,8 +69,7 @@ class TaobaoPurchaseOrder < Trade
   end
 
   def dispatchable?
-    seller = self.matched_seller
-    seller.present? && self.seller_id.blank? && self.status == 'WAIT_SELLER_SEND_GOODS' && self.memo.blank? && self.supplier_memo.blank?
+    self.seller_id.blank? && self.status == 'WAIT_SELLER_SEND_GOODS' && self.memo.blank? && self.supplier_memo.blank?
   end
 
   def receiver_address_array
@@ -80,9 +79,24 @@ class TaobaoPurchaseOrder < Trade
 
   #手动分流应使用此方法
   def dispatch!
-    return unless self.dispatchable?
     seller = self.matched_seller
+    return unless seller
+    return unless self.dispatchable?
+    if seller.has_stock
+      return unless lock_products(seller.id)
+    end
+    
     self.update_attributes(seller_id: seller.id, dispatched_at: Time.now)
+  end
+
+  def lock_products(seller_id)
+    lockable = true
+    orders.each do |order|
+      product = StockProduct.joins(:product).where("stock_products.seller_id = #{seller_id} AND products.iid = '#{order.item_outer_id}'").first
+      lockable = false if product && product.activity <= order.num
+    end
+
+    lockable
   end
 
   def out_iids

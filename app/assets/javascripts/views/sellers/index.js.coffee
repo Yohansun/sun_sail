@@ -127,10 +127,11 @@ class MagicOrders.Views.SellersIndex extends Backbone.View
 
   open_stock: (event) ->
     event.preventDefault()
+    id = $('#storage_pop .seller_id_container').html()
     $('#storage_pop').modal('hide')
-    @model = new MagicOrders.Models.Seller(id: $('#storage_pop .seller_id_container').html())
+    @model = new MagicOrders.Models.Seller(id: id)
     @model.save {has_stock: true}, 
       success: (model, response) =>
-        location.reload()
+        $(location).attr('pathname', "/sellers/#{id}/stocks")
       error: =>
         alert('fail')
