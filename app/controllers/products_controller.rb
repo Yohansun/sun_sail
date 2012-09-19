@@ -43,4 +43,9 @@ class ProductsController < ApplicationController
       render action: :edit, :notice => @product.errors.full_messages
     end
   end
+
+  def destroy
+    Product.delete(params[:id])
+    redirect_to products_path
+  end
 end

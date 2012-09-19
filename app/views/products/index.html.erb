@@ -216,8 +216,9 @@
           <td>
             <div class="btn-group">
               <button data-toggle="dropdown" class="btn btn-info dropdown-toggle min_w"><i class="icon-wrench"></i> <span class="caret"></span></button>
-              <ul class="dropdown-menu" style="left:-115px;">        
+              <ul class="dropdown-menu" style="left:-115px;">
                 <li><%= link_to '编辑', edit_product_path(product) %></li>
+                <li><%= link_to '删除', product_path(product), :confirm => "确定删除?", :method=>:delete %></li>
                 <li><a href="#">下架</a></li>
                 <li><a href="#">查看详细</a></li>
               </ul>
