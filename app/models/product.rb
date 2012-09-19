@@ -21,10 +21,6 @@ class Product < ActiveRecord::Base
   	[['净味功能', "dispell_odor"],['弹性抗裂功能',"resilience"]]
   end
 
-  def select_quantity
-  	[['5L', "5L"], ['10L', "10L"]]
-  end
-  
   def select_level
   	[['低档', "low"], ['中档', "middle"],['高档',"high"]]
   end
@@ -32,4 +28,58 @@ class Product < ActiveRecord::Base
   def select_status
   	[['上架', "on_sale"], ['下架', "sold_out"]]
   end
+
+  def present_category
+    case self.category
+      when "all"
+        '全部'
+      when "web_only"
+        '网络特供商品'
+      when "inner_wall"
+        '内墙乳胶漆'
+      when "outer_wall"
+        '外墙乳胶漆'
+      when "wood"
+        '木器漆'
+      when "DIY"
+        'DIY色彩系列'
+      when "accessary"
+        '輔助材料'
+    end
+  end
+
+  def present_features
+    chn_fs = []
+    for f in self.features.split(",")
+      case f
+        when "dispell_odor"
+          chn_fs.push '净味功能'
+        when "resilience"
+          chn_fs.push '弹性抗裂功能'
+      end
+    end
+    chn_fs.join(",")
+  end
+
+  def present_level
+    case self.level
+      when "low"
+        '低档'
+      when "middle"
+        '中档'
+      when "high"
+        '高档'
+    end
+  end
+
+  def present_status
+    case self.status
+      when "on_sale"
+        '上架'
+      when "sold_out"
+        '下架'
+    end
+  end
+
+
 end

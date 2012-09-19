@@ -15,7 +15,10 @@ MagicOrders::Application.routes.draw do
     end
   end
 
-  resources :products
+  resources :products do
+    get :made_sold_out
+    get :made_on_sale
+  end
 
   scope 'api' do
     resources :trades do

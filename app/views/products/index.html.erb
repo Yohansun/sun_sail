@@ -207,10 +207,10 @@
           <td><%= product.storage_num %></td>
           <td></td>
           <td><%= product.quantity %></td>
-          <td><%= product.category %></td>
-          <td><%= product.features %></td>
-          <td><%= product.level %></td>
-          <td><%= product.status %></td>
+          <td><%= product.present_category %></td>
+          <td><%= product.present_features %></td>
+          <td><%= product.present_level %></td>
+          <td><%= product.present_status %></td>
           <td><%= product.technical_data %></td>
           <td><%= product.description %></td>
           <td>
@@ -219,7 +219,11 @@
               <ul class="dropdown-menu" style="left:-115px;">
                 <li><%= link_to '编辑', edit_product_path(product) %></li>
                 <li><%= link_to '删除', product_path(product), :confirm => "确定删除?", :method=>:delete %></li>
-                <li><a href="#">下架</a></li>
+                <% if product.status == "on_sale" %>
+                <li><%= link_to '下架', product_made_sold_out_path(product), :confirm => "确定修改?" %></li>
+                <% elsif product.status == "sold_out" %>
+                <li><%= link_to '上架', product_made_on_sale_path(product), :confirm => "确定修改?" %></li>
+                <% end %>
                 <li><a href="#">查看详细</a></li>
               </ul>
             </div>

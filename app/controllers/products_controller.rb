@@ -31,6 +31,20 @@ class ProductsController < ApplicationController
     @product.features = @product.features.split(',')
   end
 
+  def made_sold_out
+    @product = Product.find params[:product_id]
+    @product.status = "sold_out"
+    @product.save
+    redirect_to products_path
+  end
+
+  def made_on_sale
+    @product = Product.find params[:product_id]
+    @product.status = "on_sale"
+    @product.save
+    redirect_to products_path
+  end
+
   def update
     @product = Product.find params[:id]
     featrues = params[:product].delete('features')
