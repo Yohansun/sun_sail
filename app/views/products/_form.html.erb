@@ -13,17 +13,16 @@
        <%= f.input :status, collection: @product.select_status, label: '状态：', :input_html =>{ :class => "width_auto" } %>
   </div>
 
-  <!-- <div class="w_48 pull-left">
-    <div class="control-group">
-      <label class="control-label tl" for="">图片：</label>
-      <div class="controls">
-        <img src="images/59.jpg">
-      </div>
-      <div class="controls mar_t10">
-        <input type="file" id="fileInput" class="input-file">
-      </div>
+  <div class="w_48 pull-left">
+    <% unless @product.product_image.blank?%>
+    <div class="controls">
+        <%= image_tag("#{@product.product_image}") %>
     </div>
-  </div> -->
+    <% end %>
+    <div class="controls mar_t10">
+    <%= f.input :product_image, as: :file, label: "请上传商品图片", :input_html =>{ id: "fileInput", class: "input-file" } %>
+    </div>
+  </div>
 </fieldset>
 
 <fieldset>

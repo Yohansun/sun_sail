@@ -207,7 +207,11 @@
           <td><%= product.taobao_id %></td>
           <td><%= product.storage_num %></td>
           <th><%= product.price %></th>
-          <td></td>
+          <td>
+          <% unless product.product_image.thumb.blank? %>
+            <%= image_tag("#{product.product_image.thumb}") %>
+          <% end %>
+          </td>
           <td><%= product.quantity %></td>
           <td><%= product.present_category %></td>
           <td><%= product.present_features %></td>

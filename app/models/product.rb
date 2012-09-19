@@ -1,7 +1,14 @@
 # -*- encoding : utf-8 -*-
+
+# require 'carrierwave/orm/activerecord'
+require 'carrierwave/processing/mini_magick'
+
 class Product < ActiveRecord::Base
+  
+  mount_uploader :product_image, ProductImageUploader
     
-  attr_accessible :name, :iid, :taobao_id, :storage_num, :price, :status, :level, :quantity, :category, :features, :technical_data, :description
+  attr_accessible :name, :iid, :taobao_id, :storage_num, :price, :status, :level, :quantity,
+                  :category, :features, :technical_data, :description, :product_image
   
   validates_presence_of :name, :iid, :taobao_id, :storage_num, :price, message: "信息不能为空"
   validates_uniqueness_of :name, :iid, :taobao_id, :storage_num, message: "信息已存在"
