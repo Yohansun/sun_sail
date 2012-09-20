@@ -1,4 +1,6 @@
 class TaobaoTrade < Trade
+  include TaobaoProductsLockable
+
   field :tid, type: String
   field :num, type: Integer
   field :num_iid, type: String
@@ -110,25 +112,16 @@ class TaobaoTrade < Trade
   end
 
   def dispatch!
+    return unless self.dispatchable?
+
     seller = self.matched_seller
     return unless seller
-    return unless self.dispatchable?
-    
+
     if seller.has_stock
-      return unless lock_products(seller.id)
+      return unless can_lock_products?(seller.id)
     end
 
     self.update_attributes(seller_id: seller.id, dispatched_at: Time.now)
-  end
-
-  def lock_products(seller_id)
-    lockable = true
-    orders.each do |order|
-      product = StockProduct.joins(:product).where("stock_products.seller_id = #{seller_id} AND products.iid = '#{order.outer_iid}'").first
-      lockable = false if product && product.activity <= order.num
-    end
-
-    lockable
   end
 
   def dispatchable?

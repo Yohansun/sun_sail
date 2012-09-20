@@ -34,4 +34,8 @@ class TaobaoOrder < Order
   field :cid, type: Integer
 
   embedded_in :taobao_trades
+
+  def item_outer_id
+    outer_iid
+  end
 end
