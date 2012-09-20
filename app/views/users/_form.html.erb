@@ -27,25 +27,26 @@
       <label class="control-label" for="">用户组：</label>
       <div class="controls">
         <label class="checkbox inline">
-          <%= f.check_box :support, class: 'input-xlarge', :checked => (@user.has_role? :support) ? 'checked' : '' %>
+          <%= check_box_tag :support, '1', @user.has_role?(:support) %>
           售后服务
         </label>
       </div>
       <div class="controls">
         <label class="checkbox inline">
-          <%= f.check_box :seller, class: 'input-xlarge', :checked => (@user.has_role? :seller) ? 'checked' : '' %>
+          <%#= f.check_box :seller, class: 'input-xlarge', :checked => (@user.has_role? :seller) ? 'checked' : '' %>
+          <%= check_box_tag :seller, '1', @user.has_role?(:seller) %>
           经销商
         </label>
       </div>
       <div class="controls">
         <label class="checkbox inline">
-          <%= f.check_box :interface, class: 'input-xlarge', :checked => (@user.has_role? :interface) ? 'checked' : '' %>
+          <%= check_box_tag :interface, '1', @user.has_role?(:interface) %>
           销售部联络人
         </label>
       </div>
       <div class="controls">
         <label class="checkbox inline">
-          <%= f.check_box :stock_admin, class: 'input-xlarge', :checked => (@user.has_role? :stock_admin) ? 'checked' : '' %>
+          <%= check_box_tag :stock_admin, '1', @user.has_role?(:stock_admin) %>
           仓库管理
         </label>
       </div>

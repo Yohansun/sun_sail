@@ -24,7 +24,7 @@ class UsersController < ApplicationController
     elsif params[:seller_id].present?
       @users = User.where(seller_id: params[:seller_id])
     else
-      @users = User.page(params[:page])
+      @users = User.page params[:page]
     end
   end
 
@@ -37,19 +37,12 @@ class UsersController < ApplicationController
   end
 
   def create
-    @user = User.new
-    @user.username = params[:user][:username]
-    @user.name = params[:user][:name]
-    @user.email = params[:user][:email]
-    @user.active = params[:user][:active]
-    @user.password = params[:user][:password]
-    @user.password_confirmation = params[:user][:password_confirmation]
-
+    @user = User.new(params[:user])
     if @user.save
-      @user.add_role(:support) if params[:user][:support] == '1'
-      @user.add_role(:seller) if params[:user][:seller] == '1'
-      @user.add_role(:interface) if params[:user][:interface] == '1'
-      @user.add_role(:stock_admin) if params[:user][:stock_admin] == '1'
+      @user.add_role(:support) if params[:support] == '1'
+      @user.add_role(:seller) if params[:seller] == '1'
+      @user.add_role(:interface) if params[:interface] == '1'
+      @user.add_role(:stock_admin) if params[:stock_admin] == '1'
       redirect_to users_path
     else
       render :new
@@ -68,26 +61,10 @@ class UsersController < ApplicationController
     end
 
     if @user.save
-      if params[:user][:support] == '1'
-        @user.add_role(:support)
-      else
-        @user.remove_role :support
-      end
-      if params[:user][:seller] == '1'
-        @user.add_role(:seller)
-      else
-        @user.remove_role(:seller)
-      end
-      if params[:user][:interface] == '1'
-        @user.add_role(:interface)
-      else
-        @user.remove_role(:interface)
-      end
-      if params[:user][:stock_admin] == '1'
-        @user.add_role(:stock_admin)
-      else
-        @user.remove_role(:stock_admin)
-      end
+      @user.modify_role("support",params[:support])
+      @user.modify_role("seller",params[:seller])
+      @user.modify_role("interface",params[:interface])
+      @user.modify_role("stock_admin",params[:stock_admin])
       redirect_to users_path
     else
       render :show

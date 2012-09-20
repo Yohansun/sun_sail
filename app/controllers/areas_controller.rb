@@ -1,7 +1,5 @@
 # -*- encoding : utf-8 -*-
 class AreasController < ApplicationController
-  respond_to :json
-
   before_filter :authenticate_user!
 
   def index
@@ -10,7 +8,6 @@ class AreasController < ApplicationController
     end
 
     @areas = Area.where(parent_id: params[:parent_id])
-    respond_with @areas
   end
 
 	#TODO 导出表中其他表的数据依赖关系不满足,依赖建立后释放模板

@@ -12,12 +12,13 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :role_level
+  attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :role_level, :username, :active
+  attr_protected :support, :seller, :interface, :stock_admin
   # attr_accessible :title, :body
 
-  validates_presence_of :name 
-  validates_presence_of :username
-  validates_uniqueness_of :username, on: :create
+  validates_presence_of :name, :username, :email
+  validates_presence_of :password, on: :create
+  validates_uniqueness_of :username
 
   def display_name
     name || email
@@ -48,6 +49,14 @@ class User < ActiveRecord::Base
       'interface'
     when 15
       'cs'
+    end
+  end
+
+  def modify_role(role, type)
+    if type == '1'
+      add_role role.to_sym
+    else
+      remove_role role.to_sym
     end
   end
 end
