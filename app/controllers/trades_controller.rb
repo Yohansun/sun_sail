@@ -107,8 +107,11 @@ class TradesController < ApplicationController
 
     # 按时间筛选
     if params[:search_all] && params[:search_all][:search_start_date].present? && params[:search_all][:search_end_date].present?
-      start_time = "#{params[:search_all][:search_start_date]} #{params[:search_all][:search_start_time]}".to_time(form = :local)
-      end_time = "#{params[:search_all][:search_end_time]} #{params[:search_all][:search_end_time]}".to_time(form = :local)
+      search_start_time = params[:search_all][:search_start_time].present? ? params[:search_all][:search_start_time] : "00:00:00"
+      search_end_time = params[:search_all][:search_end_time].present? ? params[:search_all][:search_end_time] : "00:00:00"
+
+      start_time = "#{params[:search_all][:search_start_date]} #{search_start_time}".to_time(form = :local)
+      end_time = "#{params[:search_all][:search_end_time]} #{search_end_time}".to_time(form = :local)
       @trades = @trades.where(:created.gte => start_time, :created.lte => end_time)
     end
 
