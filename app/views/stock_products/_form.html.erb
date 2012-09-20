@@ -1,29 +1,10 @@
-<%= form_for [@seller, @product], html: {class: 'well form-horizontal'} do |f| %>
+<%= simple_form_for [@seller, @product], html: {class: 'well form-horizontal'} do |f| %>
   <fieldset>
     <legend class="font14">添加仓库产品：</legend>
-    <%= f.hidden_field :seller_id, value: params[:seller_id] %>
-    <div class="control-group form-inline">
-      <%= f.label :product_id, '商品：', class: 'control-label'%>
-      <div class="controls">
-        <%= f.select :product_id, options_from_collection_for_select(Product.all, :id, :name), class: 'width_auto' %>
-      </div>
-    </div>
-
-    <div class="control-group form-inline">
-      <%= f.label :max, '满仓值：', class: 'control-label'%>
-      <div class="controls">
-        <%= f.text_field :max, class: 'input-small' %>
-        <p class="help-block">(库存最大值)</p>
-      </div>
-    </div>
-
-    <div class="control-group form-inline">
-      <%= f.label :safe_value, '安全值：', class: 'control-label'%>
-      <div class="controls">
-        <%= f.text_field :safe_value, class: 'input-small' %>
-        <p class="help-block">(低于安全值进入报警状态)</p>
-      </div>
-    </div>
+    <%= f.input :seller_id, as: :hidden, value: params[:seller_id] %>
+    <%= f.association :product, label: '商品：' %>
+    <%= f.input :max, hint: "(库存最大值)", label: '满仓值：', as: :string %>
+    <%= f.input :safe_value, hint: "(低于安全值进入报警状态)", label: '安全值：', as: :string %>
 
     <div class="form-actions">
       <button type="submit" class="btn btn-primary">保存</button>

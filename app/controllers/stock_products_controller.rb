@@ -5,11 +5,13 @@ class StockProductsController < ApplicationController
   end
 
   def create
+    @seller = Seller.find params[:seller_id]
   	@product = StockProduct.new params[:stock_product]
+    @product.seller_id = params[:seller_id]
   	if @product.save!
   		redirect_to seller_stocks_path(params[:seller_id])
   	else
-  		redirect_to action: :new
+  		render :new
   	end
   end
 
@@ -22,17 +24,18 @@ class StockProductsController < ApplicationController
   end
 
   def edit
-  	@product = StockProduct.find params[:id]
     @seller = Seller.find params[:seller_id]
+  	@product = StockProduct.find params[:id]
   end
 
   def update
+    @seller = Seller.find params[:seller_id]
   	@product = StockProduct.find params[:id]
     Rails.logger.info params[:seller_id].inspect
   	if @product.update_attributes(params[:stock_product])
   		redirect_to seller_stocks_path(params[:seller_id])
   	else
-  		redirect_to action: :edit
+  		render :edit
   	end
   end
 
