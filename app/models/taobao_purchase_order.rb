@@ -1,5 +1,7 @@
 #-*- encoding : utf-8 -*-
 class TaobaoPurchaseOrder < Trade
+  include TaobaoProductsLockable
+
   field :tid, type: String,             as: :fenxiao_id
   field :seller_memo, type: String,     as: :supplier_memo
   field :buyer_message, type:String,    as: :memo
@@ -69,8 +71,7 @@ class TaobaoPurchaseOrder < Trade
   end
 
   def dispatchable?
-    seller = self.matched_seller
-    seller.present? && self.seller_id.blank? && self.status == 'WAIT_SELLER_SEND_GOODS' && self.memo.blank? && self.supplier_memo.blank?
+    self.seller_id.blank? && self.status == 'WAIT_SELLER_SEND_GOODS' && self.memo.blank? && self.supplier_memo.blank?
   end
 
   def receiver_address_array
@@ -82,6 +83,12 @@ class TaobaoPurchaseOrder < Trade
   def dispatch!
     return unless self.dispatchable?
     seller = self.matched_seller
+    return unless seller
+
+    if seller.has_stock
+      return unless can_lock_products?(seller.id)
+    end
+    
     self.update_attributes(seller_id: seller.id, dispatched_at: Time.now)
   end
 

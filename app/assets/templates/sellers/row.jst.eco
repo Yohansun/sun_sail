@@ -38,7 +38,12 @@
         </a>
       </li>
       <li><a data-toggle="modal" href="#" data-type="seller_area">管辖地区</a></li>
-      <!-- <li><a data-toggle="modal" href="#dealer_login">登录账号</a></li> -->      
+      <li><a data-toggle="modal" href="#dealer_login">登录账号</a></li>
+      <% if @seller.get('has_stock') != true : %>
+      <li><a data-toggle="modal" href="#storage_pop" data-id="<%= @seller.get('id')%>" class='goto_stock'>仓库管理</a></li>
+      <% else : %>
+      <li><a href="/sellers/<%= @seller.get('id') %>/stocks">仓库管理</a></li>
+      <% end %>
       <% if @seller.get('children_count') > 0: %>
       <li class="divider"></li>
       <li>

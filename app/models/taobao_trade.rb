@@ -1,4 +1,6 @@
 class TaobaoTrade < Trade
+  include TaobaoProductsLockable
+
   field :tid, type: String
   field :num, type: Integer
   field :num_iid, type: String
@@ -111,13 +113,19 @@ class TaobaoTrade < Trade
 
   def dispatch!
     return unless self.dispatchable?
+
     seller = self.matched_seller
+    return unless seller
+
+    if seller.has_stock
+      return unless can_lock_products?(seller.id)
+    end
+
     self.update_attributes(seller_id: seller.id, dispatched_at: Time.now)
   end
 
   def dispatchable?
-    seller = self.matched_seller
-    seller.present? && self.seller_id.blank? && self.status == 'WAIT_SELLER_SEND_GOODS' && !self.has_buyer_message && self.seller_memo.blank?
+    seller_id.blank? && status == 'WAIT_SELLER_SEND_GOODS' && has_buyer_message.nil? && seller_memo.blank?
   end
 
   def out_iids

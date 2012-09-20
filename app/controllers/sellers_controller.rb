@@ -98,6 +98,10 @@ class SellersController < ApplicationController
         end
     end
 
+    if params[:has_stock] == true
+      @seller.has_stock = true
+    end
+
     @seller.active = !@seller.active
 
     @seller.save!
