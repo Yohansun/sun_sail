@@ -3,7 +3,7 @@
     <div class="subnav">
       <ul class="nav nav-pills">
         <li class="active"><%= link_to '仓库管理', seller_stocks_path %></li>
-        <li><%= link_to '进销记录', seller_stock_history_index_path %></li>
+        <li><%= link_to '进销记录', ''%></li>
       </ul>
     </div>
   </header>
@@ -106,7 +106,9 @@
                 <li><a href='javascript:void(0)' onclick='show_storage_out(<%= product.id %>)'>出库</a></li>
                 <li><%= link_to '进销记录', seller_stock_history_index_path %></li>
                 <li><%= link_to '编辑', edit_seller_stock_product_path(params[:seller_id], product.id) %></li>
-                <li><%= link_to '删除', seller_stock_product_path(params[:seller_id], product.id), method: :delete, confirm: '确认删除?' %></li>
+                <li>
+                  <%= link_to '删除', seller_stock_product_path(params[:seller_id], product.id), method: :delete, confirm: '确认删除?' %>
+                </li>
               </ul>
             </div>
           </td>
@@ -115,7 +117,7 @@
       </tbody>
     </table>
 
-    <%= paginate @products, :theme => 'twitter-bootstrap'%>
+    <%= paginate @products %>
   </div>
 </div>
 
