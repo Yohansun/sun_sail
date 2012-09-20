@@ -46,7 +46,6 @@ gem 'twitter-bootstrap-rails', '>= 2.1.2'
 gem 'simple_form'
 gem 'awesome_nested_set'
 gem 'kaminari'
-gem 'bootstrap-kaminari-views'
 gem 'rolify'
 gem 'backbone-on-rails'
 
