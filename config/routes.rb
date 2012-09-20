@@ -11,8 +11,9 @@ MagicOrders::Application.routes.draw do
   #resources :products
   resources :sellers do
     resources :stocks
-    resources :stock_products
-    resources :stock_history
+    resources :stock_products do
+      resources :stock_history
+    end
   end
 
   scope 'api' do

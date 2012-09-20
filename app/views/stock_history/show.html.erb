@@ -2,15 +2,25 @@
     <header class="jumbotron subhead" id="overview">
       <div class="subnav">
         <ul class="nav nav-pills">
-          <li><a href="/stocks">成品仓库</a></li>
-          <li class="active"><a href="/stock_history">进销记录</a></li>
+          <li>
+            <%= link_to '成品仓库', seller_stocks_path(seller_id: params[:seller_id])%>
+          </li>
+          <li class="active">
+            <%= link_to '进销记录', seller_stock_product_stock_history_index_path(params[:seller_id], params[:stock_product_id]) %>
+          </li>
         </ul>
       </div>
     </header>
     <div class="row-fluid">
       <ul class="breadcrumb" style="position:relative;">
-        <li><a href="/stocks">仓库管理</a><span class="divider">/</span></li>
-        <li><a href="/stock_history">进销记录</a><span class="divider">/</span></li>
+        <li>
+          <%= link_to '仓库管理', seller_stocks_path(seller_id: params[:seller_id])%>
+          <span class="divider">/</span>
+        </li>
+        <li>
+          <%= link_to '进销记录', seller_stock_product_stock_history_index_path(params[:seller_id], params[:stock_product_id]) %>
+          <span class="divider">/</span>
+        </li>
         <li class="active">查看</li>
       </ul><!-- breadcrumb -->
 
@@ -28,7 +38,7 @@
           <div class="control-group">
             <label class="control-label" for="">入库日期：</label>
             <div class="controls">
-              <p class="mar_t5"><%= @history.created_at %></p>
+              <p class="mar_t5"><%= @history.created_at.strftime("%Y-%m-%d %H:%M:%S") %></p>
             </div>
           </div>
 
@@ -42,7 +52,7 @@
           <div class="control-group">
             <label class="control-label" for="">原因：</label>
             <div class="controls">
-              <p class="mar_t5"><%= @history.reason %></p>
+              <p class="mar_t5"><%= @history.reason_string %></p>
             </div>
           </div>
 
@@ -55,7 +65,7 @@
 
           <div class="form-actions">
             <button type="submit" class="btn btn-primary button_print">打印</button>
-            <a href="/stock_history" class="btn">返回</a>
+            <%= link_to '返回', seller_stock_product_stock_history_index_path(params[:seller_id], params[:stock_product_id]), class: 'btn' %>
           </div>
         </fieldset>
       </form>
