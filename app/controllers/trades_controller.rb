@@ -89,16 +89,17 @@ class TradesController < ApplicationController
 
     ## 简单筛选
     if params[:search] && !params[:search][:option].blank? && params[:search][:option] != 'null' && params[:search][:option] != 'null' && !params[:search][:option].blank?
+      value = /#{params[:search][:value].strip}/
       if params[:search][:option] == 'seller_id'
-        seller = Seller.where(name: params[:search][:value]).first
+        seller = Seller.where(name: value).first
         seller_id = seller.nil? ? 0 : seller.id
         @trades = @trades.where(seller_id: seller_id)
       elsif params[:search][:option] == 'receiver_name'
-        receiver_name_hash = {"$or" => [{receiver_name: params[:search][:value]}, {"consignee_info.fullname" => params[:search][:value]}, {"receiver.name" => params[:search][:value]}]}
+        receiver_name_hash = {"$or" => [{receiver_name: value}, {"consignee_info.fullname" => value}, {"receiver.name" => value}]}
       elsif params[:search][:option] == 'receiver_mobile'
-        receiver_mobile_hash = {"$or" => [{receiver_mobile: params[:search][:value]}, {"consignee_info.mobile" => /#{params[:search][:value]}/}, {"receiver.mobile_phone" => params[:search][:value]}]}
+        receiver_mobile_hash = {"$or" => [{receiver_mobile: value}, {"consignee_info.mobile" => value}, {"receiver.mobile_phone" => value}]}
       else
-        @trades = @trades.where(Hash[params[:search][:option].to_sym, params[:search][:value]])
+        @trades = @trades.where(Hash[params[:search][:option].to_sym, value])
       end
     end
 
