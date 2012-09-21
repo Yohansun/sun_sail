@@ -55,6 +55,9 @@ GEM
       net-ssh-gateway (>= 1.1.0)
     capistrano-ext (1.2.1)
       capistrano (>= 1.0.0)
+    carrierwave (0.6.2)
+      activemodel (>= 3.2.0)
+      activesupport (>= 3.2.0)
     celluloid (0.11.1)
       timers (>= 1.0.0)
     certified (0.1.1)
@@ -70,6 +73,7 @@ GEM
     commonjs (0.2.6)
     connection_pool (0.9.2)
     crack (0.3.1)
+    daemons (1.1.9)
     debugger (1.2.0)
       columnize (>= 0.3.1)
       debugger-linecache (~> 1.1.1)
@@ -96,6 +100,7 @@ GEM
       rails (>= 3.0)
       spreadsheet (>= 0.6)
     erubis (2.7.0)
+    eventmachine (0.12.10)
     exception_notification (2.6.1)
       actionmailer (>= 3.0.4)
     execjs (1.4.0)
@@ -141,6 +146,8 @@ GEM
       treetop (~> 1.4.8)
     map_by_method (0.8.3)
     mime-types (1.19)
+    mini_magick (3.4)
+      subexec (~> 0.2.1)
     mongo (1.6.2)
       bson (~> 1.6.2)
     mongoid (2.4.12)
@@ -252,11 +259,16 @@ GEM
       hike (~> 1.2)
       rack (~> 1.0)
       tilt (~> 1.1, != 1.3.0)
+    subexec (0.2.2)
     taobao_fu_reload (1.1.1)
       crack (>= 0.1.7)
     temple (0.4.0)
     therubyracer (0.10.2)
       libv8 (~> 3.3.10)
+    thin (1.4.1)
+      daemons (>= 1.0.9)
+      eventmachine (>= 0.12.6)
+      rack (>= 1.0.0)
     thor (0.16.0)
     tilt (1.3.3)
     timers (1.0.1)
@@ -291,6 +303,7 @@ DEPENDENCIES
   bson_ext (<= 1.6.2)
   capistrano
   capistrano-ext
+  carrierwave
   certified
   coffee-rails (~> 3.2.1)
   collections
@@ -309,6 +322,7 @@ DEPENDENCIES
   json
   kaminari
   map_by_method
+  mini_magick
   mongoid (~> 2.4.11)
   mysql2
   puma
@@ -326,6 +340,7 @@ DEPENDENCIES
   slim
   spreadsheet
   taobao_fu_reload (~> 1.1.1)
+  thin
   twitter-bootstrap-rails (>= 2.1.2)
   uglifier (>= 1.0.3)
   wirble
