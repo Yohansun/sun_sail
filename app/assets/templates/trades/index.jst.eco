@@ -179,10 +179,10 @@
 
             <div class="input-append">
               <label style="position: relative; top: 5px;">下单时间：</label>
-              <input type="text" placeholder="年-月-日" class="input-small search_start_date datepicker" value="<%= @search_start_date %>">
+              <input type="text" style="margin-right:5px;" placeholder="年-月-日" class="input-small search_start_date datepicker" value="<%= @search_start_date %>">
               <input type="text" placeholder="00:00:00" class="input-small search_start_time timepicker" value="<%= @search_start_time %>">
               <i class="icon-arrow-right"></i>
-              <input type="text" placeholder="年-月-日" class="input-small search_end_date datepicker" value="<%= @search_end_date %>">
+              <input type="text" style="margin-right:5px;" placeholder="年-月-日" class="input-small search_end_date datepicker" value="<%= @search_end_date %>">
               <input type="text" placeholder="00:00:00" class="input-small search_end_time timepicker" value="<%= @search_end_time %>">
             </div>
           </div>
