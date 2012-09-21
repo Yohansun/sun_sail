@@ -8,15 +8,16 @@ MagicOrders::Application.routes.draw do
   
   #match "sellers", to: 'home#index'
 
-  #resources :products
-
-
   resources :sellers do
     member do
         resources :stocks
         get :children
         get :status_update
       end
+    collection do
+      post :search
+      post :user_list
+    end
   end
 
   resources :sellers do

@@ -29,24 +29,18 @@
       </li>
     </ul><!-- breadcrumb -->
 
-    <%#= form_tag , :class=>"well form-search" do %>
-    <form >
+    <%= form_tag search_sellers_path, :class=>"well form-search" do %>
       <fieldset class="form-inline">
         <div class="controls">
-          <select id="search_key" class="input-large">
-            <option value='id'>编号</option>
-            <option value='fullname'>全称</option>
-            <option value='name'>简称</option>
-            <option value='address'>地址</option>
-          </select>
+          <%=select_tag "where_name", options_for_select([["编号","id"],["全称","fullname"],["简称","name"],["地址","address"]],[params[:where_name]]), :value => "#{params[:where_name]}" %>
 
           <div class="input-append">
-            <input type="text" id="search_value" class="input-large">
-            <button type="button" class="btn" id='seller_search'>过滤</button>
+            <%= text_field_tag "keyword", '',:value => "#{params[:keyword] if params[:keyword]}", :class => "input-large"%>
+            <%= button_tag "过滤", :class => "btn" %>
           </div>
         </div>
       </fieldset>
-    </form>
+    <% end %>
 
     <div class="controls clearfix">
       <div class="btns btn-group pull-right">
@@ -126,6 +120,7 @@
         <%= render 'row' %>
       </tbody>
     </table>
+    <%= paginate @sellers %>
   </div>
 </div>
 
@@ -141,8 +136,10 @@
     </div>
     <div class="pull-right well w_35">
       <div class="input-append">
-        <input type="text" id="search_users_input" class="input-large">
-        <button type="button" class="btn btn-primary" id='search_users'>搜索用户</button>
+        <%= form_tag user_list_sellers_path,:remote => true do %>
+          <%= text_field_tag "user_id", '',:value => "#{params[:user_id] if params[:user_id]}", :class => "input-large"%>
+          <%= button_tag "搜索用户", :class => "btn btn-primary" %>
+        <% end %>
       </div>
       <div id='user_list'>
       </div>
@@ -153,3 +150,22 @@
     <a href="#" class="btn btn-primary">确定</a>
   </div><!-- modal-footer -->
 </div><!-- seller_area -->
+
+<div id="storage_pop" class="modal hide fade">
+  <div class="modal-header">
+    <h3>开通仓储功能
+      <button type="button" class="close" data-dismiss="modal">&times;</button>
+    </h3>
+  </div><!-- modal-header -->
+  <div class="modal-body clearfix">
+    <p>当前经销商未开通仓库，是否需要继续开通？</p>
+    <div class='seller_id_container' style='display:none'></div>
+  </div><!-- modal-body -->
+  <div class="modal-footer">
+    <a class="btn" data-dismiss="modal" >取消</a>
+    <a href="javascript:void(0)" class="btn btn-primary open_stock">确定</a>
+  </div><!-- modal-footer -->
+</div><!-- dealer_area -->
+<script type="text/javascript">
+  
+</script>

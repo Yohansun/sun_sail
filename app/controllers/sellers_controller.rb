@@ -4,15 +4,38 @@ class SellersController < ApplicationController
 
   def index
     @sellers = Seller
-
     if params[:parent_id]
       @sellers = @sellers.where(parent_id: params[:parent_id])
     else
       @sellers = @sellers.roots
     end
+    @sellers = @sellers.page(params[:page])
+  end
 
-    if params[:key].present? && params[:value].present?
-      @sellers = @sellers.where(params[:key].to_sym => params[:value])
+  def search
+    flag = false
+    if params[:keyword].present?
+      if params[:where_name] == "id"
+        @sellers = Seller.where(id: params[:keyword].strip)
+      end
+      if params[:where_name] == "fullname"
+        @sellers = Seller.where(["fullname like ?", "%#{params[:keyword].strip}%"])
+      end
+      if params[:where_name] == "name"
+        @sellers = Seller.where(["name like ?", "%#{params[:keyword].strip}%"])
+      end
+      if params[:where_name] == "address"
+        @sellers = Seller.where(["address like ?", "%#{params[:keyword].strip}%"])
+      end
+      @sellers = @sellers.page(params[:page])
+      flag = true
+    else
+      flag = false
+    end
+    if flag
+      render :index
+    else
+      redirect_to sellers_path
     end
   end
 
@@ -32,7 +55,11 @@ class SellersController < ApplicationController
     @seller = Seller.new params[:seller]
     @seller.parent_id = params[:p_id] if params[:p_id]
     if @seller.save
-      redirect_to sellers_path(:parent_id => params[:p_id])
+      if params[:p_id].present?
+        redirect_to sellers_path(:parent_id => params[:p_id])
+      else
+        redirect_to sellers_path
+      end
     else
       render :new
     end
@@ -41,12 +68,15 @@ class SellersController < ApplicationController
   def update
     @seller = Seller.find(params[:id])
     if @seller.update_attributes(params[:seller])
-      redirect_to sellers_path(:parent_id => @seller.parent_id)
+      if !@seller.parent_id.blank?
+        redirect_to sellers_path(:parent_id => @seller.parent_id)
+      else
+        redirect_to sellers_path
+      end
     else
       render :edit
     end
   end
-
 
   def children
     @seller = Seller.find params[:id]
@@ -58,7 +88,6 @@ class SellersController < ApplicationController
   end
 
   def status_update
-    
     @seller = Seller.find params[:id]
     if @seller.active == true
       @seller.active =  false
@@ -67,5 +96,16 @@ class SellersController < ApplicationController
     end
     @seller.save!
     redirect_to sellers_path(:parent_id => @seller.parent_id)
+  end
+
+  def user_list
+    if params[:user_id].present?
+      @user = User.where(id: params[:user_id], active: true, :seller_id => nil)
+    else
+      @user = User.where(active: true, :seller_id => nil)
+    end
+    respond_to do |f|
+      f.js
+    end
   end
 end

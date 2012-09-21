@@ -1,0 +1,9 @@
+html = ""
+<% @user.each do |user| %>
+   html += "<div class='controls'>" + 
+				"<div>" + 
+					"<input data-id='<%=user.id%>' class='check_user' type='checkbox' style='margin-top:-2px'><%=user.name%>" + 
+				"</div>" +
+			"</div>"
+<% end %>
+$('#user_list').html(html)
