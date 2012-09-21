@@ -16,9 +16,6 @@ class ProductsController < ApplicationController
 
   def create
     @product = Product.new params[:product]
-    featrues = params[:product].delete('features')
-    featrues.delete("")
-    @product.features = featrues.join(',')
     if @product.save
       redirect_to products_path
     else
