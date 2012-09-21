@@ -5,8 +5,20 @@ MagicOrders::Application.routes.draw do
   get "callbacks/jingdong"
   get '/autologin', to: 'users#autologin'
   devise_for :users, :path => '', :path_names => {:sign_in => 'login'}
+  
+  #match "sellers", to: 'home#index'
 
-  match "sellers", to: 'home#index'
+  resources :sellers do
+    member do
+        resources :stocks
+        get :children
+        get :status_update
+      end
+    collection do
+      post :search
+      post :user_list
+    end
+  end
 
   resources :sellers do
     resources :stocks
@@ -19,6 +31,10 @@ MagicOrders::Application.routes.draw do
     get :change_status
   end
 
+  resources :users
+  
+  resources :areas
+
   scope 'api' do
     resources :trades do
       collection do
@@ -26,23 +42,24 @@ MagicOrders::Application.routes.draw do
       end
     end
 
-    resources :sellers do
-      member do
-        resources :stocks
-        get :children
-      end
-    end
+    # resources :sellers do
+    #   member do
+    #     resources :stocks
+    #     get :children
+    #     get :status_update
+    #   end
+    # end
 
-    resources :users
+    resources :products
     resources :trade_sources
-    resources :areas do
-      collection do
-        get :export
-        get :autocomplete
-        match :area_search
-        match :remap_sellers
-      end
-    end
+    # resources :areas do
+    #   collection do
+    #     get :export
+    #     get :autocomplete
+    #     match :area_search
+    #     match :remap_sellers
+    #   end
+    # end
   end
 
   mount Sidekiq::Web => '/sidekiq'

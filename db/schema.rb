@@ -110,8 +110,8 @@ ActiveRecord::Schema.define(:version => 20120920110551) do
     t.string   "fullname"
     t.string   "address"
     t.string   "mobile"
-    t.datetime "created_at",                           :null => false
-    t.datetime "updated_at",                           :null => false
+    t.datetime "created_at",                          :null => false
+    t.datetime "updated_at",                          :null => false
     t.integer  "parent_id"
     t.integer  "lft"
     t.integer  "rgt"
@@ -124,7 +124,7 @@ ActiveRecord::Schema.define(:version => 20120920110551) do
     t.boolean  "active",            :default => true
     t.string   "interface"
     t.integer  "performance_score", :default => 0
-    t.boolean  "has_stock",         :default => false
+    t.boolean  "has_stock"
   end
 
   create_table "stock_histories", :force => true do |t|

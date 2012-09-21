@@ -4,16 +4,16 @@ require 'hz2py'
 class Seller < ActiveRecord::Base
   acts_as_nested_set :counter_cache => :children_count
 
-  attr_accessible :mobile, :telephone, :cc_emails, :email, :pinyin, :interface
+  attr_accessible :mobile, :telephone, :cc_emails, :email, :pinyin, :interface,:fullname, :name, :email,:parent_id, :address, :performance_score
 
   has_many :users
   has_many :areas
   has_many :stock_products
   has_many :stock_history
 
-  validates_uniqueness_of :fullname
-  validates_presence_of :fullname
-
+  validates_presence_of :fullname, :name, :mobile, :email
+  validates_uniqueness_of :fullname, :name, :mobile, :email
+  validates :email, :format => { :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i }
   before_save :set_pinyin
 
   def set_pinyin

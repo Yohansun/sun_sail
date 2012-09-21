@@ -1,117 +1,111 @@
+# -*- encoding : utf-8 -*-
 class SellersController < ApplicationController
   before_filter :authenticate_user!
-  respond_to :json
 
   def index
     @sellers = Seller
-
     if params[:parent_id]
       @sellers = @sellers.where(parent_id: params[:parent_id])
     else
       @sellers = @sellers.roots
     end
+    @sellers = @sellers.page(params[:page])
+  end
 
-    if params[:key].present? && params[:value].present?
-      @sellers = @sellers.where(params[:key].to_sym => params[:value])
+  def search
+    flag = false
+    if params[:keyword].present?
+      if params[:where_name] == "id"
+        @sellers = Seller.where(id: params[:keyword].strip)
+      end
+      if params[:where_name] == "fullname"
+        @sellers = Seller.where(["fullname like ?", "%#{params[:keyword].strip}%"])
+      end
+      if params[:where_name] == "name"
+        @sellers = Seller.where(["name like ?", "%#{params[:keyword].strip}%"])
+      end
+      if params[:where_name] == "address"
+        @sellers = Seller.where(["address like ?", "%#{params[:keyword].strip}%"])
+      end
+      @sellers = @sellers.page(params[:page])
+      flag = true
+    else
+      flag = false
     end
+    if flag
+      render :index
+    else
+      redirect_to sellers_path
+    end
+  end
 
-    respond_with @sellers
+  def new
+    @seller = Seller.new
   end
 
   def show
+    @sellers = Seller.where(parent_id: params[:id])
+  end
+
+  def edit
     @seller = Seller.find params[:id]
-    respond_with @seller
   end
 
   def create
-    @seller = Seller.create
-    unless params[:seller_name].blank?
-      @seller.name = params[:seller_name]
+    @seller = Seller.new params[:seller]
+    @seller.parent_id = params[:p_id] if params[:p_id]
+    if @seller.save
+      if params[:p_id].present?
+        redirect_to sellers_path(:parent_id => params[:p_id])
+      else
+        redirect_to sellers_path
+      end
+    else
+      render :new
     end
-
-    unless params[:seller_fullname].blank?
-      @seller.fullname = params[:seller_fullname]
-    end
-
-    unless params[:seller_mobile].blank?
-      @seller.mobile = params[:seller_mobile]
-    end
-
-    unless params[:seller_address].blank?
-      @seller.address = params[:seller_address]
-    end
-
-    unless params[:seller_email].blank?
-      @seller.email = params[:seller_email]
-    end
-
-    unless params[:seller_interface].blank?
-      @seller.interface = params[:seller_interface]
-    end
-
-    if params[:parent_id].present? && params[:parent_id].to_i != 0 
-      @seller.parent_id = params[:parent_id]
-    end
-
-    @seller.save
-
-    respond_with @seller
   end
 
   def update
-    @seller = Seller.where(id: params[:id]).first
-
-    unless params[:seller_name].blank?
-      @seller.name = params[:seller_name]
+    @seller = Seller.find(params[:id])
+    if @seller.update_attributes(params[:seller])
+      if !@seller.parent_id.blank?
+        redirect_to sellers_path(:parent_id => @seller.parent_id)
+      else
+        redirect_to sellers_path
+      end
+    else
+      render :edit
     end
-
-    unless params[:seller_fullname].blank?
-      @seller.fullname = params[:seller_fullname]
-    end
-
-    unless params[:seller_mobile].blank?
-      @seller.mobile = params[:seller_mobile]
-    end
-
-    unless params[:seller_address].blank?
-      @seller.address = params[:seller_address]
-    end
-
-    unless params[:seller_email].blank?
-      @seller.email = params[:seller_email]
-    end
-
-    unless params[:seller_performance_score].blank?
-      @seller.performance_score = params[:seller_performance_score]
-    end
-    
-    unless params[:seller_interface].blank?
-      @seller.interface = params[:seller_interface]
-    end
-
-    if params[:user_id].present?
-      @seller.user_ids = case params[:method]
-        when 'add'
-          @seller.user_ids | [params[:user_id].to_i]
-        when 'remove'
-          @seller.user_ids - [params[:user_id].to_i]
-        end
-    end
-
-    if params[:has_stock] == true
-      @seller.has_stock = true
-    end
-
-    @seller.active = !@seller.active
-
-    @seller.save!
-
-    respond_with @seller
   end
-
 
   def children
     @seller = Seller.find params[:id]
-    @children = @seller.children
+    @children = (@seller.children).map(&:name)
+    logger.debug(@children)
+    respond_to do |format|
+      format.json { render json: { :name => @children}}
+    end
+  end
+
+  def status_update
+    @seller = Seller.find params[:id]
+    if @seller.active == true
+      @seller.active =  false
+    else
+      @seller.active = true
+    end
+    @seller.save!
+    redirect_to sellers_path(:parent_id => @seller.parent_id)
+  end
+
+  def user_list
+    if params[:user_id].present?
+      @user = User.where(id: params[:user_id], active: true, :seller_id => nil)
+    else
+      @user = User.where(active: true, :seller_id => nil)
+    end
+    respond_to do |f|
+      f.js
+    end
   end
 end

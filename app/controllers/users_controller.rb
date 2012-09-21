@@ -1,6 +1,5 @@
 class UsersController < ApplicationController
   before_filter :authenticate_user!, :except => ['autologin']
-  respond_to :json
 
   def autologin
   	redirect_url = '/'
@@ -25,70 +24,52 @@ class UsersController < ApplicationController
     elsif params[:seller_id].present?
       @users = User.where(seller_id: params[:seller_id])
     else
-      @users = User.page(params[:page])
+      @users = User.page params[:page]
     end
-    respond_with @users
   end
 
   def show
     @user = User.find params[:id]
-    respond_with @user
+  end
+
+  def new
+    @user = User.new
   end
 
   def create
-    @user = User.new
-    @user.username = params[:username]
-    @user.name = params[:name]
-    @user.email = params[:email]
-    @user.active = params[:active]
-    @user.password = params[:password]
-    @user.password_confirmation = params[:password_confirmation]
-
-    @user.save!
-
-    @user.add_role(:support) if params[:is_support] == true
-    @user.add_role(:seller) if params[:is_seller] == true
-    @user.add_role(:interface) if params[:is_interface] == true
-    @user.add_role(:stock_admin) if params[:is_stock_admin] == true
-
-    respond_with @user
+    @user = User.new(params[:user])
+    if @user.save
+      @user.add_role(:support) if params[:support] == '1'
+      @user.add_role(:seller) if params[:seller] == '1'
+      @user.add_role(:interface) if params[:interface] == '1'
+      @user.add_role(:stock_admin) if params[:stock_admin] == '1'
+      redirect_to users_path
+    else
+      render :new
+    end 
   end
 
   def update
     @user = User.find params[:id]
-    @user.username = params[:username]
-    @user.name = params[:name]
-    @user.email = params[:email]
-    @user.active = params[:active]
-    if params[:password].present?
-      @user.password = params[:password]
-      @user.password_confirmation = params[:password_confirmation]
+    @user.username = params[:user][:username]
+    @user.name = params[:user][:name]
+    @user.email = params[:user][:email]
+    @user.active = params[:user][:active]
+    if params[:user][:password].present?
+      @user.password = params[:user][:password]
+      @user.password_confirmation = params[:user][:password_confirmation]
     end
 
-    @user.save!
-
-    if params[:is_support] == true
-      @user.add_role(:support)
+    if @user.save
+      @user.modify_role("support",params[:support])
+      @user.modify_role("seller",params[:seller])
+      @user.modify_role("interface",params[:interface])
+      @user.modify_role("stock_admin",params[:stock_admin])
+      redirect_to users_path
     else
-      @user.remove_role :support
-    end
-    if params[:is_seller] == true
-      @user.add_role(:seller)
-    else
-      @user.remove_role(:seller)
-    end
-    if params[:is_interface] == true
-      @user.add_role(:interface)
-    else
-      @user.remove_role(:interface)
-    end
-    if params[:is_stock_admin] == true
-      @user.add_role(:stock_admin)
-    else
-      @user.remove_role(:stock_admin)
+      render :show
     end
 
-    respond_with @user
   end
 
 end
