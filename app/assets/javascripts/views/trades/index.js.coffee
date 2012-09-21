@@ -208,7 +208,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
     $("#trades_bottom").waypoint('destroy')
     blocktheui()
-    @collection.fetch data: {trade_type: @trade_type, offset: @offset, search: {option: @search_option, value: @search_value}, search_all: {@search_start_date, @search_start_time, @search_end_date, @search_end_time, @status_option, @type_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_invoice, @search_color}, search_deliverbill_status: @search_deliverbill_status, logistic_status: @logistic_status}, success: (collection) =>
+    @collection.fetch data: {trade_type: @trade_type, offset: @offset, search: {option: @search_option, value: @search_value}, search_all: {@search_start_date, @search_start_time, @search_end_date, @search_end_time, @status_option, @type_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_invoice, @search_color}, search_deliverbill_status: @search_deliverbill_status, logistic_status: @logistic_status, search_trade_status: @search_trade_status, search_invoice_status: @search_invoice_status}, success: (collection) =>
       if collection.length > 0
         @offset = @offset + 20
         @renderUpdate()
