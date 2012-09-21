@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120918062804) do
+ActiveRecord::Schema.define(:version => 20120920110551) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -37,6 +37,12 @@ ActiveRecord::Schema.define(:version => 20120918062804) do
     t.string   "zip"
   end
 
+  create_table "categories", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "colors", :force => true do |t|
     t.string   "hexcode"
     t.string   "name"
@@ -47,6 +53,25 @@ ActiveRecord::Schema.define(:version => 20120918062804) do
 
   add_index "colors", ["num"], :name => "index_colors_on_num"
 
+  create_table "feature_product_relationships", :force => true do |t|
+    t.integer  "product_id"
+    t.integer  "feature_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "features", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "levels", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "products", :force => true do |t|
     t.string  "name",           :limit => 100,                               :default => "",  :null => false
     t.string  "iid",            :limit => 20,                                :default => "",  :null => false
@@ -54,12 +79,19 @@ ActiveRecord::Schema.define(:version => 20120918062804) do
     t.string  "storage_num",    :limit => 20,                                :default => "",  :null => false
     t.decimal "price",                         :precision => 8, :scale => 2, :default => 0.0, :null => false
     t.string  "status"
-    t.string  "quantity"
-    t.string  "category"
+    t.integer "quantity_id"
+    t.integer "category_id"
     t.string  "features"
     t.text    "technical_data"
     t.text    "description"
-    t.string  "level"
+    t.integer "level_id"
+    t.string  "product_image"
+  end
+
+  create_table "quantities", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "roles", :force => true do |t|

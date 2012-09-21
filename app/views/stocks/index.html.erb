@@ -89,7 +89,7 @@
         <tr>
           <td></td>
           <td><%= product.name %></td>
-          <td><%= product.category %></td>
+          <td><%= product.product.try(:category).try(:name) %></td>
           <td><%= product.taobao_id %></td>
           <td><%= product.status %></td>
           <td><%= product.storage_status %></td>
