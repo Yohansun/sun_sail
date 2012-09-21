@@ -16,8 +16,7 @@ MagicOrders::Application.routes.draw do
   end
 
   resources :products do
-    get :made_sold_out
-    get :made_on_sale
+    get :change_status
   end
 
   scope 'api' do

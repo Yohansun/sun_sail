@@ -212,10 +212,10 @@
             <%= image_tag("#{product.product_image.thumb}") %>
           <% end %>
           </td>
-          <td><%= product.quantity %></td>
-          <td><%= product.present_category %></td>
+          <td><%= product.quantity.try(:name) %></td>
+          <td><%= product.category.try(:name) %></td>
           <td><%= product.present_features %></td>
-          <td><%= product.present_level %></td>
+          <td><%= product.level.try(:name) %></td>
           <td><%= product.present_status %></td>
           <td><%= product.technical_data %></td>
           <td><%= product.description %></td>
@@ -225,10 +225,10 @@
               <ul class="dropdown-menu" style="left:-115px;">
                 <li><%= link_to '编辑', edit_product_path(product) %></li>
                 <li><%= link_to '删除', product_path(product), :confirm => "确定删除?", :method=>:delete %></li>
-                <% if product.status == "on_sale" %>
-                <li><%= link_to '下架', product_made_sold_out_path(product), :confirm => "确定修改?" %></li>
-                <% elsif product.status == "sold_out" %>
-                <li><%= link_to '上架', product_made_on_sale_path(product), :confirm => "确定修改?" %></li>
+                <% if product.status == "ON_SALE" %>
+                <li><%= link_to '下架', product_change_status_path(product), :confirm => "确定修改?" %></li>
+                <% elsif product.status == "SOLD_OUT" %>
+                <li><%= link_to '上架', product_change_status_path(product), :confirm => "确定修改?" %></li>
                 <% end %>
                 <li><a href="#">查看详细</a></li>
               </ul>

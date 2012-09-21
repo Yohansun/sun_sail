@@ -6,10 +6,10 @@
        <%= f.input :taobao_id, label: '淘宝id：', :input_html =>{ :class => "input-xlarge" } %>
        <%= f.input :storage_num, label: '仓库编号：', :input_html =>{ :class => "input-xlarge" } %>
        <%= f.input :price, label: '价格：', :input_html =>{ :class => "input-xlarge" } %>
-       <%= f.input :quantity, collection: @product.select_quantity, label: '规格：', :input_html =>{ :class => "width_auto" } %>
-       <%= f.input :category, collection: @product.select_category, label: '分类：', :input_html =>{ :class => "width_auto" } %>
-       <%= f.input :features, as: :check_boxes, collection: @product.select_features, label: '系列：'%>
-       <%= f.input :level, collection: @product.select_level, label: '档次：', :input_html =>{ :class => "width_auto" } %>
+       <%= f.association :quantity, label: '规格：', :input_html =>{ :class => "width_auto" } %>
+       <%= f.association :features, as: :check_boxes, label: '系列：'%>
+       <%= f.association :category, label: '分类：', :input_html =>{ :class => "width_auto" } %>
+       <%= f.association :level, label: '档次：', :input_html =>{ :class => "width_auto" } %>
        <%= f.input :status, collection: @product.select_status, label: '状态：', :input_html =>{ :class => "width_auto" } %>
   </div>
 

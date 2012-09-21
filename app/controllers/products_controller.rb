@@ -28,33 +28,26 @@ class ProductsController < ApplicationController
 
   def edit
     @product = Product.find params[:id]
-    @product.features = @product.features.split(',')
   end
 
-  def made_sold_out
+  def change_status
     @product = Product.find params[:product_id]
-    @product.status = "sold_out"
-    @product.save
-    redirect_to products_path
-  end
-
-  def made_on_sale
-    @product = Product.find params[:product_id]
-    @product.status = "on_sale"
+    if @product.status == "SOLD_OUT"
+      @product.status = "ON_SALE"
+    elsif @product.status == "ON_SALE"
+      @product.status = "SOLD_OUT"
+    end
     @product.save
     redirect_to products_path
   end
 
   def update
     @product = Product.find params[:id]
-    featrues = params[:product].delete('features')
-    featrues.delete("")
     if @product.update_attributes(params[:product])
-      @product.features = featrues.join(',')
       @product.save
       redirect_to products_path
     else
-      render action: :edit, :notice => @product.errors.full_messages
+      render action: :edit
     end
   end
 
