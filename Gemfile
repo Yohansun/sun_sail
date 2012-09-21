@@ -29,6 +29,7 @@ group :development do
   gem 'hirb'
   gem 'rvm-capistrano'
   gem 'certified'
+  gem "thin"
 end
 
 group :development, :test do
