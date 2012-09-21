@@ -9,23 +9,28 @@ MagicOrders::Application.routes.draw do
   #match "sellers", to: 'home#index'
 
   resources :sellers do
+    resources :stocks
+    resources :stock_products do
+      resources :stock_history
+    end
+
     member do
-        resources :stocks
-        get :children
-        get :status_update
-      end
+      get :children
+      get :status_update
+    end
+
     collection do
       post :search
       post :user_list
     end
   end
 
-  resources :sellers do
-    resources :stocks
-    resources :stock_products do
-      resources :stock_history
-    end
-  end
+  # resources :sellers do
+  #   resources :stocks
+  #   resources :stock_products do
+  #     resources :stock_history
+  #   end
+  # end
 
   resources :products do
     get :change_status
