@@ -91,9 +91,10 @@ class TradesController < ApplicationController
     if params[:search] && !params[:search][:option].blank? && params[:search][:option] != 'null' && params[:search][:option] != 'null' && !params[:search][:option].blank?
       value = /#{params[:search][:value].strip}/
       if params[:search][:option] == 'seller_id'
-        seller = Seller.where(name: value).first
-        seller_id = seller.nil? ? 0 : seller.id
-        @trades = @trades.where(seller_id: seller_id)
+        sellers = Seller.where("name like ?", "%#{params[:search][:value].strip}%")
+        seller_ids = []
+        sellers.each {|seller| seller_ids.push seller.nil? ? 0 : seller.id}
+        @trades = @trades.where(:seller_id.in => seller_ids)
       elsif params[:search][:option] == 'receiver_name'
         receiver_name_hash = {"$or" => [{receiver_name: value}, {"consignee_info.fullname" => value}, {"receiver.name" => value}]}
       elsif params[:search][:option] == 'receiver_mobile'
