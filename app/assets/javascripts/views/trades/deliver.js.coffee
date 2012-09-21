@@ -30,7 +30,7 @@ class MagicOrders.Views.TradesDeliver extends Backbone.View
         $.unblockUI()
         view = new MagicOrders.Views.TradesRow(model: model)
         $("#trade_#{model.get('id')}").replaceWith(view.render().el)
-        $("a[rel=popover]").popover(placement: 'left', trigger:'hover')
+        $("a[rel=popover]").popover(placement: 'left')
 
         $('#trade_deliver').modal('hide')
         # window.history.back()

@@ -136,8 +136,8 @@
 
 <div class="row-fluid">
   <ul class="breadcrumb" style="position:relative;">
-    <li class="active">Magic<span class="divider">/</span></li>
-    <li class="active">订单管理<span class="divider">/</span></li>
+    <li><a href="#">Magic<span class="divider">/</span></li>
+    <li><a href="#">订单管理<span class="divider">/</span></li>
     <li class="active trade_nav">所有订单</li>
     <% if MagicOrders.role_key == 'admin' : %>
     <li style="position:absolute;right:15px;top:6px;"><i class="icon-cog"></i><a href="trade_sources/1">订单设置</a></li>
@@ -268,8 +268,18 @@
       <a href="#" class="btn btn-warning"><i class="icon-user icon-white"></i>批量操作</a>
       <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-warning btn_left4"><span class="caret"></span></button>
       <ul class="dropdown-menu">
-        <li><a href="#" class="export_orders">导出报表</a></li>
+        <!-- <li><a data-toggle="modal" href="#ord_deliver_print_mult">打印出货单</a></li> -->
+        <!-- <li><a data-toggle="modal" href="#ord_logistics_print_mult">打印物流单</a></li> -->
+        <!-- <li><a data-toggle="modal" href="#ord_examine_mult">验货</a></li> -->
+        <!-- <li><a data-toggle="modal" href="#ord_deliver_sure_mult">确认发货</a></li> -->
+        <!-- <li class="divider"></li> -->
+        <!-- <li><a data-toggle="modal" href="#ord_export">订单导出</a></li> -->
+        <!-- <li><a data-toggle="modal" href="#ord_inport" href="#">订单导入</a></li> -->
       </ul>
+    </div>
+
+    <div class="btns btn-group pull-left">
+      <a data-toggle="modal" class="btn btn-warning export_orders">导出数据</a>
     </div>
   </div>
 

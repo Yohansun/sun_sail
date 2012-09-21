@@ -89,16 +89,18 @@ class TradesController < ApplicationController
 
     ## 简单筛选
     if params[:search] && !params[:search][:option].blank? && params[:search][:option] != 'null' && params[:search][:option] != 'null' && !params[:search][:option].blank?
+      value = /#{params[:search][:value].strip}/
       if params[:search][:option] == 'seller_id'
-        seller = Seller.where(name: params[:search][:value]).first
-        seller_id = seller.nil? ? 0 : seller.id
-        @trades = @trades.where(seller_id: seller_id)
+        sellers = Seller.where("name like ?", "%#{params[:search][:value].strip}%")
+        seller_ids = []
+        sellers.each {|seller| seller_ids.push seller.nil? ? 0 : seller.id}
+        @trades = @trades.where(:seller_id.in => seller_ids)
       elsif params[:search][:option] == 'receiver_name'
-        receiver_name_hash = {"$or" => [{receiver_name: params[:search][:value]}, {"consignee_info.fullname" => params[:search][:value]}, {"receiver.name" => params[:search][:value]}]}
+        receiver_name_hash = {"$or" => [{receiver_name: value}, {"consignee_info.fullname" => value}, {"receiver.name" => value}]}
       elsif params[:search][:option] == 'receiver_mobile'
-        receiver_mobile_hash = {"$or" => [{receiver_mobile: params[:search][:value]}, {"consignee_info.mobile" => /#{params[:search][:value]}/}, {"receiver.mobile_phone" => params[:search][:value]}]}
+        receiver_mobile_hash = {"$or" => [{receiver_mobile: value}, {"consignee_info.mobile" => value}, {"receiver.mobile_phone" => value}]}
       else
-        @trades = @trades.where(Hash[params[:search][:option].to_sym, params[:search][:value]])
+        @trades = @trades.where(Hash[params[:search][:option].to_sym, value])
       end
     end
 
@@ -107,11 +109,8 @@ class TradesController < ApplicationController
 
     # 按时间筛选
     if params[:search_all] && params[:search_all][:search_start_date].present? && params[:search_all][:search_end_date].present?
-      search_start_time = params[:search_all][:search_start_time].present? ? params[:search_all][:search_start_time] : "00:00:00"
-      search_end_time = params[:search_all][:search_end_time].present? ? params[:search_all][:search_end_time] : "00:00:00"
-
-      start_time = "#{params[:search_all][:search_start_date]} #{search_start_time}".to_time(form = :local)
-      end_time = "#{params[:search_all][:search_end_time]} #{search_end_time}".to_time(form = :local)
+      start_time = "#{params[:search_all][:search_start_date]} #{params[:search_all][:search_start_time]}".to_time(form = :local)
+      end_time = "#{params[:search_all][:search_end_date]} #{params[:search_all][:search_end_time]}".to_time(form = :local)
       @trades = @trades.where(:created.gte => start_time, :created.lte => end_time)
     end
 

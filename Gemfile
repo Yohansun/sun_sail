@@ -63,6 +63,8 @@ gem 'savon'
 gem 'collections'
 gem 'spreadsheet'
 gem 'ekuseru'
+gem 'carrierwave'
+gem "mini_magick"
 
 group :production do
   gem "exception_notification", "~> 2.6.1"
