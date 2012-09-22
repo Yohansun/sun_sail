@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120920110551) do
+ActiveRecord::Schema.define(:version => 20120921144238) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -36,6 +36,9 @@ ActiveRecord::Schema.define(:version => 20120920110551) do
     t.integer  "area_type"
     t.string   "zip"
   end
+
+  add_index "areas", ["name"], :name => "index_areas_on_name"
+  add_index "areas", ["parent_id"], :name => "index_areas_on_parent_id"
 
   create_table "categories", :force => true do |t|
     t.string   "name"
@@ -110,8 +113,8 @@ ActiveRecord::Schema.define(:version => 20120920110551) do
     t.string   "fullname"
     t.string   "address"
     t.string   "mobile"
-    t.datetime "created_at",                          :null => false
-    t.datetime "updated_at",                          :null => false
+    t.datetime "created_at",                           :null => false
+    t.datetime "updated_at",                           :null => false
     t.integer  "parent_id"
     t.integer  "lft"
     t.integer  "rgt"
@@ -124,8 +127,29 @@ ActiveRecord::Schema.define(:version => 20120920110551) do
     t.boolean  "active",            :default => true
     t.string   "interface"
     t.integer  "performance_score", :default => 0
-    t.boolean  "has_stock"
+    t.boolean  "has_stock",         :default => false
   end
+
+  create_table "sellers_areas", :force => true do |t|
+    t.integer  "seller_id"
+    t.integer  "area_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "sellers_areas", ["area_id"], :name => "index_sellers_areas_on_area_id"
+  add_index "sellers_areas", ["seller_id"], :name => "index_sellers_areas_on_seller_id"
+
+  create_table "settings", :force => true do |t|
+    t.string   "var",                      :null => false
+    t.text     "value"
+    t.integer  "thing_id"
+    t.string   "thing_type", :limit => 30
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
+  end
+
+  add_index "settings", ["thing_type", "thing_id", "var"], :name => "index_settings_on_thing_type_and_thing_id_and_var", :unique => true
 
   create_table "stock_histories", :force => true do |t|
     t.string   "operation"

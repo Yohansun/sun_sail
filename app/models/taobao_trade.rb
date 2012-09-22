@@ -111,17 +111,28 @@ class TaobaoTrade < Trade
     TradeTaobaoDeliver.perform_async(self.id)
   end
 
-  def dispatch!
+  def dispatch!(seller = nil)
     return unless self.dispatchable?
 
-    seller = self.matched_seller
-    return unless seller
+    unless seller
+      seller = matched_seller
 
-    if seller.has_stock
-      return unless can_lock_products?(seller.id)
+      return unless seller
+
+      if seller.has_stock
+        return unless can_lock_products?(seller.id)
+      end
     end
+    
+    update_attributes(seller_id: seller.id, dispatched_at: Time.now) if seller
+  end
 
-    self.update_attributes(seller_id: seller.id, dispatched_at: Time.now)
+  def matched_seller(area_id)
+    if TradeSetting.company == 'dulux'
+      Dulux::SellerMatcher.match_trade_seller(self, area_id)
+    else
+      super
+    end
   end
 
   def dispatchable?

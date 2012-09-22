@@ -19,8 +19,7 @@ class TaobaoPurchaseOrderSplitter
         'I1P04L10058C0V01',
         'I1P01L40015C4V03',
         'I1P01L40052C4V04',
-        'P1P16L60064C0V00',
-        'test1'
+        'P1P16L60064C0V00'
       ]
     }
   end

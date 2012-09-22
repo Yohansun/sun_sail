@@ -112,8 +112,8 @@ class Trade
   	end
   end
 
-  def matched_seller
-    @matched_seller ||= SellerMatcher.new(self).matched_seller
+  def matched_seller(area_id)
+    @matched_seller ||= SellerMatcher.new(self).matched_seller(area_id)
   end
 
   def area
@@ -136,7 +136,7 @@ class Trade
     []
   end
 
-  def dispatch!
+  def dispatch!(seller = nil)
     # overwrite this method
   end
 

@@ -52,9 +52,8 @@
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Magic<b class="caret"></b></a>
               <ul class="dropdown-menu">
                 <li><a href="/trades" class="trades">订单管理</a></li>
-                <!-- <li><a href="#">仓库管理</a></li> -->
                 <li><a href="/sellers" class="sellers">经销商管理</a></li>
-                <% if current_user.role_key == 'admin' || current_user.role_key == 'seller'%>
+                <% if (current_user.role_key == 'admin' || current_user.role_key == 'seller') && current_user.seller_id.present? %>
                 <li><%= link_to '仓库管理', seller_stocks_path(current_user.seller_id), class: "stocks" %></li>
                 <% end %>
                 <% if current_user.role_key == 'admin' %>

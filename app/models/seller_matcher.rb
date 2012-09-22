@@ -2,18 +2,19 @@ class SellerMatcher
 	
 	def initialize(trade)
 		@trade = trade
+		@default_seller = Seller.find 1720
 	end
 
-	def matched_seller
-		all_special_products_seller || area_seller
+	def matched_seller(area_id )
+		all_special_products_seller || area_seller(area_id)
 	end
 
 protected
 
-	def area_seller
-    area = @trade.area
+	def area_seller(area_id=nil)
+    area = Area.find_by_id(area_id) || @trade.area
     return if area.blank?
-    area.seller
+    area.sellers.first || @default_seller
 	end
 
 	def all_special_products_seller
@@ -25,7 +26,7 @@ protected
 		trade_out_iids = @trade.out_iids || []
 
 		if trade_out_iids.size > 0 && (trade_out_iids - special_out_iids).size == 0
-			seller = Seller.find 1720
+			seller = @default_seller
 		end
 
 		seller

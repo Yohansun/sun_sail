@@ -219,14 +219,9 @@ class TradesController < ApplicationController
   def update
     @trade = Trade.where(_id: params[:id]).first
 
-    @trade.seller_id = params[:seller_id]
-
-    if @trade.seller_id_changed?
-      if @trade.seller_id
-        @trade.dispatched_at = Time.now
-      else
-        @trade.dispatched_at = nil
-      end
+    if params[:seller_id].present?
+      seller = Seller.find_by_id params[:seller_id]
+      @trade.dispatch!(seller) if seller
     end
 
     if params[:delivered_at] == true
@@ -287,6 +282,15 @@ class TradesController < ApplicationController
     @trade = TradeDecorator.decorate(@trade)
     respond_with(@trade) do |format|
       format.json { render :show }
+    end
+  end
+
+  def seller_for_area
+    trade = Trade.find params[:id]
+    seller = trade.matched_seller(params[:area_id])
+    seller ||= Seller.new
+    respond_to do |format|
+      format.json { render json: {seller_id: seller.id, seller_name: seller.name} }
     end
   end
 end

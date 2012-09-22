@@ -80,16 +80,19 @@ class TaobaoPurchaseOrder < Trade
   end
 
   #手动分流应使用此方法
-  def dispatch!
+  def dispatch!(seller = nil)
     return unless self.dispatchable?
-    seller = self.matched_seller
-    return unless seller
 
-    if seller.has_stock
-      return unless can_lock_products?(seller.id)
+    unless seller
+      seller = matched_seller
+      return unless seller
+
+      if seller.has_stock
+        return unless can_lock_products?(seller.id)
+      end
     end
     
-    self.update_attributes(seller_id: seller.id, dispatched_at: Time.now)
+    self.update_attributes(seller_id: seller.id, dispatched_at: Time.now) if seller
   end
 
   def out_iids
