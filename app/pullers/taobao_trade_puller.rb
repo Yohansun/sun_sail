@@ -35,10 +35,16 @@ class TaobaoTradePuller
           end
 
           trade.save
-          
+
           $redis.sadd('TaobaoTradeTids',trade['tid'])
 
-          trade.auto_dispatch! unless TradeSplitter.new(trade).split!
+          unless TradeSplitter.new(trade).split!
+            if TradeSetting.company == 'dulux'
+              DelayAutoDispatch.perform_in(TradeSetting.dalay_time || 1.hours, trade.id)
+            else
+              trade.auto_dispatch!
+            end
+          end
 
           TradeTaobaoMemoFetcher.perform_async(trade.tid, trade_source_id) if trade.has_buyer_message
         end
@@ -77,14 +83,11 @@ class TaobaoTradePuller
             trade['trade_source_id'] = trade_source_id
             local_trade.update_attributes(trade)
 
-            # orders['order'].each do |order|
-            #   local_sub_order_array = local_sub_orders.select {|o| o.item_id == sub_order['item_id']}
-            #   local_sub_order = local_sub_order_array.first
-            #   next if (local_sub_order.blank? || sub_order['status'] == local_sub_order.status)
-            #   local_sub_order.update_attributes sub_order
-            # end
-
-            local_trade.auto_dispatch!
+            if TradeSetting.company == 'dulux'
+              DelayAutoDispatch.perform_in(TradeSetting.dalay_time || 1.hours, local_trade.id)
+            else
+              local_trade.auto_dispatch!
+            end
           end 
         end
 
