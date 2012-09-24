@@ -39,10 +39,12 @@ class UsersController < ApplicationController
   def create
     @user = User.new(params[:user])
     if @user.save
-      @user.add_role(:support) if params[:support] == '1'
+      @user.add_role(:cs) if params[:cs] == '1'
+      @user.add_role(:cs_read) if params[:cs_read] == '1'
       @user.add_role(:seller) if params[:seller] == '1'
       @user.add_role(:interface) if params[:interface] == '1'
       @user.add_role(:stock_admin) if params[:stock_admin] == '1'
+      @user.add_role(:admin) if params[:admin] == '1'
       redirect_to users_path
     else
       render :new
@@ -61,10 +63,12 @@ class UsersController < ApplicationController
     end
 
     if @user.save
-      @user.modify_role("support",params[:support])
+      @user.modify_role("cs",params[:cs])
+      @user.modify_role("cs_read",params[:cs_read])
       @user.modify_role("seller",params[:seller])
       @user.modify_role("interface",params[:interface])
       @user.modify_role("stock_admin",params[:stock_admin])
+      @user.modify_role("admin",params[:admin])
       redirect_to users_path
     else
       render :show

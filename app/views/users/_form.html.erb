@@ -27,8 +27,14 @@
       <label class="control-label" for="">用户组：</label>
       <div class="controls">
         <label class="checkbox inline">
-          <%= check_box_tag :support, '1', @user.has_role?(:support) %>
-          售后服务
+          <%= check_box_tag :cs, '1', @user.has_role?(:cs) %>
+          客服
+        </label>
+      </div>
+      <div class="controls">
+        <label class="checkbox inline">
+          <%= check_box_tag :cs_read, '1', @user.has_role?(:cs_read) %>
+          客服（限浏览权限）
         </label>
       </div>
       <div class="controls">
@@ -47,7 +53,13 @@
       <div class="controls">
         <label class="checkbox inline">
           <%= check_box_tag :stock_admin, '1', @user.has_role?(:stock_admin) %>
-          仓库管理
+          仓库管理员
+        </label>
+      </div>
+      <div class="controls">
+        <label class="checkbox inline">
+          <%= check_box_tag :admin, '1', @user.has_role?(:admin) %>
+          系统管理员
         </label>
       </div>
     </div>
