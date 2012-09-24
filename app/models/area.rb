@@ -6,7 +6,8 @@ class Area < ActiveRecord::Base
   attr_accessible :parent_id, :name, :is_1568, :area_type, :zip
 
   has_many :areas, foreign_key: :parent_id
-  belongs_to :seller
+  has_many :sellers_areas
+  has_many :sellers, through: :sellers_areas
 
   before_save :set_pinyin
 

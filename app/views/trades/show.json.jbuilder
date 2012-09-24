@@ -22,7 +22,6 @@ json.sum_fee @trade.sum_fee
 json.total_fee @trade.total_fee
 json.created @trade.created.strftime("%m-%d %H:%M")
 json.pay_time @trade.pay_time.strftime("%m-%d %H:%M") if @trade.pay_time
-
 json.cs_memo @trade.cs_memo
 
 json.has_color_info @trade.has_color_info

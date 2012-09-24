@@ -1,4 +1,6 @@
 class TradeSplitter
+  include Dulux::Splitter
+
   attr_accessor :trade
 
   def initialize(trade)
@@ -44,7 +46,11 @@ class TradeSplitter
     when 'TaobaoPurchaseOrder'
       TaobaoPurchaseOrderSplitter.split_orders(@trade)
     when 'TaobaoTrade'
-      TaobaoTradeSplitter.split_orders(@trade)
+      if TradeSetting.company == 'dulux'
+        split_orders(@trade)
+      else
+        TaobaoTradeSplitter.split_orders(@trade)
+      end
     else
       [{orders: @trade.orders}]
     end

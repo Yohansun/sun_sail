@@ -34,7 +34,7 @@ class TaobaoPurchaseOrderPuller
           purchase_order.save
           
           # 分流 或 拆分订单
-          purchase_order.dispatch! unless TradeSplitter.new(purchase_order).split!
+          purchase_order.auto_dispatch! unless TradeSplitter.new(purchase_order).split!
         end
       end
     end
@@ -75,7 +75,7 @@ class TaobaoPurchaseOrderPuller
             end
 
             # 分流 
-            local_trade.dispatch!
+            local_trade.auto_dispatch!
 
             # 拆分订单
             # TradeSplitter.new(local_trade).split!

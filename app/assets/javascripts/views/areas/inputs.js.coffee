@@ -9,6 +9,7 @@ class MagicOrders.Views.AreasInputs extends Backbone.View
 
   initialize: (options) ->
     @seller_name = ''
+    @trade_id = options.order_id
 
     @state = options.state
     @city = options.city
@@ -54,21 +55,33 @@ class MagicOrders.Views.AreasInputs extends Backbone.View
   refresh_city_seller: ->
     unless $("#trade_city").val() == '请选择...'
       area_id = $("#trade_city").val()
-      seller_id = $("#trade_city option[value=#{area_id}]").data("seller-id")
-      if seller_id != ''
-        $("#trade_seller_id").val(seller_id)
-        @seller_name = $("#trade_city option[value=#{area_id}]").data("seller-name")
-        $(".trade_seller").text(@seller_name)
+      # seller_id = $("#trade_city option[value=#{area_id}]").data("seller-id")
+      # if seller_id != ''
+      #   $("#trade_seller_id").val(seller_id)
+      #   @seller_name = $("#trade_city option[value=#{area_id}]").data("seller-name")
+      #   $(".trade_seller").text(@seller_name)
+      @get_seller(area_id)
 
   refresh_district_seller: ->
     unless $("#trade_district").val() == undefined or $("#trade_district").val() == '请选择...'
       area_id = $("#trade_district").val()
-      seller_id = $("#trade_district option[value=#{area_id}]").data("seller-id")
-      $("#trade_seller_id").val(seller_id)
-      @seller_name = $("#trade_district option[value=#{area_id}]").data("seller-name")
-      $(".trade_seller").text(@seller_name)
+      @get_seller(area_id)
+
+      # seller_id = $("#trade_district option[value=#{area_id}]").data("seller-id")
+      # $("#trade_seller_id").val(seller_id)
+      # @seller_name = $("#trade_district option[value=#{area_id}]").data("seller-name")
+      # $('.trade_seller').html('123aååå')
+      # $(".trade_seller").text(@seller_name)
 
   reset_seller: =>
     $("#trade_seller_id").val(-1)
     @seller_name = ''
     $(".trade_seller").text('')
+
+
+  get_seller: (area_id)->
+    $.get('/api/trades/' + @trade_id + '/seller_for_area', {area_id: area_id}, (data)=>
+      $("#trade_seller_id").val(data.seller_id);
+      $('.trade_seller').html(data.seller_name);
+    )
+

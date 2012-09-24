@@ -71,7 +71,7 @@ class TaobaoPurchaseOrder < Trade
   end
 
   def dispatchable?
-    self.seller_id.blank? && self.status == 'WAIT_SELLER_SEND_GOODS' && self.memo.blank? && self.supplier_memo.blank?
+    self.seller_id.blank? && self.status == 'WAIT_SELLER_SEND_GOODS'
   end
 
   def receiver_address_array
@@ -79,17 +79,29 @@ class TaobaoPurchaseOrder < Trade
     [receiver['state'], receiver['city'], receiver['district']]
   end
 
-  #手动分流应使用此方法
-  def dispatch!
-    return unless self.dispatchable?
-    seller = self.matched_seller
-    return unless seller
+  def auto_dispatchable?
+    memo.blank? && supplier_memo.blank?
+  end
 
-    if seller.has_stock
-      return unless can_lock_products?(seller.id)
+  def auto_dispatch!
+    return unless auto_dispatchable?
+    dispatch!
+  end
+
+  #手动分流应使用此方法
+  def dispatch!(seller = nil)
+    return unless self.dispatchable?
+
+    unless seller
+      seller = matched_seller
+      return unless seller
+
+      if seller.has_stock
+        return unless can_lock_products?(seller.id)
+      end
     end
     
-    self.update_attributes(seller_id: seller.id, dispatched_at: Time.now)
+    self.update_attributes(seller_id: seller.id, dispatched_at: Time.now) if seller
   end
 
   def out_iids

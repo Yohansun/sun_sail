@@ -17,7 +17,7 @@ class MagicOrders.Views.TradesSeller extends Backbone.View
   render_area_inputs: ->
     states = new MagicOrders.Collections.Areas()
     states.fetch()
-    view = new MagicOrders.Views.AreasInputs(states: states, state: @model.get('receiver_state'), city: @model.get('receiver_city'), district: @model.get('receiver_district'))
+    view = new MagicOrders.Views.AreasInputs(order_id: @model.get('id'), states: states, state: @model.get('receiver_state'), city: @model.get('receiver_city'), district: @model.get('receiver_district'))
 
     $(@el).find('#areas_inputs').html(view.render().el)
 

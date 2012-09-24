@@ -7,7 +7,8 @@ class Seller < ActiveRecord::Base
   attr_accessible :mobile, :telephone, :cc_emails, :email, :pinyin, :interface,:fullname, :name, :email,:parent_id, :address, :performance_score
 
   has_many :users
-  has_many :areas
+  has_many :sellers_areas
+  has_many :areas, through: :sellers_areas
   has_many :stock_products
   has_many :stock_history
 

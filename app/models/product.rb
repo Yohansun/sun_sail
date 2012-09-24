@@ -15,7 +15,7 @@ class Product < ActiveRecord::Base
   
   validates_presence_of :name, :iid, :taobao_id, :storage_num, :price, message: "信息不能为空"
   validates_uniqueness_of :name, :iid, :taobao_id, :storage_num, message: "信息已存在"
-  validates_numericality_of :iid, :taobao_id, :storage_num, :price, message: "所填项必须为数字"
+  validates_numericality_of :taobao_id, :storage_num, :price, message: "所填项必须为数字"
   validates_length_of :name, maximum: 100, message: "内容过长"
   validates_length_of :iid, :taobao_id, :storage_num, :price, maximum: 20, message: "内容过长"
   validates_length_of :technical_data, :description, maximum: 200, message: "内容过长"

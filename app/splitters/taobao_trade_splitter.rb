@@ -29,7 +29,7 @@ class TaobaoTradeSplitter
     cangku_orders = all_orders.select {|order| cangku_outer_iids.include? order.outer_iid }
     other_orders = all_orders - cangku_orders
 
-    # 快递费拆分给普通经销商（非仓库经销商）
+    # 快递费拆分给普通经销商(非仓库经销商)
     splitted_orders = [
       {
         orders: cangku_orders,

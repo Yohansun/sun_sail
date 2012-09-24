@@ -22,7 +22,7 @@
             <td><%= area.id %></td>
             <td><%= area.zip %></td>
             <td><%= area.name %></td>
-            <td><%= area.seller.name if area.seller%></td>
+            <td><%= area.sellers.join(',')%></td>
             <!-- <td>状态</td> -->
             <td>
               <% if area.children_count > 0 %>
