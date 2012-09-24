@@ -42,7 +42,7 @@ gem 'bson_ext', '<= 1.6.2'
 gem 'draper'
 gem 'inherited_resources'
 gem 'devise'
-
+gem 'devise-encryptable'
 gem 'twitter-bootstrap-rails', '>= 2.1.2'
 gem 'simple_form'
 gem 'awesome_nested_set'
