@@ -35,7 +35,7 @@ class TaobaoTradePuller
 
           trade.save
 
-          trade.dispatch! unless TradeSplitter.new(trade).split!
+          trade.auto_dispatch! unless TradeSplitter.new(trade).split!
 
           TradeTaobaoMemoFetcher.perform_async(trade.tid, trade_source_id) if trade.has_buyer_message
         end
@@ -81,7 +81,7 @@ class TaobaoTradePuller
             #   local_sub_order.update_attributes sub_order
             # end
 
-            local_trade.dispatch!
+            local_trade.auto_dispatch!
           end 
         end
 

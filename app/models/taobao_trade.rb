@@ -111,6 +111,15 @@ class TaobaoTrade < Trade
     TradeTaobaoDeliver.perform_async(self.id)
   end
 
+  def auto_dispatchable?
+    !has_buyer_message && seller_memo.blank?
+  end
+
+  def auto_dispatch!
+    return unless auto_dispatchable?
+    dispatch!
+  end
+
   def dispatch!(seller = nil)
     return unless self.dispatchable?
 
@@ -136,7 +145,7 @@ class TaobaoTrade < Trade
   end
 
   def dispatchable?
-    seller_id.blank? && status == 'WAIT_SELLER_SEND_GOODS' && has_buyer_message.nil? && seller_memo.blank?
+    seller_id.blank? && status == 'WAIT_SELLER_SEND_GOODS'
   end
 
   def out_iids

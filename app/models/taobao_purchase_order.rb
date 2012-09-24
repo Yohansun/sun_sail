@@ -71,12 +71,21 @@ class TaobaoPurchaseOrder < Trade
   end
 
   def dispatchable?
-    self.seller_id.blank? && self.status == 'WAIT_SELLER_SEND_GOODS' && self.memo.blank? && self.supplier_memo.blank?
+    self.seller_id.blank? && self.status == 'WAIT_SELLER_SEND_GOODS'
   end
 
   def receiver_address_array
     receiver = self.receiver
     [receiver['state'], receiver['city'], receiver['district']]
+  end
+
+  def auto_dispatchable?
+    memo.blank? && supplier_memo.blank?
+  end
+
+  def auto_dispatch!
+    return unless auto_dispatchable?
+    dispatch!
   end
 
   #手动分流应使用此方法
