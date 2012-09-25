@@ -1,35 +1,19 @@
 <%= simple_form_for @seller, html: {:class =>'well form-horizontal'} do |f| %>
   <fieldset>
-     <input type="hidden" value = "<%=params[:p_id]%>" name = "p_id"%>
-    <div class="control-group">
-      <%= f.input :name, :label => "经销商简称：", :placeholder => "输入文字...", :input_html => {:class => 'input-xlarge'} %>
-    </div>
-
-    <div class="control-group">
-      <%= f.input :fullname, :label => "经销商全称：", :placeholder => "输入文字...", :input_html => {:class => 'input-xlarge'} %>
-    </div>
-
-    <div class="control-group">
-      <%= f.input :mobile, :label => "手机：", :placeholder => "输入文字...", :input_html => {:class => 'input-xlarge'} %>
-    </div>
-
-    <div class="control-group">
-      <%= f.input :interface, :label => "联系人：", :placeholder => "输入文字...", :input_html => {:class => 'input-xlarge'} %>
-    </div>
-
-    <div class="control-group">
-      <%= f.input :address, :label => "地址：", :placeholder => "输入文字...", :input_html => {:class => 'input-xlarge'} %>
-    </div>
+    <input type="hidden" value = "<%=params[:p_id]%>" name = "p_id"%>
+    <%= f.input :name, :label => "经销商简称：", :placeholder => "输入文字...", :input_html => {:class => 'input-xlarge'} %>
+    <%= f.input :fullname, :label => "经销商全称：", :placeholder => "输入文字...", :input_html => {:class => 'input-xlarge'} %>
+    <%= f.input :mobile, :label => "手机：", :placeholder => "输入文字...", :input_html => {:class => 'input-xlarge'} %>
+    <%= f.input :interface, :label => "联系人：", :placeholder => "输入文字...", :input_html => {:class => 'input-xlarge'} %>
+    <%= f.input :address, :label => "地址：", :placeholder => "输入文字...", :input_html => {:class => 'input-xlarge'} %>
 
     <% if params[:action] == "edit" || params[:action] == "update" %>
-      <div class="control-group">
-        <%= f.input :performance_score, :label => "绩效打分：", :placeholder => "输入文字...", :input_html => {:class => 'input-xlarge'} %>
-      </div>
+        <%= f.input :performance_score, :label => "绩效打分：", :placeholder => "输入文字...",
+            as: :string, :input_html => {:class => 'input-xlarge'} %>
     <% end %>
 
-    <div class="control-group">
-      <%= f.input :email, :label => "Email：", :placeholder => "输入文字...", :input_html => {:class => 'input-xlarge'} %>
-    </div>
+    <%= f.input :email, :label => "Email：", :placeholder => "输入文字...", :input_html => {:class => 'input-xlarge'} %>
+    <%= f.input :has_stock, :label => "是否开通仓库功能：", :input_html => {:class => 'input-xlarge'} %>
 
     <div class="form-actions">
       <a class="btn" href='/sellers'>取消</a>
