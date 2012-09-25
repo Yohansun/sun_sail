@@ -85,10 +85,12 @@
       <tr>
         <th>商品名称</th>
         <th nowrap>特殊属性</th>
+        <th nowrap>数量</th>
+      <% unless @trade.get('post_fee') is undefined : %>
         <th nowrap>标价</th>
         <th nowrap>实际单价</th>
-        <th nowrap>数量</th>
         <th nowrap>小计</th>
+      <% end %>
       </tr>
     </thead>
     <tbody>
@@ -96,21 +98,26 @@
       <tr>
         <td><%= order.title %></td>
         <td><%= order.sku_properties %></td>
+        <td><%= order.num %></td>
+      <% unless @trade.get('post_fee') is undefined : %>
         <td>￥<%= order.auction_price %></td>
         <td>￥<%= order.price %></td>
-        <td><%= order.num %></td>
         <td>￥<%= order.total_fee %></td>
+      <% end %>
       </tr>
       <% end %>
-      <tr>
-        <th colspan="6">总价：￥<%= @trade.get('sum_fee') %>
-        <br>物流费：￥<%= @trade.get 'post_fee' %>
-        <% if @trade.get('seller_discount') > 0 : %>
-          <br>订单折扣：￥<%= @trade.get 'seller_discount' %></th>
-        <% end %>  
-      </tr>
+      <% unless @trade.get('post_fee') is undefined : %>
+        <tr>
+          <th colspan="6">总价：￥<%= @trade.get('sum_fee') %>
+          <br>物流费：￥<%= @trade.get 'post_fee' %>
+          <% if @trade.get('seller_discount') > 0 : %>
+            <br>订单折扣：￥<%= @trade.get 'seller_discount' %></th>
+          <% end %>
+        </tr>
+      <% end %>
     </tbody>
   </table>
+  <% unless @trade.get('post_fee') is undefined : %>
   <table class="table table-bordered">
 <!--     <thead>
       <tr>
@@ -131,6 +138,7 @@
       </tr>
     </tbody>
   </table>
+  <% end %>
   <!-- <table class="table table-bordered">
     <thead>
       <tr>
