@@ -50,6 +50,7 @@ class TradesController < ApplicationController
     if !params[:search_trade_status].blank? && params[:search_trade_status] != 'null'
       if params[:search_trade_status] == 'undispatched_trade'
         @trades = @trades.where(:dispatched_at.exists => false)
+        @trades = @trades.where(:status.ne => 'WAIT_BUYER_PAY')
       elsif params[:search_trade_status] == 'unusual_trade'
         #异常订单
       else
