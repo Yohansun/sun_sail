@@ -223,6 +223,8 @@ class TradesController < ApplicationController
     if params[:seller_id].present?
       seller = Seller.find_by_id params[:seller_id]
       @trade.dispatch!(seller) if seller
+    elsif params[:seller_id].nil?
+      @trade.seller_id = nil
     end
 
     if params[:delivered_at] == true
@@ -278,8 +280,6 @@ class TradesController < ApplicationController
 
     @trade.save!
 
-    Rails.logger.info @trade.orders.inspect
-
     @trade = TradeDecorator.decorate(@trade)
     respond_with(@trade) do |format|
       format.json { render :show }
@@ -289,7 +289,7 @@ class TradesController < ApplicationController
   def seller_for_area
     trade = Trade.find params[:id]
     area = Area.find params[:area_id]
-    seller = trade.matched_seller(area)
+    seller = trade.matched_seller_with_default(area)
     respond_to do |format|
       format.json { render json: {seller_id: seller.id, seller_name: seller.name} }
     end

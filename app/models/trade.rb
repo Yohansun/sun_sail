@@ -112,8 +112,8 @@ class Trade
   	end
   end
 
-  def matched_seller_with_default
-    matched_seller || Seller.find(1720)
+  def matched_seller_with_default(area = nil)
+    matched_seller(area) || Seller.find(1720)
   end
 
   def matched_seller(area = default_area)
