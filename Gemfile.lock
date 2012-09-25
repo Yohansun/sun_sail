@@ -335,6 +335,7 @@ DEPENDENCIES
   rabl
   rails (>= 3.2.3)
   rails-settings-cached
+  redis-namespace
   rolify
   rspec-rails
   rvm-capistrano

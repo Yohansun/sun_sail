@@ -26,7 +26,7 @@ class JingdongTradePuller
       p total_results
       p total_pages
 
-      default_seller_id = Seller.find_by_name("立邦仓库经销商").id
+      default_seller_id = 1720 #Seller.find_by_name("立邦仓库经销商").id
 
       (1..total_pages).each do |page|
 
@@ -39,13 +39,14 @@ class JingdongTradePuller
 
         trades = response['order_search_response']['order_search']['order_info_list']
         trades.each do |t|
-          unless JingdongTrade.where(tid: t['order_id']).exists?
+          unless ($redis.sismember('JingdongTradeTids', t['order_id']) || JingdongTrade.where(tid: t['order_id']).exists?)
             orders = t.delete('item_info_list')
             trade = JingdongTrade.new(t)
             orders.each do |order|
               order = trade.jingdong_orders.build(order)
             end
             trade.save
+            $redis.sadd('JingdongTradeTids',t['order_id'])
 
             # auto dispatch
             if trade.order_remark.blank? && (trade.order_state == "WAIT_SELLER_DELIVERY" || trade.order_state == "WAIT_SELLER_STOCK_OUT")
@@ -56,7 +57,7 @@ class JingdongTradePuller
           else
             trade = JingdongTrade.where(tid: t['order_id']).first
             p t
-            trade.order_state = t['order_state']
+            trade.order_state = t['order_state']  
             trade.order_state_remark = t['order_state_remark']
             trade.order_end_time = t['order_end_time']
             trade.save
