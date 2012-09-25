@@ -87,6 +87,17 @@ class TaobaoPurchaseOrder < Trade
     return unless auto_dispatchable?
     dispatch!
   end
+  
+  def distributor_usercode
+    case self.distributor_username.strip
+    when "满信家居专营店"  
+      "TBFX0001"
+    when ""  
+      "TBFX0002" 
+    else
+      "无对应分销商编码"
+    end     
+  end  
 
   #手动分流应使用此方法
   def dispatch!(seller = nil)

@@ -1,6 +1,8 @@
 json.array!(@trades) do |json, trade|
   json.id trade._id
-  json.tid trade.tid
+  json.tid trade.tid 
+  json.tc_order_id trade.tc_order_id if trade._type == "TaobaoPurchaseOrder"
+  json.distributor_usercode trade.distributor_usercode if trade._type == "TaobaoPurchaseOrder"
   json.splitted_tid trade.splitted_tid
   json.status trade.status
   json.status_text trade.status_text

@@ -1,5 +1,8 @@
 <td><input type="checkbox" value="option1"></td>
-<td data-col='trade_source'><span class="label label-warning"><%= @trade.get('trade_source') %><%= @trade.get('trade_source_name') %></span></td>
+<td data-col='trade_source'><span class="label label-warning"><%= @trade.get('trade_source') %><%= @trade.get('trade_source_name') %></span>
+<% if @trade.get('trade_source') == "分销平台" : %>  
+  <br><span class="label label-info">店铺代码:<%= @trade.get('distributor_usercode') %></span></td>
+<% end %>  
 <td data-col='tid'>
   <% if @trade.get('splitted_tid'): %>
     <span class="label label-info">拆分订单</span>
@@ -8,6 +11,9 @@
   <% else: %>
     <%= @trade.get('tid') %>
   <% end %>
+  <% if @trade.get('trade_source') == "分销平台" : %>
+    <span class="label label-info">主订单号:<%= @trade.get('tc_order_id') %></span>
+  <% end %>  
 </td>
 <td data-col='status'>
   <span class="label label-success"><%= @trade.get('status_text') %></span>
