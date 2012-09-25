@@ -56,7 +56,7 @@ class JingdongTradePuller
             end
           else
             trade = JingdongTrade.where(tid: t['order_id']).first
-            p t
+            return unless trade
             trade.order_state = t['order_state']  
             trade.order_state_remark = t['order_state_remark']
             trade.order_end_time = t['order_end_time']

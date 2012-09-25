@@ -287,8 +287,8 @@ class TradesController < ApplicationController
 
   def seller_for_area
     trade = Trade.find params[:id]
-    seller = trade.matched_seller(params[:area_id])
-    seller ||= Seller.new
+    area = Area.find params[:area_id]
+    seller = trade.matched_seller(area)
     respond_to do |format|
       format.json { render json: {seller_id: seller.id, seller_name: seller.name} }
     end
