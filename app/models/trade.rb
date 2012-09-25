@@ -143,4 +143,75 @@ class Trade
   def out_iids
     # overwrite this method
   end
+  
+  #清空对应trade类型的所有缓存tid
+  def self.clear_cached_tids!(type)
+    case type
+    when 'JingdongTrade'  
+      jingdong_trade_tids = $redis.smembers 'JingdongTradeTids'
+      jingdong_trade_tids.each do |tid|
+        $redis.srem('JingdongTradeTids', tid)
+      end  
+    when 'TaobaoTrade'
+      taobao_trade_tids = $redis.smembers 'TaobaoTradeTids'
+      taobao_trade_tids.each do |tid|
+        $redis.srem('TaobaoTradeTids', tid)
+      end  
+    when 'TaobaoPurchaseOrder'
+      taobao_purchase_order_tids = $redis.smembers 'TaobaoPurchaseOrderTids'
+      taobao_purchase_order_tids.each do |tid|
+        $redis.srem('TaobaoPurchaseOrderTids', tid)
+      end
+    end  
+  end  
+  
+  #清空缓存tid
+  def self.clear_cached_tid(type, tid)
+    case type
+    when 'TaobaoPurchaseOrder'
+      $redis.srem('TaobaoPurchaseOrderTids', tid)
+    when 'TaobaoTrade'
+      $redis.srem('TaobaoTradeTids', tid)
+    when 'JingdongTrade'
+      $redis.srem('JingdongTradeTids', tid)
+    end
+  end  
+  
+  #缓存或者清空一定时间段内所有tid
+  def self.cache_tids!(start_time = nil, end_time = nil, sadd_or_srem = nil)
+
+    if start_time.blank?
+        start_time = Time.now - 2.days
+    end
+
+    end_time = Time.now unless end_time
+
+    trades = Trade.only(:tid, :_type, :created).where(:created.gte => start_time, :created.lte => end_time)
+    
+    if sadd_or_srem == "srem"
+      trades.each do |trade|
+        case trade._type
+        when 'TaobaoPurchaseOrder'
+          $redis.srem('TaobaoPurchaseOrderTids', trade.tid)
+        when 'TaobaoTrade'
+          $redis.srem('TaobaoTradeTids', trade.tid)
+        when 'JingdongTrade'
+          $redis.srem('JingdongTradeTids', trade.tid)
+        end
+      end 
+    else  
+      trades.each do |trade|
+        case trade._type
+        when 'TaobaoPurchaseOrder'
+          $redis.sadd('TaobaoPurchaseOrderTids', trade.tid)
+        when 'TaobaoTrade'
+          $redis.sadd('TaobaoTradeTids', trade.tid)
+        when 'JingdongTrade'
+          $redis.sadd('JingdongTradeTids', trade.tid)
+        end
+      end  
+    end
+
+  end
+
 end

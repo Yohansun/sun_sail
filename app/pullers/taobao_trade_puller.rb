@@ -24,9 +24,10 @@ class TaobaoTradePuller
         next if trades.blank?
 
         trades.each do |trade|
-          next if TaobaoTrade.where(tid: trade['tid']).exists?
+          next if ($redis.sismember('TaobaoTradeTids',trade['tid']) || TaobaoTrade.where(tid: trade['tid']).exists?)
           orders = trade.delete('orders')
           trade = TaobaoTrade.new(trade)
+
           trade.trade_source_id = trade_source_id
 
           orders['order'].each do |order|
@@ -34,6 +35,8 @@ class TaobaoTradePuller
           end
 
           trade.save
+          
+          $redis.sadd('TaobaoTradeTids',trade['tid'])
 
           trade.auto_dispatch! unless TradeSplitter.new(trade).split!
 

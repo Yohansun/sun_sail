@@ -22,7 +22,7 @@ class TaobaoPurchaseOrderPuller
 
         trades = response['fenxiao_orders_get_response']['purchase_orders']['purchase_order']
         trades.each do |trade|
-          next if TaobaoPurchaseOrder.where(tid: trade['fenxiao_id']).exists?
+          next if ($redis.sismember('TaobaoPurchaseOrderTids', trade['fenxiao_id']) || TaobaoPurchaseOrder.where(tid: trade['fenxiao_id']).exists?)
           trade.delete 'id'
           sub_orders = trade.delete('sub_purchase_orders')
           purchase_order = TaobaoPurchaseOrder.new(trade)
@@ -31,7 +31,8 @@ class TaobaoPurchaseOrderPuller
             sub_order.delete 'id'
             sub_purchase_order = purchase_order.taobao_sub_purchase_orders.build(sub_order)
           end
-          purchase_order.save
+          purchase_order.save  
+          $redis.sadd('TaobaoPurchaseOrderTids', trade['fenxiao_id'])
           
           # 分流 或 拆分订单
           purchase_order.auto_dispatch! unless TradeSplitter.new(purchase_order).split!

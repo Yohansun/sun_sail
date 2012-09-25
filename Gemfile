@@ -68,6 +68,8 @@ gem 'ekuseru'
 gem 'carrierwave'
 gem "mini_magick"
 
+gem 'redis-namespace'
+
 group :production do
   gem "exception_notification", "~> 2.6.1"
 end
