@@ -1,4 +1,4 @@
-<div class="container-fluid">
+精准<div class="container-fluid">
   <header class="jumbotron subhead" id="overview">
     <div class="subnav">
       <ul class="nav nav-pills">
@@ -22,62 +22,25 @@
       <button type="button" class="close" data-dismiss="alert">&times;</button>
       <strong>提示</strong>该功能正在研发中...
     </div> -->
-
-    <form class="well form-search">
+    <%= simple_form_for "product",url: products_path, html: { method: "get", class: "well form-search"} ,:wrapper => :search do |f| %>
       <fieldset class="form-inline">
-        <div class="controls">
-          <label class="control-label">精准：</label>
-          <select id="" class="input-large">
-            <option>商品</option>
-            <option>商品名称</option>
-            <option>商品编码</option>
-          </select>
-
-          <div class="input-append">
-            <input type="text" id="appendedInputButton" class="w_specify">
-          </div>
-        </div>
+        <%= f.input :info_type, collection: [["商品名称","name"], ["商品编号","iid"],["淘宝ID","taobao_id"],["仓库编号","storage_num"]], label: "精准：", required: false %>
+        <%= f.input :info, input_html: {class: "w_specify"} ,label: false, required: false %>
       </fieldset>
       <fieldset class="form-inline mar_t5">
-        <div class="controls">
-          <label class="control-label">档次：</label>
-          <select id="" class="input-large">
-            <option>低档</option>
-            <option>中档</option>
-            <option>高档</option>
-          </select>
-
-          <label class="control-label">状态：</label>
-          <select id="" class="width_auto">
-            <option>上架</option>
-            <option>下架</option>
-          </select>
-
-          <label class="control-label">分类：</label>
-          <select id="" class="width_auto">
-            <option>分类</option>
-            <option>分类一</option>
-            <option>分类二</option>
-          </select>
-
-          <label class="control-label">系列：</label>
-          <select id="" class="width_auto">
-            <option>系列一</option>
-            <option>系列二</option>
-          </select>
-
-          <label class="control-label">规格：</label>
-          <select id="" class="width_auto">
-            <option>51</option>
-            <option>101</option>
-          </select>
-
-          <div class="input-append">
-            <button type="button" class="btn">过滤</button>
-          </div>
+        <%= f.input :item_level, collection: Level.all, input_html: {class: "input-large mar_r10" }, label: "档次：", required: false %>
+        <%= f.input :item_quantity, collection: Quantity.all, input_html: {class: "width_auto mar_r10" }, label: "规格：", required: false %>
+        <%= f.input :item_status, collection: [["上架","ON_SALE"], ["下架","SOLD_OUT"]], input_html: {class: "width_auto mar_r10" }, label: "状态：", required: false %>      
+        <%= f.input :item_category, collection: Category.all, input_html: {class: "width_auto mar_r10" }, label: "系列：", required: false %>
+        <br />
+        <br />
+        <%= f.input :item_features, as: :check_boxes, collection: Feature.all, input_html: {class: "width_auto mar_t5", label_style: "margin-top:-5px;"}, label: "分类：", required: false %>
+        <br />
+        <div>
+          <%= f.button :submit, "过滤", class: "btn btn-primary pull-right" %>
         </div>
       </fieldset>
-    </form>
+    <% end %>
 
     <!--<div class="controls clearfix">
       <div class="btns btn-group pull-right">
@@ -184,7 +147,7 @@
           <th>选择</th><!-- 订单号，当前状态，订单状态，经销商，接口人，客户姓名，客户联系方式，客户地址，订单内容，总价，客户备注，调色，客服备注，拆单数 -->
           <th nowrap>商品编号</th>
           <th nowrap>商品名称</th>
-          <th nowrap>淘宝id</th>
+          <th nowrap>淘宝ID</th>
           <th nowrap>仓库编号</th>
           <th nowrap>价格</th>
           <th nowrap>商品图片</th>

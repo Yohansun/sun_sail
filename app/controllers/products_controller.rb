@@ -3,7 +3,29 @@ class ProductsController < ApplicationController
   before_filter :authenticate_user!
 
   def index
-    @products = Product.page(params[:page])
+    @products = Product
+    if params[:product].present?
+      unless params[:product][:info_type].blank? || params[:product][:info].blank?
+        @products = @products.where("#{params[:product][:info_type]} like ?", "%#{params[:product][:info].strip}%")
+      end
+      unless params[:product][:item_level].blank?
+        @products = @products.where("level_id = ?", params[:product][:item_level])
+      end
+      unless params[:product][:item_status].blank?
+        @products = @products.where("status = ?", params[:product][:item_status])
+      end
+      unless params[:product][:item_category].blank?
+        @products = @products.where("category_id = ?", params[:product][:item_category])
+      end
+      unless params[:product][:item_quantity].blank?
+        @products = @products.where("quantity_id = ?", params[:product][:item_quantity])
+      end
+      unless params[:product][:item_features] == [""]
+        feature_ids = params[:product][:item_features].collect{|i| i.to_i}
+        @products = @products.joins(:feature_product_relationships).where("feature_product_relationships.feature_id in (#{feature_ids.join(',')})").uniq
+      end
+    end
+    @products = @products.page(params[:page])
   end
 
   def show
