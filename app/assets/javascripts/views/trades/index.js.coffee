@@ -43,9 +43,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     $.unblockUI()
     if !@first_rendered
        $(@el).html(@template())
-       # navs = {'all': '所有订单', 'taobao': '淘宝订单', 'taobao_fenxiao': '淘宝分销采购单', 'jingdong': '京东商城订单', 'shop': '官网订单'}
-       # $(@el).find(".trade_nav").text(navs[@trade_type])
-
       #initial mode=trades
       visible_cols = MagicOrders.trade_cols_visible_modes[MagicOrders.trade_mode]
       MagicOrders.trade_cols_hidden = _.difference(MagicOrders.trade_cols_keys, visible_cols)
@@ -264,6 +261,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     e.preventDefault()
     $('.dropdown.open .dropdown-toggle').dropdown('toggle');
     @search_trade_status = $(e.target).data('trade-status')
+    $(@el).find(".trade_nav").text($("[data-trade-status=#{@search_trade_status}]").html())
 
     @offset = 0
     blocktheui()
@@ -281,7 +279,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     e.preventDefault()
     $('.dropdown.open .dropdown-toggle').dropdown('toggle');
     @search_invoice_status = $(e.target).data('invoice-status')
-
+    $(@el).find(".trade_nav").text($(@el).find("[data-invoice-status=#{@search_invoice_status}]").html())
     @offset = 0
     blocktheui()
     $("#trade_rows").html('')
@@ -298,6 +296,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     e.preventDefault()
     $('.dropdown.open .dropdown-toggle').dropdown('toggle');
     @search_deliverbill_status = $(e.target).data('deliver-bill-status')
+    $(@el).find(".trade_nav").text($(@el).find("[data-deliver-bill-status=#{@search_deliverbill_status}]").html())
 
     @offset = 0
     blocktheui()
@@ -315,6 +314,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     e.preventDefault()
     $('.dropdown.open .dropdown-toggle').dropdown('toggle');
     @logistic_status = $(e.target).data('logistic-status')
+    $(@el).find(".trade_nav").text($(@el).find("[data-logistic-status=#{@logistic_status}]").html())
 
     @offset = 0
     blocktheui()
