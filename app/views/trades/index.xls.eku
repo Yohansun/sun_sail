@@ -5,7 +5,7 @@ sheet1.row(1).concat ["订单来源", "订单编号", "当前状态",
 	                    "下单时间", "付款时间", "分流时间", "发货时间",
 	                    "客户姓名", "联系电话", "联系地址",
                       "客户留言", "卖家备注", "客服备注",
-                      "调色信息", "发票信息", "配送经销商",
+                      "调色信息", "发票信息", "配送经销商", "店铺代码(分销)", "主订单号(分销)",
                       "商品名称", "单价（实际销售）", "数量"]
 
 yellow_format = Spreadsheet::Format.new :pattern_bg_color => "yellow", :color => "black", :pattern_fg_color => "yellow", :pattern => 1
@@ -14,13 +14,20 @@ blue_format = Spreadsheet::Format.new :pattern_bg_color => "blue", :color => "wh
 row_number = 2
 
 @trades.each_with_index do |trade,count|
+  if trade._type == "TaobaoPurchaseOrder"
+    tc_order_id = trade.tc_order_id
+    distributor_usercode = trade.distributor_usercode
+  else
+    tc_order_id = ''
+    distributor_usercode = ''
+  end  
   OrderDecorator.decorate(trade.orders).each_with_index do |order, i|
       sheet1.update_row row_number + i, trade.trade_source, trade.tid, trade.status_text,
       trade.created.try(:strftime,"%Y-%m-%d %H:%M:%S"), trade.pay_time.try(:strftime,"%Y-%m-%d %H:%M:%S"),
       trade.dispatched_at.try(:strftime,"%Y-%m-%d %H:%M:%S"), trade.delivered_at.try(:strftime,"%Y-%m-%d %H:%M:%S"),
       trade.receiver_name, trade.receiver_mobile_phone, trade.receiver_address,
       trade.seller_memo, trade.buyer_message, trade.cs_memo,
-      order.color_num, trade.invoice_name, trade.try(:seller).try(:name),
+      order.color_num, trade.invoice_name, trade.try(:seller).try(:name), distributor_usercode, tc_order_id,  
       order.title, order.auction_price, order.num
       if count.even?
         sheet1.row(row_number + i).default_format = blue_format
