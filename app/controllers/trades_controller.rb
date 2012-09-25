@@ -48,14 +48,22 @@ class TradesController < ApplicationController
 
     # 订单
     if !params[:search_trade_status].blank? && params[:search_trade_status] != 'null'
-      if params[:search_trade_status] == 'undispatched_trade'
+      status = params[:search_trade_status]
+      if status == 'undispatched'
         @trades = @trades.where(:dispatched_at.exists => false)
         @trades = @trades.where(:status.ne => 'WAIT_BUYER_PAY')
-      elsif params[:search_trade_status] == 'unusual_trade'
+      elsif status == 'unpaid'
+        @trades = @trades.where(:status.in => ["WAIT_BUYER_PAY"])
+      elsif status == 'undelivered'
+        @trades = @trades.where(:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"])
+      elsif status == 'delivered'
+        @trades = @trades.where(:status.in => ["WAIT_BUYER_CONFIRM_GOODS","WAIT_GOODS_RECEIVE_CONFIRM","WAIT_BUYER_CONFIRM_GOODS_ACOUNTED","WAIT_SELLER_SEND_GOODS_ACOUNTED"])
+      elsif status == 'refund'
+        @trades = @trades.where(:status.in => ["TRADE_REFUNDING"])
+      elsif status == 'closed'
+        @trades = @trades.where(:status.in => ["TRADE_CLOSED","TRADE_CANCELED","TRADE_CLOSED_BY_TAOBAO"])
+      elsif status == 'unusual_trade'
         #异常订单
-      else
-        status_array = params[:search_trade_status].split(",")
-        @trades = @trades.where(:status.in => status_array)
       end
     end
 
