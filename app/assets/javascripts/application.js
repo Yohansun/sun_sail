@@ -76,6 +76,19 @@ $(function () {
   $('.goto_stock').click(function(){
     $('#storage_pop .open_stock').attr('href', "/sellers/" + $(this).data('id') + "/change_stock_type")
   });
+  
+  $('.login_acount').click(function(argument) {
+    var seller_id = $(this).attr('data-id');
+    $("#seller_id_container").html(seller_id);
+    $.get("/sellers/seller_user", {seller_id:seller_id}, function(result){
+    });
+  })
+
+   $('.area_management').click(function(argument) {
+     var seller_id = $(this).attr('data-id');
+     $.get("/sellers/seller_area", {seller_id:seller_id}, function(result){
+     });
+   })
 });
 
 function blocktheui () {

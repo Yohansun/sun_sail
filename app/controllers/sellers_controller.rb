@@ -10,6 +10,7 @@ class SellersController < ApplicationController
       @sellers = @sellers.roots
     end
     @sellers = @sellers.page(params[:page])
+
   end
 
   def search
@@ -87,7 +88,6 @@ class SellersController < ApplicationController
         name: seller.fullname
       }
     end
-
     respond_to do |format|
       format.json { render json: @children }
     end
@@ -104,12 +104,34 @@ class SellersController < ApplicationController
     redirect_to sellers_path(:parent_id => @seller.parent_id)
   end
 
-  def user_list
-    if params[:user_id].present?
-      @user = User.where(id: params[:user_id], active: true, :seller_id => nil)
-    else
-      @user = User.where(active: true, :seller_id => nil)
+  def seller_user
+    @seller_user = User.where(seller_id: params[:seller_id])
+    respond_to do |f|
+      f.js
     end
+  end
+
+  def user_list
+    if params[:user_name].present?
+      @user = User.where(["seller_id is null and name like ?", "%#{params[:user_name].strip}%"])
+    else
+      @user = User.where(:seller_id => nil)
+    end
+    respond_to do |f|
+      f.js
+    end
+  end
+
+  def seller_user_list
+    @flag = false
+    user = User.find params[:u_id]
+    user.seller_id = params[:s_id]
+    if user.save 
+      @flag = true
+    else
+      @flag = false
+    end
+    @seller_user_list = User.where(seller_id: user.seller_id)
     respond_to do |f|
       f.js
     end
@@ -119,5 +141,50 @@ class SellersController < ApplicationController
     @seller = Seller.find params[:id]
     @seller.update_attribute(:has_stock, !@seller.has_stock)
     redirect_to seller_stocks_path(@seller)
+  end
+
+  def remove_seller_user
+    seller_id = ""
+    user = User.find params[:u_id]
+    seller_id = user.seller_id
+    user.seller_id = nil
+    user.save 
+    @seller_user = User.where(seller_id: seller_id)
+    render :seller_user
+  end
+
+  def seller_area    
+    @seller_areas = SellersArea.where(seller_id: params[:seller_id]).all
+    respond_to do |f|
+      f.js
+    end
+  end
+
+  def create_seller_area
+    seller_area = SellersArea.where(seller_id: params[:seller_id],area_id: params[:area_id])
+    if !seller_area.present?
+      seller_area = SellersArea.new
+      seller_area.seller_id = params[:seller_id]
+      seller_area.area_id = params[:area_id]
+      seller_area.save
+    end
+    @seller_areas = SellersArea.where(seller_id: params[:seller_id]).all
+    respond_to do |f|
+      f.js
+    end
+  end
+
+  def remove_seller_area
+    if params[:seller_id] && params[:area_id]
+      seller_area = SellersArea.where(seller_id: params[:seller_id],area_id: params[:area_id])
+    end
+    if params[:id]
+      seller_area = SellersArea.find params[:id]
+    end
+    if seller_area.present?
+      SellersArea.destroy(seller_area)
+    end
+    @seller_areas = SellersArea.where(seller_id: params[:seller_id]).all
+    render :create_seller_area
   end
 end
