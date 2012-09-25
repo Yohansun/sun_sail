@@ -4,7 +4,8 @@ require 'hz2py'
 class Seller < ActiveRecord::Base
   acts_as_nested_set :counter_cache => :children_count
 
-  attr_accessible :mobile, :telephone, :cc_emails, :email, :pinyin, :interface,:fullname, :name, :email,:parent_id, :address, :performance_score
+  attr_accessible :has_stock, :mobile, :telephone, :cc_emails, :email, :pinyin, :interface,:fullname, :name, :email,
+                  :parent_id, :address, :performance_score
 
   has_many :users
   has_many :sellers_areas

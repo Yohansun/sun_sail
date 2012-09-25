@@ -72,6 +72,10 @@ $(function () {
   $('.navbar .dropdown-menu a').click(function(){
     $('.navbar .dropdown.open .dropdown-toggle').dropdown('toggle');
   });
+
+  $('.goto_stock').click(function(){
+    $('#storage_pop .open_stock').attr('href', "/sellers/" + $(this).data('id') + "/change_stock_type")
+  });
 });
 
 function blocktheui () {

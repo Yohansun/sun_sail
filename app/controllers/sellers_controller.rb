@@ -108,4 +108,10 @@ class SellersController < ApplicationController
       f.js
     end
   end
+
+  def change_stock_type
+    @seller = Seller.find params[:id]
+    @seller.update_attribute(:has_stock, !@seller.has_stock)
+    redirect_to seller_stocks_path(@seller)
+  end
 end

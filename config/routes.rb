@@ -12,6 +12,7 @@ MagicOrders::Application.routes.draw do
     end
 
     member do
+      get :change_stock_type
       get :children
       get :status_update
     end
