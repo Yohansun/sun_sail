@@ -17,7 +17,7 @@ json.trade_source_name @trade.trade_source_name
 json.buyer_message @trade.buyer_message
 json.seller_memo @trade.seller_memo
 
-unless TradeSetting.company == 'dulux'
+unless TradeSetting.company == 'dulux' && current_user.has_role?(:seller)
   json.post_fee @trade.post_fee
   json.seller_discount @trade.seller_discount
   json.sum_fee @trade.sum_fee
@@ -56,13 +56,12 @@ json.orders OrderDecorator.decorate(@trade.orders) do |json, order|
   json.id order._id
   json.title order.title
   json.num order.num
-unless TradeSetting.company == 'dulux'
-  json.total_fee order.total_fee
-  json.price order.price
-  json.auction_price order.auction_price
-  json.buyer_payment order.buyer_payment
-  json.distributor_payment order.distributor_payment
-end
+  unless TradeSetting.company == 'dulux' && current_user.has_role?(:seller)
+    json.price order.price
+    json.auction_price order.auction_price
+    json.buyer_payment order.buyer_payment
+    json.distributor_payment order.distributor_payment
+  end
   json.item_id order.item_id
   json.sku_properties order.sku_properties
   json.item_outer_id order.item_outer_id

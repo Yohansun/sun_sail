@@ -24,7 +24,7 @@
     </div> -->
     <%= simple_form_for "product",url: products_path, html: { method: "get", class: "well form-search"} ,:wrapper => :search do |f| %>
       <fieldset class="form-inline">
-        <%= f.input :info_type, collection: [["商品名称","name"], ["商品编号","iid"],["淘宝ID","taobao_id"],["仓库编号","storage_num"]], label: "精准：", required: false %>
+        <%= f.input :info_type, collection: [["商品名称","name"], ["商品编号","iid"],["淘宝ID","taobao_id"],["仓库编号","storage_num"]], label: "精确搜索：", required: false %>
         <%= f.input :info, input_html: {class: "w_specify"} ,label: false, required: false %>
       </fieldset>
       <fieldset class="form-inline mar_t5">
