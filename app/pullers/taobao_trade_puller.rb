@@ -40,7 +40,7 @@ class TaobaoTradePuller
 
           unless TradeSplitter.new(trade).split!
             if TradeSetting.company == 'dulux'
-              DelayAutoDispatch.perform_in(TradeSetting.dalay_time || 1.hours, trade.id)
+              DelayAutoDispatch.perform_in(TradeSetting.delay_time || 1.hours, trade.id)
             else
               trade.auto_dispatch!
             end
@@ -84,7 +84,7 @@ class TaobaoTradePuller
             local_trade.update_attributes(trade)
 
             if TradeSetting.company == 'dulux'
-              DelayAutoDispatch.perform_in(TradeSetting.dalay_time || 1.hours, local_trade.id)
+              DelayAutoDispatch.perform_in(TradeSetting.delay_time || 1.hours, local_trade.id)
             else
               local_trade.auto_dispatch!
             end

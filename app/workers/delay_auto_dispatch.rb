@@ -5,6 +5,7 @@ class DelayAutoDispatch
 
   def perform(id)
   	trade = Trade.where(id: id).first
-   	trade.auto_dispatch! if trade
+  	return unless trade
+   	trade.auto_dispatch!
   end
 end

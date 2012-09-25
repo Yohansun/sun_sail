@@ -1,3 +1,5 @@
+# -*- encoding : utf-8 -*-
+
 class TaobaoTrade < Trade
   include TaobaoProductsLockable
 
@@ -121,24 +123,28 @@ class TaobaoTrade < Trade
   end
 
   def dispatch!(seller = nil)
-    return unless self.dispatchable?
+    return false unless self.dispatchable?
 
     unless seller
-      seller = matched_seller
+      seller = matched_seller_with_default
 
-      return unless seller
+      return false unless seller
 
       if seller.has_stock
-        return unless can_lock_products?(seller.id)
+        return false unless can_lock_products?(seller.id)
       end
     end
-    
+
     update_attributes(seller_id: seller.id, dispatched_at: Time.now) if seller
   end
 
-  def matched_seller(area_id)
+  def matched_seller_with_default
+    matched_seller || Seller.find(1720)
+  end
+
+  def matched_seller(area = default_area)
     if TradeSetting.company == 'dulux'
-      Dulux::SellerMatcher.match_trade_seller(self, area_id)
+      Dulux::SellerMatcher.match_trade_seller(self, area)
     else
       super
     end

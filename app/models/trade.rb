@@ -112,11 +112,15 @@ class Trade
   	end
   end
 
-  def matched_seller(area_id)
-    @matched_seller ||= SellerMatcher.new(self).matched_seller(area_id)
+  def matched_seller_with_default
+    matched_seller || Seller.find(1720)
   end
 
-  def area
+  def matched_seller(area = default_area)
+    @matched_seller ||= SellerMatcher.new(self).matched_seller(area)
+  end
+
+  def default_area
     address = self.receiver_address_array
     state = city = area = nil
     state = Area.find_by_name address[0]
