@@ -2,7 +2,7 @@
 <script type="text/javascript">
   $(function() {
     MagicOrders.init();
-    MagicOrders.role_key = "<%= current_user.roles.first.name %>";
+    MagicOrders.role_key = "<%= current_user.roles.first.try(:name) %>";
 
   });
 </script>
