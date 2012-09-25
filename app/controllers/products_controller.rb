@@ -25,7 +25,12 @@ class ProductsController < ApplicationController
         @products = @products.joins(:feature_product_relationships).where("feature_product_relationships.feature_id in (#{feature_ids.join(',')})").uniq
       end
     end
+    @searched_products = @products
     @products = @products.page(params[:page])
+    respond_to do |format|
+      format.xls
+      format.html
+    end
   end
 
   def show
