@@ -3,7 +3,7 @@ module TaobaoProductsLockable
     lockable = true
     orders.each do |order|
       product = StockProduct.joins(:product).where("stock_products.seller_id = #{seller_id} AND products.iid = '#{order.item_outer_id}'").first
-      lockable = false if product && product.activity <= order.num
+      lockable = false unless product && product.activity > order.num
     end
 
     lockable

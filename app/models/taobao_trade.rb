@@ -126,23 +126,23 @@ class TaobaoTrade < Trade
     return false unless self.dispatchable?
 
     unless seller
-      seller = matched_seller_with_default
-
+      seller = matched_seller
       return false unless seller
+    end
 
-      if seller.has_stock
-        return false unless can_lock_products?(seller.id)
-      end
+    if seller.has_stock
+      return false unless can_lock_products?(seller.id)
     end
 
     update_attributes(seller_id: seller.id, dispatched_at: Time.now) if seller
   end
 
-  def matched_seller_with_default(area = nil)
+  def matched_seller_with_default(area)
     matched_seller(area) || Seller.find(1720)
   end
 
-  def matched_seller(area = default_area)
+  def matched_seller(area = nil)
+    area ||= default_area
     if TradeSetting.company == 'dulux'
       Dulux::SellerMatcher.match_trade_seller(self, area)
     else
