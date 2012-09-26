@@ -63,7 +63,7 @@ class TradesController < ApplicationController
       elsif status == 'closed'
         @trades = @trades.where(:status.in => ["TRADE_CLOSED","TRADE_CANCELED","TRADE_CLOSED_BY_TAOBAO"])
       elsif status == 'unusual_trade'
-        #异常订单
+        @trades = @trades.where(status: '')
       end
     end
 
@@ -93,6 +93,19 @@ class TradesController < ApplicationController
       @trades = @trades.where(:seller_confirm_invoice_at.exists => true)
     elsif params[:search_invoice_status] == 'invoice_sent'
       @trades = @trades.where("$and" =>[{:status.in => ["WAIT_BUYER_CONFIRM_GOODS","WAIT_GOODS_RECEIVE_CONFIRM","WAIT_BUYER_CONFIRM_GOODS_ACOUNTED","WAIT_SELLER_SEND_GOODS_ACOUNTED"]},{:seller_confirm_invoice_at.exists => true}])
+    end
+
+    # 调色
+    trade_id = []
+    @trades.all.each do |t|
+      if t.has_color_info == true
+        trade_id += t.tid.to_a
+      end
+    end
+    if params[:search_color_status] == "matched"
+      @trades = @trades.where(:tid.in => trade_id)
+    elsif params[:search_color_status] == "unmatched"
+      @trades = @trades.where(:tid.nin => trade_id)
     end
 
 
