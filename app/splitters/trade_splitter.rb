@@ -30,7 +30,7 @@ class TradeSplitter
       new_trade.save
 
       # 自动分流
-      new_trade.dispatch!
+      # new_trade.auto_dispatch!
 
       splitted_trades << new_trade
     end

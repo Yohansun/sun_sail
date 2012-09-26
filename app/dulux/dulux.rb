@@ -2,11 +2,12 @@ module Dulux
 	module SellerMatcher
 		class << self
 			def match_item_seller(area, outer_iid, num)
+				return unless num
 				product_seller_ids = StockProduct.joins(:product).where("products.iid = '#{outer_iid}' AND stock_products.activity > #{num}").map &:seller_id
 				area.sellers.where(id: product_seller_ids).reorder("performance_score DESC").first
 			end
 
-			def match_trade_seller(trade, area = nil)
+			def match_trade_seller(trade, area)
 				order = trade.orders.first
 				match_item_seller(area, order.item_outer_id, order.num)
 			end

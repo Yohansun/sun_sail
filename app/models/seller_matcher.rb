@@ -1,7 +1,7 @@
 class SellerMatcher
 	
 	def initialize(trade)
-		@trade = trade 
+		@trade = trade
 	end
 
 	def matched_seller(area)
@@ -11,7 +11,6 @@ class SellerMatcher
 protected
 
 	def area_seller(area)
-    return if area.blank?
     area.sellers.first
 	end
 

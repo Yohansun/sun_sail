@@ -104,12 +104,12 @@ class TaobaoPurchaseOrder < Trade
     return unless self.dispatchable?
 
     unless seller
-      seller = matched_seller_with_default
+      seller = matched_seller
       return unless seller
+    end
 
-      if seller.has_stock
-        return unless can_lock_products?(seller.id)
-      end
+    if seller.has_stock
+      return unless can_lock_products?(seller.id)
     end
 
     self.update_attributes(seller_id: seller.id, dispatched_at: Time.now) if seller
