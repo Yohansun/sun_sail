@@ -4,7 +4,7 @@ class SellersController < ApplicationController
 
   def index
     @sellers = Seller
-    if params[:parent_id]
+    if params[:parent_id].present?
       @sellers = @sellers.where(parent_id: params[:parent_id])
     else
       @sellers = @sellers.roots
@@ -80,10 +80,16 @@ class SellersController < ApplicationController
 
   def children
     @seller = Seller.find params[:id]
-    @children = (@seller.children).map(&:name)
-    logger.debug(@children)
+    @children = []
+    @seller.children.each do |seller|
+      @children << {
+        id: seller.id,
+        name: seller.fullname
+      }
+    end
+
     respond_to do |format|
-      format.json { render json: { :name => @children}}
+      format.json { render json: @children }
     end
   end
 
