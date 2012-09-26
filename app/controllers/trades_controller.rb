@@ -315,4 +315,20 @@ class TradesController < ApplicationController
       format.json { render json: {seller_id: seller.id, seller_name: seller.name} }
     end
   end
+
+  def new
+    @trade = Trade.new
+  end
+  
+  def create
+    @trade = TaobaoTrade.new(params[:trade])
+    @trade.taobao_orders.build(params[:orders])
+    @trade.created = Time.now
+    @trade.tid = "000000" + Time.now.to_i.to_s
+    if @trade.saves
+      redirect_to "/trades"
+    else
+      render trades_new_path
+    end
+  end
 end

@@ -35,6 +35,15 @@ class Trade
   field :deliver_bill_printed_at, type: DateTime
   field :logistic_printed_at, type: DateTime
 
+  #创建新订单
+  field :tid, type:String
+  field :status, type:String
+  field :receiver_name, type:String
+  field :receiver_mobile, type:String
+  field :receiver_address, type:String
+  field :receiver_address, type:String
+  field :seller_memo, type:String
+
   attr_accessor :matched_seller
 
   validate :color_num_do_not_exist, :on => :update
