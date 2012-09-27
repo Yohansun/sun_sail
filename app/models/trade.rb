@@ -44,6 +44,17 @@ class Trade
   field :receiver_address, type:String
   field :seller_memo, type:String
 
+  # add indexes for speed
+  index :tid
+  index :status
+  index :created
+  index :delivered_at
+  index :dispatched_at
+  index :splitted
+  index :splitted_tid
+  index :seller_id
+  index :trade_source_id
+
   attr_accessor :matched_seller
 
   validate :color_num_do_not_exist, :on => :update
