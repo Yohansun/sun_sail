@@ -59,7 +59,7 @@ SimpleForm.setup do |config|
   config.wrappers :search, :error_class => 'error' do |b|
     b.use :html5
     b.use :placeholder
-    b.use :label, :class => 'pull-left'
+    b.use :label, :class => 'pull-left input-small'
     b.wrapper :tag => 'div', :class => 'control pull-left'  do |ba|
       ba.use :input
       ba.use :error, :wrap_with => { :tag => 'span', :class => 'help-inline' }
