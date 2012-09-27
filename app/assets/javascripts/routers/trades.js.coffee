@@ -11,6 +11,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     'trades/:id/invoice_number': 'invoice_number'
     'trades/:id/seller_confirm_deliver':'seller_confirm_deliver'
     'trades/:id/seller_confirm_invoice':'seller_confirm_invoice'
+    'trades/:id/barcode':'barcode'
 
   initialize: ->
     @trade_type = null
@@ -42,6 +43,9 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       Backbone.history.navigate('trades')
 
     $('#trade_seller_confirm_invoice').on 'hide', (event) ->
+      Backbone.history.navigate('trades')
+
+    $('#trade_barcode').on 'hide', (event) ->
       Backbone.history.navigate('trades')
 
   show_top_nav: ->
@@ -205,3 +209,14 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       view = new MagicOrders.Views.TradesSellerConfirmInvoice(model: model)
       $('#trade_seller_confirm_invoice').html(view.render().el)
       $('#trade_seller_confirm_invoice').modal('show')
+
+  barcode: (id) ->
+    blocktheui()
+
+    @model = new MagicOrders.Models.Trade(id: id)
+    @model.fetch success: (model, response) =>
+      $.unblockUI()
+
+      view = new MagicOrders.Views.TradesBarcode(model: model)
+      $('#trade_barcode').html(view.render().el)
+      $('#trade_barcode').modal('show')
