@@ -59,7 +59,7 @@
 </td>
 <td data-col='cs_memo'>
   <% if @trade.get 'cs_memo': %>
-  <a href="javascript:void(0)" rel="popover" data-content="<%= @trade.get 'cs_memo' %><br/><br/><% for order in @trade.get('orders'): %><% if order.cs_memo: %><%= order.title %>: <b><%= order.cs_memo %></b><br/><% end %><% end %>" data-original-title="<b>客服备注</b>"><i class="icon-comment"></i></a>
+  <a href="javascript:void(0)" rel="popover" data-content="<%= @trade.get 'cs_memo' %><br/><br/><% for order in @trade.get('orders'): %><% if order.cs_memo: %><b><%= order.title %>:</b> <span style= 'color:#08C' ><%= order.cs_memo %></span><br/><% end %><% end %>" data-original-title="<b>客服备注</b>"><i class="icon-comment"></i></a>
   <% end %>
 </td>
 <td data-col='color_info'>
@@ -121,18 +121,17 @@
       <li><a data-toggle="modal" href="#" data-type="invoice">申请开票</a></li>
       <li><a data-toggle="modal" href="#" data-type="cs_memo">客服备注</a></li>
       <li><a data-toggle="modal" href="#" data-type="color">申请调色</a></li>
-      <li><a data-toggle="modal" href="#" data-type="trade_splite">订单拆分</a></li>
-      <li><a data-toggle="modal" href="#" data-type="trade_unsplite">订单合并</a></li>
-      <li><a data-toggle="modal" href="#" data-type="mark">标注异常</a></li>
-      <li><a data-toggle="modal" href="#" data-type="reowner">订单转交</a></li>
-
+      <!-- <li><a data-toggle="modal" href="#" data-type="trade_splite">订单拆分</a></li> -->
+      <!-- <li><a data-toggle="modal" href="#" data-type="trade_unsplite">订单合并</a></li> -->
+      <!-- <li><a data-toggle="modal" href="#" data-type="mark">标注异常</a></li> -->
+      <!-- <li><a data-toggle="modal" href="#" data-type="reowner">订单转交</a></li> -->
       <li class= "divider"></li>
 
-      <li><a data-toggle="modal" href="#" data-type="logistic_split">物流拆分</a></li>
-      <li><a data-toggle="modal" href="#" data-type="print_deilver_bill">打印出货单</a></li>
-      <li><a data-toggle="modal" href="#" data-type="print_logistic_bill">打印物流单</a></li>
-      <li><a data-toggle="modal" href="#" data-type="logistic_company">物流公司</a></li>
-      <li><a data-toggle="modal" href="#" data-type="logistic_number">物流单号设置</a></li>
+      <!-- <li><a data-toggle="modal" href="#" data-type="logistic_split">物流拆分</a></li> -->
+      <!-- <li><a data-toggle="modal" href="#" data-type="print_deilver_bill">打印出货单</a></li> -->
+      <!-- <li><a data-toggle="modal" href="#" data-type="print_logistic_bill">打印物流单</a></li> -->
+      <!-- <li><a data-toggle="modal" href="#" data-type="logistic_company">物流公司</a></li> -->
+      <!-- <li><a data-toggle="modal" href="#" data-type="logistic_number">物流单号设置</a></li> -->
 
       <% if @trade.get('status_text') == '已付款，待发货' : %>
         <li><a data-toggle="modal" href="#" data-type="deliver">订单发货</a></li>
@@ -148,23 +147,23 @@
 
       <li class= "divider"></li>
 
-      <li><a data-toggle="modal" href="#" data-type="check_goods">验货</a></li>
-      <li><a data-toggle="modal" href="#" data-type="confirm_check_goods">确认验货</a></li>
-      <li><a data-toggle="modal" href="#" data-type="refund">申请退款</a></li>
-      <li><a data-toggle="modal" href="#" data-type="agree_refund">同意退款</a></li>
-      <li><a data-toggle="modal" href="#" data-type="confirm_refund">确认退款</a></li>
-      <li><a data-toggle="modal" href="#" data-type="return_goods">申请退货</a></li>
-      <li><a data-toggle="modal" href="#" data-type="agree_return_goods">同意退货</a></li>
-      <li><a data-toggle="modal" href="#" data-type="confirm_return_goods">确认退货</a></li>
-      <li><a data-toggle="modal" href="#" data-type="invoice_notice">开票通知</a></li>
+      <!-- <li><a data-toggle="modal" href="#" data-type="check_goods">验货</a></li> -->
+      <!-- <li><a data-toggle="modal" href="#" data-type="confirm_check_goods">确认验货</a></li> -->
+      <!-- <li><a data-toggle="modal" href="#" data-type="refund">申请退款</a></li> -->
+      <!-- <li><a data-toggle="modal" href="#" data-type="agree_refund">同意退款</a></li> -->
+      <!-- <li><a data-toggle="modal" href="#" data-type="confirm_refund">确认退款</a></li> -->
+      <!-- <li><a data-toggle="modal" href="#" data-type="return_goods">申请退货</a></li> -->
+      <!-- <li><a data-toggle="modal" href="#" data-type="agree_return_goods">同意退货</a></li> -->
+      <!-- <li><a data-toggle="modal" href="#" data-type="confirm_return_goods">确认退货</a></li> -->
+      <!-- <li><a data-toggle="modal" href="#" data-type="invoice_notice">开票通知</a></li> -->
       <li><a data-toggle="modal" href="#" data-type="invoice_number">发票号设置</a></li>
 
       <li class= "divider"></li>
 
-      <li><a data-toggle="modal" href="#" data-type="export_deliver_bill">导出出货单</a></li>
-      <li><a data-toggle="modal" href="#" data-type="export_logistic_bill">导出物流单</a></li>
-      <li><a data-toggle="modal" href="#" data-type="export_invoice">导出发票</a></li>
-      <li><a data-toggle="modal" href="#" data-type="operation_log">操作日志</a></li>
+      <!-- <li><a data-toggle="modal" href="#" data-type="export_deliver_bill">导出出货单</a></li> -->
+      <!-- <li><a data-toggle="modal" href="#" data-type="export_logistic_bill">导出物流单</a></li> -->
+      <!-- <li><a data-toggle="modal" href="#" data-type="export_invoice">导出发票</a></li> -->
+      <!-- <li><a data-toggle="modal" href="#" data-type="operation_log">操作日志</a></li> -->
     </ul>
   </div>
 </td>

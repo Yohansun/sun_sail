@@ -4,12 +4,12 @@
 			<div>
 				<a class="indexStart1" href="/trades"><span>订单管理</span></a>
 			</div>
-			<div>
+			<!-- <div>
 				<a class="indexStart2" href="#"><span>客服管理</span></a>
-			</div>
-			<div>
+			</div> -->
+			<!-- <div>
 				<a class="indexStart3" href="#"><span>数据魔方</span></a>
-			</div>
+			</div> -->
 			<% if current_user && current_user.seller_id.present? %>
 			<div>
 				<%= link_to seller_stocks_path(current_user.seller_id), class: 'indexStart4' do %>
@@ -20,12 +20,12 @@
 			<div>
 				<a class="indexStart5" href="/sellers"><span>经销商管理</span></a>
 			</div>
-			<div>
+			<!-- <div>
 				<a class="indexStart6" href="#"><span>VIP</span></a>
-			</div>
-			<div>
+			</div> -->
+			<!-- <div>
 				<a class="indexStart7" href="#"><span>互动中心</span></a>
-			</div>
+			</div> -->
 			<div>
 				<a class="indexStart8" href="/products"><span>商品管理</span></a>
 			</div>
