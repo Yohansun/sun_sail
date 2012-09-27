@@ -2,14 +2,14 @@
     <header class="jumbotron subhead" id="overview">
       <div class="subnav">
         <ul class="nav nav-pills">
-          <li class="active"><%= link_to '仓库管理', seller_stocks_path %></li>
-         <!--  <li><a href="stocks_records.html">进销记录</a></li> -->
+          <li class="active"><%= link_to '成品仓库', seller_stocks_path(params[:seller_id]) %></li>
         </ul>
       </div>
     </header>
     <div class="row-fluid">
       <ul class="breadcrumb" style="position:relative;">
-        <li><%= link_to '仓库管理', seller_stocks_path %><span class="divider">/</span></li>
+        <li><%= link_to '仓库管理', seller_stocks_path(params[:seller_id]) %><span class="divider">/</span></li>
+        <li><%= link_to '成品仓库', seller_stocks_path(params[:seller_id]) %><span class="divider">/</span></li>
         <li class="active">新增商品</li>
       </ul><!-- breadcrumb -->
 

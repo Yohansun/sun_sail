@@ -1,0 +1,12 @@
+<%= simple_form_for @color, html: {class: 'well form-horizontal'} do |f| %>
+  <fieldset>
+    <%= f.input :name, label: '颜色名' %>
+    <%= f.input :hexcode, label: '编码' %>
+    <%= f.input :num, label: '色号' %>
+
+    <div class="form-actions">
+      <%= link_to '取消', colors_path, class: 'btn' %>
+      <button type="submit" class="btn btn-primary">保存</button>
+    </div>
+  </fieldset>
+<% end %>

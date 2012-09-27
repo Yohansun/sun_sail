@@ -1,22 +1,23 @@
 <%= simple_form_for @product, html: {class: 'well form-horizontal re_padding50'} do |f| %>
 <fieldset class="group">
   <div class="w_48 pull-left">
-       <%= f.input :iid, label: '商品编码：', :input_html =>{ :class => "input-xlarge" } %>
-       <%= f.input :name, label: '商品名称：', :input_html =>{ :class => "input-xlarge" } %>
-       <%= f.input :taobao_id, label: '淘宝ID：', :input_html =>{ :class => "input-xlarge" } %>
-       <%= f.input :storage_num, label: '仓库编号：', :input_html =>{ :class => "input-xlarge" } %>
-       <%= f.input :price, label: '价格：', :input_html =>{ :class => "input-xlarge" } %>
-       <%= f.association :quantity, label: '规格：', :input_html =>{ :class => "width_auto" } %>
-       <%= f.association :features, as: :check_boxes, label: '系列：'%>
-       <%= f.association :category, label: '分类：', :input_html =>{ :class => "width_auto" } %>
-       <%= f.association :level, label: '档次：', :input_html =>{ :class => "width_auto" } %>
-       <%= f.input :status, collection: @product.select_status, label: '状态：', :input_html =>{ :class => "width_auto" }, selected: ['上架', "ON_SALE"] %>
+    <%= f.input :iid, label: '商品编码：', :input_html =>{ :class => "input-xlarge" } %>
+    <%= f.input :name, label: '商品名称：', :input_html =>{ :class => "input-xlarge" } %>
+    <%= f.input :taobao_id, label: '淘宝ID：', :input_html =>{ :class => "input-xlarge" } %>
+    <%= f.input :storage_num, label: '仓库编号：', :input_html =>{ :class => "input-xlarge" } %>
+    <%= f.input :price, label: '价格：', :input_html =>{ :class => "input-xlarge" } %>
+    <%= f.association :quantity, label: '规格：', :input_html =>{ :class => "width_auto" } %>
+    <%= f.association :features, as: :check_boxes, label: '系列：'%>
+    <%= f.association :category, label: '分类：', :input_html =>{ :class => "width_auto" } %>
+    <%= f.association :level, label: '档次：', :input_html =>{ :class => "width_auto" } %>
+    <%= f.association :colors, label: '可选颜色：', as: :check_boxes, include_blank: false %>
+    <%= f.input :status, collection: @product.select_status, label: '状态：', :input_html =>{ :class => "width_auto" } %>
   </div>
 
   <div class="w_48 pull-left">
     <% unless @product.product_image.blank?%>
     <div class="controls">
-        <%= image_tag("#{@product.product_image}") %>
+      <%= image_tag("#{@product.product_image}") %>
     </div>
     <% end %>
     <div class="controls mar_t10">

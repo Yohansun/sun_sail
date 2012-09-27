@@ -7,12 +7,14 @@ class Product < ActiveRecord::Base
   belongs_to :quantity
   has_many :feature_product_relationships
   has_many :features, :through => :feature_product_relationships
-  
+  has_many :colors_products
+  has_many :colors, through: :colors_products
+
   mount_uploader :product_image, ProductImageUploader
-    
-  attr_accessible :name, :iid, :taobao_id, :storage_num, :price, :status, :level_id, :quantity_id,
+
+  attr_accessible :name, :iid, :taobao_id, :storage_num, :price, :status, :level_id, :quantity_id, :color_ids,
                   :category_id, :features, :technical_data, :description, :product_image, :feature_ids
-  
+
   validates_presence_of :iid, :name, :storage_num, :price, message: "信息不能为空"
   validates_uniqueness_of :iid, :name, :iid, :taobao_id, :allow_blank => true, message: "信息已存在"
   validates_numericality_of :price, message: "所填项必须为数字"
