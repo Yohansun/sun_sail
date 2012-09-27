@@ -14,6 +14,12 @@
       $("#children_" + id).html(html)
     });
   }
+  function add_seller_user(u_id){
+    var s_id = $("#seller_id_container").text();
+    $.get("/sellers/seller_user_list",{u_id:u_id, s_id:s_id}, function(result){
+
+    })
+  }
 </script>
 
 <% @sellers.each do |seller| %>
@@ -52,13 +58,13 @@
           <li>
             <%= link_to (seller.active == true ? "关闭" : "启用"), status_update_seller_path(:id => seller.id), :class=>"close_seller" %>
           </li>
-          <li><a data-toggle="modal" href="#" data-type="seller_area">管辖地区</a></li>
-          <li><a data-toggle="modal" href="#dealer_login" data-id="<%= seller.id%>" class="login">登录账号</a></li>
           <% if seller.has_stock != true %>
           <li><a data-toggle="modal" href="#storage_pop" data-id="<%= seller.id%>" class='goto_stock'>仓库管理</a></li>
           <% else %>
           <li><%= link_to '仓库管理', seller_stocks_path(seller) %></li>
           <% end %>
+          <li><a data-toggle="modal" href="#dealer_area" data-type="seller_area" data-id="<%= seller.id%>" class="area_management">管辖地区</a></li>
+          <li><a data-toggle="modal" href="#dealer_login" data-id="<%= seller.id%>" class="login_acount">登录账号</a></li>
           <li class="divider"></li>
           <li>
             <%= link_to "管理下级", sellers_path(:parent_id => seller.id), :class=>"browse_children"%>

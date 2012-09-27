@@ -1,13 +1,16 @@
 # -*- encoding : utf-8 -*-
 class AreasController < ApplicationController
   before_filter :authenticate_user!
+  caches_page :index
 
   def index
-    unless params[:parent_id]
-      params[:parent_id] = 1
-    end
+    @areas = Area.where(parent_id: params[:parent_id] || 1)
 
-    @areas = Area.where(parent_id: params[:parent_id])
+    respond_to do |format|
+      format.html
+      format.js
+      format.json
+    end
   end
 
 	#TODO 导出表中其他表的数据依赖关系不满足,依赖建立后释放模板

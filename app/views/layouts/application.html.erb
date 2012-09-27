@@ -40,8 +40,10 @@
 
           <ul class="nav nav-pills" id="top-nav">
             <li class="active trades" style="display:none"><a href="#">订单管理</a></li>
-            <li class="trades" style="display:none"><a href="http://shop.nipponpaint.com.cn/admin/orders">官网订单</a></li>
-            <li class="trades" style="display:none"><a href="http://shop.nipponpaint.com.cn/admin/taobao_orders">淘宝订单</a></li>
+            <% if TradeSetting.company != 'dulux' %>
+              <li class="trades" style="display:none"><a href="http://shop.nipponpaint.com.cn/admin/orders">官网订单</a></li>
+              <li class="trades" style="display:none"><a href="http://shop.nipponpaint.com.cn/admin/taobao_orders">淘宝订单</a></li>
+            <% end %>
             <li class="areas" style="display:none"><a href="#">区域管理</a></li>
             <li class="sellers" style="display:none"><a href="#">经销商管理</a></li>
             <% if current_user.role_key == 'admin' || current_user.role_key == 'seller'%>
@@ -60,7 +62,7 @@
                 <li><a href="/trades" class="trades">订单管理</a></li>
                 <li><a href="/sellers" class="sellers">经销商管理</a></li>
                 <% if (current_user.role_key == 'admin' || current_user.role_key == 'seller') && current_user.seller_id.present? %>
-                <li><%= link_to '仓库管理', seller_stocks_path(current_user.seller_id), class: "stocks" %></li>
+                  <li><%= link_to '仓库管理', seller_stocks_path(current_user.seller_id), class: "stocks" %></li>
                 <% end %>
                 <% if current_user.role_key == 'admin' %>
                 <li><%= link_to '商品管理', products_path, class: "products" %></li>
@@ -89,7 +91,9 @@
     <!-- Javascripts
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
+
     <%= javascript_include_tag "application" %>
+    <%= javascript_include_tag "/areas.js" %>
     <script type="text/javascript">
 
       $(document).ready(function(e) {
@@ -103,6 +107,7 @@
 
       });
     </script>
+    
     <%= yield :tail -%>
   </body>
 </html>

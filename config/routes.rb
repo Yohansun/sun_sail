@@ -20,6 +20,12 @@ MagicOrders::Application.routes.draw do
     collection do
       post :search
       post :user_list
+      get :seller_user
+      get :seller_user_list
+      get :remove_seller_user
+      get :seller_area
+      get :create_seller_area
+      get :remove_seller_area
     end
   end
 
