@@ -62,7 +62,6 @@ class ProductsController < ApplicationController
       @product.status = "SOLD_OUT"
     end
     @product.save
-    redirect_to products_path
   end
 
   def update
