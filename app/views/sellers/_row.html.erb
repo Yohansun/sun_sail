@@ -1,21 +1,21 @@
 <script type="text/javascript">
   function tog(id){
-    html = "";
-    $.get("/sellers/"+id+"/children", {id:id}, function(result){
-     
-      if(result.name != ""){
-        for (i=0;i<=(result.name).length;i++){
-          if(result.name[i] != null){
-            html += "<li><a>"+result.name[i]+"</a></li>";
-          }
-        }
-      }else{
-        html += "<li><a>无下级经销商</a></li>";
+    $.get("/sellers/"+id+"/children", {}, function(data){
+      var html = ""
+
+      data.forEach(function(el, index){
+        html += "<li><a href='/sellers/" + el.id + "/edit'>" + el.name + "</a></li>"
+      })
+
+      if (html.length == 0) {
+        html += "<li><a>无下级经销商</a></li>"
       }
-        $("#children_"+id+"").html(html)
+
+      $("#children_" + id).html(html)
     });
   }
 </script>
+
 <% @sellers.each do |seller| %>
   <tr id="seller_<%=seller.id%>">
     <td><%= seller.id %><input type='hidden' class='parent_id' value="<%= seller.parent_id %>"></td>
