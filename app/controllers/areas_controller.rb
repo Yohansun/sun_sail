@@ -1,6 +1,11 @@
 # -*- encoding : utf-8 -*-
 class AreasController < ApplicationController
-  before_filter :authenticate_user!
+  before_filter :authenticate_user!, :except => :index
+
+  before_filter(:only => :index) do |controller|
+    authenticate_user! unless controller.request.format.js?
+  end
+
   caches_page :index
 
   def index
