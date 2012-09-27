@@ -296,6 +296,9 @@ class TradesController < ApplicationController
             order.color_hexcode[index] = color.try(:hexcode)
             order.color_name[index] = color.try(:name)
         end
+        item[:barcode].each_with_index do |code, index|
+          order.barcode[index] = code
+        end
       end
     end
 

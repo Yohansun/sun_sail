@@ -1,6 +1,6 @@
 <div class="modal-header">
   <button type="button" class="close" data-dismiss="modal">×</button>
-  <h3>申请调色</h3>
+  <h3>设置条形码</h3>
 </div><!-- modal-header -->
 <div class="modal-body">
   <fieldset>
@@ -12,7 +12,7 @@
         </tr> -->
         <tr>
           <th>商品</th>
-          <th>色号</th>
+          <th>条形码</th>
         </tr>
         <% for order in @trade.get('orders'): %>
         <tr>
@@ -20,7 +20,7 @@
           <td>
             <% for count in [0...order.num] : %>
               <div class="controls">
-                <input type="text" placeholder="请输入色号..." class="input-xlarge color_num_<%= order.item_id %>" value="<%= order.color_num[count] %>">
+                <input type="text" placeholder="请输入条形码..." class="input-xlarge barcode_<%= order.item_id %>" value="<%= order.barcode[count] %>">
               </div>
             <% end %>
           </td>
@@ -33,5 +33,5 @@
 
 <div class="modal-footer">
   <a class="btn" data-dismiss="modal">取消</a>
-  <a class="btn btn-primary save">确定调色</a>
+  <a class="btn btn-primary save">保存</a>
 </div><!-- modal-footer -->

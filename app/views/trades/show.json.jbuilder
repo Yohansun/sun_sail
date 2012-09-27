@@ -69,4 +69,5 @@ json.orders OrderDecorator.decorate(@trade.orders) do |json, order|
   json.color_num order.color_num
   json.color_hexcode order.color_hexcode
   json.color_name order.color_name
+  json.barcode order.barcode
 end

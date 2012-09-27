@@ -13,7 +13,13 @@
       <%= f.input :password, :required => false, :label => "密码", :input_html =>{ :class => "input-large" } %>
       <div class="form-actions">
         <%= f.button :submit, "登录", :class => "pull-right btn btn-primary" %>
+        <% if flash[:alert] %>
+          <% unless flash[:alert] == "继续操作前请注册或者登录." %>
+            <p style="color:red;margin: 6px 15px;" class="pull-right"><%= flash[:alert] %></p>
+          <% end %>
+        <% end %>
       </div>
+
     </fieldset>
     <% end %>
   </div>

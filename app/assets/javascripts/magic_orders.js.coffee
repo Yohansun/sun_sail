@@ -11,12 +11,12 @@ window.MagicOrders =
       #roles
       'cs_read':                 ['detail'],
       'cs':                      ['detail', 'seller', 'cs_memo', 'color', 'invoice', 'trade_splite', 'trade_unsplite', 'mark', 'reowner', 'refund', 'check_goods'],
-      'seller':                  ['detail', 'deliver', 'seller_confirm_invoice', 'mark', 'logistic_split', 'print_logistic_bill', 'print_deilver_bill', 'confirm_refund'],
+      'seller':                  ['detail', 'deliver', 'seller_confirm_invoice', 'mark', 'logistic_split', 'print_logistic_bill', 'print_deilver_bill', 'confirm_refund','barcode'],
       'interface':               ['detail', 'seller_confirm_deliver'],
       'admin':                   ['*'],
       
       #trade_mode
-      'trades':                  ['deliver', 'detail', 'seller', 'cs_memo', 'color', 'invoice', 'trade_splite', 'trade_unsplite', 'mark', 'reowner', 'refund', 'check_goods', 'deliver', 'seller_confirm_deliver', 'seller_confirm_invoice', 'check_goods', 'logistic_split', 'print_logistic_bill', 'print_deilver_bill', 'confirm_refund', 'operation_log'],
+      'trades':                  ['deliver', 'detail', 'seller', 'cs_memo', 'color', 'invoice', 'trade_splite', 'trade_unsplite', 'mark', 'reowner', 'refund', 'check_goods', 'deliver', 'seller_confirm_deliver', 'seller_confirm_invoice', 'barcode', 'check_goods', 'logistic_split', 'print_logistic_bill', 'print_deilver_bill', 'confirm_refund', 'operation_log'],
       'deliver':                 ['detail'],
       'logistics':               ['detail'],
       'check':                   ['detail'],

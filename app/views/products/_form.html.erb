@@ -10,7 +10,7 @@
        <%= f.association :features, as: :check_boxes, label: '系列：'%>
        <%= f.association :category, label: '分类：', :input_html =>{ :class => "width_auto" } %>
        <%= f.association :level, label: '档次：', :input_html =>{ :class => "width_auto" } %>
-       <%= f.input :status, collection: @product.select_status, label: '状态：', :input_html =>{ :class => "width_auto" } %>
+       <%= f.input :status, collection: @product.select_status, label: '状态：', :input_html =>{ :class => "width_auto" }, selected: ['上架', "ON_SALE"] %>
   </div>
 
   <div class="w_48 pull-left">

@@ -110,17 +110,14 @@
       <span class="caret"></span>
     </button>
     <ul class="dropdown-menu trade_pops" style="left:-115px;">
-      <li><a data-toggle="modal" href="#" data-type="detail">订单详情</a></li>
-
       <% if @trade.get('status_text') == '已付款，待发货': %>
       <li><a data-toggle="modal" href="#" data-type="seller">订单分流</a></li>
       <% end %>
-
       <li class= "divider"></li>
-
       <li><a data-toggle="modal" href="#" data-type="invoice">申请开票</a></li>
-      <li><a data-toggle="modal" href="#" data-type="cs_memo">客服备注</a></li>
       <li><a data-toggle="modal" href="#" data-type="color">申请调色</a></li>
+      <li><a data-toggle="modal" href="#" data-type="cs_memo">客服备注</a></li>
+      <li><a data-toggle="modal" href="#" data-type="detail">订单详情</a></li>
       <!-- <li><a data-toggle="modal" href="#" data-type="trade_splite">订单拆分</a></li> -->
       <!-- <li><a data-toggle="modal" href="#" data-type="trade_unsplite">订单合并</a></li> -->
       <!-- <li><a data-toggle="modal" href="#" data-type="mark">标注异常</a></li> -->
@@ -144,7 +141,8 @@
       <% if @trade.get('invoice_name') : %>
         <li><a data-toggle="modal" href="#" data-type="seller_confirm_invoice">确认开票</a></li>
       <% end %>
-
+        <li><a data-toggle="modal" href="#" data-type="barcode">设置商品条形码</a></li>
+          
       <li class= "divider"></li>
 
       <!-- <li><a data-toggle="modal" href="#" data-type="check_goods">验货</a></li> -->
