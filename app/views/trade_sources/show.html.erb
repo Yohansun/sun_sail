@@ -1,0 +1,56 @@
+ <div class="row-fluid">
+  <ul class="breadcrumb" style="position:relative;">
+    <li><a href="/">Magic</a><span class="divider">/</span></li>
+    <li><a href='/trades'>订单管理</a><span class="divider">/</span></li>
+    <li class="active">订单设置</li>
+  </ul><!-- breadcrumb -->
+
+
+  <ul class="nav nav-tabs nomargin" id="myTab">
+    <li class="active"><a data-toggle="tab" href="#order_source">订单来源</a></li>
+  </ul>
+
+  <div class="tab-content padding_t20 reset_border">
+    <div class="tab-pane active" id="order_source">
+      <div class="tabs-left">
+        <ul class="nav nav-tabs reset_border span2" id="myTab_sub">
+          <li <% if @trade_source.id == 1 %> class="active" <% end %> ><%= link_to "淘宝天猫", trade_source_path(1)%></li>
+          <li <% if @trade_source.id == 2 %> class="active" <% end %> ><%= link_to "淘宝集市", trade_source_path(2)%></li>
+        </ul>
+
+        <div class="tab-content reset_border">
+          <div class="tab-pane active">
+          	<%= simple_form_for @trade_source, html: {:class =>'form-horizontal nomargin'} do |f| %>
+              <fsieldset>
+                <%= f.input :app_key, :label => "app key：", :placeholder => "输入文字...", :input_html => {:class => 'input-xlarge'} %>
+
+               	<%= f.input :secret_key, :label => "secret key：", :placeholder => "输入文字...", :input_html => {:class => 'input-xlarge'} %>
+ 
+                <%= f.input :session, :label => "session：", :placeholder => "输入文字...", :input_html => {:class => 'input-xlarge'} %>
+
+                <%= f.input :fetch_quantity, collection: [20,50,100], :include_blank => true , :label => '获取数量：', :input_html => { :class=>"width_auto" } %>
+    
+    						<%= f.input :fetch_time_circle, collection: [15,30,60], :include_blank => true , :label => '抓取频次：', :input_html => { :class=>"width_auto" } %>
+
+                <div class="control-group form-inline">
+                  <label class="control-label" for="">高压阀：</label>
+                  <div class="controls">
+                    <select id="set_valve_state" class="width_auto" name="trade_source[high_pressure_valve]">	
+                      <option value="true" <% if @trade_source.high_pressure_valve == true %> selected ="selected" <% end %>>打开</option>
+                      <option value="false" <% if @trade_source.high_pressure_valve == false %> selected ="selected" <% end %>>关闭</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-actions nomargin">
+                  <button class="btn btn-primary save">保存</button>
+                </div>
+              </fieldset>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

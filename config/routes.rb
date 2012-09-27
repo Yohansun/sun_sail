@@ -35,6 +35,7 @@ MagicOrders::Application.routes.draw do
 
   resources :users
   resources :areas
+  resources :trade_sources
 
   get "trades/new", to: "trades#new"
   get "trades/create", to: "trades#create"
@@ -53,7 +54,6 @@ MagicOrders::Application.routes.draw do
     end
 
     resources :products
-    resources :trade_sources
   end
 
   mount Sidekiq::Web => '/sidekiq'
