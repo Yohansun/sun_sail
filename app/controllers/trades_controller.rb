@@ -96,16 +96,10 @@ class TradesController < ApplicationController
     end
 
     # 调色
-    trade_id = []
-    @trades.all.each do |t|
-      if t.has_color_info == true
-        trade_id += t.tid.to_a
-      end
-    end
     if params[:search_color_status] == "matched"
-      @trades = @trades.where(:tid.in => trade_id)
+      @trades = @trades.where(has_color_info: true)
     elsif params[:search_color_status] == "unmatched"
-      @trades = @trades.where(:tid.nin => trade_id)
+      @trades = @trades.where(has_color_info: false)
     end
 
 
@@ -169,13 +163,7 @@ class TradesController < ApplicationController
 
     # 需要配色
     if params[:search_all] && params[:search_all][:search_color] == "true"
-      trade_id = []
-      @trades.all.each do |t|
-        if t.has_color_info == true
-          trade_id += t.tid.to_a
-        end
-      end
-      @trades = @trades.where(:tid.in => trade_id)
+      @trades = @trades.where(has_color_info: true)
     end
 
     # 高级搜索$or,$and集中筛选
@@ -291,10 +279,16 @@ class TradesController < ApplicationController
         order = @trade.orders.find item[:id]
         order.cs_memo = item[:cs_memo]
         item[:color_num].each_with_index do |num, index|
-          order.color_num[index] = num
-          color = Color.find_by_num num
+          if num.blank?
+            order.color_num[index] = nil
+            order.color_hexcode[index] = nil
+            order.color_name[index] = nil
+          else
+            order.color_num[index] = num
+            color = Color.find_by_num num
             order.color_hexcode[index] = color.try(:hexcode)
             order.color_name[index] = color.try(:name)
+          end
         end
         item[:barcode].each_with_index do |code, index|
           order.barcode[index] = code

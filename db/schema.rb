@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120921144238) do
+ActiveRecord::Schema.define(:version => 20120927115437) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -113,7 +113,6 @@ ActiveRecord::Schema.define(:version => 20120921144238) do
     t.string   "fullname"
     t.string   "address"
     t.string   "mobile"
-    t.string   "phone"
     t.datetime "created_at",                           :null => false
     t.datetime "updated_at",                           :null => false
     t.integer  "parent_id"
@@ -195,26 +194,35 @@ ActiveRecord::Schema.define(:version => 20120921144238) do
   end
 
   create_table "users", :force => true do |t|
-    t.string   "email",                  :default => "",    :null => false
-    t.string   "encrypted_password",     :default => "",    :null => false
+    t.string   "username",                                              :null => false
+    t.string   "name"
+    t.string   "email",                               :default => "",   :null => false
+    t.string   "encrypted_password",   :limit => 128, :default => "",   :null => false
+    t.string   "password_salt",                       :default => "",   :null => false
     t.string   "reset_password_token"
-    t.datetime "reset_password_sent_at"
+    t.string   "remember_token"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          :default => 0
+    t.integer  "sign_in_count",                       :default => 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.datetime "created_at",                                :null => false
-    t.datetime "updated_at",                                :null => false
-    t.boolean  "is_super_admin",         :default => false
-    t.string   "name"
-    t.boolean  "active",                 :default => true
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "role"
+    t.integer  "role_level",                          :default => 10
+    t.integer  "sellers_count",                       :default => 0
+    t.integer  "parent_id"
+    t.integer  "children_count",                      :default => 0
+    t.integer  "lft",                                 :default => 0
+    t.integer  "rgt",                                 :default => 0
+    t.boolean  "active",                              :default => true
     t.integer  "seller_id"
   end
 
-  add_index "users", ["email"], :name => "index_users_on_email", :unique => true
-  add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
+  add_index "users", ["email"], :name => "index_admins_on_email", :unique => true
+  add_index "users", ["parent_id"], :name => "index_admins_on_parent_id"
+  add_index "users", ["reset_password_token"], :name => "index_admins_on_reset_password_token", :unique => true
 
   create_table "users_roles", :id => false, :force => true do |t|
     t.integer "user_id"

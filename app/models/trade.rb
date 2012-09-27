@@ -43,6 +43,8 @@ class Trade
   field :receiver_address, type:String
   field :seller_memo, type:String
 
+  field :has_color_info, type: Boolean, default: false
+
   # add indexes for speed
   index :tid
   index :status
@@ -54,10 +56,24 @@ class Trade
   index :seller_id
   index :trade_source_id
   index :deleted_at
+  index :has_color_info
 
   attr_accessor :matched_seller
 
   validate :color_num_do_not_exist, :on => :update
+
+  before_update :set_has_color_info
+
+  def set_has_color_info
+    self.orders.each do |order|
+      unless order.color_num.blank?
+        self.has_color_info = true
+        return
+      end
+    end
+    self.has_color_info = false
+    true
+  end
 
   def color_num_do_not_exist
     color_nums = Color.all.map {|color| color.num}
@@ -121,15 +137,6 @@ class Trade
     if self.seller_id
       Seller.find(self.seller_id)
     end
-  end
-
-  def has_color_info
-  	self.orders.each do |order|
-  		unless order.color_num.blank?
-  			return true
-  			break
-  		end
-  	end
   end
 
   def matched_seller_with_default(area)

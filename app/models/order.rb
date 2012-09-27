@@ -7,7 +7,5 @@ class Order
   field :color_num ,type: Array, default: []    # 调色字段
   field :color_hexcode ,type: Array, default: []
   field :color_name ,type: Array, default: []
-
   field :barcode, type: Array, default: []  #条形码
-
 end
