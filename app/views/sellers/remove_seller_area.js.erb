@@ -1,0 +1,4 @@
+var zTree = $.fn.zTree.getZTreeObj("treeDemo"); 
+treenode = zTree.getNodeByParam("id", <%= @area_id %>);
+zTree.checkNode(treenode, false);
+$("#area<%= @area_id %>").remove();

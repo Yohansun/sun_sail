@@ -176,15 +176,17 @@ class SellersController < ApplicationController
 
   def remove_seller_area
     if params[:seller_id] && params[:area_id]
-      seller_area = SellersArea.where(seller_id: params[:seller_id],area_id: params[:area_id])
+      seller_area = SellersArea.select("id,area_id").where(seller_id: params[:seller_id],area_id: params[:area_id]).first
     end
     if params[:id]
       seller_area = SellersArea.find params[:id]
     end
     if seller_area.present?
+      @area_id = seller_area.area_id
       SellersArea.destroy(seller_area)
     end
-    @seller_areas = SellersArea.where(seller_id: params[:seller_id]).all
-    render :create_seller_area
+    respond_to do |f|
+      f.js
+    end
   end
 end

@@ -115,7 +115,7 @@
     <table class="table table-striped table-bordered table-condensed td_colors mar_t">
       <thead>
         <tr>
-          <th>选择</th>
+          <!--<th>选择</th>-->
           <th>编号</th>
           <th>经销商简称</th>
           <th>经销商全称</th>
@@ -128,7 +128,7 @@
       </thead>
       <tbody>
         <tr>
-          <td><!-- <input id="checkbox_all" type="checkbox" value="option1"> --></td>
+          <!-- <td><input id="checkbox_all" type="checkbox" value="option1"></td> -->
           <td>1368</td>
           <td>定制销售部</td>
           <td>定制销售部</td>
