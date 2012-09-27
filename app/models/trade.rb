@@ -54,6 +54,7 @@ class Trade
   index :splitted_tid
   index :seller_id
   index :trade_source_id
+  index :deleted_at
 
   attr_accessor :matched_seller
 
