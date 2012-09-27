@@ -2,16 +2,14 @@
 class AreasController < ApplicationController
   before_filter :authenticate_user!
   caches_page :index
-  def index
-    unless params[:parent_id]
-      params[:parent_id] = 1
-    end
 
-    @areas = Area.where(parent_id: params[:parent_id])
+  def index
+    @areas = Area.where(parent_id: params[:parent_id] || 1)
 
     respond_to do |format|
       format.html
       format.js
+      format.json
     end
   end
 
