@@ -41,7 +41,6 @@ class Trade
   field :receiver_name, type:String
   field :receiver_mobile, type:String
   field :receiver_address, type:String
-  field :receiver_address, type:String
   field :seller_memo, type:String
 
   # add indexes for speed
