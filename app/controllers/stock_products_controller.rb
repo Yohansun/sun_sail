@@ -8,7 +8,7 @@ class StockProductsController < ApplicationController
     @seller = Seller.find params[:seller_id]
   	@product = StockProduct.new params[:stock_product]
     @product.seller_id = params[:seller_id]
-  	if @product.save!
+  	if @product.save
   		redirect_to seller_stocks_path(params[:seller_id])
   	else
   		render :new

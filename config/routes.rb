@@ -4,7 +4,8 @@ MagicOrders::Application.routes.draw do
   get "callbacks/jingdong"
   get '/autologin', to: 'users#autologin'
   devise_for :users, :path => '', :path_names => {:sign_in => 'login'}
-    
+  get "/stocks", to: 'stocks#home'
+
   resources :sellers do
     resources :stocks
     resources :stock_products do
@@ -30,6 +31,9 @@ MagicOrders::Application.routes.draw do
   end
 
   resources :products do
+    collection do
+      get :fetch_products
+    end
     get :change_status
   end
 

@@ -5,28 +5,29 @@
           <li>
             <%= link_to '成品仓库', seller_stocks_path(seller_id: params[:seller_id])%>
           </li>
-          <li class="active"><a href="/stock_history">进销记录</a></li>
+          <li class="active"><a href="#">进销记录</a></li>
         </ul>
       </div>
     </header>
     <div class="row-fluid">
       <ul class="breadcrumb" style="position:relative;">
-        <li><%= link_to '仓库管理', seller_stocks_path(seller_id: params[:seller_id])%><span class="divider">/</span></li>
+        <li><%= link_to 'Magic', root_path %><span class="divider">/</span></li>
+        <li><%= link_to Seller.find(params[:seller_id]).stock.name, seller_stocks_path(seller_id: params[:seller_id])%>
+          <span class="divider">/</span>
+        </li>
         <li class="active">进销记录</li>
       </ul><!-- breadcrumb -->
 
-      <form class="well form-horizontal reset_space">
+      <form class="well form-horizontal reset_space" action="<%= seller_stock_product_stock_history_index_path(params[:seller_id], params[:stock_product_id])%>" method='get'>
         <fieldset>
-          <legend class="font14">筛选条件：</legend>
-
           <div class="control-group form-inline">
             <label class="control-label">时间范围：</label>
             <div class="controls">
-              <input type="text" class="input-small search-query datepicker">
-              <input type="text" class="input-mini search-query timepicker">
+              <input type="text" class="input-small search-query datepicker", name='bdate'>
+              <input type="text" class="input-mini search-query timepicker", name='btime'>
               <i class="icon-arrow-right"></i>
-              <input type="text" class="input-small search-query datepicker">
-              <input type="text" class="input-mini search-query timepicker">
+              <input type="text" class="input-small search-query datepicker", name='edate'>
+              <input type="text" class="input-mini search-query timepicker", name='etime'>
               <a href="javascript:void(0)">最近一周</a>
               <a href="javascript:void(0)">最近一月</a>
               <a href="javascript:void(0)">最近三月</a>
@@ -36,27 +37,27 @@
             <label class="control-label">操作行为：</label>
             <div class="controls">
               <label class="radio pad_t5">
-                <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked="">
+                <input type="radio" name="optionsRadios" id="optionsRadios1" value="in">
                 入库
               </label>
               <label class="radio pad_t5">
-                <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                <input type="radio" name="optionsRadios" id="optionsRadios2" value="out">
                 出库
               </label>
               <label class="radio pad_t5">
-                <input type="radio" name="optionsRadios" id="optionsRadios3" value="option3">
+                <input type="radio" name="optionsRadios" id="optionsRadios3" value="lock">
                 锁定
               </label>
             </div>
           </div>
           <div class="control-group form-inline">
             <div class="controls">
-              <select class="width_auto">
-                <option>商品编号</option>
-                <option>淘宝ID</option>
-                <option>商品名称</option>
+              <select class="width_auto" name='search_key'>
+                <option value='product_id'>商品编号</option>
+                <option value='taobao_id'>淘宝ID</option>
+                <option value='name'>商品名称</option>
               </select>
-              <input type="text" class="input-large" id="">
+              <input type="text" class="input-large" name='search_value'>
             </div>
           </div>
           <div class="control-group form-inline">

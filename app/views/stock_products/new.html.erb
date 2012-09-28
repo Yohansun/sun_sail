@@ -17,3 +17,33 @@
     </div>
   </div>
 
+<% content_for :tail do -%>
+<script type="text/javascript">
+  $(function () {
+    $('#category option').click(function(){
+      fetch_products();
+    });
+    $('#feature option').click(function(){
+      fetch_products();
+    });
+  });
+
+
+  function fetch_products(){
+    var category = 0
+    var feature = 0
+    var a = $('#category').val()
+    var b = $('#feature').val()
+    if(a != null){
+      category = a[0]
+    }
+
+    if (b != null) {
+      feature = b[0]
+    }
+    
+    $.get('/products/fetch_products', {feature_id: feature, category_id: category});
+  }
+</script>
+<% end %>
+

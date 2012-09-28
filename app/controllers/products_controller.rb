@@ -78,4 +78,11 @@ class ProductsController < ApplicationController
     Product.delete(params[:id])
     redirect_to products_path
   end
+
+  def fetch_products
+    @products = Product.where(category_id: params[:category_id])
+    respond_to do |format|
+      format.js
+    end
+  end
 end

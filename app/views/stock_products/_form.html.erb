@@ -1,8 +1,27 @@
 <%= simple_form_for [@seller, @product], html: {class: 'well form-horizontal'} do |f| %>
   <fieldset>
-    <legend class="font14">添加仓库产品：</legend>
-    <%= f.input :seller_id, as: :hidden, value: params[:seller_id] %>
-    <%= f.association :product, label: '商品：' %>
+    <div class="control-group form-inline">
+      <label class="control-label" for="">选择商品：</label>
+      <div class="controls group re_height300">
+        <select class="span2 pull-left" multiple="multiple" id='category' name='category'>
+          <% Category.all.each do |c| %>
+          <option value='<%= c.id%>'><%= c.name %></option>
+          <% end %>
+        </select>
+        <select class="span2 pull-left" multiple="multiple" id='feature' name='feature'>
+          <% Feature.all.each do |f| %>
+          <option value='<%= f.id%>'><%= f.name %></option>
+          <% end %>
+        </select>
+        <select class="span2 pull-left" multiple="multiple" id='product' name='stock_product[product_id]'>
+          <%= render partial: "products", :object => @products = Product.all %>
+        </select>
+      </div>
+      <div class="controls">
+        <p>注：当前无商品可上架，请去产品中心创建商品;</p>
+      </div>
+    </div>
+
     <%= f.input :max, hint: "(库存最大值)", label: '满仓值：', as: :string %>
     <%= f.input :safe_value, hint: "(低于安全值进入报警状态)", label: '安全值：', as: :string %>
 

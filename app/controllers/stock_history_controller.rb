@@ -1,7 +1,17 @@
 # -*- encoding : utf-8 -*-
 class StockHistoryController < ApplicationController
 	def index
-		@history = StockHistory.where(seller_id: params[:seller_id], stock_product_id: params[:stock_product_id]).page params[:page]
+    @history = StockHistory
+
+    unless params[:bdate].blank? && params[:edate].blank?
+      btime = params[:btime] || "00:00:00"
+      etime = params[:etime] || "00:00:00"
+      @begin_time = "#{params[:bdate]} #{btime}"
+      @end_time = "#{params[:edate]} #{etime}"
+      @history = @history.where(created_at: @begin_time..@end_time)
+    end
+
+		@history = @history.where(seller_id: params[:seller_id], stock_product_id: params[:stock_product_id]).page params[:page]
 	end
 
   def create
