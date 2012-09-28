@@ -44,6 +44,7 @@ class Trade
   field :seller_memo, type:String
 
   field :has_color_info, type: Boolean, default: false
+  field :has_cs_memo, type: Boolean, default: false
 
   # add indexes for speed
   index :tid
@@ -57,12 +58,14 @@ class Trade
   index :trade_source_id
   index :deleted_at
   index :has_color_info
+  index :has_cs_memo
 
   attr_accessor :matched_seller
 
   validate :color_num_do_not_exist, :on => :update
 
   before_update :set_has_color_info
+  before_update :set_has_cs_memo
 
   def set_has_color_info
     self.orders.each do |order|
@@ -72,6 +75,22 @@ class Trade
       end
     end
     self.has_color_info = false
+    true
+  end
+
+  def set_has_cs_memo
+    unless self.cs_memo.blank?
+      self.has_cs_memo = true
+      return
+    else
+      self.orders.each do |order|
+        unless order.cs_memo.blank?
+          self.has_cs_memo = true
+          return
+        end
+      end
+      self.has_cs_memo = false
+    end
     true
   end
 

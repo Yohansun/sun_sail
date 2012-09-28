@@ -22,7 +22,7 @@ json.array!(@trades) do |json, trade|
   json.cs_memo trade.cs_memo
 
   json.has_color_info trade.has_color_info
-
+  json.has_cs_memo trade.has_cs_memo
   json.invoice_type trade.invoice_type
   json.invoice_name trade.invoice_name
   json.invoice_content trade.invoice_content

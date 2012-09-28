@@ -58,7 +58,7 @@
   <% end %>
 </td>
 <td data-col='cs_memo'>
-  <% if @trade.get 'cs_memo': %>
+  <% if @trade.get('has_cs_memo') == true : %>
   <a href="javascript:void(0)" rel="popover" data-content="<%= @trade.get 'cs_memo' %><br/><br/><% for order in @trade.get('orders'): %><% if order.cs_memo: %><b><%= order.title %>:</b> <span style= 'color:#08C' ><%= order.cs_memo %></span><br/><% end %><% end %>" data-original-title="<b>客服备注</b>"><i class="icon-comment"></i></a>
   <% end %>
 </td>
