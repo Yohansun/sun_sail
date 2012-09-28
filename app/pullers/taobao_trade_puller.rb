@@ -1,6 +1,15 @@
 # encoding : utf-8 -*- 
+require 'rest_client'
+require 'oauth2'
+
 class TaobaoTradePuller
   class << self
+    # temp test function
+    def create2
+      token = TaobaoAppToken.first
+      RestClient.get("https://eco.taobao.com/router/rest?access_token=#{token.access_token}&method=taobao.user.seller.get&v=2.0&fields=user_id,uid,nick,sex")
+    end
+
     def create(start_time = nil, end_time = nil, trade_source_id = nil)
       total_pages = nil
       page_no = 0

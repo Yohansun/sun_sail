@@ -73,6 +73,10 @@ gem "mini_magick"
 
 gem 'redis-namespace'
 
+gem 'omniauth'
+gem 'omniauth-oauth2'
+gem 'rest-client'
+
 group :production do
   gem "exception_notification", "~> 2.6.1"
 end
