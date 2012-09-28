@@ -1,5 +1,6 @@
 # -*- encoding:utf-8 -*-
 
+desc "更新数据Key"
 task :update_keys => :environment do
 
   # JingdongTrade.all.each {|t| t.rename(:order_state, :status);t.save}

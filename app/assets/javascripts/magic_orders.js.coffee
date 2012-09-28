@@ -23,7 +23,8 @@ window.MagicOrders =
       'send':                    ['deliver', 'seller_confirm_deliver'],
       'return':                  ['detail'],
       'refund':                  ['detail'],
-      'invoice':                 ['invoice_number','detail']
+      'invoice':                 ['invoice_number','detail'],
+      'unusual':                 ['detail']
     }
 
     # 所有订单列
@@ -79,6 +80,7 @@ window.MagicOrders =
       'return':                  '退货模式',
       'refund':                  '退款模式',
       'invoice':                 '发票模式',
+      'unusual':                 '异常模式'
     }
     
     # 订单模式初始化为'trades'
@@ -87,13 +89,14 @@ window.MagicOrders =
     # 不同模式下可见订单列
     @trade_cols_visible_modes = {
       'trades':                  ['trade_source','tid','status','status_history','receiver_id','receiver_name','receiver_mobile_phone','receiver_address','buyer_message','seller_memo','cs_memo','color_info','invoice_info','deliver_bill','logistic_bill','seller','order_split','operator'],
-      'deliver':                 ['tid','deliver_bill_id','deliver_bill_status','trade_source','order_goods','receiver_name','receiver_mobile_phone','receiver_address','color_info','invoice_info','seller','cs_memo'],
-      'logistics':               ['tid','deliver_bill_id','logistic_waybill','logistic_company','trade_source','order_goods','receiver_name','receiver_mobile_phone','receiver_address','invoice_info','seller','cs_memo','operator'],
-      'check':                   ['tid','deliver_bill_id','status_history','deliver_bill_status','trade_source','order_goods','receiver_name','receiver_mobile_phone','receiver_address','color_info','invoice_info','seller','cs_memo','operator'],
-      'send':                    ['tid','deliver_bill_id','status_history','order_goods','receiver_name','receiver_mobile_phone','receiver_address','color_info','invoice_info','seller','cs_memo','operator'],
-      'return':                  ['tid','deliver_bill_id','status_history','order_goods','receiver_name','receiver_mobile_phone','receiver_address','color_info','invoice_info','seller','cs_memo','operator'],
-      'refund':                  ['tid','deliver_bill_id','status_history','order_goods','receiver_name','receiver_mobile_phone','receiver_address','color_info','invoice_info','seller','cs_memo','operator'],
-      'invoice':                 ['tid','deliver_bill_id','status_history','trade_source','order_goods','invoice_type','invoice_name','invoice_value','invoice_date','seller','cs_memo','operator'],
+      'deliver':                 ['tid','status','deliver_bill_id','deliver_bill_status','trade_source','order_goods','receiver_name','receiver_mobile_phone','receiver_address','color_info','invoice_info','seller','cs_memo'],
+      'logistics':               ['tid','status','deliver_bill_id','logistic_waybill','logistic_company','trade_source','order_goods','receiver_name','receiver_mobile_phone','receiver_address','invoice_info','seller','cs_memo','operator'],
+      'check':                   ['tid','status','deliver_bill_id','status_history','deliver_bill_status','trade_source','order_goods','receiver_name','receiver_mobile_phone','receiver_address','color_info','invoice_info','seller','cs_memo','operator'],
+      'send':                    ['tid','status','deliver_bill_id','status_history','order_goods','receiver_name','receiver_mobile_phone','receiver_address','color_info','invoice_info','seller','cs_memo','operator'],
+      'return':                  ['tid','status','deliver_bill_id','status_history','order_goods','receiver_name','receiver_mobile_phone','receiver_address','color_info','invoice_info','seller','cs_memo','operator'],
+      'refund':                  ['tid','status','deliver_bill_id','status_history','order_goods','receiver_name','receiver_mobile_phone','receiver_address','color_info','invoice_info','seller','cs_memo','operator'],
+      'invoice':                 ['tid','status','deliver_bill_id','status_history','trade_source','order_goods','invoice_type','invoice_name','invoice_value','invoice_date','seller','cs_memo','operator'],
+      'unusual':                 ['trade_source','tid','status','status_history','receiver_id','receiver_name','receiver_mobile_phone','receiver_address','buyer_message','seller_memo','cs_memo','color_info','invoice_info','deliver_bill','logistic_bill','seller','order_split','operator'],      
     }
 
     new MagicOrders.Routers.Areas()
