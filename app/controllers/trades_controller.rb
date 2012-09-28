@@ -55,7 +55,7 @@ class TradesController < ApplicationController
       elsif status == 'unpaid'
         @trades = @trades.where(:status.in => ["WAIT_BUYER_PAY"])
       elsif status == 'undelivered'
-        @trades = @trades.where(:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"])
+        @trades = @trades.where("$and" => [{:dispatched_at.exists => true},{:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"]}])
       elsif status == 'delivered'
         @trades = @trades.where(:status.in => ["WAIT_BUYER_CONFIRM_GOODS","WAIT_GOODS_RECEIVE_CONFIRM","WAIT_BUYER_CONFIRM_GOODS_ACOUNTED","WAIT_SELLER_SEND_GOODS_ACOUNTED"])
       elsif status == 'refund'
