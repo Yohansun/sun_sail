@@ -1,15 +1,15 @@
 <div class="container-fluid">
   <header class="jumbotron subhead" id="overview">
-    <div class="subnav">
+    <!-- <div class="subnav">
       <ul class="nav nav-pills">
-        <li class=""><!-- active -->
+        <li class="">
           <a href="#">渠道分布</a>
         </li>
         <li>
           <a href="#">销售排行</a>
         </li>
       </ul>
-    </div>
+    </div> -->
   </header>
   <div class="row-fluid">
     <ul class="breadcrumb" style="position:relative;">
@@ -24,17 +24,17 @@
     </div> -->
     <%= simple_form_for "product",url: products_path, html: { method: "get", class: "well form-search"} ,:wrapper => :search do |f| %>
       <fieldset class="form-inline">
-        <%= f.input :info_type, collection: [["商品名称","name"], ["商品编号","iid"],["淘宝ID","taobao_id"],["仓库编号","storage_num"]], label: "精确搜索：", required: false %>
-        <%= f.input :info, input_html: {class: "w_specify"} ,label: false, required: false %>
+        <%= f.input :info_type, collection: [["商品名称","name"], ["商品编号","iid"],["淘宝ID","taobao_id"],["仓库编号","storage_num"]], input_html: {class: "mar_r10"}, label_html: {style: "margin-top:3px;" },label: "精确搜索：", required: false %>
+        <%= f.input :info, input_html: {class: "w_specify" , style: "width:490px;"} ,label: false, required: false %>
       </fieldset>
       <fieldset class="form-inline mar_t5">
-        <%= f.input :item_level, collection: Level.all, input_html: {class: "input-large mar_r10" }, label: "档次：", required: false %>
-        <%= f.input :item_quantity, collection: Quantity.all, input_html: {class: "width_auto mar_r10" }, label: "规格：", required: false %>
-        <%= f.input :item_status, collection: [["上架","ON_SALE"], ["下架","SOLD_OUT"]], input_html: {class: "width_auto mar_r10" }, label: "状态：", required: false %>      
-        <%= f.input :item_category, collection: Category.all, input_html: {class: "width_auto mar_r10" }, label: "系列：", required: false %>
+        <%= f.input :item_level, collection: Level.all, input_html: {class: "mar_r10" }, label_html: {style: "margin-top:3px;" }, label: "档次：", required: false %>
+        <%= f.input :item_quantity, collection: Quantity.all, input_html: {class: "width_auto mar_r10" },label_html: {style: "margin-top:3px;" }, label: "规格：", required: false %>
+        <%= f.input :item_status, collection: [["上架","ON_SALE"], ["下架","SOLD_OUT"]], input_html: {class: "width_auto mar_r10" },label_html: {style: "margin-top:3px;" }, label: "状态：", required: false %>      
+        <%= f.input :item_category, collection: Category.all, input_html: {class: "width_auto mar_r10" },label_html: {style: "margin-top:3px;" }, label: "系列：", required: false %>
         <br />
         <br />
-        <%= f.input :item_features, as: :check_boxes, collection: Feature.all, input_html: {class: "width_auto mar_t5", label_style: "margin-top:-5px;"}, label: "分类：", required: false %>
+        <%= f.input :item_features, as: :check_boxes, collection: Feature.all, input_html: {class: "width_auto mar_t5", label_style: "margin-top:-3px;"}, label: "分类：", required: false %>
         <br />
         <div>
           <%= f.button :submit, "过滤", class: "btn btn-primary pull-right" %>

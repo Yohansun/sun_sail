@@ -2,8 +2,7 @@
   <header class="jumbotron subhead" id="overview">
     <div class="subnav">
       <ul class="nav nav-pills">
-        <li class="active"><a href="/">用户管理</a></li>
-        <!-- <li><a href="#">用户组管理</a></li> -->
+        <li class="active"><a href="#">用户管理</a></li>
         <li><a href="/areas">地域管理</a></li>
       </ul>
     </div>
@@ -16,7 +15,7 @@
       <li style="position:absolute;right:15px;top:6px;"><%=link_to "新增用户", new_user_path, :class => "btn_alert"%></li>
     </ul><!-- breadcrumb -->
 
-    <form class="well form-search">
+   <!--  <form class="well form-search">
       <fieldset class="form-inline">
         <div class="controls">
           <select id="" class="input-small">
@@ -40,7 +39,7 @@
           </div>
         </div>
       </fieldset>
-    </form>
+    </form> -->
 
     <table class="table table-striped table-bordered table-condensed td_colors mar_t">
       <thead>
@@ -69,10 +68,10 @@
               <button data-toggle="dropdown" class="btn btn-info dropdown-toggle min_w"><i class="icon-wrench"></i> <span class="caret"></span></button>
               <ul class="dropdown-menu" style="left:-115px;">
                 <li><%= link_to "编辑", user_path(user.id)%></li>
-                <li class="divider"></li>
+               <!--  <li class="divider"></li>
                 <li><a href="#">禁用</a></li>
                 <li><a href="#">权限设置</a></li>
-                <li><a href="#">用户日志</a></li>
+                <li><a href="#">用户日志</a></li> -->
               </ul>
             </div>
           </td>

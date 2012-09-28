@@ -1,10 +1,9 @@
 <tr id='product_<%= product.id %>'>
-  <td></td>
   <td><%= product.iid %></td>
-  <td><%= product.name %></td>
+  <td><%= product.name  %></td>
   <td><%= product.taobao_id %></td>
   <td><%= product.storage_num %></td>
-  <th><%= product.price %></th>
+  <td><%= product.price %></td>
   <td>
   <% unless product.product_image.thumb.blank? %>
     <%= image_tag("#{product.product_image.thumb}") %>
@@ -28,7 +27,7 @@
         <% elsif product.status == "SOLD_OUT" %>
         <li><%= link_to '上架', product_change_status_path(product), remote: true, :confirm => "确定修改?" %></li>
         <% end %>
-        <li><a href="#">查看详细</a></li>
+        <!-- <li><a href="#">查看详细</a></li> -->
       </ul>
     </div>
   </td>

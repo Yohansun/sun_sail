@@ -144,13 +144,12 @@ class SellersController < ApplicationController
   end
 
   def remove_seller_user
-    seller_id = ""
     user = User.find params[:u_id]
-    seller_id = user.seller_id
     user.seller_id = nil
     user.save 
-    @seller_user = User.where(seller_id: seller_id)
-    render :seller_user
+    respond_to do |f|
+      f.js
+    end
   end
 
   def seller_area    

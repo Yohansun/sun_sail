@@ -1,7 +1,7 @@
 html = "<tr><th>用户编号</th><th>用户名称</th><th>所属用户组</th><th>账户状态</th><th>操作</th></tr>"
 <% if @seller_user.present? %>
 	<% @seller_user.each do |list| %>
-		html += "<tr><td><%=list.id%></td>" + 
+		html += "<tr id='seller_<%=list.id%>'><td><%=list.id%></td>" + 
 	          "<td><%= list.name%></td>" +
 	          "<td><%= list.roles.map{|r| r.role_s}.join(',') %></td>" +
 	          "<td><%= list.active ? '生效' : '禁止'%></td>" +
