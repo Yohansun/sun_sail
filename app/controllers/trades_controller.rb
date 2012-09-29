@@ -299,7 +299,7 @@ class TradesController < ApplicationController
       state.repair_man = current_user.name
       state.repaired_at = Time.now
     end
-
+    
     if params[:confirm_color_at] == true
       @trade.confirm_color_at = Time.now
     end
