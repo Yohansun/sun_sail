@@ -104,7 +104,7 @@
             <td><%= h.tid %></td>
             <td><%= h.stock_product.product.name %></td>
             <td><%= h.stock_product.product.taobao_id %></td>
-            <td><%= h.stock_product.product.category %></td>
+            <td><%= h.stock_product.product.try(:category).try(:name) %></td>
             <td><%= h.user.name %></td>
             <td><%= h.number %></td>
             <td>
