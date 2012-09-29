@@ -12,6 +12,7 @@ class Seller < ActiveRecord::Base
   has_many :areas, through: :sellers_areas
   has_many :stock_products
   has_many :stock_history
+  has_one :stock
 
   validates_presence_of :fullname, :name, :mobile, :email
   validates_uniqueness_of :fullname, :name, :mobile, :email
