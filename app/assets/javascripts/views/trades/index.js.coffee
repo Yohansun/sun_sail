@@ -354,7 +354,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     e.preventDefault()
     $('.dropdown.open .dropdown-toggle').dropdown('toggle');
     @search_unusual_trade = $(e.target).data('unusual-trade')
-    console.log(@search_unusual_trade)
     $(@el).find(".trade_nav").text($(@el).find("[data-unusual-trade=#{@search_unusual_trade}]").html())
     @offset = 0
     blocktheui()
