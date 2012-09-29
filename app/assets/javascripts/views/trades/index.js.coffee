@@ -18,6 +18,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     'click [data-deliver-bill-status]':'selectSameStatusDeliverBill'
     'click [data-logistic-status]': 'selectSameStatusLogistic'
     'click [data-color-status]': 'selectSameStatusColor'
+    'click [data-unusual-trade]': 'selectUnusualTrade'
     
     #visual effects
     'click #advanced_btn': 'advancedSearch'
@@ -206,7 +207,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
     $("#trades_bottom").waypoint('destroy')
     blocktheui()
-    @collection.fetch data: {trade_type: @trade_type, offset: @offset, search: {option: @search_option, value: @search_value}, search_all: {@search_start_date, @search_start_time, @search_end_date, @search_end_time, @status_option, @type_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_invoice, @search_color}, search_deliverbill_status: @search_deliverbill_status, logistic_status: @logistic_status, search_trade_status: @search_trade_status, search_invoice_status: @search_invoice_status, search_color_status: @search_color_status}, success: (collection) =>
+    @collection.fetch data: {trade_type: @trade_type, offset: @offset, search: {option: @search_option, value: @search_value}, search_all: {@search_start_date, @search_start_time, @search_end_date, @search_end_time, @status_option, @type_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_invoice, @search_color}, search_deliverbill_status: @search_deliverbill_status, logistic_status: @logistic_status, search_trade_status: @search_trade_status, search_invoice_status: @search_invoice_status, search_color_status: @search_color_status, search_unusual_trade: @search_unusual_trade}, success: (collection) =>
       if collection.length > 0
         @offset = @offset + 20
         @renderUpdate()
@@ -334,13 +335,31 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     e.preventDefault()
     $('.dropdown.open .dropdown-toggle').dropdown('toggle');
     @search_color_status = $(e.target).data('color-status')
+    console.log(@search_color_status)
     $(@el).find(".trade_nav").text($(@el).find("[data-color-status=#{@search_color_status}]").html())
-
+    
     @offset = 0
     blocktheui()
     $("#trade_rows").html('')
 
     @collection.fetch data: {search_color_status: @search_color_status}, success: (collection) =>
+     if collection.length > 0
+       @offset = @offset + 20
+       @renderUpdate()
+       $('#trades_bottom').waypoint @fetchMoreTrades, {offset: '100%'}
+     else
+       $.unblockUI()
+
+  selectUnusualTrade: (e) =>
+    e.preventDefault()
+    $('.dropdown.open .dropdown-toggle').dropdown('toggle');
+    @search_unusual_trade = $(e.target).data('unusual-trade')
+    $(@el).find(".trade_nav").text($(@el).find("[data-unusual-trade=#{@search_unusual_trade}]").html())
+    @offset = 0
+    blocktheui()
+    $("#trade_rows").html('')
+
+    @collection.fetch data: {search_unusual_trade: @search_unusual_trade}, success: (collection) =>
      if collection.length > 0
        @offset = @offset + 20
        @renderUpdate()

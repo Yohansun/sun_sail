@@ -1,5 +1,6 @@
 # -*- encoding:utf-8 -*-
 
+desc "初始化商品性质"
 task :add_product_reference_data => :environment do
 	Feature.create(name: "净味功能")
 	Feature.create(name: "弹性抗裂功能")

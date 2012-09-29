@@ -55,7 +55,7 @@ class TradesController < ApplicationController
       elsif status == 'unpaid'
         @trades = @trades.where(:status.in => ["WAIT_BUYER_PAY"])
       elsif status == 'undelivered'
-        @trades = @trades.where(:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"])
+        @trades = @trades.where("$and" => [{:dispatched_at.exists => true},{:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"]}])
       elsif status == 'delivered'
         @trades = @trades.where(:status.in => ["WAIT_BUYER_CONFIRM_GOODS","WAIT_GOODS_RECEIVE_CONFIRM","WAIT_BUYER_CONFIRM_GOODS_ACOUNTED","WAIT_SELLER_SEND_GOODS_ACOUNTED"])
       elsif status == 'refund'
@@ -102,6 +102,15 @@ class TradesController < ApplicationController
       @trades = @trades.where(has_color_info: false)
     end
 
+    #异常
+    if params[:search_unusual_trade] == "undispatched"
+      @trades = @trades.where("$or" => [{"$and" => [{:pay_time.lte => Time.now - 2.days},{:dispatched_at.exists => false}]},{"$and" => [{_type: "JingdongTrade"},{:created.lte => Time.now - 2.days},{:dispatched_at.exists => false}]}])
+    elsif params[:search_unusual_trade] == "undelivered"
+      t_t_hash = {"$and" => [{_type: "JingdongTrade"}, {:order_end_time.exists => false}]}
+      j_t_hash = {"$and" => [{_type: "TaobaoTrade"}, {:consign_time.exists => false}]}
+      t_p_o_hash = {"$and" => [{_type: "TaobaoPurchaseOrder"},{"$and" => [{:consign_time.exists => false}, {:delivered_at.exists => false}]}]}
+      @trades = @trades.where("$and" => [{:dispatched_at.lte => Time.now - 2.days},{"$or" => [t_t_hash, j_t_hash, t_p_o_hash]}])
+    end
 
     ## 简单筛选
     if params[:search] && !params[:search][:option].blank? && params[:search][:option] != 'null' && params[:search][:option] != 'null' && !params[:search][:option].blank?

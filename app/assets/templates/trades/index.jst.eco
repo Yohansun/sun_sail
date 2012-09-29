@@ -96,7 +96,7 @@
           <li><a href="#" data-trade-mode="send" data-trade-status="delivered">已发货</a></li>
         </ul>
       </li>
-      <li class="dropdown">
+      <!-- <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
           退货
           <b class="caret"></b>
@@ -106,8 +106,8 @@
           <li><a href="#">退货中</a></li>
           <li><a href="#">退货完成</a></li>
         </ul>
-      </li>
-      <li class="dropdown">
+      </li> -->
+      <!-- <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
           退款
           <b class="caret"></b>
@@ -117,7 +117,7 @@
           <li><a href="#">退款中</a></li>
           <li><a href="#">退款完成</a></li>
         </ul>
-      </li>
+      </li> -->
       <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
           调色
@@ -128,7 +128,7 @@
           <li><a href="#" data-trade-mode="send" data-color-status="matched">已调色</a></li>
         </ul>
       </li>
-      <li class="dropdown">
+      <!-- <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
           发票
           <b class="caret"></b>
@@ -139,7 +139,17 @@
           <li><a href="#" data-trade-mode="invoice" data-invoice-status="invoice_filled">已开票</a></li>
           <li><a href="#" data-trade-mode="invoice" data-invoice-status="invoice_sent">已寄出</a></li>
         </ul>
-      </li>      
+      </li> -->
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+          异常
+          <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu">
+          <li><a href="#" data-trade-mode="unusual" data-unusual-trade="undispatched">已付款2天未分流</a></li>
+          <li><a href="#" data-trade-mode="unusual" data-unusual-trade="undelivered">已分流2天未发货</a></li>
+        </ul>
+      </li>
     </ul>
   </div>
 </header>
