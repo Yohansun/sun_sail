@@ -328,19 +328,19 @@
         <th data-col='color_info'>调色<br/>信息</th>
         <th data-col='invoice_info'>发票<br/>信息</th>
 
-        <th data-col='deliver_bill'>出货单</th>              <!--Newly Add-->
+        <!-- <th data-col='deliver_bill'>出货单</th>  -->             <!--Newly Add-->
         <th data-col='deliver_bill_id'>出货单编号</th>
         <th data-col='deliver_bill_status'>出货单状态</th>
         <th data-col='order_goods'>商品详细</th>
-        <th data-col='logistic_bill'>物流单</th>
+        <!-- <th data-col='logistic_bill'>物流单</th> -->
         <th data-col='logistic_waybill'>物流单号</th>
         <th data-col='logistic_company'>物流公司</th>
         <th data-col='invoice_type'>发票类型</th>
         <th data-col='invoice_name'>发票抬头</th>
         <th data-col='invoice_value'>开票金额</th>
         <th data-col='invoice_date'>完成日期</th>
-        <th data-col='order_split'>拆分</th>
-        <th data-col='operator'>操作人</th>
+        <!-- <th data-col='order_split'>拆分</th> -->
+        <!-- <th data-col='operator'>操作人</th> -->
         <th data-col='seller' nowrap>配送经销商</th>
 
         <th>操作</th>

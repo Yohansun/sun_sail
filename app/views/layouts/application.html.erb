@@ -45,11 +45,11 @@
               <li class="trades" style="display:none"><a href="http://shop.nipponpaint.com.cn/admin/taobao_orders">淘宝订单</a></li>
             <% end %>
             <li class="areas" style="display:none"><a href="#">区域管理</a></li>
-            <li class="sellers" style="display:none"><a href="#">经销商管理</a></li>
             <% if current_user.role_key == 'admin' || current_user.role_key == 'seller'%>
             <li class="stocks" style="display:none"><a href="#">仓库管理</a></li>
             <% end %>
             <% if current_user.role_key == 'admin' %>
+            <li class="sellers" style="display:none"><a href="#">经销商管理</a></li>
             <li class="products" style="display:none"><a href="#">商品管理</a></li>
             <li class="users" style="display:none"><a href="#">系统管理</a></li>
             <% end %>
@@ -66,6 +66,7 @@
                 <% end %>
                 <% if current_user.role_key == 'admin' %>
                 <li><%= link_to '商品管理', products_path, class: "products" %></li>
+                <li><a href="/sellers" class="sellers">经销商管理</a></li>
                 <li class= "divider"></li>
                 <li><a href="/users" class="users">系统设置</a></li>
                 <% end %>

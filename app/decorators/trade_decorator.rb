@@ -204,6 +204,16 @@ class TradeDecorator < Draper::Base
     end
   end
 
+  def buyer_nick
+    case trade._type
+      when 'TaobaoPurchaseOrder'
+        trade.buyer_nick
+      when 'TaobaoTrade'
+        trade.buyer_nick
+      when 'JingdongTrade'
+    end
+  end
+
   def seller_memo
     case trade._type
       when 'TaobaoPurchaseOrder'
