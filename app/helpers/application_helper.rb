@@ -1,5 +1,6 @@
 module ApplicationHelper
 	def	user_stock_path
+		return '#' unless current_user
 		if current_user.has_role? :admin
 			"/stocks"
 		else
