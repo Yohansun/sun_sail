@@ -4,11 +4,9 @@ class StockHistoryController < ApplicationController
     @history = StockHistory
 
     unless params[:bdate].blank? && params[:edate].blank?
-      btime = params[:btime] || "00:00:00"
-      etime = params[:etime] || "00:00:00"
-      @begin_time = "#{params[:bdate]} #{btime}"
-      @end_time = "#{params[:edate]} #{etime}"
-      @history = @history.where(created_at: @begin_time..@end_time)
+      begin_time = "#{params[:bdate]} #{params[:btime] || '00:00:00'}".to_time(:local)
+      end_time = "#{params[:edate]} #{params[:etime] || '00:00:00'}".to_time(:local)
+      @history = @history.where(created_at: begin_time..end_time)
     end
 
 		@history = @history.where(seller_id: params[:seller_id], stock_product_id: params[:stock_product_id]).page params[:page]
@@ -19,14 +17,16 @@ class StockHistoryController < ApplicationController
   	@product = StockProduct.find params[:stock_history]['stock_product_id']
   	number = params[:stock_history]['number'].to_i
 
-  	case params[:stock_history]['operation']
-  	when '入库'
-  		@product.activity += number
-  		@product.actual += number
-  	when '出库'
-  		@product.activity -= number
-  		@product.actual -= number
+  	number = if params[:stock_history]['operation'] == '入库'
+  		number
+  	elsif params[:stock_history]['operation'] == '出库'
+  		-number
+    else
+      0
   	end
+
+    @product.activity += number
+    @product.actual += number
 
   	@history.user_id = current_user.id
     @history.seller_id = params[:seller_id]
