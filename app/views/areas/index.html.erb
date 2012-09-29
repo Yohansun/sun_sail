@@ -1,4 +1,13 @@
 <div class="container-fluid">
+  <header class="jumbotron subhead" id="overview">
+    <div class="subnav">
+      <ul class="nav nav-pills">
+        <li><a href="/users">用户管理</a></li>
+        <li class="active"><a href="#">地域管理</a></li>
+        <li><a href="/logistics">物流商管理</a></li>
+      </ul>
+    </div>
+  </header>
 	<div class="row-fluid">
     <ul class="breadcrumb" style="position:relative;">
       <li><a href="/">Magic</a><span class="divider">/</span></li>
@@ -32,7 +41,7 @@
                   <!-- <li><a class="ord_branch" data-toggle="modal" href="#dealer_edit">编辑</a></li>
                   <li><a data-toggle="modal" href="#dealer_close">关闭</a></li>
                   <li class="divider"></li> -->
-                  <li><%= link_to "管理下级", areas_path(:parent_id => area.id), :class=>"browse_children"%></li>
+                  <li><%= link_to "查看下级", areas_path(:parent_id => area.id), :class=>"browse_children"%></li>
                   <!-- <li><a href="#">历史交易</a></li> -->
                 </ul>
               </div>

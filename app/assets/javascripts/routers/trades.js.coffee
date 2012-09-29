@@ -13,6 +13,8 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     'trades/:id/seller_confirm_invoice':'seller_confirm_invoice'
     'trades/:id/barcode':'barcode'
     'trades/:id/mark_unusual_state':'mark_unusual_state'
+    'trades/:id/confirm_color': 'confirm_color'
+    'trades/:id/confirm_check_goods': 'confirm_check_goods'
 
   initialize: ->
     @trade_type = null
@@ -33,13 +35,13 @@ class MagicOrders.Routers.Trades extends Backbone.Router
 
     $('#trade_deliver').on 'hide', (event) ->
       Backbone.history.navigate('trades')
-    
+
     $('#trade_cs_memo').on 'hide', (event) ->
       Backbone.history.navigate('trades')
 
     $('#trade_invoice_number').on 'hide', (event) ->
       Backbone.history.navigate('trades')
-   
+
     $('#trade_seller_confirm_deliver').on 'hide', (event) ->
       Backbone.history.navigate('trades')
 
@@ -50,6 +52,12 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       Backbone.history.navigate('trades')
 
     $('#trade_mark_unusual_state').on 'hide', (event) ->
+      Backbone.history.navigate('trades')
+
+    $('#trade_confirm_color').on 'hide', (event) ->
+      Backbone.history.navigate('trades')
+
+    $('#trade_confirm_check_goods').on 'hide', (event) ->
       Backbone.history.navigate('trades')
 
   show_top_nav: ->
@@ -130,7 +138,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     @model = new MagicOrders.Models.Trade(id: id)
     @model.fetch success: (model, response) =>
       $.unblockUI()
-      
+
       view = new MagicOrders.Views.TradesSeller(model: model)
       $('#trade_seller').html(view.render().el)
       $('#trade_seller').modal('show')
@@ -190,8 +198,8 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       view = new MagicOrders.Views.TradesInvoiceNumber(model: model)
       $('#trade_invoice_number').html(view.render().el)
       $('#trade_invoice_number').modal('show')
-      
-      
+
+
   seller_confirm_deliver: (id) ->
     blocktheui()
 
@@ -224,7 +232,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       view = new MagicOrders.Views.TradesBarcode(model: model)
       $('#trade_barcode').html(view.render().el)
       $('#trade_barcode').modal('show')
-  
+
   mark_unusual_state: (id) ->
     blocktheui()
 
@@ -235,3 +243,25 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       view = new MagicOrders.Views.TradesMarkUnusualState(model: model)
       $('#trade_mark_unusual_state').html(view.render().el)
       $('#trade_mark_unusual_state').modal('show')
+
+  confirm_color: (id) ->
+    blocktheui()
+
+    @model = new MagicOrders.Models.Trade(id: id)
+    @model.fetch success: (model, response) =>
+      $.unblockUI()
+
+      view = new MagicOrders.Views.TradesConfirmColor(model: model)
+      $('#trade_confirm_color').html(view.render().el)
+      $('#trade_confirm_color').modal('show')
+
+  confirm_check_goods: (id) ->
+    blocktheui()
+
+    @model = new MagicOrders.Models.Trade(id: id)
+    @model.fetch success: (model, response) =>
+      $.unblockUI()
+
+      view = new MagicOrders.Views.TradesConfirmCheckGoods(model: model)
+      $('#trade_confirm_check_goods').html(view.render().el)
+      $('#trade_confirm_check_goods').modal('show')

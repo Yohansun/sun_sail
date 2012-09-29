@@ -89,6 +89,13 @@ $(function () {
      $.get("/sellers/seller_area", {seller_id:seller_id}, function(result){
      });
    })
+
+   $('.logistic_area').click(function(argument) {
+     var logistic_id = $(this).attr('data-id');
+     $.get("/logistics/logistic_area", {logistic_id:logistic_id}, function(result){
+     });
+   })
+   
 });
 
 function blocktheui () {

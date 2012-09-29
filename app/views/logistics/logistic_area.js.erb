@@ -1,0 +1,44 @@
+function zTreeBeforeCheck(treeId, treeNode) {
+    if($("#" + treeNode.tId + "_check").hasClass("checkbox_false_full_focus") == true){
+      $.get("/logistics/create_logistic_area", {area_id:treeNode.id, logistic_id:<%=params[:logistic_id]%>}, function(result){
+       });
+    }else{
+      $.get("/logistics/remove_logistic_area", {area_id:treeNode.id, logistic_id:<%=params[:logistic_id]%>}, function(result){
+       });
+    }
+};
+var setting = {
+  check: {
+    enable: true
+  },
+  data: {
+    simpleData: {
+      enable: true
+    }
+  },
+  callback: {
+    beforeCheck: zTreeBeforeCheck
+  }
+};
+var zNodes = data;
+
+var code;
+
+html = "<tr><th>地区编号</th><th>地区名称</th><th>操作</th></tr>"
+<% if @logistics.present? %>
+  <% @logistics.each do |logistics_area| %>
+    html += "<tr id='area<%= logistics_area.area.id %>'><td><%=logistics_area.area.id%></td>" + 
+            "<td><%= logistics_area.area.name%></td>" +
+            "<td><a href='/logistics/remove_logistic_area?id=<%=logistics_area.id%>&logistic_id=<%=logistics_area.logistic_id%>' data-method='get' data-remote='true'>解除绑定</a></td></tr>"
+  <% end %>
+<% end %>
+$('#logistic_area_list').html(html)
+
+$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+var zTree = $.fn.zTree.getZTreeObj("treeDemo");  
+<% if @logistics.present? %>
+  <% @logistics.each do |logistics| %>
+    treenode = zTree.getNodeByParam("id", <%=logistics.area_id%>);
+    zTree.checkNode(treenode, true);
+  <% end%>
+<% end %>

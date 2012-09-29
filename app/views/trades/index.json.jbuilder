@@ -32,7 +32,8 @@ json.array!(@trades) do |json, trade|
 
   json.seller_confirm_deliver_at trade.seller_confirm_deliver_at.strftime("%m-%d %H:%M") if trade.seller_confirm_deliver_at
   json.seller_confirm_invoice_at trade.seller_confirm_invoice_at.strftime("%m-%d %H:%M") if trade.seller_confirm_invoice_at
-
+  json.confirm_color_at trade.confirm_color_at.strftime("%m-%d %H:%M") if trade.confirm_color_at
+  json.confirm_check_goods_at trade.confirm_check_goods_at.strftime("%m-%d %H:%M") if trade.confirm_check_goods_at
   if trade.consign_time
     json.consign_time trade.consign_time.strftime("%m-%d %H:%M")
   else

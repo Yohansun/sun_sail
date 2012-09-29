@@ -27,6 +27,9 @@ class Trade
   field :seller_confirm_deliver_at, type: DateTime        # 确认发货
   field :seller_confirm_invoice_at, type: DateTime        # 确认开票
 
+  field :confirm_color_at, type: DateTime                 #确认调色
+  field :confirm_check_goods_at, type: DateTime           #确认验证
+
   # 拆单相关
   field :splitted, type: Boolean, default: false
   field :splitted_tid, type: String

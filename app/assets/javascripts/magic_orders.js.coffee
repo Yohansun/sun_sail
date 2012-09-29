@@ -11,12 +11,12 @@ window.MagicOrders =
       #roles
       'cs_read':                 ['detail'],
       'cs':                      ['detail', 'seller', 'cs_memo', 'color', 'invoice', 'trade_splite', 'trade_unsplite', 'mark_unusual_state', 'reowner', 'refund', 'check_goods'],
-      'seller':                  ['detail', 'deliver', 'seller_confirm_invoice', 'mark_unusual_state', 'logistic_split', 'print_logistic_bill', 'print_deilver_bill', 'confirm_refund','barcode'],
+      'seller':                  ['detail', 'deliver', 'seller_confirm_invoice', 'mark_unusual_state', 'logistic_split', 'print_logistic_bill', 'print_deilver_bill', 'confirm_refund','barcode','confirm_color','confirm_check_goods'],
       'interface':               ['detail', 'seller_confirm_deliver'],
       'admin':                   ['*'],
-      
+
       #trade_mode
-      'trades':                  ['deliver', 'detail', 'seller', 'cs_memo', 'color', 'invoice', 'trade_splite', 'trade_unsplite', 'mark_unusual_state', 'reowner', 'refund', 'check_goods', 'deliver', 'seller_confirm_deliver', 'seller_confirm_invoice', 'barcode', 'check_goods', 'logistic_split', 'print_logistic_bill', 'print_deilver_bill', 'confirm_refund', 'operation_log'],
+      'trades':                  ['deliver', 'detail', 'seller', 'cs_memo', 'color', 'invoice', 'trade_splite', 'trade_unsplite', 'mark_unusual_state', 'reowner', 'refund', 'check_goods', 'deliver', 'seller_confirm_deliver', 'seller_confirm_invoice', 'barcode', 'check_goods', 'logistic_split', 'print_logistic_bill', 'print_deilver_bill', 'confirm_refund', 'operation_log','confirm_color','confirm_check_goods'],
       'deliver':                 ['detail'],
       'logistics':               ['detail'],
       'check':                   ['detail'],
@@ -82,7 +82,7 @@ window.MagicOrders =
       'invoice':                 '发票模式',
       'unusual':                 '异常模式'
     }
-    
+
     # 订单模式初始化为'trades'
     @trade_mode = 'trades'
 
@@ -96,7 +96,7 @@ window.MagicOrders =
       'return':                  ['tid','status','deliver_bill_id','status_history','order_goods','receiver_name','receiver_mobile_phone','receiver_address','color_info','invoice_info','seller','cs_memo','operator'],
       'refund':                  ['tid','status','deliver_bill_id','status_history','order_goods','receiver_name','receiver_mobile_phone','receiver_address','color_info','invoice_info','seller','cs_memo','operator'],
       'invoice':                 ['tid','status','deliver_bill_id','status_history','trade_source','order_goods','invoice_type','invoice_name','invoice_value','invoice_date','seller','cs_memo','operator'],
-      'unusual':                 ['trade_source','tid','status','status_history','receiver_id','receiver_name','receiver_mobile_phone','receiver_address','buyer_message','seller_memo','cs_memo','color_info','invoice_info','deliver_bill','logistic_bill','seller','order_split','operator'],      
+      'unusual':                 ['trade_source','tid','status','status_history','receiver_id','receiver_name','receiver_mobile_phone','receiver_address','buyer_message','seller_memo','cs_memo','color_info','invoice_info','deliver_bill','logistic_bill','seller','order_split','operator'],
     }
 
     new MagicOrders.Routers.Areas()
