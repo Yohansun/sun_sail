@@ -36,7 +36,7 @@
     <span class="label label-success">确认开票 <%= @trade.get('seller_confirm_invoice_at') %></span>
   <% end %>
 </td>
-<td data-col='receiver_id'><!--客户ID--></td>   <!--Newly Add-->
+<td data-col='receiver_id'><%= @trade.get('buyer_nick') %></td>
 <td data-col='receiver_name'><%= @trade.get('receiver_name') %></td>
 <td data-col='receiver_mobile_phone'><%= @trade.get('receiver_mobile_phone') %></td>
 <td data-col='receiver_address'>
@@ -79,13 +79,13 @@
   <a href="javascript:void(0)" rel="popover" data-content="<%= @trade.get 'invoice_type' %><br/><%= @trade.get 'invoice_name' %><br/><%= @trade.get 'invoice_content' %>" data-original-title="<b>发票信息</b>"><i class="icon-comment"></i></a>
   <% end %>
 </td>
-<td data-col='deliver_bill' ><!--出货单--></td>              <!--Newly Add-->
+<!-- <td data-col='deliver_bill' ><!--出货单--</td> -->
 <td data-col='deliver_bill_id' ><!--出货单编号--></td>
 <td data-col='deliver_bill_status' ><!--出货单状态--></td>
 <td data-col='order_goods' >
     <a href="javascript:void(0)" rel="popover" data-content="<% for order in @trade.get('orders'): %> <%= order.title %> <%= order.num %>件<br/> <% end %>" data-original-title="<b>商品详细</b>"><i class="icon-comment"></i></a>
 </td>
-<td data-col='logistic_bill'><!--物流单--></td>
+<!-- <td data-col='logistic_bill'><!--物流单--</td> -->
 <td data-col='logistic_waybill' ><!--物流单号--></td>
 <td data-col='logistic_company' ><!--物流公司--></td>
 <td data-col='invoice_type' ><%= @trade.get 'invoice_type' %></td>
@@ -96,8 +96,8 @@
   <% end %>
 </td>
 <td data-col='invoice_date' style="min-width:70px"><%= @trade.get 'invoice_date' %></td>
-<td data-col='order_split' ><!--拆分--></td>
-<td data-col='operator' ><!--操作人--></td>
+<!-- <td data-col='order_split' ><!--拆分--</td> -->
+<!-- <td data-col='operator' ><!--操作人--</td> -->
 <td data-col='seller' nowrap>
   <% if @trade.get 'seller_id' : %>
     <%= @trade.get('seller_name') %>
@@ -141,8 +141,9 @@
       <% if @trade.get('invoice_name') : %>
         <li><a data-toggle="modal" href="#" data-type="seller_confirm_invoice">确认开票</a></li>
       <% end %>
+      <% if @trade.get('delivered_at') : %>
         <li><a data-toggle="modal" href="#" data-type="barcode">设置商品条形码</a></li>
-          
+      <% end %>
       <li class= "divider"></li>
 
       <!-- <li><a data-toggle="modal" href="#" data-type="check_goods">验货</a></li> -->
