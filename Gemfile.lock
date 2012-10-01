@@ -372,6 +372,7 @@ DEPENDENCIES
   collections
   cucumber-rails
   database_cleaner
+  crack
   debugger
   devise
   devise-encryptable

@@ -5,6 +5,7 @@ gem 'rails', '>= 3.2.3'
 gem 'mysql2'
 
 gem 'json'
+gem 'crack'
 gem 'rabl'
 gem 'jbuilder'
 
