@@ -79,6 +79,9 @@ gem 'omniauth-oauth2'
 gem 'rest-client'
 gem 'httparty'
 
+#test mail
+gem "mails_viewer"
+
 group :production do
   gem "exception_notification", "~> 2.6.1"
 end

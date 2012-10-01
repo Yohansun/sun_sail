@@ -74,6 +74,7 @@ MagicOrders::Application.routes.draw do
   end
 
   mount Sidekiq::Web => '/sidekiq'
+  mount MailsViewer::Engine => '/delivered_mails'
 
   root to: "home#dashboard"
   match "*path", to: "home#index"
