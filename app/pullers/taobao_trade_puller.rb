@@ -4,27 +4,20 @@ require 'oauth2'
 
 class TaobaoTradePuller
   class << self
-    def create2(start_time = nil, end_time = nil, trade_source_id = nil)
+    def create2(start_time = nil, end_time = nil, source_name = nil)
       total_pages = nil
       page_no = 0
 
       end_time ||= Time.now
       start_time ||= end_time - 1.days
 
-      token = TaobaoAppToken.first
-      token.check_or_refresh!
-      base_url = 'https://eco.taobao.com/router/rest?'
-      params = {  
-                  access_token: token.access_token, method: 'taobao.trades.sold.get',
-                  fields: 'has_buyer_message, total_fee, created, tid, status, post_fee, receiver_name, pay_time, receiver_state, receiver_city, receiver_district, receiver_address, receiver_zip, receiver_mobile, receiver_phone, buyer_nick, tile, type, point_fee, is_lgtype, is_brand_sale, is_force_wlb, modified, alipay_id, alipay_no, alipay_url, shipping_type, buyer_obtain_point_fee, cod_fee, cod_status, commission_fee, seller_nick, consign_time, received_payment, payment, timeout_action_time, has_buyer_message, real_point_fee, orders',
-                  start_created: start_time.strftime("%Y-%m-%d %H:%M:%S"), end_created: end_time.strftime("%Y-%m-%d %H:%M:%S"),
-                  page_no: page_no, page_size: 50, v: '2.0'      
-               
-                }.to_params 
-      begin   
-        data = HTTParty.post(base_url + params).parsed_response.to_json #Hash2JSON  
-        response = Crack::JSON.parse(data) 
-        p response
+      begin      
+        response = TaobaoQuery.get({
+          method: 'taobao.trades.sold.get',
+          fields: 'has_buyer_message, total_fee, created, tid, status, post_fee, receiver_name, pay_time, receiver_state, receiver_city, receiver_district, receiver_address, receiver_zip, receiver_mobile, receiver_phone, buyer_nick, tile, type, point_fee, is_lgtype, is_brand_sale, is_force_wlb, modified, alipay_id, alipay_no, alipay_url, shipping_type, buyer_obtain_point_fee, cod_fee, cod_status, commission_fee, seller_nick, consign_time, received_payment, payment, timeout_action_time, has_buyer_message, real_point_fee, orders',
+          start_created: start_time.strftime("%Y-%m-%d %H:%M:%S"), end_created: end_time.strftime("%Y-%m-%d %H:%M:%S"),
+          page_no: page_no, page_size: 50}, source_name 
+        )
         total_results = response['trades_sold_get_response']['total_results']
         total_results = total_results.to_i
         total_pages ||= total_results / 50
@@ -52,6 +45,8 @@ class TaobaoTradePuller
           end
 
           trade.save
+          
+          p "create trade #{trade['tid']}"
 
           $redis.sadd('TaobaoTradeTids',trade['tid'])
 
@@ -70,29 +65,20 @@ class TaobaoTradePuller
       end until page_no > total_pages
     end
     
-    def update2(start_time = nil, end_time = nil, trade_source_id = nil)
+    def update2(start_time = nil, end_time = nil, source_name = nil)
       total_pages = nil
       page_no = 0
 
       end_time ||= Time.now
       start_time ||= end_time - 1.days
-
-      TaobaoFu.select_source(trade_source_id)
-      
-      token = TaobaoAppToken.first
-      token.check_or_refresh!
-      
-      base_url = 'https://eco.taobao.com/router/rest?'
-      params = {  
-                  access_token: token.access_token, method: 'taobao.trades.sold.get',
-                  fields: 'total_fee, created, tid, status, post_fee, receiver_name, pay_time, receiver_state, receiver_city, receiver_district, receiver_address, receiver_zip, receiver_mobile, receiver_phone, buyer_nick, tile, type, point_fee, is_lgtype, is_brand_sale, is_force_wlb, modified, alipay_id, alipay_no, alipay_url, shipping_type, buyer_obtain_point_fee, cod_fee, cod_status, commission_fee, seller_nick, consign_time, received_payment, payment, timeout_action_time, has_buyer_message, real_point_fee, orders',
-                  start_created: start_time.strftime("%Y-%m-%d %H:%M:%S"), end_created: end_time.strftime("%Y-%m-%d %H:%M:%S"),
-                  page_no: page_no, page_size: 50, v: '2.0'      
-               
-                }.to_params 
-      begin          
-        data = HTTParty.post(base_url + params).parsed_response.to_json #Hash2JSON  
-        response = Crack::JSON.parse(data) 
+     
+      begin 
+        response = TaobaoQuery.get({
+          method: 'taobao.trades.sold.get',
+          fields: 'total_fee, created, tid, status, post_fee, receiver_name, pay_time, receiver_state, receiver_city, receiver_district, receiver_address, receiver_zip, receiver_mobile, receiver_phone, buyer_nick, tile, type, point_fee, is_lgtype, is_brand_sale, is_force_wlb, modified, alipay_id, alipay_no, alipay_url, shipping_type, buyer_obtain_point_fee, cod_fee, cod_status, commission_fee, seller_nick, consign_time, received_payment, payment, timeout_action_time, has_buyer_message, real_point_fee, orders',
+          start_created: start_time.strftime("%Y-%m-%d %H:%M:%S"), end_created: end_time.strftime("%Y-%m-%d %H:%M:%S"),
+          page_no: page_no, page_size: 50}, source_name  
+        )         
         total_results = response['trades_sold_get_response']['total_results']
         total_results = total_results.to_i
         total_pages ||= total_results / 50
@@ -107,7 +93,6 @@ class TaobaoTradePuller
           TaobaoTrade.where(tid: trade['tid']).each do |local_trade|
             next if unupdatable?(local_trade, trade['status'])
             orders = trade.delete('orders')
-
             trade['trade_source_id'] = trade_source_id
             local_trade.update_attributes(trade)
 
@@ -117,6 +102,7 @@ class TaobaoTradePuller
               local_trade.auto_dispatch!
             end
           end 
+          p "update trade #{trade['tid']}"
         end
 
         page_no += 1
