@@ -16,6 +16,15 @@ class Area < ActiveRecord::Base
   def set_pinyin
     self.pinyin = Hz2py.do(name).split(" ").map { |name| name[0, 1] }.join
   end
+  
+  #查询卖家地址库
+  def self.seller_adrress
+    response = TaobaoQuery.get({
+      method: "taobao.logistics.address.search",
+      fields: 'addresses'},nil
+    )
+    p response
+  end  
 
   def self.sync_from_taobao
     Area.skip_callback :save
