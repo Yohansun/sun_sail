@@ -3,17 +3,12 @@ class TradeTaobaoMemoFetcher
 	include Sidekiq::Worker
   sidekiq_options :queue => :taobao_memo_fetcher
   
-  def perform2(tid)
+  def perform(tid)
     trade = TaobaoTrade.where(tid: tid).first
-    source = trade.trade_source
-    source_name = nil
-    if source 
-     source_name = source.name
-    end
-    response = TaobaoQuery.get({}
+    response = TaobaoQuery.get({
       method: 'taobao.trade.get',
       fields: 'buyer_message',
-      tid: tid}, source_name
+      tid: tid}, trade.try(:trade_source_id)
     )
 
     return unless response && response["trade_get_response"]
@@ -21,19 +16,5 @@ class TradeTaobaoMemoFetcher
 
     trade.update_attributes(buyer_message: remote_trade['buyer_message'])
   end
-
-  def perform(tid, trade_source_id)
-    TaobaoFu.select_source(trade_source_id)
-
-    response = TaobaoFu.get(
-    	method: 'taobao.trade.get',
-      fields: 'buyer_message',
-      tid: tid
-    )
-
-    return unless response && response["trade_get_response"]
-    remote_trade = response["trade_get_response"]["trade"]
-
-    TaobaoTrade.where(tid: tid).update_all(buyer_message: remote_trade['buyer_message'])
-  end
+  
 end

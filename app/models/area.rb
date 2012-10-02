@@ -19,8 +19,10 @@ class Area < ActiveRecord::Base
 
   def self.sync_from_taobao
     Area.skip_callback :save
-    response = TaobaoFu.get(method: "taobao.areas.get",
-      fields: 'id, type, name, parent_id, zip')
+    response = TaobaoQuery.get({
+      method: "taobao.areas.get",
+      fields: 'id, type, name, parent_id, zip'},nil
+    )
 
     areas = response['areas_get_response']['areas']['area']
     areas.each do |taobao_area|

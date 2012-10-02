@@ -1,11 +1,15 @@
 # encoding : utf-8 -*- 
+require 'crack/json'
+require 'oauth2'
 module TaobaoQuery	
-	require 'crack/json'
-	require 'oauth2'
-
-  def self.get(options = {}, source_name=nil)
+  def self.get(options = {}, trade_source_id=nil)
   	#source_name用来选择订单源，代替之前的Taobaofu.select_source 
-  	token = TaobaoAppToken.find_by_name(source_name) || TaobaoAppToken.find_by_name('天猫')
+    source = TradeSource.find_by_id(trade_source_id)
+    if source && source.taobao_app_token
+      token = source.taobao_app_token
+    else
+  	  token = TaobaoAppToken.find_by_name('天猫')
+    end   
   	token.check_or_refresh!
   	base_url = 'https://eco.taobao.com/router/rest?'
   	

@@ -1,6 +1,8 @@
 # encoding : utf-8 -*- 
 class TaobaoAppToken < ActiveRecord::Base
 	
+	belongs_to :trade_source
+	
 	attr_accessible :access_token, :refresh_token, :last_refresh_at
 	
 	def check_or_refresh!
