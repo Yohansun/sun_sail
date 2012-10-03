@@ -18,18 +18,8 @@
     </table>
 
     <label class="control-label">发票类型：
-      <% if @trade.get('invoice_type') == "普通发票": %>
-      <input type="radio" name="invoice_type" value="普通发票" checked="checked" >普通发票
-      <input type="radio" name="invoice_type" value="增值税发票" >增值税发票
-      <% end %>
-      <% if @trade.get('invoice_type') == "增值税发票": %>
-      <input type="radio" name="invoice_type" value="普通发票" >普通发票
-      <input type="radio" name="invoice_type" value="增值税发票" checked="checked" >增值税发票
-      <% end %>
-      <% if @trade.get('invoice_type') != "普通发票" && @trade.get('invoice_type') != "增值税发票": %>
-      <input type="radio" name="invoice_type" value="普通发票" >普通发票
-      <input type="radio" name="invoice_type" value="增值税发票" >增值税发票
-      <% end %>
+      <input type="radio" name="invoice_type" value="普通发票" <% if @trade.get('invoice_type') == "普通发票": %> checked="checked" <% end %>>普通发票
+      <input type="radio" name="invoice_type" value="增值税发票" <% if @trade.get('invoice_type') == "增值税发票": %> checked="checked" <% end %>>增值税发票
     </label>
     <label class="control-label">发票抬头：
       <div class="controls">

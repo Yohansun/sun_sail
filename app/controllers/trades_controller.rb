@@ -283,6 +283,16 @@ class TradesController < ApplicationController
       @trade.seller_confirm_invoice_at = Time.now
     end
 
+    unless params[:reason].blank?
+      @trade.unusual_states.build(reason: params[:reason], created_at: Time.now, reporter: current_user.name)
+    end
+
+    unless params[:state_id].blank?
+      state = @trade.unusual_states.find params[:state_id]
+      state.repair_man = current_user.name
+      state.repaired_at = Time.now
+    end
+
     unless params[:orders].blank?
       params[:orders].each do |item|
         order = @trade.orders.find item[:id]

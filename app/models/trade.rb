@@ -60,6 +60,8 @@ class Trade
   index :has_color_info
   index :has_cs_memo
 
+  embeds_many :unusual_states
+
   attr_accessor :matched_seller
 
   validate :color_num_do_not_exist, :on => :update
