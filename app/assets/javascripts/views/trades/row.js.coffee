@@ -15,6 +15,7 @@ class MagicOrders.Views.TradesRow extends Backbone.View
     'click [data-type=seller_confirm_deliver]':'show_seller_confirm_deliver'
     'click [data-type=seller_confirm_invoice]':'show_seller_confirm_invoice'
     'click [data-type=barcode]':'show_barcode'
+    'click [data-type=mark_unusual_state]':'show_mark_unusual_state'
 
   initialize: ->
 
@@ -76,3 +77,7 @@ class MagicOrders.Views.TradesRow extends Backbone.View
   show_barcode: (e) ->
     e.preventDefault()
     Backbone.history.navigate('trades/' + @model.get("id") + '/barcode', true)
+
+  show_mark_unusual_state: (e) ->
+    e.preventDefault()
+    Backbone.history.navigate('trades/' + @model.get("id") + '/mark_unusual_state', true)

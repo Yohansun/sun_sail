@@ -1,0 +1,59 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal">×</button>
+  <h3>标注异常</h3>
+</div>
+<div class="modal-body">
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>异常原因</th>
+        <th>提交时间</th>
+        <th>提交人</th>
+        <th>处理人</th>
+        <th>处理时间</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for state in @trade.get('unusual_states'): %>
+      <tr>
+        <td><%= state.reason %></td>
+        <td><%= state.created_at %></td>
+        <td><%= state.reporter %></td>
+        <td><%= state.repair_man %></td>
+        <td><%= state.repaired_at %></td>
+        <td><% unless state.repaired_at : %><a class="small manage" data-id='<%= state.id %>'>处理</a><% end %></td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <fieldset>
+    <div class="control-group">
+      <label class="control-label">订单号：<%= @trade.get("tid") %></label>
+    </div>
+
+    <div class="control-group">
+      <div class="controls">
+        <label class="radio">
+          <input type="radio" value="买家延迟发货" name="reason">买家延迟发货
+        </label>
+        <label class="radio">
+          <input type="radio" value="经销商缺货" name="reason">经销商缺货
+        </label>
+        <label class="radio">
+          <input type="radio" value="长时间未发货" name="reason">长时间未发货
+        </label>
+        <label class="radio">
+          <input type="radio" value= "其他" name="reason">
+          <input type="text" placeholder="其他..." class="input-large" id="other_state">
+        </label>
+      </div>
+    </div>
+  </fieldset>  
+</div>
+<div class="modal-footer">
+  <a class="btn" data-dismiss="modal">取消</a>
+  <a class="btn btn-primary save">添加</a>
+</div>
+  
+   

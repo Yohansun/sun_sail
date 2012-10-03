@@ -71,3 +71,13 @@ json.orders OrderDecorator.decorate(@trade.orders) do |json, order|
   json.color_name order.color_name
   json.barcode order.barcode
 end
+
+
+json.unusual_states @trade.unusual_states do |json, state|
+  json.id state._id
+  json.reason state.reason
+  json.created_at state.created_at.strftime("%m-%d %H:%M:%S") if state.created_at
+  json.reporter state.reporter
+  json.repair_man state.repair_man
+  json.repaired_at state.repaired_at.strftime("%m-%d %H:%M:%S") if state.repaired_at
+end
