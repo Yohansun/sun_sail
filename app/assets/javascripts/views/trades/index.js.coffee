@@ -11,7 +11,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     'click .export_orders': 'exportOrders'
     'click #cols_filter input,label': 'keepColsFilterDropdownOpen'
     'change #cols_filter input[type=checkbox]': 'filterTradeColumns'
-    
+
     #navigation bar function
     'click [data-trade-status]': 'selectSameStatusTrade'
     'click [data-invoice-status]': 'selectSameStatusInvoice'
@@ -20,7 +20,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     'click [data-color-status]': 'selectSameStatusColor'
     'click [data-unusual-trade]': 'selectUnusualTrade'
     'click [data-confirm_color-status]': 'selectSameStatusConfirmColor'
-    
+
     #visual effects
     'click #advanced_btn': 'advancedSearch'
     'click .dropdown': 'dropdownTurnGray'
@@ -189,7 +189,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     $("#cols_filter input[type=checkbox]").attr("checked", "checked")
     for col in MagicOrders.trade_cols_hidden
       $("#cols_filter input[value=#{col}]").attr("checked", false)
-    
+
     # reset operation
     for pop in MagicOrders.trade_pops[MagicOrders.trade_mode]
       unless MagicOrders.role_key == 'admin'
@@ -331,19 +331,35 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
      else
        $.unblockUI()
 
-    
   selectSameStatusColor: (e) =>
     e.preventDefault()
     $('.dropdown.open .dropdown-toggle').dropdown('toggle');
     @search_color_status = $(e.target).data('color-status')
     console.log(@search_color_status)
     $(@el).find(".trade_nav").text($(@el).find("[data-color-status=#{@search_color_status}]").html())
-    
+
     @offset = 0
     blocktheui()
     $("#trade_rows").html('')
 
     @collection.fetch data: {search_color_status: @search_color_status}, success: (collection) =>
+     if collection.length > 0
+       @offset = @offset + 20
+       @renderUpdate()
+       $('#trades_bottom').waypoint @fetchMoreTrades, {offset: '100%'}
+     else
+       $.unblockUI()
+
+  selectSameStatusConfirmColor: (e) =>
+    e.preventDefault()
+    $('.dropdown.open .dropdown-toggle').dropdown('toggle');
+    @search_color_status = $(e.target).data('confirm_color-status')
+    $(@el).find(".trade_nav").text($(@el).find("[data-confirm_color--status=#{@search_color_status}]").html())
+    @offset = 0
+    blocktheui()
+    $("#trade_rows").html('')
+
+    @collection.fetch data: {search_confirm_color_status: @search_color_status}, success: (collection) =>
      if collection.length > 0
        @offset = @offset + 20
        @renderUpdate()
