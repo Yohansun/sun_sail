@@ -351,29 +351,16 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
      else
        $.unblockUI()
 
-<<<<<<< HEAD
   selectUnusualTrade: (e) =>
     e.preventDefault()
     $('.dropdown.open .dropdown-toggle').dropdown('toggle');
     @search_unusual_trade = $(e.target).data('unusual-trade')
     $(@el).find(".trade_nav").text($(@el).find("[data-unusual-trade=#{@search_unusual_trade}]").html())
-=======
-  selectSameStatusConfirmColor: (e) =>
-    e.preventDefault()
-    $('.dropdown.open .dropdown-toggle').dropdown('toggle');
-    @search_color_status = $(e.target).data('confirm_color-status')
-    $(@el).find(".trade_nav").text($(@el).find("[data-confirm_color--status=#{@search_color_status}]").html())
-
->>>>>>> 物流商管理
     @offset = 0
     blocktheui()
     $("#trade_rows").html('')
 
-<<<<<<< HEAD
     @collection.fetch data: {search_unusual_trade: @search_unusual_trade}, success: (collection) =>
-=======
-    @collection.fetch data: {search_confirm_color_status: @search_color_status}, success: (collection) =>
->>>>>>> 物流商管理
      if collection.length > 0
        @offset = @offset + 20
        @renderUpdate()
