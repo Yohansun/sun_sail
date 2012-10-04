@@ -32,8 +32,11 @@ group :development do
   gem "thin"
 end
 
-group :development, :test do
+group :test do
   gem 'rspec-rails'
+  gem 'cucumber-rails'
+  gem 'database_cleaner'
+  gem 'factory_girl_rails'
 end
 
 gem 'mongoid', '~> 2.4.11'
