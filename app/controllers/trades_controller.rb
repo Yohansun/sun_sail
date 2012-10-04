@@ -41,7 +41,7 @@ class TradesController < ApplicationController
       @trades = @trades.where(_type: trade_type)
     end
 
-    
+
     ###筛选###
 
     ## 导航栏筛选
@@ -159,7 +159,7 @@ class TradesController < ApplicationController
     if params[:search_all] && params[:search_all][:search_seller_memo] == "true"
       seller_memo_hash = {"$or" => [{"$and" => [{:seller_memo.exists => true}, {:seller_memo.ne => ''}]}, {:delivery_type.exists => true}, {:invoice_info.exists => true}]}
     end
-    
+
     # 客户有留言
     if params[:search_all] && params[:search_all][:search_buyer_message] == "true"
       buyer_message_hash = {"$and" => [{:buyer_message.exists => true}, {:buyer_message.ne => ''}]}
@@ -184,7 +184,7 @@ class TradesController < ApplicationController
 
     offset = params[:offset] || 0
     limit = params[:limit] || 20
- 
+
     @trades = TradeDecorator.decorate(@trades.limit(limit).offset(offset).order_by("created", "DESC"))
 
     if @trades.count > 0
@@ -293,6 +293,14 @@ class TradesController < ApplicationController
       state.repaired_at = Time.now
     end
 
+    if params[:confirm_color_at] == true
+      @trade.confirm_color_at = Time.now
+    end
+
+    if params[:confirm_check_goods_at] == true
+      @trade.confirm_check_goods_at = Time.now
+    end
+
     unless params[:orders].blank?
       params[:orders].each do |item|
         order = @trade.orders.find item[:id]
@@ -335,7 +343,7 @@ class TradesController < ApplicationController
   def new
     @trade = Trade.new
   end
-  
+
   def create
     @trade = TaobaoTrade.new(params[:trade])
     @trade.taobao_orders.build(params[:orders])

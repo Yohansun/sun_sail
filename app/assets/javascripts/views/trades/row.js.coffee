@@ -16,6 +16,8 @@ class MagicOrders.Views.TradesRow extends Backbone.View
     'click [data-type=seller_confirm_invoice]':'show_seller_confirm_invoice'
     'click [data-type=barcode]':'show_barcode'
     'click [data-type=mark_unusual_state]':'show_mark_unusual_state'
+    'click [data-type=confirm_color]':'show_confirm_color'
+    'click [data-type=confirm_check_goods]':'show_confirm_check_goods'
 
   initialize: ->
 
@@ -35,7 +37,7 @@ class MagicOrders.Views.TradesRow extends Backbone.View
       $(@el).find("td[data-col=#{col}]").hide()
     for col in _.difference(_.keys(MagicOrders.trade_cols), MagicOrders.trade_cols_hidden)
       $(@el).find("td[data-col=#{col}]").show()
-      
+
     this
 
   show_detail: (e) ->
@@ -81,3 +83,11 @@ class MagicOrders.Views.TradesRow extends Backbone.View
   show_mark_unusual_state: (e) ->
     e.preventDefault()
     Backbone.history.navigate('trades/' + @model.get("id") + '/mark_unusual_state', true)
+
+  show_confirm_color: (e) ->
+    e.preventDefault()
+    Backbone.history.navigate('trades/' + @model.get("id") + '/confirm_color', true)
+
+  show_confirm_check_goods: (e) ->
+    e.preventDefault()
+    Backbone.history.navigate('trades/' + @model.get("id") + '/confirm_check_goods', true)

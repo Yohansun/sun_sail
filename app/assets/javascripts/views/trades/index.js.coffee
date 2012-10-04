@@ -19,6 +19,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     'click [data-logistic-status]': 'selectSameStatusLogistic'
     'click [data-color-status]': 'selectSameStatusColor'
     'click [data-unusual-trade]': 'selectUnusualTrade'
+    'click [data-confirm_color-status]': 'selectSameStatusConfirmColor'
     
     #visual effects
     'click #advanced_btn': 'advancedSearch'

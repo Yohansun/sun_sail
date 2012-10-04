@@ -37,6 +37,16 @@ MagicOrders::Application.routes.draw do
     get :change_status
   end
 
+  resources :logistics do
+    member do
+      get :delete
+    end
+    collection do 
+      get :logistic_area
+      get :remove_logistic_area
+      get :create_logistic_area
+    end 
+  end
   resources :users
   resources :areas
   resources :trade_sources

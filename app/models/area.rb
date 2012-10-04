@@ -7,7 +7,9 @@ class Area < ActiveRecord::Base
 
   has_many :areas, foreign_key: :parent_id
   has_many :sellers_areas
+  has_many :logistic_areas
   has_many :sellers, through: :sellers_areas
+  has_many :logistics, through: :logistic_areas
 
   before_save :set_pinyin
 
