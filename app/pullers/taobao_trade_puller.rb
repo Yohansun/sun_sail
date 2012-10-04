@@ -1,7 +1,4 @@
 # encoding : utf-8 -*- 
-require 'crack/json'
-require 'oauth2'
-
 class TaobaoTradePuller
   class << self
     def create(start_time = nil, end_time = nil, trade_source_id = nil)
