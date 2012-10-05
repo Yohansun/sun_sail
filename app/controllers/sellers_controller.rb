@@ -150,6 +150,9 @@ class SellersController < ApplicationController
   def change_stock_type
     @seller = Seller.find params[:id]
     @seller.update_attribute(:has_stock, !@seller.has_stock)
+    if @seller.has_stock && !@seller.stock_opened_at
+      @seller.update_attribute(:stock_opened_at, Time.now)
+    end  
     redirect_to seller_stocks_path(@seller)
   end
 

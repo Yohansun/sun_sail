@@ -17,7 +17,7 @@
           </select>
 
           <div class="input-append">
-            <input type="text" name='stock_name' class="w_specify"><button type="submit" class="btn">过滤</button>
+            <input type="text" name='seller_name' class="w_specify"><button type="submit" class="btn">过滤</button>
           </div>
         </div>
       </fieldset>
@@ -37,15 +37,15 @@
         </tr>
       </thead>
       <tbody>
-      	<% @stocks.each do |stock| %>
+      	<% @enbaled_stocks_sellers.each do |seller| %>
         <tr>
-          <td><%= stock.name %></td>
-          <td><%= stock.seller.fullname %></td>
-          <td><%= stock.product_count%></td>
-          <td>5</td>
-          <td><%= stock.seller.fullname %></td>
-          <td><%= stock.seller.mobile %></td>
-          <td><%= stock.created_at.strftime("%y-%m-%d %H:%M:%S") %></td>
+          <td><%= seller.name %></td>
+          <td><%= seller.fullname %></td>
+          <td><%= seller.products_ids.count %></td>
+          <td><%= seller.categories_ids.count %></td>
+          <td><%= seller.fullname %></td>
+          <td><%= seller.mobile %></td>
+          <td><%= seller.stock_opened_at.try(:strftime, "%y-%m-%d %H:%M:%S") %></td>
           <td>
             <div class="btn-group">
               <button data-toggle="dropdown" class="btn btn-info dropdown-toggle min_w">
@@ -54,7 +54,7 @@
               </button>
               <ul class="dropdown-menu trade_pops" style="left:-115px;">
                 <li>
-                  <%= link_to '查看', seller_stocks_path(stock.seller)%>
+                  <%= link_to '查看', seller_stocks_path(seller)%>
                   <%#= link_to '关闭', '', method: :delete, confirm: '确认删除?' %>
                 </li>
               </ul>
@@ -65,7 +65,7 @@
       </tbody>
     </table>
 
-    <%= paginate @stocks %>
+    <%= paginate @enbaled_stocks_sellers %>
   </div>
 </div>
 
