@@ -24,7 +24,7 @@ class StockHistoryController < ApplicationController
     else
       0
   	end
-
+    
     @product.activity += number
     @product.actual += number
 
@@ -33,6 +33,12 @@ class StockHistoryController < ApplicationController
 
   	if @product.save && @history.save
   		@flag = true
+    else
+      if @product.errors[:activity].first == '数量不能小于零'
+        @error_message = '当前库存商品不足，建议调整出库数量'
+      elsif @product.errors[:activity].first == '数量必须小于满仓值' 
+        @error_message = '库存数量必须小于满仓值，建议调整入库数量'
+      end  
   	end
   end
 
