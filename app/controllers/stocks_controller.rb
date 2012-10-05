@@ -30,11 +30,11 @@ class StocksController < ApplicationController
   end
 
   def home
-    @stocks = Stock
-    if params[:stock_name].present?
-      @stocks = @stocks.where(name: params[:stock_name])
+    @enbaled_stocks_sellers =  Seller.where(has_stock: true)
+    if params[:seller_name].present?
+      @enbaled_stocks_sellers = @enbaled_stocks_sellers.where(name: params[:seller_name])
     end
-    @stocks = @stocks.page params[:page]
+    @enbaled_stocks_sellers = @enbaled_stocks_sellers.page params[:page]
   end
 
   private

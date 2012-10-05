@@ -13,7 +13,7 @@
         <%= link_to 'Magic', root_path %>
         <span class="divider">/</span>
       </li>
-      <li class="active">xxx仓库</li>
+      <li class="active"><%= @seller.try(:name) %></li>
       <li style="position:absolute;right:15px;top:6px;">
         <%= link_to '新增商品', new_seller_stock_product_path, class: 'btn_alert' %>
       </li>

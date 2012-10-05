@@ -3,9 +3,9 @@
       <div class="subnav">
         <ul class="nav nav-pills">
           <li>
-            <%= link_to 'xxx仓库', seller_stocks_path(seller_id: params[:seller_id])%>
+            <%= link_to Seller.find_by_id(params[:seller_id]).try(:name), seller_stocks_path(seller_id: params[:seller_id])%>
           </li>
-          <li class="active"><a href="#">进销记录</a></li>
+        <!--   <li class="active"><a href="#">进销记录</a></li> -->
         </ul>
       </div>
     </header>
@@ -15,7 +15,7 @@
         <li><%= link_to Seller.find(params[:seller_id]).stock.name, seller_stocks_path(seller_id: params[:seller_id])%>
           <span class="divider">/</span>
         </li>
-        <li class="active">进销记录</li>
+        <!-- <li class="active">进销记录</li> -->
       </ul><!-- breadcrumb -->
 
       <form class="well form-horizontal reset_space" action="<%= seller_stock_product_stock_history_index_path(params[:seller_id], params[:stock_product_id])%>" method='get'>

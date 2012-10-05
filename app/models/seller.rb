@@ -34,4 +34,18 @@ class Seller < ActiveRecord::Base
   def interface_name
     self.parent.name if self.parent
   end
+  
+  def products_ids
+    @products_ids = self.stock_products.select("distinct stock_products.product_id").map(&:product_id)
+  end 
+  
+  def categories_ids
+    products_ids = self.products_ids
+    if products_ids.present?
+      products = Product.where("products.id in (#{products_ids.join(',')})")
+      @categories_ids = products.select("distinct category_id").map(&:category_id)
+    else
+      @categories_ids = []
+    end
+  end    
 end
