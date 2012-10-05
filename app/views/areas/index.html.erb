@@ -31,7 +31,11 @@
             <td><%= area.id %></td>
             <td><%= area.zip %></td>
             <td><%= area.name %></td>
-            <td><%= area.sellers.join(',')%></td>
+            <td>
+            <% for seller in area.sellers %>
+            <%= seller.name %>
+            <% end %>
+            </td>
             <!-- <td>状态</td> -->
             <td>
               <% if area.children_count > 0 %>
