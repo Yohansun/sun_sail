@@ -24,7 +24,7 @@ class MagicOrders.Views.TradesRow extends Backbone.View
   render: ->
     $(@el).attr("id", "trade_#{@model.get('id')}")
     $(@el).html(@template(trade: @model))
-    if @model.get("has_unusual_state") is true || @model.get("has_unusual_state") is undefined
+    if @model.get("has_unusual_state") is true
       $(@el).attr("class", "error")
     $(@el).find(".trade_pops li").hide()
     for pop in MagicOrders.trade_pops[MagicOrders.trade_mode]
