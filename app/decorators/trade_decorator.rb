@@ -295,6 +295,8 @@ class TradeDecorator < Draper::Base
         '交易成功'
       when 'TRADE_CLOSED'
         '交易已关闭'
+      when 'TRADE_NO_CREATE_PAY'
+        '未创建支付宝交易'
       else
         trade.status
     end
