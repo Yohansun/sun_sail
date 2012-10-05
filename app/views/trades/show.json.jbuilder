@@ -28,6 +28,8 @@ json.pay_time @trade.pay_time.strftime("%m-%d %H:%M") if @trade.pay_time
 json.cs_memo @trade.cs_memo
 
 json.has_color_info @trade.has_color_info
+json.has_cs_memo @trade.has_cs_memo
+json.has_unusual_state @trade.has_unusual_state
 
 json.logistic_code @trade.logistic_code
 json.logistic_company @trade.logistic_company
