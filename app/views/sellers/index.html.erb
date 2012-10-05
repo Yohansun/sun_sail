@@ -9,9 +9,15 @@
     <div class="subnav">
       <ul class="nav nav-pills">
         <li class="dropdown active">
-          <a>
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">
             经销商
+            <b class="caret"></b>
           </a>
+          <ul class="dropdown-menu">
+            <li><a href="/sellers">所有经销商</a></li>
+            <li><%= link_to "最新经销商", latest_sellers_path %></li>
+            <li><%= link_to "已关闭经销商", closed_sellers_path %></li>
+          </ul>
         </li>
         <!-- <li><a href="history.html">历史交易</a></li> -->
       </ul>

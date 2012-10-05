@@ -56,10 +56,20 @@
         <td>支付方式：</td>
         <td>支付宝</td>
       </tr>
-<!--       <tr>
+      <% if @trade.get("status_text") is "已付款，已发货" : %>
+      <tr>
         <td>配送：</td>
-        <td>圆通物流</td>
-      </tr> -->
+        <td>
+        <% if @trade.get 'seller_id' : %>
+        <%= @trade.get('seller_name') %>
+        <% end %>
+        </td>
+      </tr>
+      <tr>
+        <td>物流单号：</td>
+        <td><%= @trade.get('logistic_waybill') %></td>
+      </tr>
+      <% end %>
     </tbody>
   </table>
 <!--   <table class="table">

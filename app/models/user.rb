@@ -59,4 +59,8 @@ class User < ActiveRecord::Base
       remove_role role.to_sym
     end
   end
+
+  def present_roles
+    roles = self.roles.map {|r| r.role_s }.join(",")
+  end
 end

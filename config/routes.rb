@@ -27,6 +27,8 @@ MagicOrders::Application.routes.draw do
       get :seller_area
       get :create_seller_area
       get :remove_seller_area
+      get :latest
+      get :closed
     end
   end
 
@@ -55,8 +57,6 @@ MagicOrders::Application.routes.draw do
   get "trades/create", to: "trades#create"
 
   scope 'api' do
-    get '/areas', to: 'areas#index'
-
     resources :trades do
       member do
         get :seller_for_area

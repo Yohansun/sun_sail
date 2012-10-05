@@ -51,7 +51,7 @@ class TradesController < ApplicationController
       status = params[:search_trade_status]
       if status == 'undispatched'
         @trades = @trades.where(:dispatched_at.exists => false)
-        @trades = @trades.where(:status.ne => 'WAIT_BUYER_PAY')
+        @trades = @trades.where(:status.nin => ['WAIT_BUYER_PAY', 'TRADE_CLOSED','TRADE_CANCELED','TRADE_CLOSED_BY_TAOBAO'])
       elsif status == 'unpaid'
         @trades = @trades.where(:status.in => ["WAIT_BUYER_PAY"])
       elsif status == 'undelivered'
@@ -63,7 +63,7 @@ class TradesController < ApplicationController
       elsif status == 'closed'
         @trades = @trades.where(:status.in => ["TRADE_CLOSED","TRADE_CANCELED","TRADE_CLOSED_BY_TAOBAO"])
       elsif status == 'unusual_trade'
-        @trades = @trades.where(status: '')
+        @trades = @trades.where(:status.in => ["TRADE_NO_CREATE_PAY"])
       end
     end
 
