@@ -13,9 +13,10 @@
   </header>
   <div class="row-fluid">
     <ul class="breadcrumb" style="position:relative;">
-      <li><a href="#">Magic</a><span class="divider">/</span></li>
-      <li><% link_to '商品管理', products_path %></li>
-      <li class="active">编辑商品</li>
+      <li><a href="/">Magic</a><span class="divider">/</span></li>
+      <li><a href="/products">商品管理</a><span class="divider">/</span></li>
+      <li class="active"><%=  @product.try(:name) %><span class="divider">/</span></li>
+      <li class="active">编辑</li>
     </ul><!-- breadcrumb -->
 
     <%= render 'form' %>
