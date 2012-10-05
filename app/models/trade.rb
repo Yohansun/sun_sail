@@ -48,6 +48,7 @@ class Trade
 
   field :has_color_info, type: Boolean, default: false
   field :has_cs_memo, type: Boolean, default: false
+  field :has_unusual_state, type:Boolean, default: false
 
   # add indexes for speed
   index :tid
@@ -62,6 +63,7 @@ class Trade
   index :deleted_at
   index :has_color_info
   index :has_cs_memo
+  index :has_unusual_state
 
   embeds_many :unusual_states
 
@@ -71,6 +73,7 @@ class Trade
 
   before_update :set_has_color_info
   before_update :set_has_cs_memo
+  before_update :set_has_unusual_state
 
   def set_has_color_info
     self.orders.each do |order|
@@ -80,6 +83,17 @@ class Trade
       end
     end
     self.has_color_info = false
+    true
+  end
+
+  def set_has_unusual_state
+    self.unusual_states.each do |unusual_state|
+      if unusual_state.repaired_at.blank?
+        self.has_unusual_state = true
+        return
+      end
+    end
+    self.has_unusual_state = false
     true
   end
 

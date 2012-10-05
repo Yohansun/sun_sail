@@ -33,7 +33,7 @@
             <td><%= area.name %></td>
             <td>
             <% if area.children.count == 0 %>
-            <%= area.sellers.first.name %>
+            <%= area.sellers.first.try(:name) %>
             <% else %>
             <%= area.children.count %>个下级经销商
             <% end %>
@@ -47,7 +47,7 @@
                   <!-- <li><a class="ord_branch" data-toggle="modal" href="#dealer_edit">编辑</a></li>
                   <li><a data-toggle="modal" href="#dealer_close">关闭</a></li>
                   <li class="divider"></li> -->
-                  <li><%= link_to "查看下级", areas_path(:parent_id => area.id), :class=>"browse_children"%></li>
+                  <li><%= link_to "查看下级", areas_path(:parent_id => area.id) %></li>
                   <!-- <li><a href="#">历史交易</a></li> -->
                 </ul>
               </div>
