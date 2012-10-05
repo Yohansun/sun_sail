@@ -50,7 +50,7 @@
           <th>姓名</th>
           <th>邮件地址</th>
           <th>用户组</th>
-          <th>状态</th>
+          <!-- <th>状态</th> -->
           <th>操作</th>
         </tr>
       </thead>
@@ -61,8 +61,8 @@
           <td><%= user.username %></td>
           <td><%= user.name %></td>
           <td><%= user.email %></td>
-          <td>3</td>
-          <td>离线</td>
+          <td><%= user.present_roles %></td>
+          <!-- <td>离线</td> -->
 
           <td>
             <div class="btn-group">
