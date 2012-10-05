@@ -40,6 +40,16 @@ class SellersController < ApplicationController
     end
   end
 
+  def latest
+    @sellers = Seller.where("created_at >= ? ", Time.now - 7.days).page(params[:page])
+    render :index
+  end
+
+  def closed
+    @sellers = Seller.where(active: false).page(params[:page])
+    render :index
+  end
+
   def new
     @seller = Seller.new
   end

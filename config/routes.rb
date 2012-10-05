@@ -27,6 +27,8 @@ MagicOrders::Application.routes.draw do
       get :seller_area
       get :create_seller_area
       get :remove_seller_area
+      get :latest
+      get :closed
     end
   end
 
