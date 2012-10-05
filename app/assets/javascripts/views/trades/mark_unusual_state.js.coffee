@@ -50,4 +50,6 @@ class MagicOrders.Views.TradesMarkUnusualState extends Backbone.View
     
     @model.save {'state_id': id }, success: (model, response) =>
       $.unblockUI()
+      view = new MagicOrders.Views.TradesRow(model: model)
+      $("#trade_#{model.get('id')}").replaceWith(view.render().el)
       $('#trade_mark_unusual_state').modal('hide')
