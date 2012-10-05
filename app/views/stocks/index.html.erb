@@ -19,49 +19,53 @@
       </li>
     </ul><!-- breadcrumb -->
 
-    <form class="well form-horizontal reset_space">
+    <%= simple_form_for "product",  url: seller_stocks_path(@seller), html: { method: "get", class: "well form-horizontal reset_space"}, :wrapper => :search do |f| %>
       <fieldset>
         <div class="control-group form-inline">
           <div class="pull-left mar_r10">
             <label class="control-label width_auto">库存状态：</label>
             <label class="radio pad_t5">
-              <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1">正常
+              <input type="radio" name="stock_state" id="optionsRadios1" value="usual">正常
             </label>
             <label class="radio pad_t5">
-              <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">满仓
+              <input type="radio" name="stock_state" id="optionsRadios2" value="max">满仓
             </label>
             <label class="radio pad_t5">
-              <input type="radio" name="optionsRadios" id="optionsRadios3" value="option3">预警
+              <input type="radio" name="stock_state" id="optionsRadios3" value="safe">预警
             </label>
           </div>
           
           <div class="pull-left mar_r10">
             <select class="width_auto">
-              <option>商品编号</option>
-              <option>淘宝id</option>
-              <option>商品名称</option>
+              <option value="iid">商品编号</option>
+              <option value="taobao_id">淘宝ID</option>
+              <option value="name">商品名称</option>
             </select>
-            <input type="text" class="input-large" id="">
+            <input type="text" name="info" class="input-large">
           </div>
-
+      
+        
           <div class="pull-left mar_r10">
-            <label class="control-label width_auto">商品分类：</label>
-            <select class="width_auto">
-              <option>全部</option>
-              <option>网络特供商品</option>
-              <option>内墙乳胶漆</option>
-              <option>外墙乳胶漆</option>
-              <option>木器漆</option>
-              <option>DIY色彩系列</option>
-              <option>輔助材料</option>
-            </select>
+            <fieldset class="form-inline">
+              <label class="control-label width_auto">商品分类：</label>
+              <select class="width_auto" name="category">            
+                <!-- nippon only-->
+                <option value="">全部</option>
+                <option value="1">网络特供商品</option>
+                <option value="2">内墙乳胶漆</option>
+                <option value="3">外墙乳胶漆</option>
+                <option value="4">木器漆</option>
+                <option value="5">DIY色彩系列</option>
+                <option value="6">輔助材料</option>
+              </select> 
+            </fieldset>                            
           </div>
-
+               
           <button type="submit" class="btn btn-primary">筛选</button>
           <button class="btn">重置</button>
         </div>
       </fieldset>
-    </form>
+    <%- end %>
 
     <table class="table table-striped table-bordered table-condensed vertical_mid">
       <thead>
