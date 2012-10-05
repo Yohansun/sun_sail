@@ -323,11 +323,13 @@ class TradesController < ApplicationController
       end
     end
 
-    @trade.save!
-
-    @trade = TradeDecorator.decorate(@trade)
-    respond_with(@trade) do |format|
-      format.json { render :show }
+    if @trade.save
+      @trade = TradeDecorator.decorate(@trade)
+      respond_with(@trade) do |format|
+        format.json { render :show, status: :ok }
+      end
+    else
+      head :unprocessable_entity
     end
   end
 
