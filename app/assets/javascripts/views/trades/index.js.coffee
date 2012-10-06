@@ -111,7 +111,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     @search_value = $(".search_value").val()
     return if @search_option == '' or @search_value == ''
 
-    $("#trades_bottom").waypoint('destroy')
     blocktheui()
     $("#trade_rows").html('')
     @collection.fetch data: {search: {option: @search_option, value: @search_value}}, success: (collection) =>
@@ -148,8 +147,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
       if collection.length > 0
         @offset = @offset + 20
         @renderUpdate()
-        $("#trades_bottom").waypoint('destroy')
-        $('#trades_bottom').waypoint @fetchMoreTrades, {offset: '100%'}
       else
         $.unblockUI()
 
@@ -206,13 +203,11 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
   forceLoadMoreTrades: (event) =>
     event.preventDefault()
 
-    $("#trades_bottom").waypoint('destroy')
     blocktheui()
     @collection.fetch data: {trade_type: @trade_type, offset: @offset, search: {option: @search_option, value: @search_value}, search_all: {@search_start_date, @search_start_time, @search_end_date, @search_end_time, @status_option, @type_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_invoice, @search_color}, search_deliverbill_status: @search_deliverbill_status, logistic_status: @logistic_status, search_trade_status: @search_trade_status, search_invoice_status: @search_invoice_status, search_color_status: @search_color_status, search_unusual_trade: @search_unusual_trade}, success: (collection) =>
       if collection.length > 0
         @offset = @offset + 20
         @renderUpdate()
-        $('#trades_bottom').waypoint @fetchMoreTrades, {offset: '100%'}
       else
         $.unblockUI()
 
@@ -274,7 +269,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
      if collection.length > 0
        @offset = @offset + 20
        @renderUpdate()
-       $('#trades_bottom').waypoint @fetchMoreTrades, {offset: '100%'}
      else
        $.unblockUI()
 
@@ -291,7 +285,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
      if collection.length > 0
        @offset = @offset + 20
        @renderUpdate()
-       $('#trades_bottom').waypoint @fetchMoreTrades, {offset: '100%'}
      else
        $.unblockUI()
 
@@ -309,7 +302,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
      if collection.length > 0
        @offset = @offset + 20
        @renderUpdate()
-       $('#trades_bottom').waypoint @fetchMoreTrades, {offset: '100%'}
      else
        $.unblockUI()
 
@@ -327,7 +319,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
      if collection.length > 0
        @offset = @offset + 20
        @renderUpdate()
-       $('#trades_bottom').waypoint @fetchMoreTrades, {offset: '100%'}
      else
        $.unblockUI()
 
@@ -346,7 +337,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
      if collection.length > 0
        @offset = @offset + 20
        @renderUpdate()
-       $('#trades_bottom').waypoint @fetchMoreTrades, {offset: '100%'}
      else
        $.unblockUI()
 
@@ -363,7 +353,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
      if collection.length > 0
        @offset = @offset + 20
        @renderUpdate()
-       $('#trades_bottom').waypoint @fetchMoreTrades, {offset: '100%'}
      else
        $.unblockUI()
 
@@ -380,6 +369,5 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
      if collection.length > 0
        @offset = @offset + 20
        @renderUpdate()
-       $('#trades_bottom').waypoint @fetchMoreTrades, {offset: '100%'}
      else
        $.unblockUI()
