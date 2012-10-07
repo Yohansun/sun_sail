@@ -12,7 +12,7 @@
     <div class="row-fluid">
       <ul class="breadcrumb" style="position:relative;">
         <li><%= link_to 'Magic', root_path %><span class="divider">/</span></li>
-        <li><%= link_to Seller.find(params[:seller_id]).stock.name, seller_stocks_path(seller_id: params[:seller_id])%>
+        <li><%= link_to Seller.find(params[:seller_id]).name, seller_stocks_path(seller_id: params[:seller_id])%>
           <span class="divider">/</span>
         </li>
         <!-- <li class="active">进销记录</li> -->
