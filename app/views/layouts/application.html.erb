@@ -44,12 +44,11 @@
               <li class="trades" style="display:none"><a href="http://shop.nipponpaint.com.cn/admin/orders">官网订单</a></li>
               <li class="trades" style="display:none"><a href="http://shop.nipponpaint.com.cn/admin/taobao_orders">淘宝订单</a></li>
             <% end %>
-            <% if current_user.has_role?(:seller) || current_user.has_role?(:admin) %>
-              <li class="stocks" style="display:none"><a href="#">仓库管理</a></li>
+            <% if current_user.has_role?(:seller) && controller_name == 'stocks' %>
+              <li class="stocks"><a href="#">仓库管理</a></li>
             <% end %>
-            <% if current_user.has_role?(:admin) %>
-              <li class="sellers" style="display:none"><a href="#">经销商管理</a></li>
-              <li class="products" style="display:none"><a href="#">商品管理</a></li>
+            <% if current_user.has_role?(:admin)  && controller_name != 'home' %>
+              <li class="products"><a href="#"><%= top_nav_name %></a></li>
             <% end %>
           </ul>
 
