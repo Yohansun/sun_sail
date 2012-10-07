@@ -1,9 +1,8 @@
 # encoding : utf-8 -*-
 class TaobaoTradeSplitter
 	def self.splitable_maps
-    # 1720 => 立邦仓库经销商
-    {
-      "1720" => [
+      default_seller_id = TradeSetting.default_seller_id   
+      {default_seller_id => [
         'A1P14L20048C0W01',
         'I1P18L50060C4V03',
         'I1P18L50061C4V04',
@@ -23,9 +22,9 @@ class TaobaoTradeSplitter
   end
 
   def self.split_orders(trade)
-    # 如果存在特殊商品, 将特殊商品拆分给仓库经销商
+    default_seller_id = TradeSetting.default_seller_id   
     all_orders = trade.orders
-    cangku_outer_iids = self.splitable_maps['1720']
+    cangku_outer_iids = self.splitable_maps[default_seller_id]
     cangku_orders = all_orders.select {|order| cangku_outer_iids.include? order.outer_iid }
     other_orders = all_orders - cangku_orders
 
@@ -33,7 +32,7 @@ class TaobaoTradeSplitter
     splitted_orders = [
       {
         orders: cangku_orders,
-        default_seller: 1720,
+        default_seller: default_seller_id,
         post_fee: 0,
         total_fee: cangku_orders.inject(0) { |sum, el| sum + el.total_fee }
       },  

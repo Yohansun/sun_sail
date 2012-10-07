@@ -9,8 +9,8 @@ class Notifier < ActionMailer::Base
          :body => "淘宝app token: 
                    #{token.to_yaml} 
                    错误代码: 
-                   #{response['error_description']}",
-         :reply_to => 'E-Business@nipponpaint.com.cn')
+                   #{response['error_description']}"
+        )
   end  
 
   def dispatch(id, notify_kind)

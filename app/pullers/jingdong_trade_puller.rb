@@ -22,7 +22,7 @@ class JingdongTradePuller
         total_pages = total_results / 10 
         next if total_results < 1 
 
-        default_seller_id = 1720 #Seller.find_by_name("立邦仓库经销商").id
+        default_seller_id = TradeSetting.default_seller_id
 
         trades = response['order_search_response']['order_search']['order_info_list']
         next if trades.blank?
@@ -39,7 +39,7 @@ class JingdongTradePuller
 
             # auto dispatch
             if trade.order_remark.blank? && (trade.order_state == "WAIT_SELLER_DELIVERY" || trade.order_state == "WAIT_SELLER_STOCK_OUT")
-              trade.update_attributes(seller_id: 1720, dispatched_at: Time.now) #Seller.find_by_name("立邦仓库经销商").id => 1720
+              trade.update_attributes(seller_id: default_seller_id, dispatched_at: Time.now)
             end
             p "created new order #{t['order_id']}"
           else

@@ -138,7 +138,7 @@ class TaobaoTrade < Trade
   end
 
   def matched_seller_with_default(area)
-    matched_seller(area) || Seller.first
+    matched_seller(area) || Seller.default_seller
   end
 
   def matched_seller(area = nil)
