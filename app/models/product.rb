@@ -13,8 +13,8 @@ class Product < ActiveRecord::Base
   attr_accessible :name, :iid, :taobao_id, :storage_num, :price, :status, :level_id, :quantity_id,
                   :category_id, :features, :technical_data, :description, :product_image, :feature_ids
   
-  validates_presence_of :name, :storage_num, :price, message: "信息不能为空"
-  validates_uniqueness_of :name, :iid, :taobao_id, :allow_blank => true, message: "信息已存在"
+  validates_presence_of :iid, :name, :storage_num, :price, message: "信息不能为空"
+  validates_uniqueness_of :iid, :name, :iid, :taobao_id, :allow_blank => true, message: "信息已存在"
   validates_numericality_of :price, message: "所填项必须为数字"
   validates_length_of :name, maximum: 100, message: "内容过长"
   validates_length_of :iid, :taobao_id, :storage_num, :price, maximum: 20, message: "内容过长"
