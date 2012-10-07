@@ -1,5 +1,5 @@
 # -*- encoding : utf-8 -*-
-set :rvm_ruby_string, '1.9.3'        
+set :rvm_ruby_string, '1.9.3'
 set :rvm_type, :system
 
 set :repository, "git@github.com:nioteam/magic_orders.git"
@@ -46,4 +46,4 @@ namespace :sidekiq do
     run "rvmsudo god restart magic_orders_pullers"
   end
 end
-after 'deploy:create_symlink', 'sidekiq:restart'
+# after 'deploy:create_symlink', 'sidekiq:restart'
