@@ -128,7 +128,6 @@
       <li><a data-toggle="modal" href="#" data-type="detail">订单详情</a></li>
       <!-- <li><a data-toggle="modal" href="#" data-type="trade_splite">订单拆分</a></li> -->
       <!-- <li><a data-toggle="modal" href="#" data-type="trade_unsplite">订单合并</a></li> -->
-      <li><a data-toggle="modal" href="#" data-type="mark_unusual_state">标注异常</a></li>
       <!-- <li><a data-toggle="modal" href="#" data-type="reowner">订单转交</a></li> -->
       <li class= "divider"></li>
 
@@ -140,6 +139,9 @@
 
       <% if @trade.get('status_text') == '已付款，待发货' : %>
         <li><a data-toggle="modal" href="#" data-type="deliver">订单发货</a></li>
+        <li><a data-toggle="modal" href="#" data-type="confirm_color">确认调色</a></li>
+        <li><a data-toggle="modal" href="#" data-type="mark_unusual_state">标注异常</a></li>
+        <li><a data-toggle="modal" href="#" data-type="confirm_check_goods">确认验货</a></li>
       <% end %>
 
       <% if !@trade.get('seller_confirm_deliver_at') && @trade.get('status_text') == '已付款，已发货' : %>
@@ -149,11 +151,11 @@
       <% if @trade.get('invoice_name') : %>
         <li><a data-toggle="modal" href="#" data-type="seller_confirm_invoice">确认开票</a></li>
       <% end %>
-        <li><a data-toggle="modal" href="#" data-type="confirm_color">确认调色</a></li>
-        <li><a data-toggle="modal" href="#" data-type="confirm_check_goods">确认验货</a></li>
+
       <% if @trade.get('delivered_at') : %>
         <li><a data-toggle="modal" href="#" data-type="barcode">设置商品条形码</a></li>
       <% end %>
+      
       <li class= "divider"></li>
 
       <!-- <li><a data-toggle="modal" href="#" data-type="check_goods">验货</a></li> -->
