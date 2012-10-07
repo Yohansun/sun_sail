@@ -27,6 +27,7 @@ class TaobaoAppToken < ActiveRecord::Base
 				p "successful update access_token"
 			else 
 				p response['error_description']	
+			  Notifier.app_token_errors(self,response).deliver
 			end
 		
 		end	

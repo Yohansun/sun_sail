@@ -2,6 +2,16 @@
 class Notifier < ActionMailer::Base
   helper :application
   default :from => "E-Business@nipponpaint.com.cn"
+  
+  def app_token_errors(token,response)
+    mail(:to => %w{errors@networking.io},
+         :subject => "淘宝app token授权失败",
+         :body => "淘宝app token: 
+                   #{token.to_yaml} 
+                   错误代码: 
+                   #{response['error_description']}",
+         :reply_to => 'E-Business@nipponpaint.com.cn')
+  end  
 
   def dispatch(id, notify_kind)
     object = Trade.find id
