@@ -39,8 +39,10 @@
         </a>
         <ul class="dropdown-menu">
           <li><a href="#" data-trade-mode="trades" data-trade-status="null">所有订单</a></li>
+          <% if MagicOrders.role_key != 'seller' : %>
           <li><a href="#" data-trade-mode="trades" data-trade-status="unpaid">未付款订单</a></li>
           <li><a href="#" data-trade-mode="trades" data-trade-status="undispatched">未分流订单</a></li>
+          <% end %>
           <li><a href="#" data-trade-mode="trades" data-trade-status="undelivered">未发货订单</a></li>
           <li><a href="#" data-trade-mode="trades" data-trade-status="delivered">已发货订单</a></li>
           <li><a href="#" data-trade-mode="trades" data-trade-status="refund">退货订单</a></li>
@@ -146,7 +148,9 @@
           <b class="caret"></b>
         </a>
         <ul class="dropdown-menu">
+          <% if MagicOrders.role_key != 'seller' : %>
           <li><a href="#" data-trade-mode="unusual" data-unusual-trade="undispatched">已付款2天未分流</a></li>
+          <% end %>
           <li><a href="#" data-trade-mode="unusual" data-unusual-trade="undelivered">已分流2天未发货</a></li>
         </ul>
       </li>
