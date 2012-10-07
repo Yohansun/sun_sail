@@ -1,5 +1,7 @@
 # -*- encoding : utf-8 -*-
 class LogisticsController < ApplicationController
+  before_filter :authenticate_user!
+
 	def index
 		@logistics = Logistic.page(params[:page])
 	end
@@ -39,7 +41,7 @@ class LogisticsController < ApplicationController
 		redirect_to logistics_path
 	end
 
-	def logistic_area    
+	def logistic_area
 		logger.debug(params[:logistic_id])
     @logistics = LogisticArea.where(logistic_id: params[:logistic_id]).all
     respond_to do |f|
@@ -59,7 +61,7 @@ class LogisticsController < ApplicationController
     respond_to do |f|
       f.js
     end
-  end 
+  end
 
   def remove_logistic_area
   	if params[:logistic_id] && params[:area_id]

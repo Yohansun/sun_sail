@@ -1,4 +1,6 @@
 class StockProductsController < ApplicationController
+  before_filter :authenticate_user!
+
   def new
   	@product = StockProduct.new
     @seller = Seller.find params[:seller_id]
@@ -19,7 +21,7 @@ class StockProductsController < ApplicationController
   	@stock_product = StockProduct.find params[:id]
     @product = @stock_product.product
   	respond_to do |format|
-  		format.json {render json: {name: @product.name, activity: @stock_product.activity, actual: @stock_product.actual}} 
+  		format.json {render json: {name: @product.name, activity: @stock_product.activity, actual: @stock_product.actual}}
   	end
   end
 

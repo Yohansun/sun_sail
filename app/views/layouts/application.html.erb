@@ -44,14 +44,12 @@
               <li class="trades" style="display:none"><a href="http://shop.nipponpaint.com.cn/admin/orders">官网订单</a></li>
               <li class="trades" style="display:none"><a href="http://shop.nipponpaint.com.cn/admin/taobao_orders">淘宝订单</a></li>
             <% end %>
-            <li class="areas" style="display:none"><a href="#">区域管理</a></li>
-            <% if current_user.role_key == 'admin' || current_user.role_key == 'seller'%>
-            <li class="stocks" style="display:none"><a href="#">仓库管理</a></li>
+            <% if current_user.has_role?(:seller) || current_user.has_role?(:admin) %>
+              <li class="stocks" style="display:none"><a href="#">仓库管理</a></li>
             <% end %>
-            <% if current_user.role_key == 'admin' %>
-            <li class="sellers" style="display:none"><a href="#">经销商管理</a></li>
-            <li class="products" style="display:none"><a href="#">商品管理</a></li>
-            <li class="users" style="display:none"><a href="#">系统管理</a></li>
+            <% if current_user.has_role?(:admin) %>
+              <li class="sellers" style="display:none"><a href="#">经销商管理</a></li>
+              <li class="products" style="display:none"><a href="#">商品管理</a></li>
             <% end %>
           </ul>
 
@@ -60,14 +58,16 @@
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Magic<b class="caret"></b></a>
               <ul class="dropdown-menu">
                 <li><a href="/trades" class="trades">订单管理</a></li>
-                <% if (current_user.role_key == 'admin' || current_user.role_key == 'seller') %>
-                  <li><%= link_to '仓库管理', user_stock_path, class: "stocks" %></li>
+                <% if current_user.has_role?(:seller) && current_user.seller %>
+                  <li><%= link_to '仓库管理', seller_stocks_path(current_user.seller.id), class: "stocks" %></li>
+                <% elsif current_user.has_role?(:admin) %>
+                  <li><%= link_to '仓库管理', stocks_path, class: "stocks" %></li>
                 <% end %>
-                <% if current_user.role_key == 'admin' %>
-                <li><%= link_to '商品管理', products_path, class: "products" %></li>
-                <li><a href="/sellers" class="sellers">经销商管理</a></li>
-                <li class= "divider"></li>
-                <li><a href="/users" class="users">系统设置</a></li>
+                <% if current_user.has_role?(:admin) %>
+                  <li><%= link_to '商品管理', products_path, class: "products" %></li>
+                  <li><a href="/sellers" class="sellers">经销商管理</a></li>
+                  <li class= "divider"></li>
+                  <li><a href="/users" class="users">系统设置</a></li>
                 <% end %>
               </ul>
             </li>
@@ -107,9 +107,9 @@
           $('.datepicker').datepicker({
             format: 'yyyy-mm-dd'
           })
-        
 
-      
+
+
           $('.timepicker').timeEntry({
             show24Hours: true, // 24 hours format
             showSeconds: true, // Show seconds?
@@ -120,7 +120,7 @@
         });
       });
     </script>
-    
+
     <%= yield :tail -%>
   </body>
 </html>
