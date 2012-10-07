@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   before_filter :authenticate_user!, :except => ['autologin']
+  before_filter :admin_only!, :except => ['autologin']
 
   def autologin
   	redirect_url = '/'
@@ -48,7 +49,7 @@ class UsersController < ApplicationController
       redirect_to users_path
     else
       render :new
-    end 
+    end
   end
 
   def update
@@ -73,7 +74,5 @@ class UsersController < ApplicationController
     else
       render :show
     end
-
   end
-
 end
