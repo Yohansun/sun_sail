@@ -205,6 +205,15 @@ ActiveRecord::Schema.define(:version => 20120929081434) do
     t.integer  "stock_product_id"
     t.datetime "created_at",                      :null => false
     t.datetime "updated_at",                      :null => false
+    
+  create_table "taobao_app_tokens", :force => true do |t|
+    t.integer  "account_id"
+    t.string   "access_token"
+    t.string   "taobao_user_id"
+    t.string   "taobao_user_nick"
+    t.string   "refresh_token"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
   end
 
   create_table "trade_sources", :force => true do |t|

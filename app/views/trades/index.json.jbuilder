@@ -47,6 +47,7 @@ json.array!(@trades) do |json, trade|
 
   json.seller_id trade.seller_id
   json.seller_name trade.seller.name if trade.seller
+  json.default_seller_id TradeSetting.default_seller_id
 
   json.orders OrderDecorator.decorate(trade.orders) do |json, order|
     json.id order._id

@@ -35,8 +35,8 @@
         <% if @trade.get('trade_source') != '京东': %>
           <div id="areas_inputs"></div>
         <% else: %>
-          点击"分流"按钮分流给: 立邦仓库经销商
-          <input type="hidden" id="trade_seller_id" value="1720">
+          点击"分流"按钮分流给: 网络经销商
+          <input type="hidden" id="trade_seller_id" value="<%= @trade.get('default_seller_id') %>">
         <% end %>
       <% end %>
     </label>

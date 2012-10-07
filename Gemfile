@@ -5,6 +5,7 @@ gem 'rails', '>= 3.2.3'
 gem 'mysql2'
 
 gem 'json'
+gem 'crack'
 gem 'rabl'
 gem 'jbuilder'
 
@@ -72,6 +73,14 @@ gem 'carrierwave'
 gem "mini_magick"
 
 gem 'redis-namespace'
+
+gem 'omniauth'
+gem 'omniauth-oauth2'
+gem 'rest-client'
+gem 'httparty'
+
+#test mail
+gem "mails_viewer"
 
 group :production do
   gem "exception_notification", "~> 2.6.1"

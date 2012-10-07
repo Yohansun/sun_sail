@@ -2,6 +2,7 @@ json.id @trade._id
 json.tid @trade.tid
 json.splitted_tid @trade.splitted_tid
 json.seller_id @trade.seller_id
+json.default_seller_id TradeSetting.default_seller_id
 json.seller_name @trade.seller.name if @trade.seller
 json.status @trade.status
 json.status_text @trade.status_text
@@ -63,6 +64,7 @@ json.orders OrderDecorator.decorate(@trade.orders) do |json, order|
   unless TradeSetting.company == 'dulux' && current_user.has_role?(:seller)
     json.price order.price
     json.auction_price order.auction_price
+    json.total_fee order.total_fee
     json.buyer_payment order.buyer_payment
     json.distributor_payment order.distributor_payment
   end

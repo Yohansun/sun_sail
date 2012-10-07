@@ -1,6 +1,8 @@
 require 'sidekiq/web'
 
 MagicOrders::Application.routes.draw do
+  match '/auth/taodan/callback', to: 'taobao_app_tokens#create'
+
   get "callbacks/jingdong"
   get '/autologin', to: 'users#autologin'
   devise_for :users, :path => '', :path_names => {:sign_in => 'login'}
@@ -72,6 +74,7 @@ MagicOrders::Application.routes.draw do
   end
 
   mount Sidekiq::Web => '/sidekiq'
+  mount MailsViewer::Engine => '/delivered_mails'
 
   root to: "home#dashboard"
   match "*path", to: "home#index"
