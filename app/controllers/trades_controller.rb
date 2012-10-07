@@ -8,14 +8,14 @@ class TradesController < ApplicationController
     @trades = Trade
     seller = current_user.seller
 
-    if current_user.role_key == 'seller'
+    if current_user.has_role?(:seller)
       if seller
         @trades = Trade.where(seller_id: seller.id)
       else
         render json: []
         return
       end
-    elsif current_user.role_key == 'interface'
+    elsif current_user.has_role?(:interface)
       if seller
         @trades = Trade.where(:seller_id.in => seller.child_ids)
       else
@@ -200,7 +200,7 @@ class TradesController < ApplicationController
 
     @trades = Trade
 
-    if current_user.role_key == 'seller'
+    if current_user.has_role?(:seller)
       unless current_user.seller == nil
         @trades = @trades.where seller_id: current_user.seller.try(:id)
       else
