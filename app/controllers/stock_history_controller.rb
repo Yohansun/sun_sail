@@ -1,5 +1,7 @@
 # -*- encoding : utf-8 -*-
 class StockHistoryController < ApplicationController
+  before_filter :authenticate_user!
+
 	def index
     @history = StockHistory
 
@@ -24,7 +26,7 @@ class StockHistoryController < ApplicationController
     else
       0
   	end
-    
+
     @product.activity += number
     @product.actual += number
 
@@ -36,9 +38,9 @@ class StockHistoryController < ApplicationController
     else
       if @product.errors[:activity].first == '数量不能小于零'
         @error_message = '当前库存商品不足，建议调整出库数量'
-      elsif @product.errors[:activity].first == '数量必须小于满仓值' 
+      elsif @product.errors[:activity].first == '数量必须小于满仓值'
         @error_message = '库存数量必须小于满仓值，建议调整入库数量'
-      end  
+      end
   	end
   end
 

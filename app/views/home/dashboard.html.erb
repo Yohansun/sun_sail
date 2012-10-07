@@ -1,32 +1,62 @@
 <div class="row-fluid">
 	<div class="indexWrap">
 		<div class="centerDashboard hide">
-			<div>
-				<a class="indexStart1" href="/trades"><span>订单管理</span></a>
-			</div>
-			<!-- <div>
-				<a class="indexStart2" href="#"><span>客服管理</span></a>
-			</div> -->
-			<!-- <div>
-				<a class="indexStart3" href="#"><span>数据魔方</span></a>
-			</div> -->
-			<div>
-				<%= link_to user_stock_path, class: 'indexStart4' do %>
-					<span>仓库管理</span>
-				<% end %>
-			</div>
-			<div>
-				<a class="indexStart5" href="/sellers"><span>经销商管理</span></a>
-			</div>
-			<!-- <div>
-				<a class="indexStart6" href="#"><span>VIP</span></a>
-			</div> -->
-			<!-- <div>
-				<a class="indexStart7" href="#"><span>互动中心</span></a>
-			</div> -->
-			<div>
-				<a class="indexStart8" href="/products"><span>商品管理</span></a>
-			</div>
+			<% if user_signed_in? %>
+				<div>
+					<a class="indexStart1" href="/trades"><span>订单管理</span></a>
+				</div>
+
+				<% if current_user.has_role?(:seller) && current_user.seller -%>
+					<div>
+						<%= link_to seller_stocks_path(current_user.seller.id), class: 'indexStart4' do %>
+							<span>仓库管理</span>
+						<% end %>
+					</div>
+				<% elsif current_user.has_role?(:admin) %>
+					<div>
+						<%= link_to stocks_path, class: 'indexStart4' do %>
+							<span>仓库管理</span>
+						<% end %>
+					</div>
+				<% end -%>
+
+				<% if current_user.has_role?(:admin) -%>
+					<div>
+						<a class="indexStart5" href="/sellers"><span>经销商管理</span></a>
+					</div>
+					<div>
+						<a class="indexStart8" href="/products"><span>商品管理</span></a>
+					</div>
+				<% end -%>
+
+			<% else -%>
+
+				<div>
+					<a class="indexStart1" href="#"><span>订单管理</span></a>
+				</div>
+				<div>
+					<a class="indexStart2" href="#"><span>客服管理</span></a>
+				</div>
+				<div>
+					<a class="indexStart3" href="#"><span>数据魔方</span></a>
+				</div>
+				<div>
+					<a class="indexStart4" href="#"><span>仓库管理</span></a>
+				</div>
+				<div>
+					<a class="indexStart5" href="#"><span>经销商管理</span></a>
+				</div>
+				<div>
+					<a class="indexStart6" href="#"><span>VIP</span></a>
+				</div>
+				<div>
+					<a class="indexStart7" href="#"><span>互动中心</span></a>
+				</div>
+				<div>
+					<a class="indexStart8" href="#"><span>商品管理</span></a>
+				</div>
+			<% end -%>
+
 		</div>
 	</div>
 </div>
