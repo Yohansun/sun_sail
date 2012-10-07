@@ -4,7 +4,7 @@ module Dulux
 			def match_item_seller(area, outer_iid, num)
 				return unless num
 				product_seller_ids = StockProduct.joins(:product).where("products.iid = '#{outer_iid}' AND stock_products.activity > #{num}").map &:seller_id
-				area.sellers.where(id: product_seller_ids).reorder("performance_score DESC").first
+				area.sellers.where(id: product_seller_ids, active: true).reorder("performance_score DESC").first
 			end
 
 			def match_trade_seller(trade, area)
