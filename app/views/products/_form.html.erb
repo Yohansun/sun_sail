@@ -1,7 +1,7 @@
 <%= simple_form_for @product, html: {class: 'well form-horizontal re_padding50'} do |f| %>
 <fieldset class="group">
   <div class="w_48 pull-left">
-       <%= f.input :iid, label: '编号：', :input_html =>{ :class => "input-xlarge" } %>
+       <%= f.input :iid, label: '商品编码：', :input_html =>{ :class => "input-xlarge" } %>
        <%= f.input :name, label: '商品名称：', :input_html =>{ :class => "input-xlarge" } %>
        <%= f.input :taobao_id, label: '淘宝ID：', :input_html =>{ :class => "input-xlarge" } %>
        <%= f.input :storage_num, label: '仓库编号：', :input_html =>{ :class => "input-xlarge" } %>
