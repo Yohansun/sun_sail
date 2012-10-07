@@ -1,6 +1,7 @@
 # -*- encoding : utf-8 -*-
 class SellersController < ApplicationController
   before_filter :authenticate_user!
+  before_filter :admin_only!
 
   def index
     @sellers = Seller
@@ -136,7 +137,7 @@ class SellersController < ApplicationController
     @flag = false
     user = User.find params[:u_id]
     user.seller_id = params[:s_id]
-    if user.save 
+    if user.save
       @flag = true
     else
       @flag = false
@@ -152,20 +153,20 @@ class SellersController < ApplicationController
     @seller.update_attribute(:has_stock, !@seller.has_stock)
     if @seller.has_stock && !@seller.stock_opened_at
       @seller.update_attribute(:stock_opened_at, Time.now)
-    end  
+    end
     redirect_to seller_stocks_path(@seller)
   end
 
   def remove_seller_user
     user = User.find params[:u_id]
     user.seller_id = nil
-    user.save 
+    user.save
     respond_to do |f|
       f.js
     end
   end
 
-  def seller_area    
+  def seller_area
     @seller_areas = SellersArea.where(seller_id: params[:seller_id]).all
     respond_to do |f|
       f.js
