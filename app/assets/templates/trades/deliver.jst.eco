@@ -16,7 +16,7 @@
       </tr>
       <tr>
         <th>订单金额</th>
-        <td>￥<%= @trade.get('total_fee') + @trade.get ('post_fee') %></td>
+        <td>￥<%= @trade.get('total_fee') %></td>
       </tr>
       <tr>
         <td nowrap>收货人：</td>
