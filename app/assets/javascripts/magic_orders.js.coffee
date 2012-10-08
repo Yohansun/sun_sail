@@ -41,6 +41,7 @@ window.MagicOrders =
       'cs_memo':                 '客服备注',
       'color_info':              '调色信息',
       'invoice_info':            '发票信息',
+      'total_fee':               '实付金额',
       'seller':                  '配送经销商',
 
       'receiver_id':             '客户ID',             #new add
@@ -88,7 +89,7 @@ window.MagicOrders =
 
     # 不同模式下可见订单列
     @trade_cols_visible_modes = {
-      'trades':                  ['trade_source','tid','status','status_history','receiver_id','receiver_name','receiver_mobile_phone','receiver_address','buyer_message','seller_memo','cs_memo','color_info','invoice_info','seller'],  #'deliver_bill','logistic_bill','operator','order_split'
+      'trades':                  ['trade_source','tid','status','status_history','receiver_id','receiver_name','receiver_mobile_phone','receiver_address','buyer_message','seller_memo','cs_memo','color_info','invoice_info', 'total_fee','seller'],  #'deliver_bill','logistic_bill','operator','order_split'
       'deliver':                 ['tid','status','deliver_bill_id','deliver_bill_status','trade_source','order_goods','receiver_name','receiver_mobile_phone','receiver_address','color_info','invoice_info','seller','cs_memo'],
       'logistics':               ['tid','status','deliver_bill_id','logistic_waybill','logistic_company','trade_source','order_goods','receiver_name','receiver_mobile_phone','receiver_address','invoice_info','seller','cs_memo','operator'],
       'check':                   ['tid','status','deliver_bill_id','status_history','deliver_bill_status','trade_source','order_goods','receiver_name','receiver_mobile_phone','receiver_address','color_info','invoice_info','seller','cs_memo','operator'],

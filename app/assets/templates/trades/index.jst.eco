@@ -331,6 +331,7 @@
         <th data-col='cs_memo'>客服<br/>备注</th>
         <th data-col='color_info'>调色<br/>信息</th>
         <th data-col='invoice_info'>发票<br/>信息</th>
+        <th data-col='total_fee' nowrap>实付金额</th>
 
         <!-- <th data-col='deliver_bill'>出货单</th>  -->             <!--Newly Add-->
         <th data-col='deliver_bill_id'>出货单编号</th>

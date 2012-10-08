@@ -1,6 +1,6 @@
 json.array!(@trades) do |json, trade|
   json.id trade._id
-  json.tid trade.tid 
+  json.tid trade.tid
   json.tc_order_id trade.tc_order_id if trade._type == "TaobaoPurchaseOrder"
   json.distributor_usercode trade.distributor_usercode if trade._type == "TaobaoPurchaseOrder"
   json.splitted_tid trade.splitted_tid
@@ -30,6 +30,8 @@ json.array!(@trades) do |json, trade|
   json.invoice_content trade.invoice_content
   json.invoice_date trade.invoice_date.strftime("%Y-%m-%d") if trade.invoice_date
   json.invoice_value trade.sum_fee
+
+  json.total_fee trade.total_fee
 
   json.seller_confirm_deliver_at trade.seller_confirm_deliver_at.strftime("%m-%d %H:%M") if trade.seller_confirm_deliver_at
   json.seller_confirm_invoice_at trade.seller_confirm_invoice_at.strftime("%m-%d %H:%M") if trade.seller_confirm_invoice_at
