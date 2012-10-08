@@ -22,6 +22,7 @@ unless TradeSetting.company == 'dulux' && current_user.has_role?(:seller)
   json.post_fee @trade.post_fee
   json.seller_discount @trade.seller_discount
   json.sum_fee @trade.sum_fee
+  json.point_fee @trade.point_fee
   json.total_fee @trade.total_fee
 end
 json.created @trade.created.strftime("%m-%d %H:%M")
