@@ -21,7 +21,7 @@ ssh_options[:forward_agent] = true
 set :deployer, `whoami`.chomp
 
 def campfire_say(words)
-    campfire = Tinder::Campfire.new 'nio8', token:'15b9a60d4a6e3220fb77f46069678052aa0f0653', ssl_options: {verify:false}
+    campfire = Tinder::Campfire.new 'nio8', token:'398fa673d19f947080feec19139fa877551a7ea2', ssl_options: {verify:false}
     room = campfire.find_room_by_id('527885')
     room.speak words
 end
