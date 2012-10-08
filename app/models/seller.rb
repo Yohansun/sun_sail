@@ -14,9 +14,8 @@ class Seller < ActiveRecord::Base
   has_many :stock_history
   has_one :stock
 
-  validates_presence_of :fullname, :name, :mobile, :email
+  validates_presence_of :fullname, :name
   validates_uniqueness_of :fullname, :name
-  validates :email, :format => { :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i }
   before_save :set_pinyin
   
   def self.default_seller
