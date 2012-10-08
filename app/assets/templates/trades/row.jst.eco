@@ -23,7 +23,7 @@
   <% if @trade.get('pay_time'): %>
     <span class="label label-success">付款 <%= @trade.get('pay_time') %></span>
   <% end %>
-  <% if @trade.get('dispatched_at'): %>
+  <% if @trade.get('seller_id'): %>
     <span class="label label-success">分流 <%= @trade.get('dispatched_at') %></span>
   <% end %>
   <% if @trade.get('consign_time'): %>
