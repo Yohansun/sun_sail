@@ -116,8 +116,8 @@
       <span class="caret"></span>
     </button>
     <ul class="dropdown-menu trade_pops" style="left:-115px;">
-      <% if @trade.get('status_text') == '已付款，待发货': %>
-      <li><a data-toggle="modal" href="#" data-type="seller">订单分流</a></li>
+      <% if @trade.get('status_text') == '已付款，待发货' : %>
+        <li><a data-toggle="modal" href="#" data-type="seller"><% if @trade.get('seller_id') : %>分流重置<% else : %>订单分流<% end %></a></li>
       <% end %>
       <li class= "divider"></li>
       <% if @trade.get('status_text') isnt '交易被淘宝关闭' and @trade.get('status_text') isnt '交易已关闭' and @trade.get('status_text') isnt '等待付款' : %>
