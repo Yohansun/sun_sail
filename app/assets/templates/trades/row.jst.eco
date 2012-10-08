@@ -85,6 +85,9 @@
   <a href="javascript:void(0)" rel="popover" data-content="<%= @trade.get 'invoice_type' %><br/><%= @trade.get 'invoice_name' %><br/><%= @trade.get 'invoice_content' %>" data-original-title="<b>发票信息</b>"><i class="icon-comment"></i></a>
   <% end %>
 </td>
+<td data-col='point_fee'>
+  <%= @trade.get('point_fee') %>
+</td>
 <td data-col='total_fee'>
   ￥<%= @trade.get('total_fee') %>
 </td>
