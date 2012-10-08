@@ -50,12 +50,12 @@ class TradesController < ApplicationController
     if !params[:search_trade_status].blank? && params[:search_trade_status] != 'null'
       status = params[:search_trade_status]
       if status == 'undispatched'
-        @trades = @trades.where(:dispatched_at.exists => false)
-        @trades = @trades.where(:status.nin => ['WAIT_BUYER_PAY', 'TRADE_CLOSED','TRADE_CANCELED','TRADE_CLOSED_BY_TAOBAO'])
+        @trades = @trades.where("$or" => [{seller_id: nil},{:seller_id.exists => false}])
+        @trades = @trades.where(:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"])
       elsif status == 'unpaid'
         @trades = @trades.where(:status.in => ["WAIT_BUYER_PAY"])
       elsif status == 'undelivered'
-        @trades = @trades.where("$and" => [{:dispatched_at.exists => true},{:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"]}])
+        @trades = @trades.where("$and" => [{:dispatched_at.ne => nil},{:dispatched_at.exists => true},{:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"]}])
       elsif status == 'delivered'
         @trades = @trades.where(:status.in => ["WAIT_BUYER_CONFIRM_GOODS","WAIT_GOODS_RECEIVE_CONFIRM","WAIT_BUYER_CONFIRM_GOODS_ACOUNTED","WAIT_SELLER_SEND_GOODS_ACOUNTED"])
       elsif status == 'refund'
@@ -243,6 +243,7 @@ class TradesController < ApplicationController
       @trade.dispatch!(seller) if seller
     elsif params[:seller_id].nil?
       @trade.seller_id = nil
+      @trade.dispatched_at = nil
     end
 
     if params[:delivered_at] == true
