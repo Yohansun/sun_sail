@@ -249,6 +249,7 @@
                 <option value="TaobaoPurchaseOrder">分销平台</option>
               </select>
             </div>
+            <div class="controls" id="select_state"><!--买家地域--></div>
             <!-- <div class="controls">
               <label for="select04" class="control-label">活动：</label>
               <select id="select04" class="input-medium">

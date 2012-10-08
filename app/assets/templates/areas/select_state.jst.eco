@@ -1,0 +1,7 @@
+<label class="control-label">买家地域：</label>
+<select class="input-large" id="state_option">
+  <option value="">请选择...</option>
+  <% for area in @states.models: %>
+  <option value="<%= area.get('name') %>"><%= area.get('name') %></option>
+  <% end %>
+</select>

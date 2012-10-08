@@ -67,8 +67,12 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     @first_rendered = true
     @collection.each(@appendTrade)
     $("a[rel=popover]").popover(placement: 'left')
-
+    @render_select_state()
     this
+
+  render_select_state: ->
+    view = new MagicOrders.Views.AreasSelectState()
+    $(@el).find('#select_state').html(view.render().el)
 
   renderUpdate: =>
     @collection.each(@appendTrade)
@@ -125,6 +129,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
     @status_option = $("#status_option").val()
     @type_option = $("#type_option").val()
+    @state_option = $("#state_option").val()
 
     @search_start_date = $(".search_start_date").val()
     @search_end_date = $(".search_end_date").val()
@@ -137,13 +142,13 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     @search_invoice = $("#search_invoice").is(':checked')
     @search_color = $("#search_color").is(':checked')
 
-    return if (@search_option == '' or @search_value == '') and @status_option == "null" and @type_option == "null" and (@search_start_date == '' or @search_end_date == '') and @search_buyer_message == false and @search_seller_memo == false and @search_cs_memo == false and @search_color == false and @search_invoice == false
+    return if (@search_option == '' or @search_value == '') and @status_option == "" and @state_option == "" and @type_option == "" and (@search_start_date == '' or @search_end_date == '') and @search_buyer_message == false and @search_seller_memo == false and @search_cs_memo == false and @search_color == false and @search_invoice == false
 
     @offset = 0
     blocktheui()
     $("#trade_rows").html('')
 
-    @collection.fetch data: {trade_type: @trade_type, search: {option: @search_option, value: @search_value}, search_all: {@search_start_date, @search_start_time, @search_end_date, @search_end_time, @status_option, @type_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_invoice, @search_color}}, success: (collection) =>
+    @collection.fetch data: {trade_type: @trade_type, search: {option: @search_option, value: @search_value}, search_all: {@search_start_date, @search_start_time, @search_end_date, @search_end_time, @status_option, @type_option, @state_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_invoice, @search_color}}, success: (collection) =>
       if collection.length > 0
         @offset = @offset + 20
         @renderUpdate()
@@ -204,7 +209,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     event.preventDefault()
 
     blocktheui()
-    @collection.fetch data: {trade_type: @trade_type, offset: @offset, search: {option: @search_option, value: @search_value}, search_all: {@search_start_date, @search_start_time, @search_end_date, @search_end_time, @status_option, @type_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_invoice, @search_color}, search_deliverbill_status: @search_deliverbill_status, logistic_status: @logistic_status, search_trade_status: @search_trade_status, search_invoice_status: @search_invoice_status, search_color_status: @search_color_status, search_unusual_trade: @search_unusual_trade}, success: (collection) =>
+    @collection.fetch data: {trade_type: @trade_type, offset: @offset, search: {option: @search_option, value: @search_value}, search_all: {@search_start_date, @search_start_time, @search_end_date, @search_end_time, @status_option, @type_option, @state_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_invoice, @search_color}, search_deliverbill_status: @search_deliverbill_status, logistic_status: @logistic_status, search_trade_status: @search_trade_status, search_invoice_status: @search_invoice_status, search_color_status: @search_color_status, search_unusual_trade: @search_unusual_trade}, success: (collection) =>
       if collection.length > 0
         @offset = @offset + 20
         @renderUpdate()
@@ -251,7 +256,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     @search_color = $("#search_color").is(':checked')
 
     @collection.fetch data: {trade_type: @trade_type, search_all: {@search_start_date, @search_start_time, @search_end_date, @search_end_time, @status_option, @type_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_invoice, @search_color}}, success: (collection) =>
-      Backbone.history.navigate("/api/trades.xls?trade_type=#{@trade_type}&search%5Boption%5D=#{@search_option}&search%5Bvalue%5D=#{@search_value}&search_all%5Bsearch_start_date%5D=#{@search_start_date}&search_all%5Bsearch_start_time%5D=#{@search_start_time}&search_all%5Bsearch_end_date%5D=#{@search_end_date}&search_all%5Bsearch_end_time%5D=#{@search_end_time}&search_all%5Bstatus_option%5D=#{@status_option}&search_all%5Btype_option%5D=#{@type_option}&search_all%5Bsearch_buyer_message%5D=#{@search_buyer_message}&search_all%5Bsearch_seller_memo%5D=#{@search_seller_memo}&search_all%5Bsearch_cs_memo%5D=#{@search_cs_memo}&search_all%5Bsearch_invoice%5D=#{@search_invoice}&search_all%5Bsearch_color%5D=#{@search_color}&search_deliverbill_status=#{@search_deliverbill_status}&logistic_status=#{@logistic_status}&limit=1000000&offset=0", true)
+      Backbone.history.navigate("/api/trades.xls?trade_type=#{@trade_type}&search%5Boption%5D=#{@search_option}&search%5Bvalue%5D=#{@search_value}&search_all%5Bsearch_start_date%5D=#{@search_start_date}&search_all%5Bsearch_start_time%5D=#{@search_start_time}&search_all%5Bsearch_end_date%5D=#{@search_end_date}&search_all%5Bsearch_end_time%5D=#{@search_end_time}&search_all%5Bstatus_option%5D=#{@status_option}&search_all%5Btype_option%5D=#{@type_option}&search_all%5Bstate_option%5D=#{@state_option}&search_all%5Bsearch_buyer_message%5D=#{@search_buyer_message}&search_all%5Bsearch_seller_memo%5D=#{@search_seller_memo}&search_all%5Bsearch_cs_memo%5D=#{@search_cs_memo}&search_all%5Bsearch_invoice%5D=#{@search_invoice}&search_all%5Bsearch_color%5D=#{@search_color}&search_deliverbill_status=#{@search_deliverbill_status}&logistic_status=#{@logistic_status}&limit=1000000&offset=0", true)
       location.reload()
       Backbone.history.navigate('trades')
 
