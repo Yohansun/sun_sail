@@ -29,6 +29,7 @@ group :development do
   gem 'map_by_method'
   gem 'hirb'
   gem 'rvm-capistrano'
+  gem 'tinder'
   gem 'certified'
   gem "thin"
 end
