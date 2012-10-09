@@ -180,6 +180,16 @@ class TradeDecorator < Draper::Base
         trade.order_seller_price
     end
   end
+
+  def point_fee
+    case trade._type
+      when 'TaobaoPurchaseOrder'
+      when 'TaobaoTrade'
+        trade.point_fee
+      when 'JingdongTrade'
+    end
+  end
+                    
  
  #总价
   def sum_fee

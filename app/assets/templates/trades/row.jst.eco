@@ -134,9 +134,9 @@
       <% end %>
       <li><a data-toggle="modal" href="#" data-type="cs_memo">客服备注</a></li>
       <li><a data-toggle="modal" href="#" data-type="detail">订单详情</a></li>
-      <!-- <li><a data-toggle="modal" href="#" data-type="trade_splite">订单拆分</a></li> -->
-      <!-- <li><a data-toggle="modal" href="#" data-type="trade_unsplite">订单合并</a></li> -->
-      <!-- <li><a data-toggle="modal" href="#" data-type="reowner">订单转交</a></li> -->
+      <!-- <li><a data-toggle="modal" href="#" data-type="trade_split">订单拆分</a></li> -->
+      <!-- <li><a data-toggle="modal" href="#" data-type="trade_unsplit">订单合并</a></li> -->
+      <!-- <li><a data-toggle="modal" href="#" data-type="reassign">订单转交</a></li> -->
       <li class= "divider"></li>
 
       <!-- <li><a data-toggle="modal" href="#" data-type="logistic_split">物流拆分</a></li> -->
