@@ -31,6 +31,7 @@ class TradeDecorator < Draper::Base
       when 'TaobaoTrade'
         trade.pay_time
       when 'JingdongTrade'
+        trade.created_at
     end
   end
 
