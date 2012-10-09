@@ -10,13 +10,13 @@ window.MagicOrders =
     @trade_pops = {
       #roles
       'cs_read':                 ['detail'],
-      'cs':                      ['detail', 'seller', 'cs_memo', 'color', 'invoice', 'trade_splite', 'trade_unsplite', 'mark_unusual_state', 'reowner', 'refund', 'check_goods'],
+      'cs':                      ['detail', 'seller', 'cs_memo', 'color', 'invoice', 'trade_split', 'trade_unsplit', 'mark_unusual_state', 'reassign', 'refund', 'check_goods'],
       'seller':                  ['detail', 'deliver', 'seller_confirm_invoice', 'mark_unusual_state', 'logistic_split', 'print_logistic_bill', 'print_deilver_bill', 'confirm_refund','barcode','confirm_color','confirm_check_goods'],
       'interface':               ['detail', 'seller_confirm_deliver'],
       'admin':                   ['*'],
 
       #trade_mode
-      'trades':                  ['deliver', 'detail', 'seller', 'cs_memo', 'color', 'invoice', 'trade_splite', 'trade_unsplite', 'mark_unusual_state', 'reowner', 'refund', 'check_goods', 'deliver', 'seller_confirm_deliver', 'seller_confirm_invoice', 'barcode', 'check_goods', 'logistic_split', 'print_logistic_bill', 'print_deilver_bill', 'confirm_refund', 'operation_log','confirm_color','confirm_check_goods'],
+      'trades':                  ['deliver', 'detail', 'seller', 'cs_memo', 'color', 'invoice', 'trade_split', 'trade_unsplit', 'mark_unusual_state', 'reassign', 'refund', 'check_goods', 'deliver', 'seller_confirm_deliver', 'seller_confirm_invoice', 'barcode', 'check_goods', 'logistic_split', 'print_logistic_bill', 'print_deilver_bill', 'confirm_refund', 'operation_log','confirm_color','confirm_check_goods'],
       'deliver':                 ['detail'],
       'logistics':               ['detail'],
       'check':                   ['detail'],
