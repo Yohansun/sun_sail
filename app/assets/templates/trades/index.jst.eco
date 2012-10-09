@@ -46,8 +46,10 @@
           <li><a href="#" data-trade-mode="trades" data-trade-status="undelivered">未发货订单</a></li>
           <li><a href="#" data-trade-mode="trades" data-trade-status="delivered">已发货订单</a></li>
           <li><a href="#" data-trade-mode="trades" data-trade-status="refund">退货订单</a></li>
+          <% if MagicOrders.role_key != 'seller' : %>
           <li><a href="#" data-trade-mode="trades" data-trade-status="closed">交易关闭订单</a></li>
           <li><a href="#" data-trade-mode="trades" data-trade-status="unusual_trade">交易异常订单</a></li>
+          <% end %>
         </ul>
       </li>
       <!-- <li class="dropdown">

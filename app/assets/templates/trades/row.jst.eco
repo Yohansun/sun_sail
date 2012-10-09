@@ -115,7 +115,9 @@
     <%= @trade.get('seller_name') %>
   <% end %>
 </td>
-<td nowrap>
+
+
+<td nowrap><!--操作-->
   <div class="btn-group">
     <button data-toggle="dropdown" class="btn btn-info dropdown-toggle min_w">
       <i class="icon-wrench"></i>
