@@ -31,6 +31,7 @@ class MagicOrders.Views.TradesMarkUnusualState extends Backbone.View
         alert("异常已标注过")
         return
      	
+    @model.set "operation", "标注异常"
     @model.save {'reason': @reason},
       success: (model, response) =>
         $.unblockUI()
@@ -47,7 +48,7 @@ class MagicOrders.Views.TradesMarkUnusualState extends Backbone.View
     blocktheui()
 
     id = $(event.target).data("id")
-    
+    @model.set "operation", "处理异常"
     @model.save {'state_id': id }, success: (model, response) =>
       $.unblockUI()
       view = new MagicOrders.Views.TradesRow(model: model)

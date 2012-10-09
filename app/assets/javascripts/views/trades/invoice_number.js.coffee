@@ -23,7 +23,8 @@ class MagicOrders.Views.TradesInvoiceNumber extends Backbone.View
     unless /^[0-9]*$/.test($("#invoice_number_text").val())
       alert("发票格式不正确")
       return
-
+      
+    @model.set "operation", "发票号设置"
     @model.save {"invoice_number": $("#invoice_number_text").val()},
       success: (model, response) =>
         $.unblockUI()

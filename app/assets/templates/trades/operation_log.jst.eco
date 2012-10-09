@@ -1,0 +1,32 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal">×</button>
+  <h3>操作日志</h3>
+</div>
+<div class="modal-body">
+  <fieldset>
+    <div class="control-group">
+      <label class="control-label">订单号：<%= @trade.get("tid") %></label>
+    </div>
+  </fieldset>  
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>操作时间</th>        
+        <th>操作</th>
+        <th>操作人</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for log in @trade.get('operation_logs'): %>
+      <tr>
+        <td><%= log.operated_at %></td>
+        <td><%= log.operation %></td>
+        <td><%= log.operator %></td>    
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+<div class="modal-footer">
+  <a class="btn" data-dismiss="modal">关闭</a>
+</div>

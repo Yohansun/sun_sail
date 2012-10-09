@@ -13,6 +13,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     'trades/:id/seller_confirm_invoice':'seller_confirm_invoice'
     'trades/:id/barcode':'barcode'
     'trades/:id/mark_unusual_state':'mark_unusual_state'
+    'trades/:id/operation_log':'operation_log'
     'trades/:id/confirm_color': 'confirm_color'
     'trades/:id/confirm_check_goods': 'confirm_check_goods'
 
@@ -52,6 +53,9 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       Backbone.history.navigate('trades')
 
     $('#trade_mark_unusual_state').on 'hide', (event) ->
+      Backbone.history.navigate('trades')
+
+    $('#trade_operation_log').on 'hide', (event) ->
       Backbone.history.navigate('trades')
 
     $('#trade_confirm_color').on 'hide', (event) ->
@@ -239,6 +243,17 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       view = new MagicOrders.Views.TradesMarkUnusualState(model: model)
       $('#trade_mark_unusual_state').html(view.render().el)
       $('#trade_mark_unusual_state').modal('show')
+
+  operation_log: (id) ->
+    blocktheui()
+
+    @model = new MagicOrders.Models.Trade(id: id)
+    @model.fetch success: (model, response) =>
+      $.unblockUI()
+
+      view = new MagicOrders.Views.TradesOperationLog(model: model)
+      $('#trade_operation_log').html(view.render().el)
+      $('#trade_operation_log').modal('show')
 
   confirm_color: (id) ->
     blocktheui()

@@ -14,7 +14,7 @@ class MagicOrders.Views.TradesSellerConfirmInvoice extends Backbone.View
 
   save: ->
     blocktheui()
-
+    @model.set "operation", "确认开票"
     @model.save 'seller_confirm_invoice_at', true, success: (model, response) =>
       $.unblockUI()
 

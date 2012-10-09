@@ -88,3 +88,11 @@ json.unusual_states @trade.unusual_states do |json, state|
   json.repair_man state.repair_man
   json.repaired_at state.repaired_at.strftime("%m-%d %H:%M:%S") if state.repaired_at
 end
+
+json.operation_logs @trade.operation_logs do |json, log|
+  json.id log.id
+  json.operator log.operator
+  json.operator_id log.operator_id
+  json.operated_at log.operated_at.strftime("%m-%d %H:%M:%S") if log.operated_at
+  json.operation log.operation
+end

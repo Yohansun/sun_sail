@@ -26,7 +26,7 @@ class MagicOrders.Views.TradesCsMemo extends Backbone.View
       orders[i].cs_memo = order_cs_memos[order.id]
 
     @model.set("orders", orders)
-
+    @model.set "operation", "客服备注"
     @model.save {'cs_memo': $("#cs_memo_text").val()}, success: (model, response) =>
       $.unblockUI()
 

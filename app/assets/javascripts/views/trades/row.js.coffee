@@ -16,6 +16,7 @@ class MagicOrders.Views.TradesRow extends Backbone.View
     'click [data-type=seller_confirm_invoice]':'show_seller_confirm_invoice'
     'click [data-type=barcode]':'show_barcode'
     'click [data-type=mark_unusual_state]':'show_mark_unusual_state'
+    'click [data-type=operation_log]':'show_operation_log'
     'click [data-type=confirm_color]':'show_confirm_color'
     'click [data-type=confirm_check_goods]':'show_confirm_check_goods'
 
@@ -85,6 +86,10 @@ class MagicOrders.Views.TradesRow extends Backbone.View
   show_mark_unusual_state: (e) ->
     e.preventDefault()
     Backbone.history.navigate('trades/' + @model.get("id") + '/mark_unusual_state', true)
+
+  show_operation_log: (e) ->
+    e.preventDefault()
+    Backbone.history.navigate('trades/' + @model.get("id") + '/operation_log', true)
 
   show_confirm_color: (e) ->
     e.preventDefault()
