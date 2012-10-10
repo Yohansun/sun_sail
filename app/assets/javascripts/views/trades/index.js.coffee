@@ -242,6 +242,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
     @status_option = $("#status_option").val()
     @type_option = $("#type_option").val()
+    @state_option = $("#state_option").val()
 
     @search_start_date = $(".search_start_date").val()
     @search_end_date = $(".search_end_date").val()

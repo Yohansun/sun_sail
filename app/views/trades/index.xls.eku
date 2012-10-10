@@ -26,8 +26,8 @@ row_number = 2
       trade.created.try(:strftime,"%Y-%m-%d %H:%M:%S"), trade.pay_time.try(:strftime,"%Y-%m-%d %H:%M:%S"),
       trade.dispatched_at.try(:strftime,"%Y-%m-%d %H:%M:%S"), trade.delivered_at.try(:strftime,"%Y-%m-%d %H:%M:%S"),
       trade.receiver_name, trade.receiver_mobile_phone, trade.receiver_address,
-      trade.seller_memo, trade.buyer_message, trade.cs_memo,
-      order.color_num, trade.invoice_name, trade.try(:seller).try(:name), distributor_usercode, tc_order_id,  
+      trade.seller_memo, trade.buyer_message, trade.cs_memo + "; " + order.cs_memo,
+      order.color_num.join(","), trade.invoice_name, trade.try(:seller).try(:name), distributor_usercode, tc_order_id,
       order.title, order.auction_price, order.num
       if count.even?
         sheet1.row(row_number + i).default_format = blue_format
