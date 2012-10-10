@@ -32,9 +32,7 @@ json.array!(@trades) do |json, trade|
   json.invoice_value trade.sum_fee
   
   json.point_fee trade.point_fee
-  unless TradeSetting.company == 'dulux' && current_user.has_role?(:seller)
-    json.total_fee trade.total_fee
-  end
+  json.total_fee trade.total_fee
 
   json.seller_confirm_deliver_at trade.seller_confirm_deliver_at.strftime("%m-%d %H:%M") if trade.seller_confirm_deliver_at
   json.seller_confirm_invoice_at trade.seller_confirm_invoice_at.strftime("%m-%d %H:%M") if trade.seller_confirm_invoice_at
