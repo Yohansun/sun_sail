@@ -161,7 +161,6 @@
       <% if @trade.get('invoice_name') : %>
         <li><a data-toggle="modal" href="#" data-type="seller_confirm_invoice">确认开票</a></li>
       <% end %>
-
       <% if @trade.get('delivered_at') : %>
         <li><a data-toggle="modal" href="#" data-type="barcode">输入唯一码</a></li>
       <% end %>

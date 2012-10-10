@@ -202,17 +202,28 @@
               <option value="TRADE_CLOSED_BY_TAOBAO">交易被淘宝关闭</option>
               <option value="TRADE_REFUNDING">退款中</option>
             </select>
-
-            <div class="input-append">
-              <label style="position: relative; top: 5px;">下单时间：</label>
-              <input type="text" style="margin-right:5px;" placeholder="年-月-日" class="input-small search_start_date datepicker" value="<%= @search_start_date %>">
-              <input type="text" placeholder="00:00:00" class="input-small search_start_time timepicker" value="<%= @search_start_time %>">
-              <i class="icon-arrow-right"></i>
-              <input type="text" style="margin-right:5px;" placeholder="年-月-日" class="input-small search_end_date datepicker" value="<%= @search_end_date %>">
-              <input type="text" placeholder="00:00:00" class="input-small search_end_time timepicker" value="<%= @search_end_time %>">
-            </div>
           </div>
         </fieldset>
+
+        <fieldset class="mar_t5">
+          <div class="controls">
+            <label style="position: relative; top: 5px;">下单时间：</label>
+            <input type="text" style="margin-right:5px;" placeholder="年-月-日" class="input-small search_start_date datepicker" value="<%= @search_start_date %>">
+            <input type="text" placeholder="00:00:00" class="input-small search_start_time timepicker" value="<%= @search_start_time %>">
+            <i class="icon-arrow-right"></i>
+            <input type="text" style="margin-right:5px;" placeholder="年-月-日" class="input-small search_end_date datepicker" value="<%= @search_end_date %>">
+            <input type="text" placeholder="00:00:00" class="input-small search_end_time timepicker" value="<%= @search_end_time %>">
+          </div>
+          <div class="controls">
+            <label style="position: relative; top: 5px;">付款时间：</label>
+            <input type="text" style="margin-right:5px;" placeholder="年-月-日" class="input-small pay_start_date datepicker" value="<%= @pay_start_date %>">
+            <input type="text" placeholder="00:00:00" class="input-small pay_start_time timepicker" value="<%= @pay_start_time %>">
+            <i class="icon-arrow-right"></i>
+            <input type="text" style="margin-right:5px;" placeholder="年-月-日" class="input-small pay_end_date datepicker" value="<%= @pay_end_date %>">
+            <input type="text" placeholder="00:00:00" class="input-small pay_end_time timepicker" value="<%= @pay_end_time %>">
+          </div>
+        </fieldset>
+
         <fieldset class="mar_t10">
           <div class="span4">
             <code>订单属性</code>
@@ -242,16 +253,17 @@
                 </label>
               </div>
             </div>
-            <div class="controls">
-              <label class="control-label">订单来源：</label>
-              <select id="type_option" class="input-large type_option">
-                <option value="">请选择</option>
-                <option value="JingdongTrade">京东</option>
-                <option value="TaobaoTrade">淘宝</option>
-                <option value="TaobaoPurchaseOrder">分销平台</option>
-              </select>
-            </div>
-            <div class="controls" id="select_state"><!--买家地域--></div>
+              <div class="controls">
+                <label class="control-label">订单来源：</label>
+                <select id="type_option" class="input-large type_option">
+                  <option value="">请选择</option>
+                  <option value="JingdongTrade">京东</option>
+                  <option value="TaobaoTrade">淘宝</option>
+                  <option value="TaobaoPurchaseOrder">分销平台</option>
+                </select>
+              </div>
+              <div class="controls" id="select_state"><!--买家地域--></div>
+           
             <!-- <div class="controls">
               <label for="select04" class="control-label">活动：</label>
               <select id="select04" class="input-medium">

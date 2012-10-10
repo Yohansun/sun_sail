@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 class Notifier < ActionMailer::Base
   helper :application
-  default :from => "E-Business@nipponpaint.com.cn"
+  default :from => TradeSetting.email_notifier_from
   
   def app_token_errors(token,response)
     mail(:to => %w{errors@networking.io},
@@ -38,8 +38,8 @@ class Notifier < ActionMailer::Base
     @is_1568 = @trade.is_1568
     @trade_info = "您好，#{@area_name}地区目前有一张#{@trade_from}订单"
     mail_subject = "#{@trade_from}订单#{@tid}-#{@area_name}（#{Time.now.strftime("%Y/%m/%d")}），请及时发货"
-    reply_to = 'E-Business@nipponpaint.com.cn'
-    bcc = %w(ayaya8586@163.com)
+    reply_to = TradeSetting.email_notifier_from
+    bcc = %w(TradeSetting.email_notifier_dispatch_bcc)
 
     if @trade.seller
       to_emails = @trade.seller.parent.email.split(',')

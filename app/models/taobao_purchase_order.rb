@@ -120,6 +120,6 @@ class TaobaoPurchaseOrder < Trade
   end
 
   def cc_emails
-    super << 'zhuyanqing@nipponpaint.com.cn'
+    super
   end  
 end

@@ -139,6 +139,13 @@ class TradesController < ApplicationController
       @trades = @trades.where(:created.gte => start_time, :created.lte => end_time)
     end
 
+    # 按付款时间筛选
+    if params[:search_all] && params[:search_all][:pay_start_date].present? && params[:search_all][:pay_end_date].present?
+      pay_start_time = "#{params[:search_all][:pay_start_date]} #{params[:search_all][:pay_start_time]}".to_time(form = :local)
+      pay_end_time = "#{params[:search_all][:pay_end_date]} #{params[:search_all][:pay_end_time]}".to_time(form = :local)
+      @trades = @trades.where(:pay_time.gte => pay_start_time, :pay_time.lte => pay_end_time)
+    end
+
     # 按状态筛选
     if params[:search_all] && params[:search_all][:status_option].present?
         status_array = params[:search_all][:status_option].split(",")
@@ -192,7 +199,6 @@ class TradesController < ApplicationController
     limit = params[:limit] || 20
 
     @trades = TradeDecorator.decorate(@trades.limit(limit).offset(offset).order_by("created", "DESC"))
-
     if @trades.count > 0
       respond_with @trades
     else

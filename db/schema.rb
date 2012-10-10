@@ -11,8 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-
-ActiveRecord::Schema.define(:version => 20120929081434) do
+ActiveRecord::Schema.define(:version => 20121005112932) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -147,6 +146,7 @@ ActiveRecord::Schema.define(:version => 20120929081434) do
     t.integer  "performance_score", :default => 0
     t.string   "interface"
     t.boolean  "has_stock",         :default => false
+    t.datetime "stock_opened_at"
   end
 
   create_table "sellers_areas", :force => true do |t|
@@ -205,7 +205,8 @@ ActiveRecord::Schema.define(:version => 20120929081434) do
     t.integer  "stock_product_id"
     t.datetime "created_at",                      :null => false
     t.datetime "updated_at",                      :null => false
-    
+  end
+
   create_table "taobao_app_tokens", :force => true do |t|
     t.integer  "account_id"
     t.string   "access_token"
@@ -214,6 +215,9 @@ ActiveRecord::Schema.define(:version => 20120929081434) do
     t.string   "refresh_token"
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
+    t.datetime "last_refresh_at"
+    t.string   "name",             :null => false
+    t.integer  "trade_source_id"
   end
 
   create_table "trade_sources", :force => true do |t|

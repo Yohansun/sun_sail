@@ -45,7 +45,7 @@
           <td><%= seller.categories_ids.count %></td>
           <td><%= seller.fullname %></td>
           <td><%= seller.mobile %></td>
-          <td><%= seller.stock_opened_at.try(:strftime, "%y-%m-%d %H:%M:%S") %></td>
+          <td><%= seller.stock_opened_at.try(:strftime, "%y-%m-%d %H:%M:%S") if seller.stock_opened_at%></td>
           <td>
             <div class="btn-group">
               <button data-toggle="dropdown" class="btn btn-info dropdown-toggle min_w">

@@ -13,7 +13,7 @@
           <option value='<%= f.id%>'><%= f.name %></option>
           <% end %>
         </select>
-        <select class="span2 pull-left" multiple="multiple" id='product' name='stock_product[product_id]'>
+        <select class="span4 pull-left" multiple="multiple" id='product' name='stock_product[product_id]'>
           <%= render partial: "products", :object => @products = Product.all %>
         </select>
       </div>
