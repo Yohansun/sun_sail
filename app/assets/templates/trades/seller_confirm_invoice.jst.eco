@@ -44,14 +44,16 @@
           <%= @trade.get 'invoice_date' %>
         </td>
       </tr>
+      <% if @trade.get('total_fee') : %>
       <tr>
         <th>发票金额：</th>
         <td>
           <% if @trade.get 'invoice_name' : %>
-            ￥<%= @trade.get 'sum_fee' %>
+            ￥<%= @trade.get('total_fee') %>
           <% end %>
         </td>
       </tr>
+      <% end %>
     </tbody>
   </table>
 </div><!-- modal-body -->

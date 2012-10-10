@@ -88,9 +88,11 @@
 <td data-col='point_fee'>
   <%= @trade.get('point_fee') %>
 </td>
+<% if @trade.get('total_fee') : %>
 <td data-col='total_fee'>
   ￥<%= @trade.get('total_fee') %>
 </td>
+<% end %>
 <!-- <td data-col='deliver_bill' ><!--出货单--</td> -->
 <td data-col='deliver_bill_id' ><!--出货单编号--></td>
 <td data-col='deliver_bill_status' ><!--出货单状态--></td>

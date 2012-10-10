@@ -3,6 +3,7 @@
   $(function() {
     MagicOrders.init();
     MagicOrders.role_key = "<%= current_user.roles.first.try(:name) %>";
+    MagicOrders.company = "<%= TradeSetting.company %>"
 
   });
 </script>
