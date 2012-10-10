@@ -2,14 +2,16 @@
     <header class="jumbotron subhead" id="overview">
       <div class="subnav">
         <ul class="nav nav-pills">
-          <li class="active"><%= link_to '成品仓库', seller_stocks_path(params[:seller_id]) %></li>
+          <li class="active"><%= link_to @seller.try(:name), seller_stocks_path(@seller) %></li>
+          <!--新建商品没有进销记录记录-->
         </ul>
       </div>
     </header>
     <div class="row-fluid">
       <ul class="breadcrumb" style="position:relative;">
-        <li><%= link_to '仓库管理', seller_stocks_path(params[:seller_id]) %><span class="divider">/</span></li>
-        <li><%= link_to '成品仓库', seller_stocks_path(params[:seller_id]) %><span class="divider">/</span></li>
+        <li> <%= link_to 'Magic', root_path %><span class="divider">/</span></li>
+        <li><a href="/stocks">仓库管理</a><span class="divider">/</span></li>
+        <li><%= link_to @seller.try(:name), seller_stocks_path(@seller) %><span class="divider">/</span></li>
         <li class="active">新增商品</li>
       </ul><!-- breadcrumb -->
 
