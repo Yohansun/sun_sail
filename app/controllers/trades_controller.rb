@@ -330,6 +330,10 @@ class TradesController < ApplicationController
       end
     end
 
+    unless params[:operation].blank?
+      @trade.operation_logs.build(operated_at: Time.now, operator: current_user.name, operator_id: current_user.id, operation: params[:operation])
+    end
+
     if @trade.save
       @trade = TradeDecorator.decorate(@trade)
       respond_with(@trade) do |format|

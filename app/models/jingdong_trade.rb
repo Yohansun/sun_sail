@@ -10,6 +10,7 @@ class JingdongTrade < Trade
   field :vender_id, type: String
   field :pay_type, type: String
   field :order_total_price, type: Float
+  field :order_seller_price, type: Float
   field :order_payment, type: Float
   field :freight_price, type: Float
   field :seller_discount, type: Float

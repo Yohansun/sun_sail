@@ -19,6 +19,7 @@ class MagicOrders.Views.TradesInvoice extends Backbone.View
     @model.set "invoice_name", $("#invoice_name_text").val()
     @model.set "invoice_content", $("#invoice_content_text").val()
     @model.set "invoice_date", $("#invoice_date_text").val()
+    @model.set "operation", "申请开票"
     @model.save {"invoice_name": $("#invoice_name_text").val()},
       error: (model, error, response) ->
         $.unblockUI()

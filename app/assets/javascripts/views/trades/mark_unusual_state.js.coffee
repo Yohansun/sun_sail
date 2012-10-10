@@ -5,6 +5,8 @@ class MagicOrders.Views.TradesMarkUnusualState extends Backbone.View
   events:
     'click .save': 'save'
     'click .manage' : 'manage'
+    'focus #other_state' : 'keep_pace_text'
+    'click #other_radio' : 'keep_pace_radio'
  
   initialize: ->
     @model.on("fetch", @render, this)
@@ -31,6 +33,7 @@ class MagicOrders.Views.TradesMarkUnusualState extends Backbone.View
         alert("异常已标注过")
         return
      	
+    @model.set "operation", "标注异常"
     @model.save {'reason': @reason},
       success: (model, response) =>
         $.unblockUI()
@@ -47,9 +50,16 @@ class MagicOrders.Views.TradesMarkUnusualState extends Backbone.View
     blocktheui()
 
     id = $(event.target).data("id")
-    
+    @model.set "operation", "处理异常"
     @model.save {'state_id': id }, success: (model, response) =>
       $.unblockUI()
       view = new MagicOrders.Views.TradesRow(model: model)
       $("#trade_#{model.get('id')}").replaceWith(view.render().el)
       $('#trade_mark_unusual_state').modal('hide')
+
+  keep_pace_text: ->
+    $('#other_radio').attr("checked",true);
+
+  keep_pace_radio: ->
+    $('#other_state').focus();
+    

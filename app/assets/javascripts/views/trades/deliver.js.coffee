@@ -22,6 +22,7 @@ class MagicOrders.Views.TradesDeliver extends Backbone.View
     @model.set('logistic_code', $("#logistic_code").val())
     @model.set('logistic_waybill', $("#logistic_waybill").val())
     @model.set('delivered_at', true)
+    @model.set "operation", "订单发货"
     @model.save {'logistic_code': $("#logistic_code").val()},
       error: (model, error, response) ->
         $.unblockUI()

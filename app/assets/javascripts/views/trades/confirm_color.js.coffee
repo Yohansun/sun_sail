@@ -14,7 +14,7 @@ class MagicOrders.Views.TradesConfirmColor extends Backbone.View
 
   save: ->
     blocktheui()
-
+    @model.set "operation", "确认调色"
     @model.save 'confirm_color_at', true, success: (model, response) =>
       $.unblockUI()
 

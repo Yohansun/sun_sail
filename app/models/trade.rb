@@ -66,6 +66,7 @@ class Trade
   index :has_unusual_state
 
   embeds_many :unusual_states
+  embeds_many :operation_logs
 
   attr_accessor :matched_seller
 

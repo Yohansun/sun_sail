@@ -44,12 +44,12 @@
           <input type="radio" value="长时间未发货" name="reason">长时间未发货
         </label>
         <label class="radio">
-          <input type="radio" value= "其他" name="reason">
+          <input type="radio" value= "其他" name="reason" id="other_radio">
           <input type="text" placeholder="其他..." class="input-large" id="other_state">
         </label>
       </div>
     </div>
-  </fieldset>  
+  </fieldset>
 </div>
 <div class="modal-footer">
   <a class="btn" data-dismiss="modal">取消</a>

@@ -3,6 +3,7 @@
   $(function() {
     MagicOrders.init();
     MagicOrders.role_key = "<%= current_user.roles.first.try(:name) %>";
+    MagicOrders.company = "<%= TradeSetting.company %>"
 
   });
 </script>
@@ -25,4 +26,5 @@
 <div id="trade_mark_unusual_state" class="modal fade hide"></div>
 <div id="trade_confirm_color" class="modal fade hide"></div>
 <div id="trade_confirm_check_goods" class="modal fade hide"></div>
+<div id="trade_operation_log" class="modal fade hide"></div>
 <div id="seller_area" class="modal fade hide"></div>

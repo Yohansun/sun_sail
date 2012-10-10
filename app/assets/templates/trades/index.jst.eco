@@ -325,7 +325,6 @@
         <th data-col='status_history' style="max-width:150px">历史状态</th>
 
         <th data-col='receiver_id'>客户ID</th>                <!--Newly Add-->
-
         <th data-col='receiver_name' nowrap>客户姓名</th>
         <th data-col='receiver_mobile_phone'>联系电话</th>
         <th data-col='receiver_address' style="min-width:100px">联系地址</th>
@@ -335,8 +334,9 @@
         <th data-col='color_info'>调色<br/>信息</th>
         <th data-col='invoice_info'>发票<br/>信息</th>
         <th data-col='point_fee' nowrap>使用积分</th>
+        <% if MagicOrders.company == "dulux" and MagicOrders.role_key != 'seller' : %>
         <th data-col='total_fee' nowrap>实付金额</th>
-
+        <% end %>
         <!-- <th data-col='deliver_bill'>出货单</th>  -->             <!--Newly Add-->
         <th data-col='deliver_bill_id'>出货单编号</th>
         <th data-col='deliver_bill_status'>出货单状态</th>
