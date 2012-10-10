@@ -46,6 +46,12 @@
       </div>
       <div class="controls">
         <label class="checkbox inline">
+          <%= check_box_tag :logistic, '1', @user.has_role?(:logistic) %>
+          物流配送商
+        </label>
+      </div>
+      <div class="controls">
+        <label class="checkbox inline">
           <%= check_box_tag :interface, '1', @user.has_role?(:interface) %>
           销售部联络人
         </label>
