@@ -3,14 +3,16 @@
 <% if @trade.get('trade_source') == "分销平台" : %>
   <br><span class="label label-info">店铺代码:<%= @trade.get('distributor_usercode') %></span></td>
 <% end %>
-<td data-col='tid'>
-  <% if @trade.get('splitted_tid'): %>
-    <span class="label label-info">拆分订单</span>
-    <br/>
-    <%= @trade.get('splitted_tid') %>
-  <% else: %>
-    <%= @trade.get('tid') %>
-  <% end %>
+<td data-col='tid' data-type="detail">
+  <a href="#">
+    <% if @trade.get('splitted_tid'): %>
+      <span class="label label-info">拆分订单</span>
+      <br/>
+      <%= @trade.get('splitted_tid') %>
+    <% else: %>
+      <%= @trade.get('tid') %>
+    <% end %>
+  </a>
   <% if @trade.get('trade_source') == "分销平台" : %>
     <span class="label label-info">主订单号:<%= @trade.get('tc_order_id') %></span>
   <% end %>
