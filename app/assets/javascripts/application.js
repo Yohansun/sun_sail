@@ -34,6 +34,7 @@ $(function () {
     $('.centerDashboard a').hide();
     $(".centerDashboard").show();
     $(".centerDashboard div").mouseenter(function(event){
+      $(this).css('height','142px');
       $(this).delay(1000).stop(true).animate({'top':'-20px'},10)
       .animate({'top':'0'},100)
       .animate({'top':'-15px'},100)
