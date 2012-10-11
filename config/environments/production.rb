@@ -58,7 +58,7 @@ MagicOrders::Application.configure do
   # the I18n.default_locale when a translation can not be found)
   config.i18n.fallbacks = true
 
-  config.action_mailer.default_url_options = { :host => TradeSetting.action_mailer_default_url_options }
+  config.action_mailer.default_url_options = YAML.load_file(Rails.root.join('config', 'magic_setting.yml')).try(:to_options)
   ### ActionMailer Config
   # Setup for production - deliveries, no errors raised
   config.action_mailer.delivery_method = :smtp
