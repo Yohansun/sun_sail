@@ -11,6 +11,7 @@ class TradesController < ApplicationController
     if current_user.has_role?(:seller)
       if seller
         @trades = Trade.where(seller_id: seller.id)
+        @trades = @trades.where("$and" => [{:dispatched_at.ne => nil},{:dispatched_at.exists => true},{:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"]}])
       else
         render json: []
         return
