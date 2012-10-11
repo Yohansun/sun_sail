@@ -11,12 +11,10 @@
           <td><%= @trade.get("tid") %></td>
         </tr> -->
         <tr>
-          <th>商品</th>
           <th>条形码</th>
         </tr>
         <% for order in @trade.get('orders'): %>
         <tr>
-          <td><%= order.title %> x <%= order.num %></td>
           <td>
             <% for count in [0...order.num] : %>
               <div class="controls">
