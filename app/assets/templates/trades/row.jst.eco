@@ -133,7 +133,9 @@
       <% end %>
       <li class= "divider"></li>
       <% if @trade.get('status_text') isnt '交易被淘宝关闭' and @trade.get('status_text') isnt '交易已关闭' and @trade.get('status_text') isnt '等待付款' : %>
-      <li><a data-toggle="modal" href="#" data-type="invoice">申请开票</a></li>
+        <% if @trade.get('seller_confirm_invoice_at') == undefined : %>
+        <li><a data-toggle="modal" href="#" data-type="invoice">申请开票</a></li>
+        <% end %>
       <li><a data-toggle="modal" href="#" data-type="color">申请调色</a></li>
       <% end %>
       <li><a data-toggle="modal" href="#" data-type="cs_memo">客服备注</a></li>
@@ -156,11 +158,11 @@
         <li><a data-toggle="modal" href="#" data-type="confirm_check_goods">确认验货</a></li>
       <% end %>
 
-      <% if !@trade.get('seller_confirm_deliver_at') && @trade.get('status_text') == '已付款，已发货' : %>
+      <% if @trade.get('seller_confirm_deliver_at') == undefined && @trade.get('status_text') == '已付款，已发货' : %>
         <li><a data-toggle="modal" href="#" data-type="seller_confirm_deliver">确认发货</a></li>
       <% end %>
 
-      <% if @trade.get('invoice_name') : %>
+      <% if @trade.get('invoice_name') && @trade.get('seller_confirm_invoice_at') == undefined : %>
         <li><a data-toggle="modal" href="#" data-type="seller_confirm_invoice">确认开票</a></li>
       <% end %>
 
