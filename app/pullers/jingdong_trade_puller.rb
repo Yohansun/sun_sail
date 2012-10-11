@@ -6,9 +6,17 @@ class JingdongTradePuller
       total_pages = nil
       page_no = 1
       
-      end_time ||= Time.now
-      start_time ||= end_time - 1.days
-
+      if start_time.blank?  
+        latest_created_order = JingdongTrade.only("created").order_by("created", "DESC").limit(1).first
+        start_time = latest_created_order.created - 1.hour
+      end
+      
+      if end_time.blank?
+        end_time = Time.now
+      end
+  
+      p "starting create_orders: since #{start_time}" 
+        
       order_states = 'WAIT_SELLER_DELIVERY,WAIT_SELLER_STOCK_OUT,WAIT_GOODS_RECEIVE_CONFIRM,FINISHED_L,TRADE_CANCELED'
       begin 
         response = JingdongFu.get(method: '360buy.order.search',
@@ -17,6 +25,7 @@ class JingdongTradePuller
           end_date: end_time.strftime("%Y-%m-%d %H:%M:%S"),
           page: page_no,
           page_size: 10)
+    
         
         total_results = response['order_search_response']['order_search']['order_total']
         total_pages = total_results / 10 
