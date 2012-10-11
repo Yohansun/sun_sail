@@ -3,6 +3,7 @@ class User < ActiveRecord::Base
   rolify
   belongs_to :area
   belongs_to :seller
+  belongs_to :logistic
 
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,

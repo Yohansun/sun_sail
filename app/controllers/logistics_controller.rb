@@ -3,38 +3,40 @@ class LogisticsController < ApplicationController
   before_filter :authenticate_user!
   before_filter :admin_only!
 
-	def index
-		@logistics = Logistic.page(params[:page])
-	end
+  def index
+    @logistics = Logistic.page(params[:page])
+  end
 
-	def new
-		@logistics = Logistic.new
-	end
+  def new
+    @logistics = Logistic.new
+  end
 
-	def create
-		@logistics = Logistic.new
-		@logistics.name = params[:logistic][:name]
-		if @logistics.save
-			redirect_to logistics_path
+  def create
+    @logistics = Logistic.new
+    @logistics.name = params[:logistic][:name]
+    @logistics.code = params[:logistic][:code].upcase
+    if @logistics.save
+      redirect_to logistics_path
     else
       render :new
     end
-	end
+  end
 
-	def edit
-		@logistics = Logistic.find params[:id]
-		render :new
-	end
+  def edit
+    @logistics = Logistic.find params[:id]
+    render :new
+  end
 
-	def update
-		@logistics = Logistic.find params[:id]
-		@logistics.name = params[:logistic][:name]
-		if @logistics.save
-			redirect_to logistics_path
+  def update
+    @logistics = Logistic.find params[:id]
+    @logistics.name = params[:logistic][:name]
+    @logistics.code = params[:logistic][:code].upcase
+    if @logistics.save
+      redirect_to logistics_path
     else
       render :new
     end
-	end
+  end
 
 	def delete
 		logistics = Logistic.find params[:id]
@@ -43,7 +45,6 @@ class LogisticsController < ApplicationController
 	end
 
 	def logistic_area
-		logger.debug(params[:logistic_id])
     @logistics = LogisticArea.where(logistic_id: params[:logistic_id]).all
     respond_to do |f|
       f.js
@@ -75,6 +76,48 @@ class LogisticsController < ApplicationController
       @area_id = logistic_area.area_id
       logistic_area.destroy
     end
+    respond_to do |f|
+      f.js
+    end
+  end
+
+  def logistic_user
+    @logistic_user = User.where(logistic_id: params[:logistic_id])
+    respond_to do |f|
+      f.js
+    end
+  end
+
+  def user_list
+    if params[:user_name].present?
+      @user = User.where(["logistic_id is null and name like ?", "%#{params[:user_name].strip}%"])
+    else
+      @user = User.where(:logistic_id => nil)
+    end
+    respond_to do |f|
+      f.js
+    end
+  end
+
+  def logistic_user_list
+    @flag = false
+    user = User.find params[:u_id]
+    user.logistic_id = params[:logistic_id]
+    if user.save
+      @flag = true
+    else
+      @flag = false
+    end
+    @logistic_user_list = User.where(logistic_id: user.logistic_id)
+    respond_to do |f|
+      f.js
+    end
+  end
+
+  def remove_logistic_user
+    user = User.find params[:u_id]
+    user.logistic_id = nil
+    user.save
     respond_to do |f|
       f.js
     end

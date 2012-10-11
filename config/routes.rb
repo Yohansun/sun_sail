@@ -51,6 +51,10 @@ MagicOrders::Application.routes.draw do
       get :logistic_area
       get :remove_logistic_area
       get :create_logistic_area
+      post :user_list
+      get :remove_logistic_user
+      get :logistic_user
+      get :logistic_user_list
     end 
   end
   resources :users

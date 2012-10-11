@@ -29,6 +29,7 @@
         <tr>
           <th>编号</th>
           <th>物流商名称</th>
+          <th>Code</th>
           <th>操作</th>
         </tr>
       </thead>
@@ -40,6 +41,36 @@
     <%= paginate @logistics %>
   </div>
 </div>
+
+<div id="dealer_login" class="modal hide fade">
+  <div class="modal-header">
+    <h3>登录帐号设置
+      <button type="button" class="close" data-dismiss="modal">&times;</button>
+    </h3>
+  </div><!-- modal-header -->
+  <div class="modal-body clearfix">
+    <div id='logistic_id_container' style="display:none"></div>
+    <div id='user_table'>
+      <table class="table table-bordered table-striped pull-left w_55" id="user_table_list">
+
+      </table>
+    </div>
+    <div class="pull-right well w_35">
+      <div class="input-append">
+        <%= form_tag user_list_logistics_path,:remote => true do %>
+          <%= text_field_tag "user_name", '',:value => "#{params[:user_name] if params[:user_name]}", :class => "input-large"%>
+          <%= button_tag "搜索用户", :class => "btn btn-primary" %>
+        <% end %>
+      </div>
+      <div id='user_list'>
+      </div>
+    </div>
+  </div><!-- modal-body -->
+  <div class="modal-footer">
+    <a href="#" class="btn" data-dismiss="modal" >取消</a>
+  </div><!-- modal-footer -->
+</div><!-- seller_area -->
+
 <div id="dealer_area" class="modal hide fade">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal">&times;</button>
