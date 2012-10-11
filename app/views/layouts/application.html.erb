@@ -63,10 +63,10 @@
                   <li><%= link_to '仓库管理', stocks_path, class: "stocks" %></li>
                 <% end %>
                 <% if current_user.has_role?(:admin) %>
-                  <li><%= link_to '商品管理', products_path, class: "products" %></li>
-                  <li><a href="/sellers" class="sellers">经销商管理</a></li>
-                  <li class= "divider"></li>
-                  <li><a href="/users" class="users">系统设置</a></li>
+                <li><%= link_to '颜色管理', colors_path %></li>
+                <li><%= link_to '商品管理', products_path, class: "products" %></li>
+                <li class= "divider"></li>
+                <li><a href="/users" class="users">系统设置</a></li>
                 <% end %>
               </ul>
             </li>

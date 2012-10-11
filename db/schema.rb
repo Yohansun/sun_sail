@@ -56,6 +56,22 @@ ActiveRecord::Schema.define(:version => 20121005112932) do
 
   add_index "colors", ["num"], :name => "index_colors_on_num"
 
+  create_table "colors_products", :force => true do |t|
+    t.integer  "color_id"
+    t.integer  "product_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "colors_products", ["product_id"], :name => "index_colors_products_on_product_id"
+
+  create_table "colors_stock_products", :force => true do |t|
+    t.integer "color_id"
+    t.integer "stock_product_id"
+  end
+
+  add_index "colors_stock_products", ["stock_product_id"], :name => "index_colors_stock_products_on_stock_product_id"
+
   create_table "feature_product_relationships", :force => true do |t|
     t.integer  "product_id"
     t.integer  "feature_id"
@@ -130,7 +146,6 @@ ActiveRecord::Schema.define(:version => 20121005112932) do
     t.string   "fullname"
     t.string   "address"
     t.string   "mobile"
-    t.string   "phone"
     t.datetime "created_at",                           :null => false
     t.datetime "updated_at",                           :null => false
     t.integer  "parent_id"
@@ -235,27 +250,35 @@ ActiveRecord::Schema.define(:version => 20121005112932) do
   end
 
   create_table "users", :force => true do |t|
-    t.string   "email",                  :default => "",    :null => false
-    t.string   "encrypted_password",     :default => "",    :null => false
+    t.string   "username",                                              :null => false
+    t.string   "name"
+    t.string   "email",                               :default => "",   :null => false
+    t.string   "encrypted_password",   :limit => 128, :default => "",   :null => false
+    t.string   "password_salt",                       :default => "",   :null => false
     t.string   "reset_password_token"
-    t.datetime "reset_password_sent_at"
+    t.string   "remember_token"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          :default => 0
+    t.integer  "sign_in_count",                       :default => 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.datetime "created_at",                                :null => false
-    t.datetime "updated_at",                                :null => false
-    t.boolean  "is_super_admin",         :default => false
-    t.string   "name"
-    t.boolean  "active",                 :default => true
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "role"
+    t.integer  "role_level",                          :default => 10
+    t.integer  "sellers_count",                       :default => 0
+    t.integer  "parent_id"
+    t.integer  "children_count",                      :default => 0
+    t.integer  "lft",                                 :default => 0
+    t.integer  "rgt",                                 :default => 0
+    t.boolean  "active",                              :default => true
     t.integer  "seller_id"
-    t.string   "username"
   end
 
-  add_index "users", ["email"], :name => "index_users_on_email", :unique => true
-  add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
+  add_index "users", ["email"], :name => "index_admins_on_email", :unique => true
+  add_index "users", ["parent_id"], :name => "index_admins_on_parent_id"
+  add_index "users", ["reset_password_token"], :name => "index_admins_on_reset_password_token", :unique => true
 
   create_table "users_roles", :id => false, :force => true do |t|
     t.integer "user_id"
