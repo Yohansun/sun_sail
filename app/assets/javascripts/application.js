@@ -95,6 +95,13 @@ $(function () {
      $.get("/logistics/logistic_area", {logistic_id:logistic_id}, function(result){
      });
    })
+
+   $('.logistic_login_acount').click(function(argument) {
+    var logistic_id = $(this).attr('data-id');
+    $("#logistic_id_container").html(logistic_id);
+    $.get("/logistics/logistic_user", {logistic_id:logistic_id}, function(result){
+    });
+  })
    
 });
 
