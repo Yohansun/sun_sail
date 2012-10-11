@@ -13,17 +13,12 @@ class MagicOrders.Views.TradesDeliver extends Backbone.View
     this
 
   deliver: ->
-    if $("#logistic_code").val() == "-1"
-      $("#logistic_code").parent().addClass("error")
-      $("#logistic_code").parent().find(".help-inline").show()
-      return
-
     blocktheui()
-    @model.set('logistic_code', $("#logistic_code").val())
+    @model.set('logistic_info', $("#logistic_info").val())
     @model.set('logistic_waybill', $("#logistic_waybill").val())
     @model.set('delivered_at', true)
     @model.set "operation", "订单发货"
-    @model.save {'logistic_code': $("#logistic_code").val()},
+    @model.save {'logistic_info': $("#logistic_info").val()},
       error: (model, error, response) ->
         $.unblockUI()
         alert(error)
