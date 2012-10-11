@@ -191,13 +191,13 @@ class Trade
   end
 
   def matched_logistics
-    area ||= default_area
+    area = default_area
     if area
-      @logistic_ids ||= LogisticArea.where(area_id: area.id).map{|l| l.logistic_id }.join(",")
-      @matched_logistics ||= Logistic.where("id in (?)", @logistic_ids).map{|ml| [ml.id, ml.name]}
-      [[1,"dulux"]] if @matched_logistics == []
+      @logistic_ids = LogisticArea.where(area_id: area.id).map{|l| l.logistic_id }.join(",")
+      @matched_logistics = Logistic.where("id in (?)", @logistic_ids).map{|ml| [ml.id, ml.name]}
+      @matched_logistics == [] ? [[1,"其他"]] : @matched_logistics
     else
-      [[1,"dulux"]]      #无匹配地区或匹配经销商时默认是dulux?
+      [[1,"其他"]]     #无匹配地区或匹配经销商时默认是其他
     end
   end
 

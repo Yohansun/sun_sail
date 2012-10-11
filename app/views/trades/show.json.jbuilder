@@ -34,6 +34,7 @@ json.has_cs_memo @trade.has_cs_memo
 json.has_unusual_state @trade.has_unusual_state
 
 json.logistic_code @trade.logistic_code
+json.logistic_name @trade.logistic_name
 json.logistic_company @trade.logistic_company
 json.logistic_waybill @trade.logistic_waybill
 json.matched_logistics @trade.matched_logistics
