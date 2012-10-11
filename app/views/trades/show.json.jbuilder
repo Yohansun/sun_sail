@@ -36,6 +36,7 @@ json.has_unusual_state @trade.has_unusual_state
 json.logistic_code @trade.logistic_code
 json.logistic_company @trade.logistic_company
 json.logistic_waybill @trade.logistic_waybill
+json.matched_logistics @trade.matched_logistics
 
 json.invoice_type @trade.invoice_type
 json.invoice_name @trade.invoice_name

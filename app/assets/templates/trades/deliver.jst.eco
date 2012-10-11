@@ -44,11 +44,11 @@
             <input type="hidden" id="logistic_code" value="<%= @trade.get('logistic_code') %>">
           <% else: %>
             <div class="control-group">
-              <select class="input-small" id="logistic_code" name="logistic_code">
-              <option value="OTHER">其他</option>
-              <option value="YTO">圆通快递</option>
-              <option value="ZTO">中通速递</option>
-            </select>
+              <select class="input-small" id="logistic_info">
+              <% for logi in @trade.get("matched_logistics") : %>
+                <option value="<%= logi[0] %>"><%= logi[1] %></option>
+              <% end %>
+              </select>
             <span class="help-inline hide">请选择物流公司</span>
             </div>
           <% end %>

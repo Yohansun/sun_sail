@@ -23,6 +23,9 @@ class Trade
 
   field :logistic_code, type: String                      # 物流公司代码
   field :logistic_waybill, type: String                   # 物流运单号
+  field :logistic_id, type: Integer
+  field :logistic_name, type: String
+
 
   field :seller_confirm_deliver_at, type: DateTime        # 确认发货
   field :seller_confirm_invoice_at, type: DateTime        # 确认开票
@@ -185,6 +188,17 @@ class Trade
   def matched_seller(area = nil)
     area ||= default_area
     @matched_seller ||= SellerMatcher.new(self).matched_seller(area)
+  end
+
+  def matched_logistics
+    area ||= default_area
+    if area
+      @logistic_ids ||= LogisticArea.where(area_id: area.id).map{|l| l.logistic_id }.join(",")
+      @matched_logistics ||= Logistic.where("id in (?)", @logistic_ids).map{|ml| [ml.id, ml.name]}
+      [[1,"dulux"]] if @matched_logistics == []
+    else
+      [[1,"dulux"]]      #无匹配地区或匹配经销商时默认是dulux?
+    end
   end
 
   def default_area
