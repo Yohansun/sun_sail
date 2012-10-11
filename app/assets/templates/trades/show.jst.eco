@@ -60,8 +60,8 @@
       <tr>
         <td>配送：</td>
         <td>
-        <% if @trade.get 'seller_id' : %>
-        <%= @trade.get('seller_name') %>
+        <% if @trade.get 'logistic_name' : %>
+        <%= @trade.get('logistic_name') %>
         <% end %>
         </td>
       </tr>
