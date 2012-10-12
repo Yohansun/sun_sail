@@ -7,6 +7,7 @@ class TradesController < ApplicationController
   def index
     @trades = Trade
     seller = current_user.seller
+    logistic = current_user.logistic
 
     if current_user.has_role?(:seller)
       if seller
@@ -18,6 +19,15 @@ class TradesController < ApplicationController
     elsif current_user.has_role?(:interface)
       if seller
         @trades = Trade.where(:seller_id.in => seller.child_ids)
+      else
+        render json: []
+        return
+      end
+    end
+
+    if current_user.has_role?(:logistic)
+      if logistic
+        @trades = Trade.where(logistic_id: logistic.id)
       else
         render json: []
         return
