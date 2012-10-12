@@ -103,6 +103,7 @@ class LogisticsController < ApplicationController
     @flag = false
     user = User.find params[:u_id]
     user.logistic_id = params[:logistic_id]
+    user.add_role :logistic
     if user.save
       @flag = true
     else
@@ -117,6 +118,7 @@ class LogisticsController < ApplicationController
   def remove_logistic_user
     user = User.find params[:u_id]
     user.logistic_id = nil
+    user.remove_role :logistic
     user.save
     respond_to do |f|
       f.js

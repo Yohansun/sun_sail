@@ -20,6 +20,8 @@ class Role < ActiveRecord::Base
       '销售部联络人'
     when 'stock_admin'
       '仓库管理员'
+    when 'logistic'
+      '物流商'
     end
   end
 end
