@@ -14,6 +14,10 @@ class TaobaoTradePuller
         end_time = Time.now
       end
       
+      if trade_source_id.blank?
+        trade_source_id = TradeSetting.default_taobao_trade_source_id
+      end  
+      
       begin      
         response = TaobaoQuery.get({
           method: 'taobao.trades.sold.get',
@@ -86,6 +90,10 @@ class TaobaoTradePuller
       if end_time.blank?
         end_time = start_time + 1.day
       end
+      
+      if trade_source_id.blank?
+        trade_source_id = TradeSetting.default_taobao_trade_source_id
+      end 
       
       begin 
         response = TaobaoQuery.get({
