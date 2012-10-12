@@ -61,13 +61,11 @@ MagicOrders::Application.configure do
   config.action_mailer.default_url_options = YAML.load_file(Rails.root.join('config', 'magic_setting.yml')).try(:to_options)
   ### ActionMailer Config
   # Setup for production - deliveries, no errors raised
-  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.delivery_method = :sendmail
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = false
   config.action_mailer.default :charset => "utf-8"
-
-  config.action_mailer.smtp_settings = YAML.load_file(Rails.root.join('config', 'mailers.yml'))[Rails.env].try(:to_options)
-
+  
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
 
