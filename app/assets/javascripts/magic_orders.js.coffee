@@ -11,7 +11,7 @@ window.MagicOrders =
       #roles
       'cs_read':                 ['detail'],
       'cs':                      ['detail', 'seller', 'cs_memo', 'color', 'invoice', 'trade_split', 'trade_unsplit', 'mark_unusual_state', 'reassign', 'refund', 'check_goods','operation_log'],
-      'seller':                  ['detail', 'deliver', 'seller_confirm_invoice', 'mark_unusual_state', 'logistic_split', 'print_logistic_bill', 'print_deilver_bill', 'confirm_refund','barcode','confirm_color','confirm_check_goods'],
+      'seller':                  ['detail', 'deliver', 'seller_confirm_invoice', 'mark_unusual_state', 'logistic_split', 'print_logistic_bill', 'print_deilver_bill', 'confirm_refund','barcode','confirm_color','confirm_check_goods','seller_confirm_deliver'],
       'interface':               ['detail', 'seller_confirm_deliver'],
       'admin':                   ['*'],
 
