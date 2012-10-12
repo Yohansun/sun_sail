@@ -1,84 +1,140 @@
+# -*- encoding: utf-8 -*-
 module Dulux
-	module SellerMatcher
-		class << self
-			def match_item_seller(area, order, color)
-				product_seller_ids = StockProduct.joins(:product, :colors).where("products.iid = '#{order.outer_iid}' AND stock_products.activity > #{order.num} AND colors.num = '#{color}'").map &:seller_id
-				area.sellers.where(id: product_seller_ids, active: true).reorder("performance_score DESC").first
-			end
-
-			def match_trade_seller(trade, area)
-				order = trade.orders.first
-				match_item_seller(area, order.item_outer_id, order.num)
-			end
-		end
-	end
-
 	module Splitter
-		def split_orders(trade)
-			area = trade.default_area
-	    return unless area
+		def matched_seller_info(trade)
+			# 向view层传递拆分信息
+      info = []
+      match_seller_with_conditions(trade).each do |split|
+        seller = Seller.find_by_id(split[:default_seller]) || trade.default_seller
+        seller_id = seller ? seller.id : nil
+        seller_name = seller ? seller.name : '无对应经销商'
+        info << {
+         orders: split[:orders].map{ |order| {title: order.title, outer_iid: order.outer_iid, num: order.num} },
+         seller_id: seller_id,
+         seller_name: seller_name
+       }
+     end
 
-	    all_orders = trade.orders
-	    color_map = color_from_memo(trade.seller_memo)
+     info
+   end
 
-	    grouped_orders = {}
-	    splitted_orders = []
+   def match_seller_with_conditions(trade)
+    	# 拆分商品
+    	# 运费还没有计算
+    	grouped_orders = {}
+      splitted_orders = []
 
-	    all_orders.each do |order|
-	    	split_by_color(order, color_map[order.item_outer_id]).each do |o|
-					seller = Dulux::SellerMatcher.match_item_seller(area, o.order, o.color)
-					seller_id = seller ? seller.id : 0
-					grouped_orders["#{seller_id}"] ||= []
-					grouped_orders["#{seller_id}"] << o.order
-				end
-	    end
+      trade.orders.each do |order|
+        seller = Dulux::SellerMatcher.match_item_seller(trade.default_area, order) || trade.default_seller
+        seller_id = seller.id
+        tmp = grouped_orders["#{seller_id}"] || []
+        tmp << order
+        grouped_orders["#{seller_id}"] = tmp
+      end
 
-	    grouped_orders.each do |key, value|
-	    	splitted_orders << {
-	    		orders: value,
-	    		post_fee: 0,
-	    		total_fee: value.inject(0) { |sum, el| sum + el.total_fee }
-	    	}
-	    end
+      grouped_orders.each do |key, value|
+        splitted_orders << {
+          orders: value,
+          post_fee: 0,
+          default_seller: key,
+          total_fee: value.inject(0) { |sum, el| sum + el.total_fee }
+        }
+      end
 
-	    splitted_orders
-	  end
+      splitted_orders
+    end
 
-	  def color_from_memo(seller_memo)
-	  	color_map = {}
-	  	return color_map unless seller_memo
+    def manual_match_seller_with_conditions(trade, split_hash)
+    	# split_hash = [
+    	#   {
+    	#     seller_id: 123,
+    	#     order_id: 123   #商品编码
+    	#   },{
+    	#
+      #   }
+      # ]
 
-	  	seller_memo.gsub!(" ", '')
-	  	color_list = seller_memo.split(/[\[\]]/)
+      grouped_orders = {}
+      splitted_orders = []
 
-	  	color_list.each do |color|
-	  		color = color.split(',')
-	  		return unless color.size == 3
-	  		color_map["#{color[0]}"] = []
-	  		color_map["#{color[0]}"] << {
-	  			num: color[1],
-	  			color: color[2]
-	  		}
-	  	end
+      return if split_hash.blank?
+      split_hash.each do |split|
+        tmp = grouped_orders["#{split[:seller_id]}"] || []
+        tmp += trade.orders.select {|order| order.outer_iid == split[:order_id]}
+        grouped_orders["#{split[:seller_id]}"] = tmp
+      end
 
-	  	color_map
-	  end
+      grouped_orders.each do |key, value|
+        splitted_orders << {
+          orders: value,
+          post_fee: 0,
+          default_seller: key,
+          total_fee: value.inject(0) { |sum, el| sum + el.total_fee }
+        }
+      end
 
-	  def split_by_color(order, color_map)
-	  	tmp = []
-	  	if color_map
-	  		color_map.each do |color|
-	  			clone_order = order.clone
-	  			clone_order.num = color.num
-	  			order.num = order.num - color.num.to_i
-	  			tmp << {order: clone_order, color: color.color}
-	  		end
-	  	end
-	  	tmp << {order: order, color: nil}
-	  end
-	end
+      splitted_orders
+    end
+
+    def split_orders(trade, auto=true, split_hash=[])
+    	# 拆单并分流
+      area = trade.default_area
+      return unless area
+
+      splitted_orders = []
+
+      if auto
+      	splitted_orders = match_seller_with_conditions(trade)
+      else
+        splitted_orders = manual_match_seller_with_conditions(trade, split_hash)
+      end
+
+      if splitted_orders.size == 1
+        # 无需拆单
+        splitted_order = splitted_orders.first
+        
+        if splitted_orders[:default_seller].present?
+          trade.seller_id = splitted_order[:default_seller]
+          trade.dispatched_at = Time.now
+          trade.save
+        end
+      else
+        # 复制创建新 trade
+        splitted_trades = []
+        splitted_orders.each_with_index do |splitted_order, index|
+          new_trade = trade.clone
+          new_trade.orders = splitted_order[:orders]
+          new_trade.splitted_tid = "#{trade.tid}-#{index+1}"
+
+          # TODO 完善物流费用拆分逻辑
+          new_trade.post_fee = splitted_order[:post_fee]
+          new_trade.total_fee = splitted_order[:total_fee]
+          new_trade.splitted = true
+
+          if splitted_order[:default_seller].present?
+            new_trade.seller_id = splitted_order[:default_seller]
+            new_trade.dispatched_at = Time.now
+          end
+
+          new_trade.save
+        end
+
+        # 删除旧 trade
+        trade.delete
+      end
+    end
+  end
+
+  module SellerMatcher
+    class << self
+      def match_item_seller(area, order)#color
+        product_seller_ids = StockProduct.joins(:product).where("products.iid = '#{order.outer_iid}' AND stock_products.activity > #{order.num}").map &:seller_id
+        area.sellers.where(id: product_seller_ids, active: true).reorder("performance_score DESC").first
+      end
+
+      def match_trade_seller(trade, area)
+        match_item_seller(area, trade.orders.first)
+      end
+		end
+  end
 end
-
-
-
-

@@ -174,14 +174,16 @@ class Trade
     end
   end
 
-  def seller
-    if self.seller_id
-      Seller.find(self.seller_id)
-    end
+  def seller(sid = seller_id)
+    Seller.find_by_id sid
+  end
+
+  def default_seller
+    seller TradeSetting.default_seller_id
   end
 
   def matched_seller_with_default(area)
-    matched_seller(area) || Seller.default_seller
+    matched_seller(area) || default_seller
   end
 
   def matched_seller(area = nil)
@@ -265,7 +267,7 @@ class Trade
   def self.cache_tids!(start_time = nil, end_time = nil, sadd_or_srem = nil)
 
     if start_time.blank?
-        start_time = Time.now - 2.days
+      start_time = Time.now - 2.days
     end
 
     end_time = Time.now unless end_time
@@ -295,7 +297,6 @@ class Trade
         end
       end  
     end
-
   end
 
 end

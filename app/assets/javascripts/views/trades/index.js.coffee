@@ -24,6 +24,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     #visual effects
     'click #advanced_btn': 'advancedSearch'
     'click .dropdown': 'dropdownTurnGray'
+    'click .split_trade': 'splitTrade'
 
   initialize: (options) ->
     @trade_type = options.trade_type
@@ -73,6 +74,17 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     $("a[rel=popover]").popover(placement: 'left')
     @render_select_state()
     this
+
+  splitTrade: =>
+    id = $('#s_id').html()
+    split_result = []
+    $('.splitted_orders table').each ()->
+      seller_id = $(this).find('.seller_id').attr('data')
+      $(this).find(".so_iid").each ()->
+        split_result.push {order_id: $(this).attr('iid'), seller_id: seller_id}
+
+    $.get '/trades/' + id + '/split_trade', {split_result: split_result}, (data)->
+      $('#ord_split').modal('hide')
 
   render_select_state: ->
     view = new MagicOrders.Views.AreasSelectState()

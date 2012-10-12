@@ -3,6 +3,7 @@
 class TradesController < ApplicationController
   before_filter :authenticate_user!
   respond_to :json, :xls
+  include Dulux::Splitter
 
   def index
     @trades = Trade
@@ -362,8 +363,10 @@ class TradesController < ApplicationController
     trade = Trade.find params[:id]
     area = Area.find params[:area_id]
     seller = trade.matched_seller_with_default(area)
+    seller_id = seller ? seller.id : nil
+    seller_name = seller ? seller.name : '无对应经销商'
     respond_to do |format|
-      format.json { render json: {seller_id: seller.id, seller_name: seller.name} }
+      format.json { render json: {seller_id: seller_id, seller_name: seller_name} }
     end
   end
 
@@ -381,6 +384,24 @@ class TradesController < ApplicationController
       redirect_to "/trades"
     else
       render trades_new_path
+    end
+  end
+
+  def sellers_info
+    trade = Trade.find params[:id]
+    logger.info matched_seller_info(trade).inspect
+    respond_to do |format|
+      format.json { render json: matched_seller_info(trade) }
+    end
+  end
+
+  def split_trade
+    trade = Trade.find params[:id]
+    split_hash = params[:split_result].values
+    split_orders(trade, false, split_hash)
+
+    respond_to do |format|
+      format.json { render json: {ok: 'tre'} }
     end
   end
 end

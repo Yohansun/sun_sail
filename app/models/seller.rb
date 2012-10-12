@@ -16,13 +16,8 @@ class Seller < ActiveRecord::Base
 
   validates_presence_of :fullname, :name
   validates_uniqueness_of :fullname, :name
-  before_save :set_pinyin
-  
-  def self.default_seller
-    default_seller_id = TradeSetting.default_seller_id
-    Seller.find default_seller_id
-  end  
-  
+  before_save :set_pinyin 
+
   def set_pinyin
     self.pinyin = Hz2py.do(name).split(" ").map { |name| name[0, 1] }.join
   end

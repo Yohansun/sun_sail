@@ -370,6 +370,40 @@
     <tbody id="trade_rows">
     </tbody>
   </table>
-    <a href="#" data-type="loadMoreTrades" class="btn">加载更多订单</a>
+
+  <div id="ord_split" class="modal hide fade">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal">&times;</button>
+      <h3>订单拆分并分流</h3>
+    </div><!-- modal-header -->
+    <div class="modal-body">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>订单编号</th>
+            <th>订单状态</th>
+            <th>客户联系方式</th>
+            <th>订单总价</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td id='s_tid'></td>
+            <td id='s_status'></td>
+            <td id='s_name'></td>
+            <td id='s_price'></td>
+          </tr>
+        </tbody>
+      </table>
+      <div style='display:none' id='s_id'></div>
+      <div class="clearfix splitted_orders"></div>
+    </div><!-- modal-body -->
+    <div class="modal-footer">
+      <a href="#" class="btn" data-dismiss="modal" >取消</a>
+      <a href="#" class="btn btn-primary split_trade">确定</a>
+    </div><!-- modal-footer -->
+  </div><!-- ord_split -->
+
+  <a href="#" data-type="loadMoreTrades" class="btn">加载更多订单</a>
 </div>
 <div id="trades_bottom"></div>
