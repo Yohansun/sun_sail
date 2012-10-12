@@ -136,7 +136,9 @@
         <% if @trade.get('seller_confirm_invoice_at') == undefined : %>
         <li><a data-toggle="modal" href="#" data-type="invoice">申请开票</a></li>
         <% end %>
-      <li><a data-toggle="modal" href="#" data-type="color">申请调色</a></li>
+        <% if @trade.get('confirm_color_at') == undefined : %>
+        <li><a data-toggle="modal" href="#" data-type="color">申请调色</a></li>
+        <% end %>
       <% end %>
       <li><a data-toggle="modal" href="#" data-type="cs_memo">客服备注</a></li>
       <li><a data-toggle="modal" href="#" data-type="detail">订单详情</a></li>
@@ -154,7 +156,9 @@
       <% if @trade.get('status_text') == '已付款，待发货' : %>
         <% if @trade.get('dispatched_at') != undefined : %>
           <li><a data-toggle="modal" href="#" data-type="deliver">订单发货</a></li>
+          <% if @trade.get('confirm_color_at') == undefined : %>
           <li><a data-toggle="modal" href="#" data-type="confirm_color">确认调色</a></li>
+          <% end %>
           <% if MagicOrders.company != "dulux" : %>
           <li><a data-toggle="modal" href="#" data-type="confirm_check_goods">确认验货</a></li>
           <% end %>
