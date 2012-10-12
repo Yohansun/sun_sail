@@ -2,6 +2,7 @@
 
 class TaobaoTrade < Trade
   include TaobaoProductsLockable
+  # include Dulux::Dispatch
 
   field :tid, type: String
   field :num, type: Integer
@@ -123,22 +124,23 @@ class TaobaoTrade < Trade
   end
 
   def dispatch!(seller = nil)
-    return false unless self.dispatchable?
+    if TradeSetting.company == 'dulux'
+      Dulux::Splitter.split_orders(self)
+    else
+      return false unless dispatchable?
 
-    unless seller
-      seller = matched_seller
+      unless seller
+        seller = matched_seller
+      end
+
       return false unless seller
+
+      if seller.has_stock
+        return false unless can_lock_products?(seller.id)
+      end
+
+      update_attributes(seller_id: seller.id, dispatched_at: Time.now) if seller
     end
-
-    if seller.has_stock
-      return false unless can_lock_products?(seller.id)
-    end
-
-    update_attributes(seller_id: seller.id, dispatched_at: Time.now) if seller
-  end
-
-  def matched_seller_with_default(area)
-    matched_seller(area) || Seller.default_seller
   end
 
   def matched_seller(area = nil)

@@ -59,10 +59,10 @@ class TaobaoTradePuller
 
           $redis.sadd('TaobaoTradeTids',trade['tid'])
 
-          unless TradeSplitter.new(trade).split!
-            if TradeSetting.company == 'dulux'
-              DelayAutoDispatch.perform_in(TradeSetting.delay_time || 1.hours, trade.id)
-            else
+          if TradeSetting.company == 'dulux'
+            DelayAutoDispatch.perform_in(TradeSetting.delay_time || 1.hours, trade.id)
+          else
+            unless TradeSplitter.new(trade).split!
               trade.auto_dispatch!
             end
           end
@@ -111,7 +111,7 @@ class TaobaoTradePuller
 
         trades.each do |trade|
           TaobaoTrade.where(tid: trade['tid']).each do |local_trade|
-            next if unupdatable?(local_trade, trade['status'])
+            next unless updatable?(local_trade, trade['status'])
             orders = trade.delete('orders')
             trade['trade_source_id'] = trade_source_id
             local_trade.update_attributes(trade)
@@ -121,6 +121,7 @@ class TaobaoTradePuller
             else
               local_trade.auto_dispatch!
             end
+
             p "update trade #{trade['tid']}"
           end 
         end
@@ -129,8 +130,8 @@ class TaobaoTradePuller
       end until(page_no > total_pages || total_pages == 0)
     end
 
-    def unupdatable?(local_trade, remote_status)
-      remote_status == local_trade.status || (remote_status == "WAIT_SELLER_SEND_GOODS" && local_trade.delivered_at.present?)
+    def updatable?(local_trade, remote_status)
+      remote_status != local_trade.status && (remote_status != "WAIT_SELLER_SEND_GOODS" && local_trade.delivered_at.blank?)
     end
   end
 end
