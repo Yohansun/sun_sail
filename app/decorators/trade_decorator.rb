@@ -197,7 +197,7 @@ class TradeDecorator < Draper::Base
       when 'TaobaoPurchaseOrder'
         trade.orders.inject(0) { |sum, order| sum + order.buyer_payment.to_f }
       when 'TaobaoTrade'
-        trade.orders.inject(0) { |sum, order| sum + order.payment.to_f }
+        trade.orders.inject(0) { |sum, order| sum + OrderDecorator.decorate(order).total_fee.to_f }
       else  
         self.total_fee.to_f + self.seller_discount.to_f - self.post_fee.to_f
       end  
