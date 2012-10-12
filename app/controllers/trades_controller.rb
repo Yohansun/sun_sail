@@ -11,7 +11,6 @@ class TradesController < ApplicationController
     if current_user.has_role?(:seller)
       if seller
         @trades = Trade.where(seller_id: seller.id)
-        @trades = @trades.where("$and" => [{:dispatched_at.ne => nil},{:dispatched_at.exists => true},{:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"]}])
       else
         render json: []
         return
@@ -66,6 +65,11 @@ class TradesController < ApplicationController
       elsif status == 'unusual_trade'
         @trades = @trades.where(:status.in => ["TRADE_NO_CREATE_PAY"])
       end
+    end
+
+    # 经销商登录默认显示未分流订单
+    if params[:search_trade_status].blank? && current_user.has_role?(:seller)
+      @trades = @trades.where("$and" => [{:dispatched_at.ne => nil},{:dispatched_at.exists => true},{:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"]}])
     end
 
     # 出货单

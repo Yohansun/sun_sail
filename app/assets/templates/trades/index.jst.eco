@@ -38,7 +38,7 @@
           <b class="caret"></b>
         </a>
         <ul class="dropdown-menu">
-          <li><a href="#" data-trade-mode="trades" data-trade-status="null">所有订单</a></li>
+          <li><a href="#" data-trade-mode="trades" data-trade-status="all">所有订单</a></li>
           <% if MagicOrders.role_key != 'seller' : %>
           <li><a href="#" data-trade-mode="trades" data-trade-status="unpaid">未付款订单</a></li>
           <li><a href="#" data-trade-mode="trades" data-trade-status="undispatched">未分流订单</a></li>
