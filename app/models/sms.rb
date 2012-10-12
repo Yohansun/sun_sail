@@ -2,7 +2,6 @@
 class Sms
   require "savon"
   require "collections"
-  CLINET = Savon::Client.new("http://www.mdao.com/nippon/services/SMS?wsdl")
   
   attr_accessor :mobiles, :content
 
@@ -12,16 +11,43 @@ class Sms
   end
 
   def transmit
+    if TradeSetting.company == "dulux"
+      http_transmit
+    else
+      soap_transmit
+    end  
+  end
+  
+  def soap_transmit
+    client = Savon::Client.new(TradeSetting.sms_soap_gateway)
+    loginName = TradeSetting.loginName
+    loginPswd = TradeSetting.loginPswd
     if Rails.env.production?
-      response = CLINET.request(:batch_send) do
-        soap.body = "<loginName>user01</loginName><loginPswd>123456</loginPswd><mobiles>#{self.mobiles}</mobiles><content>#{self.content}</content><fixedTime></fixedTime><sendId></sendId><extid></extid>"
+      response = client.request(:batch_send) do
+        soap.body = "<loginName>#{loginName}</loginName><loginPswd>#{loginPswd}</loginPswd><mobiles>#{self.mobiles}</mobiles><content>#{self.content}</content><fixedTime></fixedTime><sendId></sendId><extid></extid>"
       end
       response.body[:batch_send_response][:out]
     else
-      response = CLINET.request(:batch_send) do
-        soap.body = "<loginName>user01</loginName><loginPswd>123456</loginPswd><mobiles>18911938790</mobiles><content>#{self.content}</content><fixedTime></fixedTime><sendId></sendId><extid></extid>"
+      response = client.request(:batch_send) do
+        soap.body = "<loginName>#{loginName}</loginName><loginPswd>#{loginPswd}</loginPswd><mobiles>#{TradeSetting.sms_test_mobile}</mobiles><content>#{self.content}</content><fixedTime></fixedTime><sendId></sendId><extid></extid>"
       end
       response.body[:batch_send_response][:out]
     end
+  end  
+  
+  def http_transmit
+    client = TradeSetting.sms_http_gateway
+    mobiles = self.mobiles
+    content = self.content.encode!('GBK')
+    uid = TradeSetting.sms_http_uid
+    pwd = TradeSetting.sms_http_pwd
+    if Rails.env.production?
+      request = "uid=#{TradeSetting.sms_http_uid}&pwd=#{TradeSetting.sms_http_pwd}&mobile=#{mobiles}&Msg=#{content}&spnum=0&OpType=0"
+    else
+      request = "uid=#{TradeSetting.sms_http_uid}&pwd=#{TradeSetting.sms_http_pwd}&mobile=#{TradeSetting.sms_test_mobile}&Msg=#{content}&spnum=0&OpType=0"
+    end 
+    full_resquest = URI.escape(client + request)
+    send_request = HTTParty.get(full_resquest)
   end
+  
 end
