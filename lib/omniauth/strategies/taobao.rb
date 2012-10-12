@@ -18,7 +18,7 @@ module OmniAuth
       info do
         {
           :taobao_user_id     => raw_info['taobao_user_id'],
-          :taobao_user_nick   => raw_info['taobao_user_nick']
+          :taobao_user_nick   => CGI.unescape(raw_info['taobao_user_nick'])
         }
       end
 
