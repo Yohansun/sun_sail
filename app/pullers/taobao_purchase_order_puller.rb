@@ -6,8 +6,14 @@ class TaobaoPurchaseOrderPuller
       total_pages = nil
       page_no = 0
       
-      end_time ||= Time.now
-      start_time ||= end_time - 1.days
+      if start_time.blank?  
+        latest_created_order = TaobaoPurchaseOrder.only("created").order_by("created", "DESC").limit(1).first
+        start_time = latest_created_order.created - 1.hour
+      end
+      
+      if end_time.blank?
+        end_time = Time.now
+      end
 
       begin 
       response = TaobaoQuery.get({
@@ -16,6 +22,8 @@ class TaobaoPurchaseOrderPuller
         end_created: end_time.strftime("%Y-%m-%d %H:%M:%S"),
         page_no: page_no, page_size: 50}, nil
       )
+      
+      p "starting create_orders: since #{start_time}"
       
       break unless response['fenxiao_orders_get_response']
       
@@ -59,8 +67,14 @@ class TaobaoPurchaseOrderPuller
       total_pages = nil
       page_no = 0
 
-      end_time ||= Time.now
-      start_time ||= end_time - 7.days
+      if start_time.blank?
+        latest_created_order = TaobaoPurchaseOrder.only("modified").order_by("modified", "DESC").limit(1).first
+        start_time = latest_created_order.modified - 4.hour
+      end
+      
+      if end_time.blank?
+        end_time = start_time + 1.day
+      end
 
       begin
         response = TaobaoQuery.get({
@@ -69,6 +83,9 @@ class TaobaoPurchaseOrderPuller
           end_created: end_time.strftime("%Y-%m-%d %H:%M:%S"),
           page_no: page_no, page_size: 50}, nil
         )
+
+        p "starting upate_orders: since #{start_time}"
+        
         break unless response['fenxiao_orders_get_response']
 
         total_results = response['fenxiao_orders_get_response']['total_results']

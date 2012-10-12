@@ -4,10 +4,16 @@ class TaobaoTradePuller
     def create(start_time = nil, end_time = nil, trade_source_id = nil)
       total_pages = nil
       page_no = 0
-
-      end_time ||= Time.now
-      start_time ||= end_time - 1.days
-
+      
+      if start_time.blank?  
+        latest_created_order = TaobaoTrade.only("created").order("created", "DESC").limit(1).first
+        start_time = latest_created_order.created - 1.hour
+      end
+      
+      if end_time.blank?
+        end_time = Time.now
+      end
+      
       begin      
         response = TaobaoQuery.get({
           method: 'taobao.trades.sold.get',
@@ -15,6 +21,8 @@ class TaobaoTradePuller
           start_created: start_time.strftime("%Y-%m-%d %H:%M:%S"), end_created: end_time.strftime("%Y-%m-%d %H:%M:%S"),
           page_no: page_no, page_size: 50}, trade_source_id 
         )
+        
+        p "starting create_orders: since #{start_time}"
         
         break unless response['trades_sold_get_response']
         
@@ -70,9 +78,15 @@ class TaobaoTradePuller
       total_pages = nil
       page_no = 0
 
-      end_time ||= Time.now
-      start_time ||= end_time - 1.days
-     
+      if start_time.blank?
+        latest_created_order = TaobaoTrade.only("modified").order("modified", "DESC").limit(1).first
+        start_time = latest_created_order.modified - 4.hour
+      end
+      
+      if end_time.blank?
+        end_time = start_time + 1.day
+      end
+      
       begin 
         response = TaobaoQuery.get({
           method: 'taobao.trades.sold.get',
@@ -80,6 +94,8 @@ class TaobaoTradePuller
           start_created: start_time.strftime("%Y-%m-%d %H:%M:%S"), end_created: end_time.strftime("%Y-%m-%d %H:%M:%S"),
           page_no: page_no, page_size: 50}, trade_source_id  
         )
+        
+        p "starting upate_orders: since #{start_time}"
         
         break unless response['trades_sold_get_response']
                  
