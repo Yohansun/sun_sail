@@ -90,16 +90,15 @@ class TradeDecorator < Draper::Base
   end
   
   def receiver_full_address
-    case trade._type
-      when 'JingdongTrade'
-        trade.consignee_info['full_address']
-      else
-        "#{trade.receiver_state} #{trade.receiver_city} #{trade.receiver_district} #{trade.receiver_address}"  
-      end  
+    "#{self.receiver_state} #{self.receiver_city} #{self.receiver_district} #{self.receiver_address}"  
+  end
+  
+  def receiver_area_name
+    "#{self.receiver_state} #{self.receiver_city} #{self.receiver_district}"  
   end
   
   def has_wrong_arguments_address?
-    self.receiver_state.blank? || self.receiver_city.blank? || self.receiver_district.blank?
+    self.receiver_state.blank? || self.receiver_city.blank? || self.receiver_district.blank? || self.receiver_address.blank?
   end
 
   def receiver_address

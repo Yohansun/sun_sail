@@ -24,17 +24,25 @@ class Notifier < ActionMailer::Base
       @notify_kind = notify_kind
       @tid = @trade.tid
       @trade_from = @trade.trade_source
-      @area_name = seller.interface_name
+      
+      if TradeSetting.company == "dulux"
+        @area_name = @trade.receiver_area_name
+        to_emails = @trade.seller.email.split(',')
+        cc_emails = []
+      else  
+        @area_name = seller.interface_name
+        to_emails = @trade.seller.parent.email.split(',')
+        cc_emails = @trade.cc_emails
+      end 
+    
       @area_full_name = @trade.receiver_full_address
 
       @is_1568 = @trade.is_1568
       @trade_info = "您好，#{@area_name}地区目前有一张#{@trade_from}订单"
       mail_subject = "#{@trade_from}订单#{@tid}-#{@area_name}（#{Time.now.strftime("%Y/%m/%d")}），请及时发货"
       reply_to = TradeSetting.email_notifier_from
-      bcc = %w(TradeSetting.email_notifier_dispatch_bcc)
-      
-      to_emails = @trade.seller.parent.email.split(',')
-      cc_emails = @trade.cc_emails
+      bcc = %w(TradeSetting.email_notifier_dispatch_bcc)  
+    
       to_emails.each_with_index do |email, index|
         if index == 0
           mail(:to => email,

@@ -10,7 +10,13 @@ class TradeDispatchSms
     seller = trade.seller 
     tid = trade.tid
     trade_from = trade.trade_source
-    area_name = seller.interface_name
+    if TradeSetting.company == "dulux"
+      area_name = trade.receiver_area_name
+      mobiles = seller.mobile
+    else  
+      area_name = seller.interface_name
+      mobiles = seller.interface_mobile
+    end 
     area_full_name = trade.receiver_full_address
     trade_info = "您好，#{area_name}有#{trade_from}新订单（订单号#{tid}）"
     if notify_kind == 'new'
@@ -24,7 +30,7 @@ class TradeDispatchSms
     else
       content = "#{trade_info}调整，买家地址为#{area_full_name}，请及时通知经销商发货。"
     end
-    sms = Sms.new(content, seller.interface_mobile)
+    sms = Sms.new(content, mobiles)
     sms.transmit
   end
 end
