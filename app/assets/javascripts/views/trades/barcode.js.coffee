@@ -18,7 +18,7 @@ class MagicOrders.Views.TradesBarcode extends Backbone.View
     for order in @model.get('orders')
       barcode = []
       for item in $(".barcode_" + order.item_id)
-        if (/^[0-9]*$/.test($(item).val())) is true  ##{0,13}
+        if (/^[0-9]{0,16}$/.test($(item).val())) is true
           barcode.push $(item).val()
         else
           invalid = true
@@ -27,7 +27,7 @@ class MagicOrders.Views.TradesBarcode extends Backbone.View
 
     if invalid is true
       $.unblockUI()
-      alert("格式不正确,只能为数字")
+      alert("格式不正确,只能为16位数字")
       return
     @model.set "operation", "输入唯一码"
     @model.save {},
