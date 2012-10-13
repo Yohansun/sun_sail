@@ -9,10 +9,7 @@
 <% else %>
     <%=  @trade_info %> 信息有调整，具体信息如下，请以此封mail信息为准，
 <% end %>
-请及时通知经销商联系客户发货，并让其发货同时在“经销商后台”点击“确认发货”。之后请回复本邮件告知已发货。谢谢。
-<%- if @is_1568 %>
-    此订单为1568地区订单，请安排后续服务事宜。
-<%- end %>
+<%= @trade_deliver_info %>
 <%= render "trade_detail" %>
 <br>买家留言：<%= @trade.buyer_message %> <br>
 <br>发票信息: <%= @trade.invoice_name %> <br>
