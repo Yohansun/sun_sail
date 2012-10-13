@@ -14,34 +14,25 @@ class Notifier < ActionMailer::Base
   end  
 
   def dispatch(id, notify_kind)
+    
     object = Trade.find id
-    @notify_kind = notify_kind
     @trade = TradeDecorator.decorate(object)
-    @tid = @trade.tid
-    @trade_from = @trade.trade_source
-    @area_name = ' '
-    if @trade.receiver_state
-      @area_name += @trade.receiver_state
-    end
-    if @trade.receiver_city
-      @area_name += @trade.receiver_city
-    end
-    if @trade.receiver_district
-      @area_name += @trade.receiver_district
-    end
-    if @trade.receiver_address
-      @area_full_name = @area_name + @trade.receiver_address
-    else 
-      @area_full_name = @area_name  
-    end
-
-    @is_1568 = @trade.is_1568
-    @trade_info = "您好，#{@area_name}地区目前有一张#{@trade_from}订单"
-    mail_subject = "#{@trade_from}订单#{@tid}-#{@area_name}（#{Time.now.strftime("%Y/%m/%d")}），请及时发货"
-    reply_to = TradeSetting.email_notifier_from
-    bcc = %w(TradeSetting.email_notifier_dispatch_bcc)
 
     if @trade.seller
+      
+      seller = @trade.seller
+      @notify_kind = notify_kind
+      @tid = @trade.tid
+      @trade_from = @trade.trade_source
+      @area_name = seller.interface_name
+      @area_full_name = @trade.receiver_full_address
+
+      @is_1568 = @trade.is_1568
+      @trade_info = "您好，#{@area_name}地区目前有一张#{@trade_from}订单"
+      mail_subject = "#{@trade_from}订单#{@tid}-#{@area_name}（#{Time.now.strftime("%Y/%m/%d")}），请及时发货"
+      reply_to = TradeSetting.email_notifier_from
+      bcc = %w(TradeSetting.email_notifier_dispatch_bcc)
+      
       to_emails = @trade.seller.parent.email.split(',')
       cc_emails = @trade.cc_emails
       to_emails.each_with_index do |email, index|

@@ -88,6 +88,19 @@ class TradeDecorator < Draper::Base
         trade.consignee_info['telephone']
     end
   end
+  
+  def receiver_full_address
+    case trade._type
+      when 'JingdongTrade'
+        trade.consignee_info['full_address']
+      else
+        "#{trade.receiver_state} #{trade.receiver_city} #{trade.receiver_district} #{trade.receiver_address}"  
+      end  
+  end
+  
+  def has_wrong_arguments_address?
+    self.receiver_state.blank? || self.receiver_city.blank? || self.receiver_district.blank?
+  end
 
   def receiver_address
     case trade._type
@@ -96,7 +109,7 @@ class TradeDecorator < Draper::Base
       when 'TaobaoTrade'
         trade.receiver_address
       when 'JingdongTrade'
-        trade.consignee_info['full_address']
+        trade.consignee_info['full_address'].delete(self.receiver_state).delete(self.receiver_city).delete(self.receiver_district)
     end
   end
 
