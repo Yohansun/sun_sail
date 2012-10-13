@@ -207,12 +207,13 @@ class TradeDecorator < Draper::Base
   def sum_fee
     case trade._type
       when 'TaobaoPurchaseOrder'
-        trade.orders.inject(0) { |sum, order| sum + order.buyer_payment.to_f }
+        fee = trade.orders.inject(0) { |sum, order| sum + order.buyer_payment.to_f }
       when 'TaobaoTrade'
-        trade.orders.inject(0) { |sum, order| sum + OrderDecorator.decorate(order).total_fee.to_f }
-      else  
-        self.total_fee.to_f + self.seller_discount.to_f - self.post_fee.to_f
-      end  
+        fee = trade.orders.inject(0) { |sum, order| sum + OrderDecorator.decorate(order).total_fee.to_f }
+    else  
+        fee = self.total_fee.to_f + self.seller_discount.to_f - self.post_fee.to_f
+    end
+    fee.round(2)  
   end
   
   def buyer_message
@@ -305,20 +306,38 @@ class TradeDecorator < Draper::Base
 
   def taobao_order_status_text
     case trade.status
-      when 'WAIT_BUYER_PAY'
-        '等待付款'
-      when 'WAIT_SELLER_SEND_GOODS'
-        '已付款，待发货'
-      when 'WAIT_BUYER_CONFIRM_GOODS'
-        '已付款，已发货'
-      when 'TRADE_CLOSED_BY_TAOBAO'
-        '交易被淘宝关闭'
-      when 'TRADE_FINISHED'
-        '交易成功'
-      when 'TRADE_CLOSED'
-        '交易已关闭'
-      when 'TRADE_NO_CREATE_PAY'
-        '未创建支付宝交易'
+      when "TRADE_NO_CREATE_PAY"
+        "没有创建支付宝交易"
+      when "WAIT_BUYER_PAY"
+        "等待买家付款"
+      when "WAIT_SELLER_SEND_GOODS"
+        "买家已付款, 等待卖家发货"
+      when "WAIT_BUYER_CONFIRM_GOODS"
+        "卖家已发货, 等待买家确认收货"
+      when "TRADE_BUYER_SIGNED"
+        "买家已签收,货到付款专用"
+      when "TRADE_FINISHED"
+        "交易成功"
+      when "TRADE_CLOSED"
+        "交易关闭"
+      when "TRADE_CLOSED_BY_TAOBAO"
+        "交易被淘宝关闭"
+      when "ALL_WAIT_PAY"
+        "包含：等待买家付款、没有创建支付宝交易"
+      when "ALL_CLOSED"
+        "包含：交易关闭、交易被淘宝关闭"
+      when 'WAIT_SELLER_AGREE'
+        "买家已经申请退款，等待卖家同意"
+      when 'WAIT_BUYER_RETURN_GOODS'
+        "卖家已经同意退款，等待买家退货"
+      when 'WAIT_SELLER_CONFIRM_GOODS'
+        "买家已经退货，等待卖家确认收货"
+      when 'SELLER_REFUSE_BUYER'
+        "卖家拒绝退款"
+      when 'CLOSED'
+        "退款关闭"
+      when 'SUCCESS'
+        "退款成功"
       else
         trade.status
     end
