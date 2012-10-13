@@ -35,7 +35,7 @@ module Dulux
 
       rebuild_orders.each do |order|
         seller = Dulux::SellerMatcher.match_item_seller(trade.default_area, order) || trade.default_seller
-        seller_id = seller.id
+        seller_id = seller ? seller.id : 0
         tmp = grouped_orders["#{seller_id}"] || []
         tmp << order
         grouped_orders["#{seller_id}"] = tmp
@@ -121,39 +121,25 @@ module Dulux
         splitted_orders = manual_match_seller_with_conditions(trade, split_hash)
       end
 
-      if splitted_orders.size == 1
-        # 无需拆单
-        splitted_order = splitted_orders.first
+      return false if splitted_orders.size == 1
 
-        if splitted_order[:default_seller].present?
-          trade.seller_id = splitted_order[:default_seller]
-          trade.dispatched_at = Time.now
-          trade.save
-        end
-      else
-        # 复制创建新 trade
-        splitted_trades = []
-        splitted_orders.each_with_index do |splitted_order, index|
-          new_trade = trade.clone
-          new_trade.orders = splitted_order[:orders]
-          new_trade.splitted_tid = "#{trade.tid}-#{index+1}"
+      # 复制创建新 trade
+      splitted_trades = []
+      splitted_orders.each_with_index do |splitted_order, index|
+        new_trade = trade.clone
+        new_trade.orders = splitted_order[:orders]
+        new_trade.splitted_tid = "#{trade.tid}-#{index+1}"
 
-          # TODO 完善物流费用拆分逻辑
-          new_trade.post_fee = splitted_order[:post_fee]
-          new_trade.total_fee = splitted_order[:total_fee]
-          new_trade.splitted = true
+        # TODO 完善物流费用拆分逻辑
+        new_trade.post_fee = splitted_order[:post_fee]
+        new_trade.total_fee = splitted_order[:total_fee]
+        new_trade.splitted = true
 
-          if splitted_order[:default_seller].present?
-            new_trade.seller_id = splitted_order[:default_seller]
-            new_trade.dispatched_at = Time.now
-          end
-
-          new_trade.save
-        end
-
-        # 删除旧 trade
-        trade.delete
+        new_trade.save
       end
+
+      # 删除旧 trade
+      trade.delete
     end
   end
 

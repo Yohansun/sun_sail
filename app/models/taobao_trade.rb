@@ -124,9 +124,9 @@ class TaobaoTrade < Trade
   end
 
   def dispatch!(seller = nil)
-    if TradeSetting.company == 'dulux'
-      split_orders(self)
-    else
+    # if TradeSetting.company == 'dulux'
+    #   split_orders(self)
+    # else
       return false unless dispatchable?
 
       unless seller
@@ -140,7 +140,7 @@ class TaobaoTrade < Trade
       end
 
       update_attributes(seller_id: seller.id, dispatched_at: Time.now) if seller
-    end
+    # end
   end
 
   def matched_seller(area = nil)

@@ -16,6 +16,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     'trades/:id/operation_log':'operation_log'
     'trades/:id/confirm_color': 'confirm_color'
     'trades/:id/confirm_check_goods': 'confirm_check_goods'
+    'trades/:id/split': 'split'
 
   initialize: ->
     @trade_type = null
@@ -142,6 +143,39 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       view = new MagicOrders.Views.TradesSeller(model: model)
       $('#trade_seller').html(view.render().el)
       $('#trade_seller').modal('show')
+
+  split: (id) ->
+    blocktheui()
+
+    @model = new MagicOrders.Models.Trade(id: id)
+    @model.fetch success: (model, response) =>
+      $.unblockUI()
+      
+      html = ''
+      trade_path = '/trades/' + model.get("id")
+      id = model.get("id")
+      tid = model.get("tid")
+      status = model.get("status_text")
+      name = model.get('receiver_name')
+      mobile = model.get('receiver_mobile_phone')
+      address = model.get('receiver_state') + model.get('receiver_city') + model.get('receiver_district') + model.get('receiver_address')
+      s_name = name + "<br>" + mobile + "<br>" + address
+      price = "￥" + model.get('total_fee')
+      $.get trade_path + '/sellers_info', {}, (data)->
+        for el in data
+          html += "<table class='table table-bordered'>"
+          html += "<tr><th rowspan='" + (el.orders.length + 1) + "'>商品详细</th><th>商品名</th><th>调色信息</th><th>数量</th></tr>"
+          el.orders.forEach (item)->
+            html += "<tr class='so'><td class='so_iid' iid='" + item.outer_iid + "'>" + item.title + "</td><td class='so_color'>" + item.color_num + "</td><td class='so_num'>" + item.num + "</td></tr>"
+          html += "<tr><th>配送经销商</th><td colspan='3' class='seller_id' data='" + el.seller_id + "'>" + el.seller_name + "</td></tr>"
+          html += "</table>"
+        $('#s_id').html(id)
+        $('#s_tid').html(tid)
+        $('#s_status').html(status)
+        $('#s_name').html(s_name)
+        $('#s_price').html(price)
+        $('#ord_split .splitted_orders').html(html)
+        $('#ord_split').modal('show')
 
   deliver: (id) ->
     blocktheui()
