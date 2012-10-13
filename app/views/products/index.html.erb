@@ -1,6 +1,14 @@
 <div class="container-fluid">
   <header class="jumbotron subhead" id="overview">
-    <!-- <div class="subnav">
+    <div class="subnav">
+      <ul class="nav nav-pills">
+        <li class="active"><%= link_to '商品管理', products_path, class: "products" %></li>
+        <li><%= link_to '颜色管理', colors_path %></li>
+      </ul>
+    </div>
+  </header>
+  <!-- <header class="jumbotron subhead" id="overview">
+    <div class="subnav">
       <ul class="nav nav-pills">
         <li class="">
           <a href="#">渠道分布</a>
@@ -9,8 +17,8 @@
           <a href="#">销售排行</a>
         </li>
       </ul>
-    </div> -->
-  </header>
+    </div>
+  </header> -->
   <div class="row-fluid">
     <ul class="breadcrumb" style="position:relative;">
       <li><a href="/">Magic</a><span class="divider">/</span></li>

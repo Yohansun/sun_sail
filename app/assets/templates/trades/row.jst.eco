@@ -52,7 +52,7 @@
   <%= @trade.get('receiver_address') %>
 </td>
 <td data-col='buyer_message'>
-  <% if @trade.get 'buyer_message': %>
+  <% if MagicOrders.company == "dulux" && MagicOrders.role_key != 'seller' && @trade.get 'buyer_message': %>
   <a href="javascript:void(0)" rel="popover" data-content="<%= @trade.get 'buyer_message' %>" data-original-title="<b>买家留言</b>">
     <i class="icon-comment"></i>
   </a>
@@ -154,7 +154,7 @@
       <% if @trade.get('status_text') == '已付款，待发货' : %>
         <% if @trade.get('dispatched_at') != undefined : %>
           <li><a data-toggle="modal" href="#" data-type="deliver">订单发货</a></li>
-          <% if @trade.get('confirm_color_at') == undefined : %>
+          <% if @trade.get('confirm_color_at') == undefined && @trade.get('has_color_info') == true : %>
           <li><a data-toggle="modal" href="#" data-type="confirm_color">确认调色</a></li>
           <% end %>
           <% if MagicOrders.company != "dulux" : %>
@@ -173,7 +173,7 @@
       <% if @trade.get('invoice_name') && @trade.get('seller_confirm_invoice_at') == undefined : %>
         <li><a data-toggle="modal" href="#" data-type="seller_confirm_invoice">确认开票</a></li>
       <% end %>
-      <% if @trade.get('delivered_at') : %>
+      <% if @trade.get('dispatched_at') || @trade.get('delivered_at') : %>
         <li><a data-toggle="modal" href="#" data-type="barcode">输入唯一码</a></li>
       <% end %>
 
