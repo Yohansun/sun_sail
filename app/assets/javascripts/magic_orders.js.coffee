@@ -25,7 +25,8 @@ window.MagicOrders =
       'return':                  ['detail'],
       'refund':                  ['detail'],
       'invoice':                 ['invoice_number','detail'],
-      'unusual':                 ['detail']
+      'unusual':                 ['detail'],
+      'color':                   ['color','confirm_color']
     }
 
     # 所有订单列
@@ -84,7 +85,8 @@ window.MagicOrders =
       'return':                  '退货模式',
       'refund':                  '退款模式',
       'invoice':                 '发票模式',
-      'unusual':                 '异常模式'
+      'unusual':                 '异常模式',
+      'color':                   '调色模式'
     }
 
     # 订单模式初始化为'trades'
@@ -97,6 +99,7 @@ window.MagicOrders =
       'logistics':               ['tid','status','deliver_bill_id','logistic_waybill','logistic_company','trade_source','order_goods','receiver_name','receiver_mobile_phone','receiver_address','invoice_info','seller','cs_memo','operator','logistic'],
       'check':                   ['tid','status','deliver_bill_id','status_history','deliver_bill_status','trade_source','order_goods','receiver_name','receiver_mobile_phone','receiver_address','color_info','invoice_info','seller','cs_memo','operator'],
       'send':                    ['tid','status','deliver_bill_id','status_history','order_goods','receiver_name','receiver_mobile_phone','receiver_address','color_info','invoice_info','seller','cs_memo','operator'],
+      'color':                    ['tid','status','deliver_bill_id','status_history','order_goods','receiver_name','receiver_mobile_phone','receiver_address','color_info','invoice_info','seller','cs_memo','operator'],
       'return':                  ['tid','status','deliver_bill_id','status_history','order_goods','receiver_name','receiver_mobile_phone','receiver_address','color_info','invoice_info','seller','cs_memo','operator'],
       'refund':                  ['tid','status','deliver_bill_id','status_history','order_goods','receiver_name','receiver_mobile_phone','receiver_address','color_info','invoice_info','seller','cs_memo','operator'],
       'invoice':                 ['tid','status','deliver_bill_id','status_history','trade_source','order_goods','invoice_type','invoice_name','invoice_value','invoice_date','seller','cs_memo','operator'],
