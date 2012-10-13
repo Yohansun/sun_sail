@@ -159,11 +159,11 @@ module Dulux
 
   module SellerMatcher
     class << self
-      def match_item_seller(area, order)
+      def match_item_seller(area, order, use_color=true)
         sql = "products.iid = '#{order.outer_iid}' AND stock_products.activity > #{order.num}"
         products = StockProduct.joins(:product).where(sql)
 
-        if order.color_num.present?
+        if use_color && order.color_num.present?
           color_sql = "colors.num = '#{order.color_num.first}'"
           products = products.joins(:colors).where(color_sql)
         end
@@ -173,7 +173,7 @@ module Dulux
       end
 
       def match_trade_seller(trade, area)
-        match_item_seller(area, trade.orders.first)
+        match_item_seller(area, trade.orders.first, false)
       end
 		end
   end
