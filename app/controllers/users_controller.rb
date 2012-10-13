@@ -71,6 +71,7 @@ class UsersController < ApplicationController
       @user.modify_role("interface",params[:interface])
       @user.modify_role("stock_admin",params[:stock_admin])
       @user.modify_role("admin",params[:admin])
+      @user.modify_role("logistic",params[:logistic])
       redirect_to users_path
     else
       render :show
