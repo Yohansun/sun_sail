@@ -5,7 +5,7 @@ module Dulux
 			# 向view层传递拆分信息
       info = []
       match_seller_with_conditions(trade).each do |split|
-        seller = Seller.find_by_id(split[:default_seller]) || trade.default_seller
+        seller = Seller.find_by_id(split[:default_seller])
         seller_id = seller ? seller.id : nil
         seller_name = seller ? seller.name : '无对应经销商'
         info << {
@@ -34,7 +34,7 @@ module Dulux
       end
 
       rebuild_orders.each do |order|
-        seller = Dulux::SellerMatcher.match_item_seller(trade.default_area, order) || trade.default_seller
+        seller = Dulux::SellerMatcher.match_item_seller(trade.default_area, order)
         seller_id = seller ? seller.id : 0
         tmp = grouped_orders["#{seller_id}"] || []
         tmp << order
