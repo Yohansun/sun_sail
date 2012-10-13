@@ -1,4 +1,12 @@
 <div class="container-fluid">
+  <header class="jumbotron subhead" id="overview">
+    <div class="subnav">
+      <ul class="nav nav-pills">
+        <li><%= link_to '商品管理', products_path, class: "products" %></li>
+        <li class="active"><%= link_to '颜色管理', colors_path %></li>
+      </ul>
+    </div>
+  </header>
   <div class="row-fluid">
     <ul class="breadcrumb" style="position:relative;">
       <li>
