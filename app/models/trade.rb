@@ -178,12 +178,15 @@ class Trade
     Seller.find_by_id sid
   end
 
-  def default_seller
-    Seller.find_by_id TradeSetting.default_seller_id
+  def default_seller(area = nil)
+    if area
+      seller = area.sellers.first
+    end
+    seller || Seller.find_by_id(TradeSetting.default_seller_id)
   end
 
   def matched_seller_with_default(area)
-    matched_seller(area) || default_seller
+    matched_seller(area) || default_seller(area)
   end
 
   def matched_seller(area = nil)
