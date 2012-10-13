@@ -2,7 +2,7 @@
 
 class TaobaoTrade < Trade
   include TaobaoProductsLockable
-  # include Dulux::Dispatch
+  include Dulux::Splitter
 
   field :tid, type: String
   field :num, type: Integer
@@ -125,7 +125,7 @@ class TaobaoTrade < Trade
 
   def dispatch!(seller = nil)
     if TradeSetting.company == 'dulux'
-      Dulux::Splitter.split_orders(self)
+      split_orders(self)
     else
       return false unless dispatchable?
 

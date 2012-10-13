@@ -125,7 +125,7 @@ module Dulux
         # 无需拆单
         splitted_order = splitted_orders.first
 
-        if splitted_orders[:default_seller].present?
+        if splitted_order[:default_seller].present?
           trade.seller_id = splitted_order[:default_seller]
           trade.dispatched_at = Time.now
           trade.save
