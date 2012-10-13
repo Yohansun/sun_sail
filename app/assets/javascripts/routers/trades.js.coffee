@@ -162,6 +162,9 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       s_name = name + "<br>" + mobile + "<br>" + address
       price = "￥" + model.get('total_fee')
       $.get trade_path + '/sellers_info', {}, (data)->
+        if data.length == 1
+          html += "<h3>此订单不用拆分</h3>"
+          $('#ord_split .split_trade').remove()
         for el in data
           html += "<table class='table table-bordered'>"
           html += "<tr><th rowspan='" + (el.orders.length + 1) + "'>商品详细</th><th>商品名</th><th>调色信息</th><th>数量</th></tr>"
