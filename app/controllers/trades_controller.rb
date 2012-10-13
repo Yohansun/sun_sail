@@ -389,7 +389,7 @@ class TradesController < ApplicationController
 
   def sellers_info
     trade = Trade.find params[:id]
-    logger.info matched_seller_info(trade).inspect
+    logger.debug matched_seller_info(trade).inspect
     respond_to do |format|
       format.json { render json: matched_seller_info(trade) }
     end
