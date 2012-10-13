@@ -9,22 +9,31 @@ module Dulux
         seller_id = seller ? seller.id : nil
         seller_name = seller ? seller.name : '无对应经销商'
         info << {
-         orders: split[:orders].map{ |order| {title: order.title, outer_iid: order.outer_iid, num: order.num} },
+         orders: split[:orders].map{ |order| {title: order.title, outer_iid: order.outer_iid, num: order.num, color_num: order.color_num.first} },
          seller_id: seller_id,
          seller_name: seller_name
-       }
-     end
+        }
+      end
 
-     info
-   end
+      info
+    end
 
-   def match_seller_with_conditions(trade)
+    def match_seller_with_conditions(trade)
     	# 拆分商品
     	# 运费还没有计算
     	grouped_orders = {}
       splitted_orders = []
+      rebuild_orders = []
 
       trade.orders.each do |order|
+        if order.color_num.blank?
+          rebuild_orders << order
+        else
+          rebuild_orders += split_by_colors(order)
+        end
+      end
+
+      rebuild_orders.each do |order|
         seller = Dulux::SellerMatcher.match_item_seller(trade.default_area, order) || trade.default_seller
         seller_id = seller.id
         tmp = grouped_orders["#{seller_id}"] || []
@@ -45,22 +54,15 @@ module Dulux
     end
 
     def manual_match_seller_with_conditions(trade, split_hash)
-    	# split_hash = [
-    	#   {
-    	#     seller_id: 123,
-    	#     order_id: 123   #商品编码
-    	#   },{
-    	#
-      #   }
-      # ]
-
+      return if split_hash.blank?
       grouped_orders = {}
       splitted_orders = []
 
-      return if split_hash.blank?
       split_hash.each do |split|
         tmp = grouped_orders["#{split[:seller_id]}"] || []
-        tmp += trade.orders.select {|order| order.outer_iid == split[:order_id]}
+        order = trade.orders.select{|order| order.outer_iid == split[:order_id]}.first
+        s_order = split_by_color(order, split[:color_num], split[:num])
+        tmp << s_order
         grouped_orders["#{split[:seller_id]}"] = tmp
       end
 
@@ -76,8 +78,38 @@ module Dulux
       splitted_orders
     end
 
+    def split_by_color(order, num, count)
+      count = count.to_i
+      c_order = order.clone
+      c_order.num = count
+      color = Color.find_by_num num
+
+      c_order.color_num = color ? Array.new(count, num) : []
+      c_order.color_hexcode = color ? Array.new(count, color.hexcode) : []
+      c_order.color_name = color ? Array.new(count, color.name) : []
+      c_order.total_fee = (count / order.num) * order.total_fee 
+      c_order
+    end
+
+    def split_by_colors(order)
+      grouped_orders = {}
+      splitted_orders = []
+
+      order.color_num.each do |num|
+        num ||= "0"
+        tmp = grouped_orders["#{num}"] || 0
+        grouped_orders["#{num}"] = (tmp += 1)
+      end
+
+      grouped_orders.each do |num, count|
+        splitted_orders << split_by_color(order, num, count)
+      end
+
+      splitted_orders
+    end
+
     def split_orders(trade, auto=true, split_hash=[])
-    	# 拆单并分流
+      # 拆单并分流
       area = trade.default_area
       return unless area
 
@@ -92,7 +124,7 @@ module Dulux
       if splitted_orders.size == 1
         # 无需拆单
         splitted_order = splitted_orders.first
-        
+
         if splitted_orders[:default_seller].present?
           trade.seller_id = splitted_order[:default_seller]
           trade.dispatched_at = Time.now
@@ -127,8 +159,16 @@ module Dulux
 
   module SellerMatcher
     class << self
-      def match_item_seller(area, order)#color
-        product_seller_ids = StockProduct.joins(:product).where("products.iid = '#{order.outer_iid}' AND stock_products.activity > #{order.num}").map &:seller_id
+      def match_item_seller(area, order)
+        sql = "products.iid = '#{order.outer_iid}' AND stock_products.activity > #{order.num}"
+        products = StockProduct.joins(:product).where(sql)
+
+        if order.color_num.present?
+          color_sql = "colors.num = '#{order.color_num.first}'"
+          products = products.joins(:colors).where(color_sql)
+        end
+
+        product_seller_ids = products.map &:seller_id
         area.sellers.where(id: product_seller_ids, active: true).reorder("performance_score DESC").first
       end
 

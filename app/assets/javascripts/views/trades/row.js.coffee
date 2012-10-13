@@ -65,10 +65,10 @@ class MagicOrders.Views.TradesRow extends Backbone.View
       else
         for el in data
           html += "<table class='table table-bordered'>"
-          html += "<tr><th rowspan='" + (el.orders.length + 1) + "'>商品详细</th><th>商品名</th><th>数量</th></tr>"
+          html += "<tr><th rowspan='" + (el.orders.length + 1) + "'>商品详细</th><th>商品名</th><th>调色信息</th><th>数量</th></tr>"
           el.orders.forEach (item)->
-            html += "<tr><td class='so_iid' iid='" + item.outer_iid + "'>" + item.title + "</td><td class='so_num'>" + item.num + "</td></tr>"
-          html += "<tr><th>配送经销商</th><td colspan='2' class='seller_id' data='" + el.seller_id + "'>" + el.seller_name + "</td></tr>"
+            html += "<tr class='so'><td class='so_iid' iid='" + item.outer_iid + "'>" + item.title + "</td><td class='so_color'>" + item.color_num + "</td><td class='so_num'>" + item.num + "</td></tr>"
+          html += "<tr><th>配送经销商</th><td colspan='3' class='seller_id' data='" + el.seller_id + "'>" + el.seller_name + "</td></tr>"
           html += "</table>"
         $('#s_id').html(id)
         $('#s_tid').html(tid)

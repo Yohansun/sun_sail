@@ -80,8 +80,11 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     split_result = []
     $('.splitted_orders table').each ()->
       seller_id = $(this).find('.seller_id').attr('data')
-      $(this).find(".so_iid").each ()->
-        split_result.push {order_id: $(this).attr('iid'), seller_id: seller_id}
+      $(this).find("tr.so").each ()->
+        order_id = $(this).find('.so_iid').attr('iid')
+        num = $(this).find('.so_num').html()
+        color = $(this).find('.so_color').html()
+        split_result.push {order_id: order_id, num: num, color_num: color, seller_id: seller_id}
 
     $.get '/trades/' + id + '/split_trade', {split_result: split_result}, (data)->
       $('#ord_split').modal('hide')
