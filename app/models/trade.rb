@@ -182,7 +182,7 @@ class Trade
     if area
       seller = area.sellers.first
     end
-    seller || Seller.find_by_id(TradeSetting.default_seller_id)
+    seller
   end
 
   def matched_seller_with_default(area)
