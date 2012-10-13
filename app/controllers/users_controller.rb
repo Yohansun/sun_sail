@@ -46,6 +46,7 @@ class UsersController < ApplicationController
       @user.add_role(:interface) if params[:interface] == '1'
       @user.add_role(:stock_admin) if params[:stock_admin] == '1'
       @user.add_role(:admin) if params[:admin] == '1'
+      @user.add_role(:logistic) if params[:logistic] == '1'
       redirect_to users_path
     else
       render :new
