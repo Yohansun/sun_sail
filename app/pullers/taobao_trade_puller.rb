@@ -71,7 +71,7 @@ class TaobaoTradePuller
             end
           end
 
-           TradeTaobaoMemoFetcher.perform_async(trade.tid) if trade.has_buyer_message
+          TradeTaobaoMemoFetcher.perform_async(trade.tid) if trade.has_buyer_message
         end
 
         page_no += 1
