@@ -363,6 +363,7 @@
         <!-- <th data-col='order_split'>拆分</th> -->
         <!-- <th data-col='operator'>操作人</th> -->
         <th data-col='seller' nowrap>配送经销商</th>
+        <th data-col='logistic' nowrap>物流配送商</th>
 
         <th>操作</th>
       </tr>

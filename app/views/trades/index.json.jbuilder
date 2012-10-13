@@ -35,6 +35,9 @@ json.array!(@trades) do |json, trade|
   json.point_fee trade.point_fee
   json.total_fee trade.total_fee
 
+  json.logistic_id trade.logistic_id
+  json.logistic_name trade.logistic_name
+
   json.seller_confirm_deliver_at trade.seller_confirm_deliver_at.strftime("%m-%d %H:%M") if trade.seller_confirm_deliver_at
   json.seller_confirm_invoice_at trade.seller_confirm_invoice_at.strftime("%m-%d %H:%M") if trade.seller_confirm_invoice_at
   json.confirm_color_at trade.confirm_color_at.strftime("%m-%d %H:%M") if trade.confirm_color_at

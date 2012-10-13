@@ -120,6 +120,11 @@
     <%= @trade.get('seller_name') %>
   <% end %>
 </td>
+<td data-col='logistic' nowrap>
+  <% if @trade.get 'logistic_id' : %>
+    <%= @trade.get('logistic_name') %>
+  <% end %>
+</td>
 
 
 <td nowrap><!--操作-->
