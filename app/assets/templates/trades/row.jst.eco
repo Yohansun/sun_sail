@@ -71,16 +71,8 @@
   <% end %>
 </td>
 <td data-col='color_info'>
-  <% if @trade.get('has_color_info') == true : %>
-    <% for order in @trade.get('orders'): %>
-      <% if order.color_num: %>
-      <% for count in [0...order.num] : %>
-      <% if order.color_num[count] != null : %>
-      <a href="javascript:void(0)" rel="popover"  data-content=" <b><%= order.color_num[count] %></b> <b><%= order.color_name[count] %></b> <br/>" data-original-title="<%= order.title %>"><span class="match_color" style="background:url(/assets/color_cube.png);" ></a>
-      <% end %>
-      <% end %>
-      <% end %>
-    <% end %>
+  <% if @trade.get('has_color_info') == true : %>      
+    <a href="javascript:void(0)" rel="popover" data-content="<% for order in @trade.get('orders'): %> <%= order.title %> x <%= order.num %> <br /> <% if order.color_num: %> <% for count in [0...order.num] : %> <% if order.color_num[count] != null : %> <b><%= order.color_num[count] %></b> <b><%= order.color_name[count] %></b> <br/><% end %><% end %><% end %><% end %>" data-original-title="<b>调色信息</b>"><span class="match_color" style="background:url(/assets/color_cube.png);" ></a>
   <% end %>
 </td>
 <td data-col='invoice_info'>
