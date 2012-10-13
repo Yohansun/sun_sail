@@ -128,8 +128,8 @@
           <b class="caret"></b>
         </a>
         <ul class="dropdown-menu">
-          <li><a href="#" data-trade-mode="send" data-color-status="unmatched">未调色</a></li>
-          <li><a href="#" data-trade-mode="send" data-color-status="matched">已调色</a></li>
+          <li><a href="#" data-trade-mode="color" data-color-status="unmatched">未调色</a></li>
+          <li><a href="#" data-trade-mode="color" data-color-status="matched">已调色</a></li>
         </ul>
       </li>
       <!-- <li class="dropdown">

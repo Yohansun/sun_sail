@@ -113,9 +113,9 @@ class TradesController < ApplicationController
 
     # 调色
     if params[:search_color_status] == "matched"
-      @trades = @trades.where(has_color_info: true)
+      @trades = @trades.where("$and" =>[{has_color_info: true},{:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"]}])
     elsif params[:search_color_status] == "unmatched"
-      @trades = @trades.where(has_color_info: false)
+      @trades = @trades.where("$and" => [{has_color_info: false},{:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"]}])
     end
 
     #异常
