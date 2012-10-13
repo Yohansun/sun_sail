@@ -173,7 +173,6 @@ class TradesController < ApplicationController
       @trades = @trades.where(_type: params[:search_all][:type_option])
     end
 
-    ## 地域筛选
     # 按省筛选
     if params[:search_all] && params[:search_all][:state_option].present?
       state = /#{params[:search_all][:state_option].delete("省")}/
@@ -191,9 +190,6 @@ class TradesController < ApplicationController
       district = /#{params[:search_all][:district_option].delete("区")}/
       receiver_district_hash = {"$or" => [{receiver_district: district}, {"consignee_info.county" => district}, {"receiver.district" => district}]}
     end
-
-    receiver_location_hash = {"$and" => [receiver_state_hash, receiver_city_hash, receiver_district_hash].compact}
-    ## 地域筛选结束
 
     # 客服有备注
     if params[:search_all] && params[:search_all][:search_cs_memo] == "true"
@@ -222,7 +218,7 @@ class TradesController < ApplicationController
 
     # 高级搜索$or,$and集中筛选
     if (params[:search_all] && (params[:search_all][:state_option].present? || params[:search_all][:city_option].present? || params[:search_all][:district_option].present? || params[:search_all][:search_invoice] == "true" || params[:search_all][:search_seller_memo] == "true" || params[:search_all][:search_buyer_message] == "true")) || (params[:search] && (params[:search][:option] == 'receiver_name' || params[:search][:option] == 'receiver_mobile'))
-      @trades = @trades.where("$and" => [receiver_name_hash, receiver_mobile_hash, seller_memo_hash, buyer_message_hash, invoice_all_hash, receiver_location_hash].compact)
+      @trades = @trades.where("$and" => [receiver_name_hash, receiver_mobile_hash, seller_memo_hash, buyer_message_hash, invoice_all_hash, receiver_state_hash, receiver_city_hash, receiver_district_hash].compact)
     end
 
     ###筛选结束###
