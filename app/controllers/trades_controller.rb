@@ -410,7 +410,11 @@ class TradesController < ApplicationController
   def seller_for_area
     trade = Trade.find params[:id]
     area = Area.find params[:area_id]
-    seller = trade.matched_seller_with_default(area)
+    if TradeSetting.company == 'dulux'
+      seller = Dulux::SellerMatcher.match_trade_seller(trade, area)
+    else
+      seller = trade.matched_seller_with_default(area)
+    end
     seller_id = nil
     seller_name = '无对应经销商'
     dispatchable = false
