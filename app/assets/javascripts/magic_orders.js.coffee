@@ -13,11 +13,11 @@ window.MagicOrders =
       'cs':                      ['detail', 'seller', 'cs_memo', 'color', 'invoice', 'trade_split', 'trade_unsplit', 'mark_unusual_state', 'reassign', 'refund', 'check_goods','operation_log'],
       'seller':                  ['detail', 'deliver', 'mark_unusual_state', 'logistic_split', 'print_logistic_bill', 'print_deliver_bill', 'confirm_refund','barcode','confirm_color','confirm_check_goods','seller_confirm_deliver'],
       'interface':               ['detail', 'seller_confirm_deliver'],
-      'logistic':                ['detail'],
+      'logistic':                ['detail', 'logistic_waybill'],
       'admin':                   ['*'],
 
       #trade_mode
-      'trades':                  ['deliver', 'detail', 'seller', 'cs_memo', 'color', 'invoice', 'trade_split', 'trade_unsplit', 'mark_unusual_state', 'reassign', 'refund', 'check_goods', 'deliver', 'seller_confirm_deliver', 'seller_confirm_invoice', 'barcode', 'check_goods', 'logistic_split', 'print_logistic_bill', 'print_deliver_bill', 'confirm_refund', 'operation_log','confirm_color','confirm_check_goods'],
+      'trades':                  ['deliver', 'detail', 'seller', 'cs_memo', 'color', 'invoice', 'trade_split', 'trade_unsplit', 'mark_unusual_state', 'reassign', 'refund', 'check_goods', 'deliver', 'seller_confirm_deliver', 'seller_confirm_invoice', 'barcode', 'check_goods', 'logistic_split', 'print_logistic_bill', 'print_deliver_bill', 'confirm_refund', 'operation_log','confirm_color','confirm_check_goods', 'logistic_waybill'],
       'deliver':                 ['detail'],
       'logistics':               ['detail'],
       'check':                   ['detail'],

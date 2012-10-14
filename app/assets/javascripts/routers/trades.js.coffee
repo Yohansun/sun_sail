@@ -13,6 +13,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     'trades/:id/seller_confirm_deliver':'seller_confirm_deliver'
     'trades/:id/seller_confirm_invoice':'seller_confirm_invoice'
     'trades/:id/barcode':'barcode'
+    'trades/:id/logistic_waybill':'logistic_waybill'
     'trades/:id/mark_unusual_state':'mark_unusual_state'
     'trades/:id/operation_log':'operation_log'
     'trades/:id/confirm_color': 'confirm_color'
@@ -52,6 +53,9 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       Backbone.history.navigate('trades')
 
     $('#trade_barcode').on 'hide', (event) ->
+      Backbone.history.navigate('trades')
+
+    $('#logistic_waybill').on 'hide', (event) ->
       Backbone.history.navigate('trades')
 
     $('#trade_mark_unusual_state').on 'hide', (event) ->
@@ -280,6 +284,17 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       view = new MagicOrders.Views.TradesBarcode(model: model)
       $('#trade_barcode').html(view.render().el)
       $('#trade_barcode').modal('show')
+
+  logistic_waybill: (id) ->
+    blocktheui()
+
+    @model = new MagicOrders.Models.Trade(id: id)
+    @model.fetch success: (model, response) =>
+      $.unblockUI()
+
+      view = new MagicOrders.Views.TradesLogisticWaybill(model: model)
+      $('#logistic_waybill').html(view.render().el)
+      $('#logistic_waybill').modal('show')
 
   mark_unusual_state: (id) ->
     blocktheui()

@@ -197,7 +197,7 @@ class TradesController < ApplicationController
       state = /#{params[:search_all][:state_option].delete("省")}/
       receiver_state_hash = {"$or" => [{receiver_state: state}, {"consignee_info.province" => state}, {"receiver.state" => state}]}
     end
-    
+
     # 按市筛选
     if params[:search_all] && params[:search_all][:city_option].present?
       city = /#{params[:search_all][:city_option].delete("市")}/
@@ -363,6 +363,10 @@ class TradesController < ApplicationController
 
     if params[:confirm_check_goods_at] == true
       @trade.confirm_check_goods_at = Time.now
+    end
+
+    if params[:logistic_waybill].present?
+      @trade.logistic_waybill = params[:logistic_waybill]
     end
 
     unless params[:orders].blank?

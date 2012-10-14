@@ -3,6 +3,7 @@
   * html .timeEntry_control { margin-top: -2px; }
 </style>
 
+<% if MagicOrders.role_key != 'logistic': %>
 <header class="jumbotron subhead" id="overview">
   <div class="subnav">
     <ul class="nav nav-pills">
@@ -147,6 +148,7 @@
     </ul>
   </div>
 </header>
+<% end %>
 
 <div class="row-fluid">
   <ul class="breadcrumb" style="position:relative;">
@@ -251,7 +253,7 @@
                 </select>
               </div>
               <div class="controls" id="select_state"><!--买家地域--></div>
-           
+
             <!-- <div class="controls">
               <label for="select04" class="control-label">活动：</label>
               <select id="select04" class="input-medium">
@@ -333,8 +335,8 @@
         <th data-col='cs_memo'>客服<br/>备注</th>
         <th data-col='color_info'>调色<br/>信息</th>
         <th data-col='invoice_info'>发票<br/>信息</th>
-        <th data-col='point_fee' nowrap>使用积分</th>
-        <% if MagicOrders.company == "dulux" and MagicOrders.role_key != 'seller' : %>
+        <th data-col='point_fee'>使用<br/>积分</th>
+        <% if MagicOrders.company == "dulux" and MagicOrders.role_key != 'seller' and MagicOrders.role_key != 'logistic' : %>
         <th data-col='total_fee' nowrap>实付金额</th>
         <% end %>
         <!-- <th data-col='deliver_bill'>出货单</th>  -->             <!--Newly Add-->
