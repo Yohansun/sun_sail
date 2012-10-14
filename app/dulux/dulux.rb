@@ -87,7 +87,7 @@ module Dulux
       c_order.color_num = color ? Array.new(count, num) : []
       c_order.color_hexcode = color ? Array.new(count, color.hexcode) : []
       c_order.color_name = color ? Array.new(count, color.name) : []
-      c_order.total_fee = (count / order.num) * order.total_fee 
+      c_order.total_fee = (count / order.num) * order.total_fee
       c_order
     end
 
@@ -123,6 +123,8 @@ module Dulux
 
       return false if splitted_orders.size == 1
 
+      new_trade_ids = []
+
       # 复制创建新 trade
       splitted_trades = []
       splitted_orders.each_with_index do |splitted_order, index|
@@ -136,10 +138,13 @@ module Dulux
         new_trade.splitted = true
 
         new_trade.save
+        new_trade_ids << new_trade.id
       end
 
       # 删除旧 trade
       trade.delete
+
+      new_trade_ids
     end
   end
 

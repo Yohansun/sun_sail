@@ -83,7 +83,7 @@
 <td data-col='point_fee'>
   <%= @trade.get('point_fee') %>
 </td>
-<% if MagicOrders.company == "dulux" and MagicOrders.role_key != 'seller' : %>
+<% if MagicOrders.company == "dulux" and MagicOrders.role_key != 'seller' and MagicOrders.role_key != 'logistic' : %>
 <td data-col='total_fee'>
   ￥<%= @trade.get('total_fee') %>
 </td>
@@ -172,6 +172,10 @@
 
       <% if @trade.get('seller_confirm_deliver_at') == undefined && @trade.get('status_text') == '已付款，已发货' : %>
         <li><a data-toggle="modal" href="#" data-type="seller_confirm_deliver">确认发货</a></li>
+      <% end %>
+
+      <% if MagicOrders.role_key == 'logistic' && @trade.get('status_text') == '已付款，已发货' : %>
+        <li><a data-toggle="modal" href="#" data-type="logistic_waybill">输入物流单号</a></li>
       <% end %>
 
       <% if @trade.get('invoice_name') && @trade.get('seller_confirm_invoice_at') == undefined : %>

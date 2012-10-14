@@ -3,6 +3,7 @@
   * html .timeEntry_control { margin-top: -2px; }
 </style>
 
+<% if MagicOrders.role_key != 'logistic': %>
 <header class="jumbotron subhead" id="overview">
   <div class="subnav">
     <ul class="nav nav-pills">
@@ -147,6 +148,7 @@
     </ul>
   </div>
 </header>
+<% end %>
 
 <div class="row-fluid">
   <ul class="breadcrumb" style="position:relative;">
@@ -251,7 +253,7 @@
                 </select>
               </div>
               <div class="controls" id="select_state"><!--买家地域--></div>
-           
+
             <!-- <div class="controls">
               <label for="select04" class="control-label">活动：</label>
               <select id="select04" class="input-medium">
@@ -333,8 +335,8 @@
         <th data-col='cs_memo'>客服<br/>备注</th>
         <th data-col='color_info'>调色<br/>信息</th>
         <th data-col='invoice_info'>发票<br/>信息</th>
-        <th data-col='point_fee' nowrap>使用积分</th>
-        <% if MagicOrders.company == "dulux" and MagicOrders.role_key != 'seller' : %>
+        <th data-col='point_fee'>使用<br/>积分</th>
+        <% if MagicOrders.company == "dulux" and MagicOrders.role_key != 'seller' and MagicOrders.role_key != 'logistic' : %>
         <th data-col='total_fee' nowrap>实付金额</th>
         <% end %>
         <!-- <th data-col='deliver_bill'>出货单</th>  -->             <!--Newly Add-->
@@ -359,40 +361,6 @@
     <tbody id="trade_rows">
     </tbody>
   </table>
-
-  <div id="ord_split" class="modal hide fade">
-    <div class="modal-header">
-      <button type="button" class="close" data-dismiss="modal">&times;</button>
-      <h3>订单拆分</h3>
-    </div><!-- modal-header -->
-    <div class="modal-body">
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <th>订单编号</th>
-            <th>订单状态</th>
-            <th>客户联系方式</th>
-            <th>订单总价</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td id='s_tid'></td>
-            <td id='s_status'></td>
-            <td id='s_name'></td>
-            <td id='s_price'></td>
-          </tr>
-        </tbody>
-      </table>
-      <div style='display:none' id='s_id'></div>
-      <div class="clearfix splitted_orders"></div>
-    </div><!-- modal-body -->
-    <div class="modal-footer">
-      <a href="#" class="btn" data-dismiss="modal" >取消</a>
-      <a href="#" class="btn btn-primary split_trade">确定</a>
-    </div><!-- modal-footer -->
-  </div><!-- ord_split -->
-
   <a href="#" data-type="loadMoreTrades" class="btn">加载更多订单</a>
 </div>
 <div id="trades_bottom"></div>

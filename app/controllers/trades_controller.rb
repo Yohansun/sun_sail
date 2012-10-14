@@ -197,7 +197,7 @@ class TradesController < ApplicationController
       state = /#{params[:search_all][:state_option].delete("省")}/
       receiver_state_hash = {"$or" => [{receiver_state: state}, {"consignee_info.province" => state}, {"receiver.state" => state}]}
     end
-    
+
     # 按市筛选
     if params[:search_all] && params[:search_all][:city_option].present?
       city = /#{params[:search_all][:city_option].delete("市")}/
@@ -291,6 +291,8 @@ class TradesController < ApplicationController
 
   def show
     @trade = TradeDecorator.decorate(Trade.where(_id: params[:id]).first)
+    @splited_orders = matched_seller_info(@trade)
+    logger.debug @splited_orders.inspect
     respond_with @trade
   end
 
@@ -363,6 +365,10 @@ class TradesController < ApplicationController
 
     if params[:confirm_check_goods_at] == true
       @trade.confirm_check_goods_at = Time.now
+    end
+
+    if params[:logistic_waybill].present?
+      @trade.logistic_waybill = params[:logistic_waybill]
     end
 
     unless params[:orders].blank?
@@ -453,10 +459,10 @@ class TradesController < ApplicationController
   def split_trade
     trade = Trade.find params[:id]
     split_hash = params[:split_result].values
-    split_orders(trade, false, split_hash)
+    new_trade_ids = split_orders(trade, false, split_hash)
 
     respond_to do |format|
-      format.json { render json: {ok: 'tre'} }
+      format.json { render json: {ids: new_trade_ids} }
     end
   end
 end
