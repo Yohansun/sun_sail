@@ -1,0 +1,15 @@
+核查时间: <br>
+<br>
+<%= @start_time.localtime.to_formatted_s(:db) %> 至 <%= @end_time.localtime.to_formatted_s(:db) %><br>
+<br>
+<br>
+漏抓订单：<br>
+<br>
+<%= @lost_orders.join(", ") %><br>
+<br>
+淘宝与本地状态不同步订单：<br>
+<br>
+<%= @wrong_orders.join(", ") %><br>
+<br>
+本地发货状态异常订单:<br>
+<%= @bad_status_orders.join(", ") %><br>
