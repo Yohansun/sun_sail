@@ -70,9 +70,9 @@ class TradesController < ApplicationController
       elsif status == 'delivered'
         @trades = @trades.where(:status.in => ["WAIT_BUYER_CONFIRM_GOODS","WAIT_GOODS_RECEIVE_CONFIRM","WAIT_BUYER_CONFIRM_GOODS_ACOUNTED","WAIT_SELLER_SEND_GOODS_ACOUNTED"])
       elsif status == 'refund'
-        @trades = @trades.where(:status.in => ["TRADE_REFUNDING"])
+        @trades = @trades.where(:status.in => ["TRADE_REFUNDING","WAIT_SELLER_AGREE","SELLER_REFUSE_BUYER","WAIT_BUYER_RETURN_GOODS","WAIT_SELLER_CONFIRM_GOODS","CLOSED", "SUCCESS"])
       elsif status == 'closed'
-        @trades = @trades.where(:status.in => ["TRADE_CLOSED","TRADE_CANCELED","TRADE_CLOSED_BY_TAOBAO"])
+        @trades = @trades.where(:status.in => ["TRADE_CLOSED","TRADE_CANCELED","TRADE_CLOSED_BY_TAOBAO", "ALL_CLOSED"])
       elsif status == 'unusual_trade'
         @trades = @trades.where(:status.in => ["TRADE_NO_CREATE_PAY"])
       end
