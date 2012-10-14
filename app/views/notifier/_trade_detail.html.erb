@@ -40,6 +40,7 @@
     <tr>
       <th class="td1">商品名</th>
       <th class="td2">特殊属性</th>
+      <th class="td2">调色信息</th>
       <% unless TradeSetting.company == "dulux"%>
       <th class="td2">标价</th>
       <th class="td3">实际单价</th>
@@ -54,6 +55,14 @@
         <tr>
           <td class="td1"><%= order.title %></td>
           <td class="td2"><%= order.sku_properties %></td>
+          <td class="td2">
+            <%- if order.color_num && order.color_num.present? %>
+              <%- order.color_num.each do |color| %>
+                <%- color_name = Color.find_by_num(color).try(:name) %>
+                <%= color %>  <%= color_name %>
+              <%-end %>  
+            <%- end %>          
+          </td>
           <% unless TradeSetting.company == "dulux"%>
           <td class="td2"><span class="font-blueb">¥<%= order.auction_price %></span></td>
           <td class="td3"><span class="font-gray">¥<%= order.price %></span></td>
