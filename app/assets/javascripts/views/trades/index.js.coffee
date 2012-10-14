@@ -44,7 +44,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
     # @collection.on("reset", @render, this)
     @collection.on("fetch", @renderUpdate, this)
-
   render: =>
     $.unblockUI()
     if !@first_rendered
@@ -71,6 +70,8 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     @collection.each(@appendTrade)
     $("a[rel=popover]").popover(placement: 'left')
     @render_select_state()
+    if MagicOrders.role_key == 'seller'
+      $(@el).find(".trade_nav").text("未发货订单")
     this
 
   render_select_state: ->
