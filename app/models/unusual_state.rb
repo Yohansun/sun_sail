@@ -16,8 +16,8 @@ class UnusualState
 
   def add_key
   	case self.reason
-  	  when "卖家延迟发货"
-  	  	"seller_delay_deliver"
+  	  when "买家延迟发货"
+  	  	"buyer_delay_deliver"
   	  when "卖家长时间未发货"
   	  	"seller_ignore_deliver"
   	  when "经销商缺货"
