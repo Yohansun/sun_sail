@@ -3,11 +3,11 @@ class TradeDispatchSms
   include Sidekiq::Worker
   sidekiq_options :queue => :sms
 
-  def perform(id, notify_kind)
+  def perform(id, seller_id, notify_kind)
     content = nil
     object = Trade.find id
     trade = TradeDecorator.decorate(object)
-    seller = trade.seller 
+    seller = Seller.find seller_id 
     if seller
       tid = trade.tid
       trade_from = trade.trade_source

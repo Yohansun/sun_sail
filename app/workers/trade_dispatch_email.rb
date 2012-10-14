@@ -3,8 +3,8 @@ class TradeDispatchEmail
   include Sidekiq::Worker
   sidekiq_options :queue => :email
 
-  def perform(id, notify_kind)
-    Notifier.dispatch(id, notify_kind).deliver
+  def perform(id, seller_id, notify_kind)
+    Notifier.dispatch(id, seller_id, notify_kind).deliver
   end
 
 end
