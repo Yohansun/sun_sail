@@ -48,11 +48,11 @@ class TradesController < ApplicationController
 
     ## 异常订单筛选(仅适用于没有京东订单的dulux)
     when 'unpaid_two_days'
-      unusual_trade_hash = {"$and" => [{:created.lte => Time.now - 2.days},{:pay_time.exists => false}]}
+      unusual_trade_hash_1 = {"$and" => [{:created.lte => Time.now - 2.days},{:pay_time.exists => false}]}
     when 'undispatched_one_day'
-      unusual_trade_hash = {"$and" => [{:pay_time.lte => Time.now - 1.days},{:dispatched_at.exists => false}]}
+      unusual_trade_hash_2 = {"$and" => [{:pay_time.lte => Time.now - 1.days},{:dispatched_at.exists => false}]}
     when 'undelivered_two_days'
-      unusual_trade_hash = {"$and" => [{:dispatched_at.lte => Time.now - 2.days},{"$or" => [{"$and" => [{_type: "TaobaoTrade"}, {:consign_time.exists => false}]}, {"$and" => [{_type: "TaobaoPurchaseOrder"},{"$and" => [{:consign_time.exists => false}, {:delivered_at.exists => false}]}]}]}]}
+      unusual_trade_hash_3 = {"$and" => [{:dispatched_at.lte => Time.now - 2.days},{"$or" => [{"$and" => [{_type: "TaobaoTrade"}, {:consign_time.exists => false}]}, {"$and" => [{_type: "TaobaoPurchaseOrder"},{"$and" => [{:consign_time.exists => false}, {:delivered_at.exists => false}]}]}]}]}
     when 'buyer_delay_deliver'
       unusual_trade_hash = {"unusual_states" => {"$elemMatch" => {key: "buyer_delay_deliver"}}}
     when 'seller_ignore_deliver'
@@ -80,7 +80,21 @@ class TradesController < ApplicationController
       @trades = @trades.where(unusual_trade_hash)
     end
 
+    if unusual_trade_hash_1
+      @trades = @trades.where(unusual_trade_hash_1)
+      @trades = @trades.where(:status.nin => ["TRADE_CLOSED_BY_TAOBAO"])
+    end
+    
+    if unusual_trade_hash_2
+      @trades = @trades.where(unusual_trade_hash_2)
+      @trades = @trades.where("$or" => [{seller_id: nil},{:seller_id.exists => false}])
+      @trades = @trades.where(:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"])
+    end
 
+    if unusual_trade_hash_3
+      @trades = @trades.where(unusual_trade_hash_3)
+      @trades = @trades.where("$and" => [{:dispatched_at.ne => nil},{:dispatched_at.exists => true},{:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"]}])
+    end
 
     ###筛选###
 
