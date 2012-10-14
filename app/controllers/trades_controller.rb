@@ -53,8 +53,8 @@ class TradesController < ApplicationController
       unusual_trade_hash = {"$and" => [{:pay_time.lte => Time.now - 1.days},{:dispatched_at.exists => false}]}
     when 'undelivered_two_days'
       unusual_trade_hash = {"$and" => [{:dispatched_at.lte => Time.now - 2.days},{"$or" => [{"$and" => [{_type: "TaobaoTrade"}, {:consign_time.exists => false}]}, {"$and" => [{_type: "TaobaoPurchaseOrder"},{"$and" => [{:consign_time.exists => false}, {:delivered_at.exists => false}]}]}]}]}
-    when 'seller_delay_deliver'
-      unusual_trade_hash = {"unusual_states" => {"$elemMatch" => {key: "seller_delay_deliver"}}}
+    when 'buyer_delay_deliver'
+      unusual_trade_hash = {"unusual_states" => {"$elemMatch" => {key: "buyer_delay_deliver"}}}
     when 'seller_ignore_deliver'
       unusual_trade_hash = {"unusual_states" => {"$elemMatch" => {key: "seller_ignore_deliver"}}}
     when 'seller_lack_product'

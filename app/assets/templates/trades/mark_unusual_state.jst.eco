@@ -35,7 +35,7 @@
     <div class="control-group">
       <div class="controls">
         <label class="radio">
-          <input type="radio" value="卖家延迟发货" name="reason">卖家延迟发货
+          <input type="radio" value="买家延迟发货" name="reason">买家延迟发货
         </label>
         <label class="radio">
           <input type="radio" value="卖家长时间未发货" name="reason">卖家长时间未发货
@@ -45,10 +45,10 @@
         </label>
         <label class="radio">
           <input type="radio" value="经销商无法调色" name="reason">经销商无法调色
-        </label>        
+        </label>
         <label class="radio">
           <input type="radio" value="买家要求退款" name="reason">买家要求退款
-        </label>        
+        </label>
         <label class="radio">
           <input type="radio" value="买家要求退货" name="reason">买家要求退货
         </label>
@@ -64,5 +64,4 @@
   <a class="btn" data-dismiss="modal">取消</a>
   <a class="btn btn-primary save">添加</a>
 </div>
-  
-   
+
