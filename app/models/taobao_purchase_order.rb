@@ -109,7 +109,7 @@ class TaobaoPurchaseOrder < Trade
     end
 
     if seller.has_stock
-      return unless can_lock_products?(seller.id)
+      return unless can_lock_products?(self, seller.id)
     end
 
     self.update_attributes(seller_id: seller.id, dispatched_at: Time.now) if seller
