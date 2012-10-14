@@ -136,7 +136,7 @@ class TaobaoTrade < Trade
       return false unless seller
 
       if seller.has_stock
-        return false unless can_lock_products?(seller.id)
+        return false unless can_lock_products?(self, seller.id)
       end
 
       orders.each do |order|

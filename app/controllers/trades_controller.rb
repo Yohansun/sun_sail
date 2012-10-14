@@ -4,6 +4,7 @@ class TradesController < ApplicationController
   before_filter :authenticate_user!
   respond_to :json, :xls
   include Dulux::Splitter
+  include TaobaoProductsLockable
 
   def index
     @trades = Trade
@@ -387,14 +388,21 @@ class TradesController < ApplicationController
     seller = trade.matched_seller_with_default(area)
     seller_id = nil
     seller_name = '无对应经销商'
+    dispatchable = false
 
     if seller
       seller_id = seller.id
       seller_name = seller.name
+      dispatchable = true
+      errors = can_lock_products?(trade, seller.id).join(',')
+      unless errors.blank?
+        seller_name += "(无法分流：#{errors})"
+        dispatchable = false
+      end
     end
 
     respond_to do |format|
-      format.json { render json: {seller_id: seller_id, seller_name: seller_name} }
+      format.json { render json: {seller_id: seller_id, seller_name: seller_name, dispatchable: dispatchable} }
     end
   end
 

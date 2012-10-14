@@ -180,7 +180,7 @@ class Trade
 
   def default_seller(area = nil)
     area ||= default_area
-    area.sellers.first
+    area.sellers.where(active: true).first
   end
 
   def matched_seller_with_default(area)
