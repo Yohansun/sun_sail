@@ -72,7 +72,36 @@
             </li>
             <li class="divider-vertical"></li>
           </ul>
+          
+          <% unless current_user.has_role?(:seller) %>
+          <ul class="nav pull-right">
+            <li id="fat-menu" class="dropdown">
+              <a href="/alerts"><span class="badge badge-important" style="background:red;"></span>异常中心</a>
+            </li>
+            <li class="divider-vertical"></li>
+          </ul>
+          <% end %>
+
           <!--/.nav-collapse -->
+          <!-- <ul class="nav pull-right">
+            <li id="fat-menu" class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="badge badge-info" style="background-color:#FF0000"></span>&nbsp;异常订单 <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="/trades/unpaid_two_days">超过2天未付款</a></li>
+                <li><a href="/trades/undispatched_one_day">已付款1天未分流</a></li>
+                <li><a href="/trades/undelivered_two_days">已分流2天未发货</a></li>
+                <li class= "divider"></li>
+                <li><a href="trades/seller_delay_deliver">卖家延迟发货</a></li>
+                <li><a href="trades/seller_ignore_deliver">卖家长时间未发货</a></li>
+                <li><a href="trades/seller_lack_product">经销商缺货</a></li>
+                <li><a href="trades/seller_lack_color">经销商无法调色</a></li>
+                <li><a href="trades/buyer_demand_refund">买家要求退款</a></li>
+                <li><a href="trades/buyer_demand_return_product">买家要求退货</a></li>
+                <li><a href="trades/other_unusual_state">其他异常</a></li>
+              </ul>
+            </li>
+            <li class="divider-vertical"></li>
+          </ul> -->
 
           <% end %>
         </div>

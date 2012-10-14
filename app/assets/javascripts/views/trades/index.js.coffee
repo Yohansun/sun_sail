@@ -18,7 +18,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     'click [data-deliver-bill-status]':'selectSameStatusDeliverBill'
     'click [data-logistic-status]': 'selectSameStatusLogistic'
     'click [data-color-status]': 'selectSameStatusColor'
-    'click [data-unusual-trade]': 'selectUnusualTrade'
     'click [data-confirm_color-status]': 'selectSameStatusConfirmColor'
 
     #visual effects
@@ -235,7 +234,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     event.preventDefault()
 
     blocktheui()
-    @collection.fetch data: {trade_type: @trade_type, offset: @offset, search: {option: @search_option, value: @search_value}, search_all: {@search_start_date, @search_start_time, @pay_start_time, @pay_end_time, @pay_start_date, @pay_end_date, @search_end_date, @search_end_time, @status_option, @type_option, @state_option, @state_option, @city_option, @district_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_invoice, @search_color}, search_deliverbill_status: @search_deliverbill_status, logistic_status: @logistic_status, search_trade_status: @search_trade_status, search_invoice_status: @search_invoice_status, search_color_status: @search_color_status, search_unusual_trade: @search_unusual_trade}, success: (collection) =>
+    @collection.fetch data: {trade_type: @trade_type, offset: @offset, search: {option: @search_option, value: @search_value}, search_all: {@search_start_date, @search_start_time, @pay_start_time, @pay_end_time, @pay_start_date, @pay_end_date, @search_end_date, @search_end_time, @status_option, @type_option, @state_option, @state_option, @city_option, @district_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_invoice, @search_color}, search_deliverbill_status: @search_deliverbill_status, logistic_status: @logistic_status, search_trade_status: @search_trade_status, search_invoice_status: @search_invoice_status, search_color_status: @search_color_status}, success: (collection) =>
       if collection.length > 0
         @offset = @offset + 20
         @renderUpdate()
@@ -386,23 +385,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     $("#trade_rows").html('')
 
     @collection.fetch data: {search_confirm_color_status: @search_color_status}, success: (collection) =>
-     if collection.length > 0
-       @offset = @offset + 20
-       @renderUpdate()
-     else
-       $.unblockUI()
-
-  selectUnusualTrade: (e) =>
-    e.preventDefault()
-    $('.dropdown.open .dropdown-toggle').dropdown('toggle');
-    @search_unusual_trade = $(e.target).data('unusual-trade')
-    $(@el).find(".trade_nav").text($(@el).find("[data-unusual-trade=#{@search_unusual_trade}]").html())
-
-    @offset = 0
-    blocktheui()
-    $("#trade_rows").html('')
-
-    @collection.fetch data: {search_unusual_trade: @search_unusual_trade}, success: (collection) =>
      if collection.length > 0
        @offset = @offset + 20
        @renderUpdate()

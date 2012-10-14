@@ -45,13 +45,41 @@ class TradesController < ApplicationController
       trade_type = 'JingdongTrade'
     when 'shop'
       trade_type = 'ShopTrade'
+
+    ## 异常订单筛选(仅适用于没有京东订单的dulux)
+    when 'unpaid_two_days'
+      unusual_trade_hash = {"$and" => [{:created.lte => Time.now - 2.days},{:pay_time.exists => false}]}
+    when 'undispatched_one_day'
+      unusual_trade_hash = {"$and" => [{:pay_time.lte => Time.now - 1.days},{:dispatched_at.exists => false}]}
+    when 'undelivered_two_days'
+      unusual_trade_hash = {"$and" => [{:dispatched_at.lte => Time.now - 2.days},{"$or" => [{"$and" => [{_type: "TaobaoTrade"}, {:consign_time.exists => false}]}, {"$and" => [{_type: "TaobaoPurchaseOrder"},{"$and" => [{:consign_time.exists => false}, {:delivered_at.exists => false}]}]}]}]}
+    when 'seller_delay_deliver'
+      unusual_trade_hash = {"unusual_states" => {"$elemMatch" => {key: "seller_delay_deliver"}}}
+    when 'seller_ignore_deliver'
+      unusual_trade_hash = {"unusual_states" => {"$elemMatch" => {key: "seller_ignore_deliver"}}}
+    when 'seller_lack_product'
+      unusual_trade_hash = {"unusual_states" => {"$elemMatch" => {key: "seller_lack_product"}}}
+    when 'seller_lack_color'
+      unusual_trade_hash = {"unusual_states" => {"$elemMatch" => {key: "seller_lack_color"}}}
+    when 'buyer_demand_refund'
+      unusual_trade_hash = {"unusual_states" => {"$elemMatch" => {key: "buyer_demand_refund"}}}
+    when 'buyer_demand_return_product'
+      unusual_trade_hash = {"unusual_states" => {"$elemMatch" => {key: "buyer_demand_return_product"}}}
+    when 'other_unusual_state'
+      unusual_trade_hash = {"unusual_states" => {"$elemMatch" => {key: "other_unusual_state"}}}
     else
       trade_type = nil
+      unusual_trade_hash = nil
     end
 
     if trade_type
       @trades = @trades.where(_type: trade_type)
     end
+
+    if unusual_trade_hash
+      @trades = @trades.where(unusual_trade_hash)
+    end
+
 
 
     ###筛选###
@@ -117,16 +145,6 @@ class TradesController < ApplicationController
       @trades = @trades.where("$and" =>[{has_color_info: true},{:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"]}])
     elsif params[:search_color_status] == "unmatched"
       @trades = @trades.where("$and" => [{has_color_info: false},{:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"]}])
-    end
-
-    #异常
-    if params[:search_unusual_trade] == "undispatched"
-      @trades = @trades.where("$or" => [{"$and" => [{:pay_time.lte => Time.now - 2.days},{:dispatched_at.exists => false}]},{"$and" => [{_type: "JingdongTrade"},{:created.lte => Time.now - 2.days},{:dispatched_at.exists => false}]}])
-    elsif params[:search_unusual_trade] == "undelivered"
-      t_t_hash = {"$and" => [{_type: "JingdongTrade"}, {:order_end_time.exists => false}]}
-      j_t_hash = {"$and" => [{_type: "TaobaoTrade"}, {:consign_time.exists => false}]}
-      t_p_o_hash = {"$and" => [{_type: "TaobaoPurchaseOrder"},{"$and" => [{:consign_time.exists => false}, {:delivered_at.exists => false}]}]}
-      @trades = @trades.where("$and" => [{:dispatched_at.lte => Time.now - 2.days},{"$or" => [t_t_hash, j_t_hash, t_p_o_hash]}])
     end
 
     ## 简单筛选
@@ -329,7 +347,8 @@ class TradesController < ApplicationController
     end
 
     unless params[:reason].blank?
-      @trade.unusual_states.build(reason: params[:reason], created_at: Time.now, reporter: current_user.name)
+      state = @trade.unusual_states.build(reason: params[:reason], created_at: Time.now, reporter: current_user.name)
+      state.update_attributes(key: state.add_key)
     end
 
     unless params[:state_id].blank?
