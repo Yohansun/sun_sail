@@ -13,14 +13,13 @@ class Notifier < ActionMailer::Base
         )
   end  
 
-  def dispatch(id, notify_kind)
+  def dispatch(id, seller_id, notify_kind)
     
     object = Trade.find id
+    seller = Seller.find seller_id
     @trade = TradeDecorator.decorate(object)
-
-    if @trade.seller
-      
-      seller = @trade.seller
+     
+    if seller
       @notify_kind = notify_kind
       @tid = @trade.tid
       @trade_from = @trade.trade_source
