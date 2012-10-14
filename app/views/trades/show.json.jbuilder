@@ -99,3 +99,7 @@ json.operation_logs @trade.operation_logs do |json, log|
   json.operated_at log.operated_at.strftime("%m-%d %H:%M:%S") if log.operated_at
   json.operation log.operation
 end
+
+if params[:splited]
+  json.splited @splited_orders
+end

@@ -56,7 +56,7 @@ class MagicOrders.Views.TradesRow extends Backbone.View
 
   show_split: (e) ->
     e.preventDefault()
-    Backbone.history.navigate('trades/' + @model.get("id") + '/split', true)
+    Backbone.history.navigate('trades/' + @model.get("id") + '/splited', true)
 
   show_deliver: (e) ->
     e.preventDefault()
