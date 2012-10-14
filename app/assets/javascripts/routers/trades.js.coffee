@@ -3,6 +3,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     'trades': 'index'
     'trades/:trade_type': 'index'
     'trades/:id/detail': 'show'
+    'trades/:id/print_deliver_bill': 'print_deliver_bill'
     'trades/:id/seller': 'seller'
     'trades/:id/deliver': 'deliver'
     'trades/:id/cs_memo': 'cs_memo'
@@ -133,6 +134,16 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $('#trade_detail').html(view.render().el)
       $('#trade_detail').modal('show')
 
+  print_deliver_bill: (id) ->
+    blocktheui()
+    @model = new MagicOrders.Models.Trade(id: id)
+    @model.fetch success: (model, response) =>
+      $.unblockUI()
+
+      view = new MagicOrders.Views.TradesDeliverBill(model: model)
+      $('#trade_detail').html(view.render().el)
+      $('#trade_detail').modal('show')
+
   seller: (id) ->
     blocktheui()
 
@@ -150,7 +161,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     @model = new MagicOrders.Models.Trade(id: id)
     @model.fetch success: (model, response) =>
       $.unblockUI()
-      
+
       html = ''
       trade_path = '/trades/' + model.get("id")
       id = model.get("id")
