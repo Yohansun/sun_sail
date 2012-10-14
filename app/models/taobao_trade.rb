@@ -139,6 +139,21 @@ class TaobaoTrade < Trade
         return false unless can_lock_products?(seller.id)
       end
 
+      orders.each do |order|
+        product = Product.find_by_iid order.outer_iid
+        stock_product = StockProduct.where(product_id: product.id, seller_id: seller.id).first
+        break unless product
+        stock_product.update_quantity!(order.num, '锁定')
+        StockHistory.create!(
+          operation: '锁定',
+          number: order.num,
+          stock_product_id: stock_product.id,
+          tid: tid,
+          #user_id: current_user.id,
+          seller_id: seller.id
+        )
+      end
+
       update_attributes(seller_id: seller.id, dispatched_at: Time.now) if seller
     # end
   end
