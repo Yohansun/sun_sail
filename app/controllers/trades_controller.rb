@@ -385,8 +385,14 @@ class TradesController < ApplicationController
     trade = Trade.find params[:id]
     area = Area.find params[:area_id]
     seller = trade.matched_seller_with_default(area)
-    seller_id = seller ? seller.id : nil
-    seller_name = seller ? seller.name : '无对应经销商'
+    seller_id = nil
+    seller_name = '无对应经销商'
+
+    if seller
+      seller_id = seller.id
+      seller_name = seller.name
+    end
+
     respond_to do |format|
       format.json { render json: {seller_id: seller_id, seller_name: seller_name} }
     end

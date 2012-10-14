@@ -105,7 +105,7 @@
             <td><%= h.stock_product.product.name %></td>
             <td><%= h.stock_product.product.taobao_id %></td>
             <td><%= h.stock_product.product.try(:category).try(:name) %></td>
-            <td><%= h.user.name %></td>
+            <td><%= h.try(:user).try(:name) %></td>
             <td><%= h.number %></td>
             <td>
               <%= link_to '查看', seller_stock_product_stock_history_path(params[:seller_id], params[:stock_product_id], h.id) %>
