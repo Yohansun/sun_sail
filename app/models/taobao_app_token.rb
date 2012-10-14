@@ -25,15 +25,15 @@ class TaobaoAppToken < ActiveRecord::Base
 			response = HTTParty.post(base_url + params).parsed_response
 			p response
 			if response['access_token'].present?
-				self.update_attributes(access_token: response['access_token'], last_refresh_at: Time.now)
-				p "successful update access_token"
-				if self.refresh_token != response['refresh_token']
-					self.update_attributes(refresh_token: response['refresh_token'], refresh_token_last_refresh_at: Time.now)
-					p "successful update refresh_token"
-				end	
+				self.update_attributes(access_token: response['access_token'], last_refresh_at: Time.now, refresh_token: response['refresh_token'], refresh_token_last_refresh_at: Time.now)
+				p "successful update access_token and refresh_token"
+				TradeSetting.enable_token_error_notify = true
 			else 
 				p response['error_description']	
-			  Notifier.app_token_errors(self,response).deliver
+				if TradeSetting.enable_token_error_notify
+			  	Notifier.app_token_errors(self,response).deliver
+			  	TradeSetting.enable_token_error_notify = false
+			  end	
 			end
 		
 		end	
