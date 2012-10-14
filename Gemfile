@@ -80,6 +80,9 @@ gem 'omniauth-oauth2'
 gem 'rest-client'
 gem 'httparty'
 
+#only recompiling changed assets
+gem 'turbo-sprockets-rails3'
+
 #test mail
 gem "mails_viewer"
 
