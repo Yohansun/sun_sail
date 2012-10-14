@@ -144,18 +144,6 @@
           <li><a href="#" data-trade-mode="invoice" data-invoice-status="invoice_sent">已寄出</a></li>
         </ul>
       </li> -->
-      <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-          异常
-          <b class="caret"></b>
-        </a>
-        <ul class="dropdown-menu">
-          <% if MagicOrders.role_key != 'seller' : %>
-          <li><a href="#" data-trade-mode="unusual" data-unusual-trade="undispatched">已付款2天未分流</a></li>
-          <% end %>
-          <li><a href="#" data-trade-mode="unusual" data-unusual-trade="undelivered">已分流2天未发货</a></li>
-        </ul>
-      </li>
     </ul>
   </div>
 </header>
