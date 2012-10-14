@@ -412,6 +412,7 @@ class TradesController < ApplicationController
     area = Area.find params[:area_id]
     if TradeSetting.company == 'dulux'
       seller = Dulux::SellerMatcher.match_trade_seller(trade, area)
+      seller ||= trade.default_area.sellers.where(active: true).first
     else
       seller = trade.matched_seller_with_default(area)
     end
