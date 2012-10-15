@@ -73,7 +73,7 @@
             <li class="divider-vertical"></li>
           </ul>
 
-          <% if (current_user.has_role?(:seller) && current_user.seller) || (current_user.has_role?(:admin)) %>
+          <% if (current_user.has_role?(:seller) && current_user.seller) || (current_user.has_role?(:admin)) || (current_user.has_role?(:cs)) %>
             <ul class="nav pull-right">
               <li id="fat-menu" class="dropdown">
                 <a href="/alerts"><span class="badge badge-important" style="background:red;">New</span>异常中心</a>
