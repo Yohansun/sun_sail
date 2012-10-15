@@ -127,36 +127,36 @@ class TaobaoTrade < Trade
     # if TradeSetting.company == 'dulux'
     #   split_orders(self)
     # else
-      return false unless dispatchable?
+    return false unless dispatchable?
 
-      unless seller
-        seller = matched_seller
-      end
+    unless seller
+      seller = matched_seller
+    end
 
-      return false unless seller
+    return false unless seller
 
-      if seller.has_stock
-        return false unless can_lock_products?(self, seller.id)
-      end
+    if seller.has_stock
+      return false unless can_lock_products?(self, seller.id)
+    end
 
-      orders.each do |order|
-        product = Product.find_by_iid order.outer_iid
-        stock_product = StockProduct.where(product_id: product.id, seller_id: seller.id).first
-        break unless product
-        stock_product.update_quantity!(order.num, '锁定')
-        StockHistory.create!(
-          operation: '锁定',
-          number: order.num,
-          stock_product_id: stock_product.id,
-          tid: tid,
-          #user_id: current_user.id,
-          seller_id: seller.id
-        )
-      end
+    orders.each do |order|
+      product = Product.find_by_iid order.outer_iid
+      stock_product = StockProduct.where(product_id: product.id, seller_id: seller.id).first
+      break unless product
+      stock_product.update_quantity!(order.num, '锁定')
+      StockHistory.create!(
+        operation: '锁定',
+        number: order.num,
+        stock_product_id: stock_product.id,
+        tid: tid,
+        #user_id: current_user.id,
+        seller_id: seller.id
+      )
+    end
 
-      if seller
-        update_attributes(seller_id: seller.id, seller_name: seller.name, dispatched_at: Time.now)
-      end
+    if seller
+      update_attributes(seller_id: seller.id, seller_name: seller.name, dispatched_at: Time.now)
+    end
   end
 
   def matched_seller(area = nil)
