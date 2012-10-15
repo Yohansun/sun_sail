@@ -29,13 +29,13 @@ class TaobaoTrade < Trade
   field :pay_time, type: DateTime
   field :modified, type: DateTime
   field :end_time, type: DateTime
-  
+
   field :alipay_id, type: String
   field :alipay_no, type: String
   field :alipay_url, type: String
   field :buyer_memo, type: String
   field :buyer_flag, type: Integer
-  
+
   field :seller_flag, type: Integer
   field :invoice_name, type: String
   field :buyer_nick, type: String
@@ -154,8 +154,9 @@ class TaobaoTrade < Trade
         )
       end
 
-      update_attributes(seller_id: seller.id, dispatched_at: Time.now) if seller
-    # end
+      if seller
+        update_attributes(seller_id: seller.id, seller_name: seller.name, dispatched_at: Time.now)
+      end
   end
 
   def matched_seller(area = nil)
