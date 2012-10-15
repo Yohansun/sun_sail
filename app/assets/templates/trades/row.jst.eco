@@ -127,6 +127,7 @@
       <span class="caret"></span>
     </button>
     <ul class="dropdown-menu trade_pops" style="left:-115px;">
+      <li><a data-toggle="modal" href="#" data-type="detail">订单详情</a></li>
       <% if @trade.get('status_text') == '已付款，待发货' : %>
         <li><a data-toggle="modal" href="#" data-type="seller"><% if @trade.get('seller_id') : %>分流重置<% else : %>订单分流<% end %></a></li>
         <% unless @trade.get('seller_id') : %>
@@ -143,7 +144,9 @@
         <% end %>
       <% end %>
       <li><a data-toggle="modal" href="#" data-type="cs_memo">客服备注</a></li>
-      <li><a data-toggle="modal" href="#" data-type="detail">订单详情</a></li>
+      
+      <li><a data-toggle="modal" href="#" data-type="buyer_confirm_receive_goods">确定买家已收货</a></li>
+      <li><a data-toggle="modal" href="#" data-type="logistic_note">物流商备注</a></li>
       <!-- <li><a data-toggle="modal" href="#" data-type="trade_unsplit">订单合并</a></li> -->
       <!-- <li><a data-toggle="modal" href="#" data-type="reassign">订单转交</a></li> -->
       <li class= "divider"></li>

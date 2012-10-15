@@ -97,8 +97,6 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       @show_top_nav()
       @collection.fetch data: {trade_type: trade_type}, success: (collection, response) =>
         @mainView = new MagicOrders.Views.TradesIndex(collection: collection, trade_type: trade_type)
-        console.log $('.trade_nav')
-        console.log trade_type
         $('#content').html(@mainView.render().el)
         $("a[rel=popover]").popover(placement: 'left')
         switch trade_type
