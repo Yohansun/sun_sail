@@ -16,7 +16,6 @@ json.array!(@trades) do |json, trade|
   json.buyer_nick trade.buyer_nick
   json.seller_memo trade.seller_memo
   json.trade_source trade.trade_source
-  json.trade_source_name trade.trade_source_name
   json.created trade.created.strftime("%m-%d %H:%M") if trade.created
   json.created_timestamp trade.created.to_i if trade.created
   json.pay_time trade.pay_time.strftime("%m-%d %H:%M") if trade.pay_time
@@ -25,13 +24,13 @@ json.array!(@trades) do |json, trade|
   json.has_color_info trade.has_color_info
   json.has_cs_memo trade.has_cs_memo
   json.has_unusual_state trade.has_unusual_state
-  
+
   json.invoice_type trade.invoice_type
   json.invoice_name trade.invoice_name
   json.invoice_content trade.invoice_content
   json.invoice_date trade.invoice_date.strftime("%Y-%m-%d") if trade.invoice_date
   json.invoice_value trade.sum_fee
-  
+
   json.point_fee trade.point_fee
   json.total_fee trade.total_fee
 
@@ -53,8 +52,7 @@ json.array!(@trades) do |json, trade|
   json.dispatched_at trade.dispatched_at.strftime("%m-%d %H:%M") if trade.dispatched_at
 
   json.seller_id trade.seller_id
-  json.seller_name trade.seller.name if trade.seller
-  json.default_seller_id TradeSetting.default_seller_id
+  json.seller_name trade.seller_name if trade.seller_id
 
   json.orders OrderDecorator.decorate(trade.orders) do |json, order|
     json.id order._id
