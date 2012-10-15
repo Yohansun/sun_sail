@@ -5,8 +5,10 @@
       <li class="active">异常中心</li>
     </ul><!-- breadcrumb -->
 
-    <%- if current_user.has_role?(:seller) %>
-    <%-   trades = Trade.where(seller_id: current_user.seller.id) %>
+    <%- if current_user.has_role?(:seller) && current_user.seller %>
+      <%- trades = Trade.where(seller_id: current_user.seller.id) %>
+    <%- elsif current_user.has_role?(:admin) %>
+      <%- trades = Trade %> 
     <%- end %>
 
     <div class="well">
