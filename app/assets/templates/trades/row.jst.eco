@@ -51,13 +51,14 @@
   <%= @trade.get('receiver_state') %> <%= @trade.get('receiver_city') %> <%= @trade.get('receiver_district') %> <br/>
   <%= @trade.get('receiver_address') %>
 </td>
-<td data-col='buyer_message'>
-  <% if MagicOrders.company == "dulux" && MagicOrders.role_key != 'seller' && @trade.get 'buyer_message': %>
+<% if MagicOrders.company == "dulux" && MagicOrders.role_key != 'seller' && @trade.get 'buyer_message': %>
+<td data-col='buyer_message'>  
   <a href="javascript:void(0)" rel="popover" data-content="<%= @trade.get 'buyer_message' %>" data-original-title="<b>买家留言</b>">
     <i class="icon-comment"></i>
   </a>
-  <% end %>
 </td>
+<% end %>
+
 <td data-col='seller_memo'>
   <% if @trade.get 'seller_memo': %>
   <a href="javascript:void(0)" rel="popover" data-content="<%= @trade.get 'seller_memo' %>" data-original-title="<b>卖家备注</b>">
