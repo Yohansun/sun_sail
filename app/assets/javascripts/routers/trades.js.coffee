@@ -97,8 +97,21 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       @show_top_nav()
       @collection.fetch data: {trade_type: trade_type}, success: (collection, response) =>
         @mainView = new MagicOrders.Views.TradesIndex(collection: collection, trade_type: trade_type)
+        console.log $('.trade_nav')
+        console.log trade_type
         $('#content').html(@mainView.render().el)
         $("a[rel=popover]").popover(placement: 'left')
+        switch trade_type
+          when 'undispatched_one_day' then $('.trade_nav').html('超过一天未分流')
+          when 'undelivered_two_days' then $('.trade_nav').html('超过两天未发货')
+          when 'unpaid_two_days' then $('.trade_nav').html('超过两天未付款')
+          when 'buyer_delay_deliver' then $('.trade_nav').html('买家延迟发货')
+          when 'seller_ignore_deliver' then $('.trade_nav').html('卖家长时间未发货')
+          when 'seller_lack_product' then $('.trade_nav').html('经销商缺货')
+          when 'seller_lack_color' then $('.trade_nav').html('经销商无法调色')
+          when 'buyer_demand_refund' then $('.trade_nav').html('买家要求退款')
+          when 'buyer_demand_return_product' then $('.trade_nav').html('买家要求退货')
+          when 'other_unusual_state' then $('.trade_nav').html('其他异常')
 
         $('.form-search .datepicker').datepicker(format: 'yyyy-mm-dd')
         $('.form-search .timepicker').timeEntry(show24Hours: true, showSeconds: true, spinnerImage: '/assets/spinnerUpDown.png', spinnerSize: [17, 26, 0], spinnerIncDecOnly: true)
