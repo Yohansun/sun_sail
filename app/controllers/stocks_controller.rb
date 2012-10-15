@@ -11,7 +11,7 @@ class StocksController < ApplicationController
       @products = @products.where("products.#{params[:info_type]} like ?", "%#{params[:info].strip}%")
     end
 
-    if params[:category].present?
+    if params[:category].present? && params[:category] != '0'
       @products = @products.where("products.category_id = ?", params[:category])
     end
 
@@ -27,7 +27,6 @@ class StocksController < ApplicationController
     end
 
     @products = @products.page params[:page]
-
   end
 
   def home

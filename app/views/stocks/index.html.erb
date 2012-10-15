@@ -25,44 +25,43 @@
           <div class="pull-left mar_r10">
             <label class="control-label width_auto">库存状态：</label>
             <label class="radio pad_t5">
-              <input type="radio" name="stock_state" id="optionsRadios1" value="usual">正常
+              <input type="radio" name="stock_state" value="usual" <%= 'checked' if params[:stock_state] == 'usual' %>>正常
             </label>
             <label class="radio pad_t5">
-              <input type="radio" name="stock_state" id="optionsRadios2" value="max">满仓
+              <input type="radio" name="stock_state" value="max" <%= 'checked' if params[:stock_state] == 'max' %>>满仓
             </label>
             <label class="radio pad_t5">
-              <input type="radio" name="stock_state" id="optionsRadios3" value="safe">预警
+              <input type="radio" name="stock_state" value="safe" <%= 'checked' if params[:stock_state] == 'safe' %>>预警
             </label>
           </div>
           
           <div class="pull-left mar_r10">
-            <select class="width_auto">
-              <option value="iid">商品编号</option>
-              <option value="taobao_id">淘宝ID</option>
-              <option value="name">商品名称</option>
+            <select class="width_auto" name='info_type'>
+              <option value="iid" <%= 'selected' if params[:info_type] == 'iid' %>>商品编号</option>
+              <option value="taobao_id" <%= 'selected' if params[:info_type] == 'taobao_id' %>>淘宝ID</option>
+              <option value="name" <%= 'selected' if params[:info_type] == 'name' %>>商品名称</option>
             </select>
-            <input type="text" name="info" class="input-large">
+            <input type="text" name="info" class="input-large" value='<%= params[:info] %>'>
           </div>
       
         
           <div class="pull-left mar_r10">
             <fieldset class="form-inline">
               <label class="control-label width_auto">商品分类：</label>
-              <select class="width_auto" name="category">            
-                <!-- nippon only-->
-                <option value="">全部</option>
-                <option value="1">网络特供商品</option>
-                <option value="2">内墙乳胶漆</option>
-                <option value="3">外墙乳胶漆</option>
-                <option value="4">木器漆</option>
-                <option value="5">DIY色彩系列</option>
-                <option value="6">輔助材料</option>
+              <select class="width_auto" name="category">
+                <option value="0" <%= 'selected' if params[:category] == '0' %>>全部</option>
+                <option value="1" <%= 'selected' if params[:category] == '1' %>>网络特供商品</option>
+                <option value="2" <%= 'selected' if params[:category] == '2' %>>内墙乳胶漆</option>
+                <option value="3" <%= 'selected' if params[:category] == '3' %>>外墙乳胶漆</option>
+                <option value="4" <%= 'selected' if params[:category] == '4' %>>木器漆</option>
+                <option value="5" <%= 'selected' if params[:category] == '5' %>>DIY色彩系列</option>
+                <option value="6" <%= 'selected' if params[:category] == '6' %>>輔助材料</option>
               </select> 
             </fieldset>                            
           </div>
                
           <button type="submit" class="btn btn-primary">筛选</button>
-          <button class="btn">重置</button>
+          <a class="btn">重置</a>
         </div>
       </fieldset>
     <%- end %>
