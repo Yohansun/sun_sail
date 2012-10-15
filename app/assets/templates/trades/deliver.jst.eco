@@ -14,10 +14,12 @@
         <th nowrap>订单状态</th>
         <td><%= @trade.get("status_text") %></td>
       </tr>
+      <% if @trade.get('total_fee') : %>
       <tr>
         <th>订单金额</th>
         <td>￥<%= @trade.get('total_fee') %></td>
       </tr>
+      <% end %>
       <tr>
         <td nowrap>收货人：</td>
         <td><%= @trade.get('receiver_name') %></td>
