@@ -52,7 +52,7 @@ json.array!(@trades) do |json, trade|
   json.dispatched_at trade.dispatched_at.strftime("%m-%d %H:%M") if trade.dispatched_at
 
   json.seller_id trade.seller_id
-  json.seller_name trade.seller_name if trade.seller_id
+  json.seller_name trade.seller_name || trade.try(:seller).try(:name)
 
   json.orders OrderDecorator.decorate(trade.orders) do |json, order|
     json.id order._id
