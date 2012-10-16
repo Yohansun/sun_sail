@@ -143,20 +143,25 @@ class TaobaoTrade < Trade
       product = Product.find_by_iid order.outer_iid
       stock_product = StockProduct.where(product_id: product.id, seller_id: seller.id).first
       break unless product
-      stock_product.update_quantity!(order.num, '锁定')
-      StockHistory.create!(
-        operation: '锁定',
-        number: order.num,
-        stock_product_id: stock_product.id,
-        tid: tid,
-        #user_id: current_user.id,
-        seller_id: seller.id
-      )
+      stock_product.update_quantity!(order.num, '锁定', seller.id, tid)
     end
 
     if seller
       update_attributes(seller_id: seller.id, seller_name: seller.name, dispatched_at: Time.now)
     end
+  end
+
+  def reset_seller
+    return unless seller_id
+
+    orders.each do |order|
+      product = Product.find_by_iid order.outer_iid
+      stock_product = StockProduct.where(product_id: product.id, seller_id: seller_id).first
+      break unless product
+      stock_product.update_quantity!(order.num, '解锁', seller_id, tid)
+    end
+
+    update_attributes(seller_id: nil, seller_name: nil, dispatched_at: nil)
   end
 
   def matched_seller(area = nil)

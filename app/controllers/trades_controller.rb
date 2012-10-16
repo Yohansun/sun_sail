@@ -317,8 +317,7 @@ class TradesController < ApplicationController
       seller = Seller.find_by_id params[:seller_id]
       @trade.dispatch!(seller) if seller
     elsif params[:seller_id].nil?
-      @trade.seller_id = nil
-      @trade.dispatched_at = nil
+      @trade.reset_seller
     end
 
     if params[:delivered_at] == true
