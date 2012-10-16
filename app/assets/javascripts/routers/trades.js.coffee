@@ -215,6 +215,11 @@ class MagicOrders.Routers.Trades extends Backbone.Router
 
       view = new MagicOrders.Views.TradesColor(model: model)
       $('#trade_color').html(view.render().el)
+      $('.color_typeahead').typeahead({
+        source: (query, process)->
+          $.get '/colors/autocomplete', {num: query}, (data)->
+            process(data)
+      })
       $('#trade_color').modal('show')
 
   invoice: (id) ->

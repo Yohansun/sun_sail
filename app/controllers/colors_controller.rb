@@ -37,4 +37,9 @@ class ColorsController < ApplicationController
     @color.destroy
     redirect_to colors_path
   end
+
+  def autocomplete
+    colors = Color.where("num LIKE '%#{params[:num]}%'")
+    render json: colors.map { |c| "#{c.num} -- #{c.name}" }
+  end
 end

@@ -8,7 +8,11 @@ MagicOrders::Application.routes.draw do
   devise_for :users, :path => '', :path_names => {:sign_in => 'login'}
   get "/stocks", to: 'stocks#home'
 
-  resources :colors
+  resources :colors do
+    collection do
+      get :autocomplete
+    end
+  end
 
   resources :sellers do
     resources :stocks
