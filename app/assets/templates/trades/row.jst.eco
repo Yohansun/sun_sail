@@ -51,8 +51,8 @@
   <%= @trade.get('receiver_state') %> <%= @trade.get('receiver_city') %> <%= @trade.get('receiver_district') %> <br/>
   <%= @trade.get('receiver_address') %>
 </td>
-<% if MagicOrders.company == "dulux" && MagicOrders.role_key != 'seller' : %>
-<td data-col='buyer_message'>  
+<% if MagicOrders.company == "dulux" && MagicOrders.role_key != 'seller' && @trade.get('buyer_message') : %>
+<td data-col='buyer_message'>
   <a href="javascript:void(0)" rel="popover" data-content="<%= @trade.get 'buyer_message' %>" data-original-title="<b>买家留言</b>">
     <i class="icon-comment"></i>
   </a>
@@ -144,7 +144,7 @@
         <% end %>
       <% end %>
       <li><a data-toggle="modal" href="#" data-type="cs_memo">客服备注</a></li>
-      
+
       <li><a data-toggle="modal" href="#" data-type="buyer_confirm_receive_goods">确定买家已收货</a></li>
       <li><a data-toggle="modal" href="#" data-type="logistic_note">物流商备注</a></li>
       <!-- <li><a data-toggle="modal" href="#" data-type="trade_unsplit">订单合并</a></li> -->
