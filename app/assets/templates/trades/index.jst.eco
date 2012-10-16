@@ -241,7 +241,7 @@
                 </label>
                 <% end %>
                 <label class="checkbox inline">
-                  <input type="checkbox" id="search_color"> 需要配色
+                  <input type="checkbox" id="search_color"> 需要调色
                 </label>
               </div>
             </div>

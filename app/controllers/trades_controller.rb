@@ -244,7 +244,7 @@ class TradesController < ApplicationController
         invoice_all_hash = {"$or" => [{:invoice_name.exists => true},{:invoice_type.exists => true},{:invoice_content.exists => true}]}
     end
 
-    # 需要配色
+    # 需要调色
     if params[:search_all] && params[:search_all][:search_color] == "true"
       @trades = @trades.where(has_color_info: true)
     end
