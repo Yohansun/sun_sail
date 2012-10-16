@@ -42,12 +42,12 @@
       <th class="td2">特殊属性</th>
       <th class="td2">调色信息</th>
       <% unless TradeSetting.company == "dulux"%>
-      <th class="td2">标价</th>
-      <th class="td3">实际单价</th>
+        <th class="td2">标价</th>
+        <th class="td3">实际单价</th>
       <% end %>
       <th class="td3">数量</th>
       <% unless TradeSetting.company == "dulux"%>
-      <th class="td3">总价</th>
+        <th class="td3">总价</th>
       <% end %>
     </tr>
     <%- @trade.orders.each do |object| %>
@@ -64,20 +64,25 @@
             <%- end %>          
           </td>
           <% unless TradeSetting.company == "dulux"%>
-          <td class="td2"><span class="font-blueb">¥<%= order.auction_price %></span></td>
-          <td class="td3"><span class="font-gray">¥<%= order.price %></span></td>
+            <td class="td2"><span class="font-blueb">¥<%= order.auction_price %></span></td>
+            <td class="td3"><span class="font-gray">¥<%= order.price %></span></td>
           <% end %>
           <td class="td3"><%= order.num %></td>
           <% unless TradeSetting.company == "dulux"%>
-          <td class="td3"><%= order.total_fee %></td>
+            <td class="td3"><%= order.total_fee %></td>
           <% end %>
         </tr>
     <%- end %>
   </table>
 </div>
-<% unless TradeSetting.company == "dulux"%>
+<!--Dulux经销商邮件内容也只需要看到运费-->
+<% if TradeSetting.company == "dulux"%>
+<div class="pb5 pt5">
+    <label class="label75"><span class="font-14b">运输费用：</span></label>&nbsp;
+    <span class="font-gray">¥</span> <span class="font-blueb"><%= @trade.post_fee %></span>
+  </div>
+<%- else %>  
 <div class="order-st-total">
-  
   <div class="pb5 pt5">
     <label class="label75"><span class="font-14b">商品总价：</span></label>&nbsp;
     <span class="font-gray">¥</span> <span class="font-blueb"><%= @trade.sum_fee %></span>
@@ -92,10 +97,6 @@
       <span class="font-gray">¥</span> <span class="font-blueb"><%= @trade.seller_discount %></span>
     </div>
   <% end %> 
-  <!--<div class="pb5 pt5">-->
-  <!--<label class="label75"><span class="font-14b">优惠券：</span></label>&nbsp;-->
-  <!--<span class="font-gray">¥</span> <span class="font-blueb">200</span>-->
-  <!--</div>-->
   <div class="pb5 pt5 l">
     <label class="label75"><span class="font-14b">总价：</span></label>&nbsp;
     <span class="font-gray">¥</span> <span class="font-cyanb"><%= @trade.total_fee %></span>
