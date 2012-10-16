@@ -122,7 +122,7 @@ class TradesController < ApplicationController
     end
 
     # 经销商登录默认显示未分流订单
-    if params[:search_trade_status].blank? && current_user.has_role?(:seller)
+    if params[:search_trade_status].blank? && params[:search].blank? && params[:search_all].blank? && current_user.has_role?(:seller)
       @trades = @trades.where("$and" => [{:dispatched_at.ne => nil},{:dispatched_at.exists => true},{:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"]}])
     end
 
