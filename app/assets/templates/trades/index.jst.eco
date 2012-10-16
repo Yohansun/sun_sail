@@ -235,9 +235,11 @@
                 </label>
               </div>
               <div class="controls">
+                <% if MagicOrders.company == "dulux" and MagicOrders.role_key != 'seller' : %>
                 <label class="checkbox inline">
                   <input type="checkbox" id="search_buyer_message"> 客户有留言
                 </label>
+                <% end %>
                 <label class="checkbox inline">
                   <input type="checkbox" id="search_color"> 需要配色
                 </label>
