@@ -103,7 +103,6 @@ $(function () {
     $.get("/logistics/logistic_user", {logistic_id:logistic_id}, function(result){
     });
   })
-   
 });
 
 function blocktheui () {

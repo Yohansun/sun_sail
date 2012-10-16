@@ -20,7 +20,7 @@
           <td>
             <% for count in [0...order.num] : %>
               <div class="controls">
-                <input type="text" placeholder="请输入色号..." class="input-xlarge color_num_<%= order.item_id %>" value="<%= order.color_num[count] %>">
+                <input type="text" data-provide="typeahead" placeholder="请输入色号..." class="color_typeahead input-xlarge color_num_<%= order.item_id %>" value="<%= order.color_num[count] %>">
               </div>
             <% end %>
           </td>
