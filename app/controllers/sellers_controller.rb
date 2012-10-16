@@ -106,10 +106,13 @@ class SellersController < ApplicationController
 
   def status_update
     @seller = Seller.find params[:id]
+    users = User.where(seller_id: params[:id])
     if @seller.active == true
       @seller.active =  false
+      users.each do |user| user.lock_access! end
     else
       @seller.active = true
+      users.each do |user| user.unlock_access! end
     end
     @seller.save!
     redirect_to sellers_path(:parent_id => @seller.parent_id)
