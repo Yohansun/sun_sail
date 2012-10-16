@@ -47,6 +47,7 @@
       </tr>
     </tbody>
   </table>
+
   <table class="table">
     <tbody>
       <tr>
@@ -72,7 +73,9 @@
       <% end %>
     </tbody>
   </table>
-<!--   <table class="table">
+
+  <!-- 发票信息 -->
+  <!-- <table class="table">
     <tbody>
       <tr>
         <th colspan="2">发票信息</th>
@@ -87,6 +90,7 @@
       </tr>
     </tbody>
   </table> -->
+
   <table class="table table-bordered">
     <thead>
       <tr>
@@ -94,8 +98,8 @@
       </tr>
       <tr>
         <th>商品名称</th>
-        <th nowrap>特殊属性</th>
         <th nowrap>数量</th>
+        <th nowrap>特殊属性</th>
       <% unless @trade.get('total_fee') is undefined : %>
         <th nowrap>标价</th>
         <th nowrap>实际单价</th>
@@ -107,14 +111,19 @@
       <% for order in @trade.get('orders'): %>
         <tr>
           <td><%= order.title %></td>
-          <td><%= order.sku_properties %></td>
-          <td><%= order.num %></td>
+          <td rowspan='<%= order.contents.length + 1 %>'><%= order.num %></td>
+          <td rowspan='<%= order.contents.length + 1 %>'><%= order.sku_properties %></td>
         <% unless @trade.get('total_fee') is undefined : %>
-          <td>￥<%= order.auction_price %></td>
-          <td>￥<%= order.price %></td>
-          <td>￥<%= order.total_fee %></td>
+          <td rowspan='<%= order.contents.length + 1 %>'>￥<%= order.auction_price %></td>
+          <td rowspan='<%= order.contents.length + 1 %>'>￥<%= order.price %></td>
+          <td rowspan='<%= order.contents.length + 1 %>'>￥<%= order.total_fee %></td>
         <% end %>
         </tr>
+        <% for item in order.contents : %>
+          <tr>
+            <td>套装详情: <%= item %></td>
+          </tr>
+        <% end %>
       <% end %>
       
       <tr>
