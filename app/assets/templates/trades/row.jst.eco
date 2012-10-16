@@ -170,7 +170,7 @@
           <% end %>
         <% end %>
       <% end %>
-      <% if @trade.get('status_text') != '退款中' : %>
+      <% if @trade.get('status_text') != '退款中' && @trade.get('status_text') != '交易被淘宝关闭': %>
       <li><a data-toggle="modal" href="#" data-type="mark_unusual_state">标注异常</a></li>
       <% end %>
 
