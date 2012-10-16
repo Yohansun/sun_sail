@@ -15,7 +15,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     #navigation bar function
     'click [data-trade-status]': 'selectSameStatusTrade'
     'click [data-invoice-status]': 'selectSameStatusInvoice'
-    'click [data-deliver-bill-status]':'selectSameStatusDeliverBill'
+    'click [data-deliver-bill-status]': 'selectSameStatusDeliverBill'
     'click [data-logistic-status]': 'selectSameStatusLogistic'
     'click [data-color-status]': 'selectSameStatusColor'
     'click [data-confirm_color-status]': 'selectSameStatusConfirmColor'
@@ -44,13 +44,15 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
     # @collection.on("reset", @render, this)
     @collection.on("fetch", @renderUpdate, this)
+
   render: =>
     $.unblockUI()
     if !@first_rendered
        $(@el).html(@template())
       #initial mode=trades
       visible_cols = MagicOrders.trade_cols_visible_modes[MagicOrders.trade_mode]
-      MagicOrders.trade_cols_hidden = _.difference(MagicOrders.trade_cols_keys, visible_cols)
+      if MagicOrders.trade_cols_hidden == []
+        MagicOrders.trade_cols_hidden = _.difference(MagicOrders.trade_cols_keys, visible_cols)
       for col in MagicOrders.trade_cols_keys
         if col in MagicOrders.trade_cols_hidden
           $("#trades_table th[data-col=#{col}],td[data-col=#{col}]").hide()
@@ -272,7 +274,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     @search_color = $("#search_color").is(':checked')
 
     @collection.fetch data: {trade_type: @trade_type, search_all: {@search_start_date, @search_start_time, @pay_start_time, @pay_end_time, @pay_start_date, @pay_end_date, @search_end_date, @search_end_time, @status_option, @type_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_invoice, @search_color}}, success: (collection) =>
-      Backbone.history.navigate("/api/trades.xls?trade_type=#{@trade_type}&search%5Boption%5D=#{@search_option}&search%5Bvalue%5D=#{@search_value}&search_all%5Bsearch_start_date%5D=#{@search_start_date}&search_all%5Bsearch_start_time%5D=#{@search_start_time}&search_all%5Bsearch_end_date%5D=#{@search_end_date}&search_all%5Bsearch_end_time%5D=#{@search_end_time}&search_all%5Bstatus_option%5D=#{@status_option}&search_all%5Btype_option%5D=#{@type_option}&search_all%5Bstate_option%5D=#{@state_option}&search_all%5Bcity_option%5D=#{@city_option}&search_all%5Bdistrict_option%5D=#{@district_option}&search_all%5Bsearch_buyer_message%5D=#{@search_buyer_message}&search_all%5Bsearch_seller_memo%5D=#{@search_seller_memo}&search_all%5Bsearch_cs_memo%5D=#{@search_cs_memo}&search_all%5Bsearch_invoice%5D=#{@search_invoice}&search_all%5Bsearch_color%5D=#{@search_color}&search_deliverbill_status=#{@search_deliverbill_status}&logistic_status=#{@logistic_status}&search_all%5Bpay_start_time%5D=#{@pay_start_time}&search_all%5Bpay_end_time%5D=#{@pay_end_time}&search_all%5Bpay_start_date%5D=#{@pay_start_date}&search_all%5Bpay_end_date%5D=#{@pay_end_date}&limit=1000000&offset=0", true)
+      Backbone.history.navigate("/api/trades.xls?trade_type=#{@trade_type}&search%5Boption%5D=#{@search_option}&search%5Bvalue%5D=#{@search_value}&search_all%5Bsearch_start_date%5D=#{@search_start_date}&search_all%5Bsearch_start_time%5D=#{@search_start_time}&search_all%5Bsearch_end_date%5D=#{@search_end_date}&search_all%5Bsearch_end_time%5D=#{@search_end_time}&search_all%5Bstatus_option%5D=#{@status_option}&search_all%5Btype_option%5D=#{@type_option}&search_all%5Bstate_option%5D=#{@state_option}&search_all%5Bcity_option%5D=#{@city_option}&search_all%5Bdistrict_option%5D=#{@district_option}&search_all%5Bsearch_buyer_message%5D=#{@search_buyer_message}&search_all%5Bsearch_seller_memo%5D=#{@search_seller_memo}&search_all%5Bsearch_cs_memo%5D=#{@search_cs_memo}&search_all%5Bsearch_invoice%5D=#{@search_invoice}&search_all%5Bsearch_color%5D=#{@search_color}&search_all%5Bpay_start_time%5D=#{@pay_start_time}&search_all%5Bpay_end_time%5D=#{@pay_end_time}&search_all%5Bpay_start_date%5D=#{@pay_start_date}&search_all%5Bpay_end_date%5D=#{@pay_end_date}&limit=1000000&offset=0", true)
       location.reload()
       Backbone.history.navigate('trades')
 
