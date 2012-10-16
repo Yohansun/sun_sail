@@ -15,7 +15,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     #navigation bar function
     'click [data-trade-status]': 'selectSameStatusTrade'
     'click [data-invoice-status]': 'selectSameStatusInvoice'
-    'click [data-deliver-bill-status]':'selectSameStatusDeliverBill'
+    'click [data-deliver-bill-status]': 'selectSameStatusDeliverBill'
     'click [data-logistic-status]': 'selectSameStatusLogistic'
     'click [data-color-status]': 'selectSameStatusColor'
     'click [data-confirm_color-status]': 'selectSameStatusConfirmColor'
@@ -44,13 +44,15 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
     # @collection.on("reset", @render, this)
     @collection.on("fetch", @renderUpdate, this)
+
   render: =>
     $.unblockUI()
     if !@first_rendered
        $(@el).html(@template())
       #initial mode=trades
       visible_cols = MagicOrders.trade_cols_visible_modes[MagicOrders.trade_mode]
-      MagicOrders.trade_cols_hidden = _.difference(MagicOrders.trade_cols_keys, visible_cols)
+      if MagicOrders.trade_cols_hidden == []
+        MagicOrders.trade_cols_hidden = _.difference(MagicOrders.trade_cols_keys, visible_cols)
       for col in MagicOrders.trade_cols_keys
         if col in MagicOrders.trade_cols_hidden
           $("#trades_table th[data-col=#{col}],td[data-col=#{col}]").hide()
