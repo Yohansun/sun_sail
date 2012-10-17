@@ -21,7 +21,7 @@ class StockHistoryController < ApplicationController
   	@history.user_id = current_user.id
     @history.seller_id = params[:seller_id]
 
-  	if @product.update_quantity!(number, params[:stock_history]['operation']) && @history.save
+  	if @product.update_quantity!(number, params[:stock_history]['operation'], params[:seller_id]) && @history.save
   		@flag = true
     else
       if @product.errors[:activity].first == '数量不能小于零'
