@@ -4,7 +4,7 @@
 </div><!-- modal-header -->
 <div class="modal-body">
   <fieldset>
-    <label class="control-label">订单备注：
+    <label class="control-label">整单备注：
       <div class="controls">
         <input type="text" placeholder="输入文字..." class="input-xlarge" id="cs_memo_text" value="<%= @trade.get 'cs_memo' %>">
       </div>
