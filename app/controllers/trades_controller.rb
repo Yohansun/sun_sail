@@ -330,7 +330,8 @@ class TradesController < ApplicationController
 
   def update
     @trade = Trade.where(_id: params[:id]).first
-
+    notifer_seller_flag = false
+    
     if params[:seller_id].present?
       seller = Seller.find_by_id params[:seller_id]
       @trade.dispatch!(seller) if seller
@@ -349,6 +350,9 @@ class TradesController < ApplicationController
 
     unless params[:cs_memo].blank?
       @trade.cs_memo = params[:cs_memo].strip
+      if @trade.changed.include? 'cs_memo'
+        notifer_seller_flag = true
+      end
     end
 
     unless params[:invoice_type].blank?
@@ -414,6 +418,9 @@ class TradesController < ApplicationController
       params[:orders].each do |item|
         order = @trade.orders.find item[:id]
         order.cs_memo = item[:cs_memo]
+        if order.changed.include? 'cs_memo'
+          notifer_seller_flag = true
+        end
         item[:color_num].each_with_index do |num, index|
           if num.blank?
             order.color_num[index] = nil
@@ -438,6 +445,10 @@ class TradesController < ApplicationController
 
     if @trade.save
       @trade = TradeDecorator.decorate(@trade)
+      if notifer_seller_flag && @trade.status == "WAIT_SELLER_SEND_GOODS"
+        TradeDispatchEmail.perform_async(id, seller_id, 'second')
+        TradeDispatchSms.perform_async(id, seller_id, 'second')
+      end  
       respond_with(@trade) do |format|
         format.json { render :show, status: :ok }
       end
