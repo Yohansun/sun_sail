@@ -55,7 +55,7 @@
 <td data-col='buyer_message'>
   <% if @trade.get('buyer_message'): %>
   <a href="javascript:void(0)" rel="popover" data-content="<%= @trade.get 'buyer_message' %>" data-original-title="<b>买家留言</b>">
-    <i class="icon-comment"></i>
+    <i class="icon-msg"></i>
   </a>
   <% end %>
 </td>
@@ -64,23 +64,23 @@
 <td data-col='seller_memo'>
   <% if @trade.get 'seller_memo': %>
   <a href="javascript:void(0)" rel="popover" data-content="<%= @trade.get 'seller_memo' %>" data-original-title="<b>卖家备注</b>">
-    <i class="icon-comment"></i>
+    <i class="icon-comm"></i>
   </a>
   <% end %>
 </td>
 <td data-col='cs_memo'>
   <% if @trade.get('has_cs_memo') == true : %>
-  <a href="javascript:void(0)" rel="popover" data-content="<%= @trade.get 'cs_memo' %><br/><br/><% for order in @trade.get('orders'): %><% if order.cs_memo: %><b><%= order.title %>:</b> <span style= 'color:#08C' ><%= order.cs_memo %></span><br/><% end %><% end %>" data-original-title="<b>客服备注</b>"><i class="icon-comment"></i></a>
+  <a href="javascript:void(0)" rel="popover" data-content="<%= @trade.get 'cs_memo' %><br/><br/><% for order in @trade.get('orders'): %><% if order.cs_memo: %><b><%= order.title %>:</b> <span style= 'color:#08C' ><%= order.cs_memo %></span><br/><% end %><% end %>" data-original-title="<b>客服备注</b>"><i class="icon-comm_serv"></i></a>
   <% end %>
 </td>
 <td data-col='color_info'>
   <% if @trade.get('has_color_info') == true : %>
-    <a href="javascript:void(0)" rel="popover" data-content="<% for order in @trade.get('orders'): %> <%= order.title %> x <%= order.num %> <br /> <% if order.color_num: %> <% for count in [0...order.num] : %> <% if order.color_num[count] != null : %> <b><%= order.color_num[count] %></b> <b><%= order.color_name[count] %></b> <br/><% end %><% end %><% end %><% end %>" data-original-title="<b>调色信息</b>"><span class="match_color" style="background:url(/assets/color_cube.png);" ></a>
+    <a href="javascript:void(0)" rel="popover" data-content="<% for order in @trade.get('orders'): %> <%= order.title %> x <%= order.num %> <br /> <% if order.color_num: %> <% for count in [0...order.num] : %> <% if order.color_num[count] != null : %> <b><%= order.color_num[count] %></b> <b><%= order.color_name[count] %></b> <br/><% end %><% end %><% end %><% end %>" data-original-title="<b>调色信息</b>"><i class="icon-color"></i></a>
   <% end %>
 </td>
 <td data-col='invoice_info'>
   <% if @trade.get 'invoice_name' : %>
-  <a href="javascript:void(0)" rel="popover" data-content="<%= @trade.get 'invoice_type' %><br/><%= @trade.get 'invoice_name' %><br/><%= @trade.get 'invoice_content' %>" data-original-title="<b>发票信息</b>"><i class="icon-comment"></i></a>
+  <a href="javascript:void(0)" rel="popover" data-content="<%= @trade.get 'invoice_type' %><br/><%= @trade.get 'invoice_name' %><br/><%= @trade.get 'invoice_content' %>" data-original-title="<b>发票信息</b>"><i class="icon-invoice"></i></a>
   <% end %>
 </td>
 <td data-col='point_fee'>
