@@ -261,6 +261,10 @@ class TradesController < ApplicationController
       @trades = @trades.where("$and" => [receiver_name_hash, receiver_mobile_hash, seller_memo_hash, buyer_message_hash, invoice_all_hash, receiver_state_hash, receiver_city_hash, receiver_district_hash].compact)
     end
 
+
+    #过滤有留言但还在抓取
+    @trades = @trades.where("$or" => [{:has_buyer_message.ne => true}, {:buyer_message.ne => nil}])
+
     ###筛选结束###
 
     offset = params[:offset] || 0
