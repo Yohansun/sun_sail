@@ -73,3 +73,6 @@ class MagicOrders.Views.AreasInputs extends Backbone.View
       $('.trade_seller').html(data.seller_name);
       unless data.dispatchable
         $('.trade_seller').css('color', 'red')
+        $('.set_seller').hide()
+      else
+        $('.set_seller').show()

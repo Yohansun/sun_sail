@@ -160,6 +160,10 @@ module Dulux
   module SellerMatcher
     class << self
       def match_item_seller(area, order, use_color=true)
+        match_item_sellers(area, order, true).first
+      end
+
+      def match_item_sellers(area, order, use_color)
         sql = "products.iid = '#{order.outer_iid}' AND stock_products.activity > #{order.num}"
         products = StockProduct.joins(:product).where(sql)
 
@@ -169,11 +173,29 @@ module Dulux
         end
 
         product_seller_ids = products.map &:seller_id
-        area.sellers.where(id: product_seller_ids, active: true).reorder("performance_score DESC").first
+        area.sellers.where(id: product_seller_ids, active: true).reorder("performance_score DESC")
       end
 
       def match_trade_seller(trade, area)
-        match_item_seller(area, trade.orders.first, true)
+        matched_sellers = []
+        trade.orders.each do |o|
+          matched_sellers << match_item_sellers(area, o, true)
+        end
+
+        sellers = matched_sellers.first
+        seller = []
+        flag = true
+        sellers.each do |fs|
+          matched_sellers.each do |ms|
+            unless ms.include? fs
+              flag = false
+              break
+            end
+          end
+          seller << fs if flag
+        end
+
+        seller.first
       end
 		end
   end
