@@ -49,9 +49,9 @@ window.MagicOrders =
       'logistic':                '物流配送商'
 
       'receiver_id':             '客户ID',             #new add
-      'deliver_bill':            '出货单',
-      'deliver_bill_id':         '出货单编号',
-      'deliver_bill_status':     '出货单状态',
+      'deliver_bill':            '发货单',
+      'deliver_bill_id':         '发货单编号',
+      'deliver_bill_status':     '发货单状态',
       'order_goods':             '商品详细',
       'logistic_bill':           '物流单',
       'logistic_waybill':        '物流单号',
@@ -78,7 +78,7 @@ window.MagicOrders =
     # 订单模式可选项列表
     @trade_modes = {
       'trades':                  '订单模式',
-      'deliver':                 '出货单模式',
+      'deliver':                 '发货单模式',
       'logistics':               '物流单模式',
       'check':                   '验货模式',
       'send':                    '发货模式',

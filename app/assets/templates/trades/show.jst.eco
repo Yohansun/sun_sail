@@ -156,10 +156,10 @@
   <!-- <table class="table table-bordered">
     <thead>
       <tr>
-        <th colspan="2">出货单</th>
+        <th colspan="2">发货单</th>
       </tr>
       <tr>
-        <th>出货单号</th>
+        <th>发货单号</th>
         <th>商品</th>
       </tr>
     </thead>
@@ -176,7 +176,7 @@
         <th colspan="3">物流单</th>
       </tr>
       <tr>
-        <th>出货单号</th>
+        <th>发货单号</th>
         <th>物流单号</th>
         <th>物流商</th>
       </tr>
