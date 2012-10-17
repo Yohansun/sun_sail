@@ -76,6 +76,10 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     @render_select_state()
     if MagicOrders.role_key == 'seller'
       $(@el).find(".trade_nav").text("未发货订单")
+    if MagicOrders.role_key == 'logistic'
+      $(@el).find(".trade_nav").text("物流单")
+    if MagicOrders.role_key == 'cs'
+      $(@el).find(".trade_nav").text("未分流订单")
     this
 
   render_select_state: ->
