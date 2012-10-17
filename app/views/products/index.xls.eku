@@ -6,7 +6,7 @@ sheet1.row(1).concat ["商品编号", "商品名称", "淘宝id", "仓库编号"
 
 @searched_products.all.each_with_index do |product, i|
   sheet1.update_row i+2, product.iid, product.name, product.taobao_id, product.storage_num, product.price, product.quantity.try(:name),
-                     product.category.try(:name), product.present_features, product.level.try(:name), product.present_status, product.technical_data, product.description
+                     product.category.try(:name), product.present_features, product.grade.try(:name), product.present_status, product.technical_data, product.description
 end
 
 title_format = Spreadsheet::Format.new(:color => :blue, :weight => :bold, :size => 14)

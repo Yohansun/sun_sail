@@ -44,6 +44,13 @@ class ProductsController < ApplicationController
 
   def create
     @product = Product.new params[:product]
+
+    if params[:product]['good_type'] == '2' && params[:child_iid].present?
+      iids = params[:child_iid].gsub(' ', '').split(',')
+      products = Product.where(iid: iids)
+      @product.child_ids = products.map{|p| p.id}
+    end
+
     if @product.save
       redirect_to products_path
     else
@@ -67,8 +74,14 @@ class ProductsController < ApplicationController
 
   def update
     @product = Product.find params[:id]
+
+    if params[:product]['good_type'] == '2' && params[:child_iid].present?
+      iids = params[:child_iid].gsub(' ', '').split(',')
+      iids.delete @product.iid
+      @product.child_ids = Product.where(iid: iids).map{|p| p.id}
+    end
+
     if @product.update_attributes(params[:product])
-      @product.save
       redirect_to products_path
     else
       render action: :edit

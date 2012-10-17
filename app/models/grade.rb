@@ -1,5 +1,5 @@
 # -*- encoding : utf-8 -*-
-class Level < ActiveRecord::Base
+class Grade < ActiveRecord::Base
   has_many :products
 
   attr_accessible :name

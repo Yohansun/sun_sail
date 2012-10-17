@@ -36,7 +36,7 @@
         <%= f.input :info, input_html: {class: "w_specify" , style: "width:490px;"} ,label: false, required: false %>
       </fieldset>
       <fieldset class="form-inline mar_t5">
-        <%= f.input :item_level, collection: Level.all, input_html: {class: "mar_r10" }, label_html: {style: "margin-top:3px;" }, label: "档次：", required: false %>
+        <%= f.input :item_grade, collection: Grade.all, input_html: {class: "mar_r10" }, label_html: {style: "margin-top:3px;" }, label: "档次：", required: false %>
         <%= f.input :item_quantity, collection: Quantity.all, input_html: {class: "width_auto mar_r10" },label_html: {style: "margin-top:3px;" }, label: "规格：", required: false %>
         <%= f.input :item_status, collection: [["上架","ON_SALE"], ["下架","SOLD_OUT"]], input_html: {class: "width_auto mar_r10" },label_html: {style: "margin-top:3px;" }, label: "状态：", required: false %>      
         <%= f.input :item_category, collection: Category.all, input_html: {class: "width_auto mar_r10" },label_html: {style: "margin-top:3px;" }, label: "系列：", required: false %>

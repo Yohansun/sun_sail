@@ -1,9 +1,9 @@
 # -*- encoding : utf-8 -*-
 
 class Product < ActiveRecord::Base
-
+  acts_as_nested_set
   belongs_to :category
-  belongs_to :level
+  belongs_to :grade
   belongs_to :quantity
   has_many :feature_product_relationships
   has_many :features, :through => :feature_product_relationships
@@ -12,7 +12,7 @@ class Product < ActiveRecord::Base
 
   mount_uploader :product_image, ProductImageUploader
 
-  attr_accessible :name, :iid, :taobao_id, :storage_num, :price, :status, :level_id, :quantity_id, :color_ids,
+  attr_accessible :good_type, :name, :iid, :taobao_id, :storage_num, :price, :status, :grade_id, :quantity_id, :color_ids,
                   :category_id, :features, :technical_data, :description, :product_image, :feature_ids
 
   validates_presence_of :iid, :name, :storage_num, :price, message: "信息不能为空"

@@ -14,9 +14,9 @@ task :add_product_reference_data => :environment do
 	Feature.create(name: "亚光")
 	Feature.create(name: "底漆")
 
-	Level.create(name: "低档")
-	Level.create(name: "中档")
-	Level.create(name: "高档")
+	Grade.create(name: "低档")
+	Grade.create(name: "中档")
+	Grade.create(name: "高档")
 
 	Quantity.create(name: "5L")
 	Quantity.create(name: "10L")

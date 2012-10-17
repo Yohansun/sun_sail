@@ -25,27 +25,24 @@ unless TradeSetting.company == 'dulux' && (current_user.has_role?(:seller) || cu
   json.point_fee @trade.point_fee
   json.total_fee @trade.total_fee
 end
+
 json.created @trade.created.strftime("%m-%d %H:%M")
 json.pay_time @trade.pay_time.strftime("%m-%d %H:%M") if @trade.pay_time
 json.cs_memo @trade.cs_memo
-
 json.has_color_info @trade.has_color_info
 json.has_cs_memo @trade.has_cs_memo
 json.has_unusual_state @trade.has_unusual_state
-
 json.logistic_code @trade.logistic_code
 json.logistic_id @trade.logistic_id
 json.logistic_name @trade.logistic_name
 json.logistic_company @trade.logistic_company
 json.logistic_waybill @trade.logistic_waybill
 json.matched_logistics @trade.matched_logistics
-
 json.invoice_type @trade.invoice_type
 json.invoice_name @trade.invoice_name
 json.invoice_content @trade.invoice_content
 json.invoice_date @trade.invoice_date.strftime("%Y-%m-%d") if @trade.invoice_date
 json.invoice_number @trade.invoice_number
-
 json.seller_confirm_deliver_at @trade.seller_confirm_deliver_at.strftime("%m-%d %H:%M") if @trade.seller_confirm_deliver_at
 json.seller_confirm_invoice_at @trade.seller_confirm_invoice_at.strftime("%m-%d %H:%M") if @trade.seller_confirm_invoice_at
 json.confirm_color_at @trade.confirm_color_at.strftime("%m-%d %H:%M") if @trade.confirm_color_at
@@ -65,6 +62,7 @@ json.orders OrderDecorator.decorate(@trade.orders) do |json, order|
   json.id order._id
   json.title order.title
   json.num order.num
+
   unless TradeSetting.company == 'dulux' && current_user.has_role?(:seller)
     json.price order.price
     json.auction_price order.auction_price
@@ -72,6 +70,7 @@ json.orders OrderDecorator.decorate(@trade.orders) do |json, order|
     json.buyer_payment order.buyer_payment
     json.distributor_payment order.distributor_payment
   end
+
   json.item_id order.item_id
   json.sku_properties order.sku_properties
   json.item_outer_id order.item_outer_id
@@ -80,8 +79,8 @@ json.orders OrderDecorator.decorate(@trade.orders) do |json, order|
   json.color_hexcode order.color_hexcode
   json.color_name order.color_name
   json.barcode order.barcode
+  json.contents Product.where(iid: order.outer_iid).map &:name
 end
-
 
 json.unusual_states @trade.unusual_states do |json, state|
   json.id state._id

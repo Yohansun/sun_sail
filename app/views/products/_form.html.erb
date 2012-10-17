@@ -5,11 +5,21 @@
     <%= f.input :name, label: '商品名称：', :input_html =>{ :class => "input-xlarge" } %>
     <%= f.input :taobao_id, label: '淘宝ID：', :input_html =>{ :class => "input-xlarge" } %>
     <%= f.input :storage_num, label: '仓库编号：', :input_html =>{ :class => "input-xlarge" } %>
-    <%= f.input :price, label: '价格：', :input_html =>{ :class => "input-xlarge" } %>
+    <%= f.input :price, label: '价格：', as: :string, :input_html =>{ :class => "input-xlarge" } %>
     <%= f.association :quantity, label: '规格：', :input_html =>{ :class => "width_auto" } %>
+    <%= f.input :good_type, label: '商品类型：' do %>
+      <label class="inline good_suit">
+        <% Rails.logger.info @product.good_type.inspect %>
+        <input type="radio" name="product[good_type]" value='1' <%= 'checked' if @product.good_type == 1 %>>单品
+      </label>
+      <label class="inline good_suit">
+        <input type="radio" name="product[good_type]" value='2' <%= 'checked' if @product.good_type == 2 %>>套装
+        <input type="text" placeholder="输入关联的产品编号，以逗号隔开" name='child_iid' value='<%= @product.children.map{|c| c.iid}.join(',')%>'>
+      </label>
+    <% end %>
     <%= f.association :features, as: :check_boxes, label: '系列：'%>
     <%= f.association :category, label: '分类：', :input_html =>{ :class => "width_auto" } %>
-    <%= f.association :level, label: '档次：', :input_html =>{ :class => "width_auto" } %>
+    <%= f.association :grade, label: '档次：', :input_html =>{ :class => "width_auto" } %>
     <fieldset class="form-inline">
       <%= f.association :colors, label: '可选颜色：', as: :check_boxes, include_blank: false %>
     </fieldset>
