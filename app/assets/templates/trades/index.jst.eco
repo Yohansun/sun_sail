@@ -318,8 +318,6 @@
   </div>
 
   <br />
-  <!-- <p class="controls mar_t5">当前显示：全部订单 <span><%= @trades.length %></span>项中的 <span>20</span> 项</p> -->
-
   <div class="alert alert-info hide" id="newTradesNotifer">
     有<span>0</span>条新订单, <a href="#" id="newTradesNotiferLink">点击加载新订单数据</a>
   </div>
