@@ -6,12 +6,21 @@ module Dulux
       info = []
       match_seller_with_conditions(trade).each do |split|
         seller = Seller.find_by_id(split[:default_seller])
-        seller_id = seller ? seller.id : nil
-        seller_name = seller ? seller.name : '无对应经销商'
+
+        if seller
+          seller_id = seller.id
+          seller_name = seller.name
+        else
+          seller = trade.default_area.sellers.first 
+          seller_id = seller ? seller.id : nil
+          seller_name = seller ? "#{seller.name}: 库存不足" : '无对应经销商'
+        end
+
         info << {
-         orders: split[:orders].map{ |order| {title: order.title, outer_iid: order.outer_iid, num: order.num, color_num: order.color_num.first} },
-         seller_id: seller_id,
-         seller_name: seller_name
+          orders: split[:orders].map{ |order| {title: order.title, outer_iid: order.outer_iid, num: order.num, color_num: order.color_num.first} },
+          seller_id: seller_id,
+          seller_name: seller_name,
+          error: seller_name.include?("库存不足")
         }
       end
 
