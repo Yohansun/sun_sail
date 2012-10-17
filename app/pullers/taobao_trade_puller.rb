@@ -56,7 +56,9 @@ class TaobaoTradePuller
           order.each do |o|
             taobao_order = trade.taobao_orders.build(o)
           end
-
+                    
+          trade.operation_logs.build(operated_at: Time.now, operation: '从淘宝抓取订单')
+          
           trade.save
 
           p "create trade #{trade['tid']}"
@@ -65,6 +67,9 @@ class TaobaoTradePuller
 
           if TradeSetting.company == 'dulux'
             DelayAutoDispatch.perform_in(TradeSetting.delay_time || 1.hours, trade.id)
+            #add after auto split
+            #trade.operation_logs.build(operated_at: Time.now, operation: '系统自动拆分')
+            #trade.save
           else
             unless TradeSplitter.new(trade).split!
               trade.auto_dispatch!
@@ -123,7 +128,8 @@ class TaobaoTradePuller
             orders = trade.delete('orders')
             trade['trade_source_id'] = trade_source_id
             local_trade.update_attributes(trade)
-
+            trade.operation_logs.build(operated_at: Time.now, operation: '从淘宝更新订单')
+            trade.save
             if TradeSetting.company == 'dulux'
               DelayAutoDispatch.perform_in(TradeSetting.delay_time || 1.hours, local_trade.id)
             else
