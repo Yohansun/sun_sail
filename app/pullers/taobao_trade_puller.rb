@@ -132,9 +132,9 @@ class TaobaoTradePuller
             trade['trade_source_id'] = trade_source_id
             local_trade.update_attributes(trade)
 
-            trade.operation_logs.build(operated_at: Time.now, operation: '从淘宝更新订单')
-            trade.save
-            if trade.status == 'WAIT_SELLER_SEND_GOODS'
+            local_trade.operation_logs.build(operated_at: Time.now, operation: '从淘宝更新订单')
+            local_trade.save
+            if local_trade.status == 'WAIT_SELLER_SEND_GOODS'
               if TradeSetting.company == 'dulux'
                 DelayAutoDispatch.perform_in(TradeSetting.delay_time || 1.hours, local_trade.id)
               else
