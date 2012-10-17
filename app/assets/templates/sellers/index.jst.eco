@@ -130,7 +130,7 @@
   </div>
 </div>
 
-<div id="dealer_login" class="modal hide fade">
+<div id="dealer_login" class="modal hide fade" tabindex="-1">
   <div class="modal-header">
     <h3>登录帐号设置
       <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -155,7 +155,7 @@
   </div><!-- modal-footer -->
 </div><!-- seller_area -->
 
-<div id="storage_pop" class="modal hide fade">
+<div id="storage_pop" class="modal hide fade" tabindex="-1">
   <div class="modal-header">
     <h3>开通仓储功能
       <button type="button" class="close" data-dismiss="modal">&times;</button>

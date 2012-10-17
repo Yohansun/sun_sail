@@ -1,4 +1,98 @@
 <!--<td><input type="checkbox" value="option1"></td>-->
+
+<td nowrap><!--操作-->
+  <div class="btn-group">
+    <button data-toggle="dropdown" class="btn btn-info dropdown-toggle min_w">
+      <i class="icon-wrench"></i>
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu trade_pops">
+      <li><a data-toggle="modal" href="#" data-type="detail">订单详情</a></li>
+      <% if @trade.get('status_text') == '已付款，待发货' : %>
+        <li><a data-toggle="modal" href="#" data-type="seller"><% if @trade.get('seller_id') : %>分流重置<% else : %>订单分流<% end %></a></li>
+        <% unless @trade.get('seller_id') : %>
+        <li><a data-toggle="modal" href="#" data-type="trade_split">订单拆分</a></li>
+        <% end %>
+      <% end %>
+      <li class= "divider"></li>
+      <% if @trade.get('status_text') is "已付款，待发货" or @trade.get('status_text') is "已付款，已发货" : %>
+        <% if @trade.get('seller_confirm_invoice_at') == undefined : %>
+        <li><a data-toggle="modal" href="#" data-type="invoice">申请开票</a></li>
+        <% end %>
+        <% if @trade.get('confirm_color_at') == undefined && MagicOrders.role_key != 'seller' : %>
+        <li><a data-toggle="modal" href="#" data-type="color">申请调色</a></li>
+        <% end %>
+      <% end %>
+      <li><a data-toggle="modal" href="#" data-type="cs_memo">客服备注</a></li>
+
+      <li><a data-toggle="modal" href="#" data-type="buyer_confirm_receive_goods">确定买家已收货</a></li>
+      <li><a data-toggle="modal" href="#" data-type="logistic_note">物流商备注</a></li>
+      <!-- <li><a data-toggle="modal" href="#" data-type="trade_unsplit">订单合并</a></li> -->
+      <!-- <li><a data-toggle="modal" href="#" data-type="reassign">订单转交</a></li> -->
+      <li class= "divider"></li>
+
+      <!-- <li><a data-toggle="modal" href="#" data-type="logistic_split">物流拆分</a></li> -->
+      <% if @trade.get('status_text') is "已付款，待发货" or @trade.get('status_text') is "已付款，已发货" : %>
+        <li><a data-toggle="modal" href="#" data-type="print_deliver_bill">打印发货单</a></li>
+      <% end %>
+      <!-- <li><a data-toggle="modal" href="#" data-type="print_logistic_bill">打印物流单</a></li> -->
+      <!-- <li><a data-toggle="modal" href="#" data-type="logistic_company">物流公司</a></li> -->
+      <!-- <li><a data-toggle="modal" href="#" data-type="logistic_number">物流单号设置</a></li> -->
+
+      <% if @trade.get('status_text') == '已付款，待发货' : %>
+        <% if @trade.get('dispatched_at') != undefined : %>
+          <li><a data-toggle="modal" href="#" data-type="deliver">订单发货</a></li>
+          <% if @trade.get('confirm_color_at') == undefined && @trade.get('has_color_info') == true : %>
+          <li><a data-toggle="modal" href="#" data-type="confirm_color">确认调色</a></li>
+          <% end %>
+          <% if MagicOrders.company != "dulux" : %>
+          <li><a data-toggle="modal" href="#" data-type="confirm_check_goods">确认验货</a></li>
+          <% end %>
+        <% end %>
+      <% end %>
+      <% if @trade.get('status_text') != '退款中' && @trade.get('status_text') != '交易被淘宝关闭': %>
+      <li><a data-toggle="modal" href="#" data-type="mark_unusual_state">标注异常</a></li>
+      <% end %>
+
+      <% if @trade.get('seller_confirm_deliver_at') == undefined && @trade.get('status_text') == '已付款，已发货' : %>
+        <li><a data-toggle="modal" href="#" data-type="seller_confirm_deliver">确认发货</a></li>
+      <% end %>
+
+      <% if MagicOrders.role_key == 'logistic' && @trade.get('status_text') == '已付款，已发货' : %>
+        <li><a data-toggle="modal" href="#" data-type="logistic_waybill">输入物流单号</a></li>
+      <% end %>
+
+      <% if @trade.get('invoice_name') && @trade.get('seller_confirm_invoice_at') == undefined : %>
+        <li><a data-toggle="modal" href="#" data-type="seller_confirm_invoice">确认开票</a></li>
+      <% end %>
+      <% if @trade.get('dispatched_at') || @trade.get('delivered_at') : %>
+        <li><a data-toggle="modal" href="#" data-type="barcode">输入唯一码</a></li>
+      <% end %>
+
+      <li class= "divider"></li>
+
+      <!-- <li><a data-toggle="modal" href="#" data-type="check_goods">验货</a></li> -->
+      <!-- <li><a data-toggle="modal" href="#" data-type="confirm_check_goods">确认验货</a></li> -->
+      <!-- <li><a data-toggle="modal" href="#" data-type="refund">申请退款</a></li> -->
+      <!-- <li><a data-toggle="modal" href="#" data-type="agree_refund">同意退款</a></li> -->
+      <!-- <li><a data-toggle="modal" href="#" data-type="confirm_refund">确认退款</a></li> -->
+      <!-- <li><a data-toggle="modal" href="#" data-type="return_goods">申请退货</a></li> -->
+      <!-- <li><a data-toggle="modal" href="#" data-type="agree_return_goods">同意退货</a></li> -->
+      <!-- <li><a data-toggle="modal" href="#" data-type="confirm_return_goods">确认退货</a></li> -->
+      <!-- <li><a data-toggle="modal" href="#" data-type="invoice_notice">开票通知</a></li> -->
+      <li><a data-toggle="modal" href="#" data-type="invoice_number">发票号设置</a></li>
+
+      <li class= "divider"></li>
+
+      <!-- <li><a data-toggle="modal" href="#" data-type="export_deliver_bill">导出发货单</a></li> -->
+      <!-- <li><a data-toggle="modal" href="#" data-type="export_logistic_bill">导出物流单</a></li> -->
+      <!-- <li><a data-toggle="modal" href="#" data-type="export_invoice">导出发票</a></li> -->
+      <li><a data-toggle="modal" href="#" data-type="operation_log">订单日志</a></li>
+    </ul>
+  </div>
+</td>
+
+
 <td data-col='trade_source'><span class="label label-warning"><%= @trade.get('trade_source') %></span>
 <% if @trade.get('trade_source') == "分销平台" : %>
   <br><span class="label label-info">店铺代码:<%= @trade.get('distributor_usercode') %></span></td>
@@ -119,97 +213,4 @@
   <% if @trade.get 'logistic_id' : %>
     <%= @trade.get('logistic_name') %>
   <% end %>
-</td>
-
-
-<td nowrap><!--操作-->
-  <div class="btn-group">
-    <button data-toggle="dropdown" class="btn btn-info dropdown-toggle min_w">
-      <i class="icon-wrench"></i>
-      <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu trade_pops" style="left:-115px;">
-      <li><a data-toggle="modal" href="#" data-type="detail">订单详情</a></li>
-      <% if @trade.get('status_text') == '已付款，待发货' : %>
-        <li><a data-toggle="modal" href="#" data-type="seller"><% if @trade.get('seller_id') : %>分流重置<% else : %>订单分流<% end %></a></li>
-        <% unless @trade.get('seller_id') : %>
-        <li><a data-toggle="modal" href="#" data-type="trade_split">订单拆分</a></li>
-        <% end %>
-      <% end %>
-      <li class= "divider"></li>
-      <% if @trade.get('status_text') is "已付款，待发货" or @trade.get('status_text') is "已付款，已发货" : %>
-        <% if @trade.get('seller_confirm_invoice_at') == undefined : %>
-        <li><a data-toggle="modal" href="#" data-type="invoice">申请开票</a></li>
-        <% end %>
-        <% if @trade.get('confirm_color_at') == undefined && MagicOrders.role_key != 'seller' : %>
-        <li><a data-toggle="modal" href="#" data-type="color">申请调色</a></li>
-        <% end %>
-      <% end %>
-      <li><a data-toggle="modal" href="#" data-type="cs_memo">客服备注</a></li>
-
-      <li><a data-toggle="modal" href="#" data-type="buyer_confirm_receive_goods">确定买家已收货</a></li>
-      <li><a data-toggle="modal" href="#" data-type="logistic_note">物流商备注</a></li>
-      <!-- <li><a data-toggle="modal" href="#" data-type="trade_unsplit">订单合并</a></li> -->
-      <!-- <li><a data-toggle="modal" href="#" data-type="reassign">订单转交</a></li> -->
-      <li class= "divider"></li>
-
-      <!-- <li><a data-toggle="modal" href="#" data-type="logistic_split">物流拆分</a></li> -->
-      <% if @trade.get('status_text') is "已付款，待发货" or @trade.get('status_text') is "已付款，已发货" : %>
-        <li><a data-toggle="modal" href="#" data-type="print_deliver_bill">打印发货单</a></li>
-      <% end %>
-      <!-- <li><a data-toggle="modal" href="#" data-type="print_logistic_bill">打印物流单</a></li> -->
-      <!-- <li><a data-toggle="modal" href="#" data-type="logistic_company">物流公司</a></li> -->
-      <!-- <li><a data-toggle="modal" href="#" data-type="logistic_number">物流单号设置</a></li> -->
-
-      <% if @trade.get('status_text') == '已付款，待发货' : %>
-        <% if @trade.get('dispatched_at') != undefined : %>
-          <li><a data-toggle="modal" href="#" data-type="deliver">订单发货</a></li>
-          <% if @trade.get('confirm_color_at') == undefined && @trade.get('has_color_info') == true : %>
-          <li><a data-toggle="modal" href="#" data-type="confirm_color">确认调色</a></li>
-          <% end %>
-          <% if MagicOrders.company != "dulux" : %>
-          <li><a data-toggle="modal" href="#" data-type="confirm_check_goods">确认验货</a></li>
-          <% end %>
-        <% end %>
-      <% end %>
-      <% if @trade.get('status_text') != '退款中' && @trade.get('status_text') != '交易被淘宝关闭': %>
-      <li><a data-toggle="modal" href="#" data-type="mark_unusual_state">标注异常</a></li>
-      <% end %>
-
-      <% if @trade.get('seller_confirm_deliver_at') == undefined && @trade.get('status_text') == '已付款，已发货' : %>
-        <li><a data-toggle="modal" href="#" data-type="seller_confirm_deliver">确认发货</a></li>
-      <% end %>
-
-      <% if MagicOrders.role_key == 'logistic' && @trade.get('status_text') == '已付款，已发货' : %>
-        <li><a data-toggle="modal" href="#" data-type="logistic_waybill">输入物流单号</a></li>
-      <% end %>
-
-      <% if @trade.get('invoice_name') && @trade.get('seller_confirm_invoice_at') == undefined : %>
-        <li><a data-toggle="modal" href="#" data-type="seller_confirm_invoice">确认开票</a></li>
-      <% end %>
-      <% if @trade.get('dispatched_at') || @trade.get('delivered_at') : %>
-        <li><a data-toggle="modal" href="#" data-type="barcode">输入唯一码</a></li>
-      <% end %>
-
-      <li class= "divider"></li>
-
-      <!-- <li><a data-toggle="modal" href="#" data-type="check_goods">验货</a></li> -->
-      <!-- <li><a data-toggle="modal" href="#" data-type="confirm_check_goods">确认验货</a></li> -->
-      <!-- <li><a data-toggle="modal" href="#" data-type="refund">申请退款</a></li> -->
-      <!-- <li><a data-toggle="modal" href="#" data-type="agree_refund">同意退款</a></li> -->
-      <!-- <li><a data-toggle="modal" href="#" data-type="confirm_refund">确认退款</a></li> -->
-      <!-- <li><a data-toggle="modal" href="#" data-type="return_goods">申请退货</a></li> -->
-      <!-- <li><a data-toggle="modal" href="#" data-type="agree_return_goods">同意退货</a></li> -->
-      <!-- <li><a data-toggle="modal" href="#" data-type="confirm_return_goods">确认退货</a></li> -->
-      <!-- <li><a data-toggle="modal" href="#" data-type="invoice_notice">开票通知</a></li> -->
-      <li><a data-toggle="modal" href="#" data-type="invoice_number">发票号设置</a></li>
-
-      <li class= "divider"></li>
-
-      <!-- <li><a data-toggle="modal" href="#" data-type="export_deliver_bill">导出发货单</a></li> -->
-      <!-- <li><a data-toggle="modal" href="#" data-type="export_logistic_bill">导出物流单</a></li> -->
-      <!-- <li><a data-toggle="modal" href="#" data-type="export_invoice">导出发票</a></li> -->
-      <li><a data-toggle="modal" href="#" data-type="operation_log">订单日志</a></li>
-    </ul>
-  </div>
 </td>

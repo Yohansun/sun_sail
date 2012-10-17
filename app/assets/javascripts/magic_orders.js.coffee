@@ -21,7 +21,7 @@ window.MagicOrders =
       'deliver':                 ['detail', 'print_deliver_bill'],
       'logistics':               ['detail'],
       'check':                   ['detail'],
-      'send':                    ['deliver', 'seller_confirm_deliver'],
+      'send':                    ['deliver', 'seller_confirm_deliver','detail'],
       'return':                  ['detail'],
       'refund':                  ['detail'],
       'invoice':                 ['invoice_number','detail'],
