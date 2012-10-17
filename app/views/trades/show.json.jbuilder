@@ -38,6 +38,8 @@ json.logistic_name @trade.logistic_name
 json.logistic_company @trade.logistic_company
 json.logistic_waybill @trade.logistic_waybill
 json.matched_logistics @trade.matched_logistics
+json.logistic_memo @trade.logistic_memo
+
 json.invoice_type @trade.invoice_type
 json.invoice_name @trade.invoice_name
 json.invoice_content @trade.invoice_content
@@ -47,6 +49,7 @@ json.seller_confirm_deliver_at @trade.seller_confirm_deliver_at.strftime("%m-%d 
 json.seller_confirm_invoice_at @trade.seller_confirm_invoice_at.strftime("%m-%d %H:%M") if @trade.seller_confirm_invoice_at
 json.confirm_color_at @trade.confirm_color_at.strftime("%m-%d %H:%M") if @trade.confirm_color_at
 json.confirm_check_goods_at @trade.confirm_check_goods_at.strftime("%m-%d %H:%M") if @trade.confirm_check_goods_at
+json.confirm_receive_at @trade.confirm_receive_at.strftime("%m-%d %H:%M") if @trade.confirm_receive_at
 
 if @trade.consign_time
   json.consign_time @trade.consign_time.strftime("%m-%d %H:%M")

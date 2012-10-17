@@ -3,7 +3,6 @@
   * html .timeEntry_control { margin-top: -2px; }
 </style>
 
-<% if MagicOrders.role_key != 'logistic': %>
 <header class="jumbotron subhead" id="overview">
   <div class="subnav">
     <ul class="nav nav-pills">
@@ -19,21 +18,8 @@
           <li><a href="#" data-trade-type="jingdong">京东商城订单</a></li>
         </ul>
       </li> -->
+      <% unless MagicOrders.company == "dulux" and MagicOrders.role_key == 'logistic' : %>
       <li class="dropdown" id="trade_selector">
-        <!-- <a class="dropdown-toggle" data-toggle="dropdown">
-          <span class="trade_mode">订单模式</span>
-          <b class="caret"></b>
-        </a>
-        <ul class="dropdown-menu">
-          <li><a href="#" data-trade-mode="trades">订单模式</a></li>
-          <li><a href="#" data-trade-mode="deliver">发货单模式</a></li>
-          <li><a href="#" data-trade-mode="logistics">物流单模式</a></li>
-          <li><a href="#" data-trade-mode="check">验货模式</a></li>
-          <li><a href="#" data-trade-mode="send">发货模式</a></li>
-          <li><a href="#" data-trade-mode="return">退货模式</a></li>
-          <li><a href="#" data-trade-mode="refund">退款模式</a></li>
-          <li><a href="#" data-trade-mode="invoice">发票模式</a></li>
-        </ul> -->
         <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">
           订单
           <b class="caret"></b>
@@ -69,7 +55,8 @@
           <li><a href="#" data-trade-mode="deliver">交易异常订单</a></li> -->
         </ul>
       </li>
-      <!-- <li class="dropdown">
+      <% end %>
+      <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
           物流单
           <b class="caret"></b>
@@ -79,7 +66,8 @@
           <li><a href="#" data-trade-mode="logistics" data-logistic-status="logistic_unprinted">未打印</a></li>
           <li><a href="#" data-trade-mode="logistics" data-logistic-status="logistic_printed">已打印</a></li>
         </ul>
-      </li> -->
+      </li>
+      <% unless MagicOrders.company == "dulux" and MagicOrders.role_key == 'logistic' : %>
       <!-- <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
           验货
@@ -129,8 +117,9 @@
           <b class="caret"></b>
         </a>
         <ul class="dropdown-menu">
-          <li><a href="#" data-trade-mode="color" data-color-status="unmatched">未调色</a></li>
-          <li><a href="#" data-trade-mode="color" data-color-status="matched">已调色</a></li>
+          <li><a href="#" data-trade-mode="color" data-color-status="unmatched">未申请调色</a></li>
+          <li><a href="#" data-trade-mode="color" data-color-status="matched">已申请,未确认调色</a></li>
+          <li><a href="#" data-trade-mode="color" data-color-status="confirmed">已确认调色</a></li>
         </ul>
       </li>
       <!-- <li class="dropdown">
@@ -145,10 +134,10 @@
           <li><a href="#" data-trade-mode="invoice" data-invoice-status="invoice_sent">已寄出</a></li>
         </ul>
       </li> -->
+      <% end %>
     </ul>
   </div>
 </header>
-<% end %>
 
 <div class="row-fluid">
   <ul class="breadcrumb" style="position:relative;">

@@ -126,6 +126,12 @@ class TradesController < ApplicationController
       @trades = @trades.where("$and" => [{:dispatched_at.ne => nil},{:dispatched_at.exists => true},{:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"]}])
     end
 
+    # 客服登录默认显示未分流订单
+    if params[:search_trade_status].blank? && params[:search].blank? && params[:search_all].blank? && current_user.has_role?(:cs)
+      @trades = @trades.where("$or" => [{seller_id: nil},{:seller_id.exists => false}])
+      @trades = @trades.where(:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"])
+    end
+
     # 发货单
     # 发货单是否已打印
     if params[:search_deliverbill_status] == "deliver_bill_unprinted"
@@ -155,10 +161,12 @@ class TradesController < ApplicationController
     end
 
     # 调色
-    if params[:search_color_status] == "matched"
-      @trades = @trades.where("$and" =>[{has_color_info: true},{:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"]},{:confirm_color_at.exists => true}])
-    elsif params[:search_color_status] == "unmatched"
+    if params[:search_color_status] == "unmatched"
+      @trades = @trades.where("$and" => [{has_color_info: false},{:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"]}])
+    elsif params[:search_color_status] == "matched"
       @trades = @trades.where("$and" => [{has_color_info: true},{:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"]},{:confirm_color_at.exists => false}])
+    elsif params[:search_color_status] == "confirmed"
+      @trades = @trades.where("$and" =>[{has_color_info: true},{:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"]},{:confirm_color_at.exists => true}])
     end
 
     ## 简单筛选
@@ -390,8 +398,16 @@ class TradesController < ApplicationController
       @trade.confirm_check_goods_at = Time.now
     end
 
+    if params[:confirm_receive_at] == true
+      @trade.confirm_receive_at = Time.now
+    end
+
     if params[:logistic_waybill].present?
       @trade.logistic_waybill = params[:logistic_waybill]
+    end
+
+    if params[:logistic_memo].present?
+      @trade.logistic_memo = params[:logistic_memo]
     end
 
     unless params[:orders].blank?

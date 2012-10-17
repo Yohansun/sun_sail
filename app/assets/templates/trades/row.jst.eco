@@ -28,9 +28,10 @@
         <% end %>
       <% end %>
       <li><a data-toggle="modal" href="#" data-type="cs_memo">客服备注</a></li>
-
-      <li><a data-toggle="modal" href="#" data-type="buyer_confirm_receive_goods">确定买家已收货</a></li>
-      <li><a data-toggle="modal" href="#" data-type="logistic_note">物流商备注</a></li>
+      <% if @trade.get('status_text') is "已付款，已发货" : %>
+      <li><a data-toggle="modal" href="#" data-type="confirm_receive">确定买家已收货</a></li>
+      <% end %>
+      <li><a data-toggle="modal" href="#" data-type="logistic_memo">物流商备注</a></li>
       <!-- <li><a data-toggle="modal" href="#" data-type="trade_unsplit">订单合并</a></li> -->
       <!-- <li><a data-toggle="modal" href="#" data-type="reassign">订单转交</a></li> -->
       <li class= "divider"></li>
@@ -140,6 +141,9 @@
   <% end %>
   <% if @trade.get('confirm_check_goods_at'): %>
     <span class="label label-success">确认验货<%= @trade.get('confirm_check_goods_at') %></span>
+  <% end %>
+  <% if @trade.get('confirm_receive_at'): %>
+    <span class="label label-success">确认收货<%= @trade.get('confirm_receive_at') %></span>
   <% end %>
 </td>
 <td data-col='receiver_id'><%= @trade.get('buyer_nick') %></td>

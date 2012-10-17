@@ -13,6 +13,7 @@ class Trade
   field :delivered_at, type: DateTime                     # 发货时间
 
   field :cs_memo, type: String                            # 客服备注
+  field :logistic_memo, type: String                      # 物流商备注
 
   # 发票信息
   field :invoice_type, type: String
@@ -32,6 +33,7 @@ class Trade
 
   field :confirm_color_at, type: DateTime                 #确认调色
   field :confirm_check_goods_at, type: DateTime           #确认验证
+  field :confirm_receive_at, type: DateTime               #确认买家收货
 
   # 拆单相关
   field :splitted, type: Boolean, default: false

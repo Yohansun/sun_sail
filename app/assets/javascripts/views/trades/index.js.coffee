@@ -57,7 +57,8 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
       for col in MagicOrders.trade_cols_keys
         if col in MagicOrders.trade_cols_hidden
           $("#trades_table th[data-col=#{col}],td[data-col=#{col}]").hide()
-          $(@el).find("#cols_filter li[data-col=#{col}]").hide()
+          unless (col in MagicOrders.trade_cols_hidden_from_cookie) and (col in visible_cols)
+            $(@el).find("#cols_filter li[data-col=#{col}]").hide()
         else
           $("#trades_table th[data-col=#{col}],td[data-col=#{col}]").show()
           $(@el).find("#cols_filter li[data-col=#{col}]").show()
@@ -75,6 +76,10 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     @render_select_state()
     if MagicOrders.role_key == 'seller'
       $(@el).find(".trade_nav").text("未发货订单")
+    if MagicOrders.role_key == 'logistic'
+      $(@el).find(".trade_nav").text("物流单")
+    if MagicOrders.role_key == 'cs'
+      $(@el).find(".trade_nav").text("未分流订单")
     this
 
   render_select_state: ->
@@ -354,7 +359,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     e.preventDefault()
     $('.dropdown.open .dropdown-toggle').dropdown('toggle');
     @search_color_status = $(e.target).data('color-status')
-    console.log(@search_color_status)
     $(@el).find(".trade_nav").text($(@el).find("[data-color-status=#{@search_color_status}]").html())
 
     @offset = 0
