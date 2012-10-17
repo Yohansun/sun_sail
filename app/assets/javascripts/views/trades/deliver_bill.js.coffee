@@ -13,6 +13,7 @@ class MagicOrders.Views.TradesDeliverBill extends Backbone.View
     this
 
   print: (e) ->
+    @model.save data: {'deliver_bill_printed_at': true}          # 存储出货单最近一次的打印时间
     print_body = $(@el).find(".modal-body")
     print_body.wrapInner('<div class="print_content"></div>')
     print_body.children('.print_content').printArea()

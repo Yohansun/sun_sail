@@ -18,7 +18,7 @@ window.MagicOrders =
 
       #trade_mode
       'trades':                  ['deliver', 'logistic_waybill', 'buyer_confirm_receive_goods', 'logistic_note', 'detail', 'seller', 'cs_memo', 'color', 'invoice', 'trade_split', 'trade_unsplit', 'mark_unusual_state', 'reassign', 'refund', 'check_goods', 'deliver', 'seller_confirm_deliver', 'seller_confirm_invoice', 'barcode', 'check_goods', 'logistic_split', 'print_logistic_bill', 'print_deliver_bill', 'confirm_refund', 'operation_log','confirm_color','confirm_check_goods', 'logistic_waybill'],
-      'deliver':                 ['detail'],
+      'deliver':                 ['detail', 'print_deliver_bill'],
       'logistics':               ['detail'],
       'check':                   ['detail'],
       'send':                    ['deliver', 'seller_confirm_deliver'],
@@ -26,7 +26,7 @@ window.MagicOrders =
       'refund':                  ['detail'],
       'invoice':                 ['invoice_number','detail'],
       'unusual':                 ['detail'],
-      'color':                   ['color','confirm_color']
+      'color':                   ['color','confirm_color','detail']
     }
 
     # 所有订单列
@@ -49,9 +49,9 @@ window.MagicOrders =
       'logistic':                '物流配送商'
 
       'receiver_id':             '客户ID',             #new add
-      'deliver_bill':            '出货单',
-      'deliver_bill_id':         '出货单编号',
-      'deliver_bill_status':     '出货单状态',
+      'deliver_bill':            '发货单',
+      'deliver_bill_id':         '发货单编号',
+      'deliver_bill_status':     '发货单状态',
       'order_goods':             '商品详细',
       'logistic_bill':           '物流单',
       'logistic_waybill':        '物流单号',
@@ -78,7 +78,7 @@ window.MagicOrders =
     # 订单模式可选项列表
     @trade_modes = {
       'trades':                  '订单模式',
-      'deliver':                 '出货单模式',
+      'deliver':                 '发货单模式',
       'logistics':               '物流单模式',
       'check':                   '验货模式',
       'send':                    '发货模式',

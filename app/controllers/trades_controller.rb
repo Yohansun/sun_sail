@@ -126,8 +126,8 @@ class TradesController < ApplicationController
       @trades = @trades.where("$and" => [{:dispatched_at.ne => nil},{:dispatched_at.exists => true},{:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"]}])
     end
 
-    # 出货单
-    # 出货单是否已打印
+    # 发货单
+    # 发货单是否已打印
     if params[:search_deliverbill_status] == "deliver_bill_unprinted"
       @trades = @trades.where(:deliver_bill_printed_at.exists => false)
     elsif params[:search_deliverbill_status] == "deliver_bill_printed"
@@ -258,7 +258,6 @@ class TradesController < ApplicationController
 
     offset = params[:offset] || 0
     limit = params[:limit] || 20
-
     @trades = TradeDecorator.decorate(@trades.limit(limit).offset(offset).order_by("created", "DESC"))
     if @trades.count > 0
       respond_with @trades
