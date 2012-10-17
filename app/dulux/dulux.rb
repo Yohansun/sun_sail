@@ -164,7 +164,7 @@ module Dulux
       end
 
       def match_trade_seller(trade, area)
-        match_item_seller(area, trade.orders.first, false)
+        match_item_seller(area, trade.orders.first, true)
       end
 		end
   end
