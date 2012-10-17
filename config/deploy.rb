@@ -4,7 +4,7 @@ require "capistrano/ext/multistage"       #多stage部署所需
 require 'bundler/capistrano'       #添加之后部署时会调用bundle install
 require 'tinder'
 
-set :stages, %w(production magica1)
+set :stages, %w(production magica1 magicd)
 set :default_stage, "production"
 
 set :application, "magic_orders"
