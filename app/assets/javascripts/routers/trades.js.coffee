@@ -10,12 +10,12 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     'trades/:id/color': 'color'
     'trades/:id/invoice': 'invoice'
     'trades/:id/invoice_number': 'invoice_number'
-    'trades/:id/seller_confirm_deliver':'seller_confirm_deliver'
-    'trades/:id/seller_confirm_invoice':'seller_confirm_invoice'
-    'trades/:id/barcode':'barcode'
-    'trades/:id/logistic_waybill':'logistic_waybill'
-    'trades/:id/mark_unusual_state':'mark_unusual_state'
-    'trades/:id/operation_log':'operation_log'
+    'trades/:id/seller_confirm_deliver': 'seller_confirm_deliver'
+    'trades/:id/seller_confirm_invoice': 'seller_confirm_invoice'
+    'trades/:id/barcode': 'barcode'
+    'trades/:id/logistic_waybill': 'logistic_waybill'
+    'trades/:id/mark_unusual_state': 'mark_unusual_state'
+    'trades/:id/operation_log': 'operation_log'
     'trades/:id/confirm_color': 'confirm_color'
     'trades/:id/confirm_check_goods': 'confirm_check_goods'
     'trades/:id/splited': 'splited'
@@ -62,6 +62,9 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       Backbone.history.navigate('trades')
 
     $('#trade_operation_log').on 'hide', (event) ->
+      Backbone.history.navigate('trades')
+
+    $('#trade_print_deliver_bill').on 'hide', (event) ->
       Backbone.history.navigate('trades')
 
     $('#trade_confirm_color').on 'hide', (event) ->
