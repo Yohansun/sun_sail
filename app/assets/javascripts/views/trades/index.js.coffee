@@ -355,7 +355,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     e.preventDefault()
     $('.dropdown.open .dropdown-toggle').dropdown('toggle');
     @search_color_status = $(e.target).data('color-status')
-    console.log(@search_color_status)
     $(@el).find(".trade_nav").text($(@el).find("[data-color-status=#{@search_color_status}]").html())
 
     @offset = 0
