@@ -89,14 +89,14 @@ module Dulux
 
     def split_by_color(order, num, count)
       count = count.to_i
-      c_order = order.clone
+      c_order = TaobaoOrder.new(order.attributes)
       c_order.num = count
       color = Color.find_by_num num
 
       c_order.color_num = color ? Array.new(count, num) : []
       c_order.color_hexcode = color ? Array.new(count, color.hexcode) : []
       c_order.color_name = color ? Array.new(count, color.name) : []
-      c_order.total_fee = (count / order.num) * order.total_fee
+      c_order[:total_fee] = order.total_fee - count * order.price
       c_order
     end
 
