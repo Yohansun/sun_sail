@@ -1,48 +1,66 @@
 __filename = "export.xls"
 sheet1 = xls.create_worksheet
-sheet1[0, 0] = "订单列表"
-sheet1.row(1).concat ["订单来源", "订单编号", "当前状态",
-	                    "下单时间", "付款时间", "分流时间", "发货时间",
-	                    "客户姓名", "联系电话", "联系地址",
-                      "客户留言", "卖家备注", "客服备注",
-                      "调色信息", "发票信息", "配送经销商", "店铺代码(分销)", "主订单号(分销)",
-                      "商品名称", "单价（实际销售）", "数量"]
 
 yellow_format = Spreadsheet::Format.new :pattern_bg_color => "yellow", :color => "black", :pattern_fg_color => "yellow", :pattern => 1
 blue_format = Spreadsheet::Format.new :pattern_bg_color => "blue", :color => "white", :pattern_fg_color => "blue", :pattern => 1
+title_format = Spreadsheet::Format.new :color => "blue", :weight => :bold, :size => 18
+bold = Spreadsheet::Format.new(:weight => :bold)
+
+sheet1.row(0).set_format(0, title_format)
+sheet1.row(1).default_format = bold
+sheet1[0, 0] = "订单列表"
 
 row_number = 2
 
-@trades.each_with_index do |trade,count|
-  if trade._type == "TaobaoPurchaseOrder"
-    tc_order_id = trade.tc_order_id
-    distributor_usercode = trade.distributor_usercode
-  else
-    tc_order_id = ''
-    distributor_usercode = ''
-  end  
-  OrderDecorator.decorate(trade.orders).each_with_index do |order, i|
-    cs_memo = "#{trade.cs_memo} #{order.cs_memo}"  
-    if order.color_num.present?
-      color_num = order.color_num.join(",")
-    else
-      color_num = ''  
-    end  
-    sheet1.update_row row_number + i, trade.trade_source, trade.tid, trade.status_text,
-    trade.created.try(:strftime,"%Y-%m-%d %H:%M:%S"), trade.pay_time.try(:strftime,"%Y-%m-%d %H:%M:%S"),
-    trade.dispatched_at.try(:strftime,"%Y-%m-%d %H:%M:%S"), trade.delivered_at.try(:strftime,"%Y-%m-%d %H:%M:%S"),
-    trade.receiver_name, trade.receiver_mobile_phone, trade.receiver_address,
-    trade.seller_memo, trade.buyer_message, cs_memo,
-    color_num, trade.invoice_name, trade.try(:seller).try(:name), distributor_usercode, tc_order_id,
-    order.title, order.auction_price, order.num
-           
+if TradeSetting.company == "dulux"
+  if current_user.has_role?(:seller) || current_user.has_role?(:logistic)
+    sheet1.row(1).concat ["订单号", "下单时间", "付款时间", "分流时间", "订单状态",                       
+                          "送货经销商", "买家地址-省", "买家地址-市", "买家地址-区", "买家地址", "买家姓名", "收货人手机/座机", "商品名", "数量", "运费", "买家旺旺", "客服备注", "需要调色", "色号"]   
+    @trades.each_with_index do |trade,trade_index|
+      OrderDecorator.decorate(trade.orders).each_with_index do |order, i|
+        cs_memo = "#{trade.cs_memo} #{order.cs_memo}"  
+        if order.color_num.present?
+          color_num = order.color_num.join(",")
+        else
+          color_num = ''  
+        end  
+        need_color = trade.has_color_info ? '是' : '否'
+        sheet1.update_row row_number + i, trade.tid, 
+        trade.created.try(:strftime,"%Y-%m-%d %H:%M:%S"), trade.pay_time.try(:strftime,"%Y-%m-%d %H:%M:%S"),
+        trade.dispatched_at.try(:strftime,"%Y-%m-%d %H:%M:%S"), trade.status_text, trade.try(:seller).try(:name),
+        trade.receiver_state, trade.receiver_city, trade.receiver_district, trade.receiver_address, trade.receiver_name, trade.receiver_mobile_phone, order.title, order.num, trade.post_fee, trade.buyer_nick, cs_memo, need_color, color_num 
+        if trade_index.even?
+          sheet1.row(row_number + i).default_format = yellow_format
+        else
+          sheet1.row(row_number + i).default_format = blue_format
+        end            
+      end
+      row_number = row_number + trade.orders.count
+    end 
+  elsif current_user.has_role?(:cs) || current_user.has_role?(:admin)  
+    sheet1.row(1).concat ["订单号", "下单时间", "付款时间", "分流时间", "订单状态",                       
+                          "送货经销商", "买家地址-省", "买家地址-市", "买家地址-区", "买家地址", "买家姓名", "收货人手机/座机", "商品名", "数量", "商品标价", "实际单价", "卖家优惠", "单品总价", "商品总价（不含运费）", "运费", "订单总金额", "买家旺旺", "客服备注", "需要调色", "色号"]  
+    @trades.each_with_index do |trade,trade_index|
+      OrderDecorator.decorate(trade.orders).each_with_index do |order, i|
+        cs_memo = "#{trade.cs_memo} #{order.cs_memo}"  
+        if order.color_num.present?
+          color_num = order.color_num.join(",")
+        else
+          color_num = ''  
+        end  
+        need_color = trade.has_color_info ? '是' : '否'
+        sheet1.update_row row_number + i, trade.tid, 
+        trade.created.try(:strftime,"%Y-%m-%d %H:%M:%S"), trade.pay_time.try(:strftime,"%Y-%m-%d %H:%M:%S"),
+        trade.dispatched_at.try(:strftime,"%Y-%m-%d %H:%M:%S"), trade.status_text, trade.try(:seller).try(:name),
+        trade.receiver_state, trade.receiver_city, trade.receiver_district, trade.receiver_address, trade.receiver_name, trade.receiver_mobile_phone, order.title, order.num, order.auction_price, order.price, order.discount_fee, order.total_fee, trade.sum_fee, trade.post_fee, trade.total_fee, trade.buyer_nick, cs_memo, need_color, color_num
+        if trade_index.even?
+          sheet1.row(row_number + i).default_format = yellow_format
+        else
+          sheet1.row(row_number + i).default_format = blue_format
+        end            
+      end
+      row_number = row_number + trade.orders.count
+    end
   end
-  row_number = row_number + trade.orders.count
 end
 
-title_format = Spreadsheet::Format.new :color => "blue", :weight => :bold, :size => 18
-
-sheet1.row(0).set_format(0, title_format)
-
-bold = Spreadsheet::Format.new(:weight => :bold)
-sheet1.row(1).default_format = bold
