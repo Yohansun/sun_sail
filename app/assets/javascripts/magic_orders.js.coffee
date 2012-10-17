@@ -26,7 +26,7 @@ window.MagicOrders =
       'refund':                  ['detail'],
       'invoice':                 ['invoice_number','detail'],
       'unusual':                 ['detail'],
-      'color':                   ['color','confirm_color']
+      'color':                   ['color','confirm_color','detail']
     }
 
     # 所有订单列
