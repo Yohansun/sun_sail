@@ -10,7 +10,7 @@ class TaobaoAppToken < ActiveRecord::Base
 	  access_token_refresh = Time.now - (self.last_refresh_at || Time.now.yesterday)
 	  refresh_token_refresh = Time.now - (self.refresh_token_last_refresh_at || Time.now.yesterday)
 
-	  if access_token_refresh >= 3600 || refresh_token_refresh > 3600 && TradeSetting.enable_token_error_notify #1 hours
+	  if (access_token_refresh >= 3600 || refresh_token_refresh > 3600) && TradeSetting.enable_token_error_notify #1 hours
 
 			base_url = "https://oauth.taobao.com/token?"
 
