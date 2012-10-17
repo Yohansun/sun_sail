@@ -40,6 +40,6 @@ class ColorsController < ApplicationController
 
   def autocomplete
     colors = Color.where("num LIKE '%#{params[:num]}%'")
-    render json: colors.map { |c| "#{c.num} -- #{c.name}" }
+    render json: colors.map { |c| c.num }
   end
 end

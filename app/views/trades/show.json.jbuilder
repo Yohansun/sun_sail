@@ -82,7 +82,7 @@ json.orders OrderDecorator.decorate(@trade.orders) do |json, order|
   json.color_hexcode order.color_hexcode
   json.color_name order.color_name
   json.barcode order.barcode
-  json.contents Product.where(iid: order.outer_iid).map &:name
+  json.contents get_package(order.outer_iid)
 end
 
 json.unusual_states @trade.unusual_states do |json, state|
