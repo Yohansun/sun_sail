@@ -57,7 +57,8 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
       for col in MagicOrders.trade_cols_keys
         if col in MagicOrders.trade_cols_hidden
           $("#trades_table th[data-col=#{col}],td[data-col=#{col}]").hide()
-          $(@el).find("#cols_filter li[data-col=#{col}]").hide()
+          unless (col in MagicOrders.trade_cols_hidden_from_cookie) and (col in visible_cols)
+            $(@el).find("#cols_filter li[data-col=#{col}]").hide()
         else
           $("#trades_table th[data-col=#{col}],td[data-col=#{col}]").show()
           $(@el).find("#cols_filter li[data-col=#{col}]").show()
