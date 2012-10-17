@@ -26,9 +26,7 @@
     </tbody>
   </table>
   <div class="clearfix splitted_orders">
-    <% empty_seller = false %>
-    <% for trade in @trade.get("splited"): %>
-      <% empty_seller = true if trade.seller_id == null %>
+    <% for trade in @trade.get("splited"): %>      
       <table class="table table-bordered">
         <tbody>
           <tr>
@@ -55,7 +53,7 @@
 </div><!-- modal-body -->
 <div class="modal-footer">
   <a href="#" class="btn" data-dismiss="modal" >取消</a>
-  <% if @trade.get("splited").length > 1 && !empty_seller : %>
+  <% if @trade.get("splited").length > 1 : %>
     <a href="#" class="btn btn-primary split">确定</a>
   <% end %>
 </div><!-- modal-footer -->
