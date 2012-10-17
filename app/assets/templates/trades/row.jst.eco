@@ -18,30 +18,30 @@
   <% end %>
 </td>
 <td data-col='status'>
-  <span class="label"><%= @trade.get('status_text') %></span>
+  <span class="label label-success"><%= @trade.get('status_text') %></span>
 </td>
 <td data-col='status_history'>
   <span class="label">下单 <%= @trade.get('created') %></span>
   <% if @trade.get('pay_time'): %>
-    <span class="label">付款 <%= @trade.get('pay_time') %></span>
+    <span class="label label-success">付款 <%= @trade.get('pay_time') %></span>
   <% end %>
   <% if @trade.get('seller_id'): %>
-    <span class="label">分流 <%= @trade.get('dispatched_at') %></span>
+    <span class="label label-success">分流 <%= @trade.get('dispatched_at') %></span>
   <% end %>
   <% if @trade.get('consign_time'): %>
-    <span class="label">发货 <%= @trade.get('consign_time') %></span>
+    <span class="label label-success">发货 <%= @trade.get('consign_time') %></span>
   <% end %>
   <% if @trade.get('seller_confirm_deliver_at'): %>
-    <span class="label">确认发货 <%= @trade.get('seller_confirm_deliver_at') %></span>
+    <span class="label label-success">确认发货 <%= @trade.get('seller_confirm_deliver_at') %></span>
   <% end %>
   <% if @trade.get('seller_confirm_invoice_at'): %>
-    <span class="label">确认开票 <%= @trade.get('seller_confirm_invoice_at') %></span>
+    <span class="label label-success">确认开票 <%= @trade.get('seller_confirm_invoice_at') %></span>
   <% end %>
   <% if @trade.get('confirm_color_at'): %>
-    <span class="label">确认调色 <%= @trade.get('confirm_color_at') %></span>
+    <span class="label label-success">确认调色 <%= @trade.get('confirm_color_at') %></span>
   <% end %>
   <% if @trade.get('confirm_check_goods_at'): %>
-    <span class="label">确认验货<%= @trade.get('confirm_check_goods_at') %></span>
+    <span class="label label-success">确认验货<%= @trade.get('confirm_check_goods_at') %></span>
   <% end %>
 </td>
 <td data-col='receiver_id'><%= @trade.get('buyer_nick') %></td>
