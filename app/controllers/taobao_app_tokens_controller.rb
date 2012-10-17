@@ -7,6 +7,8 @@ class TaobaoAppTokensController < ApplicationController
     token.refresh_token = auth_hash["credentials"]["refresh_token"]
     token.save
 
+    TradeSetting.enable_token_error_notify = true
+
     redirect_to root_path
   end
 
