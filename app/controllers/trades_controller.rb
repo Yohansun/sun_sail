@@ -398,6 +398,10 @@ class TradesController < ApplicationController
       @trade.confirm_check_goods_at = Time.now
     end
 
+    if params[:confirm_receive_at] == true
+      @trade.confirm_receive_at = Time.now
+    end
+
     if params[:logistic_waybill].present?
       @trade.logistic_waybill = params[:logistic_waybill]
     end

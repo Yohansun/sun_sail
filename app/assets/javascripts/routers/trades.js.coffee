@@ -18,6 +18,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     'trades/:id/operation_log': 'operation_log'
     'trades/:id/confirm_color': 'confirm_color'
     'trades/:id/confirm_check_goods': 'confirm_check_goods'
+    'trades/:id/confirm_receive': 'confirm_receive'
     'trades/:id/splited': 'splited'
 
   initialize: ->
@@ -68,6 +69,9 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       Backbone.history.navigate('trades')
 
     $('#trade_confirm_color').on 'hide', (event) ->
+      Backbone.history.navigate('trades')
+
+    $('#trade_confirm_receive').on 'hide', (event) ->
       Backbone.history.navigate('trades')
 
     $('#trade_confirm_check_goods').on 'hide', (event) ->
@@ -162,8 +166,8 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $.unblockUI()
 
       view = new MagicOrders.Views.TradesDeliverBill(model: model)
-      $('#trade_detail').html(view.render().el)
-      $('#trade_detail').modal('show')
+      $('#trade_print_deliver_bill').html(view.render().el)
+      $('#trade_print_deliver_bill').modal('show')
 
   seller: (id) ->
     blocktheui()
@@ -336,3 +340,14 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       view = new MagicOrders.Views.TradesConfirmCheckGoods(model: model)
       $('#trade_confirm_check_goods').html(view.render().el)
       $('#trade_confirm_check_goods').modal('show')
+
+  confirm_receive: (id) ->
+    blocktheui()
+
+    @model = new MagicOrders.Models.Trade(id: id)
+    @model.fetch success: (model, response) =>
+      $.unblockUI()
+
+      view = new MagicOrders.Views.TradesConfirmReceive(model: model)
+      $('#trade_confirm_receive').html(view.render().el)
+      $('#trade_confirm_receive').modal('show')

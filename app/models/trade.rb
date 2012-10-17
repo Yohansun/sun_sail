@@ -32,6 +32,7 @@ class Trade
 
   field :confirm_color_at, type: DateTime                 #确认调色
   field :confirm_check_goods_at, type: DateTime           #确认验证
+  field :confirm_receive_at, type: DateTime                 #确认买家收货
 
   # 拆单相关
   field :splitted, type: Boolean, default: false
