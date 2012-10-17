@@ -264,6 +264,35 @@
             </div> -->
           </div>
 
+          <div class="span4">
+              <code>物流配送</code>
+              <div class="control-group h_specify">
+                <div class="controls">
+                  <label class="control-label">配送商：</label>
+                  <input type="text" class="input-xlarge" value="<%= @search_logistic %>" id="search_logistic">
+                </div>
+
+                <!-- <div class="controls padding_left">
+                  <label class="checkbox inline">
+                    <input type="checkbox" value="option1" id="inlineCheckbox6"> 实际已经发货
+                  </label>
+                  <label class="checkbox inline">
+                    <input type="checkbox" value="option2" id="inlineCheckbox7"> 附发票
+                  </label>
+                </div>
+
+                <div class="controls padding_left">
+                  <label class="checkbox inline">
+                    <input type="checkbox" value="option1" id="inlineCheckbox8"> 附质保
+                  </label>
+                  <label class="checkbox inline">
+                    <input type="checkbox" value="option2" id="inlineCheckbox9"> 客户已签收
+                  </label>
+                </div> -->
+              </div>
+            </div>
+
+
         </fieldset>
 
         <fieldset>

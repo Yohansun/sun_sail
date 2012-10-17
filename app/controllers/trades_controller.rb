@@ -162,7 +162,7 @@ class TradesController < ApplicationController
     end
 
     ## 简单筛选
-    if params[:search] && !params[:search][:option].blank? && params[:search][:option] != 'null' && params[:search][:option] != 'null' && !params[:search][:option].blank?
+    if params[:search] && !params[:search][:option].blank? && params[:search][:option] != 'null' && params[:search][:value] != 'null' && !params[:search][:value].blank?
       value = /#{params[:search][:value].strip}/
       if params[:search][:option] == 'seller_id'
         sellers = Seller.where("name like ?", "%#{params[:search][:value].strip}%")
@@ -248,6 +248,13 @@ class TradesController < ApplicationController
     if params[:search_all] && params[:search_all][:search_color] == "true"
       @trades = @trades.where(has_color_info: true)
     end
+
+    # 按经销商筛选
+    if params[:search_all] && !params[:search_all][:search_logistic].blank? && params[:search_all][:search_logistic] != 'null'
+      logi_name = /#{params[:search_all][:search_logistic].strip}/
+      @trades = @trades.where(logistic_name: logi_name)
+    end
+
 
     # 高级搜索$or,$and集中筛选
     if (params[:search_all] && (params[:search_all][:state_option].present? || (params[:search_all][:city_option].present? && params[:search_all][:city_option] != 'undefined') || (params[:search_all][:district_option].present? && params[:search_all][:district_option] != 'undefined') || params[:search_all][:search_invoice] == "true" || params[:search_all][:search_seller_memo] == "true" || params[:search_all][:search_buyer_message] == "true")) || (params[:search] && (params[:search][:option] == 'receiver_name' || params[:search][:option] == 'receiver_mobile'))
