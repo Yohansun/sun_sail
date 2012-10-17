@@ -23,6 +23,7 @@ class MagicOrders.Views.TradesRow extends Backbone.View
     'click [data-type=confirm_check_goods]': 'show_confirm_check_goods'
     'click [data-type=trade_split]': 'show_split'
     'click [data-type=logistic_waybill]': 'show_logistic_waybill'
+    'click [data-type=logistic_memo]': 'show_logistic_memo'
 
   initialize: ->
 
@@ -118,3 +119,7 @@ class MagicOrders.Views.TradesRow extends Backbone.View
   show_logistic_waybill: (e) ->
     e.preventDefault()
     Backbone.history.navigate('trades/' + @model.get("id") + '/logistic_waybill', true)
+
+  show_logistic_memo: (e) ->
+    e.preventDefault()
+    Backbone.history.navigate('trades/' + @model.get("id") + '/logistic_memo', true)

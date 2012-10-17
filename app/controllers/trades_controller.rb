@@ -406,6 +406,10 @@ class TradesController < ApplicationController
       @trade.logistic_waybill = params[:logistic_waybill]
     end
 
+    if params[:logistic_memo].present?
+      @trade.logistic_memo = params[:logistic_memo]
+    end
+
     unless params[:orders].blank?
       params[:orders].each do |item|
         order = @trade.orders.find item[:id]

@@ -19,6 +19,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     'trades/:id/confirm_color': 'confirm_color'
     'trades/:id/confirm_check_goods': 'confirm_check_goods'
     'trades/:id/confirm_receive': 'confirm_receive'
+    'trades/:id/logistic_memo': 'logistic_memo'
     'trades/:id/splited': 'splited'
 
   initialize: ->
@@ -78,6 +79,9 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       Backbone.history.navigate('trades')
 
     $('#trade_splited').on 'hide', (event) ->
+      Backbone.history.navigate('trades')
+
+    $('#trade_logistic_memo').on 'hide', (event) ->
       Backbone.history.navigate('trades')
 
   show_top_nav: ->
@@ -351,3 +355,14 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       view = new MagicOrders.Views.TradesConfirmReceive(model: model)
       $('#trade_confirm_receive').html(view.render().el)
       $('#trade_confirm_receive').modal('show')
+
+  logistic_memo: (id) ->
+    blocktheui()
+
+    @model = new MagicOrders.Models.Trade(id: id)
+    @model.fetch success: (model, response) =>
+      $.unblockUI()
+
+      view = new MagicOrders.Views.TradesLogisticMemo(model: model)
+      $('#trade_logistic_memo').html(view.render().el)
+      $('#trade_logistic_memo').modal('show')
