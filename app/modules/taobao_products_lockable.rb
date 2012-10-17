@@ -15,9 +15,9 @@ module TaobaoProductsLockable
 
         unless product && product.activity > order.num
           if has_product
-            lockable << '商品无法调色'
+            lockable << "#{order.title}: 无法调色"
           else
-            lockable << '商品库存不足'
+            lockable << "#{order.title}: 库存不足"
           end
 
           next
@@ -26,7 +26,7 @@ module TaobaoProductsLockable
         product = products.first
 
         unless product && product.activity > order.num
-          lockable << '商品库存不足'
+          lockable << "#{order.title}: 库存不足"
           next
         end
       end

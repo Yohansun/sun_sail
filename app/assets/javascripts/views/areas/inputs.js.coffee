@@ -67,15 +67,9 @@ class MagicOrders.Views.AreasInputs extends Backbone.View
     @seller_name = ''
     $(".trade_seller").text('')
 
-
   get_seller: (area_id)->
-    $.get('/api/trades/' + @trade_id + '/seller_for_area', {area_id: area_id}, (data)=>
+    $.get '/api/trades/' + @trade_id + '/seller_for_area', {area_id: area_id}, (data)=>
       $("#trade_seller_id").val(data.seller_id);
       $('.trade_seller').html(data.seller_name);
       unless data.dispatchable
         $('.trade_seller').css('color', 'red')
-        $('.set_seller').hide()
-      else
-        $('.set_seller').show()
-    )
-
