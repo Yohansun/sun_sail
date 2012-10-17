@@ -44,7 +44,11 @@
           <% end %>
           <tr>
             <th>配送经销商</th>
-            <td colspan="3" class="seller_id" data="1764"><%= trade.seller_name %></td>
+            <% if trade.error == false : %>
+            <td colspan="3" class="seller_id" data="<%= trade.seller_id%>"><%= trade.seller_name %></td>
+            <% else : %>
+            <td colspan="3" class="seller_id" data="<%= trade.seller_id%>" style='color:red;'><%= trade.seller_name %></td>
+            <% end %>
           </tr>
         </tbody>
       </table>
