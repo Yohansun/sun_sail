@@ -108,7 +108,7 @@ class TradeDecorator < Draper::Base
       when 'TaobaoTrade'
         trade.receiver_address
       when 'JingdongTrade'
-        trade.consignee_info['full_address'].delete(self.receiver_state).delete(self.receiver_city).delete(self.receiver_district)
+        trade.consignee_info['full_address'].try(:delete, self.receiver_state).try(:delete, self.receiver_city).try(:delete, self.receiver_district)
     end
   end
 
