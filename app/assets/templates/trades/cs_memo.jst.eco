@@ -6,7 +6,11 @@
   <fieldset>
     <label class="control-label">整单备注：
       <div class="controls">
+        <% unless MagicOrders.role_key == 'seller' : %>
         <input type="text" placeholder="输入文字..." class="input-xlarge" id="cs_memo_text" value="<%= @trade.get 'cs_memo' %>">
+        <% else : %>
+        <label class="control-label"><%= @trade.get 'cs_memo' %>
+        <% end %>
       </div>
     </label>
     
@@ -33,7 +37,11 @@
           <td><%= order.title %> x <%= order.num %></td>
           <td>
             <div class="controls">
+              <% unless MagicOrders.role_key == 'seller' : %>
               <input type="text" placeholder="输入文字..." class="input-xlarge order_cs_memo" data-order-id="<%= order.id %>" value="<%= order.cs_memo %>">
+              <% else : %>
+              <label class="control-label"><%= order.cs_memo %>
+              <% end %>
             </div>
           </td>
         </tr>
@@ -44,6 +52,10 @@
 </div>
 
 <div class="modal-footer">
+  <% unless MagicOrders.role_key == 'seller' : %>
   <a class="btn" data-dismiss="modal">取消</a>
   <a class="btn btn-primary save">保存备注</a>
+  <% else : %>
+  <a class="btn" data-dismiss="modal">关闭</a>
+  <% end %>
 </div><!-- modal-footer -->
