@@ -445,9 +445,9 @@ class TradesController < ApplicationController
 
     if @trade.save
       @trade = TradeDecorator.decorate(@trade)
-      if notifer_seller_flag && @trade.status == "WAIT_SELLER_SEND_GOODS"
-        TradeDispatchEmail.perform_async(id, seller_id, 'second')
-        TradeDispatchSms.perform_async(id, seller_id, 'second')
+      if notifer_seller_flag && @trade.status == "WAIT_SELLER_SEND_GOODS" && @trade.seller
+        TradeDispatchEmail.perform_async(@trade.id, @trade.seller_id, 'second')
+        TradeDispatchSms.perform_async(@trade.id, @trade.seller_id, 'second')
       end  
       respond_with(@trade) do |format|
         format.json { render :show, status: :ok }
