@@ -40,6 +40,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     @pay_end_date = null
     @search_logistic = null
 
+    @identity = MagicOrders.role_key
     @offset = @collection.length
     @first_rendered = false
 
@@ -74,11 +75,11 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     @collection.each(@appendTrade)
     $("a[rel=popover]").popover(placement: 'left')
     @render_select_state()
-    if MagicOrders.role_key == 'seller'
+    if @identity == 'seller'
       $(@el).find(".trade_nav").text("未发货订单")
-    if MagicOrders.role_key == 'logistic'
+    if @identity == 'logistic'
       $(@el).find(".trade_nav").text("物流单")
-    if MagicOrders.role_key == 'cs'
+    if @identity == 'cs'
       $(@el).find(".trade_nav").text("未分流订单")
     this
 
@@ -222,7 +223,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
         $(@el).find(".trade_pops li [data-type=#{pop}]").parent().show()
 
   fetch_new_trades: =>
-    @collection.fetch add: true, data: {trade_type: @trade_type, offset: 0, limit: $("#newTradesNotifer span").text()}, success: (collection) =>
+    @collection.fetch add: true, data: {identity: @identity, trade_type: @trade_type, offset: 0, limit: $("#newTradesNotifer span").text()}, success: (collection) =>
       @renderNew()
       $("#newTradesNotifer").hide()
 
@@ -230,7 +231,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     event.preventDefault()
 
     blocktheui()
-    @collection.fetch data: {trade_type: @trade_type, offset: @offset, search: {option: @search_option, value: @search_value}, search_all: {@search_start_date, @search_start_time, @pay_start_time, @pay_end_time, @pay_start_date, @pay_end_date, @search_end_date, @search_end_time, @status_option, @type_option, @state_option, @state_option, @city_option, @district_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_invoice, @search_color, @search_logistic}, search_deliverbill_status: @search_deliverbill_status, logistic_status: @logistic_status, search_trade_status: @search_trade_status, search_invoice_status: @search_invoice_status, search_color_status: @search_color_status}, success: (collection) =>
+    @collection.fetch data: {identity: @identity, trade_type: @trade_type, offset: @offset, search: {option: @search_option, value: @search_value}, search_all: {@search_start_date, @search_start_time, @pay_start_time, @pay_end_time, @pay_start_date, @pay_end_date, @search_end_date, @search_end_time, @status_option, @type_option, @state_option, @state_option, @city_option, @district_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_invoice, @search_color, @search_logistic}, search_deliverbill_status: @search_deliverbill_status, logistic_status: @logistic_status, search_trade_status: @search_trade_status, search_invoice_status: @search_invoice_status, search_color_status: @search_color_status}, success: (collection) =>
       if collection.length > 0
         @offset = @offset + 20
         @renderUpdate()
@@ -284,7 +285,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     @search_logistic = $("#search_logistic").val()
 
     @collection.fetch data: {trade_type: @trade_type, search_all: {@search_start_date, @search_start_time, @pay_start_time, @pay_end_time, @pay_start_date, @pay_end_date, @search_end_date, @search_end_time, @status_option, @type_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_invoice, @search_color}}, success: (collection) =>
-      Backbone.history.navigate("/api/trades.xls?trade_type=#{@trade_type}&search%5Boption%5D=#{@search_option}&search%5Bvalue%5D=#{@search_value}&search_all%5Bsearch_start_date%5D=#{@search_start_date}&search_all%5Bsearch_start_time%5D=#{@search_start_time}&search_all%5Bsearch_end_date%5D=#{@search_end_date}&search_all%5Bsearch_end_time%5D=#{@search_end_time}&search_all%5Bstatus_option%5D=#{@status_option}&search_all%5Btype_option%5D=#{@type_option}&search_all%5Bstate_option%5D=#{@state_option}&search_all%5Bcity_option%5D=#{@city_option}&search_all%5Bdistrict_option%5D=#{@district_option}&search_all%5Bsearch_buyer_message%5D=#{@search_buyer_message}&search_all%5Bsearch_seller_memo%5D=#{@search_seller_memo}&search_all%5Bsearch_cs_memo%5D=#{@search_cs_memo}&search_all%5Bsearch_invoice%5D=#{@search_invoice}&search_all%5Bsearch_color%5D=#{@search_color}&search_all%5Bpay_start_time%5D=#{@pay_start_time}&search_all%5Bpay_end_time%5D=#{@pay_end_time}&search_all%5Bpay_start_date%5D=#{@pay_start_date}&search_all%5Bpay_end_date%5D=#{@pay_end_date}&search_all%5Bsearch_logistic%5D=#{@search_logistic}&limit=1000000&offset=0", true)
+      Backbone.history.navigate("/api/trades.xls?identity=#{@identity}&trade_type=#{@trade_type}&search%5Boption%5D=#{@search_option}&search%5Bvalue%5D=#{@search_value}&search_all%5Bsearch_start_date%5D=#{@search_start_date}&search_all%5Bsearch_start_time%5D=#{@search_start_time}&search_all%5Bsearch_end_date%5D=#{@search_end_date}&search_all%5Bsearch_end_time%5D=#{@search_end_time}&search_all%5Bstatus_option%5D=#{@status_option}&search_all%5Btype_option%5D=#{@type_option}&search_all%5Bstate_option%5D=#{@state_option}&search_all%5Bcity_option%5D=#{@city_option}&search_all%5Bdistrict_option%5D=#{@district_option}&search_all%5Bsearch_buyer_message%5D=#{@search_buyer_message}&search_all%5Bsearch_seller_memo%5D=#{@search_seller_memo}&search_all%5Bsearch_cs_memo%5D=#{@search_cs_memo}&search_all%5Bsearch_invoice%5D=#{@search_invoice}&search_all%5Bsearch_color%5D=#{@search_color}&search_all%5Bpay_start_time%5D=#{@pay_start_time}&search_all%5Bpay_end_time%5D=#{@pay_end_time}&search_all%5Bpay_start_date%5D=#{@pay_start_date}&search_all%5Bpay_end_date%5D=#{@pay_end_date}&search_all%5Bsearch_logistic%5D=#{@search_logistic}&limit=1000000&offset=0", true)
       location.reload()
       Backbone.history.navigate('trades')
 

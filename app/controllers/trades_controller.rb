@@ -11,14 +11,14 @@ class TradesController < ApplicationController
     seller = current_user.seller
     logistic = current_user.logistic
 
-    if current_user.has_role?(:seller)
+    if current_user.has_role?(:seller) || params[:identity] == 'seller'
       if seller
         @trades = Trade.where(seller_id: seller.id)
       else
         render json: []
         return
       end
-    elsif current_user.has_role?(:interface)
+    elsif current_user.has_role?(:interface) || params[:identity] == 'interface'
       if seller
         @trades = Trade.where(:seller_id.in => seller.child_ids)
       else
@@ -27,7 +27,7 @@ class TradesController < ApplicationController
       end
     end
 
-    if current_user.has_role?(:logistic)
+    if current_user.has_role?(:logistic) || params[:identity] == 'logistic'
       if logistic
         @trades = Trade.where(logistic_id: logistic.id)
       else
@@ -122,12 +122,12 @@ class TradesController < ApplicationController
     end
 
     # 经销商登录默认显示未分流订单
-    if params[:search_trade_status].blank? && params[:search].blank? && params[:search_all].blank? && current_user.has_role?(:seller)
+    if current_user.has_role?(:seller) && params[:identity] == 'seller'
       @trades = @trades.where("$and" => [{:dispatched_at.ne => nil},{:dispatched_at.exists => true},{:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"]}])
     end
 
     # 客服登录默认显示未分流订单
-    if params[:search_trade_status].blank? && params[:search].blank? && params[:search_all].blank? && current_user.has_role?(:cs)
+    if current_user.has_role?(:cs) && params[:identity] == 'cs'
       @trades = @trades.where("$or" => [{seller_id: nil},{:seller_id.exists => false}])
       @trades = @trades.where(:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"])
     end
