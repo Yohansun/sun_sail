@@ -263,15 +263,11 @@ class TradesController < ApplicationController
       @trades = @trades.where(logistic_name: logi_name)
     end
 
+    #过滤有留言但还在抓取
+    still_fetching_hash = {"$or" => [{:has_buyer_message.ne => true}, {:buyer_message.ne => nil}]}
 
     # 高级搜索$or,$and集中筛选
-    if (params[:search_all] && (params[:search_all][:state_option].present? || (params[:search_all][:city_option].present? && params[:search_all][:city_option] != 'undefined') || (params[:search_all][:district_option].present? && params[:search_all][:district_option] != 'undefined') || params[:search_all][:search_invoice] == "true" || params[:search_all][:search_seller_memo] == "true" || params[:search_all][:search_buyer_message] == "true")) || (params[:search] && (params[:search][:option] == 'receiver_name' || params[:search][:option] == 'receiver_mobile'))
-      @trades = @trades.where("$and" => [receiver_name_hash, receiver_mobile_hash, seller_memo_hash, buyer_message_hash, invoice_all_hash, receiver_state_hash, receiver_city_hash, receiver_district_hash].compact)
-    end
-
-
-    #过滤有留言但还在抓取
-    @trades = @trades.where("$or" => [{:has_buyer_message.ne => true}, {:buyer_message.ne => nil}])
+    @trades = @trades.where("$and" => [receiver_name_hash, receiver_mobile_hash, seller_memo_hash, buyer_message_hash, invoice_all_hash, receiver_state_hash, receiver_city_hash, receiver_district_hash, still_fetching_hash].compact)
 
     ###筛选结束###
 
