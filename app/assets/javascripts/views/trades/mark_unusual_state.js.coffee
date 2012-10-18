@@ -46,7 +46,7 @@ class MagicOrders.Views.TradesMarkUnusualState extends Backbone.View
         $.unblockUI()
         alert("输入错误")
 
-  manage: ->
+  manage: (event) ->
     blocktheui()
 
     id = $(event.target).data("id")
