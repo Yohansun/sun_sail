@@ -181,7 +181,7 @@
 </td>
 <td data-col='color_info'>
   <% if @trade.get('has_color_info') == true : %>
-    <a href="javascript:void(0)" rel="popover" data-content="<% for order in @trade.get('orders'): %> <%= order.title %> x <%= order.num %> <br /> <% if order.color_num: %> <% for count in [0...order.num] : %> <% if order.color_num[count] != null : %> <b><%= order.color_num[count] %></b> <b><%= order.color_name[count] %></b> <br/><% end %><% end %><% end %><% end %>" data-original-title="<b>调色信息</b>"><i class="icon-color"></i></a>
+    <a data-toggle="modal" href="javascript:void(0)" data-type="color_info"><i class="icon-color"></i></a>
   <% end %>
 </td>
 <td data-col='invoice_info'>
