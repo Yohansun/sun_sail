@@ -60,7 +60,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     $('#logistic_waybill').on 'hide', (event) ->
       Backbone.history.navigate('trades')
 
-    $('#trade_mark_unusual_state').on 'hide', (event) ->
+    $('#trade_mark_unusual_state').on 'hidden', (event) ->
       Backbone.history.navigate('trades')
 
     $('#trade_operation_log').on 'hide', (event) ->
@@ -310,6 +310,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
 
       view = new MagicOrders.Views.TradesMarkUnusualState(model: model)
       $('#trade_mark_unusual_state').html(view.render().el)
+      $('.pick_plan_detail .datepicker').datepicker(format: 'yyyy-mm-dd')
       $('#trade_mark_unusual_state').modal('show')
 
   operation_log: (id) ->

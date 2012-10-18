@@ -79,7 +79,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
       $(@el).find(".trade_nav").text("未发货订单")
     if @identity == 'logistic'
       $(@el).find(".trade_nav").text("物流单")
-    if @identity == 'cs'
+    if @identity == 'cs' or @identity == 'admin'
       $(@el).find(".trade_nav").text("未分流订单")
     this
 
