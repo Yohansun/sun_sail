@@ -320,7 +320,6 @@ class TradesController < ApplicationController
   def show
     @trade = TradeDecorator.decorate(Trade.where(_id: params[:id]).first)
     @splited_orders = matched_seller_info(@trade)
-    logger.debug @splited_orders.inspect
     respond_with @trade
   end
 
@@ -509,8 +508,8 @@ class TradesController < ApplicationController
 
   def split_trade
     trade = Trade.find params[:id]
-    split_hash = params[:split_result].values
-    new_trade_ids = split_orders(trade, false, split_hash)
+    # split_hash = params[:split_result].values
+    new_trade_ids = split_orders(trade)
 
     respond_to do |format|
       format.json { render json: {ids: new_trade_ids} }

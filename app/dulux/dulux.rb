@@ -62,30 +62,32 @@ module Dulux
       splitted_orders
     end
 
-    def manual_match_seller_with_conditions(trade, split_hash)
-      return if split_hash.blank?
-      grouped_orders = {}
-      splitted_orders = []
 
-      split_hash.each do |split|
-        tmp = grouped_orders["#{split[:seller_id]}"] || []
-        order = trade.orders.select{|order| order.outer_iid == split[:order_id]}.first
-        s_order = split_by_color(order, split[:color_num], split[:num])
-        tmp << s_order
-        grouped_orders["#{split[:seller_id]}"] = tmp
-      end
+    # 适用于手动选择拆分经销商
+    # def manual_match_seller_with_conditions(trade, split_hash)
+    #   return if split_hash.blank?
+    #   grouped_orders = {}
+    #   splitted_orders = []
 
-      grouped_orders.each do |key, value|
-        splitted_orders << {
-          orders: value,
-          post_fee: 0,
-          default_seller: key,
-          total_fee: value.inject(0) { |sum, el| sum + el.total_fee }
-        }
-      end
+    #   split_hash.each do |split|
+    #     tmp = grouped_orders["#{split[:seller_id]}"] || []
+    #     order = trade.orders.select{|order| order.outer_iid == split[:order_id]}.first
+    #     s_order = split_by_color(order, split[:color_num], split[:num])
+    #     tmp << s_order
+    #     grouped_orders["#{split[:seller_id]}"] = tmp
+    #   end
 
-      splitted_orders
-    end
+    #   grouped_orders.each do |key, value|
+    #     splitted_orders << {
+    #       orders: value,
+    #       post_fee: 0,
+    #       default_seller: key,
+    #       total_fee: value.inject(0) { |sum, el| sum + el.total_fee }
+    #     }
+    #   end
+
+    #   splitted_orders
+    # end
 
     def split_by_color(order, num, count)
       count = count.to_i
