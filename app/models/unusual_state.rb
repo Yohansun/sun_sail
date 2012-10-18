@@ -4,13 +4,15 @@ class UnusualState
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  field :reason,       type: String
-  field :key,          type: String
+  field :reason,         type: String
+  field :key,            type: String
+  field :note,           type: String
 
-  field :created_at,   type: DateTime
-  field :reporter,     type: String
-  field :repair_man,   type: String
-  field :repaired_at,  type: DateTime
+  field :reporter,       type: String
+  field :repair_man,     type: String
+  field :plan_repair_at, type: DateTime
+  field :repaired_at,    type: DateTime
+  field :created_at,     type: DateTime
 
   embedded_in :trades
 

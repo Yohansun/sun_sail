@@ -9,8 +9,10 @@
         <th>异常原因</th>
         <th>提交时间</th>
         <th>提交人</th>
-        <th>处理人</th>
+        <th>预约处理时间</th>
         <th>处理时间</th>
+        <th>处理人</th>
+        <th>备注</th>
         <th>操作</th>
       </tr>
     </thead>
@@ -20,46 +22,65 @@
         <td><%= state.reason %></td>
         <td><%= state.created_at %></td>
         <td><%= state.reporter %></td>
-        <td><%= state.repair_man %></td>
+        <td><%= state.plan_repair_at %></td>
         <td><%= state.repaired_at %></td>
+        <td><%= state.repair_man %></td>
+        <td><%= state.note %></td>
         <td><% unless state.repaired_at : %><a class="small manage" data-id='<%= state.id %>'>处理</a><% end %></td>
       </tr>
       <% end %>
     </tbody>
   </table>
-  <fieldset>
-    <div class="control-group">
-      <label class="control-label">订单号：<%= @trade.get("tid") %></label>
+  <fieldset class="clearfix">
+    <div class="w_48 pull-left">
+      <div class="control-group">
+        <label class="control-label">订单号：<%= @trade.get("tid") %></label>
+      </div>
+
+      <div class="control-group">
+        <div class="controls">
+          <label class="radio">
+            <input type="radio" value="买家延迟发货" name="reason">买家延迟发货
+          </label>
+          <label class="radio">
+            <input type="radio" value="卖家长时间未发货" name="reason">卖家长时间未发货
+          </label>
+          <label class="radio">
+            <input type="radio" value="经销商缺货" name="reason">经销商缺货
+          </label>
+          <label class="radio">
+            <input type="radio" value="经销商无法调色" name="reason">经销商无法调色
+          </label>
+          <label class="radio">
+            <input type="radio" value="买家要求退款" name="reason">买家要求退款
+          </label>
+          <label class="radio">
+            <input type="radio" value="买家要求退货" name="reason">买家要求退货
+          </label>
+          <label class="radio">
+            <input type="radio" value= "其他" name="reason" id="other_radio">
+            <input type="text" placeholder="其他..." class="input-large" id="other_state">
+          </label>
+        </div>
+      </div>
+
+      <div class="control-group pick_plan_detail">
+        <div class="controls">预计处理时间：<input type="text" class="input-small datepicker nomargin" id="plan_repair_at"></div>
+      </div>
     </div>
 
-    <div class="control-group">
-      <div class="controls">
-        <label class="radio">
-          <input type="radio" value="买家延迟发货" name="reason">买家延迟发货
-        </label>
-        <label class="radio">
-          <input type="radio" value="卖家长时间未发货" name="reason">卖家长时间未发货
-        </label>
-        <label class="radio">
-          <input type="radio" value="经销商缺货" name="reason">经销商缺货
-        </label>
-        <label class="radio">
-          <input type="radio" value="经销商无法调色" name="reason">经销商无法调色
-        </label>
-        <label class="radio">
-          <input type="radio" value="买家要求退款" name="reason">买家要求退款
-        </label>
-        <label class="radio">
-          <input type="radio" value="买家要求退货" name="reason">买家要求退货
-        </label>
-        <label class="radio">
-          <input type="radio" value= "其他" name="reason" id="other_radio">
-          <input type="text" placeholder="其他..." class="input-large" id="other_state">
-        </label>
+    <div class="w_48 pull-right">
+      <div class="control-group">
+        <label class="control-label">备注：</label>
+        <textarea rows="10" style="width:96%;resize:none;" placeholder="备注..." id="state_note"></textarea>
       </div>
     </div>
   </fieldset>
 </div>
+
+
+
+
 <div class="modal-footer">
   <a class="btn" data-dismiss="modal">取消</a>
   <a class="btn btn-primary save">添加</a>

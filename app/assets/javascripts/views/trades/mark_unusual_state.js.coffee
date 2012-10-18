@@ -26,13 +26,19 @@ class MagicOrders.Views.TradesMarkUnusualState extends Backbone.View
         return
       else
         @reason = $("#other_state").val()
+    else if @reason is undefined
+      $.unblockUI()
+      alert("请选择异常")
+      return
 
     for state in @model.get('unusual_states')
       if state.reason is @reason
         $.unblockUI()
         alert("异常已标注过")
         return
-     	
+
+    @model.set "plan_repair_at", $("#plan_repair_at").val()
+    @model.set "state_note", $("#state_note").val()
     @model.set "operation", "标注异常"
     @model.save {'reason': @reason},
       success: (model, response) =>

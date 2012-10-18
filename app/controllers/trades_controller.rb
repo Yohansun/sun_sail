@@ -380,7 +380,7 @@ class TradesController < ApplicationController
     end
 
     unless params[:reason].blank?
-      state = @trade.unusual_states.build(reason: params[:reason], created_at: Time.now, reporter: current_user.name)
+      state = @trade.unusual_states.build(reason: params[:reason], plan_repair_at: params[:plan_repair_at], note: params[:state_note], created_at: Time.now, reporter: current_user.name)
       state.update_attributes(key: state.add_key)
     end
 
