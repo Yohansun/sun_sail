@@ -19,7 +19,7 @@ window.MagicOrders =
       #trade_mode
       'trades':                  ['deliver', 'logistic_waybill', 'confirm_receive', 'logistic_memo', 'detail', 'seller', 'cs_memo', 'color', 'invoice', 'trade_split', 'trade_unsplit', 'mark_unusual_state', 'reassign', 'refund', 'check_goods', 'deliver', 'seller_confirm_deliver', 'seller_confirm_invoice', 'barcode', 'check_goods', 'logistic_split', 'print_logistic_bill', 'print_deliver_bill', 'confirm_refund', 'operation_log','confirm_color','confirm_check_goods', 'logistic_waybill'],
       'deliver':                 ['detail', 'print_deliver_bill'],
-      'logistics':               ['detail'],
+      'logistics':               ['detail', 'logistic_waybill', 'confirm_receive', 'logistic_memo'],
       'check':                   ['detail'],
       'send':                    ['deliver', 'seller_confirm_deliver','detail'],
       'return':                  ['detail'],

@@ -126,8 +126,8 @@ class TradesController < ApplicationController
       @trades = @trades.where("$and" => [{:dispatched_at.ne => nil},{:dispatched_at.exists => true},{:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"]}])
     end
 
-    # 客服登录默认显示未分流订单
-    if current_user.has_role?(:cs) && params[:identity] == 'cs'
+    # 管理员，客服登录默认显示未分流订单
+    if (current_user.has_role?(:cs) && params[:identity] == 'cs') || (current_user.has_role?(:admin) && params[:identity] == 'admin')
       @trades = @trades.where("$or" => [{seller_id: nil},{:seller_id.exists => false}])
       @trades = @trades.where(:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"])
     end
@@ -143,12 +143,14 @@ class TradesController < ApplicationController
     end
 
     # 物流单
-    # 物流单是否已打印
+    # 物流单号是否已设置
     if params[:logistic_status] == "logistic_all"
-    elsif params[:logistic_status] == "logistic_unprinted"
-      @trades = @trades.where(:logistic_printed_at.exists => false)
-    elsif params[:logistic_status] == "logistic_printed"
-      @trades = @trades.where(:logistic_printed_at.exists => true)
+    elsif params[:logistic_status] == "logistic_waybill_void"
+      @trades = @trades.where(:logistic_waybill.exists => false)
+      @trades = @trades.where(:status.in => ["WAIT_BUYER_CONFIRM_GOODS","WAIT_GOODS_RECEIVE_CONFIRM","WAIT_BUYER_CONFIRM_GOODS_ACOUNTED","WAIT_SELLER_SEND_GOODS_ACOUNTED"])
+    elsif params[:logistic_status] == "logistic_waybill_exist"
+      @trades = @trades.where(:logistic_waybill.exists => true)
+      @trades = @trades.where(:status.in => ["WAIT_BUYER_CONFIRM_GOODS","WAIT_GOODS_RECEIVE_CONFIRM","WAIT_BUYER_CONFIRM_GOODS_ACOUNTED","WAIT_SELLER_SEND_GOODS_ACOUNTED"])
     end
 
     #发票
