@@ -121,7 +121,7 @@ class TradesController < ApplicationController
       end
     end
 
-    # 经销商登录默认显示未分流订单
+    # 经销商登录默认显示未发货订单
     if current_user.has_role?(:seller) && params[:identity] == 'seller'
       @trades = @trades.where("$and" => [{:dispatched_at.ne => nil},{:dispatched_at.exists => true},{:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"]}])
     end
@@ -136,8 +136,10 @@ class TradesController < ApplicationController
     # 发货单是否已打印
     if params[:search_deliverbill_status] == "deliver_bill_unprinted"
       @trades = @trades.where(:deliver_bill_printed_at.exists => false)
+      @trades = @trades.where("$and" => [{:dispatched_at.ne => nil},{:dispatched_at.exists => true},{:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT","WAIT_BUYER_CONFIRM_GOODS","WAIT_GOODS_RECEIVE_CONFIRM","WAIT_BUYER_CONFIRM_GOODS_ACOUNTED","WAIT_SELLER_SEND_GOODS_ACOUNTED"]}])
     elsif params[:search_deliverbill_status] == "deliver_bill_printed"
       @trades = @trades.where(:deliver_bill_printed_at.exists => true)
+      @trades = @trades.where("$and" => [{:dispatched_at.ne => nil},{:dispatched_at.exists => true},{:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT","WAIT_BUYER_CONFIRM_GOODS","WAIT_GOODS_RECEIVE_CONFIRM","WAIT_BUYER_CONFIRM_GOODS_ACOUNTED","WAIT_SELLER_SEND_GOODS_ACOUNTED"]}])
     end
 
     # 物流单
@@ -263,11 +265,13 @@ class TradesController < ApplicationController
       @trades = @trades.where(logistic_name: logi_name)
     end
 
-    #过滤有留言但还在抓取
-    still_fetching_hash = {"$or" => [{:has_buyer_message.ne => true}, {:buyer_message.ne => nil}]}
-
     # 高级搜索$or,$and集中筛选
-    @trades = @trades.where("$and" => [receiver_name_hash, receiver_mobile_hash, seller_memo_hash, buyer_message_hash, invoice_all_hash, receiver_state_hash, receiver_city_hash, receiver_district_hash, still_fetching_hash].compact)
+      if (params[:search_all] && (params[:search_all][:state_option].present? || (params[:search_all][:city_option].present? && params[:search_all][:city_option] != 'undefined') || (params[:search_all][:district_option].present? && params[:search_all][:district_option] != 'undefined') || params[:search_all][:search_invoice] == "true" || params[:search_all][:search_seller_memo] == "true" || params[:search_all][:search_buyer_message] == "true")) || (params[:search] && (params[:search][:option] == 'receiver_name' || params[:search][:option] == 'receiver_mobile'))
+        @trades = @trades.where("$and" => [receiver_name_hash, receiver_mobile_hash, seller_memo_hash, buyer_message_hash, invoice_all_hash, receiver_state_hash, receiver_city_hash, receiver_district_hash].compact)
+      end
+
+    # 过滤有留言但还在抓取         ####这个筛选很特殊，写在这里会完全搞乱逻辑，我先注释掉了####
+    # @trades = @trades.where("$or" => [{:has_buyer_message.ne => true}, {:buyer_message.ne => nil}])
 
     ###筛选结束###
 
