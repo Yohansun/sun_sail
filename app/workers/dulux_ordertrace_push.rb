@@ -4,8 +4,24 @@ class DuluxOrdertracePush
   sidekiq_options :queue => :taobao
   
   def perform(tid)
+    
+    
+    #dummy send #调用该接口可实现无需物流（虚拟）发货,使用该接口发货，交易订单状态会直接变成卖家已发货
     code = false
     trade = TaobaoTrade.where(tid: tid).first
+    dummy_send_response = TaobaoQuery.get({
+      method: 'taobao.logistics.dummy.send',
+      tid:tid
+      }, trade.try(:trade_source_id)
+    )
+    p dummy_send_response
+    
+    if dummy_send_response['delivery_dummy_send_response']
+      p "start dummy send"
+      p response['shipping']['is_success']
+    end
+    
+    #push trace
     response = TaobaoQuery.get({
       method: 'taobao.logistics.ordertrace.push',
       mail_no: '762016565903',                         #快递单号        
