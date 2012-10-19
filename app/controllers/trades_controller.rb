@@ -514,9 +514,8 @@ class TradesController < ApplicationController
 
   def split_trade
     trade = Trade.find params[:id]
-    # split_hash = params[:split_result].values
     new_trade_ids = split_orders(trade)
-
+    trade.operation_logs.create(operated_at: Time.now, operation: '拆单')
     respond_to do |format|
       format.json { render json: {ids: new_trade_ids} }
     end
