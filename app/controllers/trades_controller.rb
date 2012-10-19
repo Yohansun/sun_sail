@@ -190,6 +190,13 @@ class TradesController < ApplicationController
       end
     end
 
+    # 发货单打印时间筛选
+    if params[:search_print_time] && params[:search_print_time][:from_deliver_print_date].present? && params[:search_print_time][:to_deliver_print_date].present?
+      print_start_time = "#{params[:search_print_time][:from_deliver_print_date]} #{params[:search_print_time][:from_deliver_print_time]}".to_time(form = :local)
+      print_end_time = "#{params[:search_print_time][:to_deliver_print_date]} #{params[:search_print_time][:to_deliver_print_time]}".to_time(form = :local)
+      @trades = @trades.where(:deliver_bill_printed_at.gte => print_start_time, :deliver_bill_printed_at.lte => print_end_time)
+    end
+
 
     ##高级搜索
 
@@ -414,6 +421,10 @@ class TradesController < ApplicationController
 
     if params[:logistic_memo].present?
       @trade.logistic_memo = params[:logistic_memo]
+    end
+
+    if params[:deliver_bill_printed_at] == true
+      @trade.deliver_bill_printed_at = Time.now
     end
 
     unless params[:orders].blank?
