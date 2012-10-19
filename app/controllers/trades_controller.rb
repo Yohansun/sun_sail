@@ -11,14 +11,19 @@ class TradesController < ApplicationController
     seller = current_user.seller
     logistic = current_user.logistic
 
-    if current_user.has_role?(:seller) || params[:identity] == 'seller'
+    paid_not_deliver_array = ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"]
+    paid_and_delivered_array = ["WAIT_BUYER_CONFIRM_GOODS","WAIT_GOODS_RECEIVE_CONFIRM","WAIT_BUYER_CONFIRM_GOODS_ACOUNTED","WAIT_SELLER_SEND_GOODS_ACOUNTED"]
+    closed_array = ["TRADE_CLOSED","TRADE_CANCELED","TRADE_CLOSED_BY_TAOBAO", "ALL_CLOSED"]
+    refund_array = ["TRADE_REFUNDING","WAIT_SELLER_AGREE","SELLER_REFUSE_BUYER","WAIT_BUYER_RETURN_GOODS","WAIT_SELLER_CONFIRM_GOODS","CLOSED", "SUCCESS"]
+
+    if current_user.has_role?(:seller)
       if seller
         @trades = Trade.where(seller_id: seller.id)
       else
         render json: []
         return
       end
-    elsif current_user.has_role?(:interface) || params[:identity] == 'interface'
+    elsif current_user.has_role?(:interface)
       if seller
         @trades = Trade.where(:seller_id.in => seller.child_ids)
       else
@@ -27,12 +32,24 @@ class TradesController < ApplicationController
       end
     end
 
-    if current_user.has_role?(:logistic) || params[:identity] == 'logistic'
+    if current_user.has_role?(:logistic)
       if logistic
         @trades = Trade.where(logistic_id: logistic.id)
       else
         render json: []
         return
+      end
+    end
+
+    ##登录时的默认显示
+    if params[:trade_type].blank? && params[:search_trade_status].blank? && params[:search].blank? && params[:search_all].blank? && params[:search_deliverbill_status].blank? && params[:logistic_status].blank? && params[:search_color_status].blank? && params[:search_print_time].blank?
+      # 经销商登录默认显示未发货订单
+      if current_user.has_role?(:seller)
+        @trades = @trades.where("$and" => [{:dispatched_at.exists => true},{:status.in => paid_not_deliver_array}])
+      end
+      # 管理员，客服登录默认显示未分流订单
+      if current_user.has_role?(:cs) || current_user.has_role?(:admin)
+        @trades = @trades.where("$and" => [{"$or" => [{seller_id: nil},{:seller_id.exists => false}]},{:status.in => paid_not_deliver_array}])
       end
     end
 
@@ -81,95 +98,74 @@ class TradesController < ApplicationController
     end
 
     if unusual_trade_hash_1
-      @trades = @trades.where("$and" => [unusual_trade_hash_1,{:status.nin => ["TRADE_CLOSED","TRADE_CANCELED","TRADE_CLOSED_BY_TAOBAO", "ALL_CLOSED"]}])
+      @trades = @trades.where("$and" => [unusual_trade_hash_1,{:status.nin => closed_array}])
     end
     
     if unusual_trade_hash_2
-      @trades = @trades.where("$and" => [unusual_trade_hash_2,{:seller_id.exists => false}])
-      @trades = @trades.where(:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"])
+      @trades = @trades.where("$and" => [unusual_trade_hash_2,{:seller_id.exists => false},{:status.in => paid_not_deliver_array}])
     end
 
     if unusual_trade_hash_3
-      @trades = @trades.where(unusual_trade_hash_3)
-      @trades = @trades.where(:dispatched_at.exists => true)
-      @trades = @trades.where(:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"])
+      @trades = @trades.where("$and" => [unusual_trade_hash_3,{:dispatched_at.exists => true},{:status.in => paid_not_deliver_array}])
     end
 
-    ###筛选###
-
     ## 导航栏筛选
-
     # 订单
-    if !params[:search_trade_status].blank? && params[:search_trade_status] != 'null'
+    if params[:search_trade_status]
       status = params[:search_trade_status]
       if status == 'undispatched'
-        @trades = @trades.where("$or" => [{seller_id: nil},{:seller_id.exists => false}])
-        @trades = @trades.where(:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"])
+        @trades = @trades.where("$and" =>[{"$or" => [{seller_id: nil},{:seller_id.exists => false}]},{:status.in => paid_not_deliver_array}])
       elsif status == 'unpaid'
-        @trades = @trades.where(:status.in => ["WAIT_BUYER_PAY"])
+        @trades = @trades.where(status: "WAIT_BUYER_PAY")
       elsif status == 'undelivered'
-        @trades = @trades.where("$and" => [{:dispatched_at.exists => true},{:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"]}])
+        @trades = @trades.where("$and" => [{:dispatched_at.exists => true},{:status.in => paid_not_deliver_array}])
       elsif status == 'delivered'
-        @trades = @trades.where(:status.in => ["WAIT_BUYER_CONFIRM_GOODS","WAIT_GOODS_RECEIVE_CONFIRM","WAIT_BUYER_CONFIRM_GOODS_ACOUNTED","WAIT_SELLER_SEND_GOODS_ACOUNTED"])
+        @trades = @trades.where(:status.in => paid_and_delivered_array)
       elsif status == 'refund'
-        @trades = @trades.where(:status.in => ["TRADE_REFUNDING","WAIT_SELLER_AGREE","SELLER_REFUSE_BUYER","WAIT_BUYER_RETURN_GOODS","WAIT_SELLER_CONFIRM_GOODS","CLOSED", "SUCCESS"])
+        @trades = @trades.where(:status.in => refund_array)
       elsif status == 'closed'
-        @trades = @trades.where(:status.in => ["TRADE_CLOSED","TRADE_CANCELED","TRADE_CLOSED_BY_TAOBAO", "ALL_CLOSED"])
+        @trades = @trades.where(:status.in => closed_array)
       elsif status == 'unusual_trade'
-        @trades = @trades.where(:status.in => ["TRADE_NO_CREATE_PAY"])
+        @trades = @trades.where(status: "TRADE_NO_CREATE_PAY")
       end
     end
 
-    # 经销商登录默认显示未发货订单
-    if current_user.has_role?(:seller) && params[:identity] == 'seller'
-      @trades = @trades.where("$and" => [{:dispatched_at.exists => true},{:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"]}])
-    end
-
-    # 管理员，客服登录默认显示未分流订单
-    if (current_user.has_role?(:cs) && params[:identity] == 'cs') || (current_user.has_role?(:admin) && params[:identity] == 'admin')
-      @trades = @trades.where("$or" => [{seller_id: nil},{:seller_id.exists => false}])
-      @trades = @trades.where(:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"])
-    end
 
     # 发货单
     # 发货单是否已打印
     if params[:search_deliverbill_status] == "deliver_bill_unprinted"
-      @trades = @trades.where(:deliver_bill_printed_at.exists => false)
-      @trades = @trades.where("$and" => [{:dispatched_at.exists => true},{:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT","WAIT_BUYER_CONFIRM_GOODS","WAIT_GOODS_RECEIVE_CONFIRM","WAIT_BUYER_CONFIRM_GOODS_ACOUNTED","WAIT_SELLER_SEND_GOODS_ACOUNTED"]}])
+      @trades = @trades.where("$and" => [{:deliver_bill_printed_at.exists => false},{:dispatched_at.exists => true},{:status.in => paid_not_deliver_array + paid_and_delivered_array}])
     elsif params[:search_deliverbill_status] == "deliver_bill_printed"
-      @trades = @trades.where(:deliver_bill_printed_at.exists => true)
-      @trades = @trades.where("$and" => [{:dispatched_at.exists => true},{:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT","WAIT_BUYER_CONFIRM_GOODS","WAIT_GOODS_RECEIVE_CONFIRM","WAIT_BUYER_CONFIRM_GOODS_ACOUNTED","WAIT_SELLER_SEND_GOODS_ACOUNTED"]}])
+      @trades = @trades.where("$and" => [{:deliver_bill_printed_at.exists => true},{:dispatched_at.exists => true},{:status.in => paid_not_deliver_array + paid_and_delivered_array}])
     end
 
     # 物流单
     # 物流单号是否已设置
     if params[:logistic_status] == "logistic_all"
     elsif params[:logistic_status] == "logistic_waybill_void"
-      @trades = @trades.where(:logistic_waybill.exists => false)
-      @trades = @trades.where(:status.in => ["WAIT_BUYER_CONFIRM_GOODS","WAIT_GOODS_RECEIVE_CONFIRM","WAIT_BUYER_CONFIRM_GOODS_ACOUNTED","WAIT_SELLER_SEND_GOODS_ACOUNTED"])
+      @trades = @trades.where("$and" =>[{:logistic_waybill.exists => false},{:status.in => paid_and_delivered_array}])
     elsif params[:logistic_status] == "logistic_waybill_exist"
-      @trades = @trades.where(:logistic_waybill.exists => true)
-      @trades = @trades.where(:status.in => ["WAIT_BUYER_CONFIRM_GOODS","WAIT_GOODS_RECEIVE_CONFIRM","WAIT_BUYER_CONFIRM_GOODS_ACOUNTED","WAIT_SELLER_SEND_GOODS_ACOUNTED"])
+      @trades = @trades.where("$and" =>[{:logistic_waybill.exists => true},{:status.in => paid_and_delivered_array}])
     end
 
-    #发票
-    if params[:search_invoice_status] == 'invoice_all'
-      @trades = @trades.where("$or" => [{:invoice_name.exists => true},{:invoice_type.exists => true},{:invoice_content.exists => true}])
-    elsif params[:search_invoice_status] == 'invoice_unfilled'
-      @trades = @trades.where(:seller_confirm_invoice_at.exists => false)
-    elsif params[:search_invoice_status] == 'invoice_filled'
-      @trades = @trades.where(:seller_confirm_invoice_at.exists => true)
-    elsif params[:search_invoice_status] == 'invoice_sent'
-      @trades = @trades.where("$and" =>[{:status.in => ["WAIT_BUYER_CONFIRM_GOODS","WAIT_GOODS_RECEIVE_CONFIRM","WAIT_BUYER_CONFIRM_GOODS_ACOUNTED","WAIT_SELLER_SEND_GOODS_ACOUNTED"]},{:seller_confirm_invoice_at.exists => true}])
-    end
+    # #发票
+    # if params[:search_invoice_status] == 'invoice_all'
+    #   @trades = @trades.where(:invoice_name.exists => true)
+    # elsif params[:search_invoice_status] == 'invoice_unfilled'
+    #   @trades = @trades.where(:seller_confirm_invoice_at.exists => false)
+    # elsif params[:search_invoice_status] == 'invoice_filled'
+    #   @trades = @trades.where(:seller_confirm_invoice_at.exists => true)
+    # elsif params[:search_invoice_status] == 'invoice_sent'
+    #   @trades = @trades.where("$and" =>[{:status.in => paid_and_delivered_array},{:seller_confirm_invoice_at.exists => true}])
+    # end
 
     # 调色
     if params[:search_color_status] == "unmatched"
-      @trades = @trades.where("$and" => [{has_color_info: false},{:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"]}])
+      @trades = @trades.where("$and" => [{has_color_info: false},{:status.in => paid_not_deliver_array}])
     elsif params[:search_color_status] == "matched"
-      @trades = @trades.where("$and" => [{has_color_info: true},{:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"]},{:confirm_color_at.exists => false}])
+      @trades = @trades.where("$and" => [{has_color_info: true},{:status.in => paid_not_deliver_array},{:confirm_color_at.exists => false}])
     elsif params[:search_color_status] == "confirmed"
-      @trades = @trades.where("$and" =>[{has_color_info: true},{:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"]},{:confirm_color_at.exists => true}])
+      @trades = @trades.where("$and" =>[{has_color_info: true},{:status.in => paid_not_deliver_array},{:confirm_color_at.exists => true}])
     end
 
     ## 简单筛选
@@ -244,7 +240,7 @@ class TradesController < ApplicationController
 
     # 客服有备注
     if params[:search_all] && params[:search_all][:search_cs_memo] == "true"
-      @trades = @trades.where(:cs_memo.exists => true)
+      @trades = @trades.where(has_cs_memo: true)
     end
 
     # 卖家有备注
