@@ -5,27 +5,38 @@ class DuluxOrdertracePush
   
   def perform(tid)
     
+    code = false
     
     #dummy send #调用该接口可实现无需物流（虚拟）发货,使用该接口发货，交易订单状态会直接变成卖家已发货
-    code = false
-    trade = TaobaoTrade.where(tid: tid).first
-    dummy_send_response = TaobaoQuery.get({
-      method: 'taobao.logistics.dummy.send',
-      tid:tid
-      }, trade.try(:trade_source_id)
-    )
-    p dummy_send_response
+    # code = false
+    # trade = TaobaoTrade.where(tid: tid).first
+    # dummy_send_response = TaobaoQuery.get({
+    #   method: 'taobao.logistics.dummy.send',
+    #   tid: tid
+    #   }, trade.try(:trade_source_id)
+    # )
+    # p dummy_send_response
     
-    if dummy_send_response['delivery_dummy_send_response']
-      p "start dummy send"
-      p response['shipping']['is_success']
-    end
+    # if dummy_send_response['delivery_dummy_send_response']
+    #   p "start dummy send"
+    #   p response['shipping']['is_success']
+    # end
+    
+    # 自有物流发货
+    send_response = TaobaoQuery.get({
+      method: 'taobao.logistics.offline.send',
+      tid: trade.tid,
+      out_sid: '762016565903',
+      company_code: '自有物流'}, trade.try(:trade_source_id)
+    )
+    
+    p send_response
     
     #push trace
     response = TaobaoQuery.get({
       method: 'taobao.logistics.ordertrace.push',
       mail_no: '762016565903',                         #快递单号        
-      occure_time: Time.now,                    #流转节点发生时间
+      occure_time: Time.now.strftime("%Y-%m-%d %H:%M:%S"),                    #流转节点发生时间
       operate_detail: '浙江省杭州市西湖区上车扫描',                 #流转节点的详细地址及操作描述
       company_name:  '自有物流'                    #物流公司名称
       # operator_name:,                 #快递业务员名称
@@ -40,8 +51,7 @@ class DuluxOrdertracePush
     p response
 
     if response['logistics_ordertrace_push_response']
-      response = response['shipping']['is_success']
-      is_succsess = response['is_succsess']
+      code = response['logistics_ordertrace_push_response']['shipping']['is_success']
     end
     
     if code
