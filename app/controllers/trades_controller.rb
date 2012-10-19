@@ -81,13 +81,11 @@ class TradesController < ApplicationController
     end
 
     if unusual_trade_hash_1
-      @trades = @trades.where(unusual_trade_hash_1)
-      @trades = @trades.where(:status.nin => ["TRADE_CLOSED_BY_TAOBAO"])
+      @trades = @trades.where("$and" => [unusual_trade_hash_1,{:status.nin => ["TRADE_CLOSED","TRADE_CANCELED","TRADE_CLOSED_BY_TAOBAO", "ALL_CLOSED"]}])
     end
     
     if unusual_trade_hash_2
-      @trades = @trades.where(unusual_trade_hash_2)
-      @trades = @trades.where(:seller_id.exists => false)
+      @trades = @trades.where("$and" => [unusual_trade_hash_2,{:seller_id.exists => false}])
       @trades = @trades.where(:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"])
     end
 
