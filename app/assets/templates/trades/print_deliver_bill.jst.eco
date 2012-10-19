@@ -26,7 +26,26 @@
         <td><%= order.outer_iid %></td>
         <td><%= order.num %></td>
         <td><%= order.title %></td>
-        <td><% if order.color_num: %> <% for count in [0...order.num] : %> <% if order.color_num[count] != null : %> <b><%= order.color_num[count] %></b> <b><%= order.color_name[count] %></b> <br/><% end %><% end %><% end %></td>
+        <td>
+          <% index = 0 %>
+          <% for count in [0...order.num] : %>
+            <% if order.contents.length > 1 : %>
+              <% for item in order.contents : %>
+                <div class="controls">
+                  套装项目：<%= item %>
+                  <br/>
+                  <b><%= order.color_num[index] %></b>
+                </div>
+                <% index = index + 1 %>
+              <% end %>
+              <hr/>
+            <% else : %>
+              <div class="controls">
+                <%= order.color_num[count] %>
+              </div>
+            <% end %>
+          <% end %>
+        </td>
         <td><%= order.cs_memo %></td>
       </tr>
       <% end %>
@@ -42,5 +61,5 @@
 </div><!-- modal-body -->
 <div class="modal-footer">
   <a class="btn" data-dismiss="modal">关闭</a>
-  <a href="#" class="btn btn-primary button_print">打印</a>
+  <a href="/trades/<%= @trade.get('id') %>/print_bill" class="btn btn-primary button_print">打印</a>
 </div><!-- modal-footer -->

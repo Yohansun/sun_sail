@@ -71,6 +71,7 @@ MagicOrders::Application.routes.draw do
   get "trades/create", to: "trades#create"
   get "/trades/:id/sellers_info", to: "trades#sellers_info"
   get "/trades/:id/split_trade", to: "trades#split_trade"
+  get "/trades/:id/print_bill", to: "trades#print_bill"
 
   scope 'api' do
     get "areas", to: "areas#index"
