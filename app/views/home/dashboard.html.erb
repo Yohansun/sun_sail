@@ -3,7 +3,7 @@
 		<div class="centerDashboard hide">
 			<% if user_signed_in? %>
 				<div>
-					<a class="indexStart1" href="/trades"><span>订单管理</span></a>
+					<a class="indexStart1" href="/app#trades"><span>订单管理</span></a>
 				</div>
 
 				<% if current_user.has_role?(:seller) && current_user.seller -%>

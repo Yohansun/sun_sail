@@ -1,7 +1,7 @@
  <div class="row-fluid">
   <ul class="breadcrumb" style="position:relative;">
     <li><a href="/">Magic</a><span class="divider">/</span></li>
-    <li><a href='/trades'>订单管理</a><span class="divider">/</span></li>
+    <li><a href='/app#trades'>订单管理</a><span class="divider">/</span></li>
     <li class="active">订单设置</li>
   </ul><!-- breadcrumb -->
 
@@ -25,17 +25,17 @@
                 <%= f.input :app_key, :label => "app key：", :placeholder => "输入文字...", :input_html => {:class => 'input-xlarge'} %>
 
                	<%= f.input :secret_key, :label => "secret key：", :placeholder => "输入文字...", :input_html => {:class => 'input-xlarge'} %>
- 
+
                 <%= f.input :session, :label => "session：", :placeholder => "输入文字...", :input_html => {:class => 'input-xlarge'} %>
 
                 <%= f.input :fetch_quantity, collection: [20,50,100], :include_blank => true , :label => '获取数量：', :input_html => { :class=>"width_auto" } %>
-    
+
     						<%= f.input :fetch_time_circle, collection: [15,30,60], :include_blank => true , :label => '抓取频次：', :input_html => { :class=>"width_auto" } %>
 
                 <div class="control-group form-inline">
                   <label class="control-label" for="">高压阀：</label>
                   <div class="controls">
-                    <select id="set_valve_state" class="width_auto" name="trade_source[high_pressure_valve]">	
+                    <select id="set_valve_state" class="width_auto" name="trade_source[high_pressure_valve]">
                       <option value="true" <% if @trade_source.high_pressure_valve == true %> selected ="selected" <% end %>>打开</option>
                       <option value="false" <% if @trade_source.high_pressure_valve == false %> selected ="selected" <% end %>>关闭</option>
                     </select>

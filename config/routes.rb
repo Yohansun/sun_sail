@@ -51,7 +51,7 @@ MagicOrders::Application.routes.draw do
     member do
       get :delete
     end
-    collection do 
+    collection do
       get :logistic_area
       get :remove_logistic_area
       get :create_logistic_area
@@ -59,13 +59,13 @@ MagicOrders::Application.routes.draw do
       get :remove_logistic_user
       get :logistic_user
       get :logistic_user_list
-    end 
+    end
   end
 
   resources :users
   resources :areas
   resources :trade_sources
-  
+
   match '/alerts', to: 'trades#alerts'
   get "trades/new", to: "trades#new"
   get "trades/create", to: "trades#create"
@@ -92,5 +92,7 @@ MagicOrders::Application.routes.draw do
   mount MailsViewer::Engine => '/delivered_mails'
 
   root to: "home#dashboard"
+
+  match "/app", to: "home#index"
   match "*path", to: "home#index"
 end

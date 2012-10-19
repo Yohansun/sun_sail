@@ -100,7 +100,7 @@ class TradesController < ApplicationController
     if unusual_trade_hash_1
       @trades = @trades.where("$and" => [unusual_trade_hash_1,{:status.nin => closed_array}])
     end
-    
+
     if unusual_trade_hash_2
       @trades = @trades.where("$and" => [unusual_trade_hash_2,{:seller_id.exists => false},{:status.in => paid_not_deliver_array}])
     end
@@ -334,7 +334,7 @@ class TradesController < ApplicationController
   def update
     @trade = Trade.where(_id: params[:id]).first
     notifer_seller_flag = false
-    
+
     if params[:seller_id].present?
       seller = Seller.find_by_id params[:seller_id]
       @trade.dispatch!(seller) if seller
@@ -455,7 +455,7 @@ class TradesController < ApplicationController
       if notifer_seller_flag && @trade.status == "WAIT_SELLER_SEND_GOODS" && @trade.seller
         TradeDispatchEmail.perform_async(@trade.id, @trade.seller_id, 'second')
         TradeDispatchSms.perform_async(@trade.id, @trade.seller_id, 'second')
-      end  
+      end
       respond_with(@trade) do |format|
         format.json { render :show, status: :ok }
       end
@@ -504,7 +504,7 @@ class TradesController < ApplicationController
     @trade.tid = "000000" + Time.now.to_i.to_s
     @trade.taobao_orders.first.total_fee = 1
     if @trade.save
-      redirect_to "/trades"
+      redirect_to "/app#trades"
     else
       render trades_new_path
     end

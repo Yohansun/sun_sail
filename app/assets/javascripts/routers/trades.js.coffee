@@ -28,65 +28,11 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     $('#content').html('')
     @collection = new MagicOrders.Collections.Trades()
 
-    $('#trade_detail').on 'hide', (event) ->
-      Backbone.history.navigate('trades')
+    $('.modal').on 'hidden', (event) ->
+      Backbone.history.navigate('trades', true)
 
-    $('#trade_seller').on 'hide', (event) ->
-      Backbone.history.navigate('trades')
-
-    $('#trade_invoice').on 'hidden', (event) ->
-      Backbone.history.navigate('trades')
-
-    $('#trade_color').on 'hide', (event) ->
-      Backbone.history.navigate('trades')
-
-    $('#trade_deliver').on 'hide', (event) ->
-      Backbone.history.navigate('trades')
-
-    $('#trade_cs_memo').on 'hide', (event) ->
-      Backbone.history.navigate('trades')
-
-    $('#trade_invoice_number').on 'hide', (event) ->
-      Backbone.history.navigate('trades')
-
-    $('#trade_seller_confirm_deliver').on 'hide', (event) ->
-      Backbone.history.navigate('trades')
-
-    $('#trade_seller_confirm_invoice').on 'hide', (event) ->
-      Backbone.history.navigate('trades')
-
-    $('#trade_barcode').on 'hide', (event) ->
-      Backbone.history.navigate('trades')
-
-    $('#logistic_waybill').on 'hide', (event) ->
-      Backbone.history.navigate('trades')
-
-    $('#trade_mark_unusual_state').on 'hidden', (event) ->
-      Backbone.history.navigate('trades')
-
-    $('#trade_operation_log').on 'hide', (event) ->
-      Backbone.history.navigate('trades')
-
-    $('#trade_print_deliver_bill').on 'hide', (event) ->
-      Backbone.history.navigate('trades')
-
-    $('#trade_confirm_color').on 'hide', (event) ->
-      Backbone.history.navigate('trades')
-
-    $('#trade_color_info').on 'hide', (event) ->
-      Backbone.history.navigate('trades')
-
-    $('#trade_confirm_receive').on 'hide', (event) ->
-      Backbone.history.navigate('trades')
-
-    $('#trade_confirm_check_goods').on 'hide', (event) ->
-      Backbone.history.navigate('trades')
-
-    $('#trade_splited').on 'hide', (event) ->
-      Backbone.history.navigate('trades')
-
-    $('#trade_logistic_memo').on 'hide', (event) ->
-      Backbone.history.navigate('trades')
+    $('[data-toggle="modal"]').bind 'show', (event) ->
+      blocktheui()
 
   show_top_nav: ->
     $("#top-nav li").hide()
@@ -158,7 +104,6 @@ class MagicOrders.Routers.Trades extends Backbone.Router
           @mainView.fetch_new_trades()
 
   show: (id) ->
-    blocktheui()
     @model = new MagicOrders.Models.Trade(id: id)
     @model.fetch success: (model, response) =>
       $.unblockUI()
@@ -168,7 +113,6 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $('#trade_detail').modal('show')
 
   print_deliver_bill: (id) ->
-    blocktheui()
     @model = new MagicOrders.Models.Trade(id: id)
     @model.fetch success: (model, response) =>
       $.unblockUI()
@@ -178,8 +122,6 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $('#trade_print_deliver_bill').modal('show')
 
   seller: (id) ->
-    blocktheui()
-
     @model = new MagicOrders.Models.Trade(id: id)
     @model.fetch success: (model, response) =>
       $.unblockUI()
@@ -189,8 +131,6 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $('#trade_seller').modal('show')
 
   splited: (id) ->
-    blocktheui()
-
     @model = new MagicOrders.Models.Trade(id: id)
     @model.fetch data: {splited: true}, success: (model, response) =>
       $.unblockUI()
@@ -200,8 +140,6 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $('#trade_splited').modal('show')
 
   deliver: (id) ->
-    blocktheui()
-
     @model = new MagicOrders.Models.Trade(id: id)
     @model.fetch success: (model, response) =>
       $.unblockUI()
@@ -211,8 +149,6 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $('#trade_deliver').modal('show')
 
   cs_memo: (id) ->
-    blocktheui()
-
     @model = new MagicOrders.Models.Trade(id: id)
     @model.fetch success: (model, response) =>
       $.unblockUI()
@@ -222,8 +158,6 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $('#trade_cs_memo').modal('show')
 
   color: (id) ->
-    blocktheui()
-
     @model = new MagicOrders.Models.Trade(id: id)
     @model.fetch success: (model, response) =>
       $.unblockUI()
@@ -238,8 +172,6 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $('#trade_color').modal('show')
 
   invoice: (id) ->
-    blocktheui()
-
     @model = new MagicOrders.Models.Trade(id: id)
     @model.fetch success: (model, response) =>
       $.unblockUI()
@@ -250,8 +182,6 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $('#trade_invoice').modal('show')
 
   invoice_number: (id) ->
-    blocktheui()
-
     @model = new MagicOrders.Models.Trade(id: id)
     @model.fetch success: (model, response) =>
       $.unblockUI()
@@ -262,8 +192,6 @@ class MagicOrders.Routers.Trades extends Backbone.Router
 
 
   seller_confirm_deliver: (id) ->
-    blocktheui()
-
     @model = new MagicOrders.Models.Trade(id: id)
     @model.fetch success: (model, response) =>
       $.unblockUI()
@@ -273,8 +201,6 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $('#trade_seller_confirm_deliver').modal('show')
 
   seller_confirm_invoice: (id) ->
-    blocktheui()
-
     @model = new MagicOrders.Models.Trade(id: id)
     @model.fetch success: (model, response) =>
       $.unblockUI()
@@ -284,8 +210,6 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $('#trade_seller_confirm_invoice').modal('show')
 
   barcode: (id) ->
-    blocktheui()
-
     @model = new MagicOrders.Models.Trade(id: id)
     @model.fetch success: (model, response) =>
       $.unblockUI()
@@ -295,8 +219,6 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $('#trade_barcode').modal('show')
 
   color_info: (id) ->
-    blocktheui()
-
     @model = new MagicOrders.Models.Trade(id: id)
     @model.fetch success: (model, response) =>
       $.unblockUI()
