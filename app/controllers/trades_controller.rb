@@ -1,6 +1,8 @@
 # -*- encoding : utf-8 -*-
 
 class TradesController < ApplicationController
+  layout false, :only => :print_bill
+  #layout 'application', :except => [:print_bill]
   before_filter :authenticate_user!
   respond_to :json, :xls
   include Dulux::Splitter
@@ -525,5 +527,9 @@ class TradesController < ApplicationController
     respond_to do |format|
       format.json { render json: {ids: new_trade_ids} }
     end
+  end
+
+  def print_bill
+    @trade = Trade.find params[:id]
   end
 end

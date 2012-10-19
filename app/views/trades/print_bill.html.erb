@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>打印</title>
+<style type="text/css">
+*{margin:0;padding:0;}
+body{font-size:18px;max-height:450px;}
+.print_bill{width:830px;margin:15px auto;padding:0 15px;}
+h4{margin-bottom:40px;}
+.tc{text-align:center;}
+h4,span{font-size:20px;}
+table{width:100%;/*height:300px;*/border-spacing:0;border-collapse:0;margin-top:10px;}
+table,table th,table td{border:1px solid #000;}
+table th,table td{padding:4px;font:18px/24px "SimSum";}
+table th{border-width:0 1px 0 0;}
+table td{border-width:1px 1px 0 0;}
+table th.noborder_right,table td.noborder_right{border-right-width:0;}
+.mar_r10{margin-right:10px;}
+</style>
+</head>
+
+<body>
+<div class="print_bill">
+  <div class="modal-body">
+      <h4 class="tc">多乐士官方旗舰店出库单</h4>
+      <div class="clearfix"><span class="pull-left mar_r10">编号：<%= @trade.tid %></span></div>
+      <div class="clearfix">
+        <span class="pull-left mar_r10">收货人：<%= @trade.receiver_name %></span>
+        <span class="pull-left mar_r10">电话：<%= @trade.receiver_mobile %></span>
+      </div>
+      <div class="clearfix">
+        <span class="pull-left mar_r10">地址：<%= @trade.receiver_state + @trade.receiver_city + @trade.receiver_district + @trade.receiver_address %></span>
+      </div>
+
+      <table class="table table-bordered mar_t10">
+        <tbody>
+          <tr>
+            <th width="20%">商品编号</th>
+            <th width="10%">数量</th>
+            <th width="25%">商品名称</th>
+            <th width="25%">调色信息</th>
+            <th width="20%" class="noborder_right">备注信息</th>
+          </tr>
+
+          <% @trade.orders.each do |order| %>
+          <tr>
+            <td><%= order.outer_iid %></td>
+            <td><%= order.num %></td>
+            <td><%= order.title %></td>
+            <td>
+              <% index = 0 %>
+              <% order.num.to_i.times do |count| %>
+                <% if get_package(order.outer_iid).length > 1 %>
+                  <% for item in get_package(order.outer_iid) %>
+                    <div class="controls">
+                      套装项目：<%= item %>
+                      <br/>
+                      <b><%= order.color_num[index] %></b>
+                    </div>
+                    <% index = index + 1 %>
+                  <% end %>
+                  <hr/>
+                <% else %>
+                  <div class="controls">
+                    <%= order.color_num[count] %>
+                  </div>
+                <% end %>
+              <% end %>
+            </td>
+            <td class="noborder_right"><%= order.total_fee %></td>
+          </tr>
+          <% end %>
+
+          <tr>
+            <td colspan="5" class="noborder_right">产品数量：<%= @trade.orders.size %></td>
+          </tr>
+          <tr>
+            <td colspan="3" width="50%">温馨提示:尊敬的顾客，为保证您的权益，签字前请确认外包装是否完好。如有异议，请向快递员当面提出同时立即致电多乐士售后提出异议。售后电话：021-60956000-8128</td>
+            <td class="noborder_right" colspan="2">
+              签收人：________________________<br>
+              日&nbsp;&nbsp;&nbsp;期：________________________
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!--<p>温馨提示：</p>-->
+    </div><!-- modal-body -->
+</div>
+<script type="text/javascript">
+window.onload=window.print
+</script>
+</body>
+</html>
+
