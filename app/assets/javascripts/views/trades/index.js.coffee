@@ -75,6 +75,9 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     @collection.each(@appendTrade)
     $("a[rel=popover]").popover(placement: 'left')
     @render_select_state()
+    @render_select_print_time()
+    if MagicOrders.trade_mode != 'deliver'
+      $(@el).find('#select_print_time').hide()
     if @identity == 'seller'
       $(@el).find(".trade_nav").text("未发货订单")
     if @identity == 'logistic'
@@ -86,6 +89,10 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
   render_select_state: ->
     view = new MagicOrders.Views.AreasSelectState()
     $(@el).find('#select_state').html(view.render().el)
+
+  render_select_print_time: ->
+    view = new MagicOrders.Views.TradesSelectPrintTime()
+    $(@el).find('#select_print_time').html(view.render().el)
 
   renderUpdate: =>
     @collection.each(@appendTrade)
@@ -126,11 +133,17 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     e.preventDefault()
     @search_option = $(".search_option").val()
     @search_value = $(".search_value").val()
-    return if @search_option == '' or @search_value == ''
+
+    @from_deliver_print_date = $(".print_start_date").val()
+    @to_deliver_print_date = $(".print_end_date").val()
+    @from_deliver_print_time = $(".print_start_time").val()
+    @to_deliver_print_time = $(".print_end_time").val()
+
+    return if (@search_option == '' or @search_value == '') and (@from_deliver_print_date == '' or @to_deliver_print_date == '')
 
     blocktheui()
     $("#trade_rows").html('')
-    @collection.fetch data: {search: {option: @search_option, value: @search_value}}, success: (collection) =>
+    @collection.fetch data: {search: {option: @search_option, value: @search_value}, search_print_time: {@from_deliver_print_date, @to_deliver_print_date, @from_deliver_print_time, @to_deliver_print_time}}, success: (collection) =>
       @renderUpdate()
       $.unblockUI()
 
@@ -150,10 +163,10 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     @search_end_date = $(".search_end_date").val()
     @search_start_time = $(".search_start_time").val()
     @search_end_time = $(".search_end_time").val()
-    @pay_start_time = $(".pay_start_time").val()
-    @pay_end_time = $(".pay_end_time").val()
     @pay_start_date = $(".pay_start_date").val()
     @pay_end_date = $(".pay_end_date").val()
+    @pay_start_time = $(".pay_start_time").val()
+    @pay_end_time = $(".pay_end_time").val()
 
     @search_buyer_message = $("#search_buyer_message").is(':checked')
     @search_seller_memo = $("#search_seller_memo").is(':checked')
@@ -195,6 +208,10 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
       $("#simple_search_button").removeClass 'simple_search'
     else
       $("#fieldset_advanced").show()
+    if MagicOrders.trade_mode == 'deliver'        #发货单打印时间筛选框只在deliver模式下显示
+      $(@el).find('#select_print_time').show()
+    else
+      $(@el).find('#select_print_time').hide()
     #$(@el).find(".trade_mode").text(MagicOrders.trade_modes[MagicOrders.trade_mode])
 
     # hide some cols

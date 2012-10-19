@@ -16,3 +16,5 @@ class MagicOrders.Views.TradesShow extends Backbone.View
     print_body = $(@el).find(".modal-body")
     print_body.wrapInner('<div class="print_content"></div>')
     print_body.children('.print_content').printArea()
+
+    $('#trade_detail').modal('hide')
