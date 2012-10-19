@@ -167,10 +167,14 @@ class TaobaoTrade < Trade
   def matched_seller(area = nil)
     area ||= default_area
     if TradeSetting.company == 'dulux'
-      Dulux::SellerMatcher.match_trade_seller(self, area)
+      Dulux::SellerMatcher.match_trade_seller(self, area) if splitable?
     else
       super
     end
+  end
+
+  def splitable?
+    match_seller_with_conditions(self).size == 1
   end
 
   def dispatchable?
