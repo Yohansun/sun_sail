@@ -151,5 +151,76 @@ class TaobaoTradePuller
     def updatable?(local_trade, remote_status)
       remote_status != local_trade.status && (remote_status != "WAIT_SELLER_SEND_GOODS" && local_trade.delivered_at.blank?)
     end
+
+    def update_by_created(start_time = nil, end_time = nil, trade_source_id = nil)
+      total_pages = nil
+      page_no = 0
+
+      if start_time.blank?
+        latest_created_order = TaobaoTrade.only("created").order("created", "DESC").limit(1).first
+        start_time = latest_created_order.created - 1.hour
+      end
+
+      if end_time.blank?
+        end_time = Time.now
+      end
+
+      if trade_source_id.blank?
+        trade_source_id = TradeSetting.default_taobao_trade_source_id
+      end
+
+      begin
+        response = TaobaoQuery.get({
+          method: 'taobao.trades.sold.get',
+          fields: 'has_buyer_message, total_fee, created, tid, status, post_fee, receiver_name, pay_time, receiver_state, receiver_city, receiver_district, receiver_address, receiver_zip, receiver_mobile, receiver_phone, buyer_nick, tile, type, point_fee, is_lgtype, is_brand_sale, is_force_wlb, modified, alipay_id, alipay_no, alipay_url, shipping_type, buyer_obtain_point_fee, cod_fee, cod_status, commission_fee, seller_nick, consign_time, received_payment, payment, timeout_action_time, has_buyer_message, real_point_fee, orders',
+          start_created: start_time.strftime("%Y-%m-%d %H:%M:%S"), end_created: end_time.strftime("%Y-%m-%d %H:%M:%S"),
+          page_no: page_no, page_size: 40}, trade_source_id
+          )
+
+        p "starting update_orders: since #{start_time}"
+
+        unless response['trades_sold_get_response']
+          p response
+          break
+        end
+
+        total_results = response['trades_sold_get_response']['total_results']
+        total_results = total_results.to_i
+        total_pages ||= total_results / 40
+        next if total_results < 1
+        trades = response['trades_sold_get_response']['trades']['trade']
+        unless trades.is_a?(Array)
+          trades = [] << trades
+        end
+        next if trades.blank?
+
+        trades.each do |trade|
+
+          next unless TaobaoTrade.where(tid: trade['tid']).exists?
+
+          TaobaoTrade.where(tid: trade['tid']).each do |local_trade|
+            next unless remote_status != local_trade.status
+            orders = trade.delete('orders')
+            trade['trade_source_id'] = trade_source_id
+            local_trade.update_attributes(trade)
+
+            local_trade.operation_logs.build(operated_at: Time.now, operation: '从淘宝更新订单')
+            local_trade.save
+            if local_trade.status == 'WAIT_SELLER_SEND_GOODS'
+              if TradeSetting.company == 'dulux'
+                DelayAutoDispatch.perform_in(TradeSetting.delay_time || 1.hours, local_trade.id)
+              else
+                local_trade.auto_dispatch!
+              end
+            end
+            TradeTaobaoMemoFetcher.perform_async(local_trade.tid) if local_trade.has_buyer_message
+
+            p "update trade #{trade['tid']}"
+          end
+        end
+
+        page_no += 1
+      end until(page_no > total_pages || total_pages == 0)
+    end
   end
 end
