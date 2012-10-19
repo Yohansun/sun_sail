@@ -1,5 +1,6 @@
 class MagicOrders.Routers.Trades extends Backbone.Router
   routes:
+    '': 'main'
     'trades': 'index'
     'trades/:trade_type': 'index'
     'trades/:id/splited': 'splited'
@@ -29,6 +30,9 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       if scrollTop <= @navTop && @isFixed
         @isFixed = false
         @nav.removeClass('subnav-fixed')
+
+  main: () ->
+    Backbone.history.navigate('trades', true)
 
   index: (trade_type = null) ->
     # reset the index stage, hide all popups
