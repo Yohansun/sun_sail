@@ -94,6 +94,7 @@ MagicOrders::Application.routes.draw do
       member do
         get :seller_for_area
         get :split_trade
+        get :recover_from_split
       end
 
       collection do

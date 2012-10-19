@@ -9,6 +9,7 @@ class MagicOrders.Views.TradesRow extends Backbone.View
     'click [data-type=trade_split]': 'show_split'
     'click a[rel=popover]': "addHover"
     'click': 'highlight'
+    'click [data-type=unsplit]': 'show_unsplit'
 
   initialize: ->
 
@@ -70,3 +71,7 @@ class MagicOrders.Views.TradesRow extends Backbone.View
     $('.popover_close_btn').click ->
       $('.lovely_pop').click()
       $('.lovely_pop').toggleClass('lovely_pop')
+
+  show_unsplit: (e) ->
+    e.preventDefault()
+    Backbone.history.navigate('trades/' + @model.get("id") + '/unsplited', true)

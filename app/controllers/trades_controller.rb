@@ -382,4 +382,19 @@ class TradesController < ApplicationController
 
     render json: {isSuccess: success}    
   end
+
+  def recover_from_split
+    trade = Trade.find params[:id]
+    parent_trade = Trade.deleted.where(tid: trade.tid, splitted_tid: nil).first
+
+    success = if parent_trade
+      Trade.where(tid: trade.tid).delete_all
+      parent_trade.operation_logs.create(operated_at: Time.now, operation: '订单合并')
+      parent_trade.restore
+    end
+
+    respond_to do |format|
+      format.json { render json: {is_success: success.present? } }
+    end
+  end
 end

@@ -15,7 +15,7 @@ class MagicOrders.Views.TradesInvoiceNumber extends Backbone.View
   save: (e) ->
     e.preventDefault()
     blocktheui()
-    
+
     unless $('#invoice_number_text').val() isnt ""
       alert("发票号不能为空")
       return
@@ -23,7 +23,7 @@ class MagicOrders.Views.TradesInvoiceNumber extends Backbone.View
     unless /^[0-9]*$/.test($("#invoice_number_text").val())
       alert("发票格式不正确")
       return
-      
+
     @model.set "operation", "发票号设置"
     @model.save {"invoice_number": $("#invoice_number_text").val()},
       success: (model, response) =>
@@ -32,8 +32,4 @@ class MagicOrders.Views.TradesInvoiceNumber extends Backbone.View
         view = new MagicOrders.Views.TradesRow(model: model)
         $("#trade_#{model.get('id')}").replaceWith(view.render().el)
         $("a[rel=popover]").popover(placement: 'left')
-
         $('#trade_invoice_number').modal('hide')
-
-
-        
