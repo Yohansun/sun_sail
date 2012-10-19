@@ -61,5 +61,5 @@
 </div><!-- modal-body -->
 <div class="modal-footer">
   <a class="btn" data-dismiss="modal">关闭</a>
-  <a href="/trades/<%= @trade.get('id') %>/print_bill" class="btn btn-primary button_print">打印</a>
+  <a href="/trades/<%= @trade.get('id') %>/print_bill" target="_blank" class="btn btn-primary button_print">打印</a>
 </div><!-- modal-footer -->
