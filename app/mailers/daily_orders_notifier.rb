@@ -9,7 +9,7 @@ class DailyOrdersNotifier < ActionMailer::Base
     @lost_orders = lost_orders
     @wrong_orders = wrong_orders
     @bad_status_orders = bad_status_orders
-    mail(:to => reciever, :subject => "MagicOrders异常核查报告 #{Time.now}")
+    mail(:to => reciever, :subject => "#{TradeSetting.site_title_basic} 异常核查报告 #{Time.now}")
   end
 
   def yesterday
@@ -29,7 +29,7 @@ class DailyOrdersNotifier < ActionMailer::Base
       @taobao_trades = TaobaoTrade.where(:created => yesterday_begin..yesterday_end)
       @taobao_paid_trades = TaobaoTrade.where(:pay_time => yesterday_begin..yesterday_end)
       @taobao_paid = TradeDecorator.decorate(@taobao_paid_trades).inject(0) { |sum, trade| sum + trade.total_fee.to_f }
-      email_subject = "#{year}年#{month}月#{day}日淘宝电商数据"    
+      email_subject = "#{year}年#{month}月#{day}日#{TradeSetting.site_title_basic} 淘宝电商数据"    
     else
       @jingdong_trades = JingdongTrade.where(:created => yesterday_begin..yesterday_end)
       @jingdong_paid_trades = JingdongTrade.where(:created => yesterday_begin..yesterday_end)
