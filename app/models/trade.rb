@@ -125,7 +125,7 @@ class Trade
     total_num = 0
     self.orders.each do |order|
       num = self._type == "JingdongTrade" ? order.item_total : order.num
-      num.times do |i|
+      num.to_i.times do |i|
         if (order.color_num[i] == nil && order.color_num != []) || order.color_num[i] == ""
           count += 1
         end

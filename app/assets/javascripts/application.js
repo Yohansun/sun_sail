@@ -14,6 +14,7 @@
 //= require jquery_ujs
 //= require twitter/bootstrap
 //= require underscore
+//= require underscore.string
 //= require backbone
 //= require bootstrap-datepicker
 //
@@ -25,6 +26,8 @@
 //= require_tree .//views
 //= require_tree .//routers
 //= require_tree .
+
+_.mixin(_.str.exports());
 
 $(function () {
   // fire dashboard icons
@@ -77,7 +80,7 @@ $(function () {
   $('.goto_stock').click(function(){
     $('#storage_pop .open_stock').attr('href', "/sellers/" + $(this).data('id') + "/change_stock_type")
   });
-  
+
   $('.login_acount').click(function(argument) {
     var seller_id = $(this).attr('data-id');
     $("#seller_id_container").html(seller_id);

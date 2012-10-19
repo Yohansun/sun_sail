@@ -2,91 +2,19 @@ class MagicOrders.Routers.Trades extends Backbone.Router
   routes:
     'trades': 'index'
     'trades/:trade_type': 'index'
-    'trades/:id/detail': 'show'
-    'trades/:id/print_deliver_bill': 'print_deliver_bill'
-    'trades/:id/seller': 'seller'
-    'trades/:id/deliver': 'deliver'
-    'trades/:id/cs_memo': 'cs_memo'
-    'trades/:id/color': 'color'
-    'trades/:id/color_info': 'color_info'
-    'trades/:id/invoice': 'invoice'
-    'trades/:id/invoice_number': 'invoice_number'
-    'trades/:id/seller_confirm_deliver': 'seller_confirm_deliver'
-    'trades/:id/seller_confirm_invoice': 'seller_confirm_invoice'
-    'trades/:id/barcode': 'barcode'
-    'trades/:id/logistic_waybill': 'logistic_waybill'
-    'trades/:id/mark_unusual_state': 'mark_unusual_state'
-    'trades/:id/operation_log': 'operation_log'
-    'trades/:id/confirm_color': 'confirm_color'
-    'trades/:id/confirm_check_goods': 'confirm_check_goods'
-    'trades/:id/confirm_receive': 'confirm_receive'
-    'trades/:id/logistic_memo': 'logistic_memo'
     'trades/:id/splited': 'splited'
+    'trades/:id/:operation': 'operation'
 
   initialize: ->
     @trade_type = null
     $('#content').html('')
     @collection = new MagicOrders.Collections.Trades()
 
-    $('#trade_detail').on 'hide', (event) ->
-      Backbone.history.navigate('trades')
+    $('.modal').on 'hidden', (event) ->
+      Backbone.history.navigate('trades', false)
 
-    $('#trade_seller').on 'hide', (event) ->
-      Backbone.history.navigate('trades')
-
-    $('#trade_invoice').on 'hidden', (event) ->
-      Backbone.history.navigate('trades')
-
-    $('#trade_color').on 'hide', (event) ->
-      Backbone.history.navigate('trades')
-
-    $('#trade_deliver').on 'hide', (event) ->
-      Backbone.history.navigate('trades')
-
-    $('#trade_cs_memo').on 'hide', (event) ->
-      Backbone.history.navigate('trades')
-
-    $('#trade_invoice_number').on 'hide', (event) ->
-      Backbone.history.navigate('trades')
-
-    $('#trade_seller_confirm_deliver').on 'hide', (event) ->
-      Backbone.history.navigate('trades')
-
-    $('#trade_seller_confirm_invoice').on 'hide', (event) ->
-      Backbone.history.navigate('trades')
-
-    $('#trade_barcode').on 'hide', (event) ->
-      Backbone.history.navigate('trades')
-
-    $('#logistic_waybill').on 'hide', (event) ->
-      Backbone.history.navigate('trades')
-
-    $('#trade_mark_unusual_state').on 'hidden', (event) ->
-      Backbone.history.navigate('trades')
-
-    $('#trade_operation_log').on 'hide', (event) ->
-      Backbone.history.navigate('trades')
-
-    $('#trade_print_deliver_bill').on 'hide', (event) ->
-      Backbone.history.navigate('trades')
-
-    $('#trade_confirm_color').on 'hide', (event) ->
-      Backbone.history.navigate('trades')
-
-    $('#trade_color_info').on 'hide', (event) ->
-      Backbone.history.navigate('trades')
-
-    $('#trade_confirm_receive').on 'hide', (event) ->
-      Backbone.history.navigate('trades')
-
-    $('#trade_confirm_check_goods').on 'hide', (event) ->
-      Backbone.history.navigate('trades')
-
-    $('#trade_splited').on 'hide', (event) ->
-      Backbone.history.navigate('trades')
-
-    $('#trade_logistic_memo').on 'hide', (event) ->
-      Backbone.history.navigate('trades')
+    $('[data-toggle="modal"]').bind 'show', (event) ->
+      blocktheui()
 
   show_top_nav: ->
     $("#top-nav li").hide()
@@ -103,6 +31,9 @@ class MagicOrders.Routers.Trades extends Backbone.Router
         @nav.removeClass('subnav-fixed')
 
   index: (trade_type = null) ->
+    # reset the index stage, hide all popups
+    $('.modal').modal('hide')
+
     @isFixed = false
 
     if @collection.length == 0 || @trade_type != trade_type
@@ -157,40 +88,28 @@ class MagicOrders.Routers.Trades extends Backbone.Router
           $("#newTradesNotiferLink").off 'click'
           @mainView.fetch_new_trades()
 
-  show: (id) ->
-    blocktheui()
-    @model = new MagicOrders.Models.Trade(id: id)
-    @model.fetch success: (model, response) =>
-      $.unblockUI()
-
-      view = new MagicOrders.Views.TradesShow(model: model)
-      $('#trade_detail').html(view.render().el)
-      $('#trade_detail').modal('show')
-
-  print_deliver_bill: (id) ->
-    blocktheui()
-    @model = new MagicOrders.Models.Trade(id: id)
-    @model.fetch success: (model, response) =>
-      $.unblockUI()
-
-      view = new MagicOrders.Views.TradesDeliverBill(model: model)
-      $('#trade_print_deliver_bill').html(view.render().el)
-      $('#trade_print_deliver_bill').modal('show')
-
-  seller: (id) ->
-    blocktheui()
+  operation: (id, operation_key) ->
+    viewClassName = "Trades" + _.classify(operation_key)
+    modalDivID = "#trade_" + operation_key
 
     @model = new MagicOrders.Models.Trade(id: id)
     @model.fetch success: (model, response) =>
       $.unblockUI()
 
-      view = new MagicOrders.Views.TradesSeller(model: model)
-      $('#trade_seller').html(view.render().el)
-      $('#trade_seller').modal('show')
+      view = new MagicOrders.Views[viewClassName](model: model)
+      $(modalDivID).html(view.render().el)
+      $(modalDivID + ' .datepicker').datepicker(format: 'yyyy-mm-dd')
+
+      if operation_key == 'color'
+        $('.color_typeahead').typeahead({
+          source: (query, process)->
+            $.get '/colors/autocomplete', {num: query}, (data)->
+              process(data)
+        })
+
+      $(modalDivID).modal('show')
 
   splited: (id) ->
-    blocktheui()
-
     @model = new MagicOrders.Models.Trade(id: id)
     @model.fetch data: {splited: true}, success: (model, response) =>
       $.unblockUI()
@@ -198,187 +117,3 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       view = new MagicOrders.Views.TradesSplited(model: model)
       $('#trade_splited').html(view.render().el)
       $('#trade_splited').modal('show')
-
-  deliver: (id) ->
-    blocktheui()
-
-    @model = new MagicOrders.Models.Trade(id: id)
-    @model.fetch success: (model, response) =>
-      $.unblockUI()
-
-      view = new MagicOrders.Views.TradesDeliver(model: model)
-      $('#trade_deliver').html(view.render().el)
-      $('#trade_deliver').modal('show')
-
-  cs_memo: (id) ->
-    blocktheui()
-
-    @model = new MagicOrders.Models.Trade(id: id)
-    @model.fetch success: (model, response) =>
-      $.unblockUI()
-
-      view = new MagicOrders.Views.TradesCsMemo(model: model)
-      $('#trade_cs_memo').html(view.render().el)
-      $('#trade_cs_memo').modal('show')
-
-  color: (id) ->
-    blocktheui()
-
-    @model = new MagicOrders.Models.Trade(id: id)
-    @model.fetch success: (model, response) =>
-      $.unblockUI()
-
-      view = new MagicOrders.Views.TradesColor(model: model)
-      $('#trade_color').html(view.render().el)
-      $('.color_typeahead').typeahead({
-        source: (query, process)->
-          $.get '/colors/autocomplete', {num: query}, (data)->
-            process(data)
-      })
-      $('#trade_color').modal('show')
-
-  invoice: (id) ->
-    blocktheui()
-
-    @model = new MagicOrders.Models.Trade(id: id)
-    @model.fetch success: (model, response) =>
-      $.unblockUI()
-
-      view = new MagicOrders.Views.TradesInvoice(model: model)
-      $('#trade_invoice').html(view.render().el)
-      $('.pick_invoice_detail .datepicker').datepicker(format: 'yyyy-mm-dd')
-      $('#trade_invoice').modal('show')
-
-  invoice_number: (id) ->
-    blocktheui()
-
-    @model = new MagicOrders.Models.Trade(id: id)
-    @model.fetch success: (model, response) =>
-      $.unblockUI()
-
-      view = new MagicOrders.Views.TradesInvoiceNumber(model: model)
-      $('#trade_invoice_number').html(view.render().el)
-      $('#trade_invoice_number').modal('show')
-
-
-  seller_confirm_deliver: (id) ->
-    blocktheui()
-
-    @model = new MagicOrders.Models.Trade(id: id)
-    @model.fetch success: (model, response) =>
-      $.unblockUI()
-
-      view = new MagicOrders.Views.TradesSellerConfirmDeliver(model: model)
-      $('#trade_seller_confirm_deliver').html(view.render().el)
-      $('#trade_seller_confirm_deliver').modal('show')
-
-  seller_confirm_invoice: (id) ->
-    blocktheui()
-
-    @model = new MagicOrders.Models.Trade(id: id)
-    @model.fetch success: (model, response) =>
-      $.unblockUI()
-
-      view = new MagicOrders.Views.TradesSellerConfirmInvoice(model: model)
-      $('#trade_seller_confirm_invoice').html(view.render().el)
-      $('#trade_seller_confirm_invoice').modal('show')
-
-  barcode: (id) ->
-    blocktheui()
-
-    @model = new MagicOrders.Models.Trade(id: id)
-    @model.fetch success: (model, response) =>
-      $.unblockUI()
-
-      view = new MagicOrders.Views.TradesBarcode(model: model)
-      $('#trade_barcode').html(view.render().el)
-      $('#trade_barcode').modal('show')
-
-  color_info: (id) ->
-    blocktheui()
-
-    @model = new MagicOrders.Models.Trade(id: id)
-    @model.fetch success: (model, response) =>
-      $.unblockUI()
-
-      view = new MagicOrders.Views.TradesColorInfo(model: model)
-      $('#trade_color_info').html(view.render().el)
-      $('#trade_color_info').modal('show')
-
-  logistic_waybill: (id) ->
-    blocktheui()
-
-    @model = new MagicOrders.Models.Trade(id: id)
-    @model.fetch success: (model, response) =>
-      $.unblockUI()
-
-      view = new MagicOrders.Views.TradesLogisticWaybill(model: model)
-      $('#logistic_waybill').html(view.render().el)
-      $('#logistic_waybill').modal('show')
-
-  mark_unusual_state: (id) ->
-    blocktheui()
-
-    @model = new MagicOrders.Models.Trade(id: id)
-    @model.fetch success: (model, response) =>
-      $.unblockUI()
-
-      view = new MagicOrders.Views.TradesMarkUnusualState(model: model)
-      $('#trade_mark_unusual_state').html(view.render().el)
-      $('.pick_plan_detail .datepicker').datepicker(format: 'yyyy-mm-dd')
-      $('#trade_mark_unusual_state').modal('show')
-
-  operation_log: (id) ->
-    blocktheui()
-
-    @model = new MagicOrders.Models.Trade(id: id)
-    @model.fetch success: (model, response) =>
-      $.unblockUI()
-
-      view = new MagicOrders.Views.TradesOperationLog(model: model)
-      $('#trade_operation_log').html(view.render().el)
-      $('#trade_operation_log').modal('show')
-
-  confirm_color: (id) ->
-    blocktheui()
-
-    @model = new MagicOrders.Models.Trade(id: id)
-    @model.fetch success: (model, response) =>
-      $.unblockUI()
-
-      view = new MagicOrders.Views.TradesConfirmColor(model: model)
-      $('#trade_confirm_color').html(view.render().el)
-      $('#trade_confirm_color').modal('show')
-
-  confirm_check_goods: (id) ->
-    blocktheui()
-
-    @model = new MagicOrders.Models.Trade(id: id)
-    @model.fetch success: (model, response) =>
-      $.unblockUI()
-
-      view = new MagicOrders.Views.TradesConfirmCheckGoods(model: model)
-      $('#trade_confirm_check_goods').html(view.render().el)
-      $('#trade_confirm_check_goods').modal('show')
-
-  confirm_receive: (id) ->
-    blocktheui()
-
-    @model = new MagicOrders.Models.Trade(id: id)
-    @model.fetch success: (model, response) =>
-      $.unblockUI()
-
-      view = new MagicOrders.Views.TradesConfirmReceive(model: model)
-      $('#trade_confirm_receive').html(view.render().el)
-      $('#trade_confirm_receive').modal('show')
-
-  logistic_memo: (id) ->
-    blocktheui()
-
-    @model = new MagicOrders.Models.Trade(id: id)
-    @model.fetch success: (model, response) =>
-      $.unblockUI()
-
-      view = new MagicOrders.Views.TradesLogisticMemo(model: model)
-      $('#trade_logistic_memo').html(view.render().el)
-      $('#trade_logistic_memo').modal('show')

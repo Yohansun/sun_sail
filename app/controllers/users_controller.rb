@@ -10,9 +10,9 @@ class UsersController < ApplicationController
 
       case params[:source]
       when 'fenxiao'
-      	redirect_url = '/trades/taobao_fenxiao'
+      	redirect_url = '/app#trades/taobao_fenxiao'
       when 'jingdong'
-      	redirect_url = '/trades/jingdong'
+      	redirect_url = '/app#trades/jingdong'
       end
     end
 

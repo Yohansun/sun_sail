@@ -1,6 +1,6 @@
-class MagicOrders.Views.TradesShow extends Backbone.View
+class MagicOrders.Views.TradesDetail extends Backbone.View
 
-  template: JST['trades/show']
+  template: JST['trades/detail']
 
   events:
     "click .button_print": 'print'

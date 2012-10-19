@@ -13,7 +13,7 @@ class MagicOrders.Views.TradesSplited extends Backbone.View
     this
 
   split: ->
-    $.get '/trades/' + @model.id + '/split_trade', {}, (data) =>
+    $.get '/api/trades/' + @model.id + '/split_trade', {}, (data) =>
       $("#trade_" + @model.id).hide()
       for trade_id in data.ids
         trade = new MagicOrders.Models.Trade(id: trade_id)

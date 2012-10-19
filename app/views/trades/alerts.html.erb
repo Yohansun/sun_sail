@@ -8,15 +8,15 @@
     <%- if current_user.has_role?(:seller) && current_user.seller %>
       <%- trades = Trade.where(seller_id: current_user.seller.id) %>
     <%- elsif current_user.has_role?(:admin) || current_user.has_role?(:cs) %>
-      <%- trades = Trade %> 
+      <%- trades = Trade %>
     <%- end %>
 
     <div class="well">
       <dl class="unusual">
         <dt><span>系统自动预警</span></dt>
-        <dd><a href="/trades/unpaid_two_days">超过2天未付款订单<span>(<%= trades.where({"$and" => [{:created.lte => Time.now - 2.days},{:pay_time.exists => false},{:status.nin => ["TRADE_CLOSED","TRADE_CANCELED","TRADE_CLOSED_BY_TAOBAO", "ALL_CLOSED"]}]}).count %>)</span></a></dd>
-        <dd><a href="/trades/undelivered_two_days">超过2天未发货订单<span>(<%= trades.where({"$and" => [{:dispatched_at.lte => Time.now - 2.days},{"$or" => [{"$and" => [{_type: "TaobaoTrade"}, {:consign_time.exists => false}]}, {"$and" => [{_type: "TaobaoPurchaseOrder"},{"$and" => [{:consign_time.exists => false}, {:delivered_at.exists => false}]}]}]}]}).where(:dispatched_at.exists => true).where(:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"]).count %>)</span></a></dd>
-        <dd><a href="/trades/undispatched_one_day">超过1天未分流订单<span>(<%= trades.where({"$and" => [{:pay_time.lte => Time.now - 1.days},{:dispatched_at.exists => false},{:seller_id.exists => false}]}).where(:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"]).count %>)</span></a></dd>
+        <dd><a href="/app#trades/unpaid_two_days">超过2天未付款订单<span>(<%= trades.where({"$and" => [{:created.lte => Time.now - 2.days},{:pay_time.exists => false},{:status.nin => ["TRADE_CLOSED","TRADE_CANCELED","TRADE_CLOSED_BY_TAOBAO", "ALL_CLOSED"]}]}).count %>)</span></a></dd>
+        <dd><a href="/app#trades/undelivered_two_days">超过2天未发货订单<span>(<%= trades.where({"$and" => [{:dispatched_at.lte => Time.now - 2.days},{"$or" => [{"$and" => [{_type: "TaobaoTrade"}, {:consign_time.exists => false}]}, {"$and" => [{_type: "TaobaoPurchaseOrder"},{"$and" => [{:consign_time.exists => false}, {:delivered_at.exists => false}]}]}]}]}).where(:dispatched_at.exists => true).where(:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"]).count %>)</span></a></dd>
+        <dd><a href="/app#trades/undispatched_one_day">超过1天未分流订单<span>(<%= trades.where({"$and" => [{:pay_time.lte => Time.now - 1.days},{:dispatched_at.exists => false},{:seller_id.exists => false}]}).where(:status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"]).count %>)</span></a></dd>
         <!-- <dd><a href="#">状态不同步订单<span>(10)</span></a></dd>
         <dd><a href="#">状态不同步订单<span>(10)</span></a></dd>
         <dd><a href="#">状态不同步订单<span>(10)</span></a></dd>
@@ -26,13 +26,13 @@
 
       <dl class="unusual">
         <dt><span>客服异常预警</span></dt>
-        <dd><a href="trades/buyer_delay_deliver">买家延迟发货<span>(<%= trades.where({"unusual_states" => {"$elemMatch" => {key: "buyer_delay_deliver"}}}).count %>)</span></a></dd>
-        <dd><a href="trades/seller_ignore_deliver">卖家长时间未发货<span>(<%= trades.where({"unusual_states" => {"$elemMatch" => {key: "seller_ignore_deliver"}}}).count %>)</span></a></dd>
-        <dd><a href="trades/seller_lack_product">经销商缺货<span>(<%= trades.where({"unusual_states" => {"$elemMatch" => {key: "seller_lack_product"}}}).count %>)</span></a></dd>
-        <dd><a href="trades/seller_lack_color">经销商无法调色<span>(<%= trades.where({"unusual_states" => {"$elemMatch" => {key: "seller_lack_color"}}}).count %>)</span></a></dd>
-        <dd><a href="trades/buyer_demand_refund">买家要求退款<span>(<%= trades.where({"unusual_states" => {"$elemMatch" => {key: "buyer_demand_refund"}}}).count %>)</span></a></dd>
-        <dd><a href="trades/buyer_demand_return_product">买家要求退货<span>(<%= trades.where({"unusual_states" => {"$elemMatch" => {key: "buyer_demand_return_product"}}}).count %>)</span></a></dd>
-        <dd><a href="trades/other_unusual_state">其他异常<span>(<%= trades.where({"unusual_states" => {"$elemMatch" => {key: "other_unusual_state"}}}).count %>)</span></a></dd>
+        <dd><a href="/app#trades/buyer_delay_deliver">买家延迟发货<span>(<%= trades.where({"unusual_states" => {"$elemMatch" => {key: "buyer_delay_deliver"}}}).count %>)</span></a></dd>
+        <dd><a href="/app#trades/seller_ignore_deliver">卖家长时间未发货<span>(<%= trades.where({"unusual_states" => {"$elemMatch" => {key: "seller_ignore_deliver"}}}).count %>)</span></a></dd>
+        <dd><a href="/app#trades/seller_lack_product">经销商缺货<span>(<%= trades.where({"unusual_states" => {"$elemMatch" => {key: "seller_lack_product"}}}).count %>)</span></a></dd>
+        <dd><a href="/app#trades/seller_lack_color">经销商无法调色<span>(<%= trades.where({"unusual_states" => {"$elemMatch" => {key: "seller_lack_color"}}}).count %>)</span></a></dd>
+        <dd><a href="/app#trades/buyer_demand_refund">买家要求退款<span>(<%= trades.where({"unusual_states" => {"$elemMatch" => {key: "buyer_demand_refund"}}}).count %>)</span></a></dd>
+        <dd><a href="/app#trades/buyer_demand_return_product">买家要求退货<span>(<%= trades.where({"unusual_states" => {"$elemMatch" => {key: "buyer_demand_return_product"}}}).count %>)</span></a></dd>
+        <dd><a href="/app#trades/other_unusual_state">其他异常<span>(<%= trades.where({"unusual_states" => {"$elemMatch" => {key: "other_unusual_state"}}}).count %>)</span></a></dd>
       </dl>
     </div>
   </div>
