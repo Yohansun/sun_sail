@@ -20,7 +20,6 @@ gem 'jquery-rails'
 group :development do
   gem 'capistrano'
   gem "capistrano-ext"
-  gem 'debugger'
   gem 'quiet_assets'
   gem 'bond'
   gem 'puma'
