@@ -17,13 +17,19 @@ task :add_products_to_sellers => :environment do
     puts 'begin add to sellers'
 
     Seller.find_each do |seller|
-      sp = seller.stock_products.create!(
+      sp = seller.stock_products.build(
         product_id: product.id,
         max: 99999,
         safe_value: 20
       )
 
-      puts 'creat stock product success'
+
+      if sp.safe
+        puts 'creat stock product success'
+      else
+        next
+      end
+
 
       sp.color_ids = color_ids
 
