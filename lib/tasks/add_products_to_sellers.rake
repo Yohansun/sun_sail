@@ -24,7 +24,7 @@ task :add_products_to_sellers => :environment do
       )
 
 
-      if sp.safe
+      if sp.save
         puts 'creat stock product success'
       else
         next
