@@ -46,9 +46,18 @@ class ProductsController < ApplicationController
     @product = Product.new params[:product]
 
     if params[:product]['good_type'] == '2' && params[:child_iid].present?
-      iids = params[:child_iid].gsub(' ', '').split(',')
-      products = Product.where(iid: iids)
-      @product.child_ids = products.map{|p| p.id}
+      packages = params[:child_iid].gsub(' ', '').split(',[').each {|i| i.gsub!(/[\[|\]]/, '')}
+
+      packages.each do |p|
+        p = p.split(',')
+
+        next if p[0].blank? || p[0] == @product.iid
+        next unless Product.find_by_iid p[0]
+        @product.packages.create(
+          number: p[1],
+          iid: p[0]
+        )
+      end
     end
 
     if @product.save
@@ -76,9 +85,20 @@ class ProductsController < ApplicationController
     @product = Product.find params[:id]
 
     if params[:product]['good_type'] == '2' && params[:child_iid].present?
-      iids = params[:child_iid].gsub(' ', '').split(',')
-      iids.delete @product.iid
-      @product.child_ids = Product.where(iid: iids).map{|p| p.id}
+      packages = params[:child_iid].gsub(' ', '').split(',[').each {|i| i.gsub!(/[\[|\]]/, '')}
+
+      @product.packages.delete_all
+
+      packages.each do |p|
+        p = p.split(',')
+
+        next if p[0].blank? || p[0] == @product.iid
+        next unless Product.find_by_iid p[0]
+        @product.packages.create(
+          number: p[1],
+          iid: p[0]
+        )
+      end
     end
 
     if @product.update_attributes(params[:product])

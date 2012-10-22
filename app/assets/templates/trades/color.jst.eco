@@ -15,29 +15,30 @@
           <th>色号</th>
         </tr>
         <% for order in @trade.get('orders'): %>
-            <tr>
-              <td><%= order.title %> x <%= order.num %></td>
-              <td>
-                <% index = 0 %>
-                <% for count in [0...order.num] : %>
-                  <% if order.contents.length > 1 : %>
-                    <% for item in order.contents : %>
+          <tr>
+            <td><%= order.title %> x <%= order.num %></td>
+            <td>
+              <% index = 0 %>
+              <% for count in [0...order.num] : %>
+                <% if order.contents.length > 1 : %>
+                  <% for item in order.contents : %>
+                    <% for [0...item.number] : %>
                       <div class="controls">
-                        套装项目：<%= item %>
-                        <input type="text" data-provide="typeahead" placeholder="请输入色号..." class="color_typeahead input-xlarge color_num_<%= order.item_id %>" value="<%= order.color_num[index] %>">
+                        套装项目：<%= item.name %>
+                        <input type="text" data-provide="typeahead" placeholder="请输入色号..." class="color_typeahead input-xlarge color_num_<%= order.item_id %>_<%= count %>">
                       </div>
-                      <% index = index + 1 %>
                     <% end %>
-                    <hr/>
-                  <% else : %>
-                    <div class="controls">
-                      <input type="text" data-provide="typeahead" placeholder="请输入色号..." class="color_typeahead input-xlarge color_num_<%= order.item_id %>" value="<%= order.color_num[count] %>">
-                    </div>
+                    <% index = index + 1 %>
                   <% end %>
+                  <hr/>
+                <% else : %>
+                  <div class="controls">
+                    <input type="text" data-provide="typeahead" placeholder="请输入色号..." class="color_typeahead input-xlarge color_num_<%= order.item_id %>_<%= count %>">
+                  </div>
                 <% end %>
-
-              </td>
-            </tr>
+              <% end %>
+            </td>
+          </tr>
         <% end %>
       </tbody>
     </table>

@@ -75,7 +75,7 @@ class Trade
 
   attr_accessor :matched_seller
 
-  validate :color_num_do_not_exist, :on => :update
+  # validate :color_num_do_not_exist, :on => :update
 
   before_update :set_has_color_info
   before_update :set_has_cs_memo

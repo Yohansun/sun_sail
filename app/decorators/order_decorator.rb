@@ -61,7 +61,7 @@ class OrderDecorator < Draper::Base
 	   when 'TaobaoSubPurchaseOrder'
 	    order.item_outer_id
 	   when 'TaobaoOrder'
-	    ''
+	    order.outer_iid
 	   when 'JingdongOrder'
 	    order.outer_sku_id
 	   end

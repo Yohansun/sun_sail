@@ -9,6 +9,7 @@ class Product < ActiveRecord::Base
   has_many :features, :through => :feature_product_relationships
   has_many :colors_products
   has_many :colors, through: :colors_products
+  has_many :packages
 
   mount_uploader :product_image, ProductImageUploader
 
@@ -38,10 +39,6 @@ class Product < ActiveRecord::Base
   end
 
   def present_features
-    features = []
-    for f in self.features
-      features.push f.name
-    end
-    features.join(",")
+    features.map(&:name).join(',')
   end
 end
