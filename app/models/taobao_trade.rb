@@ -104,9 +104,7 @@ class TaobaoTrade < Trade
   end
 
   def deliverable?
-    return false if self.status != "WAIT_SELLER_SEND_GOODS"
-    sibling = (TaobaoTrade.where(tid: self.tid).to_a - [self]).first
-    sibling.blank? || (sibling.present? && sibling.delivered_at.present?)
+    TaobaoTrade.where({:tid => tid, :splitted_tid.ne => nil}).map(&:status).delete!('WAIT_SELLER_SEND_GOODS').size == 0
   end
 
   def deliver!
