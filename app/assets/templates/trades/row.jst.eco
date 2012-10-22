@@ -201,7 +201,7 @@
 <td data-col='deliver_bill_id' ><!--发货单编号--></td>
 <td data-col='deliver_bill_status' ><!--发货单状态--></td>
 <td data-col='order_goods' >
-    <a href="javascript:void(0)" rel="popover" data-content="<% for order in @trade.get('orders'): %> <%= order.title %> <%= order.num %>件<br/> <% end %>" data-original-title="<b>商品详细</b>"><i class="icon-comment"></i></a>
+    <a href="javascript:void(0)" rel="popover" data-content="<% for order in @trade.get('orders'): %> <%= order.title %> <%= order.num %>件<br/> <% end %>" data-original-title="<b>商品详细</b>"><i class="icon-detail"></i></a>
 </td>
 <!-- <td data-col='logistic_bill'><!--物流单--</td> -->
 <td data-col='logistic_waybill' ><!--物流单号--></td>
