@@ -50,7 +50,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
   render: =>
     $.unblockUI()
     if !@first_rendered
-       $(@el).html(@template())
+       $(@el).html(@template(trades: @collection))
       #initial mode=trades
       visible_cols = MagicOrders.trade_cols_visible_modes[MagicOrders.trade_mode]
       if MagicOrders.trade_cols_hidden == []
@@ -84,6 +84,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
       $(@el).find(".trade_nav").text("物流单")
     if @identity == 'cs' or @identity == 'admin'
       $(@el).find(".trade_nav").text("未分流订单")
+    $(@el).find("#get_offset").text(@offset)
     this
 
   render_select_state: ->
@@ -96,6 +97,11 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
   renderUpdate: =>
     @collection.each(@appendTrade)
+    unless parseInt($("#complete_offset").text()) <= @offset
+      $("#get_offset").text(@offset)
+    else
+      $("#get_offset").text($("#complete_offset").text())
+      $("[data-type=loadMoreTrades]").replaceWith("<p><b>当前为最后一条订单</b></p>")
     $("a[rel=popover]").popover(placement: 'left')
     $.unblockUI()
 

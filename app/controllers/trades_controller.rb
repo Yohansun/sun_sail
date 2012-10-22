@@ -280,7 +280,7 @@ class TradesController < ApplicationController
     # @trades = @trades.where("$or" => [{:has_buyer_message.ne => true}, {:buyer_message.ne => nil}])
 
     ###筛选结束###
-
+    @trades_count = @trades.count
     offset = params[:offset] || 0
     limit = params[:limit] || 20
     @trades = TradeDecorator.decorate(@trades.limit(limit).offset(offset).order_by("created", "DESC"))

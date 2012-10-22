@@ -32,7 +32,7 @@
     <td><%= seller.address %></td>
     <td>
       <div class="btn-group">
-        <%= link_to raw("<img src='/assets/u741_original.png'>"), '', "data-toggle" =>"dropdown",  :remote => true, :class => 'dropdown-toggle noshadow min_w preview_children', :onclick=>"tog(#{seller.id})", :id => seller.id%>
+        <%= link_to raw("<i class='icon-next_dealer'></i>"), '', "data-toggle" =>"dropdown",  :remote => true, :class => 'dropdown-toggle noshadow min_w preview_children', :onclick=>"tog(#{seller.id})", :id => seller.id%>
         
         <ul class="dropdown-menu" style="left:-115px;" id='children_<%= seller.id %>'>
         </ul>
