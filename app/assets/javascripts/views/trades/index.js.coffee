@@ -85,6 +85,8 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     if @identity == 'cs' or @identity == 'admin'
       $(@el).find(".trade_nav").text("未分流订单")
     $(@el).find("#get_offset").text(@offset)
+    if parseInt($(@el).find("#complete_offset").text()) == @offset
+      $(@el).find("[data-type=loadMoreTrades]").replaceWith("<p><b>当前为最后一条订单</b></p>")
     this
 
   render_select_state: ->
@@ -97,6 +99,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
   renderUpdate: =>
     @collection.each(@appendTrade)
+    $("#complete_offset").html(@collection.at(0).get("trades_count"))
     unless parseInt($("#complete_offset").text()) <= @offset
       $("#get_offset").text(@offset)
     else
