@@ -30,10 +30,10 @@ class Product < ActiveRecord::Base
 
   def present_status
     case status
-      when "ON_SALE"
-        '上架'
-      when "SOLD_OUT"
-        '下架'
+    when "ON_SALE"
+      '上架'
+    when "SOLD_OUT"
+      '下架'
     end
   end
 
@@ -44,5 +44,4 @@ class Product < ActiveRecord::Base
     end
     features.join(",")
   end
-   
 end
