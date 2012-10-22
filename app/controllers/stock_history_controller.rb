@@ -15,13 +15,10 @@ class StockHistoryController < ApplicationController
 	end
 
   def create
-  	@history = StockHistory.new params[:stock_history]
   	@product = StockProduct.find params[:stock_history]['stock_product_id']
   	number = params[:stock_history]['number'].to_i
-  	@history.user_id = current_user.id
-    @history.seller_id = params[:seller_id]
 
-  	if @product.update_quantity!(number, params[:stock_history]['operation'], params[:seller_id]) && @history.save
+  	if @product.update_quantity!(number, params[:stock_history]['operation'], params[:seller_id])
   		@flag = true
     else
       if @product.errors[:activity].first == '数量不能小于零'
