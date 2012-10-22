@@ -37,3 +37,8 @@ class MagicOrders.Views.TradesColor extends Backbone.View
         $("a[rel=popover]").popover(placement: 'left')
 
         $('#trade_color').modal('hide')
+
+      error: (model, error, response) =>
+        $.unblockUI()
+        alert("色号不存在")
+

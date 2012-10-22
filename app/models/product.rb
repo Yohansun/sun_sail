@@ -41,4 +41,20 @@ class Product < ActiveRecord::Base
   def present_features
     features.map(&:name).join(',')
   end
+
+  def create_packages(child_iid)
+    package_map = child_iid.gsub(' ', '').split(',[').each {|i| i.gsub!(/[\[|\]]/, '')}
+
+    package_map.each do |p|
+      p = p.split(',')
+
+      next if p[0].blank? || p[0] == iid
+      next unless Product.exists?(iid: p[0])
+
+      packages.create(
+        number: p[1],
+        iid: p[0]
+      )
+    end
+  end
 end

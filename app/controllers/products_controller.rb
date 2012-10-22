@@ -46,7 +46,7 @@ class ProductsController < ApplicationController
     @product = Product.new params[:product]
 
     if params[:product]['good_type'] == '2' && params[:child_iid].present?
-      create_packages(params[:child_iid], @product)
+      @product.create_packages(params[:child_iid])
     end
 
     if @product.save
@@ -75,7 +75,7 @@ class ProductsController < ApplicationController
 
     if params[:product]['good_type'] == '2' && params[:child_iid].present?
       @product.packages.delete_all
-      create_packages(params[:child_iid], @product)
+      @product.create_packages(params[:child_iid])
     end
 
     if @product.update_attributes(params[:product])
@@ -94,23 +94,6 @@ class ProductsController < ApplicationController
     @products = Product.where(category_id: params[:category_id])
     respond_to do |format|
       format.js
-    end
-  end
-
-  protected
-
-  def create_packages(child_iid, product)
-    packages = child_iid.gsub(' ', '').split(',[').each {|i| i.gsub!(/[\[|\]]/, '')}
-
-    packages.each do |p|
-      p = p.split(',')
-
-      next if p[0].blank? || p[0] == product.iid
-      next unless Product.find_by_iid p[0]
-      product.packages.create(
-        number: p[1],
-        iid: p[0]
-      )
     end
   end
 end
