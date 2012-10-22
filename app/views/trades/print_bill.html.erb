@@ -51,8 +51,8 @@ table th.noborder_right,table td.noborder_right{border-right-width:0;}
             <td>
               <% index = 0 %>
               <% order.num.to_i.times do |count| %>
-                <% if get_package(order.outer_iid).length > 1 %>
-                  <% for item in get_package(order.outer_iid) %>
+                <% if get_package(order.outer_iid, @trade.id).length > 1 %>
+                  <% for item in get_package(order.outer_iid, @trade.id) %>
                     <div class="controls">
                       套装项目：<%= item %>
                       <br/>
