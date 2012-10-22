@@ -2,7 +2,11 @@
 
 desc "添加新商品"
 task :add_products_to_sellers => :environment do
-  product_iids = ['ICI0054', 'ICI0056', 'ICI0059']
+
+  # 20121020
+  # product_iids = ['ICI0054', 'ICI0056', 'ICI0059']
+
+  product_iids = ['ICI0063']
 
   product_iids.each do |iid|
     puts 'work with ' + iid
