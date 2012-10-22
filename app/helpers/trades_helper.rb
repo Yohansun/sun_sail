@@ -1,7 +1,6 @@
 # -*- encoding:utf-8 -*-
 module TradesHelper
   def get_package(iid, time)
-    Rails.logger.info time.inspect
     tmp = []
 
     iid_map = {

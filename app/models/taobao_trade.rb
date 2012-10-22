@@ -104,7 +104,7 @@ class TaobaoTrade < Trade
   end
 
   def deliverable?
-    TaobaoTrade.where({:tid => tid, :splitted_tid.ne => nil}).map(&:status).delete!('WAIT_SELLER_SEND_GOODS').size == 0
+    TaobaoTrade.where(tid: tid).map(&:status).delete!('WAIT_SELLER_SEND_GOODS').size == 0
   end
 
   def deliver!

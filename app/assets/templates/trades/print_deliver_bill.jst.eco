@@ -22,7 +22,6 @@
         <th>备注信息</th>
       </tr>
       <% for order in @trade.get('orders'): %>
-      <% console.log(order) %>
       <tr>
         <td><%= order.item_outer_id %></td>
         <td><%= order.num %></td>

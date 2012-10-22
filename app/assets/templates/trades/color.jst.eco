@@ -20,22 +20,24 @@
             <td>
               <% index = 0 %>
               <% for count in [0...order.num] : %>
+                <% i = 0 %>
                 <% if order.contents.length > 1 : %>
                   <% for item in order.contents : %>
                     <% for [0...item.number] : %>
                       <div class="controls">
                         套装项目：<%= item.name %>
-                        <input type="text" data-provide="typeahead" placeholder="请输入色号..." class="color_typeahead input-xlarge color_num_<%= order.item_id %>_<%= count %>">
+                        <input type="text" data-provide="typeahead" placeholder="请输入色号..." class="color_typeahead input-xlarge color_num_<%= order.item_id %>_<%= count %>" value='<%= order.color_num[index][i]%>'>
                       </div>
+                      <% i = i + 1 %>
                     <% end %>
-                    <% index = index + 1 %>
                   <% end %>
                   <hr/>
                 <% else : %>
                   <div class="controls">
-                    <input type="text" data-provide="typeahead" placeholder="请输入色号..." class="color_typeahead input-xlarge color_num_<%= order.item_id %>_<%= count %>">
+                    <input type="text" data-provide="typeahead" placeholder="请输入色号..." class="color_typeahead input-xlarge color_num_<%= order.item_id %>_<%= count %>" value='<%= order.color_num[index]%>'>
                   </div>
                 <% end %>
+                <% index = index + 1 %>
               <% end %>
             </td>
           </tr>

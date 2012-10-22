@@ -46,18 +46,7 @@ class ProductsController < ApplicationController
     @product = Product.new params[:product]
 
     if params[:product]['good_type'] == '2' && params[:child_iid].present?
-      packages = params[:child_iid].gsub(' ', '').split(',[').each {|i| i.gsub!(/[\[|\]]/, '')}
-
-      packages.each do |p|
-        p = p.split(',')
-
-        next if p[0].blank? || p[0] == @product.iid
-        next unless Product.find_by_iid p[0]
-        @product.packages.create(
-          number: p[1],
-          iid: p[0]
-        )
-      end
+      create_packages(params[:child_iid], @product)
     end
 
     if @product.save
@@ -85,20 +74,8 @@ class ProductsController < ApplicationController
     @product = Product.find params[:id]
 
     if params[:product]['good_type'] == '2' && params[:child_iid].present?
-      packages = params[:child_iid].gsub(' ', '').split(',[').each {|i| i.gsub!(/[\[|\]]/, '')}
-
       @product.packages.delete_all
-
-      packages.each do |p|
-        p = p.split(',')
-
-        next if p[0].blank? || p[0] == @product.iid
-        next unless Product.find_by_iid p[0]
-        @product.packages.create(
-          number: p[1],
-          iid: p[0]
-        )
-      end
+      create_packages(params[:child_iid], @product)
     end
 
     if @product.update_attributes(params[:product])
@@ -117,6 +94,23 @@ class ProductsController < ApplicationController
     @products = Product.where(category_id: params[:category_id])
     respond_to do |format|
       format.js
+    end
+  end
+
+  protected
+
+  def create_packages(child_iid, product)
+    packages = child_iid.gsub(' ', '').split(',[').each {|i| i.gsub!(/[\[|\]]/, '')}
+
+    packages.each do |p|
+      p = p.split(',')
+
+      next if p[0].blank? || p[0] == product.iid
+      next unless Product.find_by_iid p[0]
+      product.packages.create(
+        number: p[1],
+        iid: p[0]
+      )
     end
   end
 end
