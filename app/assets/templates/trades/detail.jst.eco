@@ -42,8 +42,13 @@
         <td><%= @trade.get('receiver_zip') %></td>
       </tr>
       <tr>
-        <td>备注：</td>
-        <td><%= @trade.get('seller_memo') %></td>
+        <td>客服备注：</td>
+        <td>
+          <%= @trade.get('cs_memo') %>
+          <% for order in @trade.get('orders'): %>
+            <%= order.cs_memo %>
+          <%- end %>  
+        </td>
       </tr>
     </tbody>
   </table>

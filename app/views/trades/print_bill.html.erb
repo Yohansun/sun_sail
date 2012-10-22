@@ -15,11 +15,10 @@ table,table th,table td{border:1px solid #000;}
 table th,table td{padding:4px;font-size:16px;}
 table th{border-width:0 1px 0 0;}
 table td{border-width:1px 1px 0 0;}
-table th.noborder_right,table td.noborder_right{border-right-width:0;}
+table th.noborder_right,table td.noborder_right{border-right-width:0;word-wrap:break-word;}
 .mar_r10{margin-right:10px;}
 </style>
 </head>
-
 <body>
 <div class="print_bill">
   <div class="modal-body">
@@ -38,12 +37,12 @@ table th.noborder_right,table td.noborder_right{border-right-width:0;}
           <tr>
             <th width="10%">商品编号</th>
             <th width="5%">数量</th>
-            <th width="40%">商品名称</th>
-            <th>调色信息</th>
-            <th class="noborder_right">备注信息</th>
+            <th width="30%">商品名称</th>
+            <th width="35%">调色信息</th>
+            <th width="20%" class="noborder_right">备注信息</th>
           </tr>
 
-          <% @trade.orders.each do |order| %>
+          <% @trade.orders.each_with_index do |order, order_index| %>
           <tr>
             <td><%= order.outer_iid %></td>
             <td><%= order.num %></td>
@@ -78,7 +77,12 @@ table th.noborder_right,table td.noborder_right{border-right-width:0;}
                 <% index = index + 1 %>
               <% end %>
             </td>
-            <td class="noborder_right"><%= order.cs_memo %></td>
+            <td class="noborder_right">
+              <%- if order_index == 0 %>
+                <%= @trade.cs_memo %>
+              <%- end %>  
+              <%= order.cs_memo %>  
+            </td>
           </tr>
           <% end %>
 
