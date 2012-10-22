@@ -199,7 +199,7 @@ class TaobaoTradePuller
           next unless TaobaoTrade.where(tid: trade['tid']).exists?
 
           TaobaoTrade.where(tid: trade['tid']).each do |local_trade|
-            next unless remote_status != local_trade.status
+            next unless trade['status'] != local_trade.status
             orders = trade.delete('orders')
             trade['trade_source_id'] = trade_source_id
             local_trade.update_attributes(trade)
