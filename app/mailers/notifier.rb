@@ -46,7 +46,7 @@ class Notifier < ActionMailer::Base
       
       mail_subject = "#{@trade_from}订单#{@tid}-#{@area_name}（#{Time.now.strftime("%Y/%m/%d")}），请及时发货"
       reply_to = TradeSetting.email_notifier_from
-      bcc = %w(TradeSetting.email_notifier_dispatch_bcc)  
+      bcc = TradeSetting.email_notifier_dispatch_bcc  
     
       to_emails.each_with_index do |email, index|
         if index == 0
