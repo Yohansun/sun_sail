@@ -9,6 +9,7 @@ class Product < ActiveRecord::Base
   has_many :features, :through => :feature_product_relationships
   has_many :colors_products
   has_many :colors, through: :colors_products
+  has_many :packages
 
   mount_uploader :product_image, ProductImageUploader
 
@@ -38,10 +39,22 @@ class Product < ActiveRecord::Base
   end
 
   def present_features
-    features = []
-    for f in self.features
-      features.push f.name
+    features.map(&:name).join(',')
+  end
+
+  def create_packages(child_iid)
+    package_map = child_iid.gsub(' ', '').split(',[').each {|i| i.gsub!(/[\[|\]]/, '')}
+
+    package_map.each do |p|
+      p = p.split(',')
+
+      next if p[0].blank? || p[0] == iid
+      next unless Product.exists?(iid: p[0])
+
+      packages.create(
+        number: p[1],
+        iid: p[0]
+      )
     end
-    features.join(",")
   end
 end

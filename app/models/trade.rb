@@ -120,29 +120,12 @@ class Trade
   end
 
   def color_num_do_not_exist
-    color_nums = Color.all.map {|color| color.num}
-    count = 0
-    total_num = 0
-    self.orders.each do |order|
-      num = self._type == "JingdongTrade" ? order.item_total : order.num
-      num.to_i.times do |i|
-        if (order.color_num[i] == nil && order.color_num != []) || order.color_num[i] == ""
-          count += 1
-        end
-        for color_num in color_nums
-          if order.color_num[i] == color_num
-            count += 1
-            break
-          end
-        end
+    orders.map(&:color_num).flatten.each do |color|
+      next if color.blank?
+      unless Color.exists?(num: color)
+        errors.add(:self, "色号不存在")
+        break
       end
-      if order.color_num == []
-        count += num
-      end
-      total_num += num
-    end
-    if count != total_num
-      errors.add(:self, "Blank color_num")
     end
   end
 

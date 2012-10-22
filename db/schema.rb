@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121017121858) do
+ActiveRecord::Schema.define(:version => 20121022054033) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -108,6 +108,17 @@ ActiveRecord::Schema.define(:version => 20121017121858) do
     t.datetime "updated_at", :null => false
     t.string   "code"
   end
+
+  create_table "packages", :force => true do |t|
+    t.string   "iid"
+    t.integer  "number",     :default => 1
+    t.integer  "product_id"
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
+  end
+
+  add_index "packages", ["iid"], :name => "index_packages_on_iid"
+  add_index "packages", ["product_id"], :name => "index_packages_on_product_id"
 
   create_table "products", :force => true do |t|
     t.string  "name",           :limit => 100,                               :default => "",  :null => false

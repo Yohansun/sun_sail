@@ -2,7 +2,7 @@
 class TradeTaobaoDeliver
   include Sidekiq::Worker
   sidekiq_options :queue => :taobao
-  
+
   def perform(id)
     code = false
     trade = TaobaoTrade.find(id)
@@ -17,7 +17,7 @@ class TradeTaobaoDeliver
       response = response['delivery_offline_send_response']['shipping']
       code = response['is_succsess']
     end
-    
+
     if code
       trade.orders.each do |order|
         product = Product.find_by_iid order.outer_iid

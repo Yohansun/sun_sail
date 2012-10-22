@@ -14,31 +14,40 @@
           <th width="45%">商品</th>
           <th>色号</th>
         </tr>
+
         <% for order in @trade.get('orders'): %>
-            <tr>
-              <td><%= order.title %> x <%= order.num %></td>
-              <td>
-                <% index = 0 %>
-                <% for count in [0...order.num] : %>
-                  <% if order.contents.length > 1 : %>
-                    <% for item in order.contents : %>
-                      <div class="controls">
-                        套装项目：<%= item %>
-                        <br/>
-                        <b><%= order.color_num[index] %></b>
-                      </div>
-                      <% index = index + 1 %>
-                    <% end %>
-                    <hr/>
-                  <% else : %>
+        <tr>
+          <td><%= order.title %> x <%= order.num %></td>
+          <td>
+            <% index = 0 %>
+            <% for count in [0...order.num] : %>
+              <% colors = order.color_num[index] %>
+              <% i = 0 %>
+              <% if order.contents.length > 1 : %>
+                <% for item in order.contents : %>
+                  <% for [0...item.number] : %>
                     <div class="controls">
-                      <%= order.color_num[count] %>
+                      套装项目：<%= item.name %>
+                      <br>
+                      <% if colors[i] == '' : %>
+                        <b>不调色</b>
+                      <% else : %>
+                        <b><%= colors[i] %></b>
+                      <% end %>
                     </div>
+                    <% i += 1 %>
                   <% end %>
                 <% end %>
-
-              </td>
-            </tr>
+                <hr/>
+              <% else : %>
+                <div class="controls">
+                  <%= order.color_num[count] %>
+                </div>
+              <% end %>
+              <% index = index + 1 %>
+            <% end %>
+          </td>
+        </tr>
         <% end %>
       </tbody>
     </table>

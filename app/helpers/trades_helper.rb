@@ -1,10 +1,7 @@
 # -*- encoding:utf-8 -*-
 module TradesHelper
-  def get_package(iid,trade_id)
-    trade = Trade.find trade_id
+  def get_package(iid, time)
     tmp = []
-
-    return tmp unless trade
 
     iid_map = {
       'ICI0007' => '五合一配套抗碱底漆',
@@ -17,13 +14,21 @@ module TradesHelper
     }
 
     product = Product.where(iid: iid).first
+
     return tmp unless product
-    product.children.each do |p|
-      if trade.created_at < '2012-10-22 00:00:00' && iid_map.keys.include?(product.iid) && p.name == '多乐士净味底漆'
-        tmp << iid_map["#{product.iid}"]
+    product.packages.each do |p|
+      item = Product.find_by_iid p.iid
+      next unless item
+      if time < '2012-10-22 00:00:00' && iid_map.keys.include?(item.iid) && item.name == '多乐士净味底漆'
+        item_name = iid_map["#{product.iid}"]
       else
-        tmp << p.name
+        item_name = item.name
       end
+
+      tmp << {
+        name: item_name,
+        number: p.number
+      }
     end
 
     tmp

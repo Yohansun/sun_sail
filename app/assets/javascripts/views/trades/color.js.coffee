@@ -17,8 +17,14 @@ class MagicOrders.Views.TradesColor extends Backbone.View
 
     for order in @model.get('orders')
       color_num = []
-      for item in $(".color_num_" + order.item_id)
-        color_num.push $(item).val()
+
+      for count in [0...order.num]
+        tmp = []
+        for item in $(".color_num_" + order.item_id + '_' + count)
+          tmp.push $(item).val()
+
+        color_num.push tmp
+
       order.color_num = color_num
 
     @model.set "operation", "申请调色"
@@ -35,3 +41,4 @@ class MagicOrders.Views.TradesColor extends Backbone.View
       error: (model, error, response) =>
         $.unblockUI()
         alert("色号不存在")
+
