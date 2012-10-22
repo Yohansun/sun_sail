@@ -84,9 +84,12 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
       $(@el).find(".trade_nav").text("物流单")
     if @identity == 'cs' or @identity == 'admin'
       $(@el).find(".trade_nav").text("未分流订单")
-    $(@el).find("#get_offset").text(@offset)
-    if parseInt($(@el).find("#complete_offset").text()) == @offset
-      $(@el).find("[data-type=loadMoreTrades]").replaceWith("<p><b>当前为最后一条订单</b></p>")
+    $(@el).find(".get_offset").html(@offset)
+    if parseInt($(@el).find(".complete_offset").html()) == @offset
+      if @offset == 0
+        $(@el).find("[data-type=loadMoreTrades]").replaceWith("<span data-type='loadMoreTrades'><b>当前无订单</b></span>")
+      else
+        $(@el).find("[data-type=loadMoreTrades]").replaceWith("<span data-type='loadMoreTrades'><b>当前为最后一条订单</b></span>")
     this
 
   render_select_state: ->
@@ -100,18 +103,19 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
   renderUpdate: =>
     if @collection.length != 0
       @collection.each(@appendTrade)
-      console.log(@collection.at(0).get("trades_count"))
-      $("#complete_offset").html(@collection.at(0).get("trades_count"))
-      unless parseInt($("#complete_offset").text()) <= @offset
-        $("#get_offset").text(@offset)
+      $(".complete_offset").html(@collection.at(0).get("trades_count"))
+      console.log(parseInt($(".complete_offset").html()))
+      unless parseInt($(".complete_offset").html()) <= @offset
+        $(".get_offset").html(@offset)
+        $("[data-type=loadMoreTrades]").replaceWith("<a href='#' data-type='loadMoreTrades' class='btn'>加载更多订单</a>")
       else
-        $("#get_offset").text($("#complete_offset").text())
-        $("[data-type=loadMoreTrades]").replaceWith("<p><b>当前为最后一条订单</b></p>")
+        $(".get_offset").html($(".complete_offset").html())
+        $("[data-type=loadMoreTrades]").replaceWith("<span data-type='loadMoreTrades'><b>当前为最后一条订单</b></span>")
       $("a[rel=popover]").popover(placement: 'left')
     else
-      $("#complete_offset").html(0)
-      $("#get_offset").text(0)
-      $("[data-type=loadMoreTrades]").replaceWith("<p><b>当前无订单</b></p>")
+      $(".complete_offset").html(0)
+      $(".get_offset").html(0)
+      $("[data-type=loadMoreTrades]").replaceWith("<span data-type='loadMoreTrades'><b>当前无订单</b></span>")
     $.unblockUI()
 
   appendTrade: (trade) =>
