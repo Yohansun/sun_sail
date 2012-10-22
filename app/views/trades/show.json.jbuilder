@@ -3,6 +3,7 @@ json.tid @trade.tid
 json.splitted_tid @trade.splitted_tid
 json.seller_id @trade.seller_id
 json.default_seller_id TradeSetting.default_seller_id
+json.shopname TradeSetting.shopname
 json.seller_name @trade.seller.name if @trade.seller
 json.status @trade.status
 json.status_text @trade.status_text

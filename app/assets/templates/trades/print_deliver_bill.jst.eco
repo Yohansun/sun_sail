@@ -3,7 +3,7 @@
   <h3>发货单</h3>
 </div><!-- modal-header -->
 <div class="modal-body">
-  <h4 class="tc">多乐士官方旗舰店出库单</h4>
+  <h4 class="tc"><%= @trade.get('shopname') %>发货单</h4>
   <div class="clearfix"><span class="pull-left mar_r10">编号：<%= @trade.get("tid") %>D</span></div>
   <div class="clearfix"><span class="pull-left mar_r10">收货人：<%= @trade.get('receiver_name') %></span><span class="pull-left mar_r10">电话：<%= @trade.get('receiver_mobile_phone') %></span></div>
   <div class="clearfix"><span class="pull-left mar_r10">地址：
@@ -12,7 +12,7 @@
     <%= @trade.get('receiver_district') %>
     <%= @trade.get('receiver_address') %></span>
   </div>
-  <table class="table table-bordered mar_t10">
+  <table class="table table-bordered mar_t10 border-bold">
     <tbody>
       <tr>
         <th nowrap>商品编号</th>

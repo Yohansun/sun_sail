@@ -23,7 +23,7 @@ table th.noborder_right,table td.noborder_right{border-right-width:0;}
 <body>
 <div class="print_bill">
   <div class="modal-body">
-      <h4 class="tc">多乐士官方旗舰店出库单</h4>
+      <h4 class="tc"><%= TradeSetting.shopname %>发货单</h4>
       <div class="clearfix"><span class="pull-left mar_r10">编号：<%= @trade.tid %></span></div>
       <div class="clearfix">
         <span class="pull-left mar_r10">收货人：<%= @trade.receiver_name %></span>
