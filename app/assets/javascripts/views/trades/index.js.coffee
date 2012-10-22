@@ -98,14 +98,20 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     $(@el).find('#select_print_time').html(view.render().el)
 
   renderUpdate: =>
-    @collection.each(@appendTrade)
-    $("#complete_offset").html(@collection.at(0).get("trades_count"))
-    unless parseInt($("#complete_offset").text()) <= @offset
-      $("#get_offset").text(@offset)
+    if @collection.length != 0
+      @collection.each(@appendTrade)
+      console.log(@collection.at(0).get("trades_count"))
+      $("#complete_offset").html(@collection.at(0).get("trades_count"))
+      unless parseInt($("#complete_offset").text()) <= @offset
+        $("#get_offset").text(@offset)
+      else
+        $("#get_offset").text($("#complete_offset").text())
+        $("[data-type=loadMoreTrades]").replaceWith("<p><b>当前为最后一条订单</b></p>")
+      $("a[rel=popover]").popover(placement: 'left')
     else
-      $("#get_offset").text($("#complete_offset").text())
-      $("[data-type=loadMoreTrades]").replaceWith("<p><b>当前为最后一条订单</b></p>")
-    $("a[rel=popover]").popover(placement: 'left')
+      $("#complete_offset").html(0)
+      $("#get_offset").text(0)
+      $("[data-type=loadMoreTrades]").replaceWith("<p><b>当前无订单</b></p>")
     $.unblockUI()
 
   appendTrade: (trade) =>
@@ -193,7 +199,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
     @collection.fetch data: {trade_type: @trade_type, search: {option: @search_option, value: @search_value}, search_all: {@search_start_date, @search_start_time, @search_end_date, @pay_start_time, @pay_end_time, @pay_start_date, @pay_end_date, @search_end_time, @status_option, @type_option, @state_option, @city_option, @district_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_invoice, @search_color, @search_logistic}}, success: (collection) =>
 
-      if collection.length > 0
+      if collection.length >= 0
         @offset = @offset + 20
         @renderUpdate()
       else
@@ -258,7 +264,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
     blocktheui()
     @collection.fetch data: {trade_type: @trade_type, offset: @offset, search: {option: @search_option, value: @search_value}, search_all: {@search_start_date, @search_start_time, @pay_start_time, @pay_end_time, @pay_start_date, @pay_end_date, @search_end_date, @search_end_time, @status_option, @type_option, @state_option, @state_option, @city_option, @district_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_invoice, @search_color, @search_logistic}, search_deliverbill_status: @search_deliverbill_status, logistic_status: @logistic_status, search_trade_status: @search_trade_status, search_invoice_status: @search_invoice_status, search_color_status: @search_color_status}, success: (collection) =>
-      if collection.length > 0
+      if collection.length >= 0
         @offset = @offset + 20
         @renderUpdate()
       else
@@ -323,7 +329,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     $("#trade_rows").html('')
 
     @collection.fetch data: {search_trade_status: @search_trade_status}, success: (collection) =>
-     if collection.length > 0
+     if collection.length >= 0
        @offset = @offset + 20
        @renderUpdate()
      else
@@ -339,7 +345,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     $("#trade_rows").html('')
 
     @collection.fetch data: {search_invoice_status: @search_invoice_status}, success: (collection) =>
-     if collection.length > 0
+     if collection.length >= 0
        @offset = @offset + 20
        @renderUpdate()
      else
@@ -356,7 +362,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     $("#trade_rows").html('')
 
     @collection.fetch data: {search_deliverbill_status: @search_deliverbill_status}, success: (collection) =>
-     if collection.length > 0
+     if collection.length >= 0
        @offset = @offset + 20
        @renderUpdate()
      else
@@ -373,7 +379,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     $("#trade_rows").html('')
 
     @collection.fetch data: {logistic_status: @logistic_status}, success: (collection) =>
-     if collection.length > 0
+     if collection.length >= 0
        @offset = @offset + 20
        @renderUpdate()
      else
@@ -390,7 +396,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     $("#trade_rows").html('')
 
     @collection.fetch data: {search_color_status: @search_color_status}, success: (collection) =>
-     if collection.length > 0
+     if collection.length >= 0
        @offset = @offset + 20
        @renderUpdate()
      else
@@ -406,7 +412,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     $("#trade_rows").html('')
 
     @collection.fetch data: {search_confirm_color_status: @search_color_status}, success: (collection) =>
-     if collection.length > 0
+     if collection.length >= 0
        @offset = @offset + 20
        @renderUpdate()
      else
