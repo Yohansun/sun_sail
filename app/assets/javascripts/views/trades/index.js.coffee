@@ -6,7 +6,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     # 'click [data-trade-type]': 'changeTradeType'
     'click [data-trade-mode]': 'changeTradeMode'
     'click .search': 'search'
-    'click .search_all': 'searchAll'
     'click [data-type=loadMoreTrades]': 'forceLoadMoreTrades'
     'click .export_orders': 'exportOrders'
     'click #cols_filter input,label': 'keepColsFilterDropdownOpen'
@@ -130,24 +129,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
   search: (e) ->
     e.preventDefault()
-    @search_option = $(".search_option").val()
-    @search_value = $(".search_value").val()
-
-    @from_deliver_print_date = $(".print_start_date").val()
-    @to_deliver_print_date = $(".print_end_date").val()
-    @from_deliver_print_time = $(".print_start_time").val()
-    @to_deliver_print_time = $(".print_end_time").val()
-
-    return if (@search_option == '' or @search_value == '') and (@from_deliver_print_date == '' or @to_deliver_print_date == '')
-
-    blocktheui()
-    $("#trade_rows").html('')
-    @collection.fetch data: {search: {option: @search_option, value: @search_value}, search_print_time: {@from_deliver_print_date, @to_deliver_print_date, @from_deliver_print_time, @to_deliver_print_time}}, success: (collection) =>
-      @renderUpdate()
-      $.unblockUI()
-
-  searchAll: (e) ->
-    e.preventDefault()
 
     @search_option = $(".search_option").val()
     @search_value = $(".search_value").val()
@@ -166,6 +147,10 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     @pay_end_date = $(".pay_end_date").val()
     @pay_start_time = $(".pay_start_time").val()
     @pay_end_time = $(".pay_end_time").val()
+    @from_deliver_print_date = $(".print_start_date").val()
+    @to_deliver_print_date = $(".print_end_date").val()
+    @from_deliver_print_time = $(".print_start_time").val()
+    @to_deliver_print_time = $(".print_end_time").val()
 
     @search_buyer_message = $("#search_buyer_message").is(':checked')
     @search_seller_memo = $("#search_seller_memo").is(':checked')
@@ -175,14 +160,13 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
     @search_logistic = $("#search_logistic").val()
 
-    return if (@search_option == '' or @search_value == '') and @search_logistic == '' and @status_option == "" and @state_option == "" and @city_option == "" and @district_option == "" and @type_option == "" and (@search_start_date == '' or @search_end_date == '') and (@pay_start_date == '' or @pay_end_date == '') and @search_buyer_message == false and @search_seller_memo == false and @search_cs_memo == false and @search_color == false and @search_invoice == false
+    return if (@search_option == '' or @search_value == '') and (@from_deliver_print_date == '' or @to_deliver_print_date == '') and @search_logistic == '' and @status_option == "" and @state_option == "" and @city_option == "" and @district_option == "" and @type_option == "" and (@search_start_date == '' or @search_end_date == '') and (@pay_start_date == '' or @pay_end_date == '') and @search_buyer_message == false and @search_seller_memo == false and @search_cs_memo == false and @search_color == false and @search_invoice == false
 
     @offset = 0
     blocktheui()
     $("#trade_rows").html('')
 
-    @collection.fetch data: {trade_type: @trade_type, search: {option: @search_option, value: @search_value}, search_all: {@search_start_date, @search_start_time, @search_end_date, @pay_start_time, @pay_end_time, @pay_start_date, @pay_end_date, @search_end_time, @status_option, @type_option, @state_option, @city_option, @district_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_invoice, @search_color, @search_logistic}}, success: (collection) =>
-
+    @collection.fetch data: {trade_type: @trade_type, search: {option: @search_option, value: @search_value}, search_print_time: {@from_deliver_print_date, @to_deliver_print_date, @from_deliver_print_time, @to_deliver_print_time}, search_all: {@search_start_date, @search_start_time, @search_end_date, @pay_start_time, @pay_end_time, @pay_start_date, @pay_end_date, @search_end_time, @status_option, @type_option, @state_option, @city_option, @district_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_invoice, @search_color, @search_logistic}}, success: (collection) =>
       if collection.length >= 0
         @offset = @offset + 20
         @renderUpdate()
@@ -199,11 +183,10 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     $('.dropdown.open .dropdown-toggle').dropdown('toggle');
     $(@el).find(".trade_pops li").hide()
     MagicOrders.trade_mode = $(e.target).data('trade-mode')
+    $(".order_search_form")[0].reset()
     if MagicOrders.trade_mode isnt 'trades'
       $("#search_toggle").hide()
       $("#fieldset_advanced").hide()
-      $("#advanced_btn i").toggleClass 'icon-arrow-down'
-      $("#advanced_btn i").toggleClass 'icon-arrow-up'
       $("#simple_search_button").removeClass 'simple_search'
     else
       $("#fieldset_advanced").show()
@@ -260,8 +243,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
   advancedSearch: (e) ->
     e.preventDefault()
-    $("#advanced_btn i").toggleClass 'icon-arrow-down'
-    $("#advanced_btn i").toggleClass 'icon-arrow-up'
     $("#search_toggle").toggle()
     $("#simple_search_button").toggleClass 'simple_search'
 

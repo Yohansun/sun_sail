@@ -286,18 +286,17 @@
         </fieldset>
 
         <fieldset>
-          <button class="pull-right btn btn-primary search_all" type="button">搜索</button>
+          <button class="pull-right btn btn-primary search" type="button">搜索</button>
         </fieldset>
 
       </div>
 
       <fieldset id="fieldset_advanced">
          <ul class="the-icons mar_t3">
-           <li class="pull-right" id="advanced_btn"><i class="icon-arrow-down"></i><a href="#">高级搜索</a>
+           <li class="pull-right" id="advanced_btn"><a href="#">高级搜索</a>
            </li>
          </ul>
       </fieldset>
-
   </form>
 
 
