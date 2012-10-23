@@ -26,20 +26,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
   initialize: (options) ->
     @trade_type = options.trade_type
-    @search_option = null
-    @search_value = null
-    @status_option = null
-    @type_option = null
-    @search_start_date = null
-    @search_end_date = null
-    @search_start_time = null
-    @search_end_time = null
-    @pay_start_time = null
-    @pay_end_time = null
-    @pay_start_date = null
-    @pay_end_date = null
-    @search_logistic = null
-
     @identity = MagicOrders.role_key
     @offset = @collection.length
     @first_rendered = false
@@ -104,7 +90,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     if @collection.length != 0
       @collection.each(@appendTrade)
       $(".complete_offset").html(@collection.at(0).get("trades_count"))
-      console.log(parseInt($(".complete_offset").html()))
       unless parseInt($(".complete_offset").html()) <= @offset
         $(".get_offset").html(@offset)
         $("[data-type=loadMoreTrades]").replaceWith("<a href='#' data-type='loadMoreTrades' class='btn'>加载更多订单</a>")
