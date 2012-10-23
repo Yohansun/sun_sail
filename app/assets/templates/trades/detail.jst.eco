@@ -126,7 +126,7 @@
       </tr>
       <% for item in order.contents : %>
       <tr>
-        <td>套装详情: <%= item %></td>
+        <td>套装详情: <%= item.name %></td>
       </tr>
       <% end %>
       <% end %>
