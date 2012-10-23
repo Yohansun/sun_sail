@@ -44,14 +44,14 @@ class TradesController < ApplicationController
     end
 
     ##登录时的默认显示
-    if params[:trade_type].blank? && params[:search_trade_status].blank? && params[:search].blank? && params[:search_all].blank? && params[:search_deliverbill_status].blank? && params[:logistic_status].blank? && params[:search_color_status].blank? && params[:search_print_time].blank?
+    if params[:trade_type].blank? && params[:search_trade_status].blank? && params[:search].blank? && params[:search_all].blank?
       # 经销商登录默认显示未发货订单
       if current_user.has_role?(:seller)
-        @trades = @trades.where("$and" => [{:dispatched_at.exists => true},{:status.in => paid_not_deliver_array}])
+        @trades = @trades.where({"$and" => [{:dispatched_at.exists => true},{:status.in => paid_not_deliver_array}]})
       end
       # 管理员，客服登录默认显示未分流订单
       if current_user.has_role?(:cs) || current_user.has_role?(:admin)
-        @trades = @trades.where("$and" => [{"$or" => [{seller_id: nil},{:seller_id.exists => false}]},{:status.in => paid_not_deliver_array}])
+        @trades = @trades.where({"$and" => [{"$or" => [{seller_id: nil},{:seller_id.exists => false}]},{:status.in => paid_not_deliver_array}]})
       end
     end
 
@@ -100,15 +100,15 @@ class TradesController < ApplicationController
     end
 
     if unusual_trade_hash_1
-      @trades = @trades.where("$and" => [unusual_trade_hash_1,{:status.nin => closed_array}])
+@trades = @trades.where({"$and" => [unusual_trade_hash_1,{:status.nin => closed_array}]})
     end
 
     if unusual_trade_hash_2
-      @trades = @trades.where("$and" => [unusual_trade_hash_2,{:seller_id.exists => false},{:status.in => paid_not_deliver_array}])
+      @trades = @trades.where({"$and" => [unusual_trade_hash_2,{:seller_id.exists => false},{:status.in => paid_not_deliver_array}]})
     end
 
     if unusual_trade_hash_3
-      @trades = @trades.where("$and" => [unusual_trade_hash_3,{:dispatched_at.exists => true},{:status.in => paid_not_deliver_array}])
+      @trades = @trades.where({"$and" => [unusual_trade_hash_3,{:dispatched_at.exists => true},{:status.in => paid_not_deliver_array}]})
     end
 
     ## 导航栏筛选
@@ -116,11 +116,11 @@ class TradesController < ApplicationController
     if params[:search_trade_status]
       status = params[:search_trade_status]
       if status == 'undispatched'
-        @trades = @trades.where("$and" =>[{"$or" => [{seller_id: nil},{:seller_id.exists => false}]},{:status.in => paid_not_deliver_array}])
+        @trades = @trades.where({"$and" =>[{"$or" => [{seller_id: nil},{:seller_id.exists => false}]},{:status.in => paid_not_deliver_array}]})
       elsif status == 'unpaid'
         @trades = @trades.where(status: "WAIT_BUYER_PAY")
       elsif status == 'undelivered'
-        @trades = @trades.where("$and" => [{:dispatched_at.exists => true},{:status.in => paid_not_deliver_array}])
+        @trades = @trades.where({"$and" => [{:dispatched_at.exists => true},{:status.in => paid_not_deliver_array}]})
       elsif status == 'delivered'
         @trades = @trades.where(:status.in => paid_and_delivered_array)
       elsif status == 'refund'
@@ -135,38 +135,38 @@ class TradesController < ApplicationController
 
     # 发货单
     # 发货单是否已打印
-    if params[:search_deliverbill_status] == "deliver_bill_unprinted"
+    if params[:search_trade_status] == "deliver_bill_unprinted"
       @trades = @trades.where("$and" => [{:deliver_bill_printed_at.exists => false},{:dispatched_at.exists => true},{:status.in => paid_not_deliver_array + paid_and_delivered_array}])
-    elsif params[:search_deliverbill_status] == "deliver_bill_printed"
+    elsif params[:search_trade_status] == "deliver_bill_printed"
       @trades = @trades.where("$and" => [{:deliver_bill_printed_at.exists => true},{:dispatched_at.exists => true},{:status.in => paid_not_deliver_array + paid_and_delivered_array}])
     end
 
     # 物流单
     # 物流单号是否已设置
-    if params[:logistic_status] == "logistic_all"
-    elsif params[:logistic_status] == "logistic_waybill_void"
+    if params[:search_trade_status] == "logistic_all"
+    elsif params[:search_trade_status] == "logistic_waybill_void"
       @trades = @trades.where("$and" =>[{:logistic_waybill.exists => false},{:status.in => paid_and_delivered_array}])
-    elsif params[:logistic_status] == "logistic_waybill_exist"
+    elsif params[:search_trade_status] == "logistic_waybill_exist"
       @trades = @trades.where("$and" =>[{:logistic_waybill.exists => true},{:status.in => paid_and_delivered_array}])
     end
 
     # #发票
-    # if params[:search_invoice_status] == 'invoice_all'
+    # if params[:search_trade_status] == 'invoice_all'
     #   @trades = @trades.where(:invoice_name.exists => true)
-    # elsif params[:search_invoice_status] == 'invoice_unfilled'
+    # elsif params[:search_trade_status] == 'invoice_unfilled'
     #   @trades = @trades.where(:seller_confirm_invoice_at.exists => false)
-    # elsif params[:search_invoice_status] == 'invoice_filled'
+    # elsif params[:search_trade_status] == 'invoice_filled'
     #   @trades = @trades.where(:seller_confirm_invoice_at.exists => true)
-    # elsif params[:search_invoice_status] == 'invoice_sent'
+    # elsif params[:search_trade_status] == 'invoice_sent'
     #   @trades = @trades.where("$and" =>[{:status.in => paid_and_delivered_array},{:seller_confirm_invoice_at.exists => true}])
     # end
 
     # 调色
-    if params[:search_color_status] == "unmatched"
+    if params[:search_trade_status] == "color_unmatched"
       @trades = @trades.where("$and" => [{has_color_info: false},{:status.in => paid_not_deliver_array}])
-    elsif params[:search_color_status] == "matched"
+    elsif params[:search_trade_status] == "color_matched"
       @trades = @trades.where("$and" => [{has_color_info: true},{:status.in => paid_not_deliver_array},{:confirm_color_at.exists => false}])
-    elsif params[:search_color_status] == "confirmed"
+    elsif params[:search_trade_status] == "color_confirmed"
       @trades = @trades.where("$and" =>[{has_color_info: true},{:status.in => paid_not_deliver_array},{:confirm_color_at.exists => true}])
     end
 
