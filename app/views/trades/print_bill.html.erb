@@ -52,6 +52,7 @@ table th.noborder_right,table td.noborder_right{border-right-width:0;word-wrap:b
               <% order.num.times do %>
                 <% colors = order.color_num[index] %>
                 <% i = 0 %>
+                <% if colors.present? %>
                 <% if get_package(order.outer_iid, @trade.created_at).length > 1 %>
                   <% for item in get_package(order.outer_iid, @trade.created_at) %>
                     <% item[:number].times do %>
@@ -70,9 +71,9 @@ table th.noborder_right,table td.noborder_right{border-right-width:0;word-wrap:b
                   <hr/>
                 <% else %>
                   <div class="controls">
-                    <%= order.color_num[index][i] %>
-                    <% i += 1 %>
+                    <%= colors[i] %>
                   </div>
+                <% end %>
                 <% end %>
                 <% index = index + 1 %>
               <% end %>

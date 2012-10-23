@@ -23,6 +23,7 @@
             <% for count in [0...order.num] : %>
               <% colors = order.color_num[index] %>
               <% i = 0 %>
+              <% if colors : %>
               <% if order.contents.length > 1 : %>
                 <% for item in order.contents : %>
                   <% for [0...item.number] : %>
@@ -41,8 +42,9 @@
                 <hr/>
               <% else : %>
                 <div class="controls">
-                  <%= order.color_num[count] %>
+                  <%= colors[i] %>
                 </div>
+              <% end %>
               <% end %>
               <% index = index + 1 %>
             <% end %>
