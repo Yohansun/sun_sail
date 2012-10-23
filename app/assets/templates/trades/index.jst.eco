@@ -46,8 +46,8 @@
         </a>
         <ul class="dropdown-menu">
           <!-- <li><a href="#" data-trade-mode="deliver">所有发货单</a></li> -->
-          <li><a href="#" data-trade-mode="deliver" data-deliver-bill-status="deliver_bill_unprinted">未打印</a></li>
-          <li><a href="#" data-trade-mode="deliver" data-deliver-bill-status="deliver_bill_printed">已打印</a></li>
+          <li><a href="#" data-trade-mode="deliver" data-trade-status="deliver_bill_unprinted">未打印</a></li>
+          <li><a href="#" data-trade-mode="deliver" data-trade-status="deliver_bill_printed">已打印</a></li>
           <!-- <li><a href="#" data-trade-mode="deliver">有物流单号</a></li>
           <li><a href="#" data-trade-mode="deliver">无物流单号</a></li>
           <li><a href="#" data-trade-mode="deliver">退货订单</a></li>
@@ -62,8 +62,8 @@
           <b class="caret"></b>
         </a>
         <ul class="dropdown-menu">
-          <li><a href="#" data-trade-mode="logistics" data-logistic-status="logistic_waybill_void">未返回物流单号</a></li>
-          <li><a href="#" data-trade-mode="logistics" data-logistic-status="logistic_waybill_exist">已返回物流单号</a></li>
+          <li><a href="#" data-trade-mode="logistics" data-trade-status="logistic_waybill_void">未返回物流单号</a></li>
+          <li><a href="#" data-trade-mode="logistics" data-trade-status="logistic_waybill_exist">已返回物流单号</a></li>
         </ul>
       </li>
       <% unless MagicOrders.company == "dulux" and MagicOrders.role_key == 'logistic' : %>
@@ -116,9 +116,9 @@
           <b class="caret"></b>
         </a>
         <ul class="dropdown-menu">
-          <li><a href="#" data-trade-mode="color" data-color-status="unmatched">未申请调色</a></li>
-          <li><a href="#" data-trade-mode="color" data-color-status="matched">已申请,未确认调色</a></li>
-          <li><a href="#" data-trade-mode="color" data-color-status="confirmed">已确认调色</a></li>
+          <li><a href="#" data-trade-mode="color" data-trade-status="color_unmatched">未申请调色</a></li>
+          <li><a href="#" data-trade-mode="color" data-trade-status="color_matched">已申请,未确认调色</a></li>
+          <li><a href="#" data-trade-mode="color" data-trade-status="color_confirmed">已确认调色</a></li>
         </ul>
       </li>
       <!-- <li class="dropdown">
@@ -127,10 +127,10 @@
           <b class="caret"></b>
         </a>
         <ul class="dropdown-menu">
-          <li><a href="#" data-trade-mode="invoice" data-invoice-status="invoice_all">所有开票</a></li>
-          <li><a href="#" data-trade-mode="invoice" data-invoice-status="invoice_unfilled">未开票</a></li>
-          <li><a href="#" data-trade-mode="invoice" data-invoice-status="invoice_filled">已开票</a></li>
-          <li><a href="#" data-trade-mode="invoice" data-invoice-status="invoice_sent">已寄出</a></li>
+          <li><a href="#" data-trade-mode="invoice" data-trade-status="invoice_all">所有开票</a></li>
+          <li><a href="#" data-trade-mode="invoice" data-trade-status="invoice_unfilled">未开票</a></li>
+          <li><a href="#" data-trade-mode="invoice" data-trade-status="invoice_filled">已开票</a></li>
+          <li><a href="#" data-trade-mode="invoice" data-trade-status="invoice_sent">已寄出</a></li>
         </ul>
       </li> -->
       <% end %>

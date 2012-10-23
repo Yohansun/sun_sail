@@ -14,11 +14,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
     #navigation bar function
     'click [data-trade-status]': 'selectSameStatusTrade'
-    'click [data-invoice-status]': 'selectSameStatusInvoice'
-    'click [data-deliver-bill-status]': 'selectSameStatusDeliverBill'
-    'click [data-logistic-status]': 'selectSameStatusLogistic'
-    'click [data-color-status]': 'selectSameStatusColor'
-    'click [data-confirm_color-status]': 'selectSameStatusConfirmColor'
 
     #visual effects
     'click #advanced_btn': 'advancedSearch'
@@ -252,7 +247,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     event.preventDefault()
 
     blocktheui()
-    @collection.fetch data: {trade_type: @trade_type, offset: @offset, search: {option: @search_option, value: @search_value}, search_all: {@search_start_date, @search_start_time, @pay_start_time, @pay_end_time, @pay_start_date, @pay_end_date, @search_end_date, @search_end_time, @status_option, @type_option, @state_option, @state_option, @city_option, @district_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_invoice, @search_color, @search_logistic}, search_deliverbill_status: @search_deliverbill_status, logistic_status: @logistic_status, search_trade_status: @search_trade_status, search_invoice_status: @search_invoice_status, search_color_status: @search_color_status}, success: (collection) =>
+    @collection.fetch data: {trade_type: @trade_type, offset: @offset, search: {option: @search_option, value: @search_value}, search_all: {@search_start_date, @search_start_time, @pay_start_time, @pay_end_time, @pay_start_date, @pay_end_date, @search_end_date, @search_end_time, @status_option, @type_option, @state_option, @state_option, @city_option, @district_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_invoice, @search_color, @search_logistic}, search_trade_status: @search_trade_status}, success: (collection) =>
       if collection.length >= 0
         @offset = @offset + 20
         @renderUpdate()
@@ -318,89 +313,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     $("#trade_rows").html('')
 
     @collection.fetch data: {search_trade_status: @search_trade_status}, success: (collection) =>
-     if collection.length >= 0
-       @offset = @offset + 20
-       @renderUpdate()
-     else
-       $.unblockUI()
-
-  selectSameStatusInvoice: (e) =>
-    e.preventDefault()
-    $('.dropdown.open .dropdown-toggle').dropdown('toggle');
-    @search_invoice_status = $(e.target).data('invoice-status')
-    $(@el).find(".trade_nav").text($(@el).find("[data-invoice-status=#{@search_invoice_status}]").html())
-    @offset = 0
-    blocktheui()
-    $("#trade_rows").html('')
-
-    @collection.fetch data: {search_invoice_status: @search_invoice_status}, success: (collection) =>
-     if collection.length >= 0
-       @offset = @offset + 20
-       @renderUpdate()
-     else
-       $.unblockUI()
-
-  selectSameStatusDeliverBill: (e) =>
-    e.preventDefault()
-    $('.dropdown.open .dropdown-toggle').dropdown('toggle');
-    @search_deliverbill_status = $(e.target).data('deliver-bill-status')
-    $(@el).find(".trade_nav").text($(@el).find("[data-deliver-bill-status=#{@search_deliverbill_status}]").html())
-
-    @offset = 0
-    blocktheui()
-    $("#trade_rows").html('')
-
-    @collection.fetch data: {search_deliverbill_status: @search_deliverbill_status}, success: (collection) =>
-     if collection.length >= 0
-       @offset = @offset + 20
-       @renderUpdate()
-     else
-       $.unblockUI()
-
-  selectSameStatusLogistic: (e) =>
-    e.preventDefault()
-    $('.dropdown.open .dropdown-toggle').dropdown('toggle');
-    @logistic_status = $(e.target).data('logistic-status')
-    $(@el).find(".trade_nav").text($(@el).find("[data-logistic-status=#{@logistic_status}]").html())
-
-    @offset = 0
-    blocktheui()
-    $("#trade_rows").html('')
-
-    @collection.fetch data: {logistic_status: @logistic_status}, success: (collection) =>
-     if collection.length >= 0
-       @offset = @offset + 20
-       @renderUpdate()
-     else
-       $.unblockUI()
-
-  selectSameStatusColor: (e) =>
-    e.preventDefault()
-    $('.dropdown.open .dropdown-toggle').dropdown('toggle');
-    @search_color_status = $(e.target).data('color-status')
-    $(@el).find(".trade_nav").text($(@el).find("[data-color-status=#{@search_color_status}]").html())
-
-    @offset = 0
-    blocktheui()
-    $("#trade_rows").html('')
-
-    @collection.fetch data: {search_color_status: @search_color_status}, success: (collection) =>
-     if collection.length >= 0
-       @offset = @offset + 20
-       @renderUpdate()
-     else
-       $.unblockUI()
-
-  selectSameStatusConfirmColor: (e) =>
-    e.preventDefault()
-    $('.dropdown.open .dropdown-toggle').dropdown('toggle');
-    @search_color_status = $(e.target).data('confirm_color-status')
-    $(@el).find(".trade_nav").text($(@el).find("[data-confirm_color--status=#{@search_color_status}]").html())
-    @offset = 0
-    blocktheui()
-    $("#trade_rows").html('')
-
-    @collection.fetch data: {search_confirm_color_status: @search_color_status}, success: (collection) =>
      if collection.length >= 0
        @offset = @offset + 20
        @renderUpdate()
