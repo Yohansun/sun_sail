@@ -292,15 +292,4 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     e.preventDefault()
     $('.dropdown.open .dropdown-toggle').dropdown('toggle');
     @search_trade_status = $(e.target).data('trade-status')
-    $(@el).find(".trade_nav").text($("[data-trade-status=#{@search_trade_status}]").html())
-
-    @offset = 0
-    blocktheui()
-    $("#trade_rows").html('')
-
-    @collection.fetch data: {search_trade_status: @search_trade_status}, success: (collection) =>
-     if collection.length >= 0
-       @offset = @offset + 20
-       @renderUpdate()
-     else
-       $.unblockUI()
+    Backbone.history.navigate('trades/' + @search_trade_status, true)

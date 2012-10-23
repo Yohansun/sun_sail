@@ -44,7 +44,7 @@ class TradesController < ApplicationController
     end
 
     ##登录时的默认显示
-    if params[:trade_type].blank? && params[:search_trade_status].blank? && params[:search].blank?
+    if params[:trade_type].blank? && params[:search].blank?
       # 经销商登录默认显示未发货订单
       if current_user.has_role?(:seller)
         @trades = @trades.where("$and" => [{:dispatched_at.exists => true},{:status.in => paid_not_deliver_array}])
@@ -56,89 +56,83 @@ class TradesController < ApplicationController
     end
 
 
-    ## 导航栏筛选
+    ## 导航栏
     if params[:trade_type]
       type = params[:trade_type]
       case type
       when 'taobao'
-        @trades = @trades.where(_type: 'TaobaoTrade')
+        trade_type_hash = {_type: 'TaobaoTrade'}
       when 'taobao_fenxiao'
-        @trades = @trades.where(_type: 'TaobaoPurchaseOrder')
+        trade_type_hash = {_type: 'TaobaoPurchaseOrder'}
       when 'jingdong'
-        @trades = @trades.where(_type: 'JingdongTrade')
+        trade_type_hash = {_type: 'JingdongTrade'}
       when 'shop'
-        @trades = @trades.where(_type: 'ShopTrade')
+        trade_type_hash = {_type: 'ShopTrade'}
 
       ## 异常订单筛选(仅适用于没有京东订单的dulux)
       when 'unpaid_two_days'
-        @trades = @trades.where("$and" => [{:created.lte => Time.now - 2.days},{:pay_time.exists => false},{:status.nin => closed_array}])
+        trade_type_hash = {"$and" => [{:created.lte => Time.now - 2.days},{:pay_time.exists => false},{:status.nin => closed_array}]}
       when 'undispatched_one_day'
-        @trades = @trades.where("$and" => [{:pay_time.lte => Time.now - 1.days},{:dispatched_at.exists => false},{:seller_id.exists => false},{:status.in => paid_not_deliver_array}])
+        trade_type_hash = {"$and" => [{:pay_time.lte => Time.now - 1.days},{:dispatched_at.exists => false},{:seller_id.exists => false},{:status.in => paid_not_deliver_array}]}
       when 'undelivered_two_days'
-        @trades = @trades.where("$and" => [{:dispatched_at.lte => Time.now - 2.days},{"$or" => [{"$and" => [{_type: "TaobaoTrade"}, {:consign_time.exists => false}]}, {"$and" => [{_type: "TaobaoPurchaseOrder"},{"$and" => [{:consign_time.exists => false}, {:delivered_at.exists => false}]}]}]},{:dispatched_at.exists => true},{:status.in => paid_not_deliver_array}]) 
+        trade_type_hash = {"$and" => [{:dispatched_at.lte => Time.now - 2.days},{"$or" => [{"$and" => [{_type: "TaobaoTrade"}, {:consign_time.exists => false}]}, {"$and" => [{_type: "TaobaoPurchaseOrder"},{"$and" => [{:consign_time.exists => false}, {:delivered_at.exists => false}]}]}]},{:dispatched_at.exists => true},{:status.in => paid_not_deliver_array}]} 
       when 'buyer_delay_deliver', 'seller_ignore_deliver', 'seller_lack_product', 'seller_lack_color', 'buyer_demand_refund', 'buyer_demand_return_product', 'other_unusual_state'
-        @trades = @trades.where("unusual_states" => {"$elemMatch" => {key: type}})
+        trade_type_hash = {"unusual_states" => {"$elemMatch" => {key: type}}}
+
+      # 订单
+      when 'undispatched'
+        trade_type_hash = {"$and" =>[{"$or" => [{seller_id: nil},{:seller_id.exists => false}]},{:status.in => paid_not_deliver_array}]}
+      when 'unpaid'
+        trade_type_hash = {status: "WAIT_BUYER_PAY"}
+      when 'undelivered'
+        trade_type_hash = {"$and" => [{:dispatched_at.exists => true},{:status.in => paid_not_deliver_array}]}
+      when 'delivered'
+        trade_type_hash = {:status.in => paid_and_delivered_array}
+      when 'refund'
+        trade_type_hash = {:status.in => refund_array}
+      when 'closed'
+        trade_type_hash = {:status.in => closed_array}
+      when 'unusual_trade'
+        trade_type_hash = {status: "TRADE_NO_CREATE_PAY"}
+
+
+      # 发货单
+      # 发货单是否已打印
+      when "deliver_bill_unprinted"
+        trade_type_hash = {"$and" => [{:deliver_bill_printed_at.exists => false},{:dispatched_at.exists => true},{:status.in => paid_not_deliver_array + paid_and_delivered_array}]}
+      when "deliver_bill_printed"
+        trade_type_hash = {"$and" => [{:deliver_bill_printed_at.exists => true},{:dispatched_at.exists => true},{:status.in => paid_not_deliver_array + paid_and_delivered_array}]}
+
+      # 物流单
+      # 物流单号是否已设置
+      when "logistic_all"
+      when "logistic_waybill_void"
+        trade_type_hash = {"$and" =>[{:logistic_waybill.exists => false},{:status.in => paid_and_delivered_array}]}
+      when "logistic_waybill_exist"
+        trade_type_hash = {"$and" =>[{:logistic_waybill.exists => true},{:status.in => paid_and_delivered_array}]}
+
+      # #发票
+      # when 'invoice_all'
+      #   trade_type_hash = {:invoice_name.exists => true}
+      # when 'invoice_unfilled'
+      #   trade_type_hash = {:seller_confirm_invoice_at.exists => false}
+      # when 'invoice_filled'
+      #   trade_type_hash = {:seller_confirm_invoice_at.exists => true}
+      # when 'invoice_sent'
+      #   trade_type_hash = {"$and" =>[{:status.in => paid_and_delivered_array},{:seller_confirm_invoice_at.exists => true}]}
+
+      # 调色
+      when "color_unmatched"
+        trade_type_hash = {"$and" => [{has_color_info: false},{:status.in => paid_not_deliver_array}]}
+      when "color_matched"
+        trade_type_hash = {"$and" => [{has_color_info: true},{:status.in => paid_not_deliver_array},{:confirm_color_at.exists => false}]}
+      when "color_confirmed"
+        trade_type_hash = {"$and" =>[{has_color_info: true},{:status.in => paid_not_deliver_array},{:confirm_color_at.exists => true}]}
       else
+        trade_type_hash = nil
       end
     end
 
-    # 订单
-    if params[:search_trade_status]
-      status = params[:search_trade_status]
-      if status == 'undispatched'
-        @trades = @trades.where("$and" =>[{"$or" => [{seller_id: nil},{:seller_id.exists => false}]},{:status.in => paid_not_deliver_array}])
-      elsif status == 'unpaid'
-        @trades = @trades.where(status: "WAIT_BUYER_PAY")
-      elsif status == 'undelivered'
-        @trades = @trades.where("$and" => [{:dispatched_at.exists => true},{:status.in => paid_not_deliver_array}])
-      elsif status == 'delivered'
-        @trades = @trades.where(:status.in => paid_and_delivered_array)
-      elsif status == 'refund'
-        @trades = @trades.where(:status.in => refund_array)
-      elsif status == 'closed'
-        @trades = @trades.where(:status.in => closed_array)
-      elsif status == 'unusual_trade'
-        @trades = @trades.where(status: "TRADE_NO_CREATE_PAY")
-      end
-    end
-
-
-    # 发货单
-    # 发货单是否已打印
-    if params[:search_trade_status] == "deliver_bill_unprinted"
-      @trades = @trades.where("$and" => [{:deliver_bill_printed_at.exists => false},{:dispatched_at.exists => true},{:status.in => paid_not_deliver_array + paid_and_delivered_array}])
-    elsif params[:search_trade_status] == "deliver_bill_printed"
-      @trades = @trades.where("$and" => [{:deliver_bill_printed_at.exists => true},{:dispatched_at.exists => true},{:status.in => paid_not_deliver_array + paid_and_delivered_array}])
-    end
-
-    # 物流单
-    # 物流单号是否已设置
-    if params[:search_trade_status] == "logistic_all"
-    elsif params[:search_trade_status] == "logistic_waybill_void"
-      @trades = @trades.where("$and" =>[{:logistic_waybill.exists => false},{:status.in => paid_and_delivered_array}])
-    elsif params[:search_trade_status] == "logistic_waybill_exist"
-      @trades = @trades.where("$and" =>[{:logistic_waybill.exists => true},{:status.in => paid_and_delivered_array}])
-    end
-
-    # #发票
-    # if params[:search_trade_status] == 'invoice_all'
-    #   @trades = @trades.where(:invoice_name.exists => true)
-    # elsif params[:search_trade_status] == 'invoice_unfilled'
-    #   @trades = @trades.where(:seller_confirm_invoice_at.exists => false)
-    # elsif params[:search_trade_status] == 'invoice_filled'
-    #   @trades = @trades.where(:seller_confirm_invoice_at.exists => true)
-    # elsif params[:search_trade_status] == 'invoice_sent'
-    #   @trades = @trades.where("$and" =>[{:status.in => paid_and_delivered_array},{:seller_confirm_invoice_at.exists => true}])
-    # end
-
-    # 调色
-    if params[:search_trade_status] == "color_unmatched"
-      @trades = @trades.where("$and" => [{has_color_info: false},{:status.in => paid_not_deliver_array}])
-    elsif params[:search_trade_status] == "color_matched"
-      @trades = @trades.where("$and" => [{has_color_info: true},{:status.in => paid_not_deliver_array},{:confirm_color_at.exists => false}])
-    elsif params[:search_trade_status] == "color_confirmed"
-      @trades = @trades.where("$and" =>[{has_color_info: true},{:status.in => paid_not_deliver_array},{:confirm_color_at.exists => true}])
-    end
 
     ## 筛选
     if params[:search] && !params[:search][:simple_search_option].blank? && !params[:search][:simple_search_value].blank?
@@ -180,8 +174,8 @@ class TradesController < ApplicationController
 
     # 按状态筛选
     if params[:search] && params[:search][:status_option].present?
-        status_array = params[:search][:status_option].split(",")
-        status_hash = {:status.in => status_array}
+      status_array = params[:search][:status_option].split(",")
+      status_hash = {:status.in => status_array}
     end
 
     # 按来源筛选
@@ -238,21 +232,26 @@ class TradesController < ApplicationController
       logistic_hash = {logistic_name: logi_name}
     end
 
-    # 集中筛选
-      if params[:search]
-        @trades = @trades.where({"$and" => [
-          seller_hash, tid_hash, receiver_name_hash, receiver_mobile_hash,
-          deliver_print_time_hash, create_time_hash, pay_time_hash,
-          status_hash, type_hash, logistic_hash,
-          seller_memo_hash, buyer_message_hash, has_color_info_hash, has_cs_memo_hash, invoice_all_hash,
-          receiver_state_hash, receiver_city_hash, receiver_district_hash,
-          ].compact})
+    # 搜索集中筛选
+    if params[:search]
+      search_hash = {"$and" => [
+        seller_hash, tid_hash, receiver_name_hash, receiver_mobile_hash,
+        deliver_print_time_hash, create_time_hash, pay_time_hash,
+        status_hash, type_hash, logistic_hash,
+        seller_memo_hash, buyer_message_hash, has_color_info_hash, has_cs_memo_hash, invoice_all_hash,
+        receiver_state_hash, receiver_city_hash, receiver_district_hash,
+        ].compact}
+      search_hash == {"$and"=>[]} ? search_hash = nil : search_hash
+    end
+
+    # 过滤有留言但还在抓取 + 总筛选
+      chief_hash = {"$and" =>[trade_type_hash, search_hash, {"$or" => [{:has_buyer_message.ne => true}, {:buyer_message.ne => nil}]}].compact}
+      unless chief_hash == {"$and"=>[]}
+        @trades = @trades.where(chief_hash)
       end
 
-    # 过滤有留言但还在抓取         ####这个筛选很特殊，写在这里会完全搞乱逻辑，我先注释掉了####
-    # @trades = @trades.where("$or" => [{:has_buyer_message.ne => true}, {:buyer_message.ne => nil}])
-
     ###筛选结束###
+
     @trades_count = @trades.count
     offset = params[:offset] || 0
     limit = params[:limit] || 20

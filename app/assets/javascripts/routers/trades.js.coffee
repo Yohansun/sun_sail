@@ -61,6 +61,8 @@ class MagicOrders.Routers.Trades extends Backbone.Router
           when 'buyer_demand_refund' then $('.trade_nav').html('买家要求退款')
           when 'buyer_demand_return_product' then $('.trade_nav').html('买家要求退货')
           when 'other_unusual_state' then $('.trade_nav').html('其他异常')
+          else
+            $('.trade_nav').html($("[data-trade-status=#{trade_type}]").html())
 
         $('.form-search .datepicker').datepicker(format: 'yyyy-mm-dd')
         $('.form-search .timepicker').timeEntry(show24Hours: true, showSeconds: true, spinnerImage: '/assets/spinnerUpDown.png', spinnerSize: [17, 26, 0], spinnerIncDecOnly: true)
