@@ -104,7 +104,9 @@ class TaobaoTrade < Trade
   end
 
   def deliverable?
-    TaobaoTrade.where(tid: tid).map(&:status).delete!('WAIT_SELLER_SEND_GOODS').size == 0
+    status_array = TaobaoTrade.where(tid: tid).map(&:status)
+    undeliverable_status = status_array - ['WAIT_SELLER_SEND_GOODS']
+    undeliverable_status.size == 0
   end
 
   def deliver!
