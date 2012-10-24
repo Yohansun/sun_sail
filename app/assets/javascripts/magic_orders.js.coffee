@@ -25,7 +25,7 @@ window.MagicOrders =
       'return':                  ['detail'],
       'refund':                  ['detail'],
       'invoice':                 ['invoice_number','detail'],
-      'unusual':                 ['detail'],
+      'unusual':                 ['detail', 'mark_unusual_state'],
       'color':                   ['color','confirm_color','detail']
     }
 
