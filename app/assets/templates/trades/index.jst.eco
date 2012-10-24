@@ -84,8 +84,8 @@
           <b class="caret"></b>
         </a>
         <ul class="dropdown-menu">
-          <li><a href="#" data-trade-mode="send" data-trade-status="undelivered">未发货</a></li>
-          <li><a href="#" data-trade-mode="send" data-trade-status="delivered">已发货</a></li>
+          <li><a href="#" data-trade-mode="send" data-trade-status="seller_undelivered">未发货</a></li>
+          <li><a href="#" data-trade-mode="send" data-trade-status="seller_delivered">已发货</a></li>
         </ul>
       </li>
       <!-- <li class="dropdown">
@@ -148,28 +148,34 @@
     <% end %>
   </ul><!-- breadcrumb -->
 
-  <form class="well form-search order_search_form">
-
-      <fieldset class="form-inline">
-        <div class="controls">
-          <select id="search_option" class="input-large search_option pull-left">
+  <form class="well form-horizontal reset_space order_search_form">
+    <div class="control-group">
+      <label class="control-label" for=""><code>精准：</code></label>
+      <div class="controls clearfix">
+        <fieldset class="pull-left form-inline mar_r10">
+          <select id="search_option" class="input-large search_option">
             <option value="">请选择筛选条件</option>
             <option value="tid">订单编号</option>
             <option value="receiver_name">收货人姓名</option>
             <option value="receiver_mobile">收货人手机</option>
             <option value="seller_id">经销商</option>
           </select>
-          <input type="text" class="search_value pull-left mar_r10" style="width:196px;" value="<%= @search_value %>">
-          <div class="pull-left" id="select_print_time"></div>
-          <div class="pull-left">
-            <button type="button" class="btn btn-info search" id="simple_search_button">筛选</button>
-          </div>
-        </div>
-      </fieldset>
+          <input type="text" class="search_value mar_r10" style="width:196px;" value="<%= @search_value %>">
+        </fieldset>
 
-      <div class="fieldset_group" id="search_toggle" style='display:none'>
-        <fieldset>
-          <div class="controls">
+        <fieldset class="pull-left form-inline mar_r10">
+          <div class="pull-left mar_r10" id="select_print_time"></div>
+          <button type="button" class="btn btn-info search" id="simple_search_button">筛选</button>
+          <label class="inline mar_t5 label_advanced"><a id="advanced_btn" href="#">高级搜索</a></label>
+        </fieldset>
+      </div>
+    </div>
+
+    <div class="fieldset_group" id="search_toggle" style='display:none'>
+      <div class="control-group">
+        <label class="control-label" for=""><code>属性：</code></label>
+        <div class="controls clearfix">
+          <fieldset class="pull-left form-inline mar_r10">
             <select id="status_option" class="input-large">
               <option value="">订单状态</option>
               <option value="WAIT_BUYER_PAY">等待付款</option>
@@ -182,121 +188,72 @@
               <option value="TRADE_CLOSED_BY_TAOBAO">交易被淘宝关闭</option>
               <option value="TRADE_REFUNDING">退款中</option>
             </select>
-          </div>
-        </fieldset>
 
-        <fieldset class="mar_t5">
-          <div class="controls">
-            <label style="position: relative; top: 5px;">下单时间：</label>
+            <select id="type_option" class="input-large type_option">
+              <option value="">订单来源</option>
+              <option value="JingdongTrade">京东</option>
+              <option value="TaobaoTrade">淘宝</option>
+              <option value="TaobaoPurchaseOrder">分销平台</option>
+            </select>
+          </fieldset>
+
+          <fieldset class="pull-left form-inline mar_r10">
+            <label style="position: relative; ">下单时间：</label>
             <input type="text" style="margin-right:5px;" placeholder="年-月-日" class="input-small search_start_date datepicker" value="<%= @search_start_date %>">
             <input type="text" placeholder="00:00:00" class="input-small search_start_time timepicker" value="<%= @search_start_time %>">
             <i class="icon-arrow-right"></i>
             <input type="text" style="margin-right:5px;" placeholder="年-月-日" class="input-small search_end_date datepicker" value="<%= @search_end_date %>">
             <input type="text" placeholder="00:00:00" class="input-small search_end_time timepicker" value="<%= @search_end_time %>">
-          </div>
-          <div class="controls">
-            <label style="position: relative; top: 5px;">付款时间：</label>
+          </fieldset>
+        </div>
+
+        <div class="controls clearfix">
+          <fieldset class="pull-left form-inline mar_r10">
+            <label class="checkbox inline">
+              <input type="checkbox" id="search_cs_memo"> 客服有备注
+            </label>
+            <label class="checkbox inline">
+              <input type="checkbox" id="search_seller_memo"> 卖家有备注
+            </label>
+            <% if MagicOrders.company == "dulux" and MagicOrders.role_key != 'seller' : %>
+            <label class="checkbox inline">
+              <input type="checkbox" id="search_buyer_message"> 客户有留言
+            </label>
+            <% end %>
+            <label class="checkbox inline">
+              <input type="checkbox" id="search_invoice"> 需要开票
+            </label>
+            <label class="checkbox inline">
+              <input type="checkbox" id="search_color"> 需要调色
+            </label>
+          </fieldset>
+
+          <fieldset class="pull-left form-inline mar_r10">
+            <label style="position: relative; ">付款时间：</label>
             <input type="text" style="margin-right:5px;" placeholder="年-月-日" class="input-small pay_start_date datepicker" value="<%= @pay_start_date %>">
             <input type="text" placeholder="00:00:00" class="input-small pay_start_time timepicker" value="<%= @pay_start_time %>">
             <i class="icon-arrow-right"></i>
             <input type="text" style="margin-right:5px;" placeholder="年-月-日" class="input-small pay_end_date datepicker" value="<%= @pay_end_date %>">
             <input type="text" placeholder="00:00:00" class="input-small pay_end_time timepicker" value="<%= @pay_end_time %>">
-          </div>
-        </fieldset>
-
-        <fieldset class="mar_t10">
-          <div class="span4">
-            <code>订单属性</code>
-            <div class="control-group h_specify">
-              <div class="controls">
-                <label class="checkbox inline">
-                  <input type="checkbox" id="search_cs_memo"> 客服有备注
-                </label>
-               <!--  <label class="checkbox inline">
-                  <input type="checkbox" value="option1" id="inlineCheckbox1"> 标记
-                </label> -->
-              </div>
-              <div class="controls">
-                <label class="checkbox inline">
-                  <input type="checkbox" id="search_seller_memo"> 卖家有备注
-                </label>
-                <label class="checkbox inline">
-                  <input type="checkbox" id="search_invoice"> 需要开票
-                </label>
-              </div>
-              <div class="controls">
-                <% if MagicOrders.company == "dulux" and MagicOrders.role_key != 'seller' : %>
-                <label class="checkbox inline">
-                  <input type="checkbox" id="search_buyer_message"> 客户有留言
-                </label>
-                <% end %>
-                <label class="checkbox inline">
-                  <input type="checkbox" id="search_color"> 需要调色
-                </label>
-              </div>
-            </div>
-              <div class="controls">
-                <label class="control-label">订单来源：</label>
-                <select id="type_option" class="input-large type_option">
-                  <option value="">请选择</option>
-                  <option value="JingdongTrade">京东</option>
-                  <option value="TaobaoTrade">淘宝</option>
-                  <option value="TaobaoPurchaseOrder">分销平台</option>
-                </select>
-              </div>
-              <div class="controls" id="select_state"><!--买家地域--></div>
-
-            <!-- <div class="controls">
-              <label for="select04" class="control-label">活动：</label>
-              <select id="select04" class="input-medium">
-                <option>something</option>
-              </select>
-            </div> -->
-          </div>
-
-          <div class="span4">
-              <code>物流配送</code>
-              <div class="control-group h_specify">
-                <div class="controls">
-                  <label class="control-label">配送商：</label>
-                  <input type="text" class="input-xlarge" value="<%= @search_logistic %>" id="search_logistic">
-                </div>
-
-                <!-- <div class="controls padding_left">
-                  <label class="checkbox inline">
-                    <input type="checkbox" value="option1" id="inlineCheckbox6"> 实际已经发货
-                  </label>
-                  <label class="checkbox inline">
-                    <input type="checkbox" value="option2" id="inlineCheckbox7"> 附发票
-                  </label>
-                </div>
-
-                <div class="controls padding_left">
-                  <label class="checkbox inline">
-                    <input type="checkbox" value="option1" id="inlineCheckbox8"> 附质保
-                  </label>
-                  <label class="checkbox inline">
-                    <input type="checkbox" value="option2" id="inlineCheckbox9"> 客户已签收
-                  </label>
-                </div> -->
-              </div>
-            </div>
-
-
-        </fieldset>
-
-        <fieldset>
-          <button class="pull-right btn btn-primary search" type="button">搜索</button>
-        </fieldset>
-
+          </fieldset>
+        </div>
       </div>
 
-      <fieldset id="fieldset_advanced">
-         <ul class="the-icons mar_t3">
-           <li class="pull-right" id="advanced_btn"><a href="#">高级搜索</a>
-           </li>
-         </ul>
-      </fieldset>
+      <div class="control-group">
+        <label class="control-label" ><code>配送：</code></label>
+        <div class="controls clearfix">
+          <fieldset class="pull-left form-inline mar_r10">
+            <input type="text" placeholder="物流配送商..." class="input-xlarge" value="<%= @search_logistic %>" id="search_logistic" style="width:410px;">
+          </fieldset>
+          <fieldset class="pull-left form-inline mar_r10">
+            <div id="select_state"><!--买家地域--></div>
+          </fieldset>
+          <fieldset>
+            <button class="pull-right btn btn-primary search" type="button">搜索</button>
+          </fieldset>
+        </div>
+      </div>
+    </div>
   </form>
 
 

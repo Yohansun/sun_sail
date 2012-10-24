@@ -74,9 +74,9 @@ class TradesController < ApplicationController
         trade_type_hash = {"$and" =>[{"$or" => [{seller_id: nil},{:seller_id.exists => false}]},{:status.in => paid_not_deliver_array}]}
       when 'unpaid'
         trade_type_hash = {status: "WAIT_BUYER_PAY"}
-      when 'undelivered'
+      when 'undelivered','seller_undelivered'
         trade_type_hash = {"$and" => [{:dispatched_at.exists => true},{:status.in => paid_not_deliver_array}]}
-      when 'delivered'
+      when 'delivered','seller_delivered'
         trade_type_hash = {:status.in => paid_and_delivered_array}
       when 'refund'
         trade_type_hash = {:status.in => refund_array}

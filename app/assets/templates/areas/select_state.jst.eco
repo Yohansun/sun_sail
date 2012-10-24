@@ -1,4 +1,4 @@
-<label class="control-label">买家地域：</label>
+<label>买家地域：</label>
 
 <select class="input-small" id="state_option" name="select_state" >
   <option value="">请选择...</option>
