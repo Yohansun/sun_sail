@@ -1,4 +1,4 @@
-<style type="text/css">
+ <style type="text/css">
   .timeEntry_control { vertical-align: middle; margin-left: -1px; margin-top: 0px; cursor: pointer; }
   * html .timeEntry_control { margin-top: -2px; }
 </style>
@@ -163,8 +163,15 @@
             <option value="receiver_name">收货人姓名</option>
             <option value="receiver_mobile">收货人手机</option>
             <option value="seller_id">经销商</option>
+            <option value="logistic">物流商</option>
           </select>
-          <input type="text" class="search_value mar_r10" style="width:196px;" value="<%= @search_value %>">
+          <input type="text" class="search_value mar_r10" style="width:196px;" id＝"simple_search_text" value="<%= @search_value %>">
+          <select id="search_logistic" class="input-large">
+            <option value="">请选择物流商</option>
+            <% for logi in MagicOrders.logistics.models: %>
+            <option value="<%= logi.get('name') %>" ><%= logi.get('name') %></option>
+            <% end %>
+          </select>
         </fieldset>
 
         <fieldset class="pull-left form-inline mar_r10">
@@ -180,6 +187,7 @@
         <label class="control-label" for=""><code>属性：</code></label>
         <div class="controls clearfix">
           <fieldset class="pull-left form-inline mar_r10">
+            <% unless MagicOrders.trade_mode in ['deliver', 'logistics', 'send'] : %>
             <select id="status_option" class="input-large">
               <option value="">订单状态</option>
               <option value="WAIT_BUYER_PAY">等待付款</option>
@@ -192,6 +200,7 @@
               <option value="TRADE_CLOSED_BY_TAOBAO">交易被淘宝关闭</option>
               <option value="require_refund">申请退款</option>
             </select>
+            <% end %>
 
             <select id="type_option" class="input-large type_option">
               <option value="">订单来源</option>
@@ -247,9 +256,6 @@
         <label class="control-label" ><code>配送：</code></label>
         <div class="controls clearfix">
           <fieldset class="pull-left form-inline mar_r10">
-            <input type="text" placeholder="物流配送商..." class="input-xlarge" value="<%= @search_logistic %>" id="search_logistic" style="width:410px;">
-          </fieldset>
-          <fieldset class="pull-left form-inline mar_r10">
             <div id="select_state"><!--买家地域--></div>
           </fieldset>
           <fieldset>
@@ -259,7 +265,6 @@
       </div>
     </div>
   </form>
-
 
   <div class="controls clearfix">
     <div class="btns btn-group pull-right">
@@ -277,19 +282,33 @@
       </ul>
     </div>
 
-    <!-- <div class="btns btn-group pull-left">
-      <a href="#" class="btn btn-warning"><i class="icon-user icon-white"></i>批量操作</a>
-      <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-warning btn_left4"><span class="caret"></span></button>
-      <ul class="dropdown-menu">-->
-        <!-- <li><a data-toggle="modal" href="#ord_deliver_print_mult">打印发货单</a></li> -->
-        <!-- <li><a data-toggle="modal" href="#ord_logistics_print_mult">打印物流单</a></li> -->
-        <!-- <li><a data-toggle="modal" href="#ord_examine_mult">验货</a></li> -->
-        <!-- <li><a data-toggle="modal" href="#ord_deliver_sure_mult">确认发货</a></li> -->
-        <!-- <li class="divider"></li> -->
-        <!-- <li><a data-toggle="modal" href="#ord_export">订单导出</a></li> -->
-        <!-- <li><a data-toggle="modal" href="#ord_inport" href="#">订单导入</a></li> -->
-      <!-- </ul>
-    </div> -->
+    <div class="btns btn-group pull-left">
+      <a href="javascript:void(0)" class="btn btn-warning"><i class="icon-user icon-white"></i>批量操作</a>
+      <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-warning btn_left4">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <% if MagicOrders.trade_mode == 'deliver' : %>
+        <li><a data-toggle="modal" class='print_delivers' href='#'>批量打印发货单</a></li>
+        <% end %>
+        <% if MagicOrders.trade_mode == 'logistics' : %>
+          <% if MagicOrders.trade_type in ['logistic_bill_unprinted', 'logistic_bill_printed'] : %>
+            <li><a data-toggle="modal" class='print_logistics' href="#">批量打印物流单</a></li>
+          <% end %>
+          <% if MagicOrders.trade_type in ['logistic_waybill_void', 'logistic_waybill_exist'] : %>
+            <!-- <li><a data-toggle="modal" class='return_logistics' href='#'>批量返回物流单号</a></li> -->
+          <% end %>
+        <% end %>
+        <% if MagicOrders.trade_mode == 'send' : %>
+        <li><a data-toggle="modal" class='batch_deliver' href='#'>批量发货</a></li>
+        <% end %>
+        <!-- <li><a data-toggle="modal" href="#ord_examine_mult">验货</a></li>
+        <li><a data-toggle="modal" href="#ord_deliver_sure_mult">确认发货</a></li>
+        <li class="divider"></li>
+        <li><a data-toggle="modal" href="#ord_export">订单导出</a></li>
+        <li><a data-toggle="modal" href="#ord_inport" href="#">订单导入</a></li> -->
+      </ul>
+    </div>
 
     <div class="btns btn-group pull-left">
       <a data-toggle="modal" class="btn btn-warning export_orders">导出数据</a>
@@ -309,7 +328,7 @@
     <thead>
       <tr>
         <th>序号</th>
-        <!--<th><input id="checkbox_all" type="checkbox" value="option1">选择</th>-->
+        <th><input id="checkbox_all" type="checkbox" value="option1">全选</th>
         <th>操作</th>
         <th data-col='trade_source'>订单来源</th>
         <th data-col='tid'>订单编号</th>
@@ -337,6 +356,7 @@
         <!-- <th data-col='deliver_bill'>发货单</th>  -->             <!--Newly Add-->
         <th data-col='deliver_bill_id'>发货单编号</th>
         <th data-col='deliver_bill_status'>发货单状态</th>
+        <th data-col='logistic_bill_status'>物流单状态</th>
         <th data-col='order_goods'>商品详细</th>
         <!-- <th data-col='logistic_bill'>物流单</th> -->
         <th data-col='logistic_waybill'>物流单号</th>
@@ -361,4 +381,91 @@
   <span class="controls mar_t5" >当前显示：全部订单 <span class="complete_offset">0</span> 项中的 0 项</span>
   <% end %>
 </div>
+<div id="ord_logistics_billnum_mult" class="modal hide fade" tabindex="-1">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h3>批量返回物流单号</h3>
+  </div><!-- modal-header -->
+  <div class="modal-body">
+    <p>此次共同返回<b class='logistic_count'></b>单</p>
+    <fieldset>
+      <div class="control-group">
+        <div class="controls form-inline mar_t5">
+          <label class="input-small nomargin">物流商：</label><input class='logistic_name' type="text" value="圆通" disabled>
+        </div>
+        <div class="controls form-inline mar_t5">
+          <label class="input-small nomargin">开始单号：</label><input class='logistic_begin' type="text" value="">
+        </div>
+        <div class="controls form-inline mar_t5">
+          <label class="input-small nomargin">结束单号：</label><input class='logistic_end' type="text" value="">
+        </div>
+      </div>
+    </fieldset>
+  </div><!-- modal-body -->
+
+  <div class="modal-footer">
+    <a href="#" class="btn" data-dismiss="modal" >取消</a>
+    <a class="btn btn-primary confirm_return">确认</a>
+  </div>
+</div>
+
+<div id="ord_logistics_billnum_mult2" class="modal hide fade" tabindex="-1" style="width: 890px;margin-left: -445px;">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h3>批量返回物流单号</h3>
+  </div><!-- modal-header -->
+  <div class="modal-body">
+    <p>此次共返回 <b class='logistic_count'></b> 单号，请确认并保存</p>
+    <fieldset>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>订单编号</th>
+            <th>姓名</th>
+            <th>地址</th>
+            <th>物流单号</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </fieldset>
+  </div><!-- modal-body -->
+
+  <div class="modal-footer">
+    <a href="#" class="btn" data-dismiss="modal" >取消</a>
+    <button class="btn btn-primary confirm_logistics">确认保存</button>
+  </div>
+</div><!-- ord_logistics_billnum_mult2 -->
+
+<div id="batch_deliver" class="modal fade hide" tabindex="-1" style="width: 890px;margin-left: -445px;">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h3>批量发货</h3>
+  </div><!-- modal-header -->
+  <div class="modal-body">
+    <p>此次共需要发货<b class='deliver_count'></b>单，请确认订单再点击“发货”</p>
+    <fieldset>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>编号</th>
+            <th>姓名</th>
+            <th>地址</th>
+            <th>物流商</th>
+            <th>物流单号</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </fieldset>
+  </div><!-- modal-body -->
+
+  <div class="modal-footer">
+    <a href="#" class="btn" data-dismiss="modal">取消</a>
+    <a href="javascript:void(0)" class="btn btn-primary confirm_batch_deliver">确认并发货</a>
+  </div>
+</div>
+
 <div id="trades_bottom"></div>

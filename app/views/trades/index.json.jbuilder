@@ -22,12 +22,13 @@ json.array!(@trades) do |json, trade|
   json.pay_time trade.pay_time.strftime("%m-%d %H:%M") if trade.pay_time
   json.cs_memo trade.cs_memo
   json.gift_memo trade.gift_memo
-
+  json.deliver_bill_printed_at trade.deliver_bill_printed_at.try(:strftime, "%m-%d %H:%M")
+  json.logistic_printed_at trade.logistic_printed_at.try(:strftime, "%m-%d %H:%M")
   json.has_color_info trade.has_color_info
   json.has_cs_memo trade.has_cs_memo
   json.has_unusual_state trade.has_unusual_state
   json.has_refund_order trade.has_refund_order
-
+  json.can_change_logistic can_change_logistic(trade)
   json.invoice_type trade.invoice_type
   json.invoice_name trade.invoice_name
   json.invoice_content trade.invoice_content
@@ -39,7 +40,7 @@ json.array!(@trades) do |json, trade|
 
   json.logistic_id trade.logistic_id
   json.logistic_name trade.logistic_name
-
+  json.logistic_waybill trade.logistic_waybill
   json.seller_confirm_deliver_at trade.seller_confirm_deliver_at.strftime("%m-%d %H:%M") if trade.seller_confirm_deliver_at
   json.seller_confirm_invoice_at trade.seller_confirm_invoice_at.strftime("%m-%d %H:%M") if trade.seller_confirm_invoice_at
   json.confirm_color_at trade.confirm_color_at.strftime("%m-%d %H:%M") if trade.confirm_color_at

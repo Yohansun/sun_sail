@@ -41,7 +41,7 @@
       <tr>
         <td>物流公司：</td>
         <td>
-          <% if @trade.get('logistic_code'): %>
+          <% if @trade.get('logistic_code') : %>
             <%= @trade.get('logistic_company') %>
             <input type="hidden" id="logistic_code" value="<%= @trade.get('logistic_code') %>">
           <% else: %>

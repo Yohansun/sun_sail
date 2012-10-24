@@ -59,7 +59,7 @@
 
       <tr>
         <td colspan="2" rowspan="2" width="50%">温馨提示：尊敬的顾客，为保证您的权益，签字前请确认外包装是否完好。如有异议，请向快递员当面提出同时立即致电多乐士售后提出异议。<br>
-        售后电话：021-60956000-8128 工作时间：周一～周五（9:00～12:00；13:00～18:00）
+        售后电话：021-60956000-8128 工作时间：周一～周五(9:00～12:00；13:00～18:00)
         </td>
         <td colspan="4">签收人：</td>
       </tr>
@@ -68,6 +68,7 @@
   </table>
 </div><!-- modal-body -->
 <div class="modal-footer">
-  <a class="btn" data-dismiss="modal">关闭</a>
-  <a href="/trades/<%= @trade.get('id') %>/print_bill" target="_blank" class="btn btn-primary button_print">打印</a>
+  <a class="btn" data-dismiss="modal" style='margin-top:-22px;'>关闭</a>
+  <div id="showbox">
+  </div>
 </div><!-- modal-footer -->

@@ -1,6 +1,5 @@
-<td></td>
-<!--<td><input type="checkbox" value="option1"></td>-->
-
+<td><td>
+<td><input class='trade_check' type="checkbox" value="option1"></td>
 <td nowrap><!--操作-->
   <div class="btn-group">
     <button data-toggle="dropdown" class="btn btn-info dropdown-toggle min_w">
@@ -45,8 +44,11 @@
       <!-- <li><a data-toggle="modal" href="#" data-type="logistic_split">物流拆分</a></li> -->
       <% if @trade.get('status_text') is "已付款，待发货" or @trade.get('status_text') is "已付款，已发货" : %>
         <li><a data-toggle="modal" href="#" data-type="print_deliver_bill">打印发货单</a></li>
+        <% if @trade.get('can_change_logistic') == true : %>
+        <li><a data-toggle="modal" href="#" data-type="print_logistic_bill">打印物流单</a></li>
+        <% end %>
       <% end %>
-      <!-- <li><a data-toggle="modal" href="#" data-type="print_logistic_bill">打印物流单</a></li> -->
+
       <!-- <li><a data-toggle="modal" href="#" data-type="logistic_company">物流公司</a></li> -->
       <!-- <li><a data-toggle="modal" href="#" data-type="logistic_number">物流单号设置</a></li> -->
 
@@ -170,6 +172,12 @@
   <% if @trade.get('confirm_refund_at'): %>
     <span class="label label-success">确认退款<%= @trade.get('confirm_refund_at') %></span>
   <% end %>
+  <% if @trade.get('deliver_bill_printed_at'): %>
+    <span class="label label-success">打印发货单 <%= @trade.get('deliver_bill_printed_at') %></span>
+  <% end %>
+  <% if @trade.get('logistic_printed_at'): %>
+    <span class="label label-success">打印物流单 <%= @trade.get('logistic_printed_at') %></span>
+  <% end %>
 </td>
 <td data-col='receiver_id'><%= @trade.get('buyer_nick') %></td>
 <td data-col='receiver_name'><%= @trade.get('receiver_name') %></td>
@@ -227,13 +235,26 @@
 <% end %>
 <!-- <td data-col='deliver_bill' ><!--发货单--</td> -->
 <td data-col='deliver_bill_id' ><!--发货单编号--></td>
-<td data-col='deliver_bill_status' ><!--发货单状态--></td>
+<td data-col='deliver_bill_status' >
+<% if @trade.get('deliver_bill_printed_at') : %>
+  已打印
+<% else : %>
+  未打印
+<% end %>
+</td>
+<td data-col='logistic_bill_status' >
+<% if @trade.get('logistic_printed_at') : %>
+  已打印
+<% else : %>
+  未打印
+<% end %>
+</td>
 <td data-col='order_goods' >
-    <a href="javascript:void(0)" rel="popover" data-content="<% for order in @trade.get('orders'): %> <%= order.title %> <%= order.num %>件<br/> <% end %>" data-original-title="<b>商品详细</b>"><i class="icon-detail"></i></a>
+  <a href="javascript:void(0)" rel="popover" data-content="<% for order in @trade.get('orders'): %> <%= order.title %> <%= order.num %>件<br/> <% end %>" data-original-title="<b>商品详细</b>"><i class="icon-detail"></i></a>
 </td>
 <!-- <td data-col='logistic_bill'><!--物流单--</td> -->
-<td data-col='logistic_waybill' ><!--物流单号--></td>
-<td data-col='logistic_company' ><!--物流公司--></td>
+<td data-col='logistic_waybill' ><%= @trade.get('logistic_waybill')%></td>
+<td data-col='logistic_company' ><%= @trade.get('logistic_company')%></td>
 <td data-col='invoice_type' ><%= @trade.get 'invoice_type' %></td>
 <td data-col='invoice_name' ><%= @trade.get 'invoice_name' %></td>
 <td data-col='invoice_value' >

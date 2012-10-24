@@ -56,6 +56,7 @@ MagicOrders::Application.routes.draw do
       get :delete
     end
     collection do
+      get :logistic_templates
       get :logistic_area
       get :remove_logistic_area
       get :create_logistic_area
@@ -75,7 +76,14 @@ MagicOrders::Application.routes.draw do
   get "trades/create", to: "trades#create"
   get "/trades/:id/sellers_info", to: "trades#sellers_info"
   get "/trades/:id/split_trade", to: "trades#split_trade"
-  get "/trades/:id/print_bill", to: "trades#print_bill"
+  get "/trades/:id/print_deliver_bill", to: "trades#print_deliver_bill"
+  get "/trades/print_deliver_bill.:format", to: "trades#print_deliver_bill"
+  get "/trades/:id/logistic_info", to: "trades#logistic_info"
+  get "/trades/deliver_list", to: "trades#deliver_list"
+  get "/trades/setup_logistics", to: 'trades#setup_logistics'
+  get "/trades/batch_deliver", to: 'trades#batch_deliver'
+  get "/trades/batch-print-deliver", to: 'trades#batch_print_deliver'
+  get "/trades/batch-print-logistic", to: 'trades#batch_print_logistic'
 
   scope 'api' do
     get "areas", to: "areas#index"

@@ -8,14 +8,13 @@ class LogisticsController < ApplicationController
   end
 
   def new
-    @logistics = Logistic.new
+    @logistic = Logistic.new
   end
 
   def create
-    @logistics = Logistic.new
-    @logistics.name = params[:logistic][:name]
-    @logistics.code = params[:logistic][:code].upcase
-    if @logistics.save
+    params[:logistic][:code].try(:upcase!)
+    @logistic = Logistic.new params[:logistic]
+    if @logistic.save
       redirect_to logistics_path
     else
       render :new
@@ -23,15 +22,14 @@ class LogisticsController < ApplicationController
   end
 
   def edit
-    @logistics = Logistic.find params[:id]
+    @logistic = Logistic.find params[:id]
     render :new
   end
 
   def update
-    @logistics = Logistic.find params[:id]
-    @logistics.name = params[:logistic][:name]
-    @logistics.code = params[:logistic][:code].upcase
-    if @logistics.save
+    @logistic = Logistic.find params[:id]
+    params[:logistic][:code].upcase!
+    if @logistic.update_attributes params[:logistic]
       redirect_to logistics_path
     else
       render :new
@@ -123,5 +121,19 @@ class LogisticsController < ApplicationController
     respond_to do |f|
       f.js
     end
+  end
+
+  def logistic_templates
+    tmp = []
+    @logistics = Logistic.where("xml is not null")
+    @logistics.each do |l|
+      tmp << {
+        id: l.id,
+        xml: l.xml.inspect,
+        name: l.name
+      }
+    end
+
+    render json: tmp
   end
 end

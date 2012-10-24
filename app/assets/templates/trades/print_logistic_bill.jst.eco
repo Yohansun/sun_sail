@@ -1,0 +1,11 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal">&times;</button>
+  <h3>物流单打印</h3>
+</div><!-- modal-header -->
+<div id="logistic_print" class="modal-body">
+</div><!-- modal-body -->
+<div class="modal-footer">
+  <a href="#" class="btn" data-dismiss="modal" >取消</a>
+  <a href="javascript:void(0)" onclick='startPrint()' class="btn btn-primary">打印</a>
+  <select id="logistic_select" class="input-medium nomargin pull-left"></select>
+</div><!-- modal-footer -->

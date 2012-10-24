@@ -1,4 +1,4 @@
-class MagicOrders.Views.TradesLogisticWaybill extends Backbone.View
+ class MagicOrders.Views.TradesLogisticWaybill extends Backbone.View
 
   template: JST['trades/logistic_waybill']
 

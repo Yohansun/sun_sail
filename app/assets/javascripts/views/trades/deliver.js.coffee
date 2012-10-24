@@ -24,9 +24,12 @@ class MagicOrders.Views.TradesDeliver extends Backbone.View
         alert(error)
       success: (model, response) ->
         $.unblockUI()
-        view = new MagicOrders.Views.TradesRow(model: model)
-        $("#trade_#{model.get('id')}").replaceWith(view.render().el)
-        $("a[rel=popover]").popover(placement: 'left')
+        if MagicOrders.trade_mode == 'send'
+          $("#trade_#{model.get('id')}").remove()
+        else
+          view = new MagicOrders.Views.TradesRow(model: model)
+          $("#trade_#{model.get('id')}").replaceWith(view.render().el)
 
+        $("a[rel=popover]").popover(placement: 'left')
         $('#trade_deliver').modal('hide')
         # window.history.back()

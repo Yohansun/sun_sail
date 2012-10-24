@@ -201,10 +201,10 @@ class Trade
     area = default_area
     if area
       @logistic_ids = LogisticArea.where(area_id: area.id).map{|l| l.logistic_id }.join(",")
-      @matched_logistics = Logistic.where("id in (?)", @logistic_ids).map{|ml| [ml.id, ml.name]}
-      @matched_logistics == [] ? [[1,"其他"]] : @matched_logistics
+      @matched_logistics = Logistic.where("id in (?) AND xml IS NOT NULL", @logistic_ids).map{|ml| [ml.id, ml.name, ml.xml]}
+      @matched_logistics == [] ? [[1,"其他", '']] : @matched_logistics
     else
-      [[1,"其他"]]     #无匹配地区或匹配经销商时默认是其他
+      [[1,"其他", '']]     #无匹配地区或匹配经销商时默认是其他
     end
   end
 
@@ -385,9 +385,11 @@ class Trade
       when "logistic_waybill_exist"
         trade_type_hash = {"$and" =>[{:logistic_waybill.exists => true},{:status.in => paid_and_delivered_array}]}
       when "logistic_bill_unprinted"
-        trade_type_hash = {"$and" =>[{:logistic_printed_at.exists => false},{:status.in => paid_and_delivered_array}]}
+        # trade_type_hash = {"$and" =>[{:logistic_printed_at.exists => false},{:status.in => paid_and_delivered_array}]}
+        trade_type_hash = {"$and" =>[{:logistic_printed_at.exists => false}, {"$or" => [{status: 'WAIT_SELLER_SEND_GOODS'}, {"$and"=>[{status: 'WAIT_BUYER_CONFIRM_GOODS'}, {:delivered_at.exists => true},{:delivered_at.gt => 23.hours.ago}]}]}]}
       when "logistic_bill_printed"
-        trade_type_hash = {"$and" =>[{:logistic_printed_at.exists => true},{:status.in => paid_and_delivered_array}]}
+        # trade_type_hash = {"$and" =>[{:logistic_printed_at.exists => true},{:status.in => paid_and_delivered_array}]}
+        trade_type_hash = {"$and" =>[{:logistic_printed_at.exists => true}, {"$or" => [{status: 'WAIT_SELLER_SEND_GOODS'}, {"$and"=>[{status: 'WAIT_BUYER_CONFIRM_GOODS'}, {:delivered_at.exists => true},{:delivered_at.gt => 23.hours.ago}]}]}]}
 
       # # 发票
       # when 'invoice_all'

@@ -33,4 +33,19 @@ module TradesHelper
 
     tmp
   end
+
+  def trade_item_count(trade)
+    count = 0
+    trade.orders.each do |order|
+      order.bill_info.each do |info|
+        count += info[:number] * order.num
+      end
+    end
+
+    count
+  end
+
+  def can_change_logistic(trade)
+    trade.status == 'WAIT_SELLER_SEND_GOODS' || (trade.status == 'WAIT_BUYER_CONFIRM_GOODS' && trade.delivered_at.present? && trade.delivered_at > 23.hours.ago)
+  end
 end
