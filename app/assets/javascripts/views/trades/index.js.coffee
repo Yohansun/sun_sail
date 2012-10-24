@@ -30,7 +30,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
   render: =>
     $.unblockUI()
     if !@first_rendered
-       $(@el).html(@template(trades: @collection))
+      $(@el).html(@template(trades: @collection))
       #initial mode=trades
       visible_cols = MagicOrders.trade_cols_visible_modes[MagicOrders.trade_mode]
       if MagicOrders.trade_cols_hidden == []
@@ -230,7 +230,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     event.preventDefault()
 
     blocktheui()
-    @collection.fetch data: {trade_type: @trade_type, offset: @offset, search: {@simple_search_option, @simple_search_value, @from_deliver_print_date, @to_deliver_print_date, @from_deliver_print_time, @to_deliver_print_time, @search_start_date, @search_start_time, @search_end_date, @pay_start_time, @pay_end_time, @pay_start_date, @pay_end_date, @search_end_time, @status_option, @type_option, @state_option, @city_option, @district_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_invoice, @search_color, @search_logistic}, search_trade_status: @search_trade_status}, success: (collection) =>
+    @collection.fetch data: {trade_type: @trade_type, offset: @offset, search: {@simple_search_option, @simple_search_value, @from_deliver_print_date, @to_deliver_print_date, @from_deliver_print_time, @to_deliver_print_time, @search_start_date, @search_start_time, @search_end_date, @pay_start_time, @pay_end_time, @pay_start_date, @pay_end_date, @search_end_time, @status_option, @type_option, @state_option, @city_option, @district_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_invoice, @search_color, @search_logistic}}, success: (collection) =>
       if collection.length >= 0
         @offset = @offset + 20
         @renderUpdate()

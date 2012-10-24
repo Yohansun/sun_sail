@@ -68,6 +68,8 @@ class TradesController < ApplicationController
         trade_type_hash = {"unusual_states" => {"$elemMatch" => {key: type}}}
 
       # 订单
+      when 'all'
+        trade_type_hash = nil
       when 'undispatched'
         trade_type_hash = {"$and" =>[{"$or" => [{seller_id: nil},{:seller_id.exists => false}]},{:status.in => paid_not_deliver_array}]}
       when 'unpaid'

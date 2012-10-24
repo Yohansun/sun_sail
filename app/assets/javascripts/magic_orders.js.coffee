@@ -69,11 +69,13 @@ window.MagicOrders =
     # 可见订单列（与订单模式选择有关），默认为全部
     @trade_cols_visible = @trade_cols_keys
 
+
     # 初始化时需要隐藏的订单列
     if $.cookie('trade_cols_hidden')
       @trade_cols_hidden_from_cookie = $.cookie('trade_cols_hidden').split(',')
       @trade_cols_hidden = @trade_cols_hidden_from_cookie
     else
+      @trade_cols_hidden_from_cookie = []
       @trade_cols_hidden = []
 
     # 订单模式可选项列表
