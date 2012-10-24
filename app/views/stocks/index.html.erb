@@ -72,7 +72,7 @@
           <th>图片</th>
           <th>名称</th>
           <th>分类</th>
-          <th>淘宝ID</th>
+          <th>商品编码</th>
           <th>商品状态</th>
           <th>库存状态</th>
           <th>可用库存</th>
@@ -86,7 +86,7 @@
           <td></td>
           <td><%= product.name %></td>
           <td><%= product.product.try(:category).try(:name) %></td>
-          <td><%= product.taobao_id %></td>
+          <td><%= product.product.iid %></td>
           <td><%= product.product.present_status %></td>
           <td><%= product.storage_status %></td>
           <td><%= product.activity %></td>

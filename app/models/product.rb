@@ -57,4 +57,25 @@ class Product < ActiveRecord::Base
       )
     end
   end
+
+  # 匹配套装内单品调色信息
+  #
+  # def map_packages_by_colors(color_num)
+  #   tmp = []
+  #   tmp_hash = {}
+  #   package_iids = packages.each {|p| tmp = tmp | Array.new(p.number, p.iid)}
+  #   if package_iids.present?
+  #     color_num.each do |nums|
+  #       package_iids.each_with_index do |package_iid, index|
+  #         array = tmp_hash[package_iid.to_sym] || []
+  #         array << nums[index]
+  #         tmp_hash[package_iid.to_sym] = array
+  #       end
+  #     end
+  #   else
+  #     tmp_hash[iid.to_sym] = color_num
+  #   end
+
+  #   tmp_hash
+  # end
 end

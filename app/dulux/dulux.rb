@@ -170,8 +170,9 @@ module Dulux
         products = StockProduct.joins(:product).where(sql)
 
         if use_color && order.color_num.present?
-          color_sql = "colors.num = '#{order.color_num.first}'"
-          products = products.joins(:colors).where(color_sql)
+          colors = order.color_num.flatten.compact
+          colors.delete('')
+          products = products.select {|p| (colors - p.colors.map(&:num)).size == 0}
         end
 
         product_seller_ids = products.map &:seller_id
