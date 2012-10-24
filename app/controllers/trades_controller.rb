@@ -43,19 +43,7 @@ class TradesController < ApplicationController
       end
     end
 
-    ##登录时的默认显示
-    if params[:trade_type].blank? && params[:search].blank?
-      # 经销商登录默认显示未发货订单
-      if current_user.has_role?(:seller)
-        @trades = @trades.where("$and" => [{:dispatched_at.exists => true},{:status.in => paid_not_deliver_array}])
-      end
-      # 管理员，客服登录默认显示未分流订单
-      if current_user.has_role?(:cs) || current_user.has_role?(:admin)
-        @trades = @trades.where("$and" => [{"$or" => [{seller_id: nil},{:seller_id.exists => false}]},{:status.in => paid_not_deliver_array}])
-      end
-    end
-
-
+    ###筛选开始####
     ## 导航栏
     if params[:trade_type]
       type = params[:trade_type]
@@ -69,7 +57,7 @@ class TradesController < ApplicationController
       when 'shop'
         trade_type_hash = {_type: 'ShopTrade'}
 
-      ## 异常订单筛选(仅适用于没有京东订单的dulux)
+      # 异常订单(仅适用于没有京东订单的dulux)
       when 'unpaid_two_days'
         trade_type_hash = {"$and" => [{:created.lte => Time.now - 2.days},{:pay_time.exists => false},{:status.nin => closed_array}]}
       when 'undispatched_one_day'
@@ -111,7 +99,7 @@ class TradesController < ApplicationController
       when "logistic_waybill_exist"
         trade_type_hash = {"$and" =>[{:logistic_waybill.exists => true},{:status.in => paid_and_delivered_array}]}
 
-      # #发票
+      # # 发票
       # when 'invoice_all'
       #   trade_type_hash = {:invoice_name.exists => true}
       # when 'invoice_unfilled'
@@ -128,8 +116,17 @@ class TradesController < ApplicationController
         trade_type_hash = {"$and" => [{has_color_info: true},{:status.in => paid_not_deliver_array},{:confirm_color_at.exists => false}]}
       when "color_confirmed"
         trade_type_hash = {"$and" =>[{has_color_info: true},{:status.in => paid_not_deliver_array},{:confirm_color_at.exists => true}]}
+
+      # 登录时的默认显示
       else
-        trade_type_hash = nil
+        # 经销商登录默认显示未发货订单
+        if current_user.has_role?(:seller)
+          trade_type_hash = {"$and" => [{:dispatched_at.exists => true},{:status.in => paid_not_deliver_array}]}
+        end
+        # 管理员，客服登录默认显示未分流订单
+        if current_user.has_role?(:cs) || current_user.has_role?(:admin)
+          trade_type_hash = {"$and" => [{"$or" => [{seller_id: nil},{:seller_id.exists => false}]},{:status.in => paid_not_deliver_array}]}
+        end
       end
     end
 
@@ -232,7 +229,7 @@ class TradesController < ApplicationController
       logistic_hash = {logistic_name: logi_name}
     end
 
-    # 搜索集中筛选
+    # 集中筛选
     if params[:search]
       search_hash = {"$and" => [
         seller_hash, tid_hash, receiver_name_hash, receiver_mobile_hash,
@@ -244,7 +241,7 @@ class TradesController < ApplicationController
       search_hash == {"$and"=>[]} ? search_hash = nil : search_hash
     end
 
-    # 过滤有留言但还在抓取 + 总筛选
+    ## 过滤有留言但还在抓取 + 总筛选
       chief_hash = {"$and" =>[trade_type_hash, search_hash, {"$or" => [{:has_buyer_message.ne => true}, {:buyer_message.ne => nil}]}].compact}
       unless chief_hash == {"$and"=>[]}
         @trades = @trades.where(chief_hash)
