@@ -1,3 +1,5 @@
+# -*- encoding:utf-8 -*-
+
 class TaobaoOrder < Order
   field :oid, type: String
   field :status, type: String
@@ -38,4 +40,16 @@ class TaobaoOrder < Order
   def item_outer_id
     outer_iid
   end
+
+  def product
+    Product.find_by_iid outer_iid
+  end
+
+  # 匹配套装内单品调色信息
+  #
+  # def map_products_by_colors
+  #   tmp_p = product
+  #   return {} unless tmp_p
+  #   tmp_p.map_packages_by_colors color_num
+  # end
 end
