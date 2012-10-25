@@ -63,7 +63,7 @@ class TradesController < ApplicationController
       when 'undispatched_one_day'
         trade_type_hash = {"$and" => [{:pay_time.lte => Time.now - 1.days},{:dispatched_at.exists => false},{:seller_id.exists => false},{:status.in => paid_not_deliver_array}]}
       when 'undelivered_two_days'
-        trade_type_hash = {"$and" => [{:dispatched_at.lte => Time.now - 2.days},{"$or" => [{"$and" => [{_type: "TaobaoTrade"}, {:consign_time.exists => false}]}, {"$and" => [{_type: "TaobaoPurchaseOrder"},{"$and" => [{:consign_time.exists => false}, {:delivered_at.exists => false}]}]}]},{:dispatched_at.exists => true},{:status.in => paid_not_deliver_array}]} 
+        trade_type_hash = {"$and" => [{:dispatched_at.lte => Time.now - 2.days},{"$or" => [{"$and" => [{_type: "TaobaoTrade"}, {:consign_time.exists => false}]}, {"$and" => [{_type: "TaobaoPurchaseOrder"},{"$and" => [{:consign_time.exists => false}, {:delivered_at.exists => false}]}]}]},{:dispatched_at.ne => nil},{:status.in => paid_not_deliver_array}]} 
       when 'buyer_delay_deliver', 'seller_ignore_deliver', 'seller_lack_product', 'seller_lack_color', 'buyer_demand_refund', 'buyer_demand_return_product', 'other_unusual_state'
         trade_type_hash = {"unusual_states" => {"$elemMatch" => {key: type, repaired_at: {"$exists" => false}}}}
 
@@ -75,7 +75,7 @@ class TradesController < ApplicationController
       when 'unpaid'
         trade_type_hash = {status: "WAIT_BUYER_PAY"}
       when 'undelivered','seller_undelivered'
-        trade_type_hash = {"$and" => [{:dispatched_at.exists => true},{:status.in => paid_not_deliver_array}]}
+        trade_type_hash = {"$and" => [{:dispatched_at.ne => nil},{:status.in => paid_not_deliver_array}]}
       when 'delivered','seller_delivered'
         trade_type_hash = {:status.in => paid_and_delivered_array}
       when 'refund'
@@ -89,9 +89,9 @@ class TradesController < ApplicationController
       # 发货单
       # 发货单是否已打印
       when "deliver_bill_unprinted"
-        trade_type_hash = {"$and" => [{:deliver_bill_printed_at.exists => false},{:dispatched_at.exists => true},{:status.in => paid_not_deliver_array + paid_and_delivered_array}]}
+        trade_type_hash = {"$and" => [{:deliver_bill_printed_at.exists => false},{:dispatched_at.ne => nil},{:status.in => paid_not_deliver_array + paid_and_delivered_array}]}
       when "deliver_bill_printed"
-        trade_type_hash = {"$and" => [{:deliver_bill_printed_at.exists => true},{:dispatched_at.exists => true},{:status.in => paid_not_deliver_array + paid_and_delivered_array}]}
+        trade_type_hash = {"$and" => [{:deliver_bill_printed_at.exists => true},{:dispatched_at.ne => nil},{:status.in => paid_not_deliver_array + paid_and_delivered_array}]}
 
       # 物流单
       # 物流单号是否已设置
@@ -123,7 +123,7 @@ class TradesController < ApplicationController
       else
         # 经销商登录默认显示未发货订单
         if current_user.has_role?(:seller)
-          trade_type_hash = {"$and" => [{:dispatched_at.exists => true},{:status.in => paid_not_deliver_array}]}
+          trade_type_hash = {"$and" => [{:dispatched_at.ne => nil},{:status.in => paid_not_deliver_array}]}
         end
         # 管理员，客服登录默认显示未分流订单
         if current_user.has_role?(:cs) || current_user.has_role?(:admin)

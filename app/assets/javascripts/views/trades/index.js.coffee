@@ -244,6 +244,8 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     MagicOrders.trade_mode = $(e.target).data('trade-mode')
     Backbone.history.navigate('trades/' + "#{MagicOrders.trade_mode}-#{@search_trade_status}", true)
 
+    MagicOrders.original_path = window.location.hash
+
     $(@el).find(".trade_pops li").hide()
 
     if MagicOrders.trade_mode == 'deliver'        #发货单打印时间筛选框只在deliver模式下显示

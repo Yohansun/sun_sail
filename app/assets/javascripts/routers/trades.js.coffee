@@ -11,9 +11,13 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     $('#content').html('')
     @collection = new MagicOrders.Collections.Trades()
 
+    MagicOrders.original_path = window.location.hash
     $('.modal').on 'hidden', (event) ->
       refresh = ($('#content').html() == '')
-      Backbone.history.navigate('trades', refresh)
+      if _.str.include(MagicOrders.original_path,'-')
+        Backbone.history.navigate("#{MagicOrders.original_path}", refresh)
+      else
+        Backbone.history.navigate("trades", refresh)
 
     $('[data-toggle="modal"]').bind 'show', (event) ->
       blocktheui()
