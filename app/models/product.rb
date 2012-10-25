@@ -58,24 +58,75 @@ class Product < ActiveRecord::Base
     end
   end
 
-  # 匹配套装内单品调色信息
-  #
-  # def map_packages_by_colors(color_num)
-  #   tmp = []
-  #   tmp_hash = {}
-  #   package_iids = packages.each {|p| tmp = tmp | Array.new(p.number, p.iid)}
-  #   if package_iids.present?
-  #     color_num.each do |nums|
-  #       package_iids.each_with_index do |package_iid, index|
-  #         array = tmp_hash[package_iid.to_sym] || []
-  #         array << nums[index]
-  #         tmp_hash[package_iid.to_sym] = array
-  #       end
-  #     end
-  #   else
-  #     tmp_hash[iid.to_sym] = color_num
-  #   end
+  def package_info
+    info = []
+    packages.each do |item|
+      product = Product.find_by_iid(item.iid)
+      info << {
+        iid: item.iid,
+        number: item.number,
+        storage_num: product.try(:storage_num),
+        title: product.try(:name)
+      }
+    end
 
-  #   tmp_hash
-  # end
+    info
+  end
+
+  def color_map(color_num)
+    result = []
+    if packages.count > 0
+      result = package_color_map(color_num)
+    else
+      tmp = {}
+      color_num.each do |nums|
+        num = nums[0]
+        next if num.blank?
+
+        if tmp.has_key? num
+          tmp["#{num}"][0] += 1
+        else
+          tmp["#{num}"] = [1, Color.find_by_num(num).try(:name)]
+        end
+      end
+
+      result = [{
+        iid: iid,
+        number: 1,
+        storage_num: storage_num,
+        title: name,
+        colors: tmp
+      }]
+    end
+
+    result
+  end
+
+  def package_color_map(color_num)
+    tmp_hash = package_info
+
+    color_num.each do |nums|
+      i = 0
+
+      tmp_hash.each do |package|
+        package[:number].times do
+          next if nums[i].blank?
+
+          tmp = package[:colors] || {}
+
+          if tmp.has_key? nums[i]
+            tmp["#{nums[i]}"][0] += 1
+          else
+            tmp["#{nums[i]}"] = [1, Color.find_by_num(nums[i]).try(:name)]
+          end
+
+          package[:colors] = tmp
+
+          i += 1
+        end
+      end
+    end
+
+    tmp_hash
+  end
 end
