@@ -80,6 +80,7 @@ class Product < ActiveRecord::Base
     else
       tmp = {}
       color_num.each do |nums|
+        next if nums.blank?
         num = nums[0]
         next if num.blank?
 
