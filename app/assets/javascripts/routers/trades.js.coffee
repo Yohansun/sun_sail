@@ -2,7 +2,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
   routes:
     '': 'main'
     'trades': 'index'
-    'trades/:trade_type': 'index'
+    'trades/:trade_mode-:trade_type': 'index'
     'trades/:id/splited': 'splited'
     'trades/:id/:operation': 'operation'
 
@@ -35,7 +35,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
   main: () ->
     Backbone.history.navigate('trades', true)
 
-  index: (trade_type = null) ->
+  index: (trade_mode = "trades", trade_type = null) ->
     # reset the index stage, hide all popups
     $('.modal').modal('hide')
 
@@ -44,6 +44,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     if @collection.length == 0 || @trade_type != trade_type
       $('#content').html ""
       @trade_type = trade_type
+      MagicOrders.trade_mode = trade_mode
       blocktheui()
       @show_top_nav()
       @collection.fetch data: {trade_type: trade_type}, success: (collection, response) =>
@@ -61,10 +62,15 @@ class MagicOrders.Routers.Trades extends Backbone.Router
           when 'buyer_demand_refund' then $('.trade_nav').html('买家要求退款')
           when 'buyer_demand_return_product' then $('.trade_nav').html('买家要求退货')
           when 'other_unusual_state' then $('.trade_nav').html('其他异常')
-
-        $('.form-search .datepicker').datepicker(format: 'yyyy-mm-dd')
-        $('.form-search .timepicker').timeEntry(show24Hours: true, showSeconds: true, spinnerImage: '/assets/spinnerUpDown.png', spinnerSize: [17, 26, 0], spinnerIncDecOnly: true)
-
+          else
+            $('.trade_nav').html($("[data-trade-status=#{trade_type}]").html())
+        $('.order_search_form .datepicker').datepicker(format: 'yyyy-mm-dd')
+        $('.order_search_form .timepicker').timeEntry(show24Hours: true, showSeconds: true, spinnerImage: '/assets/spinnerUpDown.png', spinnerSize: [17, 26, 0], spinnerIncDecOnly: true)
+        if MagicOrders.trade_mode != 'trades'
+          $("#search_toggle").hide()
+          $(".label_advanced").hide()
+        else
+          $(".label_advanced").show()
         @nav = $('.subnav')
         @navTop = $('.subnav').length && $('.subnav').offset().top - 40
         $(window).off 'scroll'

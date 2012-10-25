@@ -3,19 +3,15 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
   template: JST['trades/index']
 
   events:
-    # 'click [data-trade-type]': 'changeTradeType'
-    'click [data-trade-mode]': 'changeTradeMode'
+
     'click .search': 'search'
-    'click .search_all': 'searchAll'
     'click [data-type=loadMoreTrades]': 'forceLoadMoreTrades'
     'click .export_orders': 'exportOrders'
-    'click #cols_filter input,label': 'keepColsFilterDropdownOpen'
     'change #cols_filter input[type=checkbox]': 'filterTradeColumns'
-
-    #navigation bar function
     'click [data-trade-status]': 'selectSameStatusTrade'
 
     #visual effects
+    'click #cols_filter input,label': 'keepColsFilterDropdownOpen'
     'click #advanced_btn': 'advancedSearch'
     'click .dropdown': 'dropdownTurnGray'
 
@@ -31,7 +27,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
   render: =>
     $.unblockUI()
     if !@first_rendered
-       $(@el).html(@template(trades: @collection))
+      $(@el).html(@template(trades: @collection))
       #initial mode=trades
       visible_cols = MagicOrders.trade_cols_visible_modes[MagicOrders.trade_mode]
       if MagicOrders.trade_cols_hidden == []
@@ -130,27 +126,9 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
   search: (e) ->
     e.preventDefault()
-    @search_option = $(".search_option").val()
-    @search_value = $(".search_value").val()
 
-    @from_deliver_print_date = $(".print_start_date").val()
-    @to_deliver_print_date = $(".print_end_date").val()
-    @from_deliver_print_time = $(".print_start_time").val()
-    @to_deliver_print_time = $(".print_end_time").val()
-
-    return if (@search_option == '' or @search_value == '') and (@from_deliver_print_date == '' or @to_deliver_print_date == '')
-
-    blocktheui()
-    $("#trade_rows").html('')
-    @collection.fetch data: {search: {option: @search_option, value: @search_value}, search_print_time: {@from_deliver_print_date, @to_deliver_print_date, @from_deliver_print_time, @to_deliver_print_time}}, success: (collection) =>
-      @renderUpdate()
-      $.unblockUI()
-
-  searchAll: (e) ->
-    e.preventDefault()
-
-    @search_option = $(".search_option").val()
-    @search_value = $(".search_value").val()
+    @simple_search_option = $(".search_option").val()
+    @simple_search_value = $(".search_value").val()
 
     @status_option = $("#status_option").val()
     @type_option = $("#type_option").val()
@@ -166,6 +144,10 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     @pay_end_date = $(".pay_end_date").val()
     @pay_start_time = $(".pay_start_time").val()
     @pay_end_time = $(".pay_end_time").val()
+    @from_deliver_print_date = $(".print_start_date").val()
+    @to_deliver_print_date = $(".print_end_date").val()
+    @from_deliver_print_time = $(".print_start_time").val()
+    @to_deliver_print_time = $(".print_end_time").val()
 
     @search_buyer_message = $("#search_buyer_message").is(':checked')
     @search_seller_memo = $("#search_seller_memo").is(':checked')
@@ -175,48 +157,103 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
     @search_logistic = $("#search_logistic").val()
 
-    return if (@search_option == '' or @search_value == '') and @search_logistic == '' and @status_option == "" and @state_option == "" and @city_option == "" and @district_option == "" and @type_option == "" and (@search_start_date == '' or @search_end_date == '') and (@pay_start_date == '' or @pay_end_date == '') and @search_buyer_message == false and @search_seller_memo == false and @search_cs_memo == false and @search_color == false and @search_invoice == false
+    return if (@search_option == '' or @search_value == '') and (@from_deliver_print_date == '' or @to_deliver_print_date == '') and @search_logistic == '' and @status_option == "" and @state_option == "" and @city_option == "" and @district_option == "" and @type_option == "" and (@search_start_date == '' or @search_end_date == '') and (@pay_start_date == '' or @pay_end_date == '') and @search_buyer_message == false and @search_seller_memo == false and @search_cs_memo == false and @search_color == false and @search_invoice == false
 
     @offset = 0
     blocktheui()
     $("#trade_rows").html('')
 
-    @collection.fetch data: {trade_type: @trade_type, search: {option: @search_option, value: @search_value}, search_all: {@search_start_date, @search_start_time, @search_end_date, @pay_start_time, @pay_end_time, @pay_start_date, @pay_end_date, @search_end_time, @status_option, @type_option, @state_option, @city_option, @district_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_invoice, @search_color, @search_logistic}}, success: (collection) =>
-
+    @collection.fetch data: {trade_type: @trade_type, search: {@simple_search_option, @simple_search_value, @from_deliver_print_date, @to_deliver_print_date, @from_deliver_print_time, @to_deliver_print_time, @search_start_date, @search_start_time, @search_end_date, @pay_start_time, @pay_end_time, @pay_start_date, @pay_end_date, @search_end_time, @status_option, @type_option, @state_option, @city_option, @district_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_invoice, @search_color, @search_logistic}}, success: (collection) =>
       if collection.length >= 0
         @offset = @offset + 20
         @renderUpdate()
       else
         $.unblockUI()
 
-  # changeTradeType: (e) ->
-  #   e.preventDefault()
-  #   type = $(e.target).data('trade-type')
-  #   Backbone.history.navigate('trades/' + type, true)
+  fetch_new_trades: =>
+    @collection.fetch add: true, data: {trade_type: @trade_type, offset: 0, limit: $("#newTradesNotifer span").text()}, success: (collection) =>
+      @renderNew()
+      $("#newTradesNotifer").hide()
 
-  changeTradeMode: (e) ->
+  forceLoadMoreTrades: (event) =>
+    event.preventDefault()
+
+    blocktheui()
+    @collection.fetch data: {trade_type: @trade_type, offset: @offset, search: {@simple_search_option, @simple_search_value, @from_deliver_print_date, @to_deliver_print_date, @from_deliver_print_time, @to_deliver_print_time, @search_start_date, @search_start_time, @search_end_date, @pay_start_time, @pay_end_time, @pay_start_date, @pay_end_date, @search_end_time, @status_option, @type_option, @state_option, @city_option, @district_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_invoice, @search_color, @search_logistic}}, success: (collection) =>
+      if collection.length >= 0
+        @offset = @offset + 20
+        @renderUpdate()
+      else
+        $.unblockUI()
+
+  fetchMoreTrades: (event, direction) =>
+    if direction == 'down'
+      @forceLoadMoreTrades(event)
+
+  advancedSearch: (e) ->
     e.preventDefault()
-    $('.dropdown.open .dropdown-toggle').dropdown('toggle');
-    $(@el).find(".trade_pops li").hide()
+    $("#search_toggle").toggle()
+    $("#simple_search_button").toggleClass 'simple_search'
+
+  dropdownTurnGray: (e) ->
+    e.preventDefault()
+    $click_li_dropdown = $("#overview").find("li.dropdown li")
+    $click_li_dropdown.click ->
+      $(this).parents(".dropdown").siblings().removeClass "active"
+      $(this).parents(".dropdown").addClass "active"
+
+  exportOrders: (e) =>
+    e.preventDefault()
+
+    @simple_search_option = $(".search_option").val()
+    @simple_search_value = $(".search_value").val()
+
+    @status_option = $("#status_option").val()
+    @type_option = $("#type_option").val()
+    @state_option = $("#state_option").val()
+    @city_option = $("#city_option").val()
+    @district_option = $("#district_option").val()
+
+    @search_start_date = $(".search_start_date").val()
+    @search_end_date = $(".search_end_date").val()
+    @search_start_time = $(".search_start_time").val()
+    @search_end_time = $(".search_end_time").val()
+    @pay_start_date = $(".pay_start_date").val()
+    @pay_end_date = $(".pay_end_date").val()
+    @pay_start_time = $(".pay_start_time").val()
+    @pay_end_time = $(".pay_end_time").val()
+    @from_deliver_print_date = $(".print_start_date").val()
+    @to_deliver_print_date = $(".print_end_date").val()
+    @from_deliver_print_time = $(".print_start_time").val()
+    @to_deliver_print_time = $(".print_end_time").val()
+
+    @search_buyer_message = $("#search_buyer_message").is(':checked')
+    @search_seller_memo = $("#search_seller_memo").is(':checked')
+    @search_cs_memo = $("#search_cs_memo").is(':checked')
+    @search_invoice = $("#search_invoice").is(':checked')
+    @search_color = $("#search_color").is(':checked')
+
+    @search_logistic = $("#search_logistic").val()
+
+    window.open("/api/trades.xls?trade_type=#{@trade_type}&search%5Bsimple_search_option%5D=#{@simple_search_option}&search%5Bsimple_search_value%5D=#{@simple_search_value}&search%5Bfrom_deliver_print_date%5D=#{@from_deliver_print_date}&search%5Bto_deliver_print_date%5D=#{@to_deliver_print_date}&search%5Bfrom_deliver_print_time%5D=#{@from_deliver_print_time}&search%5Bto_deliver_print_time%5D=#{@to_deliver_print_time}&search%5Bsearch_start_date%5D=#{@search_start_date}&search%5Bsearch_start_time%5D=#{@search_start_time}&search%5Bsearch_end_date%5D=#{@search_end_date}&search%5Bsearch_end_time%5D=#{@search_end_time}&search%5Bpay_start_time%5D=#{@pay_start_time}&search%5Bpay_end_time%5D=#{@pay_end_time}&search%5Bpay_start_date%5D=#{@pay_start_date}&search%5Bpay_end_date%5D=#{@pay_end_date}&search%5Bstatus_option%5D=#{@status_option}&search%5Btype_option%5D=#{@type_option}&search%5Bstate_option%5D=#{@state_option}&search%5Bcity_option%5D=#{@city_option}&search%5Bdistrict_option%5D=#{@district_option}&search%5Bsearch_buyer_message%5D=#{@search_buyer_message}&search%5Bsearch_seller_memo%5D=#{@search_seller_memo}&search%5Bsearch_cs_memo%5D=#{@search_cs_memo}&search%5Bsearch_invoice%5D=#{@search_invoice}&search%5Bsearch_color%5D=#{@search_color}&search%5Bsearch_logistic%5D=#{@search_logistic}&limit=0&offset=0")
+
+  selectSameStatusTrade: (e) =>
+    e.preventDefault()
+    $('.dropdown.open .dropdown-toggle').dropdown('toggle')
+    @search_trade_status = $(e.target).data('trade-status')
     MagicOrders.trade_mode = $(e.target).data('trade-mode')
-    if MagicOrders.trade_mode isnt 'trades'
-      $("#search_toggle").hide()
-      $("#fieldset_advanced").hide()
-      $("#advanced_btn i").toggleClass 'icon-arrow-down'
-      $("#advanced_btn i").toggleClass 'icon-arrow-up'
-      $("#simple_search_button").removeClass 'simple_search'
-    else
-      $("#fieldset_advanced").show()
+    Backbone.history.navigate('trades/' + "#{MagicOrders.trade_mode}-#{@search_trade_status}", true)
+
+    $(@el).find(".trade_pops li").hide()
+
     if MagicOrders.trade_mode == 'deliver'        #发货单打印时间筛选框只在deliver模式下显示
       $(@el).find('#select_print_time').show()
     else
       $(@el).find('#select_print_time').hide()
-    #$(@el).find(".trade_mode").text(MagicOrders.trade_modes[MagicOrders.trade_mode])
 
     # hide some cols
     visible_cols = MagicOrders.trade_cols_visible_modes[MagicOrders.trade_mode]
     MagicOrders.trade_cols_hidden = _.difference(MagicOrders.trade_cols_keys, visible_cols)
-
     for col in MagicOrders.trade_cols_keys
       if col in MagicOrders.trade_cols_hidden
         $("#trades_table th[data-col=#{col}], #trades_table td[data-col=#{col}]").hide()
@@ -237,84 +274,3 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
           $(@el).find(".trade_pops li [data-type=#{pop}]").parent().show()
       else
         $(@el).find(".trade_pops li [data-type=#{pop}]").parent().show()
-
-  fetch_new_trades: =>
-    @collection.fetch add: true, data: {trade_type: @trade_type, offset: 0, limit: $("#newTradesNotifer span").text()}, success: (collection) =>
-      @renderNew()
-      $("#newTradesNotifer").hide()
-
-  forceLoadMoreTrades: (event) =>
-    event.preventDefault()
-
-    blocktheui()
-    @collection.fetch data: {trade_type: @trade_type, offset: @offset, search: {option: @search_option, value: @search_value}, search_all: {@search_start_date, @search_start_time, @pay_start_time, @pay_end_time, @pay_start_date, @pay_end_date, @search_end_date, @search_end_time, @status_option, @type_option, @state_option, @state_option, @city_option, @district_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_invoice, @search_color, @search_logistic}, search_trade_status: @search_trade_status}, success: (collection) =>
-      if collection.length >= 0
-        @offset = @offset + 20
-        @renderUpdate()
-      else
-        $.unblockUI()
-
-  fetchMoreTrades: (event, direction) =>
-    if direction == 'down'
-      @forceLoadMoreTrades(event)
-
-  advancedSearch: (e) ->
-    e.preventDefault()
-    $("#advanced_btn i").toggleClass 'icon-arrow-down'
-    $("#advanced_btn i").toggleClass 'icon-arrow-up'
-    $("#search_toggle").toggle()
-    $("#simple_search_button").toggleClass 'simple_search'
-
-  dropdownTurnGray: (e) ->
-    e.preventDefault()
-    $click_li_dropdown = $("#overview").find("li.dropdown li")
-    $click_li_dropdown.click ->
-      $(this).parents(".dropdown").siblings().removeClass "active"
-      $(this).parents(".dropdown").addClass "active"
-
-  exportOrders: (e) =>
-    e.preventDefault()
-
-    @search_option = $(".search_option").val()
-    @search_value = $(".search_value").val()
-
-    @status_option = $("#status_option").val()
-    @type_option = $("#type_option").val()
-    @state_option = $("#state_option").val()
-
-    @search_start_date = $(".search_start_date").val()
-    @search_end_date = $(".search_end_date").val()
-    @search_start_time = $(".search_start_time").val()
-    @search_end_time = $(".search_end_time").val()
-    @pay_start_time = $(".pay_start_time").val()
-    @pay_end_time = $(".pay_end_time").val()
-    @pay_start_date = $(".pay_start_date").val()
-    @pay_end_date = $(".pay_end_date").val()
-
-    @search_buyer_message = $("#search_buyer_message").is(':checked')
-    @search_seller_memo = $("#search_seller_memo").is(':checked')
-    @search_cs_memo = $("#search_cs_memo").is(':checked')
-
-    @search_invoice = $("#search_invoice").is(':checked')
-    @search_color = $("#search_color").is(':checked')
-
-    @search_logistic = $("#search_logistic").val()
-
-    window.open("/api/trades.xls?trade_type=#{@trade_type}&search%5Boption%5D=#{@search_option}&search%5Bvalue%5D=#{@search_value}&search_all%5Bsearch_start_date%5D=#{@search_start_date}&search_all%5Bsearch_start_time%5D=#{@search_start_time}&search_all%5Bsearch_end_date%5D=#{@search_end_date}&search_all%5Bsearch_end_time%5D=#{@search_end_time}&search_all%5Bstatus_option%5D=#{@status_option}&search_all%5Btype_option%5D=#{@type_option}&search_all%5Bstate_option%5D=#{@state_option}&search_all%5Bcity_option%5D=#{@city_option}&search_all%5Bdistrict_option%5D=#{@district_option}&search_all%5Bsearch_buyer_message%5D=#{@search_buyer_message}&search_all%5Bsearch_seller_memo%5D=#{@search_seller_memo}&search_all%5Bsearch_cs_memo%5D=#{@search_cs_memo}&search_all%5Bsearch_invoice%5D=#{@search_invoice}&search_all%5Bsearch_color%5D=#{@search_color}&search_all%5Bpay_start_time%5D=#{@pay_start_time}&search_all%5Bpay_end_time%5D=#{@pay_end_time}&search_all%5Bpay_start_date%5D=#{@pay_start_date}&search_all%5Bpay_end_date%5D=#{@pay_end_date}&search_all%5Bsearch_logistic%5D=#{@search_logistic}&limit=1000000&offset=0")
-
-  selectSameStatusTrade: (e) =>
-    e.preventDefault()
-    $('.dropdown.open .dropdown-toggle').dropdown('toggle');
-    @search_trade_status = $(e.target).data('trade-status')
-    $(@el).find(".trade_nav").text($("[data-trade-status=#{@search_trade_status}]").html())
-
-    @offset = 0
-    blocktheui()
-    $("#trade_rows").html('')
-
-    @collection.fetch data: {search_trade_status: @search_trade_status}, success: (collection) =>
-     if collection.length >= 0
-       @offset = @offset + 20
-       @renderUpdate()
-     else
-       $.unblockUI()
