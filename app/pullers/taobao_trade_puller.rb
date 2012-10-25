@@ -149,7 +149,7 @@ class TaobaoTradePuller
     end
 
     def updatable?(local_trade, remote_status)
-      remote_status != local_trade.status && (remote_status != "WAIT_SELLER_SEND_GOODS" && local_trade.delivered_at.blank?)
+      !local_trade.splitted || (local_trade.splitted && remote_status != local_trade.status && remote_status != "WAIT_SELLER_SEND_GOODS" && local_trade.delivered_at.blank?)
     end
 
     def update_by_created(start_time = nil, end_time = nil, trade_source_id = nil)
