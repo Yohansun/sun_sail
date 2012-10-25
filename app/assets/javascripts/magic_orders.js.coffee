@@ -109,6 +109,8 @@ window.MagicOrders =
       'unusual':                 ['trade_source','tid','status','status_history','receiver_id','receiver_name','receiver_mobile_phone','receiver_address','buyer_message','seller_memo','cs_memo','color_info','invoice_info','deliver_bill','logistic_bill','seller','order_split','operator'],
     }
 
+    @original_path = 'trades'
+
     new MagicOrders.Routers.Areas()
     new MagicOrders.Routers.Trades()
     new MagicOrders.Routers.Sellers()
