@@ -52,4 +52,30 @@ class TaobaoOrder < Order
   #   return {} unless tmp_p
   #   tmp_p.map_packages_by_colors color_num
   # end
+
+  def bill_info
+    if product
+      product.color_map(color_num)
+    else
+      tmp = {}
+      color_num.each do |nums|
+        num = nums[0]
+        next if num.blank?
+
+        if tmp.has_key? num
+          tmp["#{num}"][0] += 1
+        else
+          tmp["#{num}"] = [1, Color.find_by_num(num).try(:name)]
+        end
+      end
+
+      [{
+        iid: '',
+        number: 1,
+        storage_num: '',
+        title: title,
+        colors: tmp
+      }]
+    end
+  end
 end

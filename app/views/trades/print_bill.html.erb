@@ -22,85 +22,63 @@ table th.noborder_right,table td.noborder_right{border-right-width:0;word-wrap:b
 <body>
 <div class="print_bill">
   <div class="modal-body">
-      <h4 class="tc"><%= TradeSetting.shopname %>发货单</h4>
-      <div class="clearfix"><span class="pull-left mar_r10">编号：<%= @trade.tid %></span></div>
-      <div class="clearfix">
-        <span class="pull-left mar_r10">收货人：<%= @trade.receiver_name %></span>
-        <span class="pull-left mar_r10">电话：<%= @trade.receiver_mobile %></span>
-      </div>
-      <div class="clearfix">
-        <span class="pull-left mar_r10">地址：<%= @trade.receiver_state + @trade.receiver_city + @trade.receiver_district + @trade.receiver_address %></span>
-      </div>
+    <h4 class="tc"><%= TradeSetting.shopname %>发货单</h4>
+    <div class="clearfix"><span class="pull-left mar_r10">编号：<%= @trade.tid %></span></div>
+    <div class="clearfix">
+      <span class="pull-left mar_r10">收货人：<%= @trade.receiver_name %></span>
+      <span class="pull-left mar_r10">电话：<%= @trade.receiver_mobile %></span>
+    </div>
+    <div class="clearfix">
+      <span class="pull-left mar_r10">地址：<%= @trade.receiver_state + @trade.receiver_city + @trade.receiver_district + @trade.receiver_address %></span>
+    </div>
+    <div class="clearfix">
+      <span class="pull-left mar_r10">
+        整单备注：<%= @trade.cs_memo %>
+      </span>
+    </div>
+    <table class="table table-bordered mar_t10">
+      <tbody>
+        <tr>
+          <th width="20%">产品编码</th>
+          <th width="25%">商品名称</th>
+          <th width="20%">产品数量</th>
+          <th width="35%">调色信息</th>
+        </tr>
 
-      <table class="table table-bordered mar_t10">
-        <tbody>
-          <tr>
-            <th width="10%">商品编号</th>
-            <th width="5%">数量</th>
-            <th width="30%">商品名称</th>
-            <th width="35%">调色信息</th>
-            <th width="20%" class="noborder_right">备注信息</th>
-          </tr>
+        <% count = 0 %>
+        <% @trade.orders.each do |order| %>
+        <% order.bill_info.each do |info| %>
+        <tr>
+          <td><%= info[:storage_num] %></td>
+          <td><%= info[:title] %></td>
+          <td><%= info[:number] * order.num  %></td>
+          <% count = count + info[:number].to_i * order.num.to_i %>
+          <td>
+            <% if info[:colors].present? %>
+            <% info[:colors].each do |color, array|%>
+            <%= array[0] %>桶 <%= color %> <%= array[1] %><br>
+            <% end %>
+            <% end %>
+          </td>
+        </tr>
+        <% end %>
+        <% end %>
+        <tr>
+          <td colspan="2" class="tr fb">产品数量：</td>
+          <td colspan="1" class="fb"><%= count %></td>
+          <td colspan="1"></td>
+        </tr>
 
-          <% @trade.orders.each_with_index do |order, order_index| %>
-          <tr>
-            <td><%= order.outer_iid %></td>
-            <td><%= order.num %></td>
-            <td><%= order.title %></td>
-            <td>
-              <% index = 0 %>
-              <% order.num.times do %>
-                <% colors = order.color_num[index] %>
-                <% i = 0 %>
-                <% if colors.present? %>
-                <% if get_package(order.outer_iid, @trade.created_at).length > 1 %>
-                  <% for item in get_package(order.outer_iid, @trade.created_at) %>
-                    <% item[:number].times do %>
-                      <div class="controls">
-                        套装项目：<%= item[:name] %>
-                        <br>
-                        <% if colors[i] == '' %>
-                          <b>不调色</b>
-                        <% else %>
-                          <b><%= colors[i] %></b>
-                        <% end %>
-                      </div>
-                      <% i += 1 %>
-                    <% end %>
-                  <% end %>
-                  <hr/>
-                <% else %>
-                  <div class="controls">
-                    <%= colors[i] %>
-                  </div>
-                <% end %>
-                <% end %>
-                <% index = index + 1 %>
-              <% end %>
-            </td>
-            <td class="noborder_right">
-              <%- if order_index == 0 %>
-                <%= @trade.cs_memo %>
-              <%- end %>  
-              <%= order.cs_memo %>  
-            </td>
-          </tr>
-          <% end %>
-
-          <tr>
-            <td colspan="5" class="noborder_right">产品数量：<%= @trade.orders.size %></td>
-          </tr>
-          <tr>
-            <td colspan="3" width="50%">温馨提示:尊敬的顾客，为保证您的权益，签字前请确认外包装是否完好。如有异议，请向快递员当面提出同时立即致电多乐士售后提出异议。售后电话：021-60956000-8128</td>
-            <td class="noborder_right" colspan="2">
-              签收人：________________________<br>
-              日&nbsp;&nbsp;&nbsp;期：________________________
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <!--<p>温馨提示：</p>-->
-    </div><!-- modal-body -->
+        <tr>
+          <td colspan="2" rowspan="2" width="50%">温馨提示：尊敬的顾客，为保证您的权益，签字前请确认外包装是否完好。如有异议，请向快递员当面提出同时立即致电多乐士售后提出异议。<br>
+          售后电话：021-60956000-8128
+          </td>
+          <td colspan="4">签收人：</td>
+        </tr>
+        <tr><td colspan="4">签收日期：</td></tr>
+      </tbody>
+    </table>
+  </div><!-- modal-body -->
 </div>
 <script type="text/javascript">
 window.onload=window.print

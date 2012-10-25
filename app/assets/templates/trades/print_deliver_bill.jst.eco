@@ -4,77 +4,66 @@
 </div><!-- modal-header -->
 <div class="modal-body">
   <h4 class="tc"><%= @trade.get('shopname') %>发货单</h4>
-  <div class="clearfix"><span class="pull-left mar_r10">编号：<%= @trade.get("tid") %>D</span></div>
-  <div class="clearfix"><span class="pull-left mar_r10">收货人：<%= @trade.get('receiver_name') %></span><span class="pull-left mar_r10">电话：<%= @trade.get('receiver_mobile_phone') %></span></div>
-  <div class="clearfix"><span class="pull-left mar_r10">地址：
-    <%= @trade.get('receiver_state') %>
-    <%= @trade.get('receiver_city') %>
-    <%= @trade.get('receiver_district') %>
-    <%= @trade.get('receiver_address') %></span>
+  <div class="clearfix">
+    <span class="pull-left mar_r10">编号：<%= @trade.get("tid") %>D</span>
   </div>
-  <table class="table table-bordered mar_t10 border-bold">
+  <div class="clearfix">
+    <span class="pull-left mar_r10">收货人：<%= @trade.get('receiver_name') %></span>
+    <span class="pull-left mar_r10">电话：<%= @trade.get('receiver_mobile_phone') %></span>
+  </div>
+  <div class="clearfix">
+    <span class="pull-left mar_r10">地址：
+      <%= @trade.get('receiver_state') %>
+      <%= @trade.get('receiver_city') %>
+      <%= @trade.get('receiver_district') %>
+      <%= @trade.get('receiver_address') %>
+    </span>
+  </div>
+  <div class="clearfix">
+    <span class="pull-left mar_r10">
+      整单备注：<%= @trade.get('cs_memo') %>
+    </span>
+  </div>
+  <table class="table table-bordered mar_t10">
     <tbody>
       <tr>
-        <th nowrap>商品编号</th>
-        <th nowrap>数量</th>
-        <th>商品名称</th>
-        <th>调色信息</th>
-        <th>备注信息</th>
+        <th width="20%">产品编码</th>
+        <th width="25%">商品名称</th>
+        <th width="20%">产品数量</th>
+        <th width="35%">调色信息</th>
       </tr>
-       <% order_index = 0 %>
-      <% for order in @trade.get('orders'): %>
+
+      <% count = 0 %>
+      <% for order in @trade.get('orders') : %>
+      <% for info in order['bill_info'] : %>
       <tr>
-        <td><%= order.item_outer_id %></td>
-        <td><%= order.num %></td>
-        <td><%= order.title %></td>
+        <td><%= info['storage_num'] %></td>
+        <td><%= info['title'] %></td>
+        <td><%= info['number'] * order.num  %></td>
+        <% count = count + info['number'] * order.num %>
         <td>
-          <% index = 0 %>
-          <% for count in [0...order.num] : %>
-            <% colors = order.color_num[index] %>
-            <% i = 0 %>
-            <% if colors : %>
-            <% if order.contents.length > 1 : %>
-              <% for item in order.contents : %>
-                <% for [0...item.number] : %>
-                  <div class="controls">
-                    套装项目：<%= item.name %>
-                    <br>
-                    <% if colors[i] == '' : %>
-                      <b>不调色</b>
-                    <% else : %>
-                      <b><%= colors[i] %></b>
-                    <% end %>
-                  </div>
-                  <% i += 1 %>
-                <% end %>
-              <% end %>
-              <hr/>
-            <% else : %>
-              <div class="controls">
-                <%= colors[i] %>
-              </div>
-            <% end %>
-            <% end %>
-            <% index = index + 1 %>
+          <% if info['colors'] != undefined : %>
+          <% for color, array of info['colors'] : %>
+          <%= array[0] %>桶 <%= color %> <%= array[1] %><br>
+          <% end %>
           <% end %>
         </td>
-        <td>
-          <% if order_index == 0 : %>
-            <%= @trade.get('cs_memo') %>
-          <br>  
-          <% end %>  
-          <%= order.cs_memo %>  
-        </td>
       </tr>
-      <% order_index = order_index + 1 %>
       <% end %>
-      <tr><td colspan="5">产品数量：<%= @trade.get('orders').length %></td></tr>
-      <tr><td colspan="3" width="40%">温馨提示：尊敬的顾客，为保证您的权益，签字前请确认外包装是否完好。如有异议，请向快递员当面提出同时立即致电多乐士售后提出异议。售后电话：021-60956000-8128</td><td colspan="2">
-      <br/>
-      签收人： ____________
-      <br/>
-      <br/>
-      日期：_____________</td></tr>
+      <% end %>
+      <tr>
+        <td colspan="2" class="tr fb">产品数量：</td>
+        <td colspan="1" class="fb"><%= count %></td>
+        <td colspan="1"></td>
+      </tr>
+
+      <tr>
+        <td colspan="2" rowspan="2" width="50%">温馨提示：尊敬的顾客，为保证您的权益，签字前请确认外包装是否完好。如有异议，请向快递员当面提出同时立即致电多乐士售后提出异议。<br>
+        售后电话：021-60956000-8128
+        </td>
+        <td colspan="4">签收人：</td>
+      </tr>
+      <tr><td colspan="4">签收日期：</td></tr>
     </tbody>
   </table>
 </div><!-- modal-body -->
