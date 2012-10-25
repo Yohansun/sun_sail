@@ -19,7 +19,7 @@ module TradesHelper
     product.packages.each do |p|
       item = Product.find_by_iid p.iid
       next unless item
-      if time < '2012-10-22 00:00:00' && iid_map.keys.include?(item.iid) && item.name == '多乐士净味底漆'
+      if time < '2012-10-22 00:00:00' && iid_map.keys.include?(product.iid) && item.name == '多乐士净味底漆'
         item_name = iid_map["#{product.iid}"]
       else
         item_name = item.name
