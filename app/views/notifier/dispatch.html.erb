@@ -5,14 +5,13 @@
 </head>
 <body>
 <% if @notify_kind == 'new' %>
-    <%=  @trade_info %>，具体信息如下，
+  <%=  @trade_info %>，具体信息如下，
 <% else %>
-    <%=  @trade_info %> 信息有调整，具体信息如下，请以此封mail信息为准，
+  <%=  @trade_info %> 信息有调整，具体信息如下，请以此封mail信息为准，
 <% end %>
 <%= @trade_deliver_info %>
 <%= render "trade_detail" %>
-<br>买家留言：<%= @trade.buyer_message %> <br>
-<br>发票信息: <%= @trade.invoice_name %> <br>
-<br>客服备注：<%= @trade.cs_memo %> <br>
+<br>发票信息: <%= @trade.invoice_name %><br>
+<br>客服备注：<%= @trade.cs_memo %><br>
 </body>
 </html>
