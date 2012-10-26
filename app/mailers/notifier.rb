@@ -13,14 +13,10 @@ class Notifier < ActionMailer::Base
         )
   end  
 
-  def deliver_errors(trade, response)
+  def deliver_errors(id, errors)
     mail(:to => %w{errors@networking.io},
          :subject => "#{TradeSetting.shopname}发货异常提醒",
-         :body => "错误代码: 
-                   #{response['error_description']}"
-                  "订单: 
-                   #{trade}"
-                   
+         :body => "订单ID: #{id}  \n 错误代码: #{errors} "                  
         )
   end  
 
