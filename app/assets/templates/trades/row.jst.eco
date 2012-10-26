@@ -81,17 +81,25 @@
       <% end %>
 
       <li class= "divider"></li>
+      <% if @trade.get('has_refund_order') == true : %>
+      <% if @trade.get('request_return_at') == undefined : %>
+      <li><a data-toggle="modal" href="#" data-type="request_return">申请退货</a></li>
+      <% end %>
+      <% if @trade.get('request_return_at') && @trade.get('confirm_return_at') == undefined : %>
+      <li><a data-toggle="modal" href="#" data-type="confirm_return">确认退货</a></li>
+      <% end %>
+      <% if @trade.get('confirm_return_at') && @trade.get('confirm_refund_at') == undefined : %>
+      <li><a data-toggle="modal" href="#" data-type="confirm_refund">确认退款</a></li>
+      <% end %>
+      <% end %>
+      <li><a data-toggle="modal" href="#" data-type="invoice_number">发票号设置</a></li>
 
       <!-- <li><a data-toggle="modal" href="#" data-type="check_goods">验货</a></li> -->
       <!-- <li><a data-toggle="modal" href="#" data-type="confirm_check_goods">确认验货</a></li> -->
       <!-- <li><a data-toggle="modal" href="#" data-type="refund">申请退款</a></li> -->
       <!-- <li><a data-toggle="modal" href="#" data-type="agree_refund">同意退款</a></li> -->
-      <!-- <li><a data-toggle="modal" href="#" data-type="confirm_refund">确认退款</a></li> -->
-      <!-- <li><a data-toggle="modal" href="#" data-type="return_goods">申请退货</a></li> -->
       <!-- <li><a data-toggle="modal" href="#" data-type="agree_return_goods">同意退货</a></li> -->
-      <!-- <li><a data-toggle="modal" href="#" data-type="confirm_return_goods">确认退货</a></li> -->
       <!-- <li><a data-toggle="modal" href="#" data-type="invoice_notice">开票通知</a></li> -->
-      <li><a data-toggle="modal" href="#" data-type="invoice_number">发票号设置</a></li>
 
       <li class= "divider"></li>
 
@@ -108,8 +116,8 @@
 <% if @trade.get('trade_source') == "分销平台" : %>
   <br><span class="label label-info">店铺代码:<%= @trade.get('distributor_usercode') %></span></td>
 <% end %>
-<td data-col='tid' data-type="detail">
-  <a href="#">
+<td data-col='tid'>
+  <a href="#" data-type="detail">
     <% if @trade.get('splitted_tid'): %>
       <span class="label label-info">拆分订单</span>
       <br/>
@@ -151,6 +159,15 @@
   <% if @trade.get('confirm_receive_at'): %>
     <span class="label label-success">确认收货<%= @trade.get('confirm_receive_at') %></span>
   <% end %>
+  <% if @trade.get('request_return_at'): %>
+    <span class="label label-success">申请退货<%= @trade.get('request_return_at') %></span>
+  <% end %>
+  <% if @trade.get('confirm_return_at'): %>
+    <span class="label label-success">确认退货<%= @trade.get('confirm_return_at') %></span>
+  <% end %>
+  <% if @trade.get('confirm_refund_at'): %>
+    <span class="label label-success">确认退款<%= @trade.get('confirm_refund_at') %></span>
+  <% end %>
 </td>
 <td data-col='receiver_id'><%= @trade.get('buyer_nick') %></td>
 <td data-col='receiver_name'><%= @trade.get('receiver_name') %></td>
@@ -183,7 +200,7 @@
 </td>
 <td data-col='color_info'>
   <% if @trade.get('has_color_info') == true : %>
-    <a data-toggle="modal" href="javascript:void(0)" data-type="color_info"><i class="icon-color"></i></a>
+    <a href="#"><i class="icon-color" data-type="color_info"></i></a>
   <% end %>
 </td>
 <td data-col='invoice_info'>

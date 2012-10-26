@@ -79,7 +79,7 @@ class TradesController < ApplicationController
       when 'delivered','seller_delivered'
         trade_type_hash = {:status.in => paid_and_delivered_array}
       when 'refund'
-        trade_type_hash = {:status.in => refund_array}
+        trade_type_hash = {has_refund_order: true}
       when 'closed'
         trade_type_hash = {:status.in => closed_array}
       when 'unusual_trade'
@@ -382,6 +382,18 @@ class TradesController < ApplicationController
 
     if params[:confirm_receive_at] == true
       @trade.confirm_receive_at = Time.now
+    end
+
+    if params[:request_return_at] == true
+      @trade.request_return_at = Time.now
+    end
+
+    if params[:confirm_return_at] == true
+      @trade.confirm_return_at = Time.now
+    end
+
+    if params[:confirm_refund_at] == true
+      @trade.confirm_refund_at = Time.now
     end
 
     if params[:logistic_waybill].present?

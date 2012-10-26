@@ -31,9 +31,13 @@ class Trade
   field :seller_confirm_deliver_at, type: DateTime        # 确认发货
   field :seller_confirm_invoice_at, type: DateTime        # 确认开票
 
-  field :confirm_color_at, type: DateTime                 #确认调色
-  field :confirm_check_goods_at, type: DateTime           #确认验证
-  field :confirm_receive_at, type: DateTime               #确认买家收货
+  field :confirm_color_at, type: DateTime                 # 确认调色
+  field :confirm_check_goods_at, type: DateTime           # 确认验证
+  field :confirm_receive_at, type: DateTime               # 确认买家收货
+
+  field :request_return_at, type: DateTime                # 退货相关
+  field :confirm_return_at, type: DateTime
+  field :confirm_refund_at, type: DateTime
 
   # 拆单相关
   field :splitted, type: Boolean, default: false
