@@ -10,6 +10,7 @@ class Product < ActiveRecord::Base
   has_many :colors_products
   has_many :colors, through: :colors_products
   has_many :packages
+  has_many :stock_products
 
   mount_uploader :product_image, ProductImageUploader
 

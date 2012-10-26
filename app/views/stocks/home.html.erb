@@ -1,4 +1,16 @@
 <div class="container-fluid">
+  <header class="jumbotron subhead" id="overview">
+    <div class="subnav">
+      <ul class="nav nav-pills">
+        <% if current_user.has_role?(:seller) && current_user.seller %>
+          <li class="active"><%= link_to '仓库管理', seller_stocks_path(current_user.seller.id) %></li>
+        <% else %>
+          <li class="active"><a href="/stocks">所有仓库</a></li>
+        <% end %>
+        <li ><a href="<%=stock_products_path%>">库存查询</a></li>
+      </ul>
+    </div>
+  </header>
   <div class="row-fluid">
     <ul class="breadcrumb" style="position:relative;">
       <li>

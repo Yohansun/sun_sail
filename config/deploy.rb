@@ -13,7 +13,7 @@ set :use_sudo, false
 set :scm, :git
 set :git_shallow_clone, 1
 set :git_enable_submodules, 1
-set :deploy_via, :remote_cache
+#set :deploy_via, :remote_cache
 set :deploy_env, 'production'
 default_run_options[:pty] = true
 ssh_options[:forward_agent] = true
