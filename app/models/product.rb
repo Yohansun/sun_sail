@@ -108,7 +108,7 @@ class Product < ActiveRecord::Base
 
     color_num.each do |nums|
       i = 0
-
+      next if nums.blank?
       tmp_hash.each do |package|
         package[:number].times do
           next if nums[i].blank?

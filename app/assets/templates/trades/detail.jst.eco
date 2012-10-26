@@ -116,7 +116,7 @@
       <% for order in @trade.get('orders'): %>
       <tr>
         <td><%= order.title %></td>
-        <td rowspan='<%= order.contents.length + 1 %>'><%= order.num %></td>
+        <td><%= order.num %><%= '套' if order.contents.length > 0 %></td>
         <td rowspan='<%= order.contents.length + 1 %>'><%= order.sku_properties %></td>
         <% unless @trade.get('total_fee') is undefined : %>
         <td rowspan='<%= order.contents.length + 1 %>'>￥<%= order.auction_price %></td>
@@ -127,6 +127,7 @@
       <% for item in order.contents : %>
       <tr>
         <td>套装详情: <%= item.name %></td>
+        <td><%= item.number * order.num %>桶</td>
       </tr>
       <% end %>
       <% end %>
