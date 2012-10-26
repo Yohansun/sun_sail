@@ -13,10 +13,9 @@ class TradesController < ApplicationController
     seller = current_user.seller
     logistic = current_user.logistic
 
-    paid_not_deliver_array = ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"]
-    paid_and_delivered_array = ["WAIT_BUYER_CONFIRM_GOODS","WAIT_GOODS_RECEIVE_CONFIRM","WAIT_BUYER_CONFIRM_GOODS_ACOUNTED","WAIT_SELLER_SEND_GOODS_ACOUNTED"]
+    paid_not_deliver_array = ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT","WAIT_SELLER_SEND_GOODS_ACOUNTED"]
+    paid_and_delivered_array = ["WAIT_BUYER_CONFIRM_GOODS","WAIT_GOODS_RECEIVE_CONFIRM","WAIT_BUYER_CONFIRM_GOODS_ACOUNTED"]
     closed_array = ["TRADE_CLOSED","TRADE_CANCELED","TRADE_CLOSED_BY_TAOBAO", "ALL_CLOSED"]
-    refund_array = ["TRADE_REFUNDING","WAIT_SELLER_AGREE","SELLER_REFUSE_BUYER","WAIT_BUYER_RETURN_GOODS","WAIT_SELLER_CONFIRM_GOODS","CLOSED", "SUCCESS"]
 
     if current_user.has_role?(:seller)
       if seller
@@ -77,7 +76,7 @@ class TradesController < ApplicationController
       when 'undelivered','seller_undelivered'
         trade_type_hash = {"$and" => [{:dispatched_at.ne => nil},{:status.in => paid_not_deliver_array}]}
       when 'delivered','seller_delivered'
-        trade_type_hash = {:status.in => paid_and_delivered_array}
+        trade_type_hash = {"$and" =>[{:status.in => paid_and_delivered_array},{"$or" => [{:has_refund_order.exists => false},{has_refund_order: false}]}]}
       when 'refund'
         trade_type_hash = {has_refund_order: true}
       when 'closed'
@@ -174,7 +173,13 @@ class TradesController < ApplicationController
     # 按状态筛选
     if params[:search] && params[:search][:status_option].present?
       status_array = params[:search][:status_option].split(",")
-      status_hash = {:status.in => status_array}
+      if status_array == ["WAIT_BUYER_CONFIRM_GOODS","WAIT_GOODS_RECEIVE_CONFIRM"] || status_array == ["WAIT_BUYER_CONFIRM_GOODS_ACOUNTED"]
+        status_hash = {"$and" =>[{:status.in => status_array},{"$or" => [{:has_refund_order.exists => false},{has_refund_order: false}]}]}
+      elsif status_array = ['require_refund']
+        status_hash = {has_refund_order: true}
+      else
+        status_hash = {:status.in => status_array}
+      end
     end
 
     # 按来源筛选

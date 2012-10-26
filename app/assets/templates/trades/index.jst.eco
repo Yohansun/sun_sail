@@ -186,7 +186,7 @@
               <option value="WAIT_BUYER_CONFIRM_GOODS_ACOUNTED">已付款（已分账），已发货</option>
               <option value="WAIT_SELLER_SEND_GOODS_ACOUNTED">已付款（已分账），待发货</option>
               <option value="TRADE_CLOSED_BY_TAOBAO">交易被淘宝关闭</option>
-              <option value="TRADE_REFUNDING">退款中</option>
+              <option value="require_refund">申请退款</option>
             </select>
 
             <select id="type_option" class="input-large type_option">
