@@ -32,6 +32,8 @@ class TradeTaobaoDeliver
           seller_id: trade.seller_id
         )
       end
+    else
+      Notifier.deliver_errors(trade, response).deliver
     end
   end
   
