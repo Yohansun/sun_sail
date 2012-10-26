@@ -42,36 +42,40 @@
       <th class="td2">特殊属性</th>
       <th class="td2">调色信息</th>
       <% unless TradeSetting.company == "dulux"%>
-        <th class="td2">标价</th>
-        <th class="td3">实际单价</th>
+      <th class="td2">标价</th>
+      <th class="td3">实际单价</th>
       <% end %>
       <th class="td3">数量</th>
       <% unless TradeSetting.company == "dulux"%>
-        <th class="td3">总价</th>
+      <th class="td3">总价</th>
       <% end %>
     </tr>
     <%- @trade.orders.each do |object| %>
-        <%- order = OrderDecorator.decorate(object) %>
-        <tr>
-          <td class="td1"><%= order.title %></td>
-          <td class="td2"><%= order.sku_properties %></td>
-          <td class="td2">
-            <%- if order.color_num && order.color_num.present? %>
-              <%- order.color_num.each do |color| %>
-                <%- color_name = Color.find_by_num(color).try(:name) %>
-                <%= color %>  <%= color_name %>
-              <%-end %>  
-            <%- end %>          
-          </td>
-          <% unless TradeSetting.company == "dulux"%>
-            <td class="td2"><span class="font-blueb">¥<%= order.auction_price %></span></td>
-            <td class="td3"><span class="font-gray">¥<%= order.price %></span></td>
-          <% end %>
-          <td class="td3"><%= order.num %></td>
-          <% unless TradeSetting.company == "dulux"%>
-            <td class="td3"><%= order.total_fee %></td>
-          <% end %>
-        </tr>
+      <%- order = OrderDecorator.decorate(object) %>
+      <% object.bill_info.each do |info| %>
+      <tr>
+        <td class="td1"><%= info[:title] %></td>
+        <td class="td2"><%= order.sku_properties %></td>
+        <td class="td2">
+        <%- if info[:colors].present? %>
+          <%- info[:colors].each do |color, array| %>
+            <%= array[0]%>桶 <%= color %>  <%= array[1] %><br>
+          <%- end %>
+        <%- end %>
+        </td>
+
+        <% unless TradeSetting.company == "dulux"%>
+        <td class="td2"><span class="font-blueb">¥<%= order.auction_price %></span></td>
+        <td class="td3"><span class="font-gray">¥<%= order.price %></span></td>
+        <% end %>
+
+        <td class="td3"><%= info[:number] * order.num %></td>
+
+        <% unless TradeSetting.company == "dulux"%>
+        <td class="td3"><%= order.total_fee %></td>
+        <% end %>
+      </tr>
+      <% end %>
     <%- end %>
   </table>
 </div>
