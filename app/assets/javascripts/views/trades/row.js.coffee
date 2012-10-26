@@ -5,26 +5,8 @@ class MagicOrders.Views.TradesRow extends Backbone.View
   template: JST['trades/row']
 
   events:
-    'click [data-type=detail]': 'show_detail'
-    'click [data-type=seller]': 'show_seller'
-    'click [data-type=deliver]': 'show_deliver'
-    'click [data-type=print_deliver_bill]': 'show_print_deliver_bill'
-    'click [data-type=cs_memo]': 'show_cs_memo'
-    'click [data-type=color]': 'show_color'
-    'click [data-type=color_info]': 'show_color_info'
-    'click [data-type=invoice]': 'show_invoice'
-    'click [data-type=invoice_number]': 'show_invoice_number'
-    'click [data-type=seller_confirm_deliver]': 'show_seller_confirm_deliver'
-    'click [data-type=seller_confirm_invoice]': 'show_seller_confirm_invoice'
-    'click [data-type=barcode]': 'show_barcode'
-    'click [data-type=mark_unusual_state]': 'show_mark_unusual_state'
-    'click [data-type=operation_log]': 'show_operation_log'
-    'click [data-type=confirm_color]': 'show_confirm_color'
-    'click [data-type=confirm_receive]': 'show_confirm_receive'
-    'click [data-type=confirm_check_goods]': 'show_confirm_check_goods'
+    'click [data-type]': 'show_type'
     'click [data-type=trade_split]': 'show_split'
-    'click [data-type=logistic_waybill]': 'show_logistic_waybill'
-    'click [data-type=logistic_memo]': 'show_logistic_memo'
     'click': 'highlight'
 
   initialize: ->
@@ -50,85 +32,15 @@ class MagicOrders.Views.TradesRow extends Backbone.View
 
     this
 
-  show_detail: (e) ->
+  show_type: (e) ->
     e.preventDefault()
-    Backbone.history.navigate('trades/' + @model.get("id") + '/detail', true)
-
-  show_seller: (e) ->
-    e.preventDefault()
-    Backbone.history.navigate('trades/' + @model.get("id") + '/seller', true)
+    type = $(e.target).data('type')
+    if type isnt 'trade_split'
+      Backbone.history.navigate('trades/' + @model.get("id") + "/#{type}", true)
 
   show_split: (e) ->
     e.preventDefault()
     Backbone.history.navigate('trades/' + @model.get("id") + '/splited', true)
-
-  show_deliver: (e) ->
-    e.preventDefault()
-    Backbone.history.navigate('trades/' + @model.get("id") + '/deliver', true)
-
-  show_cs_memo: (e) ->
-    e.preventDefault()
-    Backbone.history.navigate('trades/' + @model.get("id") + '/cs_memo', true)
-
-  show_color: (e) ->
-    e.preventDefault()
-    Backbone.history.navigate('trades/' + @model.get("id") + '/color', true)
-
-  show_color_info: (e) ->
-    e.preventDefault()
-    Backbone.history.navigate('trades/' + @model.get("id") + '/color_info', true)
-
-  show_invoice: (e) ->
-    e.preventDefault()
-    Backbone.history.navigate('trades/' + @model.get("id") + '/invoice', true)
-
-  show_invoice_number: (e) ->
-    e.preventDefault()
-    Backbone.history.navigate('trades/' + @model.get("id") + '/invoice_number', true)
-
-  show_seller_confirm_deliver: (e) ->
-    e.preventDefault()
-    Backbone.history.navigate('trades/' + @model.get("id") + '/seller_confirm_deliver', true)
-
-  show_seller_confirm_invoice: (e) ->
-    e.preventDefault()
-    Backbone.history.navigate('trades/' + @model.get("id") + '/seller_confirm_invoice', true)
-
-  show_barcode: (e) ->
-    e.preventDefault()
-    Backbone.history.navigate('trades/' + @model.get("id") + '/barcode', true)
-
-  show_mark_unusual_state: (e) ->
-    e.preventDefault()
-    Backbone.history.navigate('trades/' + @model.get("id") + '/mark_unusual_state', true)
-
-  show_operation_log: (e) ->
-    e.preventDefault()
-    Backbone.history.navigate('trades/' + @model.get("id") + '/operation_log', true)
-
-  show_confirm_color: (e) ->
-    e.preventDefault()
-    Backbone.history.navigate('trades/' + @model.get("id") + '/confirm_color', true)
-
-  show_confirm_check_goods: (e) ->
-    e.preventDefault()
-    Backbone.history.navigate('trades/' + @model.get("id") + '/confirm_check_goods', true)
-
-  show_confirm_receive: (e) ->
-    e.preventDefault()
-    Backbone.history.navigate('trades/' + @model.get("id") + '/confirm_receive', true)
-
-  show_print_deliver_bill: (e) ->
-    e.preventDefault()
-    Backbone.history.navigate('trades/' + @model.get("id") + '/print_deliver_bill', true)
-
-  show_logistic_waybill: (e) ->
-    e.preventDefault()
-    Backbone.history.navigate('trades/' + @model.get("id") + '/logistic_waybill', true)
-
-  show_logistic_memo: (e) ->
-    e.preventDefault()
-    Backbone.history.navigate('trades/' + @model.get("id") + '/logistic_memo', true)
 
   highlight: (e) =>
     $("#trades_table tr").removeClass 'info'
