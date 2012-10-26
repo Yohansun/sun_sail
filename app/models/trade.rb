@@ -53,7 +53,8 @@ class Trade
 
   field :has_color_info, type: Boolean, default: false
   field :has_cs_memo, type: Boolean, default: false
-  field :has_unusual_state, type:Boolean, default: false
+  field :has_unusual_state, type: Boolean, default: false
+  field :has_refund_order, type: Boolean, default: false
 
   # add indexes for speed
   index :tid
@@ -69,6 +70,7 @@ class Trade
   index :has_color_info
   index :has_cs_memo
   index :has_unusual_state
+  index :has_refund_order
 
   embeds_many :unusual_states
   embeds_many :operation_logs
@@ -80,6 +82,7 @@ class Trade
   before_update :set_has_color_info
   before_update :set_has_cs_memo
   before_update :set_has_unusual_state
+  before_update :set_has_refund_order
 
   def set_has_color_info
     self.orders.each do |order|
@@ -89,6 +92,19 @@ class Trade
       end
     end
     self.has_color_info = false
+    true
+  end
+
+  def set_has_refund_order
+    unless self.confirm_receive_at.blank?
+      self.orders.each do |order|
+        if order.refund_status == 'WAIT_BUYER_RETURN_GOODS'
+          self.has_refund_order = true
+          return
+        end
+      end
+    end
+    self.has_refund_order = false
     true
   end
 
