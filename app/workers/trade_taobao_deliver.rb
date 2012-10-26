@@ -4,7 +4,7 @@ class TradeTaobaoDeliver
   sidekiq_options :queue => :taobao
 
   def perform(id)
-    code = false
+    code = true
     trade = TaobaoTrade.find(id)
     response = TaobaoQuery.get({
       method: 'taobao.logistics.offline.send',
@@ -13,10 +13,8 @@ class TradeTaobaoDeliver
       company_code: trade.logistic_code}, trade.try(:trade_source_id)
     )
 
-    if response['delivery_offline_send_response']
-      response = response['delivery_offline_send_response']['shipping']
-      code = response['is_succsess']
-    end
+    errors = response['error_response']
+    code = false if errors.present?
 
     if code
       trade.orders.each do |order|
@@ -33,7 +31,7 @@ class TradeTaobaoDeliver
         )
       end
     else
-      Notifier.deliver_errors(trade, response).deliver
+      Notifier.deliver_errors(id, errors).deliver
     end
   end
   
