@@ -138,14 +138,7 @@ class Trade
 
   # 物流公司名称
   def logistic_company
-    case logistic_code
-    when 'YTO'
-      '圆通快递'
-    when 'ZTO'
-      '中通速递'
-    else
-      '其他'
-    end
+    logistic_name
   end
 
   def cc_emails

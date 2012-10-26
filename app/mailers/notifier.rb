@@ -5,11 +5,22 @@ class Notifier < ActionMailer::Base
   
   def app_token_errors(token,response)
     mail(:to => %w{errors@networking.io},
-         :subject => "淘宝app token授权失败",
+         :subject => "#{TradeSetting.shopname}淘宝app token授权失败",
          :body => "淘宝app token: 
                    #{token.to_yaml} 
                    错误代码: 
                    #{response['error_description']}"
+        )
+  end  
+
+  def deliver_errors(trade, response)
+    mail(:to => %w{errors@networking.io},
+         :subject => "#{TradeSetting.shopname}发货异常提醒",
+         :body => "错误代码: 
+                   #{response['error_description']}"
+                  "订单: 
+                   #{trade}"
+                   
         )
   end  
 
