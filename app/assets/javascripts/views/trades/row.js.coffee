@@ -25,6 +25,7 @@ class MagicOrders.Views.TradesRow extends Backbone.View
     'click [data-type=trade_split]': 'show_split'
     'click [data-type=logistic_waybill]': 'show_logistic_waybill'
     'click [data-type=logistic_memo]': 'show_logistic_memo'
+    'click': 'highlight'
 
   initialize: ->
 
@@ -128,3 +129,7 @@ class MagicOrders.Views.TradesRow extends Backbone.View
   show_logistic_memo: (e) ->
     e.preventDefault()
     Backbone.history.navigate('trades/' + @model.get("id") + '/logistic_memo', true)
+
+  highlight: (e) =>
+    $("#trades_table tr").removeClass 'info'
+    $(@el).addClass 'info'
