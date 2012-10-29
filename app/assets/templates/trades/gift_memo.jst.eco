@@ -1,0 +1,13 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal">×</button>
+  <h3>赠品备注</h3>
+</div><!-- modal-header -->
+<div class="modal-body">
+  <fieldset>
+    <textarea placeholder="输入赠品备注..." style="resize:none;width:510px;height:150px;padding:5px;" id="gift_memo_text" value="<%= @trade.get 'gift_memo' %>"></textarea>
+  </fieldset>
+</div><!-- modal-body -->
+<div class="modal-footer">
+  <a class="btn" data-dismiss="modal">取消</a>
+  <a class="btn btn-primary save">保存</a>
+</div>

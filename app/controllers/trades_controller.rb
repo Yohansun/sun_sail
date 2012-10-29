@@ -338,6 +338,10 @@ class TradesController < ApplicationController
       end
     end
 
+    unless params[:gift_memo].blank?
+      @trade.gift_memo = params[:gift_memo].strip
+    end
+
     unless params[:invoice_type].blank?
       @trade.invoice_type = params[:invoice_type].strip
     end

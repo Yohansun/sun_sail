@@ -14,6 +14,7 @@ class Trade
 
   field :cs_memo, type: String                            # 客服备注
   field :logistic_memo, type: String                      # 物流商备注
+  field :gift_memo, type: String                          # 赠品备注
 
   # 发票信息
   field :invoice_type, type: String
