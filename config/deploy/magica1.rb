@@ -2,8 +2,7 @@
 set :rvm_ruby_string, '1.9.3'
 set :rvm_type, :system
 
-#set :repository, "git@github.com:nioteam/magic_orders.git"
-set :repository, "git@github.com:skyyuan/magic_orders.git"
+set :repository, "git@github.com:nioteam/magic_orders.git"
 set :branch, "master"
 
 server "magica1.doorder.com", :web, :app, :db, primary: true

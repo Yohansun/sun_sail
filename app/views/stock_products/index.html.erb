@@ -26,7 +26,7 @@
       <strong>提示</strong>该功能正在研发中...
     </div> -->
 
-    <%= form_tag srarch_path, :method => :get, :id=> "search", :class => "well form-search" do %>
+    <%= form_tag stock_products_search_path, :method => :get, :id=> "search", :class => "well form-search" do %>
       <fieldset class="form-inline">
         <div class="controls">
           <label for="" class="control-label">商品：</label>
@@ -54,7 +54,7 @@
       
       <div class="btns btn-group pull-left">
         <% if params[:product]%>
-          <%= link_to "导出数据", srarch_path(:format => "xls","product[id]" => "#{params[:product][:id]}",:name_all => "#{params[:name_all]}", :area_name_one => "#{params[:area_name_one]}", :area_name_two => "#{params[:area_name_two]}", :area_name_tree => "#{params[:area_name_tree]}" ), :class => "btn btn-warning", "data-toggle" =>"modal" %>
+          <%= link_to "导出数据", stock_products_search_path(:format => "xls","product[id]" => "#{params[:product][:id]}",:name_all => "#{params[:name_all]}", :area_name_one => "#{params[:area_name_one]}", :area_name_two => "#{params[:area_name_two]}", :area_name_tree => "#{params[:area_name_tree]}" ), :class => "btn btn-warning", "data-toggle" =>"modal" %>
         <% else %>
           <a data-toggle="modal" href="#ord_export" class="btn btn-warning">导出数据</a>
         <% end %>
@@ -75,8 +75,8 @@
         <% if @sellers%>
           <% @sellers.each do |seller|%>
             <tr>
-              <td><%= StockProduct.find_by_id(seller.sp_id).product.name %></td>
-              <td><%= Area.find_by_id(seller.a_name).self_and_ancestors.map(&:name).join('-') %></td>
+              <td><%= seller.product_name(seller.sp_id) if seller.product_name(seller.sp_id)%></td>
+              <td><%= seller.area_name(seller.a_name)  if seller.area_name(seller.a_name)%></td>
               <td><%= seller.name %></td>
               <td><%= seller.activity %></td>
             </tr>
@@ -95,7 +95,7 @@
   <script type="text/javascript">
     $(function() {
       var options = {
-        data  : data1
+        data  : linkage_data
       }
 
       var sel = new LinkageSelect(options);

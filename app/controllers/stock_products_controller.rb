@@ -4,7 +4,7 @@ class StockProductsController < ApplicationController
   def index
   end
 
-  def search_product
+  def search
     area_id = nil
     where_sql = "stock_products.product_id = #{params[:product][:id].to_i}"
     if current_user.has_role?(:seller) && current_user.seller

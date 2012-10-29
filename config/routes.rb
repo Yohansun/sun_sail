@@ -8,7 +8,7 @@ MagicOrders::Application.routes.draw do
   devise_for :users, :path => '', :path_names => {:sign_in => 'login'}
   get "/stocks", to: 'stocks#home'
   get "/stock_products", to: 'stock_products#index'
-  get "/srarch", to: 'stock_products#search_product'
+  get "/stock_products/search", to: 'stock_products#search'
 
   resources :colors do
     collection do
@@ -77,7 +77,6 @@ MagicOrders::Application.routes.draw do
 
   scope 'api' do
     get "areas", to: "areas#index"
-    get "area_tree", to: "areas#index"
 
     resources :trades do
       member do

@@ -4,7 +4,7 @@ sheet1[0, 0] = "库存统计数据"
 
 sheet1.row(1).concat ["商品名称", "地域", "经销商", "可用库存数量"]
 @sellers.each_with_index do |seller, i|
-  sheet1.update_row i+2, StockProduct.find_by_id(seller.sp_id).product.name , Area.find_by_id(seller.a_name).self_and_ancestors.map(&:name).join('-'), seller.name, seller.activity
+  sheet1.update_row i+2, seller.product_name(seller.sp_id), seller.area_name(seller.a_name), seller.name, seller.activity
 end
 
 title_format = Spreadsheet::Format.new(:color => :blue, :weight => :bold, :size => 14)
