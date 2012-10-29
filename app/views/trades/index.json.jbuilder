@@ -21,10 +21,12 @@ json.array!(@trades) do |json, trade|
   json.created_timestamp trade.created.to_i if trade.created
   json.pay_time trade.pay_time.strftime("%m-%d %H:%M") if trade.pay_time
   json.cs_memo trade.cs_memo
+  json.gift_memo trade.gift_memo
 
   json.has_color_info trade.has_color_info
   json.has_cs_memo trade.has_cs_memo
   json.has_unusual_state trade.has_unusual_state
+  json.has_refund_order trade.has_refund_order
 
   json.invoice_type trade.invoice_type
   json.invoice_name trade.invoice_name
@@ -43,6 +45,9 @@ json.array!(@trades) do |json, trade|
   json.confirm_color_at trade.confirm_color_at.strftime("%m-%d %H:%M") if trade.confirm_color_at
   json.confirm_check_goods_at trade.confirm_check_goods_at.strftime("%m-%d %H:%M") if trade.confirm_check_goods_at
   json.confirm_receive_at trade.confirm_receive_at.strftime("%m-%d %H:%M") if trade.confirm_receive_at
+  json.request_return_at trade.request_return_at.strftime("%m-%d %H:%M") if trade.request_return_at
+  json.confirm_return_at trade.confirm_return_at.strftime("%m-%d %H:%M") if trade.confirm_return_at
+  json.confirm_refund_at trade.confirm_refund_at.strftime("%m-%d %H:%M") if trade.confirm_refund_at
   if trade.consign_time
     json.consign_time trade.consign_time.strftime("%m-%d %H:%M")
   else

@@ -186,7 +186,7 @@
               <option value="WAIT_BUYER_CONFIRM_GOODS_ACOUNTED">已付款（已分账），已发货</option>
               <option value="WAIT_SELLER_SEND_GOODS_ACOUNTED">已付款（已分账），待发货</option>
               <option value="TRADE_CLOSED_BY_TAOBAO">交易被淘宝关闭</option>
-              <option value="TRADE_REFUNDING">退款中</option>
+              <option value="require_refund">申请退款</option>
             </select>
 
             <select id="type_option" class="input-large type_option">
@@ -321,6 +321,9 @@
         <% end %>
         <th data-col='seller_memo'>卖家<br/>备注</th>
         <th data-col='cs_memo'>客服<br/>备注</th>
+        <% if MagicOrders.company == "dulux" && (MagicOrders.role_key == 'admin' || MagicOrders.role_key == 'cs') : %>
+        <th data-col='gift_memo'>赠品<br/>备注</th>
+        <% end %>
         <th data-col='color_info'>调色<br/>信息</th>
         <th data-col='invoice_info'>发票<br/>信息</th>
         <th data-col='point_fee'>使用<br/>积分</th>

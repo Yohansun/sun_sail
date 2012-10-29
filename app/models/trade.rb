@@ -14,6 +14,7 @@ class Trade
 
   field :cs_memo, type: String                            # 客服备注
   field :logistic_memo, type: String                      # 物流商备注
+  field :gift_memo, type: String                          # 赠品备注
 
   # 发票信息
   field :invoice_type, type: String
@@ -31,9 +32,13 @@ class Trade
   field :seller_confirm_deliver_at, type: DateTime        # 确认发货
   field :seller_confirm_invoice_at, type: DateTime        # 确认开票
 
-  field :confirm_color_at, type: DateTime                 #确认调色
-  field :confirm_check_goods_at, type: DateTime           #确认验证
-  field :confirm_receive_at, type: DateTime               #确认买家收货
+  field :confirm_color_at, type: DateTime                 # 确认调色
+  field :confirm_check_goods_at, type: DateTime           # 确认验证
+  field :confirm_receive_at, type: DateTime               # 确认买家收货
+
+  field :request_return_at, type: DateTime                # 退货相关
+  field :confirm_return_at, type: DateTime
+  field :confirm_refund_at, type: DateTime
 
   # 拆单相关
   field :splitted, type: Boolean, default: false
@@ -53,7 +58,8 @@ class Trade
 
   field :has_color_info, type: Boolean, default: false
   field :has_cs_memo, type: Boolean, default: false
-  field :has_unusual_state, type:Boolean, default: false
+  field :has_unusual_state, type: Boolean, default: false
+  field :has_refund_order, type: Boolean, default: false
 
   # add indexes for speed
   index :tid
@@ -69,6 +75,7 @@ class Trade
   index :has_color_info
   index :has_cs_memo
   index :has_unusual_state
+  index :has_refund_order
 
   embeds_many :unusual_states
   embeds_many :operation_logs
@@ -80,6 +87,7 @@ class Trade
   before_update :set_has_color_info
   before_update :set_has_cs_memo
   before_update :set_has_unusual_state
+  before_update :set_has_refund_order
 
   def set_has_color_info
     self.orders.each do |order|
@@ -89,6 +97,19 @@ class Trade
       end
     end
     self.has_color_info = false
+    true
+  end
+
+  def set_has_refund_order
+    unless self.confirm_receive_at.blank?
+      self.orders.each do |order|
+        if order.refund_status == 'WAIT_BUYER_RETURN_GOODS'
+          self.has_refund_order = true
+          return
+        end
+      end
+    end
+    self.has_refund_order = false
     true
   end
 

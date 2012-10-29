@@ -30,9 +30,11 @@ end
 json.created @trade.created.strftime("%m-%d %H:%M")
 json.pay_time @trade.pay_time.strftime("%m-%d %H:%M") if @trade.pay_time
 json.cs_memo @trade.cs_memo
+json.gift_memo @trade.gift_memo
 json.has_color_info @trade.has_color_info
 json.has_cs_memo @trade.has_cs_memo
 json.has_unusual_state @trade.has_unusual_state
+json.has_refund_order @trade.has_refund_order
 json.logistic_code @trade.logistic_code
 json.logistic_id @trade.logistic_id
 json.logistic_name @trade.logistic_name
@@ -52,6 +54,9 @@ json.confirm_color_at @trade.confirm_color_at.strftime("%m-%d %H:%M") if @trade.
 json.confirm_check_goods_at @trade.confirm_check_goods_at.strftime("%m-%d %H:%M") if @trade.confirm_check_goods_at
 json.confirm_receive_at @trade.confirm_receive_at.strftime("%m-%d %H:%M") if @trade.confirm_receive_at
 json.deliver_bill_printed_at @trade.deliver_bill_printed_at if @trade.deliver_bill_printed_at
+json.request_return_at @trade.request_return_at.strftime("%m-%d %H:%M") if @trade.request_return_at
+json.confirm_return_at @trade.confirm_return_at.strftime("%m-%d %H:%M") if @trade.confirm_return_at
+json.confirm_refund_at @trade.confirm_refund_at.strftime("%m-%d %H:%M") if @trade.confirm_refund_at
 
 if @trade.consign_time
   json.consign_time @trade.consign_time.strftime("%m-%d %H:%M")
@@ -67,7 +72,6 @@ json.orders OrderDecorator.decorate(@trade.orders) do |json, order|
   json.id order._id
   json.title order.title
   json.num order.num
-
   unless TradeSetting.company == 'dulux' && current_user.has_role?(:seller)
     json.price order.price
     json.auction_price order.auction_price
@@ -75,7 +79,6 @@ json.orders OrderDecorator.decorate(@trade.orders) do |json, order|
     json.buyer_payment order.buyer_payment
     json.distributor_payment order.distributor_payment
   end
-
   json.item_id order.item_id
   json.sku_properties order.sku_properties
   json.item_outer_id order.item_outer_id
@@ -86,6 +89,7 @@ json.orders OrderDecorator.decorate(@trade.orders) do |json, order|
   json.barcode order.barcode
   json.contents get_package(order.outer_iid, @trade.created_at)
   json.bill_info order.bill_info
+  json.refund_status order.refund_status
 end
 
 json.unusual_states @trade.unusual_states do |json, state|
