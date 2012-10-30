@@ -25,10 +25,14 @@ class MagicOrders.Views.TradesRow extends Backbone.View
         $(@el).find(".trade_pops li [data-type=#{pop}]").parent().show()
 
     # reset cols
-    for col in MagicOrders.trade_cols_hidden
+    visible_cols = MagicOrders.trade_cols_visible_modes[MagicOrders.trade_mode]
+    for col in MagicOrders.trade_cols_keys
+      if col in visible_cols
+        $(@el).find("td[data-col=#{col}]").show()
+      else
+        $(@el).find("td[data-col=#{col}]").hide()
+    for col in MagicOrders.trade_cols_hidden[MagicOrders.trade_mode]
       $(@el).find("td[data-col=#{col}]").hide()
-    for col in _.difference(_.keys(MagicOrders.trade_cols), MagicOrders.trade_cols_hidden)
-      $(@el).find("td[data-col=#{col}]").show()
 
     this
 
