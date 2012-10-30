@@ -444,15 +444,14 @@ class TradesController < ApplicationController
       end
     end
 
-    unless params[:operation].blank?
-      @trade.operation_logs.build(operated_at: Time.now, operator: current_user.name, operator_id: current_user.id, operation: params[:operation])
-    end
-
-    if @trade.save
+    if @trade.save!
       @trade = TradeDecorator.decorate(@trade)
       if notifer_seller_flag && @trade.status == "WAIT_SELLER_SEND_GOODS" && @trade.seller
         TradeDispatchEmail.perform_async(@trade.id, @trade.seller_id, 'second')
         TradeDispatchSms.perform_async(@trade.id, @trade.seller_id, 'second')
+      end
+      unless params[:operation].blank?
+        @trade.operation_logs.create(operated_at: Time.now, operator: current_user.name, operator_id: current_user.id, operation: params[:operation])
       end
       respond_with(@trade) do |format|
         format.json { render :show, status: :ok }

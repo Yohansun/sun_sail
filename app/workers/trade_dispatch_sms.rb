@@ -30,7 +30,18 @@ class TradeDispatchSms
         content = "#{trade_info}调整，买家地址为#{area_full_name}，请及时发货。"
       end
       sms = Sms.new(content, mobiles)
-      sms.transmit
+      response = sms.transmit.parsed_response
+      sms_operation = "发送短信"
+      if response == '0'     
+        if mobiles.present?
+          sms_operation += "到#{mobiles}"
+        else
+          sms_operation  += "失败，经销商没有绑定手机号"  
+        end
+      else
+        sms_operation += "失败，请检查短信平台是否正常连接"  
+      end
+      trade.operation_logs.create!(operated_at: Time.now, operation: sms_operation)
     end
   end
 end
