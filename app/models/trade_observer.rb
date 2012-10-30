@@ -21,11 +21,12 @@ class TradeObserver < Mongoid::Observer
     @flag = false
   end
 
-  def before_save(object)
-    if object.delivered_at_changed? && object.delivered_at.present?
+  def around_save(object)
+    
+    yield
+    if object.delivered_at_changed? && object.delivered_at.present? && object.logistic_waybill.present?
       # 发货操作
       object.deliver!
-      object.status = 'WAIT_BUYER_CONFIRM_GOODS'
       return
     end
 

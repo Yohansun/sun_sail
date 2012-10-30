@@ -17,6 +17,7 @@ class TradeTaobaoDeliver
     code = false if errors.present?
 
     if code
+      trade.update_attributes!(status: 'WAIT_BUYER_CONFIRM_GOODS')
       trade.orders.each do |order|
         product = Product.find_by_iid order.outer_iid
         stock_product = StockProduct.where(product_id: product.id, seller_id: trade.seller_id).first
