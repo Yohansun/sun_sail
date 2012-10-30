@@ -6,6 +6,7 @@ class TradeTaobaoDeliver
   def perform(id)
     code = true
     trade = TaobaoTrade.find(id)
+    tid = trade.tid
     response = TaobaoQuery.get({
       method: 'taobao.logistics.offline.send',
       tid: trade.tid,
@@ -22,7 +23,7 @@ class TradeTaobaoDeliver
         product = Product.find_by_iid order.outer_iid
         stock_product = StockProduct.where(product_id: product.id, seller_id: trade.seller_id).first
         break unless product
-        stock_product.update_quantity!(order.num, '发货')
+        stock_product.update_quantity!(order.num, '发货', tid)
         StockHistory.create!(
           operation: '发货',
           number: order.num,
