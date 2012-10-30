@@ -64,6 +64,8 @@
         <ul class="dropdown-menu">
           <li><a href="#" data-trade-mode="logistics" data-trade-status="logistic_waybill_void">未返回物流单号</a></li>
           <li><a href="#" data-trade-mode="logistics" data-trade-status="logistic_waybill_exist">已返回物流单号</a></li>
+          <li><a href="#" data-trade-mode="logistics" data-trade-status="logistic_bill_unprinted">未打印物流单</a></li>
+          <li><a href="#" data-trade-mode="logistics" data-trade-status="logistic_bill_printed">已打印物流单</a></li>
         </ul>
       </li>
       <% unless MagicOrders.company == "dulux" and MagicOrders.role_key == 'logistic' : %>

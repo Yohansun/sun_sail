@@ -93,12 +93,14 @@ class TradesController < ApplicationController
         trade_type_hash = {"$and" => [{:deliver_bill_printed_at.exists => true},{:dispatched_at.ne => nil},{:status.in => paid_not_deliver_array + paid_and_delivered_array}]}
 
       # 物流单
-      # 物流单号是否已设置
-      when "logistic_all"
       when "logistic_waybill_void"
         trade_type_hash = {"$and" =>[{:logistic_waybill.exists => false},{:status.in => paid_and_delivered_array}]}
       when "logistic_waybill_exist"
         trade_type_hash = {"$and" =>[{:logistic_waybill.exists => true},{:status.in => paid_and_delivered_array}]}
+      when "logistic_bill_unprinted"
+        trade_type_hash = {"$and" =>[{:logistic_printed_at.exists => false},{:status.in => paid_and_delivered_array}]}
+      when "logistic_bill_printed"
+        trade_type_hash = {"$and" =>[{:logistic_printed_at.exists => true},{:status.in => paid_and_delivered_array}]}
 
       # # 发票
       # when 'invoice_all'

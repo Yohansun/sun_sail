@@ -70,7 +70,7 @@ window.MagicOrders =
     # 可见订单列（与订单模式选择有关），默认为全部
     @trade_cols_visible = @trade_cols_keys
 
-    # 订单模式初始化为'trades'
+    # 订单模式初始化
     @trade_mode = _(_(location.hash.toString()).strLeft('-')).strRight("/")
 
     # 初始化时需要隐藏的订单列
