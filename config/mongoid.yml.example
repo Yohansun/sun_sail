@@ -1,0 +1,17 @@
+<%
+  # if you need to work on a branch with a different schema, use
+  # git config --bool branch.the-new-branch.database true
+  branch = `git symbolic-ref HEAD 2>/dev/null`.chomp.sub('refs/heads/', '')
+  if branch == 'magicalpha'
+    database = 'magicalpha'
+  else
+    database = 'magicdulux'
+  end    
+%>
+development:
+  host: localhost
+  database: <%= database %>
+
+test:
+  host: localhost
+  database: <%= database %>
