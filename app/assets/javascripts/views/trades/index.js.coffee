@@ -30,23 +30,25 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
       $(@el).html(@template(trades: @collection))
       #initial mode=trades
       visible_cols = MagicOrders.trade_cols_visible_modes[MagicOrders.trade_mode]
-      if MagicOrders.trade_cols_hidden == []
-        MagicOrders.trade_cols_hidden = _.difference(MagicOrders.trade_cols_keys, visible_cols)
+      MagicOrders.trade_cols_hidden[MagicOrders.trade_mode] = []
+      if $.cookie("trade_cols_hidden_#{MagicOrders.trade_mode}")
+        MagicOrders.trade_cols_hidden[MagicOrders.trade_mode] = $.cookie("trade_cols_hidden_#{MagicOrders.trade_mode}").split(',')
       for col in MagicOrders.trade_cols_keys
-        if col in MagicOrders.trade_cols_hidden
-          $("#trades_table th[data-col=#{col}],td[data-col=#{col}]").hide()
-          unless (col in MagicOrders.trade_cols_hidden_from_cookie) and (col in visible_cols)
-            $(@el).find("#cols_filter li[data-col=#{col}]").hide()
-        else
-          $("#trades_table th[data-col=#{col}],td[data-col=#{col}]").show()
+        if col in visible_cols
           $(@el).find("#cols_filter li[data-col=#{col}]").show()
+          $(@el).find("#trades_table th[data-col=#{col}]").show()
+          $(@el).find("#trades_table td[data-col=#{col}]").show()
+        else
+          $(@el).find("#cols_filter li[data-col=#{col}]").hide()
+          $(@el).find("#trades_table th[data-col=#{col}]").hide()
+          $(@el).find("#trades_table td[data-col=#{col}]").hide()
 
-      # check column filters
+      # check column & trades_table filters
       $(@el).find("#cols_filter input[type=checkbox]").attr("checked", "checked")
-      for col in MagicOrders.trade_cols_hidden
-        $(@el).find("td[data-col=#{col}]").hide()
-        $(@el).find("th[data-col=#{col}]").hide()
+      for col in MagicOrders.trade_cols_hidden[MagicOrders.trade_mode]
         $(@el).find("#cols_filter input[value=#{col}]").attr("checked", false)
+        $(@el).find("#trades_table th[data-col=#{col}]").hide()
+        $(@el).find("#trades_table td[data-col=#{col}]").hide()
 
     @first_rendered = true
     @collection.each(@appendTrade)
@@ -116,13 +118,13 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     col = event.target
     if $(col).attr("checked") == 'checked'
       $("#trades_table th[data-col=#{$(col).val()}],td[data-col=#{$(col).val()}]").show()
-      MagicOrders.trade_cols_hidden = _.without(MagicOrders.trade_cols_hidden, $(col).val())
+      MagicOrders.trade_cols_hidden[MagicOrders.trade_mode] = _.without(MagicOrders.trade_cols_hidden[MagicOrders.trade_mode], $(col).val())
     else
       $("#trades_table th[data-col=#{$(col).val()}],td[data-col=#{$(col).val()}]").hide()
-      MagicOrders.trade_cols_hidden.push($(col).val())
+      MagicOrders.trade_cols_hidden[MagicOrders.trade_mode].push($(col).val())
 
-    MagicOrders.trade_cols_hidden = _.uniq(MagicOrders.trade_cols_hidden)
-    $.cookie('trade_cols_hidden', MagicOrders.trade_cols_hidden.join(","))
+    MagicOrders.trade_cols_hidden[MagicOrders.trade_mode] = _.uniq(MagicOrders.trade_cols_hidden[MagicOrders.trade_mode])
+    $.cookie("trade_cols_hidden_#{MagicOrders.trade_mode}", MagicOrders.trade_cols_hidden[MagicOrders.trade_mode].join(","))
 
   search: (e) ->
     e.preventDefault()
@@ -246,30 +248,14 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
     MagicOrders.original_path = window.location.hash
 
-    $(@el).find(".trade_pops li").hide()
-
-    if MagicOrders.trade_mode == 'deliver'        #发货单打印时间筛选框只在deliver模式下显示
+    # 发货单打印时间筛选框只在deliver模式下显示
+    if MagicOrders.trade_mode == 'deliver'
       $(@el).find('#select_print_time').show()
     else
       $(@el).find('#select_print_time').hide()
 
-    # hide some cols
-    visible_cols = MagicOrders.trade_cols_visible_modes[MagicOrders.trade_mode]
-    MagicOrders.trade_cols_hidden = _.difference(MagicOrders.trade_cols_keys, visible_cols)
-    for col in MagicOrders.trade_cols_keys
-      if col in MagicOrders.trade_cols_hidden
-        $("#trades_table th[data-col=#{col}], #trades_table td[data-col=#{col}]").hide()
-        $("#cols_filter li[data-col=#{col}]").hide()
-      else
-        $("#trades_table th[data-col=#{col}], #trades_table td[data-col=#{col}]").show()
-        $("#cols_filter li[data-col=#{col}]").show()
-
-    # reset cols filter checker
-    $("#cols_filter input[type=checkbox]").attr("checked", "checked")
-    for col in MagicOrders.trade_cols_hidden
-      $("#cols_filter input[value=#{col}]").attr("checked", false)
-
     # reset operation
+    $(@el).find(".trade_pops li").hide()
     for pop in MagicOrders.trade_pops[MagicOrders.trade_mode]
       unless MagicOrders.role_key == 'admin'
         if pop in MagicOrders.trade_pops[MagicOrders.role_key]

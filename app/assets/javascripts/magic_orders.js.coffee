@@ -70,14 +70,15 @@ window.MagicOrders =
     # 可见订单列（与订单模式选择有关），默认为全部
     @trade_cols_visible = @trade_cols_keys
 
+    # 订单模式初始化为'trades'
+    @trade_mode = _(_(location.hash.toString()).strLeft('-')).strRight("/")
 
     # 初始化时需要隐藏的订单列
-    if $.cookie('trade_cols_hidden')
-      @trade_cols_hidden_from_cookie = $.cookie('trade_cols_hidden').split(',')
-      @trade_cols_hidden = @trade_cols_hidden_from_cookie
+    @trade_cols_hidden = []
+    if $.cookie("trade_cols_hidden_#{MagicOrders.trade_mode}")
+      @trade_cols_hidden[MagicOrders.trade_mode] = $.cookie("trade_cols_hidden_#{MagicOrders.trade_mode}").split(',')
     else
-      @trade_cols_hidden_from_cookie = []
-      @trade_cols_hidden = []
+      @trade_cols_hidden[MagicOrders.trade_mode] = []
 
     # 订单模式可选项列表
     @trade_modes = {
@@ -92,9 +93,6 @@ window.MagicOrders =
       'unusual':                 '异常模式',
       'color':                   '调色模式'
     }
-
-    # 订单模式初始化为'trades'
-    @trade_mode = 'trades'
 
     # 不同模式下可见订单列
     @trade_cols_visible_modes = {
