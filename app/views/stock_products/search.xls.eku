@@ -1,0 +1,13 @@
+__filename = "库存统计数据.xls"
+sheet1 = xls.create_worksheet
+sheet1[0, 0] = "库存统计数据"
+
+sheet1.row(1).concat ["商品名称", "地域", "经销商", "可用库存数量"]
+@sellers.each_with_index do |seller, i|
+  sheet1.update_row i+2, seller.product_name(seller.sp_id), seller.area_name(seller.a_name), seller.name, seller.activity
+end
+
+title_format = Spreadsheet::Format.new(:color => :blue, :weight => :bold, :size => 14)
+sheet1.row(0).set_format(0, title_format)
+bold = Spreadsheet::Format.new(:pattern_fg_color => :yellow, :weight => :bold)
+sheet1.row(1).default_format = bold

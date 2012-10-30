@@ -24,10 +24,12 @@ var zNodes = data;
 
 var code;
 
-html = "<tr><th>地区编号</th><th>地区名称</th><th>操作</th></tr>"
+html = "<tr><th>地区编号</th><th>省</th><th>市</th><th>区</th><th>操作</th></tr>"
 <% if @seller_areas.present? %>
   <% @seller_areas.each do |seller_area| %>
     html += "<tr id='area<%= seller_area.area.id %>'><td><%=seller_area.area.id%></td>" + 
+            "<td><%= seller_area.area.try(:parent).try(:parent).try(:name)%></td>" +
+            "<td><%= seller_area.area.try(:parent).try(:name)%></td>" +
             "<td><%= seller_area.area.name%></td>" +
             "<td><a href='/sellers/remove_seller_area?id=<%=seller_area.id%>&seller_id=<%=seller_area.seller_id%>' data-method='get' data-remote='true'>解除绑定</a></td></tr>"
   <% end %>

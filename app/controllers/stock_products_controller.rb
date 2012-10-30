@@ -1,6 +1,57 @@
 class StockProductsController < ApplicationController
   before_filter :authenticate_user!
 
+  def index
+  end
+
+  def search
+    area_id = nil
+    where_sql = "stock_products.product_id = #{params[:product][:id].to_i}"
+    if current_user.has_role?(:seller) && current_user.seller
+      where_sql += " and sellers.id = #{current_user.seller.id}"
+    end
+    if params[:area_name_tree].present?
+      area_id = params[:area_name_tree].to_i
+    elsif params[:area_name_two].present?
+      area_id = params[:area_name_two].to_i
+    elsif params[:area_name_one].present?
+      area_id = params[:area_name_one].to_i
+    elsif params[:name_all].present?
+      area_id = params[:name_all].to_i
+    end
+    if area_id.present?
+      area = Area.find_by_id area_id
+      unless area
+        if params[:format]
+          @sellers = Seller.joins(:sellers_areas, :stock_products).select('stock_products.id AS sp_id, stock_products.activity, sellers.name, sellers_areas.area_id AS a_name').where(where_sql)
+        else
+          @sellers = Seller.joins(:sellers_areas, :stock_products).select('stock_products.id AS sp_id, stock_products.activity, sellers.name, sellers_areas.area_id AS a_name').where(where_sql).page params[:page]
+        end
+      else
+        leaves = area.leaves
+        leaves << area if leaves.blank?
+        where_sql += " AND areas.id in (#{leaves.map(&:id).join(',')})"
+        if params[:format]
+          @sellers = Seller.joins(:areas, :stock_products).select('stock_products.id AS sp_id, stock_products.activity, sellers.name, areas.id AS a_name').where(where_sql)
+        else
+          @sellers = Seller.joins(:areas, :stock_products).select('stock_products.id AS sp_id, stock_products.activity, sellers.name, areas.id AS a_name').where(where_sql).page params[:page]
+        end
+      end
+    else
+      if params[:format]
+        @sellers = Seller.joins(:sellers_areas, :stock_products).select('stock_products.id AS sp_id, stock_products.activity, sellers.name, sellers_areas.area_id AS a_name').where(where_sql)
+      else 
+        @sellers = Seller.joins(:sellers_areas, :stock_products).select('stock_products.id AS sp_id, stock_products.activity, sellers.name, sellers_areas.area_id AS a_name').where(where_sql).page params[:page]
+      end
+      
+    end
+    respond_to do |format|
+      format.xls
+      format.html { render :index }
+    end
+    
+  end
+
   def new
   	@product = StockProduct.new
     @seller = Seller.find params[:seller_id]

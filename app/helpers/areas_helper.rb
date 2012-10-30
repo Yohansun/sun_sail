@@ -20,4 +20,40 @@ module AreasHelper
     end
     @areas.to_json
 	end
+
+  #地域三级联动
+  def area_tree(current = nil, flag = 0)
+    flag = flag
+    if current
+      is_right = 1 if current.right_sibling == nil
+      children = current.children
+      return unless children
+    
+      html = "'0,#{current.self_and_ancestors.map { |a| a.id }.join(",")}':{"
+    else
+      html = "'0':{"
+      children = Area.roots
+      flag = 1
+    end
+    
+    html << children.map { |child| "#{child.id}:'#{child.name.split.join(',').to_s}'" }.join(",")
+       
+    if flag == 1
+      html << "},\n"
+    else
+      html << "}\n"
+    end
+      
+    children.each do |child|
+      if !child.leaf?
+        if is_right && child.right_sibling == nil
+          html << area_tree(child)
+        else
+          html << area_tree(child,1) 
+        end
+      end
+    end
+    
+    html
+  end
 end

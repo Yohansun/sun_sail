@@ -47,4 +47,12 @@ class Seller < ActiveRecord::Base
       @categories_ids = []
     end
   end    
+
+  def product_name(id)
+    StockProduct.find_by_id(id).try(:product).try(:name)
+  end
+
+  def area_name(id)
+    Area.find_by_id(id).self_and_ancestors.map(&:name).join('-')
+  end
 end
