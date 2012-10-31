@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 class TradeObserver < Mongoid::Observer
 
-  observe :trade
+  observe :trade 
 
   def around_save(object)
 
@@ -33,7 +33,7 @@ class TradeObserver < Mongoid::Observer
     trade = TradeDecorator.decorate(trade)
     mobile = trade.receiver_mobile_phone
     trade_tid = trade.tid
-    content = "亲您好，感谢您的购买，您的订单号为#{trade_tid}，我们会尽快为您安排发货。【天猫多乐士店】"
+    content = "亲您好，感谢您的购买，您的订单号为#{trade_tid}，我们会尽快为您安排发货。【#{TradeSetting.shopname_taobao}】" #TradeSetting.shopname_taobao = "天猫多乐士店"
     notify_kind = "before_send_goods"
     if content && mobile
       SmsNotifier.perform_async(content, mobile, trade_tid ,notify_kind)

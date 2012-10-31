@@ -23,9 +23,9 @@ class TradeTaobaoDeliver
       trade = TradeDecorator.decorate(trade)
       mobile = trade.receiver_mobile_phone
       if trade.splitted?
-        content = "亲您好，您的订单#{tid}已经发货，该订单将由地区发送，请注意查收。【天猫多乐士店】"
+        content = "亲您好，您的订单#{tid}已经发货，该订单将由地区发送，请注意查收。【#{TradeSetting.shopname_taobao}】"
       else
-        content = "亲您好，您的订单#{tid}已经发货，我们将尽快为您送达，请注意查收。【天猫多乐士店】"
+        content = "亲您好，您的订单#{tid}已经发货，我们将尽快为您送达，请注意查收。【#{TradeSetting.shopname_taobao}】"
       end
       notify_kind = "after_send_goods"
       if content && mobile
