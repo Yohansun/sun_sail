@@ -7,6 +7,7 @@ class MagicOrders.Views.TradesRow extends Backbone.View
   events:
     'click [data-type]': 'show_type'
     'click [data-type=trade_split]': 'show_split'
+    'click a[rel=popover]': "addHover"
     'click': 'highlight'
 
   initialize: ->
@@ -34,6 +35,7 @@ class MagicOrders.Views.TradesRow extends Backbone.View
     for col in MagicOrders.trade_cols_hidden[MagicOrders.trade_mode]
       $(@el).find("td[data-col=#{col}]").hide()
 
+    $("a[rel=popover]").popover(placement: 'left')
     this
 
   show_type: (e) ->
@@ -45,6 +47,13 @@ class MagicOrders.Views.TradesRow extends Backbone.View
   show_split: (e) ->
     e.preventDefault()
     Backbone.history.navigate('trades/' + @model.get("id") + '/splited', true)
+
+  addHover: (e) ->
+    $(e.target).parent().toggleClass('lovely_pop')
+    $('.popover.right').css('margin-left','-5px')
+    $('.popover').mouseleave ->
+      $('.lovely_pop').click()
+      $(e.target).parent().toggleClass('lovely_pop')
 
   highlight: (e) =>
     $("#trades_table tr").removeClass 'info'
