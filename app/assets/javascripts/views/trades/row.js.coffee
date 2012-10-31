@@ -48,13 +48,14 @@ class MagicOrders.Views.TradesRow extends Backbone.View
     e.preventDefault()
     Backbone.history.navigate('trades/' + @model.get("id") + '/splited', true)
 
+  highlight: (e) =>
+    console.log($(@el))
+    $("#trades_table tr").removeClass 'info'
+    $(@el).addClass 'info'
+
   addHover: (e) ->
     $(e.target).parent().toggleClass('lovely_pop')
     $('.popover.right').css('margin-left','-5px')
     $('.popover').mouseleave ->
       $('.lovely_pop').click()
-      $(e.target).parent().toggleClass('lovely_pop')
-
-  highlight: (e) =>
-    $("#trades_table tr").removeClass 'info'
-    $(@el).addClass 'info'
+      $('.lovely_pop').toggleClass('lovely_pop')
