@@ -9,3 +9,5 @@ public/system/
 public/dev-assets/
 public/areas.js
 vendor/
+data/*.xls
+

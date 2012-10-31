@@ -4,6 +4,7 @@ class User < ActiveRecord::Base
   belongs_to :area
   belongs_to :seller
   belongs_to :logistic
+  has_many   :trade_reports
 
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
