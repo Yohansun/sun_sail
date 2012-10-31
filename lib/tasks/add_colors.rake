@@ -2,33 +2,32 @@
 require 'csv'
 desc "import colors"
 task :import_colors => :environment do
-  tmp = []
-  CSV.foreach("#{Rails.root}/lib/tasks/import_colors.csv") do |row|
-    	
-      puts "STARTING~~~~~~~~~~~~~~~~~~~~"
-    	hexcode = row[0] #? row[0].force_encoding("UTF-8"):nil
-    	name = row[1] #? row[1].force_encoding("UTF-8"):nil
-    	num = row[2]
-      
-      p name
-      
-    	c = Color.new(
-    		:hexcode => hexcode,
-    		:name => name,
-    		:num => num
-    		)
-      
-      unless c.save
-        tmp << name
-        puts "#{c.errors.inspect}"
-      else
-        p "Succeed!"
+  CSV.foreach("#{Rails.root}/lib/tasks/import_colors_20121031.csv") do |row|
+    puts "STARTING~~~~~~~~~~~~~~~~~~~~"
+  	name = row[1] 
+  	num = row[0]
+    
+    p name
+    
+  	c = Color.new(
+  		:name => name,
+  		:num => num
+  	)
+    
+    unless c.save
+      puts "#{c.errors.inspect}"
+    else
+      p "Succeed!"
+
+      Product.find_each do |p|
+        color_ids = p.color_ids
+        p.color_ids = color_ids + [c.id]
+
+        p.stock_products.each do |s|
+          color_ids = s.color_ids
+          s.color_ids = color_ids + [c.id]
+        end
       end
-
+    end
   end
-
-  CSV.open("colorfailedtasks_20120725.csv", 'wb') do |csv|
-    tmp.each {|f| csv << [f]}
-  end
-	
 end
