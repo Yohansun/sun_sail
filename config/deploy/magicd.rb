@@ -23,7 +23,6 @@ namespace :deploy do
     run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
     run "ln -nfs #{shared_path}/config/mailers.yml #{release_path}/config/mailers.yml"
     run "ln -nfs #{shared_path}/config/magic_setting.yml #{release_path}/config/magic_setting.yml"
-    run "ln -nfs #{shared_path}/config/taobao.yml #{release_path}/config/taobao.yml"
     run "ln -nfs #{shared_path}/config/jingdong.yml #{release_path}/config/jingdong.yml"
     run "ln -nfs #{shared_path}/config/mongoid.yml #{release_path}/config/mongoid.yml"
     run "ln -nfs #{shared_path}/config/redis.yml #{release_path}/config/redis.yml"

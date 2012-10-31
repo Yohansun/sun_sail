@@ -116,6 +116,12 @@ class TaobaoTradePuller
           )
 
         page_no += 1
+
+        unless response['trades_sold_increment_get_response']
+          p response
+          break
+        end
+        
         has_next = response['trades_sold_increment_get_response']['has_next']
         next unless response['trades_sold_increment_get_response']['trades']
 
