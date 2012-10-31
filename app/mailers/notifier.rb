@@ -33,12 +33,12 @@ class Notifier < ActionMailer::Base
       
       if TradeSetting.company == "dulux"
         @area_name = @trade.receiver_area_name
-        to_emails = @trade.seller.email.split(',')
+        to_emails = seller.email.try(:split, ',')
         cc_emails = []
         @trade_deliver_info = "请及时发货，谢谢。"
       else  
         @area_name = seller.interface_name
-        to_emails = @trade.seller.parent.email.split(',')
+        to_emails = seller.interface_email
         cc_emails = @trade.cc_emails
         @trade_deliver_info = "请及时通知经销商联系客户发货，并让其发货同时在“经销商后台”点击“确认发货”。之后请回复本邮件告知已发货。谢谢。"
         if  @trade.is_1568
@@ -54,22 +54,23 @@ class Notifier < ActionMailer::Base
       mail_subject = "#{@trade_from}订单#{@tid}-#{@area_name}（#{Time.now.strftime("%Y/%m/%d")}），请及时发货"
       reply_to = TradeSetting.email_notifier_from
       bcc = TradeSetting.email_notifier_dispatch_bcc  
-    
-      to_emails.each_with_index do |email, index|
-        if index == 0
-          mail(:to => email,
-               :cc => cc_emails,
-               :bcc => bcc,
-               :subject => mail_subject,
-               :reply_to => reply_to
-          )
-        else
-          mail(:to => email,
-               :subject => mail_subject,
-               :bcc => bcc,
-               :reply_to => reply_to
-          )
-        end
+      if to_emails.present?
+        to_emails.each_with_index do |email, index|
+          if index == 0
+            mail(:to => email,
+                 :cc => cc_emails,
+                 :bcc => bcc,
+                 :subject => mail_subject,
+                 :reply_to => reply_to
+            )
+          else
+            mail(:to => email,
+                 :subject => mail_subject,
+                 :bcc => bcc,
+                 :reply_to => reply_to
+            )
+          end
+        end  
       end
     end
   end
