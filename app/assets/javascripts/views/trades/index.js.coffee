@@ -14,7 +14,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     'click #cols_filter input,label': 'keepColsFilterDropdownOpen'
     'click #advanced_btn': 'advancedSearch'
     'click .dropdown': 'dropdownTurnGray'
-    'click a[rel=popover]': "addHover"
 
   initialize: (options) ->
     @trade_type = options.trade_type
@@ -71,13 +70,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
       else
         $(@el).find("[data-type=loadMoreTrades]").replaceWith("<span data-type='loadMoreTrades'><b>当前为最后一条订单</b></span>")
     this
-
-  addHover: (e) ->
-    $(e.target).parent().toggleClass('test_class')
-    $('.popover.right').css('margin-left','-5px')
-    $('.popover').mouseleave ->
-      $('.test_class').click()
-      $(e.target).parent().toggleClass('test_class')
 
   render_select_state: ->
     view = new MagicOrders.Views.AreasSelectState()
