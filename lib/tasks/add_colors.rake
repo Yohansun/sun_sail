@@ -2,7 +2,7 @@
 require 'csv'
 desc "import colors"
 task :import_colors => :environment do
-  CSV.foreach("#{Rails.root}/lib/tasks/import_colors_20121031.csv") do |row|
+  CSV.foreach("#{Rails.root}/lib/tasks/import_colors_20121101.csv") do |row|
     puts "STARTING~~~~~~~~~~~~~~~~~~~~"
   	name = row[1] 
   	num = row[0]
