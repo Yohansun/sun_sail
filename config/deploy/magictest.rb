@@ -5,7 +5,7 @@ set :rvm_type, :system
 set :repository, "git@github.com:nioteam/magic_orders.git"
 set :branch, "master"
 
-server "magica1.doorder.com", :web, :app, :db, primary: true
+server "magictest.networking.io", :web, :app, :db, primary: true
 set :user, "root"
 set :deploy_to, "/var/rails/magic_orders"
 
