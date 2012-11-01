@@ -72,6 +72,7 @@ window.MagicOrders =
 
     # 订单模式初始化
     @trade_mode = _(_(location.hash.toString()).strLeft('-')).strRight("/")
+    @trade_type = ''
 
     # 初始化时需要隐藏的订单列
     @trade_cols_hidden = []

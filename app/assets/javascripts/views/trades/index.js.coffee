@@ -15,8 +15,8 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     'click #advanced_btn': 'advancedSearch'
     'click .dropdown': 'dropdownTurnGray'
 
-  initialize: (options) ->
-    @trade_type = options.trade_type
+  initialize: ->
+    @trade_type = MagicOrders.trade_type
     @identity = MagicOrders.role_key
     @offset = @collection.length
     @first_rendered = false

@@ -177,7 +177,7 @@ class TradesController < ApplicationController
       status_array = params[:search][:status_option].split(",")
       if status_array == ["WAIT_BUYER_CONFIRM_GOODS","WAIT_GOODS_RECEIVE_CONFIRM"] || status_array == ["WAIT_BUYER_CONFIRM_GOODS_ACOUNTED"]
         status_hash = {"$and" =>[{:status.in => status_array},{"$or" => [{:has_refund_order.exists => false},{has_refund_order: false}]}]}
-      elsif status_array = ['require_refund']
+      elsif status_array == ['require_refund']
         status_hash = {has_refund_order: true}
       else
         status_hash = {:status.in => status_array}
