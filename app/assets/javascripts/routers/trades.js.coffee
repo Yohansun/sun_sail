@@ -49,6 +49,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $('#content').html ""
       @trade_type = trade_type
       MagicOrders.trade_mode = trade_mode
+      MagicOrders.trade_type = trade_type
       blocktheui()
       @show_top_nav()
       @collection.fetch data: {trade_type: trade_type}, success: (collection, response) =>
