@@ -12,7 +12,7 @@ module TaobaoQuery
     end  
   end
   
-  def oauth_get
+  def self.oauth_get(options, trade_source_id)
     #source_name用来选择订单源，代替之前的Taobaofu.select_source
     source = TradeSource.find_by_id(trade_source_id)
     if source && source.taobao_app_token
