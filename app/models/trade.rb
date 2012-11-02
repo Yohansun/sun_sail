@@ -299,7 +299,7 @@ class Trade
     end
   end
 
-  def self.filter(current_user, params, is_report=false)
+  def self.filter(current_user, params)
     trades = Trade
     seller = current_user.seller
     logistic = current_user.logistic
@@ -353,9 +353,9 @@ class Trade
       when 'undelivered','seller_undelivered'
         trade_type_hash = {"$and" => [{:dispatched_at.ne => nil},{:status.in => paid_not_deliver_array}]}
       when 'delivered','seller_delivered'
-        trade_type_hash = {:status.in => paid_and_delivered_array}
+        trade_type_hash = {"$and" =>[{:status.in => paid_and_delivered_array},{"$or" => [{:has_refund_order.exists => false},{has_refund_order: false}]}]}
       when 'refund'
-        trade_type_hash = {:status.in => refund_array}
+        trade_type_hash = {has_refund_order: true}
       when 'closed'
         trade_type_hash = {:status.in => closed_array}
       when 'unusual_trade'
@@ -370,12 +370,14 @@ class Trade
         trade_type_hash = {"$and" => [{:deliver_bill_printed_at.exists => true},{:dispatched_at.ne => nil},{:status.in => paid_not_deliver_array + paid_and_delivered_array}]}
 
       # 物流单
-      # 物流单号是否已设置
-      when "logistic_all"
       when "logistic_waybill_void"
         trade_type_hash = {"$and" =>[{:logistic_waybill.exists => false},{:status.in => paid_and_delivered_array}]}
       when "logistic_waybill_exist"
         trade_type_hash = {"$and" =>[{:logistic_waybill.exists => true},{:status.in => paid_and_delivered_array}]}
+      when "logistic_bill_unprinted"
+        trade_type_hash = {"$and" =>[{:logistic_printed_at.exists => false},{:status.in => paid_and_delivered_array}]}
+      when "logistic_bill_printed"
+        trade_type_hash = {"$and" =>[{:logistic_printed_at.exists => true},{:status.in => paid_and_delivered_array}]}
 
       # # 发票
       # when 'invoice_all'
@@ -426,14 +428,21 @@ class Trade
       end
     end
 
-    # 发货单打印时间筛选
+   # 发货单打印时间筛选
     if params[:search] && params[:search][:from_deliver_print_date].present? && params[:search][:to_deliver_print_date].present?
-      print_start_time = "#{params[:search][:from_deliver_print_date]} #{params[:search][:from_deliver_print_time]}".to_time(form = :local)
-      print_end_time = "#{params[:search][:to_deliver_print_date]} #{params[:search][:to_deliver_print_time]}".to_time(form = :local)
-      deliver_print_time_hash = {:deliver_bill_printed_at.gte => print_start_time, :deliver_bill_printed_at.lte => print_end_time}
+      deliver_print_start_time = "#{params[:search][:from_deliver_print_date]} #{params[:search][:from_deliver_print_time]}".to_time(form = :local)
+      deliver_print_end_time = "#{params[:search][:to_deliver_print_date]} #{params[:search][:to_deliver_print_time]}".to_time(form = :local)
+      deliver_print_time_hash = {:deliver_bill_printed_at.gte => deliver_print_start_time, :deliver_bill_printed_at.lte => deliver_print_end_time}
     end
 
-    # 按时间筛选
+    # 物流单打印时间筛选
+    if params[:search] && params[:search][:from_logistic_print_date].present? && params[:search][:to_logistic_print_date].present?
+      logistic_print_start_time = "#{params[:search][:from_logistic_print_date]} #{params[:search][:from_logistic_print_time]}".to_time(form = :local)
+      logistic_print_end_time = "#{params[:search][:to_logistic_print_date]} #{params[:search][:to_logistic_print_time]}".to_time(form = :local)
+      logistic_print_time_hash = {:logistic_printed_at.gte => logistic_print_start_time, :logistic_printed_at.lte => logistic_print_end_time}
+    end
+
+    # 按下单时间筛选
     if params[:search] && params[:search][:search_start_date].present? && params[:search][:search_end_date].present?
       start_time = "#{params[:search][:search_start_date]} #{params[:search][:search_start_time]}".to_time(form = :local)
       end_time = "#{params[:search][:search_end_date]} #{params[:search][:search_end_time]}".to_time(form = :local)
@@ -450,7 +459,13 @@ class Trade
     # 按状态筛选
     if params[:search] && params[:search][:status_option].present?
       status_array = params[:search][:status_option].split(",")
-      status_hash = {:status.in => status_array}
+      if status_array == ["WAIT_BUYER_CONFIRM_GOODS","WAIT_GOODS_RECEIVE_CONFIRM"] || status_array == ["WAIT_BUYER_CONFIRM_GOODS_ACOUNTED"]
+        status_hash = {"$and" =>[{:status.in => status_array},{"$or" => [{:has_refund_order.exists => false},{has_refund_order: false}]}]}
+      elsif status_array == ['require_refund']
+        status_hash = {has_refund_order: true}
+      else
+        status_hash = {:status.in => status_array}
+      end
     end
 
     # 按来源筛选
@@ -511,7 +526,7 @@ class Trade
     if params[:search]
       search_hash = {"$and" => [
         seller_hash, tid_hash, receiver_name_hash, receiver_mobile_hash,
-        deliver_print_time_hash, create_time_hash, pay_time_hash,
+        deliver_print_time_hash, create_time_hash, pay_time_hash,  logistic_print_time_hash,
         status_hash, type_hash, logistic_hash,
         seller_memo_hash, buyer_message_hash, has_color_info_hash, has_cs_memo_hash, invoice_all_hash,
         receiver_state_hash, receiver_city_hash, receiver_district_hash,

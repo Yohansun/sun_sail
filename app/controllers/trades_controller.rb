@@ -11,7 +11,7 @@ class TradesController < ApplicationController
   def index
     offset = params[:offset] || 0
     limit = params[:limit] || 20
-    @trades = Trade.filter(current_user, params, false)
+    @trades = Trade.filter(current_user, params)
     @trades_count = @trades.count
     @trades = TradeDecorator.decorate(@trades.limit(limit).offset(offset).order_by("created", "DESC"))
     if @trades_count > 0
@@ -23,11 +23,14 @@ class TradesController < ApplicationController
 
   def export
     @report = TradeReport.new
+    @report.request_at = Time.now
     @report.user_id = current_user.id
-    @report.conditions = params
+    @report.conditions = params.select {|k,v| !['limit','offset', 'action', 'controller'].include?(k)  } 
     @report.save
     @report.export_report
-    render nothing: true
+    respond_to do |format|
+      format.js
+    end
   end
 
   def notifer

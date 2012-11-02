@@ -6,6 +6,10 @@
 					<a class="indexStart1" href="/app#trades"><span>订单管理</span></a>
 				</div>
 
+				<div>
+					<a class="indexStart3" href="/trade_reports"><span>数据魔方</span></a>
+				</div>
+
 				<% if current_user.has_role?(:seller) && current_user.seller -%>
 					<div>
 						<%= link_to seller_stocks_path(current_user.seller.id), class: 'indexStart4' do %>

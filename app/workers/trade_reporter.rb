@@ -1,13 +1,16 @@
 # -*- encoding : utf-8 -*-
 class TradeReporter
   include Sidekiq::Worker
+  include BaseHelper
   sidekiq_options :queue => :reporter
 
   def perform(id)
-    report =TradeReport.find(id)
+    report = TradeReport.find(id)
     current_user = User.find(report.user_id)
-    params_hash = report.conditions
-    trades = Trade.filter(current_user, params_hash, true)
+    hash = report.conditions
+    hash = recursive_symbolize_keys! hash
+    trades = Trade.filter(current_user, hash)
+    trades = TradeDecorator.decorate(trades.order_by("created", "DESC"))
     book = Spreadsheet::Workbook.new
     sheet1 = book.create_worksheet
     sheet1[0, 0] = "订单列表"
@@ -112,6 +115,7 @@ class TradeReporter
         end
       end
     end
-    book.write "#{Rails.root}/data/trade_reports/"+id.to_s+".xls"
+    book.write "#{Rails.root}/data/#{id}.xls"
+    report.update_attributes!(performed_at: Time.now)
   end
 end

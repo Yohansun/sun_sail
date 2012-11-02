@@ -1,0 +1,70 @@
+<div class="container-fluid">
+  <div class="row-fluid">
+    <ul class="breadcrumb" style="position:relative;">
+      <li><a href="/">Magic</a><span class="divider">/</span></li>
+      <li><a href="/trade_reports">数据魔方</a><span class="divider">/</span></li>
+      <li class="active">报表下载</li>
+    </ul><!-- breadcrumb -->  
+
+    <form ation="/trades_reports" class="well form-horizontal">
+        <div class="control-group nomargin">
+          <label class="control-label" for="">生成时间：</label>
+          <div class="controls clearfix">
+            <fieldset class="pull-left form-inline mar_r10">
+                <input type="text" class="input-small datepicker" name="start_date" value="<%= @start_date %>">
+                <input type="text" class="input-mini timepicker" name="start_time" value="<%= @start_time %> ">
+                <i class="icon-arrow-right"></i>
+                <input type="text" class="input-small datepicker"  name="end_date" value="<%= @end_date %>">
+                <input type="text" class="input-mini timepicker" name="end_time" value="<%= @end_time %>">
+            </fieldset>
+              <button type="submit" class="btn btn-info">过滤</button>
+          </div>         
+        </div>
+      </form>  
+
+
+    <table class="table table-striped table-bordered mar_t10">
+      <thead>
+        <tr>
+          <th>报表编号</th>
+          <th>请求时间</th>
+          <th>生成时间</th>
+          <th>文件大小</th>
+          <th>格式</th>
+          <th>操作人</th>
+          <th>状态</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if @reports %>
+          <% @reports.each do |report|%>
+            <tr>
+              <td><%= report.id %></td>
+              <td><%= report.request_at.to_s(:db) %></td>
+              <td><%= report.performed_time %></td>
+              <td><%= report.size %></td>
+              <td><%= report.ext_name %></td>
+              <td><%= report.username %></td>
+              <td><%= report.status %></td>
+              <td>
+                <div class="btn-group">
+                  <button data-toggle="dropdown" class="btn btn-info dropdown-toggle min_w"><i class="icon-wrench"></i> <span class="caret"></span></button>
+                  <%- if report.status == "可用" %> 
+                    <ul class="dropdown-menu">
+                      <li><a class="download_tips" data-toggle="modal" href="/trade_reports/<%= report.id %>">下载</a></li> 
+                    </ul>
+                </div>
+                <%- end %> 
+              </td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+    <% if @reports %>
+      <%= paginate @reports  %>
+    <% end %>
+  </div>
+  <hr>
+</div>
