@@ -16,7 +16,7 @@
 	    <li><a href="/">Magic</a><span class="divider">/</span></li>
 	    <li><a href="#">系统设置</a><span class="divider">/</span></li>
 	    <li><a href="/logistics">物流商管理</a><span class="divider">/</span></li>
-	    <li class="active">新增物流商</li>
+	    <li class="active"><% if params[:action] == "new" || params[:action] == "create" %>新增物流商<% elsif params[:action] == "edit" || params[:action] == "update" %>编辑物流商<% end %></li>
 	  </ul><!-- breadcrumb -->
 
 	  <%= render 'form' %>
