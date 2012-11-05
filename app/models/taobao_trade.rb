@@ -109,9 +109,29 @@ class TaobaoTrade < Trade
     TradeTaobaoDeliver.perform_async(self.id)
   end
 
-  def auto_dispatchable?
-    !has_buyer_message && seller_memo.blank?
+  def auto_dispatchable? 
+    !has_buyer_message && has_special_seller_memo?
   end
+
+  def has_special_seller_memo?
+    if TradeSetting.company == 'dulux'
+      seller_memo.present? && (seller_memo.strip == "@送货上门".strip || seller_memo.strip == "@自提".strip)
+    else
+      seller_memo.blank?
+    end  
+  end  
+
+  def special_seller_memo
+    if TradeSetting.company == 'dulux'
+      if seller_memo.present?
+        if seller_memo.strip == "@送货上门".strip
+          "@送货上门"
+        elsif seller_memo.strip == "@自提".strip
+          "@自提"
+        end
+      end    
+    end  
+  end  
 
   def auto_dispatch!
     return unless auto_dispatchable?
@@ -122,10 +142,16 @@ class TaobaoTrade < Trade
     # if TradeSetting.company == 'dulux'
     #   split_orders(self)
     # else
-    return false unless dispatchable?
 
+    if TradeSetting.company == 'dulux' && self.has_special_seller_memo? && self.special_seller_memo.present?
+      cs_memo = "#{self.cs_memo} #{self.special_seller_memo}"
+      self.update_attributes!(cs_memo: cs_memo) 
+    end
+
+    return false unless dispatchable?
     unless seller
       seller = matched_seller
+      self.operation_logs.create!(operated_at: Time.now, operation: '分流未匹配到经销商')  
     end
 
     return false unless seller
@@ -143,7 +169,9 @@ class TaobaoTrade < Trade
 
     if seller
       update_attributes(seller_id: seller.id, seller_name: seller.name, dispatched_at: Time.now)
+      self.operation_logs.create!(operated_at: Time.now, operation: '延时自动分流')
     end
+
   end
 
   def reset_seller
