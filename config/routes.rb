@@ -1,6 +1,8 @@
 require 'sidekiq/web'
 
 MagicOrders::Application.routes.draw do
+  resources :trade_reports
+
   match '/auth/taodan/callback', to: 'taobao_app_tokens#create'
 
   get "callbacks/jingdong"
@@ -85,6 +87,7 @@ MagicOrders::Application.routes.draw do
 
       collection do
         get :notifer
+        get :export
       end
     end
 
