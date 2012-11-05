@@ -9,6 +9,12 @@ class Trade
   field :trade_source_id, type: Integer
 
   field :seller_id, type: Integer
+  field :seller_alipay_no, type: String
+  field :seller_mobile, type: String
+  field :seller_phone, type: String
+  field :seller_name, type: String
+  field :seller_email, type: String
+
   field :dispatched_at, type: DateTime                    # 分流时间
   field :delivered_at, type: DateTime                     # 发货时间
 
@@ -311,7 +317,7 @@ class Trade
 
     if current_user.has_role?(:seller)
       trades = Trade.where(seller_id: seller.id) if seller
-    elsif current_user.has_role?(:interface) 
+    elsif current_user.has_role?(:interface)
       trades = Trade.where(:seller_id.in => seller.child_ids) if seller
     end
 
@@ -339,7 +345,7 @@ class Trade
       when 'undispatched_one_day'
         trade_type_hash = {"$and" => [{:pay_time.lte => Time.now - 1.days},{:dispatched_at.exists => false},{:seller_id.exists => false},{:status.in => paid_not_deliver_array}]}
       when 'undelivered_two_days'
-        trade_type_hash = {"$and" => [{:dispatched_at.lte => Time.now - 2.days},{"$or" => [{"$and" => [{_type: "TaobaoTrade"}, {:consign_time.exists => false}]}, {"$and" => [{_type: "TaobaoPurchaseOrder"},{"$and" => [{:consign_time.exists => false}, {:delivered_at.exists => false}]}]}]},{:dispatched_at.ne => nil},{:status.in => paid_not_deliver_array}]} 
+        trade_type_hash = {"$and" => [{:dispatched_at.lte => Time.now - 2.days},{"$or" => [{"$and" => [{_type: "TaobaoTrade"}, {:consign_time.exists => false}]}, {"$and" => [{_type: "TaobaoPurchaseOrder"},{"$and" => [{:consign_time.exists => false}, {:delivered_at.exists => false}]}]}]},{:dispatched_at.ne => nil},{:status.in => paid_not_deliver_array}]}
       when 'buyer_delay_deliver', 'seller_ignore_deliver', 'seller_lack_product', 'seller_lack_color', 'buyer_demand_refund', 'buyer_demand_return_product', 'other_unusual_state'
         trade_type_hash = {"unusual_states" => {"$elemMatch" => {key: type, repaired_at: {"$exists" => false}}}}
 
@@ -541,7 +547,7 @@ class Trade
       end
 
     ###筛选结束###
-   
+
   end
 
 end
