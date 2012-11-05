@@ -67,9 +67,9 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     $(@el).find(".get_offset").html(@offset)
     if parseInt($(@el).find(".complete_offset").html()) == @offset
       if @offset == 0
-        $(@el).find("[data-type=loadMoreTrades]").replaceWith("<span data-type='loadMoreTrades'><b>当前无订单</b></span>")
+        $(@el).find("#bottom_line").replaceWith("<span id='bottom_line'><b>当前无订单</b></span>")
       else
-        $(@el).find("[data-type=loadMoreTrades]").replaceWith("<span data-type='loadMoreTrades'><b>当前为最后一条订单</b></span>")
+        $(@el).find("#bottom_line").replaceWith("<span id='bottom_line'><b>当前为最后一条订单</b></span>")
     this
 
   render_select_state: ->
@@ -86,15 +86,15 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
       $(".complete_offset").html(@collection.at(0).get("trades_count"))
       unless parseInt($(".complete_offset").html()) <= @offset
         $(".get_offset").html(@offset)
-        $("[data-type=loadMoreTrades]").replaceWith("<a href='#' data-type='loadMoreTrades' class='btn'>加载更多订单</a>")
+        $("[data-type=loadMoreTrades]").replaceWith("<a href='#' data-type='loadMoreTrades' id='bottom_line' class='btn'>加载更多订单</a>")
       else
         $(".get_offset").html($(".complete_offset").html())
-        $("[data-type=loadMoreTrades]").replaceWith("<span data-type='loadMoreTrades'><b>当前为最后一条订单</b></span>")
+        $("[data-type=loadMoreTrades]").replaceWith("<span id='bottom_line'><b>当前为最后一条订单</b></span>")
       $("a[rel=popover]").popover(placement: 'left')
     else
       $(".complete_offset").html(0)
       $(".get_offset").html(0)
-      $("[data-type=loadMoreTrades]").replaceWith("<span data-type='loadMoreTrades'><b>当前无订单</b></span>")
+      $("[data-type=loadMoreTrades]").replaceWith("<span id='bottom_line'><b>当前无订单</b></span>")
     $.unblockUI()
 
   appendTrade: (trade) =>
@@ -184,8 +184,8 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
   forceLoadMoreTrades: (event) =>
     event.preventDefault()
-
     blocktheui()
+
     @collection.fetch data: {trade_type: @trade_type, offset: @offset, search: {@simple_search_option, @simple_search_value, @from_deliver_print_date, @to_deliver_print_date, @from_deliver_print_time, @to_deliver_print_time, @search_start_date, @search_start_time, @search_end_date, @pay_start_time, @pay_end_time, @pay_start_date, @pay_end_date, @search_end_time, @status_option, @type_option, @state_option, @city_option, @district_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_invoice, @search_color, @search_logistic}}, success: (collection) =>
       if collection.length >= 0
         @offset = @offset + 20
