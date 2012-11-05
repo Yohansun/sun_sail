@@ -137,8 +137,7 @@ class TaobaoTradePuller
             orders = trade.delete('orders')
             trade['trade_source_id'] = trade_source_id
             local_trade.update_attributes(trade)
-
-            local_trade.operation_logs.build(operated_at: Time.now, operation: '从淘宝更新订单')
+            local_trade.operation_logs.build(operated_at: Time.now, operation: "从淘宝更新订单,更新#{local_trade.changed.try(:join, ',')}") if local_trade.changed?
             local_trade.save
             if local_trade.status == 'WAIT_SELLER_SEND_GOODS'
               if TradeSetting.company == 'dulux'
@@ -209,8 +208,7 @@ class TaobaoTradePuller
             orders = trade.delete('orders')
             trade['trade_source_id'] = trade_source_id
             local_trade.update_attributes(trade)
-
-            local_trade.operation_logs.build(operated_at: Time.now, operation: '从淘宝更新订单')
+            local_trade.operation_logs.build(operated_at: Time.now, operation: "订单状态核查,更新#{local_trade.changed.try(:join, ',')}") if local_trade.changed?
             local_trade.save
             if local_trade.status == 'WAIT_SELLER_SEND_GOODS'
               if TradeSetting.company == 'dulux'
