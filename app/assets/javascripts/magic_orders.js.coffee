@@ -113,7 +113,7 @@ window.MagicOrders =
     }
 
     @original_path = 'trades'
-    @trade_number = 0
+    @cache_trade_number = 0
 
     new MagicOrders.Routers.Areas()
     new MagicOrders.Routers.Trades()
