@@ -62,6 +62,11 @@ class MagicOrders.Views.TradesRow extends Backbone.View
   addHover: (e) ->
     $(e.target).parent().toggleClass('lovely_pop')
     $('.popover.right').css('margin-left','-5px')
+    $('.popover_close_btn').remove()
+    $('.popover-inner').append('<div class="popover_close_btn" href="#">X</div>')
     $('.popover').mouseleave ->
+      $('.lovely_pop').click()
+      $('.lovely_pop').toggleClass('lovely_pop')
+    $('.popover_close_btn').click ->
       $('.lovely_pop').click()
       $('.lovely_pop').toggleClass('lovely_pop')
