@@ -99,6 +99,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
   appendTrade: (trade) =>
     if $("#trade_#{trade.get('id')}").length == 0
+      MagicOrders.trade_number = 0
       @trade_number += 1
       view = new MagicOrders.Views.TradesRow(model: trade)
       $(@el).find("#trade_rows").append(view.render().el)
@@ -111,6 +112,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
   prependTrade: (trade) =>
     if $("#trade_#{trade.get('id')}").length == 0
+      MagicOrders.trade_number = 0
       @trade_number += 1
       view = new MagicOrders.Views.TradesRow(model: trade)
       $(@el).find("#trade_rows").prepend(view.render().el)

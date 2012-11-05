@@ -13,8 +13,10 @@ class MagicOrders.Views.TradesRow extends Backbone.View
   initialize: ->
 
   render: ->
+   
     $(@el).attr("id", "trade_#{@model.get('id')}")
     $(@el).html(@template(trade: @model))
+
     if @model.get("has_unusual_state") is true
       $(@el).attr("class", "error")
     $(@el).find(".trade_pops li").hide()
@@ -36,16 +38,21 @@ class MagicOrders.Views.TradesRow extends Backbone.View
       $(@el).find("td[data-col=#{col}]").hide()
 
     $("a[rel=popover]").popover(placement: 'left')
+
+    if MagicOrders.trade_number != 0
+      $(@el).find("td:first").html("#{MagicOrders.trade_number}")
     this
 
   show_type: (e) ->
     e.preventDefault()
     type = $(e.target).data('type')
     if type isnt 'trade_split'
+      MagicOrders.trade_number = parseInt($(@el).find("td:first").html())
       Backbone.history.navigate('trades/' + @model.get("id") + "/#{type}", true)
 
   show_split: (e) ->
     e.preventDefault()
+    MagicOrders.trade_number = parseInt($(@el).find("td:first").html())
     Backbone.history.navigate('trades/' + @model.get("id") + '/splited', true)
 
   highlight: (e) =>

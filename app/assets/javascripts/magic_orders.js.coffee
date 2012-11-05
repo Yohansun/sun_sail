@@ -71,7 +71,10 @@ window.MagicOrders =
     @trade_cols_visible = @trade_cols_keys
 
     # 订单模式初始化
-    @trade_mode = _(_(location.hash.toString()).strLeft('-')).strRight("/")
+    @trade_mode = 'trades'
+    if _.str.include(location.hash.toString(),'-')
+      @trade_mode = _(_(location.hash.toString()).strLeft('-')).strRight("/")
+
     @trade_type = ''
 
     # 初始化时需要隐藏的订单列
@@ -110,6 +113,7 @@ window.MagicOrders =
     }
 
     @original_path = 'trades'
+    @trade_number = 0
 
     new MagicOrders.Routers.Areas()
     new MagicOrders.Routers.Trades()
