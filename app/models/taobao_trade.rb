@@ -80,11 +80,6 @@ class TaobaoTrade < Trade
   field :receiver_mobile, type: String
   field :receiver_phone, type: String
   field :consign_time, type: DateTime
-  field :seller_alipay_no, type: String
-  field :seller_mobile, type: String
-  field :seller_phone, type: String
-  field :seller_name, type: String
-  field :seller_email, type: String
   field :available_confirm_fee, type: Float
   field :received_payment, type: Float
   field :timeout_action_time, type: DateTime
