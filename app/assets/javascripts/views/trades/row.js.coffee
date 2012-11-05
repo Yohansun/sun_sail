@@ -49,7 +49,6 @@ class MagicOrders.Views.TradesRow extends Backbone.View
     Backbone.history.navigate('trades/' + @model.get("id") + '/splited', true)
 
   highlight: (e) =>
-    console.log($(@el))
     $("#trades_table tr").removeClass 'info'
     $(@el).addClass 'info'
 

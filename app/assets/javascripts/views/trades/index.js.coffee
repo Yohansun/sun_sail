@@ -20,6 +20,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     @identity = MagicOrders.role_key
     @offset = @collection.length
     @first_rendered = false
+    @trade_number = 0
 
     # @collection.on("reset", @render, this)
     @collection.on("fetch", @renderUpdate, this)
@@ -98,8 +99,10 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
   appendTrade: (trade) =>
     if $("#trade_#{trade.get('id')}").length == 0
+      @trade_number += 1
       view = new MagicOrders.Views.TradesRow(model: trade)
       $(@el).find("#trade_rows").append(view.render().el)
+      $(@el).find("#trade_#{trade.get('id')} td:first").html("#{@trade_number}")
 
   renderNew: =>
     @collection.each(@prependTrade)
@@ -108,8 +111,10 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
   prependTrade: (trade) =>
     if $("#trade_#{trade.get('id')}").length == 0
+      @trade_number += 1
       view = new MagicOrders.Views.TradesRow(model: trade)
       $(@el).find("#trade_rows").prepend(view.render().el)
+      $(@el).find("#trade_#{trade.get('id')} td:first").html("#{@trade_number}")
 
   keepColsFilterDropdownOpen: (event) ->
     event.stopPropagation()
