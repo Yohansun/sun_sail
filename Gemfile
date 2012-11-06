@@ -84,5 +84,5 @@ gem "mails_viewer"
 
 group :production do
   gem "exception_notification", "~> 2.6.1"
-  gem 'newrelic_rpm'
+  # gem 'newrelic_rpm'
 end
