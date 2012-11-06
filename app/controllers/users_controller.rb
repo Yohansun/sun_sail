@@ -39,6 +39,12 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(params[:user])
+    if @user.active == false
+      @user.lock_access!
+    end
+    if @user.active == true 
+      @user.unlock_access!
+    end
     if @user.save
       @user.add_role(:cs) if params[:cs] == '1'
       @user.add_role(:cs_read) if params[:cs_read] == '1'
@@ -59,6 +65,12 @@ class UsersController < ApplicationController
     @user.name = params[:user][:name]
     @user.email = params[:user][:email]
     @user.active = params[:user][:active]
+    if @user.active == false
+       @user.lock_access!
+    end
+    if @user.active == true
+      @user.unlock_access!
+    end
     if params[:user][:password].present?
       @user.password = params[:user][:password]
       @user.password_confirmation = params[:user][:password_confirmation]
