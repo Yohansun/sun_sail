@@ -70,6 +70,7 @@ MagicOrders::Application.routes.draw do
   resources :users
   resources :areas
   resources :trade_sources
+  resources :sales
 
   match '/alerts', to: 'trades#alerts'
   get "trades/new", to: "trades#new"

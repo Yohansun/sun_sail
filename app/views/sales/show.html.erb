@@ -1,0 +1,351 @@
+<div class="container-fluid">
+  <header class="jumbotron subhead" id="overview">
+    <div class="subnav">
+      <ul class="nav nav-pills">
+        <li><a href="#">实时销售 </a></li>
+      </ul>
+    </div>
+  </header>
+
+  <div class="row-fluid">
+    <ul class="breadcrumb" style="position:relative;">
+      <li><a href="#">Magic</a><span class="divider">/</span></li>
+      <li><a href="#">数据魔方</a><span class="divider">/</span></li>
+      <li class="active">销售[<%= @sale.name %>]</li>
+      <li style="position:absolute;right:15px;top:6px;"><a href="/sales/new">设定</a></li>
+    </ul><!-- breadcrumb -->
+
+    <div class="progress progress-info progress-striped mar_t10">
+      <div class="bar" style="width: <%= @sale.money_percent_bar %>"></div>
+    </div>
+
+    <div class="clearfix info_show">
+      <h4 id="timer_count" class="add_unit tc span3">0000-00-00<strong>00:00:00</strong></h4>
+      <h4 class="add_unit tc span3">倒计时<strong><span id="day_text"><span id="day"><%= @sale.time_gap[0] %></span>天</span><span id="timer"><%= @sale.time_gap[1] %></span></strong></h4>
+      <h4 class="add_unit tc span3">下单金额<strong><%= @sale.all_trade_fee %></strong></h4>
+      <h4 class="add_unit tc span3">实际成交金额<strong><%= @sale.paid_trade_fee %></strong></h4>
+    </div>
+
+
+    <div class="well">
+      <div id="chartdiv" style="width: 100%; height: 400px;"></div>
+    </div>
+  </div>
+</div>
+
+<% content_for :tail do -%>
+<script type="text/javascript">
+  //$.get("/sales/sale_chart")
+  var chart;
+  var chartData = [{date: new Date(2012, 9, 25, 0),
+    amount: 11,
+    amountall: 0
+  }, {
+    date: new Date(2012, 9, 25, 0,10),
+    amount: 25,
+    amountall: 15
+  }, {
+    date: new Date(2012, 9, 25, 0, 20),
+    amount: 25,
+    amountall: 15
+  }, {
+    date: new Date(2012, 9, 25, 0,30),
+    amount: 65,
+    amountall: 15
+  }, {
+    date: new Date(2012, 9, 25, 0, 40),
+    amount: 75,
+    amountall: 15
+  }, {
+    date: new Date(2012, 9, 25, 0, 50),
+    amount: 85,
+    amountall: 15
+  }, {
+    date: new Date(2012, 9, 25, 1),
+    amount: 95,
+    amountall: 15
+  }, {
+    date: new Date(2012, 9, 25, 1,10),
+    amount: 125,
+    amountall: 105
+  }, {
+    date: new Date(2012, 9, 25, 1,20),
+    amount: 155,
+    amountall: 125
+  }, {
+    date: new Date(2012, 9, 25, 1,30),
+    amount: 189,
+    amountall: 155
+  }, {
+    date: new Date(2012, 9, 25, 1,40),
+    amount: 185,
+    amountall: 165
+  }, {
+    date: new Date(2012, 9, 25, 1,50),
+    amount: 195,
+    amountall: 175
+  }, {
+    date: new Date(2012, 9, 25, 2),
+    amount: 200,
+    amountall: 187
+  }, {
+    date: new Date(2012, 9, 25, 2,30),
+    amount: 195,
+    amountall: 175
+  }, {
+    date: new Date(2012, 9, 25, 3),
+    amount: 178,
+    amountall: 155
+  }, {
+    date: new Date(2012, 9, 25, 3,30),
+    amount: 155,
+    amountall: 145
+  }, {
+    date: new Date(2012, 9, 25, 4),
+    amount: 185,
+    amountall: 135
+  }, {
+    date: new Date(2012, 9, 25, 4, 30),
+    amount: 155,
+    amountall: 125
+  }, {
+    date: new Date(2012, 9, 25, 5),
+    amount: 120,
+    amountall: 100
+  }, {
+    date: new Date(2012, 9, 25, 5, 30),
+    amount: 87,
+    amountall: 17
+  }, {
+    date: new Date(2012, 9, 25, 6),
+    amount: 65,
+    amountall: 15
+  }, {
+    date: new Date(2012, 9, 25, 6, 30),
+    amount: 57,
+    amountall: 17
+  }, {
+    date: new Date(2012, 9, 25, 7),
+    amount: 65,
+    amountall: 15
+  }, {
+    date: new Date(2012, 9, 25, 7, 30),
+    amount: 89,
+    amountall: 19
+  }, {
+    date: new Date(2012, 9, 25, 8),
+    amount: 65,
+    amountall: 15
+  }, {
+    date: new Date(2012, 9, 25, 8, 30),
+    amount: 69,
+    amountall: 19
+  }, {
+    date: new Date(2012, 9, 25, 9),
+    amount: 65,
+    amountall: 15
+  }, {
+    date: new Date(2012, 9, 25, 9, 30),
+    amount: 75,
+    amountall: 15
+  }, {
+    date: new Date(2012, 9, 25, 10),
+    amount: 65,
+    amountall: 15
+  }, {
+    date: new Date(2012, 9, 25, 10, 30),
+    amount: 32,
+    amountall: 12
+  }, {
+    date: new Date(2012, 9, 25, 11),
+    amount: 65,
+    amountall: 15
+  }, {
+    date: new Date(2012, 9, 25, 11, 30),
+    amount: 58,
+    amountall: 18
+  }, {
+    date: new Date(2012, 9, 25, 12),
+    amount: 65,
+    amountall: 15
+  }, {
+    date: new Date(2012, 9, 25, 12, 30),
+    amount: 85,
+    amountall: 15
+  }];
+
+  //var average = 55.4;
+
+  AmCharts.ready(function () {
+    // SERIAL CHART
+    chart = new AmCharts.AmSerialChart();
+    chart.pathToImages = "/assets/amchart_images/";
+    chart.zoomOutButton = {
+      backgroundColor: '#000000',
+      backgroundAlpha: 0.15
+    };
+    /*+++++var balloon = chart.balloon;
+    balloon.adjustBorderColor = true;
+    balloon.color = "#000000";
+    balloon.cornerRadius = 5;
+    balloon.fillColor = "#FFFFFF";+++++提示的样式*/
+    chart.dataProvider = chartData;
+    chart.categoryField = "date";
+    chart.fontSize = 11;//调整xy轴显示的字体大小
+    // +++++chart.startDuration = 1;动态效果
+    chart.marginTop = 40;//+++++
+    // listen for "dataUpdated" event (fired when chart is inited) and call zoomChart method when it happens
+    chart.addListener("dataUpdated", zoomChart);
+
+    // AXES
+    // category
+    var categoryAxis = chart.categoryAxis;
+    categoryAxis.parseDates = true; // as our data is date-based, we set parseDates to true
+    categoryAxis.minPeriod = "fff"; // our data is daily, so we set minPeriod to DD
+    categoryAxis.dashLength = 1;
+    categoryAxis.gridAlpha = 0.15;
+    categoryAxis.axisColor = "#DADADA";
+    categoryAxis.startOnAxis = true;
+    categoryAxis.gridCount = 90;
+    categoryAxis.autoGridCount = false;
+    categoryAxis.equalSpacing = true;//+++++++If you want data points to be placed at equal intervals (omiting dates with no data), set equalSpacing to true.
+
+
+    // AXES
+    // X
+    var xAxis = new AmCharts.ValueAxis();
+    // xAxis.title = "X Axis";
+    // xAxis.position = "bottom";
+    xAxis.autoGridCount = false;
+    xAxis.gridCount = 10;
+    xAxis.unit = "w";
+    xAxis.gridAlpha = 0.15;
+    xAxis.axisColor = "#DADADA";
+    chart.addValueAxis(xAxis);
+
+    // value
+    var valueAxis = new AmCharts.ValueAxis();
+    valueAxis.axisColor = "#DADADA";
+    valueAxis.dashLength = 1;
+    valueAxis.logarithmic = true; // this line makes axis logarithmic
+    valueAxis.unit = "w";//+++++
+    //+++++valueAxis.title = "销售量（w）";
+    chart.addValueAxis(valueAxis);
+
+    // // GUIDE for average
+    // var guide = new AmCharts.Guide();
+    // guide.value = average;
+    // guide.lineColor = "#CC0000";
+    // guide.dashLength = 4;
+    // guide.label = "average";
+    // guide.inside = true;
+    // guide.lineAlpha = 1;
+    // valueAxis.addGuide(guide);
+
+
+    // GRAPH
+    //first graph
+    var graph = new AmCharts.AmGraph();
+    graph.type = "smoothedLine";
+    graph.bullet = "round";
+    graph.bulletColor = "#FFFFFF";
+    graph.bulletBorderColor = "#00BBCC";
+    graph.bulletBorderThickness = 2;
+    graph.bulletSize = 7;//线上圆点的大小
+    graph.title = "Amount";
+    graph.valueField = "amount";
+    graph.balloonText = "下单金额 [[amount]] 万";//+++++
+    graph.lineThickness = 2;
+    graph.lineColor = "#00BBCC";
+    chart.addGraph(graph);
+    //second graph
+    var graph = new AmCharts.AmGraph();
+    graph.type = "smoothedLine";
+    graph.bullet = "round";
+    graph.bulletColor = "#FFFFFF";
+    graph.bulletBorderColor = "#ff0000";
+    graph.bulletBorderThickness = 2;
+    graph.bulletSize = 7;//线上圆点的大小
+    graph.title = "Amountall";
+    graph.valueField = "amountall";
+    graph.balloonText = "成交金额 [[amountall]] 万";//+++++
+    graph.lineThickness = 2;
+    graph.lineColor = "#ff0000";
+    chart.addGraph(graph);
+
+    // CURSOR
+    var chartCursor = new AmCharts.ChartCursor();
+    chartCursor.cursorPosition = "mouse";
+    chartCursor.categoryBalloonDateFormat = "JJ:NN, DD MMMM";//+++++
+    chart.addChartCursor(chartCursor);
+
+    // SCROLLBAR
+    var chartScrollbar = new AmCharts.ChartScrollbar();
+    chart.addChartScrollbar(chartScrollbar);
+
+    categoryAxis.dateFormats = [{
+      period:'fff',
+      format:'JJ:NN:SS'
+    },{
+      period:'ss',
+      format:'JJ:NN:SS'
+    },{
+      period:'mm',
+      format:'JJ:NN'
+    },{
+      period:'hh',
+      format:'JJ:NN'
+    },{
+      period:'DD',
+      format:'MMM DD'
+    },{
+      period:'MM',
+      format:'MMM'
+    },{
+      period:'YYYY',
+      format:'YYYY'
+    }];
+
+    // WRITE
+    chart.write("chartdiv");
+  });
+
+  function zoomChart() {
+    // different zoom methods can be used - zoomToIndexes, zoomToDates, zoomToCategoryValues
+    chart.zoomToDates(new Date(2012, 9, 25, 0), new Date(2012, 9, 25, 2));
+  }
+
+//实时销售时间设定
+function setTime(id){
+  var timer = new Date(),
+  obj = {
+    year : timer.getFullYear(),
+    month : timer.getMonth() + 1,
+    date : timer.getDate(),
+    hour : timer.getHours(),
+    minute : timer.getMinutes(),
+    second : timer.getSeconds()
+  };
+  for(var i in obj){
+    obj[i] = (obj[i] < 10 ? '0' : '') + obj[i];
+  }
+  document.getElementById(id).innerHTML = obj.year + '-' + obj.month + '-' + obj.date + '<strong>' + obj.hour + ':' + obj.minute + ':' + obj.second + '</strong>';
+}
+
+$(function(){
+  setInterval(function(){
+    setTime('timer_count');
+  }, 1000);
+});
+
+//设置倒计时
+$(function(){
+  $(document).counter({
+    day : $('#day'),
+    timer : $('#timer'),
+    starts : new Date(2012,9,24,9,0,0),
+    deadline : new Date(2012,10,11,23,0,0)
+  });
+});
+</script>
+<% end %>

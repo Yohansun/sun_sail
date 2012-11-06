@@ -212,3 +212,25 @@ function bind_swf(id, type, xml) {
 
   swfobject.embedSWF("/swf/deliver_bill.swf", "showbox", "83", "35", "9.0.0","/swf/expressInstall.swf", flashvars);
 }
+
+//datepicker & timepicker
+$(document).ready(function(e) {
+  $(function(){
+    $('#myModal').modal('toggle');
+    $('#myModal').on('shown',function(){
+      $('.modal-backdrop').unbind('click');
+    });
+
+    $('.datepicker').datepicker({
+      format: 'yyyy-mm-dd'
+    })
+
+    $('.timepicker').timeEntry({
+      show24Hours: true, // 24 hours format
+      showSeconds: true, // Show seconds?
+      spinnerImage: '/assets/spinnerUpDown.png', // Arrows image
+      spinnerSize: [17, 26, 0], // Image size
+      spinnerIncDecOnly: true // Only up and down arrows
+    });
+  });
+});
