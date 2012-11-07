@@ -352,6 +352,8 @@ class Trade
       # 订单
       when 'all'
         trade_type_hash = nil
+      when 'dispatched'
+        trade_type_hash = {"$and" => [{:dispatched_at.ne => nil},{:status.in => paid_not_deliver_array + paid_and_delivered_array}]}
       when 'undispatched'
         trade_type_hash = {"$and" =>[{"$or" => [{seller_id: nil},{:seller_id.exists => false}]},{:status.in => paid_not_deliver_array}]}
       when 'unpaid'
@@ -366,6 +368,8 @@ class Trade
         trade_type_hash = {:status.in => closed_array}
       when 'unusual_trade'
         trade_type_hash = {status: "TRADE_NO_CREATE_PAY"}
+      when 'deliver_unconfirmed'
+        trade_type_hash = {"$and" =>[{:seller_confirm_deliver_at.exists => false},{:status.in => paid_and_delivered_array},{"$or" => [{:has_refund_order.exists => false},{has_refund_order: false}]}]}
 
 
       # 发货单
