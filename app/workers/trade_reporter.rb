@@ -20,7 +20,7 @@ class TradeReporter
     title_format = Spreadsheet::Format.new :color => "blue", :weight => :bold, :size => 18
     bold = Spreadsheet::Format.new(:weight => :bold)
 
-    row_number = 2
+    row_number = 1
 
     if TradeSetting.company == "dulux"
       if current_user.has_role?(:seller) || current_user.has_role?(:logistic)
@@ -28,45 +28,58 @@ class TradeReporter
                               "送货经销商", "买家地址-省", "买家地址-市", "买家地址-区", "买家地址", "买家姓名", "收货人手机/座机", "商品名", "数量", "运费", "买家旺旺", "客服备注", "需要调色", "色号"]
         trades.each_with_index do |trade, trade_index|
           if trade.splitted?
-            OrderDecorator.decorate(trade.orders).each_with_index do |order, i|
-              cs_memo = "#{trade.cs_memo} #{order.cs_memo}"
-              if order.color_num.present?
-                color_num = order.color_num.join(",")
-              else
+            trade.orders.each do |object|
+              order = OrderDecorator.decorate(object)
+              object.bill_info.each_with_index do |info, i|
+                title = info[:title]
+                cs_memo = "#{trade.cs_memo} #{order.cs_memo}"
+                num = info[:number] * order.num
                 color_num = ''
-              end
-              need_color = trade.has_color_info ? '是' : '否'
-              sheet1.update_row row_number + i, trade.splitted_tid,
-              trade.created.try(:strftime,"%Y-%m-%d %H:%M:%S"), trade.pay_time.try(:strftime,"%Y-%m-%d %H:%M:%S"),
-              trade.dispatched_at.try(:strftime,"%Y-%m-%d %H:%M:%S"), trade.status_text, trade.seller_name,
-              trade.receiver_state, trade.receiver_city, trade.receiver_district, trade.receiver_address, trade.receiver_name, trade.receiver_mobile_phone, order.title, order.num, trade.post_fee, trade.buyer_nick, cs_memo, need_color, color_num
-              if trade_index.even?
-                sheet1.row(row_number + i).default_format = yellow_format
-              else
-                sheet1.row(row_number + i).default_format = blue_format
-              end
+                if info[:colors].present?
+                  info[:colors].each do |color, array|
+                    color_num += "#{array[0]}桶#{color}#{array[1]}"
+                  end  
+                end
+                need_color = trade.has_color_info ? '是' : '否'
+                row_number += 1
+                sheet1.update_row row_number, trade.splitted_tid,
+                trade.created.try(:strftime,"%Y-%m-%d %H:%M:%S"), trade.pay_time.try(:strftime,"%Y-%m-%d %H:%M:%S"),
+                trade.dispatched_at.try(:strftime,"%Y-%m-%d %H:%M:%S"), trade.status_text, trade.seller_name,
+                trade.receiver_state, trade.receiver_city, trade.receiver_district, trade.receiver_address, trade.receiver_name, trade.receiver_mobile_phone, title, num, 0, trade.buyer_nick, cs_memo, need_color, color_num
+                if trade_index.even?
+                  sheet1.row(row_number).default_format = yellow_format
+                else
+                  sheet1.row(row_number).default_format = blue_format
+                end
+              end  
             end
           else
-            OrderDecorator.decorate(trade.orders).each_with_index do |order, i|
-              cs_memo = "#{trade.cs_memo} #{order.cs_memo}"
-              if order.color_num.present?
-                color_num = order.color_num.join(",")
-              else
+             trade.orders.each do |object|
+              order = OrderDecorator.decorate(object)
+              object.bill_info.each_with_index do |info, i|
+                title = info[:title]
+                cs_memo = "#{trade.cs_memo} #{order.cs_memo}"
+                num = info[:number] * order.num
                 color_num = ''
-              end
-              need_color = trade.has_color_info ? '是' : '否'
-              sheet1.update_row row_number + i, trade.tid,
-              trade.created.try(:strftime,"%Y-%m-%d %H:%M:%S"), trade.pay_time.try(:strftime,"%Y-%m-%d %H:%M:%S"),
-              trade.dispatched_at.try(:strftime,"%Y-%m-%d %H:%M:%S"), trade.status_text, trade.seller_name,
-              trade.receiver_state, trade.receiver_city, trade.receiver_district, trade.receiver_address, trade.receiver_name, trade.receiver_mobile_phone, order.title, order.num, trade.post_fee, trade.buyer_nick, cs_memo, need_color, color_num
-              if trade_index.even?
-                sheet1.row(row_number + i).default_format = yellow_format
-              else
-                sheet1.row(row_number + i).default_format = blue_format
-              end
+                if info[:colors].present?
+                  info[:colors].each do |color, array|
+                    color_num += "#{array[0]}桶#{color}#{array[1]}"
+                  end  
+                end  
+                need_color = trade.has_color_info ? '是' : '否'
+                row_number += 1
+                sheet1.update_row row_number, trade.tid,
+                trade.created.try(:strftime,"%Y-%m-%d %H:%M:%S"), trade.pay_time.try(:strftime,"%Y-%m-%d %H:%M:%S"),
+                trade.dispatched_at.try(:strftime,"%Y-%m-%d %H:%M:%S"), trade.status_text, trade.seller_name,
+                trade.receiver_state, trade.receiver_city, trade.receiver_district, trade.receiver_address, trade.receiver_name, trade.receiver_mobile_phone, title, num, 0, trade.buyer_nick, cs_memo, need_color, color_num
+                if trade_index.even?
+                  sheet1.row(row_number).default_format = yellow_format
+                else
+                  sheet1.row(row_number).default_format = blue_format
+                end
+              end  
             end
           end
-          row_number = row_number + trade.orders.count
         end
       elsif current_user.has_role?(:cs) || current_user.has_role?(:admin)
         sheet1.row(1).concat ["订单号", "下单时间", "付款时间", "分流时间", "订单状态",
@@ -81,14 +94,15 @@ class TradeReporter
                 color_num = ''
               end
               need_color = trade.has_color_info ? '是' : '否'
-              sheet1.update_row row_number + i, trade.splitted_tid,
+              row_number += 1
+              sheet1.update_row row_number, trade.splitted_tid,
               trade.created.try(:strftime,"%Y-%m-%d %H:%M:%S"), trade.pay_time.try(:strftime,"%Y-%m-%d %H:%M:%S"),
               trade.dispatched_at.try(:strftime,"%Y-%m-%d %H:%M:%S"), trade.status_text, trade.seller_name,
               trade.receiver_state, trade.receiver_city, trade.receiver_district, trade.receiver_address, trade.receiver_name, trade.receiver_mobile_phone, order.title, order.num, order.auction_price, order.price, order.discount_fee, order.total_fee, trade.sum_fee, trade.post_fee, trade.total_fee, trade.buyer_nick, cs_memo, need_color, color_num
               if trade_index.even?
-                sheet1.row(row_number + i).default_format = yellow_format
+                sheet1.row(row_number).default_format = yellow_format
               else
-                sheet1.row(row_number + i).default_format = blue_format
+                sheet1.row(row_number).default_format = blue_format
               end
             end
           else
@@ -100,18 +114,18 @@ class TradeReporter
                 color_num = ''
               end
               need_color = trade.has_color_info ? '是' : '否'
-              sheet1.update_row row_number + i, trade.tid,
+              row_number += 1
+              sheet1.update_row row_number, trade.tid,
               trade.created.try(:strftime,"%Y-%m-%d %H:%M:%S"), trade.pay_time.try(:strftime,"%Y-%m-%d %H:%M:%S"),
               trade.dispatched_at.try(:strftime,"%Y-%m-%d %H:%M:%S"), trade.status_text, trade.seller_name,
               trade.receiver_state, trade.receiver_city, trade.receiver_district, trade.receiver_address, trade.receiver_name, trade.receiver_mobile_phone, order.title, order.num, order.auction_price, order.price, order.discount_fee, order.total_fee, trade.sum_fee, trade.post_fee, trade.total_fee, trade.buyer_nick, cs_memo, need_color, color_num
               if trade_index.even?
-                sheet1.row(row_number + i).default_format = yellow_format
+                sheet1.row(row_number).default_format = yellow_format
               else
-                sheet1.row(row_number + i).default_format = blue_format
+                sheet1.row(row_number).default_format = blue_format
               end
             end
           end
-          row_number = row_number + trade.orders.count
         end
       end
     end

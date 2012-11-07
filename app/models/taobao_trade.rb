@@ -216,4 +216,8 @@ class TaobaoTrade < Trade
     goods_fee = self.orders.inject(0) { |sum, order| sum + order.total_fee.to_f}
     goods_fee.to_f + self.post_fee.to_f
   end
+
+  def bill_infos_count
+    self.orders.inject(0) { |sum, order| sum + order.bill_info.count }
+  end  
 end
