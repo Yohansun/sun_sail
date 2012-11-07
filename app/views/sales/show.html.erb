@@ -37,142 +37,25 @@
 <script type="text/javascript">
   //$.get("/sales/sale_chart")
   var chart;
-  var chartData = [{date: new Date(2012, 9, 25, 0),
-    amount: 11,
-    amountall: 0
-  }, {
-    date: new Date(2012, 9, 25, 0,10),
-    amount: 25,
-    amountall: 15
-  }, {
-    date: new Date(2012, 9, 25, 0, 20),
-    amount: 25,
-    amountall: 15
-  }, {
-    date: new Date(2012, 9, 25, 0,30),
-    amount: 65,
-    amountall: 15
-  }, {
-    date: new Date(2012, 9, 25, 0, 40),
-    amount: 75,
-    amountall: 15
-  }, {
-    date: new Date(2012, 9, 25, 0, 50),
-    amount: 85,
-    amountall: 15
-  }, {
-    date: new Date(2012, 9, 25, 1),
-    amount: 95,
-    amountall: 15
-  }, {
-    date: new Date(2012, 9, 25, 1,10),
-    amount: 125,
-    amountall: 105
-  }, {
-    date: new Date(2012, 9, 25, 1,20),
-    amount: 155,
-    amountall: 125
-  }, {
-    date: new Date(2012, 9, 25, 1,30),
-    amount: 189,
-    amountall: 155
-  }, {
-    date: new Date(2012, 9, 25, 1,40),
-    amount: 185,
-    amountall: 165
-  }, {
-    date: new Date(2012, 9, 25, 1,50),
-    amount: 195,
-    amountall: 175
-  }, {
-    date: new Date(2012, 9, 25, 2),
-    amount: 200,
-    amountall: 187
-  }, {
-    date: new Date(2012, 9, 25, 2,30),
-    amount: 195,
-    amountall: 175
-  }, {
-    date: new Date(2012, 9, 25, 3),
-    amount: 178,
-    amountall: 155
-  }, {
-    date: new Date(2012, 9, 25, 3,30),
-    amount: 155,
-    amountall: 145
-  }, {
-    date: new Date(2012, 9, 25, 4),
-    amount: 185,
-    amountall: 135
-  }, {
-    date: new Date(2012, 9, 25, 4, 30),
-    amount: 155,
-    amountall: 125
-  }, {
-    date: new Date(2012, 9, 25, 5),
-    amount: 120,
-    amountall: 100
-  }, {
-    date: new Date(2012, 9, 25, 5, 30),
-    amount: 87,
-    amountall: 17
-  }, {
-    date: new Date(2012, 9, 25, 6),
-    amount: 65,
-    amountall: 15
-  }, {
-    date: new Date(2012, 9, 25, 6, 30),
-    amount: 57,
-    amountall: 17
-  }, {
-    date: new Date(2012, 9, 25, 7),
-    amount: 65,
-    amountall: 15
-  }, {
-    date: new Date(2012, 9, 25, 7, 30),
-    amount: 89,
-    amountall: 19
-  }, {
-    date: new Date(2012, 9, 25, 8),
-    amount: 65,
-    amountall: 15
-  }, {
-    date: new Date(2012, 9, 25, 8, 30),
-    amount: 69,
-    amountall: 19
-  }, {
-    date: new Date(2012, 9, 25, 9),
-    amount: 65,
-    amountall: 15
-  }, {
-    date: new Date(2012, 9, 25, 9, 30),
-    amount: 75,
-    amountall: 15
-  }, {
-    date: new Date(2012, 9, 25, 10),
-    amount: 65,
-    amountall: 15
-  }, {
-    date: new Date(2012, 9, 25, 10, 30),
-    amount: 32,
-    amountall: 12
-  }, {
-    date: new Date(2012, 9, 25, 11),
-    amount: 65,
-    amountall: 15
-  }, {
-    date: new Date(2012, 9, 25, 11, 30),
-    amount: 58,
-    amountall: 18
-  }, {
-    date: new Date(2012, 9, 25, 12),
-    amount: 65,
-    amountall: 15
-  }, {
-    date: new Date(2012, 9, 25, 12, 30),
-    amount: 85,
-    amountall: 15
-  }];
+  var frequency = <%= TradeSetting.gap_time/60 %>
+  var gap = <%= @sale.end_at.to_i/60 - @sale.start_at.to_i/60 %>
+  var chartData = []
+  var t = 0
+  do {
+    chartData.push({
+      date: new Date(<%= @sale.start_at.year %>,<%= @sale.start_at.month - 1 %>,<%= @sale.start_at.day %>,<%= @sale.start_at.hour - 8 %>,<%= @sale.start_at.min %> + t),
+      amount: 0,
+      amountall: 20
+    })
+    t = t + frequency
+    if (t > gap){
+      chartData.push({
+        date: new Date(<%= @sale.start_at.year %>,<%= @sale.start_at.month - 1 %>,<%= @sale.start_at.day %>,<%= @sale.start_at.hour - 8 %>,<%= @sale.start_at.min %> + gap),
+        amount: 0,
+        amountall: 20
+      })
+    }
+  } while (t < gap)
 
   //var average = 55.4;
 
@@ -241,7 +124,6 @@
     // guide.inside = true;
     // guide.lineAlpha = 1;
     // valueAxis.addGuide(guide);
-
 
     // GRAPH
     //first graph
@@ -312,7 +194,9 @@
 
   function zoomChart() {
     // different zoom methods can be used - zoomToIndexes, zoomToDates, zoomToCategoryValues
-    chart.zoomToDates(new Date(2012, 9, 25, 0), new Date(2012, 9, 25, 2));
+    chart.zoomToDates(new Date(<%= @sale.start_at.year %>, <%= @sale.start_at.month - 1 %>, <%= @sale.start_at.day %>, <%= @sale.start_at.hour - 8 %>, <%= @sale.start_at.min %>), new Date(<%= @sale.start_at.year %>, <%= @sale.start_at.month - 1 %>, <%= @sale.start_at.day %>, <%= @sale.start_at.hour - 5 %>, <%= @sale.start_at.min %>));
+    console.log(new Date(<%= @sale.start_at.year %>, <%= @sale.start_at.month %>, <%= @sale.start_at.day %>, <%= @sale.start_at.hour - 8 %>, <%= @sale.start_at.min %>))
+    console.log(new Date(<%= @sale.start_at.year %>, <%= @sale.start_at.month %>, <%= @sale.start_at.day %>, <%= @sale.start_at.hour - 6 %>, <%= @sale.start_at.min %>))
   }
 
 //实时销售时间设定
@@ -343,8 +227,8 @@ $(function(){
   $(document).counter({
     day : $('#day'),
     timer : $('#timer'),
-    starts : new Date(2012,9,24,9,0,0),
-    deadline : new Date(2012,10,11,23,0,0)
+    starts : new Date(<%= @sale.start_at.year %>, <%= @sale.start_at.month - 1 %>, <%= @sale.start_at.day %>, <%= @sale.start_at.hour - 8 %>, <%= @sale.start_at.min %>,<%= @sale.start_at.sec %>),
+    deadline : new Date(<%= @sale.end_at.year %>, <%= @sale.end_at.month - 1 %>, <%= @sale.end_at.day %>, <%= @sale.end_at.hour - 8 %>, <%= @sale.end_at.min %>,<%= @sale.end_at.sec %>)
   });
 });
 </script>
