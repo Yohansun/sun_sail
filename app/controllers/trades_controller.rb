@@ -369,12 +369,11 @@ class TradesController < ApplicationController
     Trade.any_in(_id: params[:ids]).each do |trade|
       trade.logistic_printed_at = Time.now
 
-      # 只记录 暂不做修改
-      # if trade.logistic_waybill.blank?
-      #   trade.logistic_id = logistic.try(:id)
-      #   trade.logistic_name = logistic.try(:name)
-      #   trade.logistic_code = logistic.try(:code)
-      # end
+      if trade.logistic_waybill.blank?
+        trade.logistic_id = logistic.try(:id)
+        trade.logistic_name = logistic.try(:name)
+        trade.logistic_code = logistic.try(:code)
+      end
 
       success = false unless trade.save
     end

@@ -45,7 +45,7 @@
       <% if @trade.get('status_text') is "已付款，待发货" or @trade.get('status_text') is "已付款，已发货" : %>
         <li><a data-toggle="modal" href="#" data-type="print_deliver_bill">打印发货单</a></li>
         <% if @trade.get('can_change_logistic') == true : %>
-        <!-- <li><a data-toggle="modal" href="#" data-type="print_logistic_bill">打印物流单</a></li> -->
+        <li><a data-toggle="modal" href="#" data-type="print_logistic_bill">打印物流单</a></li>
         <% end %>
       <% end %>
 

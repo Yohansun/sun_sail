@@ -46,6 +46,6 @@ module TradesHelper
   end
 
   def can_change_logistic(trade)
-    trade.status == 'WAIT_SELLER_SEND_GOODS' || (trade.status == 'WAIT_BUYER_CONFIRM_GOODS' && trade.delivered_at.present? && trade.delivered_at > 23.hours.ago)
+    trade.status == 'WAIT_SELLER_SEND_GOODS'
   end
 end

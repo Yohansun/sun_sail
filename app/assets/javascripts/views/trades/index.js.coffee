@@ -352,6 +352,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
   printLogistics: ->
     tmp = []
+    logistics = {}
     length = $('.trade_check:checked').parents('tr').length
 
     if length < 1
@@ -375,6 +376,10 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     $.get '/trades/deliver_list', {ids: tmp}, (data) ->
       html = ''
       for trade in data
+        lname = trade.logistic_name
+        lname = '无物流商' if lname == ''
+        logistics[lname] = logistics[lname] || 0
+        logistics[lname] += 1
         html += '<tr>'
         html += '<td>' + trade.tid + '</td>'
         html += '<td>' + trade.name + '</td>'
@@ -396,6 +401,13 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
           MagicOrders.hasPrint = false
 
+        flag = true
+        notice = '其中'
+        for key, value of logistics
+          notice += key + value + '单， '
+          flag = false if value == 20
+
+        $('#print_delivers .notice').html(notice) if flag = true
         $('#print_delivers').modal('show')
 
   returnLogistics: ->
