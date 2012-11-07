@@ -6,7 +6,8 @@ task :add_products_to_sellers => :environment do
   # 20121020
   # product_iids = ['ICI0054', 'ICI0056', 'ICI0059']
 
-  product_iids = ['ICI0063']
+  product_iids = ['ICI0062','ICI0063','ICI0064','ICI0065','ICI0066','ICI0067','ICI0068','ICI0069',
+                  'ICI0070','ICI0071','ICI0072','ICI0073','ICI0074','ICI0075','ICI0076']
 
   product_iids.each do |iid|
     puts 'work with ' + iid
