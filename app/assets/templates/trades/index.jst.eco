@@ -60,8 +60,7 @@
       <% end %>
       <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-          物流单
-          <b class="caret"></b>
+          物流单<b class="caret"></b>
         </a>
         <ul class="dropdown-menu">
           <li><a href="#" data-trade-mode="logistics" data-trade-status="logistic_waybill_void">未返回物流单号</a></li>
@@ -293,7 +292,7 @@
         <% end %>
         <% if MagicOrders.trade_mode == 'logistics' : %>
           <% if MagicOrders.trade_type in ['logistic_bill_unprinted', 'logistic_bill_printed'] : %>
-            <li><a data-toggle="modal" class='print_logistics' href="#">批量打印物流单</a></li>
+            <!-- <li><a data-toggle="modal" class='print_logistics' href="#">批量打印物流单</a></li> -->
           <% end %>
           <% if MagicOrders.trade_type in ['logistic_waybill_void', 'logistic_waybill_exist'] : %>
             <!-- <li><a data-toggle="modal" class='return_logistics' href='#'>批量返回物流单号</a></li> -->
