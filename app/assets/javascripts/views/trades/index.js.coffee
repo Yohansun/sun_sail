@@ -445,12 +445,15 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
   confirmReturn: ->
     begin = $('.logistic_begin').val()
+    end = $('.logistic_end').val()
+    unless /^\w+$/.test(begin) and /^\w+$/.test(end)
+      alert('输入单号不符合规则')
+      return
+
     begin_pre = begin.slice(0, -4)
     begin_last_number = begin.slice(-4) * 1
-    end = $('.logistic_end').val()
     end_pre = end.slice(0, -4)
     end_last_number = end.slice(-4) * 1
-
     if (end_last_number - begin_last_number + 1) != MagicOrders.idCarrier.length
       alert('物流单号与选中产品个数不匹配')
       return
