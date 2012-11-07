@@ -21,6 +21,12 @@ class Sale < ActiveRecord::Base
     # end
   end
 
+  def self.total_fee_by_time(start_time, end_time)
+    trades = Trade.where("$and" => [{:created.gte => start_time.utc}, {:created.lte => end_time.utc}])
+    amount = trades.inject(0) { |sum, trade| sum + trade.calculate_fee }
+    amount.to_i
+  end
+
   def all_trade_fee(time_passed, frequency)
     all_trades = Trade.where("$and" => [{:created.gte => (self.start_at.to_time + time_passed.minutes)},{:created.lte => (self.start_at.to_time + time_passed.minutes + frequency.minutes)}])
     p all_trades.count

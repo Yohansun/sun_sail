@@ -1,4 +1,4 @@
-<div class="container-fluid">
+3<div class="container-fluid">
   <header class="jumbotron subhead" id="overview">
     <div class="subnav">
       <ul class="nav nav-pills">
@@ -37,25 +37,12 @@
 <script type="text/javascript">
   //$.get("/sales/sale_chart")
   var chart;
-  var frequency = <%= TradeSetting.gap_time/60 %>
-  var gap = <%= @sale.end_at.to_i/60 - @sale.start_at.to_i/60 %>
-  var chartData = []
-  var t = 0
-  do {
-    chartData.push({
-      date: new Date(<%= @sale.start_at.year %>,<%= @sale.start_at.month - 1 %>,<%= @sale.start_at.day %>,<%= @sale.start_at.hour - 8 %>,<%= @sale.start_at.min %> + t),
-      amount: <%= @sale.all_trade_fee(@sale.add_time, TradeSetting.gap_time/60)%>,
-      amountall: <%= @sale.paid_trade_fee(@sale.add_time, TradeSetting.gap_time/60)%>
-    })
-    t = t + frequency
-    if (t > gap){
-      chartData.push({
-        date: new Date(<%= @sale.start_at.year %>,<%= @sale.start_at.month - 1 %>,<%= @sale.start_at.day %>,<%= @sale.start_at.hour - 8 %>,<%= @sale.start_at.min %> + gap),
-        amount: <%= @sale.all_trade_fee(@sale.add_time, TradeSetting.gap_time/60) %>,
-        amountall: <%= @sale.paid_trade_fee(@sale.add_time, TradeSetting.gap_time/60) %>
-      })
-    }
-  } while (t < gap)
+  //var frequency = <%#= TradeSetting.gap_time/60 %>
+  //var gap = <%#= @sale.end_at.to_i/60 - @sale.start_at.to_i/60 %>
+  var chartData = [];
+  <% @data.each do |row| -%>
+  chartData.push({date: new Date(<%= row[0].year %>, <%= row[0].month %>, <%= row[0].day %>, <%= row[0].hour %>, <%= row[0].min %>, <%= row[0].sec %>), amount: <%= row[1] %>, amountall: <%= row[2] %>});
+  <% end -%>
 
   //var average = 55.4;
 
@@ -101,7 +88,7 @@
     // xAxis.position = "bottom";
     xAxis.autoGridCount = false;
     xAxis.gridCount = 10;
-    xAxis.unit = "w";
+    xAxis.unit = "元";
     xAxis.gridAlpha = 0.15;
     xAxis.axisColor = "#DADADA";
     chart.addValueAxis(xAxis);
@@ -111,7 +98,7 @@
     valueAxis.axisColor = "#DADADA";
     valueAxis.dashLength = 1;
     valueAxis.logarithmic = true; // this line makes axis logarithmic
-    valueAxis.unit = "w";//+++++
+    valueAxis.unit = "元";//+++++
     //+++++valueAxis.title = "销售量（w）";
     chart.addValueAxis(valueAxis);
 
@@ -136,7 +123,7 @@
     graph.bulletSize = 7;//线上圆点的大小
     graph.title = "Amount";
     graph.valueField = "amount";
-    graph.balloonText = "下单金额 [[amount]] 万";//+++++
+    graph.balloonText = "下单金额 [[amount]] 元";//+++++
     graph.lineThickness = 2;
     graph.lineColor = "#00BBCC";
     chart.addGraph(graph);
@@ -150,7 +137,7 @@
     graph.bulletSize = 7;//线上圆点的大小
     graph.title = "Amountall";
     graph.valueField = "amountall";
-    graph.balloonText = "成交金额 [[amountall]] 万";//+++++
+    graph.balloonText = "成交金额 [[amountall]] 元";//+++++
     graph.lineThickness = 2;
     graph.lineColor = "#ff0000";
     chart.addGraph(graph);
@@ -158,7 +145,7 @@
     // CURSOR
     var chartCursor = new AmCharts.ChartCursor();
     chartCursor.cursorPosition = "mouse";
-    chartCursor.categoryBalloonDateFormat = "JJ:NN, DD MMMM";//+++++
+    chartCursor.categoryBalloonDateFormat = "MM-DD JJ:NN";//+++++
     chart.addChartCursor(chartCursor);
 
     // SCROLLBAR
@@ -179,10 +166,10 @@
       format:'JJ:NN'
     },{
       period:'DD',
-      format:'MMM DD'
+      format:'MM DD'
     },{
       period:'MM',
-      format:'MMM'
+      format:'MM'
     },{
       period:'YYYY',
       format:'YYYY'

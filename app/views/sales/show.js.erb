@@ -1,0 +1,5 @@
+chartData = [];
+<% @data.each do |row| -%>
+chartData.push({date: new Date(<%= row[0].year %>, <%= row[0].month %>, <%= row[0].day %>, <%= row[0].hour %>, <%= row[0].min %>, <%= row[0].sec %>), amount: <%= row[1] %>, amountall: <%= row[2] %>})
+<% end -%>
+dataProvider = chartData;
