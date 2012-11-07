@@ -16,14 +16,18 @@
     </ul><!-- breadcrumb -->
 
     <div class="progress progress-info progress-striped mar_t10">
-      <div class="bar" style="width: <%= ((@data.last[2]/@sale.earn_guess)*100).to_i %>%"></div>
+      <div class="bar" id="progress_bar" style="width: <%= @progress_bar %>%"></div>
     </div>
 
     <div class="clearfix info_show">
       <h4 id="timer_count" class="add_unit tc span3">0000-00-00<strong>00:00:00</strong></h4>
+      <%- if TradeSetting.test_time > @sale.end_at %>
+      <h4 class="add_unit tc span3">倒计时<strong><span id="day_text"><span id="day">0</span>天</span><span id="timer">00:00:00</span></strong></h4>
+      <%- else %>
       <h4 class="add_unit tc span3">倒计时<strong><span id="day_text"><span id="day"><%= @sale.time_gap[0] %></span>天</span><span id="timer"><%= @sale.time_gap[1] %></span></strong></h4>
-      <h4 class="add_unit tc span3">下单金额<strong><%= @data.last[1] %></strong></h4>
-      <h4 class="add_unit tc span3">实际成交金额<strong><%= @data.last[2] %></strong></h4>
+      <%- end %>
+      <h4 class="add_unit tc span3" id="deal_money">下单金额<strong><%= @data.last[1] %></strong></h4>
+      <h4 class="add_unit tc span3" id="paid_money">实际成交金额<strong><%= @data.last[2] %></strong></h4>
     </div>
 
 
@@ -36,17 +40,23 @@
 <% content_for :tail do -%>
   <script type="text/javascript">
     var chart;
+
     var chartData = [];
-    // var start_date = new Date(<%= @sale.start_at.year %>, <%= @sale.start_at.month - 1 %>, <%= @sale.start_at.day %>, <%= @sale.start_at.hour - 8 %>, <%= @sale.start_at.min %>)
-    // var end_date = new Date(<%= @sale.end_at.year %>, <%= @sale.end_at.month - 1 %>, <%= @sale.end_at.day %>, <%= @sale.end_at.hour - 8 %>, <%= @sale.end_at.min %>)
-    // var time_now = new Date()
-    // if (start_date > time_now || end_date < time_now){
+
+    var start_date = new Date(<%= @sale.start_at.year %>, <%= @sale.start_at.month - 1 %>, <%= @sale.start_at.day %>, <%= @sale.start_at.hour - 8 %>, <%= @sale.start_at.min %>)
+
+    var end_date = new Date(<%= @sale.end_at.year %>, <%= @sale.end_at.month - 1 %>, <%= @sale.end_at.day %>, <%= @sale.end_at.hour - 8 %>, <%= @sale.end_at.min %>)
+
+    var time_now = new Date(<%= TradeSetting.test_time.year %>, <%= TradeSetting.test_time.month - 1 %>, <%= TradeSetting.test_time.day %>, <%= TradeSetting.test_time.hour %>, <%= TradeSetting.test_time.min %>)
+    if (time_now > start_date && time_now < end_date){
       <% @data.each do |row| -%>
         chartData.push({date: new Date(<%= row[0].year %>, <%= row[0].month - 1 %>, <%= row[0].day %>, <%= row[0].hour %>, <%= row[0].min %>, <%= row[0].sec %>), amount: <%= row[1] %>, amountall: <%= row[2] %>})
       <% end -%>
-    // } else {
-    //   chartData.push(new Date(<%= @sale.start_at.year %>, <%= @sale.start_at.month - 1 %>, <%= @sale.start_at.day %>, <%= @sale.start_at.hour %>, <%= @sale.start_at.min %>))
-    // }
+    } else {
+      <% @data.each do |row| -%>
+        chartData.push({date: new Date(<%= row[0].year %>, <%= row[0].month - 1 %>, <%= row[0].day %>, <%= row[0].hour - 8 %>, <%= row[0].min %>, <%= row[0].sec %>), amount: <%= row[1] %>, amountall: <%= row[2] %>})
+      <% end -%>
+    }
 
     //var average = 55.4;
 
@@ -183,33 +193,59 @@
       chart.write("chartdiv");
     });
 
+    // if (time_now > start_date && time_now < end_date){
+    //   function zoomChart() {
+    //   // different zoom methods can be used - zoomToIndexes, zoomToDates, zoomToCategoryValues
+    //     chart.zoomToDates(new Date(<%= @sale.start_at.year %>, <%= @sale.start_at.month - 1 %>, <%= @sale.start_at.day %>, <%= @sale.start_at.hour %>, <%= @sale.start_at.min %>), new Date(<%= @sale.start_at.year %>, <%= @sale.start_at.month - 1 %>, <%= @sale.start_at.day %>, <%= @sale.start_at.hour + 2 %>, <%= @sale.start_at.min %>));
+    //   // console.log(new Date(<%= TradeSetting.test_time.year %>, <%= TradeSetting.test_time.month - 1 %>, <%= TradeSetting.test_time.day %>, <%= TradeSetting.test_time.hour %>, <%= TradeSetting.test_time.min %>))
+    //   // console.log(new Date(<%= TradeSetting.test_time.year %>, <%= TradeSetting.test_time.month - 1 %>, <%= TradeSetting.test_time.day %>, <%= TradeSetting.test_time.hour + 2 %>, <%= TradeSetting.test_time.min %>))
+    //   }
+    // } else{
+    //   console.log("hello")
+    //   function zoomChart() {
+    //   // different zoom methods can be used - zoomToIndexes, zoomToDates, zoomToCategoryValues
+    //     chart.zoomToDates(new Date(<%= @sale.start_at.year %>, <%= @sale.start_at.month - 1 %>, <%= @sale.start_at.day %>, <%= @sale.start_at.hour - 8 %>, <%= @sale.start_at.min %>), new Date(<%= @sale.start_at.year %>, <%= @sale.start_at.month - 1 %>, <%= @sale.start_at.day %>, <%= @sale.start_at.hour - 5 %>, <%= @sale.start_at.min %>));
+    //   }
+    // }
+
+    if (time_now > start_date && time_now < end_date){
+      add_node();
+    }
+
     function zoomChart() {
-      // different zoom methods can be used - zoomToIndexes, zoomToDates, zoomToCategoryValues
-      chart.zoomToDates(new Date(<%= TradeSetting.test_time.year %>, <%= TradeSetting.test_time.month - 1 %>, <%= TradeSetting.test_time.day %>, <%= TradeSetting.test_time.hour %>, <%= TradeSetting.test_time.min %>), new Date(<%= TradeSetting.test_time.year %>, <%= TradeSetting.test_time.month - 1 %>, <%= TradeSetting.test_time.day %>, <%= TradeSetting.test_time.hour + 2 %>, <%= TradeSetting.test_time.min %>));
-      console.log(new Date(<%= TradeSetting.test_time.year %>, <%= TradeSetting.test_time.month - 1 %>, <%= TradeSetting.test_time.day %>, <%= TradeSetting.test_time.hour %>, <%= TradeSetting.test_time.min %>))
-      console.log(new Date(<%= TradeSetting.test_time.year %>, <%= TradeSetting.test_time.month - 1 %>, <%= TradeSetting.test_time.day %>, <%= TradeSetting.test_time.hour + 2 %>, <%= TradeSetting.test_time.min %>))
+    // different zoom methods can be used - zoomToIndexes, zoomToDates, zoomToCategoryValues
+      chart.zoomToDates(new Date(<%= @sale.start_at.year %>, <%= @sale.start_at.month - 1 %>, <%= @sale.start_at.day %>, <%= @sale.start_at.hour %>, <%= @sale.start_at.min %>), new Date(<%= @sale.start_at.year %>, <%= @sale.start_at.month - 1 %>, <%= @sale.start_at.day %>, <%= @sale.start_at.hour + 2 %>, <%= @sale.start_at.min %>));
+    // console.log(new Date(<%= TradeSetting.test_time.year %>, <%= TradeSetting.test_time.month - 1 %>, <%= TradeSetting.test_time.day %>, <%= TradeSetting.test_time.hour %>, <%= TradeSetting.test_time.min %>))
+    // console.log(new Date(<%= TradeSetting.test_time.year %>, <%= TradeSetting.test_time.month - 1 %>, <%= TradeSetting.test_time.day %>, <%= TradeSetting.test_time.hour + 2 %>, <%= TradeSetting.test_time.min %>))
     }
 
     //添加坐标点
     function add_node(){
-      setTimeout(function(){
-        $.get("/sales/add_node", {}, function(data){
-          console.log("#############################")
-          console.log("chartData", chartData)
-          console.log("data", data)
-          console.log(new Date(data.year, data.month - 1, data.day, data.hour, data.min))
-          chartData.push({
-            date: new Date(data.year, data.month - 1, data.day, data.hour, data.min), amount: data.amount, amountall: data.amountall
-            });
+      setInterval(function(){
+        // console.log(start_date)
+        // console.log(end_date)
+        // console.log(time_now)
+        // if (time_now > start_date && time_now < end_date){
+          $.get("/sales/add_node", {}, function(data){
+            // console.log("#############################")
+            // console.log("data", data)
+            // console.log("should be date",new Date(data.year, data.month - 1, data.day, data.hour, data.min))
+            chartData.push({
+              date: new Date(data.year, data.month - 1, data.day, data.hour + 8, data.min), amount: data.amount, amountall: data.amountall
+              });
+            chart.validateData();
+            var width = "width:" + data.progress_bar + "%"
+            var deal_money = "下单金额<strong>" + data.amount + "</strong>"
+            var paid_money = "实际成交金额<strong>" + data.amountall + "</strong>"
+            $("#progress_bar").attr("style",width)
+            $('#deal_money').html(deal_money)
+            $('#paid_money').html(paid_money)
+            // console.log("chartData", chartData)
           });
-          chart.validateData();
-          add_node();
-      }, 10000);
+        // }
+      }, 10000);//频率为了测试目前设为10秒加一个点，其实应该900秒加一个点，即 TradeSetting.gap_time*1000
     };
 
-    // if (time_now > start_date || time_now < end_date){
-    add_node();
-    // }
 
     //实时销售时间设定
     function setTime(id){
@@ -238,8 +274,8 @@
       $(document).counter({
         day : $('#day'),
         timer : $('#timer'),
-        starts : new Date(<%= @sale.start_at.year %>, <%= @sale.start_at.month - 1 %>, <%= @sale.start_at.day %>, <%= @sale.start_at.hour - 8 %>, <%= @sale.start_at.min %>,<%= @sale.start_at.sec %>),
-        deadline : new Date(<%= @sale.end_at.year %>, <%= @sale.end_at.month - 1 %>, <%= @sale.end_at.day %>, <%= @sale.end_at.hour - 8 %>, <%= @sale.end_at.min %>,<%= @sale.end_at.sec %>)
+        starts : new Date(<%= @sale.start_at.year %>, <%= @sale.start_at.month - 1 %>, <%= @sale.start_at.day %>, <%= @sale.start_at.hour %>, <%= @sale.start_at.min %>,<%= @sale.start_at.sec %>),
+        deadline : new Date(<%= @sale.end_at.year %>, <%= @sale.end_at.month - 1 %>, <%= @sale.end_at.day %>, <%= @sale.end_at.hour %>, <%= @sale.end_at.min %>,<%= @sale.end_at.sec %>)
       });
     });
   </script>
