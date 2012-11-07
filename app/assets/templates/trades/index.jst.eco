@@ -451,6 +451,7 @@
   </div><!-- modal-header -->
   <div class="modal-body">
     <p>此次共需要发货<b class='deliver_count'></b>单，请确认订单再点击“发货”</p>
+    <p class='error'></p>
     <fieldset>
       <table class="table table-bordered">
         <thead>

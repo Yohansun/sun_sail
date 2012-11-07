@@ -504,7 +504,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
         tmp.push trade_id
 
     MagicOrders.idCarrier = tmp
-
+    flag = true
     $.get '/trades/deliver_list', {ids: tmp}, (data) ->
       html = ''
       for trade in data
@@ -514,9 +514,15 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
         html += '<td>' + trade.address + '</td>'
         html += '<td>' + trade.logistic_name + '</td>'
         html += '<td>' + trade.logistic_waybill + '</td></tr>'
+        flag = false if trade.logistic_name == '' or trade.logistic_waybill == ''
 
       $('.deliver_count').html(data.length)
       $('#batch_deliver tbody').html(html)
+      unless flag == true
+        alert('部份订单无物流信息，无法发货') 
+        $('#batch_deliver .confirm_batch_deliver').hide()
+      else
+        $('#batch_deliver .confirm_batch_deliver').show()
       $('#batch_deliver').modal('show')
 
   confirmBatchDeliver: ->
