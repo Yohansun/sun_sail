@@ -34,185 +34,213 @@
 </div>
 
 <% content_for :tail do -%>
-<script type="text/javascript">
-  //$.get("/sales/sale_chart")
-  var chart;
-  var chartData = [];
-  <% @data.each do |row| -%>
-  chartData.push({date: new Date(<%= row[0].year %>, <%= row[0].month - 1 %>, <%= row[0].day %>, <%= row[0].hour - 8 %>, <%= row[0].min %>, <%= row[0].sec %>), amount: <%= row[1] %>, amountall: <%= row[2] %>});
-  <% end -%>
+  <script type="text/javascript">
+    var chart;
+    var chartData = [];
+    // var start_date = new Date(<%= @sale.start_at.year %>, <%= @sale.start_at.month - 1 %>, <%= @sale.start_at.day %>, <%= @sale.start_at.hour - 8 %>, <%= @sale.start_at.min %>)
+    // var end_date = new Date(<%= @sale.end_at.year %>, <%= @sale.end_at.month - 1 %>, <%= @sale.end_at.day %>, <%= @sale.end_at.hour - 8 %>, <%= @sale.end_at.min %>)
+    // var time_now = new Date()
+    // if (start_date > time_now || end_date < time_now){
+      <% @data.each do |row| -%>
+        chartData.push({date: new Date(<%= row[0].year %>, <%= row[0].month - 1 %>, <%= row[0].day %>, <%= row[0].hour %>, <%= row[0].min %>, <%= row[0].sec %>), amount: <%= row[1] %>, amountall: <%= row[2] %>})
+      <% end -%>
+    // } else {
+    //   chartData.push(new Date(<%= @sale.start_at.year %>, <%= @sale.start_at.month - 1 %>, <%= @sale.start_at.day %>, <%= @sale.start_at.hour %>, <%= @sale.start_at.min %>))
+    // }
 
-  //var average = 55.4;
+    //var average = 55.4;
 
-  AmCharts.ready(function () {
-    // SERIAL CHART
-    chart = new AmCharts.AmSerialChart();
-    chart.pathToImages = "/assets/amchart_images/";
-    chart.zoomOutButton = {
-      backgroundColor: '#000000',
-      backgroundAlpha: 0.15
+    AmCharts.ready(function () {
+      // SERIAL CHART
+      chart = new AmCharts.AmSerialChart();
+      chart.pathToImages = "/assets/amchart_images/";
+      chart.zoomOutButton = {
+        backgroundColor: '#000000',
+        backgroundAlpha: 0.15
+      };
+      /*+++++var balloon = chart.balloon;
+      balloon.adjustBorderColor = true;
+      balloon.color = "#000000";
+      balloon.cornerRadius = 5;
+      balloon.fillColor = "#FFFFFF";+++++提示的样式*/
+      chart.dataProvider = chartData;
+      chart.categoryField = "date";
+      chart.fontSize = 11;//调整xy轴显示的字体大小
+      // +++++chart.startDuration = 1;动态效果
+      chart.marginTop = 40;//+++++
+      // listen for "dataUpdated" event (fired when chart is inited) and call zoomChart method when it happens
+      chart.addListener("dataUpdated", zoomChart);
+
+      // AXES
+      // category
+      var categoryAxis = chart.categoryAxis;
+      categoryAxis.parseDates = true; // as our data is date-based, we set parseDates to true
+      categoryAxis.minPeriod = "fff"; // our data is daily, so we set minPeriod to DD
+      categoryAxis.dashLength = 1;
+      categoryAxis.gridAlpha = 0.15;
+      categoryAxis.axisColor = "#DADADA";
+      categoryAxis.startOnAxis = true;
+      categoryAxis.gridCount = 90;
+      categoryAxis.autoGridCount = false;
+      categoryAxis.equalSpacing = true;//+++++++If you want data points to be placed at equal intervals (omiting dates with no data), set equalSpacing to true.
+
+
+      // AXES
+      // X
+      var xAxis = new AmCharts.ValueAxis();
+      // xAxis.title = "X Axis";
+      // xAxis.position = "bottom";
+      xAxis.autoGridCount = false;
+      xAxis.gridCount = 10;
+      xAxis.unit = "元";
+      xAxis.gridAlpha = 0.15;
+      xAxis.axisColor = "#DADADA";
+      chart.addValueAxis(xAxis);
+
+      // value
+      var valueAxis = new AmCharts.ValueAxis();
+      valueAxis.axisColor = "#DADADA";
+      valueAxis.dashLength = 1;
+      valueAxis.logarithmic = true; // this line makes axis logarithmic
+      valueAxis.unit = "元";//+++++
+      //+++++valueAxis.title = "销售量（w）";
+      chart.addValueAxis(valueAxis);
+
+      // // GUIDE for average
+      // var guide = new AmCharts.Guide();
+      // guide.value = average;
+      // guide.lineColor = "#CC0000";
+      // guide.dashLength = 4;
+      // guide.label = "average";
+      // guide.inside = true;
+      // guide.lineAlpha = 1;
+      // valueAxis.addGuide(guide);
+
+      // GRAPH
+      //first graph
+      var graph = new AmCharts.AmGraph();
+      graph.type = "smoothedLine";
+      graph.bullet = "round";
+      graph.bulletColor = "#FFFFFF";
+      graph.bulletBorderColor = "#00BBCC";
+      graph.bulletBorderThickness = 2;
+      graph.bulletSize = 7;//线上圆点的大小
+      graph.title = "Amount";
+      graph.valueField = "amount";
+      graph.balloonText = "下单金额 [[amount]] 元";//+++++
+      graph.lineThickness = 2;
+      graph.lineColor = "#00BBCC";
+      chart.addGraph(graph);
+      //second graph
+      var graph = new AmCharts.AmGraph();
+      graph.type = "smoothedLine";
+      graph.bullet = "round";
+      graph.bulletColor = "#FFFFFF";
+      graph.bulletBorderColor = "#ff0000";
+      graph.bulletBorderThickness = 2;
+      graph.bulletSize = 7;//线上圆点的大小
+      graph.title = "Amountall";
+      graph.valueField = "amountall";
+      graph.balloonText = "成交金额 [[amountall]] 元";//+++++
+      graph.lineThickness = 2;
+      graph.lineColor = "#ff0000";
+      chart.addGraph(graph);
+
+      // CURSOR
+      var chartCursor = new AmCharts.ChartCursor();
+      chartCursor.cursorPosition = "mouse";
+      chartCursor.categoryBalloonDateFormat = "MM-DD JJ:NN";//+++++
+      chart.addChartCursor(chartCursor);
+
+      // SCROLLBAR
+      var chartScrollbar = new AmCharts.ChartScrollbar();
+      chart.addChartScrollbar(chartScrollbar);
+
+      categoryAxis.dateFormats = [{
+        period:'fff',
+        format:'JJ:NN:SS'
+      },{
+        period:'ss',
+        format:'JJ:NN:SS'
+      },{
+        period:'mm',
+        format:'JJ:NN'
+      },{
+        period:'hh',
+        format:'JJ:NN'
+      },{
+        period:'DD',
+        format:'MM DD'
+      },{
+        period:'MM',
+        format:'MM'
+      },{
+        period:'YYYY',
+        format:'YYYY'
+      }];
+
+      // WRITE
+      chart.write("chartdiv");
+    });
+
+    function zoomChart() {
+      // different zoom methods can be used - zoomToIndexes, zoomToDates, zoomToCategoryValues
+      chart.zoomToDates(new Date(<%= TradeSetting.test_time.year %>, <%= TradeSetting.test_time.month - 1 %>, <%= TradeSetting.test_time.day %>, <%= TradeSetting.test_time.hour %>, <%= TradeSetting.test_time.min %>), new Date(<%= TradeSetting.test_time.year %>, <%= TradeSetting.test_time.month - 1 %>, <%= TradeSetting.test_time.day %>, <%= TradeSetting.test_time.hour + 2 %>, <%= TradeSetting.test_time.min %>));
+      console.log(new Date(<%= TradeSetting.test_time.year %>, <%= TradeSetting.test_time.month - 1 %>, <%= TradeSetting.test_time.day %>, <%= TradeSetting.test_time.hour %>, <%= TradeSetting.test_time.min %>))
+      console.log(new Date(<%= TradeSetting.test_time.year %>, <%= TradeSetting.test_time.month - 1 %>, <%= TradeSetting.test_time.day %>, <%= TradeSetting.test_time.hour + 2 %>, <%= TradeSetting.test_time.min %>))
+    }
+
+    //添加坐标点
+    function add_node(){
+      setTimeout(function(){
+        $.get("/sales/add_node", {}, function(data){
+          console.log("#############################")
+          console.log("chartData", chartData)
+          console.log("data", data)
+          console.log(new Date(data.year, data.month - 1, data.day, data.hour, data.min))
+          chartData.push({
+            date: new Date(data.year, data.month - 1, data.day, data.hour, data.min), amount: data.amount, amountall: data.amountall
+            });
+          });
+          chart.validateData();
+          add_node();
+      }, 10000);
     };
-    /*+++++var balloon = chart.balloon;
-    balloon.adjustBorderColor = true;
-    balloon.color = "#000000";
-    balloon.cornerRadius = 5;
-    balloon.fillColor = "#FFFFFF";+++++提示的样式*/
-    chart.dataProvider = chartData;
-    chart.categoryField = "date";
-    chart.fontSize = 11;//调整xy轴显示的字体大小
-    // +++++chart.startDuration = 1;动态效果
-    chart.marginTop = 40;//+++++
-    // listen for "dataUpdated" event (fired when chart is inited) and call zoomChart method when it happens
-    chart.addListener("dataUpdated", zoomChart);
 
-    // AXES
-    // category
-    var categoryAxis = chart.categoryAxis;
-    categoryAxis.parseDates = true; // as our data is date-based, we set parseDates to true
-    categoryAxis.minPeriod = "fff"; // our data is daily, so we set minPeriod to DD
-    categoryAxis.dashLength = 1;
-    categoryAxis.gridAlpha = 0.15;
-    categoryAxis.axisColor = "#DADADA";
-    categoryAxis.startOnAxis = true;
-    categoryAxis.gridCount = 90;
-    categoryAxis.autoGridCount = false;
-    categoryAxis.equalSpacing = true;//+++++++If you want data points to be placed at equal intervals (omiting dates with no data), set equalSpacing to true.
+    // if (time_now > start_date || time_now < end_date){
+    add_node();
+    // }
 
+    //实时销售时间设定
+    function setTime(id){
+      var timer = new Date(),
+      obj = {
+        year : timer.getFullYear(),
+        month : timer.getMonth() + 1,
+        date : timer.getDate(),
+        hour : timer.getHours(),
+        minute : timer.getMinutes(),
+        second : timer.getSeconds()
+      };
+      for(var i in obj){
+        obj[i] = (obj[i] < 10 ? '0' : '') + obj[i];
+      }
+      document.getElementById(id).innerHTML = obj.year + '-' + obj.month + '-' + obj.date + '<strong>' + obj.hour + ':' + obj.minute + ':' + obj.second + '</strong>';
+    }
+    $(function(){
+      setInterval(function(){
+        setTime('timer_count');
+      }, 1000);
+    });
 
-    // AXES
-    // X
-    var xAxis = new AmCharts.ValueAxis();
-    // xAxis.title = "X Axis";
-    // xAxis.position = "bottom";
-    xAxis.autoGridCount = false;
-    xAxis.gridCount = 10;
-    xAxis.unit = "元";
-    xAxis.gridAlpha = 0.15;
-    xAxis.axisColor = "#DADADA";
-    chart.addValueAxis(xAxis);
-
-    // value
-    var valueAxis = new AmCharts.ValueAxis();
-    valueAxis.axisColor = "#DADADA";
-    valueAxis.dashLength = 1;
-    valueAxis.logarithmic = true; // this line makes axis logarithmic
-    valueAxis.unit = "元";//+++++
-    //+++++valueAxis.title = "销售量（w）";
-    chart.addValueAxis(valueAxis);
-
-    // // GUIDE for average
-    // var guide = new AmCharts.Guide();
-    // guide.value = average;
-    // guide.lineColor = "#CC0000";
-    // guide.dashLength = 4;
-    // guide.label = "average";
-    // guide.inside = true;
-    // guide.lineAlpha = 1;
-    // valueAxis.addGuide(guide);
-
-    // GRAPH
-    //first graph
-    var graph = new AmCharts.AmGraph();
-    graph.type = "smoothedLine";
-    graph.bullet = "round";
-    graph.bulletColor = "#FFFFFF";
-    graph.bulletBorderColor = "#00BBCC";
-    graph.bulletBorderThickness = 2;
-    graph.bulletSize = 7;//线上圆点的大小
-    graph.title = "Amount";
-    graph.valueField = "amount";
-    graph.balloonText = "下单金额 [[amount]] 元";//+++++
-    graph.lineThickness = 2;
-    graph.lineColor = "#00BBCC";
-    chart.addGraph(graph);
-    //second graph
-    var graph = new AmCharts.AmGraph();
-    graph.type = "smoothedLine";
-    graph.bullet = "round";
-    graph.bulletColor = "#FFFFFF";
-    graph.bulletBorderColor = "#ff0000";
-    graph.bulletBorderThickness = 2;
-    graph.bulletSize = 7;//线上圆点的大小
-    graph.title = "Amountall";
-    graph.valueField = "amountall";
-    graph.balloonText = "成交金额 [[amountall]] 元";//+++++
-    graph.lineThickness = 2;
-    graph.lineColor = "#ff0000";
-    chart.addGraph(graph);
-
-    // CURSOR
-    var chartCursor = new AmCharts.ChartCursor();
-    chartCursor.cursorPosition = "mouse";
-    chartCursor.categoryBalloonDateFormat = "MM-DD JJ:NN";//+++++
-    chart.addChartCursor(chartCursor);
-
-    // SCROLLBAR
-    var chartScrollbar = new AmCharts.ChartScrollbar();
-    chart.addChartScrollbar(chartScrollbar);
-
-    categoryAxis.dateFormats = [{
-      period:'fff',
-      format:'JJ:NN:SS'
-    },{
-      period:'ss',
-      format:'JJ:NN:SS'
-    },{
-      period:'mm',
-      format:'JJ:NN'
-    },{
-      period:'hh',
-      format:'JJ:NN'
-    },{
-      period:'DD',
-      format:'MM DD'
-    },{
-      period:'MM',
-      format:'MM'
-    },{
-      period:'YYYY',
-      format:'YYYY'
-    }];
-
-    // WRITE
-    chart.write("chartdiv");
-  });
-
-  function zoomChart() {
-    // different zoom methods can be used - zoomToIndexes, zoomToDates, zoomToCategoryValues
-    chart.zoomToDates(new Date(<%= @sale.start_at.year %>, <%= @sale.start_at.month - 1 %>, <%= @sale.start_at.day %>, <%= @sale.start_at.hour - 8 %>, <%= @sale.start_at.min %>), new Date(<%= @sale.start_at.year %>, <%= @sale.start_at.month - 1 %>, <%= @sale.start_at.day %>, <%= @sale.start_at.hour - 5 %>, <%= @sale.start_at.min %>));
-  }
-
-//实时销售时间设定
-function setTime(id){
-  var timer = new Date(),
-  obj = {
-    year : timer.getFullYear(),
-    month : timer.getMonth() + 1,
-    date : timer.getDate(),
-    hour : timer.getHours(),
-    minute : timer.getMinutes(),
-    second : timer.getSeconds()
-  };
-  for(var i in obj){
-    obj[i] = (obj[i] < 10 ? '0' : '') + obj[i];
-  }
-  document.getElementById(id).innerHTML = obj.year + '-' + obj.month + '-' + obj.date + '<strong>' + obj.hour + ':' + obj.minute + ':' + obj.second + '</strong>';
-}
-
-$(function(){
-  setInterval(function(){
-    setTime('timer_count');
-  }, 1000);
-});
-
-//设置倒计时
-$(function(){
-  $(document).counter({
-    day : $('#day'),
-    timer : $('#timer'),
-    starts : new Date(<%= @sale.start_at.year %>, <%= @sale.start_at.month - 1 %>, <%= @sale.start_at.day %>, <%= @sale.start_at.hour - 8 %>, <%= @sale.start_at.min %>,<%= @sale.start_at.sec %>),
-    deadline : new Date(<%= @sale.end_at.year %>, <%= @sale.end_at.month - 1 %>, <%= @sale.end_at.day %>, <%= @sale.end_at.hour - 8 %>, <%= @sale.end_at.min %>,<%= @sale.end_at.sec %>)
-  });
-});
-</script>
+    //设置倒计时
+    $(function(){
+      $(document).counter({
+        day : $('#day'),
+        timer : $('#timer'),
+        starts : new Date(<%= @sale.start_at.year %>, <%= @sale.start_at.month - 1 %>, <%= @sale.start_at.day %>, <%= @sale.start_at.hour - 8 %>, <%= @sale.start_at.min %>,<%= @sale.start_at.sec %>),
+        deadline : new Date(<%= @sale.end_at.year %>, <%= @sale.end_at.month - 1 %>, <%= @sale.end_at.day %>, <%= @sale.end_at.hour - 8 %>, <%= @sale.end_at.min %>,<%= @sale.end_at.sec %>)
+      });
+    });
+  </script>
 <% end %>
