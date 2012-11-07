@@ -28,6 +28,7 @@
           <li><a href="#" data-trade-mode="trades" data-trade-status="all">所有</a></li>
           <% if MagicOrders.role_key != 'seller' : %>
           <li><a href="#" data-trade-mode="trades" data-trade-status="unpaid">未付款</a></li>
+          <li><a href="#" data-trade-mode="trades" data-trade-status="paid">已付款</a></li>
           <li><a href="#" data-trade-mode="trades" data-trade-status="undispatched">未分流</a></li>
           <% end %>
           <li><a href="#" data-trade-mode="trades" data-trade-status="dispatched">已分流</a></li>

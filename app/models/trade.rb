@@ -314,6 +314,7 @@ class Trade
     paid_and_delivered_array = ["WAIT_BUYER_CONFIRM_GOODS","WAIT_GOODS_RECEIVE_CONFIRM","WAIT_BUYER_CONFIRM_GOODS_ACOUNTED","WAIT_SELLER_SEND_GOODS_ACOUNTED"]
     closed_array = ["TRADE_CLOSED","TRADE_CANCELED","TRADE_CLOSED_BY_TAOBAO", "ALL_CLOSED"]
     refund_array = ["TRADE_REFUNDING","WAIT_SELLER_AGREE","SELLER_REFUSE_BUYER","WAIT_BUYER_RETURN_GOODS","WAIT_SELLER_CONFIRM_GOODS","CLOSED", "SUCCESS"]
+    succeed_array = ["TRADE_FINISHED","FINISHED_L"]
 
     if current_user.has_role?(:seller)
       trades = Trade.where(seller_id: seller.id) if seller
@@ -353,11 +354,13 @@ class Trade
       when 'all'
         trade_type_hash = nil
       when 'dispatched'
-        trade_type_hash = {"$and" => [{:dispatched_at.ne => nil},{:status.in => paid_not_deliver_array + paid_and_delivered_array}]}
+        trade_type_hash = {"$and" => [{:dispatched_at.ne => nil},{:status.in => paid_not_deliver_array + paid_and_delivered_array},{"$or" => [{:has_refund_order.exists => false},{has_refund_order: false}]}]}
       when 'undispatched'
         trade_type_hash = {"$and" =>[{"$or" => [{seller_id: nil},{:seller_id.exists => false}]},{:status.in => paid_not_deliver_array}]}
       when 'unpaid'
         trade_type_hash = {status: "WAIT_BUYER_PAY"}
+      when 'paid'
+        trade_type_hash = {"$and" => [{:status.in => paid_not_deliver_array + paid_and_delivered_array + succeed_array},{"$or" => [{:has_refund_order.exists => false},{has_refund_order: false}]}]}
       when 'undelivered','seller_undelivered'
         trade_type_hash = {"$and" => [{:dispatched_at.ne => nil},{:status.in => paid_not_deliver_array}]}
       when 'delivered','seller_delivered'
@@ -365,9 +368,9 @@ class Trade
       when 'refund'
         trade_type_hash = {has_refund_order: true}
       when 'closed'
-        trade_type_hash = {:status.in => closed_array}
+        trade_type_hash = {"$and" => [{:status.in => closed_array},{"$or" => [{:has_refund_order.exists => false},{has_refund_order: false}]}]}
       when 'unusual_trade'
-        trade_type_hash = {status: "TRADE_NO_CREATE_PAY"}
+        trade_type_hash = {"$and" => [{status: "TRADE_NO_CREATE_PAY"},{"$or" => [{:has_refund_order.exists => false},{has_refund_order: false}]}]}
       when 'deliver_unconfirmed'
         trade_type_hash = {"$and" =>[{:seller_confirm_deliver_at.exists => false},{:status.in => paid_and_delivered_array},{"$or" => [{:has_refund_order.exists => false},{has_refund_order: false}]}]}
 
@@ -471,12 +474,10 @@ class Trade
     # 按状态筛选
     if params[:search] && params[:search][:status_option].present?
       status_array = params[:search][:status_option].split(",")
-      if status_array == ["WAIT_BUYER_CONFIRM_GOODS","WAIT_GOODS_RECEIVE_CONFIRM"] || status_array == ["WAIT_BUYER_CONFIRM_GOODS_ACOUNTED"]
-        status_hash = {"$and" =>[{:status.in => status_array},{"$or" => [{:has_refund_order.exists => false},{has_refund_order: false}]}]}
-      elsif status_array == ['require_refund']
+      if status_array == ['require_refund']
         status_hash = {has_refund_order: true}
       else
-        status_hash = {:status.in => status_array}
+        status_hash = {"$and" =>[{:status.in => status_array},{"$or" => [{:has_refund_order.exists => false},{has_refund_order: false}]}]}
       end
     end
 
