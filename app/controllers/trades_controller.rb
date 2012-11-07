@@ -89,7 +89,7 @@ class TradesController < ApplicationController
     end
 
     if params[:delivered_at] == true
-      logistic = Logistic.find_by_id params[:logistic_info]
+      logistic = Logistic.find_by_name params[:logistic_info]
       @trade.logistic_id = logistic.id
       @trade.logistic_name = logistic.name
       @trade.logistic_code = logistic.code

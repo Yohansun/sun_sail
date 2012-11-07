@@ -119,6 +119,12 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $(modalDivID + ' .datepicker').datepicker(format: 'yyyy-mm-dd')
 
       switch operation_key
+        when 'deliver'
+          unless model.get('logistic_company') and model.get('logistic_waybill')
+            alert('订单无物流单号或物流商信息，无法发货')
+            $('.deliver').hide()
+          else
+            $('.deliver').show()
         when 'color'
           $('.color_typeahead').typeahead({
             source: (query, process)->
