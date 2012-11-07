@@ -7,18 +7,27 @@ class SalesController < ApplicationController
   def show
     @sale = Sale.last
 
-    gap = 2.hour
-
+    frequency = TradeSetting.gap_time               ## per second
+    gap = @sale.end_at.to_i - @sale.start_at.to_i
     @data = []
-    num = ((@sale.end_at - @sale.start_at) / gap).to_i
+    num = gap/frequency
+    if gap%frequency > 0
+      num += 1
+    end
     (0..num).each do |counter|
-      start_time = @sale.start_at + counter * gap
-      end_time = @sale.start_at + (counter + 1) * gap
+      start_time = @sale.start_at + counter * frequency
+      if (counter + 1) * frequency > gap
+        end_time = @sale.end_at
+      else
+        end_time = @sale.start_at + (counter + 1) * frequency
+      end
 
-      amount_in_gap = Sale.total_fee_by_time(start_time, end_time)
-      amountall = @data.size > 0 ? @data.last[2] + amount_in_gap : amount_in_gap
+      all_in_frequency = @sale.all_trade_fee(start_time, end_time)
+      paid_in_frequency = @sale.paid_trade_fee(start_time, end_time)
+      amount_all = @data.size > 0 ? @data.last[1] + all_in_frequency : all_in_frequency
+      amount_paid = @data.size > 0 ? @data.last[2] + paid_in_frequency : paid_in_frequency
 
-      @data << [start_time, amountall, amountall]
+      @data << [start_time, amount_all, amount_paid]
     end
   end
 
