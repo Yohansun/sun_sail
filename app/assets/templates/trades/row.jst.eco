@@ -17,6 +17,7 @@
         <% unless @trade.get('seller_id') or @trade.get('splitted_tid') : %>
         <li><a data-toggle="modal" href="#" data-type="trade_split">订单拆分</a></li>
         <% end %>
+        <li><a data-toggle="modal" href="#" data-type="print_logistic_bill">打印物流单</a></li>
       <% end %>
       <li class= "divider"></li>
       <% if @trade.get('status_text') is "已付款，待发货" or @trade.get('status_text') is "已付款，已发货" : %>
@@ -26,6 +27,7 @@
         <% if @trade.get('confirm_color_at') == undefined && MagicOrders.role_key != 'seller' : %>
         <li><a data-toggle="modal" href="#" data-type="color">申请调色</a></li>
         <% end %>
+        <li><a data-toggle="modal" href="#" data-type="print_deliver_bill">打印发货单</a></li>
       <% end %>
       <% unless @trade.get('status_text') is "申请退款" : %>
       <li><a data-toggle="modal" href="#" data-type="cs_memo">客服备注</a></li>
@@ -39,18 +41,11 @@
       <% end %>
       <!-- <li><a data-toggle="modal" href="#" data-type="trade_unsplit">订单合并</a></li> -->
       <!-- <li><a data-toggle="modal" href="#" data-type="reassign">订单转交</a></li> -->
-      <li class= "divider"></li>
-
       <!-- <li><a data-toggle="modal" href="#" data-type="logistic_split">物流拆分</a></li> -->
-      <% if @trade.get('status_text') is "已付款，待发货" or @trade.get('status_text') is "已付款，已发货" : %>
-        <li><a data-toggle="modal" href="#" data-type="print_deliver_bill">打印发货单</a></li>
-        <% if @trade.get('can_change_logistic') == true : %>
-        <li><a data-toggle="modal" href="#" data-type="print_logistic_bill">打印物流单</a></li>
-        <% end %>
-      <% end %>
-
       <!-- <li><a data-toggle="modal" href="#" data-type="logistic_company">物流公司</a></li> -->
       <!-- <li><a data-toggle="modal" href="#" data-type="logistic_number">物流单号设置</a></li> -->
+
+      <li class= "divider"></li>
 
       <% if @trade.get('status_text') == '已付款，待发货' : %>
         <% if @trade.get('dispatched_at') != undefined : %>

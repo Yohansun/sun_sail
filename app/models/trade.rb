@@ -384,9 +384,9 @@ class Trade
 
       # 物流单
       when "logistic_waybill_void"
-        trade_type_hash = {"$and" =>[{:logistic_waybill.exists => false},{:status.in => paid_and_delivered_array}]}
+        trade_type_hash = {"$and" =>[{:logistic_waybill.exists => false},{:status.in => paid_not_deliver_array}]}
       when "logistic_waybill_exist"
-        trade_type_hash = {"$and" =>[{:logistic_waybill.exists => true},{:status.in => paid_and_delivered_array}]}
+        trade_type_hash = {"$and" =>[{:logistic_waybill.exists => true},{:status.in => paid_not_deliver_array}]}
       when "logistic_bill_unprinted"
         # trade_type_hash = {"$and" =>[{:logistic_printed_at.exists => false},{:status.in => paid_and_delivered_array}]}
         trade_type_hash = {"$and" =>[{:logistic_printed_at.exists => false}, {"$or" => [{status: 'WAIT_SELLER_SEND_GOODS'}, {"$and"=>[{status: 'WAIT_BUYER_CONFIRM_GOODS'}, {:delivered_at.exists => true},{:delivered_at.gt => 23.hours.ago}]}]}]}

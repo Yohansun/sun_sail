@@ -324,15 +324,16 @@ class TradesController < ApplicationController
 
   def setup_logistics
     flag = true
+    logistic = Logistic.find_by_name params[:logistic_name]
     if params[:data].present?
-      params[:data].values.each do |trade|
-        a = trade
-        trade = Trade.where(tid: a['tid']).first
-        trade.logistic_code = 'OTHER'
-        trade.logistic_waybill = a["logistic"]
-        trade.logistic_name = '圆通'
-        trade.logistic_id = 3
-        trade.save!
+      params[:data].values.each do |info|
+        trade = Trade.where(tid: info['tid']).first
+        trade.logistic_code = logistic.try(:code)
+        trade.logistic_waybill = info["logistic"]
+        trade.logistic_name = logistic.try(:name)
+        trade.logistic_id = logistic.try(:id)
+        trade.save
+        trade.operation_logs.create(operated_at: Time.now, operation: '设置物流单号') if logistic
       end
     else
       flag =false
@@ -342,20 +343,14 @@ class TradesController < ApplicationController
   end
 
   def batch_deliver
-    flag = true
-    if params[:ids].present?
-      params[:ids].each do |id|
-        trade = Trade.find(id)
-        next unless trade
-        trade.status = 'WAIT_BUYER_CONFIRM_GOODS'
-        trade.delivered_at = Time.now
-        trade.save
-      end
-    else
-      flag =false
+    Trade.any_in(_id: params[:ids]).each do |trade|
+      trade.status = 'WAIT_BUYER_CONFIRM_GOODS'
+      trade.delivered_at = Time.now
+      trade.save
+      trade.operation_logs.create(operated_at: Time.now, operation: '发货')
     end
 
-    render json: {isSuccess: flag}
+    render json: {isSuccess: true}
   end
 
   def batch_print_deliver
@@ -376,6 +371,7 @@ class TradesController < ApplicationController
       end
 
       success = false unless trade.save
+      trade.operation_logs.create(operated_at: Time.now, operation: '打印物流单号')
     end
 
     render json: {isSuccess: success}    

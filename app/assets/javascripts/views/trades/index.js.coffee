@@ -431,7 +431,17 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
         tmp.push trade_id
     $('.logistic_count').html(length)
     MagicOrders.idCarrier = tmp
-    $('#ord_logistics_billnum_mult').modal('show')
+
+    logistics = []
+    $.get '/trades/deliver_list', {ids: tmp}, (data) ->
+      for trade in data
+        logistics.push trade.logistic_name unless trade.logistic_name in logistics
+
+      if logistics.length > 1
+        alert('只能选择同一家物流商的订单批量设置物流')
+      else
+        $('#ord_logistics_billnum_mult .logistic_name').val(logistics[0])
+        $('#ord_logistics_billnum_mult').modal('show')
 
   confirmReturn: ->
     begin = $('.logistic_begin').val()
@@ -467,7 +477,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
       h = {tid: tid, logistic: logistic}
       bb.push(h)
 
-    $.get '/trades/setup_logistics', {data: bb}, (data)->
+    $.get '/trades/setup_logistics', {data: bb, logistic_name: $('#ord_logistics_billnum_mult .logistic_name').val()}, (data)->
       if data.isSuccess == true
         $('#ord_logistics_billnum_mult2').modal('hide')
       else

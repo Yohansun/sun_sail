@@ -302,7 +302,7 @@
             <li><a data-toggle="modal" class='print_logistics' href="#">批量打印物流单</a></li>
           <% end %>
           <% if MagicOrders.trade_type in ['logistic_waybill_void', 'logistic_waybill_exist'] : %>
-            <!-- <li><a data-toggle="modal" class='return_logistics' href='#'>批量返回物流单号</a></li> -->
+            <li><a data-toggle="modal" class='return_logistics' href='#'>批量设置物流单号</a></li>
           <% end %>
         <% end %>
         <% if MagicOrders.trade_mode == 'send' : %>

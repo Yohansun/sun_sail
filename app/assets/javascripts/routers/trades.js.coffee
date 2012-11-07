@@ -142,12 +142,6 @@ class MagicOrders.Routers.Trades extends Backbone.Router
 
             $('#logistic_select').html(html_options)
             $('#logistic_select').show()
-            $('#logistic_select').change ()->
-              if $("#logistic_select").find("option:selected").attr('lid') in ["2", "3"]
-                bind_logistic_swf model.get('id'), $(this).val()
-              else
-                alert('您所选的订单无须打印物流单')
-
             $(modalDivID).on 'hidden', ()->
               if MagicOrders.hasPrint == true
                 $.get '/trades/batch-print-logistic', {ids: [model.get('id')], logistic: $("#logistic_select").find("option:selected").attr('lid')}
