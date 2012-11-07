@@ -1,8 +1,7 @@
 # -*- encoding : utf-8 -*-
 
 class TradesController < ApplicationController
-  layout false, :only => :print_bill
-  #layout 'application', :except => [:print_bill]
+  layout false, :only => :print_deliver_bill
   before_filter :authenticate_user!
   respond_to :json, :xls
   include Dulux::Splitter
@@ -288,7 +287,95 @@ class TradesController < ApplicationController
     end
   end
 
-  def print_bill
+  def print_deliver_bill
+    @trades = Trade.find(params[:ids].split(','))
+    respond_to do |format|
+      format.html
+      format.xml
+    end
+  end
+
+  def logistic_info
     @trade = Trade.find params[:id]
+    xml = Logistic.find_by_id(@trade.logistic_id).try(:xml)
+    xml ||= @trade.matched_logistics.select{ |e| e[2].present? }.first.try(:at, 2)
+    render text: xml
+  end
+
+  def deliver_list
+    list = []
+    Trade.find(params[:ids]).each do |trade|
+      list << {
+        name: trade.receiver_name,
+        tid: trade.tid,
+        address: "#{trade.receiver_state} #{trade.receiver_city} #{trade.receiver_district} #{trade.receiver_address}",
+        logistic_name: trade.logistic_name || '',
+        logistic_waybill: trade.logistic_waybill || ''
+      }
+    end
+
+    respond_to do |format|
+      format.json { render json: list }
+    end
+  end
+
+  def setup_logistics
+    flag = true
+    if params[:data].present?
+      params[:data].values.each do |trade|
+        a = trade
+        trade = Trade.where(tid: a['tid']).first
+        trade.logistic_code = 'OTHER'
+        trade.logistic_waybill = a["logistic"]
+        trade.logistic_name = '圆通'
+        trade.logistic_id = 3
+        trade.save!
+      end
+    else
+      flag =false
+    end
+
+    render json: {isSuccess: flag}
+  end
+
+  def batch_deliver
+    flag = true
+    if params[:ids].present?
+      params[:ids].each do |id|
+        trade = Trade.find(id)
+        next unless trade
+        trade.status = 'WAIT_BUYER_CONFIRM_GOODS'
+        trade.delivered_at = Time.now
+        trade.save
+      end
+    else
+      flag =false
+    end
+
+    render json: {isSuccess: flag}
+  end
+
+  def batch_print_deliver
+    success = Trade.any_in(_id: params[:ids]).update_all(deliver_bill_printed_at: Time.now)
+    render json: {isSuccess: success}
+  end
+
+  def batch_print_logistic
+    logistic = Logistic.find_by_id params[:logistic]
+    success = true
+    Trade.any_in(_id: params[:ids]).each do |trade|
+      trade.logistic_printed_at = Time.now
+
+      # 只记录 暂不做修改
+      # if trade.logistic_waybill.blank?
+      #   trade.logistic_id = logistic.try(:id)
+      #   trade.logistic_name = logistic.try(:name)
+      #   trade.logistic_code = logistic.try(:code)
+      # end
+
+      success = false unless trade.save
+    end
+
+    render json: {isSuccess: success}    
   end
 end

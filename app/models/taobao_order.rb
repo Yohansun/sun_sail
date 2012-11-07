@@ -60,6 +60,7 @@ class TaobaoOrder < Order
       tmp = {}
       color_num.each do |nums|
         next if nums.blank?
+
         num = nums[0]
         next if num.blank?
 

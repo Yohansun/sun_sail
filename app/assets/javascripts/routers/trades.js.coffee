@@ -5,6 +5,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     'trades/:trade_mode-:trade_type': 'index'
     'trades/:id/splited': 'splited'
     'trades/:id/:operation': 'operation'
+    'trades/print_deliver_bills': 'printDeliverBills'
 
   initialize: ->
     @trade_type = null
@@ -71,7 +72,8 @@ class MagicOrders.Routers.Trades extends Backbone.Router
             $('.trade_nav').html($("[data-trade-status=#{trade_type}]").html())
         $('.order_search_form .datepicker').datepicker(format: 'yyyy-mm-dd')
         $('.order_search_form .timepicker').timeEntry(show24Hours: true, showSeconds: true, spinnerImage: '/assets/spinnerUpDown.png', spinnerSize: [17, 26, 0], spinnerIncDecOnly: true)
-        if MagicOrders.trade_mode != 'trades'
+
+        unless MagicOrders.trade_mode in ['trades', 'deliver', 'logistics', 'send']
           $("#search_toggle").hide()
           $(".label_advanced").hide()
         else
@@ -116,12 +118,52 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $(modalDivID).html(view.render().el)
       $(modalDivID + ' .datepicker').datepicker(format: 'yyyy-mm-dd')
 
-      if operation_key == 'color'
-        $('.color_typeahead').typeahead({
-          source: (query, process)->
-            $.get '/colors/autocomplete', {num: query}, (data)->
-              process(data)
-        })
+      switch operation_key
+        when 'color'
+          $('.color_typeahead').typeahead({
+            source: (query, process)->
+              $.get '/colors/autocomplete', {num: query}, (data)->
+                process(data)
+          })
+        when 'print_deliver_bill'
+          bind_deliver_swf(model.get('id'))
+
+          $(modalDivID).on 'hidden', ()->
+            if MagicOrders.hasPrint == true
+              $.get '/trades/batch-print-deliver', {ids: [model.get('id')]}
+
+            MagicOrders.hasPrint = false
+
+        when 'print_logistic_bill'
+          $.get '/logistics/logistic_templates', {}, (t_data)->
+            html_options = ''
+            for item in t_data
+              html_options += '<option lid="' + item.id + '" value="' + item.xml + '">' + item.name + '</option>'
+
+            $('#logistic_select').html(html_options)
+            $('#logistic_select').show()
+            $('#logistic_select').change ()->
+              if $("#logistic_select").find("option:selected").attr('lid') in ["2", "3"]
+                bind_logistic_swf model.get('id'), $(this).val()
+              else
+                alert('您所选的订单无须打印物流单')
+
+            $(modalDivID).on 'hidden', ()->
+              if MagicOrders.hasPrint == true
+                $.get '/trades/batch-print-logistic', {ids: [model.get('id')], logistic: $("#logistic_select").find("option:selected").attr('lid')}
+
+              MagicOrders.hasPrint = false
+
+            $.get ('/trades/' + model.get('id') + '/logistic_info'), {}, (data)->
+              if data == '' or data == null
+                ytong = $('#logistic_select').find('[lid="3"]')
+                data = ytong.val()
+                $('#logistic_select').find('[lid="3"]').attr('selected', 'selected')
+              else
+                $('#logistic_select').find('[value="' + data + '"]').attr('selected', 'selected')
+
+              bind_logistic_swf(model.get('id'), data)
+              pageInit()
 
       $(modalDivID).modal('show')
 
@@ -133,3 +175,6 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       view = new MagicOrders.Views.TradesSplited(model: model)
       $('#trade_splited').html(view.render().el)
       $('#trade_splited').modal('show')
+
+  printDeliverBills: ->
+    $('[checked="checked"].trade_check')
