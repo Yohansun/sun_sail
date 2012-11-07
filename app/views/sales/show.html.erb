@@ -22,8 +22,8 @@
     <div class="clearfix info_show">
       <h4 id="timer_count" class="add_unit tc span3">0000-00-00<strong>00:00:00</strong></h4>
       <h4 class="add_unit tc span3">倒计时<strong><span id="day_text"><span id="day"><%= @sale.time_gap[0] %></span>天</span><span id="timer"><%= @sale.time_gap[1] %></span></strong></h4>
-      <h4 class="add_unit tc span3">下单金额<strong><%= @sale.all_trade_fee %></strong></h4>
-      <h4 class="add_unit tc span3">实际成交金额<strong><%= @sale.paid_trade_fee %></strong></h4>
+      <h4 class="add_unit tc span3">下单金额<strong><%= @sale.all_trade_fee(10,15) %></strong></h4>
+      <h4 class="add_unit tc span3">实际成交金额<strong><%= @sale.paid_trade_fee(10,15) %></strong></h4>
     </div>
 
 
@@ -44,15 +44,15 @@
   do {
     chartData.push({
       date: new Date(<%= @sale.start_at.year %>,<%= @sale.start_at.month - 1 %>,<%= @sale.start_at.day %>,<%= @sale.start_at.hour - 8 %>,<%= @sale.start_at.min %> + t),
-      amount: 0,
-      amountall: 20
+      amount: <%= @sale.all_trade_fee(@sale.add_time, TradeSetting.gap_time/60)%>,
+      amountall: <%= @sale.paid_trade_fee(@sale.add_time, TradeSetting.gap_time/60)%>
     })
     t = t + frequency
     if (t > gap){
       chartData.push({
         date: new Date(<%= @sale.start_at.year %>,<%= @sale.start_at.month - 1 %>,<%= @sale.start_at.day %>,<%= @sale.start_at.hour - 8 %>,<%= @sale.start_at.min %> + gap),
-        amount: 0,
-        amountall: 20
+        amount: <%= @sale.all_trade_fee(@sale.add_time, TradeSetting.gap_time/60) %>,
+        amountall: <%= @sale.paid_trade_fee(@sale.add_time, TradeSetting.gap_time/60) %>
       })
     }
   } while (t < gap)

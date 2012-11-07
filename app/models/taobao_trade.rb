@@ -211,4 +211,9 @@ class TaobaoTrade < Trade
   def receiver_address_array
     [self.receiver_state, self.receiver_city, self.receiver_district]
   end
+
+  def calculate_fee
+    goods_fee = self.orders.inject(0) { |sum, order| sum + order.total_fee.to_f}
+    goods_fee.to_f + self.post_fee.to_f
+  end
 end

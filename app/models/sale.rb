@@ -21,25 +21,28 @@ class Sale < ActiveRecord::Base
     # end
   end
 
-  def all_trade_fee
-    all_trades = TradeDecorator.decorate(Trade.where("$and" => [{:created.gte => (self.start_at.to_time)},{:created.lte => (self.start_at.to_time + 10.hours)}]))
-    if all_trades
-      p all_trades.count
-      all_money = all_trades.inject(0) { |sum, trade| sum + trade.total_fee.to_f }
-      all_money.round(2)
-    end
+  def all_trade_fee(time_passed, frequency)
+    all_trades = Trade.where("$and" => [{:created.gte => (self.start_at.to_time + time_passed.minutes)},{:created.lte => (self.start_at.to_time + time_passed.minutes + frequency.minutes)}])
+    p all_trades.count
+    all_money = all_trades.inject(0) { |sum, trade| sum + trade.calculate_fee }
+    all_money.round(2)
   end
 
-  def paid_trade_fee
-    paid_trades = TradeDecorator.decorate(Trade.where("$and" => [{:pay_time.gte => (self.start_at.to_time)},{:pay_time.lte => (self.start_at.to_time + 10.hours)}]))
+  def paid_trade_fee(time_passed, frequency)
+    paid_trades = Trade.where("$and" => [{:created.gte => (self.start_at.to_time + time_passed.minutes)},{:created.lte => (self.start_at.to_time + time_passed.minutes + frequency.minutes)}])
     if paid_trades
       p paid_trades.count
-      paid_money = paid_trades.inject(0) { |sum, trade| sum + trade.total_fee.to_f }
+      paid_money = paid_trades.inject(0) { |sum, trade| sum + trade.calculate_fee }
       paid_money.round(2)
     end
   end
 
   def money_percent_bar
-    ((self.paid_trade_fee/self.earn_guess)* 100).to_i.to_s + "%"
+    # ((self.paid_trade_fee/self.earn_guess)* 100).to_i.to_s + "%"
+    "40%"
+  end
+
+  def add_time
+    0
   end
 end
