@@ -3,7 +3,7 @@ set :rvm_ruby_string, '1.9.3'
 set :rvm_type, :system
 
 set :repository, "git@github.com:nioteam/magic_orders.git"
-set :branch, "flash_print"
+set :branch, "master"
 
 server "magictest.networking.io", :web, :app, :db, primary: true
 set :user, "root"
