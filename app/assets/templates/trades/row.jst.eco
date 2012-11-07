@@ -1,4 +1,4 @@
-<td><td>
+<td></td>
 <td><input class='trade_check' type="checkbox" value="option1"></td>
 <td nowrap><!--操作-->
   <div class="btn-group">
