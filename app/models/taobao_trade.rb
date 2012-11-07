@@ -114,11 +114,11 @@ class TaobaoTrade < Trade
   end
 
   def has_special_seller_memo?
-    if TradeSetting.company == 'dulux'
-      seller_memo.present? && (seller_memo.strip == "@送货上门".strip || seller_memo.strip == "@自提".strip)
-    else
+    # if TradeSetting.company == 'dulux'
+    #   seller_memo.present? && (seller_memo.strip == "@送货上门".strip || seller_memo.strip == "@自提".strip)
+    # else
       seller_memo.blank?
-    end  
+    # end  
   end  
 
   def special_seller_memo
@@ -143,10 +143,12 @@ class TaobaoTrade < Trade
     #   split_orders(self)
     # else
 
-    if TradeSetting.company == 'dulux' && self.has_special_seller_memo? && self.special_seller_memo.present?
-      cs_memo = "#{self.cs_memo} #{self.special_seller_memo}"
-      self.update_attributes!(cs_memo: cs_memo) 
-    end
+    # FIX ME
+    # SHOULD ALSO WRITE IN TAOBAOTRADE UPDATE METHOD
+    # if TradeSetting.company == 'dulux' && self.has_special_seller_memo? && self.special_seller_memo.present?
+    #   cs_memo = "#{self.cs_memo} #{self.special_seller_memo}"
+    #   self.update_attributes!(cs_memo: cs_memo) 
+    # end
 
     return false unless dispatchable?
     unless seller
