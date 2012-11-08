@@ -38,6 +38,8 @@ class SalesController < ApplicationController
         paid_in_frequency = @sale.paid_trade_fee(start_time, end_time)
         amount_all = @data.size > 0 ? @data.last[1] + all_in_frequency : all_in_frequency
         amount_paid = @data.size > 0 ? @data.last[2] + paid_in_frequency : paid_in_frequency
+        Rails.cache.write 'amount_all', amount_all
+        Rails.cache.write 'amount_paid', amount_paid
         @data << [start_time, amount_all, amount_paid]
         @progress_bar = (amount_paid/@sale.earn_guess*100).to_i
       end
@@ -54,8 +56,10 @@ class SalesController < ApplicationController
 
     all_in_frequency = @sale.all_trade_fee(start_time, end_time)
     paid_in_frequency = @sale.paid_trade_fee(start_time, end_time)
-    amount_all = all_in_frequency
-    amount_paid = paid_in_frequency
+    amount_all = Rails.cache.read 'amount_all' + all_in_frequency
+    amount_paid = Rails.cache.read 'amount_paid' + paid_in_frequency
+    Rails.cache.write 'amount_all', amount_all
+    Rails.cache.write 'amount_paid', amount_paid
     progress_bar = (amount_paid/@sale.earn_guess*100).to_i
     respond_to do |format|
       format.json { render json: {year: start_time.year, month: start_time.month, day: start_time.day, hour: start_time.hour, min: start_time.min, amount: amount_all, amountall: amount_paid, progress_bar: progress_bar}}
