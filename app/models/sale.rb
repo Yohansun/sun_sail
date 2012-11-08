@@ -3,8 +3,7 @@
 class Sale < ActiveRecord::Base
   attr_accessible :name, :earn_guess, :start_at, :end_at
 
-  # start_at = self.start_at.to_time
-  # end_at = self.end_at.to_time
+  validates_presence_of :name, :earn_guess, :start_at, :end_at, message: "信息不能为空"
 
   def time_gap
       gap = (self.end_at - self.start_at).to_i

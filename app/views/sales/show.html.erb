@@ -9,8 +9,8 @@
 
   <div class="row-fluid">
     <ul class="breadcrumb" style="position:relative;">
-      <li><a href="#">Magic</a><span class="divider">/</span></li>
-      <li><a href="#">数据魔方</a><span class="divider">/</span></li>
+      <li><a href="/">Magic</a><span class="divider">/</span></li>
+      <li><a href="/trade_reports">数据魔方</a><span class="divider">/</span></li>
       <li class="active">销售[<%= @sale.name %>]</li>
       <li style="position:absolute;right:15px;top:6px;"><a href="/sales/new">设定</a></li>
     </ul><!-- breadcrumb -->
@@ -90,9 +90,9 @@
       categoryAxis.gridAlpha = 0.15;
       categoryAxis.axisColor = "#DADADA";
       categoryAxis.startOnAxis = true;
-      categoryAxis.gridCount = 90;
-      categoryAxis.autoGridCount = false;
-      categoryAxis.equalSpacing = true;//+++++++If you want data points to be placed at equal intervals (omiting dates with no data), set equalSpacing to true.
+      // categoryAxis.gridCount = 90;
+      // categoryAxis.autoGridCount = false;
+      // categoryAxis.equalSpacing = true;//+++++++If you want data points to be placed at equal intervals (omiting dates with no data), set equalSpacing to true.
 
 
       // AXES
@@ -180,7 +180,7 @@
         format:'JJ:NN'
       },{
         period:'DD',
-        format:'MM DD'
+        format:'MM-DD'
       },{
         period:'MM',
         format:'MM'

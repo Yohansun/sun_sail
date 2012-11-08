@@ -73,7 +73,7 @@ class SalesController < ApplicationController
     if @sale.save
       redirect_to "/sales/show"
     else
-      render sales_new_path
+      render new_sale_path
     end
   end
 end
