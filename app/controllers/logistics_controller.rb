@@ -125,7 +125,13 @@ class LogisticsController < ApplicationController
 
   def logistic_templates
     tmp = []
-    @logistics = Logistic.where("xml is not null")
+    @logistics = Logistic
+    if params[:type] && params[:type] == 'all'
+      @logistics = @logistics.all
+    else
+      @logistics = @logistics.where("xml is not null")
+    end
+
     @logistics.each do |l|
       tmp << {
         id: l.id,
