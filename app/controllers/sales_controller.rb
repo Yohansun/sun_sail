@@ -41,8 +41,8 @@ class SalesController < ApplicationController
         end
         all_in_frequency = @sale.all_trade_fee(start_time, end_time)
         paid_in_frequency = @sale.paid_trade_fee(start_time, end_time)
-        amount_all = @data.size > 0 ? @data.last[1] + all_in_frequency : all_in_frequency
-        amount_paid = @data.size > 0 ? @data.last[2] + paid_in_frequency : paid_in_frequency
+        amount_all = all_in_frequency #@data.size > 0 ? @data.last[1] + all_in_frequency :
+        amount_paid = paid_in_frequency #@data.size > 0 ? @data.last[2] + paid_in_frequency :
         # Rails.cache.write 'amount_all', amount_all
         # Rails.cache.write 'amount_paid', amount_paid
         @data << [start_time, amount_all, amount_paid]

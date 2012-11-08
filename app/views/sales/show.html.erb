@@ -192,39 +192,15 @@
       chart.write("chartdiv");
     });
 
-    // if (time_now > start_date && time_now < end_date){
-    //   function zoomChart() {
-    //   // different zoom methods can be used - zoomToIndexes, zoomToDates, zoomToCategoryValues
-    //     chart.zoomToDates(new Date(<%= @start_at.year %>, <%= @start_at.month - 1 %>, <%= @start_at.day %>, <%= @start_at.hour %>, <%= @start_at.min %>), new Date(<%= @start_at.year %>, <%= @start_at.month - 1 %>, <%= @start_at.day %>, <%= @start_at.hour + 2 %>, <%= @start_at.min %>));
-    //   // console.log(new Date(<%= Time.now.year %>, <%= Time.now.month - 1 %>, <%= Time.now.day %>, <%= Time.now.hour %>, <%= Time.now.min %>))
-    //   // console.log(new Date(<%= Time.now.year %>, <%= Time.now.month - 1 %>, <%= Time.now.day %>, <%= Time.now.hour + 2 %>, <%= Time.now.min %>))
-    //   }
-    // } else{
-    //   console.log("hello")
-    //   function zoomChart() {
-    //   // different zoom methods can be used - zoomToIndexes, zoomToDates, zoomToCategoryValues
-    //     chart.zoomToDates(new Date(<%= @start_at.year %>, <%= @start_at.month - 1 %>, <%= @start_at.day %>, <%= @start_at.hour - 8 %>, <%= @start_at.min %>), new Date(<%= @start_at.year %>, <%= @start_at.month - 1 %>, <%= @start_at.day %>, <%= @start_at.hour - 5 %>, <%= @start_at.min %>));
-    //   }
-    // }
-
     function zoomChart() {
     // different zoom methods can be used - zoomToIndexes, zoomToDates, zoomToCategoryValues
-      // chart.zoomToDates(new Date(<%= @start_at.year %>, <%= @start_at.month - 1 %>, <%= @start_at.day %>, <%= @start_at.hour %>, <%= @start_at.min %>), new Date(<%= @start_at.year %>, <%= @start_at.month - 1 %>, <%= @start_at.day %>, <%= @start_at.hour + 2 %>, <%= @start_at.min %>));
       chart.zoomToIndexes(chartData.length - 10, chartData.length - 1);
-    // console.log(new Date(<%= Time.now.year %>, <%= Time.now.month - 1 %>, <%= Time.now.day %>, <%= Time.now.hour %>, <%= Time.now.min %>))
-    // console.log(new Date(<%= Time.now.year %>, <%= Time.now.month - 1 %>, <%= Time.now.day %>, <%= Time.now.hour + 2 %>, <%= Time.now.min %>))
     }
 
     //添加坐标点
     function add_node(){
       clear_loop = setInterval(function(){
-        // console.log(start_date)
-        // console.log(end_date)
-        // console.log(time_now)
           $.get("/sales/add_node", {}, function(data){
-            // console.log("#############################")
-            // console.log("data", data)
-            // console.log("should be date",new Date(data.year, data.month - 1, data.day, data.hour, data.min))
             chartData.push({
               date: new Date(data.year, data.month - 1, data.day, data.hour, data.min), amount: data.amount, amountall: data.amountall
               });
@@ -235,7 +211,6 @@
             $("#progress_bar").attr("style",width)
             $('#deal_money').html(deal_money)
             $('#paid_money').html(paid_money)
-            // console.log("chartData", chartData)
           });
       }, <%= TradeSetting.frequency*1000 %>);
     };
@@ -245,7 +220,6 @@
     }
 
     //实时销售时间设定
-
     function setTime(id){
       var timer = new Date(<%= Time.now.year %>, <%= Time.now.month - 1 %>, <%= Time.now.day %>, <%= Time.now.hour %>, <%= Time.now.min %>,<%= Time.now.sec %> + count),
       obj = {
@@ -269,8 +243,13 @@
       }, 1000);
     });
 
-    if (time_now > start_date && time_now < end_date){
-      add_node();
+    //设置定时实时销售开始
+    if (time_now < start_date){
+      $(function(){
+        setTimeout(function(){
+          add_node();
+        }, start_date - time_now);
+      });
     }
 
     //设置倒计时
