@@ -21,7 +21,7 @@
 
     <div class="clearfix info_show">
       <h4 id="timer_count" class="add_unit tc span3">0000-00-00<strong>00:00:00</strong></h4>
-      <%- if TradeSetting.test_time > @sale.end_at %>
+      <%- if TradeSetting.test_time > @end_at %>
       <h4 class="add_unit tc span3">倒计时<strong><span id="day_text"><span id="day">0</span>天</span><span id="timer">00:00:00</span></strong></h4>
       <%- else %>
       <h4 class="add_unit tc span3">倒计时<strong><span id="day_text"><span id="day"><%= @sale.time_gap[0] %></span>天</span><span id="timer"><%= @sale.time_gap[1] %></span></strong></h4>
@@ -45,9 +45,9 @@
 
     var clear_loop;
 
-    var start_date = new Date(<%= @sale.start_at.year %>, <%= @sale.start_at.month - 1 %>, <%= @sale.start_at.day %>, <%= @sale.start_at.hour %>, <%= @sale.start_at.min %>)
+    var start_date = new Date(<%= @start_at.year %>, <%= @start_at.month - 1 %>, <%= @start_at.day %>, <%= @start_at.hour %>, <%= @start_at.min %>)
 
-    var end_date = new Date(<%= @sale.end_at.year %>, <%= @sale.end_at.month - 1 %>, <%= @sale.end_at.day %>, <%= @sale.end_at.hour %>, <%= @sale.end_at.min %>)
+    var end_date = new Date(<%= @end_at.year %>, <%= @end_at.month - 1 %>, <%= @end_at.day %>, <%= @end_at.hour %>, <%= @end_at.min %>)
 
     var time_now = new Date(<%= TradeSetting.test_time.year %>, <%= TradeSetting.test_time.month - 1 %>, <%= TradeSetting.test_time.day %>, <%= TradeSetting.test_time.hour %>, <%= TradeSetting.test_time.min %>)
 
@@ -87,9 +87,9 @@
       categoryAxis.gridAlpha = 0.15;
       categoryAxis.axisColor = "#DADADA";
       categoryAxis.startOnAxis = true;
-      // categoryAxis.gridCount = 90;
-      // categoryAxis.autoGridCount = false;
-      // categoryAxis.equalSpacing = true;//+++++++If you want data points to be placed at equal intervals (omiting dates with no data), set equalSpacing to true.
+      //categoryAxis.gridCount = 20;
+      //categoryAxis.autoGridCount = false;
+      categoryAxis.equalSpacing = true;//+++++++If you want data points to be placed at equal intervals (omiting dates with no data), set equalSpacing to true.
 
 
       // AXES
@@ -161,7 +161,9 @@
 
       // SCROLLBAR
       var chartScrollbar = new AmCharts.ChartScrollbar();
+      //chartScrollbar.updateOnReleaseOnly = true;
       chart.addChartScrollbar(chartScrollbar);
+
 
       categoryAxis.dateFormats = [{
         period:'fff',
@@ -193,7 +195,7 @@
     // if (time_now > start_date && time_now < end_date){
     //   function zoomChart() {
     //   // different zoom methods can be used - zoomToIndexes, zoomToDates, zoomToCategoryValues
-    //     chart.zoomToDates(new Date(<%= @sale.start_at.year %>, <%= @sale.start_at.month - 1 %>, <%= @sale.start_at.day %>, <%= @sale.start_at.hour %>, <%= @sale.start_at.min %>), new Date(<%= @sale.start_at.year %>, <%= @sale.start_at.month - 1 %>, <%= @sale.start_at.day %>, <%= @sale.start_at.hour + 2 %>, <%= @sale.start_at.min %>));
+    //     chart.zoomToDates(new Date(<%= @start_at.year %>, <%= @start_at.month - 1 %>, <%= @start_at.day %>, <%= @start_at.hour %>, <%= @start_at.min %>), new Date(<%= @start_at.year %>, <%= @start_at.month - 1 %>, <%= @start_at.day %>, <%= @start_at.hour + 2 %>, <%= @start_at.min %>));
     //   // console.log(new Date(<%= TradeSetting.test_time.year %>, <%= TradeSetting.test_time.month - 1 %>, <%= TradeSetting.test_time.day %>, <%= TradeSetting.test_time.hour %>, <%= TradeSetting.test_time.min %>))
     //   // console.log(new Date(<%= TradeSetting.test_time.year %>, <%= TradeSetting.test_time.month - 1 %>, <%= TradeSetting.test_time.day %>, <%= TradeSetting.test_time.hour + 2 %>, <%= TradeSetting.test_time.min %>))
     //   }
@@ -201,7 +203,7 @@
     //   console.log("hello")
     //   function zoomChart() {
     //   // different zoom methods can be used - zoomToIndexes, zoomToDates, zoomToCategoryValues
-    //     chart.zoomToDates(new Date(<%= @sale.start_at.year %>, <%= @sale.start_at.month - 1 %>, <%= @sale.start_at.day %>, <%= @sale.start_at.hour - 8 %>, <%= @sale.start_at.min %>), new Date(<%= @sale.start_at.year %>, <%= @sale.start_at.month - 1 %>, <%= @sale.start_at.day %>, <%= @sale.start_at.hour - 5 %>, <%= @sale.start_at.min %>));
+    //     chart.zoomToDates(new Date(<%= @start_at.year %>, <%= @start_at.month - 1 %>, <%= @start_at.day %>, <%= @start_at.hour - 8 %>, <%= @start_at.min %>), new Date(<%= @start_at.year %>, <%= @start_at.month - 1 %>, <%= @start_at.day %>, <%= @start_at.hour - 5 %>, <%= @start_at.min %>));
     //   }
     // }
 
@@ -211,7 +213,8 @@
 
     function zoomChart() {
     // different zoom methods can be used - zoomToIndexes, zoomToDates, zoomToCategoryValues
-      chart.zoomToDates(new Date(<%= @sale.start_at.year %>, <%= @sale.start_at.month - 1 %>, <%= @sale.start_at.day %>, <%= @sale.start_at.hour %>, <%= @sale.start_at.min %>), new Date(<%= @sale.start_at.year %>, <%= @sale.start_at.month - 1 %>, <%= @sale.start_at.day %>, <%= @sale.start_at.hour + 2 %>, <%= @sale.start_at.min %>));
+      // chart.zoomToDates(new Date(<%= @start_at.year %>, <%= @start_at.month - 1 %>, <%= @start_at.day %>, <%= @start_at.hour %>, <%= @start_at.min %>), new Date(<%= @start_at.year %>, <%= @start_at.month - 1 %>, <%= @start_at.day %>, <%= @start_at.hour + 2 %>, <%= @start_at.min %>));
+      chart.zoomToIndexes(chartData.length - 10, chartData.length - 1);
     // console.log(new Date(<%= TradeSetting.test_time.year %>, <%= TradeSetting.test_time.month - 1 %>, <%= TradeSetting.test_time.day %>, <%= TradeSetting.test_time.hour %>, <%= TradeSetting.test_time.min %>))
     // console.log(new Date(<%= TradeSetting.test_time.year %>, <%= TradeSetting.test_time.month - 1 %>, <%= TradeSetting.test_time.day %>, <%= TradeSetting.test_time.hour + 2 %>, <%= TradeSetting.test_time.min %>))
     }
@@ -227,7 +230,7 @@
             // console.log("data", data)
             // console.log("should be date",new Date(data.year, data.month - 1, data.day, data.hour, data.min))
             chartData.push({
-              date: new Date(data.year, data.month - 1, data.day, data.hour + 8, data.min), amount: data.amount, amountall: data.amountall
+              date: new Date(data.year, data.month - 1, data.day, data.hour, data.min), amount: data.amount, amountall: data.amountall
               });
             chart.validateData();
             var width = "width:" + data.progress_bar + "%"
@@ -239,7 +242,7 @@
             // console.log("chartData", chartData)
           });
 
-      }, <%= TradeSetting.frequency*1000 %>);
+      }, 1000);//<%= TradeSetting.frequency*1000 %>
     };
 
     if (time_now < start_date && time_now > end_date){
@@ -273,8 +276,8 @@
       $(document).counter({
         day : $('#day'),
         timer : $('#timer'),
-        starts : new Date(<%= @sale.start_at.year %>, <%= @sale.start_at.month - 1 %>, <%= @sale.start_at.day %>, <%= @sale.start_at.hour %>, <%= @sale.start_at.min %>,<%= @sale.start_at.sec %>),
-        deadline : new Date(<%= @sale.end_at.year %>, <%= @sale.end_at.month - 1 %>, <%= @sale.end_at.day %>, <%= @sale.end_at.hour %>, <%= @sale.end_at.min %>,<%= @sale.end_at.sec %>)
+        starts : new Date(<%= @start_at.year %>, <%= @start_at.month - 1 %>, <%= @start_at.day %>, <%= @start_at.hour %>, <%= @start_at.min %>,<%= @start_at.sec %>),
+        deadline : new Date(<%= @end_at.year %>, <%= @end_at.month - 1 %>, <%= @end_at.day %>, <%= @end_at.hour %>, <%= @end_at.min %>,<%= @end_at.sec %>)
       });
     });
   </script>
