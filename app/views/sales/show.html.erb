@@ -43,6 +43,8 @@
 
     var chartData = [];
 
+    var clear_loop;
+
     var start_date = new Date(<%= @sale.start_at.year %>, <%= @sale.start_at.month - 1 %>, <%= @sale.start_at.day %>, <%= @sale.start_at.hour %>, <%= @sale.start_at.min %>)
 
     var end_date = new Date(<%= @sale.end_at.year %>, <%= @sale.end_at.month - 1 %>, <%= @sale.end_at.day %>, <%= @sale.end_at.hour %>, <%= @sale.end_at.min %>)
@@ -216,11 +218,10 @@
 
     //添加坐标点
     function add_node(){
-      setInterval(function(){
+      clear_loop = setInterval(function(){
         // console.log(start_date)
         // console.log(end_date)
         // console.log(time_now)
-        // if (time_now > start_date && time_now < end_date){
           $.get("/sales/add_node", {}, function(data){
             // console.log("#############################")
             // console.log("data", data)
@@ -237,10 +238,13 @@
             $('#paid_money').html(paid_money)
             // console.log("chartData", chartData)
           });
-        // }
+
       }, <%= TradeSetting.gap_time*1000 %>);
     };
 
+    if (time_now < start_date && time_now > end_date){
+      clearInterval(clear_loop)
+    }
 
     //实时销售时间设定
     function setTime(id){
