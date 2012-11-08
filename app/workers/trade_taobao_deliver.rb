@@ -16,7 +16,6 @@ class TradeTaobaoDeliver
 
     errors = response['error_response']
     code = false if errors.present?
-
     if code
       trade.update_attributes!(status: 'WAIT_BUYER_CONFIRM_GOODS')
       
@@ -48,6 +47,8 @@ class TradeTaobaoDeliver
       end
     else
       Notifier.deliver_errors(id, errors).deliver
+      trade.unusual_states.build(reason: "发货异常#{errors['sub_msg']}", key: 'other_unusual_state', created_at: Time.now,)
+      trade.save
     end
   end
   
