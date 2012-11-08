@@ -239,7 +239,7 @@
             // console.log("chartData", chartData)
           });
 
-      }, <%= TradeSetting.gap_time*1000 %>);
+      }, <%= TradeSetting.frequency*1000 %>);
     };
 
     if (time_now < start_date && time_now > end_date){
