@@ -9,8 +9,8 @@
 
   <div class="row-fluid">
     <ul class="breadcrumb" style="position:relative;">
-      <li><a href="#">Magic</a><span class="divider">/</span></li>
-      <li><a href="#">数据魔方</a><span class="divider">/</span></li>
+      <li><a href="/">Magic</a><span class="divider">/</span></li>
+      <li><a href="/trade_reports">数据魔方</a><span class="divider">/</span></li>
       <li class="active">销售[<%= @sale.name %>]</li>
       <li style="position:absolute;right:15px;top:6px;"><a href="/sales/new">设定</a></li>
     </ul><!-- breadcrumb -->
@@ -43,20 +43,15 @@
 
     var chartData = [];
 
-    var start_date = new Date(<%= @sale.start_at.year %>, <%= @sale.start_at.month - 1 %>, <%= @sale.start_at.day %>, <%= @sale.start_at.hour - 8 %>, <%= @sale.start_at.min %>)
+    var start_date = new Date(<%= @sale.start_at.year %>, <%= @sale.start_at.month - 1 %>, <%= @sale.start_at.day %>, <%= @sale.start_at.hour %>, <%= @sale.start_at.min %>)
 
-    var end_date = new Date(<%= @sale.end_at.year %>, <%= @sale.end_at.month - 1 %>, <%= @sale.end_at.day %>, <%= @sale.end_at.hour - 8 %>, <%= @sale.end_at.min %>)
+    var end_date = new Date(<%= @sale.end_at.year %>, <%= @sale.end_at.month - 1 %>, <%= @sale.end_at.day %>, <%= @sale.end_at.hour %>, <%= @sale.end_at.min %>)
 
     var time_now = new Date(<%= TradeSetting.test_time.year %>, <%= TradeSetting.test_time.month - 1 %>, <%= TradeSetting.test_time.day %>, <%= TradeSetting.test_time.hour %>, <%= TradeSetting.test_time.min %>)
-    if (time_now > start_date && time_now < end_date){
-      <% @data.each do |row| -%>
-        chartData.push({date: new Date(<%= row[0].year %>, <%= row[0].month - 1 %>, <%= row[0].day %>, <%= row[0].hour %>, <%= row[0].min %>, <%= row[0].sec %>), amount: <%= row[1] %>, amountall: <%= row[2] %>})
-      <% end -%>
-    } else {
-      <% @data.each do |row| -%>
-        chartData.push({date: new Date(<%= row[0].year %>, <%= row[0].month - 1 %>, <%= row[0].day %>, <%= row[0].hour - 8 %>, <%= row[0].min %>, <%= row[0].sec %>), amount: <%= row[1] %>, amountall: <%= row[2] %>})
-      <% end -%>
-    }
+
+    <% @data.each do |row| -%>
+      chartData.push({date: new Date(<%= row[0].year %>, <%= row[0].month - 1 %>, <%= row[0].day %>, <%= row[0].hour %>, <%= row[0].min %>, <%= row[0].sec %>), amount: <%= row[1] %>, amountall: <%= row[2] %>})
+    <% end -%>
 
     //var average = 55.4;
 
@@ -90,9 +85,9 @@
       categoryAxis.gridAlpha = 0.15;
       categoryAxis.axisColor = "#DADADA";
       categoryAxis.startOnAxis = true;
-      categoryAxis.gridCount = 90;
-      categoryAxis.autoGridCount = false;
-      categoryAxis.equalSpacing = true;//+++++++If you want data points to be placed at equal intervals (omiting dates with no data), set equalSpacing to true.
+      // categoryAxis.gridCount = 90;
+      // categoryAxis.autoGridCount = false;
+      // categoryAxis.equalSpacing = true;//+++++++If you want data points to be placed at equal intervals (omiting dates with no data), set equalSpacing to true.
 
 
       // AXES
@@ -180,7 +175,7 @@
         format:'JJ:NN'
       },{
         period:'DD',
-        format:'MM DD'
+        format:'MM-DD'
       },{
         period:'MM',
         format:'MM'
@@ -243,7 +238,7 @@
             // console.log("chartData", chartData)
           });
         // }
-      }, 10000);//频率为了测试目前设为10秒加一个点，其实应该900秒加一个点，即 TradeSetting.gap_time*1000
+      }, <%= TradeSetting.gap_time*1000 %>);
     };
 
 
