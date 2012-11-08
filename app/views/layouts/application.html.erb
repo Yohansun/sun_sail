@@ -47,9 +47,9 @@
             <% if current_user.has_role?(:seller) && controller_name == 'stocks' %>
               <li class="stocks"><a href="#">仓库管理</a></li>
             <% end %>
-            <% if current_user.has_role?(:admin) && ['sales', 'stuffs', 'trade_reports'].include?(controller_name)  %>
-          <!--     <li class="<%= 'active' if controller_name == 'stuffs'%>"><a href="/stuffs">人员</a></li>
-              <li class="<%= 'active' if controller_name == 'sales'%>"><a href="/sales">销售</a></li> -->
+            <% if current_user.has_role?(:admin) && ['sales', 'staffs', 'trade_reports'].include?(controller_name)  %>
+          <!--     <li class="<%= 'active' if controller_name == 'staffs'%>"><a href="/staffs">人员</a></li> -->
+              <li class="<%= 'active' if controller_name == 'sales'%>"><a href="/sales/show">销售</a></li>
               <li class="<%= 'active' if controller_name == 'trade_reports'%>"><a href="/trade_reports">报表下载</a></li>
             <% end %>
             <% if current_user.has_role?(:admin)  && controller_name != 'home' %>
@@ -128,31 +128,6 @@
 
     <%= javascript_include_tag "application" %>
     <%= javascript_include_tag "/areas.js" %>
-    <script type="text/javascript">
-
-      $(document).ready(function(e) {
-
-        $(function(){
-          $('#myModal').modal('toggle');
-          $('#myModal').on('shown',function(){
-            $('.modal-backdrop').unbind('click');
-          });
-
-          $('.datepicker').datepicker({
-            format: 'yyyy-mm-dd'
-          })
-
-          $('.timepicker').timeEntry({
-            show24Hours: true, // 24 hours format
-            showSeconds: true, // Show seconds?
-            spinnerImage: '/assets/spinnerUpDown.png', // Arrows image
-            spinnerSize: [17, 26, 0], // Image size
-            spinnerIncDecOnly: true // Only up and down arrows
-          });
-        });
-      });
-    </script>
-
     <%= yield :tail -%>
   </body>
 </html>

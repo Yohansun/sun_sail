@@ -11,6 +11,7 @@ MagicOrders::Application.routes.draw do
   get "/stocks", to: 'stocks#home'
   get "/stock_products", to: 'stock_products#index'
   get "/stock_products/search", to: 'stock_products#search'
+  get "/sales/add_node", to: 'sales#add_node'
 
   resources :colors do
     collection do
@@ -70,6 +71,7 @@ MagicOrders::Application.routes.draw do
   resources :users
   resources :areas
   resources :trade_sources
+  resources :sales
 
   match '/alerts', to: 'trades#alerts'
   get "trades/new", to: "trades#new"
