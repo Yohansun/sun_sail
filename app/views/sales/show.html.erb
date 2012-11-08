@@ -238,8 +238,7 @@
             // console.log("chartData", chartData)
           });
         // }
-      }, 10000);//频率为了测试目前设为10秒加一个点，其实应该900秒加一个点，即 TradeSetting.gap_time*1000
-    };
+      }, <%= TradeSetting.gap_time*1000 %>);
 
 
     //实时销售时间设定
