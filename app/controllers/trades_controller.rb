@@ -24,7 +24,7 @@ class TradesController < ApplicationController
     @report = TradeReport.new
     @report.request_at = Time.now
     @report.user_id = current_user.id
-    %w(from_deliver_print_date to_deliver_print_date from_deliver_print_time to_deliver_print_time).each do |undefined|
+    %w(status_option from_deliver_print_date to_deliver_print_date from_deliver_print_time to_deliver_print_time).each do |undefined|
       params['search'][undefined] = '' if params['search'][undefined] == "undefined"
     end  
     @report.conditions = params.select {|k,v| !['limit','offset', 'action', 'controller'].include?(k)  } 
