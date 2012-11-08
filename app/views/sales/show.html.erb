@@ -193,8 +193,9 @@
     });
 
     function zoomChart() {
-    // different zoom methods can be used - zoomToIndexes, zoomToDates, zoomToCategoryValues
-      chart.zoomToIndexes(chartData.length - 10, chartData.length - 1);
+      // different zoom methods can be used - zoomToIndexes, zoomToDates, zoomToCategoryValues
+      // chart.zoomToIndexes(chartData.length - 10, chartData.length - 1);
+      chart.zoomOut();
     }
 
     //添加坐标点
