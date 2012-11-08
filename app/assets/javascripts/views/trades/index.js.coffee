@@ -3,7 +3,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
   template: JST['trades/index']
 
   events:
-
     'click .search': 'search'
     'click [data-type=loadMoreTrades]': 'forceLoadMoreTrades'
     'click .export_orders': 'exportOrders'
