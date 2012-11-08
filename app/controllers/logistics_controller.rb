@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 class LogisticsController < ApplicationController
   before_filter :authenticate_user!
-  before_filter :admin_only!
+  before_filter :admin_only!, :except => :logistic_templates
 
   def index
     @logistics = Logistic.page(params[:page])
