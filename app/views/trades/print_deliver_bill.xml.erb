@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <data>
   <% @trades.each do |trade| %>
-  <trade tid="<%= trade.tid %>" company="<%= TradeSetting.shopname %>" nameOfOrganization="doorder" 
+  <trade tid="<%= trade.tid %>" company="<%= TradeSetting.shopname %>" nameOfOrganization="多乐士官方旗舰店" 
     num="<%= trade_item_count(trade) %>" phone="<%= trade.receiver_mobile %>" memo="<%= trade.cs_memo %>" 
     copyright="Magic" receiver="<%= trade.receiver_name %>"
     address="<%= "#{trade.receiver_state} #{trade.receiver_city} #{trade.receiver_district} #{trade.receiver_address}" %>"
     address_xiangxi="" studiocamera="021-60956000转8128" kehu_receiver="<%= trade.receiver_name %>"
-    city="<%= trade.receiver_city %>" organization="" kehu_phone="<%= trade.receiver_mobile %>" jijian_name="多乐士官方旗舰店" point="" 
+    city="<%= trade.receiver_city %>" organization="" kehu_phone="<%= trade.receiver_mobile %>" jijian_name="" point="" 
     jijian_dizhi=""
     shoujian_dizhi="<%= "#{trade.receiver_state} #{trade.receiver_city} #{trade.receiver_district} #{trade.receiver_address}" %>"
     shoujian_youbian="" jijian_youbian="" jijian_zuoji="" shoujian_zuoji=""
