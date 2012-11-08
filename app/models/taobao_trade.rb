@@ -222,4 +222,35 @@ class TaobaoTrade < Trade
   def bill_infos_count
     self.orders.inject(0) { |sum, order| sum + order.bill_info.count }
   end  
+
+  def taobao_status_memo
+    if has_refund_order
+      "申请退款"
+    else
+      case status
+        when "TRADE_NO_CREATE_PAY"
+          "没有创建支付宝交易"
+        when "WAIT_BUYER_PAY"
+          "等待付款"
+        when "WAIT_SELLER_SEND_GOODS"
+          "已付款，待发货"
+        when "WAIT_BUYER_CONFIRM_GOODS"
+          "已付款，已发货"
+        when "TRADE_BUYER_SIGNED"
+          "买家已签收,货到付款专用"
+        when "TRADE_FINISHED"
+          "交易成功"
+        when "TRADE_CLOSED"
+          "交易已关闭"
+        when "TRADE_CLOSED_BY_TAOBAO"
+          "交易被淘宝关闭"
+        when "ALL_WAIT_PAY"
+          "包含：等待买家付款、没有创建支付宝交易"
+        when "ALL_CLOSED"
+          "包含：交易关闭、交易被淘宝关闭"
+        else
+          status
+      end
+    end
+  end  
 end
