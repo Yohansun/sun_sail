@@ -43,20 +43,15 @@
 
     var chartData = [];
 
-    var start_date = new Date(<%= @sale.start_at.year %>, <%= @sale.start_at.month - 1 %>, <%= @sale.start_at.day %>, <%= @sale.start_at.hour - 8 %>, <%= @sale.start_at.min %>)
+    var start_date = new Date(<%= @sale.start_at.year %>, <%= @sale.start_at.month - 1 %>, <%= @sale.start_at.day %>, <%= @sale.start_at.hour %>, <%= @sale.start_at.min %>)
 
-    var end_date = new Date(<%= @sale.end_at.year %>, <%= @sale.end_at.month - 1 %>, <%= @sale.end_at.day %>, <%= @sale.end_at.hour - 8 %>, <%= @sale.end_at.min %>)
+    var end_date = new Date(<%= @sale.end_at.year %>, <%= @sale.end_at.month - 1 %>, <%= @sale.end_at.day %>, <%= @sale.end_at.hour %>, <%= @sale.end_at.min %>)
 
     var time_now = new Date(<%= TradeSetting.test_time.year %>, <%= TradeSetting.test_time.month - 1 %>, <%= TradeSetting.test_time.day %>, <%= TradeSetting.test_time.hour %>, <%= TradeSetting.test_time.min %>)
-    if (time_now > start_date && time_now < end_date){
-      <% @data.each do |row| -%>
-        chartData.push({date: new Date(<%= row[0].year %>, <%= row[0].month - 1 %>, <%= row[0].day %>, <%= row[0].hour %>, <%= row[0].min %>, <%= row[0].sec %>), amount: <%= row[1] %>, amountall: <%= row[2] %>})
-      <% end -%>
-    } else {
-      <% @data.each do |row| -%>
-        chartData.push({date: new Date(<%= row[0].year %>, <%= row[0].month - 1 %>, <%= row[0].day %>, <%= row[0].hour - 8 %>, <%= row[0].min %>, <%= row[0].sec %>), amount: <%= row[1] %>, amountall: <%= row[2] %>})
-      <% end -%>
-    }
+
+    <% @data.each do |row| -%>
+      chartData.push({date: new Date(<%= row[0].year %>, <%= row[0].month - 1 %>, <%= row[0].day %>, <%= row[0].hour %>, <%= row[0].min %>, <%= row[0].sec %>), amount: <%= row[1] %>, amountall: <%= row[2] %>})
+    <% end -%>
 
     //var average = 55.4;
 
