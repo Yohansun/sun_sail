@@ -48,10 +48,12 @@
 
 <div class="modal-footer">
   <a href='javascript:void(0)' class="btn" data-dismiss="modal">取消</a>
-  <% if @trade.get('seller_id') != null and @trade.get('logistic_waybill') != null: %>
-  <% else if @trade.get('seller_id') != null and @trade.get('logistic_waybill') == null: %>
-    <button class="btn btn-primary reset_seller" type="button">分流重置</button>
-  <% else: %>
+ 
+  <% if @trade.get('seller_id') != null : %>
+    <% unless @trade.get('logistic_waybill') : %>
+      <a class="btn btn-primary reset_seller">分流重置</a>
+    <% end %>
+  <% else : %>
     <a class="btn btn-primary set_seller">分流</a>
   <% end %>
 </div><!-- modal-footer -->
