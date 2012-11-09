@@ -543,11 +543,14 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
       $('.deliver_count').html(data.length)
       $('#batch_deliver tbody').html(html)
-      unless flag == true
-        alert('部份订单无物流信息，无法发货') 
+      unless flag == true 
+        $('#batch_deliver').on "shown", ()->
+          alert('部份订单无物流信息，无法发货')
+
         $('#batch_deliver .confirm_batch_deliver').hide()
       else
         $('#batch_deliver .confirm_batch_deliver').show()
+
       $('#batch_deliver').modal('show')
 
   confirmBatchDeliver: ->
