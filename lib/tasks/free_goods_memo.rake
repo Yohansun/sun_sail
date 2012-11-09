@@ -22,17 +22,23 @@ task :free_goods_memo => :environment do
     }
   ]
 
-  puts "更新赠品备注"
-  DATA.each do |item|
-    puts "work with #{item[:file]}"
-    CSV.foreach("#{Rails.root}/lib/data_source/" + item[:file]) do |row|
-      update_gift_memo(row[0], item[:memo])
-    end
-  end
+  # puts "更新赠品备注"
+  # DATA.each do |item|
+  #   puts "work with #{item[:file]}"
+  #   CSV.foreach("#{Rails.root}/lib/data_source/" + item[:file]) do |row|
+  #     update_gift_memo(row[0], item[:memo])
+  #   end
+  # end
 
 
-  puts "更新整单备注"
-  TaobaoTrade.where({"taobao_orders" => {"$elemMatch" => {outer_iid: 'ICI0052'}}}).each do |trade|
+  # puts "更新整单备注"
+  # TaobaoTrade.where({"taobao_orders" => {"$elemMatch" => {outer_iid: 'ICI0052'}}}).each do |trade|
+  #   trade.cs_memo ||= ''
+  #   trade.cs_memo += " 送一个滚筒"
+  #   puts "#{trade.tid} save fail" unless trade.save
+  # end
+
+  TaobaoTrade.where({"taobao_orders" => {"$elemMatch" => {outer_iid: 'ICI0064'}}}).each do |trade|
     trade.cs_memo ||= ''
     trade.cs_memo += " 送一个滚筒"
     puts "#{trade.tid} save fail" unless trade.save
