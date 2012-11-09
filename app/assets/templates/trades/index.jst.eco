@@ -187,6 +187,52 @@
         <label class="control-label" for=""><code>属性：</code></label>
         <div class="controls clearfix">
           <fieldset class="pull-left form-inline mar_r10">
+            <label style="position: relative; ">下单时间：</label>
+            <input type="text" style="margin-right:5px;" placeholder="年-月-日" class="input-small search_start_date datepicker" value="<%= @search_start_date %>">
+            <input type="text" placeholder="00:00:00" class="input-small search_start_time timepicker" value="<%= @search_start_time %>">
+            <i class="icon-arrow-right"></i>
+            <input type="text" style="margin-right:5px;" placeholder="年-月-日" class="input-small search_end_date datepicker" value="<%= @search_end_date %>">
+            <input type="text" placeholder="00:00:00" class="input-small search_end_time timepicker" value="<%= @search_end_time %>">
+          </fieldset>
+
+          <fieldset class="pull-left form-inline mar_r10">
+            <label class="checkbox inline">
+              <input type="checkbox" id="search_cs_memo"> 客服有备注
+            </label>
+            <label class="checkbox inline">
+              <input type="checkbox" id="search_cs_memo_void"> 客服无备注
+            </label>
+            <label class="checkbox inline">
+              <input type="checkbox" id="search_seller_memo"> 卖家有备注
+            </label>
+            <% if MagicOrders.company == "dulux" and MagicOrders.role_key != 'seller' : %>
+            <label class="checkbox inline">
+              <input type="checkbox" id="search_buyer_message"> 客户有留言
+            </label>
+            <% end %>
+            <label class="checkbox inline">
+              <input type="checkbox" id="search_invoice"> 需要开票
+            </label>
+            <label class="checkbox inline">
+              <input type="checkbox" id="search_color"> 需要调色
+            </label>
+            <label class="checkbox inline">
+              <input type="checkbox" id="search_color_void"> 不需要调色
+            </label>
+          </fieldset>
+        </div>
+
+        <div class="controls clearfix">
+          <fieldset class="pull-left form-inline mar_r10">
+            <label style="position: relative; ">付款时间：</label>
+            <input type="text" style="margin-right:5px;" placeholder="年-月-日" class="input-small pay_start_date datepicker" value="<%= @pay_start_date %>">
+            <input type="text" placeholder="00:00:00" class="input-small pay_start_time timepicker" value="<%= @pay_start_time %>">
+            <i class="icon-arrow-right"></i>
+            <input type="text" style="margin-right:5px;" placeholder="年-月-日" class="input-small pay_end_date datepicker" value="<%= @pay_end_date %>">
+            <input type="text" placeholder="00:00:00" class="input-small pay_end_time timepicker" value="<%= @pay_end_time %>">
+          </fieldset>
+
+          <fieldset class="pull-left form-inline mar_r10">
             <% unless MagicOrders.trade_mode in ['deliver', 'logistics', 'send'] : %>
             <select id="status_option" class="input-large">
               <option value="">订单状态</option>
@@ -208,46 +254,6 @@
               <option value="TaobaoTrade">淘宝</option>
               <option value="TaobaoPurchaseOrder">分销平台</option>
             </select>
-          </fieldset>
-
-          <fieldset class="pull-left form-inline mar_r10">
-            <label style="position: relative; ">下单时间：</label>
-            <input type="text" style="margin-right:5px;" placeholder="年-月-日" class="input-small search_start_date datepicker" value="<%= @search_start_date %>">
-            <input type="text" placeholder="00:00:00" class="input-small search_start_time timepicker" value="<%= @search_start_time %>">
-            <i class="icon-arrow-right"></i>
-            <input type="text" style="margin-right:5px;" placeholder="年-月-日" class="input-small search_end_date datepicker" value="<%= @search_end_date %>">
-            <input type="text" placeholder="00:00:00" class="input-small search_end_time timepicker" value="<%= @search_end_time %>">
-          </fieldset>
-        </div>
-
-        <div class="controls clearfix">
-          <fieldset class="pull-left form-inline mar_r10">
-            <label class="checkbox inline">
-              <input type="checkbox" id="search_cs_memo"> 客服有备注
-            </label>
-            <label class="checkbox inline">
-              <input type="checkbox" id="search_seller_memo"> 卖家有备注
-            </label>
-            <% if MagicOrders.company == "dulux" and MagicOrders.role_key != 'seller' : %>
-            <label class="checkbox inline">
-              <input type="checkbox" id="search_buyer_message"> 客户有留言
-            </label>
-            <% end %>
-            <label class="checkbox inline">
-              <input type="checkbox" id="search_invoice"> 需要开票
-            </label>
-            <label class="checkbox inline">
-              <input type="checkbox" id="search_color"> 需要调色
-            </label>
-          </fieldset>
-
-          <fieldset class="pull-left form-inline mar_r10">
-            <label style="position: relative; ">付款时间：</label>
-            <input type="text" style="margin-right:5px;" placeholder="年-月-日" class="input-small pay_start_date datepicker" value="<%= @pay_start_date %>">
-            <input type="text" placeholder="00:00:00" class="input-small pay_start_time timepicker" value="<%= @pay_start_time %>">
-            <i class="icon-arrow-right"></i>
-            <input type="text" style="margin-right:5px;" placeholder="年-月-日" class="input-small pay_end_date datepicker" value="<%= @pay_end_date %>">
-            <input type="text" placeholder="00:00:00" class="input-small pay_end_time timepicker" value="<%= @pay_end_time %>">
           </fieldset>
         </div>
       </div>

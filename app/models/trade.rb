@@ -509,6 +509,11 @@ class Trade
       has_cs_memo_hash = {has_cs_memo: true}
     end
 
+    # 客服无备注
+    if params[:search] && params[:search][:search_cs_memo_void] == "true"
+      cs_memo_void_hash = {has_cs_memo: false}
+    end
+
     # 卖家有备注
     if params[:search] && params[:search][:search_seller_memo] == "true"
       seller_memo_hash = {"$or" => [{"$and" => [{:seller_memo.exists => true}, {:seller_memo.ne => ''}]}, {:delivery_type.exists => true}, {:invoice_info.exists => true}]}
@@ -529,6 +534,11 @@ class Trade
       has_color_info_hash = {has_color_info: true}
     end
 
+    # 不需要调色
+    if params[:search] && params[:search][:search_color_void] == "true"
+      color_info_void_hash = {has_color_info: false}
+    end
+
     # 按经销商筛选
     if params[:search] && !params[:search][:search_logistic].blank? && params[:search][:search_logistic] != 'null'
       logi_name = /#{params[:search][:search_logistic].strip}/
@@ -542,6 +552,7 @@ class Trade
         deliver_print_time_hash, create_time_hash, pay_time_hash,  logistic_print_time_hash,
         status_hash, type_hash, logistic_hash,
         seller_memo_hash, buyer_message_hash, has_color_info_hash, has_cs_memo_hash, invoice_all_hash,
+        cs_memo_void_hash, color_info_void_hash,
         receiver_state_hash, receiver_city_hash, receiver_district_hash,
         ].compact}
       search_hash == {"$and"=>[]} ? search_hash = nil : search_hash
