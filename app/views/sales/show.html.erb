@@ -26,8 +26,8 @@
       <%- else %>
       <h4 class="add_unit tc span3">倒计时<strong><span id="day_text"><span id="day"><%= @sale.time_gap[0] %></span>天</span><span id="timer"><%= @sale.time_gap[1] %></span></strong></h4>
       <%- end %>
-      <h4 class="add_unit tc span3" id="deal_money">下单金额<strong><%= @data.last[1] %></strong></h4>
-      <h4 class="add_unit tc span3" id="paid_money">实际成交金额<strong><%= @data.last[2] %></strong></h4>
+      <h4 class="add_unit tc span3" id="deal_money">下单金额<strong><%= @amount_all %></strong></h4>
+      <h4 class="add_unit tc span3" id="paid_money">实际成交金额<strong><%= @amount_paid %></strong></h4>
     </div>
 
 
@@ -72,7 +72,7 @@
       balloon.fillColor = "#FFFFFF";+++++提示的样式*/
       chart.dataProvider = chartData;
       chart.categoryField = "date";
-      chart.fontSize = 11;//调整xy轴显示的字体大小
+      chart.fontSize = 8;//调整xy轴显示的字体大小
       // +++++chart.startDuration = 1;动态效果
       chart.marginTop = 40;//+++++
       // listen for "dataUpdated" event (fired when chart is inited) and call zoomChart method when it happens
@@ -98,7 +98,7 @@
       // xAxis.title = "X Axis";
       // xAxis.position = "bottom";
       xAxis.autoGridCount = false;
-      xAxis.gridCount = 10;
+      xAxis.gridCount = 5;
       xAxis.unit = "元";
       xAxis.gridAlpha = 0.15;
       xAxis.axisColor = "#DADADA";
@@ -207,8 +207,8 @@
               });
             chart.validateData();
             var width = "width:" + data.progress_bar + "%"
-            var deal_money = "下单金额<strong>" + data.amount + "</strong>"
-            var paid_money = "实际成交金额<strong>" + data.amountall + "</strong>"
+            var deal_money = "下单金额<strong>" + data.bill_money + "</strong>"
+            var paid_money = "实际成交金额<strong>" + data.paid_money + "</strong>"
             $("#progress_bar").attr("style",width)
             $('#deal_money').html(deal_money)
             $('#paid_money').html(paid_money)
