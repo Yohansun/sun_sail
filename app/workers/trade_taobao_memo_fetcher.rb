@@ -17,12 +17,6 @@ class TradeTaobaoMemoFetcher
     trade.update_attributes(buyer_message: remote_trade['buyer_message'])
     trade.operation_logs.build(operated_at: Time.now, operation: '从淘宝抓取留言')
     trade.save
-  end
-
-  def self.perform(*args)
-    args.each do |tid|
-      TradeTaobaoMemoFetcher.new.perform(tid)
-    end
-  end  
+  end 
   
 end
