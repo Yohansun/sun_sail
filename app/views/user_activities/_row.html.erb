@@ -1,0 +1,20 @@
+<% (@staffs.sort {|x,y| y<=>x}).each do |staff| %>
+  <% staff = staff.split(',')%>
+  <div class="clearfix alert alert-info" >
+    <% if staff[4].include? '系统管理员' %>
+      <%= image_tag "admin.png", :class=>"pull-left img-rounded" %>
+    <% elsif staff[4].include? '经销商' %>
+      <%= image_tag "seller.png", :class=>"pull-left img-rounded" %>
+    <% elsif staff[4].include? '客服' %>
+      <%= image_tag "cs.png", :class=>"pull-left img-rounded" %>
+    <% end %>
+    <div class="offset2">
+      <% if params[:action] == "all" %>
+        <span class="pull-right"><%=distance_of_time_in_words(staff[2].to_datetime,Time.now)%>前</span>
+      <% end %>
+      <span><%=((staff[4]).gsub('["','')).gsub('"]','')%>：<%=staff[3]%></span>
+      <span><%=staff[1]%><%=staff[5]%></span>
+      <span><%=(staff[2].to_datetime).strftime("%Y-%m-%d %H:%M:%S")%></span>
+    </div>
+  </div>
+<% end %>

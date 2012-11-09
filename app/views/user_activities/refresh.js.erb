@@ -1,0 +1,25 @@
+<% if @staffs.size > 0  %>
+	i = 1
+	<% @staffs.sort {|x,y| y<=>x}.each_with_index do |staff,index| %>
+		html = ""
+		<% staff = staff.split(',')%>
+	  html += "<div class='clearfix alert alert-info' style='display:none'>" 
+	  <% if staff[4].include? '系统管理员' %>
+	    html += "<img class='pull-left img-rounded' src='/assets/admin.png'>"
+	  <% elsif staff[4].include? '经销商' %>
+	    html += "<img class='pull-left img-rounded' src='/assets/seller.png'>"
+	  <% elsif staff[4].include? '客服' %>
+		html += "<img class='pull-left img-rounded' src='/assets/cs.png'>"
+	  <% end %>
+	  html += "<div class='offset2'>" + 
+	  		    "<span><%=((staff[4]).gsub('["','')).gsub('"]','')%>：<%=staff[3]%></span>" + 
+	  		    "<span><%=staff[1]%><%=staff[5]%></span>" + 
+	  		    "<span>&nbsp;<%=(staff[2].to_datetime).strftime('%Y-%m-%d %H:%M:%S')%></span>" + 
+		  	  "</div></div>"
+  	$('.msg_list').children('div:gt(18)').remove();
+	$('.msg_list').children().addClass('alert-info');
+    $('.msg_list').delay(1000 * i).prepend(html).children('div').eq(0).removeClass('alert-info').fadeIn(1000);
+  	i = i + 1
+	<% end %>
+	$("#count").attr('value','<%=@count%>')
+<% end %>
