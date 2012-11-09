@@ -18,5 +18,11 @@ class TradeTaobaoMemoFetcher
     trade.operation_logs.build(operated_at: Time.now, operation: '从淘宝抓取留言')
     trade.save
   end
+
+  def self.perform(*args)
+    args.each do |tid|
+      TradeTaobaoMemoFetcher.new.perform(tid)
+    end
+  end  
   
 end
