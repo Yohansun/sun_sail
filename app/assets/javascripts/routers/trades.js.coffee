@@ -121,7 +121,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       switch operation_key
         when 'deliver'
           unless model.get('logistic_company') and model.get('logistic_waybill')
-            alert('订单无物流单号或物流商信息，无法发货')
+            alert('该订单没有设置物流商和物流单号，请去“物流单”下“未设置物流信息”中调整订单')
             $('.deliver').hide()
           else
             $('.deliver').show()

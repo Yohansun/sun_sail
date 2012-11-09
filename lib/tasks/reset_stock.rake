@@ -3,6 +3,8 @@ require "csv"
 desc "更新多乐士库存"
 task :reset_stock => :environment do
 
+  flag = ENV['show'] == 'show'
+
   head = [
     "上海丽王", "上海好心情装饰材料有限公司", "杭州锦鹏贸易有限公司", "温州市嘉美涂料有限公司", "宁波经济技术开发区嘉诚化工有限公司", 
     "嘉兴秀州", "绍兴市顺畅化工有限公司", "台州市美亚涂料有限公司", "南京西湖漆油有限公司",
@@ -16,6 +18,9 @@ task :reset_stock => :environment do
   ]
 
   StockProduct.delete_all
+
+  not_exist_products = []
+  not_exist_sellers = []
 
   CSV.foreach("#{Rails.root}/lib/data_source/dulux_stock_20121108.csv") do |row|
     product = Product.where("storage_num = '#{row[0]}' OR iid = '#{row[0]}'").first

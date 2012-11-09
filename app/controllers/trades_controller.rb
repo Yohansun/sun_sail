@@ -93,15 +93,11 @@ class TradesController < ApplicationController
     end
 
     if params[:setup_logistic] == true
-      Rails.logger.info "==============================="
-      Rails.logger.info params[:logistic_id].inspect
-      Rails.logger.info params[:logistic_waybill].inspect
       logistic = Logistic.find_by_id params[:logistic_id]
       @trade.logistic_id = logistic.try(:id)
       @trade.logistic_name = logistic.try(:name)
       @trade.logistic_code = logistic.try(:code)
       @trade.logistic_waybill = params[:logistic_waybill]
-      Rails.logger.info "================================"
     end
 
     unless params[:cs_memo].blank?

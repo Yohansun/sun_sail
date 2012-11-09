@@ -64,10 +64,10 @@
           物流单<b class="caret"></b>
         </a>
         <ul class="dropdown-menu">
-          <li><a href="#" data-trade-mode="logistics" data-trade-status="logistic_waybill_void">未返回物流单号</a></li>
-          <li><a href="#" data-trade-mode="logistics" data-trade-status="logistic_waybill_exist">已返回物流单号</a></li>
           <li><a href="#" data-trade-mode="logistics" data-trade-status="logistic_bill_unprinted">未打印物流单</a></li>
           <li><a href="#" data-trade-mode="logistics" data-trade-status="logistic_bill_printed">已打印物流单</a></li>
+          <li><a href="#" data-trade-mode="logistics" data-trade-status="logistic_waybill_void">未设置物流信息</a></li>
+          <li><a href="#" data-trade-mode="logistics" data-trade-status="logistic_waybill_exist">已设置物流信息</a></li>
         </ul>
       </li>
       <% unless MagicOrders.company == "dulux" and MagicOrders.role_key == 'logistic' : %>
@@ -288,6 +288,7 @@
       </ul>
     </div>
 
+    <% unless MagicOrders.trade_mode == 'trades' : %>
     <div class="btns btn-group pull-left">
       <a href="javascript:void(0)" class="btn btn-warning"><i class="icon-user icon-white"></i>批量操作</a>
       <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-warning btn_left4">
@@ -302,7 +303,7 @@
             <li><a data-toggle="modal" class='print_logistics' href="#">批量打印物流单</a></li>
           <% end %>
           <% if MagicOrders.trade_type in ['logistic_waybill_void', 'logistic_waybill_exist'] : %>
-            <li><a data-toggle="modal" class='return_logistics' href='#'>批量设置物流单号</a></li>
+            <li><a data-toggle="modal" class='return_logistics' href='#'>批量设置物流信息</a></li>
           <% end %>
         <% end %>
         <% if MagicOrders.trade_mode == 'send' : %>
@@ -315,7 +316,7 @@
         <li><a data-toggle="modal" href="#ord_inport" href="#">订单导入</a></li> -->
       </ul>
     </div>
-
+    <% end %>
     <div class="btns btn-group pull-left">
       <a data-toggle="modal" class="btn btn-warning export_orders">导出数据</a>
     </div>
