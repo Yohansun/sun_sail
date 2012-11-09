@@ -33,21 +33,23 @@ class SalesController < ApplicationController
       num = gap/frequency
 
       (0..num).each do |counter|
-        start_time = @start_at + counter * frequency
-        if num == counter && gap%frequency > 0
-          if TradeSetting.test_time >= @end_at
-            end_time = @end_at
+        unless num == counter && gap%frequency == 0
+          start_time = @start_at + counter * frequency
+          if num == counter && gap%frequency > 0
+            if TradeSetting.test_time >= @end_at
+              end_time = @end_at
+            else
+              end_time = TradeSetting.test_time
+            end
           else
-            end_time = TradeSetting.test_time
+            end_time = @start_at + (counter + 1) * frequency
           end
-        else
-          end_time = @start_at + (counter + 1) * frequency
+          all_in_frequency = @sale.all_trade_fee(start_time, end_time)
+          paid_in_frequency = @sale.paid_trade_fee(start_time, end_time)
+          @amount_all += all_in_frequency
+          @amount_paid += paid_in_frequency
+          @data << [end_time, all_in_frequency, paid_in_frequency]
         end
-        all_in_frequency = @sale.all_trade_fee(start_time, end_time)
-        paid_in_frequency = @sale.paid_trade_fee(start_time, end_time)
-        @amount_all += all_in_frequency
-        @amount_paid += paid_in_frequency
-        @data << [end_time, all_in_frequency, paid_in_frequency]
       end
     end
     @progress_bar = (@amount_paid/@sale.earn_guess*100).to_i
