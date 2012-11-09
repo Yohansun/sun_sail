@@ -136,6 +136,11 @@ class TaobaoTrade < Trade
   def auto_dispatch!
     return unless auto_dispatchable?
     dispatch!
+    if seller_id
+      self.operation_logs.create!(operated_at: Time.now, operation: '延时自动分流')
+    else
+      self.operation_logs.create!(operated_at: Time.now, operation: '延时自动分流,未匹配到经销商')   
+    end
   end
 
   def dispatch!(seller = nil)
@@ -151,13 +156,13 @@ class TaobaoTrade < Trade
     # end
 
     return false unless dispatchable?
+
     unless seller
       seller = matched_seller
-      self.operation_logs.create!(operated_at: Time.now, operation: '分流未匹配到经销商')  
     end
 
     return false unless seller
-
+      
     if seller.has_stock
       return false unless can_lock_products?(self, seller.id)
     end
@@ -171,7 +176,6 @@ class TaobaoTrade < Trade
 
     if seller
       update_attributes(seller_id: seller.id, seller_name: seller.name, dispatched_at: Time.now)
-      self.operation_logs.create!(operated_at: Time.now, operation: '延时自动分流')
     end
 
   end
