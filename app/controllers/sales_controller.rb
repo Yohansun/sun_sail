@@ -16,6 +16,7 @@ class SalesController < ApplicationController
     @amount_paid = 0
     unless @sale
       @sale = Sale.create(name: "测试活动", earn_guess: 100000, start_at: TradeSetting.test_time, end_at: TradeSetting.test_time + 1.day)
+      render action: :edit
     end
     @start_at = @sale.start_at.to_time
     @end_at = @sale.end_at.to_time
@@ -54,7 +55,6 @@ class SalesController < ApplicationController
     @progress_bar = (@amount_paid/@sale.earn_guess*100).to_i
     Rails.cache.write 'amount_all', @amount_all
     Rails.cache.write 'amount_paid', @amount_paid
-
   end
 
   def add_node
@@ -77,18 +77,22 @@ class SalesController < ApplicationController
     end
   end
 
-  def new
-    @sale = Sale.new
+  def edit
+    @sale = Sale.last
+    unless @sale
+      @sale = Sale.create(name: "测试活动", earn_guess: 100000, start_at: Time.now + 8.hour, end_at: Time.now + 8.hour + 1.day)
+    end
   end
 
-  def create
+  def update
+    @sale = Sale.last
     start_at = "#{params[:times][:start_date]} #{params[:times][:start_time]}".to_time
     end_at = "#{params[:times][:end_date]} #{params[:times][:end_time]}".to_time
-    @sale = Sale.create(name: params[:sale][:name], earn_guess: params[:sale][:earn_guess], start_at: start_at, end_at: end_at)
-    if @sale.save
+
+    if @sale.update_attributes(name: params[:sale][:name], earn_guess: params[:sale][:earn_guess], start_at: start_at, end_at: end_at)
       redirect_to "/sales/show"
     else
-      render new_sale_path
+      render action: :edit
     end
   end
 end

@@ -12,7 +12,7 @@
       <li><a href="/">Magic</a><span class="divider">/</span></li>
       <li><a href="/trade_reports">数据魔方</a><span class="divider">/</span></li>
       <li class="active">销售[<%= @sale.name %>]</li>
-      <li style="position:absolute;right:15px;top:6px;"><a href="/sales/new">设定</a></li>
+      <li style="position:absolute;right:15px;top:6px;"><%= link_to '设定', edit_sale_path %></li>
     </ul><!-- breadcrumb -->
 
     <div class="progress progress-info progress-striped mar_t10">
