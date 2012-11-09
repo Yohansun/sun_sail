@@ -469,7 +469,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     end_pre = end.slice(0, -4)
     end_last_number = end.slice(-4) * 1
     
-    if begin and end 
+    unless (!begin or !end) and flag
       unless /^\w+$/.test(begin) and /^\w+$/.test(end)
         alert('输入单号不符合规则')
         return
