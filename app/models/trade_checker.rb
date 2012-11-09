@@ -64,9 +64,12 @@ class TradeChecker
     puts "ending check_status: ERROR wrong #{wrong_orders.join(",")}"
 
     bad_status_orders = TaobaoTrade.only(:tid, :status, :track_goods_status).where(:status.in => ["WAIT_SELLER_SEND_GOODS"], :track_goods_status.in => ["INIT"]).all.map { |e| e.tid }
-
+    
+    hidden_orders = TaobaoTrade.only(:tid, :has_buyer_message, :buyer_message).where(has_buyer_message: true, buyer_message:nil).map(&:tid)
+    
     if send_email
-      DailyOrdersNotifier.check_status_result(start_time, end_time, lost_orders, wrong_orders, bad_status_orders).deliver
+      DailyOrdersNotifier.check_status_result(start_time, end_time, lost_orders, wrong_orders, bad_status_orders, hidden_orders).deliver
     end
   end
+
 end

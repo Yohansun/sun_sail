@@ -13,3 +13,6 @@
 <br>
 本地发货状态异常订单:<br>
 <%= @bad_status_orders.join(", ") %><br>
+<br>
+标记有留言但是留言还没有抓取到的订单:<br>
+<%= @hidden_orders.join(", ") %><br>
