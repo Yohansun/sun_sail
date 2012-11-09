@@ -20,28 +20,26 @@ class SalesController < ApplicationController
     end
     @start_at = @sale.start_at.to_time
     @end_at = @sale.end_at.to_time
+    @data = [[@start_at, 0, 0]]
 
     ## 分时间段显示不同情况
-    if TradeSetting.test_time < @start_at
-      @data = [[@start_at, 0, 0]]
-    else
+    unless TradeSetting.test_time < @start_at
       frequency = TradeSetting.frequency
       if TradeSetting.test_time >= @end_at
         gap = @end_at.to_i - @start_at.to_i
       else
         gap = TradeSetting.test_time.to_i - @start_at.to_i
       end
-      @data = []
       num = gap/frequency
-      if gap%frequency > 0
-        num += 1
-      end
 
       (0..num).each do |counter|
         start_time = @start_at + counter * frequency
-        p start_time
-        if (counter + 1) * frequency > gap
-          end_time = @end_at
+        if num == counter && gap%frequency > 0
+          if TradeSetting.test_time >= @end_at
+            end_time = @end_at
+          else
+            end_time = TradeSetting.test_time
+          end
         else
           end_time = @start_at + (counter + 1) * frequency
         end
@@ -49,7 +47,7 @@ class SalesController < ApplicationController
         paid_in_frequency = @sale.paid_trade_fee(start_time, end_time)
         @amount_all += all_in_frequency
         @amount_paid += paid_in_frequency
-        @data << [start_time, all_in_frequency, paid_in_frequency]
+        @data << [end_time, all_in_frequency, paid_in_frequency]
       end
     end
     @progress_bar = (@amount_paid/@sale.earn_guess*100).to_i
@@ -61,8 +59,8 @@ class SalesController < ApplicationController
     @sale = Sale.last
     frequency = TradeSetting.frequency
     time_now = TradeSetting.test_time_2
-    start_time = time_now + frequency
-    end_time = time_now + frequency * 2
+    start_time = time_now
+    end_time = time_now + frequency
     TradeSetting.test_time_2 += frequency
 
     all_in_frequency = @sale.all_trade_fee(start_time, end_time)
@@ -73,7 +71,7 @@ class SalesController < ApplicationController
     Rails.cache.write 'amount_paid', amount_paid
     progress_bar = (amount_paid/@sale.earn_guess*100).to_i
     respond_to do |format|
-      format.json { render json: {year: start_time.year, month: start_time.month, day: start_time.day, hour: start_time.hour, min: start_time.min, amount: all_in_frequency, amountall: paid_in_frequency, progress_bar: progress_bar, bill_money: amount_all, paid_money: amount_paid }}
+      format.json { render json: {year: end_time.year, month: end_time.month, day: end_time.day, hour: end_time.hour, min: end_time.min, amount: all_in_frequency, amountall: paid_in_frequency, progress_bar: progress_bar, bill_money: amount_all, paid_money: amount_paid }}
     end
   end
 

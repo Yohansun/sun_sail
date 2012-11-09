@@ -244,13 +244,15 @@
       }, 1000);
     });
 
-    //设置定时实时销售开始
+    //判断是否设置定时实时销售开始
     if (time_now < start_date){
       $(function(){
         setTimeout(function(){
           add_node();
         }, start_date - time_now);
       });
+    } else {
+      add_node();
     }
 
     //设置倒计时
