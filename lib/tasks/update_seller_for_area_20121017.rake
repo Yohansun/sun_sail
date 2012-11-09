@@ -2,7 +2,7 @@
 require "csv"
 desc "更新经销商管辖地区"
 task :update_seller_for_area => :environment do
-  CSV.foreach("#{Rails.root}/lib/data_source/seller_for_area_20121017.csv") do |row|
+  CSV.foreach("#{Rails.root}/lib/data_source/seller_for_area_20121109.csv") do |row|
     state = row[0]
     city = row[1]
     dist = row[2]
