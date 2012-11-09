@@ -119,6 +119,14 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $(modalDivID + ' .datepicker').datepicker(format: 'yyyy-mm-dd')
 
       switch operation_key
+        when 'deliver'
+          unless model.get('logistic_company') and model.get('logistic_waybill')
+            $(modalDivID).on 'shown', ()->
+              alert('该订单没有设置物流商和物流单号，请去“物流单”下“未设置物流信息”中调整订单')
+
+            $('.deliver').hide()
+          else
+            $('.deliver').show()
         when 'color'
           $('.color_typeahead').typeahead({
             source: (query, process)->
@@ -142,11 +150,9 @@ class MagicOrders.Routers.Trades extends Backbone.Router
 
             $('#logistic_select').html(html_options)
             $('#logistic_select').show()
+
             $('#logistic_select').change ()->
-              if $("#logistic_select").find("option:selected").attr('lid') in ["2", "3"]
-                bind_logistic_swf model.get('id'), $(this).val()
-              else
-                alert('您所选的订单无须打印物流单')
+              bind_logistic_swf model.get('id'), $(this).val()
 
             $(modalDivID).on 'hidden', ()->
               if MagicOrders.hasPrint == true

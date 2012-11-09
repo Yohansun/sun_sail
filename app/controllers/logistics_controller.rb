@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 class LogisticsController < ApplicationController
   before_filter :authenticate_user!
-  before_filter :admin_only!
+  before_filter :admin_only!, :except => :logistic_templates
 
   def index
     @logistics = Logistic.page(params[:page])
@@ -125,7 +125,13 @@ class LogisticsController < ApplicationController
 
   def logistic_templates
     tmp = []
-    @logistics = Logistic.where("xml is not null")
+    @logistics = Logistic
+    if params[:type] && params[:type] == 'all'
+      @logistics = @logistics.all
+    else
+      @logistics = @logistics.where("xml is not null")
+    end
+
     @logistics.each do |l|
       tmp << {
         id: l.id,

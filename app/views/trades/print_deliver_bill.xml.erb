@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <data>
   <% @trades.each do |trade| %>
-  <trade tid="<%= trade.tid %>" company="<%= TradeSetting.shopname %>" nameOfOrganization="doorder" num="<%= trade_item_count(trade) %>"
-    phone="<%= trade.receiver_mobile %>" memo="<%= trade.cs_memo %>" copyright="Magic" receiver="<%= trade.receiver_name %>"
+  <trade tid="<%= trade.tid %>" company="<%= TradeSetting.shopname %>" nameOfOrganization="多乐士官方旗舰店" 
+    num="<%= trade_item_count(trade) %>" phone="<%= trade.receiver_mobile %>" memo="<%= trade.cs_memo %>" 
+    copyright="Magic" receiver="<%= trade.receiver_name %>"
     address="<%= "#{trade.receiver_state} #{trade.receiver_city} #{trade.receiver_district} #{trade.receiver_address}" %>"
-    address_xiangxi="详细地址详细地址详细地址详细地址" studiocamera="152252658" kehu_receiver="<%= trade.receiver_name %>"
-    city="<%= trade.receiver_city %>" organization="" kehu_phone="<%= trade.receiver_mobile %>" jijian_name="辉" point="上海" 
-    jijian_dizhi="这是地址这是地址这是地址这是地址这是地址这是地址这是地址这是地址这是地址这是地址这是地址这是地址这是地址这是地址这是地址"
+    address_xiangxi="" studiocamera="021-60956000转8128" kehu_receiver="<%= trade.receiver_name %>"
+    city="<%= trade.receiver_city %>" organization="" kehu_phone="<%= trade.receiver_mobile %>" jijian_name="" point="" 
+    jijian_dizhi=""
     shoujian_dizhi="<%= "#{trade.receiver_state} #{trade.receiver_city} #{trade.receiver_district} #{trade.receiver_address}" %>"
-    shoujian_youbian="1　2　3　4　5　6" jijian_youbian="1　2　3　4　5　6" jijian_zuoji="123456" shoujian_zuoji="123456"
-    address_sheng="这是省" address_shi="这是市" address_zhen="这是镇" addressee_sheng="<%= trade.receiver_state %>" 
+    shoujian_youbian="" jijian_youbian="" jijian_zuoji="" shoujian_zuoji=""
+    address_sheng="" address_shi="" address_zhen="" addressee_sheng="<%= trade.receiver_state %>" 
     addressee_shi="<%= trade.receiver_city %>" addressee_zhen="<%= trade.receiver_district %>" 
     addressee_xiangxi="<%= trade.receiver_address %>" jijian_date="<%= "#{Time.now.year} #{Time.now.month} #{Time.now.day}" %>"
     shoujian_date="">

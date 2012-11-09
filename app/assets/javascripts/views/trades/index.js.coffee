@@ -3,7 +3,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
   template: JST['trades/index']
 
   events:
-
     'click .search': 'search'
     'click [data-type=loadMoreTrades]': 'forceLoadMoreTrades'
     'click .export_orders': 'exportOrders'
@@ -352,6 +351,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
   printLogistics: ->
     tmp = []
+    logistics = {}
     length = $('.trade_check:checked').parents('tr').length
 
     if length < 1
@@ -375,6 +375,10 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     $.get '/trades/deliver_list', {ids: tmp}, (data) ->
       html = ''
       for trade in data
+        lname = trade.logistic_name
+        lname = '无物流商' if lname == ''
+        logistics[lname] = logistics[lname] || 0
+        logistics[lname] += 1
         html += '<tr>'
         html += '<td>' + trade.tid + '</td>'
         html += '<td>' + trade.name + '</td>'
@@ -396,6 +400,13 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
           MagicOrders.hasPrint = false
 
+        flag = true
+        notice = '其中'
+        for key, value of logistics
+          notice += key + value + '单， '
+          flag = false if value == 20
+
+        $('#print_delivers .notice').html(notice) if flag = true
         $('#print_delivers').modal('show')
 
   returnLogistics: ->
@@ -419,19 +430,54 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
         tmp.push trade_id
     $('.logistic_count').html(length)
     MagicOrders.idCarrier = tmp
-    $('#ord_logistics_billnum_mult').modal('show')
+
+    logistics = {}
+    $.get '/trades/deliver_list', {ids: tmp}, (data) ->
+      for trade in data
+        lname = trade.logistic_name
+        lname = '无物流商' if lname == ''
+        logistics[lname] = logistics[lname] || 0
+        logistics[lname] += 1
+
+      flag = ''
+      notice = '其中'
+      for key, value of logistics
+        notice += key + value + '单'
+        flag = key if value == tmp.length
+
+      $.get '/logistics/logistic_templates', {type: 'all'}, (t_data)->
+        html_options = ''
+        for item in t_data
+          html_options += '<option lid="' + item.id + '" value="' + item.xml + '">' + item.name + '</option>'
+
+        $('#ord_logistics_billnum_mult .logistic_select').html(html_options)
+
+        if flag == ''
+          $('#ord_logistics_billnum_mult .info').html(notice)
+        else
+          $("#ord_logistics_billnum_mult option:contains('" + flag + "')").attr('selected', 'selected')
+
+        $('#ord_logistics_billnum_mult').modal('show')
 
   confirmReturn: ->
+    flag = $(".logistic_select").find("option:selected").html() in ['其他', '虹迪', '雄瑞']
+
     begin = $('.logistic_begin').val()
+    end = $('.logistic_end').val()
     begin_pre = begin.slice(0, -4)
     begin_last_number = begin.slice(-4) * 1
-    end = $('.logistic_end').val()
     end_pre = end.slice(0, -4)
     end_last_number = end.slice(-4) * 1
+    
+    if begin and end 
+      unless /^\w+$/.test(begin) and /^\w+$/.test(end)
+        alert('输入单号不符合规则')
+        return
 
-    if (end_last_number - begin_last_number + 1) != MagicOrders.idCarrier.length
-      alert('物流单号与选中产品个数不匹配')
-      return
+    unless flag
+      if (end_last_number - begin_last_number + 1) != MagicOrders.idCarrier.length
+        alert('物流单号与选中产品个数不匹配')
+        return
 
     $.get '/trades/deliver_list', {ids: MagicOrders.idCarrier}, (data) ->
       html = ''
@@ -440,7 +486,10 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
         html += '<td class="tid">' + trade.tid + '</td>'
         html += '<td>' + trade.name + '</td>'
         html += '<td>' + trade.address + '</td>'
-        html += '<td class="logistic_bill">' + begin_pre + (begin_last_number + i) + '</td></tr>'
+        if begin and end
+          html += '<td class="logistic_bill">' + begin_pre + (begin_last_number + i) + '</td></tr>'
+        else
+          html += '<td class="logistic_bill"></td></tr>'
 
       $('#ord_logistics_billnum_mult2 tbody').html(html)
       $('#ord_logistics_billnum_mult').modal('hide')
@@ -455,7 +504,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
       h = {tid: tid, logistic: logistic}
       bb.push(h)
 
-    $.get '/trades/setup_logistics', {data: bb}, (data)->
+    $.get '/trades/setup_logistics', {data: bb, logistic: $('#ord_logistics_billnum_mult .logistic_select').find("option:selected").attr('lid')}, (data)->
       if data.isSuccess == true
         $('#ord_logistics_billnum_mult2').modal('hide')
       else
@@ -482,7 +531,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
         tmp.push trade_id
 
     MagicOrders.idCarrier = tmp
-
+    flag = true
     $.get '/trades/deliver_list', {ids: tmp}, (data) ->
       html = ''
       for trade in data
@@ -492,9 +541,18 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
         html += '<td>' + trade.address + '</td>'
         html += '<td>' + trade.logistic_name + '</td>'
         html += '<td>' + trade.logistic_waybill + '</td></tr>'
+        flag = false if trade.logistic_name == '' or trade.logistic_waybill == ''
 
       $('.deliver_count').html(data.length)
       $('#batch_deliver tbody').html(html)
+      unless flag == true 
+        $('#batch_deliver').on "shown", ()->
+          alert('部份订单无物流信息，无法发货')
+
+        $('#batch_deliver .confirm_batch_deliver').hide()
+      else
+        $('#batch_deliver .confirm_batch_deliver').show()
+
       $('#batch_deliver').modal('show')
 
   confirmBatchDeliver: ->

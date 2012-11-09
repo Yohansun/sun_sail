@@ -11,7 +11,7 @@ window.MagicOrders =
       #roles
       'cs_read':                 ['detail'],
       'cs':                      ['detail', 'seller', 'cs_memo', 'color', 'invoice', 'trade_split', 'trade_unsplit', 'mark_unusual_state', 'reassign', 'refund', 'check_goods','operation_log', 'print_deliver_bill', 'deliver', 'confirm_color', 'seller_confirm_invoice', 'confirm_receive', 'logistic_memo', 'barcode', 'seller_confirm_deliver','request_return','confirm_refund','gift_memo'],
-      'seller':                  ['detail', 'deliver', 'mark_unusual_state', 'logistic_split', 'print_logistic_bill', 'print_deliver_bill', 'barcode','confirm_color','confirm_check_goods','seller_confirm_deliver','cs_memo', 'confirm_receive', 'logistic_memo','confirm_return'],
+      'seller':                  ['detail', 'setup_logistic','deliver', 'mark_unusual_state', 'logistic_split', 'print_logistic_bill', 'print_deliver_bill', 'barcode','confirm_color','confirm_check_goods','seller_confirm_deliver','cs_memo', 'confirm_receive', 'logistic_memo','confirm_return'],
       'interface':               ['detail', 'seller_confirm_deliver'],
       'logistic':                ['detail', 'logistic_waybill', 'confirm_receive', 'logistic_memo'],
       'admin':                   ['*'],
@@ -19,7 +19,7 @@ window.MagicOrders =
       #trade_mode
       'trades':                  ['deliver', 'logistic_waybill', 'confirm_receive', 'logistic_memo', 'detail', 'seller', 'cs_memo', 'color', 'invoice', 'trade_split', 'trade_unsplit', 'mark_unusual_state', 'reassign', 'request_return', 'confirm_return', 'confirm_refund', 'check_goods', 'deliver', 'seller_confirm_deliver', 'seller_confirm_invoice', 'barcode', 'check_goods', 'logistic_split', 'print_logistic_bill', 'print_deliver_bill', 'confirm_refund', 'operation_log','confirm_color','confirm_check_goods', 'logistic_waybill', 'gift_memo'],
       'deliver':                 ['detail', 'print_deliver_bill'],
-      'logistics':               ['detail', 'logistic_waybill', 'confirm_receive', 'logistic_memo', 'print_logistic_bill'],
+      'logistics':               ['detail','setup_logistic','logistic_waybill', 'confirm_receive', 'logistic_memo', 'print_logistic_bill'],
       'check':                   ['detail'],
       'send':                    ['deliver', 'seller_confirm_deliver','detail'],
       'return':                  ['detail'],

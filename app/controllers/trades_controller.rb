@@ -89,14 +89,15 @@ class TradesController < ApplicationController
     end
 
     if params[:delivered_at] == true
-      logistic = Logistic.find_by_id params[:logistic_info]
-      @trade.logistic_id = logistic.id
-      @trade.logistic_name = logistic.name
-      @trade.logistic_code = logistic.code
-      if @trade.logistic_code == "OTHER"
-        @trade.logistic_waybill = params[:logistic_waybill].present? ? params[:logistic_waybill] : @trade.tid
-      end  
       @trade.delivered_at = Time.now
+    end
+
+    if params[:setup_logistic] == true
+      logistic = Logistic.find_by_id params[:logistic_id]
+      @trade.logistic_id = logistic.try(:id)
+      @trade.logistic_name = logistic.try(:name)
+      @trade.logistic_code = logistic.try(:code)
+      @trade.logistic_waybill = params[:logistic_waybill].present? ? params[:logistic_waybill] : @trade.tid
     end
 
     unless params[:cs_memo].blank?
@@ -324,15 +325,16 @@ class TradesController < ApplicationController
 
   def setup_logistics
     flag = true
-    if params[:data].present?
-      params[:data].values.each do |trade|
-        a = trade
-        trade = Trade.where(tid: a['tid']).first
-        trade.logistic_code = 'OTHER'
-        trade.logistic_waybill = a["logistic"]
-        trade.logistic_name = '圆通'
-        trade.logistic_id = 3
-        trade.save!
+    logistic = Logistic.find_by_id params[:logistic]
+    if logistic && params[:data].present?
+      params[:data].values.each do |info|
+        trade = Trade.where(tid: info['tid']).first
+        trade.logistic_code = logistic.try(:code)
+        trade.logistic_waybill = info["logistic"].present? ? info["logistic"] : trade.tid
+        trade.logistic_name = logistic.try(:name)
+        trade.logistic_id = logistic.try(:id)
+        trade.save
+        trade.operation_logs.create(operated_at: Time.now, operation: '设置物流单号')
       end
     else
       flag =false
@@ -342,20 +344,14 @@ class TradesController < ApplicationController
   end
 
   def batch_deliver
-    flag = true
-    if params[:ids].present?
-      params[:ids].each do |id|
-        trade = Trade.find(id)
-        next unless trade
-        trade.status = 'WAIT_BUYER_CONFIRM_GOODS'
-        trade.delivered_at = Time.now
-        trade.save
-      end
-    else
-      flag =false
+    Trade.any_in(_id: params[:ids]).each do |trade|
+      trade.status = 'WAIT_BUYER_CONFIRM_GOODS'
+      trade.delivered_at = Time.now
+      trade.save
+      trade.operation_logs.create(operated_at: Time.now, operation: '发货')
     end
 
-    render json: {isSuccess: flag}
+    render json: {isSuccess: true}
   end
 
   def batch_print_deliver
@@ -369,14 +365,14 @@ class TradesController < ApplicationController
     Trade.any_in(_id: params[:ids]).each do |trade|
       trade.logistic_printed_at = Time.now
 
-      # 只记录 暂不做修改
-      # if trade.logistic_waybill.blank?
-      #   trade.logistic_id = logistic.try(:id)
-      #   trade.logistic_name = logistic.try(:name)
-      #   trade.logistic_code = logistic.try(:code)
-      # end
+      if trade.logistic_waybill.blank?
+        trade.logistic_id = logistic.try(:id)
+        trade.logistic_name = logistic.try(:name)
+        trade.logistic_code = logistic.try(:code)
+      end
 
       success = false unless trade.save
+      trade.operation_logs.create(operated_at: Time.now, operation: '打印物流单号')
     end
 
     render json: {isSuccess: success}    
