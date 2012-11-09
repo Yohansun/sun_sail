@@ -2,13 +2,14 @@
 class DailyOrdersNotifier < ActionMailer::Base
   default :from => TradeSetting.email_notifier_from  
 
-  def check_status_result(start_time, end_time, lost_orders, wrong_orders, bad_status_orders)
+  def check_status_result(start_time, end_time, lost_orders, wrong_orders, bad_status_orders, hidden_orders)
     reciever = TradeSetting.check_status_result_reciever
     @start_time = start_time
     @end_time = end_time
     @lost_orders = lost_orders
     @wrong_orders = wrong_orders
     @bad_status_orders = bad_status_orders
+    @hidden_orders = hidden_orders
     mail(:to => reciever, :subject => "#{TradeSetting.site_title_basic} 异常核查报告 #{Time.now}")
   end
 

@@ -223,6 +223,12 @@ class TaobaoTrade < Trade
     self.orders.inject(0) { |sum, order| sum + order.bill_info.count }
   end  
 
+  def self.rescue_buyer_message(*args)
+    args.each do |tid|
+      TradeTaobaoMemoFetcher.perform_async(tid)
+    end
+  end 
+
   def taobao_status_memo
     if has_refund_order
       "申请退款"
