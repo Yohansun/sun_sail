@@ -22,8 +22,8 @@ task :reset_stock => :environment do
   not_exist_products = []
   not_exist_sellers = []
 
-  CSV.foreach("#{Rails.root}/lib/data_source/dulux_stock_20121108.csv") do |row|
-    product = Product.where("storage_num = '#{row[0]}' OR iid = '#{row[0]}'").first
+  CSV.foreach("#{Rails.root}/lib/data_source/stock_20121109.csv") do |row|
+    product = Product.find_by_iid row[0]
     
     unless product
       puts "product #{row[0]} not exist"
@@ -32,9 +32,9 @@ task :reset_stock => :environment do
     end
 
     p_cids = product.color_ids
-
-    row[2...-1].each_with_index do |data, index|
+    row[1..-1].each_with_index do |data, index|
       data = data.to_i
+      puts "#{data} -- #{head[index]}"
       seller = Seller.find_by_name head[index]
 
       unless seller
@@ -42,8 +42,7 @@ task :reset_stock => :environment do
         not_exist_sellers << head[index]
         next
       end
-
-      puts "#{product.id} #{seller.id}" 
+ 
       sp = StockProduct.new(
         product_id: product.id,
         seller_id: seller.id,
