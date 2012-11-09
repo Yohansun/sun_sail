@@ -394,11 +394,13 @@
     <h3>批量返回物流单号</h3>
   </div><!-- modal-header -->
   <div class="modal-body">
-    <p>此次共同返回<b class='logistic_count'></b>单</p>
+    <p>此次共同返回<b class='logistic_count'></b>单. <span class='info' style='color:red'></span></p>
     <fieldset>
       <div class="control-group">
         <div class="controls form-inline mar_t5">
-          <label class="input-small nomargin">物流商：</label><input class='logistic_name' type="text" value="圆通" disabled>
+          <label class="input-small nomargin">物流商：</label>
+          <select class="input-medium logistic_select"></select>
+          <!-- <input class='logistic_name' type="text" value="圆通" disabled> -->
         </div>
         <div class="controls form-inline mar_t5">
           <label class="input-small nomargin">开始单号：</label><input class='logistic_begin' type="text" value="">

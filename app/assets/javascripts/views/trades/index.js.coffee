@@ -385,7 +385,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
         html += '<td>' + trade.address + '</td></tr>'
 
       $.get '/logistics/logistic_templates', {}, (t_data)->
-        console.log t_data
         html_options = ''
         for item in t_data
           html_options += '<option lid="' + item.id + '" value="' + item.xml + '">' + item.name + '</option>'
@@ -432,31 +431,51 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     $('.logistic_count').html(length)
     MagicOrders.idCarrier = tmp
 
-    logistics = []
+    logistics = {}
     $.get '/trades/deliver_list', {ids: tmp}, (data) ->
       for trade in data
-        logistics.push trade.logistic_name unless trade.logistic_name in logistics
+        lname = trade.logistic_name
+        lname = '无物流商' if lname == ''
+        logistics[lname] = logistics[lname] || 0
+        logistics[lname] += 1
 
-      if logistics.length > 1
-        alert('只能选择同一家物流商的订单批量设置物流')
-      else
-        $('#ord_logistics_billnum_mult .logistic_name').val(logistics[0])
+      flag = ''
+      notice = '其中'
+      for key, value of logistics
+        notice += key + value + '单'
+        flag = key if value == tmp.length
+
+      $.get '/logistics/logistic_templates', {type: 'all'}, (t_data)->
+        html_options = ''
+        for item in t_data
+          html_options += '<option lid="' + item.id + '" value="' + item.xml + '">' + item.name + '</option>'
+
+        $('#ord_logistics_billnum_mult .logistic_select').html(html_options)
+
+        if flag == ''
+          $('#ord_logistics_billnum_mult .info').html(notice)
+        else
+          $("#ord_logistics_billnum_mult option:contains('" + flag + "')").attr('selected', 'selected')
+
         $('#ord_logistics_billnum_mult').modal('show')
 
   confirmReturn: ->
-    begin = $('.logistic_begin').val()
-    end = $('.logistic_end').val()
-    unless /^\w+$/.test(begin) and /^\w+$/.test(end)
-      alert('输入单号不符合规则')
-      return
+    flag = $(".logistic_select").find("option:selected").html() in ['其他', '虹迪', '雄瑞']
 
-    begin_pre = begin.slice(0, -4)
-    begin_last_number = begin.slice(-4) * 1
-    end_pre = end.slice(0, -4)
-    end_last_number = end.slice(-4) * 1
-    if (end_last_number - begin_last_number + 1) != MagicOrders.idCarrier.length
-      alert('物流单号与选中产品个数不匹配')
-      return
+    unless flag
+      begin = $('.logistic_begin').val()
+      end = $('.logistic_end').val()
+      unless /^\w+$/.test(begin) and /^\w+$/.test(end)
+        alert('输入单号不符合规则')
+        return
+
+      begin_pre = begin.slice(0, -4)
+      begin_last_number = begin.slice(-4) * 1
+      end_pre = end.slice(0, -4)
+      end_last_number = end.slice(-4) * 1
+      if (end_last_number - begin_last_number + 1) != MagicOrders.idCarrier.length
+        alert('物流单号与选中产品个数不匹配')
+        return
 
     $.get '/trades/deliver_list', {ids: MagicOrders.idCarrier}, (data) ->
       html = ''
@@ -465,7 +484,10 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
         html += '<td class="tid">' + trade.tid + '</td>'
         html += '<td>' + trade.name + '</td>'
         html += '<td>' + trade.address + '</td>'
-        html += '<td class="logistic_bill">' + begin_pre + (begin_last_number + i) + '</td></tr>'
+        unless flag
+          html += '<td class="logistic_bill">' + begin_pre + (begin_last_number + i) + '</td></tr>'
+        else
+          html += '<td class="logistic_bill"></td></tr>'
 
       $('#ord_logistics_billnum_mult2 tbody').html(html)
       $('#ord_logistics_billnum_mult').modal('hide')
@@ -480,7 +502,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
       h = {tid: tid, logistic: logistic}
       bb.push(h)
 
-    $.get '/trades/setup_logistics', {data: bb, logistic_name: $('#ord_logistics_billnum_mult .logistic_name').val()}, (data)->
+    $.get '/trades/setup_logistics', {data: bb, logistic: $('#ord_logistics_billnum_mult .logistic_select').find("option:selected").attr('lid')}, (data)->
       if data.isSuccess == true
         $('#ord_logistics_billnum_mult2').modal('hide')
       else

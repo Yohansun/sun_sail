@@ -97,7 +97,7 @@ class TradesController < ApplicationController
       @trade.logistic_id = logistic.try(:id)
       @trade.logistic_name = logistic.try(:name)
       @trade.logistic_code = logistic.try(:code)
-      @trade.logistic_waybill = params[:logistic_waybill]
+      @trade.logistic_waybill = params[:logistic_waybill].present? ? params[:logistic_waybill] : @trade.tid
     end
 
     unless params[:cs_memo].blank?
@@ -325,16 +325,16 @@ class TradesController < ApplicationController
 
   def setup_logistics
     flag = true
-    logistic = Logistic.find_by_name params[:logistic_name]
-    if params[:data].present?
+    logistic = Logistic.find_by_id params[:logistic]
+    if logistic && params[:data].present?
       params[:data].values.each do |info|
         trade = Trade.where(tid: info['tid']).first
         trade.logistic_code = logistic.try(:code)
-        trade.logistic_waybill = info["logistic"]
+        trade.logistic_waybill = info["logistic"].present? ? info["logistic"] : trade.tid
         trade.logistic_name = logistic.try(:name)
         trade.logistic_id = logistic.try(:id)
         trade.save
-        trade.operation_logs.create(operated_at: Time.now, operation: '设置物流单号') if logistic
+        trade.operation_logs.create(operated_at: Time.now, operation: '设置物流单号')
       end
     else
       flag =false

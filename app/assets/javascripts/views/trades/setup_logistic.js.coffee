@@ -19,15 +19,18 @@ class MagicOrders.Views.TradesSetupLogistic extends Backbone.View
     this
 
   save: ->
+    flag = $("#logistic_select").find("option:selected").html() in ['其他', '虹迪', '雄瑞']
     lid = $('#logistic_select').find("option:selected").attr('lid')
     waybill = $('.waybill').val()
-    if waybill == ''
-      alert('运单号不能为空')
-      return
 
-    unless /^\w+$/.test(waybill)
-      alert('输入物流单号不符合规则')
-      return
+    unless flag
+      if waybill == ''
+        alert('运单号不能为空')
+        return
+
+      unless /^\w+$/.test(waybill)
+        alert('输入物流单号不符合规则')
+        return
 
     @model.set('logistic_id', lid)
     @model.set('logistic_waybill', waybill)
