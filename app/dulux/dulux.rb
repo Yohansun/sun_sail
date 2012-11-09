@@ -184,8 +184,7 @@ module Dulux
         trade.orders.each do |o|
           matched_sellers << match_item_sellers(area, o, true)
         end
-        Rails.logger.info "============================="
-        Rails.logger.info matched_sellers.inspect
+
         sellers = matched_sellers.first
         seller = []
         flag = true

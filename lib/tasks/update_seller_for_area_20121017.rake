@@ -25,6 +25,8 @@ task :update_seller_for_area => :environment do
 
     leaves.each do |l|
       l.seller_ids = [seller.id]
+      logistic = Logistic.find_by_name row[4]
+      l.logistics = [logistic]
       l.save
     end
   end
