@@ -249,21 +249,23 @@
       $(function(){
         setTimeout(function(){
           add_node();
-        }, start_date - time_now);
+          count_down();
+        }, start_date - new Date(<%= Time.now.year %>, <%= Time.now.month - 1 %>, <%= Time.now.day %>, <%= Time.now.hour %>, <%= Time.now.min %>,<%= Time.now.sec %>));
       });
     } else if (time_now > end_date){
     } else {
       add_node();
+      count_down();
     }
 
     //设置倒计时
-    $(function(){
+    function count_down(){
       $(document).counter({
         day : $('#day'),
         timer : $('#timer'),
         starts : new Date(<%= @start_at.year %>, <%= @start_at.month - 1 %>, <%= @start_at.day %>, <%= @start_at.hour %>, <%= @start_at.min %>,<%= @start_at.sec %>),
         deadline : new Date(<%= @end_at.year %>, <%= @end_at.month - 1 %>, <%= @end_at.day %>, <%= @end_at.hour %>, <%= @end_at.min %>,<%= @end_at.sec %>)
       });
-    });
+    }
   </script>
 <% end %>
