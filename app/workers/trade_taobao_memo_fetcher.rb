@@ -13,8 +13,9 @@ class TradeTaobaoMemoFetcher
 
     return unless response && response["trade_get_response"]
     remote_trade = response["trade_get_response"]["trade"]
-
-    trade.update_attributes(buyer_message: remote_trade['buyer_message'], seller_memo: remote_trade['seller_memo'])
+    return unless remote_trade
+    trade.update_attributes(buyer_message: remote_trade['buyer_message']) if remote_trade['buyer_message']
+    trade.update_attributes(seller_memo: remote_trade['seller_memo']) if remote_trade['seller_memo']
     trade.save
   end 
   
