@@ -34,8 +34,9 @@ class TradeTaobaoDeliver
       #FIXME, MOVE LATER                     
       trade.orders.each do |order|
         product = Product.find_by_iid order.outer_iid
-        stock_product = StockProduct.where(product_id: product.id, seller_id: trade.seller_id).first
         break unless product
+        stock_product = StockProduct.where(product_id: product.id, seller_id: trade.seller_id).first
+        break unless stock_product
         stock_product.update_quantity!(order.num, '发货', tid)
         StockHistory.create!(
           operation: '发货',
