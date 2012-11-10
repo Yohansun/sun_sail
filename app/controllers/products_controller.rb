@@ -45,11 +45,10 @@ class ProductsController < ApplicationController
   def create
     @product = Product.new params[:product]
 
-    if params[:product]['good_type'] == '2' && params[:child_iid].present?
-      @product.create_packages(params[:child_iid])
-    end
-
     if @product.save
+      if params[:product]['good_type'] == '2' && params[:child_iid].present?
+        @product.create_packages(params[:child_iid])
+      end
       redirect_to products_path
     else
       render new_product_path
