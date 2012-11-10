@@ -48,6 +48,6 @@ class StockProduct < ActiveRecord::Base
       seller_id: seller_id
     )
 
-    update_attributes!(activity: activity + opt_activity, actual: actual + opt_actual)
+    update_attributes(activity: activity + opt_activity, actual: actual + opt_actual)
   end
 end
