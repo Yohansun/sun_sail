@@ -68,7 +68,7 @@ class TaobaoTradePuller
 
           $redis.sadd('TaobaoTradeTids',trade['tid'])
 
-          if trade.status == 'WAIT_SELLER_SEND_GOODS'
+          if trade.dispatchable? && trade.auto_dispatchable?
             if TradeSetting.company == 'dulux'
               DelayAutoDispatch.perform_in(TradeSetting.delay_time || 1.hours, trade.id)
             else
@@ -139,7 +139,7 @@ class TaobaoTradePuller
             local_trade.update_attributes(trade)
             local_trade.operation_logs.build(operated_at: Time.now, operation: "从淘宝更新订单,更新#{local_trade.changed.try(:join, ',')}") if local_trade.changed?
             local_trade.save
-            if local_trade.status == 'WAIT_SELLER_SEND_GOODS'
+            if local_trade.dispatchable? && local_trade.auto_dispatchable?
               if TradeSetting.company == 'dulux'
                 DelayAutoDispatch.perform_in(TradeSetting.delay_time || 1.hours, local_trade.id)
               else
@@ -210,7 +210,7 @@ class TaobaoTradePuller
             local_trade.update_attributes(trade)
             local_trade.operation_logs.build(operated_at: Time.now, operation: "订单状态核查,更新#{local_trade.changed.try(:join, ',')}") if local_trade.changed?
             local_trade.save
-            if local_trade.status == 'WAIT_SELLER_SEND_GOODS'
+            if local_trade.dispatchable? && local_trade.auto_dispatchable?
               if TradeSetting.company == 'dulux'
                 DelayAutoDispatch.perform_in(TradeSetting.delay_time || 1.hours, local_trade.id)
               else
