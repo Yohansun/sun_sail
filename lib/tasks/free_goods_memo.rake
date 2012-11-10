@@ -37,22 +37,30 @@ task :free_goods_memo => :environment do
   #   trade.cs_memo += " 送一个滚筒"
   #   puts "#{trade.tid} save fail" unless trade.save
   # end
-  i = 0
-  Trade.all.each_with_index do |trade, index|
-    puts "#{index} -- #{i}"
-    iids = trade.orders.map(&:outer_iid).inspect
-    trade.cs_memo.delete!(' 送一个滚筒') if trade.cs_memo.present?
-    if iids.include? 'ICI0064'
-      p trade.tid
-      i += 1
-      trade.cs_memo ||= ''
-      trade.cs_memo += " 送一个滚筒"
-      puts "#{trade.tid} save fail" unless trade.save
-      p trade.cs_memo
-    else
-      trade.save
-      next
-    end
+
+  # i = 0
+  # Trade.all.each_with_index do |trade, index|
+  #   puts "#{index} -- #{i}"
+  #   iids = trade.orders.map(&:outer_iid).inspect
+  #   trade.cs_memo.delete!(' 送一个滚筒') if trade.cs_memo.present?
+  #   if iids.include? 'ICI0064'
+  #     p trade.tid
+  #     i += 1
+  #     trade.cs_memo ||= ''
+  #     trade.cs_memo += " 送一个滚筒"
+  #     puts "#{trade.tid} save fail" unless trade.save
+  #     p trade.cs_memo
+  #   else
+  #     trade.save
+  #     next
+  #   end
+  # end
+
+
+  CSV.foreach("#{Rails.root}/lib/data_source/cs_memo_20121110.csv") do |row|
+    tid = row[0]
+    puts tid
+    puts row[0] unless Trade.where(tid: tid).update_all(cs_memo: row[1])
   end
 end
 
