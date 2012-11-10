@@ -7,15 +7,14 @@ class TradeTaobaoMemoFetcher
     trade = TaobaoTrade.where(tid: tid).first
     response = TaobaoQuery.get({
       method: 'taobao.trade.get',
-      fields: 'buyer_message',
+      fields: 'buyer_message, seller_memo',
       tid: tid}, trade.try(:trade_source_id)
     )
 
     return unless response && response["trade_get_response"]
     remote_trade = response["trade_get_response"]["trade"]
 
-    trade.update_attributes(buyer_message: remote_trade['buyer_message'])
-    trade.operation_logs.build(operated_at: Time.now, operation: '从淘宝抓取留言')
+    trade.update_attributes(buyer_message: remote_trade['buyer_message'], seller_memo: remote_trade['seller_memo'])
     trade.save
   end 
   

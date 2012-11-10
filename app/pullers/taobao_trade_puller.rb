@@ -21,7 +21,7 @@ class TaobaoTradePuller
       begin
         response = TaobaoQuery.get({
           method: 'taobao.trades.sold.get',
-          fields: 'seller_memo, total_fee, created, tid, status, post_fee, receiver_name, pay_time, receiver_state, receiver_city, receiver_district, receiver_address, receiver_zip, receiver_mobile, receiver_phone, buyer_nick, tile, type, point_fee, is_lgtype, is_brand_sale, is_force_wlb, modified, alipay_id, alipay_no, alipay_url, shipping_type, buyer_obtain_point_fee, cod_fee, cod_status, commission_fee, seller_nick, consign_time, received_payment, payment, timeout_action_time, has_buyer_message, real_point_fee, orders',
+          fields: 'total_fee, created, tid, status, post_fee, receiver_name, pay_time, receiver_state, receiver_city, receiver_district, receiver_address, receiver_zip, receiver_mobile, receiver_phone, buyer_nick, tile, type, point_fee, is_lgtype, is_brand_sale, is_force_wlb, modified, alipay_id, alipay_no, alipay_url, shipping_type, buyer_obtain_point_fee, cod_fee, cod_status, commission_fee, seller_nick, consign_time, received_payment, payment, timeout_action_time, has_buyer_message, real_point_fee, orders',
           start_created: start_time.strftime("%Y-%m-%d %H:%M:%S"), end_created: end_time.strftime("%Y-%m-%d %H:%M:%S"),
           page_no: page_no, page_size: 40}, trade_source_id
           )
@@ -78,7 +78,7 @@ class TaobaoTradePuller
             end
           end
 
-          TradeTaobaoMemoFetcher.perform_async(trade.tid) if trade.has_buyer_message
+          TradeTaobaoMemoFetcher.perform_async(trade.tid) 
         end
 
         page_no += 1
@@ -107,7 +107,7 @@ class TaobaoTradePuller
         puts "upate_orders: fetching page #{page_no}"
 
         response = TaobaoQuery.get({:method => 'taobao.trades.sold.increment.get',
-          :fields => 'seller_memo, total_fee, tid, status, adjust_fee, post_fee, receiver_name, pay_time, receiver_state, receiver_city, receiver_district, receiver_address, receiver_zip, receiver_mobile, receiver_phone, buyer_nick, title, type, point_fee, modified, alipay_id, alipay_no, alipay_url, shipping_type, buyer_obtain_point_fee, cod_fee, cod_status, commission_fee, consign_time, received_payment, payment, timeout_action_time, has_buyer_message, real_point_fee, orders',
+          :fields => 'total_fee, tid, status, adjust_fee, post_fee, receiver_name, pay_time, receiver_state, receiver_city, receiver_district, receiver_address, receiver_zip, receiver_mobile, receiver_phone, buyer_nick, title, type, point_fee, modified, alipay_id, alipay_no, alipay_url, shipping_type, buyer_obtain_point_fee, cod_fee, cod_status, commission_fee, consign_time, received_payment, payment, timeout_action_time, has_buyer_message, real_point_fee, orders',
           :start_modified => start_time.strftime("%Y-%m-%d %H:%M:%S"),
           :end_modified => end_time.strftime("%Y-%m-%d %H:%M:%S"),
           :page_no => page_no,
@@ -136,7 +136,7 @@ class TaobaoTradePuller
             next unless updatable?(local_trade, trade['status'])
             orders = trade.delete('orders')
             trade['trade_source_id'] = trade_source_id
-            local_trade.update_attributes(trade)
+            local_trade.update_attributes(trade)      
             local_trade.operation_logs.build(operated_at: Time.now, operation: "从淘宝更新订单,更新#{local_trade.changed.try(:join, ',')}") if local_trade.changed?
             local_trade.save
             if local_trade.dispatchable? && local_trade.auto_dispatchable?
@@ -146,7 +146,7 @@ class TaobaoTradePuller
                 local_trade.auto_dispatch!
               end
             end
-
+            TradeTaobaoMemoFetcher.perform_async(local_trade.tid)
             p "update trade #{trade['tid']}"
           end
         end
@@ -177,7 +177,7 @@ class TaobaoTradePuller
       begin
         response = TaobaoQuery.get({
           method: 'taobao.trades.sold.get',
-          fields: 'seller_memo, total_fee, created, tid, status, post_fee, receiver_name, pay_time, receiver_state, receiver_city, receiver_district, receiver_address, receiver_zip, receiver_mobile, receiver_phone, buyer_nick, tile, type, point_fee, is_lgtype, is_brand_sale, is_force_wlb, modified, alipay_id, alipay_no, alipay_url, shipping_type, buyer_obtain_point_fee, cod_fee, cod_status, commission_fee, seller_nick, consign_time, received_payment, payment, timeout_action_time, has_buyer_message, real_point_fee, orders',
+          fields: 'total_fee, created, tid, status, post_fee, receiver_name, pay_time, receiver_state, receiver_city, receiver_district, receiver_address, receiver_zip, receiver_mobile, receiver_phone, buyer_nick, tile, type, point_fee, is_lgtype, is_brand_sale, is_force_wlb, modified, alipay_id, alipay_no, alipay_url, shipping_type, buyer_obtain_point_fee, cod_fee, cod_status, commission_fee, seller_nick, consign_time, received_payment, payment, timeout_action_time, has_buyer_message, real_point_fee, orders',
           start_created: start_time.strftime("%Y-%m-%d %H:%M:%S"), end_created: end_time.strftime("%Y-%m-%d %H:%M:%S"),
           page_no: page_no, page_size: 40}, trade_source_id
           )
@@ -217,8 +217,7 @@ class TaobaoTradePuller
                 local_trade.auto_dispatch!
               end
             end
-            TradeTaobaoMemoFetcher.perform_async(local_trade.tid) if local_trade.has_buyer_message
-
+             TradeTaobaoMemoFetcher.perform_async(local_trade.tid)
             p "update trade #{trade['tid']}"
           end
         end
