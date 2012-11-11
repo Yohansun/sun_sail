@@ -105,7 +105,7 @@ class TradeReporter
           trade_orders = trade.orders
           sum_fee = trade.orders.inject(0) { |sum, order| sum + order.total_fee.to_f }
           post_fee = trade.post_fee
-          total_fee = sum_fee.to_f + post_fee.to_f
+          total_fee = trade.payment
           created = trade.created.try(:strftime,"%Y-%m-%d %H:%M:%S")
           pay_time = trade.pay_time.try(:strftime,"%Y-%m-%d %H:%M:%S")
           dispatched_at = trade.dispatched_at.try(:strftime,"%Y-%m-%d %H:%M:%S")
