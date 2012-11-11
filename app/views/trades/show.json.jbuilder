@@ -19,6 +19,7 @@ json.trade_source_name @trade.trade_source_name
 json.buyer_message @trade.buyer_message
 json.seller_memo @trade.seller_memo
 json.post_fee @trade.post_fee
+json.payment @trade.payment
 
 unless TradeSetting.company == 'dulux' && (current_user.has_role?(:seller) || current_user.has_role?(:logistic))
   json.seller_discount @trade.seller_discount
