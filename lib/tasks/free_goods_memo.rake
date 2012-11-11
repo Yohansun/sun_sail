@@ -57,21 +57,21 @@ task :free_goods_memo => :environment do
   # end
 
 
-  CSV.foreach("#{Rails.root}/lib/data_source/cs_memo_20121110.csv") do |row|
+  CSV.foreach("#{Rails.root}/lib/data_source/cs_memo_20111111.csv") do |row|
     tid = row[0]
     puts tid
     puts row[0] unless Trade.where(tid: tid).update_all(cs_memo: row[1])
   end
 end
 
-def update_gift_memo(tid, memo)
-  trade = Trade.where(tid: tid).first
+# def update_gift_memo(tid, memo)
+#   trade = Trade.where(tid: tid).first
 
-  unless trade
-    puts "#{tid} not found"
-  else
-    trade.gift_memo ||= ''
-    trade.gift_memo += memo
-    puts "#{tid} save fail" unless trade.save
-  end
-end
+#   unless trade
+#     puts "#{tid} not found"
+#   else
+#     trade.gift_memo ||= ''
+#     trade.gift_memo += memo
+#     puts "#{tid} save fail" unless trade.save
+#   end
+# end
