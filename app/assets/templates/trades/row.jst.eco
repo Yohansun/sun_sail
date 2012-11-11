@@ -229,7 +229,7 @@
 </td>
 <% if MagicOrders.company == "dulux" and MagicOrders.role_key != 'seller' and MagicOrders.role_key != 'logistic' : %>
 <td data-col='total_fee'>
-  ￥<%= @trade.get('total_fee') %>
+  ￥<%= @trade.get('payment') %>
 </td>
 <% end %>
 <!-- <td data-col='deliver_bill' ><!--发货单--</td> -->
