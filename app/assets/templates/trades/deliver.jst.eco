@@ -3,6 +3,7 @@
   <h3>订单发货</h3>
 </div><!-- modal-header -->
 <div class="modal-body">
+  <div><p class='error' style='color:red;'></p></div>
 <fieldset>
   <table class="table table-bordered">
     <tbody>
