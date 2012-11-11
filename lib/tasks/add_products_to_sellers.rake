@@ -9,7 +9,7 @@ task :add_products_to_sellers => :environment do
   # product_iids = ['ICI0062','ICI0063','ICI0064','ICI0065','ICI0066','ICI0067','ICI0068','ICI0069',
   #                 'ICI0070','ICI0071','ICI0072','ICI0073','ICI0074','ICI0075','ICI0076']
 
-  product_iids = ['ICI0077','ICI0078','ICI0079','ICI0005']
+  product_iids = ['ICI0050']
 
 
   product_iids.each do |iid|
@@ -25,31 +25,29 @@ task :add_products_to_sellers => :environment do
     puts 'begin add to sellers'
 
     Seller.find_each do |seller|
-      # sp = seller.stock_products.build(
-      #   product_id: product.id,
-      #   max: 99999,
-      #   safe_value: 20
-      # )
-
-
-      # if sp.save
-      #   puts 'creat stock product success'
-      # else
-      #   next
-      # end
       sp = seller.stock_products.where(product_id: product.id).first
 
-      if sp
-        sp.color_ids = color_ids
+      unless sp
+        sp = seller.stock_products.build(
+          product_id: product.id,
+          max: 99999,
+          safe_value: 20
+        )
       end
 
-      puts 'set color success'
+      if sp.save
+        puts 'creat stock product success'
+        sp.color_ids = color_ids
+        puts 'set color success'
 
-      # if sp.update_quantity!(200, '入库', seller.id)
-      #   puts 'add num success'
-      # else
-      #   puts 'add num fail'
-      # end
+        if sp.update_quantity!(100, '入库', seller.id)
+          puts 'add num success'
+        else
+          puts 'add num fail'
+        end
+      else
+        next
+      end
     end
 
     puts iid + ' operation end'

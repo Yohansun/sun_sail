@@ -10,7 +10,7 @@ task :fetch_taobao_data => :environment do
   start_time = Time.local(2012,11,11,0,0,0)
   end_time = Time.now
 
-  trade_source_id ＝ 2
+  trade_source_id = 2
   CSV.open('result.csv', 'wb') do |csv|
   begin
     response = TaobaoQuery.get({
