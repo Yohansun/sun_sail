@@ -54,7 +54,7 @@
           <% unless @trade.get('total_fee') is undefined : %>
           物流费：￥<%= @trade.get 'post_fee' %>
           <br>
-          总价：￥<%= @trade.get('sum_fee') %>
+          总价：￥<%= @trade.get('total_fee') %>
           <% if @trade.get('seller_discount') > 0 : %>
           <br>订单折扣：￥<%= @trade.get 'seller_discount' %>
           <% end %>
