@@ -187,7 +187,8 @@ class TradeDecorator < Draper::Base
       when 'TaobaoPurchaseOrder'
         self.sum_fee.to_f + self.post_fee.to_f
       when 'TaobaoTrade'
-        self.sum_fee.to_f + self.post_fee.to_f
+        #self.sum_fee.to_f + self.post_fee.to_f
+        self.payment
       when 'JingdongTrade'
         trade.order_seller_price
     end
