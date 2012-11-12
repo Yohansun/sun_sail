@@ -167,39 +167,51 @@ module Dulux
       end
 
       def match_item_sellers(area, order, use_color)
-        sql = "products.iid = '#{order.outer_iid}' AND stock_products.activity > #{order.num}"
-        products = StockProduct.joins(:product).where(sql)
+        sellers = nil
+        op = Product.find_by_iid order.outer_iid
+        return [] unless op
+        color_num = order.color_num
+        color_num.delete('')
+        op_package = op.package_info
+        op_package << {
+          iid: order.outer_iid,
+          number: order.num,
+          title: order.title
+        } if op_package.blank?
 
-        if use_color && order.color_num.present?
-          colors = order.color_num.flatten.compact
-          colors.delete('')
-          products = products.select {|p| (colors - p.colors.map(&:num)).size == 0}
+        op_package.each do |pp|
+          sql = "products.iid = '#{pp[:iid]}' AND stock_products.activity > #{pp[:number]}"
+          products = StockProduct.joins(:product).where(sql)
+
+          if use_color && color_num.present?
+            color_num.each do |colors|
+              next if colors.blank?
+              colors = colors.shift(pp[:number]).flatten.compact.uniq
+              colors.delete('')
+              products = products.select {|p| (colors - p.colors.map(&:num)).size == 0}
+            end
+          end
+
+          product_seller_ids = products.map &:seller_id
+          a_sellers = area.sellers.where(id: product_seller_ids, active: true).reorder("performance_score DESC")
+          if sellers
+            sellers = sellers & a_sellers
+          else
+            sellers = a_sellers
+          end
         end
-
-        product_seller_ids = products.map &:seller_id
-        area.sellers.where(id: product_seller_ids, active: true).reorder("performance_score DESC")
+        sellers
       end
 
       def match_trade_seller(trade, area)
-        matched_sellers = []
+        matched_sellers = nil
         trade.orders.each do |o|
-          matched_sellers << match_item_sellers(area, o, true)
+          matched_sellers ||= match_item_sellers(area, o, true)
+          matched_sellers = matched_sellers & match_item_sellers(area, o, true)
         end
 
-        sellers = matched_sellers.first
-        seller = []
-        flag = true
-        sellers.each do |fs|
-          matched_sellers.each do |ms|
-            unless ms.include? fs
-              flag = false
-              break
-            end
-          end
-          seller << fs if flag
-        end
-
-        seller.first
+        matched_sellers ||= []
+        matched_sellers.first
       end
 		end
   end
