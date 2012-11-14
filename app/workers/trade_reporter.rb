@@ -184,6 +184,7 @@ class TradeReporter
 
     file = "#{Rails.root}/data/#{id}.xls"
     FileUtils.touch(file) unless File.exist?(file)
+    FileUtils.chmod 0777, file
     book.write file
     report.update_attributes!(performed_at: Time.now)
   end
