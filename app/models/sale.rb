@@ -17,10 +17,10 @@ class Sale < ActiveRecord::Base
   end
 
   def all_trade_fee(start_time, end_time)
-    all_money = Trade.where("$and" => [{:created.gte => start_time.utc - 8.hour }, {:created.lte => end_time.utc - 8.hour}]).sum(:payment).to_f.round(2)
+    all_money = Trade.where("$and" => [{:created.gte => start_time.utc - 8.hour }, {:created.lt => end_time.utc - 8.hour}]).sum(:payment).to_f.round(2)
   end
 
   def paid_trade_fee(start_time, end_time)
-    paid_trades = Trade.where("$and" => [{:pay_time.gte => start_time.utc - 8.hour }, {:pay_time.lte => end_time.utc - 8.hour }]).sum(:payment).to_f.round(2)
+    paid_trades = Trade.where("$and" => [{:pay_time.gte => start_time.utc - 8.hour }, {:pay_time.lt => end_time.utc - 8.hour }]).sum(:payment).to_f.round(2)
   end
 end
