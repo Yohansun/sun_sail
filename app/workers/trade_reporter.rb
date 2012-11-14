@@ -183,6 +183,7 @@ class TradeReporter
     end
 
     file = "data/#{id}.xls"
+    FileUtils.cd Rails.root
     # FileUtils.touch(file) unless File.exist?(file)
     # FileUtils.chmod 0777, file
     book.write file
