@@ -40,9 +40,7 @@ group :test do
   gem 'factory_girl_rails'
 end
 
-gem 'mongoid', '~> 2.4.11'
-gem 'bson', '<= 1.6.2'
-gem 'bson_ext', '<= 1.6.2'
+gem 'mongoid', '3.0.13'
 gem 'draper'
 gem 'inherited_resources'
 gem 'devise'
@@ -50,6 +48,7 @@ gem 'devise-encryptable'
 gem 'rails-settings-cached'
 gem 'twitter-bootstrap-rails', '>= 2.1.2'
 gem 'simple_form'
+gem "kiqstand"
 gem 'awesome_nested_set'
 gem 'kaminari'
 gem 'rolify'
