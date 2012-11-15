@@ -285,7 +285,7 @@ class TradesController < ApplicationController
   def split_trade
     trade = Trade.find params[:id]
     new_trade_ids = split_orders(trade)
-    trade.operation_logs.create(operated_at: Time.now, operation: '拆单')
+    trade.operation_logs.create(operated_at: Time.now, operation: '拆单', operator_id: current_user.id, operator: current_user.name)
     respond_to do |format|
       format.json { render json: {ids: new_trade_ids} }
     end
@@ -334,7 +334,7 @@ class TradesController < ApplicationController
         trade.logistic_name = logistic.try(:name)
         trade.logistic_id = logistic.try(:id)
         trade.save
-        trade.operation_logs.create(operated_at: Time.now, operation: '设置物流单号')
+        trade.operation_logs.create(operated_at: Time.now, operation: '设置物流单号', operator_id: current_user.id, operator: current_user.name)
       end
     else
       flag =false
@@ -348,7 +348,7 @@ class TradesController < ApplicationController
       trade.status = 'WAIT_BUYER_CONFIRM_GOODS'
       trade.delivered_at = Time.now
       trade.save
-      trade.operation_logs.create(operated_at: Time.now, operation: '发货')
+      trade.operation_logs.create(operated_at: Time.now, operation: '发货', operator_id: current_user.id, operator: current_user.name)
     end
 
     render json: {isSuccess: true}
@@ -358,7 +358,7 @@ class TradesController < ApplicationController
     Trade.any_in(_id: params[:ids]).each do |trade|
       trade.deliver_bill_printed_at = Time.now
       trade.save
-      trade.operation_logs.create(operated_at: Time.now, operation: '打印发货单')
+      trade.operation_logs.create(operated_at: Time.now, operation: '打印发货单', operator_id: current_user.id, operator: current_user.name)
     end
 
     render json: {isSuccess: true}
@@ -377,7 +377,7 @@ class TradesController < ApplicationController
       end
 
       success = false unless trade.save
-      trade.operation_logs.create(operated_at: Time.now, operation: '打印物流单')
+      trade.operation_logs.create(operated_at: Time.now, operation: '打印物流单', operator_id: current_user.id, operator: current_user.name)
     end
 
     render json: {isSuccess: success}    
