@@ -87,6 +87,7 @@ class TaobaoTrade < Trade
   field :promotion, type: String
 
   embeds_many :taobao_orders
+  embeds_many :promotion_details
 
   accepts_nested_attributes_for :taobao_orders
 

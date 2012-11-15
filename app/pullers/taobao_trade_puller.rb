@@ -79,6 +79,7 @@ class TaobaoTradePuller
           end
 
           TradeTaobaoMemoFetcher.perform_async(trade.tid) 
+          TradeTaobaoPromotionFetcher.perform_async(trade.tid)
         end
 
         page_no += 1
