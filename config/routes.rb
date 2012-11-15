@@ -93,6 +93,7 @@ MagicOrders::Application.routes.draw do
     resources :trades do
       member do
         get :seller_for_area
+        get :split_trade
       end
 
       collection do

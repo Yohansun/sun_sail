@@ -146,6 +146,7 @@ module Dulux
         # TODO 完善物流费用拆分逻辑
         new_trade.post_fee = splitted_order[:post_fee]
         new_trade.total_fee = splitted_order[:total_fee]
+        new_trade.payment = new_trade.orders.sum(:payment)
         new_trade.splitted = true
 
         new_trade.save
