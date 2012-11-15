@@ -355,8 +355,13 @@ class TradesController < ApplicationController
   end
 
   def batch_print_deliver
-    success = Trade.any_in(_id: params[:ids]).update_all(deliver_bill_printed_at: Time.now)
-    render json: {isSuccess: success}
+    Trade.any_in(_id: params[:ids]).each do |trade|
+      trade.deliver_bill_printed_at = Time.now
+      trade.save
+      trade.operation_logs.create(operated_at: Time.now, operation: '打印发货单')
+    end
+
+    render json: {isSuccess: true}
   end
 
   def batch_print_logistic
@@ -372,7 +377,7 @@ class TradesController < ApplicationController
       end
 
       success = false unless trade.save
-      trade.operation_logs.create(operated_at: Time.now, operation: '打印物流单号')
+      trade.operation_logs.create(operated_at: Time.now, operation: '打印物流单')
     end
 
     render json: {isSuccess: success}    
