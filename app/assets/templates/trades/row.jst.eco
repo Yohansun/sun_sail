@@ -15,13 +15,14 @@
           </a>
         </li>
 
-        <% unless @trade.get('seller_id') : %>
-          <% if @trade.get('splitted_tid') : %>
-            <li><a data-toggle="modal" href="#" data-type="unsplit">订单合并</a></li>
-          <% else : %>
-            <li><a data-toggle="modal" href="#" data-type="trade_split">订单拆分</a></li>
+        <% if @trade.get('splitted_tid') : %>
+          <li><a data-toggle="modal" href="#" data-type="unsplit">订单合并</a></li>
+        <% else : %>
+          <% unless @trade.get('seller_id') : %>
+          <li><a data-toggle="modal" href="#" data-type="trade_split">订单拆分</a></li>
           <% end %>
         <% end %>
+        
         <% if MagicOrders.trade_type in ['logistic_waybill_exist', 'logistic_waybill_void'] : %>
           <li><a data-toggle="modal" href="#" data-type="setup_logistic">物流单号设置</a></li>
         <% end %>
@@ -80,25 +81,26 @@
       <% if @trade.get('invoice_name') && @trade.get('seller_confirm_invoice_at') == undefined && @trade.get('status_text') isnt "申请退款" : %>
         <li><a data-toggle="modal" href="#" data-type="seller_confirm_invoice">确认开票</a></li>
       <% end %>
+
       <% if @trade.get('dispatched_at') || @trade.get('delivered_at') || @trade.get('consign_time'): %>
-      <% if @trade.get('status_text') == '已付款，已发货' || @trade.get('status_text') == '交易成功' : %>
-      <% unless MagicOrders.role_key == 'seller' : %>
-        <li><a data-toggle="modal" href="#" data-type="barcode">输入唯一码</a></li>
-      <% end %>
-      <% end %>
+        <% if @trade.get('status_text') == '已付款，已发货' || @trade.get('status_text') == '交易成功' : %>
+          <% unless MagicOrders.role_key == 'seller' : %>
+            <li><a data-toggle="modal" href="#" data-type="barcode">输入唯一码</a></li>
+          <% end %>
+        <% end %>
       <% end %>
 
       <li class= "divider"></li>
       <% if @trade.get('has_refund_order') == true : %>
-      <% if @trade.get('request_return_at') == undefined : %>
-      <li><a data-toggle="modal" href="#" data-type="request_return">申请退货</a></li>
-      <% end %>
-      <% if @trade.get('request_return_at') && @trade.get('confirm_return_at') == undefined : %>
-      <li><a data-toggle="modal" href="#" data-type="confirm_return">确认退货</a></li>
-      <% end %>
-      <% if @trade.get('confirm_return_at') && @trade.get('confirm_refund_at') == undefined : %>
-      <li><a data-toggle="modal" href="#" data-type="confirm_refund">确认退款</a></li>
-      <% end %>
+        <% if @trade.get('request_return_at') == undefined : %>
+          <li><a data-toggle="modal" href="#" data-type="request_return">申请退货</a></li>
+        <% end %>
+        <% if @trade.get('request_return_at') && @trade.get('confirm_return_at') == undefined : %>
+          <li><a data-toggle="modal" href="#" data-type="confirm_return">确认退货</a></li>
+        <% end %>
+        <% if @trade.get('confirm_return_at') && @trade.get('confirm_refund_at') == undefined : %>
+          <li><a data-toggle="modal" href="#" data-type="confirm_refund">确认退款</a></li>
+        <% end %>
       <% end %>
       <li><a data-toggle="modal" href="#" data-type="invoice_number">发票号设置</a></li>
 
@@ -118,7 +120,6 @@
     </ul>
   </div>
 </td>
-
 
 <td data-col='trade_source'><span class="label label-warning"><%= @trade.get('trade_source') %></span>
 <% if @trade.get('trade_source') == "分销平台" : %>
