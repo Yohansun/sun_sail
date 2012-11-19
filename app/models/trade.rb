@@ -484,6 +484,7 @@ class Trade
         trade = trades.between pay_time: pay_start_time..pay_end_time
       end
 
+<<<<<<< HEAD
       # 按状态筛选
       if params[:search][:status_option].present?
         status_array = params[:search][:status_option].split(",")
@@ -494,6 +495,22 @@ class Trade
           # status_hash = {"$and" =>[{:status.in => status_array},{"$or" => [{:has_refund_order.exists => false},{has_refund_order: false}]}]}
           trades = trades.where :status.in => status_array, :has_refund_order.nin => [nil, false]
         end
+=======
+    # 按分流时间筛选
+    if params[:search] && params[:search][:dispatch_start_date].present? && params[:search][:dispatch_end_date].present?
+      dispatch_start_time = "#{params[:search][:dispatch_start_date]} #{params[:search][:dispatch_start_time]}".to_time(form = :local)
+      dispatch_end_time = "#{params[:search][:dispatch_end_date]} #{params[:search][:dispatch_end_time]}".to_time(form = :local)
+      dispatch_time_hash = {:dispatched_at.gte => dispatch_start_time, :dispatched_at.lte => dispatch_end_time}
+    end
+
+    # 按状态筛选
+    if params[:search] && params[:search][:status_option].present?
+      status_array = params[:search][:status_option].split(",")
+      if status_array == ['require_refund']
+        status_hash = {has_refund_order: true}
+      else
+        status_hash = {"$and" =>[{:status.in => status_array},{"$or" => [{:has_refund_order.exists => false},{has_refund_order: false}]}]}
+>>>>>>> TEMPLATE
       end
 
       # 按来源筛选
@@ -571,6 +588,7 @@ class Trade
         trades = trades.any_in logistic_id: Logistic.where("name LIKE '%#{params[:search][:search_logistic]}%'").map(&:id)
       end
 
+<<<<<<< HEAD
       # 集中筛选
       # search_hash = {"$and" => [
       #   seller_hash, tid_hash, receiver_name_hash, receiver_mobile_hash,
@@ -581,6 +599,19 @@ class Trade
       #   receiver_state_hash, receiver_city_hash, receiver_district_hash,
       #   ].compact}
       # search_hash == {"$and"=>[]} ? search_hash = nil : search_hash
+=======
+    # 集中筛选
+    if params[:search]
+      search_hash = {"$and" => [
+        seller_hash, tid_hash, receiver_name_hash, receiver_mobile_hash,
+        deliver_print_time_hash, create_time_hash, pay_time_hash, dispatch_time_hash, logistic_print_time_hash,
+        status_hash, type_hash, logistic_hash,
+        seller_memo_hash, buyer_message_hash, has_color_info_hash, has_cs_memo_hash, invoice_all_hash,
+        cs_memo_void_hash, color_info_void_hash,
+        receiver_state_hash, receiver_city_hash, receiver_district_hash,
+        ].compact}
+      search_hash == {"$and"=>[]} ? search_hash = nil : search_hash
+>>>>>>> TEMPLATE
     end
 
     ## 过滤有留言但还在抓取 + 总筛选
