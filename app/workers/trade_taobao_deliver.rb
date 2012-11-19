@@ -36,7 +36,7 @@ class TradeTaobaoDeliver
       trade.nofity_stock "发货", trade.seller_id
     else
       Notifier.deliver_errors(id, errors).deliver
-      trade.unusual_states.build(reason: "发货异常#{errors['sub_msg']}", key: 'other_unusual_state', created_at: Time.now,)
+      trade.unusual_states.build(reason: "发货异常#{errors['sub_msg']}", key: 'other_unusual_state', created_at: Time.now)
       trade.save
     end
   end

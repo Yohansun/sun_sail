@@ -344,13 +344,7 @@ class TradesController < ApplicationController
   end
 
   def batch_deliver
-    Trade.any_in(_id: params[:ids]).each do |trade|
-      trade.status = 'WAIT_BUYER_CONFIRM_GOODS'
-      trade.delivered_at = Time.now
-      trade.save
-      trade.operation_logs.create(operated_at: Time.now, operation: '发货', operator_id: current_user.id, operator: current_user.name)
-    end
-
+    Trade.any_in(_id: params[:ids]).update_all(delivered_at: Time.now)
     render json: {isSuccess: true}
   end
 
