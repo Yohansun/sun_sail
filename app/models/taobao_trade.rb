@@ -116,9 +116,11 @@ class TaobaoTrade < Trade
   end
 
   def deliverable?
-    status_array = TaobaoTrade.where(tid: tid).map(&:status)
-    undeliverable_status = status_array - ['WAIT_SELLER_SEND_GOODS']
-    undeliverable_status.size == 0
+    trades = TaobaoTrade.where(tid: tid).select do |trade|
+      trade.orders.where(:refund_status.in => ['NO_REFUND', 'CLOSED']).size != 0
+    end
+
+    (trades.map(&:status) - ["WAIT_SELLER_SEND_GOODS"]).size == 0 && !trades.map(&:delivered_at).include?(nil)
   end
 
   def deliver!
