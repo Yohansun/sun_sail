@@ -95,6 +95,22 @@ class TaobaoTrade < Trade
     self.taobao_orders
   end
 
+  def nofity_stock(operation, op_seller)
+    orders.each do |order|
+      product = Product.find_by_iid order.outer_iid
+      package = product.package_info
+      if package.present?
+        package.each do |data|
+          stock_product = StockProduct.joins(:product).where("products.iid = ? AND seller_id = ?", data[:iid], op_seller).readonly(false).first
+          stock_product.update_quantity!(data[:number] * order.num, operation, op_seller, tid)
+        end
+      else
+        stock_product = StockProduct.where(product_id: product.id, seller_id: op_seller).first
+        stock_product.update_quantity!(order.num, operation, op_seller, tid)
+      end
+    end
+  end
+
   def orders=(new_orders)
     self.taobao_orders = new_orders
   end
@@ -145,52 +161,21 @@ class TaobaoTrade < Trade
   end
 
   def dispatch!(seller = nil)
-    # if TradeSetting.company == 'dulux'
-    #   split_orders(self)
-    # else
-
-    # FIX ME
-    # SHOULD ALSO WRITE IN TAOBAOTRADE UPDATE METHOD
-    # if TradeSetting.company == 'dulux' && self.has_special_seller_memo? && self.special_seller_memo.present?
-    #   cs_memo = "#{self.cs_memo} #{self.special_seller_memo}"
-    #   self.update_attributes!(cs_memo: cs_memo) 
-    # end
-
     return false unless dispatchable?
 
     unless seller
       seller = matched_seller
     end
 
-    return false unless seller
-      
-    if seller.has_stock
-      return false unless can_lock_products?(self, seller.id)
-    end
+    return false if seller.blank?
 
-    orders.each do |order|
-      product = Product.find_by_iid order.outer_iid
-      stock_product = StockProduct.where(product_id: product.id, seller_id: seller.id).first
-      break unless product
-      stock_product.update_quantity!(order.num, '锁定', seller.id, tid)
-    end
-
-    if seller
-      update_attributes(seller_id: seller.id, seller_name: seller.name, dispatched_at: Time.now)
-    end
-
+    nofity_stock '锁定', seller.id
+    update_attributes(seller_id: seller.id, seller_name: seller.name, dispatched_at: Time.now)
   end
 
   def reset_seller
     return unless seller_id
-
-    orders.each do |order|
-      product = Product.find_by_iid order.outer_iid
-      stock_product = StockProduct.where(product_id: product.id, seller_id: seller_id).first
-      break unless product
-      stock_product.update_quantity!(order.num, '解锁', seller_id, tid)
-    end
-
+    nofity_stock "解锁", seller_id
     update_attributes(seller_id: nil, seller_name: nil, dispatched_at: nil)
   end
 

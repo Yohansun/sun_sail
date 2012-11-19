@@ -26,26 +26,14 @@ class TradeTaobaoDeliver
       else
         content = "亲您好，您的订单#{tid}已经发货，我们将尽快为您送达，请注意查收。【#{TradeSetting.shopname_taobao}】"
       end
+
       notify_kind = "after_send_goods"
       if content && mobile
         SmsNotifier.perform_async(content, mobile, tid ,notify_kind) 
       end
       
       #FIXME, MOVE LATER                     
-      trade.orders.each do |order|
-        product = Product.find_by_iid order.outer_iid
-        break unless product
-        stock_product = StockProduct.where(product_id: product.id, seller_id: trade.seller_id).first
-        break unless stock_product
-        stock_product.update_quantity!(order.num, '发货', tid)
-        StockHistory.create!(
-          operation: '发货',
-          number: order.num,
-          stock_product_id: stock_product.id,
-          tid: trade.tid,
-          seller_id: trade.seller_id
-        )
-      end
+      trade.nofity_stock "发货", trade.seller_id
     else
       Notifier.deliver_errors(id, errors).deliver
       trade.unusual_states.build(reason: "发货异常#{errors['sub_msg']}", key: 'other_unusual_state', created_at: Time.now,)
