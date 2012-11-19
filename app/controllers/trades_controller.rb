@@ -383,7 +383,7 @@ class TradesController < ApplicationController
     render json: {isSuccess: success}    
   end
 
-  def recover_from_split
+  def recover
     trade = Trade.find params[:id]
     parent_trade = Trade.deleted.where(tid: trade.tid, splitted_tid: nil).first
 

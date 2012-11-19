@@ -184,11 +184,3 @@ class MagicOrders.Routers.Trades extends Backbone.Router
 
   printDeliverBills: ->
     $('[checked="checked"].trade_check')
-
-  recover: (id) ->
-    @model = new MagicOrders.Models.Trade(id: id)
-    @model.fetch success: (model, response) =>
-      $.unblockUI()
-      view = new MagicOrders.Views.TradesUnsplited(model: model)
-      $('#trade_unsplited').html(view.render().el)
-      $('#trade_unsplited').modal('show')

@@ -16,7 +16,7 @@
         </li>
 
         <% if @trade.get('splitted_tid') : %>
-          <li><a data-toggle="modal" href="#" data-type="unsplit">订单合并</a></li>
+          <li><a data-toggle="modal" href="#" data-type="recover">订单合并</a></li>
         <% else : %>
           <% unless @trade.get('seller_id') : %>
           <li><a data-toggle="modal" href="#" data-type="trade_split">订单拆分</a></li>
@@ -50,7 +50,6 @@
       <% end %>
       <li><a data-toggle="modal" href="#" data-type="logistic_memo">物流商备注</a></li>
       <% end %>
-      <!-- <li><a data-toggle="modal" href="#" data-type="trade_unsplit">订单合并</a></li> -->
       <!-- <li><a data-toggle="modal" href="#" data-type="reassign">订单转交</a></li> -->
       <!-- <li><a data-toggle="modal" href="#" data-type="logistic_split">物流拆分</a></li> -->
       <!-- <li><a data-toggle="modal" href="#" data-type="logistic_company">物流公司</a></li> -->
