@@ -428,7 +428,7 @@ class Trade
         value = /#{params[:search][:simple_search_value].strip}/
         if params[:search][:simple_search_option] == 'seller_id'
           seller_ids = Seller.select(:id).where("name like ?", "%#{params[:search][:simple_search_value].strip}%").map &:id
-          seller_hash = {:seller_id.in => seller_ids}
+          seller_hash = {"seller_id" => {"$in" => seller_ids}}
         elsif params[:search][:simple_search_option] == 'receiver_name'
           receiver_name_hash = {"$or" => [{receiver_name: value}, {"consignee_info.fullname" => value}, {"receiver.name" => value}]}
         elsif params[:search][:simple_search_option] == 'receiver_mobile'
@@ -472,7 +472,7 @@ class Trade
         if status_array == ['require_refund']
           status_hash = {has_refund_order: true}
         else
-          status_hash = {:status.in => status_array, :has_refund_order.in => [nil, false]}
+          status_hash = {"$and" => [{"status" =>{"$in" => status_array}}, {"has_refund_order" => {"$in" => [nil, false]}}]}
         end
       end
 
@@ -516,7 +516,7 @@ class Trade
 
       # 客户有留言
       if params[:search][:search_buyer_message] == "true"
-        buyer_message_hash = {:buyer_message.nin => ['', nil]}
+        buyer_message_hash = {"buyer_message" => {"$nin" => ['', nil]}}
       end
 
       # 需要开票
@@ -536,7 +536,8 @@ class Trade
 
       # 按经销商筛选
       if params[:search][:search_logistic].present?
-        logistic_hash = {logistic_id: Logistic.where("name LIKE '%#{params[:search][:search_logistic]}%'").map(&:id)}
+        logi_name = /#{params[:search][:search_logistic].strip}/
+        logistic_hash = {logistic_name: logi_name}
       end
     end
 
