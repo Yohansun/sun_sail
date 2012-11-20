@@ -4,7 +4,7 @@ require "csv"
 desc "更新淘宝上未发货的订单"
 task :fetch_undelivered_trades => :environment do
   tmp = []
-  CSV.foreach("#{Rails.root}/lib/data_source/undelivered_trades.csv") do |row|
+  CSV.foreach("#{Rails.root}/lib/data_source/undelivered_trades_02.csv") do |row|
     tid = row[0]
     trade = TaobaoTrade.where(tid: tid).first
 
