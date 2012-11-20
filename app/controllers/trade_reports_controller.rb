@@ -19,7 +19,7 @@ class TradeReportsController < ApplicationController
     else
     	@start_date = @end_date = @start_time = @end_time = ''
     end	
-  	reports = reports.order_by("performed_at DESC")
+  	reports = reports.order_by(:performed_at.desc)
 		@reports = reports.page params[:page]
 	end	
 
