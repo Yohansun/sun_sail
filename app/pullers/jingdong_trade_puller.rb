@@ -7,7 +7,7 @@ class JingdongTradePuller
       page_no = 1
       
       if start_time.blank?  
-        latest_created_order = JingdongTrade.only("created").order_by("created", "DESC").limit(1).first
+        latest_created_order = JingdongTrade.only("created").order_by(:created.desc).limit(1).first
         start_time = latest_created_order.created - 1.hour
       end
       

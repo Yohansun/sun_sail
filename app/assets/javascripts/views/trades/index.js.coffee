@@ -178,6 +178,10 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     @pay_end_date = $(".pay_end_date").val()
     @pay_start_time = $(".pay_start_time").val()
     @pay_end_time = $(".pay_end_time").val()
+    @dispatch_start_date = $(".dispatch_start_date").val()
+    @dispatch_end_date = $(".dispatch_end_date").val()
+    @dispatch_start_time = $(".dispatch_start_time").val()
+    @dispatch_end_time = $(".dispatch_end_time").val()
     @from_deliver_print_date = $("#deliver_print_start_date").val()
     @to_deliver_print_date = $("#deliver_print_end_date").val()
     @from_deliver_print_time = $("#deliver_print_start_time").val()
@@ -195,13 +199,11 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     @search_color = $("#search_color").is(':checked')
     @search_color_void = $("#search_color_void").is(':checked')
 
-    return if (@search_option == '' or @search_value == '') and (@from_deliver_print_date == '' or @to_deliver_print_date == '') and (@from_logistic_print_date == '' or @to_logistic_print_date == '') and @search_logistic == '' and @status_option == "" and @state_option == "" and @city_option == "" and @district_option == "" and @type_option == "" and (@search_start_date == '' or @search_end_date == '') and (@pay_start_date == '' or @pay_end_date == '') and @search_buyer_message == false and @search_seller_memo == false and @search_cs_memo == false and @search_color == false and @search_invoice == false and @search_cs_memo_void == false and @search_color == false
-
     @offset = 0
     blocktheui()
     $("#trade_rows").html('')
 
-    @collection.fetch data: {trade_type: @trade_type, search: {@simple_search_option, @simple_search_value, @from_deliver_print_date, @to_deliver_print_date, @from_deliver_print_time, @to_deliver_print_time, @from_logistic_print_date, @to_logistic_print_date, @from_logistic_print_time, @to_logistic_print_time, @search_start_date, @search_start_time, @search_end_date, @pay_start_time, @pay_end_time, @pay_start_date, @pay_end_date, @search_end_time, @status_option, @type_option, @state_option, @city_option, @district_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_cs_memo_void, @search_invoice, @search_color, @search_color_void, @search_logistic}}, success: (collection) =>
+    @collection.fetch data: {trade_type: @trade_type, search: {@simple_search_option, @simple_search_value, @from_deliver_print_date, @to_deliver_print_date, @from_deliver_print_time, @to_deliver_print_time, @from_logistic_print_date, @to_logistic_print_date, @from_logistic_print_time, @to_logistic_print_time, @search_start_date, @search_start_time, @search_end_date, @search_end_time, @pay_start_time, @pay_end_time, @pay_start_date, @pay_end_date, @dispatch_start_time, @dispatch_end_time, @dispatch_start_date, @dispatch_end_date, @status_option, @type_option, @state_option, @city_option, @district_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_cs_memo_void, @search_invoice, @search_color, @search_color_void, @search_logistic}}, success: (collection) =>
       if collection.length >= 0
         @offset = @offset + 20
         @trade_number = 0
@@ -218,7 +220,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     event.preventDefault()
     blocktheui()
 
-    @collection.fetch data: {trade_type: @trade_type, offset: @offset, search: {@simple_search_option, @simple_search_value, @from_deliver_print_date, @to_deliver_print_date, @from_deliver_print_time, @to_deliver_print_time, @from_logistic_print_date, @to_logistic_print_date, @from_logistic_print_time, @to_logistic_print_time, @search_start_date, @search_start_time, @search_end_date, @pay_start_time, @pay_end_time, @pay_start_date, @pay_end_date, @search_end_time, @status_option, @type_option, @state_option, @city_option, @district_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_cs_memo_void, @search_invoice, @search_color, @search_color_void, @search_logistic}}, success: (collection) =>
+    @collection.fetch data: {trade_type: @trade_type, offset: @offset, search: {@simple_search_option, @simple_search_value, @from_deliver_print_date, @to_deliver_print_date, @from_deliver_print_time, @to_deliver_print_time, @from_logistic_print_date, @to_logistic_print_date, @from_logistic_print_time, @to_logistic_print_time, @search_start_date, @search_start_time, @search_end_date, @search_end_time, @pay_start_time, @pay_end_time, @pay_start_date, @pay_end_date, @dispatch_start_time, @dispatch_end_time, @dispatch_start_date, @dispatch_end_date, @status_option, @type_option, @state_option, @city_option, @district_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_cs_memo_void, @search_invoice, @search_color, @search_color_void, @search_logistic}}, success: (collection) =>
       if collection.length >= 0
         @offset = @offset + 20
         @renderUpdate()
@@ -261,6 +263,10 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     @pay_end_date = $(".pay_end_date").val()
     @pay_start_time = $(".pay_start_time").val()
     @pay_end_time = $(".pay_end_time").val()
+    @dispatch_start_date = $(".dispatch_start_date").val()
+    @dispatch_end_date = $(".dispatch_end_date").val()
+    @dispatch_start_time = $(".dispatch_start_time").val()
+    @dispatch_end_time = $(".dispatch_end_time").val()
     @from_deliver_print_date = $("#deliver_print_start_date").val()
     @to_deliver_print_date = $("#deliver_print_end_date").val()
     @from_deliver_print_time = $("#deliver_print_start_time").val()
@@ -280,7 +286,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
     @search_logistic = $("#search_logistic").val()
     $('.export_orders').addClass('export_orders_disabled disabled').removeClass('export_orders')
-    $.get("/api/trades/export?trade_type=#{@trade_type}&search%5Bsimple_search_option%5D=#{@simple_search_option}&search%5Bsimple_search_value%5D=#{@simple_search_value}&search%5Bfrom_logistic_print_date%5D=#{@from_logistic_print_date}&search%5Bto_logistic_print_date%5D=#{@to_logistic_print_date}&search%5Bfrom_logistic_print_time%5D=#{@from_logistic_print_time}&search%5Bto_logistic_print_time%5D=#{@to_logistic_print_time}&search%5Bfrom_deliver_print_date%5D=#{@from_deliver_print_date}&search%5Bto_deliver_print_date%5D=#{@to_deliver_print_date}&search%5Bfrom_deliver_print_time%5D=#{@from_deliver_print_time}&search%5Bto_deliver_print_time%5D=#{@to_deliver_print_time}&search%5Bsearch_start_date%5D=#{@search_start_date}&search%5Bsearch_start_time%5D=#{@search_start_time}&search%5Bsearch_end_date%5D=#{@search_end_date}&search%5Bsearch_end_time%5D=#{@search_end_time}&search%5Bpay_start_time%5D=#{@pay_start_time}&search%5Bpay_end_time%5D=#{@pay_end_time}&search%5Bpay_start_date%5D=#{@pay_start_date}&search%5Bpay_end_date%5D=#{@pay_end_date}&search%5Bstatus_option%5D=#{@status_option}&search%5Btype_option%5D=#{@type_option}&search%5Bstate_option%5D=#{@state_option}&search%5Bcity_option%5D=#{@city_option}&search%5Bdistrict_option%5D=#{@district_option}&search%5Bsearch_buyer_message%5D=#{@search_buyer_message}&search%5Bsearch_seller_memo%5D=#{@search_seller_memo}&search%5Bsearch_cs_memo%5D=#{@search_cs_memo}&search%5Bsearch_cs_memo_void%5D=#{@search_cs_memo_void}&search%5Bsearch_invoice%5D=#{@search_invoice}&search%5Bsearch_color%5D=#{@search_color}&search%5Bsearch_color_void%5D=#{@search_color_void}&search%5Bsearch_logistic%5D=#{@search_logistic}&limit=0&offset=0")
+    $.get("/api/trades/export?trade_type=#{@trade_type}&search%5Bsimple_search_option%5D=#{@simple_search_option}&search%5Bsimple_search_value%5D=#{@simple_search_value}&search%5Bfrom_logistic_print_date%5D=#{@from_logistic_print_date}&search%5Bto_logistic_print_date%5D=#{@to_logistic_print_date}&search%5Bfrom_logistic_print_time%5D=#{@from_logistic_print_time}&search%5Bto_logistic_print_time%5D=#{@to_logistic_print_time}&search%5Bfrom_deliver_print_date%5D=#{@from_deliver_print_date}&search%5Bto_deliver_print_date%5D=#{@to_deliver_print_date}&search%5Bfrom_deliver_print_time%5D=#{@from_deliver_print_time}&search%5Bto_deliver_print_time%5D=#{@to_deliver_print_time}&search%5Bsearch_start_date%5D=#{@search_start_date}&search%5Bsearch_start_time%5D=#{@search_start_time}&search%5Bsearch_end_date%5D=#{@search_end_date}&search%5Bsearch_end_time%5D=#{@search_end_time}&search%5Bpay_start_time%5D=#{@pay_start_time}&search%5Bpay_end_time%5D=#{@pay_end_time}&search%5Bpay_start_date%5D=#{@pay_start_date}&search%5Bpay_end_date%5D=#{@pay_end_date}&search%5Bdispatch_start_time%5D=#{@dispatch_start_time}&search%5Bdispatch_end_time%5D=#{@dispatch_end_time}&search%5Bdispatch_start_date%5D=#{@dispatch_start_date}&search%5Bdispatch_end_date%5D=#{@dispatch_end_date}&search%5Bstatus_option%5D=#{@status_option}&search%5Btype_option%5D=#{@type_option}&search%5Bstate_option%5D=#{@state_option}&search%5Bcity_option%5D=#{@city_option}&search%5Bdistrict_option%5D=#{@district_option}&search%5Bsearch_buyer_message%5D=#{@search_buyer_message}&search%5Bsearch_seller_memo%5D=#{@search_seller_memo}&search%5Bsearch_cs_memo%5D=#{@search_cs_memo}&search%5Bsearch_cs_memo_void%5D=#{@search_cs_memo_void}&search%5Bsearch_invoice%5D=#{@search_invoice}&search%5Bsearch_color%5D=#{@search_color}&search%5Bsearch_color_void%5D=#{@search_color_void}&search%5Bsearch_logistic%5D=#{@search_logistic}&limit=0&offset=0")
     
   selectSameStatusTrade: (e) =>
     e.preventDefault()

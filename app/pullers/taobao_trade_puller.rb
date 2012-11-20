@@ -6,7 +6,7 @@ class TaobaoTradePuller
       page_no = 0
 
       if start_time.blank?
-        latest_created_order = TaobaoTrade.only("created").order("created", "DESC").limit(1).first
+        latest_created_order = TaobaoTrade.only("created").order_by(:created.desc).limit(1).first
         start_time = latest_created_order.created - 1.hour
       end
 
@@ -88,7 +88,7 @@ class TaobaoTradePuller
 
     def update(start_time = nil, end_time = nil, trade_source_id = nil)
       if start_time.blank?
-        latest_created_order = TaobaoTrade.only("modified").order("modified", "DESC").limit(1).first
+        latest_created_order = TaobaoTrade.only("modified").order_by(:modified.desc).limit(1).first
         start_time = latest_created_order.modified - 4.hour
       end
 
@@ -163,7 +163,7 @@ class TaobaoTradePuller
       page_no = 0
 
       if start_time.blank?
-        latest_created_order = TaobaoTrade.only("created").order("created", "DESC").limit(1).first
+        latest_created_order = TaobaoTrade.only("created").order_by(:created.desc).limit(1).first
         start_time = latest_created_order.created - 1.hour
       end
 
