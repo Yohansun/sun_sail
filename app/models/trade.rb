@@ -495,7 +495,6 @@ class Trade
         pay_time_hash = {"$and" => [{"pay_time" => {"$gte" => pay_start_time}}, {"pay_time" => {"$lte" => pay_end_time}}]}
       end
 
-
       # 按状态筛选
       if params[:search][:status_option].present?
         status_array = params[:search][:status_option].split(",")
@@ -504,7 +503,8 @@ class Trade
         else
           status_hash = {"$and" => [{"status" =>{"$in" => status_array}}, {"has_refund_order" => {"$in" => [nil, false]}}]}
         end
-      
+      end
+
       # # 按分流时间筛选
       # if params[:search] && params[:search][:dispatch_start_date].present? && params[:search][:dispatch_end_date].present?
       #   dispatch_start_time = "#{params[:search][:dispatch_start_date]} #{params[:search][:dispatch_start_time]}".to_time(form = :local)
@@ -587,7 +587,6 @@ class Trade
       receiver_state_hash, receiver_city_hash, receiver_district_hash,
       ].compact}
     search_hash == {"$and"=>[]} ? search_hash = nil : search_hash
-
 
     ## 过滤有留言但还在抓取 + 总筛选
     trades.where(trade_type_hash).where(search_hash).where({"$or" => [{"has_buyer_message" => {"$ne" => true}},{"buyer_message" => {"$ne" => nil}}]})
