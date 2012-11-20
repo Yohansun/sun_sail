@@ -4,6 +4,12 @@ module TaobaoProductsLockable
     lockable = []
     trade.orders.each do |order|
       op = Product.find_by_iid order.outer_iid
+
+      if op.blank?
+        lockable << "#{order.title}: 库存不足"
+        next
+      end
+
       op_package = op.package_info
       color_num = order.color_num
       color_num.delete('')
