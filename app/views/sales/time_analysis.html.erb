@@ -7,7 +7,7 @@
       <li><a href="/">Magic</a><span class="divider">/</span></li>
       <li><a href="/trade_reports">数据魔方</a><span class="divider">/</span></li>
       <li><a href="＃">买家分析</a><span class="divider">/</span></li>
-      <li class="active">买家地域分析</li>
+      <li class="active">购买时段分析</li>
     </ul><!-- breadcrumb -->
 
     <%= render 'select_time' %>
@@ -36,11 +36,10 @@
                   <!--<img src="/assets/aug_details.jpg">-->
                 </a>
                                     
-                          买家集中省份TOP1
+                          高峰成交时段TOP1
                           
               </div>
-              <big><strong>广东</strong></big>
-              <p>该省购买人数62.267</p>
+              <big><strong>22:00-23:00</strong></big>
             </li>
             <li class="span2">
               <div>
@@ -48,11 +47,10 @@
                   <!--<img src="/assets/aug_details.jpg">-->
                 </a>
                                     
-                          买家集中省份TOP2p
+                          高峰成交时段TOP2p
                           
               </div>
-              <big><strong>浙江</strong></big>
-              <p>该省购买人数62.267</p>
+              <big><strong>21:00-22:00</strong></big>
             </li>
             <li class="span2">
               <div>
@@ -60,11 +58,10 @@
                   <!--<img src="/assets/aug_details.jpg">-->
                 </a>
                                     
-                          买家集中省份TOP3
+                          高峰成交时段TOP3
                           
               </div>
-              <big><strong>江苏</strong></big>
-              <p>该省购买人数60.246</p>
+              <big><strong>15:00-16:00</strong></big>
             </li>
             <li class="span2">
               <div>
@@ -72,11 +69,10 @@
                   <!--<img src="/assets/aug_details.jpg">-->
                 </a>
                                     
-                          买家集中省份TOP4
+                          高峰成交时段TOP4
                           
               </div>
-              <big><strong>上海</strong></big>
-              <p>该省购买人数40.534</p>
+              <big><strong>10:00-11:00</strong></big>
             </li>
             <li class="span2">
               <div>
@@ -84,18 +80,30 @@
                   <!--<img src="/assets/aug_details.jpg">-->
                 </a>
                                     
-                          买家集中省份TOP5
+                          高峰成交时段TOP5
                           
               </div>
-              <big><strong>中国其他</strong></big>
-              <p>该省购买人数30.968</p>
+              <big><strong>16:00-17:00</strong></big>
             </li>
 
           </ul>
         </div>
        </div>
     </div>
-
+    <div class="mar_t10">
+      <ul class="nav nav-tabs reset_border nomargin" id="myTab_sub">
+        <li class="active"><a href="#tab2" data-toggle="tab">数据图</a></li>
+      </ul>
+      <div class="tab-content reset_border">
+        <div class="tab-pane active chart_opts" id="tab1">
+          <ul class="clearfix aug_data_tops nomargin">
+            <li class="span2 noborder">
+              
+            </li>
+          </ul>
+        </div>
+       </div>
+    </div>
 
     <div class="mar_t10">
       <ul class="nav nav-tabs reset_border nomargin" id="myTab_sub">
@@ -107,26 +115,26 @@
             <thead>
               <tr>
                 <th>序号</th>
-                <th>省份</th>
-                <th>成交金额占比</th>
-                <th>成交人数</th>
-                <th>成交笔数</th>
+                <th>小时段</th>
+                <th>总成交金额占比</th>
+                <th>总成交人数</th>
+                <th>日平均成交人数</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td>1</td>
-                <td>广东</td>
-                <td>11.33%</td>
-                <td>66.846</td>
-                <td>127.032</td>
+                <td>22:00 - 23:00</td>
+                <td>8.50%</td>
+                <td>51,556</td>
+                <td>7,356</td>
               </tr>
               <tr>
                 <td>2</td>
-                <td>浙江</td>
-                <td>10.96%</td>
-                <td>62.267</td>
-                <td>117.154</td>
+                <td>22:00 - 23:00</td>
+                <td>8.50%</td>
+                <td>51,556</td>
+                <td>7,356</td>
               </tr>
             </tbody> 
           </table>

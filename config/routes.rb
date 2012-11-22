@@ -19,7 +19,8 @@ MagicOrders::Application.routes.draw do
   get "/stock_products/search", to: 'stock_products#search'
   get "/sales/add_node", to: 'sales#add_node'
   get "/sales/area_analysis", to: 'sales#area_analysis'
-  get "/sales/purchase_time", to: 'sales#purchase_time'
+  get "/sales/time_analysis", to: 'sales#time_analysis'
+  get "/sales/customer_analysis", to: 'sales#customer_analysis'
   resources :colors do
     collection do
       get :autocomplete

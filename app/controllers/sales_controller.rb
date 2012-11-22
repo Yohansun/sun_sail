@@ -120,6 +120,12 @@ class SalesController < ApplicationController
     render "/sales/product_analysis"
   end
   def area_analysis
+
+  end
+  def customer_analysis
+    
+  end
+  def time_analysis
     
   end
 
