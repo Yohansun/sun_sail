@@ -1,17 +1,13 @@
 <div class="container-fluid">
-  <header class="jumbotron subhead" id="overview">
-    <div class="subnav">
-      <ul class="nav nav-pills">
-        <li><a href="#">实时销售 </a></li>
-      </ul>
-    </div>
-  </header>
+
+  <%= render 'header' %>
 
   <div class="row-fluid">
     <ul class="breadcrumb" style="position:relative;">
       <li><a href="/">Magic</a><span class="divider">/</span></li>
       <li><a href="/trade_reports">数据魔方</a><span class="divider">/</span></li>
-      <li class="active">销售[<%= @sale.name %>]</li>
+      <li><a href="#">销售分析</a><span class="divider">/</span></li>
+      <li class="active">实时销售[<%= @sale.name %>]</li>
       <li style="position:absolute;right:15px;top:6px;"><%= link_to '设定', edit_sale_path %></li>
     </ul><!-- breadcrumb -->
 

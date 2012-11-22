@@ -95,4 +95,11 @@ class SalesController < ApplicationController
       render action: :edit
     end
   end
+
+  def product_analysis
+    @products = Product.all
+    @lift_products = Product.limit(10)
+    render "/sales/product_analysis"
+  end
+
 end

@@ -78,6 +78,8 @@ MagicOrders::Application.routes.draw do
   resources :users
   resources :areas
   resources :trade_sources
+
+  get "/sales/product_analysis", to: 'sales#product_analysis'
   resources :sales
 
   match '/alerts', to: 'trades#alerts'
