@@ -205,4 +205,8 @@ class SellersController < ApplicationController
       f.js
     end
   end
+
+  def info
+    @seller = Seller.find params[:id]
+  end
 end
