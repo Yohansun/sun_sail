@@ -9,11 +9,13 @@
     <ul class="dropdown-menu trade_pops">
       <li><a data-toggle="modal" href="#" data-type="detail">订单详情</a></li>
       <% if @trade.get('status_text') == '已付款，待发货' : %>
-        <li>
-          <a data-toggle="modal" href="#" data-type="seller">
-            <% if @trade.get('seller_id') : %>分流重置<% else : %>订单分流<% end %>
-          </a>
-        </li>
+        <% if @trade.get('seller_id') : %>
+          <% if MagicOrders.role_key == 'admin' : %>
+            <li><a data-toggle="modal" href="#" data-type="seller">分流重置</a></li>
+          <% end %>
+        <% else : %>
+          <li><a data-toggle="modal" href="#" data-type="seller">订单分流</a></li>
+        <% end %>
 
         <% if @trade.get('splitted_tid') : %>
           <li><a data-toggle="modal" href="#" data-type="recover">订单合并</a></li>
