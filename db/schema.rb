@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121105081828) do
+ActiveRecord::Schema.define(:version => 20121122071541) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -122,23 +122,25 @@ ActiveRecord::Schema.define(:version => 20121105081828) do
   add_index "packages", ["product_id"], :name => "index_packages_on_product_id"
 
   create_table "products", :force => true do |t|
-    t.string  "name",           :limit => 100,                               :default => "",  :null => false
-    t.string  "iid",            :limit => 20,                                :default => "",  :null => false
-    t.string  "taobao_id",      :limit => 20,                                :default => "",  :null => false
-    t.string  "storage_num",    :limit => 20,                                :default => "",  :null => false
-    t.decimal "price",                         :precision => 8, :scale => 2, :default => 0.0, :null => false
-    t.string  "status"
-    t.integer "quantity_id"
-    t.integer "category_id"
-    t.string  "features"
-    t.text    "technical_data"
-    t.text    "description"
-    t.integer "grade_id"
-    t.string  "product_image"
-    t.integer "parent_id"
-    t.integer "lft",                                                         :default => 0
-    t.integer "rgt",                                                         :default => 0
-    t.integer "good_type"
+    t.string   "name",           :limit => 100,                               :default => "",  :null => false
+    t.string   "iid",            :limit => 20,                                :default => "",  :null => false
+    t.string   "taobao_id",      :limit => 20,                                :default => "",  :null => false
+    t.string   "storage_num",    :limit => 20,                                :default => "",  :null => false
+    t.decimal  "price",                         :precision => 8, :scale => 2, :default => 0.0, :null => false
+    t.string   "status"
+    t.integer  "quantity_id"
+    t.integer  "category_id"
+    t.string   "features"
+    t.text     "technical_data"
+    t.text     "description"
+    t.integer  "grade_id"
+    t.string   "product_image"
+    t.integer  "parent_id"
+    t.integer  "lft",                                                         :default => 0
+    t.integer  "rgt",                                                         :default => 0
+    t.integer  "good_type"
+    t.datetime "updated_at"
+    t.datetime "created_at"
   end
 
   create_table "quantities", :force => true do |t|
