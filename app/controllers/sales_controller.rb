@@ -98,16 +98,25 @@ class SalesController < ApplicationController
   end
 
   def product_analysis
-    start_at = "#{params[:start_date]} #{params[:start_time]}".to_time(:local)
-    end_at = "#{params[:end_date]} #{params[:end_time]}".to_time(:local)
-    @products = Product.all
-    if start_at == nil || end_at == nil
-      @trades = TaobaoTrade.between(created: 1.month.ago..Time.now)
-    else
+    @start_date = params[:start_date] if params[:start_date].present?
+    @end_date = params[:end_date] if params[:end_date].present?
+    @start_time = params[:start_time] if params[:start_time].present?
+    @end_time = params[:end_time] if params[:end_time].present?
+
+    if @start_date && @end_date
+      start_at = "#{@start_date} #{@start_time}".to_time(:local)
+      end_at = "#{@end_date} #{@end_time}".to_time(:local)
       @trades = TaobaoTrade.between(created: start_at..end_at)
+      time_gap = (end_at - start_at).to_i
+      @old_trades = TaobaoTrade.between(created: (start_at - time_gap.seconds)..start_at)
+    else
+      @trades = TaobaoTrade.between(created: 1.month.ago..Time.now)
+      @old_trades = TaobaoTrade.between(created: 2.month.ago..1.month.ago)
     end
-    @sold_info = sold_count(@trades)
-    @lift_products = Product.limit(10)
+
+    if @trades && @old_trades
+      @product_data = product_data(@trades, @old_trades)
+    end
     render "/sales/product_analysis"
   end
 

@@ -44,16 +44,20 @@
 		          </tr>
 		        </thead>
 		        <tbody>
-		        	<% @products.each_with_index do |p, i| %>
-		          <tr>
-		            <td><%= i + 1 %></td>
-		            <td><a href="#"><img src="<%= p.product_image %>" /></a></td>
-		            <td width="100"><a href="#"><%= p.name %></a></td>
-		            <td><%= @sold_info[p.iid].try(:[],1) %></td>
-		            <td><%= @sold_info[p.iid].try(:[],0) %></td>
-		            <td><%= @sold_info[p.iid].try(:[],2) %></td>
-		            <td><a href="#">查看详情</a></td>
-		          </tr>
+		        	<%- i = 0 %>
+		        	<% @product_data[0].each do |key, value| %>
+		        	<%- p = Product.find_by_iid(key) %>
+		          	<%- if p %>
+			          <tr>
+			            <td><%= i += 1 %></td>
+			            <td><a href="#"><img src="<%= p.product_image %>" /></a></td>
+			            <td width="200"><%= link_to "#{p.name}", product_path(p.id) %></td>
+			            <td><%= value.try(:[],1) %></td>
+			            <td><%= value.try(:[],0) %></td>
+			            <td><%= value.try(:[],2) %></td>
+			            <td><%= link_to '查看详情', product_path(p.id) %></td>
+			          </tr>
+                <%- end %>
 		          <%- end %>
 		        </tbody>
 	        </table>
@@ -66,6 +70,7 @@
               	<th>序号</th>
                 <th>宝贝</th>
                 <th>标题</th>
+                <th>环比增长率</th>
                 <th>成交商品数</th>
                 <th>成交金额</th>
                 <th>平均成交价格</th>
@@ -73,16 +78,22 @@
               </tr>
             </thead>
             <tbody>
-            	<% @lift_products.each_with_index do |lp, i| %>
-              <tr>
-                <td><%= i + 1 %></td>
-                <td><a href="#"><img src="<%= lp.product_image %>" /></a></td>
-                <td width="100"><a href="#"><%= lp.name %></a></td>
-                <td>1,729</td>
-                <td>1,208,696</td>
-                <td>699</td>
-                <td><a href="#">查看详情</a></td>
-              </tr>
+            	<%- j = 0 %>
+            	<% @product_data[1].each do |value| %>
+            	<%- lp = Product.find_by_iid(value[4]) %>
+            	  <%- if lp %>
+	              <tr>
+	                <td><%= j += 1 %></td>
+	                <td><a href="#"><img src="<%= lp.product_image %>" /></a></td>
+	                <td width="200"><%= link_to "#{lp.name}", product_path(lp.id) %></td>
+                  <td><%= (value.try(:[],3)*100).to_i.to_s + "%" %></td>
+	                <td><%= value.try(:[],1) %></td>
+	                <td><%= value.try(:[],0) %></td>
+	                <td><%= value.try(:[],2) %></td>
+	                <td><%= link_to '查看详情', product_path(lp.id) %></td>
+	              </tr>
+	              <%- break if j == 10 %>
+	              <% end %>
               <% end %>
             </tbody>
           </table>
