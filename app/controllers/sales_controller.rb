@@ -119,5 +119,8 @@ class SalesController < ApplicationController
     end
     render "/sales/product_analysis"
   end
+  def area_analysis
+    
+  end
 
 end
