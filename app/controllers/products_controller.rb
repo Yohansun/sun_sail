@@ -3,6 +3,10 @@ class ProductsController < ApplicationController
   before_filter :authenticate_user!
   before_filter :admin_only!
 
+  cache_sweeper :product_sweeper
+  caches_action :show, :edit
+  caches_action :index, cache_path: Proc.new { |c| c.params }
+
   def index
     @products = Product
     if params[:product].present?
@@ -23,11 +27,11 @@ class ProductsController < ApplicationController
       end
       unless params[:product][:item_features] == [""]
         feature_ids = params[:product][:item_features].collect{|i| i.to_i}
-        @products = @products.joins(:feature_product_relationships).where("feature_product_relationships.feature_id in (#{feature_ids.join(',')})").uniq
+        @products = @products.joins(:feature_product_relationships).where("feature_product_relationships.feature_id in (#{feature_ids.uniq.join(',')})")
       end
     end
     @searched_products = @products
-    @products = @products.page(params[:page])
+    @products = @products.order("updated_at DESC").page(params[:page])
     respond_to do |format|
       format.xls
       format.html

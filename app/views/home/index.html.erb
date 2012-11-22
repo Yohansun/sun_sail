@@ -6,7 +6,6 @@
     MagicOrders.company = "<%= TradeSetting.company %>"
     MagicOrders.logistics = new MagicOrders.Collections.Logistics();
     MagicOrders.logistics.reset(<%= raw @logistics.to_json %>);
-
   });
 </script>
 <% end -%>

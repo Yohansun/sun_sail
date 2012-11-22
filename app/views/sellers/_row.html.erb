@@ -52,9 +52,8 @@
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" style="left:-115px;">
-          <li>
-            <%= link_to "编辑", edit_seller_path(:id => seller.id), :class=>"edit_seller"%>
-          </li>
+          <li><%= link_to "查看详情", info_seller_path(seller) %></li>
+          <li><%= link_to "编辑", edit_seller_path(:id => seller.id), :class=>"edit_seller"%></li>
           <li>
             <%= link_to (seller.active == true ? "关闭" : "启用"), status_update_seller_path(:id => seller.id), :class=>"close_seller" %>
           </li>
