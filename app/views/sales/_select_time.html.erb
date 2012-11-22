@@ -1,19 +1,18 @@
-<form class="well form-search">
+<form action="/sales/product_analysis" class="well form-search">
   <fieldset class="form-inline">
     <div class="controls">
       <label class="control-label">开始时间：</label>
-      <input type="text" class="input-small search-query datepicker">
-      <input type="text" class="input-mini search-query timepicker">
+      <input type="text" class="input-small search-query datepicker" name="start_date" value="<%= @start_date %>">
+      <input type="text" class="input-mini search-query timepicker" name="start_time" value="<%= @start_time %> ">
       <label class="control-label">结束时间：</label>
-      <input type="text" class="input-small search-query datepicker">
-      <input type="text" class="input-mini search-query timepicker">
-
+      <input type="text" class="input-small search-query datepicker" name="end_date" value="<%= @end_date %>">
+      <input type="text" class="input-mini search-query timepicker" name="end_time" value="<%= @end_time %>">
       <div class="input-append">
-        <!-- <input type="text" id="appendedInputButton" class="search-query w_specify"> --><button type="button" class="btn">过滤</button>
+        <button type="submit" class="btn">过滤</button>
       </div>
-      <a href="javascript:void(0)">昨天</a>
+      <!-- <a href="javascript:void(0)">昨天</a>
       <a href="javascript:void(0)">最近一周</a>
-      <a href="javascript:void(0)">最近一月</a>
+      <a href="javascript:void(0)">最近一月</a> -->
     </div>
   </fieldset>
 </form>

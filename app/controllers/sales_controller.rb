@@ -1,5 +1,6 @@
 # -*- encoding : utf-8 -*-
 class SalesController < ApplicationController
+  include SalesHelper
   before_filter :authenticate_user!
   before_filter :admin_only!
 
@@ -97,7 +98,15 @@ class SalesController < ApplicationController
   end
 
   def product_analysis
+    start_at = "#{params[:start_date]} #{params[:start_time]}".to_time(:local)
+    end_at = "#{params[:end_date]} #{params[:end_time]}".to_time(:local)
     @products = Product.all
+    if start_at == nil || end_at == nil
+      @trades = TaobaoTrade.between(created: 1.month.ago..Time.now)
+    else
+      @trades = TaobaoTrade.between(created: start_at..end_at)
+    end
+    @sold_info = sold_count(@trades)
     @lift_products = Product.limit(10)
     render "/sales/product_analysis"
   end

@@ -49,12 +49,9 @@
 		            <td><%= i + 1 %></td>
 		            <td><a href="#"><img src="<%= p.product_image %>" /></a></td>
 		            <td width="100"><a href="#"><%= p.name %></a></td>
-		            <% p "@@@@@@@@@@@@@@@@@@@@@"%>
-		            <% p sold_count(p) %>
-		            <% p "@@@@@@@@@@@@@@@@@@@@@"%>
-		            <!-- <td><%= sold_count(p)["total_money"] %></td>
-		            <td><%= sold_count(p)["total_num"] %></td>
-		            <td><%= sold_count(p)["average_money"] %></td> -->
+		            <td><%= @sold_info[p.iid].try(:[],1) %></td>
+		            <td><%= @sold_info[p.iid].try(:[],0) %></td>
+		            <td><%= @sold_info[p.iid].try(:[],2) %></td>
 		            <td><a href="#">查看详情</a></td>
 		          </tr>
 		          <%- end %>
