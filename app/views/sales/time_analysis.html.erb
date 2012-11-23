@@ -23,6 +23,7 @@
         </ul> -->
       </div>
     </div>
+
     <div class="mar_t10">
       <ul class="nav nav-tabs reset_border nomargin" id="myTab_sub">
         <li class="active"><a href="#tab2" data-toggle="tab">数据概况</a></li>
@@ -32,77 +33,24 @@
           <ul class="clearfix aug_data_tops nomargin">
             <li class="span2 noborder">
               <div>
-                <a href="#" class="pull-right">
-                  <!--<img src="/assets/aug_details.jpg">-->
-                </a>
-                                    
-                          高峰成交时段TOP1
-                          
+                <a href="#" class="pull-right"><!--<img src="/assets/aug_details.jpg">--></a>高峰成交时段TOP1
               </div>
               <big><strong>22:00-23:00</strong></big>
             </li>
-            <li class="span2">
-              <div>
-                <a href="#" class="pull-right">
-                  <!--<img src="/assets/aug_details.jpg">-->
-                </a>
-                                    
-                          高峰成交时段TOP2p
-                          
-              </div>
-              <big><strong>21:00-22:00</strong></big>
-            </li>
-            <li class="span2">
-              <div>
-                <a href="#" class="pull-right">
-                  <!--<img src="/assets/aug_details.jpg">-->
-                </a>
-                                    
-                          高峰成交时段TOP3
-                          
-              </div>
-              <big><strong>15:00-16:00</strong></big>
-            </li>
-            <li class="span2">
-              <div>
-                <a href="#" class="pull-right">
-                  <!--<img src="/assets/aug_details.jpg">-->
-                </a>
-                                    
-                          高峰成交时段TOP4
-                          
-              </div>
-              <big><strong>10:00-11:00</strong></big>
-            </li>
-            <li class="span2">
-              <div>
-                <a href="#" class="pull-right">
-                  <!--<img src="/assets/aug_details.jpg">-->
-                </a>
-                                    
-                          高峰成交时段TOP5
-                          
-              </div>
-              <big><strong>16:00-17:00</strong></big>
-            </li>
-
           </ul>
         </div>
        </div>
     </div>
+
     <div class="mar_t10">
       <ul class="nav nav-tabs reset_border nomargin" id="myTab_sub">
         <li class="active"><a href="#tab2" data-toggle="tab">数据图</a></li>
       </ul>
-      <div class="tab-content reset_border">
+      <div class="tab-content reset_border padding_t20">
         <div class="tab-pane active chart_opts" id="tab1">
-          <ul class="clearfix aug_data_tops nomargin">
-            <li class="span2 noborder">
-              
-            </li>
-          </ul>
+          <div id="chartdiv" style="width: 100%; height: 400px;"></div>
         </div>
-       </div>
+      </div>
     </div>
 
     <div class="mar_t10">
@@ -129,13 +77,6 @@
                 <td>51,556</td>
                 <td>7,356</td>
               </tr>
-              <tr>
-                <td>2</td>
-                <td>22:00 - 23:00</td>
-                <td>8.50%</td>
-                <td>51,556</td>
-                <td>7,356</td>
-              </tr>
             </tbody> 
           </table>
         </div>
@@ -144,3 +85,147 @@
 
   </div>
 </div>
+
+<% content_for :tail do -%>
+<script type="text/javascript">
+var chart;
+
+var chartData = [{
+  priceLevels: "00-01",
+  visits: 2,
+  color: "#0088cc"
+}, {
+  priceLevels: "01-02",
+  visits: 5,
+  color: "#0088cc"
+}, {
+  priceLevels: "02-03",
+  visits: 8,
+  color: "#0088cc"
+}, {
+  priceLevels: "03-04",
+  visits: 12,
+  color: "#0088cc"
+}, {
+  priceLevels: "04-05",
+  visits: 25,
+  color: "#0088cc"
+}, {
+  priceLevels: "05-06",
+  visits: 20,
+  color: "#0088cc"
+}, {
+  priceLevels: "07-08",
+  visits: 10,
+  color: "#0088cc"
+}, {
+  priceLevels: "08-09",
+  visits: 6,
+  color: "#0088cc"
+}, {
+  priceLevels: "09-10",
+  visits: 6,
+  color: "#0088cc"
+}, {
+  priceLevels: "10-11",
+  visits: 6,
+  color: "#0088cc"
+}, {
+  priceLevels: "11-12",
+  visits: 6,
+  color: "#0088cc"
+}, {
+  priceLevels: "12-13",
+  visits: 6,
+  color: "#0088cc"
+}, {
+  priceLevels: "13-14",
+  visits: 6,
+  color: "#0088cc"
+}, {
+  priceLevels: "14-15",
+  visits: 6,
+  color: "#0088cc"
+}, {
+  priceLevels: "15-16",
+  visits: 6,
+  color: "#0088cc"
+}, {
+  priceLevels: "16-17",
+  visits: 6,
+  color: "#0088cc"
+}, {
+  priceLevels: "17-18",
+  visits: 6,
+  color: "#0088cc"
+}, {
+  priceLevels: "18-19",
+  visits: 6,
+  color: "#0088cc"
+}, {
+  priceLevels: "19-20",
+  visits: 6,
+  color: "#0088cc"
+}, {
+  priceLevels: "20-21",
+  visits: 6,
+  color: "#0088cc"
+}, {
+  priceLevels: "21-22",
+  visits: 6,
+  color: "#0088cc"
+}, {
+  priceLevels: "22-23",
+  visits: 6,
+  color: "#0088cc"
+}, {
+  priceLevels: "23-24",
+  visits: 6,
+  color: "#0088cc"
+}];
+
+
+AmCharts.ready(function () {
+  // SERIAL CHART
+  chart = new AmCharts.AmSerialChart();
+  chart.dataProvider = chartData;
+  chart.categoryField = "priceLevels";
+  chart.startDuration = 1;
+
+  chart.marginTop = 40;
+
+  // AXES
+  // category
+  var categoryAxis = chart.categoryAxis;
+  categoryAxis.title = "时间段";
+  categoryAxis.titleColor = "#555555";
+  categoryAxis.gridAlpha = 0.15;
+  categoryAxis.fillAlpha = 1;
+  categoryAxis.axisColor = "#DADADA";
+  categoryAxis.gridPosition = "start";
+
+
+  // value
+  var valueAxis = new AmCharts.ValueAxis();
+  valueAxis.dashLength = 5;
+  valueAxis.title = "人数"
+  valueAxis.titleColor = "#555555";
+  valueAxis.unit = "(人)";
+  valueAxis.axisAlpha = 0;
+  chart.addValueAxis(valueAxis);
+
+  // GRAPH
+  var graph = new AmCharts.AmGraph();
+  graph.valueField = "visits";
+  graph.colorField = "color";
+  graph.balloonText = "[[category]]: [[value]]";
+  graph.type = "column";
+  graph.lineAlpha = 0;
+  graph.fillAlphas = 0.7;
+  chart.addGraph(graph);
+
+  // WRITE
+  chart.write("chartdiv");
+});
+</script>
+<% end %>

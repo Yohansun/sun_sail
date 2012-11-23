@@ -3,8 +3,15 @@
 <form action="/sales/product_analysis" class="well form-search">
 <%- elsif action_name == 'area_analysis'%>
 <form action="/sales/area_analysis" class="well form-search">
+<%- elsif action_name == 'time_analysis'%>
+<form action="/sales/time_analysis" class="well form-search">
+<%- elsif action_name == 'customer_analysis'%>
+<form action="/sales/customer_analysis" class="well form-search">
+<%- else %>
+<form class="well form-search">
 <%- end %>
 <%- end %>
+
   <fieldset class="form-inline">
     <div class="controls">
       <label class="control-label">开始时间：</label>
