@@ -6,7 +6,7 @@
     <ul class="breadcrumb" style="position:relative;">
       <li><a href="/">Magic</a><span class="divider">/</span></li>
       <li><a href="/trade_reports">数据魔方</a><span class="divider">/</span></li>
-      <li><a href="＃">买家分析</a><span class="divider">/</span></li>
+      <li><a href="#">买家分析</a><span class="divider">/</span></li>
       <li class="active">买家地域分析</li>
     </ul><!-- breadcrumb -->
 
@@ -25,72 +25,22 @@
     </div>
     <div class="mar_t10">
       <ul class="nav nav-tabs reset_border nomargin" id="myTab_sub">
-        <li class="active"><a href="#tab2" data-toggle="tab">数据概况</a></li>
+        <li class="active"><a href="#tab1" data-toggle="tab">数据概况</a></li>
       </ul>
       <div class="tab-content reset_border">
         <div class="tab-pane active chart_opts" id="tab1">
           <ul class="clearfix aug_data_tops nomargin">
             <li class="span2 noborder">
+            <%- @area_data.each_with_index do |value, i| %>
               <div>
-                <a href="#" class="pull-right">
-                  <!--<img src="/assets/aug_details.jpg">-->
-                </a>
-                                    
-                          买家集中省份TOP1
-                          
+                <a href="#" class="pull-right"><!--<img src="/assets/aug_details.jpg">--></a>买家集中省份TOP<%= i + 1 %>            
               </div>
-              <big><strong>广东</strong></big>
-              <p>该省购买人数62.267</p>
+              <big><strong><%= value.try(:[],0) %></strong></big>
+              <p>该省购买人数<%= value.try(:[],2) %></p>
             </li>
+            <%- break if i == 4 %>
             <li class="span2">
-              <div>
-                <a href="#" class="pull-right">
-                  <!--<img src="/assets/aug_details.jpg">-->
-                </a>
-                                    
-                          买家集中省份TOP2p
-                          
-              </div>
-              <big><strong>浙江</strong></big>
-              <p>该省购买人数62.267</p>
-            </li>
-            <li class="span2">
-              <div>
-                <a href="#" class="pull-right">
-                  <!--<img src="/assets/aug_details.jpg">-->
-                </a>
-                                    
-                          买家集中省份TOP3
-                          
-              </div>
-              <big><strong>江苏</strong></big>
-              <p>该省购买人数60.246</p>
-            </li>
-            <li class="span2">
-              <div>
-                <a href="#" class="pull-right">
-                  <!--<img src="/assets/aug_details.jpg">-->
-                </a>
-                                    
-                          买家集中省份TOP4
-                          
-              </div>
-              <big><strong>上海</strong></big>
-              <p>该省购买人数40.534</p>
-            </li>
-            <li class="span2">
-              <div>
-                <a href="#" class="pull-right">
-                  <!--<img src="/assets/aug_details.jpg">-->
-                </a>
-                                    
-                          买家集中省份TOP5
-                          
-              </div>
-              <big><strong>中国其他</strong></big>
-              <p>该省购买人数30.968</p>
-            </li>
-
+            <%- end %>
           </ul>
         </div>
        </div>
@@ -99,7 +49,7 @@
 
     <div class="mar_t10">
       <ul class="nav nav-tabs reset_border nomargin" id="myTab_sub">
-        <li class="active"><a href="#tab1" data-toggle="tab">数据报表</a></li>
+        <li class="active"><a href="#tab2" data-toggle="tab">数据报表</a></li>
       </ul>
       <div class="tab-content reset_border padding_t20">
         <div class="tab-pane active chart_opts" id="tab1">
@@ -114,20 +64,15 @@
               </tr>
             </thead>
             <tbody>
+              <%- @area_data.each_with_index do |value, j| %>
               <tr>
-                <td>1</td>
-                <td>广东</td>
-                <td>11.33%</td>
-                <td>66.846</td>
-                <td>127.032</td>
+                <td><%= j + 1 %></td>
+                <td><%= value.try(:[],0) %></td>
+                <td><%= value.try(:[],1).to_s + "%" %></td>
+                <td><%= value.try(:[],2) %></td>
+                <td><%= value.try(:[],3) %></td>
               </tr>
-              <tr>
-                <td>2</td>
-                <td>浙江</td>
-                <td>10.96%</td>
-                <td>62.267</td>
-                <td>117.154</td>
-              </tr>
+              <%- end %>
             </tbody> 
           </table>
         </div>

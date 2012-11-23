@@ -13,7 +13,7 @@ class TradeReportsController < ApplicationController
     @start_time = params[:start_time] if params[:start_time].present?
     @end_time =  params[:end_time] if params[:end_time].present?
     if @start_date && @end_date && @start_time && @end_time
-		  start_at = "#{@start_date} #{@start_time}".to_time(form = :local)
+    	start_at = "#{@start_date} #{@start_time}".to_time(form = :local)
 	    end_at = "#{@end_date} #{@end_time}".to_time(form = :local)
   		reports = reports.where(:performed_at.gte => start_at, :performed_at.lte => end_at)
     else

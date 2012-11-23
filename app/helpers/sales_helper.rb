@@ -53,4 +53,42 @@ module SalesHelper
 
     p [sold_info, sold_compare]
   end
+
+  def area_data(start_at, end_at)
+
+    ##对数据map_reduce
+    map = %Q{
+      function() {
+        emit(this.receiver_state, {payment: this.payment, buyer_nick: this.buyer_nick });
+      }
+    }
+    reduce = %Q{
+      function(key, values) {
+        var result = {payment: 0, buyer_nick: []};
+        values.forEach(function(value) {
+          result.payment += value.payment;
+          if(value.buyer_nick != null){
+          result.buyer_nick.push(value.buyer_nick);
+          }
+        });
+        return result;
+      }
+    }
+
+    trades = TaobaoTrade.between(created: start_at..end_at).in(status: ["TRADE_FINISHED","FINISHED_L"])
+    map_reduce_info = trades.map_reduce(map, reduce).out(inline: true)
+
+    #处理数据
+    money_sum = trades.sum(:payment)
+    area_info = []
+    map_reduce_info.each do |info|
+      state = info["_id"]
+      money_rate = (info["value"]["payment"]/money_sum*100).round(3)
+      buyer_num = info["value"]["buyer_nick"].to_a.flatten.uniq.count
+      trade_num = info["value"]["buyer_nick"].to_a.flatten.count
+      area_info << [state, money_rate, buyer_num, trade_num]
+    end
+      area_info = area_info.sort{|a, b| b[1] <=> a[1]}
+  end
+
 end

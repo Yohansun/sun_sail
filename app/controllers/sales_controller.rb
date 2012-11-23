@@ -119,18 +119,27 @@ class SalesController < ApplicationController
     end
     render "/sales/product_analysis"
   end
+
   def area_analysis
-    start_at = "#{params[:start_date]} #{params[:start_time]}".to_time(:local)
-    end_at = "#{params[:end_date]} #{params[:end_time]}".to_time(:local)
-    if start_at == nil || end_at == nil
-      @trades = TaobaoTrade.between(created: 1.month.ago..Time.now)
+    @start_date = params[:start_date] if params[:start_date].present?
+    @end_date = params[:end_date] if params[:end_date].present?
+    @start_time = params[:start_time] if params[:start_time].present?
+    @end_time = params[:end_time] if params[:end_time].present?
+
+    if @start_date && @end_date
+      start_at = "#{@start_date} #{@start_time}".to_time(:local)
+      end_at = "#{@end_date} #{@end_time}".to_time(:local)
     else
-      @trades = TaobaoTrade.between(created: start_at..end_at)
+      start_at = 1.month.ago
+      end_at = Time.now
     end
-    @sold_info = sold_count(@trades)
+    @area_data = area_data(start_at, end_at)
+    render "/sales/area_analysis"
   end
+
   def customer_analysis
   end
+
   def time_analysis
   end
 

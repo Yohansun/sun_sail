@@ -1,4 +1,10 @@
+<%- if controller_name == 'sales' %>
+<%- if action_name == 'product_analysis'%>
 <form action="/sales/product_analysis" class="well form-search">
+<%- elsif action_name == 'area_analysis'%>
+<form action="/sales/area_analysis" class="well form-search">
+<%- end %>
+<%- end %>
   <fieldset class="form-inline">
     <div class="controls">
       <label class="control-label">开始时间：</label>
