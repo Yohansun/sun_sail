@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-  before_filter :authenticate_user!, :except => ['autologin']
-  before_filter :admin_only!, :except => ['autologin']
+  before_filter :authenticate_user!, :except => ['autologin','edit','update']
+  before_filter :admin_only!, :except => ['autologin','edit','update']
 
   def autologin
   	redirect_url = '/'
@@ -61,32 +61,44 @@ class UsersController < ApplicationController
 
   def update
     @user = User.find params[:id]
-    @user.username = params[:user][:username]
-    @user.name = params[:user][:name]
-    @user.email = params[:user][:email]
-    @user.active = params[:user][:active]
-    if @user.active == false
-       @user.lock_access!
+    if !params[:ac].present?
+      @user.username = params[:user][:username] 
+      @user.name = params[:user][:name]
+      @user.active = params[:user][:active] 
+      if @user.active == false 
+         @user.lock_access!
+      end
+      if @user.active == true
+        @user.unlock_access!
+      end
     end
-    if @user.active == true
-      @user.unlock_access!
-    end
+    @user.email = params[:user][:email] 
     if params[:user][:password].present?
       @user.password = params[:user][:password]
       @user.password_confirmation = params[:user][:password_confirmation]
     end
 
     if @user.save
-      @user.modify_role("cs",params[:cs])
-      @user.modify_role("cs_read",params[:cs_read])
-      @user.modify_role("seller",params[:seller])
-      @user.modify_role("interface",params[:interface])
-      @user.modify_role("stock_admin",params[:stock_admin])
-      @user.modify_role("admin",params[:admin])
-      @user.modify_role("logistic",params[:logistic])
+      if !params[:ac].present?
+        @user.modify_role("cs",params[:cs])
+        @user.modify_role("cs_read",params[:cs_read])
+        @user.modify_role("seller",params[:seller])
+        @user.modify_role("interface",params[:interface])
+        @user.modify_role("stock_admin",params[:stock_admin])
+        @user.modify_role("admin",params[:admin])
+        @user.modify_role("logistic",params[:logistic])
+      end
       redirect_to users_path
     else
-      render :show
+      if params[:ac].present? && params[:ac] == "edit"
+        render :edit
+      else
+        render :show
+      end
     end
+  end
+
+  def edit
+    @user = User.find current_user.id
   end
 end
