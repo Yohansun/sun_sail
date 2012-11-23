@@ -1,0 +1,71 @@
+<style type="text/css">
+  .magic_person img{
+    width: 25px;
+    height: 25px;
+  }
+  .magic_person div.clearfix div span{
+      margin-bottom:10px;
+    }
+    .magic_person div.clearfix div.offset2{
+      margin-left: 80px;
+    }
+    .magic_person div.clearfix div span{
+      margin-right: 20px;
+    }
+</style>
+<% content_for :tail do %>
+<script type="text/javascript">
+ //最新消息每10秒刷新一次
+  setInterval(function () {
+      $.ajax({
+          url: '<%=refresh_user_activities_path%>', //异步请求Action
+          data: "count=" + $("#count").val() + "&key=<%=params[:key_value] if params[:key_value]%>", //参数Id(可多个参数：data: "id=@Model.id&name=@Model.Name",)
+          type: "GET"
+      });
+  }, 3000);
+ </script>
+<% end %>
+<div class="container-fluid">
+  <div class="row-fluid">
+    <ul class="breadcrumb" style="position:relative;">
+      <li><a href="/">Magic</a><span class="divider">/</span></li>
+      <li><a href="/trade_reports">数据魔方</a><span class="divider">/</span></li>
+      <li class="active">人员</li>
+    </ul><!-- breadcrumb -->  
+
+    <%= form_tag '/user_activities', :method => :get, :class => "well form-horizontal" do %>
+      <div class="control-group nomargin">
+        <label class="control-label" for="">查看：</label>
+        <div class="controls clearfix">
+          <fieldset class="pull-left form-inline mar_r10"><!--  class="form-inline" -->
+            <% if params[:key_value].present? %>
+              <%=select_tag :key_value, options_for_select([["所有人","0"],["客服","1"],["系统管理员","2"],["经销商","3"]], params[:key_value]),:class=>"input-large"%>
+            <% else %>
+              <%=select_tag :key_value, options_for_select([["所有人","0"],["客服","1"],["系统管理员","2"],["经销商","3"]]),:class=>"input-large"%>
+            <% end %>
+          </fieldset>
+
+          <!-- <div class="input-append"> -->
+            <button type="sumbit" class="btn btn-info">过滤</button>
+          <!-- </div> -->
+        </div>         
+      </div>
+    <% end %>
+    <div class="well magic_person">
+      <p>所有记录 2000 中的 20 条:</p>
+      <div id="list_staff" class="msg_list">
+        <input type="hidden" id="count" value="<%=@count%>">
+        <%= render "row" %>
+      </div>
+
+      <p class="clearfix">
+        <% if params[:key_value] %>
+          <a class="pull-right" href="<%=all_user_activities_path(:key=>params[:key_value])%>" target="_blank">查看全部</a>
+        <% else %>
+          <a class="pull-right" href="<%=all_user_activities_path %>" target="_blank">查看全部</a>
+        <% end %>
+      </p>
+    </div>
+  </div>
+  <hr>
+</div>

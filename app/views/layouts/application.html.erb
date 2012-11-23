@@ -29,6 +29,7 @@
             <button class="btn btn-primary btn_mar4"><i class="icon-user icon-white"></i> <%= current_user.display_name %></button>
             <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle"><span class="caret"></span></button>
             <ul class="dropdown-menu">
+              <li><%= link_to "修改信息", edit_user_path(current_user.id) %></li>
               <li><%= link_to "注销", destroy_user_session_path, method: :delete %></li>
             </ul>
           </div>
@@ -46,7 +47,8 @@
             <li class="<%= 'active' if controller_name == 'sales'%>"><a href="/sales/show">销售</a></li>
             <% end %>
             <% if current_user.has_role?(:admin) && ['sales', 'staffs', 'trade_reports'].include?(controller_name)  %>
-          <!--     <li class="<%= 'active' if controller_name == 'staffs'%>"><a href="/staffs">人员</a></li> -->
+              <li class="<%= 'active' if controller_name == 'user_activities'%>"><a href="/user_activities">人员</a></li> 
+              <li class="<%= 'active' if controller_name == 'sales'%>"><a href="/sales/show">销售</a></li>
               <li class="<%= 'active' if controller_name == 'trade_reports'%>"><a href="/trade_reports">报表下载</a></li>
             <% end %>
             <% if current_user.has_role?(:admin)  && controller_name != 'home' %>

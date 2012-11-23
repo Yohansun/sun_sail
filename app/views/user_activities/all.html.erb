@@ -1,0 +1,76 @@
+<style type="text/css">
+  .magic_person img{
+    width: 25px;
+    height: 25px;
+  }
+  .magic_person div.clearfix div span{
+      margin-bottom:10px;
+    }
+    .magic_person div.clearfix div.offset2{
+      margin-left: 80px;
+    }
+    .magic_person div.clearfix div span{
+      margin-right: 20px;
+    }
+</style>
+<div class="container-fluid">
+  <div class="row-fluid">
+    <ul class="breadcrumb" style="position:relative;">
+      <li><a href="/">Magic</a><span class="divider">/</span></li>
+      <li><a href="/trade_reports">数据魔方</a><span class="divider">/</span></li>
+      <li><a href="/user_activities">人员</a><span class="divider">/</span></li>
+      <li class="active">
+        <% if params[:key] == "1"%>
+          客服
+        <% elsif params[:key] == "2"%>
+          系统管理员
+        <% elsif params[:key] == "3"%>
+          经销商
+        <% else %>
+          所有人
+        <% end %>
+      </li>
+    </ul><!-- breadcrumb -->  
+
+    <div class="well magic_person">
+      <div id="list_staff" class="msg_list">
+        <%= render "row" %>
+      </div>
+      <div class="pagination">
+        <ul class="pull-right">
+          <% if params[:page] && (params[:page].to_i - -20) != 0 %>
+            <li class="first">
+              <a href="/user_activities/all?key=<%=params[:key]%>&pages=1">首页</a>
+            </li>
+            <li class="prev">
+              <a href="/user_activities/all?key=<%=params[:key]%>&page=<%= params[:page].to_i - -20 %>&pages=<%=params[:pages].to_i - 1%>" rel="prev">上一页</a>
+            </li>
+          <% end %>
+
+          <% page = 0%>
+          <% (@count / 20 == 0 ? @count / 20 : @count / 20 + 1).times do |count| %>
+            <% if  @pages.to_i == count + 1 %>
+              <li class="page active">
+            <% else %>
+              <li class="page">
+            <% end %> 
+            <% page = count + 1%>
+            <% next if (count + 1) < (@pages.to_i - 2) || (count + 1) > (@pages.to_i + 2) %>
+              <a href="/user_activities/all?key=<%=params[:key]%>&page=<%= -20 * (count+1)%>&pages=<%=count+1%>"><%=count + 1%></a>
+            </li>
+          <% end %>
+          
+          <% if params[:page].to_i > -@count %>
+            <li class="next_page">
+              <a href="/user_activities/all?key=<%=params[:key]%>&page=<% if params[:page] %><%= params[:page].to_i + -20 %><% else %><%= -20 + -20%><% end %>&pages=<% if params[:pages] %><%= params[:pages].to_i + 1 %><% else %><%= 2 %><% end %>" rel="next">下一页</a>
+            </li>
+            <li class="last next">
+              <a href="/user_activities/all?key=<%=params[:key]%>&page=<%=-20 * page %>&pages=<%=page%>">末页</a>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <hr>
+</div>
