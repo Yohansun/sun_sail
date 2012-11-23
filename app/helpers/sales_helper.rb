@@ -76,7 +76,7 @@ module SalesHelper
     }
 
     trades = TaobaoTrade.between(created: start_at..end_at).in(status: ["TRADE_FINISHED","FINISHED_L"])
-    map_reduce_info = trades.map_reduce(map, reduce).out(inline: true)
+    map_reduce_info = trades.map_reduce(map, reduce).out(inline: true).sort{|a, b| a['_id'] <=> b['_id']}
 
     #处理数据
     money_sum = trades.sum(:payment)
@@ -89,6 +89,51 @@ module SalesHelper
       area_info << [state, money_rate, buyer_num, trade_num]
     end
       area_info = area_info.sort{|a, b| b[1] <=> a[1]}
+  end
+
+  def price_data(start_at, end_at)
+
+    ##对数据map_reduce
+    map = %Q{
+      function() {
+      for(var i in this.taobao_orders) {
+        if(this.taobao_orders[i].price != null){
+          emit(this.taobao_orders[i].price, {num: this.taobao_orders[i].num });
+        }
+      }
+      }
+    }
+    reduce = %Q{
+      function(key, values) {
+        var result = {num: 0};
+        values.forEach(function(value) {
+          result.num += value.num;
+        });
+        return result;
+      }
+    }
+
+    trades = TaobaoTrade.between(created: start_at..end_at).in(status: ["TRADE_FINISHED","FINISHED_L"])
+    map_reduce_info = trades.map_reduce(map, reduce).out(inline: true)
+
+    price_info = []
+    total_num_sum = 0
+    map_reduce_info.each do |info|
+      total_num_sum += info["value"]["num"].to_i
+    end
+    price_gap = [0..2, 2..5, 5..10, 10..29, 29..80, 80..200, 200..500, 500..1000, 1000..1900, 1900..4900, 4900..6000]
+
+    price_gap.each do |gap|
+      num_sum = 0
+      map_reduce_info.each do |info|
+        if (gap).include?(info["_id"])
+          num_sum += info["value"]["num"]
+        end
+      end
+      num_rate = ((num_sum.to_f)/total_num_sum*100).round(2)
+      price_info << [gap, num_sum, num_rate]
+    end
+    price_info
   end
 
 end

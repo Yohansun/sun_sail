@@ -80,8 +80,9 @@ MagicOrders::Application.routes.draw do
   resources :trade_sources
 
   get "/sales/area_analysis", to: 'sales#area_analysis'
-  #get "/sales/time_analysis", to: 'sales#time_analysis'
+  # get "/sales/time_analysis", to: 'sales#time_analysis'
   get "/sales/product_analysis", to: 'sales#product_analysis'
+  get "/sales/price_analysis", to: 'sales#price_analysis'
   #get "/sales/customer_analysis", to: 'sales#customer_analysis'
   resources :sales
 

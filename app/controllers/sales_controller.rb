@@ -106,12 +106,12 @@ class SalesController < ApplicationController
     if @start_date && @end_date
       start_at = "#{@start_date} #{@start_time}".to_time(:local)
       end_at = "#{@end_date} #{@end_time}".to_time(:local)
-      @trades = TaobaoTrade.between(created: start_at..end_at)
+      @trades = TaobaoTrade.between(created: start_at..end_at).in(status: ["TRADE_FINISHED","FINISHED_L"])
       time_gap = (end_at - start_at).to_i
-      @old_trades = TaobaoTrade.between(created: (start_at - time_gap.seconds)..start_at)
+      @old_trades = TaobaoTrade.between(created: (start_at - time_gap.seconds)..start_at).in(status: ["TRADE_FINISHED","FINISHED_L"])
     else
-      @trades = TaobaoTrade.between(created: 1.month.ago..Time.now)
-      @old_trades = TaobaoTrade.between(created: 2.month.ago..1.month.ago)
+      @trades = TaobaoTrade.between(created: 1.month.ago..Time.now).in(status: ["TRADE_FINISHED","FINISHED_L"])
+      @old_trades = TaobaoTrade.between(created: 2.month.ago..1.month.ago).in(status: ["TRADE_FINISHED","FINISHED_L"])
     end
 
     if @trades && @old_trades
@@ -141,6 +141,23 @@ class SalesController < ApplicationController
   end
 
   def time_analysis
+  end
+
+  def price_analysis
+    @start_date = params[:start_date] if params[:start_date].present?
+    @end_date = params[:end_date] if params[:end_date].present?
+    @start_time = params[:start_time] if params[:start_time].present?
+    @end_time = params[:end_time] if params[:end_time].present?
+
+    if @start_date && @end_date
+      start_at = "#{@start_date} #{@start_time}".to_time(:local)
+      end_at = "#{@end_date} #{@end_time}".to_time(:local)
+    else
+      start_at = 1.month.ago
+      end_at = Time.now
+    end
+    @price_data = price_data(start_at, end_at)
+    render "/sales/price_analysis"
   end
 
 end
