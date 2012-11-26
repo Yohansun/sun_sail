@@ -132,9 +132,57 @@ module SalesHelper
         end
       end
       num_rate = ((num_sum.to_f)/total_num_sum*100).round(2)
-      price_info << [gap, num_sum, num_rate]
+      price_info << [gap, num_sum.to_i, num_rate]
     end
     price_info
+  end
+
+  def time_data(start_at, end_at)
+    trades = TaobaoTrade.in(status: ["TRADE_FINISHED","FINISHED_L"])
+    day_gap = ((end_at - start_at)/86400).to_i
+    start_time = start_at
+    day_info = []
+
+    sum_money = trades.between(created: start_at..end_at).sum(:payment).to_f
+    time_info = []
+
+    #收集一天内24小时数据
+    day_gap.times do |k|
+      hour_info = {}
+      (0..23).each do |i|
+        payment_gap = trades.between(created: start_time..(start_time + 1.hour)).sum(:payment).to_f
+        sum = trades.between(created: start_time..(start_time + 1.hour)).count.to_i
+        hour_info[i] = [payment_gap, sum]
+        start_time = start_time + 1.hour
+      end
+      day_info << hour_info
+    end
+
+    #处理24小时数据
+    (0..23).each do |hour|
+      if hour + 1 < 10
+        hour_gap_1 = "0" + hour.to_s
+        hour_gap_2 = "0" + (hour + 1).to_s
+      elsif hour + 1 == 10
+        hour_gap_1 = "09"
+        hour_gap_2 = "10"
+      else
+        hour_gap_1 = hour.to_s
+        hour_gap_2 = (hour + 1).to_s
+      end
+
+      hour_payment = 0
+      hour_sum = 0
+      day_gap.times do |day|
+        hour_payment += day_info[day][hour][0]
+        hour_sum += day_info[day][hour][1]
+      end
+      hour_payment_rate = (hour_payment/sum_money*100).round(2)
+      hour_daily_payment = (hour_sum.to_f/day_gap).round(1)
+
+      time_info << [hour_gap_1, hour_gap_2, hour_payment_rate, hour_sum, hour_daily_payment]
+    end
+    time_info
   end
 
 end

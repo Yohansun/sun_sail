@@ -43,13 +43,10 @@
             <% if current_user.has_role?(:seller) && controller_name == 'stocks' %>
               <li class="stocks"><a href="#">仓库管理</a></li>
             <% end %>
-            <% if (current_user.has_role?(:admin) || current_user.has_role?(:cs)) && ['sales', 'staffs', 'trade_reports'].include?(controller_name)  %>
-            <li class="<%= 'active' if controller_name == 'sales'%>"><a href="/sales/product_analysis">销售</a></li>
-            <% end %>
             <% if current_user.has_role?(:admin) && ['sales', 'staffs', 'trade_reports'].include?(controller_name)  %>
-              <li class="<%= 'active' if controller_name == 'user_activities'%>"><a href="/user_activities">人员</a></li> 
-              <li class="<%= 'active' if controller_name == 'sales'%>"><a href="/sales/show">销售</a></li>
+              <li class="<%= 'active' if controller_name == 'user_activities'%>"><a href="/user_activities">人员</a></li>
               <li class="<%= 'active' if controller_name == 'trade_reports'%>"><a href="/trade_reports">报表下载</a></li>
+              <li class="<%= 'active' if controller_name == 'sales'%>"><a href="/sales/product_analysis">销售</a></li>
             <% end %>
             <% if current_user.has_role?(:admin)  && controller_name != 'home' %>
               <li class="products"><a href="#"><%= top_nav_name %></a></li>
