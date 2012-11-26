@@ -140,25 +140,57 @@ class SalesController < ApplicationController
 
   def customer_analysis
   end
-
-  def time_analysis
-  end
-
   def price_analysis
     @start_date = params[:start_date] if params[:start_date].present?
     @end_date = params[:end_date] if params[:end_date].present?
     @start_time = params[:start_time] if params[:start_time].present?
     @end_time = params[:end_time] if params[:end_time].present?
-
-    if @start_date && @end_date
+    if@start_date && @end_date
       start_at = "#{@start_date} #{@start_time}".to_time(:local)
       end_at = "#{@end_date} #{@end_time}".to_time(:local)
     else
       start_at = 1.month.ago
       end_at = Time.now
     end
-    @price_data = price_data(start_at, end_at)
-    render "/sales/price_analysis"
+      @price_data = price_data(start_at, end_at)
+      render "/sales/price_analysis"
   end
-
+  def time_analysis
+    @start_date = params[:start_date] if params[:start_date].present?
+    @end_date = params[:end_date] if params[:end_date].present?
+    @start_time = params[:start_time] if params[:start_time].present?
+    @end_time = params[:end_time] if params[:end_time].present?
+    if @start_date && @end_date
+      start_at = "#{@start_date} #{@start_time}".to_time(:local)
+      end_at = "#{@end_date} #{@end_time}".to_time(:local)
+    else
+      start_at = 1.month.ago
+      end_at = Time.now  
+    end 
+    sum_money = TaobaoTrade.only(:payment).between(created: start_at..end_at).sum(:payment)#总的金额数
+    day_gap = start_at.day - end_at.day
+    #求这些天内时间段的成交金额
+    3.times do |day|
+      day_info = []
+      hour_info = {}
+      (0..23).each do |hour|
+       period_payment = TaobaoTrade.only(:payment).sum(:payment)
+       sum = TaobaoTrade.only(:payment).count
+       hour_info[hour] = [period_payment, sum]
+      end
+      day_info << hour_info
+    end
+    time_info = []
+    #每个时段金额占总金额的比
+    (0..23).each do |i|
+      day_info.each do |info|
+        payment += info[i][0]
+        trade_sum += info[i][1]
+      end
+      time_info << [i, payment, trade_num]
+    end
+    #render "/sales/time_analysis"
+  end  
+  
+  
 end
