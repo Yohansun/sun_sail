@@ -5,6 +5,7 @@ class SalesController < ApplicationController
   before_filter :admin_only!
 
   def index
+    redirect_to "/sales/product_analysis"
   end
 
   def show

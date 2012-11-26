@@ -51,7 +51,7 @@ module SalesHelper
     end
     sold_compare = compare_rate.sort{|a, b| b[3] <=> a[3]}
 
-    p [sold_info, sold_compare]
+    [sold_info, sold_compare]
   end
 
   def area_data(start_at, end_at)
@@ -88,7 +88,7 @@ module SalesHelper
       trade_num = info["value"]["buyer_nick"].to_a.flatten.count
       area_info << [state, money_rate, buyer_num, trade_num]
     end
-      area_info = area_info.sort{|a, b| b[1] <=> a[1]}
+    area_info = area_info.sort{|a, b| b[1] <=> a[1]}
   end
 
   def price_data(start_at, end_at)
@@ -116,6 +116,7 @@ module SalesHelper
     trades = TaobaoTrade.between(created: start_at..end_at).in(status: ["TRADE_FINISHED","FINISHED_L"])
     map_reduce_info = trades.map_reduce(map, reduce).out(inline: true)
 
+    #处理数据
     price_info = []
     total_num_sum = 0
     map_reduce_info.each do |info|

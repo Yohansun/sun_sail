@@ -22,7 +22,7 @@ task :compare_taobao_magic_2 => :environment do
 	      	p tid
 	      	p t.tid
 	      	p money
-            p t.payment
+	      	p t.payment
 	    end
 	  end
   end  

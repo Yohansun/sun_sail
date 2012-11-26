@@ -8,7 +8,7 @@ class Sale < ActiveRecord::Base
       second = gap%60
       total_minute = gap/60
       minute = total_minute%60
-      total_hour = total_minute/60 
+      total_hour = total_minute/60
       hour = total_hour%24
       day = total_hour/24
       gap = [day.to_s,(hour.to_s + ":" + minute.to_s + ":" + second.to_s)]
