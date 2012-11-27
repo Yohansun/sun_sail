@@ -95,8 +95,6 @@ class Trade
   before_update :set_has_unusual_state
   before_update :set_has_refund_order
 
-  max_versions 3
-
   def set_has_color_info
     self.orders.each do |order|
       unless order.color_num.blank?
