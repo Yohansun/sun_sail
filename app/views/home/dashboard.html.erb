@@ -10,35 +10,36 @@
 					<a class="indexStart3" href="/trade_reports"><span>数据魔方</span></a>
 				</div>
 
-				<% if current_user.has_role?(:seller) && current_user.seller -%>
-					<div>
-						<%= link_to seller_stocks_path(current_user.seller.id), class: 'indexStart4' do %>
-							<span>仓库管理</span>
-						<% end %>
-					</div>
-				<% elsif current_user.has_role?(:admin) %>
-					<div>
-						<%= link_to stocks_path, class: 'indexStart4' do %>
-							<span>仓库管理</span>
-						<% end %>
-					</div>
-				<% elsif current_user.has_role?(:cs) %>
-					<div>
-						<%= link_to stock_products_path, class: 'indexStart4' do %>
-							<span>仓库管理</span>
-						<% end %>
-					</div>
-				<% end -%>
+				<% if TradeSetting.company == 'dulux' %>
+					<% if current_user.has_role?(:seller) && current_user.seller -%>
+						<div>
+							<%= link_to seller_stocks_path(current_user.seller.id), class: 'indexStart4' do %>
+								<span>仓库管理</span>
+							<% end %>
+						</div>
+					<% elsif current_user.has_role?(:admin) %>
+						<div>
+							<%= link_to stocks_path, class: 'indexStart4' do %>
+								<span>仓库管理</span>
+							<% end %>
+						</div>
+					<% elsif current_user.has_role?(:cs) %>
+						<div>
+							<%= link_to stock_products_path, class: 'indexStart4' do %>
+								<span>仓库管理</span>
+							<% end %>
+						</div>
+					<% end -%>
 
-				<% if current_user.has_role?(:admin) -%>
-					<div>
-						<a class="indexStart5" href="/sellers"><span>经销商管理</span></a>
-					</div>
-					<div>
-						<a class="indexStart8" href="/products"><span>商品管理</span></a>
-					</div>
-				<% end -%>
-
+					<% if current_user.has_role?(:admin) -%>
+						<div>
+							<a class="indexStart5" href="/sellers"><span>经销商管理</span></a>
+						</div>
+						<div>
+							<a class="indexStart8" href="/products"><span>商品管理</span></a>
+						</div>
+					<% end -%>
+				<% end %>
 			<% else -%>
 
 				<div>

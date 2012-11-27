@@ -184,6 +184,30 @@ class Trade
     emails
   end
 
+  def nofity_stock(operation, op_seller)
+    return unless TradeSetting.company == 'dulux'
+
+    orders.each do |order|
+      product = Product.find_by_iid order.outer_iid
+      package = product.package_info
+      if package.present?
+        package.each do |data|
+          stock_product = StockProduct.joins(:product).where("products.iid = ? AND seller_id = ?", data[:iid], op_seller).readonly(false).first
+          stock_product.update_quantity!(data[:number] * order.num, operation, op_seller, tid)
+        end
+      else
+        stock_product = StockProduct.where(product_id: product.id, seller_id: op_seller).first
+        stock_product.update_quantity!(order.num, operation, op_seller, tid)
+      end
+    end
+  end
+
+  def reset_seller
+    return unless seller_id
+    nofity_stock "解锁", seller_id
+    update_attributes(seller_id: nil, seller_name: nil, dispatched_at: nil)
+  end
+
   def seller(sid = seller_id)
     Seller.find_by_id sid
   end

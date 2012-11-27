@@ -19,7 +19,13 @@ class TradeDispatchSms
       else
         area_name = seller.interface_name
         mobiles = seller.interface_mobile
-        mobiles += ",13761949153" if object._type == "TaobaoPurchaseOrder"
+
+        if object._type == "TaobaoPurchaseOrder"
+          extra_mobiles = TradeSetting.purchase_extra_mobiles || []
+          mobiles_string = ",#{extra_mobiles.join(',')}"
+          mobiles += mobiles_string
+        end
+
         trade_info = "您好，#{seller.interface_name}有#{trade_from}新订单（订单号#{tid}）"
       end
 

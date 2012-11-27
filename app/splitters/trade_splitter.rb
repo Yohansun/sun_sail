@@ -46,9 +46,7 @@ class TradeSplitter
     when 'TaobaoPurchaseOrder'
       TaobaoPurchaseOrderSplitter.split_orders(@trade)
     when 'TaobaoTrade'
-      if TradeSetting.company == 'dulux'
-        split_orders(@trade)
-      else
+
         TaobaoTradeSplitter.split_orders(@trade)
       end
     else

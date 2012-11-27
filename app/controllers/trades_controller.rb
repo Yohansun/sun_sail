@@ -4,8 +4,9 @@ class TradesController < ApplicationController
   layout false, :only => :print_deliver_bill
   before_filter :authenticate_user!
   respond_to :json, :xls
-  include Dulux::Splitter
+
   include TaobaoProductsLockable
+  include Dulux::Splitter
 
   def index
     offset = params[:offset] || 0
@@ -233,12 +234,14 @@ class TradesController < ApplicationController
   def seller_for_area
     trade = Trade.find params[:id]
     area = Area.find params[:area_id]
+
     if TradeSetting.company == 'dulux'
       seller = Dulux::SellerMatcher.match_trade_seller(trade, area)
       seller ||= trade.default_seller
     else
       seller = trade.matched_seller_with_default(area)
     end
+
     seller_id = nil
     seller_name = '无对应经销商'
     dispatchable = false
@@ -247,10 +250,12 @@ class TradesController < ApplicationController
       seller_id = seller.id
       seller_name = seller.name
       dispatchable = true
-      errors = can_lock_products?(trade, seller.id).join(',')
-      unless errors.blank?
-        seller_name += "(无法分流：#{errors})"
-        dispatchable = false
+      if TradeSetting.company == 'dulux'
+        errors = can_lock_products?(trade, seller.id).join(',')
+        unless errors.blank?
+          seller_name += "(无法分流：#{errors})"
+          dispatchable = false
+        end
       end
     end
 
@@ -286,7 +291,12 @@ class TradesController < ApplicationController
 
   def split_trade
     trade = Trade.find params[:id]
-    new_trade_ids = split_orders(trade)
+    new_trade_ids = if TradeSetting.company == 'dulux'
+      split_orders(@trade)
+    else
+      TradeSplitter.new(trade).split!
+    end
+
     trade.operation_logs.create(operated_at: Time.now, operation: '拆单', operator_id: current_user.id, operator: current_user.name)
     respond_to do |format|
       format.json { render json: {ids: new_trade_ids} }
@@ -311,10 +321,11 @@ class TradesController < ApplicationController
   def deliver_list
     list = []
     Trade.find(params[:ids]).each do |trade|
+      trade = TradeDecorator.decorate(trade)
       list << {
         name: trade.receiver_name,
         tid: trade.tid,
-        address: "#{trade.receiver_state} #{trade.receiver_city} #{trade.receiver_district} #{trade.receiver_address}",
+        address: trade.receiver_full_address,
         logistic_name: trade.logistic_name || '',
         logistic_waybill: trade.logistic_waybill || ''
       }
