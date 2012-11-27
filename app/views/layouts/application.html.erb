@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <% if TradeSetting.company == 'dulux' %>
-    <title>Magic - 多乐士电商ERP BETA 1.0</title>
+    <title><%= TradeSetting.site_title_basic %></title>
     <% else %>
     <title><%= content_for?(:title) ? yield(:title) : "Magic Orders" %></title>
     <% end %>

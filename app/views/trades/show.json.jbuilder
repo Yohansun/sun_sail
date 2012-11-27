@@ -1,5 +1,7 @@
 json.id @trade._id
 json.tid @trade.tid
+json.trade_type @trade._type
+json.current_user_is_seller current_user.has_role?(:seller)
 json.splitted_tid @trade.splitted_tid
 json.seller_id @trade.seller_id
 json.default_seller_id TradeSetting.default_seller_id
@@ -74,7 +76,13 @@ json.orders OrderDecorator.decorate(@trade.orders) do |json, order|
   json.title order.title
   json.num order.num
   unless TradeSetting.company == 'dulux' && current_user.has_role?(:seller)
-    json.price order.price
+    if current_user.has_role?(:seller) && @trade._type == "TaobaoPurchaseOrder"
+      json.price order.price
+      json.total_fee order.seller_total_fee
+    else
+      json.price order.auction_price
+      json.total_fee order.total_fee
+    end
     json.auction_price order.auction_price
     json.total_fee order.total_fee
     json.buyer_payment order.buyer_payment
@@ -88,9 +96,13 @@ json.orders OrderDecorator.decorate(@trade.orders) do |json, order|
   json.color_hexcode order.color_hexcode
   json.color_name order.color_name
   json.barcode order.barcode
-  json.contents get_package(order.outer_iid, @trade.created_at)
+
+  if @trade._type == 'TaobaoTrade'
+    json.refund_status order.refund_status
+  end
+
+  json.contents @trade._type == 'TaobaoTrade' ? get_package(order.outer_iid, @trade.created_at) : []
   json.bill_info order.bill_info
-  json.refund_status order.refund_status
 end
 
 json.unusual_states @trade.unusual_states do |json, state|

@@ -9,8 +9,62 @@
 <% else %>
   <%=  @trade_info %> 信息有调整，具体信息如下，请以此封mail信息为准，
 <% end %>
+
 <%= @trade_deliver_info %>
-<%= render "trade_detail" %>
-<br>客服备注：<%= @trade.cs_memo %><br>
+
+<% if TradeSetting.company != 'dulux' %>
+  <%= render "trade_detail" %>
+  <br>客服备注：<%= @trade.cs_memo %><br>
+<% else %>
+  <%- if @is_1568 %>
+  此订单为1568地区订单，请安排后续服务事宜。
+  <%- end %>
+  <br>
+  <div class="info-zone"><span class="font-14b">订单信息</span></div>
+  <div class="pro-title">
+    <p class="pro-title-p font-blue14b">收货人信息</p>
+  </div>
+  <div class="c">
+    <p>
+      <label class="label65"><span class="font-gray">收货人：</span></label>&nbsp;
+      <%= @trade.receiver_name %>
+    </p>
+
+    <p>
+      <label class="label65"><span class="font-gray">收货地址：</span></label>&nbsp;
+      <%= @area_full_name %>
+    </p>
+
+    <p>
+      <label class="label65"><span class="font-gray">手机：</span></label>&nbsp;
+      <%= @trade.receiver_mobile_phone %>
+    </p>
+
+    <p>
+      <label class="label65"><span class="font-gray">邮政编码：</span></label>&nbsp;
+      <%= @trade.receiver_zip %>
+    </p>
+  </div>
+  <div class="pro-title">
+    <p class="pro-title-p font-blue14b">支付及配送方式</p>
+  </div>
+  <div class="c">
+    <p>
+      <label class="label65"><span class="font-gray">支付方式：</span></label>&nbsp;
+      支付宝
+    </p>
+  </div>
+  <div class="pro-title">
+    <p class="pro-title-p font-blue14b">商品清单</p>
+  </div>
+  <%- if @trade._type == "TaobaoPurchaseOrder" %>
+  	<%= render "purchase_order" %>
+  <%- else %>	
+  	<%= render "trade_detail" %>
+  <%- end %>
+  <br>买家留言：<%= @trade.buyer_message %> <br>
+  <br>发票信息: <%= @trade.invoice_name %> <br>
+  <br>客服备注：<%= @trade.cs_memo %> <br>
+<% end %>
 </body>
 </html>

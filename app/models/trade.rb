@@ -95,6 +95,8 @@ class Trade
   before_update :set_has_unusual_state
   before_update :set_has_refund_order
 
+  max_versions 3
+
   def set_has_color_info
     self.orders.each do |order|
       unless order.color_num.blank?
@@ -169,14 +171,19 @@ class Trade
   end
 
   def cc_emails
+    emails = []
+
     if self.seller
       cc = self.seller.ancestors.map { |e|
         if e.cc_emails
           e.cc_emails.split(",")
         end
       }
-      cc.flatten.compact.map { |e| e.strip }
+      emails = cc.flatten.compact.map { |e| e.strip }
+      emails = emails | (TradeSetting.extra_cc || [])
     end
+
+    emails
   end
 
   def seller(sid = seller_id)

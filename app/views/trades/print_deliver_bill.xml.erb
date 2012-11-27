@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <data>
   <% @trades.each do |trade| %>
-  <trade tid="<%= trade.tid %>" company="<%= TradeSetting.shopname %>" nameOfOrganization="多乐士官方旗舰店" 
+  <trade tid="<%= trade.tid %>" company="<%= TradeSetting.shopname %>" nameOfOrganization="<%= TradeSetting.shopname_taobao %>" 
     num="<%= trade_item_count(trade) %>" phone="<%= trade.receiver_mobile %>" memo="<%= trade.cs_memo %>" 
     copyright="Magic" receiver="<%= trade.receiver_name %>"
     address="<%= "#{trade.receiver_state} #{trade.receiver_city} #{trade.receiver_district} #{trade.receiver_address}" %>"

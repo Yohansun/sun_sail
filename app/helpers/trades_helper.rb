@@ -2,6 +2,7 @@
 module TradesHelper
   def get_package(iid, time)
     tmp = []
+    return tmp unless TradeSetting.company == 'dulux'
 
     iid_map = {
       'ICI0007' => '五合一配套抗碱底漆',

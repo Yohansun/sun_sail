@@ -31,6 +31,7 @@ group :development do
   gem 'tinder'
   gem 'certified'
   gem "thin"
+  gem "letter_opener"
 end
 
 group :test do

@@ -113,8 +113,11 @@ MagicOrders::Application.routes.draw do
     resources :products
   end
 
-  mount Sidekiq::Web => '/sidekiq'
   mount MailsViewer::Engine => '/delivered_mails'
+
+  authenticate :user do
+    mount Sidekiq::Web => '/sidekiq'
+  end
 
   root to: "home#dashboard"
 

@@ -16,7 +16,8 @@ class Seller < ActiveRecord::Base
 
   validates_presence_of :fullname, :name
   validates_uniqueness_of :fullname, :name
-  before_save :set_pinyin 
+
+  before_save :set_pinyin
 
   def set_pinyin
     self.pinyin = Hz2py.do(name).split(" ").map { |name| name[0, 1] }.join
@@ -33,11 +34,11 @@ class Seller < ActiveRecord::Base
   def interface_name
     self.parent.name if self.parent
   end
-  
+
   def products_ids
     @products_ids = self.stock_products.select("distinct stock_products.product_id").map(&:product_id)
-  end 
-  
+  end
+
   def categories_ids
     products_ids = self.products_ids
     if products_ids.present?
@@ -46,7 +47,7 @@ class Seller < ActiveRecord::Base
     else
       @categories_ids = []
     end
-  end    
+  end
 
   def product_name(id)
     StockProduct.find_by_id(id).try(:product).try(:name)

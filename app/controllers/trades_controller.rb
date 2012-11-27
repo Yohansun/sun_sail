@@ -73,7 +73,9 @@ class TradesController < ApplicationController
 
   def show
     @trade = TradeDecorator.decorate(Trade.where(_id: params[:id]).first)
-    @splited_orders = matched_seller_info(@trade)
+    if params[:splited]
+      @splited_orders = matched_seller_info(@trade)
+    end
     respond_with @trade
   end
 

@@ -21,4 +21,28 @@ class TaobaoSubPurchaseOrder < Order
   field :buyer_payment, type: Float
 
   embedded_in :taobao_purchase_order
+
+  def bill_info
+    tmp = {}
+    color_num.each do |nums|
+      next if nums.blank?
+
+      num = nums[0]
+      next if num.blank?
+
+      if tmp.has_key? num
+        tmp["#{num}"][0] += 1
+      else
+        tmp["#{num}"] = [1, Color.find_by_num(num).try(:name)]
+      end
+    end
+
+    [{
+      iid: '',
+      number: 1,
+      storage_num: '',
+      title: title,
+      colors: tmp
+    }]
+  end
 end
