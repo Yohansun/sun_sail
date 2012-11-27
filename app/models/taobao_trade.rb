@@ -95,22 +95,6 @@ class TaobaoTrade < Trade
     self.taobao_orders
   end
 
-  def nofity_stock(operation, op_seller)
-    orders.each do |order|
-      product = Product.find_by_iid order.outer_iid
-      package = product.package_info
-      if package.present?
-        package.each do |data|
-          stock_product = StockProduct.joins(:product).where("products.iid = ? AND seller_id = ?", data[:iid], op_seller).readonly(false).first
-          stock_product.update_quantity!(data[:number] * order.num, operation, op_seller, tid)
-        end
-      else
-        stock_product = StockProduct.where(product_id: product.id, seller_id: op_seller).first
-        stock_product.update_quantity!(order.num, operation, op_seller, tid)
-      end
-    end
-  end
-
   def orders=(new_orders)
     self.taobao_orders = new_orders
   end
@@ -172,13 +156,8 @@ class TaobaoTrade < Trade
     return false if seller.blank?
 
     nofity_stock '锁定', seller.id
-    update_attributes(seller_id: seller.id, seller_name: seller.name, dispatched_at: Time.now)
-  end
 
-  def reset_seller
-    return unless seller_id
-    nofity_stock "解锁", seller_id
-    update_attributes(seller_id: nil, seller_name: nil, dispatched_at: nil)
+    update_attributes(seller_id: seller.id, seller_name: seller.name, dispatched_at: Time.now)
   end
 
   def matched_seller(area = nil)
@@ -226,28 +205,28 @@ class TaobaoTrade < Trade
       "申请退款"
     else
       case status
-        when "TRADE_NO_CREATE_PAY"
-          "没有创建支付宝交易"
-        when "WAIT_BUYER_PAY"
-          "等待付款"
-        when "WAIT_SELLER_SEND_GOODS"
-          "已付款，待发货"
-        when "WAIT_BUYER_CONFIRM_GOODS"
-          "已付款，已发货"
-        when "TRADE_BUYER_SIGNED"
-          "买家已签收,货到付款专用"
-        when "TRADE_FINISHED"
-          "交易成功"
-        when "TRADE_CLOSED"
-          "交易已关闭"
-        when "TRADE_CLOSED_BY_TAOBAO"
-          "交易被淘宝关闭"
-        when "ALL_WAIT_PAY"
-          "包含：等待买家付款、没有创建支付宝交易"
-        when "ALL_CLOSED"
-          "包含：交易关闭、交易被淘宝关闭"
-        else
-          status
+      when "TRADE_NO_CREATE_PAY"
+        "没有创建支付宝交易"
+      when "WAIT_BUYER_PAY"
+        "等待付款"
+      when "WAIT_SELLER_SEND_GOODS"
+        "已付款，待发货"
+      when "WAIT_BUYER_CONFIRM_GOODS"
+        "已付款，已发货"
+      when "TRADE_BUYER_SIGNED"
+        "买家已签收,货到付款专用"
+      when "TRADE_FINISHED"
+        "交易成功"
+      when "TRADE_CLOSED"
+        "交易已关闭"
+      when "TRADE_CLOSED_BY_TAOBAO"
+        "交易被淘宝关闭"
+      when "ALL_WAIT_PAY"
+        "包含：等待买家付款、没有创建支付宝交易"
+      when "ALL_CLOSED"
+        "包含：交易关闭、交易被淘宝关闭"
+      else
+        status
       end
     end
   end  

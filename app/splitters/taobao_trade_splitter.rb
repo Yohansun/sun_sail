@@ -1,30 +1,10 @@
-# encoding : utf-8 -*-
-class TaobaoTradeSplitter
-	def self.splitable_maps
-      default_seller_id = TradeSetting.default_seller_id   
-      {default_seller_id => [
-        'A1P14L20048C0W01',
-        'I1P18L50060C4V03',
-        'I1P18L50061C4V04',
-        'I1P18L40062C4V03',
-        'I1P18L40063C4V04',
-        'I1P04L10028C0V01',
-        'I1P04L10026C0V01',
-        'I1P04L10027C0V01',
-        'I1P04L10056C0V00',
-        'I1P04L10058C0V01',
-        'I1P01L40015C4V03',
-        'I1P01L40052C4V04',
-        'P1P16L60064C0V00',
-        'test1'
-      ]
-    }
-  end
+# -*- encoding : utf-8 -*-
 
+class TaobaoTradeSplitter
   def self.split_orders(trade)
     default_seller_id = TradeSetting.default_seller_id   
+    cangku_outer_iids = TradeSetting.special_iids
     all_orders = trade.orders
-    cangku_outer_iids = self.splitable_maps[default_seller_id]
     cangku_orders = all_orders.select {|order| cangku_outer_iids.include? order.outer_iid }
     other_orders = all_orders - cangku_orders
 

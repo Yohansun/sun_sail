@@ -180,94 +180,125 @@ class TradeDecorator < Draper::Base
       when 'JingdongTrade'
        trade.seller_discount
     end
-  end    
+  end
+
+  def payment
+    case trade._type
+    when 'TaobaoPurchaseOrder'
+      trade.distributor_payment
+    when 'TaobaoTrade'
+      trade.payment
+    when 'JingdongTrade'
+      trade.order_seller_price
+    end
+  end
 
   def total_fee
     case trade._type
-      when 'TaobaoPurchaseOrder'
-        self.sum_fee.to_f + self.post_fee.to_f
-      when 'TaobaoTrade'
-        #self.sum_fee.to_f + self.post_fee.to_f
-        self.payment
-      when 'JingdongTrade'
-        trade.order_seller_price
+    when 'TaobaoPurchaseOrder'
+      self.sum_fee.to_f + self.post_fee.to_f
+    when 'TaobaoTrade'
+      #self.sum_fee.to_f + self.post_fee.to_f
+      trade.payment
+    when 'JingdongTrade'
+      trade.order_seller_price
     end
   end
 
   def point_fee
     case trade._type
-      when 'TaobaoPurchaseOrder'
-      when 'TaobaoTrade'
-        trade.point_fee
-      when 'JingdongTrade'
+    when 'TaobaoPurchaseOrder'
+    when 'TaobaoTrade'
+      trade.point_fee
+    when 'JingdongTrade'
     end
   end
-                    
- 
- #总价
+
+  def seller_total_fee
+    case trade._type
+    when 'TaobaoPurchaseOrder'
+      self.seller_sum_fee.to_f + self.post_fee.to_f
+    when 'TaobaoTrade'
+      self.sum_fee.to_f + self.post_fee.to_f
+    when 'JingdongTrade'
+      trade.order_seller_price
+    end
+  end
+
+  #总价
   def sum_fee
     case trade._type
-      when 'TaobaoPurchaseOrder'
-        fee = trade.orders.inject(0) { |sum, order| sum + order.buyer_payment.to_f }
-      when 'TaobaoTrade'
-        fee = trade.orders.inject(0) { |sum, order| sum + OrderDecorator.decorate(order).total_fee.to_f }
-    else  
-        fee = self.total_fee.to_f + self.seller_discount.to_f - self.post_fee.to_f
+    when 'TaobaoPurchaseOrder', 'TaobaoTrade'
+      fee = trade.orders.inject(0) { |sum, order| sum + OrderDecorator.decorate(order).total_fee.to_f }
+    else
+      fee = self.total_fee.to_f + self.seller_discount.to_f - self.post_fee.to_f
     end
-    fee.round(2)  
+    fee.round(2)
   end
-  
+
+  #经销商看到的总价
+  def seller_sum_fee
+    case trade._type
+    when 'TaobaoPurchaseOrder'
+      trade.orders.inject(0) { |sum, order| sum + OrderDecorator.decorate(order).seller_total_fee.to_f }
+    when 'TaobaoTrade'
+      trade.orders.inject(0) { |sum, order| sum + order.payment.to_f }
+    else  
+      self.total_fee.to_f + self.seller_discount.to_f - self.post_fee.to_f
+    end
+  end
+
   def buyer_message
     case trade._type
-      when 'TaobaoPurchaseOrder'
-        trade.memo
-      when 'TaobaoTrade'
-        trade.buyer_message
-      when 'JingdongTrade'
-        trade.order_remark
+    when 'TaobaoPurchaseOrder'
+      trade.memo
+    when 'TaobaoTrade'
+      trade.buyer_message
+    when 'JingdongTrade'
+      trade.order_remark
     end
   end
 
   def buyer_nick
     case trade._type
-      when 'TaobaoPurchaseOrder'
-        trade.buyer_nick
-      when 'TaobaoTrade'
-        trade.buyer_nick
-      when 'JingdongTrade'
+    when 'TaobaoPurchaseOrder'
+      trade.buyer_nick
+    when 'TaobaoTrade'
+      trade.buyer_nick
+    when 'JingdongTrade'
     end
   end
 
   def seller_memo
     case trade._type
-      when 'TaobaoPurchaseOrder'
-        trade.supplier_memo
-      when 'TaobaoTrade'
-        trade.seller_memo
-      when 'JingdongTrade'
-        [trade.pay_type, trade.delivery_type, trade.invoice_info].join("; ")
+    when 'TaobaoPurchaseOrder'
+      trade.supplier_memo
+    when 'TaobaoTrade'
+      trade.seller_memo
+    when 'JingdongTrade'
+      [trade.pay_type, trade.delivery_type, trade.invoice_info].join("; ")
     end
   end
 
   def trade_source
     case trade._type
-      when 'TaobaoPurchaseOrder'
-        '分销平台'
-      when 'TaobaoTrade'
-        '淘宝'
-      when 'JingdongTrade'
-        '京东'
+    when 'TaobaoPurchaseOrder'
+      '分销平台'
+    when 'TaobaoTrade'
+      '淘宝'
+    when 'JingdongTrade'
+      '京东'
     end
   end
 
   def orders
     case trade._type
-      when 'TaobaoPurchaseOrder'
-        trade.taobao_sub_purchase_orders
-      when 'TaobaoTrade'
-        trade.taobao_orders
-      when 'JingdongTrade'
-        trade.jingdong_orders
+    when 'TaobaoPurchaseOrder'
+      trade.taobao_sub_purchase_orders
+    when 'TaobaoTrade'
+      trade.taobao_orders
+    when 'JingdongTrade'
+      trade.jingdong_orders
     end
   end
   
@@ -283,24 +314,24 @@ class TradeDecorator < Draper::Base
 
   def fenxiao_status_text
     case trade.status
-      when 'WAIT_BUYER_PAY'
-        '等待付款'
-      when 'WAIT_SELLER_SEND_GOODS'
-        '已付款，待发货'
-      when 'WAIT_BUYER_CONFIRM_GOODS'
-        '已付款，已发货'
-      when 'TRADE_FINISHED'
-        '交易成功'
-      when 'TRADE_CLOSED'
-        '交易已关闭'
-      when 'WAIT_BUYER_CONFIRM_GOODS_ACOUNTED'
-        '已付款（已分账），已发货'
-      when 'WAIT_SELLER_SEND_GOODS_ACOUNTED'
-        '已付款（已分账），待发货'
-      when 'TRADE_REFUNDING'
-        '退款中'
-      else
-        trade.status
+    when 'WAIT_BUYER_PAY'
+      '等待付款'
+    when 'WAIT_SELLER_SEND_GOODS'
+      '已付款，待发货'
+    when 'WAIT_BUYER_CONFIRM_GOODS'
+      '已付款，已发货'
+    when 'TRADE_FINISHED'
+      '交易成功'
+    when 'TRADE_CLOSED'
+      '交易已关闭'
+    when 'WAIT_BUYER_CONFIRM_GOODS_ACOUNTED'
+      '已付款（已分账），已发货'
+    when 'WAIT_SELLER_SEND_GOODS_ACOUNTED'
+      '已付款（已分账），待发货'
+    when 'TRADE_REFUNDING'
+      '退款中'
+    else
+      trade.status
     end
   end
 
@@ -310,46 +341,46 @@ class TradeDecorator < Draper::Base
       "申请退款"
     else
       case trade.status
-        when "TRADE_NO_CREATE_PAY"
-          "没有创建支付宝交易"
-        when "WAIT_BUYER_PAY"
-          "等待付款"
-        when "WAIT_SELLER_SEND_GOODS"
-          "已付款，待发货"
-        when "WAIT_BUYER_CONFIRM_GOODS"
-          "已付款，已发货"
-        when "TRADE_BUYER_SIGNED"
-          "买家已签收,货到付款专用"
-        when "TRADE_FINISHED"
-          "交易成功"
-        when "TRADE_CLOSED"
-          "交易已关闭"
-        when "TRADE_CLOSED_BY_TAOBAO"
-          "交易被淘宝关闭"
-        when "ALL_WAIT_PAY"
-          "包含：等待买家付款、没有创建支付宝交易"
-        when "ALL_CLOSED"
-          "包含：交易关闭、交易被淘宝关闭"
-        else
-          trade.status
+      when "TRADE_NO_CREATE_PAY"
+        "没有创建支付宝交易"
+      when "WAIT_BUYER_PAY"
+        "等待付款"
+      when "WAIT_SELLER_SEND_GOODS"
+        "已付款，待发货"
+      when "WAIT_BUYER_CONFIRM_GOODS"
+        "已付款，已发货"
+      when "TRADE_BUYER_SIGNED"
+        "买家已签收,货到付款专用"
+      when "TRADE_FINISHED"
+        "交易成功"
+      when "TRADE_CLOSED"
+        "交易已关闭"
+      when "TRADE_CLOSED_BY_TAOBAO"
+        "交易被淘宝关闭"
+      when "ALL_WAIT_PAY"
+        "包含：等待买家付款、没有创建支付宝交易"
+      when "ALL_CLOSED"
+        "包含：交易关闭、交易被淘宝关闭"
+      else
+        trade.status
       end
     end
   end
 
   def jingdong_order_status_text
     case trade.order_state
-      when 'WAIT_SELLER_DELIVERY'
-        '已付款，待发货'
-      when 'WAIT_SELLER_STOCK_OUT'
-        '已付款，待发货'
-      when 'WAIT_GOODS_RECEIVE_CONFIRM'
-        '已付款，已发货'
-      when 'FINISHED_L'
-        '交易成功'
-      when 'TRADE_CANCELED'
-        '交易已关闭'
-      else
-        trade.order_state
+    when 'WAIT_SELLER_DELIVERY'
+      '已付款，待发货'
+    when 'WAIT_SELLER_STOCK_OUT'
+      '已付款，待发货'
+    when 'WAIT_GOODS_RECEIVE_CONFIRM'
+      '已付款，已发货'
+    when 'FINISHED_L'
+      '交易成功'
+    when 'TRADE_CANCELED'
+      '交易已关闭'
+    else
+      trade.order_state
     end
   end
 

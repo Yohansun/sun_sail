@@ -1,40 +1,3 @@
-<div class="info-zone"><span class="font-14b">订单信息</span></div>
-<div class="pro-title">
-  <p class="pro-title-p font-blue14b">收货人信息</p>
-</div>
-<div class="c">
-  <p>
-    <label class="label65"><span class="font-gray">收货人：</span></label>&nbsp;
-    <%= @trade.receiver_name %>
-  </p>
-
-  <p>
-    <label class="label65"><span class="font-gray">收货地址：</span></label>&nbsp;
-    <%= @area_full_name %>
-  </p>
-
-  <p>
-    <label class="label65"><span class="font-gray">手机：</span></label>&nbsp;
-    <%= @trade.receiver_mobile_phone %>
-  </p>
-
-  <p>
-    <label class="label65"><span class="font-gray">邮政编码：</span></label>&nbsp;
-    <%= @trade.receiver_zip %>
-  </p>
-</div>
-<div class="pro-title">
-  <p class="pro-title-p font-blue14b">支付及配送方式</p>
-</div>
-<div class="c">
-  <p>
-    <label class="label65"><span class="font-gray">支付方式：</span></label>&nbsp;
-    支付宝
-  </p>
-</div>
-<div class="pro-title">
-  <p class="pro-title-p font-blue14b">商品清单</p>
-</div>
 <div class="order-st-list">
   <table border="0" cellpadding="0" cellspacing="0">
     <tr>
@@ -79,13 +42,13 @@
     <%- end %>
   </table>
 </div>
-<!--Dulux经销商邮件内容也只需要看到运费-->
+
 <% if TradeSetting.company == "dulux"%>
 <div class="pb5 pt5">
-    <label class="label75"><span class="font-14b">运输费用：</span></label>&nbsp;
-    <span class="font-gray">¥</span> <span class="font-blueb"><%= @trade.post_fee %></span>
-  </div>
-<%- else %>  
+  <label class="label75"><span class="font-14b">运输费用：</span></label>&nbsp;
+  <span class="font-gray">¥</span> <span class="font-blueb"><%= @trade.post_fee %></span>
+</div>
+<%- else %>
 <div class="order-st-total">
   <div class="pb5 pt5">
     <label class="label75"><span class="font-14b">商品总价：</span></label>&nbsp;

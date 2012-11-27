@@ -15,29 +15,28 @@ class TaobaoPurchaseOrderPuller
         end_time = Time.now
       end
 
-      begin 
-      response = TaobaoQuery.get({
-        method: 'taobao.fenxiao.orders.get',
-        start_created: start_time.strftime("%Y-%m-%d %H:%M:%S"),
-        end_created: end_time.strftime("%Y-%m-%d %H:%M:%S"),
-        page_no: page_no, page_size: 50}, nil
-      )
-      
-      p "starting create_orders: since #{start_time}"
-      
-      break unless response['fenxiao_orders_get_response']
-      
+      begin
+        response = TaobaoQuery.get({
+          method: 'taobao.fenxiao.orders.get',
+          start_created: start_time.strftime("%Y-%m-%d %H:%M:%S"),
+          end_created: end_time.strftime("%Y-%m-%d %H:%M:%S"),
+          page_no: page_no, page_size: 50}, nil
+        )
+
+        p "starting create_orders: since #{start_time}"
+
+        break unless response['fenxiao_orders_get_response']
         total_results = response['fenxiao_orders_get_response']['total_results']
         total_results = total_results.to_i
         total_pages = total_results / 50
-        next if total_results < 1 
+        next if total_results < 1
 
         trades = response['fenxiao_orders_get_response']['purchase_orders']['purchase_order']
         unless trades.is_a?(Array)
           trades = [] << trades
         end
-        next if trades.blank?  
-            
+        next if trades.blank?
+
         trades.each do |trade|
           next if ($redis.sismember('TaobaoPurchaseOrderTids', trade['fenxiao_id']) || TaobaoPurchaseOrder.where(tid: trade['fenxiao_id']).exists?)
           trade.delete 'id'

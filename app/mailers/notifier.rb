@@ -2,58 +2,52 @@
 class Notifier < ActionMailer::Base
   helper :application
   default :from => TradeSetting.email_notifier_from
-  
+
   def app_token_errors(token,response)
     mail(:to => %w{errors@networking.io},
          :subject => "#{TradeSetting.shopname}淘宝app token授权失败",
-         :body => "淘宝app token: 
-                   #{token.to_yaml} 
-                   错误代码: 
-                   #{response['error_description']}"
+         :body => "淘宝app token:#{token.to_yaml} \n 错误代码:#{response['error_description']}"
         )
-  end  
+  end
 
   def deliver_errors(id, errors)
     mail(:to => %w{errors@networking.io},
          :subject => "#{TradeSetting.shopname}发货异常提醒",
-         :body => "订单ID: #{id}  \n 错误代码: #{errors} "                  
+         :body => "订单ID: #{id}  \n 错误代码: #{errors} "
         )
-  end  
+  end
 
   def dispatch(id, seller_id, notify_kind)
-    
     object = Trade.find id
     seller = Seller.find seller_id
     @trade = TradeDecorator.decorate(object)
-     
+
     if seller
       @notify_kind = notify_kind
       @tid = @trade.tid
       @trade_from = @trade.trade_source
-      
+
       if TradeSetting.company == "dulux"
         @area_name = @trade.receiver_area_name
         to_emails = seller.email.try(:split, ',')
         cc_emails = []
         @trade_deliver_info = "请及时发货，谢谢。"
-      else  
+      else
         @area_name = seller.interface_name
         to_emails = seller.interface_email
         cc_emails = @trade.cc_emails
         @trade_deliver_info = "请及时通知经销商联系客户发货，并让其发货同时在“经销商后台”点击“确认发货”。之后请回复本邮件告知已发货。谢谢。"
-        if  @trade.is_1568
+        if @trade.is_1568
           @trade_deliver_info += "此订单为1568地区订单，请安排后续服务事宜。"
-        end  
-      end 
-    
-      @area_full_name = @trade.receiver_full_address
+        end
+      end
 
-      
+      @area_full_name = @trade.receiver_full_address
       @trade_info = "您好，#{@area_name}地区目前有一张#{@trade_from}订单"
-      
+
       mail_subject = "#{@trade_from}订单#{@tid}-#{@area_name}（#{Time.now.strftime("%Y/%m/%d")}），请及时发货"
       reply_to = TradeSetting.email_notifier_from
-      bcc = TradeSetting.email_notifier_dispatch_bcc  
+      bcc = TradeSetting.email_notifier_dispatch_bcc
       if to_emails.present?
         to_emails.each_with_index do |email, index|
           if index == 0
@@ -70,9 +64,8 @@ class Notifier < ActionMailer::Base
                  :reply_to => reply_to
             )
           end
-        end  
+        end
       end
     end
   end
 end
-

@@ -18,10 +18,10 @@ protected
 		# TODO
 		# 完善的匹配规则
 		seller = nil
-		
-    default_seller_id = TradeSetting.default_seller_id
 
-		special_out_iids = TaobaoPurchaseOrderSplitter.splitable_maps[default_seller_id]
+    default_seller_id = TradeSetting.default_seller_id
+		special_out_iids = TradeSetting.special_iids
+
 		trade_out_iids = @trade.out_iids || []
 
 		if trade_out_iids.size > 0 && (trade_out_iids - special_out_iids).size == 0
