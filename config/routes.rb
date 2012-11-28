@@ -83,6 +83,10 @@ MagicOrders::Application.routes.draw do
   get "/sales/time_analysis", to: 'sales#time_analysis'
   get "/sales/product_analysis", to: 'sales#product_analysis'
   get "/sales/price_analysis", to: 'sales#price_analysis'
+  get "/sales/real_area_analysis", to: 'sales#real_area_analysis'
+  get "/sales/real_time_analysis", to: 'sales#real_time_analysis'
+  get "/sales/real_product_analysis", to: 'sales#real_product_analysis'
+  get "/sales/real_price_analysis", to: 'sales#real_price_analysis'
   #get "/sales/customer_analysis", to: 'sales#customer_analysis'
   resources :sales
 

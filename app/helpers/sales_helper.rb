@@ -131,7 +131,11 @@ module SalesHelper
           num_sum += info["value"]["num"]
         end
       end
-      num_rate = ((num_sum.to_f)/total_num_sum*100).round(2)
+      if total_num_sum != 0
+        num_rate = ((num_sum.to_f)/total_num_sum*100).round(2)
+      else
+        num_rate = 0
+      end
       price_info << [gap, num_sum.to_i, num_rate]
     end
     price_info
@@ -177,7 +181,11 @@ module SalesHelper
         hour_payment += day_info[day][hour][0]
         hour_sum += day_info[day][hour][1]
       end
-      hour_payment_rate = (hour_payment/sum_money*100).round(2)
+      if sum_money != 0
+        hour_payment_rate = (hour_payment/sum_money*100).round(2)
+      else
+        hour_payment_rate = 0
+      end
       hour_daily_payment = (hour_sum.to_f/day_gap).round(1)
 
       time_info << [hour_gap_1, hour_gap_2, hour_payment_rate, hour_sum, hour_daily_payment]
