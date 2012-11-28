@@ -46,9 +46,7 @@ class TradeSplitter
     when 'TaobaoPurchaseOrder'
       TaobaoPurchaseOrderSplitter.split_orders(@trade)
     when 'TaobaoTrade'
-
-        TaobaoTradeSplitter.split_orders(@trade)
-      end
+      TaobaoTradeSplitter.split_orders(@trade)
     else
       [{orders: @trade.orders}]
     end
