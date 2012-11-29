@@ -1,120 +1,138 @@
 <% content_for :tail do -%>  
   <script type="text/javascript">
-   
-    $(".chart_opts input").click(function(){
-        option = $(this).val() 
-        $.get("/callcenter/switch_option", { option: option});
-    });
- 
 
-    $('a[data-toggle="tab"]').on('shown', function (e) {
-      var a = e.target.id // activated tab
-      if(a == 'success_rate_2'){
-        chart2()
-      }else if(a == 'success_rate_3'){
-        chart3()
-      }else if(a == 'success_rate_4'){
-        chart4()
-      }else if(a == 'success_rate_5'){
-        chart5()
-      };
-    })
-    chart1();
-    <%- %w(chart1 chart2 chart3 chart4 chart5).each_with_index do |chart_name, index| %>
-      <%- serial = index + 1 %>
-      function <%= chart_name %>() {
-        var method = $("#tab1 input:checked").val()
-        var chart;
-        var chartData = [
-        
-        <%- WangwangMember.all[0..-2].each do |member| %>  
-          {service_staff_id: '<%= member.short_id %>', 人数: '<%= member.send(:"#{@option}", @start_date, @end_date) %>'  }, 
-        <%- end %>  
-        {service_staff_id: '<%= WangwangMember.last.short_id %>',人数: '<%= WangwangMember.last.send(:"#{@option}",@start_date, @end_date) %>'}
-        
-        ];
-        
+    var option = 1
 
-        // SERIAL CHART    
-        var chart = new AmCharts.AmSerialChart();
+    // $('a[data-toggle="tab"]').on('shown', function (e) {
+    //   var a = e.target.id // activated tab
+    //   if(a == 'success_rate_2'){
+    //     chart2()
+    //   }else if(a == 'success_rate_3'){
+    //     chart3()
+    //   }else if(a == 'success_rate_4'){
+    //     chart4()
+    //   }else if(a == 'success_rate_5'){
+    //     chart5()
+    //   };
+    // })
 
-        chart.dataProvider = chartData;
-        chart.marginTop = 45;
-        chart.categoryField = "service_staff_id";
-        chart.pathToImages = "/assets/amcharts_images/";    
-        // listen for "dataUpdated" event (fired when chart is inited) and call zoomChart method when it happens
-        chart.addListener("dataUpdated", zoomChart);
-     
-        // AXES
-        // category                
-        var categoryAxis = chart.categoryAxis;
-       
-        categoryAxis.dashLength = 2;
-        categoryAxis.gridAlpha = 0.15;
-        categoryAxis.axisColor = "#ff6600";
-        categoryAxis.startOnAxis = true;
-        //categoryAxis.labelRotation = 90;
-        // categoryAxis.gridCount = 90;
-        // categoryAxis.autoGridCount = false;
-        // categoryAxis.equalSpacing = true;
-
-        // first value axis (on the left)
-        var valueAxis1 = new AmCharts.ValueAxis();
-        valueAxis1.axisColor = "#ff6600";
-        valueAxis1.axisThickness = 1;
-        valueAxis1.gridAlpha = 0.15;
-        chart.addValueAxis(valueAxis1);
-
-        // second value axis (on the right) 
-        var valueAxis2 = new AmCharts.ValueAxis();
-        valueAxis2.position = "right"; // this line makes the axis to appear on the right
-        valueAxis2.axisColor = "#FCD202";
-        valueAxis2.axisThickness = 1;
-        valueAxis2.gridAlpha = 0.15;
-        valueAxis2.axisThickness = 1;
-        chart.addValueAxis(valueAxis2);/**/
-        
-        // GRAPHS
-        // first graph
-        var graph1 = new AmCharts.AmGraph();
-        graph1.valueAxis = valueAxis1; // we have to indicate which value axis should be used
-        graph1.title = "人数";
-        graph1.valueField = "人数";
-        graph1.bullet = "round";
-        graph1.hideBulletsCount = 30;
-        chart.addGraph(graph1);
-
-        var graph2 = new AmCharts.AmGraph();
-        graph2.valueAxis = valueAxis2; // we have to indicate which value axis should be used
-        graph2.title = "金额";
-        graph2.valueField = "金额";
-        graph2.bullet = "square";
-        graph2.hideBulletsCount = 30;
-        chart.addGraph(graph2);
-
-
-        //Scrollbar
-        var chartScrollbar = new AmCharts.ChartScrollbar();
-        chart.addChartScrollbar(chartScrollbar);
-
-        // CURSOR
-        var chartCursor = new AmCharts.ChartCursor();
-        chartCursor.cursorPosition = "mouse";
-        chart.addChartCursor(chartCursor);
-
-        // LEGEND
-        var legend = new AmCharts.AmLegend();
-        legend.marginLeft = 110;
-        chart.addLegend(legend);
-
-        // WRITE
-        chart.write("chartdiv<%= serial %>");
-        function zoomChart() {
-            // different zoom methods can be used - zoomToIndexes, zoomToDates, zoomToCategoryValues
-            // chart.zoomToDates(new Date(2012, 9, 25, 0), new Date(2012, 9, 25, 2));
-            chart.zoomToIndexes(chartData.length - 30, chartData.length - 1);
-        }
-      };
+    var chart;
+    var chartData = [];
+    <%- WangwangMember.each do |member| %>
+      chartData.push({service_staff_id: $("#member_<%= member.id %> td:eq(0)").text(), 人数: $("#member_<%= member.id %> td").eq(option).text()})
     <%- end %>
+
+    // SERIAL CHART
+    chart = new AmCharts.AmSerialChart();
+
+    chart.dataProvider = chartData;
+    chart.marginTop = 45;
+    chart.categoryField = "service_staff_id";
+    chart.pathToImages = "/assets/amcharts_images/";
+    // listen for "dataUpdated" event (fired when chart is inited) and call zoomChart method when it happens
+    chart.addListener("dataUpdated", zoomChart);
+
+    // AXES
+    // category
+    var categoryAxis = chart.categoryAxis;
+
+    categoryAxis.dashLength = 2;
+    categoryAxis.gridAlpha = 0.15;
+    categoryAxis.axisColor = "#ff6600";
+    categoryAxis.startOnAxis = true;
+    //categoryAxis.labelRotation = 90;
+    // categoryAxis.gridCount = 90;
+    // categoryAxis.autoGridCount = false;
+    // categoryAxis.equalSpacing = true;
+
+    // first value axis (on the left)
+    var valueAxis1 = new AmCharts.ValueAxis();
+    valueAxis1.axisColor = "#ff6600";
+    valueAxis1.axisThickness = 1;
+    valueAxis1.gridAlpha = 0.15;
+    chart.addValueAxis(valueAxis1);
+
+    // second value axis (on the right)
+    var valueAxis2 = new AmCharts.ValueAxis();
+    valueAxis2.position = "right"; // this line makes the axis to appear on the right
+    valueAxis2.axisColor = "#FCD202";
+    valueAxis2.axisThickness = 1;
+    valueAxis2.gridAlpha = 0.15;
+    valueAxis2.axisThickness = 1;
+    chart.addValueAxis(valueAxis2);/**/
+
+    // GRAPHS
+    // first graph
+    var graph1 = new AmCharts.AmGraph();
+    graph1.valueAxis = valueAxis1; // we have to indicate which value axis should be used
+    graph1.title = "人数";
+    graph1.valueField = "人数";
+    graph1.bullet = "round";
+    graph1.hideBulletsCount = 30;
+    chart.addGraph(graph1);
+
+    var graph2 = new AmCharts.AmGraph();
+    graph2.valueAxis = valueAxis2; // we have to indicate which value axis should be used
+    graph2.title = "金额";
+    graph2.valueField = "金额";
+    graph2.bullet = "square";
+    graph2.hideBulletsCount = 30;
+    chart.addGraph(graph2);
+
+
+    //Scrollbar
+    var chartScrollbar = new AmCharts.ChartScrollbar();
+    chart.addChartScrollbar(chartScrollbar);
+
+    // CURSOR
+    var chartCursor = new AmCharts.ChartCursor();
+    chartCursor.cursorPosition = "mouse";
+    chart.addChartCursor(chartCursor);
+
+    // LEGEND
+    var legend = new AmCharts.AmLegend();
+    legend.marginLeft = 110;
+    chart.addLegend(legend);
+
+    // WRITE
+    chart.write("chartdiv");
+
+    $(".chart_opts input").click(function(){
+        option = $(this).val();
+        switch(option) {
+          case 'receivenum':
+            option = 1;
+            break;
+          case 'chatpeers_count':
+            option = 2;
+            break;
+          case 'created_trade_buyer_count':
+            option = 3;
+            break;
+          case 'paid_trade_buyer_count':
+            option = 4;
+            break;
+          case 'paid_trade_payment':
+            option = 5;
+            break;
+          case 'created_trade_payment':
+            option = 6;
+            break;
+          default:
+            option = 7;
+        }
+        changeData = [];
+        <%- WangwangMember.each do |member| %>
+        changeData.push({service_staff_id: $("#member_<%= member.id %> td:eq(0)").html(), 人数: $("#member_<%= member.id %> td").eq(option).html().replace(" %",'') });
+        <%- end %>
+        chart.dataProvider = changeData;
+        chart.validateData();
+    });
+        
+    function zoomChart() {
+        // different zoom methods can be used - zoomToIndexes, zoomToDates, zoomToCategoryValues
+        // chart.zoomToDates(new Date(2012, 9, 25, 0), new Date(2012, 9, 25, 2));
+        chart.zoomOut();
+    }
   </script>
 <% end %>

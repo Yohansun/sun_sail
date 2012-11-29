@@ -18,14 +18,14 @@ class CallcenterController < ApplicationController
 			@start_date = range_start.beginning_of_day
 			@end_date = range_end.end_of_day
 		end
-		@members = WangwangMember.all.page params[:page]
+		@members = WangwangMember.all
 
 		@option = "receivenum"
 	end
 
 	def switch_option
 		if params[:option].present?
-			@option = params[:option] 
+			@option = params[:option]
 	    respond_to do |f|
 	      f.js
 	    end
