@@ -194,8 +194,6 @@ GEM
       i18n (>= 0.4.0)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
-    mails_viewer (0.0.3)
-      rails (>= 3.1.0)
     map_by_method (0.8.3)
     metaclass (0.0.1)
     method_source (0.8.1)
@@ -359,7 +357,7 @@ GEM
       actionpack (>= 3.2.0)
       activemodel (>= 3.2.0)
     subexec (0.2.2)
-    taobao_fu_reload (1.1.1)
+    taobao_fu_reload (1.1.2)
       crack (>= 0.1.7)
     temple (0.4.0)
     therubyracer (0.10.2)
@@ -451,7 +449,6 @@ DEPENDENCIES
   kiqstand
   less-rails
   letter_opener
-  mails_viewer
   map_by_method
   mini_magick
   mongoid (= 3.0.13)

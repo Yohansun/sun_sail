@@ -1,0 +1,554 @@
+<!-- <header class="jumbotron subhead" id="overview">
+  <div class="subnav">
+    <ul class="nav nav-pills">
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">
+          总览
+          <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu">
+          <li><a href="customer_service.html">商城绩效</a></li>
+          <li><a href="customer_service2.html">客服对比</a></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">
+          商城总绩效
+          <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu">
+          <li><a href="c_shop_performance.html">总绩效报表</a></li>
+          <li><a href="c_shop_performance2.html">客单价分析</a></li>
+          <li><a href="c_shop_performance3.html">客件数分析</a></li>
+          <li><a href="c_shop_performance4.html">成功率分析</a></li>
+          <li><a href="c_shop_performance5.html">工作量分析</a></li>
+          <li><a href="c_shop_performance6.html">接待压力分析</a></li>
+          <li><a href="c_shop_performance7.html">退款情况分析</a></li>
+          <li><a href="c_shop_performance8.html">销售量分析</a></li>
+        </ul>
+      </li>
+      <li class="dropdown active">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+          客服对比
+          <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu">
+          <li><a href="c_service.html">绩效对比</a></li>
+          <li><a href="c_service2.html">客单价对比</a></li>
+          <li><a href="c_service3.html">客件数对比</a></li>
+          <li><a href="c_service4.html">成功率对比</a></li>
+          <li><a href="c_service5.html">工作量对比</a></li>
+          <li><a href="c_service6.html">议价能力对比</a></li>
+          <li><a href="c_service7.html">退款情况对比</a></li>
+          <li><a href="c_service8.html">值班情况对比</a></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+          客服绩效
+          <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu">
+          <li><a href="c_service_performance.html">绩效报表</a></li>
+          <li><a href="c_service_performance2.html">客单价分析</a></li>
+          <li><a href="c_service_performance3.html">客件数分析</a></li>
+          <li><a href="c_service_performance4.html">成功率分析</a></li>
+          <li><a href="c_service_performance5.html">工作量分析</a></li>
+          <li><a href="c_service_performance6.html">接待压力分析</a></li>
+          <li><a href="c_service_performance7.html">退款情况分析</a></li>
+          <li><a href="c_service_performance8.html">值班情况分析</a></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+          客服明细
+          <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu">
+          <li><a href="c_service_detail.html">旺旺接待记录</a></li>
+          <li><a href="c_service_detail2.html">下单成功明细</a></li>
+          <li><a href="c_service_detail3.html">付款成功明细</a></li>
+          <li><a href="c_service_detail4.html">下单未付款明细</a></li>
+          <li><a href="c_service_detail5.html">静默下单未付款明细</a></li>
+          <li><a href="c_service_detail6.html">询单流失明细</a></li>
+          <li><a href="c_service_detail7.html">协助服务明细</a></li>
+          <li><a href="c_service_detail8.html">接待过滤明细</a></li>
+          <li><a href="c_service_detail9.html">旺旺退款明细</a></li>
+          <li><a href="c_service_detail10.html">未回复明细</a></li>
+          <li><a href="c_service_detail11.html">慢响应明细</a></li>
+          <li><a href="c_service_detail12.html">静默销售明细</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</header> -->
+<div class="row-fluid">
+  <ul class="breadcrumb" style="position:relative;">
+    <li><a href="#">Magic</a><span class="divider">/</span></li>
+    <li><a href="#">客服管理</a><span class="divider">/</span></li>
+    <li><a href="#">客服对比</a><span class="divider">/</span></li>
+    <li class="active">绩效对比</li>
+    <!-- <li style="position:absolute;right:15px;top:6px;"><i class="icon-cog"></i><a class="btn_alert" href="order_settings.html">客服设置</a></li> -->
+  </ul><!-- breadcrumb -->
+
+  <form action="/callcenter/contrastive_performance" class="well form-search">
+    <fieldset class="form-inline">
+      <div class="controls">
+        <label class="control-label">开始时间：</label>
+        <input type="text" name="start_date" class="input-small datepickers">
+        <!-- <input type="text" class="input-mini timepickers"> -->
+        <label class="control-label">结束时间：</label>
+        <input type="text" name="end_date"class="input-small datepickers">
+        <!-- <input type="text" class="input-mini timepickers"> -->
+
+        <button type="submit" class="btn btn-info">过滤</button>
+
+        <a href="/callcenter/contrastive_performance">昨天</a>
+        <a href="/callcenter/contrastive_performance?date_range=lastest_week">最近一周</a>
+        <a href="/callcenter/contrastive_performance?date_range=lastest_month">最近一月</a>
+      </div>
+    </fieldset>
+  </form>
+
+  <div class="controls clearfix">
+    <div class="btns btn-group pull-right">
+      <a href="#" class="btn btn-success btn_mar4">显示设置</a>
+      <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-success"><span class="caret"></span></button>
+      <ul class="dropdown-menu">
+        <li><a href="#">Profile</a></li>
+        <li class="divider"></li>
+        <li><a href="login.html">Sign Out</a></li>
+      </ul>
+    </div>
+
+    <div class="btns btn-group pull-left">
+      <a href="#" class="btn btn-warning"><!-- <i class="icon-user icon-white"></i> --> 导出数据</a>
+    </div>
+  </div>
+
+  <div class="mar_t5">
+    <ul class="nav nav-tabs reset_border nomargin" id="myTab_sub">
+      <li class="active"><a href="#tab1" data-toggle="tab" id="success_rate_1">汇总</a></li>
+      <!-- <li><a href="#tab2" data-toggle="tab" id="success_rate_2">询单->下单</a></li>
+      <li><a href="#tab3" data-toggle="tab" id="success_rate_3">下单->付款</a></li>
+      <li><a href="#tab4" data-toggle="tab" id="success_rate_4">协助服务</a></li>
+      <li><a href="#tab5" data-toggle="tab" id="success_rate_5">落实付款</a></li> -->
+    </ul>
+
+    <div class="tab-content reset_border">
+      <div class="tab-pane active chart_opts" id="tab1">
+        <div class="re_margin30">
+          <div class="control-group chart_opts">
+            <div class="controls">
+              <label class="radio inline">                   
+                <input type="radio" checked="checked" value="receivenum" name="chart_option">
+                接待人数
+              </label>
+              <label class="radio inline">
+                <input type="radio" value="chatpeers_count" name="chart_option">
+                询单人数
+              </label>
+              <label class="radio inline">
+                <input type="radio" value="created_trade_buyer_count" name="chart_option">
+                下单人数
+              </label>
+              <label class="radio inline">
+                <input type="radio" value="paid_trade_buyer_count" name="chart_option">
+                付款人数
+              </label>
+              <label class="radio inline">
+                <input type="radio" value="paid_trade_payment" name="chart_option">
+                下单金额
+              </label>
+              <label class="radio inline">
+                <input type="radio" value="created_trade_payment" name="chart_option">
+                付款金额
+              </label>
+              <label class="radio inline">
+                <input type="radio" value="paid_trade_payment_percentage" name="chart_option">
+                付款金额%
+              </label>
+            </div>
+          </div>
+
+          <div id="chartdiv1" style="width: 100%; height: 400px;"></div>
+
+          <table class="table table-striped table-bordered marginlr30 table-condensed td_colors">
+            <thead>
+              <tr>
+                <th>昵称</th>
+                <th>接待人数</th>
+                <th>询单人数</th>
+                <th>下单人数</th>
+                <th>付款人数</th>
+                <th>下单金额</th>
+                <th>付款金额</th>
+                <th>付款金额%</th>
+              </tr>
+            </thead>
+            <tbody>
+              <%- @members.each do |member|%>
+                <tr>
+                  <td><%= member.short_id %></td>
+                  <td><%= member.receivenum(@start_date, @end_date) %></td>
+                  <td><%= member.chatpeers_count(@start_date, @end_date) %></td>
+                  <td><%= member.created_trade_buyer_count(@start_date, @end_date) %></td>
+                  <td><%= member.paid_trade_buyer_count(@start_date, @end_date) %></td>
+                  <td><%= member.created_trade_payment(@start_date, @end_date) %></td>
+                  <td><%= member.paid_trade_payment(@start_date, @end_date) %></td>
+                  <td><%= member.paid_trade_payment_percentage(@start_date, @end_date) %> % </td>
+                </tr>
+              <%- end %>
+              <tr>
+                <td>汇总</td>
+                <td><%= WangwangMember.receivenum(@start_date, @end_date) %></td>
+                <td><%= WangwangMember.chatpeers_count(@start_date, @end_date) %></td>
+                <td><%= WangwangMember.created_trade_buyer_count(@start_date, @end_date) %></td>
+                <td><%= WangwangMember.paid_trade_buyer_count(@start_date, @end_date) %></td>
+                <td><%= WangwangMember.created_trade_payment(@start_date, @end_date) %></td>
+                <td><%= WangwangMember.paid_trade_payment(@start_date, @end_date) %></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>均值</td>
+                <td><%= WangwangMember.avg_receivenum(@start_date, @end_date) %></td>
+                <td><%= WangwangMember.avg_chatpeers_count(@start_date, @end_date) %></td>
+                <td><%= WangwangMember.avg_created_trade_buyer_count(@start_date, @end_date) %></td>
+                <td><%= WangwangMember.avg_paid_trade_buyer_count(@start_date, @end_date) %></td>
+                <td><%= WangwangMember.avg_created_trade_payment(@start_date, @end_date) %></td>
+                <td><%= WangwangMember.avg_paid_trade_payment(@start_date, @end_date) %></td> 
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="tab-pane chart_opts" id="tab2">
+        <div class="re_margin30">
+          <div class="control-group chart_opts">
+            <div class="controls">
+              <label class="radio inline">
+                <input type="radio" checked="checked" value="receivenum" name="chart_option">
+                询单人数
+              </label>
+              <label class="radio inline">
+                <input type="radio" value="option2" name="chart_option">
+                流失人数
+              </label>
+              <label class="radio inline">
+                <input type="radio" value="option2" name="chart_option">
+                当日下单人数
+              </label>
+              <label class="radio inline">
+                <input type="radio" value="option2" name="chart_option">
+                当日下单金额
+              </label>
+              <label class="radio inline">
+                <input type="radio" value="option2" name="chart_option">
+                最终下单人数
+              </label>
+              <label class="radio inline">
+                <input type="radio" value="option2" name="chart_option">
+                最终下单金额
+              </label>
+              <label class="radio inline">
+                <input type="radio" value="option2" name="chart_option">
+                成功率
+              </label>
+            </div>
+          </div>
+          
+          <div id="chartdiv2" style="width: 100%; height: 400px;"></div>
+
+          <table class="table table-striped table-bordered marginlr30 table-condensed td_colors mar_t">
+            <thead>
+              <tr>
+                <th>昵称</th>
+                <th>询单人数</th>
+                <th>流失人数</th>
+                <th>当日下单人数</th>
+                <th>当日下单金额</th>
+                <th>最终下单人数</th>
+                <th>最终下单金额</th>
+                <th>成功率</th>
+              </tr>
+            </thead>
+            <tbody>
+              <%- @members.each do |member|%>
+                <tr>
+                  <td><%#= member.short_id %></td>
+                  <td><%#= member.chatpeers_count(@start_date, @end_date) %></td>
+                  <td><%#= member.lost_created_chatpeers(@start_date, @end_date) %></td>
+                  <td><%#= ember.current_created_trade_buyer_count(@start_date, @end_date) %></td>
+                  <td><%#= member.current_created_trade_payment(@start_date, @end_date) %></td>
+                  <td><%#= member.final_created_trade_buyer_count(@start_date, @end_date) %></td>
+                  <td><%#= member.final_created_trade_payment(@start_date, @end_date) %></td>
+                  <td><%#= member.final_created_trade_buyer_count_percentage(@start_date, @end_date) %></td>
+                </tr>
+              <%- end %>
+              <tr>
+                <td>汇总</td>
+                <td><%#= WangwangMember.chatpeers_count(@start_date, @end_date) %></td>
+                <td><%#= WangwangMember.lost_created_chatpeers(@start_date, @end_date) %></td>
+                <td><%#= WangwangMember.current_created_trade_buyer_count(@start_date, @end_date) %></td>
+                <td><%#= WangwangMember.current_created_trade_payment(@start_date, @end_date) %></td>
+                <td><%#= WangwangMember.final_created_trade_buyer_count(@start_date, @end_date) %></td>
+                <td><%#= WangwangMember.final_created_trade_payment(@start_date, @end_date) %></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>均值</td>
+                <td><%#= WangwangMember.avg_chatpeers_count(@start_date, @end_date) %></td>
+                <td><%#= WangwangMember.avg_lost_created_chatpeers(@start_date, @end_date) %></td>
+                <td><%#= WangwangMember.avg_current_created_trade_buyer_count(@start_date, @end_date) %></td>
+                <td><%#= WangwangMember.avg_current_created_trade_payment(@start_date, @end_date) %></td>
+                <td><%#= WangwangMember.avg_final_created_trade_buyer_count(@start_date, @end_date) %></td>
+                <td><%#= WangwangMember.avg_final_created_trade_payment(@start_date, @end_date) %></td> 
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="tab-pane chart_opts" id="tab3">
+        <div class="re_margin30">
+          <div class="control-group chart_opts">
+            <div class="controls">
+              <label class="radio inline">
+                <input type="radio" checked="checked" value="option3" name="chart_option">
+                下单人数
+              </label>
+              <label class="radio inline">
+                <input type="radio" value="option3" name="chart_option">
+                下单金额
+              </label>
+              <label class="radio inline">
+                <input type="radio" value="option3" name="chart_option">
+                流失人数
+              </label>
+              <label class="radio inline">
+                <input type="radio" value="option3" name="chart_option">
+                流失金额
+              </label>
+              <label class="radio inline">
+                <input type="radio" value="option3" name="chart_option">
+                当日付款人数
+              </label>
+              <label class="radio inline">
+                <input type="radio" value="option3" name="chart_option">
+                当日付款金额
+              </label>
+              <label class="radio inline">
+                <input type="radio" value="option3" name="chart_option">
+                最终付款人数
+              </label>
+              <label class="radio inline">
+                <input type="radio" value="option3" name="chart_option">
+                最终付款金额
+              </label>
+              <label class="radio inline">
+                <input type="radio" value="option3" name="chart_option">
+                成功率
+              </label>
+            </div>
+          </div>
+
+          <div id="chartdiv3" style="width: 100%; height: 400px;"></div>
+
+          <table class="table table-striped table-bordered marginlr30 table-condensed td_colors mar_t">
+            <thead>
+              <tr>
+                <th>昵称</th>
+                <th>下单人数</th>
+                <th>下单金额</th>
+                <th>流失人数</th>
+                <th>流失金额</th>
+                <th>当日付款人数</th>
+                <th>当日付款金额</th>
+                <th>最终付款人数</th>
+                <th>最终付款金额</th>
+                <th>成功率</th>
+              </tr>
+            </thead>
+            <tbody>
+              <%- @members.each do |member|%>
+                <tr>
+                  <td><%#= member.short_id %></td>
+                  <td><%#= member.created_trade_buyer_count(@start_date, @end_date) %></td>
+                  <td><%#= member.created_trade_payment(@start_date, @end_date) %></td>                
+                  <td><%#= member.lost_paid_trade_buyer_count(@start_date, @end_date) %></td>
+                  <td><%#= member.lost_paid_trade_payment(@start_date, @end_date) %></td>
+                  <td><%#= member.current_created_trade_buyer_count(@start_date, @end_date) %></td>
+                  <td><%#= member.current_created_trade_payment(@start_date, @end_date) %></td>
+                  <td><%#= member.final_paid_trade_buyer_count(@start_date, @end_date) %></td>
+                  <td><%#= member.final_paid_trade_payment(@start_date, @end_date) %></td>
+                  <td><%#= member.final_paid_trade_buyer_count_percentage(@start_date, @end_date) %></td>
+                </tr>             
+              <%- end %>
+              <tr>
+                <td>汇总</td>
+                <td><%#= WangwangMember.created_trade_buyer_count(@start_date, @end_date) %></td>
+                <td><%#= WangwangMember.created_trade_payment(@start_date, @end_date) %></td>
+                <td><%#= WangwangMember.lost_paid_trade_buyer_count(@start_date, @end_date) %></td>
+                <td><%#= WangwangMember.lost_paid_trade_payment(@start_date, @end_date) %></td>
+                <td><%#= WangwangMember.current_created_trade_buyer_count(@start_date, @end_date) %></td>
+                <td><%#= WangwangMember.current_created_trade_payment(@start_date, @end_date) %></td>
+                <td><%#= WangwangMember.final_paid_trade_buyer_count(@start_date, @end_date) %></td>
+                <td><%#= WangwangMember.final_paid_trade_payment(@start_date, @end_date) %></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>均值</td>
+                <td><%#= WangwangMember.avg_created_trade_buyer_count(@start_date, @end_date) %></td>
+                <td><%#= WangwangMember.avg_created_trade_payment(@start_date, @end_date) %></td>
+                <td><%#= WangwangMember.avg_lost_paid_trade_buyer_count(@start_date, @end_date) %></td>
+                <td><%#= WangwangMember.avg_lost_paid_trade_payment(@start_date, @end_date) %></td>
+                <td><%#= WangwangMember.avg_current_created_trade_buyer_count(@start_date, @end_date) %></td>
+                <td><%#= WangwangMember.avg_pcurrent_created_trade_payment(@start_date, @end_date) %></td> 
+                <td><%#= WangwangMember.avg_final_paid_trade_buyer_count(@start_date, @end_date) %></td>
+                <td><%#= WangwangMember.avg_final_paid_trade_payment(@start_date, @end_date) %></td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="tab-pane chart_opts" id="tab4">
+        <div class="re_margin30">
+          <div class="control-group chart_opts">
+            <div class="controls">
+              <label class="radio inline">
+                <input type="radio" checked="checked" value="option4" name="chart_option">
+                协助下单人数
+              </label>
+              <label class="radio inline">
+                <input type="radio" value="option4" name="chart_option">
+                协助下单参考金额
+              </label>
+              <label class="radio inline">
+                <input type="radio" value="option4" name="chart_option">
+                协助跟进人数
+              </label>
+              <label class="radio inline">
+                <input type="radio" value="option4" name="chart_option">
+                协助跟进参考金额
+              </label>
+            </div>
+          </div>
+
+          <div id="chartdiv4" style="width: 100%; height: 400px;"></div>
+
+          <table class="table table-striped table-bordered marginlr30 table-condensed td_colors mar_t">
+            <thead>
+              <tr>
+                <th>昵称</th>
+                <th>协助下单人数</th>
+                <th>协助下单参考金额</th>
+                <th>协助跟进人数</th>
+                <th>协助跟进参考金额</th>
+              </tr>
+            </thead>
+            <tbody>
+              <%- @members.each do |member|%>
+                <tr>
+                  
+                </tr>
+              <%- end %>
+              <tr>
+                <td>汇总</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>均值</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="tab-pane chart_opts" id="tab5">
+        <div class="re_margin30">
+          <div class="control-group chart_opts">
+            <div class="controls">
+              <label class="radio inline">
+                <input type="radio" checked="checked" value="option4" name="chart_option">
+                总付款人数
+              </label>
+              <label class="radio inline">
+                <input type="radio" value="option4" name="chart_option">
+                静默单人数
+              </label>
+              <label class="radio inline">
+                <input type="radio" value="option4" name="chart_option">
+                他人单人数
+              </label>
+              <label class="radio inline">
+                <input type="radio" value="option4" name="chart_option">
+                本人单人数
+              </label>
+              <label class="radio inline">
+                <input type="radio" value="option4" name="chart_option">
+                总付款金额
+              </label>
+              <label class="radio inline">
+                <input type="radio" value="option4" name="chart_option">
+                静默单金额
+              </label>
+              <label class="radio inline">
+                <input type="radio" value="option4" name="chart_option">
+                他人单金额
+              </label>
+              <label class="radio inline">
+                <input type="radio" value="option4" name="chart_option">
+                本人单金额
+              </label>
+            </div>
+          </div>
+
+          <div id="chartdiv5" style="width: 100%; height: 400px;"></div>
+
+          <table class="table table-striped table-bordered marginlr30 table-condensed td_colors mar_t">
+            <thead>
+              <tr>
+                <th>昵称</th>
+                <th>总付款人数</th>
+                <th>静默单人数</th>
+                <th>他人单人数</th>
+                <th>本人单人数</th>
+                <th>总付款金额</th>
+                <th>静默单金额</th>
+                <th>他人单金额</th>
+                <th>本人单金额</th>
+              </tr>
+            </thead>
+            <tbody>             
+              <tr>
+                <td>汇总</td>      
+                <td></td>
+              </tr>
+              <tr>
+                <td>均值</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <%= paginate @members  %>
+</div>
+<hr>
+<div id="callcenter_tail">
+<%= render "tail" %>
+<div>
