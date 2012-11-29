@@ -221,11 +221,11 @@ $(document).ready(function(e) {
       $('.modal-backdrop').unbind('click');
     });
 
-    $('.datepicker').datepicker({
+    $('.datepickers').datepicker({
       format: 'yyyy-mm-dd'
     })
 
-    $('.timepicker').timeEntry({
+    $('.timepickers').timeEntry({
       show24Hours: true, // 24 hours format
       showSeconds: true, // Show seconds?
       spinnerImage: '/assets/spinnerUpDown.png', // Arrows image

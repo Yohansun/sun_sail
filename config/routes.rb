@@ -103,6 +103,7 @@ MagicOrders::Application.routes.draw do
   get "/trades/batch_deliver", to: 'trades#batch_deliver'
   get "/trades/batch-print-deliver", to: 'trades#batch_print_deliver'
   get "/trades/batch-print-logistic", to: 'trades#batch_print_logistic'
+  get "/logistic_rates", to: 'logistic_rates#index'
 
   scope 'api' do
     get "areas", to: "areas#index"
@@ -122,8 +123,6 @@ MagicOrders::Application.routes.draw do
 
     resources :products
   end
-
-  mount MailsViewer::Engine => '/delivered_mails'
 
   authenticate :user do
     mount Sidekiq::Web => '/sidekiq'

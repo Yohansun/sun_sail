@@ -59,6 +59,7 @@ class TaobaoTrade < Trade
   field :alipay_warn_msg, type: String
   field :cod_status, type: String
   field :can_rate, type: Boolean
+  field :has_sent_send_logistic_rate_sms, type: Boolean
   field :commission_fee, type: Float
   field :trade_memo, type: String
   field :seller_nick, type: String

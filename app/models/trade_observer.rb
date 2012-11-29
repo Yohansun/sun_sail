@@ -22,6 +22,12 @@ class TradeObserver < Mongoid::Observer
       dispatch_notify(object.id, object.seller_id)
     end
 
+    if TradeSetting.company == "dulux" && object._type == "TaobaoTrade" && object.status_changed? && object.status == "TRADE_FINISHED" && !object.has_sent_send_logistic_rate_sms
+      send_rate_sms_to_buyer(object)
+      create_rate_record(object)
+      object.has_sent_send_logistic_rate_sms = true
+    end
+
   end
 
   protected
@@ -35,6 +41,24 @@ class TradeObserver < Mongoid::Observer
     trade_tid = trade.tid
     content = "亲您好，感谢您的购买，您的订单号为#{trade_tid}，我们会尽快为您安排发货。【#{TradeSetting.shopname_taobao}】"
     notify_kind = "before_send_goods"
+    if content && mobile
+      SmsNotifier.perform_async(content, mobile, trade_tid ,notify_kind)
+    end
+  end
+
+  def create_rate_record(trade)
+    logistic_id = trade.logistic_id
+    seller_id = trade.seller_id
+    mobile = trade.receiver_mobile
+    tid = trade.tid
+    LogisticRate.create(send_at: Time.now, seller_id: seller_id, mobile: mobile, tid: tid, logistic_id: logistic_id)
+  end
+
+  def send_rate_sms_to_buyer(trade)
+    mobile = trade.receiver_mobile
+    trade_tid = trade.tid
+    notify_kind = "rate_sms_to_buyer"
+    content = "亲，感谢您对【#{TradeSetting.shopname_taobao}】的支持，若您对本次物流服务满意请回复“5“，若觉得物流有待提升请回复“3”，若觉得很不满意请回复“1“，本条短信回复免费。【#{TradeSetting.shopname_taobao}】" #TradeSetting.shopname_taobao = "天猫多乐士店"
     if content && mobile
       SmsNotifier.perform_async(content, mobile, trade_tid ,notify_kind)
     end

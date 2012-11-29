@@ -209,4 +209,5 @@ class SellersController < ApplicationController
   def info
     @seller = Seller.find params[:id]
   end
+
 end

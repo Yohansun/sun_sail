@@ -71,8 +71,8 @@ class MagicOrders.Routers.Trades extends Backbone.Router
           when 'other_unusual_state' then $('.trade_nav').html('其他异常')
           else
             $('.trade_nav').html($("[data-trade-status=#{trade_type}]").html())
-        $('.order_search_form .datepicker').datepicker(format: 'yyyy-mm-dd')
-        $('.order_search_form .timepicker').timeEntry(show24Hours: true, showSeconds: true, spinnerImage: '/assets/spinnerUpDown.png', spinnerSize: [17, 26, 0], spinnerIncDecOnly: true)
+        $('.order_search_form .datepickers').datepicker(format: 'yyyy-mm-dd')
+        $('.order_search_form .timepickers').timeEntry(show24Hours: true, showSeconds: true, spinnerImage: '/assets/spinnerUpDown.png', spinnerSize: [17, 26, 0], spinnerIncDecOnly: true)
 
         unless MagicOrders.trade_mode in ['trades', 'deliver', 'logistics', 'send']
           $("#search_toggle").hide()
@@ -117,7 +117,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
 
       view = new MagicOrders.Views[viewClassName](model: model)
       $(modalDivID).html(view.render().el)
-      $(modalDivID + ' .datepicker').datepicker(format: 'yyyy-mm-dd')
+      $(modalDivID + ' .datepickers').datepicker(format: 'yyyy-mm-dd')
 
       switch operation_key
         when 'deliver'
