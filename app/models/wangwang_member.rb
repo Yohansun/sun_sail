@@ -7,7 +7,7 @@ class WangwangMember
   validates_uniqueness_of :user_id
   validates_presence_of :user_id
 
-  def clerk_id
+  def service_staff_id
   	"cntaobao" + user_id
   end
 
@@ -15,20 +15,20 @@ class WangwangMember
     name || user_id.gsub("立邦漆官方旗舰店:","")
   end
 
-  def self.find_with_clerk_id(clerk_id)
-  	user_id = clerk_id.gsub("cntaobao", "")
+  def self.find_with_service_staff_id(service_staff_id)
+  	user_id = service_staff_id.gsub("cntaobao", "")
   	where(user_id: user_id).first
   end
 
   def clerk_brief_info(start_date, end_date)
-    inquired_today = WangwangChatpeer.where(user_id: clerk_id).where(:date.gte => start_date, :date.lt => end_date).map(&:buyer_nick)
-    inquired_today_and_yesterday = WangwangChatpeer.where(user_id: clerk_id).where(:date.gte => (start_date - 1.day), :date.lt => end_date).map(&:buyer_nick)
+    inquired_today = WangwangChatpeer.where(user_id: service_staff_id).where(:date.gte => start_date, :date.lt => end_date).map(&:buyer_nick)
+    inquired_today_and_yesterday = WangwangChatpeer.where(user_id: service_staff_id).where(:date.gte => (start_date - 1.day), :date.lt => end_date).map(&:buyer_nick)
 
     #当日接待
-    serviced_num = WangwangReplyState.where(user_id: clerk_id).where(:reply_date.gte => start_date, :reply_date.lt => end_date).sum(:reply_num) || 0
+    served_num = WangwangReplyState.where(user_id: service_staff_id).where(:reply_date.gte => start_date, :reply_date.lt => end_date).sum(:reply_num) || 0
 
     #当日询单（该数据须延迟一天统计)
-    inquired_num = WangwangChatpeer.where(user_id: clerk_id).where(:date.gte => start_date, :date.lt => end_date).map(&:buyer_nick).count
+    inquired_num = WangwangChatpeer.where(user_id: service_staff_id).where(:date.gte => start_date, :date.lt => end_date).map(&:buyer_nick).count
 
     #下单订单: 前一日或当日询单，本旺旺落实当日下单订单
     created_trades = TaobaoTrade.only(:buyer_nick, :created, :payment).where(:created.gte => start_date, :created.lt => end_date).where(:buyer_nick.in => inquired_today_and_yesterday)
@@ -48,7 +48,7 @@ class WangwangMember
     #付款金额
     paid_payment = paid_trades.try(:sum, :payment) || 0
 
-    [self.short_id, serviced_num.to_i, inquired_num.to_i, created_num.to_i, paid_num.to_i, created_payment, paid_payment]
+    [self.short_id, served_num.to_i, inquired_num.to_i, created_num.to_i, paid_num.to_i, created_payment, paid_payment]
   end
 
   def self.total_brief_info(start_date, end_date)
@@ -57,8 +57,8 @@ class WangwangMember
     inquired_today_and_yesterday = WangwangChatpeer.where(:date.gte => (start_date - 1.day), :date.lt => end_date).map(&:buyer_nick)
 
     #当日接待
-    total_serviced_num = WangwangReplyState.where(:reply_date.gte => start_date, :reply_date.lt => end_date).sum(:reply_num) || 0
-    avg_serviced_num = total_serviced_num/clerk_num
+    total_served_num = WangwangReplyState.where(:reply_date.gte => start_date, :reply_date.lt => end_date).sum(:reply_num) || 0
+    avg_served_num = total_served_num/clerk_num
 
     #当日询单（该数据须延迟一天统计)
     total_inquired_num = WangwangChatpeer.where(:date.gte => start_date, :date.lt => end_date).map(&:buyer_nick).count
@@ -87,8 +87,8 @@ class WangwangMember
     avg_paid_payment = total_paid_payment/clerk_num
 
     total_brief_info = []
-    total_brief_info[0] = ["汇总", total_serviced_num.to_i, total_inquired_num.to_i, total_created_num.to_i, total_paid_num.to_i, total_created_payment.round(2), total_paid_payment.round(2)]
-    total_brief_info[1] = ["均值", avg_serviced_num.round(1), avg_inquired_num.round(1), avg_created_num.round(1), avg_paid_num.round(1), avg_created_payment.round(2), total_paid_payment.round(2)]
+    total_brief_info[0] = ["汇总", total_served_num.to_i, total_inquired_num.to_i, total_created_num.to_i, total_paid_num.to_i, total_created_payment.round(2), total_paid_payment.round(2)]
+    total_brief_info[1] = ["均值", avg_served_num.round(1), avg_inquired_num.round(1), avg_created_num.round(1), avg_paid_num.round(1), avg_created_payment.round(2), total_paid_payment.round(2)]
 
     total_brief_info
   end

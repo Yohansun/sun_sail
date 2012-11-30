@@ -4,14 +4,14 @@ class WangwangPuller
 	START_DATE = (Time.now - 7.days).beginning_of_day.strftime("%Y-%m-%d %H:%M:%S")
 	END_DATE = Time.now.yesterday.end_of_day.strftime("%Y-%m-%d %H:%M:%S")
 
-  def self.chatpeers_get(start_date = nil, end_date = nil, clerk_ids = nil)
+  def self.chatpeers_get(start_date = nil, end_date = nil, service_staff_ids = nil)
   	
     start_date ||= START_DATE
     end_date ||= END_DATE
 
-    clerk_ids ||= WangwangMember.all.map &:clerk_id
+    service_staff_ids ||= WangwangMember.all.map &:service_staff_id
 
-    clerk_ids.each do |chat_id|
+    service_staff_ids.each do |chat_id|
 
       response = TaobaoFu.get(
         method: 'taobao.wangwang.eservice.chatpeers.get',
@@ -38,15 +38,15 @@ class WangwangPuller
 
   end	
 
-  def self.chatlog_get(start_date = nil, end_date = nil,  clerk_ids = nil)
+  def self.chatlog_get(start_date = nil, end_date = nil,  service_staff_ids = nil)
 
     start_date ||= START_DATE
     end_date ||= END_DATE
 
-    from_ids ||= WangwangMember.all.map &:clerk_id
+    from_ids ||= WangwangMember.all.map &:service_staff_id
 
     from_ids.each do |from_id|
-      member = WangwangMember.find_with_clerk_id(from_id)
+      member = WangwangMember.find_with_service_staff_id(from_id)
       chatpeers = member.chatpeers(start_date, end_date) 
       if chatpeers.present?   
         chatpeers.each do |to_id|         
@@ -81,18 +81,18 @@ class WangwangPuller
   end
   	
   # 服务提供时间（7:00:00-24:00:00）
-  def self.receivenum_get(start_date = nil, end_date = nil, clerk_ids = nil)
+  def self.receivenum_get(start_date = nil, end_date = nil, service_staff_ids = nil)
   	
     start_date ||= START_DATE
     end_date ||= END_DATE 
 
-    clerk_ids ||= WangwangMember.all.map &:clerk_id
+    service_staff_ids ||= WangwangMember.all.map &:service_staff_id
 
-    clerk_ids.each do |clerk_id|
+    service_staff_ids.each do |service_staff_id|
 
       response = TaobaoFu.get(
         method: 'taobao.wangwang.eservice.receivenum.get',
-        clerk_id: clerk_id,
+        service_staff_id: service_staff_id,
         start_date: start_date,
       	end_date: end_date
       )
