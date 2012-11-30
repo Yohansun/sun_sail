@@ -7,7 +7,7 @@ class WangwangMember
   validates_uniqueness_of :user_id
   validates_presence_of :user_id
 
-  def service_staff_id
+  def clerk_id
   	"cntaobao" + user_id
   end
 
@@ -15,120 +15,82 @@ class WangwangMember
     name || user_id.gsub("立邦漆官方旗舰店:","")
   end
 
-  def self.find_with_staff_id(service_staff_id) 
-  	user_id = service_staff_id.gsub("cntaobao", "")
+  def self.find_with_clerk_id(clerk_id)
+  	user_id = clerk_id.gsub("cntaobao", "")
   	where(user_id: user_id).first
-  end	
-  
-
-  #当日接待总人数
-  
-  def self.receivenum(start_date, end_date)
-    WangwangReplyState.where(:reply_date.gte => start_date, :reply_date.lt => end_date).sum(:reply_num) || 0
-  end 
-
-  def self.avg_receivenum(start_date, end_date)
-    (WangwangMember.receivenum(start_date, end_date) / WangwangMember.count).to_f.round(4)
   end
 
-  def receivenum(start_date, end_date)
-    WangwangReplyState.where(user_id: service_staff_id).where(:reply_date.gte => start_date, :reply_date.lt => end_date).sum(:reply_num) || 0
+  def clerk_brief_info(start_date, end_date)
+    inquired_today = WangwangChatpeer.where(user_id: clerk_id).where(:date.gte => start_date, :date.lt => end_date).map(&:buyer_nick)
+    inquired_today_and_yesterday = WangwangChatpeer.where(user_id: clerk_id).where(:date.gte => (start_date - 1.day), :date.lt => end_date).map(&:buyer_nick)
+
+    #当日接待
+    serviced_num = WangwangReplyState.where(user_id: clerk_id).where(:reply_date.gte => start_date, :reply_date.lt => end_date).sum(:reply_num) || 0
+
+    #当日询单（该数据须延迟一天统计)
+    inquired_num = WangwangChatpeer.where(user_id: clerk_id).where(:date.gte => start_date, :date.lt => end_date).map(&:buyer_nick).count
+
+    #下单订单: 前一日或当日询单，本旺旺落实当日下单订单
+    created_trades = TaobaoTrade.only(:buyer_nick, :created, :payment).where(:created.gte => start_date, :created.lt => end_date).where(:buyer_nick.in => inquired_today_and_yesterday)
+
+    #下单人数
+    created_num = created_trades.try(:map, &:buyer_nick).uniq.count
+
+    #下单金额
+    created_payment = created_trades.try(:sum, :payment) || 0
+
+    #付款订单: 本旺旺落实当日付款订单
+    paid_trades = TaobaoTrade.only(:buyer_nick, :pay_time, :payment).where(:pay_time.gte => start_date, :pay_time.lt => end_date).where(:buyer_nick.in => inquired_today)
+
+    #付款人数
+    paid_num = paid_trades.try(:map, &:buyer_nick).uniq.count
+
+    #付款金额
+    paid_payment = paid_trades.try(:sum, :payment) || 0
+
+    [self.short_id, serviced_num.to_i, inquired_num.to_i, created_num.to_i, paid_num.to_i, created_payment, paid_payment]
   end
 
-  #当日询单人（该数据须延迟一天统计）
+  def self.total_brief_info(start_date, end_date)
+    clerk_num = WangwangMember.count
+    inquired_today = WangwangChatpeer.where(:date.gte => start_date, :date.lt => end_date).map(&:buyer_nick)
+    inquired_today_and_yesterday = WangwangChatpeer.where(:date.gte => (start_date - 1.day), :date.lt => end_date).map(&:buyer_nick)
 
-  def self.chatpeers(start_date, end_date)
-    WangwangChatpeer.where(:date.gte => start_date, :date.lt => end_date).map(&:buyer_nick)
-  end 
- 
-  def self.chatpeers_count(start_date, end_date)
-    WangwangMember.chatpeers(start_date, end_date).count
-  end
+    #当日接待
+    total_serviced_num = WangwangReplyState.where(:reply_date.gte => start_date, :reply_date.lt => end_date).sum(:reply_num) || 0
+    avg_serviced_num = total_serviced_num/clerk_num
 
-  def self.avg_chatpeers_count(start_date, end_date)
-    (WangwangMember.chatpeers_count(start_date, end_date) / WangwangMember.count).to_f.round(4)
-  end
+    #当日询单（该数据须延迟一天统计)
+    total_inquired_num = WangwangChatpeer.where(:date.gte => start_date, :date.lt => end_date).map(&:buyer_nick).count
+    avg_inquired_num = total_inquired_num/clerk_num
 
-  def chatpeers(start_date, end_date)
-    WangwangChatpeer.where(user_id: service_staff_id).where(:date.gte => start_date, :date.lt => end_date).map(&:buyer_nick)
-  end
+    #下单订单: 前一日或当日询单，本旺旺落实当日下单订单
+    total_created_trade = TaobaoTrade.only(:buyer_nick, :created, :payment).where(:created.gte => start_date, :created.lt => end_date).where(:buyer_nick.in => inquired_today_and_yesterday)
 
-  def chatpeers_count(start_date, end_date)
-    chatpeers(start_date, end_date).count
-  end
+    #下单人数
+    total_created_num = total_created_trade.try(:map, &:buyer_nick).uniq.count
+    avg_created_num = total_created_num/clerk_num
 
+    #下单金额
+    total_created_payment = total_created_trade.try(:sum, :payment) || 0
+    avg_created_payment = total_created_payment/clerk_num
 
-  #下单订单: 前一日或当日询单，本旺旺落实当日下单订单
-  def self.created_trade(start_date, end_date)
-    adjust_date = (start_date.to_time - 1.day).strftime("%Y-%m-%d %H:%M:%S")
-    TaobaoTrade.only(:buyer_nick, :created, :pay_time, :payment).where(:created.gte => start_date, :created.lt => end_date).where(:buyer_nick.in => WangwangMember.chatpeers(adjust_date, end_date))
-  end
+    #付款订单: 本旺旺落实当日付款订单
+    total_paid_trade = TaobaoTrade.only(:buyer_nick, :pay_time, :payment).where(:pay_time.gte => start_date, :pay_time.lt => end_date).where(:buyer_nick.in => inquired_today)
 
-  def self.created_trade_buyer_count(start_date, end_date)
-    WangwangMember.created_trade(start_date, end_date).try(:map, &:buyer_nick).uniq.count
-  end 
+    #付款人数
+    total_paid_num = total_paid_trade.try(:map, &:buyer_nick).uniq.count
+    avg_paid_num = total_paid_num/clerk_num
 
-  def self.created_trade_payment(start_date, end_date)
-    WangwangMember.created_trade(start_date, end_date).try(:sum, :payment) || 0
-  end
+    #付款金额
+    total_paid_payment = total_paid_trade.try(:sum, :payment) || 0
+    avg_paid_payment = total_paid_payment/clerk_num
 
-  def self.avg_created_trade_buyer_count(start_date, end_date)
-    (WangwangMember.created_trade_buyer_count(start_date, end_date) / WangwangMember.count).to_f.round(4)
-  end 
+    total_brief_info = []
+    total_brief_info[0] = ["汇总", total_serviced_num.to_i, total_inquired_num.to_i, total_created_num.to_i, total_paid_num.to_i, total_created_payment.round(2), total_paid_payment.round(2)]
+    total_brief_info[1] = ["均值", avg_serviced_num.round(1), avg_inquired_num.round(1), avg_created_num.round(1), avg_paid_num.round(1), avg_created_payment.round(2), total_paid_payment.round(2)]
 
-  def self.avg_created_trade_payment(start_date, end_date)
-    (WangwangMember.created_trade_payment(start_date, end_date) / WangwangMember.count).to_f.round(4)
-  end
-
-  def created_trade(start_date, end_date)
-    adjust_date = (start_date.to_time - 1.day).strftime("%Y-%m-%d %H:%M:%S")
-    trades = TaobaoTrade.only(:buyer_nick, :created, :pay_time, :payment).where(:created.gte => start_date, :created.lt => end_date).where(:buyer_nick.in => chatpeers(adjust_date, end_date))
-  end
-
-  def created_trade_buyer_count(start_date, end_date)
-    created_trade(start_date, end_date).try(:map, &:buyer_nick).uniq.count
-  end 
-
-  def created_trade_payment(start_date, end_date)
-    created_trade(start_date, end_date).try(:sum, :payment) || 0
-  end
-
-  #付款订单:本旺旺落实当日付款订单
-  def self.paid_trade(start_date, end_date)
-    TaobaoTrade.only(:buyer_nick, :created, :pay_time, :payment).where(:created.gte => start_date, :created.lt => end_date).where(:buyer_nick.in => WangwangMember.chatpeers(start_date, end_date))
-  end
-
-  def self.paid_trade_buyer_count(start_date, end_date)
-    WangwangMember.paid_trade(start_date, end_date).try(:map, &:buyer_nick).uniq.count
-  end 
-
-  def self.paid_trade_payment(start_date, end_date)
-    WangwangMember.paid_trade(start_date, end_date).try(:sum, :payment) || 0
-  end
-
-  def self.avg_paid_trade_buyer_count(start_date, end_date)
-    (WangwangMember.paid_trade_buyer_count(start_date, end_date) / WangwangMember.count).to_f.round(4)
-  end 
-
-  def self.avg_paid_trade_payment(start_date, end_date)
-    (WangwangMember.paid_trade_payment(start_date, end_date) / WangwangMember.count).to_f.round(4)
-  end
-
-  def paid_trade_buyer_count(start_date, end_date)
-    paid_trade(start_date, end_date).try(:map, &:buyer_nick).uniq.count
-  end 
-
-  def paid_trade_payment(start_date, end_date)
-    paid_trade(start_date, end_date).try(:sum, :payment) || 0
-  end
-
-  def paid_trade(start_date, end_date)
-    TaobaoTrade.only(:buyer_nick, :created, :pay_time, :payment).where(:pay_time.gte => start_date, :pay_time.lt => end_date).where(:buyer_nick.in => chatpeers(start_date, end_date))
-  end
-
-  def paid_trade_payment_percentage(start_date, end_date)
-    return 0 if WangwangMember.paid_trade_payment(start_date, end_date) == 0
-    (paid_trade_payment(start_date, end_date) / WangwangMember.paid_trade_payment(start_date, end_date)).to_f.round(4) * 100
+    total_brief_info
   end
 
 end

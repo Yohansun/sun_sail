@@ -19,7 +19,7 @@
     var chart;
     var chartData = [];
     <%- WangwangMember.each do |member| %>
-      chartData.push({service_staff_id: $("#member_<%= member.id %> td:eq(0)").text(), 人数: $("#member_<%= member.id %> td").eq(option).text()})
+      chartData.push({clerk_id: $("#member_<%= member.id %> td:eq(0)").text(), 人数: $("#member_<%= member.id %> td").eq(option).text()})
     <%- end %>
 
     // SERIAL CHART
@@ -27,7 +27,7 @@
 
     chart.dataProvider = chartData;
     chart.marginTop = 45;
-    chart.categoryField = "service_staff_id";
+    chart.categoryField = "clerk_id";
     chart.pathToImages = "/assets/amcharts_images/";
     // listen for "dataUpdated" event (fired when chart is inited) and call zoomChart method when it happens
     chart.addListener("dataUpdated", zoomChart);
@@ -123,7 +123,7 @@
         }
         changeData = [];
         <%- WangwangMember.each do |member| %>
-        changeData.push({service_staff_id: $("#member_<%= member.id %> td:eq(0)").html(), 人数: $("#member_<%= member.id %> td").eq(option).html().replace(" %",'') });
+        changeData.push({clerk_id: $("#member_<%= member.id %> td:eq(0)").html(), 人数: $("#member_<%= member.id %> td").eq(option).html().replace(" %",'') });
         <%- end %>
         chart.dataProvider = changeData;
         chart.validateData();

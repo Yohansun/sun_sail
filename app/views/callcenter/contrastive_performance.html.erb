@@ -71,7 +71,7 @@
               </label>
               <label class="radio inline">
                 <input type="radio" value="paid_trade_payment_percentage" name="chart_option">
-                付款金额%
+                付款金额 %
               </label>
             </div>
           </div>
@@ -88,42 +88,35 @@
                 <th>付款人数</th>
                 <th>下单金额</th>
                 <th>付款金额</th>
-                <th>付款金额%</th>
+                <th>付款金额 % </th>
               </tr>
             </thead>
             <tbody>
               <%- @members.each do |member|%>
+                <% clerk_info = member.clerk_brief_info(@start_date, @end_date) %>
                 <tr id="member_<%= member.id %>">
-                  <td><%= member.short_id %></td>
-                  <td><%= member.receivenum(@start_date, @end_date) %></td>
-                  <td><%= member.chatpeers_count(@start_date, @end_date) %></td>
-                  <td><%= member.created_trade_buyer_count(@start_date, @end_date) %></td>
-                  <td><%= member.paid_trade_buyer_count(@start_date, @end_date) %></td>
-                  <td><%= member.created_trade_payment(@start_date, @end_date) %></td>
-                  <td><%= member.paid_trade_payment(@start_date, @end_date) %></td>
-                  <td><%= member.paid_trade_payment_percentage(@start_date, @end_date) %> % </td>
+                  <td><%= clerk_info[0] %></td>
+                  <td><%= clerk_info[1] %></td>
+                  <td><%= clerk_info[2] %></td>
+                  <td><%= clerk_info[3] %></td>
+                  <td><%= clerk_info[4] %></td>
+                  <td><%= clerk_info[5] %></td>
+                  <td><%= clerk_info[6] %></td>
+                  <td><%= (clerk_info[6]/@total_paid_payment*100).round(2) %> % </td>
                 </tr>
               <%- end %>
+              <%- WangwangMember.total_brief_info(@start_date, @end_date).each do |total_info| %>
               <tr>
-                <td>汇总</td>
-                <td><%= WangwangMember.receivenum(@start_date, @end_date) %></td>
-                <td><%= WangwangMember.chatpeers_count(@start_date, @end_date) %></td>
-                <td><%= WangwangMember.created_trade_buyer_count(@start_date, @end_date) %></td>
-                <td><%= WangwangMember.paid_trade_buyer_count(@start_date, @end_date) %></td>
-                <td><%= WangwangMember.created_trade_payment(@start_date, @end_date) %></td>
-                <td><%= WangwangMember.paid_trade_payment(@start_date, @end_date) %></td>
+                <td><%= total_info[0] %></td>
+                <td><%= total_info[1] %></td>
+                <td><%= total_info[2] %></td>
+                <td><%= total_info[3] %></td>
+                <td><%= total_info[4] %></td>
+                <td><%= total_info[5] %></td>
+                <td><%= total_info[6] %></td>
                 <td></td>
               </tr>
-              <tr>
-                <td>均值</td>
-                <td><%= WangwangMember.avg_receivenum(@start_date, @end_date) %></td>
-                <td><%= WangwangMember.avg_chatpeers_count(@start_date, @end_date) %></td>
-                <td><%= WangwangMember.avg_created_trade_buyer_count(@start_date, @end_date) %></td>
-                <td><%= WangwangMember.avg_paid_trade_buyer_count(@start_date, @end_date) %></td>
-                <td><%= WangwangMember.avg_created_trade_payment(@start_date, @end_date) %></td>
-                <td><%= WangwangMember.avg_paid_trade_payment(@start_date, @end_date) %></td> 
-                <td></td>
-              </tr>
+              <%- end %>
             </tbody>
           </table>
 

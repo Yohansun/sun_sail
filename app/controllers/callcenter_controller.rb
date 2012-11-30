@@ -20,18 +20,7 @@ class CallcenterController < ApplicationController
 		end
 		@members = WangwangMember.all
 
-		@option = "receivenum"
+		total_inquired_today = WangwangChatpeer.where(:date.gte => @start_date, :date.lt => @end_date).map(&:buyer_nick)
+		@total_paid_payment = TaobaoTrade.only(:buyer_nick, :pay_time, :payment).where(:pay_time.gte => @start_date, :pay_time.lt => @end_date).where(:buyer_nick.in => total_inquired_today).try(:sum, :payment) || 0
 	end
-
-	def switch_option
-		if params[:option].present?
-			@option = params[:option]
-	    respond_to do |f|
-	      f.js
-	    end
-	  else
-	  	render nothing: true
-	  end	  
-	end	
-
 end
