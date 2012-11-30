@@ -18,7 +18,9 @@
             <li><%= link_to "已关闭经销商", closed_sellers_path %></li>
           </ul>
         </li>
-        <li><a href="/logistic_rates">服务评分</a></li>
+        <% if current_user.has_role?(:admin) || current_user.has_role?(:cs) %>
+          <li><a href="/logistic_rates">服务评分</a></li>
+        <% end %>
         <!-- <li><a href="history.html">历史交易</a></li> -->
       </ul>
     </div>

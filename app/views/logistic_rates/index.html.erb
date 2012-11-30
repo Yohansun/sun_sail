@@ -135,14 +135,9 @@
             <%- rates_array = LogisticRate.rates_array(rate.seller_id, @start_date, @end_date, rate.logistic_id)%>
               <tr>
                 <td><%= rate.display_name %></td>
-                <td><%= rates_array[0] %></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td><%= rates_array[4] %></td>
-                <td><%= rates_array[5] %></td>
-                <td><%= rates_array[6] %></td>
-                <td><%= rates_array[7] %>%</td>
+                <%- (0..7).each do |i| %>
+                 <td><%= rates_array[i] %><%= "%" if [3,7].include?(i) %></td>
+                <%- end %> 
               </tr>
           <%- end %>   
         </tbody>

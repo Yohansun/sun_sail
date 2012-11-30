@@ -8,7 +8,7 @@ class LogisticRatesController < ApplicationController
       @end_date = params[:end_date].to_time(form = :local).end_of_day
     end
     if params[:seller_id].present? && params[:seller_id] != "all"
-      @rates = @rates.where(:id => params[:seller_id])
+      @rates = @rates.where(:seller_id => params[:seller_id])
     end    
     @start_date ||= Time.now - 1.month
     @end_date ||= Time.now

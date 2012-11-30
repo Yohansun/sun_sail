@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121129085416) do
+ActiveRecord::Schema.define(:version => 20121129121457) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -108,8 +108,9 @@ ActiveRecord::Schema.define(:version => 20121129085416) do
     t.string   "mobile"
     t.string   "tid"
     t.datetime "send_at"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+    t.integer  "taobao_rate_score"
   end
 
   create_table "logistics", :force => true do |t|
@@ -273,6 +274,25 @@ ActiveRecord::Schema.define(:version => 20121129085416) do
     t.integer  "trade_source_id"
     t.datetime "refresh_token_last_refresh_at"
   end
+
+  create_table "taobao_trade_rates", :force => true do |t|
+    t.string   "tid"
+    t.string   "oid"
+    t.string   "role"
+    t.string   "nick"
+    t.text     "result"
+    t.datetime "created"
+    t.string   "rated_nick"
+    t.string   "item_title"
+    t.float    "item_price"
+    t.string   "content"
+    t.string   "reply"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "taobao_trade_rates", ["oid"], :name => "index_taobao_trade_rates_on_oid"
+  add_index "taobao_trade_rates", ["tid"], :name => "index_taobao_trade_rates_on_tid"
 
   create_table "trade_sources", :force => true do |t|
     t.integer  "account_id"

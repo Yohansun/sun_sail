@@ -4,7 +4,7 @@ class SmsNotifier
   sidekiq_options :queue => :sms
 
   def perform(content, mobile, tid, notify_kind)
-    trade = TradeDecorator.decorate(Trade.where(tid: tid).first)
+    trade = Trade.where(tid: tid).first
     sms = Sms.new(content, mobile)
     response = sms.transmit.parsed_response
     if response == '0' 
