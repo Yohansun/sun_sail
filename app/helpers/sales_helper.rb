@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 module SalesHelper
 	def product_data(trades, old_trades)
 
@@ -193,4 +194,45 @@ module SalesHelper
     time_info
   end
 
+  def frequency_data(start_at, end_at)
+    map = %Q{
+      function() {
+          emit(this.buyer_nick, {num: 1 });
+      }
+    }
+
+    reduce = %Q{
+       function(key, values) {
+         var result = {num: 0};
+         values.forEach(function(value) {
+            result.num += value.num;
+         });
+         return result;
+       }
+     }
+
+     trades = TaobaoTrade.between(created: start_at..end_at).in(status: ["TRADE_FINISHED","FINISHED_L"])
+     frequency = trades.map_reduce(map, reduce).out(inline: true)
+     purchase_num = Array.new(15,0)
+     frequency_info = []
+     total_num = 0
+     frequency.each do |fre|
+       total_num += fre["value"]["num"].to_i
+       (0..13).each do |i|
+         if fre["value"]["num"].to_i == i+1
+           purchase_num[i] += 1
+         end
+       end
+       if fre["value"]["num"].to_i>=15
+         purchase_num[14] += 1
+       end
+     end
+     purchase_num.each do |p|
+       purchase_data = (p/total_num.to_f*100).round(2)
+       frequency_info << [p , purchase_data]
+     end
+     frequency_info
+  end  
+
+ 
 end

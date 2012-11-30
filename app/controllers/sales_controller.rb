@@ -193,6 +193,24 @@ class SalesController < ApplicationController
 
   def customer_analysis
   end
-
   
+  def frequency_analysis
+    render "/sales/frequency_analysis"
+  end
+  def real_frequency_analysis
+    @start_date = params[:start_date] if params[:start_date].present?
+    @end_date = params[:end_date] if params[:end_date].present?
+    @start_time = params[:start_time] if params[:start_time].present?
+    @end_time = params[:end_time] if params[:end_time].present?
+    if @start_date && @end_date
+      start_at = "#{@start_date} #{@start_time}".to_time(:local)
+      end_at = "#{@end_date} #{@end_time}".to_time(:local)
+    else
+      start_at = 1.month.ago
+      end_at = Time.now
+    end
+    @frequency_data = frequency_data(start_at, end_at)
+    render "/sales/real_frequency_analysis"
+  end
+
 end
