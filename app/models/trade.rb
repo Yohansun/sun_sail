@@ -457,13 +457,13 @@ class Trade
         value = /#{params[:search][:simple_search_value].strip}/
         if params[:search][:simple_search_option] == 'seller_id'
           seller_ids = Seller.select(:id).where("name like ?", "%#{params[:search][:simple_search_value].strip}%").map &:id
-          seller_hash = {"seller_id" => {"$in" => seller_ids}}
+          simple_search_hash = {"seller_id" => {"$in" => seller_ids}}
         elsif params[:search][:simple_search_option] == 'receiver_name'
-          receiver_name_hash = {"$or" => [{receiver_name: value}, {"consignee_info.fullname" => value}, {"receiver.name" => value}]}
+          simple_search_hash = {"$or" => [{receiver_name: value}, {"consignee_info.fullname" => value}, {"receiver.name" => value}]}
         elsif params[:search][:simple_search_option] == 'receiver_mobile'
-          receiver_mobile_hash = {"$or" => [{receiver_mobile: value}, {"consignee_info.mobile" => value}, {"receiver.mobile_phone" => value}]}
+          simple_search_hash = {"$or" => [{receiver_mobile: value}, {"consignee_info.mobile" => value}, {"receiver.mobile_phone" => value}]}
         else
-          tid_hash = {tid: value}
+          simple_search_hash = Hash[params[:search][:simple_search_option].to_sym, value]
         end
       end
 
@@ -504,6 +504,13 @@ class Trade
           status_hash = {"$and" => [{"status" =>{"$in" => status_array}}, {"has_refund_order" => {"$in" => [nil, false]}}]}
         end
       end
+
+      # # 按分流时间筛选
+      # if params[:search] && params[:search][:dispatch_start_date].present? && params[:search][:dispatch_end_date].present?
+      #   dispatch_start_time = "#{params[:search][:dispatch_start_date]} #{params[:search][:dispatch_start_time]}".to_time(form = :local)
+      #   dispatch_end_time = "#{params[:search][:dispatch_end_date]} #{params[:search][:dispatch_end_time]}".to_time(form = :local)
+      #   dispatch_time_hash = {:dispatched_at.gte => dispatch_start_time, :dispatched_at.lte => dispatch_end_time}
+      # end
 
       # 按来源筛选
       if params[:search][:type_option].present?
@@ -572,12 +579,12 @@ class Trade
 
     # 集中筛选
     search_hash = {"$and" => [
-      seller_hash, tid_hash, receiver_name_hash, receiver_mobile_hash,
-      deliver_print_time_hash, create_time_hash, pay_time_hash,  logistic_print_time_hash,
-      status_hash, type_hash, logistic_hash,
-      seller_memo_hash, buyer_message_hash, has_color_info_hash, has_cs_memo_hash, invoice_all_hash,
-      cs_memo_void_hash, color_info_void_hash,
-      receiver_state_hash, receiver_city_hash, receiver_district_hash,
+      deliver_print_time_hash,     create_time_hash,         pay_time_hash,
+      logistic_print_time_hash,    status_hash,              type_hash,
+      logistic_hash,               seller_memo_hash,         buyer_message_hash,
+      has_color_info_hash,         has_cs_memo_hash,         invoice_all_hash,
+      cs_memo_void_hash,           color_info_void_hash,     receiver_state_hash,
+      receiver_city_hash,          receiver_district_hash,   simple_search_hash
       ].compact}
     search_hash == {"$and"=>[]} ? search_hash = nil : search_hash
 

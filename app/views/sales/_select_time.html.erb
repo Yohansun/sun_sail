@@ -1,0 +1,30 @@
+<%- if controller_name == 'sales' %>
+<%- if action_name == 'product_analysis'%>
+<form action="/sales/real_product_analysis" class="well form-search">
+<%- elsif action_name == 'area_analysis'%>
+<form action="/sales/real_area_analysis" class="well form-search">
+<%- elsif action_name == 'time_analysis'%>
+<form action="/sales/real_time_analysis" class="well form-search">
+<%- elsif action_name == 'price_analysis'%>
+<form action="/sales/real_price_analysis" class="well form-search">
+<%- else %>
+<form class="well form-search">
+<%- end %>
+  <fieldset class="form-inline">
+    <div class="controls">
+      <label class="control-label">开始时间：</label>
+      <input type="text" class="input-small search-query datepicker" name="start_date" value="<%= @start_date %>">
+      <input type="text" class="input-mini search-query timepicker" name="start_time" value="<%= @start_time %> ">
+      <label class="control-label">结束时间：</label>
+      <input type="text" class="input-small search-query datepicker" name="end_date" value="<%= @end_date %>">
+      <input type="text" class="input-mini search-query timepicker" name="end_time" value="<%= @end_time %>">
+      <div class="input-append">
+        <button type="submit" class="btn" onclick='blocktheui()'>过滤</button>
+      </div>
+      <!-- <a href="javascript:void(0)">昨天</a>
+      <a href="javascript:void(0)">最近一周</a>
+      <a href="javascript:void(0)">最近一月</a> -->
+    </div>
+  </fieldset>
+</form>
+<%- end %>

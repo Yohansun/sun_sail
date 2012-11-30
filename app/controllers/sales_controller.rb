@@ -1,9 +1,11 @@
 # -*- encoding : utf-8 -*-
 class SalesController < ApplicationController
+  include SalesHelper
   before_filter :authenticate_user!
   before_filter :admin_only!
 
   def index
+    redirect_to "/sales/product_analysis"
   end
 
   def show
@@ -95,4 +97,102 @@ class SalesController < ApplicationController
       render action: :edit
     end
   end
+
+  def fetch_data
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  def product_analysis
+    render "/sales/product_analysis"
+  end
+
+  def real_product_analysis
+    @start_date = params[:start_date] if params[:start_date].present?
+    @end_date = params[:end_date] if params[:end_date].present?
+    @start_time = params[:start_time] if params[:start_time].present?
+    @end_time = params[:end_time] if params[:end_time].present?
+
+    if @start_date && @end_date
+      start_at = "#{@start_date} #{@start_time}".to_time(:local)
+      end_at = "#{@end_date} #{@end_time}".to_time(:local)
+      @trades = TaobaoTrade.between(created: start_at..end_at).in(status: ["TRADE_FINISHED","FINISHED_L"])
+      time_gap = (end_at - start_at).to_i
+      @old_trades = TaobaoTrade.between(created: (start_at - time_gap.seconds)..start_at).in(status: ["TRADE_FINISHED","FINISHED_L"])
+    else
+      @trades = TaobaoTrade.between(created: 1.week.ago..Time.now).in(status: ["TRADE_FINISHED","FINISHED_L"])
+      @old_trades = TaobaoTrade.between(created: 2.week.ago..1.week.ago).in(status: ["TRADE_FINISHED","FINISHED_L"])
+    end
+
+    if @trades && @old_trades
+      @product_data = product_data(@trades, @old_trades)
+    end
+    render "/sales/real_product_analysis"
+  end
+
+  def area_analysis
+    render "/sales/area_analysis"
+  end
+
+  def real_area_analysis
+    @start_date = params[:start_date] if params[:start_date].present?
+    @end_date = params[:end_date] if params[:end_date].present?
+    @start_time = params[:start_time] if params[:start_time].present?
+    @end_time = params[:end_time] if params[:end_time].present?
+
+    if @start_date && @end_date
+      start_at = "#{@start_date} #{@start_time}".to_time(:local)
+      end_at = "#{@end_date} #{@end_time}".to_time(:local)
+    else
+      start_at = 1.week.ago
+      end_at = Time.now
+    end
+    @area_data = area_data(start_at, end_at)
+    render "/sales/real_area_analysis"
+  end
+
+  def price_analysis
+    render "/sales/price_analysis"
+  end
+
+  def real_price_analysis
+    @start_date = params[:start_date] if params[:start_date].present?
+    @end_date = params[:end_date] if params[:end_date].present?
+    @start_time = params[:start_time] if params[:start_time].present?
+    @end_time = params[:end_time] if params[:end_time].present?
+    if@start_date && @end_date
+      start_at = "#{@start_date} #{@start_time}".to_time(:local)
+      end_at = "#{@end_date} #{@end_time}".to_time(:local)
+    else
+      start_at = 1.week.ago
+      end_at = Time.now
+    end
+    @price_data = price_data(start_at, end_at)
+    render "/sales/real_price_analysis"
+  end
+
+  def time_analysis
+    render "/sales/time_analysis"
+  end
+
+  def real_time_analysis
+    @start_date = params[:start_date] if params[:start_date].present?
+    @end_date = params[:end_date] if params[:end_date].present?
+    @start_time = params[:start_time] if params[:start_time].present?
+    @end_time = params[:end_time] if params[:end_time].present?
+    if @start_date && @end_date
+      start_at = "#{@start_date} #{@start_time}".to_time(:local)
+      end_at = "#{@end_date} #{@end_time}".to_time(:local)
+    else
+      start_at = 1.week.ago
+      end_at = Time.now  
+    end
+    @time_data = time_data(start_at, end_at)
+  end
+
+  def customer_analysis
+  end
+
+  
 end

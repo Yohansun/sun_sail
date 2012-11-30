@@ -160,10 +160,12 @@
           <select id="search_option" class="input-large search_option">
             <option value="">请选择筛选条件</option>
             <option value="tid">订单编号</option>
+            <option value="buyer_nick">收货人ID</option>
             <option value="receiver_name">收货人姓名</option>
             <option value="receiver_mobile">收货人手机</option>
             <option value="seller_id">经销商</option>
             <option value="logistic">物流商</option>
+            <option value="logistic_waybill">物流单号</option>
           </select>
           <input type="text" class="search_value mar_r10" style="width:196px;" id＝"simple_search_text" value="<%= @search_value %>">
           <select id="search_logistic" class="input-large">

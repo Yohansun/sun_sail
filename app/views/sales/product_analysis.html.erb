@@ -1,0 +1,18 @@
+<div class="container-fluid">
+  
+  <%= render 'header' %>
+
+  <div class="row-fluid">
+	  <ul class="breadcrumb" style="position:relative;">
+	    <li><a href="/">Magic</a><span class="divider">/</span></li>
+	    <li><a href="/sales">数据魔方</a><span class="divider">/</span></li>
+	    <li><a href="/sales/product_analysis">销售分析</a><span class="divider">/</span></li>
+	    <li class="active">热销产品分析</li>
+    </ul><!-- breadcrumb -->
+
+    <%= render 'select_time' %>
+
+     <div class="remind_loading_info" style="min-height:500px;"><h5>请输入间隔时间(默认搜索最近一星期的数据)</h5><div>
+
+  </div>
+</div>
