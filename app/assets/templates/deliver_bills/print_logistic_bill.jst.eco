@@ -1,0 +1,17 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal">&times;</button>
+  <h3>物流单打印</h3>
+</div><!-- modal-header -->
+<div class="modal-body">
+  <% if @trade.get('logistic_name') : %>
+  <div>
+    <p>您当前所选订单，物流商为<%= @trade.get('logistic_name') %>，请确认是否更改并打印</p>
+  </div>
+  <% end %>
+  <div id="logistic_print"></div>
+</div><!-- modal-body -->
+<div class="modal-footer">
+  <a href="#" class="btn" data-dismiss="modal" >取消</a>
+  <a href="javascript:void(0)" onclick='startPrint()' class="btn btn-primary">打印</a>
+  <select id="logistic_select" class="input-medium nomargin pull-left"></select>
+</div><!-- modal-footer -->

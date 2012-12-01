@@ -3,6 +3,8 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     '': 'main'
     'trades': 'index'
     'trades/:trade_mode-:trade_type': 'index'
+    'send/:trade_mode-:trade_type': 'index'
+    'color/:trade_mode-:trade_type': 'index'
     'trades/:id/splited': 'splited'
     'trades/:id/:operation': 'operation'
     'trades/print_deliver_bills': 'printDeliverBills'
@@ -14,7 +16,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     @collection = new MagicOrders.Collections.Trades()
 
     MagicOrders.original_path = window.location.hash
-    $('.modal').on 'hidden', (event) ->
+    $('.trade, .modal').on 'hidden', (event) ->
       refresh = ($('#content').html() == '')
       if _.str.include(MagicOrders.original_path,'-')
         Backbone.history.navigate("#{MagicOrders.original_path}", refresh)
@@ -78,23 +80,31 @@ class MagicOrders.Routers.Trades extends Backbone.Router
           $("#search_toggle").hide()
           $(".label_advanced").hide()
         else
-          $(".label_advanced").show()
-        @nav = $('.subnav')
-        @navTop = $('.subnav').length && $('.subnav').offset().top - 40
-        $(window).off 'scroll'
-        $(window).on 'scroll', @processScroll
-        @processScroll
+          $('.trade_nav').html($("[data-trade-status=#{trade_type}]").html())
+      $('.order_search_form .datepickers').datepicker(format: 'yyyy-mm-dd')
+      $('.order_search_form .timepickers').timeEntry(show24Hours: true, showSeconds: true, spinnerImage: '/assets/spinnerUpDown.png', spinnerSize: [17, 26, 0], spinnerIncDecOnly: true)
 
-        $.unblockUI()
+      unless MagicOrders.trade_mode in ['trades', 'deliver', 'logistics', 'send']
+        $("#search_toggle").hide()
+        $(".label_advanced").hide()
+      else
+        $(".label_advanced").show()
+      @nav = $('.subnav')
+      @navTop = $('.subnav').length && $('.subnav').offset().top - 40
+      $(window).off 'scroll'
+      $(window).on 'scroll', @processScroll
+      @processScroll
 
-        # # 新订单提醒相关
-        # if collection.models.length > 0
-        #   @latest_trade_timestamp = collection.models[0].get('created_timestamp')
-        # else
-        #   @latest_trade_timestamp = -1
+      $.unblockUI()
 
-        # clearInterval @newTradesNotiferInterval if @newTradesNotiferInterval
-        # @newTradesNotiferInterval = setInterval @newTradesNotifer, 300000
+      # # 新订单提醒相关
+      # if collection.models.length > 0
+      #   @latest_trade_timestamp = collection.models[0].get('created_timestamp')
+      # else
+      #   @latest_trade_timestamp = -1
+
+      # clearInterval @newTradesNotiferInterval if @newTradesNotiferInterval
+      # @newTradesNotiferInterval = setInterval @newTradesNotifer, 300000
 
 
   newTradesNotifer: =>
@@ -139,43 +149,6 @@ class MagicOrders.Routers.Trades extends Backbone.Router
               $.get '/colors/autocomplete', {num: query}, (data)->
                 process(data)
           })
-        when 'print_deliver_bill'
-          bind_deliver_swf(model.get('id'))
-
-          $(modalDivID).on 'hidden', ()->
-            if MagicOrders.hasPrint == true
-              $.get '/trades/batch-print-deliver', {ids: [model.get('id')]}
-
-            MagicOrders.hasPrint = false
-
-        when 'print_logistic_bill'
-          $.get '/logistics/logistic_templates', {}, (t_data)->
-            html_options = ''
-            for item in t_data
-              html_options += '<option lid="' + item.id + '" value="' + item.xml + '">' + item.name + '</option>'
-
-            $('#logistic_select').html(html_options)
-            $('#logistic_select').show()
-
-            $('#logistic_select').change ()->
-              bind_logistic_swf model.get('id'), $(this).val()
-
-            $(modalDivID).on 'hidden', ()->
-              if MagicOrders.hasPrint == true
-                $.get '/trades/batch-print-logistic', {ids: [model.get('id')], logistic: $("#logistic_select").find("option:selected").attr('lid')}
-
-              MagicOrders.hasPrint = false
-
-            $.get ('/trades/' + model.get('id') + '/logistic_info'), {}, (data)->
-              if data == '' or data == null
-                ytong = $('#logistic_select').find('[lid="3"]')
-                data = ytong.val()
-                $('#logistic_select').find('[lid="3"]').attr('selected', 'selected')
-              else
-                $('#logistic_select').find('[value="' + data + '"]').attr('selected', 'selected')
-
-              bind_logistic_swf(model.get('id'), data)
-              pageInit()
 
       $(modalDivID).modal('show')
 

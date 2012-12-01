@@ -1,0 +1,36 @@
+<td><input class='trade_check' type="checkbox" value="option1"></td>
+<td data-col='tid'><%= @bill.get('tid') %></td>
+<td data-col='trade_source'><%= @bill.get('bill_number') %></td>
+<td data-col='status'>
+  <span class="label label-warning">
+    <% if @bill.get('is_logistic_printed') : %>
+    已打印
+    <% else : %>
+    未打印
+    <% end %>
+  </span>
+</td>
+<td data-col='trade_source'><%= @bill.get('logistic_waybill') %></td>
+<td data-col='trade_source'><%= @bill.get('logistic_name') %></td>
+<td><span class="label label-warning"><%= @bill.get('trade_source') %></span></td>
+<td>
+  <% for product in @bill.get('orders') : %>
+    <%= product.title %> X <%= product.num %><br>
+    <span class="label label-info">调色信息</span><%= product.color_info %><br>
+    <span class="label label-info">客服留言</span><%= product.cs_memo %>
+  <% end %>
+</td>
+<td data-col='receiver_name'><%= @bill.get('receiver_name') %></td>
+<td data-col='receiver_mobile'><%= @bill.get('receiver_mobile') %></td>
+<td data-col='receiver_address'><%= @bill.get('receiver_address') %></td>
+<td>
+  <div class="btn-group">
+    <button data-toggle="dropdown" class="btn btn-info dropdown-toggle min_w">
+      <i class="icon-wrench"></i><span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+      <li><a data-toggle="modal" href="#" data-type="print_logistic_bill">打印物流单</a></li>
+      <li><a data-toggle="modal" href="#" data-type="setup_logistic">设置物流信息</a></li>
+    </ul>
+  </div>
+</td>

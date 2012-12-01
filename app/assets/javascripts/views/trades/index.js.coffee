@@ -13,10 +13,9 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     'click .print_delivers': 'printDelivers'
     'click .print_logistics': 'printLogistics'
     'click .return_logistics': 'returnLogistics'
-    'click .confirm_return': 'confirmReturn'
-    'click .confirm_logistics': 'confirmLogistics'
     'click .batch_deliver': 'batchDeliver'
     'click .confirm_batch_deliver': 'confirmBatchDeliver'
+    'click .deliver_bills li' : 'gotoDeliverBills'
 
     #visual effects
     'click #cols_filter input,label': 'keepColsFilterDropdownOpen'
@@ -293,7 +292,8 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     $('.dropdown.open .dropdown-toggle').dropdown('toggle')
     @search_trade_status = $(e.target).data('trade-status')
     MagicOrders.trade_mode = $(e.target).data('trade-mode')
-    Backbone.history.navigate('trades/' + "#{MagicOrders.trade_mode}-#{@search_trade_status}", true)
+    status = $(e.target).data('trade-status')
+    Backbone.history.navigate("#{MagicOrders.trade_mode}/" + "#{MagicOrders.trade_mode}-#{status}", true)
 
     MagicOrders.original_path = window.location.hash
 
@@ -465,57 +465,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
         $('#ord_logistics_billnum_mult').modal('show')
 
-  confirmReturn: ->
-    flag = $(".logistic_select").find("option:selected").html() in ['其他', '虹迪', '雄瑞']
-
-    begin = $('.logistic_begin').val()
-    end = $('.logistic_end').val()
-    begin_pre = begin.slice(0, -4)
-    begin_last_number = begin.slice(-4) * 1
-    end_pre = end.slice(0, -4)
-    end_last_number = end.slice(-4) * 1
-    
-    unless (!begin or !end) and flag
-      unless /^\w+$/.test(begin) and /^\w+$/.test(end)
-        alert('输入单号不符合规则')
-        return
-
-    unless flag
-      if (end_last_number - begin_last_number + 1) != MagicOrders.idCarrier.length
-        alert('物流单号与选中产品个数不匹配')
-        return
-
-    $.get '/trades/deliver_list', {ids: MagicOrders.idCarrier}, (data) ->
-      html = ''
-      for trade, i in data
-        html += '<tr>'
-        html += '<td class="tid">' + trade.tid + '</td>'
-        html += '<td>' + trade.name + '</td>'
-        html += '<td>' + trade.address + '</td>'
-        if begin and end
-          html += '<td class="logistic_bill">' + begin_pre + (begin_last_number + i) + '</td></tr>'
-        else
-          html += '<td class="logistic_bill"></td></tr>'
-
-      $('#ord_logistics_billnum_mult2 tbody').html(html)
-      $('#ord_logistics_billnum_mult').modal('hide')
-      $('#ord_logistics_billnum_mult2').modal('show')
-
-  confirmLogistics: ->
-    bb = []
-    a = $('#ord_logistics_billnum_mult2 tbody tr')
-    a.each (i)->
-      tid = $(a[i]).find('td.tid').html()
-      logistic = $(a[i]).find('td.logistic_bill').html()
-      h = {tid: tid, logistic: logistic}
-      bb.push(h)
-
-    $.get '/trades/setup_logistics', {data: bb, logistic: $('#ord_logistics_billnum_mult .logistic_select').find("option:selected").attr('lid')}, (data)->
-      if data.isSuccess == true
-        $('#ord_logistics_billnum_mult2').modal('hide')
-      else
-        alert('失败')
-
   batchDeliver: ->
     tmp = []
     length = $('.trade_check:checked').parents('tr').length
@@ -567,3 +516,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
         $('#batch_deliver').modal('hide')
       else
         alert('失败')
+
+  gotoDeliverBills: ->
+    Backbone.history.navigate('deliver_bills', true)

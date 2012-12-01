@@ -1,0 +1,199 @@
+<style type="text/css">
+  .timeEntry_control { vertical-align: middle; margin-left: -1px; margin-top: 0px; cursor: pointer; }
+  * html .timeEntry_control { margin-top: -2px; }
+</style>
+
+<header class="jumbotron subhead" id="overview">
+  <div class="subnav">
+    <ul class="nav nav-pills">
+      <% unless MagicOrders.company == "dulux" and MagicOrders.role_key == 'logistic' : %>
+      <li class="dropdown" id="trade_selector">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">
+          订单<b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu">
+          <li><a href="#trades" data-trade-mode="trades" data-trade-status="all">所有</a></li>
+          <% if MagicOrders.role_key != 'seller' : %>
+          <li><a href="#" data-trade-mode="trades" data-trade-status="unpaid">未付款</a></li>
+          <li><a href="#" data-trade-mode="trades" data-trade-status="paid">已付款</a></li>
+          <li><a href="#" data-trade-mode="trades" data-trade-status="undispatched">未分流</a></li>
+          <% end %>
+          <li><a href="#" data-trade-mode="trades" data-trade-status="dispatched">已分流</a></li>
+          <li><a href="#" data-trade-mode="trades" data-trade-status="undelivered">已分流，未发货</a></li>
+          <li><a href="#" data-trade-mode="trades" data-trade-status="delivered">已发货</a></li>
+          <li><a href="#" data-trade-mode="trades" data-trade-status="deliver_unconfirmed">已发货，未确认发货</a></li>
+          <li><a href="#" data-trade-mode="trades" data-trade-status="refund">退货</a></li>
+          <% if MagicOrders.role_key != 'seller' : %>
+          <li><a href="#" data-trade-mode="trades" data-trade-status="closed">交易关闭</a></li>
+          <li><a href="#" data-trade-mode="trades" data-trade-status="unusual_trade">交易异常</a></li>
+          <% end %>
+        </ul>
+      </li>
+      <% end %>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">
+          发货单
+          <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu">
+          <li><a href="#" data-trade-mode="deliver_bills" data-trade-status="all">所有发货单</a></li>
+          <li><a href="#" data-trade-mode="deliver_bills" data-trade-status="unprinted">未打印</a></li>
+          <li><a href="#" data-trade-mode="deliver_bills" data-trade-status="printed">已打印</a></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+          物流单<b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu">
+          <li><a href="#" data-trade-mode="logistic_bills" data-trade-status="all">所有物流单</a></li>
+          <li><a href="#" data-trade-mode="logistic_bills" data-trade-status="unprinted">未打印物流单</a></li>
+          <li><a href="#" data-trade-mode="logistic_bills" data-trade-status="printed">已打印物流单</a></li>
+        </ul>
+      </li>
+      <% unless MagicOrders.company == "dulux" and MagicOrders.role_key == 'logistic' : %>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+          发货
+          <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu">
+          <li><a href="#" data-trade-mode="send" data-trade-status="seller_undelivered">未发货</a></li>
+          <li><a href="#" data-trade-mode="send" data-trade-status="seller_delivered">已发货</a></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+          调色
+          <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu">
+          <li><a href="#" data-trade-mode="color" data-trade-status="color_unmatched">未申请调色</a></li>
+          <li><a href="#" data-trade-mode="color" data-trade-status="color_matched">已申请,未确认调色</a></li>
+          <li><a href="#" data-trade-mode="color" data-trade-status="color_confirmed">已确认调色</a></li>
+        </ul>
+      </li>
+      <% end %>
+    </ul>
+  </div>
+</header>
+
+<div class="row-fluid">
+  <ul class="breadcrumb" style="position:relative;">
+    <li><a href="#">Magic</a><span class="divider">/</span></li>
+    <li><a href="#logistic_bills">物流单管理</a><span class="divider">/</span></li>
+    <li class="active trade_nav">全部物流单</li>
+  </ul><!-- breadcrumb -->
+
+  <form class="well form-search">
+    <fieldset class="form-inline">
+      <div class="controls">
+        <select id="deliver_bill_search_condition" class="input-large">
+          <option value='tid'>订单编号</option>
+          <option value='r_name'>收货人姓名</option>
+          <option value='r_mobile'>收货人手机</option>
+          <option value='s_name'>经销商</option>
+        </select>
+
+        <div class="input-append">
+          <input type="text" id="deliver_bill_search_value" class="search-query w_specify">
+          <button type="button" class="btn js-search">搜索</button>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+
+  <div class="controls clearfix">
+    <div class="btns btn-group pull-left">
+      <a href="javascript:void(0)" class="btn btn-warning"><i class="icon-user icon-white"></i>批量操作</a>
+      <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-warning btn_left4">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li><a data-toggle="modal" class='print_logistics' href="#">批量打印物流单</a></li>
+        <li><a data-toggle="modal" class='return_logistics' href='#'>批量设置物流信息</a></li>
+      </ul>
+    </div>
+  </div>
+  <br>
+  <table class="table table-striped table-bordered table-condensed td_colors" id="trades_table">
+    <thead>
+      <tr>
+        <th><input id="checkbox_all" type="checkbox" value="option1">全选</th>
+        <th data-col='tid'>订单编号</th>
+        <th data-col='tid'>发货单编号</th>
+        <th data-col='tid'>打印状态</th>
+        <th data-col='tid'>物流单号</th>
+        <th data-col='tid'>物流公司</th>
+        <th data-col='trade_source'>订单来源</th>
+        <th data-col='trade_source'>商品详细</th>
+        <th data-col='receiver_name' nowrap>客户姓名</th>
+        <th data-col='receiver_mobile_phone'>联系电话</th>
+        <th data-col='receiver_address' style="min-width:100px">联系地址</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody id="trade_rows">
+    </tbody>
+  </table>
+</div>
+
+<div id="ord_logistics_billnum_mult" class="logistic_bill modal hide fade" tabindex="-1">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h3>批量返回物流单号</h3>
+  </div><!-- modal-header -->
+  <div class="modal-body">
+    <p>此次共同返回<b class='logistic_count'></b>单. <span class='info' style='color:red'></span></p>
+    <fieldset>
+      <div class="control-group">
+        <div class="controls form-inline mar_t5">
+          <label class="input-small nomargin">物流商：</label>
+          <select class="input-medium logistic_select"></select>
+          <!-- <input class='logistic_name' type="text" value="圆通" disabled> -->
+        </div>
+        <div class="controls form-inline mar_t5">
+          <label class="input-small nomargin">开始单号：</label><input class='logistic_begin' type="text" value="">
+        </div>
+        <div class="controls form-inline mar_t5">
+          <label class="input-small nomargin">结束单号：</label><input class='logistic_end' type="text" value="">
+        </div>
+      </div>
+    </fieldset>
+  </div><!-- modal-body -->
+
+  <div class="modal-footer">
+    <a href="#" class="btn" data-dismiss="modal" >取消</a>
+    <a class="btn btn-primary js-confirm-return">确认</a>
+  </div>
+</div>
+
+<div id="ord_logistics_billnum_mult2" class="logistic_bill modal hide fade" tabindex="-1" style="width: 890px;margin-left: -445px;">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h3>批量返回物流单号</h3>
+  </div><!-- modal-header -->
+  <div class="modal-body">
+    <p>此次共返回 <b class='logistic_count'></b> 单号，请确认并保存</p>
+    <fieldset>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>订单编号</th>
+            <th>姓名</th>
+            <th>地址</th>
+            <th>物流单号</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </fieldset>
+  </div><!-- modal-body -->
+
+  <div class="modal-footer">
+    <a href="#" class="btn" data-dismiss="modal" >取消</a>
+    <button class="btn btn-primary js-confirm-logistics">确认保存</button>
+  </div>
+</div><!-- ord_logistics_billnum_mult2 -->
+

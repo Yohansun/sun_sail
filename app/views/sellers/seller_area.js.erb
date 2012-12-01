@@ -1,12 +1,11 @@
 function zTreeBeforeCheck(treeId, treeNode) {
-    if($("#" + treeNode.tId + "_check").hasClass("checkbox_false_full_focus") == true){
-      $.get("/sellers/create_seller_area", {area_id:treeNode.id, seller_id:<%=params[:seller_id]%>}, function(result){
-       });
-    }else{
-      $.get("/sellers/remove_seller_area", {area_id:treeNode.id, seller_id:<%=params[:seller_id]%>}, function(result){
-       });
-    }
+  if($("#" + treeNode.tId + "_check").hasClass("checkbox_false_full_focus") == true){
+    $.get("/sellers/create_seller_area", {area_id:treeNode.id, seller_id:<%=params[:seller_id]%>});
+  }else{
+    $.get("/sellers/remove_seller_area", {area_id:treeNode.id, seller_id:<%=params[:seller_id]%>});
+  }
 };
+
 var setting = {
   check: {
     enable: true
@@ -20,11 +19,11 @@ var setting = {
     beforeCheck: zTreeBeforeCheck
   }
 };
+
 var zNodes = data;
-
 var code;
+var html = "<tr><th>地区编号</th><th>省</th><th>市</th><th>区</th><th>操作</th></tr>"
 
-html = "<tr><th>地区编号</th><th>省</th><th>市</th><th>区</th><th>操作</th></tr>"
 <% if @seller_areas.present? %>
   <% @seller_areas.each do |seller_area| %>
     html += "<tr id='area<%= seller_area.area.id %>'><td><%=seller_area.area.id%></td>" + 

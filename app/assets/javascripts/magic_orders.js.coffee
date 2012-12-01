@@ -117,10 +117,12 @@ window.MagicOrders =
     @cache_trade_number = 0
     @idCarrier = []
     @hasPrint = false
+    @enable_trade_deliver_bill_spliting = false
+    @enable_trade_deliver_bill_spliting_sellers = []
 
-    new MagicOrders.Routers.Areas()
     new MagicOrders.Routers.Trades()
-    new MagicOrders.Routers.Sellers()
-    new MagicOrders.Routers.Users()
     new MagicOrders.Routers.TradeSettings()
+    new MagicOrders.Routers.DeliverBills()
+    new MagicOrders.Routers.LogisticBills()
+
     Backbone.history.start(pushState: false)

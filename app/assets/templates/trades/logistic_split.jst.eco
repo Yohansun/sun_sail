@@ -1,0 +1,72 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal">&times;</button>
+  <h3>物流/发货单拆分</h3>
+</div><!-- modal-header -->
+<div class="modal-body">
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>订单编号</th>
+        <th>订单状态</th>
+        <th>客户联系方式</th>
+        <th>订单总价</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><%= @trade.get("tid") %></td>
+        <td><%= @trade.get("status_text") %></td>
+        <td>
+          <%= @trade.get("receiver_name") %><br/>
+          <%= @trade.get("receiver_mobile_phone") %><br/>
+          <%= @trade.get('receiver_state') + @trade.get('receiver_city') + @trade.get('receiver_district') + @trade.get('receiver_address') %>
+        </td>
+        <td><%= @trade.get("payment") %></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="alert alert-info fade in">
+    <button data-dismiss="alert" class="close" type="button">×</button>
+    根据商品详情，系统建议分为<%= @trade.get('splited_bills').length %>个出货批次
+  </div>
+
+  <div class="clearfix deliver_bills_container">
+    <% for item in @trade.get('splited_bills') : %>
+    <table class="table table-bordered pull-left w_48">
+      <tbody>
+        <tr>
+          <th>出货单号</th>
+          <td class='bill_id'><%= item.bill.id %></td>
+        </tr>
+        <tr>
+          <th>商品详细</th>
+          <td><%= item.bill.title %></td>
+        </tr>
+        <tr>
+          <th>配送商</th>
+          <td><%= @trade.get('seller_name') %></td>
+        </tr>
+        <tr>
+          <th>商品数量</th>
+          <td><%= item.bill.number %></td>
+        </tr>
+        <tr>
+          <th>物流公司</th>
+          <td>
+            <select class="width_auto logistic_id">
+            </select>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <% end %>
+  </div>
+</div><!-- modal-body -->
+
+<div class="modal-footer">
+  <a href="#" class="btn" data-dismiss="modal" >取消</a>
+  <% unless @trade.get('splited_bills').length == 0 : %>
+    <a href="#" class="btn btn-primary js-split">确定</a>
+  <% end %>
+</div><!-- modal-footer -->

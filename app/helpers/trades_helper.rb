@@ -2,7 +2,6 @@
 module TradesHelper
   def get_package(iid, time)
     tmp = []
-    return tmp unless TradeSetting.company == 'dulux'
 
     iid_map = {
       'ICI0007' => '五合一配套抗碱底漆',
@@ -33,17 +32,6 @@ module TradesHelper
     end
 
     tmp
-  end
-
-  def trade_item_count(trade)
-    count = 0
-    trade.orders.each do |order|
-      order.bill_info.each do |info|
-        count += info[:number] * order.num
-      end
-    end
-
-    count
   end
 
   def can_change_logistic(trade)

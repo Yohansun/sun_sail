@@ -96,6 +96,8 @@ class Trade
   embeds_many :operation_logs
   embeds_many :manual_sms_or_emails
 
+  has_many :deliver_bills
+
   attr_accessor :matched_seller
 
   validate :color_num_do_not_exist, :on => :update, :if => :color_num_changed?
@@ -269,6 +271,110 @@ class Trade
       @matched_logistics == [] ? [[1,"其他", '']] : @matched_logistics
     else
       [[1,"其他", '']]     #无匹配地区或匹配经销商时默认是其他
+    end
+  end
+
+  def generate_deliver_bill
+    return if _type == 'JingdongTrade'
+    #分流时生成默认发货单, 不支持京东订单
+
+    deliver_bills.delete_all
+
+    bill = deliver_bills.create(deliver_bill_number: "#{tid}01", seller_id: seller_id, seller_name: seller_name)
+    orders.each do |order|
+      bill.bill_products.create(
+        title: order.title,
+        iid: order.outer_iid,
+        colors: order.color_num,
+        number: order.num,
+        memo: order.cs_memo
+      )
+    end
+  end
+
+  def logistic_split
+    splited = []
+    orders.each do |order|
+      product = Product.find_by_iid order.outer_iid
+
+      unless product
+        splited.clear
+        break
+      end
+
+      if product.category.try(:name) == '輔助材料'
+        divmod = 100000
+      else
+        divmod = case product.quantity.try(:name)
+        when '5L'
+          3
+        when '10L', '15L'
+          1
+        else
+          splited.clear
+          break
+        end
+      end
+
+      div = order.num.divmod divmod
+
+      if div[0] != 0
+        div[0].times do
+          splited << {
+            bill: {
+              id: tid + ("%02d" % (splited.size + 1)),
+              number: divmod,
+              title: order.title,
+              iid: order.outer_iid
+            }
+          }
+        end
+      end
+
+      if div[1] != 0
+        div[1].times do
+          splited << {
+            bill: {
+              id: tid + ("%02d" % (splited.size + 1)),
+              number: 1,
+              title: order.title,
+              iid: order.outer_iid
+            }
+          }
+        end
+      end
+    end
+
+    splited
+  end
+
+  def split_logistic(logistic_ids)
+    # 清空默认发货单
+    deliver_bills.delete_all
+
+    logistic_split.each do |item|
+      iid = item[:bill][:iid]
+      order = orders.select{|order| order.outer_iid == iid}.first
+      color_num = order.color_num
+      bill_number = item[:bill][:id]
+
+      deliver_bill = deliver_bills.create(
+        deliver_bill_number: bill_number,
+        seller_id: seller_id,
+        seller_name: seller_name
+      )
+
+      deliver_bill.bill_products.create(
+        iid: iid,
+        title: item[:bill][:title],
+        number: item[:bill][:number],
+        colors: color_num.pop(item[:bill][:number]),
+        memo: order.cs_memo
+      )
+
+      logistic_id = logistic_ids[bill_number]
+      logistic = Logistic.find logistic_id
+      deliver_bill.logistic = logistic
     end
   end
 
