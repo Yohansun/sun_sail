@@ -123,9 +123,9 @@ module SalesHelper
     map_reduce_info.each do |info|
       total_num_sum += info["value"]["num"].to_i
     end
-    price_gap = [0..2, 2..5, 5..10, 10..29, 29..80, 80..200, 200..500, 500..1000, 1000..1900, 1900..4900, 4900..6000]
-
-    price_gap.each do |gap|
+    price_gap = [0..2, 2.01..5, 5.01..10, 10.01..29, 29.01..80, 80.01..200, 200.01..500, 500.01..1000, 1000.01..1900, 1900.01..4900, 4900.01..6000]
+    price_gap2 = [0..2, 2..5, 5..10, 10..29, 29..80, 80..200, 200..500, 500..1000, 1000..1900, 1900..4900, 4900..6000]
+    price_gap.each_with_index do |gap, i|
       num_sum = 0
       map_reduce_info.each do |info|
         if (gap).include?(info["_id"])
@@ -137,7 +137,7 @@ module SalesHelper
       else
         num_rate = 0
       end
-      price_info << [gap, num_sum.to_i, num_rate]
+      price_info << [price_gap2[i], num_sum.to_i, num_rate]
     end
     price_info
   end
@@ -234,5 +234,50 @@ module SalesHelper
      frequency_info
   end  
 
+  def univalent_data(start_at, end_at)
+    map = %Q{
+      function() {
+          emit(this.buyer_nick, {payment: this.payment , num: 1 });
+      }
+    }
+
+    reduce = %Q{
+       function(key, values) {
+         var result = {payment:0 , num: 0};
+         values.forEach(function(value) {
+            result.num += value.num;
+            result.payment += value.payment
+         });
+         return result;
+       }
+     }
+
+     trades = TaobaoTrade.between(created: start_at..end_at).in(status: ["TRADE_FINISHED","FINISHED_L"])
+     univalent = trades.map_reduce(map, reduce).out(inline: true)
+     univalent_info = []
+     total_num = 0
+     payment_money = 0
+     average_money = []
+     money_gap = money_gap = [0..2, 2.01..5, 5.01..10, 10.01..29, 29.01..80, 80.01..200, 200.01..500, 500.01..1000, 1000.01..1900, 1900.01..4900, 4900.01..6000]
+     money_gap2 = [0..2, 2..5, 5..10, 10..29, 29..80, 80..200, 200..500, 500..1000, 1000..1900, 1900..4900, 4900..6000]
+     person_num = Array.new(11 , 0)
+     total_person_num = 0
+     money_gap.each_with_index do |gap, i|
+       univalent.each do |fre|
+         total_num = fre["value"]["num"].to_i  
+         payment_money = fre["value"]["payment"].to_f
+         average_money = payment_money/total_num
+         if (gap).include?(average_money)
+           person_num[i] += 1
+         end
+       end
+       total_person_num += person_num[i]
+     end
+     person_num.each_with_index do |p, i|
+       univalent_data = (p/total_person_num.to_f*100).round(2)
+       univalent_info << [money_gap2[i], p , univalent_data]
+     end
+     univalent_info
+  end 
  
 end
