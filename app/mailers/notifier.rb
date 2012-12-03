@@ -34,7 +34,8 @@ class Notifier < ActionMailer::Base
         @trade_deliver_info = "请及时发货，谢谢。"
       else
         @area_name = seller.interface_name
-        to_emails = seller.interface_email
+        to_emails = seller.interface_email   
+        to_emails = [] << to_emails unless to_emails.is_a?(Array)
         cc_emails = @trade.cc_emails
         @trade_deliver_info = "请及时通知经销商联系客户发货，并让其发货同时在“经销商后台”点击“确认发货”。之后请回复本邮件告知已发货。谢谢。"
         if @trade.is_1568
