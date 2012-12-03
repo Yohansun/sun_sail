@@ -13,6 +13,7 @@ class TradesController < ApplicationController
     limit = params[:limit] || 20
     @trades = Trade.filter(current_user, params)
     @trades_count = @trades.count
+
     @trades = TradeDecorator.decorate(@trades.limit(limit).skip(offset).order_by(:created.desc))
     if @trades_count > 0
       respond_with @trades
