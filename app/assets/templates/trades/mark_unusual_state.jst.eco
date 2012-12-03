@@ -65,7 +65,7 @@
       </div>
 
       <div class="control-group pick_plan_detail">
-        <div class="controls">预计处理时间：<input type="text" class="input-small datepicker nomargin" id="plan_repair_at"></div>
+        <div class="controls">预计处理时间：<input type="text" class="input-small datepickers nomargin" id="plan_repair_at"></div>
       </div>
     </div>
 

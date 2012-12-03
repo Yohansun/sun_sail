@@ -190,11 +190,11 @@
         <div class="controls clearfix">
           <fieldset class="pull-left form-inline mar_r10">
             <label style="position: relative; ">下单时间：</label>
-            <input type="text" style="margin-right:5px;" placeholder="年-月-日" class="input-small search_start_date datepicker" value="<%= @search_start_date %>">
-            <input type="text" placeholder="00:00:00" class="input-small search_start_time timepicker" value="<%= @search_start_time %>">
+            <input type="text" style="margin-right:5px;" placeholder="年-月-日" class="input-small search_start_date datepickers" value="<%= @search_start_date %>">
+            <input type="text" placeholder="00:00:00" class="input-small search_start_time timepickers" value="<%= @search_start_time %>">
             <i class="icon-arrow-right"></i>
-            <input type="text" style="margin-right:5px;" placeholder="年-月-日" class="input-small search_end_date datepicker" value="<%= @search_end_date %>">
-            <input type="text" placeholder="00:00:00" class="input-small search_end_time timepicker" value="<%= @search_end_time %>">
+            <input type="text" style="margin-right:5px;" placeholder="年-月-日" class="input-small search_end_date datepickers" value="<%= @search_end_date %>">
+            <input type="text" placeholder="00:00:00" class="input-small search_end_time timepickers" value="<%= @search_end_time %>">
           </fieldset>
 
           <fieldset class="pull-left form-inline mar_r10">
@@ -227,11 +227,11 @@
         <div class="controls clearfix">
           <fieldset class="pull-left form-inline mar_r10">
             <label style="position: relative; ">付款时间：</label>
-            <input type="text" style="margin-right:5px;" placeholder="年-月-日" class="input-small pay_start_date datepicker" value="<%= @pay_start_date %>">
-            <input type="text" placeholder="00:00:00" class="input-small pay_start_time timepicker" value="<%= @pay_start_time %>">
+            <input type="text" style="margin-right:5px;" placeholder="年-月-日" class="input-small pay_start_date datepickers" value="<%= @pay_start_date %>">
+            <input type="text" placeholder="00:00:00" class="input-small pay_start_time timepickers" value="<%= @pay_start_time %>">
             <i class="icon-arrow-right"></i>
-            <input type="text" style="margin-right:5px;" placeholder="年-月-日" class="input-small pay_end_date datepicker" value="<%= @pay_end_date %>">
-            <input type="text" placeholder="00:00:00" class="input-small pay_end_time timepicker" value="<%= @pay_end_time %>">
+            <input type="text" style="margin-right:5px;" placeholder="年-月-日" class="input-small pay_end_date datepickers" value="<%= @pay_end_date %>">
+            <input type="text" placeholder="00:00:00" class="input-small pay_end_time timepickers" value="<%= @pay_end_time %>">
           </fieldset>
 
           <fieldset class="pull-left form-inline mar_r10">
@@ -265,11 +265,11 @@
         <div class="controls clearfix">
           <!-- <fieldset class="pull-left form-inline mar_r10">
             <label style="position: relative; ">分流时间：</label>
-            <input type="text" style="margin-right:5px;" placeholder="年-月-日" class="input-small dispatch_start_date datepicker" value="<%= @dispatch_start_date %>">
-            <input type="text" placeholder="00:00:00" class="input-small dispatch_start_time timepicker" value="<%= @dispatch_start_time %>">
+            <input type="text" style="margin-right:5px;" placeholder="年-月-日" class="input-small dispatch_start_date datepickers" value="<%= @dispatch_start_date %>">
+            <input type="text" placeholder="00:00:00" class="input-small dispatch_start_time timepickers" value="<%= @dispatch_start_time %>">
             <i class="icon-arrow-right"></i>
-            <input type="text" style="margin-right:5px;" placeholder="年-月-日" class="input-small dispatch_end_date datepicker" value="<%= @dispatch_end_date %>">
-            <input type="text" placeholder="00:00:00" class="input-small dispatch_end_time timepicker" value="<%= @dispatch_end_time %>">
+            <input type="text" style="margin-right:5px;" placeholder="年-月-日" class="input-small dispatch_end_date datepickers" value="<%= @dispatch_end_date %>">
+            <input type="text" placeholder="00:00:00" class="input-small dispatch_end_time timepickers" value="<%= @dispatch_end_time %>">
           </fieldset> -->
 
           <fieldset class="pull-left form-inline mar_r10">

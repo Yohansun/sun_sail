@@ -33,7 +33,7 @@
     </label>
     <label class="control-label pick_invoice_detail">完成日期：
       <div class="controls">
-        <input type="text" class="input-large datepicker" placeholder="请填写日期(年-月-日)..." id="invoice_date_text" value="<%= @trade.get 'invoice_date' %>">
+        <input type="text" class="input-large datepickers" placeholder="请填写日期(年-月-日)..." id="invoice_date_text" value="<%= @trade.get 'invoice_date' %>">
       </div>
     </label>
   </fieldset>

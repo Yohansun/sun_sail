@@ -290,14 +290,14 @@ class TradesController < ApplicationController
   end
 
   def split_trade
-    trade = Trade.find params[:id]
+    @trade = Trade.find params[:id]
     new_trade_ids = if TradeSetting.company == 'dulux'
       split_orders(@trade)
     else
-      TradeSplitter.new(trade).split!
+      TradeSplitter.new(@trade).split!
     end
 
-    trade.operation_logs.create(operated_at: Time.now, operation: '拆单', operator_id: current_user.id, operator: current_user.name)
+    @trade.operation_logs.build(operated_at: Time.now, operation: '拆单', operator_id: current_user.id, operator: current_user.name)
     respond_to do |format|
       format.json { render json: {ids: new_trade_ids} }
     end

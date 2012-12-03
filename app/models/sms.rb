@@ -17,6 +17,14 @@ class Sms
       soap_transmit
     end  
   end
+
+  def self.receive
+    if TradeSetting.company == "dulux"
+      Sms.http_receive
+    else
+      Sms.soap_receive
+    end  
+  end
   
   def soap_transmit
     client = Savon::Client.new(TradeSetting.sms_soap_gateway)
@@ -34,6 +42,10 @@ class Sms
       response.body[:batch_send_response][:out]
     end
   end  
+
+  def self.soap_receive
+  
+  end  
   
   def http_transmit
     client = TradeSetting.sms_http_gateway
@@ -50,4 +62,13 @@ class Sms
     send_request = HTTParty.get(full_resquest)
   end
   
+  def self.http_receive
+    client = TradeSetting.sms_http_receive_gateway
+    uid = TradeSetting.sms_http_uid
+    pwd = TradeSetting.sms_http_pwd
+    request = "uid=#{TradeSetting.sms_http_uid}&pwd=#{TradeSetting.sms_http_pwd}"
+    full_resquest = URI.escape(client + request)
+    send_request = HTTParty.get(full_resquest)
+  end
+
 end
