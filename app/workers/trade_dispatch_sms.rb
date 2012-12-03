@@ -42,9 +42,11 @@ class TradeDispatchSms
       end
 
       sms = Sms.new(content, mobiles)
-      response = sms.transmit.parsed_response
+      success = false
+      success = true if TradeSetting.company == "dulux" && sms.transmit.parsed_response == "0"
+      success = true if TradeSetting.company == "nippon" && sms.transmit.fetch(:description) == "成功"
       sms_operation = "发送短信"
-      if response == '0'
+      if success
         if mobiles.present?
           sms_operation += "到#{mobiles}"
         else
