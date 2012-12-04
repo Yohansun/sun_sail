@@ -10,8 +10,9 @@ class LogisticRate < ActiveRecord::Base
 	  	arr[0] = rates.count #订单数
 	  	taobao_rates = rates.where("taobao_rate_score in (1,3,5)") 
 	  	arr[1] = taobao_rates.count * 5 #订单总分 
-	  	arr[2] = rates.sum(:taobao_rate_score) #订单评分 
-	  	arr[3] = ((arr[2].to_f / arr[1]) * 100).round(2) #物流评分满意度 
+	  	arr[2] = taobao_rates.sum(:taobao_rate_score) #订单评分 
+	  	arr[3] = ((arr[2].to_f / arr[1]) * 100).round(2) #订单评分满意度 
+	  	arr[3] = 0 if arr[1] == 0
 	  	valid_rates = rates.where("score in (1,3,5)")
 	  	if valid_rates
 	  		arr[4] = valid_rates.count #有效回复数
