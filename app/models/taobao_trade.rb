@@ -166,7 +166,7 @@ class TaobaoTrade < Trade
     if TradeSetting.company == 'dulux'
       Dulux::SellerMatcher.match_trade_seller(self, area) unless splitable?
     else
-      super
+      Dulux::SellerMatcher.match_trade_seller(self, area)
     end
   end
 

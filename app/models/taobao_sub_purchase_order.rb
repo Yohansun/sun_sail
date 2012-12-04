@@ -22,6 +22,10 @@ class TaobaoSubPurchaseOrder < Order
 
   embedded_in :taobao_purchase_order
 
+  def outer_iid
+    item_outer_id
+  end
+
   def bill_info
     tmp = {}
     color_num.each do |nums|

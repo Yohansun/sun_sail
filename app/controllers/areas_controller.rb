@@ -9,7 +9,7 @@ class AreasController < ApplicationController
   caches_page :index, :if => Proc.new { |c| c.request.format.js? }
 
   def index
-    @areas = Area.where(parent_id: params[:parent_id] || 1)
+    @areas = Area.where(parent_id: params[:parent_id])
 
     respond_to do |format|
       format.html

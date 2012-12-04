@@ -3,7 +3,7 @@ set :rvm_ruby_string, '1.9.3'        # Or whatever env you want it to run in.
 set :rvm_type, :user
 
 set :repository, "git@github.com:nioteam/magic_orders.git"
-set :branch, "magicalpha"
+set :branch, "master"
 
 server "121.11.90.8", :web, :app, :db, primary: true
 set :user, "nio"
@@ -21,6 +21,7 @@ namespace :deploy do
   task :symlink_shared, :roles => :app do
     run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
     run "ln -nfs #{shared_path}/config/mailers.yml #{release_path}/config/mailers.yml"
+    run "ln -nfs #{shared_path}/config/magic_setting.yml #{release_path}/config/magic_setting.yml"
     run "ln -nfs #{shared_path}/config/taobao.yml #{release_path}/config/taobao.yml"
     run "ln -nfs #{shared_path}/config/jingdong.yml #{release_path}/config/jingdong.yml"
     run "ln -nfs #{shared_path}/config/mongoid.yml #{release_path}/config/mongoid.yml"
