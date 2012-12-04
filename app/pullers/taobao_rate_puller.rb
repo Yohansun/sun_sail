@@ -43,9 +43,9 @@ class TaobaoRatePuller
           TaobaoTradeRate.create(:tid => rate['tid'].to_s, :oid => rate['oid'], :content => rate['content'], :created => rate['created'], :item_price => rate['item_price'], :item_title => rate['item_title'], :nick => rate['nick'], :rated_nick => rate['rated_nick'], :result => rate['result'], :role => rate['role'], :reply => rate['reply'])
           # UPDATE LogisticRate
           next unless LogisticRate.exists?(["tid = ?", rate['tid']])
-          if rate['rated_nick'] == "good"
+          if rate['result'] == "good"
             taobao_rate_score = 5
-          elsif rate['rated_nick'] == "neutral" 
+          elsif rate['result'] == "neutral" 
             taobao_rate_score = 3
           else
             taobao_rate_score = 1
