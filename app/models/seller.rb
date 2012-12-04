@@ -15,7 +15,7 @@ class Seller < ActiveRecord::Base
   has_one :stock
 
   validates_presence_of :fullname, :name
-  validates_uniqueness_of :fullname, :name
+  validates_uniqueness_of :fullname
 
   before_save :set_pinyin
 
