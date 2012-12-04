@@ -50,9 +50,9 @@ class TaobaoRatePuller
           else
             taobao_rate_score = 1
           end    
-          logistic_rates = LogisticRate.where(tid: tid)
-          logistic_rate.each do |logistic_rate| 
-            logistic_rate.update_attribute(taobao_rate_score: taobao_rate_score)
+          logistic_rates = LogisticRate.where(tid: rate['tid'])
+          logistic_rates.each do |logistic_rate| 
+            logistic_rate.update_attributes!(taobao_rate_score: taobao_rate_score)
           end    
         end
       end
