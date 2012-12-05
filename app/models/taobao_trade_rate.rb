@@ -23,15 +23,15 @@ class TaobaoTradeRate < ActiveRecord::Base
       end	
       trade_rates.each do |rate|
           tid = rate.tid
-          order = TaobaoOrder.where(tid: tid).first
-          if order
-            order_created = order.created.strftime("%Y-%m-%d %H:%M:%S")
+          order = TaobaoTrade.where(tid: tid).first 
+          if order  
             if TradeSetting.company == "nippon"
 	            seller_name = order.seller.try :get_username
 	            interface_name = order.seller.try(:interface_name)
 	          else
 	          	seller_name = order.seller_name
 	          end  
+	          order_created = order.created.strftime("%Y-%m-%d %H:%M:%S")
             state = order.receiver_state
             city = order.receiver_city
             title = rate.item_title
