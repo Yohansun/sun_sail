@@ -2,7 +2,7 @@
 
 class TaobaoPurchaseOrderPuller
   class << self
-    def create(start_time = nil, end_time = nil)     
+    def create(start_time = nil, end_time = nil, source_id = nil)
       total_pages = nil
       page_no = 0
       
@@ -15,12 +15,14 @@ class TaobaoPurchaseOrderPuller
         end_time = Time.now
       end
 
+      source_id ||= TradeSetting.default_taobao_purchase_source_id
+
       begin
         response = TaobaoQuery.get({
           method: 'taobao.fenxiao.orders.get',
           start_created: start_time.strftime("%Y-%m-%d %H:%M:%S"),
           end_created: end_time.strftime("%Y-%m-%d %H:%M:%S"),
-          page_no: page_no, page_size: 50}, nil
+          page_no: page_no, page_size: 50}, source_id
         )
 
         p "starting create_orders: since #{start_time}"
@@ -62,7 +64,7 @@ class TaobaoPurchaseOrderPuller
       end until(page_no > total_pages || total_pages == 0) 
     end
 
-    def update(start_time = nil, end_time = nil)
+    def update(start_time = nil, end_time = nil, source_id = nil)
       total_pages = nil
       page_no = 0
 
@@ -75,12 +77,14 @@ class TaobaoPurchaseOrderPuller
         end_time = start_time + 1.day
       end
 
+      source_id ||= TradeSetting.default_taobao_purchase_source_id
+
       begin
         response = TaobaoQuery.get({
           method: 'taobao.fenxiao.orders.get',
           start_created: start_time.strftime("%Y-%m-%d %H:%M:%S"),
           end_created: end_time.strftime("%Y-%m-%d %H:%M:%S"),
-          page_no: page_no, page_size: 50}, nil
+          page_no: page_no, page_size: 50}, source_id
         )
 
         p "starting upate_orders: since #{start_time}"
