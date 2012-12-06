@@ -7,6 +7,10 @@
 <form action="/sales/real_time_analysis" class="well form-search">
 <%- elsif action_name == 'price_analysis'%>
 <form action="/sales/real_price_analysis" class="well form-search">
+<%- elsif action_name == 'frequency_analysis'%>
+<form action="/sales/real_frequency_analysis" class="well form-search">
+<%- elsif action_name == 'univalent_analysis'%>
+<form action="/sales/real_univalent_analysis" class="well form-search">
 <%- else %>
 <form class="well form-search">
 <%- end %>
