@@ -14,21 +14,21 @@
 <%- else %>
 <form class="well form-search">
 <%- end %>
-  <fieldset class="form-inline">
-    <div class="controls">
-      <label class="control-label">开始时间：</label>
-      <input type="text" class="input-small search-query datepicker" name="start_date" value="<%= @start_date %>">
-      <input type="text" class="input-mini search-query timepicker" name="start_time" value="<%= @start_time %> ">
-      <label class="control-label">结束时间：</label>
-      <input type="text" class="input-small search-query datepicker" name="end_date" value="<%= @end_date %>">
-      <input type="text" class="input-mini search-query timepicker" name="end_time" value="<%= @end_time %>">
-      <div class="input-append">
-        <button type="submit" class="btn" onclick='blocktheui()'>过滤</button>
-      </div>
-      <!-- <a href="javascript:void(0)">昨天</a>
-      <a href="javascript:void(0)">最近一周</a>
-      <a href="javascript:void(0)">最近一月</a> -->
-    </div>
-  </fieldset>
+  <form ation="/trades_reports" class="well form-horizontal">
+        <div class="control-group nomargin">
+          <label class="control-label" for="">生成时间：</label>
+          <div class="controls clearfix">
+            <fieldset class="pull-left form-inline mar_r10">
+                <input type="text" class="input-small datepickers" name="start_date" value="<%= @start_date %>">
+                <input type="text" class="input-mini timepickers" name="start_time" value="<%= @start_time %> ">
+                <i class="icon-arrow-right"></i>
+                <input type="text" class="input-small datepickers"  name="end_date" value="<%= @end_date %>">
+                <input type="text" class="input-mini timepickers" name="end_time" value="<%= @end_time %>">
+            </fieldset>
+              <button type="submit" class="btn btn-info">过滤</button>
+          </div>         
+        </div>
+  </form>  
+
 </form>
 <%- end %>
