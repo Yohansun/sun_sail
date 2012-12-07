@@ -6,11 +6,6 @@
     <small class="help-inline">订单状态 <strong><%= @trade.get("status_text") %></strong></small>
   </h3>
 </div><!-- modal-header -->
-<script>
-  $(function () {
-    $('#myTab a:first').tab('show');
-  })
-</script>
 <div class="modal-body">
   <!-- tab menus -->
   <ul class="nav nav-tabs" id="myTab">
@@ -95,12 +90,12 @@
             </td>
             <td><%= @trade.get('receiver_zip') %></td>
           </tr>
-          <!-- 
+          <%if @trade.get("seller_id") : %>
           <tr>
             <td colspan="1"><b>配送商信息</b></td>
-            <td colspan="4" class="reedit_select">上海好心情公司</td>
+            <td colspan="4" class="reedit_select"><%= @trade.get("seller_name")%></td>
           </tr>
-           -->
+          <% end %>
           <tr>
             <td colspan="1"><b>客服备注</b></td>
             <td colspan="4" class="reedit_text">
