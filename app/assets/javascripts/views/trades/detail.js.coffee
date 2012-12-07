@@ -11,6 +11,7 @@ class MagicOrders.Views.TradesDetail extends Backbone.View
 
   render: ->
     $(@el).html(@template(trade: @model))
+    $('#myTab a:first').tab('show');
     this
 
   print: (e) ->
