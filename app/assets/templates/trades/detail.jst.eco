@@ -67,11 +67,12 @@
           <% end %>
           <tr>
             <td colspan="2">
-              <b class="mar_r10">订单金额：￥<%= @trade.get('total_fee') %></b>
+              <b class="mar_r10">订单金额：￥<%= @trade.get('sum_fee') %></b>
               <b class="mar_r10">积分：￥<%= @trade.get('point_fee') || 0 %></b>
-              <b class="mar_r10">活动优惠：￥<%= @trade.get 'seller_discount' %></b>
-              <b class="mar_r10">物流费：￥<%= @trade.get 'post_fee' %> </b><!-- <b class="mar_r10"> 订单总金额：￥1824;</b> --></td>
-              <td colspan="3" class="tr"><b>订单实付金额：￥1824</b></td>
+              <b class="mar_r10">活动优惠：￥<%= @trade.get('seller_discount') %></b>
+              <b class="mar_r10">物流费：￥<%= @trade.get('post_fee') %> </b>
+            </td>
+            <td colspan="3" class="tr"><b>订单实付金额：￥<%= @trade.get('total_fee')%></b></td>
           </tr>
 
         </tbody>
