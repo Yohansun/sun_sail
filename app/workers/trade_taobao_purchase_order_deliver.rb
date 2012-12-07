@@ -8,7 +8,7 @@ class TradeTaobaoPurchaseOrderDeliver
     response = TaobaoQuery.get({
       :method => 'taobao.logistics.offline.send', :tid => trade.tid,
       :out_sid => trade.logistic_waybill,
-      :company_code => trade.logistic_code},nil
+      :company_code => trade.logistic_code}, trade.trade_source_id
      ) 
 
     if response['delivery_offline_send_response']
