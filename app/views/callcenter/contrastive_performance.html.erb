@@ -24,31 +24,31 @@
           <div class="control-group chart_opts">
             <div class="controls">
               <label class="radio inline">                   
-                <input type="radio" checked="checked" value="receivenum" name="chart_option">
+                <input type="radio" checked="checked" value="daily_reply_count" name="chart_option">
                 接待人数
               </label>
               <label class="radio inline">
-                <input type="radio" value="chatpeers_count" name="chart_option">
+                <input type="radio" value="daily_inquired_count" name="chart_option">
                 询单人数
               </label>
               <label class="radio inline">
-                <input type="radio" value="created_trade_buyer_count" name="chart_option">
+                <input type="radio" value="daily_created_count" name="chart_option">
                 下单人数
               </label>
               <label class="radio inline">
-                <input type="radio" value="paid_trade_buyer_count" name="chart_option">
+                <input type="radio" value="daily_paid_count" name="chart_option">
                 付款人数
               </label>
               <label class="radio inline">
-                <input type="radio" value="paid_trade_payment" name="chart_option">
+                <input type="radio" value="daily_created_payment" name="chart_option">
                 下单金额
               </label>
               <label class="radio inline">
-                <input type="radio" value="created_trade_payment" name="chart_option">
+                <input type="radio" value="daily_paid_payment" name="chart_option">
                 付款金额
               </label>
               <label class="radio inline">
-                <input type="radio" value="paid_trade_payment_percentage" name="chart_option">
+                <input type="radio" value="payment_percentage" name="chart_option">
                 付款金额 %
               </label>
             </div>
@@ -74,28 +74,28 @@
                 <tr id="member_<%= i+1 %>">
                   <%- p member %>
                   <td><%= member["_id"] %></td>
-                  <td><%= member["value"]["reply_count"].try(:to_i) %></td>
-                  <td><%= member["value"]["inquired_count"].try(:to_i) %></td>
-                  <td><%= member["value"]["created_count"].try(:to_i) %></td>
-                  <td><%= member["value"]["paid_count"].try(:to_i) %></td>
-                  <td><%= member["value"]["created_payment"] %></td>
-                  <td><%= member["value"]["paid_payment"] %></td>
-                  <%- if @total_paid_payment && member["value"]["paid_payment"] && @total_paid_payment != 0 %>
-                  <td><%= (member["value"]["paid_payment"]/@total_paid_payment*100).round(2) %>%</td>
+                  <td><%= member["value"]["daily_reply_count"].try(:to_i) %></td>
+                  <td><%= member["value"]["daily_inquired_count"].try(:to_i) %></td>
+                  <td><%= member["value"]["daily_created_count"].try(:to_i) %></td>
+                  <td><%= member["value"]["daily_paid_count"].try(:to_i) %></td>
+                  <td><%= member["value"]["daily_created_payment"] %></td>
+                  <td><%= member["value"]["daily_paid_payment"] %></td>
+                  <%- if @total_paid_payment && member["value"]["daily_paid_payment"] && @total_paid_payment != 0 %>
+                  <td><%= (member["value"]["daily_paid_payment"]/@total_paid_payment*100).round(2) %>%</td>
                   <%- else %>
                   <td>0%</td>
                   <%- end %>
                 </tr>
               <%- end %>
-              <%- @total_brief_info.each do |total_info| %>
+              <%- @total_info.each do |info| %>
               <tr>
-                <td><%= total_info[0] %></td>
-                <td><%= total_info[1] %></td>
-                <td><%= total_info[2] %></td>
-                <td><%= total_info[3] %></td>
-                <td><%= total_info[4] %></td>
-                <td><%= total_info[5] %></td>
-                <td><%= total_info[6] %></td>
+                <td><%= info[0] %></td>
+                <td><%= info[1] %></td>
+                <td><%= info[2] %></td>
+                <td><%= info[3] %></td>
+                <td><%= info[4] %></td>
+                <td><%= info[5] %></td>
+                <td><%= info[6] %></td>
                 <td></td>
               </tr>
               <%- end %>

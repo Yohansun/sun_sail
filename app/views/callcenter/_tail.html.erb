@@ -100,22 +100,28 @@
     $(".chart_opts input").click(function(){
         option = $(this).val();
         switch(option) {
-          case 'receivenum':
+          case 'daily_reply_count':
+          case 'daily_inquired_count_2':
             option = 1;
             break;
-          case 'chatpeers_count':
+          case 'daily_inquired_count':
+          case 'two_days_lost_count':
             option = 2;
             break;
-          case 'created_trade_buyer_count':
+          case 'daily_created_count':
+          case 'daily_created_count_2':
             option = 3;
             break;
-          case 'paid_trade_buyer_count':
+          case 'daily_paid_count':
+          case 'daily_created_payment_2':
             option = 4;
             break;
-          case 'paid_trade_payment':
+          case 'daily_created_payment':
+          case 'two_days_created_count':
             option = 5;
             break;
-          case 'created_trade_payment':
+          case 'daily_paid_payment':
+          case 'two_days_created_payment':
             option = 6;
             break;
           default:
