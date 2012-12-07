@@ -53,7 +53,8 @@ MagicOrders::Application.routes.draw do
   end
   
   get 'callcenter/contrastive_performance'
-  get 'callcenter/switch_option'
+  get 'callcenter/inquired_and_created'
+
   
   resources :sellers do
     resources :stocks

@@ -18,8 +18,8 @@
 
     var chart;
     var chartData = [];
-    <%- WangwangMember.each do |member| %>
-      chartData.push({service_staff_id: $("#member_<%= member.id %> td:eq(0)").text(), 人数: $("#member_<%= member.id %> td").eq(option).text()})
+    <%- @members.each_with_index do |member, i| %>
+      chartData.push({service_staff_id: $("#member_<%= i+1 %> td:eq(0)").text(), 人数: $("#member_<%= i+1 %> td").eq(option).text()})
     <%- end %>
 
     // SERIAL CHART

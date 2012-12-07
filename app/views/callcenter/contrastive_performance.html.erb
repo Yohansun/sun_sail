@@ -1,29 +1,7 @@
 <%#= render 'header' %>
 <div class="row-fluid">
-  <ul class="breadcrumb" style="position:relative;">
-    <li><a href="#">Magic</a><span class="divider">/</span></li>
-    <li><a href="#">客服管理</a><span class="divider">/</span></li>
-    <li><a href="#">客服对比</a><span class="divider">/</span></li>
-    <li class="active">绩效对比</li>
-    <!-- <li style="position:absolute;right:15px;top:6px;"><i class="icon-cog"></i><a class="btn_alert" href="order_settings.html">客服设置</a></li> -->
-  </ul><!-- breadcrumb -->
 
-  <form action="/callcenter/contrastive_performance" class="well form-search">
-    <fieldset class="form-inline">
-      <div class="controls">
-        <label class="control-label">开始时间：</label>
-        <input type="text" name="start_date" value="<%= @start_date.strftime("%Y-%m-%d") %>" class="input-small datepickers">
-        <label class="control-label">结束时间：</label>
-        <input type="text" name="end_date" value="<%= @end_date.strftime("%Y-%m-%d") %>" class="input-small datepickers">
-
-        <button type="submit" class="btn btn-info">过滤</button>
-
-        <a href="/callcenter/contrastive_performance">昨天</a>
-        <a href="/callcenter/contrastive_performance?date_range=lastest_week">最近一周</a>
-        <a href="/callcenter/contrastive_performance?date_range=lastest_month">最近一月</a>
-      </div>
-    </fieldset>
-  </form>
+  <%= render 'select_time' %>
 
   <!-- <div class="controls clearfix">
     <div class="btns btn-group pull-left">
@@ -34,8 +12,8 @@
   <div class="mar_t5">
     <ul class="nav nav-tabs reset_border nomargin" id="myTab_sub">
       <li class="active"><a href="#tab1" data-toggle="tab" id="success_rate_1">汇总</a></li>
-      <!-- <li><a href="#tab2" data-toggle="tab" id="success_rate_2">询单->下单</a></li>
-      <li><a href="#tab3" data-toggle="tab" id="success_rate_3">下单->付款</a></li>
+      <li><a href="/callcenter/inquired_and_created" id="success_rate_2">询单->下单</a></li>
+      <!-- <li><a href="#tab3" data-toggle="tab" id="success_rate_3">下单->付款</a></li>
       <li><a href="#tab4" data-toggle="tab" id="success_rate_4">协助服务</a></li>
       <li><a href="#tab5" data-toggle="tab" id="success_rate_5">落实付款</a></li> -->
     </ul>
@@ -88,24 +66,28 @@
                 <th>付款人数</th>
                 <th>下单金额</th>
                 <th>付款金额</th>
-                <th>付款金额 % </th>
+                <th>付款金额%</th>
               </tr>
             </thead>
             <tbody>
-              <%- @members.each do |member|%>
-                <% clerk_info = member.clerk_brief_info(@start_date, @end_date) %>
-                <tr id="member_<%= member.id %>">
-                  <td><%= clerk_info[0] %></td>
-                  <td><%= clerk_info[1] %></td>
-                  <td><%= clerk_info[2] %></td>
-                  <td><%= clerk_info[3] %></td>
-                  <td><%= clerk_info[4] %></td>
-                  <td><%= clerk_info[5] %></td>
-                  <td><%= clerk_info[6] %></td>
-                  <td><%= (clerk_info[6]/@total_paid_payment*100).round(2) %> % </td>
+              <%- @members.each_with_index do |member, i|%>
+                <tr id="member_<%= i+1 %>">
+                  <%- p member %>
+                  <td><%= member["_id"] %></td>
+                  <td><%= member["value"]["reply_count"] %></td>
+                  <td><%= member["value"]["inquired_count"] %></td>
+                  <td><%= member["value"]["created_count"] %></td>
+                  <td><%= member["value"]["paid_count"] %></td>
+                  <td><%= member["value"]["created_payment"] %></td>
+                  <td><%= member["value"]["paid_payment"] %></td>
+                  <%- if @total_paid_payment && member["value"]["paid_payment"] && @total_paid_payment != 0 %>
+                  <td><%= (member["value"]["paid_payment"]/@total_paid_payment*100).round(2) %>%</td>
+                  <%- else %>
+                  <td>0%</td>
+                  <%- end %>
                 </tr>
               <%- end %>
-              <%- WangwangMember.total_brief_info(@start_date, @end_date).each do |total_info| %>
+              <%- @total_brief_info.each do |total_info| %>
               <tr>
                 <td><%= total_info[0] %></td>
                 <td><%= total_info[1] %></td>
@@ -119,16 +101,14 @@
               <%- end %>
             </tbody>
           </table>
-
-
         </div>
       </div>
-
-
     </div>
   </div>
 </div>
+
 <hr>
+
 <div id="callcenter_tail">
   <%= render "tail" %>
 <div>
