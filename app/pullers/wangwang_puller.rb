@@ -4,14 +4,19 @@ class WangwangPuller
 	START_DATE = (Time.now - 7.days).beginning_of_day.strftime("%Y-%m-%d %H:%M:%S")
 	END_DATE = Time.now.yesterday.end_of_day.strftime("%Y-%m-%d %H:%M:%S")
 
+  def self.get_wangwang_data(start_date = nil, end_date = nil, service_staff_ids = nil, manager_id = nil)
+    WangwangPuller.receivenum_get(start_date, end_date, service_staff_ids) & WangwangPuller.chatpeers_get(start_date, end_date, service_staff_ids)  ##& WangwangPuller.chatlog_get(start_date, end_date, service_staff_ids)
+  end
+
+  private
+
   def self.chatpeers_get(start_date = nil, end_date = nil, service_staff_ids = nil)
-  	
+    p "start chatpeers_get"
     start_date ||= START_DATE
     end_date ||= END_DATE
 
     service_staff_ids ||= WangwangMember.all.map &:service_staff_id
-
-    service_staff_ids.each do |chat_id|
+    service_staff_ids.each_with_index do |chat_id, i|
 
       response = TaobaoFu.get(
         method: 'taobao.wangwang.eservice.chatpeers.get',
@@ -19,6 +24,9 @@ class WangwangPuller
         start_date: start_date,
       	end_date: end_date
       )
+      p response
+      p i
+
       if response['chatpeers_get_response'].present? && response['chatpeers_get_response']['ret'] = "10000"
         count = response['chatpeers_get_response']['count']
         if response['chatpeers_get_response']['chatpeers'].present? && response['chatpeers_get_response']['chatpeers']['chatpeer'].present?
@@ -29,7 +37,9 @@ class WangwangPuller
           chatpeers.each do |chatpeer|
         		uid = chatpeer['uid']
             date = chatpeer['date'].to_datetime
-            WangwangChatpeer.create(user_id: chat_id, uid: uid, date:date)
+            buyer_nick = chatpeer['uid'].gsub("cntaobao", "")
+            WangwangChatpeer.create(user_id: chat_id, uid: uid, date: date, buyer_nick: buyer_nick)
+            p WangwangChatpeer.where(user_id: chat_id).first
           end	
         end  
       end
@@ -39,7 +49,7 @@ class WangwangPuller
   end	
 
   def self.chatlog_get(start_date = nil, end_date = nil,  service_staff_ids = nil)
-
+    p "start chatlog_get"
     start_date ||= START_DATE
     end_date ||= END_DATE
 
@@ -49,7 +59,7 @@ class WangwangPuller
       member = WangwangMember.find_with_service_staff_id(from_id)
       chatpeers = member.chatpeers(start_date, end_date) 
       if chatpeers.present?   
-        chatpeers.each do |to_id|         
+        chatpeers.each_with_index do |to_id, i|
           response = TaobaoFu.get(
             method: 'taobao.wangwang.eservice.chatlog.get',
             from_id: from_id,
@@ -57,6 +67,8 @@ class WangwangPuller
             start_date: start_date,
           	end_date: end_date
           )
+          p response
+          p i
           if response['chatlog_get_response'].present? && response['chatlog_get_response']['ret'] = "10000"
             count = response['chatlog_get_response']['count']
             if response['chatlog_get_response']['msgs'].present? && response['chatlog_get_response']['msgs']['msg'].present?
@@ -65,11 +77,12 @@ class WangwangPuller
                 msgs = [] << msgs
               end 
               msgs.each do |msg|   	
-              	WangwangChatlog.create(from_id: from_id, 
-                 to_id: to_id, 
-                 direction: msg['direction'], 
-                 time: msg['time'].to_datetime,
-                 content: msg['content']
+              	WangwangChatlog.create(
+                  from_id: from_id,
+                  to_id: to_id,
+                  direction: msg['direction'],
+                  time: msg['time'].to_datetime,
+                  content: msg['content']
                 )
               end	
             end
@@ -82,7 +95,7 @@ class WangwangPuller
   	
   # 服务提供时间（7:00:00-24:00:00）
   def self.receivenum_get(start_date = nil, end_date = nil, service_staff_ids = nil)
-  	
+  	p "start receivenum_get"
     start_date ||= START_DATE
     end_date ||= END_DATE 
 
@@ -96,6 +109,7 @@ class WangwangPuller
         start_date: start_date,
       	end_date: end_date
       )
+      p response
       response = response['wangwang_eservice_receivenum_get_response']
       next unless response
       response = response['reply_stat_list_on_days']
@@ -128,7 +142,8 @@ class WangwangPuller
   end
 
   # depreciate
-  def self.groupmember_get(manager_id = nil)	
+  def self.groupmember_get(manager_id = nil)
+    p "start groupmember_get"
   	manager_id ||= TradeSetting.default_manager_id
   	response = TaobaoFu.get(
       method: 'taobao.wangwang.eservice.groupmember.get',

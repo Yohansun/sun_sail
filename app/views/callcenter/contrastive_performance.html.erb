@@ -74,10 +74,10 @@
                 <tr id="member_<%= i+1 %>">
                   <%- p member %>
                   <td><%= member["_id"] %></td>
-                  <td><%= member["value"]["reply_count"] %></td>
-                  <td><%= member["value"]["inquired_count"] %></td>
-                  <td><%= member["value"]["created_count"] %></td>
-                  <td><%= member["value"]["paid_count"] %></td>
+                  <td><%= member["value"]["reply_count"].try(:to_i) %></td>
+                  <td><%= member["value"]["inquired_count"].try(:to_i) %></td>
+                  <td><%= member["value"]["created_count"].try(:to_i) %></td>
+                  <td><%= member["value"]["paid_count"].try(:to_i) %></td>
                   <td><%= member["value"]["created_payment"] %></td>
                   <td><%= member["value"]["paid_payment"] %></td>
                   <%- if @total_paid_payment && member["value"]["paid_payment"] && @total_paid_payment != 0 %>

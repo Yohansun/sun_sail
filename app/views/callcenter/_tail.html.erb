@@ -122,8 +122,8 @@
             option = 7;
         }
         changeData = [];
-        <%- WangwangMember.each do |member| %>
-        changeData.push({service_staff_id: $("#member_<%= member.id %> td:eq(0)").html(), 人数: $("#member_<%= member.id %> td").eq(option).html().replace(" %",'') });
+        <%- @members.each_with_index do |member, i| %>
+        changeData.push({service_staff_id: $("#member_<%= i+1 %> td:eq(0)").html(), 人数: $("#member_<%= i+1 %> td").eq(option).html().replace("%",'') });
         <%- end %>
         chart.dataProvider = changeData;
         chart.validateData();

@@ -4,8 +4,8 @@ class CallcenterController < ApplicationController
 
 	def contrastive_performance
 		if params[:start_date].present? && params[:end_date].present?
-			@start_date = params[:start_date].to_time
-			@end_date = params[:end_date].to_time
+			@start_date = params[:start_date].to_time(:local)
+			@end_date = params[:end_date].to_time(:local)
 		else	
 			if params[:date_range].present?
 				if params[:date_range] == "lastest_week"
