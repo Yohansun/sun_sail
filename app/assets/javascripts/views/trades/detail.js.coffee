@@ -75,7 +75,7 @@ class MagicOrders.Views.TradesDetail extends Backbone.View
           colors = []
           for count in [0...order.num]
             colors.push(order.color_num[count][0] + " "+ order.color_name[count])
-          mergedColor = compressArray(colorHtml)
+          mergedColor = compressArray(colors)
           for color in mergedColor
             $('.js-color-label-'+order.id).html(color.count+"桶 "+color.value+"<br/>")
 
