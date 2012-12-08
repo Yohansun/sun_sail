@@ -27,6 +27,7 @@ json.array!(@trades) do |json, trade|
   json.has_color_info trade.has_color_info
   json.has_cs_memo trade.has_cs_memo
   json.has_unusual_state trade.has_unusual_state
+  json.unusual_color trade.unusual_color if trade.unusual_color
   json.has_refund_order trade.has_refund_order
   json.can_change_logistic can_change_logistic(trade)
   json.invoice_type trade.invoice_type

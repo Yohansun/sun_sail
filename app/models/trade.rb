@@ -114,6 +114,14 @@ class Trade
     self.has_color_info = false
     true
   end
+      
+  def unusual_color
+    if unusual_states && unusual_states.last.present? && unusual_states.last.unusual_color.present?
+      unusual_states.last.unusual_color 
+    else
+     '#F2DEDE;' # keep up with old logic
+    end
+  end 
 
   def set_has_refund_order
     unless self.confirm_receive_at.blank?
@@ -129,14 +137,14 @@ class Trade
   end
 
   def set_has_unusual_state
-    self.unusual_states.each do |unusual_state|
-      if unusual_state.repaired_at.blank?
-        self.has_unusual_state = true
-        return
-      end
+    Rails.logger.warn "set_has_unusual_state"
+    if unusual_states.where(:repaired_at => nil).exists?
+      self.has_unusual_state = true
+      return
+    else  
+      self.has_unusual_state = false
+      true
     end
-    self.has_unusual_state = false
-    true
   end
 
   def set_has_cs_memo

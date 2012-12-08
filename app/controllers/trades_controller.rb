@@ -144,8 +144,10 @@ class TradesController < ApplicationController
     end
 
     unless params[:reason].blank?
-      state = @trade.unusual_states.build(reason: params[:reason], plan_repair_at: params[:plan_repair_at], note: params[:state_note], created_at: Time.now, reporter: current_user.name)
+      state = @trade.unusual_states.create!(reason: params[:reason], plan_repair_at: params[:plan_repair_at], note: params[:state_note], created_at: Time.now, reporter: current_user.name)
       state.update_attributes(key: state.add_key)
+      role_key = current_user.has_role?(:interface) ? 'interface' : current_user.role_key 
+      state.update_attributes!(reporter_role: role_key)
     end
 
     unless params[:state_id].blank?
