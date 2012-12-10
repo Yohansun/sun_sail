@@ -222,6 +222,9 @@ function compressArray(original) {
     var myCount = 0;
     // loop over every element in the copy and see if it's the same
     for (var w = 0; w < copy.length; w++) {
+      if ($.trim(original[i]) == null || $.trim(original[i]) == "" ){
+        break;
+      }
       if (original[i] == copy[w]) {
         // increase amount of times duplicate is found
         myCount++;
