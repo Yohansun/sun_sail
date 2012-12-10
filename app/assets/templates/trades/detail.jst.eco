@@ -35,9 +35,11 @@
                 <td><%= order.title %></td>
                 <td><%= order.num %></td>
                 <td class='js-color-label-<%= order.id %>'>
-                  <% if info['colors'] != undefined : %>
-                    <% for color, array of info['colors'] : %>
-                      <%= array[0] %>桶 <%= color %> <%= array[1] %><br>
+                  <% if !order.packaged : %>
+                    <% if info['colors'] != undefined : %>
+                      <% for color, array of info['colors'] : %>
+                        <%= array[0] %>桶 <%= color %> <%= array[1] %><br>
+                      <% end %>
                     <% end %>
                   <% end %>
                 </td>
