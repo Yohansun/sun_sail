@@ -110,22 +110,34 @@
             break;
           case 'yesterday_created_count':
           case 'daily_created_count':
+          case 'yesterday_lost_count':
             option = 3;
             break;
           case 'daily_paid_count':
           case 'daily_created_payment':
+          case 'yesterday_lost_payment':
             option = 4;
             break;
           case 'yesterday_created_payment':
           case 'tomorrow_created_count':
+          case 'yesterday_paid_count':
             option = 5;
             break;
           case 'daily_paid_payment':
           case 'tomorrow_created_payment':
+          case 'yesterday_paid_payment':
             option = 6;
             break;
-          default:
+          case 'payment_percentage':
+          case 'success_ratio':
+          case 'yesterday_final_paid_count':
             option = 7;
+            break;
+          case 'yesterday_final_paid_payment':
+            option = 8;
+            break;
+          default:
+            option = 9;
         }
         changeData = [];
         <%- @members.each_with_index do |member, i| %>

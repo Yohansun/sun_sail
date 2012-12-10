@@ -2,84 +2,92 @@
 class WangwangMemberContrast
   include Mongoid::Document
   
-  field :user_id,                     type: String
-  field :created_at,                  type: DateTime
+  field :user_id,                      type: String
+  field :created_at,                   type: DateTime
 
-  field :daily_reply_count,           type: Integer
-  field :daily_inquired_count,        type: Integer
-  field :yesterday_created_count,     type: Integer
-  field :yesterday_created_payment,   type: Float
-  field :daily_paid_count,            type: Integer
-  field :daily_paid_payment,          type: Float
+  field :daily_reply_count,            type: Integer
+  field :daily_inquired_count,         type: Integer
+  field :yesterday_created_count,      type: Integer
+  field :yesterday_created_payment,    type: Float
+  field :daily_paid_count,             type: Integer
+  field :daily_paid_payment,           type: Float
 
-  field :daily_created_count,         type: Integer
-  field :daily_created_payment,       type: Float
-  field :tomorrow_lost_count,         type: Integer
-  field :tomorrow_created_count,      type: Integer
-  field :tomorrow_created_payment,    type: Float
+  field :daily_created_count,          type: Integer
+  field :daily_created_payment,        type: Float
+  field :tomorrow_lost_count,          type: Integer
+  field :tomorrow_created_count,       type: Integer
+  field :tomorrow_created_payment,     type: Float
+
+  field :yesterday_lost_count,         type: Integer
+  field :yesterday_lost_payment,       type: Float
+  field :yesterday_paid_count,         type: Integer
+  field :yesterday_paid_payment,       type: Float
+  field :yesterday_final_paid_count,   type: Integer
+  field :yesterday_final_paid_payment, type: Float
 
   def self.total_brief_info(start_date, end_date)
     clerk_num = WangwangMember.count
     contrast_info = WangwangMemberContrast.where(:created_at.gte => start_date, :created_at.lt => end_date)
-
-    #当日接待
-    total_reply_num = contrast_info.try(:sum, :daily_reply_count) || 0
-    avg_reply_num = (total_reply_num == 0 ? 0 : total_reply_num/clerk_num)
-
-    #当日询单（该数据须延迟一天统计)
-    total_inquired_num = contrast_info.try(:sum, :daily_inquired_count) || 0
-    avg_inquired_num = (total_inquired_num == 0 ? 0 : total_inquired_num/clerk_num)
-
-    #昨天今天下单人数
-    total_created_num = contrast_info.try(:sum, :yesterday_created_count) || 0
-    avg_created_num = (total_created_num == 0 ? 0 : total_created_num/clerk_num)
-
-    #昨天今天下单金额
-    total_created_payment = contrast_info.try(:sum, :yesterday_created_payment) || 0
-    avg_created_payment = (total_created_payment == 0 ? 0 : total_created_payment/clerk_num)
-
-    #付款人数
-    total_paid_num = contrast_info.try(:sum, :daily_paid_num) || 0
-    avg_paid_num = (total_paid_num == 0 ? 0 : total_paid_num/clerk_num)
-
-    #付款金额
-    total_paid_payment = contrast_info.try(:sum, :daily_paid_payment) || 0
-    avg_paid_payment = (total_paid_payment == 0 ? 0 : total_paid_payment/clerk_num)
-
-    total_brief_info = []
-    total_brief_info[0] = ["汇总", total_reply_num.to_i, total_inquired_num.to_i, total_created_num.to_i, total_paid_num.to_i, total_created_payment.round(2), total_paid_payment.round(2)]
-    total_brief_info[1] = ["均值", avg_reply_num.round(1), avg_inquired_num.round(1), avg_created_num.round(1), avg_paid_num.round(1), avg_created_payment.round(2), total_paid_payment.round(2)]
-
-    total_brief_info
+    total_info = []
+    total_info[0] = ["汇总"]
+    total_info[1] = ["均值"]
+    sum_array = [:daily_reply_count,
+                 :daily_inquired_count,
+                 :yesterday_created_count,
+                 :daily_paid_count,
+                 :yesterday_created_payment,
+                 :daily_paid_payment]
+    sum_array.each do |data|
+      total_num = contrast_info.try(:sum, data) || 0
+      avg_num = (total_num == 0 ? 0 : total_num/clerk_num) || 0
+      total_info[0].push(total_num)
+      total_info[1].push(avg_num)
+    end
+    total_info
   end
 
   def self.total_inquired_and_created(start_date, end_date)
     clerk_num = WangwangMember.count
     contrast_info = WangwangMemberContrast.where(:created_at.gte => start_date, :created_at.lt => end_date)
+    total_info = []
+    total_info[0] = ["汇总"]
+    total_info[1] = ["均值"]
+    sum_array = [:daily_inquired_count,
+                 :tomorrow_lost_count,
+                 :daily_created_count,
+                 :daily_created_payment,
+                 :tomorrow_created_count,
+                 :tomorrow_created_payment]
+    sum_array.each do |data|
+      total_num = contrast_info.try(:sum, data) || 0
+      avg_num = (total_num == 0 ? 0 : total_num/clerk_num) || 0
+      total_info[0].push(total_num)
+      total_info[1].push(avg_num)
+    end
+    total_info
+  end
 
-    total_inquired_num = contrast_info.try(:sum, :daily_inquired_count) || 0
-    avg_inquired_num = (total_inquired_num == 0 ? 0 : total_inquired_num/clerk_num)
-
-    total_tomorrow_lost_count = contrast_info.try(:sum, :tomorrow_lost_count) || 0
-    avg_tomorrow_lost_count = (total_tomorrow_lost_count == 0 ? 0 : total_tomorrow_lost_count/clerk_num)
-
-    total_created_num = contrast_info.try(:sum, :daily_created_count) || 0
-    avg_created_num = (total_created_num == 0 ? 0 : total_created_num/clerk_num)
-
-    total_created_payment = contrast_info.try(:sum, :daily_created_payment) || 0
-    avg_created_payment = (total_created_payment == 0 ? 0 : total_created_payment/clerk_num)
-
-    total_tomorrow_created_count = contrast_info.try(:sum, :tomorrow_created_count) || 0
-    avg_tomorrow_created_count = (total_tomorrow_created_count == 0 ? 0 : total_tomorrow_created_count/clerk_num)
-
-    total_tomorrow_created_payment = contrast_info.try(:sum, :tomorrow_created_payment) || 0
-    avg_tomorrow_created_payment = (total_tomorrow_created_payment == 0 ? 0 : total_tomorrow_created_payment/clerk_num)
-
-    total_brief_info = []
-    total_brief_info[0] = ["汇总", total_inquired_num.to_i, total_tomorrow_lost_count.to_i, total_created_num.to_i, total_created_payment.round(2), total_tomorrow_created_count.to_i, total_tomorrow_created_payment.round(2)]
-    total_brief_info[1] = ["均值", avg_inquired_num.round(1), avg_tomorrow_lost_count.round(1), avg_created_num.round(1), avg_created_payment.round(2), avg_tomorrow_created_count.round(1), avg_tomorrow_created_payment.round(2)]
-
-    total_brief_info
+  def self.total_created_and_paid(start_date, end_date)
+    clerk_num = WangwangMember.count
+    contrast_info = WangwangMemberContrast.where(:created_at.gte => start_date, :created_at.lt => end_date)
+    total_info = []
+    total_info[0] = ["汇总"]
+    total_info[1] = ["均值"]
+    sum_array = [:yesterday_created_count,
+                 :yesterday_created_payment,
+                 :yesterday_lost_count,
+                 :yesterday_lost_payment,
+                 :yesterday_paid_count,
+                 :yesterday_paid_payment,
+                 :yesterday_final_paid_count,
+                 :yesterday_final_paid_payment]
+    sum_array.each do |data|
+      total_num = contrast_info.try(:sum, data) || 0
+      avg_num = (total_num == 0 ? 0 : total_num/clerk_num) || 0
+      total_info[0].push(total_num)
+      total_info[1].push(avg_num)
+    end
+    total_info
   end
 
 end

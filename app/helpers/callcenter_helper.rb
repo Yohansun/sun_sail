@@ -77,4 +77,49 @@ module CallcenterHelper
     contrast_info = WangwangMemberContrast.between(created_at: start_at..end_at).map_reduce(map, reduce).out(inline: true)
     p contrast_info
   end
+
+  def created_and_paid_contrast(start_at, end_at)
+    map = %Q{
+      function() {
+        emit(this.user_id, {
+          yesterday_created_count: this.yesterday_created_count,
+          yesterday_created_payment: this.yesterday_created_payment,
+          yesterday_lost_count: this.yesterday_lost_count,
+          yesterday_lost_payment: this.yesterday_lost_payment,
+          yesterday_paid_count: this.yesterday_paid_count,
+          yesterday_paid_payment: this.yesterday_paid_payment,
+          yesterday_final_paid_count: this.yesterday_final_paid_count,
+          yesterday_final_paid_payment: this.yesterday_final_paid_payment
+        });
+      }
+    }
+    reduce = %Q{
+      function(key, values) {
+        var result = {
+          yesterday_created_count: 0,
+          yesterday_created_payment: 0,
+          yesterday_lost_count: 0,
+          yesterday_lost_payment: 0,
+          yesterday_paid_count: 0,
+          yesterday_paid_payment: 0,
+          yesterday_final_paid_count: 0,
+          yesterday_final_paid_payment: 0
+        };
+        values.forEach(function(value) {
+          result.yesterday_created_count += value.yesterday_created_count
+          result.yesterday_created_payment += value.yesterday_created_payment
+          result.yesterday_lost_count += value.yesterday_lost_count
+          result.yesterday_lost_payment += value.yesterday_lost_payment
+          result.yesterday_paid_count += value.yesterday_paid_count
+          result.yesterday_paid_payment += value.yesterday_paid_payment
+          result.yesterday_final_paid_count += value.yesterday_final_paid_count
+          result.yesterday_final_paid_payment += value.yesterday_final_paid_payment
+        });
+        return result;
+      }
+    }
+
+    contrast_info = WangwangMemberContrast.between(created_at: start_at..end_at).map_reduce(map, reduce).out(inline: true)
+    p contrast_info
+  end
 end
