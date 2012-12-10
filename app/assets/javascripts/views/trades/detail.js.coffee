@@ -79,6 +79,8 @@ class MagicOrders.Views.TradesDetail extends Backbone.View
           mergedColor = compressArray(colors)
           for color in mergedColor
             $('.js-color-label-'+order.id).html(color.count+"桶 "+color.value+"<br/>")
+          if mergedColor.length is 0
+            $('.js-color-label-'+order.id).html('')
 
         $('.js-invoice-label').html(@model.get('invoice_type') + ': ' + $("#invoice_name_text").val() + ', ' + $("#invoice_content_text").val() + ', ' + $("#invoice_date_text").val())
         $('.js-gift-memo-label').html(@model.get 'gift_memo')
