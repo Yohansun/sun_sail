@@ -95,70 +95,82 @@
     chart.addLegend(legend);
 
     // WRITE
-    chart.write("chartdiv");
+    if(chartData == ""){
+      $('#chartdiv h4').replaceWith("<h4>无可显示的数据</h4>");
+      $('.chart_table').hide();
+      $('.chart_radio').hide();
+    } else {
+      chart.write("chartdiv");
+    };
 
     $(".chart_opts input").click(function(){
-        option = $(this).val();
-        switch(option) {
-          case 'daily_reply_count':
-          case 'daily_inquired_count_2':
-          case 'daily_paid_count_2':
-            option = 1;
-            break;
-          case 'daily_inquired_count':
-          case 'tomorrow_lost_count':
-          case 'daily_quiet_paid_count':
-            option = 2;
-            break;
-          case 'yesterday_created_count':
-          case 'daily_created_count':
-          case 'yesterday_lost_count':
-          case 'daily_others_paid_count':
-            option = 3;
-            break;
-          case 'daily_paid_count':
-          case 'daily_created_payment':
-          case 'yesterday_lost_payment':
-          case 'daily_self_paid_count':
-            option = 4;
-            break;
-          case 'yesterday_created_payment':
-          case 'tomorrow_created_count':
-          case 'yesterday_paid_count':
-          case 'daily_paid_payment_2':
-            option = 5;
-            break;
-          case 'daily_paid_payment':
-          case 'tomorrow_created_payment':
-          case 'yesterday_paid_payment':
-          case 'daily_quiet_paid_payment':
-            option = 6;
-            break;
-          case 'payment_percentage':
-          case 'success_ratio':
-          case 'yesterday_final_paid_count':
-          case 'daily_others_paid_payment':
-            option = 7;
-            break;
-          case 'yesterday_final_paid_payment':
-          case 'daily_self_paid_payment':
-            option = 8;
-            break;
-          default:
-            option = 9;
-        }
-        changeData = [];
-        <%- @members.each_with_index do |member, i| %>
-        changeData.push({service_staff_id: $("#member_<%= i+1 %> td:eq(0)").html(), 人数: $("#member_<%= i+1 %> td").eq(option).html().replace("%",'') });
-        <%- end %>
+      option = $(this).val();
+      switch(option) {
+        case 'daily_reply_count':
+        case 'daily_inquired_count_2':
+        case 'daily_paid_count_2':
+          option = 1;
+          break;
+        case 'daily_inquired_count':
+        case 'tomorrow_lost_count':
+        case 'daily_quiet_paid_count':
+          option = 2;
+          break;
+        case 'yesterday_created_count':
+        case 'daily_created_count':
+        case 'yesterday_lost_count':
+        case 'daily_others_paid_count':
+          option = 3;
+          break;
+        case 'daily_paid_count':
+        case 'daily_created_payment':
+        case 'yesterday_lost_payment':
+        case 'daily_self_paid_count':
+          option = 4;
+          break;
+        case 'yesterday_created_payment':
+        case 'tomorrow_created_count':
+        case 'yesterday_paid_count':
+        case 'daily_paid_payment_2':
+          option = 5;
+          break;
+        case 'daily_paid_payment':
+        case 'tomorrow_created_payment':
+        case 'yesterday_paid_payment':
+        case 'daily_quiet_paid_payment':
+          option = 6;
+          break;
+        case 'payment_percentage':
+        case 'success_ratio':
+        case 'yesterday_final_paid_count':
+        case 'daily_others_paid_payment':
+          option = 7;
+          break;
+        case 'yesterday_final_paid_payment':
+        case 'daily_self_paid_payment':
+          option = 8;
+          break;
+        default:
+          option = 9;
+      }
+      changeData = [];
+      <%- @members.each_with_index do |member, i| %>
+      changeData.push({service_staff_id: $("#member_<%= i+1 %> td:eq(0)").html(), 人数: $("#member_<%= i+1 %> td").eq(option).html().replace("%",'') });
+      <%- end %>
+      if(changeData == []){
+        $('#chartdiv').html("<h4>无可显示的数据<h4>");
+        $('.chart_table').hide();
+        $('.chart_radio').hide();
+      }else{
         chart.dataProvider = changeData;
         chart.validateData();
+      };
     });
-        
+
     function zoomChart() {
-        // different zoom methods can be used - zoomToIndexes, zoomToDates, zoomToCategoryValues
-        // chart.zoomToDates(new Date(2012, 9, 25, 0), new Date(2012, 9, 25, 2));
-        chart.zoomOut();
+      // different zoom methods can be used - zoomToIndexes, zoomToDates, zoomToCategoryValues
+      // chart.zoomToDates(new Date(2012, 9, 25, 0), new Date(2012, 9, 25, 2));
+      chart.zoomOut();
     }
   </script>
 <% end %>

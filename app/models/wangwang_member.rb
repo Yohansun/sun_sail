@@ -23,6 +23,4 @@ class WangwangMember
   def chatpeers(start_date, end_date)
     WangwangChatpeer.where(user_id: service_staff_id).where(:date.gte => start_date, :date.lt => end_date).map(&:buyer_nick)
   end
-  
-  # success_ratio = (created_today_and_tomorrow/inquired_today*100)
 end
