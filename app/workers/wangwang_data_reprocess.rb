@@ -59,6 +59,54 @@ class WangwangDataReprocess
       yesterday_final_paid_count = yesterday_final_paid_trades.try(:map, &:buyer_nick).count
       yesterday_final_paid_payment = yesterday_final_paid_trades.try(:sum, :payment) || 0
 
+      ## 落实付款 ##
+      daily_trades = TaobaoTrade.where(:buyer_nick.in => inquired_today)
+      daily_quiet_paid_count = 0
+      daily_quiet_paid_payment = 0
+      daily_self_paid_count = 0
+      daily_self_paid_payment = 0
+      daily_trades.each do |trade|
+        #静默单
+        inquired_time = WangwangChatpeer.where(buyer_nick: trade.buyer_nick).try(:map, &:date)
+        flag_quiet = true
+        inquired_time.each do |i_time|
+          (trade.pay_time.present? && i_time > trade.created && i_time < trade.pay_time) ? flag_quiet &= true : flag_quiet &= false
+        end
+        if flag_quiet && WangwangChatpeer.where(buyer_nick: trade.buyer_nick).where(user_id: m.service_staff_id).present?
+          daily_quiet_paid_count += 1
+          daily_quiet_paid_payment += trade.payment
+        end
+        #本人单
+        self_inquired_time = WangwangChatpeer.where(buyer_nick: trade.buyer_nick).where(user_id: m.service_staff_id).try(:map, &:date)
+        flag_self = true
+        flag_1 = true
+        flag_2 = true
+        self_inquired_time.each do |i_time|
+          if (trade.created.present? && i_time < trade.created)
+            flag_1 = true
+            break
+          else
+            flag_1 = false
+          end
+        end
+        self_inquired_time.each do |i_time|
+          if (trade.pay_time.present? && i_time > trade.created && i_time < trade.pay_time)
+            flag_2 = true
+            break
+          else
+            flag_2 = false
+          end
+        end
+        flag_self &= (flag_1 && flag_2)
+        if flag_self
+          daily_self_paid_count += 1
+          daily_self_paid_payment += trade.payment
+        end
+      end
+      #他人单
+      daily_others_paid_count = daily_paid_count - daily_self_paid_count - daily_quiet_paid_count
+      daily_others_paid_payment = daily_paid_payment - daily_self_paid_payment - daily_quiet_paid_payment
+
       WangwangMemberContrast.create(
         user_id:                       m.short_id,
         created_at:                    start_date,
@@ -78,7 +126,13 @@ class WangwangDataReprocess
         yesterday_paid_count:          yesterday_paid_count,
         yesterday_paid_payment:        yesterday_paid_payment,
         yesterday_final_paid_count:    yesterday_final_paid_count,
-        yesterday_final_paid_payment:  yesterday_final_paid_payment
+        yesterday_final_paid_payment:  yesterday_final_paid_payment,
+        daily_quiet_paid_count:        daily_quiet_paid_count,
+        daily_quiet_paid_payment:      daily_quiet_paid_payment,
+        daily_self_paid_count:         daily_self_paid_count,
+        daily_self_paid_payment:       daily_self_paid_payment,
+        daily_others_paid_count:       daily_others_paid_count,
+        daily_others_paid_payment:     daily_others_paid_payment
         )
     end
   end

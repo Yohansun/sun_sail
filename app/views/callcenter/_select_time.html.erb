@@ -14,6 +14,8 @@
 <form action="/callcenter/inquired_and_created" class="well form-search">
 <%- elsif action_name == 'created_and_paid'%>
 <form action="/callcenter/created_and_paid" class="well form-search">
+<%- elsif action_name == 'followed_paid'%>
+<form action="/callcenter/followed_paid" class="well form-search">
 <%- end %>
   <fieldset class="form-inline">
     <div class="controls">
@@ -35,6 +37,10 @@
       <a href="/callcenter/created_and_paid">昨天</a>
       <a href="/callcenter/created_and_paid?date_range=lastest_week">最近一周</a>
       <a href="/callcenter/created_and_paid?date_range=lastest_month">最近一月</a>
+      <%- elsif action_name == 'followed_paid'%>
+      <a href="/callcenter/followed_paid">昨天</a>
+      <a href="/callcenter/followed_paid?date_range=lastest_week">最近一周</a>
+      <a href="/callcenter/followed_paid?date_range=lastest_month">最近一月</a>
       <%- end %>
     </div>
   </fieldset>

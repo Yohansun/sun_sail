@@ -122,4 +122,49 @@ module CallcenterHelper
     contrast_info = WangwangMemberContrast.between(created_at: start_at..end_at).map_reduce(map, reduce).out(inline: true)
     p contrast_info
   end
+
+  def followed_paid_contrast(start_at, end_at)
+    map = %Q{
+      function() {
+        emit(this.user_id, {
+          daily_paid_count: this.daily_paid_count,
+          daily_paid_payment: this.daily_paid_payment,
+          daily_quiet_paid_count: this.daily_quiet_paid_count,
+          daily_quiet_paid_payment: this.daily_quiet_paid_payment,
+          daily_self_paid_count: this.daily_self_paid_count,
+          daily_self_paid_payment: this.daily_self_paid_payment,
+          daily_others_paid_count: this.daily_others_paid_count,
+          daily_others_paid_payment: this.daily_others_paid_payment
+        });
+      }
+    }
+    reduce = %Q{
+      function(key, values) {
+        var result = {
+          daily_paid_count: 0,
+          daily_paid_payment: 0,
+          daily_quiet_paid_count: 0,
+          daily_quiet_paid_payment: 0,
+          daily_self_paid_count: 0,
+          daily_self_paid_payment: 0,
+          daily_others_paid_count: 0,
+          daily_others_paid_payment: 0
+        };
+        values.forEach(function(value) {
+          result.daily_paid_count += value.daily_paid_count
+          result.daily_paid_payment += value.daily_paid_payment
+          result.daily_quiet_paid_count += value.daily_quiet_paid_count
+          result.daily_quiet_paid_payment += value.daily_quiet_paid_payment
+          result.daily_self_paid_count += value.daily_self_paid_count
+          result.daily_self_paid_payment += value.daily_self_paid_payment
+          result.daily_others_paid_count += value.daily_others_paid_count
+          result.daily_others_paid_payment += value.daily_others_paid_payment
+        });
+        return result;
+      }
+    }
+
+    contrast_info = WangwangMemberContrast.between(created_at: start_at..end_at).map_reduce(map, reduce).out(inline: true)
+    p contrast_info
+  end
 end
