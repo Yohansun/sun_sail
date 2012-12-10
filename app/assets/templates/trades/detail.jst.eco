@@ -1,122 +1,228 @@
 <div class="modal-header">
   <button type="button" class="close" data-dismiss="modal">×</button>
-  <h3>订单详情</h3>
+  <h3 class="pr" style="margin-right:15px;">
+    <span big-toggle="bigtoggle"></span>订单操作
+    <small class="help-inline">订单编号 <strong><%= @trade.get("tid") %></strong></small>
+    <small class="help-inline">订单状态 <strong><%= @trade.get("status_text") %></strong></small>
+  </h3>
 </div><!-- modal-header -->
 <div class="modal-body">
-
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th colspan="5">商品清单</th>
-      </tr>
-      <tr>
-        <th>商品名称</th>
-        <th nowrap>数量</th>
-        <% unless @trade.get('total_fee') is undefined : %>
-        <th nowrap>单价</th>
-        <% end %>
-        <th nowrap>调色信息</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% for order in @trade.get('orders') : %>
-        <% if order['bill_info'].length > 1 : %>
+  <!-- tab menus -->
+  <ul class="nav nav-tabs" id="myTab">
+    <li class="active"><a href="#tab1" data-toggle="tab" class="active">详情</a></li>
+    <li class=""><a href="#tab2" data-toggle="tab">预处理</a></li>
+  </ul>
+  <!-- tab container -->
+  <div class="tab-content">
+    <!-- tab1 -->
+    <div class="tab-pane active" id="tab1">
+      <table class="table table-bordered table-condensed">
+        <thead>
           <tr>
-            <td><%= order.title %></td>
-            <td><%= order.num %></td>
+            <th width="50%">商品名称</th>
+            <th width="">数量</th>
+            <th width="230">调色信息</th>
             <% unless @trade.get('total_fee') is undefined : %>
-              <td rowspan='<%= order['bill_info'].length + 1 if order['bill_info'].length > 1 %>'>￥<%= order.price %></td>
+              <th width="">单价</th>
             <% end %>
-            <td></td>
+            <th width="">备注</th>
           </tr>
-        <% end %>
-
-        <% for info in order['bill_info'] : %>
-          <tr>
-            <td><%= info['title'] %></td>
-            <td><%= info['number'] * order.num  %></td>
-            <% if @trade.get('total_fee') isnt undefined and order['bill_info'].length < 2 : %>
-              <td>￥<%= order.price %></td>
-            <% end %>
-            <td>
-              <% if info['colors'] != undefined : %>
-                <% for color, array of info['colors'] : %>
-                  <%= array[0] %>桶 <%= color %> <%= array[1] %><br>
+        </thead>
+        <tbody>
+          <% for order in @trade.get('orders') : %>
+            <% if order['bill_info'].length > 1 : %>
+              <tr>
+                <td><%= order.title %></td>
+                <td><%= order.num %></td>
+                <td class='js-color-label-<%= order.id %>'>
+                  <% if !order.packaged : %>
+                    <% if info['colors'] != undefined : %>
+                      <% for color, array of info['colors'] : %>
+                        <%= array[0] %>桶 <%= color %> <%= array[1] %><br>
+                      <% end %>
+                    <% end %>
+                  <% end %>
+                </td>
+                <% unless @trade.get('total_fee') is undefined : %>
+                  <td rowspan='<%= order['bill_info'].length + 1 if order['bill_info'].length > 1 %>'>￥<%= order.price %></td>
                 <% end %>
-              <% end %>
+                <td class='js-order-cs-memo-label-<%= order.id %>'><%= order.cs_memo %></td>
+              </tr>
+            <% end %>
+            <% for info in order['bill_info'] : %>
+              <tr>
+                <td><%= info['title'] %></td>
+                <td><%= info['number'] * order.num  %></td>
+                <td class='js-color-label-<%= order.id %>'>
+                  <% if info['colors'] != undefined : %>
+                    <% for color, array of info['colors'] : %>
+                      <%= array[0] %>桶 <%= color %> <%= array[1] %><br>
+                    <% end %>
+                  <% end %>
+                </td>
+                <% if @trade.get('total_fee') isnt undefined and order['bill_info'].length < 2 : %>
+                  <td>￥<%= order.price %></td>
+                <% end %>
+                <td class='js-order-cs-memo-label-<%= order.id %>'><%= order.cs_memo %></td>
+              </tr>
+            <% end %>
+          <% end %>
+          <tr>
+            <td colspan="2">
+              <b class="mar_r10">订单金额：￥<%= @trade.get('sum_fee') %></b>
+              <b class="mar_r10">积分：￥<%= @trade.get('point_fee') || 0 %></b>
+              <b class="mar_r10">活动优惠：￥<%= @trade.get('seller_discount') %></b>
+              <b class="mar_r10">物流费：￥<%= @trade.get('post_fee') %> </b>
+            </td>
+            <td colspan="3" class="tr"><b>订单实付金额：￥<%= @trade.get('total_fee')%></b></td>
+          </tr>
+
+        </tbody>
+      </table>
+      <table class="table table-condensed">
+        <tbody>
+          <tr>
+            <td><b>收货人信息</b></td>
+            <td><%= @trade.get('receiver_name') %></td>
+            <td><%= @trade.get('receiver_mobile_phone') %></td>
+            <td>
+              <%= @trade.get('receiver_state') %>
+              <%= @trade.get('receiver_city') %>
+              <%= @trade.get('receiver_district') %>
+              <%= @trade.get('receiver_address') %>
+            </td>
+            <td><%= @trade.get('receiver_zip') %></td>
+          </tr>
+          <%if @trade.get("seller_id") : %>
+          <tr>
+            <td colspan="1"><b>配送商信息</b></td>
+            <td colspan="4" class="reedit_select"><%= @trade.get("seller_name")%></td>
+          </tr>
+          <% end %>
+          <tr>
+            <td colspan="1"><b>客服备注</b></td>
+            <td colspan="4" class="reedit_text">
+              <%= @trade.get('cs_memo') %>
             </td>
           </tr>
-        <% end %>
-      <% end %>
-
-      <tr>
-        <th colspan="6">
-          <% unless @trade.get('total_fee') is undefined : %>
-          物流费：￥<%= @trade.get 'post_fee' %>
-          <br>
-          总价：￥<%= @trade.get('total_fee') %>
-          <% if @trade.get('seller_discount') > 0 : %>
-          <br>订单折扣：￥<%= @trade.get 'seller_discount' %>
+          <% if @trade.get('invoice_name') : %>
+          <tr>
+            <td colspan="1"><b>开票信息</b></td>
+            <td colspan="4" class="reedit_text js-invoice-label">
+              <%= @trade.get('invoice_type')%>: <%= @trade.get('invoice_name')%> <%= @trade.get('invoice_content')%> <%= @trade.get('invoice_date')%>
+            </td>
+          </tr>
           <% end %>
-          <% else : %>
-          物流费：￥0
-          <% end %>
-        </th>
-      </tr>
-    </tbody>
-  </table>
-
-  <table class="table table-bordered">
-    <tbody>
-      <tr>
-        <th colspan="6">收货人信息</th>
-      </tr>
-      <tr>
-        <th nowrap>收货人</td>
-        <td><%= @trade.get('receiver_name') %></td>
-        <th nowrap>联系电话</td>
-        <td><%= @trade.get('receiver_mobile_phone') %></td>
-        <th>邮编</td>
-        <td><%= @trade.get('receiver_zip') %></td>
-      </tr>
-      <tr>
-        <th nowrap>收货地址</td>
-        <td colspan="5">
-          <%= @trade.get('receiver_state') %>
-          <%= @trade.get('receiver_city') %>
-          <%= @trade.get('receiver_district') %>
-          <%= @trade.get('receiver_address') %>
-        </td>
-      </tr>
-      <tr>
-        <th>客服备注</td>
-        <td colspan="5">
-          <%= @trade.get('cs_memo') %>
-          <% for order in @trade.get('orders'): %>
-            <%= order.cs_memo %>
-          <%- end %>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th colspan="4">订单信息</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <th>订单编号</th>
-        <td><%= @trade.get("tid") %></td>
-        <th>订单状态</th>
-        <td><%= @trade.get("status_text") %></td>
-      </tr>
-    </tbody>
-  </table>
+          <tr>
+            <td colspan="1"><b>赠品信息</b></td>
+            <td colspan="4" class="reedit_text js-gift-memo-label"><%= @trade.get('gift_memo') %></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="modal-footer">
+        <a href="#" class="btn btn-primary button_print">打印</a>
+      </div>
+    </div>
+    <!-- tab2 -->
+    <div class="tab-pane" id="tab2">
+      <form class="">
+        <div class="control-group">
+          <label class="control-label">订单备注：&nbsp;
+            <input type="text" id="cs_memo_text" placeholder="输入文字..." class="input-xlarge" value="<%= @trade.get 'cs_memo' %>">
+          </label>
+        </div>
+        <table class="table table-bordered table-condensed">
+          <tbody>
+            <tr>
+              <th>商品</th>
+              <th width='160px'>调色</th>
+              <th>备注</th>
+            </tr>
+            <% for order in @trade.get('orders'): %>
+            <tr>
+              <td><%= order.title %> x <%= order.num %></td>
+              <td>
+                <% index = 0 %>
+                <% for count in [0...order.num] : %>
+                  <% i = 0 %>
+                  <% colors = order.color_num[index] %>
+                  <% if colors == undefined or colors == null : %>
+                  <% colors = [] %>
+                  <% end %>
+                  <% if order.contents.length > 1 : %>
+                    <% for item in order.contents : %>
+                      <% for [0...item.number] : %>
+                        <div class="controls">
+                          套装项目：<%= item.name %>
+                          <input type="text" data-provide="typeahead" placeholder="请输入色号..." class="color_typeahead input-xlarge color_num_<%= order.item_id %>_<%= count %>" value='<%= colors[i]%>'>
+                        </div>
+                        <% i = i + 1 %>
+                      <% end %>
+                    <% end %>
+                    <hr/>
+                  <% else : %>
+                    <div class="controls">
+                      <input type="text" data-provide="typeahead" placeholder="请输入色号..." class="color_typeahead input-xlarge color_num_<%= order.item_id %>_<%= count %>" value='<%= colors[i] %>'>
+                    </div>
+                  <% end %>
+                  <% index = index + 1 %>
+                <% end %>
+              </td>
+              <td>
+                <% unless MagicOrders.role_key == 'seller' : %>
+                  <input type="text" placeholder="输入文字..." class="input-xlarge order_cs_memo" 
+                    data-order-id="<%= order.id %>" value="<%= order.cs_memo %>">
+                <% else : %>
+                  <label class="control-label"><%= order.cs_memo %>
+                <% end %>
+              </td>
+            </tr>
+            <% end %>
+          </tbody>
+        </table>
+        <div class="control-group">
+          <table class="table table-bordered table-condensed">
+            <tr>
+              <th width='50%'>开票信息</th>
+              <th>赠品信息</th>
+            </tr>
+            <tr>
+              <td>
+                <div class="control-group">
+                  <label class="control-label">发票类型：
+                    <input type="radio" name="invoice_type" value="普通发票" <% if @trade.get('invoice_type') == "普通发票": %> checked="checked" <% end %>>&nbsp;普通发票
+                    <input type="radio" name="invoice_type" value="增值税发票" <% if @trade.get('invoice_type') == "增值税发票": %> checked="checked" <% end %>>&nbsp;增值税发票
+                  </label>
+                </div>
+                <div class="control-group">
+                  <label class="control-label">发票抬头：
+                      <input type="text" placeholder="输入文字..." class="input-xlarge" id="invoice_name_text" value="<%= @trade.get 'invoice_name' %>">
+                  </label>
+                </div>
+                <div class="control-group">
+                  <label class="control-label">发票内容：
+                      <input type="text" placeholder="输入文字..." class="input-xlarge" id="invoice_content_text" value="<%= @trade.get 'invoice_content' %>">
+                  </label>
+                </div>
+                <div class="control-group">
+                  <label class="control-label pick_invoice_detail">完成日期：
+                      <input type="text" class="input-large datepickers" placeholder="请填写日期(年-月-日)..." id="invoice_date_text" value="<%= @trade.get 'invoice_date' %>">
+                  </label>
+                </div>
+              </td>
+              <td>
+                <fieldset>
+                  <textarea placeholder="输入赠品备注..." style="resize:none;width:96%;height:150px;padding:5px;"
+                    id="gift_memo_text" ><%= @trade.get 'gift_memo' %></textarea>
+                </fieldset>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </form>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary js-save" data-source='pre-process'>保存</button>
+      </div>
+    </div>
+  </div>
 </div><!-- modal-body -->
-<div class="modal-footer">
-  <a href="/app#trades" class="btn" data-dismiss="modal">关闭</a>
-  <a href="#" class="btn btn-primary button_print">打印</a>
-</div><!-- modal-footer -->
