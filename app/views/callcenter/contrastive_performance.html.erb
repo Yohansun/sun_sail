@@ -32,7 +32,7 @@
                 询单人数
               </label>
               <label class="radio inline">
-                <input type="radio" value="daily_created_count" name="chart_option">
+                <input type="radio" value="yesterday_created_count" name="chart_option">
                 下单人数
               </label>
               <label class="radio inline">
@@ -40,7 +40,7 @@
                 付款人数
               </label>
               <label class="radio inline">
-                <input type="radio" value="daily_created_payment" name="chart_option">
+                <input type="radio" value="yesterday_created_payment" name="chart_option">
                 下单金额
               </label>
               <label class="radio inline">
@@ -76,9 +76,9 @@
                   <td><%= member["_id"] %></td>
                   <td><%= member["value"]["daily_reply_count"].try(:to_i) %></td>
                   <td><%= member["value"]["daily_inquired_count"].try(:to_i) %></td>
-                  <td><%= member["value"]["daily_created_count"].try(:to_i) %></td>
+                  <td><%= member["value"]["yesterday_created_count"].try(:to_i) %></td>
                   <td><%= member["value"]["daily_paid_count"].try(:to_i) %></td>
-                  <td><%= member["value"]["daily_created_payment"] %></td>
+                  <td><%= member["value"]["yesterday_created_payment"] %></td>
                   <td><%= member["value"]["daily_paid_payment"] %></td>
                   <%- if @total_paid_payment && member["value"]["daily_paid_payment"] && @total_paid_payment != 0 %>
                   <td><%= (member["value"]["daily_paid_payment"]/@total_paid_payment*100).round(2) %>%</td>

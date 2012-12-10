@@ -7,14 +7,16 @@ class WangwangMemberContrast
 
   field :daily_reply_count,           type: Integer
   field :daily_inquired_count,        type: Integer
-  field :daily_created_count,         type: Integer
-  field :daily_created_payment,       type: Float
+  field :yesterday_created_count,     type: Integer
+  field :yesterday_created_payment,   type: Float
   field :daily_paid_count,            type: Integer
   field :daily_paid_payment,          type: Float
 
-  field :two_days_lost_count,         type: Integer
-  field :two_days_created_count,      type: Integer
-  field :two_days_created_payment,    type: Float
+  field :daily_created_count,         type: Integer
+  field :daily_created_payment,       type: Float
+  field :tomorrow_lost_count,         type: Integer
+  field :tomorrow_created_count,      type: Integer
+  field :tomorrow_created_payment,    type: Float
 
   def self.total_brief_info(start_date, end_date)
     clerk_num = WangwangMember.count
@@ -28,12 +30,12 @@ class WangwangMemberContrast
     total_inquired_num = contrast_info.try(:sum, :daily_inquired_count) || 0
     avg_inquired_num = (total_inquired_num == 0 ? 0 : total_inquired_num/clerk_num)
 
-    #下单人数
-    total_created_num = contrast_info.try(:sum, :daily_created_count) || 0
+    #昨天今天下单人数
+    total_created_num = contrast_info.try(:sum, :yesterday_created_count) || 0
     avg_created_num = (total_created_num == 0 ? 0 : total_created_num/clerk_num)
 
-    #下单金额
-    total_created_payment = contrast_info.try(:sum, :daily_created_payment) || 0
+    #昨天今天下单金额
+    total_created_payment = contrast_info.try(:sum, :yesterday_created_payment) || 0
     avg_created_payment = (total_created_payment == 0 ? 0 : total_created_payment/clerk_num)
 
     #付款人数
@@ -58,8 +60,8 @@ class WangwangMemberContrast
     total_inquired_num = contrast_info.try(:sum, :daily_inquired_count) || 0
     avg_inquired_num = (total_inquired_num == 0 ? 0 : total_inquired_num/clerk_num)
 
-    total_two_days_lost_count = contrast_info.try(:sum, :two_days_lost_count) || 0
-    avg_two_days_lost_count = (total_two_days_lost_count == 0 ? 0 : total_two_days_lost_count/clerk_num)
+    total_tomorrow_lost_count = contrast_info.try(:sum, :tomorrow_lost_count) || 0
+    avg_tomorrow_lost_count = (total_tomorrow_lost_count == 0 ? 0 : total_tomorrow_lost_count/clerk_num)
 
     total_created_num = contrast_info.try(:sum, :daily_created_count) || 0
     avg_created_num = (total_created_num == 0 ? 0 : total_created_num/clerk_num)
@@ -67,15 +69,15 @@ class WangwangMemberContrast
     total_created_payment = contrast_info.try(:sum, :daily_created_payment) || 0
     avg_created_payment = (total_created_payment == 0 ? 0 : total_created_payment/clerk_num)
 
-    total_two_days_created_count = contrast_info.try(:sum, :daily_created_payment) || 0
-    avg_two_days_created_count = (total_two_days_created_count == 0 ? 0 : total_two_days_created_count/clerk_num)
+    total_tomorrow_created_count = contrast_info.try(:sum, :tomorrow_created_count) || 0
+    avg_tomorrow_created_count = (total_tomorrow_created_count == 0 ? 0 : total_tomorrow_created_count/clerk_num)
 
-    total_two_days_created_payment = contrast_info.try(:sum, :daily_created_payment) || 0
-    avg_two_days_created_payment = (total_two_days_created_payment == 0 ? 0 : total_two_days_created_payment/clerk_num)
+    total_tomorrow_created_payment = contrast_info.try(:sum, :tomorrow_created_payment) || 0
+    avg_tomorrow_created_payment = (total_tomorrow_created_payment == 0 ? 0 : total_tomorrow_created_payment/clerk_num)
 
     total_brief_info = []
-    total_brief_info[0] = ["汇总", total_inquired_num.to_i, total_two_days_lost_count.to_i, total_created_num.to_i, total_created_payment.to_i, total_two_days_created_count.round(2), total_two_days_created_payment.round(2)]
-    total_brief_info[1] = ["均值", avg_inquired_num.round(1), avg_two_days_lost_count.round(1), avg_created_num.round(1), avg_created_payment.round(1), avg_two_days_created_count.round(2), avg_two_days_created_payment.round(2)]
+    total_brief_info[0] = ["汇总", total_inquired_num.to_i, total_tomorrow_lost_count.to_i, total_created_num.to_i, total_created_payment.round(2), total_tomorrow_created_count.to_i, total_tomorrow_created_payment.round(2)]
+    total_brief_info[1] = ["均值", avg_inquired_num.round(1), avg_tomorrow_lost_count.round(1), avg_created_num.round(1), avg_created_payment.round(2), avg_tomorrow_created_count.round(1), avg_tomorrow_created_payment.round(2)]
 
     total_brief_info
   end

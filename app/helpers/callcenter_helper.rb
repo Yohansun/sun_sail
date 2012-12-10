@@ -5,8 +5,8 @@ module CallcenterHelper
         emit(this.user_id, {  
           daily_reply_count: this.daily_reply_count,
           daily_inquired_count: this.daily_inquired_count,
-          daily_created_count: this.daily_created_count,
-          daily_created_payment: this.daily_created_payment,
+          yesterday_created_count: this.yesterday_created_count,
+          yesterday_created_payment: this.yesterday_created_payment,
           daily_paid_count: this.daily_paid_count,
           daily_paid_payment: this.daily_paid_payment
         });
@@ -17,16 +17,16 @@ module CallcenterHelper
         var result = {
           daily_reply_count: 0,
           daily_inquired_count: 0,
-          daily_created_count: 0,
-          daily_created_payment: 0,
+          yesterday_created_count: 0,
+          yesterday_created_payment: 0,
           daily_paid_count: 0,
           daily_paid_payment: 0
         };
         values.forEach(function(value) {
           result.daily_reply_count += value.daily_reply_count
           result.daily_inquired_count += value.daily_inquired_count
-          result.daily_created_count += value.daily_created_count
-          result.daily_created_payment += value.daily_created_payment
+          result.yesterday_created_count += value.yesterday_created_count
+          result.yesterday_created_payment += value.yesterday_created_payment
           result.daily_paid_count += value.daily_paid_count
           result.daily_paid_payment += value.daily_paid_payment
         });
@@ -46,9 +46,9 @@ module CallcenterHelper
           daily_inquired_count: this.daily_inquired_count,
           daily_created_count: this.daily_created_count,
           daily_created_payment: this.daily_created_payment,
-          two_days_lost_count: this.two_days_lost_count,
-          two_days_created_count: this.two_days_created_count,
-          two_days_created_payment: this.two_days_created_payment
+          tomorrow_lost_count: this.tomorrow_lost_count,
+          tomorrow_created_count: this.tomorrow_created_count,
+          tomorrow_created_payment: this.tomorrow_created_payment
         });
       }
     }
@@ -58,17 +58,17 @@ module CallcenterHelper
           daily_inquired_count: 0,
           daily_created_count: 0,
           daily_created_payment: 0,
-          two_days_lost_count: 0,
-          two_days_created_count: 0,
-          two_days_created_payment: 0
+          tomorrow_lost_count: 0,
+          tomorrow_created_count: 0,
+          tomorrow_created_payment: 0
         };
         values.forEach(function(value) {
           result.daily_inquired_count += value.daily_inquired_count
           result.daily_created_count += value.daily_created_count
           result.daily_created_payment += value.daily_created_payment
-          result.two_days_lost_count += value.two_days_lost_count
-          result.two_days_created_count += value.two_days_created_count
-          result.two_days_created_payment += value.two_days_created_payment
+          result.tomorrow_lost_count += value.tomorrow_lost_count
+          result.tomorrow_created_count += value.tomorrow_created_count
+          result.tomorrow_created_payment += value.tomorrow_created_payment
         });
         return result;
       }
