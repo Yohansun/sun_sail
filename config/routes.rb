@@ -56,6 +56,7 @@ MagicOrders::Application.routes.draw do
   get 'callcenter/inquired_and_created'
   get 'callcenter/created_and_paid'
   get 'callcenter/followed_paid'
+  get 'callcenter/settings'
 
   
   resources :sellers do

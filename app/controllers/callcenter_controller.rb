@@ -91,4 +91,7 @@ class CallcenterController < ApplicationController
 		@members = followed_paid_contrast(@start_date, @end_date)
 		@total_info = WangwangMemberContrast.total_followed_paid(@start_date, @end_date)
 	end
+
+  def settings
+  end
 end

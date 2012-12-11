@@ -6,5 +6,5 @@ class WangwangChatlog
   field :content,    type: String
   field :direction,  type: String
   field :time,       type: DateTime
-
+  field :usable,     type: Boolean,  default: true
 end
