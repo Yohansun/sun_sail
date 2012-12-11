@@ -106,29 +106,24 @@ class Product < ActiveRecord::Base
 
   def package_color_map(color_num)
     tmp_hash = package_info
-
     color_num.each do |nums|
       i = 0
       next if nums.blank?
-      tmp_hash.each do |package|
+      package_info.each_with_index do |package, index|
+        colors = tmp_hash[index][:colors] || {}
         package[:number].times do
-          next if nums[i].blank?
-
-          tmp = package[:colors] || {}
-
-          if tmp.has_key? nums[i]
-            tmp["#{nums[i]}"][0] += 1
-          else
-            tmp["#{nums[i]}"] = [1, Color.find_by_num(nums[i]).try(:name)]
-          end
-
-          package[:colors] = tmp
-
+          color = nums[i]
           i += 1
+          next if color.blank?
+          if colors.has_key? color
+            colors["#{color}"][0] += 1
+          else
+            colors["#{color}"] = [1, Color.find_by_num(color).try(:name)]
+          end
+          tmp_hash[index][:colors]  = colors
         end
       end
     end
-
     tmp_hash
   end
 end

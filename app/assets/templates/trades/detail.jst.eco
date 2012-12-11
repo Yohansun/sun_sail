@@ -30,41 +30,41 @@
         </thead>
         <tbody>
           <% for order in @trade.get('orders') : %>
-            <% if order['bill_info'].length > 1 : %>
-              <tr>
-                <td><%= order.title %></td>
-                <td><%= order.num %></td>
-                <td class='js-color-label-<%= order.id %>'>
-                  <% if !order.packaged : %>
-                    <% if info['colors'] != undefined : %>
-                      <% for color, array of info['colors'] : %>
-                        <%= array[0] %>桶 <%= color %> <%= array[1] %><br>
-                      <% end %>
-                    <% end %>
-                  <% end %>
-                </td>
-                <% unless @trade.get('total_fee') is undefined : %>
-                  <td rowspan='<%= order['bill_info'].length + 1 if order['bill_info'].length > 1 %>'>￥<%= order.price %></td>
-                <% end %>
-                <td class='js-order-cs-memo-label-<%= order.id %>'><%= order.cs_memo %></td>
-              </tr>
-            <% end %>
-            <% for info in order['bill_info'] : %>
-              <tr>
-                <td><%= info['title'] %></td>
-                <td><%= info['number'] * order.num  %></td>
-                <td class='js-color-label-<%= order.id %>'>
-                  <% if info['colors'] != undefined : %>
+            <% if order.packaged : %>
+              <!-- package order -->
+              <p><%= order.title %> * <%= order.num %> 套</p>
+              <p>订单备注：<span class='trade-cs-memo-label'><%= @trade.get('cs_memo') %></span></p>
+              <% for info in order['bill_info'] : %>
+                <tr>
+                  <td><%= info.title %></td>
+                  <td><%= info.number * order.num %></td>
+                  <td class='js-color-label-<%= order.id %>-<%= info.iid %>'>
                     <% for color, array of info['colors'] : %>
                       <%= array[0] %>桶 <%= color %> <%= array[1] %><br>
                     <% end %>
+                  </td>
+                  <td>---</td>
+                  <td>---</td>
+                </tr>
+              <% end %>
+            <% else : %>
+              <!-- independent order -->
+              <p>订单备注：<span class='trade-cs-memo-label'><%= @trade.get('cs_memo') %></span></p>
+              <% for info in order['bill_info'] : %>
+                <tr>
+                  <td><%= info.title %></td>
+                  <td><%= info.number * order.num %></td>
+                  <td class='js-color-label-<%= order.id %>'>
+                    <% for color, array of info['colors'] : %>
+                      <%= array[0] %>桶 <%= color %> <%= array[1] %><br>
+                    <% end %>
+                  </td>
+                  <% if @trade.get('total_fee') isnt undefined and order['bill_info'].length < 2 : %>
+                    <td>￥<%= order.price %></td>
                   <% end %>
-                </td>
-                <% if @trade.get('total_fee') isnt undefined and order['bill_info'].length < 2 : %>
-                  <td>￥<%= order.price %></td>
-                <% end %>
-                <td class='js-order-cs-memo-label-<%= order.id %>'><%= order.cs_memo %></td>
-              </tr>
+                  <td class='js-order-cs-memo-label-<%= order.id %>'><%= order.cs_memo %></td>               
+                </tr>
+              <% end %>
             <% end %>
           <% end %>
           <tr>
@@ -139,44 +139,49 @@
               <th>备注</th>
             </tr>
             <% for order in @trade.get('orders'): %>
-            <tr>
-              <td><%= order.title %> x <%= order.num %></td>
-              <td>
-                <% index = 0 %>
-                <% for count in [0...order.num] : %>
-                  <% i = 0 %>
-                  <% colors = order.color_num[index] %>
-                  <% if colors == undefined or colors == null : %>
-                  <% colors = [] %>
-                  <% end %>
-                  <% if order.contents.length > 1 : %>
-                    <% for item in order.contents : %>
-                      <% for [0...item.number] : %>
-                        <div class="controls">
-                          套装项目：<%= item.name %>
-                          <input type="text" data-provide="typeahead" placeholder="请输入色号..." class="color_typeahead input-xlarge color_num_<%= order.item_id %>_<%= count %>" value='<%= colors[i]%>'>
-                        </div>
-                        <% i = i + 1 %>
+              <!-- package order -->
+              <% if order.packaged : %>
+                <% for info in order.bill_info : %>
+                <tr>
+                  <td><%= info.title %></td>
+                  <td>
+                    <% existing_colors = [] %>
+                    <%for key, value of info.colors : %>
+                      <% for v_index in [0...value[0]] : %>
+                        <% existing_colors.push(key) %>
                       <% end %>
                     <% end %>
-                    <hr/>
-                  <% else : %>
-                    <div class="controls">
-                      <input type="text" data-provide="typeahead" placeholder="请输入色号..." class="color_typeahead input-xlarge color_num_<%= order.item_id %>_<%= count %>" value='<%= colors[i] %>'>
-                    </div>
-                  <% end %>
-                  <% index = index + 1 %>
+                    <% for count in [0...(info.number*order.num)] : %>
+                        <input type="text" data-provide="typeahead" placeholder="请输入色号..." class="color_typeahead input-xlarge js-color-num-<%= order.item_id %>-<%= info.iid %>-<%= count %>" 
+                        value='<%= existing_colors[count] %>'><br/>
+                    <% end %>
+                  </td>
+                  <td>---</td>
+                </tr>
                 <% end %>
-              </td>
-              <td>
-                <% unless MagicOrders.role_key == 'seller' : %>
-                  <input type="text" placeholder="输入文字..." class="input-xlarge order_cs_memo" 
-                    data-order-id="<%= order.id %>" value="<%= order.cs_memo %>">
-                <% else : %>
-                  <label class="control-label"><%= order.cs_memo %>
-                <% end %>
-              </td>
-            </tr>
+              <% else : %>
+                <!-- independent order -->
+                <tr>
+                  <td><%= order.title %></td>
+                  <td>
+                    <% for count in [0...order.num] : %>
+                      <% colors = order.color_num[count] %>
+                      <% if colors == undefined or colors == null : %>
+                        <% colors = [] %>
+                      <% end %>
+                      <input type="text" data-provide="typeahead" placeholder="请输入色号..." class="color_typeahead input-xlarge js-color-num-<%= order.item_id %>-<%= count %>" value='<%= colors[0] %>'><br/>
+                    <% end %>
+                  </td>
+                  <td>
+                    <% unless MagicOrders.role_key == 'seller' : %>
+                      <input type="text" placeholder="输入文字..." class="input-xlarge order_cs_memo"
+                        data-order-id="<%= order.id %>" value="<%= order.cs_memo %>">
+                    <% else : %>
+                      <label class="control-label"><%= order.cs_memo %>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
             <% end %>
           </tbody>
         </table>

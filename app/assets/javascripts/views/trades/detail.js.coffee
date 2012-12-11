@@ -31,13 +31,27 @@ class MagicOrders.Views.TradesDetail extends Backbone.View
     # color
     for order in @model.get('orders')
       color_num = []
-      for count in [0...order.num]
-        tmp = []
-        for item in $(".color_num_" + order.item_id + '_' + count)
-          tmp.push $(item).val()
-        color_num.push tmp
+      if order.packaged
+        tmp = {}
+        for info in order.bill_info
+          infoArray = []
+          for info_count in [0...(info.number*order.num)]
+            for item in $(".js-color-num-" + order.item_id + '-' + info.iid + '-' + info_count)
+              infoArray.push($(item).val())
+            tmp[info['iid']] = infoArray
+        for count in [0...order.num]
+          suite = []
+          for info in order.bill_info
+            for info_index in [0...info.number]
+              suite.push(tmp[info.iid].shift())
+          color_num.push(suite)
+      else
+        for count in [0...order.num]
+          tmp = []
+          for item in $(".js-color-num-" + order.item_id + '-' + count)
+            tmp.push $(item).val()
+          color_num.push(tmp)
       order.color_num = color_num
-
     # memo
     order_cs_memos = {}
     for item in $(".order_cs_memo")
@@ -67,20 +81,47 @@ class MagicOrders.Views.TradesDetail extends Backbone.View
       success: (model, response) =>
         $.unblockUI()
         # refresh the content of info tab elements
+        $(".trade-cs-memo-label").html(@model.get('cs_memo'))
         for item in $(".order_cs_memo")
           order_id = $(item).data("order-id")
           $(".js-order-cs-memo-label-"+order_id).html($(item).val())
 
         for order in @model.get('orders')
           colors = []
-          for count in [0...order.num]
-            if order.color_num[count][0] and order.color_name[count]
-              colors.push(order.color_num[count][0] + " "+ order.color_name[count])
-          mergedColor = compressArray(colors)
-          for color in mergedColor
-            $('.js-color-label-'+order.id).html(color.count+"桶 "+color.value+"<br/>")
-          if mergedColor.length is 0
-            $('.js-color-label-'+order.id).html('')
+          if order.packaged
+            for info in order.bill_info
+              info_color = []
+              for key, value of info.colors
+                for v_index in [0...value[0]]
+                  info_color.push(key+" "+value[1])
+              # console.log("info_color ->"+info_color)
+              colors.push(info_color)
+          else
+            for count in [0...order.num]
+              if order.color_num[count] and order.color_num[count][0] and order.color_name[count]
+                colors.push(order.color_num[count][0] + " "+ order.color_name[count])
+
+          if order.packaged
+            for index in [0...order.bill_info.length]
+              mergedColor = compressArray(colors[index])
+              console.log("mergedColor ->"+mergedColor)
+              if mergedColor.length is 0
+                $('.js-color-label-'+order.id+"-"+info.iid).html('')
+              else
+                colorHtml = ''
+                for color in mergedColor
+                  colorHtml += color.count+"桶 "+color.value+"<br/>"
+                console.log("colorHtml ->"+colorHtml)
+                $('.js-color-label-'+order.id+"-"+order.bill_info[index].iid).html(colorHtml)
+          else
+            mergedColor = compressArray(colors)
+            if mergedColor.length is 0
+              $('.js-color-label-'+order.id).html('')
+            else
+              colorHtml = ''
+              for color in mergedColor
+                colorHtml += color.count+"桶 "+color.value+"<br/>"
+              $('.js-color-label-'+order.id).html(colorHtml)
 
         $('.js-invoice-label').html(@model.get('invoice_type') + ': ' + $("#invoice_name_text").val() + ', ' + $("#invoice_content_text").val() + ', ' + $("#invoice_date_text").val())
         $('.js-gift-memo-label').html(@model.get 'gift_memo')
