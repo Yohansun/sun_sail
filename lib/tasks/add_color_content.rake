@@ -2,6 +2,8 @@
 require 'csv'
 desc "增加商品的调色信息"
 task :add_color_content => :environment do
+  Color.delete_all
+  
   color_id_array=[]
   CSV.foreach("#{Rails.root}/lib/data_source/color.2012.11.27.csv") do |row|
     puts "进行中..."
