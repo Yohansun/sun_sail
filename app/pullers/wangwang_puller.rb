@@ -5,7 +5,7 @@ class WangwangPuller
 	END_DATE = Time.now.yesterday.end_of_day.strftime("%Y-%m-%d %H:%M:%S")
 
   def self.get_wangwang_data(start_date = nil, end_date = nil, service_staff_ids = nil, manager_id = nil)
-    WangwangPuller.receivenum_get(start_date, end_date, service_staff_ids) & WangwangPuller.chatpeers_get(start_date, end_date, service_staff_ids)  ##& WangwangPuller.chatlog_get(start_date, end_date, service_staff_ids)
+    WangwangPuller.receivenum_get(start_date, end_date, service_staff_ids) & WangwangPuller.chatpeers_get(start_date, end_date, service_staff_ids)  & WangwangPuller.chatlog_get(start_date, end_date, service_staff_ids)
   end
 
   private
@@ -35,31 +35,27 @@ class WangwangPuller
             chatpeers = [] << chatpeers
           end 	
           chatpeers.each do |chatpeer|
-        		uid = chatpeer['uid']
             date = chatpeer['date'].to_datetime
             buyer_nick = chatpeer['uid'].gsub("cntaobao", "")
-            WangwangChatpeer.create(user_id: chat_id, uid: uid, date: date, buyer_nick: buyer_nick)
+            WangwangChatpeer.create(user_id: chat_id, buyer_nick: buyer_nick, date: date)
             p WangwangChatpeer.where(user_id: chat_id).first
           end	
         end  
       end
-
     end
-
   end	
 
   def self.chatlog_get(start_date = nil, end_date = nil,  service_staff_ids = nil)
     p "start chatlog_get"
     start_date ||= START_DATE
     end_date ||= END_DATE
-
     from_ids ||= WangwangMember.all.map &:service_staff_id
-
     from_ids.each do |from_id|
       member = WangwangMember.find_with_service_staff_id(from_id)
       chatpeers = member.chatpeers(start_date, end_date) 
       if chatpeers.present?   
         chatpeers.each_with_index do |to_id, i|
+          to_id = "cntaobao" + to_id
           response = TaobaoFu.get(
             method: 'taobao.wangwang.eservice.chatlog.get',
             from_id: from_id,
@@ -78,15 +74,15 @@ class WangwangPuller
               end 
               msgs.each do |msg|   	
               	WangwangChatlog.create(
-                  from_id: from_id,
-                  to_id: to_id,
+                  user_id: from_id,
+                  buyer_nick: to_id.gsub("cntaobao",''),
                   direction: msg['direction'],
-                  time: msg['time'].to_datetime,
+                  time: msg['time'].to_time(:local),
                   content: msg['content']
                 )
               end	
             end
-            sleep(2)
+            #sleep(2)
           end  
         end    
       end
@@ -135,7 +131,7 @@ class WangwangPuller
             reply_num: reply_stat_by_id['reply_num'],
             reply_date: reply_date.to_datetime
           )	
-        end	  
+        end
       end  
 
     end  
