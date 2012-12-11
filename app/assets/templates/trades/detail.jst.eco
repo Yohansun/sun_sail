@@ -16,6 +16,7 @@
   <div class="tab-content">
     <!-- tab1 -->
     <div class="tab-pane active" id="tab1">
+      <p>订单备注：<span class='trade-cs-memo-label'><%= @trade.get('cs_memo') %></span></p>
       <table class="table table-bordered table-condensed">
         <thead>
           <tr>
@@ -32,8 +33,10 @@
           <% for order in @trade.get('orders') : %>
             <% if order.packaged : %>
               <!-- package order -->
-              <p><%= order.title %> * <%= order.num %> 套</p>
-              <p>订单备注：<span class='trade-cs-memo-label'><%= @trade.get('cs_memo') %></span></p>
+              <tr>
+                <td colspan='4'><%= order.title %> * <%= order.num %> 套</td>
+                <td><%= order.cs_memo%></td>
+              </tr>
               <% for info in order['bill_info'] : %>
                 <tr>
                   <td><%= info.title %></td>
@@ -49,7 +52,6 @@
               <% end %>
             <% else : %>
               <!-- independent order -->
-              <p>订单备注：<span class='trade-cs-memo-label'><%= @trade.get('cs_memo') %></span></p>
               <% for info in order['bill_info'] : %>
                 <tr>
                   <td><%= info.title %></td>
@@ -141,6 +143,17 @@
             <% for order in @trade.get('orders'): %>
               <!-- package order -->
               <% if order.packaged : %>
+                <tr>
+                  <td colspan='2'><%= order.title %> * <%= order.num %> 套</td>
+                  <td>
+                    <% unless MagicOrders.role_key == 'seller' : %>
+                      <input type="text" placeholder="输入文字..." class="input-xlarge order_cs_memo"
+                        data-order-id="<%= order.id %>" value="<%= order.cs_memo %>">
+                    <% else : %>
+                      <label class="control-label"><%= order.cs_memo %>
+                    <% end %>
+                  </td>
+                </tr>
                 <% for info in order.bill_info : %>
                 <tr>
                   <td><%= info.title %></td>

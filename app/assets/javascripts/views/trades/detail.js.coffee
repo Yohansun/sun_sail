@@ -94,7 +94,6 @@ class MagicOrders.Views.TradesDetail extends Backbone.View
               for key, value of info.colors
                 for v_index in [0...value[0]]
                   info_color.push(key+" "+value[1])
-              # console.log("info_color ->"+info_color)
               colors.push(info_color)
           else
             for count in [0...order.num]
