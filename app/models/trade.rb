@@ -94,6 +94,7 @@ class Trade
 
   embeds_many :unusual_states
   embeds_many :operation_logs
+  embeds_many :manual_sms_or_emails
 
   attr_accessor :matched_seller
 
@@ -115,12 +116,16 @@ class Trade
     true
   end
       
-  def unusual_color
-    if unusual_states && unusual_states.last.present? && unusual_states.last.unusual_color.present?
-      unusual_states.last.unusual_color 
+  def unusual_color_class
+    if has_unusual_state
+      if unusual_states && unusual_states.last.present? && unusual_states.last.unusual_color_class.present?
+        unusual_states.last.unusual_color_class 
+      else
+       'cs_error' # keep up with old logic
+      end
     else
-     '#F2DEDE;' # keep up with old logic
-    end
+      ''
+    end    
   end 
 
   def set_has_refund_order
@@ -137,7 +142,6 @@ class Trade
   end
 
   def set_has_unusual_state
-    Rails.logger.warn "set_has_unusual_state"
     if unusual_states.where(:repaired_at => nil).exists?
       self.has_unusual_state = true
       return

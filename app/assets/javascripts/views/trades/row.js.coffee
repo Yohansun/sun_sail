@@ -2,6 +2,9 @@ class MagicOrders.Views.TradesRow extends Backbone.View
 
   tagName: 'tr'
 
+  className: ()=>
+     @model.get('unusual_color_class')
+
   template: JST['trades/row']
 
   events:
@@ -16,9 +19,6 @@ class MagicOrders.Views.TradesRow extends Backbone.View
    
     $(@el).attr("id", "trade_#{@model.get('id')}")
     $(@el).html(@template(trade: @model))
-
-    if @model.get("has_unusual_state") is true 
-          $(@el).attr("style", "background-color:#{@model.get("unusual_color")}")
 
     $(@el).find(".trade_pops li").hide()
     for pop in MagicOrders.trade_pops[MagicOrders.trade_mode]

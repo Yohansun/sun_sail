@@ -10,14 +10,14 @@ window.MagicOrders =
     @trade_pops = {
       #roles
       'cs_read':                 ['detail'],
-      'cs':                      ['detail', 'logistic_waybill', 'seller', 'cs_memo', 'color', 'invoice', 'trade_split', 'recover', 'mark_unusual_state', 'reassign', 'refund', 'check_goods','operation_log', 'print_deliver_bill', 'deliver', 'confirm_color', 'seller_confirm_invoice', 'confirm_receive', 'logistic_memo', 'barcode', 'seller_confirm_deliver','request_return','confirm_refund','gift_memo'],
+      'cs':                      ['detail', 'logistic_waybill', 'seller', 'cs_memo', 'color', 'invoice', 'trade_split', 'recover', 'mark_unusual_state', 'reassign', 'refund', 'check_goods','operation_log', 'manual_sms_or_email','print_deliver_bill', 'deliver', 'confirm_color', 'seller_confirm_invoice', 'confirm_receive', 'logistic_memo', 'barcode', 'seller_confirm_deliver','request_return','confirm_refund','gift_memo'],
       'seller':                  ['detail', 'logistic_waybill', 'setup_logistic','deliver', 'mark_unusual_state', 'logistic_split', 'print_logistic_bill', 'print_deliver_bill', 'barcode','confirm_color','confirm_check_goods','seller_confirm_deliver','cs_memo', 'confirm_receive', 'logistic_memo','confirm_return'],
       'interface':               ['detail', 'logistic_waybill', 'seller_confirm_deliver'],
       'logistic':                ['detail', 'logistic_waybill', 'confirm_receive', 'logistic_memo'],
       'admin':                   ['*'],
 
       #trade_mode
-      'trades':                  ['deliver', 'logistic_waybill', 'confirm_receive', 'logistic_memo', 'detail', 'seller', 'cs_memo', 'color', 'invoice', 'trade_split', 'recover', 'mark_unusual_state', 'reassign', 'request_return', 'confirm_return', 'confirm_refund', 'check_goods', 'deliver', 'seller_confirm_deliver', 'seller_confirm_invoice', 'barcode', 'check_goods', 'logistic_split', 'print_logistic_bill', 'print_deliver_bill', 'confirm_refund', 'operation_log','confirm_color','confirm_check_goods', 'logistic_waybill', 'gift_memo'],
+      'trades':                  ['deliver', 'logistic_waybill', 'confirm_receive', 'logistic_memo', 'detail', 'seller', 'cs_memo', 'color', 'invoice', 'trade_split', 'recover', 'mark_unusual_state', 'reassign', 'request_return', 'confirm_return', 'confirm_refund', 'check_goods', 'deliver', 'seller_confirm_deliver', 'seller_confirm_invoice', 'barcode', 'check_goods', 'logistic_split', 'print_logistic_bill', 'print_deliver_bill', 'confirm_refund', 'operation_log', 'manual_sms_or_email','confirm_color','confirm_check_goods', 'logistic_waybill', 'gift_memo'],
       'deliver':                 ['detail', 'print_deliver_bill'],
       'logistics':               ['detail', 'setup_logistic','logistic_waybill', 'confirm_receive', 'logistic_memo', 'print_logistic_bill'],
       'check':                   ['detail'],

@@ -35,17 +35,9 @@ class UnusualState
   	  	"other_unusual_state"
   	end
   end
-  def unusual_color
-    case reporter_role
-      when "admin"
-        "#F098C9;"
-      when "cs"
-        "#ECC1D9;"  
-      when "interface"
-        "#A1A1F5;"
-      when "seller"
-        "#D3D36C;"
-    end
+
+  def unusual_color_class
+    reporter_role.try('+', '_error')
   end  
 
 end

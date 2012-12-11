@@ -216,6 +216,14 @@ class TradesController < ApplicationController
         end
       end
     end
+    
+    unless params[:notify_content].blank?
+      notify = @trade.manual_sms_or_emails.create(notify_sender: params[:notify_sender], 
+                                          notify_receiver: params[:notify_receiver], 
+                                          notify_theme: params[:notify_theme], 
+                                          notify_content: params[:notify_content], 
+                                          notify_type: params[:notify_type] )
+    end  
 
     if @trade.save!
       @trade = TradeDecorator.decorate(@trade)

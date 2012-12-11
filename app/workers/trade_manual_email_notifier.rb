@@ -1,0 +1,9 @@
+# -*- encoding : utf-8 -*-
+class TradeManualEmailNotifier
+  include Sidekiq::Worker
+  sidekiq_options :queue => :trade_manual_notify
+
+  def perform(mails, notify_content, notify_theme)
+    Notifier.manual_notify(mails, notify_content, notify_theme).deliver
+  end	
+end

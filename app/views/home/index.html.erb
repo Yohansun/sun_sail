@@ -4,6 +4,7 @@
     MagicOrders.init();
     MagicOrders.role_key = "<%= current_user.roles.first.try(:name) %>";
     MagicOrders.company = "<%= TradeSetting.company %>"
+    MagicOrders.user = "<%= current_user.name %>"
     MagicOrders.logistics = new MagicOrders.Collections.Logistics();
     MagicOrders.logistics.reset(<%= raw @logistics.to_json %>);
     MagicOrders.deliver_bill_notice_info = "<%= TradeSetting.deliver_bill_notice_info %>"
@@ -31,6 +32,7 @@
 <div id="trade_confirm_color" class="modal fade hide" tabindex="-1"></div>
 <div id="trade_confirm_check_goods" class="modal fade hide" tabindex="-1"></div>
 <div id="trade_operation_log" class="modal fade hide" tabindex="-1"></div>
+<div id="trade_manual_sms_or_email" class="modal fade hide" tabindex="-1"></div>
 <div id="trade_print_deliver_bill" class="modal fade hide" tabindex="-1" style="width: 890px; margin-left: -445px;"></div>
 <div id="trade_confirm_receive" class="modal fade hide" tabindex="-1"></div>
 <div id="trade_logistic_memo" class="modal fade hide" tabindex="-1"></div>
