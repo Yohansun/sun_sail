@@ -82,6 +82,15 @@ class Trade
   index has_cs_memo: 1
   index has_unusual_state: 1
   index has_refund_order: 1
+  index buyer_nick: 1
+  index receiver_name: 1
+  index receiver_mobile: 1
+  index logistic_waybill: 1
+  index receiver_state: 1
+  index receiver_district: 1
+  index receiver_city: 1
+  index deliver_bill_printed_at: -1
+  index logistic_printed_at: -1
 
   embeds_many :unusual_states
   embeds_many :operation_logs
