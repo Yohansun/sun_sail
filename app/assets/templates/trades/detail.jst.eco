@@ -34,7 +34,8 @@
             <% if order.packaged : %>
               <!-- package order -->
               <tr>
-                <td colspan='4'><%= order.title %> * <%= order.num %> 套</td>
+                <td colspan='3'><%= order.title %> * <%= order.num %> 套</td>
+                <td>￥ <%= order.price%></td>
                 <td><%= order.cs_memo%></td>
               </tr>
               <% for info in order['bill_info'] : %>
