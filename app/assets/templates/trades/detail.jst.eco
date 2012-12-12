@@ -118,10 +118,17 @@
             </td>
           </tr>
           <% end %>
-          <tr>
-            <td colspan="1"><b>赠品信息</b></td>
-            <td colspan="4" class="reedit_text js-gift-memo-label"><%= @trade.get('gift_memo') %></td>
-          </tr>
+          <% if MagicOrders.company == "dulux" and (MagicOrders.role_key == 'admin' or MagicOrders.role_key == 'cs') : %>
+            <tr>
+              <td colspan="1"><b>赠品信息</b></td>
+              <td colspan="4" class="reedit_text js-gift-memo-label"><%= @trade.get('gift_memo') %></td>
+            </tr>
+          <% else : %>
+            <tr>
+              <td colspan="1"><b>赠品信息</b></td>
+              <td colspan="4" class="reedit_text js-gift-memo-label"><%= @trade.get('gift_memo') %></td>
+            </tr>
+          <% end %>
         </tbody>
       </table>
       <div class="modal-footer">
