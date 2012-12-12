@@ -10,7 +10,9 @@
   <!-- tab menus -->
   <ul class="nav nav-tabs" id="myTab">
     <li class="active"><a href="#tab1" data-toggle="tab" class="active">详情</a></li>
-    <li class=""><a href="#tab2" data-toggle="tab">预处理</a></li>
+    <% if MagicOrders.role_key == 'admin' or MagicOrders.role_key == 'cs' : %>
+      <li class=""><a href="#tab2" data-toggle="tab">预处理</a></li>
+    <% end %>
   </ul>
   <!-- tab container -->
   <div class="tab-content">

@@ -7,9 +7,7 @@
       <span class="caret"></span>
     </button>
     <ul class="dropdown-menu trade_pops">
-      <% if MagicOrders.role_key == 'admin' or MagicOrders.role_key == 'cs' : %>
-      <li><a data-toggle="modal" href="#" data-type="detail">订单操作</a></li>
-      <% end %>
+      <li><a data-toggle="modal" href="#" data-type="detail">订单详情</a></li>
       <% if @trade.get('status_text') == '已付款，待发货' : %>
         <% if @trade.get('seller_id') : %>
           <% if MagicOrders.role_key == 'admin' : %>
