@@ -1,6 +1,14 @@
 # -*- encoding : utf-8 -*-
 
 class Product < ActiveRecord::Base
+
+  # ========================
+  #  Attributes desc
+  #    - iid: 淘宝编码，从淘宝获取
+  #    - storage_num: 仓库编码， 默认与淘宝编码一致，可以为不同值
+  #    - taobao_id: 淘宝商品id， 可作为淘宝商品的唯一标示，暂未使用
+  # ========================
+
   acts_as_nested_set
   belongs_to :category
   belongs_to :grade
@@ -18,12 +26,11 @@ class Product < ActiveRecord::Base
                   :category_id, :features, :technical_data, :description, :product_image, :feature_ids
 
   validates_presence_of :iid, :name, :storage_num, :price, message: "信息不能为空"
-  validates_uniqueness_of :iid, :name, :iid, :taobao_id, :allow_blank => true, message: "信息已存在"
+  validates_uniqueness_of :iid, :allow_blank => true, message: "信息已存在"
   validates_numericality_of :price, message: "所填项必须为数字"
   validates_length_of :name, maximum: 100, message: "内容过长"
   validates_length_of :iid, :taobao_id, :storage_num, :price, maximum: 20, message: "内容过长"
   validates_length_of :technical_data, :description, maximum: 200, message: "内容过长"
-  validates_numericality_of :taobao_id, :allow_blank => true, message: "所填项必须为数字"
   validates_format_of :storage_num, with: /^[0-9A-Z-]+$/, message: "格式错误"
 
   def select_status
