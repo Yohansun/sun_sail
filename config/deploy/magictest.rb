@@ -41,12 +41,12 @@ namespace :db do
   end
 end
 
-namespace :sidekiq do
-  desc "restart sidekiq"
-  task :restart, :roles => :app do
-    run "rvmsudo god restart magic_orders"
-    run "rvmsudo god restart magic_orders_pullers"
-  end
-end
+# namespace :sidekiq do
+#   desc "restart sidekiq"
+#   task :restart, :roles => :app do
+#     run "rvmsudo god restart magic_orders"
+#     run "rvmsudo god restart magic_orders_pullers"
+#   end
+# end
 
-after 'deploy:create_symlink', 'sidekiq:restart'
+# after 'deploy:create_symlink', 'sidekiq:restart'
