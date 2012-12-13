@@ -5,6 +5,7 @@ class MagicOrders.Views.TradesDetail extends Backbone.View
   events:
     "click .button_print": 'print'
     'click button.js-save': 'save'
+    'click div.modal-header h3 span': 'zoolToggle'
 
   initialize: ->
     @model.on("fetch", @render, this)
@@ -20,6 +21,10 @@ class MagicOrders.Views.TradesDetail extends Backbone.View
     print_body.children('.print_content').printArea()
 
     $('#trade_detail').modal('hide')
+
+  zoolToggle: (e) ->
+    $(e.currentTarget).parents('.modal').toggleClass('bigtoggle_parents');
+    $(e.currentTarget).toggleClass('bigtoggle');
 
   save: (e)->
     blocktheui()
