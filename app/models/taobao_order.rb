@@ -42,7 +42,7 @@ class TaobaoOrder < Order
   end
 
   def product
-    Product.find_by_iid outer_iid
+    super(outer_iid)
   end
 
   # 匹配套装内单品调色信息

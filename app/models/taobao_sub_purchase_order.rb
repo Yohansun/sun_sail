@@ -26,6 +26,10 @@ class TaobaoSubPurchaseOrder < Order
     item_outer_id
   end
 
+  def product
+    super(outer_iid)
+  end
+
   def bill_info
     tmp = {}
     color_num.each do |nums|

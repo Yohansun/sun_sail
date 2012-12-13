@@ -104,7 +104,7 @@ json.orders OrderDecorator.decorate(@trade.orders) do |json, order|
 
   json.contents @trade._type == 'TaobaoTrade' ? get_package(order.outer_iid, @trade.created_at) : []
   json.bill_info order.bill_info
-  json.packaged order.product.try(:package_info).present?
+  json.packaged order.model.product.try(:package_info).present?
 end
 
 json.unusual_states @trade.unusual_states do |json, state|
