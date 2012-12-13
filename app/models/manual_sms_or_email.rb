@@ -33,13 +33,7 @@ class ManualSmsOrEmail
       if notify_receiver == "interface"
         emails = seller.try(:interface_email) 
       end  
-      TradeManualEmailNotifier.perform_async(emails, notify_content, notify_theme_text) if (emails.present? && notify_content.present?)    
+      TradeManualEmailNotifier.perform_async(emails, notify_content, notify_theme) if (emails.present? && notify_content.present?)    
     end                        
   end
-
-  def notify_theme_text
-    "订单分流" if notify_theme == "dispatch"
-    "修改客服备注" if notify_theme == "update_cs_memo" 
-  end
-
 end

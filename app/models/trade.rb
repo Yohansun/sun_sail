@@ -118,14 +118,12 @@ class Trade
       
   def unusual_color_class
     if has_unusual_state
-      if unusual_states && unusual_states.last.present? && unusual_states.last.unusual_color_class.present?
-        unusual_states.last.unusual_color_class 
-      else
-       'cs_error' # keep up with old logic
+      class_name = 'cs_error'
+      if TradeSetting.company == "nippon"
+        class_name = unusual_states.last.unusual_color_class  if unusual_states && unusual_states.last.present? && unusual_states.last.unusual_color_class.present?
       end
-    else
-      ''
-    end    
+    end 
+    class_name   
   end 
 
   def set_has_refund_order

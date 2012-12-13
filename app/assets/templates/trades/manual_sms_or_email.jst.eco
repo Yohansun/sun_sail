@@ -25,11 +25,9 @@
     </div>
     <div class="clearfix">
       <label class="pull-left">发送主题：</label>
-      <select name="notify_theme" id="notify_theme">
-        <option value="dispatch">订单分流</option>
-        <option value="update_cs_memo">修改客服备注</option>   
-      </select>
+      <input type="" name="notify_theme" id="notify_theme">
     </div>
+    <br>
     <div class="clearfix">
       <label class="pull-left">发送内容：</label>
       <textarea style="resize:none;width:415px;height:150px;padding:5px;" name="notify_content"  id="notify_content"></textarea>
