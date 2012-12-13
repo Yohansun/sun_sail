@@ -1,7 +1,7 @@
 module AreasHelper
 	#地区树形结构
 	def area
-    areas = Area.where(parent_id: 1)
+    areas = Area.roots
     @areas = []
     areas.each do |a|
       @areas << {id: a.id,pId: a.parent_id,name: a.name, open: false, nocheck: true} 
