@@ -273,6 +273,11 @@
               <td><%= log.operator %></td>
             </tr>
           <% end %>
+          <% if @trade.get('operation_logs').length == 0 : %>
+            <tr>
+              <td colspan='3'>暂无数据</td>
+            </tr>
+          <% end %>
         </tbody>
       </table>
       <div class="modal-footer">
