@@ -1,6 +1,10 @@
 require 'sidekiq/web'
 
 MagicOrders::Application.routes.draw do
+  resources :bbs_categories
+
+  resources :bbs_topics
+
   resources :trade_reports 
   resources :user_activities do 
     collection do 

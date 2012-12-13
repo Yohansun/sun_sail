@@ -10,3 +10,4 @@ public/dev-assets/
 public/areas.js
 vendor/
 data/*.xls
+spec/factories
