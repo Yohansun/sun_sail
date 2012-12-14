@@ -92,7 +92,6 @@
       <% end %>
 
       <li class= "divider"></li>
-      <% if @trade.get('has_refund_order') == true : %>
         <% if @trade.get('request_return_at') == undefined : %>
           <li><a data-toggle="modal" href="#" data-type="request_return">申请退货</a></li>
         <% end %>
@@ -102,7 +101,6 @@
         <% if @trade.get('confirm_return_at') && @trade.get('confirm_refund_at') == undefined : %>
           <li><a data-toggle="modal" href="#" data-type="confirm_refund">确认退款</a></li>
         <% end %>
-      <% end %>
       <li><a data-toggle="modal" href="#" data-type="invoice_number">发票号设置</a></li>
 
       <!-- <li><a data-toggle="modal" href="#" data-type="check_goods">验货</a></li> -->
