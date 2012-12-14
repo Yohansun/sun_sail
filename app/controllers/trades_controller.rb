@@ -30,11 +30,15 @@ class TradesController < ApplicationController
       params['search'][undefined] = '' if params['search'][undefined] == "undefined"
     end  
     @report.conditions = params.select {|k,v| !['limit','offset', 'action', 'controller'].include?(k)  } 
-    @report.save
-    @report.export_report
-    respond_to do |format|
-      format.js
-    end
+    if TradeSetting.company == "nippon" && @report.conditions.fetch("search").fetch("type_option").blank?
+      render :js => "alert('导出报表之前请在高级搜索中选择订单来源');$('.export_orders_disabled').addClass('export_orders').removeClass('export_orders_disabled disabled');"
+    else
+      @report.save
+      @report.export_report
+      respond_to do |format|
+        format.js
+      end
+    end  
   end
 
   def notifer
