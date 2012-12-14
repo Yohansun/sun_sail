@@ -30,11 +30,15 @@ class TradesController < ApplicationController
       params['search'][undefined] = '' if params['search'][undefined] == "undefined"
     end  
     @report.conditions = params.select {|k,v| !['limit','offset', 'action', 'controller'].include?(k)  } 
-    @report.save
-    @report.export_report
-    respond_to do |format|
-      format.js
-    end
+    if TradeSetting.company == "nippon" && @report.conditions.fetch("search").fetch("type_option").blank?
+      render :js => "alert('导出报表之前请在高级搜索中选择订单来源');$('.export_orders_disabled').addClass('export_orders').removeClass('export_orders_disabled disabled');"
+    else
+      @report.save
+      @report.export_report
+      respond_to do |format|
+        format.js
+      end
+    end  
   end
 
   def notifer
@@ -144,8 +148,10 @@ class TradesController < ApplicationController
     end
 
     unless params[:reason].blank?
-      state = @trade.unusual_states.build(reason: params[:reason], plan_repair_at: params[:plan_repair_at], note: params[:state_note], created_at: Time.now, reporter: current_user.name)
+      state = @trade.unusual_states.create!(reason: params[:reason], plan_repair_at: params[:plan_repair_at], note: params[:state_note], created_at: Time.now, reporter: current_user.name)
       state.update_attributes(key: state.add_key)
+      role_key = current_user.has_role?(:interface) ? 'interface' : current_user.role_key 
+      state.update_attributes!(reporter_role: role_key)
     end
 
     unless params[:state_id].blank?
@@ -214,6 +220,14 @@ class TradesController < ApplicationController
         end
       end
     end
+    
+    unless params[:notify_content].blank?
+      notify = @trade.manual_sms_or_emails.create(notify_sender: params[:notify_sender], 
+                                          notify_receiver: params[:notify_receiver], 
+                                          notify_theme: params[:notify_theme], 
+                                          notify_content: params[:notify_content], 
+                                          notify_type: params[:notify_type] )
+    end  
 
     if @trade.save!
       @trade = TradeDecorator.decorate(@trade)

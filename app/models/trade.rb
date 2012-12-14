@@ -94,6 +94,7 @@ class Trade
 
   embeds_many :unusual_states
   embeds_many :operation_logs
+  embeds_many :manual_sms_or_emails
 
   attr_accessor :matched_seller
 
@@ -114,6 +115,16 @@ class Trade
     self.has_color_info = false
     true
   end
+      
+  def unusual_color_class
+    if has_unusual_state
+      class_name = 'cs_error'
+      if TradeSetting.company == "nippon"
+        class_name = unusual_states.last.unusual_color_class  if unusual_states && unusual_states.last.present? && unusual_states.last.unusual_color_class.present?
+      end
+    end 
+    class_name   
+  end 
 
   def set_has_refund_order
     unless self.confirm_receive_at.blank?
@@ -129,14 +140,13 @@ class Trade
   end
 
   def set_has_unusual_state
-    self.unusual_states.each do |unusual_state|
-      if unusual_state.repaired_at.blank?
-        self.has_unusual_state = true
-        return
-      end
+    if unusual_states.where(:repaired_at => nil).exists?
+      self.has_unusual_state = true
+      return
+    else  
+      self.has_unusual_state = false
+      true
     end
-    self.has_unusual_state = false
-    true
   end
 
   def set_has_cs_memo

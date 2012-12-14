@@ -9,6 +9,7 @@ class UnusualState
   field :note,           type: String
 
   field :reporter,       type: String
+  field :reporter_role,       type: String
   field :repair_man,     type: String
   field :plan_repair_at, type: DateTime
   field :repaired_at,    type: DateTime
@@ -34,4 +35,9 @@ class UnusualState
   	  	"other_unusual_state"
   	end
   end
+
+  def unusual_color_class
+    reporter_role.try('+', '_error')
+  end  
+
 end

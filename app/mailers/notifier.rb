@@ -10,6 +10,13 @@ class Notifier < ActionMailer::Base
         )
   end
 
+  def manual_notify(mails, notify_content, notify_theme)
+    mail(:to => mails,
+         :subject => notify_theme,
+         :body => notify_content
+        )
+  end  
+
   def deliver_errors(id, errors)
     mail(:to => %w{errors@networking.io},
          :subject => "#{TradeSetting.shopname}发货异常提醒",

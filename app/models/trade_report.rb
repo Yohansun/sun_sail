@@ -11,13 +11,20 @@ class TradeReport
   field :request_at, type:DateTime
 
   def export_report
-    TradeReporter.perform_async(self.id)  	
+    DuluxTaobaoTradeReporter.perform_async(self.id)  if TradeSetting.company == "dulux"
+    if TradeSetting.company == "nippon" && conditions.fetch("search").fetch("type_option").present?
+      if conditions.fetch("search").fetch("type_option") == "TaobaoTrade"
+        NipponTaobaoTradeReporter.perform_async(self.id) 
+      else 
+        NipponOtherTradeReporter.perform_async(self.id)   	
+      end
+    end
   end
 
   def username
   	user = User.find_by_id self.user_id
   	user.try(:name)
-  end	 	
+  end	 	 
 
   def status	
   	if self.performed_at && File.exist?(self.url) && !File.zero?(self.url)
