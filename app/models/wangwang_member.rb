@@ -21,6 +21,6 @@ class WangwangMember
   end
 
   def chatpeers(start_date, end_date)
-    WangwangChatpeer.where(user_id: service_staff_id).where(:date.gte => start_date, :date.lt => end_date).map(&:buyer_nick)
+    WangwangChatpeer.where(user_id: service_staff_id).where(:date.gte => start_date.to_time.to_i, :date.lt => end_date.to_time.to_i).map(&:buyer_nick)
   end
 end

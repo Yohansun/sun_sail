@@ -3,8 +3,9 @@ class WangwangChatlog
   
   field :user_id,    type: String
   field :buyer_nick, type: String
-  field :content,    type: String
-  field :direction,  type: String
-  field :time,       type: DateTime
+  field :start_time, type: DateTime
+  field :end_time,   type: DateTime
   field :usable,     type: Boolean,  default: true
+
+  embeds_many :wangwang_chatmsgs
 end

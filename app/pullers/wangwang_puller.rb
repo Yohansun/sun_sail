@@ -1,16 +1,16 @@
 # -*- encoding : utf-8 -*-
 class WangwangPuller
 
-	START_DATE = (Time.now - 7.days).beginning_of_day.strftime("%Y-%m-%d %H:%M:%S")
-	END_DATE = Time.now.yesterday.end_of_day.strftime("%Y-%m-%d %H:%M:%S")
+	START_DATE = (Time.now - 16.days).beginning_of_day.strftime("%Y-%m-%d %H:%M:%S")
+	END_DATE = (Time.now - 16.days).end_of_day.strftime("%Y-%m-%d %H:%M:%S")
 
-  def self.get_wangwang_data(start_date = nil, end_date = nil, service_staff_ids = nil, manager_id = nil)
-    WangwangPuller.receivenum_get(start_date, end_date, service_staff_ids) & WangwangPuller.chatpeers_get(start_date, end_date, service_staff_ids)  & WangwangPuller.chatlog_get(start_date, end_date, service_staff_ids)
+  def get_wangwang_data(start_date = nil, end_date = nil, service_staff_ids = nil, manager_id = nil)
+    chatpeers_get(start_date, end_date, service_staff_ids) & receivenum_get(start_date, end_date, service_staff_ids) & chatlog_get(start_date, end_date, service_staff_ids) #
   end
 
   private
 
-  def self.chatpeers_get(start_date = nil, end_date = nil, service_staff_ids = nil)
+  def chatpeers_get(start_date = nil, end_date = nil, service_staff_ids = nil)
     p "start chatpeers_get"
     start_date ||= START_DATE
     end_date ||= END_DATE
@@ -33,26 +33,25 @@ class WangwangPuller
         	chatpeers = response['chatpeers_get_response']['chatpeers']['chatpeer']
           unless chatpeers.is_a?(Array)
             chatpeers = [] << chatpeers
-          end 	
+          end
           chatpeers.each do |chatpeer|
-            date = chatpeer['date'].to_datetime
+            date = chatpeer['date'].to_time.to_i
             buyer_nick = chatpeer['uid'].gsub("cntaobao", "")
             WangwangChatpeer.create(user_id: chat_id, buyer_nick: buyer_nick, date: date)
-            p WangwangChatpeer.where(user_id: chat_id).first
-          end	
-        end  
+          end
+        end
       end
     end
   end	
 
-  def self.chatlog_get(start_date = nil, end_date = nil,  service_staff_ids = nil)
+  def chatlog_get(start_date = nil, end_date = nil,  service_staff_ids = nil)
     p "start chatlog_get"
     start_date ||= START_DATE
     end_date ||= END_DATE
     from_ids ||= WangwangMember.all.map &:service_staff_id
     from_ids.each do |from_id|
       member = WangwangMember.find_with_service_staff_id(from_id)
-      chatpeers = member.chatpeers(start_date, end_date) 
+      chatpeers = member.chatpeers(start_date, end_date)
       if chatpeers.present?   
         chatpeers.each_with_index do |to_id, i|
           to_id = "cntaobao" + to_id
@@ -69,28 +68,39 @@ class WangwangPuller
             count = response['chatlog_get_response']['count']
             if response['chatlog_get_response']['msgs'].present? && response['chatlog_get_response']['msgs']['msg'].present?
             	msgs = response['chatlog_get_response']['msgs']['msg']
+              chatlog = WangwangChatlog.create(
+                  user_id: from_id,
+                  buyer_nick: to_id.gsub("cntaobao",'')
+              )
             	unless msgs.is_a?(Array)
                 msgs = [] << msgs
-              end 
-              msgs.each do |msg|   	
-              	WangwangChatlog.create(
-                  user_id: from_id,
-                  buyer_nick: to_id.gsub("cntaobao",''),
+              end
+              start_time = ""
+              end_time = ""
+              msgs.each_with_index do |msg, i|
+                if i == 0
+                  start_time = msg['time'].to_time(:local)
+                end
+                if i == msgs.count - 1
+                  end_time = msg['time'].to_time(:local)
+                end
+                chatlog.wangwang_chatmsgs.build(
                   direction: msg['direction'],
                   time: msg['time'].to_time(:local),
                   content: msg['content']
                 )
-              end	
+              end
+              chatlog.update_attributes(start_time: start_time, end_time: end_time)
             end
             #sleep(2)
-          end  
-        end    
+          end
+        end
       end
     end  
   end
   	
   # 服务提供时间（7:00:00-24:00:00）
-  def self.receivenum_get(start_date = nil, end_date = nil, service_staff_ids = nil)
+  def receivenum_get(start_date = nil, end_date = nil, service_staff_ids = nil)
   	p "start receivenum_get"
     start_date ||= START_DATE
     end_date ||= END_DATE 
@@ -116,7 +126,7 @@ class WangwangPuller
         response = [] << response
       end
       response.each do |rep|
-      	reply_date = rep['reply_date']
+      	reply_date = rep['reply_date'].to_time.to_i
       	reply_stat_by_ids = rep['reply_stat_by_ids']
         next unless reply_stat_by_ids
         reply_stat_by_ids = reply_stat_by_ids['reply_stat_by_id']   
@@ -128,27 +138,25 @@ class WangwangPuller
         	user_id = reply_stat_by_id['user_id']
         	reply_num = reply_stat_by_id['reply_num']
           WangwangReplyState.create(user_id: reply_stat_by_id['user_id'],
-            reply_num: reply_stat_by_id['reply_num'],
-            reply_date: reply_date.to_datetime
-          )	
+                                    reply_num: reply_stat_by_id['reply_num'],
+                                    reply_date: reply_date)
         end
-      end  
-
+      end
     end  
   end
 
   # depreciate
-  def self.groupmember_get(manager_id = nil)
-    p "start groupmember_get"
-  	manager_id ||= TradeSetting.default_manager_id
-  	response = TaobaoFu.get(
-      method: 'taobao.wangwang.eservice.groupmember.get',
-      manager_id: manager_id
-    )
-    p response
-    if response['wangwang_eservice_groupmember_get_response'].present? && response['wangwang_eservice_groupmember_get_response']['group_member_list']
-      group_member_list = response['wangwang_eservice_groupmember_get_response']['group_member_list']
-    end
-  end	
+  # def groupmember_get(manager_id = nil)
+  #   p "start groupmember_get"
+  # 	manager_id ||= TradeSetting.default_manager_id
+  # 	response = TaobaoFu.get(
+  #     method: 'taobao.wangwang.eservice.groupmember.get',
+  #     manager_id: manager_id
+  #   )
+  #   p response
+  #   if response['wangwang_eservice_groupmember_get_response'].present? && response['wangwang_eservice_groupmember_get_response']['group_member_list']
+  #     group_member_list = response['wangwang_eservice_groupmember_get_response']['group_member_list']
+  #   end
+  # end
 
 end
