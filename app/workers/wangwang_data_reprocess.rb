@@ -14,6 +14,9 @@ class WangwangDataReprocess
   end
 
   def member_brief_info(start_date, end_date)
+    WangwangChatlog.all.each do |log|
+      log.chatlog_filter
+    end
     today = start_date.to_i
     yesterday = start_date.yesterday.to_i
     inquired_today = WangwangChatpeer.where(date: today).map(&:buyer_nick).uniq
