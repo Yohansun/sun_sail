@@ -93,5 +93,61 @@ class CallcenterController < ApplicationController
 	end
 
   def settings
+    @setting = WangwangChatlogSetting.first
+    @wangwangs = WangwangMember.all
   end
+
+  def adjust_filter
+    @setting = WangwangChatlogSetting.first
+    if params[:type]
+	    @setting[params[:type]]
+      @setting[params[:type]] ? @setting[params[:type]] = false : @setting[params[:type]] = true
+      @setting.save
+      render text: "success"
+    elsif params[:ad_msg]
+    	@setting.ad_msg = params[:ad_msg]
+    	@setting.save
+    	render "/callcenter/settings"
+    elsif params[:ad_chat_length]
+    	@setting.ad_chat_length = params[:ad_chat_length]
+    	@setting.save
+    	render "/callcenter/settings"
+    elsif params[:main_account_msg]
+      @setting.main_account_msg = params[:main_account_msg]
+    	@setting.save
+    	render "/callcenter/settings"
+    elsif params[:one_word_chat_length]
+      @setting.one_word_chat_length = params[:one_word_chat_length]
+    	@setting.save
+    	render "/callcenter/settings"
+    end
+  end
+
+  def wangwang_list
+    @flag = false
+    user = WangwangMember.where(_id: params[:u_id]).first
+    setting = WangwangChatlogSetting.first
+    setting.wangwang_list = setting.wangwang_list.merge(user._id => user.short_id)
+    if setting.save
+      @flag = true
+    else
+      @flag = false
+    end
+    @wangwang_list = setting.wangwang_list
+    respond_to do |f|
+      f.js
+    end
+  end
+
+  def remove_wangwang
+    user = WangwangMember.where(_id: params[:u_id]).first
+    setting = WangwangChatlogSetting.first
+    setting.wangwang_list.delete(user._id.to_s)
+    setting.wangwang_list = {} if setting.wangwang_list == nil
+    setting.save
+    respond_to do |f|
+      f.js
+    end
+  end
+
 end

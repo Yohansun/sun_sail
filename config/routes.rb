@@ -45,6 +45,9 @@ MagicOrders::Application.routes.draw do
   get "/stock_products/search", to: 'stock_products#search'
   get "/sales/add_node", to: 'sales#add_node'
   get "/api/logistics", to: 'logistics#logistic_templates'
+  get 'callcenter/wangwang_list', to: 'callcenter#wangwang_list'
+  get 'callcenter/remove_wangwang', to: 'callcenter#remove_wangwang'
+
 
   resources :colors do
     collection do
@@ -57,7 +60,7 @@ MagicOrders::Application.routes.draw do
   get 'callcenter/created_and_paid'
   get 'callcenter/followed_paid'
   get 'callcenter/settings'
-
+  get 'callcenter/adjust_filter'
   
   resources :sellers do
     resources :stocks

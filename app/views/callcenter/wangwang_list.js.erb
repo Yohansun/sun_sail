@@ -1,0 +1,14 @@
+html = "<tr><th>用户名称</th><th>操作</th></tr>"
+<% if @wangwang_list.present? %>
+	<% @wangwang_list.each do |key, value| %>
+		html += "<tr id='wangwang_<%= key %>'>" +
+	          "<td><%= value %></td>" +
+	          "<td><a href='/callcenter/remove_wangwang?u_id=<%= key %>' data-method='get' data-remote='true'>解除过滤</a></td></tr>"
+	<% end %>
+<% end %>
+<% if @flag %>
+	$('#wangwang_list_<%=params[:u_id]%>').hide()
+<% else %>
+	$('#checkbox_id_<%=params[:u_id]%>').removeAttr('checked')
+<% end %>
+$('#wangwang_table_list').html(html)
