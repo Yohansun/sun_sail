@@ -108,14 +108,14 @@ class MagicOrders.Views.TradesDetail extends Backbone.View
           if order.packaged
             for index in [0...order.bill_info.length]
               mergedColor = compressArray(colors[index])
-              console.log("mergedColor ->"+mergedColor)
+              # console.log("mergedColor ->"+mergedColor)
               if mergedColor.length is 0
-                $('.js-color-label-'+order.id+"-"+info.iid).html('')
+                $('.js-color-label-'+order.id+"-"+order.bill_info[index].iid).html('')
               else
                 colorHtml = ''
                 for color in mergedColor
                   colorHtml += color.count+"桶 "+color.value+"<br/>"
-                console.log("colorHtml ->"+colorHtml)
+                # console.log("colorHtml ->"+colorHtml)
                 $('.js-color-label-'+order.id+"-"+order.bill_info[index].iid).html(colorHtml)
           else
             mergedColor = compressArray(colors)
