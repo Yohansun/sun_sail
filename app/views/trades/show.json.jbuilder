@@ -107,6 +107,11 @@ json.orders OrderDecorator.decorate(@trade.orders) do |json, order|
   json.packaged order.model.product.try(:package_info).present?
 end
 
+if @trade._type == "TaobaoPurchaseOrder"
+  json.distributor_username @trade.distributor_username
+  json.distributor_payment @trade.distributor_payment
+end
+
 json.unusual_states @trade.unusual_states do |json, state|
   json.id state._id
   json.reason state.reason

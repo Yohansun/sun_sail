@@ -68,7 +68,7 @@
                   <% if @trade.get('total_fee') isnt undefined and order['bill_info'].length < 2 : %>
                     <td>￥<%= order.price %></td>
                   <% end %>
-                  <td class='js-order-cs-memo-label-<%= order.id %>'><%= order.cs_memo %></td>               
+                  <td class='js-order-cs-memo-label-<%= order.id %>'><%= order.cs_memo %></td>
                 </tr>
               <% end %>
             <% end %>
@@ -76,17 +76,22 @@
           <% if MagicOrders.role_key == 'admin' or MagicOrders.role_key == 'cs' : %>
             <tr>
               <td colspan="2">
-                <b class="mar_r10">订单金额：￥<%= @trade.get('total_fee') %></b>
-                <b class="mar_r10">积分：￥<%= @trade.get('point_fee') || 0 %></b>
-                <b class="mar_r10">活动优惠：￥<%= @trade.get('seller_discount') %></b>
+                <b class="mar_r10">订单金额：￥<%= @trade.get('sum_fee') %></b>
+
+                <% unless @trade.get('trade_type') == 'TaobaoPurchaseOrder' : %>
+                  <b class="mar_r10">积分：￥<%= @trade.get('point_fee') || 0 %></b>
+                  <b class="mar_r10">活动优惠：￥<%= @trade.get('seller_discount') %></b>
+                <% end %>
+
                 <b class="mar_r10">物流费：￥<%= @trade.get('post_fee') %> </b>
               </td>
-              <td colspan="3" class="tr"><b>订单实付金额：￥<%= @trade.get('payment')%></b></td>
+
+              <td colspan="3" class="tr"><b>订单实付金额：￥<%= @trade.get('total_fee')%></b></td>
             </tr>
-            <% if @trade.get('distributor_usercode') : %>
+            <% if @trade.get('trade_type') == 'TaobaoPurchaseOrder' : %>
               <tr>
                 <td colspan='2'>
-                  <b class="mar_r10">分销商编号：￥<%= @trade.get('distributor_username') %></b>
+                  <b class="mar_r10">分销商编号：<%= @trade.get('distributor_username') %></b>
                 </td>
                 <td colspan='3' class="tr">
                   <b>分销商实付金额：￥<%= @trade.get('distributor_payment') %></b>
@@ -205,7 +210,7 @@
                       <% end %>
                     <% end %>
                     <% for count in [0...(info.number*order.num)] : %>
-                        <input type="text" data-provide="typeahead" placeholder="请输入色号..." class="color_typeahead input-xlarge js-color-num-<%= order.item_id %>-<%= info.iid %>-<%= count %>" 
+                        <input type="text" data-provide="typeahead" placeholder="请输入色号..." class="color_typeahead input-xlarge js-color-num-<%= order.item_id %>-<%= info.iid %>-<%= count %>"
                         value='<%= existing_colors[count] %>'><br/>
                     <% end %>
                   </td>
@@ -309,7 +314,7 @@
       </table>
       <div class="modal-footer">
         <a href="#" class="btn btn-primary" data-dismiss="modal">关闭</a>
-      </div>      
+      </div>
     </div>
   </div>
 </div><!-- modal-body -->
