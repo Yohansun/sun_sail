@@ -77,15 +77,18 @@ json.orders OrderDecorator.decorate(@trade.orders) do |json, order|
   json.title order.title
   json.num order.num
   unless TradeSetting.company == 'dulux' && current_user.has_role?(:seller)
-    if current_user.has_role?(:seller) && @trade._type == "TaobaoPurchaseOrder"
-      json.price order.price
-      json.total_fee order.seller_total_fee
-    else
+    if @trade._type == "TaobaoPurchaseOrder"
       json.price order.auction_price
       json.total_fee order.total_fee
+
+      unless current_user.has_role?(:seller)
+        json.buyer_price order.price
+      end
+    else
+      json.price order.price
     end
+
     json.auction_price order.auction_price
-    json.total_fee order.total_fee
     json.buyer_payment order.buyer_payment
     json.distributor_payment order.distributor_payment
   end
