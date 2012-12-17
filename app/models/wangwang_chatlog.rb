@@ -13,19 +13,16 @@ class WangwangChatlog
   	self.adjust_wangwang_solo & self.adjust_mass_msg & self.adjust_one_word & self.adjust_main_account & self.adjust_ad & self.adjust_self_buyer & self.adjust_wangwang_account
   end
 
-  private
-
   def adjust_self_buyer
   	if WangwangMember.all.map(&:user_id).include?(self.buyer_nick)
       WangwangChatlogSetting.first.self_buyer_filter ? self.usable = true : self.usable = false
       self.save
-      break
     end
   end
 
   def adjust_wangwang_account
     WangwangChatlogSetting.first.wangwang_list.keys.each do |key|
-      if WangwangMember.where(_id: key).first.user_id == self.buyer_nick
+      if WangwangMember.where(_id: key).first.user_id == self.user_id
         WangwangChatlogSetting.first.wangwang_account_filter ? self.usable = true : self.usable = false
         self.save
         break
@@ -57,7 +54,6 @@ class WangwangChatlog
     if self.wangwang_chatmsgs.where(direction: 1).count == 1 && self.wangwang_chatmsgs.count < WangwangChatlogSetting.first.one_word_chat_length
       WangwangChatlogSetting.first.one_word_filter ? self.usable = true : self.usable = false
       self.save
-      break
     end
   end
 
@@ -75,7 +71,6 @@ class WangwangChatlog
     if self.wangwang_chatmsgs.where(direction: 0).count == self.wangwang_chatmsgs.count
       WangwangChatlogSetting.first.wangwang_solo_filter ? self.usable = true : self.usable = false
       self.save
-      break
     end
   end
 

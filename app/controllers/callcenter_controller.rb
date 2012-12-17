@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class CallcenterController < ApplicationController
 	include CallcenterHelper
 	before_filter :authenticate_user!
@@ -14,7 +15,7 @@ class CallcenterController < ApplicationController
 				  range_start = Time.now - 1.month + 1.day	
 				end
 			else	
-        range_start = Time.now - 1.day
+            range_start = Time.now - 30.day
 			end	
 			range_end = Time.now - 1.day
 			@start_date = range_start.beginning_of_day
@@ -38,7 +39,7 @@ class CallcenterController < ApplicationController
 				  range_start = Time.now - 1.month + 1.day
 				end
 			else
-				range_start = Time.now - 1.day
+				range_start = Time.now - 30.day
 			end
 			range_end = Time.now - 1.day
 			@start_date = range_start.beginning_of_day
@@ -60,7 +61,7 @@ class CallcenterController < ApplicationController
 				  range_start = Time.now - 1.month + 1.day
 				end
 			else
-				range_start = Time.now - 1.day
+				range_start = Time.now - 30.day
 			end
 			range_end = Time.now - 1.day
 			@start_date = range_start.beginning_of_day
@@ -82,7 +83,7 @@ class CallcenterController < ApplicationController
 				  range_start = Time.now - 1.month + 1.day
 				end
 			else
-				range_start = Time.now - 1.day
+				range_start = Time.now - 30.day
 			end
 			range_end = Time.now - 1.day
 			@start_date = range_start.beginning_of_day
@@ -98,18 +99,15 @@ class CallcenterController < ApplicationController
   end
 
   def adjust_filter
+    @wangwangs = WangwangMember.all
     @setting = WangwangChatlogSetting.first
     if params[:type]
-	    @setting[params[:type]]
       @setting[params[:type]] ? @setting[params[:type]] = false : @setting[params[:type]] = true
       @setting.save
       render text: "success"
-    elsif params[:ad_msg]
-    	@setting.ad_msg = params[:ad_msg]
-    	@setting.save
-    	render "/callcenter/settings"
-    elsif params[:ad_chat_length]
-    	@setting.ad_chat_length = params[:ad_chat_length]
+    elsif params[:ad_msg] || params[:ad_chat_length]
+    	@setting.ad_msg = params[:ad_msg] if params[:ad_msg]
+    	@setting.ad_chat_length = params[:ad_chat_length] if params[:ad_chat_length]
     	@setting.save
     	render "/callcenter/settings"
     elsif params[:main_account_msg]
@@ -118,7 +116,7 @@ class CallcenterController < ApplicationController
     	render "/callcenter/settings"
     elsif params[:one_word_chat_length]
       @setting.one_word_chat_length = params[:one_word_chat_length]
-    	@setting.save
+      @setting.save
     	render "/callcenter/settings"
     end
   end

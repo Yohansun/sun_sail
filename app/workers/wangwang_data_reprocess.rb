@@ -4,17 +4,18 @@ class WangwangDataReprocess
   sidekiq_options :queue => :data_process
   
   def perform()
-    start_date = (Time.now - 16.days).beginning_of_day.strftime("%Y-%m-%d %H:%M:%S")
+    start_date = (Time.now - 20.days).beginning_of_day.strftime("%Y-%m-%d %H:%M:%S")
     p start_date
-    end_date = (Time.now - 16.days).end_of_day.strftime("%Y-%m-%d %H:%M:%S")
+    end_date = (Time.now - 20.days).end_of_day.strftime("%Y-%m-%d %H:%M:%S")
     p end_date
-    #WangwangPuller.new.get_wangwang_data(start_date, end_date)
+    WangwangPuller.new.get_wangwang_data(start_date, end_date)
     p "start member_brief_info"
     member_brief_info(start_date.to_time, end_date.to_time)
   end
 
   def member_brief_info(start_date, end_date)
     WangwangChatlog.all.each do |log|
+      p "chatlog_filter"
       log.chatlog_filter
     end
     today = start_date.to_i
@@ -93,13 +94,12 @@ class WangwangDataReprocess
       yesterday_final_paid_count = result.count
       yesterday_final_paid_payment = result.try(:sum, :payment) || 0
 
+      ## 落实付款 ##
       #付款订单: 本旺旺落实当日付款订单
       daily_paid_trades = TaobaoTrade.where(:pay_time.gte => start_date, :pay_time.lt => end_date)
       result = chatlog_query(daily_paid_trades, m.service_staff_id, "pay_time")
       daily_paid_count = result.count
       daily_paid_payment = result.try(:sum, :payment) || 0
-
-      ## 落实付款 ##
       #本人单
       second_result = chatlog_query(result, m.service_staff_id, "created")
       daily_self_paid_count = second_result.count
@@ -155,7 +155,7 @@ class WangwangDataReprocess
            tids << trade.tid
         end
       end
-      clert_chatlog = WangwangChatlog.where(:end_time.lt => trade[time_status]).where(buyer_nick: trade.buyer_nick)
+      clert_chatlog = WangwangChatlog.where(:end_time.gte => (trade[time_status] - 2.day), :end_time.lt => trade[time_status]).where(buyer_nick: trade.buyer_nick)
       if clert_chatlog.count == 1 && user_id == clert_chatlog.first.user_id
         tids << trade.tid
       elsif clert_chatlog.count > 1

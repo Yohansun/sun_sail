@@ -5,7 +5,9 @@ class WangwangPuller
 	END_DATE = (Time.now - 16.days).end_of_day.strftime("%Y-%m-%d %H:%M:%S")
 
   def get_wangwang_data(start_date = nil, end_date = nil, service_staff_ids = nil, manager_id = nil)
-    chatpeers_get(start_date, end_date, service_staff_ids) & receivenum_get(start_date, end_date, service_staff_ids) & chatlog_get(start_date, end_date, service_staff_ids) #
+    unless WangwangReplyState.all.map(&:reply_date).include?(start_date.to_time.to_i)
+      chatpeers_get(start_date, end_date, service_staff_ids) & receivenum_get(start_date, end_date, service_staff_ids) & chatlog_get(start_date, end_date, service_staff_ids) #
+    end
   end
 
   private
