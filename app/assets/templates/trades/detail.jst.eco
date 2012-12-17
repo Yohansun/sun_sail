@@ -12,6 +12,7 @@
     <li class="active"><a href="#tab1" data-toggle="tab" class="active">详情</a></li>
     <% if MagicOrders.role_key == 'admin' or MagicOrders.role_key == 'cs' : %>
       <li class=""><a href="#tab2" data-toggle="tab">预处理</a></li>
+      <li class=""><a href="#tab3" data-toggle="tab">日志</a></li>
     <% end %>
   </ul>
   <!-- tab container -->
@@ -253,6 +254,35 @@
       <div class="modal-footer">
         <button type="submit" class="btn btn-primary js-save" data-source='pre-process'>保存</button>
       </div>
+    </div>
+    <!-- tab3 -->
+    <div class="tab-pane" id='tab3'>
+      <table class="table table-bordered table-condensed">
+        <thead>
+          <tr>
+            <th>操作时间</th>
+            <th>操作</th>
+            <th>操作人</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for log in @trade.get('operation_logs') : %>
+            <tr>
+              <td><%= log.operated_at %></td>
+              <td><%= log.operation %></td>
+              <td><%= log.operator %></td>
+            </tr>
+          <% end %>
+          <% if @trade.get('operation_logs').length == 0 : %>
+            <tr>
+              <td colspan='3'>暂无数据</td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <div class="modal-footer">
+        <a href="#" class="btn btn-primary" data-dismiss="modal">关闭</a>
+      </div>      
     </div>
   </div>
 </div><!-- modal-body -->

@@ -10,6 +10,10 @@ class JingdongOrder < Order
 
   embedded_in :jingdong_trades
 
+  def product
+    super(outer_sku_id)
+  end
+
   def bill_info
     tmp = {}
     color_num.each do |nums|
