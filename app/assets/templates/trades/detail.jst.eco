@@ -83,7 +83,7 @@
               </td>
               <td colspan="3" class="tr"><b>订单实付金额：￥<%= @trade.get('payment')%></b></td>
             </tr>
-            <% if @trade.distributor_usercode : %>
+            <% if @trade.get('distributor_usercode') : %>
               <tr>
                 <td colspan='2'>
                   <b class="mar_r10">分销商编号：￥<%= @trade.get('distributor_username') %></b>
