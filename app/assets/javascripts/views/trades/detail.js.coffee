@@ -86,12 +86,12 @@ class MagicOrders.Views.TradesDetail extends Backbone.View
       success: (model, response) =>
         $.unblockUI()
         # refresh the content of info tab elements
-        $(".trade-cs-memo-label").html(@model.get('cs_memo'))
+        $(".js-trade-cs-memo-label").html(model.get('cs_memo'))
         for item in $(".order_cs_memo")
           order_id = $(item).data("order-id")
           $(".js-order-cs-memo-label-"+order_id).html($(item).val())
 
-        for order in @model.get('orders')
+        for order in model.get('orders')
           colors = []
           if order.packaged
             for info in order.bill_info
@@ -127,8 +127,12 @@ class MagicOrders.Views.TradesDetail extends Backbone.View
                 colorHtml += color.count+"桶 "+color.value+"<br/>"
               $('.js-color-label-'+order.id).html(colorHtml)
 
-        $('.js-invoice-label').html(@model.get('invoice_type') + ': ' + $("#invoice_name_text").val() + ', ' + $("#invoice_content_text").val() + ', ' + $("#invoice_date_text").val())
-        $('.js-gift-memo-label').html(@model.get 'gift_memo')
+        if model.get('invoice_name') or model.get('invoice_content')
+          $('.js-invoice-label').html(model.get('invoice_type') + ' ' + model.get('invoice_name') + ' ' + model.get('invoice_content') + ' ' + $("#invoice_date_text").val())
+        else
+          $('.js-invoice-label').html('')
+
+        $('.js-gift-memo-label').html(model.get 'gift_memo')
         # focus on the info tab
         $('#myTab a:first').tab('show');
         # refresh the data to row view

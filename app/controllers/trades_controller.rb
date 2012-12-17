@@ -106,36 +106,18 @@ class TradesController < ApplicationController
       @trade.logistic_waybill = params[:logistic_waybill].present? ? params[:logistic_waybill] : @trade.tid
     end
 
-    unless params[:cs_memo].blank?
+    if params[:cs_memo]
       @trade.cs_memo = params[:cs_memo].strip
       if @trade.changed.include? 'cs_memo'
         notifer_seller_flag = true
       end
     end
-
-    unless params[:gift_memo].blank?
-      @trade.gift_memo = params[:gift_memo].strip
-    end
-
-    unless params[:invoice_type].blank?
-      @trade.invoice_type = params[:invoice_type].strip
-    end
-
-    unless params[:invoice_name].blank?
-      @trade.invoice_name = params[:invoice_name].strip
-    end
-
-    unless params[:invoice_content].blank?
-      @trade.invoice_content = params[:invoice_content].strip
-    end
-
-    unless params[:invoice_date].blank?
-      @trade.invoice_date = params[:invoice_date].strip
-    end
-
-    unless params[:invoice_number].blank?
-      @trade.invoice_number = params[:invoice_number].strip
-    end
+    @trade.gift_memo = params[:gift_memo].strip if params[:gift_memo]
+    @trade.invoice_type = params[:invoice_type].strip if params[:invoice_type]
+    @trade.invoice_name = params[:invoice_name].strip if params[:invoice_name]
+    @trade.invoice_content = params[:invoice_content].strip if params[:invoice_content]
+    @trade.invoice_date = params[:invoice_date].strip if params[:invoice_date]
+    @trade.invoice_number = params[:invoice_number].strip if params[:invoice_number]
 
     if params[:seller_confirm_deliver_at] == true
       @trade.seller_confirm_deliver_at = Time.now
