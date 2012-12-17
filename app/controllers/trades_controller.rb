@@ -26,9 +26,7 @@ class TradesController < ApplicationController
     @report = TradeReport.new
     @report.request_at = Time.now
     @report.user_id = current_user.id
-    %w(status_option to_logistic_print_date from_deliver_print_date from_logistic_print_time to_deliver_print_date from_deliver_print_time to_logistic_print_time to_deliver_print_time).each do |undefined|
-      params['search'][undefined] = '' if params['search'][undefined] == "undefined"
-    end  
+    params['search'] =  params['search'] .select {|k,v| v != "undefined"  }   
     @report.conditions = params.select {|k,v| !['limit','offset', 'action', 'controller'].include?(k)  } 
     if TradeSetting.company == "nippon" && @report.conditions.fetch("search").fetch("type_option").blank?
       render :js => "alert('导出报表之前请在高级搜索中选择订单来源');$('.export_orders_disabled').addClass('export_orders').removeClass('export_orders_disabled disabled');"
