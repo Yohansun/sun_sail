@@ -135,4 +135,3 @@ class MagicOrders.Views.TradesDetail extends Backbone.View
         view = new MagicOrders.Views.TradesRow(model: model)
         $("#trade_#{model.get('id')}").replaceWith(view.render().el)
         $("a[rel=popover]").popover(placement: 'left')
-        $('#logistic_waybill').modal('hide')
