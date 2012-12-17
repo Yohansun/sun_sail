@@ -88,15 +88,15 @@ class TradeDecorator < Draper::Base
         trade.consignee_info['telephone']
     end
   end
-  
+
   def receiver_full_address
-    "#{self.receiver_state} #{self.receiver_city} #{self.receiver_district} #{self.receiver_address}"  
+    "#{self.receiver_state} #{self.receiver_city} #{self.receiver_district} #{self.receiver_address}"
   end
-  
+
   def receiver_area_name
-    "#{self.receiver_state} #{self.receiver_city} #{self.receiver_district}"  
+    "#{self.receiver_state} #{self.receiver_city} #{self.receiver_district}"
   end
-  
+
   def has_wrong_arguments_address?
     self.receiver_state.blank? || self.receiver_city.blank? || self.receiver_district.blank? || self.receiver_address.blank?
   end
@@ -176,7 +176,7 @@ class TradeDecorator < Draper::Base
       when 'TaobaoPurchaseOrder'
         trade.total_fee - (self.payment - trade.post_fee)
       when 'TaobaoTrade'
-        trade.total_fee - (self.payment - trade.post_fee)
+        self.sum_fee + self.post_fee - trade.payment
       when 'JingdongTrade'
        trade.seller_discount
     end
@@ -198,8 +198,7 @@ class TradeDecorator < Draper::Base
     when 'TaobaoPurchaseOrder'
       self.sum_fee.to_f + self.post_fee.to_f
     when 'TaobaoTrade'
-      #self.sum_fee.to_f + self.post_fee.to_f
-      trade.payment
+      self.payment
     when 'JingdongTrade'
       trade.order_seller_price
     end
@@ -228,8 +227,10 @@ class TradeDecorator < Draper::Base
   #总价
   def sum_fee
     case trade._type
-    when 'TaobaoPurchaseOrder', 'TaobaoTrade'
+    when 'TaobaoPurchaseOrder'
       fee = trade.orders.inject(0) { |sum, order| sum + OrderDecorator.decorate(order).total_fee.to_f }
+    when 'TaobaoTrade'
+      fee = trade.total_fee
     else
       fee = self.total_fee.to_f + self.seller_discount.to_f - self.post_fee.to_f
     end
@@ -243,7 +244,7 @@ class TradeDecorator < Draper::Base
       trade.orders.inject(0) { |sum, order| sum + OrderDecorator.decorate(order).seller_total_fee.to_f }
     when 'TaobaoTrade'
       trade.orders.inject(0) { |sum, order| sum + order.payment.to_f }
-    else  
+    else
       self.total_fee.to_f + self.seller_discount.to_f - self.post_fee.to_f
     end
   end
@@ -301,14 +302,14 @@ class TradeDecorator < Draper::Base
       trade.jingdong_orders
     end
   end
-  
+
   def is_1568
     if trade.try(:seller).try(:areas).try(:first).nil?
       false
     else
       trade.seller.areas.first.is_1568
     end
-  end  
+  end
 
   protected
 
