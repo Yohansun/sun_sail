@@ -19,7 +19,7 @@
   <div class="tab-content">
     <!-- tab1 -->
     <div class="tab-pane active" id="tab1">
-      <p>订单备注：<span class='trade-cs-memo-label'><%= @trade.get('cs_memo') %></span></p>
+      <p>订单备注：<span class='js-trade-cs-memo-label'><%= @trade.get('cs_memo') %></span></p>
       <table class="table table-bordered table-condensed">
         <thead>
           <tr>
@@ -132,14 +132,14 @@
               <%= @trade.get('cs_memo') %>
             </td>
           </tr>
-          <% if @trade.get('invoice_name') : %>
           <tr>
             <td colspan="1"><b>开票信息</b></td>
             <td colspan="4" class="reedit_text js-invoice-label">
-              <%= @trade.get('invoice_type')%>: <%= @trade.get('invoice_name')%> <%= @trade.get('invoice_content')%> <%= @trade.get('invoice_date')%>
+              <% if @trade.get('invoice_name') : %>
+                <%= @trade.get('invoice_type')%> <%= @trade.get('invoice_name')%> <%= @trade.get('invoice_content')%> <%= @trade.get('invoice_date')%>
+              <% end %>
             </td>
           </tr>
-          <% end %>
           <% if MagicOrders.company == "dulux" : %>
             <% if (MagicOrders.role_key == 'admin' or MagicOrders.role_key == 'cs') : %>
               <tr>
