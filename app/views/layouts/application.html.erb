@@ -58,7 +58,7 @@
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Magic<b class="caret"></b></a>
               <ul class="dropdown-menu">
                 <li><a href="/app#trades" class="trades">订单管理</a></li>
-                <li><a href="/trade_reports">数据魔方</a></li>
+                <li><a href="/sales">数据魔方</a></li>
                 <% if current_user.has_role?(:seller) && current_user.seller %>
                   <li><%= link_to '仓库管理', seller_stocks_path(current_user.seller.id), class: "stocks" %></li>
                 <% elsif current_user.has_role?(:admin) %>
