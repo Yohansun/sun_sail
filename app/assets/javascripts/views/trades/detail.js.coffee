@@ -131,3 +131,8 @@ class MagicOrders.Views.TradesDetail extends Backbone.View
         $('.js-gift-memo-label').html(@model.get 'gift_memo')
         # focus on the info tab
         $('#myTab a:first').tab('show');
+        # refresh the data to row view
+        view = new MagicOrders.Views.TradesRow(model: model)
+        $("#trade_#{model.get('id')}").replaceWith(view.render().el)
+        $("a[rel=popover]").popover(placement: 'left')
+        $('#logistic_waybill').modal('hide')
