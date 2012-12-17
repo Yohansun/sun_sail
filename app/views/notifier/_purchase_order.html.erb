@@ -34,21 +34,15 @@
     <span class="font-gray">¥</span> <span class="font-blueb"><%= @trade.seller_sum_fee %></span>
   </div>
   <div class="pb5 pt5">
+    <label class="label75"><span class="font-14b">优惠金额: </span></label>&nbsp;
+    <span class="font-gray">¥</span> <span class="font-blueb"><%= @trade.seller_discount %></span>
+  </div>
+  <div class="pb5 pt5">
     <label class="label75"><span class="font-14b">运输费用：</span></label>&nbsp;
     <span class="font-gray">¥</span> <span class="font-blueb"><%= @trade.post_fee %></span>
   </div>
-  <%- if @trade.seller_discount > 0 %>
-    <div class="pb5 pt5">
-      <label class="label75"><span class="font-14b">订单折扣:</span></label>&nbsp;
-      <span class="font-gray">¥</span> <span class="font-blueb"><%= @trade.seller_discount %></span>
-    </div>
-  <% end %> 
-  <!--<div class="pb5 pt5">-->
-  <!--<label class="label75"><span class="font-14b">优惠券：</span></label>&nbsp;-->
-  <!--<span class="font-gray">¥</span> <span class="font-blueb">200</span>-->
-  <!--</div>-->
   <div class="pb5 pt5 l">
-    <label class="label75"><span class="font-14b">总价：</span></label>&nbsp;
+    <label class="label75"><span class="font-14b">订单总价：</span></label>&nbsp;
     <span class="font-gray">¥</span> <span class="font-cyanb"><%= @trade.seller_total_fee %></span>
   </div>
 </div>
