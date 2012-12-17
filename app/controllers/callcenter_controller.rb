@@ -2,6 +2,7 @@
 class CallcenterController < ApplicationController
 	include CallcenterHelper
 	before_filter :authenticate_user!
+	before_filter :check_module
 
 	def contrastive_performance
 		if params[:start_date].present? && params[:end_date].present?
@@ -15,7 +16,7 @@ class CallcenterController < ApplicationController
 				  range_start = Time.now - 1.month + 1.day	
 				end
 			else	
-            range_start = Time.now - 30.day
+        range_start = Time.now - 30.day
 			end	
 			range_end = Time.now - 1.day
 			@start_date = range_start.beginning_of_day
@@ -148,4 +149,9 @@ class CallcenterController < ApplicationController
     end
   end
 
+  private
+
+  def check_module
+  	redirect_to "/" if TradeSetting.enable_module_wangwang != true
+  end
 end

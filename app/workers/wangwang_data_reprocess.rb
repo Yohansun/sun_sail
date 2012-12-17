@@ -2,15 +2,19 @@
 class WangwangDataReprocess
   include Sidekiq::Worker
   sidekiq_options :queue => :data_process
-  
+
   def perform()
-    start_date = (Time.now - 20.days).beginning_of_day.strftime("%Y-%m-%d %H:%M:%S")
-    p start_date
-    end_date = (Time.now - 20.days).end_of_day.strftime("%Y-%m-%d %H:%M:%S")
-    p end_date
-    WangwangPuller.new.get_wangwang_data(start_date, end_date)
-    p "start member_brief_info"
-    member_brief_info(start_date.to_time, end_date.to_time)
+    # 注意start_date的时间必须是零点
+    (28..30).each do |num|
+      start_date = (Time.now - num.days).beginning_of_day.strftime("%Y-%m-%d %H:%M:%S")
+      p start_date
+      end_date = (Time.now - num.days).end_of_day.strftime("%Y-%m-%d %H:%M:%S")
+      p end_date
+      unless WangwangPuller.new.get_wangwang_data(start_date, end_date) == nil
+        p "start member_brief_info"
+        member_brief_info(start_date.to_time, end_date.to_time)
+      end
+    end
   end
 
   def member_brief_info(start_date, end_date)
