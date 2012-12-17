@@ -116,6 +116,7 @@ class DuluxTaobaoTradeReporter
 
     file = "data/#{id}.xls"
     FileUtils.cd Rails.root
+    FileUtils.mkdir 'data' unless Dir.exists?("data")
     # FileUtils.touch(file) unless File.exist?(file)
     # FileUtils.chmod 0777, file
     book.write file
