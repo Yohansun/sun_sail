@@ -174,9 +174,9 @@ class TradeDecorator < Draper::Base
   def seller_discount
     case trade._type
       when 'TaobaoPurchaseOrder'
-        0
+        trade.total_fee - (trade.payment - trade.post_fee)
       when 'TaobaoTrade'
-        0
+        trade.total_fee - (trade.payment - trade.post_fee)
       when 'JingdongTrade'
        trade.seller_discount
     end
