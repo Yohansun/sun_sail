@@ -5,7 +5,7 @@ class WangwangDataReprocess
 
   def perform()
     # 注意start_date的时间必须是零点
-    (28..30).each do |num|
+    (26..26).each do |num|
       start_date = (Time.now - num.days).beginning_of_day.strftime("%Y-%m-%d %H:%M:%S")
       p start_date
       end_date = (Time.now - num.days).end_of_day.strftime("%Y-%m-%d %H:%M:%S")
@@ -22,29 +22,30 @@ class WangwangDataReprocess
       p "chatlog_filter"
       log.chatlog_filter
     end
+    chatlogs = WangwangChatlog.where(usable: true)
     today = start_date.to_i
     yesterday = start_date.yesterday.to_i
-    inquired_today = WangwangChatpeer.where(date: today).map(&:buyer_nick).uniq
-    inquired_today_yesterday = WangwangChatpeer.where(:date.in => [today, yesterday]).map(&:buyer_nick).uniq
+    inquired_today = WangwangChatpeer.where(date: today).map(&:buyer_nick)
+    inquired_today_yesterday = WangwangChatpeer.where(:date.in => [today, yesterday]).map(&:buyer_nick)
     WangwangMember.all.each do |m|
       #当日接待
       daily_reply_count = WangwangReplyState.where(user_id: m.service_staff_id).where(reply_date: today).sum(:reply_num) || 0
 
       #当日询单（该数据须延迟一天统计)
-      daily_inquired_count = WangwangChatpeer.where(user_id: m.service_staff_id).where(date: today).map(&:buyer_nick).count
+      daily_inquired_count = WangwangChatpeer.where(user_id: m.service_staff_id).where(date: today).map(&:buyer_nick).uniq.count
 
       #下单订单: 前一日或当日询单，本旺旺落实当日下单订单
       yesterday_created_count = 0
       yesterday_created_payment = 0
       yesterday_created_trades = TaobaoTrade.where(:buyer_nick.in => inquired_today_yesterday).where(:created.gte => start_date, :created.lt => end_date)
       yesterday_created_trades.each do |trade|
-        WangwangChatlog.where(user_id: m.service_staff_id).each do |log|
+        chatlogs.where(user_id: m.service_staff_id).each do |log|
           if (log.start_time..log.end_time).include?(trade.created)
               yesterday_created_count += 1
               yesterday_created_payment += trade.payment
           end
         end
-        clert_chatlog = WangwangChatlog.where(:end_time.lt => trade.created).where(buyer_nick: trade.buyer_nick)
+        clert_chatlog = chatlogs.where(:end_time.lt => trade.created).where(buyer_nick: trade.buyer_nick)
         if clert_chatlog.count == 1 && m.service_staff_id == clert_chatlog.first.user_id
           yesterday_created_count += 1
           yesterday_created_payment += trade.payment
@@ -112,7 +113,7 @@ class WangwangDataReprocess
       daily_quiet_paid_count = 0
       daily_quiet_paid_payment = 0
       second_result.each do |trade|
-        chatlog_count = WangwangChatlog.where(:end_time.lt => trade.created).where(buyer_nick: trade.buyer_nick).count
+        chatlog_count = chatlogs.where(:end_time.lt => trade.created).where(buyer_nick: trade.buyer_nick).count
         if chatlog_count == 0
           daily_quiet_paid_count += 1
           daily_quiet_paid_payment += trade.payment
@@ -153,17 +154,18 @@ class WangwangDataReprocess
 
   def chatlog_query(trades, user_id, time_status)
     tids = []
+    chatlogs = WangwangChatlog.where(usable: true)
     trades.each do |trade|
-      WangwangChatlog.where(user_id: user_id).each do |log|
+      chatlogs.where(user_id: user_id).each do |log|
         if (log.start_time..log.end_time).include?(trade[time_status])
-           tids << trade.tid
+          tids << trade.tid
         end
       end
-      clert_chatlog = WangwangChatlog.where(:end_time.gte => (trade[time_status] - 2.day), :end_time.lt => trade[time_status]).where(buyer_nick: trade.buyer_nick)
+      clert_chatlog = chatlogs.where(:end_time.gte => (trade[time_status] - 1.week), :end_time.lt => trade[time_status]).where(buyer_nick: trade.buyer_nick)
       if clert_chatlog.count == 1 && user_id == clert_chatlog.first.user_id
         tids << trade.tid
       elsif clert_chatlog.count > 1
-        min_gap = 172800  #two_day
+        min_gap = 604800  #one week
         id = ''
         clert_chatlog.each do |log|
           if min_gap > trade[time_status] - log.end_time
