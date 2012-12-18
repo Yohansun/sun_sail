@@ -1,19 +1,23 @@
 <div class="order-st-list">
-  <table border="0" cellpadding="0" cellspacing="0">
+  <table border="1" cellpadding="0" cellspacing="0" style="width: 1000px; border:  1px solid #ddd; margin: 15px 0;">
     <tr>
-      <th class="td1">商品名</th>
-      <th class="td2">特殊属性</th>
-      <th class="td2">调色信息</th>
-      <th class="td3">实际单价</th>
-      <th class="td3">数量</th>
-      <th class="td3">总价</th>
+        <td style="padding: 5px;text-align: center;"><b>订单编号：</b><%= @trade.tid %></td>
+        <td style="padding: 5px;text-align: center;"  colspan="5"><b>订单状态：</b><%= @trade.status_text %></td>
+    </tr>
+    <tr>
+      <th style="padding: 5px;text-align: center;" width="450">商品名</th>
+      <th style="padding: 5px;text-align: center;">特殊属性</th>
+      <th style="padding: 5px;text-align: center;">调色信息</th>
+      <th style="padding: 5px;text-align: center;">实际单价</th>
+      <th style="padding: 5px;text-align: center;">数量</th>
+      <th style="padding: 5px;text-align: center;">商品总价</th>
     </tr>
     <%- @trade.orders.each do |object| %>
         <%- order = OrderDecorator.decorate(object) %>
         <tr>
-          <td class="td1"><%= order.title %></td>
-          <td class="td2"><%= order.sku_properties %></td>
-          <td class="td2">
+          <td style="padding: 5px;text-align: center;"><%= order.title %></td>
+          <td style="padding: 5px;text-align: center;"><%= order.sku_properties %></td>
+          <td style="padding: 5px;text-align: center;">
             <%- if order.color_num && order.color_num.present? %>
               <%- order.color_num.each do |color| %>
                 <%- color_name = Color.find_by_num(color).try(:name) %>
@@ -21,28 +25,28 @@
               <%-end %>  
             <%- end %>          
           </td>
-          <td class="td3"><span class="font-gray">¥<%= order.price %></span></td>
-          <td class="td3"><%= order.num %></td>
-          <td class="td3"><%= order.seller_total_fee %></td>
+          <td style="padding: 5px;text-align: center;"><span class="font-gray">¥<%= order.price %></span></td>
+          <td style="padding: 5px;text-align: center;"><%= order.num %></td>
+          <td style="padding: 5px;text-align: center;"><%= order.seller_total_fee %></td>
         </tr>
     <%- end %>
   </table>
 </div>
 <div class="order-st-total">
   <div class="pb5 pt5">
-    <label class="label75"><span class="font-14b">商品总价：</span></label>&nbsp;
+    <label class="label75"><span class="font-14b"><b>订单金额：</b></span></label>&nbsp;
     <span class="font-gray">¥</span> <span class="font-blueb"><%= @trade.seller_sum_fee %></span>
   </div>
   <div class="pb5 pt5">
-    <label class="label75"><span class="font-14b">优惠金额: </span></label>&nbsp;
+    <label class="label75"><span class="font-14b"><b>优惠金额: </b></span></label>&nbsp;
     <span class="font-gray">¥</span> <span class="font-blueb"><%= @trade.seller_discount %></span>
   </div>
   <div class="pb5 pt5">
-    <label class="label75"><span class="font-14b">运输费用：</span></label>&nbsp;
+    <label class="label75"><span class="font-14b"><b>运输费用：</b></span></label>&nbsp;
     <span class="font-gray">¥</span> <span class="font-blueb"><%= @trade.post_fee %></span>
   </div>
   <div class="pb5 pt5 l">
-    <label class="label75"><span class="font-14b">订单总价：</span></label>&nbsp;
+    <label class="label75"><span class="font-14b"><b>订单总价：</b></span></label>&nbsp;
     <span class="font-gray">¥</span> <span class="font-cyanb"><%= @trade.seller_total_fee %></span>
   </div>
 </div>

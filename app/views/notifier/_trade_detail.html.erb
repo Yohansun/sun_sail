@@ -1,25 +1,29 @@
 <div class="order-st-list">
-  <table border="0" cellpadding="0" cellspacing="0">
+  <table  border= "1" cellpadding="0" cellspacing="0" style="width: 1000px; border:  1px solid #ddd; margin: 15px 0;">
     <tr>
-      <th class="td1">商品名</th>
-      <th class="td2">特殊属性</th>
-      <th class="td2">调色信息</th>
+        <td style="padding: 5px;text-align: center;"><b>订单编号：</b><%= order.tid %></td>
+        <td style="padding: 5px;text-align: center;" colspan="5"><b>订单状态：</b><%= @trade.status_text %></td>
+    </tr>
+    <tr>
+      <th style="padding: 5px;text-align: center;" width="450">商品名</th>
+      <th style="padding: 5px;text-align: center;">特殊属性</th>
+      <th style="padding: 5px;text-align: center;">调色信息</th>
       <% unless TradeSetting.company == "dulux"%>
-      <th class="td2">标价</th>
-      <th class="td3">实际单价</th>
+      <th style="padding: 5px;text-align: center;">标价</th>
+      <th style="padding: 5px;text-align: center;">实际单价</th>
       <% end %>
-      <th class="td3">数量</th>
+      <th style="padding: 5px;text-align: center;">数量</th>
       <% unless TradeSetting.company == "dulux"%>
-      <th class="td3">总价</th>
+      <th style="padding: 5px;text-align: center;">商品总价</th>
       <% end %>
     </tr>
     <%- @trade.orders.each do |object| %>
       <%- order = OrderDecorator.decorate(object) %>
       <% object.bill_info.each do |info| %>
       <tr>
-        <td class="td1"><%= info[:title] %></td>
-        <td class="td2"><%= order.sku_properties %></td>
-        <td class="td2">
+        <td style="padding: 5px;text-align: center;"><%= info[:title] %></td>
+        <td style="padding: 5px;text-align: center;"><%= order.sku_properties %></td>
+        <td style="padding: 5px;text-align: center;">
         <%- if info[:colors].present? %>
           <%- info[:colors].each do |color, array| %>
             <%= array[0]%>桶 <%= color %>  <%= array[1] %><br>
@@ -28,14 +32,14 @@
         </td>
 
         <% unless TradeSetting.company == "dulux"%>
-        <td class="td2"><span class="font-blueb">¥<%= order.auction_price %></span></td>
-        <td class="td3"><span class="font-gray">¥<%= order.price %></span></td>
+        <td style="padding: 5px;text-align: center;"><span class="font-blueb">¥<%= order.auction_price %></span></td>
+        <td style="padding: 5px;text-align: center;"><span class="font-gray">¥<%= order.price %></span></td>
         <% end %>
 
-        <td class="td3"><%= info[:number] * order.num %></td>
+        <td style="padding: 5px;text-align: center;"><%= info[:number] * order.num %></td>
 
         <% unless TradeSetting.company == "dulux"%>
-        <td class="td3"><%= order.total_fee %></td>
+        <td style="padding: 5px;text-align: center;"><%= order.total_fee %></td>
         <% end %>
       </tr>
       <% end %>
@@ -45,27 +49,27 @@
 
 <% if TradeSetting.company == "dulux"%>
 <div class="pb5 pt5">
-  <label class="label75"><span class="font-14b">运输费用：</span></label>&nbsp;
+  <label class="label75"><span class="font-14b"><b>运输费用：</b></span></label>&nbsp;
   <span class="font-gray">¥</span> <span class="font-blueb"><%= @trade.post_fee %></span>
 </div>
 <%- else %>
 <div class="order-st-total">
   <div class="pb5 pt5">
-    <label class="label75"><span class="font-14b">商品总价：</span></label>&nbsp;
+    <label class="label75"><span class="font-14b"><b>订单金额</b></span></label>&nbsp;
     <span class="font-gray">¥</span> <span class="font-blueb"><%= @trade.sum_fee %></span>
   </div>
   <%- if @trade.seller_discount > 0 %>
     <div class="pb5 pt5">
-      <label class="label75"><span class="font-14b">优惠金额:</span></label>&nbsp;
+      <label class="label75"><span class="font-14b"><b>优惠金额: </b></span></label>&nbsp;
       <span class="font-gray">¥</span> <span class="font-blueb"><%= @trade.seller_discount %></span>
     </div>
   <% end %> 
   <div class="pb5 pt5">
-    <label class="label75"><span class="font-14b">运输费用：</span></label>&nbsp;
+    <label class="label75"><span class="font-14b"><b>运输费用：</b></span></label>&nbsp;
     <span class="font-gray">¥</span> <span class="font-blueb"><%= @trade.post_fee %></span>
   </div>
   <div class="pb5 pt5 l">
-    <label class="label75"><span class="font-14b">订单总价：</span></label>&nbsp;
+    <label class="label75"><span class="font-14b"><b>订单总价：</b></span></label>&nbsp;
     <span class="font-gray">¥</span> <span class="font-cyanb"><%= @trade.total_fee %></span>
   </div>
 </div>

@@ -3,23 +3,23 @@
 <head>
   <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
 </head>
-<body>
+<body style="padding-top:20px">
 <% if @notify_kind == 'new' %>
   <%=  @trade_info %>，具体信息如下，
 <% else %>
   <%=  @trade_info %> 信息有调整，具体信息如下，请以此封mail信息为准，
 <% end %>
 <br><%= @trade_deliver_info %>
-<br><%- if @trade._type == "TaobaoPurchaseOrder" %>
+<%- if @trade._type == "TaobaoPurchaseOrder" %>
 	<%= render "purchase_order" %>
 <%- else %>	
 	<%= render "trade_detail" %>
 <%- end %>
-<br><%= render "buyer_info"  %>
-<br>买家留言：<%= @trade.buyer_message %> <br>
+<%= render "buyer_info"  %>
+<b>买家留言：</b><%= @trade.buyer_message %> <br>
 <%- if TradeSetting.company == "nippon" %>
-    <br>发票信息: <%= @trade.invoice_name %> <br>
+    <b>发票信息: </b><%= @trade.invoice_name %> <br>
 <%- end %>    
-<br>客服备注：<%= @trade.cs_memo %> <br>
+<b>客服备注：</b><%= @trade.cs_memo %> <br>
 </body>
 </html>
