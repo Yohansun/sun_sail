@@ -97,11 +97,8 @@ class DuluxTaobaoTradeReporter
           order_cs_memo = order.cs_memo
           cs_memo = "#{trade_cs_memo} #{order_cs_memo}"
           title = order.title
-          if order.color_num.present?
-            color_num = order.color_num.join(",")
-          else
-            color_num = ''
-          end
+          color_num = ''
+          color_num = order.color_num.join(" ") if order.color_num.present?
           need_color = has_color_info ? '是' : '否'
           row_number += 1
           sheet1.update_row row_number, tid, created, pay_time, dispatched_at, taobao_status_memo, seller_name, receiver_state, receiver_city, receiver_district, receiver_address, receiver_name, receiver_mobile, title, num, auction_price, price, order_discount_fee, order_total_fee, sum_fee, post_fee, total_fee, buyer_nick, cs_memo, need_color, color_num
