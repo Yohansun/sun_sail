@@ -1,8 +1,8 @@
 require 'sidekiq/web'
 
 MagicOrders::Application.routes.draw do
-  resources :bbs_categories
-
+  
+  resources :bbs_categories, only: [:show]
   resources :bbs_topics
 
   resources :trade_reports 

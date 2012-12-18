@@ -8,7 +8,7 @@ FactoryGirl.define do
   end
 
   factory :bbs_category do
-    name "Category 1"
+    name { "Category #{BbsCategory.count + 1}" }
   end
 
   factory :bbs_topic do

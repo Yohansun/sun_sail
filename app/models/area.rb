@@ -1,4 +1,25 @@
 # -*- encoding : utf-8 -*-
+# == Schema Information
+#
+# Table name: areas
+#
+#  id             :integer(4)      not null, primary key
+#  name           :string(255)
+#  parent_id      :integer(4)
+#  seller_id      :integer(4)
+#  created_at     :datetime        not null
+#  updated_at     :datetime        not null
+#  active         :boolean(1)      default(TRUE)
+#  is_1568        :boolean(1)      default(FALSE)
+#  pinyin         :string(255)
+#  children_count :integer(4)      default(0)
+#  lft            :integer(4)      default(0)
+#  rgt            :integer(4)      default(0)
+#  sellers_count  :integer(4)      default(0)
+#  area_type      :integer(4)
+#  zip            :string(255)
+#
+
 require 'hz2py'
 
 class Area < ActiveRecord::Base

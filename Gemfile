@@ -21,6 +21,8 @@ group :test, :development do
   gem "guard"
   gem "guard-bundler"
   gem "guard-rspec"
+  gem "annotate", '~> 2.4.1.beta1'
+  gem 'guard-annotate'
   gem "rspec-instafail"
   gem "rspec-rails"
   gem 'rb-fsevent', '~> 0.9.1'
