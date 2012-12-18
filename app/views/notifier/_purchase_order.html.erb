@@ -1,23 +1,23 @@
 <div class="order-st-list">
-  <table border="1" cellpadding="0" cellspacing="0" style="width: 1000px; border:  1px solid #ddd; margin: 15px 0;">
+  <table cellpadding="0" cellspacing="0" style="width: 710px; border-bottom:  1px solid #F2DEDE; margin: 15px 0;">
     <tr>
-        <td style="padding: 5px;text-align: center;"><b>订单编号：</b><%= @trade.tid %></td>
-        <td style="padding: 5px;text-align: center;"  colspan="5"><b>订单状态：</b><%= @trade.status_text %></td>
+        <td style="padding: 5px;"><b>订单编号：</b><%= @trade.tid %></td>
+        <td style="padding: 5px;"  colspan="5"><b>订单状态：</b><%= @trade.status_text %></td>
     </tr>
     <tr>
-      <th style="padding: 5px;text-align: center;" width="450">商品名</th>
-      <th style="padding: 5px;text-align: center;">特殊属性</th>
-      <th style="padding: 5px;text-align: center;">调色信息</th>
-      <th style="padding: 5px;text-align: center;">实际单价</th>
-      <th style="padding: 5px;text-align: center;">数量</th>
-      <th style="padding: 5px;text-align: center;">商品总价</th>
+      <th style="padding: 5px;background:#F2DEDE;border-right:1px dashed #fff;" width="350">商品名</th>
+      <th style="padding: 5px;text-align: center;background:#F2DEDE;border-right:1px dashed #fff;">特殊属性</th>
+      <th style="padding: 5px;text-align: center;background:#F2DEDE;border-right:1px dashed #fff;">调色信息</th>
+      <th style="padding: 5px;text-align: center;background:#F2DEDE;border-right:1px dashed #fff;">实际单价</th>
+      <th style="padding: 5px;text-align: center;background:#F2DEDE;border-right:1px dashed #fff;">数量</th>
+      <th style="padding: 5px;text-align: center;background:#F2DEDE;">商品总价</th>
     </tr>
     <%- @trade.orders.each do |object| %>
         <%- order = OrderDecorator.decorate(object) %>
         <tr>
-          <td style="padding: 5px;text-align: center;"><%= order.title %></td>
-          <td style="padding: 5px;text-align: center;"><%= order.sku_properties %></td>
-          <td style="padding: 5px;text-align: center;">
+          <td style="border-right:1px dashed #F2DEDE;padding: 5px;"><%= order.title %></td>
+          <td style="border-right:1px dashed #F2DEDE;padding: 5px;text-align: center;"><%= order.sku_properties %></td>
+          <td style="border-right:1px dashed #F2DEDE;padding: 5px;text-align: center;">
             <%- if order.color_num && order.color_num.present? %>
               <%- order.color_num.each do |color| %>
                 <%- color_name = Color.find_by_num(color).try(:name) %>
@@ -25,8 +25,8 @@
               <%-end %>  
             <%- end %>          
           </td>
-          <td style="padding: 5px;text-align: center;"><span class="font-gray">¥<%= order.price %></span></td>
-          <td style="padding: 5px;text-align: center;"><%= order.num %></td>
+          <td style="border-right:1px dashed #F2DEDE;padding: 5px;text-align: center;"><span class="font-gray">¥<%= order.price %></span></td>
+          <td style="border-right:1px dashed #F2DEDE;padding: 5px;text-align: center;"><%= order.num %></td>
           <td style="padding: 5px;text-align: center;"><%= order.seller_total_fee %></td>
         </tr>
     <%- end %>

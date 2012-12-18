@@ -1,13 +1,13 @@
 <div class="order-st-list">
-  <table  border="1" cellpadding="0" cellspacing="0" style="width: 1000px; border:  1px solid #ddd; margin: 15px 0;">
+  <table cellpadding="0" cellspacing="0" style="width: 710px; margin: 15px 0;border-bottom:1px solid #F2DEDE;">
     <tr>
-      <th style="padding: 5px;text-align: center;" width="450">买家地址</th>
-      <th style="padding: 5px;text-align: center;">买家姓名</th>
-      <th style="padding: 5px;text-align: center;">收货人手机</th>
+      <th style="padding: 5px;border-right:1px dashed #fff;background:#F2DEDE;" width="350">买家地址</th>
+      <th style="padding: 5px;text-align: center;border-right:1px dashed #fff;background:#F2DEDE;">买家姓名</th>
+      <th style="padding: 5px;text-align: center;background:#F2DEDE;">收货人手机</th>
     </tr>
     <tr>
-      <td style="padding: 5px;text-align: center;"><%= @trade.receiver_full_address %></td>
-      <td style="padding: 5px;text-align: center;"><%= @trade.receiver_name %></td>
+      <td style="padding: 5px;border-right:1px dashed #F2DEDE;"><%= @trade.receiver_full_address %></td>
+      <td style="padding: 5px;text-align: center;border-right:1px dashed #F2DEDE;"><%= @trade.receiver_name %></td>
       <td style="padding: 5px;text-align: center;"><%= @trade.receiver_mobile_phone %></td>
     </tr>
   </table>

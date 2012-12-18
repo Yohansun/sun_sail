@@ -1,29 +1,29 @@
 <div class="order-st-list">
-  <table  border= "1" cellpadding="0" cellspacing="0" style="width: 1000px; border:  1px solid #ddd; margin: 15px 0;">
+  <table cellpadding="0" cellspacing="0" style="width: 710px; border-bottom:  1px solid #F2DEDE; margin: 15px 0;">
     <tr>
-        <td style="padding: 5px;text-align: center;"><b>订单编号：</b><%= order.tid %></td>
-        <td style="padding: 5px;text-align: center;" colspan="5"><b>订单状态：</b><%= @trade.status_text %></td>
+        <td style="padding: 5px;"><b>订单编号：</b><%= @trade.tid %></td>
+        <td style="padding: 5px;" colspan="5"><b>订单状态：</b><%= @trade.status_text %></td>
     </tr>
     <tr>
-      <th style="padding: 5px;text-align: center;" width="450">商品名</th>
-      <th style="padding: 5px;text-align: center;">特殊属性</th>
-      <th style="padding: 5px;text-align: center;">调色信息</th>
+      <th style="padding: 5px;background:#F2DEDE;border-right:1px dashed #fff;" width="350">商品名</th>
+      <th style="padding: 5px;background:#F2DEDE;text-align: center;border-right:1px dashed #FFFFFF;">特殊属性</th>
+      <th style="padding: 5px;background:#F2DEDE;ttext-align: center;border-right:1px dashed #FFFFFF;">调色信息</th>
       <% unless TradeSetting.company == "dulux"%>
-      <th style="padding: 5px;text-align: center;">标价</th>
-      <th style="padding: 5px;text-align: center;">实际单价</th>
+      <th style="padding: 5px;background:#F2DEDE;ttext-align: center;border-right:1px dashed #FFFFFF;">标价</th>
+      <th style="padding: 5px;background:#F2DEDE;ttext-align: center;border-right:1px dashed #FFFFFF;">实际单价</th>
       <% end %>
-      <th style="padding: 5px;text-align: center;">数量</th>
+      <th style="padding: 5px;background:#F2DEDE;ttext-align: center;border-right:1px dashed #FFFFFF;">数量</th>
       <% unless TradeSetting.company == "dulux"%>
-      <th style="padding: 5px;text-align: center;">商品总价</th>
+      <th style="padding: 5px;background:#F2DEDE;ttext-align: center;border-right:1px dashed #FFFFFF;">商品总价</th>
       <% end %>
     </tr>
     <%- @trade.orders.each do |object| %>
       <%- order = OrderDecorator.decorate(object) %>
       <% object.bill_info.each do |info| %>
       <tr>
-        <td style="padding: 5px;text-align: center;"><%= info[:title] %></td>
-        <td style="padding: 5px;text-align: center;"><%= order.sku_properties %></td>
-        <td style="padding: 5px;text-align: center;">
+        <td style="border-right:1px dashed #F2DEDE;padding: 5px;"><%= info[:title] %></td>
+        <td style="border-right:1px dashed #F2DEDE;padding: 5px;text-align: center;"><%= order.sku_properties %></td>
+        <td style="border-right:1px dashed #F2DEDE;padding: 5px;text-align: center;">
         <%- if info[:colors].present? %>
           <%- info[:colors].each do |color, array| %>
             <%= array[0]%>桶 <%= color %>  <%= array[1] %><br>
@@ -32,14 +32,14 @@
         </td>
 
         <% unless TradeSetting.company == "dulux"%>
-        <td style="padding: 5px;text-align: center;"><span class="font-blueb">¥<%= order.auction_price %></span></td>
-        <td style="padding: 5px;text-align: center;"><span class="font-gray">¥<%= order.price %></span></td>
+        <td style="border-right:1px dashed #F2DEDE;padding: 5px;text-align: center;"><span class="font-blueb">¥<%= order.auction_price %></span></td>
+        <td style="border-right:1px dashed #F2DEDE;padding: 5px;text-align: center;"><span class="font-gray">¥<%= order.price %></span></td>
         <% end %>
 
-        <td style="padding: 5px;text-align: center;"><%= info[:number] * order.num %></td>
+        <td style="border-right:1px dashed #F2DEDE;padding: 5px;text-align: center;"><%= info[:number] * order.num %></td>
 
         <% unless TradeSetting.company == "dulux"%>
-        <td style="padding: 5px;text-align: center;"><%= order.total_fee %></td>
+        <td style="border-right:1px dashed #F2DEDE;padding: 5px;text-align: center;"><%= order.total_fee %></td>
         <% end %>
       </tr>
       <% end %>
