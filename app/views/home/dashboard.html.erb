@@ -12,6 +12,12 @@
 					<% end %>
 				</div>
 
+				<% if current_user.has_role?(:cs) -%>
+					<div>
+						<a class="indexStart3" href="/sales"><span>数据魔方</span></a>
+					</div>
+				<% end %>
+
 				<% if current_user.has_role?(:admin) -%>
 					<div>
 						<a class="indexStart3" href="/sales"><span>数据魔方</span></a>
