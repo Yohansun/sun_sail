@@ -47,7 +47,7 @@ gem 'inherited_resources'
 gem 'devise'
 gem 'devise-encryptable'
 gem 'rails-settings-cached'
-gem 'twitter-bootstrap-rails', '>= 2.1.2'
+gem 'twitter-bootstrap-rails', '>= 2.1.9'
 gem 'simple_form'
 gem "kiqstand"
 gem 'awesome_nested_set'
