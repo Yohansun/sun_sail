@@ -111,11 +111,7 @@ class DuluxTaobaoTradeReporter
       end
     end
 
-    file = "data/#{id}.xls"
-    FileUtils.cd Rails.root
-    FileUtils.mkdir 'data' unless Dir.exists?("data")
-    # FileUtils.touch(file) unless File.exist?(file)
-    # FileUtils.chmod 0777, file
+    file = "#{Rails.root}/data/#{id}.xls"
     book.write file
     report.update_attributes!(performed_at: Time.now)
   end
