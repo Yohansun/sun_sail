@@ -10,7 +10,7 @@ class MagicOrders.Routers.DeliverBills extends Backbone.Router
     @collection = new MagicOrders.Collections.DeliverBills()
 
     MagicOrders.original_path = window.location.hash
-    $('.delvier, .modal').on 'hidden', (event) ->
+    $('.delvier.modal').on 'hidden', (event) ->
       refresh = ($('#content').html() == '')
       if _.str.include(MagicOrders.original_path,'-')
         Backbone.history.navigate("#{MagicOrders.original_path}", refresh)
@@ -55,6 +55,10 @@ class MagicOrders.Routers.DeliverBills extends Backbone.Router
       $(window).off 'scroll'
       $(window).on 'scroll', @processScroll
       @processScroll
+      switch trade_type
+        when 'unprinted' then $('.trade_nav').html('未打印')
+        when 'printed' then $('.trade_nav').html('已打印')
+
       $.unblockUI()
 
   newTradesNotifer: =>

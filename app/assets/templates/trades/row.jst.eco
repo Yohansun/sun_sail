@@ -57,7 +57,7 @@
         <% if @trade.get('dispatched_at') != undefined : %>
           <% if @trade.get('trade_source') != '京东' : %>
             <% if MagicOrders.enable_trade_deliver_bill_spliting && !@trade.get('has_split_deliver_bill') : %>
-              <% if seller_id in MagicOrders.enable_trade_deliver_bill_spliting_sellers : %>
+              <% if @trade.get('seller_id') in MagicOrders.enable_trade_deliver_bill_spliting_sellers : %>
                 <li><a data-toggle="modal" href="#" data-type="logistic_split">物流拆分</a></li>
               <% end %>
             <% end %>

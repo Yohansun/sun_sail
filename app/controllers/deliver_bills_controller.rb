@@ -40,7 +40,7 @@ class DeliverBillsController < ApplicationController
     if current_user.has_role? :seller
       ids = []
 
-      seller = current_user.user
+      seller = current_user.seller
       ids = seller.self_and_descendants.map(&:id) if seller
 
       @bills = @bills.any_in(seller_id: ids)

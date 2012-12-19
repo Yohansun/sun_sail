@@ -54,6 +54,9 @@ class Trade
   field :deliver_bill_printed_at, type: DateTime
   field :logistic_printed_at, type: DateTime
 
+  # 单据是否拆分
+  field :has_split_deliver_bill, type: Boolean, default: false
+
   #创建新订单
   field :tid, type:String
   field :status, type:String
@@ -289,7 +292,7 @@ class Trade
         number: order.num,
         memo: order.cs_memo
       )
-    end
+    end    
   end
 
   def logistic_split
@@ -302,8 +305,11 @@ class Trade
         break
       end
 
-      if product.category.try(:name) == '輔助材料'
+      case product.category.try(:name)
+      when '輔助材料'
         divmod = 100000
+      when '木器漆' 
+        divmod = 1
       else
         divmod = case product.quantity.try(:name)
         when '5L'
@@ -376,6 +382,8 @@ class Trade
       logistic = Logistic.find logistic_id
       deliver_bill.logistic = logistic
     end
+
+    update_attributes has_split_deliver_bill: true
   end
 
   def default_area

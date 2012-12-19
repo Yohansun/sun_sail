@@ -16,7 +16,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     @collection = new MagicOrders.Collections.Trades()
 
     MagicOrders.original_path = window.location.hash
-    $('.trade, .modal').on 'hidden', (event) ->
+    $('.trade.modal').on 'hidden', (event) ->
       refresh = ($('#content').html() == '')
       if _.str.include(MagicOrders.original_path,'-')
         Backbone.history.navigate("#{MagicOrders.original_path}", refresh)
@@ -33,8 +33,8 @@ class MagicOrders.Routers.Trades extends Backbone.Router
   processScroll: =>
     scrollTop = $(window).scrollTop()
     if scrollTop >= @navTop && !@isFixed
-        @isFixed = true
-        @nav.addClass('subnav-fixed')
+      @isFixed = true
+      @nav.addClass('subnav-fixed')
     else
       if scrollTop <= @navTop && @isFixed
         @isFixed = false

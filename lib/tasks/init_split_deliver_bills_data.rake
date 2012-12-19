@@ -1,3 +1,4 @@
+# -*- encoding:utf-8 -*-
 desc "初始化拆分发货单所需数据"
 
 task :init_split_deliver_bill_data => :environment do
