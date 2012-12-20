@@ -24,6 +24,13 @@ class Notifier < ActionMailer::Base
         )
   end
 
+  def puller_errors(errors)
+    mail(:to => %w{errors@networking.io},
+         :subject => "订单抓取异常提醒",
+         :body => "错误代码: #{errors} "
+        )
+  end
+
   def dispatch(id, seller_id, notify_kind)
     object = Trade.find id
     seller = Seller.find seller_id
