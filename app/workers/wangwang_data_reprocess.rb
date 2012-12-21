@@ -6,7 +6,7 @@ class WangwangDataReprocess
   def perform(start_date = nil, end_date = nil)
     start_date ||= (Time.now - 27.day).to_date
     end_date ||= (Time.now - 27.day).to_date
-    if WangwangPuller.new.get_wangwang_data(start_date.to_time.beginning_of_day.strftime("%Y-%m-%d %H:%M:%S"), start_date.to_time.end_of_day.strftime("%Y-%m-%d %H:%M:%S")) == nil
+    if WangwangReplyState.all.map(&:reply_date).include?(start_date.to_s.to_time.to_i)
       p "delete_all"
       WangwangMemberContrast.delete_all
     end
@@ -20,6 +20,8 @@ class WangwangDataReprocess
   end
 
   def member_brief_info(start_date, end_date)
+    start_time = start_date - 8.hours
+    end_time = end_date - 8.hours
     p "chatlog_filter"
     WangwangChatlog.where(special_log: true).each do |log|
       log.chatlog_filter
@@ -40,19 +42,19 @@ class WangwangDataReprocess
       #daily_inquired_count = WangwangChatpeer.where(user_id: m.service_staff_id).where(date: today).map(&:buyer_nick).uniq.count
 
       #下单订单: 前一日或当日询单，本旺旺落实当日下单订单
-      yesterday_created_trades = TaobaoTrade.where(:buyer_nick.in => inquired_today_yesterday).where(:created.gte => start_date, :created.lt => end_date)
+      yesterday_created_trades = TaobaoTrade.where(:buyer_nick.in => inquired_today_yesterday).where(:created.gte => start_time, :created.lt => end_time)
       result = chatlog_query(yesterday_created_trades, m.service_staff_id, "created")
       yesterday_created_count = result.count
       yesterday_created_payment = result.try(:sum, :payment) || 0
 
       #下单订单: 当日询单，本旺旺落实当日下单订单
-      daily_created_trades = TaobaoTrade.where(:buyer_nick.in => inquired_today).where(:created.gte => start_date, :created.lt => end_date)
+      daily_created_trades = TaobaoTrade.where(:buyer_nick.in => inquired_today).where(:created.gte => start_time, :created.lt => end_time)
       result = chatlog_query(daily_created_trades, m.service_staff_id, "created")
       daily_created_count = result.count
       daily_created_payment = result.try(:sum, :payment) || 0
 
       #当日询单，当日次日下单人数
-      tomorrow_created_trades = TaobaoTrade.where(:buyer_nick.in => inquired_today).where(:created.gte => start_date, :created.lt => (end_date + 1.day))
+      tomorrow_created_trades = TaobaoTrade.where(:buyer_nick.in => inquired_today).where(:created.gte => start_time, :created.lt => (end_date + 1.day))
       result = chatlog_query(tomorrow_created_trades, m.service_staff_id, "created")
       tomorrow_created_count = result.count
       tomorrow_created_payment= result.try(:sum, :payment) || 0
@@ -61,27 +63,27 @@ class WangwangDataReprocess
       tomorrow_lost_count = daily_inquired_count - tomorrow_created_count
 
       #前一日或当日询单，本旺旺落实当日下单后最终未付款
-      yesterday_lost_trades = TaobaoTrade.where(:buyer_nick.in => inquired_today_yesterday).where(:created.gte => start_date, :created.lt => end_date).where(pay_time: nil)
+      yesterday_lost_trades = TaobaoTrade.where(:buyer_nick.in => inquired_today_yesterday).where(:created.gte => start_time, :created.lt => end_time).where(pay_time: nil)
       result = chatlog_query(yesterday_lost_trades, m.service_staff_id, "created")
       yesterday_lost_count = result.count
       yesterday_lost_payment = result.try(:sum, :payment) || 0
 
       #前一日或当日询单，本旺旺落实当日下单当日付款
-      yesterday_paid_trades = TaobaoTrade.where(:buyer_nick.in => inquired_today_yesterday).where(:created.gte => start_date, :created.lt => end_date).where(:pay_time.gte => start_date, :pay_time.lt => end_date)
+      yesterday_paid_trades = TaobaoTrade.where(:buyer_nick.in => inquired_today_yesterday).where(:created.gte => start_time, :created.lt => end_time).where(:pay_time.gte => start_time, :pay_time.lt => end_time)
       result = chatlog_query(yesterday_paid_trades, m.service_staff_id, "created")
       second_result = chatlog_query(result, m.service_staff_id, "pay_time")
       yesterday_paid_count = second_result.count
-      yesterday_paid_payment = second_result.count
+      yesterday_paid_payment = second_result.try(:sum, :payment) || 0
 
       #前一日或当日询单，本旺旺落实当日下单后最终付款
-      yesterday_final_paid_trades = TaobaoTrade.where(:buyer_nick.in => inquired_today_yesterday).where(:created.gte => start_date, :created.lt => end_date).where(:pay_time.ne => nil)
+      yesterday_final_paid_trades = TaobaoTrade.where(:buyer_nick.in => inquired_today_yesterday).where(:created.gte => start_time, :created.lt => end_time).where(:pay_time.ne => nil)
       result = chatlog_query(yesterday_final_paid_trades, m.service_staff_id, "created")
       yesterday_final_paid_count = result.count
       yesterday_final_paid_payment = result.try(:sum, :payment) || 0
 
       ## 落实付款 ##
       #付款订单: 本旺旺落实当日付款订单
-      daily_paid_trades = TaobaoTrade.where(:pay_time.gte => start_date, :pay_time.lt => end_date)
+      daily_paid_trades = TaobaoTrade.where(:pay_time.gte => start_time, :pay_time.lt => end_time)
       result = chatlog_query(daily_paid_trades, m.service_staff_id, "pay_time")
       daily_paid_count = result.count
       daily_paid_payment = result.try(:sum, :payment) || 0
