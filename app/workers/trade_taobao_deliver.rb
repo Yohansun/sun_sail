@@ -4,7 +4,6 @@ class TradeTaobaoDeliver
   sidekiq_options :queue => :taobao
 
   def perform(id)
-    code = true
     trade = TaobaoTrade.find(id)
     tid = trade.tid
     response = TaobaoQuery.get({
@@ -14,9 +13,7 @@ class TradeTaobaoDeliver
       company_code: trade.logistic_code}, trade.try(:trade_source_id)
     )
 
-    errors = response['error_response']
-    code = false if errors.present?
-    if code
+    if response['error_response'].blank?
       trade.update_attributes!(status: 'WAIT_BUYER_CONFIRM_GOODS')
       
       trade = TradeDecorator.decorate(trade)

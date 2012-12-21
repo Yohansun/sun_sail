@@ -118,6 +118,7 @@ class Trade
   end
       
   def unusual_color_class
+    class_name = ''
     if has_unusual_state
       class_name = 'cs_error'
       if TradeSetting.company == "nippon"
@@ -360,21 +361,20 @@ class Trade
 
   def self.filter(current_user, params)
     trades = Trade.all
-    roles = current_user.roles.map &:name
-
+    
     paid_not_deliver_array = ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"]
     paid_and_delivered_array = ["WAIT_BUYER_CONFIRM_GOODS","WAIT_GOODS_RECEIVE_CONFIRM","WAIT_BUYER_CONFIRM_GOODS_ACOUNTED","WAIT_SELLER_SEND_GOODS_ACOUNTED"]
     closed_array = ["TRADE_CLOSED","TRADE_CANCELED","TRADE_CLOSED_BY_TAOBAO", "ALL_CLOSED"]
     refund_array = ["TRADE_REFUNDING","WAIT_SELLER_AGREE","SELLER_REFUSE_BUYER","WAIT_BUYER_RETURN_GOODS","WAIT_SELLER_CONFIRM_GOODS","CLOSED", "SUCCESS"]
     succeed_array = ["TRADE_FINISHED","FINISHED_L"]
 
-    if roles.include? "seller"
+    if current_user.has_role? "seller"
       seller = current_user.seller
-      trades = trades.where(seller_id: seller.id) if seller
-    elsif roles.include? 'interface'
-      seller = current_user.seller
-      trades = trades.any_in(seller_id: seller.child_ids) if seller
-    elsif roles.include? 'logistic'
+      self_and_descendants_ids = seller.self_and_descendants.map(&:id)
+      trades = trades.any_in(seller_id: self_and_descendants_ids) if self_and_descendants_ids.present?
+    end 
+      
+    if current_user.has_role? 'logistic'
       logistic = current_user.logistic
       trades = trades.where(logistic_id: logistic.id) if logistic
     end
