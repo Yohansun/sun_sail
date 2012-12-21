@@ -82,7 +82,7 @@
         </tr>
       </thead>
       <tbody>
-      	<% @products.each do |product| %>
+        <% @products.each do |product| %>
         <tr>
           <td></td>
           <td><%= product.name %></td>
@@ -119,8 +119,8 @@
 </div>
 
 <%= form_tag '', id: 'storage_in', class: 'form-horizontal modal hide fade', remote: true %>
-	<input type='hidden' class='modal_product_id' name='stock_history[stock_product_id]'>
-	<input type='hidden' class='modal_product_operation' name='stock_history[operation]' value='入库'>
+  <input type='hidden' class='modal_product_id' name='stock_history[stock_product_id]'>
+  <input type='hidden' class='modal_product_operation' name='stock_history[operation]' value='入库'>
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal">×</button>
     <h4>入库操作</h4>
@@ -180,8 +180,8 @@
 </form>
 
 <%= form_tag "", id: 'storage_out', class: 'form-horizontal modal hide fade', remote: true %>
-	<input type='hidden' class='modal_product_id' name='stock_history[stock_product_id]'>
-	<input type='hidden' class='modal_product_operation' name='stock_history[operation]' value='出库'>
+  <input type='hidden' class='modal_product_id' name='stock_history[stock_product_id]'>
+  <input type='hidden' class='modal_product_operation' name='stock_history[operation]' value='出库'>
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal">×</button>
     <h4>出库操作</h4>
@@ -262,3 +262,121 @@
     })
   }
 </script>
+<% content_for :tail do -%>
+<script src="js/amcharts/amcharts.js" type="text/javascript"></script>
+<script type="text/javascript">
+var chart;
+var chartData = []
+<% @products.each do |p| -%>
+  chartData.push({commodity: "<%= p.iid %>", stock_infact: "<%= p.actual %>", stock_safe: "<%= p.safe_value %>", stock_safe_end: "<%= p.safe_value - 3 %>", stock_avaliable: "<%= p.activity %>"})
+
+
+  AmCharts.ready(function () {
+      // SERIAL CHART
+      chart = new AmCharts.AmSerialChart();
+      chart.dataProvider = chartData;
+      chart.pathToImages = "/assets/";
+      chart.categoryField = "commodity";
+      chart.marginTop = 45;
+      chart.addListener("dataUpdated", zoomChart);
+
+      // AXES
+      // category
+      var categoryAxis = chart.categoryAxis;
+      // categoryAxis.title = "数量";
+      // categoryAxis.titleColor = "#555555";
+      categoryAxis.gridAlpha = 0.15;
+      categoryAxis.axisAlpha = 0;
+      // categoryAxis.labelRotation = 60;
+      categoryAxis.gridPosition = "start";
+
+      // value                        
+      var valueAxis = new AmCharts.ValueAxis();
+      valueAxis.stackType = "3d"; // this line makes the chart regular stacked
+      valueAxis.gridAlpha = 0.15;
+      valueAxis.axisAlpha = 0;
+      // valueAxis.labelsEnabled = false;
+      chart.addValueAxis(valueAxis);
+
+
+      // stock_safe graph              
+      var graph = new AmCharts.AmGraph();
+      graph.title = "安全值";
+      // graph.labelText = "[[value]]";
+      graph.balloonText = "<%= p.name %> 安全库存: [[value]]";
+      // graph.valueField = "stock_safe";
+      graph.type = "column";//graph.type = "line";//graph.type = "step";
+      graph.lineAlpha = 1;//graph.lineAlpha = 1;
+      graph.fillAlphas = 1;
+      graph.valueField = "stock_safe";
+      graph.openField = "stock_safe_end";
+      graph.lineThickness = 1;
+      // graph.bullet = "round";
+      graph.lineColor = "#F05D22";
+      chart.addGraph(graph);
+
+      // stock_avaliable graph              
+      var graph = new AmCharts.AmGraph();
+      graph.title = "可用库存";
+      // graph.labelText = "[[value]]";
+      graph.balloonText = "<%= p.name %> 可用库存: [[value]]";
+      graph.valueField = "stock_avaliable";
+      graph.type = "column";
+      graph.lineAlpha = 0;
+      graph.fillAlphas = 1;
+      graph.lineColor = "#3D9ED5";
+      chart.addGraph(graph);
+
+      // GRAPHS
+      // stock_infact graph                          
+      var graph = new AmCharts.AmGraph();
+      graph.title = "实际库存";
+      // graph.labelText = "[[value]]";
+      graph.balloonText = "<%= p.name %> 实际库存: [[value]]";
+      graph.valueField = "stock_infact";
+      graph.type = "column";
+      graph.lineAlpha = 0;
+      graph.fillAlphas = 1;
+      graph.lineColor = "#FDD900";
+      chart.addGraph(graph);
+      
+
+
+      // LEGEND                  
+      var legend = new AmCharts.AmLegend();
+      legend.borderAlpha = 0.2;
+      legend.horizontalGap = 10;
+      legend.autoMargins = false;
+      legend.marginLeft = 20;
+      legend.marginRight = 20;
+      legend.switchType = "v";
+      chart.addLegend(legend);
+      // SCROLLBAR
+      var chartScrollbar = new AmCharts.ChartScrollbar();
+      chart.addChartScrollbar(chartScrollbar);
+
+      // WRITE                  
+      chart.write("chartdiv");
+
+      function zoomChart() {
+              // different zoom methods can be used - zoomToIndexes, zoomToDates, zoomToCategoryValues
+              // chart.zoomToDates(new Date(2012, 9, 25, 0), new Date(2012, 9, 25, 2));
+              chart.zoomToIndexes(chartData.length - 10, chartData.length - 1);
+            }
+  });
+
+  // this method makes chart 2D/3D
+  /*function setDepth() {
+      if (document.getElementById("rb1").checked) {
+          chart.depth3D = 0;
+          chart.angle = 0;
+      } else {
+          chart.depth3D = 25;
+          chart.angle = 30;
+      }
+      chart.validateNow();
+  }*/
+  <%- end %>
+</script>
+</script>
+<% end %>
