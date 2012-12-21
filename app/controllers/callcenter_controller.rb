@@ -102,24 +102,15 @@ class CallcenterController < ApplicationController
   def adjust_filter
     @wangwangs = WangwangMember.all
     @setting = WangwangChatlogSetting.first
-    if params[:type]
-      @setting[params[:type]] ? @setting[params[:type]] = false : @setting[params[:type]] = true
-      @setting.save
-      render text: "success"
-    elsif params[:ad_msg] || params[:ad_chat_length]
-    	@setting.ad_msg = params[:ad_msg] if params[:ad_msg]
-    	@setting.ad_chat_length = params[:ad_chat_length] if params[:ad_chat_length]
-    	@setting.save
-    	render "/callcenter/settings"
-    elsif params[:main_account_msg]
-      @setting.main_account_msg = params[:main_account_msg]
-    	@setting.save
-    	render "/callcenter/settings"
-    elsif params[:one_word_chat_length]
-      @setting.one_word_chat_length = params[:one_word_chat_length]
-      @setting.save
-    	render "/callcenter/settings"
-    end
+    @setting.update_attributes(params[:setting])
+    if @setting.save
+	    start_date = WangwangChatlog.last.start_time.to_date
+	    end_date = WangwangChatlog.first.start_time.to_date
+	    WangwangDataReprocess.perform_async(start_date, end_date)
+	    redirect_to "/callcenter/contrastive_performance"
+	  else
+	  	redirect_to "/callcenter/settings"
+	  end
   end
 
   def wangwang_list

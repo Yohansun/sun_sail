@@ -92,7 +92,8 @@ class WangwangPuller
                   content: msg['content']
                 )
               end
-              chatlog.update_attributes(start_time: start_time, end_time: end_time)
+              chatlog.update_attributes(date: start_time.to_date.to_s.to_time.to_i, start_time: start_time, end_time: end_time)
+              chatlog.chatlog_filter
             end
             #sleep(2)
           end
