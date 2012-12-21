@@ -98,7 +98,7 @@ class Trade
 
   attr_accessor :matched_seller
 
-  validate :color_num_do_not_exist, :on => :update
+  validate :color_num_do_not_exist, :on => :update, :if => :color_num_changed?
 
   before_update :set_has_color_info
   before_update :set_has_cs_memo
@@ -174,6 +174,10 @@ class Trade
         break
       end
     end
+  end
+
+  def color_num_changed?
+    orders.all.map(&:color_num_changed?).include? (true)
   end
 
   # model 属性方法
