@@ -3,7 +3,7 @@
 class TaobaoPurchaseOrderPuller
   class << self
     def create(start_time = nil, end_time = nil, source_id = nil)
-       source_id ||= TradeSetting.default_taobao_purchase_source_id     
+      source_id ||= TradeSetting.default_taobao_purchase_source_id     
       if start_time.blank?  
         latest_created_order = TaobaoPurchaseOrder.only("created").order_by(:created.desc).limit(1).first
         start_time = latest_created_order.created - 1.hour
