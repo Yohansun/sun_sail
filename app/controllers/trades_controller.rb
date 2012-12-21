@@ -209,7 +209,7 @@ class TradesController < ApplicationController
                                           notify_type: params[:notify_type] )
     end  
 
-    if @trade.save!
+    if @trade.save
       @trade = TradeDecorator.decorate(@trade)
       if notifer_seller_flag && @trade.status == "WAIT_SELLER_SEND_GOODS" && @trade.seller
         TradeDispatchEmail.perform_async(@trade.id, @trade.seller_id, 'second')
