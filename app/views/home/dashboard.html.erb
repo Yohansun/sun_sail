@@ -11,7 +11,11 @@
             <span>仓库管理</span>
           <% end %>
         </div>
-
+        <% if TradeSetting.enable_module_bbs %>
+          <div>
+            <a class="indexStart7" href="/bbs_topics"><span>互动中心</span></a>
+          </div>
+        <% end %>
         <% if current_user.has_role?(:cs) -%>
           <div>
             <a class="indexStart3" href="/sales"><span>数据魔方</span></a>
