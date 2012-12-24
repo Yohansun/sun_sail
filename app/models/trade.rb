@@ -67,6 +67,11 @@ class Trade
   field :has_unusual_state, type: Boolean, default: false
   field :has_refund_order, type: Boolean, default: false
 
+  field :modify_payment, type: Float
+  field :modify_payment_no, type: String
+  field :modify_payment_at, type: DateTime
+  field :modify_payment_memo, type: String
+
   # add indexes for speed
   index tid: -1
   index status: 1

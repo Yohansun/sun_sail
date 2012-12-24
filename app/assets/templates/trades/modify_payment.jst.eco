@@ -1,0 +1,43 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal">×</button>
+  <h3>金额调整</h3>
+</div><!-- modal-header -->
+<div class="modal-body">
+  <fieldset>
+    <div class="clearfix">
+      <label class="pull-left">订单编号：</label>
+      <span><%= @trade.get("tid") %></span>
+    </div>
+    <div class="clearfix">
+      <label class="pull-left">订单状态：</label>
+      <span><%= @trade.get("status_text") %></span>
+    </div>
+    <div class="clearfix">
+      <label class="pull-left">订单金额：</label>
+      <span>￥<%= @trade.get('sum_fee') %></span>
+    </div>
+  </fieldset>
+  <fieldset>
+    <div class="clearfix">
+      <label class="pull-left">调整金额：</label>
+      <input type="text" placeholder="请输入调整的金额..." class="input-xlarge" id="modify_payment" value="<%= @trade.get 'modify_payment' %>">
+    </div>
+    <div class="clearfix">
+      <label class="pull-left">调整日期：</label>
+      <input type="text" placeholder="请输入调整的日期..." class="datepickers" id="modify_payment_at" value="<%= @trade.get 'modify_payment_at' %>">
+    </div>
+    <div class="clearfix">
+      <label class="pull-left">交易码：</label>
+      <input type="text" placeholder="请输入交易码..." class="input-xlarge" id="modify_payment_no" value="<%= @trade.get 'modify_payment_no' %>">
+    </div>
+    <div class="clearfix">
+      <label class="pull-left">调整备注：</label>
+      <textarea style="resize:none;width:390px;height:150px;padding:5px;" placeholder="请输入备注信息..." class="input-xlarge" id="modify_payment_memo"><%= @trade.get('modify_payment_memo') %></textarea>
+    </div>
+  </fieldset>
+</div><!-- modal-body -->
+<div class="modal-footer">
+  <!-- <a href="#" class="btn" data-dismiss="modal" >取消</a> -->
+  <button class="btn btn-primary save">确定调整</button>
+  <button class="btn clear_info">清空</button>
+</div>

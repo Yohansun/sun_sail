@@ -66,12 +66,13 @@ class DuluxTaobaoTradeReporter
         end
       end
     elsif current_user.has_role?(:cs) || current_user.has_role?(:admin)
-      sheet1.row(1).concat ["订单号", "下单时间", "付款时间", "分流时间", "订单状态", "送货经销商", "买家地址-省", "买家地址-市", "买家地址-区", "买家地址", "买家姓名", "收货人手机/座机", "商品名", "数量", "商品标价", "实际单价", "卖家优惠", "单品总价", "商品总价（不含运费）", "运费", "订单总金额", "买家旺旺", "客服备注", "需要调色", "色号"]
+      sheet1.row(1).concat ["订单号", "下单时间", "付款时间", "分流时间", "订单状态", "送货经销商", "买家地址-省", "买家地址-市", "买家地址-区", "买家地址", "买家姓名", "收货人手机/座机", "商品名", "数量", "商品标价", "实际单价", "卖家优惠", "单品总价", "商品总价（不含运费）", "运费", "订单总金额", "调整金额", "买家旺旺", "客服备注", "需要调色", "色号"]
       trades.each_with_index do |trade, trade_index|
         trade_orders = trade.orders
         sum_fee = trade.orders.inject(0) { |sum, order| sum + order.total_fee.to_f }
         post_fee = trade.post_fee
         total_fee = trade.payment
+        modify_payment = trade.modify_payment
         created = trade.created.try(:strftime,"%Y-%m-%d %H:%M:%S")
         pay_time = trade.pay_time.try(:strftime,"%Y-%m-%d %H:%M:%S")
         dispatched_at = trade.dispatched_at.try(:strftime,"%Y-%m-%d %H:%M:%S")
@@ -101,7 +102,7 @@ class DuluxTaobaoTradeReporter
           color_num = order.color_num.join(" ") if order.color_num.present?
           need_color = has_color_info ? '是' : '否'
           row_number += 1
-          sheet1.update_row row_number, tid, created, pay_time, dispatched_at, taobao_status_memo, seller_name, receiver_state, receiver_city, receiver_district, receiver_address, receiver_name, receiver_mobile, title, num, auction_price, price, order_discount_fee, order_total_fee, sum_fee, post_fee, total_fee, buyer_nick, cs_memo, need_color, color_num
+          sheet1.update_row row_number, tid, created, pay_time, dispatched_at, taobao_status_memo, seller_name, receiver_state, receiver_city, receiver_district, receiver_address, receiver_name, receiver_mobile, title, num, auction_price, price, order_discount_fee, order_total_fee, sum_fee, post_fee, total_fee, modify_payment, buyer_nick, cs_memo, need_color, color_num
           if trade_index.even?
             sheet1.row(row_number).default_format = yellow_format
           else
