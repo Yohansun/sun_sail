@@ -1,10 +1,11 @@
 FactoryGirl.define do
   factory :user do
-    name "foofoo"
-    username "foofoo"  
+    # name "foofoo"
+    sequence(:name) { |n| "foo-name-#{n}" }
+    username Faker::Name.name
     password "foobar"  
     password_confirmation { |u| u.password }  
-    email "foo@example.com"
+    email Faker::Internet.email
   end
 
   factory :bbs_category do
@@ -15,6 +16,7 @@ FactoryGirl.define do
     bbs_category
     user
     title "What's up?"
+    body 'bbs topic content'
   end
 
 end

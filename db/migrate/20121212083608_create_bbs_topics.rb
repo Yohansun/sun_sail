@@ -4,6 +4,7 @@ class CreateBbsTopics < ActiveRecord::Migration
       t.integer :bbs_category_id
       t.integer :user_id
       t.string  :title
+      t.text    :body
       t.integer :read_count, default: 0
       t.integer :download_count, default: 0
       t.timestamps

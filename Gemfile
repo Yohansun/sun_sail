@@ -28,6 +28,7 @@ group :test, :development do
   gem 'rb-fsevent', '~> 0.9.1'
   gem 'database_cleaner'
   gem 'factory_girl_rails'
+  gem 'faker'
 
   gem 'capistrano'
   gem "capistrano-ext"
@@ -45,6 +46,7 @@ group :test, :development do
   gem "letter_opener"  
 end
 
+gem 'strong_parameters'
 gem 'mongoid', '3.0.13'
 gem 'draper'
 gem 'inherited_resources'
