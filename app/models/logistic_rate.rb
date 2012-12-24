@@ -1,3 +1,19 @@
+# == Schema Information
+#
+# Table name: logistic_rates
+#
+#  id                :integer(4)      not null, primary key
+#  seller_id         :integer(4)
+#  logistic_id       :integer(4)
+#  score             :integer(4)
+#  mobile            :string(255)
+#  tid               :string(255)
+#  send_at           :datetime
+#  created_at        :datetime        not null
+#  updated_at        :datetime        not null
+#  taobao_rate_score :integer(4)
+#
+
 # -*- encoding : utf-8 -*-
 class LogisticRate < ActiveRecord::Base
 

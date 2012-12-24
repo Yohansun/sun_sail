@@ -1,60 +1,60 @@
 <div class="row-fluid">
-	<div class="indexWrap">
-		<div class="centerDashboard hide">
-			<% if user_signed_in? %>
-				<div>
-					<a class="indexStart1" href="/app#trades"><span>订单管理</span></a>
-				</div>
+  <div class="indexWrap">
+    <div class="centerDashboard hide">
+      <% if user_signed_in? %>
+        <div>
+          <a class="indexStart1" href="/app#trades"><span>订单管理</span></a>
+        </div>
 
-				<div>
-					<%= link_to stock_path_by_user, class: 'indexStart4' do %>
-						<span>仓库管理</span>
-					<% end %>
-				</div>
+        <div>
+          <%= link_to stock_path_by_user, class: 'indexStart4' do %>
+            <span>仓库管理</span>
+          <% end %>
+        </div>
 
-				<% if current_user.has_role?(:cs) -%>
-					<div>
-						<a class="indexStart3" href="/sales"><span>数据魔方</span></a>
-					</div>
-				<% end %>
+        <% if current_user.has_role?(:cs) -%>
+          <div>
+            <a class="indexStart3" href="/sales"><span>数据魔方</span></a>
+          </div>
+        <% end %>
 
-				<% if current_user.has_role?(:admin) -%>
-					<div>
-						<a class="indexStart3" href="/sales"><span>数据魔方</span></a>
-					</div>
-					<div>
-						<a class="indexStart5" href="/sellers"><span>经销商管理</span></a>
-					</div>
-					<div>
-						<a class="indexStart8" href="/products"><span>商品管理</span></a>
-					</div>
-				<% end %>
-			<% else -%>
-				<div>
-					<a class="indexStart1" href="#"><span>订单管理</span></a>
-				</div>
-				<div>
-					<a class="indexStart2" href="#"><span>客服管理</span></a>
-				</div>
-				<div>
-					<a class="indexStart3" href="#"><span>数据魔方</span></a>
-				</div>
-				<div>
-					<a class="indexStart4" href="#"><span>仓库管理</span></a>
-				</div>
-				<div>
-					<a class="indexStart5" href="#"><span>经销商管理</span></a>
-				</div>
-				<div>
-					<a class="indexStart6" href="#"><span>VIP</span></a>
-				</div>
-				<div>
-					<a class="indexStart7" href="#"><span>互动中心</span></a>
-				</div>
-				<div>
-					<a class="indexStart8" href="#"><span>商品管理</span></a>
-				</div>
-			<% end -%>
-		</div>
-	</div>
+        <% if current_user.has_role?(:admin) -%>
+          <div>
+            <a class="indexStart3" href="/sales"><span>数据魔方</span></a>
+          </div>
+          <div>
+            <a class="indexStart5" href="/sellers"><span>经销商管理</span></a>
+          </div>
+          <div>
+            <a class="indexStart8" href="/products"><span>商品管理</span></a>
+          </div>
+        <% end %>
+      <% else -%>
+        <div>
+          <a class="indexStart1" href="#"><span>订单管理</span></a>
+        </div>
+        <div>
+          <a class="indexStart2" href="#"><span>客服管理</span></a>
+        </div>
+        <div>
+          <a class="indexStart3" href="#"><span>数据魔方</span></a>
+        </div>
+        <div>
+          <a class="indexStart4" href="#"><span>仓库管理</span></a>
+        </div>
+        <div>
+          <a class="indexStart5" href="#"><span>经销商管理</span></a>
+        </div>
+        <div>
+          <a class="indexStart6" href="#"><span>VIP</span></a>
+        </div>
+        <div>
+          <a class="indexStart7" href="#"><span>互动中心</span></a>
+        </div>
+        <div>
+          <a class="indexStart8" href="#"><span>商品管理</span></a>
+        </div>
+      <% end -%>
+    </div>
+  </div>
 </div>

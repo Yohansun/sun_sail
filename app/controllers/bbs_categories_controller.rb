@@ -1,0 +1,2 @@
+class BbsCategoriesController < ApplicationController
+end

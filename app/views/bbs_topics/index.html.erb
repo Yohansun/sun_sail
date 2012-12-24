@@ -1,0 +1,11 @@
+<ul class="breadcrumb">
+  <li><%= link_to '互动中心', bbs_topics_path %><span class="divider">&gt;&gt;</span></li>
+  <li><a href="#">社区</a> <span class="divider">&gt;</span></li>
+  <li class="active">热门帖子</li>
+</ul>
+
+<div class="well">
+  <%- @categories.each do |category| -%>
+    <%= link_to category.name, bbs_category_path(category), class: 'btn btn-large btn-inline' %>
+  <%- end -%>
+</div>

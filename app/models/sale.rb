@@ -1,4 +1,16 @@
-#-*- encoding :utf-8 -*-
+# -*- encoding : utf-8 -*-
+# == Schema Information
+#
+# Table name: sales
+#
+#  id         :integer(4)      not null, primary key
+#  name       :string(255)
+#  earn_guess :float
+#  start_at   :datetime
+#  end_at     :datetime
+#  created_at :datetime        not null
+#  updated_at :datetime        not null
+#
 
 class Sale < ActiveRecord::Base
   attr_accessible :name, :earn_guess, :start_at, :end_at

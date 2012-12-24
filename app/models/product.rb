@@ -1,4 +1,29 @@
 # -*- encoding : utf-8 -*-
+# == Schema Information
+#
+# Table name: products
+#
+#  id             :integer(4)      not null, primary key
+#  name           :string(100)     default(""), not null
+#  iid            :string(20)      default(""), not null
+#  taobao_id      :string(20)      default(""), not null
+#  storage_num    :string(20)      default(""), not null
+#  price          :decimal(8, 2)   default(0.0), not null
+#  status         :string(255)
+#  quantity_id    :integer(4)
+#  category_id    :integer(4)
+#  features       :string(255)
+#  technical_data :text
+#  description    :text
+#  grade_id       :integer(4)
+#  product_image  :string(255)
+#  parent_id      :integer(4)
+#  lft            :integer(4)      default(0)
+#  rgt            :integer(4)      default(0)
+#  good_type      :integer(4)
+#  updated_at     :datetime
+#  created_at     :datetime
+#
 
 class Product < ActiveRecord::Base
 
