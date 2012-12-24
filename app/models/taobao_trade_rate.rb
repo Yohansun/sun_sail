@@ -1,4 +1,24 @@
 # -*- encoding : utf-8 -*-
+# == Schema Information
+#
+# Table name: taobao_trade_rates
+#
+#  id         :integer(4)      not null, primary key
+#  tid        :string(255)
+#  oid        :string(255)
+#  role       :string(255)
+#  nick       :string(255)
+#  result     :text
+#  created    :datetime
+#  rated_nick :string(255)
+#  item_title :string(255)
+#  item_price :float
+#  content    :string(255)
+#  reply      :string(255)
+#  created_at :datetime        not null
+#  updated_at :datetime        not null
+#
+
 require "csv"
 class TaobaoTradeRate < ActiveRecord::Base
   validates_uniqueness_of :oid

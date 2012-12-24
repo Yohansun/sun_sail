@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: colors
+#
+#  id         :integer(4)      not null, primary key
+#  hexcode    :string(255)
+#  name       :string(255)
+#  num        :string(255)
+#  created_at :datetime        not null
+#  updated_at :datetime        not null
+#
+
 # -*- encoding : utf-8 -*-
 class Color < ActiveRecord::Base
   validates_uniqueness_of :num

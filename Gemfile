@@ -17,7 +17,19 @@ end
 
 gem 'jquery-rails'
 
-group :development do
+group :test, :development do
+  gem "guard"
+  gem "guard-bundler"
+  gem "guard-rspec"
+  gem "annotate", '~> 2.4.1.beta1'
+  gem 'guard-annotate'
+  gem "rspec-instafail"
+  gem "rspec-rails"
+  gem 'rb-fsevent', '~> 0.9.1'
+  gem 'database_cleaner'
+  gem 'factory_girl_rails'
+  gem 'faker'
+
   gem 'capistrano'
   gem "capistrano-ext"
   gem 'quiet_assets'
@@ -31,16 +43,10 @@ group :development do
   gem 'tinder'
   gem 'certified'
   gem "thin"
-  gem "letter_opener"
+  gem "letter_opener"  
 end
 
-group :test do
-  gem 'rspec-rails'
-  gem 'cucumber-rails'
-  gem 'database_cleaner'
-  gem 'factory_girl_rails'
-end
-
+gem 'strong_parameters'
 gem 'mongoid', '3.0.13'
 gem 'draper'
 gem 'inherited_resources'
