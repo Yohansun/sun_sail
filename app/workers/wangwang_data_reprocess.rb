@@ -4,8 +4,8 @@ class WangwangDataReprocess
   sidekiq_options :queue => :wangwang_data_reprocess
 
   def perform(start_date = nil, end_date = nil)
-    start_date ||= (Time.now - 27.day).to_date
-    end_date ||= (Time.now - 27.day).to_date
+    start_date ||= (Time.now - 1.day).to_date
+    end_date ||= (Time.now - 1.day).to_date
     if WangwangReplyState.all.map(&:reply_date).include?(start_date.to_s.to_time.to_i)
       p "delete_all"
       WangwangMemberContrast.delete_all
