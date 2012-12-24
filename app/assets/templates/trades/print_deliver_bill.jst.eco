@@ -56,7 +56,11 @@
       <% end %>
       <% end %>
       <tr>
-        <td colspan="2" class="tr fb" style='text-align:right'>产品数量：</td>
+        <% if MagicOrders.company != 'nippon': %>
+          <td colspan="2" class="tr fb" style='text-align:right'>产品数量：</td>
+        <% else: %>
+          <td colspan="1" class="tr fb" style='text-align:right'>产品数量：</td>
+        <% end %>
         <td colspan="1" class="fb"><%= count %></td>
         <td colspan="1"></td>
       </tr>

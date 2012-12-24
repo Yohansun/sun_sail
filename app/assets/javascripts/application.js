@@ -166,7 +166,8 @@ function getElement(id){ //获取Flash 元素，尽量别用jquery ，以jquery�
 }
 
 function bind_deliver_swf (id) {
-  bind_swf(id, 'ffd')
+  var ffd_type = 'ffd_' + MagicOrders.company
+  bind_swf(id, ffd_type)
 }
 
 function bind_logistic_swf (id, xml) {
