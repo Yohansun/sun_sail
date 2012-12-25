@@ -121,6 +121,8 @@ task :build_test_trades => :environment do
 		order.color_num = nil
 		order.save
 		trade.save
+
+		count += 1
 	end
 
 	puts sp_area_tids.inspect
