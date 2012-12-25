@@ -44,9 +44,9 @@ task :build_test_trades => :environment do
 		end
 
 		or_trade_tids << trade.tid
-		trade.receiver["district"] = '通川区'
-		trade.receiver["city"] = '达州市'
-		trade.receiver["stat"] = '四川省'
+		trade.update_attributes("receiver.district" => '通川区')
+		trade.update_attributes("receiver.city" => '达州市')
+		trade.update_attributes("receiver.stat" => '四川省')
 		trade.status = 'WAIT_SELLER_SEND_GOODS'
 		trade.seller_id = nil
 		trade.seller_name = nil
@@ -55,7 +55,7 @@ task :build_test_trades => :environment do
 		order = trade.orders.first
 		order.title = "测试商品#{p.iid}"
 		order.item_outer_id = p.iid
-		order.color_num = nil
+		order.color_num = []
 		
 		order.save
 		trade.save
@@ -74,9 +74,9 @@ task :build_test_trades => :environment do
 		end
 
 		sp_trade_tids << trade.tid
-		trade.receiver["district"] = '莲湖区'
-		trade.receiver["city"] = '西安市'
-		trade.receiver["stat"] = '陕西省'
+		trade.update_attributes("receiver.district" => '莲湖区')
+		trade.update_attributes("receiver.city" => '西安市')
+		trade.update_attributes("receiver.stat" => '陕西省')
 		trade.status = 'WAIT_SELLER_SEND_GOODS'
 		trade.seller_id = nil
 		trade.seller_name = nil
@@ -85,7 +85,7 @@ task :build_test_trades => :environment do
 		order = trade.orders.first
 		order.title = "测试商品#{p.iid}"
 		order.item_outer_id = p.iid
-		order.color_num = nil
+		order.color_num = []
 		
 		order.save
 		trade.save
@@ -107,9 +107,9 @@ task :build_test_trades => :environment do
 		end
 
 		sp_area_tids << trade.tid
-		trade.receiver["district"] = area[2]
-		trade.receiver["city"] = area[1]
-		trade.receiver["stat"] = area[0]
+		trade.update_attributes("receiver.district" => area[2])
+		trade.update_attributes("receiver.city" => area[1])
+		trade.update_attributes("receiver.stat" => area[0])
 		trade.status = 'WAIT_SELLER_SEND_GOODS'
 		trade.seller_id = nil
 		trade.seller_name = nil
@@ -118,7 +118,7 @@ task :build_test_trades => :environment do
 		order = trade.orders.first
 		order.title = "测试商品#{product.iid}"
 		order.item_outer_id = product.iid
-		order.color_num = nil
+		order.color_num = []
 		order.save
 		trade.save
 
