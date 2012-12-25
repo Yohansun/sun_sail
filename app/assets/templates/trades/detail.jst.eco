@@ -104,7 +104,7 @@
           <tr>
             <td><b>收货人信息</b></td>
             <td><%= @trade.get('receiver_name') %></td>
-            <td><%= @trade.get('receiver_mobile_phone') %></td>
+            <td><%= @trade.get('receiver_mobile_phone') %> <%= @trade.get('receiver_phone') %></td>
             <td>
               <%= @trade.get('receiver_state') %>
               <%= @trade.get('receiver_city') %>

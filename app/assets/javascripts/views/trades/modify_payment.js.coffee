@@ -22,6 +22,11 @@ class MagicOrders.Views.TradesModifyPayment extends Backbone.View
       $.unblockUI()
       return
 
+    unless /^(-|)[0-9]*$/.test($("#modify_payment").val())
+      alert("价格格式错误")
+      $.unblockUI()
+      return
+
     unless @model.get('payment') + parseFloat($('#modify_payment').val()) >= 0
       alert("价格调整幅度过大")
       $.unblockUI()

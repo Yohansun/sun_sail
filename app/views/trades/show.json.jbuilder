@@ -11,6 +11,7 @@ json.status @trade.status
 json.status_text @trade.status_text
 json.receiver_name @trade.receiver_name
 json.receiver_mobile_phone @trade.receiver_mobile_phone
+json.receiver_phone @trade.receiver_phone
 json.receiver_address @trade.receiver_address
 json.receiver_district @trade.receiver_district
 json.receiver_city @trade.receiver_city
