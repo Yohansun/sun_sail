@@ -1,0 +1,19 @@
+.bbs_reset .well{padding:0 0 19px;}
+.bbs_coninfo{padding:0 14px;}
+.bbs_reset .alert{
+	-webkit-border-radius: 4px 4px 0 0;
+	-moz-border-radius:  4px 4px 0 0;
+	border-radius:  4px 4px 0 0;
+}
+.bbs_home img.img-rounded{width:25px;height:25px;}
+.bbs_home.well{min-height:500px;}
+.bbs_coninfo{font-family:"Microsoft Yahei"}
+
+.bbs_hot .label{padding:8px 10px;}
+.bbs_hot .page-header{border-bottom-color:#ddd;}
+
+
+.nomargin{margin:0!important;}
+.lineh20{line-height:20px!important;}
+.lineh45{line-height:45px!important;}
+.mar_l10{margin-left:15px;}

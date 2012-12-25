@@ -1,0 +1,51 @@
+  <%= form_for @topic, :html=> {:class => "form-horizontal"} do |f| %>
+    <div class="control-group alert alert-info">
+      <a href="#" class="pull-right"><img class="img-rounded" src="/assets/admin_photo/admin_photo1.jpg" /></a>
+      <label class="control-label">属于栏目：</label>
+      <div class="controls">
+        <label class="radio inline">
+          <%=f.radio_button :bbs_category_id, "1", { :checked => true } %>
+          资料下载
+        </label>
+        <label class="radio inline">
+          <%=f.radio_button :bbs_category_id, "2" %>
+          最新新闻
+        </label>
+        <label class="radio inline">
+          <%=f.radio_button :bbs_category_id, "3" %>
+          使用规范
+        </label>
+        <label class="radio inline">
+          <%=f.radio_button :bbs_category_id, "4" %>
+          操作指南
+        </label>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="inputEmail">标题：</label>
+      <div class="controls">
+        <!-- <input type="text" class="input-xxlarge" /> -->
+        <%=f.text_field :title, :class => 'input-xxlarge' %>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="inputPassword">帖子内容：</label>
+      <div class="controls">
+         <%=f.text_area :body, :class => 'input-xxlarge' %>
+         <!-- <textarea class="input-xxlarge" rows="13" ></textarea> -->
+      </div>
+    </div>
+    <div class="control-group">
+      <div class="controls">
+        <input type="file" class="lineh20" />
+      </div>
+      <!-- <div class="controls">
+        <input class="test_file lineh20" type="file" value="" />
+      </div> -->
+    </div>
+    <div class="control-group">
+      <div class="controls input-xxlarge">
+        <%= f.submit :class => 'btn btn-primary pull-right', :value => "提交"%>
+      </div>
+    </div>
+<%- end %>

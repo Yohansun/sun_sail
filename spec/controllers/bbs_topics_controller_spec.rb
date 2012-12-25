@@ -42,7 +42,7 @@ describe BbsTopicsController do
     it 'success' do
       post :create, bbs_topic: { bbs_category_id: 1, title: 'rspec title', body: 'rspec body' }
       assigns(:topic).should_not be_nil
-      response.should redirect_to(bbs_topic_url(assigns(:topic)))
+      response.should redirect_to(bbs_topics_url)
     end
 
     it 'fail' do
@@ -71,7 +71,7 @@ describe BbsTopicsController do
     it 'success' do
       put :update, id: @topic.id, bbs_topic: { title: 'update title'}
       assigns(:topic).title.should == 'update title'
-      response.should redirect_to(bbs_topic_url(assigns(:topic)))
+      response.should redirect_to(bbs_topics_url)
     end
 
     it 'fail' do

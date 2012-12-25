@@ -1,6 +1,7 @@
 class BbsTopicsController < ApplicationController
+  before_filter :authenticate_user!
   before_filter :fetch_categories, except: [:download, :create]
-  before_filter :fetch_topic, except: [:index, :new, :create]
+  before_filter :fetch_topic, except: [:index, :new, :create, :list]
 
   def index
     @hot_topics = BbsTopic.hot.limit(10)
@@ -13,8 +14,9 @@ class BbsTopicsController < ApplicationController
 
   def create
     @topic = BbsTopic.new(topic_params)
+    @topic.user_id = current_user.id
     if @topic.save
-      redirect_to @topic
+      redirect_to bbs_topics_path
     else
       render :new
     end
@@ -22,15 +24,32 @@ class BbsTopicsController < ApplicationController
 
   def update
     if @topic.update_attributes(topic_params)
-      redirect_to @topic
+      redirect_to bbs_topics_path
     else
       render :edit
     end
   end
 
+  def list
+    if params[:category] == "hot"
+    @hot_topics = BbsTopic.page(params[:page]).per(4)
+    else
+    @latest_topics = BbsTopic.page(params[:page]).per(4)
+    end
+  end
+
+  def destroy
+     @r = BbsTopic.find(params[:id])
+     @r.destroy
+     redirect_to bbs_topics_path
+  end
+
+  def edit
+    @topic = BbsTopic.find(params[:id])
+  end
+
   def show
-    BbsTopic.increment_counter(:read_count, @topic.id)
-    # @attachements = @topic.attachements
+    @count = @topic.read_count + 1
   end
 
   def download
@@ -52,5 +71,6 @@ class BbsTopicsController < ApplicationController
   def topic_params
     params.require(:bbs_topic).permit(:bbs_category_id, :title, :body)
   end
+
 
 end

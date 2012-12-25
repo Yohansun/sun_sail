@@ -1,0 +1,34 @@
+<div class="container-fluid">
+    <ul class="breadcrumb">
+      <li><%= link_to '互动中心', bbs_topics_path %><span class="divider">&gt;&gt;</span></li>
+      <li class="active">帖子内容</li>
+    </ul>
+    <div class="row-fluid bbs_reset">
+      <div class="span10 pull-left well">
+        <div class="alert alert-info">
+          <a href="#" class="pull-right"><img class="img-rounded" src="/assets/admin_photo/admin_photo1.jpg" /></a>
+          <h3 class="nomargin">
+             <%=@topic.title %>
+          </h3>
+          <span class="btn-block">
+            <%= @topic.bbs_category.name %> • <%= @topic.user.name %> • 于<%= @topic.created_at.strftime('%Y-%m-%d %H:%M:%S')%>发布  • <%= @topic.read_count %>次阅读
+          </span>
+        </div>
+        <div class="bbs_coninfo">
+          <p><%=@topic.body %></p>
+          <div>
+            <p>附件1：<a href="#">xxx.doc</a></p>
+            <p>附件2：<a href="#">xxx.ppt</a></p>
+          </div>
+          <div class="pagination-right">
+            <a href="#" class="btn btn-primary">下载</a>
+            <a href="#" class="btn btn-primary">打印</a>
+          </div>
+        </div><!--bbs_coninfo-->
+      </div><!--span10 pull-left well-->
+    </div><!--row-fluid bbs_reset-->
+    <%= render partial: 'categories', :locals => { :categories => @categories }%>
+    <footer>
+      © Copyright 2011-2012 Do Order. All rights reserved.
+    </footer>
+</div><!--container-fluid ends-->

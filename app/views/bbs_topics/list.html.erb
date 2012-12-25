@@ -1,0 +1,65 @@
+<div class="container-fluid">
+    <ul class="breadcrumb">
+      <li><li><%= link_to '互动中心', bbs_topics_path %> <span class="divider">&gt;&gt;</span></li>
+      <%- if params[:category] == "last"%>
+      <li href="/bbs_topics/list?category=last" class="active">最新帖子</li>
+      <%- else %>
+      <li href="/bbs_topics/list?category=hot" class="active">热门帖子</li>
+      <%- end %>
+    </ul>
+    <div class="row-fluid bbs_reset">
+      <div class="span10 pull-left well bbs_hot">
+        <div class="alert alert-info pagination-right">
+          <%- if params[:category] == "last"%>
+          <a href="#">最新帖子</a>
+          <%- else %>
+          <a href="#">热门帖子</a>
+          <%- end %>
+        </div>
+        <%- if params[:category] == "last"%>
+        <%- @latest_topics.each_with_index do |topic, j| %>
+        <div class="bbs_coninfo">
+          <div class="clearfix page-header">
+            <a class="pull-left" href="#"><img class="img-rounded" src="/assets/admin_photo/admin_photo1.jpg"></a>
+            <div class="offset1">
+              <span class="pull-right mar_l10">
+                <%=link_to "编辑", edit_bbs_topic_path(topic), :class => 'btn-block'%>
+                <%=link_to "删除", bbs_topic_path(topic), method: :delete, confirm: 'delete it?', :class => 'btn-block'%>
+              </span>
+              <span class="pull-right lineh45">下载数：<span class="label label-important lead">30</span></span>
+              <p><%=topic.title %></p>
+              <p><%= topic.body %>由<%=topic.user.name %>于<%=topic.created_at.strftime('%Y-%m-%d %H:%M:%S') %>发表</p>
+            </div>
+          </div>
+        </div>
+        <%- end %>
+        <%- else %>
+        <%- @hot_topics.each_with_index do |topic, j| %>
+        <div class="bbs_coninfo">
+          <div class="clearfix page-header">
+            <a class="pull-left" href="#"><img class="img-rounded" src="/assets/admin_photo/admin_photo1.jpg"></a>
+            <div class="offset1">
+              <span class="pull-right mar_l10">
+                <%=link_to "编辑", edit_bbs_topic_path(topic), :class => 'btn-block'%>
+                <%=link_to "删除", bbs_topic_path(topic), method: :delete, confirm: 'delete it?', :class => 'btn-block'%>
+              </span>
+              <span class="pull-right lineh45">下载数：<span class="label label-important lead">30</span></span>
+              <p><a href="bbs_in.html"><%=topic.title %></a></p>
+              <p><%= topic.body %>由<%=topic.user.name %>于<%=topic.created_at.strftime('%Y-%m-%d %H:%M:%S') %>发表</p>
+            </div>
+          </div>
+        </div>
+        <%- end %>
+        <%- end %>
+        <div class="pagination">
+          <%- if params[:category] == "hot"%>
+          <%= paginate @hot_topics %>
+          <%-else %>
+          <%= paginate @latest_topics %>
+          <%- end %>
+      </div><!-- pagination ends -->
+      </div><!--span10 pull-left well bbs_hot-->
+    <!-- </div>row-fluid bbs_reset -->
+      <%= render partial: 'categories', :locals => { :categories => @categories }%>
+    </div><!--row-fluid bbs_reset-->
+  </div>
