@@ -43,10 +43,14 @@
             <% if current_user.has_role?(:seller) && controller_name == 'stocks' %>
               <li class="stocks"><a href="#">仓库管理</a></li>
             <% end %>
-            <% if ((current_user.has_role?(:admin)) || (current_user.has_role?(:cs))) && ['sales', 'user_activities', 'trade_reports'].include?(controller_name)  %>
-              <li class="<%= 'active' if controller_name == 'user_activities'%>"><a href="/user_activities">人员</a></li>
-              <li class="<%= 'active' if controller_name == 'trade_reports'%>"><a href="/trade_reports">报表下载</a></li>
-              <li class="<%= 'active' if controller_name == 'sales'%>"><a href="/sales/product_analysis">销售</a></li>
+            <% if ['sales', 'user_activities', 'trade_reports'].include?(controller_name)  %>
+              <%- if current_user.has_role?(:admin) %>   
+                <li class="<%= 'active' if controller_name == 'user_activities'%>"><a href="/user_activities">人员</a></li>
+                <li class="<%= 'active' if controller_name == 'trade_reports'%>"><a href="/trade_reports">报表下载</a></li>
+                <li class="<%= 'active' if controller_name == 'sales'%>"><a href="/sales/product_analysis">销售</a></li>
+               <%- else %>
+                <li class="<%= 'active' if controller_name == 'trade_reports'%>"><a href="/trade_reports">报表下载</a>
+               <%- end %>   
             <% end %>
             <% if current_user.has_role?(:admin)  && controller_name != 'home' %>
               <li class="products"><a href="#"><%= top_nav_name %></a></li>
@@ -58,7 +62,11 @@
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Magic<b class="caret"></b></a>
               <ul class="dropdown-menu">
                 <li><a href="/app#trades" class="trades">订单管理</a></li>
-                <li><a href="/sales">数据魔方</a></li>
+                <%- if  current_user.has_role?(:admin)%>
+                  <li><a href="/sales">数据魔方</a></li>
+                <%- elsif  current_user.has_role?(:cs) ||  current_user.has_role?(:seller) %>  
+                  <li><a href="/trade_reports">数据魔方</a></li>
+                <%- end %>
                 <% if current_user.has_role?(:seller) && current_user.seller %>
                   <li><%= link_to '仓库管理', seller_stocks_path(current_user.seller.id), class: "stocks" %></li>
                 <% elsif current_user.has_role?(:admin) %>
