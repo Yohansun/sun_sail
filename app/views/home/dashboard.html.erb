@@ -16,9 +16,10 @@
             <a class="indexStart7" href="/bbs_topics"><span>互动中心</span></a>
           </div>
         <% end %>
-        <% if current_user.has_role?(:cs) -%>
+        
+        <% if current_user.has_role?(:cs) || current_user.has_role?(:seller)-%>
           <div>
-            <a class="indexStart3" href="/sales"><span>数据魔方</span></a>
+            <a class="indexStart3" href="/trade_reports"><span>数据魔方</span></a>
           </div>
         <% end %>
 

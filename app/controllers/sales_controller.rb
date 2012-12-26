@@ -4,14 +4,6 @@ class SalesController < ApplicationController
   before_filter :authenticate_user!
   before_filter :admin_only! 
 
-  def admin_only!
-    if TradeSetting.company == "nippon" &&  current_user.has_role?(:cs) 
-       return true
-    else   
-      super
-    end  
-  end
-
   def index
     redirect_to "/sales/product_analysis"
   end
