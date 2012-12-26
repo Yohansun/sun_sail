@@ -25,10 +25,10 @@ class Sale < ActiveRecord::Base
       day = total_hour/24
       gap = [day.to_s,(hour.to_s + ":" + minute.to_s + ":" + second.to_s)]
   end
-  def all_trade_fee(start_time, end_time)
-    all_money = Trade.where("$and" => [{:created.gte => start_time.utc - 8.hour }, {:created.lt => end_time.utc - 8.hour}]).sum(:payment).to_f.round(2)
-  end
-  def paid_trade_fee(start_time, end_time)
-    paid_trades = Trade.where("$and" => [{:pay_time.gte => start_time.utc - 8.hour }, {:pay_time.lt => end_time.utc - 8.hour }]).sum(:payment).to_f.round(2)
-  end
+  # def all_trade_fee(start_time, end_time)
+  #   all_money = Trade.where("$and" => [{:created.gte => start_time.utc - 8.hour }, {:created.lt => end_time.utc - 8.hour}]).sum(:payment).to_f.round(2)
+  # end
+  # def paid_trade_fee(start_time, end_time)
+  #   paid_trades = Trade.where("$and" => [{:pay_time.gte => start_time.utc - 8.hour }, {:pay_time.lt => end_time.utc - 8.hour }]).sum(:payment).to_f.round(2)
+  # end
 end

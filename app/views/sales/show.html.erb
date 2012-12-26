@@ -22,13 +22,13 @@
       <%- else %>
       <h4 class="add_unit tc span3">倒计时<strong><span id="day_text"><span id="day"><%= @sale.time_gap[0] %></span>天</span><span id="timer"><%= @sale.time_gap[1] %></span></strong></h4>
       <%- end %>
-      <h4 class="add_unit tc span3" id="deal_money">下单金额<strong><%= @amount_all %></strong></h4>
-      <h4 class="add_unit tc span3" id="paid_money">实际成交金额<strong><%= @amount_paid %></strong></h4>
+      <h4 class="add_unit tc span3" id="deal_money">下单金额<strong><%= @amount_all.round(2) %></strong></h4>
+      <h4 class="add_unit tc span3" id="paid_money">实际成交金额<strong><%= @amount_paid.round(2) %></strong></h4>
     </div>
 
 
     <div class="well">
-      <div id="chartdiv" style="width: 100%; height: 400px;"></div>
+      <div id="chartdiv" style="width: 100%; height: 400px;"><h4>正在处理数据，请稍等...</h4></div>
     </div>
   </div>
 </div>
@@ -39,16 +39,10 @@
 
     var chartData = [];
 
-    var clear_loop;
-
-    var start_date = new Date(<%= @start_at.year %>, <%= @start_at.month - 1 %>, <%= @start_at.day %>, <%= @start_at.hour %>, <%= @start_at.min %>)
-
-    var end_date = new Date(<%= @end_at.year %>, <%= @end_at.month - 1 %>, <%= @end_at.day %>, <%= @end_at.hour %>, <%= @end_at.min %>)
-
     var time_now = new Date(<%= Time.now.year %>, <%= Time.now.month - 1 %>, <%= Time.now.day %>, <%= Time.now.hour %>, <%= Time.now.min %>)
 
-    <% @data.each do |row| -%>
-      chartData.push({date: new Date(<%= row[0].year %>, <%= row[0].month - 1 %>, <%= row[0].day %>, <%= row[0].hour %>, <%= row[0].min %>, <%= row[0].sec %>), amount: <%= row[1] %>, amountall: <%= row[2] %>})
+    <% @final_hash.each do |time, value| -%>
+      chartData.push({date: new Date(<%= time.year %>, <%= time.month - 1 %>, <%= time.day %>, <%= time.hour %>, <%= time.min %>, <%= time.sec %>), amount: <%= value["created_fee"] %>, amountall: <%= value["paid_fee"] %>})
     <% end -%>
 
     //var average = 55.4;
@@ -84,8 +78,8 @@
       categoryAxis.axisColor = "#DADADA";
       categoryAxis.startOnAxis = true;
       //categoryAxis.gridCount = 20;
-      //categoryAxis.autoGridCount = false;
-      categoryAxis.equalSpacing = true;//+++++++If you want data points to be placed at equal intervals (omiting dates with no data), set equalSpacing to true.
+      categoryAxis.autoGridCount = true;
+      categoryAxis.equalSpacing = false;//+++++++If you want data points to be placed at equal intervals (omiting dates with no data), set equalSpacing to true.
 
 
       // AXES
@@ -195,6 +189,8 @@
     }
 
     //添加坐标点
+    var clear_loop;
+
     function add_node(){
       clear_loop = setInterval(function(){
           $.get("/sales/add_node", {}, function(data){
@@ -241,6 +237,10 @@
     });
 
     //判断是否设置定时实时销售开始
+    var start_date = new Date(<%= @start_at.year %>, <%= @start_at.month - 1 %>, <%= @start_at.day %>, <%= @start_at.hour %>, <%= @start_at.min %>)
+
+    var end_date = new Date(<%= @end_at.year %>, <%= @end_at.month - 1 %>, <%= @end_at.day %>, <%= @end_at.hour %>, <%= @end_at.min %>)
+
     if (time_now < start_date){
       $(function(){
         setTimeout(function(){

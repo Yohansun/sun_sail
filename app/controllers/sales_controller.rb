@@ -13,47 +13,161 @@ class SalesController < ApplicationController
     @sale = Sale.last
     TradeSetting.test_time = Time.now + 8.hour
     TradeSetting.test_time_2 = TradeSetting.test_time
-    TradeSetting.frequency = 900   ## per second
-    @amount_all = 0
-    @amount_paid = 0
+    TradeSetting.frequency = 600   ## per second
     unless @sale
       @sale = Sale.create(name: "测试活动", earn_guess: 100000, start_at: TradeSetting.test_time, end_at: TradeSetting.test_time + 1.day)
       render action: :edit
     end
-    @start_at = @sale.start_at.to_time
-    @end_at = @sale.end_at.to_time
-    @data = [[@start_at, 0, 0]]
+    @start_at = @sale.start_at
+    @end_at = @sale.end_at
 
-    ## 分时间段显示不同情况
-    unless TradeSetting.test_time < @start_at
-      frequency = TradeSetting.frequency
-      if TradeSetting.test_time >= @end_at
-        gap = @end_at.to_i - @start_at.to_i
-      else
-        gap = TradeSetting.test_time.to_i - @start_at.to_i
-      end
-      num = gap/frequency
+    c_map = %Q{
+      function() {
+        emit(this.created.toString().slice(4,20).concat("0:00"), {created_fee: this.payment});
+      }
+    }
 
-      (0..num).each do |counter|
-        unless num == counter && gap%frequency == 0
-          start_time = @start_at + counter * frequency
-          if num == counter && gap%frequency > 0
-            if TradeSetting.test_time >= @end_at
-              end_time = @end_at
-            else
-              end_time = TradeSetting.test_time
-            end
-          else
-            end_time = @start_at + (counter + 1) * frequency
+    p_map = %Q{
+      function() {
+        if(this.pay_time != null){
+          emit(this.pay_time.toString().slice(4,20).concat("0:00"), {paid_fee: this.payment});
+        }
+      }
+    }
+
+    week_c_map = %Q{
+      function() {
+        emit(this.created.toString().slice(4,17).concat("0:00:00"), {created_fee: this.payment});
+      }
+    }
+
+    week_p_map = %Q{
+      function() {
+        if(this.pay_time != null){
+          emit(this.pay_time.toString().slice(4,17).concat("0:00:00"), {paid_fee: this.payment});
+        }
+      }
+    }
+
+    month_c_map = %Q{
+      function() {
+        emit(this.created.toString().slice(4,16).concat("00:00:00"), {created_fee: this.payment});
+      }
+    }
+
+    month_p_map = %Q{
+      function() {
+        if(this.pay_time != null){
+          emit(this.pay_time.toString().slice(4,16).concat("00:00:00"), {paid_fee: this.payment});
+        }
+      }
+    }
+
+    year_c_map = %Q{
+      function() {
+        if(this.created.toString().slice(8,9) == 3){
+          emit(this.created.toString().slice(4,8).concat("01").concat(Date().toString().slice(10,16)), {created_fee: this.payment});
+        } else {
+          emit(this.created.toString().slice(4,9).concat("1").concat(Date().toString().slice(10,16)), {created_fee: this.payment});
+        }
+      }
+    }
+
+    year_p_map = %Q{
+      function() {
+        if(this.pay_time != null){
+          if(this.created.toString().slice(8,9) == 3){
+            emit(this.pay_time.toString().slice(4,8).concat("01").concat(Date().toString().slice(10,16)), {paid_fee: this.payment});
+          } else{
+            emit(this.pay_time.toString().slice(4,9).concat("1").concat(Date().toString().slice(10,16)), {paid_fee: this.payment});
+          }
+        }
+      }
+    }
+
+    c_reduce = %Q{
+      function(key, values) {
+        var result = {created_fee: 0};
+        values.forEach(function(value) {
+          result.created_fee += value.created_fee;
+        });
+        return result;
+      }
+    }
+
+    p_reduce = %Q{
+      function(key, values) {
+        var result = {paid_fee: 0};
+        values.forEach(function(value) {
+          result.paid_fee += value.paid_fee;
+        });
+        return result;
+      }
+    }
+
+    created_trades = TaobaoTrade.between(created: (@start_at.to_time - 8.hours)..(@end_at.to_time - 8.hours))
+    paid_trades = TaobaoTrade.between(pay_time: (@start_at.to_time - 8.hours)..(@end_at.to_time - 8.hours))
+    @amount_all = created_trades.try(:sum, :payment) || 0
+    @amount_paid = paid_trades.try(:sum, :payment) || 0
+    if @end_at.to_i - @start_at.to_i < 3.days.to_i
+      created_map_reduce = created_trades.map_reduce(c_map, c_reduce).out(inline: true)
+      paid_map_reduce = paid_trades.map_reduce(p_map, p_reduce).out(inline: true)
+    elsif @end_at.to_i - @start_at.to_i >= 3.days.to_i && @end_at.to_i - @start_at.to_i < 1.month.to_i
+      created_map_reduce = created_trades.map_reduce(week_c_map, c_reduce).out(inline: true)
+      paid_map_reduce = paid_trades.map_reduce(week_p_map, p_reduce).out(inline: true)
+    elsif @end_at.to_i - @start_at.to_i >= 1.month.to_i && @end_at.to_i - @start_at.to_i < 3.months.to_i
+      created_map_reduce = created_trades.map_reduce(month_c_map, c_reduce).out(inline: true)
+      paid_map_reduce = paid_trades.map_reduce(month_p_map, p_reduce).out(inline: true)
+    elsif @end_at.to_i - @start_at.to_i >= 3.months.to_i
+      created_map_reduce = created_trades.map_reduce(year_c_map, c_reduce).out(inline: true)
+      paid_map_reduce = paid_trades.map_reduce(year_p_map, p_reduce).out(inline: true)
+    end
+
+    # 非典型性循环
+    enum_paid = paid_map_reduce.sort{|x,y| x["_id"].to_time.to_i <=> y["_id"].to_time.to_i}.to_enum
+    enum_created = created_map_reduce.sort{|x,y| x["_id"].to_time.to_i <=> y["_id"].to_time.to_i}.to_enum
+    @final_hash = {}
+    begin
+      current_paid = enum_paid.next
+      current_created = enum_created.next
+      p current_paid
+      p current_created
+      while(1)
+        if current_created["_id"] == current_paid["_id"]
+          @final_hash[current_created["_id"].to_time] = current_created["value"].merge(current_paid["value"])
+          current_paid = enum_paid.next
+          current_created = enum_created.next
+        elsif current_created["_id"].to_time.to_i > current_paid["_id"].to_time.to_i
+          while(current_created["_id"].to_time.to_i > current_paid["_id"].to_time.to_i)
+            @final_hash[current_paid["_id"].to_time] = current_paid["value"].merge("created_fee" => 0.0)
+            current_paid = enum_paid.next
           end
-          all_in_frequency = @sale.all_trade_fee(start_time, end_time)
-          paid_in_frequency = @sale.paid_trade_fee(start_time, end_time)
-          @amount_all += all_in_frequency
-          @amount_paid += paid_in_frequency
-          @data << [end_time, all_in_frequency, paid_in_frequency]
+        else
+          while(current_created["_id"].to_time.to_i < current_paid["_id"].to_time.to_i)
+            @final_hash[current_created["_id"].to_time] = current_created["value"].merge("paid_fee" => 0.0)
+            current_created = enum_created.next
+          end
         end
       end
+      rescue StopIteration
     end
+    begin
+      while(1)
+        current_created = enum_created.next
+        @final_hash[current_created["_id"].to_time] = current_created["value"].merge("paid_fee" => "0")
+      end
+      rescue StopIteration
+    end
+    begin
+      while(1)
+        current_paid = enum_paid.next
+        @final_hash[current_paid["_id"].to_time] = current_paid["value"].merge("created_fee" => "0")
+      end
+      rescue StopIteration
+    end
+
+    p created_map_reduce.count
+
     @progress_bar = (@amount_paid/@sale.earn_guess*100).to_i
     Rails.cache.write 'amount_all', @amount_all
     Rails.cache.write 'amount_paid', @amount_paid
@@ -216,6 +330,7 @@ class SalesController < ApplicationController
   def univalent_analysis
     render "/sales/univalent_analysis"
   end
+
   def real_univalent_analysis
     @start_date = params[:start_date] if params[:start_date].present?
     @end_date = params[:end_date] if params[:end_date].present?
