@@ -43,10 +43,10 @@ task :sync_products => :environment do
     'I1P04L10095C0V01'
   ]
 
-  p_ids = Product.where(iid: a).map(&:id)
+  p_ids = Product.where(iid: (a | product_iids)).map(&:id)
   StockProduct.where("seller_id not in (?)", [1791,1792,1793,1794]).where("product_id in (?)", p_ids).delete_all
 
-  product_ids = product_ids | p_ids
+  product_ids = p_ids
 
   (1791..1794).each do |id|
   	seller = Seller.find id
