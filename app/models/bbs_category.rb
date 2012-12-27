@@ -9,8 +9,9 @@
 #
 
 class BbsCategory < ActiveRecord::Base
+  include ActiveModel::ForbiddenAttributesProtection
+
   attr_accessible :name
 
   has_many :topics
-
 end

@@ -14,6 +14,8 @@
 #
 
 class BbsTopic < ActiveRecord::Base
+  include ActiveModel::ForbiddenAttributesProtection
+
   attr_accessible :bbs_category_id, :title, :body
 
   belongs_to :bbs_category
