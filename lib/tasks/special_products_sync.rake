@@ -1106,7 +1106,7 @@ task :special_products_sync => :environment do
 		district_name = areas[2]
 		state = Area.find_by_name state_name
     city = state.children.where(name: city_name).first if state
-    district = city.children.where(name: district_name).first if city
+    district = city.children.where("name like ?", "%#{district_name.gsub(/市|县|区/, '')}%").first if city
     if district
     	district.sellers.where("seller_id not in (?)", [1791,1792,1793,1794]).each {|seller| seller.stock_products.where(product_id: product.id).delete_all}
     else
