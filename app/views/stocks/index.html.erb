@@ -271,7 +271,7 @@
 var chart;
 var chartData = []
 <%- @products.each do |p| %>
-  chartData.push({commodity: "<%= p.iid %>", stock_infact: "<%= p.actual %>", stock_safe: "<%= p.safe_value %>", stock_safe_end: "<%= p.safe_value - 3 %>", stock_avaliable: "800"})
+  chartData.push({commodity: "<%= p.iid %>", stock_infact: "<%= p.actual %>", stock_safe: "<%= p.safe_value %>", stock_safe_end: "<%= p.safe_value - 3 %>", stock_avaliable: "<%= p.activity %>"})
 
 
   AmCharts.ready(function () {
@@ -313,7 +313,7 @@ var chartData = []
       graph.fillAlphas = 1;
       graph.valueField = "stock_safe";
       graph.openField = "stock_safe_end";
-      graph.lineThickness = 1;
+      graph.lineThickness = 2;
       // graph.bullet = "round";
       graph.lineColor = "#F05D22";
       chart.addGraph(graph);
