@@ -23,10 +23,6 @@ json.buyer_message @trade.buyer_message
 json.seller_memo @trade.seller_memo
 json.post_fee @trade.post_fee
 json.payment @trade.payment
-json.modify_payment @trade.modify_payment
-json.modify_payment_no @trade.modify_payment_no
-json.modify_payment_at @trade.modify_payment_at.strftime("%Y-%m-%d") if @trade.modify_payment_at
-json.modify_payment_memo @trade.modify_payment_memo
 
 unless TradeSetting.company == 'dulux' && (current_user.has_role?(:seller) || current_user.has_role?(:logistic))
   json.seller_discount @trade.seller_discount
