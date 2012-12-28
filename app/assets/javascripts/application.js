@@ -50,6 +50,21 @@ $(function () {
     });
   };
 
+  //ver2.2.2
+  //1.modal-scrollbar & scrollbar
+  $(function(){
+    $('.modal').on('show', function () {
+      $('body').addClass('body_toggleclass')
+    });
+    $('.modal').on('hidden', function () {
+      $('body').removeClass('body_toggleclass')
+    });
+  });
+  //2.
+  /*$(function(){
+    $('.subnav').scrollspy()
+  })*/
+
   //高级搜索显示/隐藏
   $('#advanced_btn').click(function(){
     $('#advanced_btn i').toggleClass('icon-arrow-up');

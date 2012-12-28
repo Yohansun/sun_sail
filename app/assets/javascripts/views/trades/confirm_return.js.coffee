@@ -20,6 +20,6 @@ class MagicOrders.Views.TradesConfirmReturn extends Backbone.View
 
       view = new MagicOrders.Views.TradesRow(model: model)
       $("#trade_#{model.get('id')}").replaceWith(view.render().el)
-      $("a[rel=popover]").popover(placement: 'left')
+      $("a[rel=popover]").popover({placement: 'left', html:true})
 
       $('#trade_confirm_return').modal('hide')

@@ -61,7 +61,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
     @first_rendered = true
     @collection.each(@appendTrade)
-    $("a[rel=popover]").popover(placement: 'left')
+    $("a[rel=popover]").popover({placement: 'left', html:true})
     @render_select_state()
     @render_select_print_time()
     $(@el).find("#search_logistic").hide()
@@ -106,7 +106,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
       else
         $(".get_offset").html($(".complete_offset").html())
         $("[data-type=loadMoreTrades]").replaceWith("<span id='bottom_line'><b>当前为最后一条订单</b></span>")
-      $("a[rel=popover]").popover(placement: 'left')
+      $("a[rel=popover]").popover({placement: 'left', html:true})
     else
       $(".complete_offset").html(0)
       $(".get_offset").html(0)
@@ -123,7 +123,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
   renderNew: =>
     @collection.each(@prependTrade)
-    $("a[rel=popover]").popover(placement: 'left')
+    $("a[rel=popover]").popover({placement: 'left', html:true})
     $.unblockUI()
 
   prependTrade: (trade) =>

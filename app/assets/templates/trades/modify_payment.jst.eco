@@ -20,15 +20,15 @@
   <fieldset>
     <div class="clearfix">
       <label class="pull-left">调整金额：</label>
-      <input type="text" placeholder="请输入调整的金额..." class="input-xlarge" id="modify_payment" value="<%= @trade.get 'modify_payment' %>">
+      <input type="text" placeholder="请输入调整的金额..." class="input-large" id="modify_payment" value="<%= @trade.get 'modify_payment' %>">
+    </div>
+    <div class="clearfix">
+      <label class="pull-left" style="margin-right:14px;">交易码：</label>
+      <input type="text" placeholder="请输入交易码..." class="input-large" id="modify_payment_no" value="<%= @trade.get 'modify_payment_no' %>">
     </div>
     <div class="clearfix">
       <label class="pull-left">调整日期：</label>
-      <input type="text" placeholder="请输入调整的日期..." class="datepickers" id="modify_payment_at" value="<%= @trade.get 'modify_payment_at' %>">
-    </div>
-    <div class="clearfix">
-      <label class="pull-left">交易码：</label>
-      <input type="text" placeholder="请输入交易码..." class="input-xlarge" id="modify_payment_no" value="<%= @trade.get 'modify_payment_no' %>">
+      <input type="text" placeholder="请输入调整的日期..." class="input-large datepickers" id="modify_payment_at" value="<%= @trade.get 'modify_payment_at' %>">
     </div>
     <div class="clearfix">
       <label class="pull-left">调整备注：</label>
