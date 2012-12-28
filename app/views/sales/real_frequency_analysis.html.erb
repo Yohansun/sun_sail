@@ -37,19 +37,19 @@
             </thead>
             <tbody>
               <% @frequency_data.each_with_index do |value, j| -%>
-              <% if j<=13 -%>
+              <% if j <= 13 -%>
                 <tr>
                   <td><%= j + 1 %></td>
                   <td>期间购买<%= (j+1) %>次</td>
                   <td><%= value.try(:[],0) %></td>
-                  <td><%= value.try(:[],1) %></td>
+                  <td><%= value.try(:[],1) %>%</td>
                 </tr>
               <% else -%>
                 <tr>
                   <td><%= j + 1 %></td>
                   <td>期间购买大于或等于<%= j+1 %>次</td>
                   <td><%= value.try(:[],0) %></td>
-                  <td><%= value.try(:[],1) %></td>
+                  <td><%= value.try(:[],1) %>%</td>
                 </tr>
               <% end %>
               <% end %>
