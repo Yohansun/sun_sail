@@ -6,8 +6,17 @@
     <div class="row-fluid bbs_reset">
       <div class="span10 pull-left well bbs_hot">
         <div class="alert alert-info pagination-right">
-          <a href="#"><%=@category.name %></a>
+          <%- if params[:category] == "last"%>
+          <p><a href="/bbs_topics/list?category=last">最新帖子</a>/<a href="/bbs_topics/list?category=hot">热门帖子</a></p>
+          <%- else %>
+           <p><a href="/bbs_topics/list?category=hot">热门帖子</a>/<a href="/bbs_topics/list?category=last">最新帖子</a></p>
+          <%- end %>
         </div>
+        <%- if @topics.size == 0%>
+          <div class="bbs_coninfo">
+            <p>该板块暂无帖子</p>
+          </div>
+        <%- else %>
         <%- @topics.each_with_index do |topic, j| %>
         <div class="bbs_coninfo">
           <div class="clearfix page-header">
@@ -15,14 +24,15 @@
             <div class="offset1">
               <span class="pull-right mar_l10">
                 <%=link_to "编辑", edit_bbs_topic_path(topic), :class => 'btn-block'%>
-                <%=link_to "删除", bbs_topic_path(topic), method: :delete, confirm: 'delete it?', :class => 'btn-block'%>
+                <%=link_to "删除", bbs_topic_path(topic, category: "category"), method: :delete, confirm: 'delete it?', :class => 'btn-block'%>
               </span>
-              <span class="pull-right lineh45">下载数：<span class="label label-important lead">30</span></span>
-              <p><%=topic.title %></p>
-              <p><%= topic.body %>由<%=topic.user.name %>于<%=topic.created_at.strftime('%Y-%m-%d %H:%M:%S') %>发表</p>
+              <!-- <span class="pull-right lineh45">下载数：<span class="label label-important lead">30</span></span> -->
+              <p><%=link_to topic.title, bbs_topic_path(topic) %></p>
+              <p>由<%=topic.user.name %>于<%=topic.created_at.strftime('%Y-%m-%d %H:%M:%S') %>发表</p>
             </div>
           </div>
         </div>
+        <%- end %>
         <%- end %>
         <div class="pagination">
           <%= paginate @topics %>

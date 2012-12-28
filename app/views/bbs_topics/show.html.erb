@@ -16,18 +16,18 @@
         </div>
         <div class="bbs_coninfo">
           <p><%=@topic.body %></p>
-          <div>
+          <!-- <div>
             <p>附件1：<a href="#">xxx.doc</a></p>
             <p>附件2：<a href="#">xxx.ppt</a></p>
           </div>
           <div class="pagination-right">
             <a href="#" class="btn btn-primary">下载</a>
             <a href="#" class="btn btn-primary">打印</a>
-          </div>
+          </div> -->
         </div><!--bbs_coninfo-->
       </div><!--span10 pull-left well-->
-    </div><!--row-fluid bbs_reset-->
     <%= render partial: 'categories', :locals => { :categories => @categories }%>
+    </div><!--row-fluid bbs_reset-->
     <footer>
       © Copyright 2011-2012 Do Order. All rights reserved.
     </footer>

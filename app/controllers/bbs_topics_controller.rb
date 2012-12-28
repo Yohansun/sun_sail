@@ -15,8 +15,9 @@ class BbsTopicsController < ApplicationController
   def create
     @topic = BbsTopic.new(topic_params)
     @topic.user_id = current_user.id
+    bbs_category_id = @topic.bbs_category_id
     if @topic.save
-      redirect_to bbs_topics_path
+      redirect_to bbs_category_path(:id => bbs_category_id)
     else
       render :new
     end
@@ -32,24 +33,28 @@ class BbsTopicsController < ApplicationController
 
   def list
     if params[:category] == "hot"
-    @hot_topics = BbsTopic.page(params[:page]).per(4)
+    @hot_topics = BbsTopic.page(params[:page]).per(20)
     else
-    @latest_topics = BbsTopic.page(params[:page]).per(4)
+    @latest_topics = BbsTopic.page(params[:page]).per(20)
     end
   end
 
   def destroy
-     @r = BbsTopic.find(params[:id])
-     @r.destroy
-     redirect_to bbs_topics_path
-  end
-
-  def edit
-    @topic = BbsTopic.find(params[:id])
+     @topic = BbsTopic.find(params[:id])
+     bbs_category_id = @topic.bbs_category_id
+     @topic.destroy
+     if params[:category] == "hot"
+       redirect_to list_bbs_topics_path(:category => "hot")
+     elsif params[:category] == "category"
+       redirect_to bbs_category_path(:id => bbs_category_id)
+     else 
+      redirect_to list_bbs_topics_path(:category => "last")
+     end
   end
 
   def show
-    @count = @topic.read_count + 1
+    BbsTopic.increment_counter(:read_count, @topic.id)
+    # @attachements = @topic.attachements
   end
 
   def download
