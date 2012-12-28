@@ -57,7 +57,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       @collection.fetch data: {trade_type: trade_type}, success: (collection, response) =>
         @mainView = new MagicOrders.Views.TradesIndex(collection: collection, trade_type: trade_type)
         $('#content').html(@mainView.render().el)
-        $("a[rel=popover]").popover(placement: 'left')
+        $("a[rel=popover]").popover({placement: 'left', html:true})
         switch trade_type
           when 'undispatched_one_day' then $('.trade_nav').html('超过一天未分流')
           when 'undelivered_two_days' then $('.trade_nav').html('超过两天未发货')

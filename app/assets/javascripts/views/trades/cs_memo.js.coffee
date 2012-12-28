@@ -32,7 +32,7 @@ class MagicOrders.Views.TradesCsMemo extends Backbone.View
 
       view = new MagicOrders.Views.TradesRow(model: model)
       $("#trade_#{model.get('id')}").replaceWith(view.render().el)
-      $("a[rel=popover]").popover(placement: 'left')
+      $("a[rel=popover]").popover({placement: 'left', html:true})
 
       $('#trade_cs_memo').modal('hide')
       # window.history.back()

@@ -228,7 +228,7 @@ module SalesHelper
        end
      end
      purchase_num.each do |p|
-       purchase_data = (p/total_num.to_f*100).round(2)
+       total_num != 0 ? purchase_data = (p/total_num.to_f*100).round(2) : purchase_data = 0
        frequency_info << [p , purchase_data]
      end
      frequency_info
@@ -274,7 +274,7 @@ module SalesHelper
        total_person_num += person_num[i]
      end
      person_num.each_with_index do |p, i|
-       univalent_data = (p/total_person_num.to_f*100).round(2)
+       total_person_num != 0 ? univalent_data = (p/total_person_num.to_f*100).round(2) : univalent_data = 0
        univalent_info << [money_gap2[i], p , univalent_data]
      end
      univalent_info

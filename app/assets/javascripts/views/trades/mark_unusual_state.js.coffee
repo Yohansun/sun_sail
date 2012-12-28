@@ -46,7 +46,7 @@ class MagicOrders.Views.TradesMarkUnusualState extends Backbone.View
 
         view = new MagicOrders.Views.TradesRow(model: model)
         $("#trade_#{model.get('id')}").replaceWith(view.render().el)
-        $("a[rel=popover]").popover(placement: 'left')
+        $("a[rel=popover]").popover({placement: 'left', html:true})
         $('#trade_mark_unusual_state').modal('hide')
 
       error: (model, error, response) =>
@@ -62,7 +62,7 @@ class MagicOrders.Views.TradesMarkUnusualState extends Backbone.View
       $.unblockUI()
       view = new MagicOrders.Views.TradesRow(model: model)
       $("#trade_#{model.get('id')}").replaceWith(view.render().el)
-      $("a[rel=popover]").popover(placement: 'left')
+      $("a[rel=popover]").popover({placement: 'left', html:true})
       $('#trade_mark_unusual_state').modal('hide')
 
   keep_pace_text: ->
