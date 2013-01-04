@@ -25,7 +25,7 @@
         <%- else %>
         <%- @latest_topics.each_with_index do |topic, j| %>
           <div class="clearfix">
-            <a class="pull-left" href="#"><img class="img-rounded" src="assets/admin_photo/admin_photo1.jpg"></a>
+            <%= render partial: 'bbs_topics/img', :locals => { :user => topic.user }%>
             <div class="offset1">
               <p>
                 <%=link_to topic.title, bbs_topic_path(topic) %>
@@ -53,7 +53,7 @@
         <%- else %>
         <%- @hot_topics.each_with_index do |topic, j| %>
           <div class="clearfix">
-            <a class="pull-left" href="#"><img class="img-rounded" src="assets/admin_photo/admin_photo1.jpg"></a>
+            <%= render partial: 'bbs_topics/img', :locals => { :user => topic.user }%>
             <div class="offset1">
               <p>
                  <%=link_to topic.title, bbs_topic_path(topic) %>

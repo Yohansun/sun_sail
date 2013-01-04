@@ -32,6 +32,7 @@ class BbsTopicsController < ApplicationController
   end
 
   def list
+    @name = current_user.username
     if params[:category] == "hot"
     @hot_topics = BbsTopic.page(params[:page]).per(20)
     else
@@ -60,7 +61,11 @@ class BbsTopicsController < ApplicationController
   def download
     # TODO: bind the attachments with request
     BbsTopic.increment_counter(:download_count, @topic.id)
-    send_file(Rails.root.join('public', 'robots.txt'), :filename => "download-robots.txt")
+    send_file @topic.uploadfile.path 
+  end
+
+  def print
+    
   end
 
   private
@@ -74,7 +79,7 @@ class BbsTopicsController < ApplicationController
   end
 
   def topic_params
-    params.require(:bbs_topic).permit(:bbs_category_id, :title, :body)
+    params.require(:bbs_topic).permit(:bbs_category_id, :title, :body, :uploadfile)
   end
 
 

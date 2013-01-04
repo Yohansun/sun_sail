@@ -14,7 +14,11 @@
 #
 
 class BbsTopic < ActiveRecord::Base
-  attr_accessible :bbs_category, :title, :body, :user, :bbs_category_id
+  attr_accessible :bbs_category, :title, :body, :user, :bbs_category_id, :uploadfile, :uploadfile_file_name, :uploadfile_content_type, :uploadfile_file_size, :uploadfile_updated_at
+  has_attached_file :uploadfile,
+                    :whiny_thumbnails => true,
+                    :url => "/system/:class/:attachment/:id/:style/:basename.:extension",
+                    :path => ":rails_root/public/system/:class/:attachment/:id/:style/:basename.:extension"
 
   belongs_to :bbs_category
   belongs_to :user

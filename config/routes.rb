@@ -6,6 +6,7 @@ MagicOrders::Application.routes.draw do
   resources :bbs_topics do
     member do
       get :download
+      get :print
     end
     collection do
       get :list

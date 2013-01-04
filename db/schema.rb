@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130107042609) do
+ActiveRecord::Schema.define(:version => 20130106095730) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -20,38 +20,53 @@ ActiveRecord::Schema.define(:version => 20130107042609) do
     t.datetime "updated_at", :null => false
   end
 
-  create_table "alipay_trade_histories", :force => true do |t|
-    t.string   "finance_trade_sn"
-    t.string   "business_trade_sn"
-    t.string   "merchant_trade_sn"
-    t.string   "product_name"
-    t.datetime "traded_at"
-    t.string   "account_info"
-    t.decimal  "revenue_amount",                   :precision => 10, :scale => 0
-    t.decimal  "outlay_amount",                    :precision => 10, :scale => 0
-    t.decimal  "balance_amount",                   :precision => 10, :scale => 0
-    t.string   "trade_source"
-    t.string   "trade_type"
-    t.string   "memo",              :limit => 500
-    t.datetime "created_at",                                                      :null => false
-    t.datetime "updated_at",                                                      :null => false
+  create_table "admin_profiles", :force => true do |t|
+    t.integer  "admin_id"
+    t.string   "name"
+    t.integer  "login_times"
+    t.string   "last_login_ip"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+    t.string   "alipay_account"
+    t.string   "mobile"
+    t.string   "phone"
+    t.string   "address"
   end
 
-  add_index "alipay_trade_histories", ["trade_type"], :name => "index_alipay_trade_histories_on_trade_type"
-
-  create_table "alipay_trade_orders", :force => true do |t|
-    t.integer  "reconcile_statement_id"
-    t.integer  "alipay_trade_history_id"
-    t.string   "original_trade_sn"
-    t.string   "trade_sn"
-    t.datetime "traded_at"
-    t.datetime "created_at",              :null => false
-    t.datetime "updated_at",              :null => false
+  create_table "admins", :force => true do |t|
+    t.string   "email",                  :default => "", :null => false
+    t.string   "encrypted_password",     :default => "", :null => false
+    t.string   "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.integer  "sign_in_count",          :default => 0
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string   "current_sign_in_ip"
+    t.string   "last_sign_in_ip"
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
+    t.integer  "is_locked"
+    t.datetime "last_logout_at"
+    t.string   "username"
   end
 
-  add_index "alipay_trade_orders", ["alipay_trade_history_id"], :name => "index_alipay_trade_orders_on_alipay_trade_history_id"
-  add_index "alipay_trade_orders", ["original_trade_sn"], :name => "index_alipay_trade_orders_on_original_trade_sn"
-  add_index "alipay_trade_orders", ["trade_sn"], :name => "index_alipay_trade_orders_on_trade_sn"
+  add_index "admins", ["email"], :name => "index_admins_on_email", :unique => true
+  add_index "admins", ["reset_password_token"], :name => "index_admins_on_reset_password_token", :unique => true
+
+  create_table "admins_functions", :force => true do |t|
+    t.integer  "admin_id"
+    t.integer  "function_id"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  create_table "admins_groups", :force => true do |t|
+    t.integer  "admin_id"
+    t.integer  "group_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "areas", :force => true do |t|
     t.string   "name"
@@ -73,6 +88,25 @@ ActiveRecord::Schema.define(:version => 20130107042609) do
   add_index "areas", ["name"], :name => "index_areas_on_name"
   add_index "areas", ["parent_id"], :name => "index_areas_on_parent_id"
 
+  create_table "banners", :force => true do |t|
+    t.string   "position"
+    t.string   "desc"
+    t.string   "key"
+    t.string   "img_file_name"
+    t.string   "img_content_type"
+    t.integer  "img_file_size"
+    t.datetime "img_updated_at"
+    t.string   "media_type"
+    t.string   "media_format"
+    t.integer  "width"
+    t.integer  "height"
+    t.integer  "maximum_size"
+    t.boolean  "enabled"
+    t.boolean  "require_approve"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
+
   create_table "bbs_categories", :force => true do |t|
     t.string   "name"
     t.datetime "created_at", :null => false
@@ -84,10 +118,14 @@ ActiveRecord::Schema.define(:version => 20130107042609) do
     t.integer  "user_id"
     t.string   "title"
     t.text     "body"
-    t.integer  "read_count",      :default => 0
-    t.integer  "download_count",  :default => 0
-    t.datetime "created_at",                     :null => false
-    t.datetime "updated_at",                     :null => false
+    t.integer  "read_count",              :default => 0
+    t.integer  "download_count",          :default => 0
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
+    t.string   "uploadfile_file_name"
+    t.string   "uploadfile_content_type"
+    t.integer  "uploadfile_file_size"
+    t.datetime "uploadfile_updated_at"
   end
 
   add_index "bbs_topics", ["bbs_category_id"], :name => "index_bbs_topics_on_bbs_category_id"
@@ -125,6 +163,27 @@ ActiveRecord::Schema.define(:version => 20130107042609) do
 
   add_index "colors_stock_products", ["stock_product_id"], :name => "index_colors_stock_products_on_stock_product_id"
 
+  create_table "downloads", :force => true do |t|
+    t.string   "title"
+    t.integer  "subject_id"
+    t.string   "preview_img_file_name"
+    t.string   "preview_img_content_type"
+    t.integer  "preview_img_file_size"
+    t.datetime "preview_img_updated_at"
+    t.string   "detail_img_file_name"
+    t.string   "detail_img_content_type"
+    t.integer  "detail_img_file_size"
+    t.datetime "detail_img_updated_at"
+    t.string   "file_file_name"
+    t.string   "file_content_type"
+    t.integer  "file_file_size"
+    t.datetime "file_updated_at"
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
+    t.datetime "published_at"
+    t.integer  "counts"
+  end
+
   create_table "feature_product_relationships", :force => true do |t|
     t.integer  "product_id"
     t.integer  "feature_id"
@@ -138,10 +197,63 @@ ActiveRecord::Schema.define(:version => 20130107042609) do
     t.datetime "updated_at", :null => false
   end
 
+  create_table "function_categories", :force => true do |t|
+    t.string   "name"
+    t.integer  "function_id"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  create_table "functions", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at",           :null => false
+    t.datetime "updated_at",           :null => false
+    t.integer  "function_category_id"
+  end
+
+  create_table "functions_permissions", :force => true do |t|
+    t.integer  "function_id"
+    t.integer  "permission_id"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
   create_table "grades", :force => true do |t|
     t.string   "name"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+  end
+
+  create_table "groups", :force => true do |t|
+    t.integer  "admin_id"
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "is_locked"
+  end
+
+  create_table "groups_functions", :force => true do |t|
+    t.integer  "group_id"
+    t.integer  "function_id"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  create_table "jobs", :force => true do |t|
+    t.string   "job"
+    t.string   "local"
+    t.string   "company"
+    t.string   "department"
+    t.string   "edu_bg"
+    t.integer  "number"
+    t.datetime "begin_time"
+    t.datetime "stop_time"
+    t.string   "email"
+    t.text     "descript"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+    t.integer  "subject_id"
+    t.string   "work_experience"
   end
 
   create_table "logistic_areas", :force => true do |t|
@@ -185,6 +297,46 @@ ActiveRecord::Schema.define(:version => 20130107042609) do
 
   add_index "packages", ["iid"], :name => "index_packages_on_iid"
   add_index "packages", ["product_id"], :name => "index_packages_on_product_id"
+
+  create_table "pages", :force => true do |t|
+    t.string   "title"
+    t.string   "slug"
+    t.text     "intro"
+    t.text     "content"
+    t.integer  "admin_id"
+    t.integer  "subject_id"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+    t.datetime "published_at"
+  end
+
+  create_table "permissions", :force => true do |t|
+    t.string   "name"
+    t.string   "action"
+    t.string   "subject_class"
+    t.integer  "subject_id"
+    t.datetime "created_at",                   :null => false
+    t.datetime "updated_at",                   :null => false
+    t.integer  "can",           :default => 1
+    t.integer  "function_id"
+  end
+
+  create_table "posts", :force => true do |t|
+    t.string   "title"
+    t.string   "slug"
+    t.text     "intro"
+    t.text     "body"
+    t.integer  "admin_id"
+    t.integer  "subject_id"
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
+    t.datetime "published_at"
+    t.string   "preview_img_file_name"
+    t.string   "preview_img_content_type"
+    t.integer  "preview_img_file_size"
+    t.datetime "preview_img_updated_at"
+    t.string   "content_source"
+  end
 
   create_table "products", :force => true do |t|
     t.string   "name",           :limit => 100,                               :default => "",  :null => false
@@ -348,6 +500,34 @@ ActiveRecord::Schema.define(:version => 20130107042609) do
     t.datetime "updated_at",                      :null => false
   end
 
+  create_table "subjects", :force => true do |t|
+    t.string   "name"
+    t.string   "slug"
+    t.integer  "parent_id"
+    t.integer  "lft"
+    t.integer  "rgt"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+    t.string   "content_type"
+  end
+
+  create_table "taggings", :force => true do |t|
+    t.integer  "tag_id"
+    t.integer  "taggable_id"
+    t.string   "taggable_type"
+    t.integer  "tagger_id"
+    t.string   "tagger_type"
+    t.string   "context",       :limit => 128
+    t.datetime "created_at"
+  end
+
+  add_index "taggings", ["tag_id"], :name => "index_taggings_on_tag_id"
+  add_index "taggings", ["taggable_id", "taggable_type", "context"], :name => "index_taggings_on_taggable_id_and_taggable_type_and_context"
+
+  create_table "tags", :force => true do |t|
+    t.string "name"
+  end
+
   create_table "taobao_app_tokens", :force => true do |t|
     t.integer  "account_id"
     t.string   "access_token"
@@ -394,6 +574,15 @@ ActiveRecord::Schema.define(:version => 20130107042609) do
     t.boolean  "high_pressure_valve", :default => false
   end
 
+  create_table "upload_files", :force => true do |t|
+    t.string   "filedata_file_name"
+    t.string   "filedata_content_type"
+    t.integer  "filedata_file_size"
+    t.datetime "filedata_updated_at"
+    t.datetime "created_at",            :null => false
+    t.datetime "updated_at",            :null => false
+  end
+
   create_table "users", :force => true do |t|
     t.string   "username",                                              :null => false
     t.string   "name"
@@ -436,5 +625,18 @@ ActiveRecord::Schema.define(:version => 20130107042609) do
   end
 
   add_index "users_roles", ["user_id", "role_id"], :name => "index_users_roles_on_user_id_and_role_id"
+
+  create_table "videos", :force => true do |t|
+    t.string   "title"
+    t.text     "embed_code"
+    t.integer  "subject_id"
+    t.string   "snap_file_name"
+    t.string   "snap_content_type"
+    t.integer  "snap_file_size"
+    t.datetime "snap_updated_at"
+    t.datetime "published_at"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+  end
 
 end
