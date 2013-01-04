@@ -477,7 +477,7 @@ DEPENDENCIES
   slim
   spreadsheet
   strong_parameters
-  taobao_fu_reload (~> 1.1.1)
+  taobao_fu_reload (~> 1.1.2)
   therubyracer
   thin
   tinder
