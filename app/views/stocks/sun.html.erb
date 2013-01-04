@@ -1,0 +1,103 @@
+<div class="container-fluid">
+    <ul class="breadcrumb">
+      <li><a href="bbs_home.html">Home</a> <span class="divider">&gt;&gt;</span></li>
+      <li><a href="#">社区</a> <span class="divider">&gt;</span></li>
+      <%- if params[:category] == "last"%>
+      <li class="active">最新帖子</li>
+      <%- else %>
+      <li class="active">热门帖子</li>
+      <%- end %>
+    </ul>
+    <div class="row-fluid bbs_reset">
+      <div class="span10 pull-left well bbs_hot">
+        <div class="alert alert-info pagination-right">
+          <%- if params[:category] == "last"%>
+          <a href="#">最新帖子</a>
+          <%- else %>
+          <a href="#">热门帖子</a>
+          <%- end %>
+        </div>
+        <%- if params[:category] == "last"%>
+        <%- @latest_topics.each_with_index do |l, j| %>
+        <div class="bbs_coninfo">
+          <div class="clearfix page-header">
+            <a class="pull-left" href="#"><img class="img-rounded" src="images/admin_photo/admin_photo1.jpg"></a>
+            <div class="offset1">
+              <span class="pull-right mar_l10"><a class="btn-block" href="bbs.html">编辑</a><a class="btn-block" href="#">删除</a></span>
+              <span class="pull-right lineh45">下载数：<span class="label label-important lead">30</span></span>
+              <p><a href="bbs_in.html"><%=l.title %></a></p>
+              <p><%= l.body %>由<%=l.user_id %>于<%=l.created_at %>发表</p>
+            </div>
+          </div>
+        </div>
+        <%- end %>
+        <%- else %>
+        <%- @hot_topics.each_with_index do |l, j| %>
+        <div class="bbs_coninfo">
+          <div class="clearfix page-header">
+            <a class="pull-left" href="#"><img class="img-rounded" src="images/admin_photo/admin_photo1.jpg"></a>
+            <div class="offset1">
+              <span class="pull-right mar_l10"><a class="btn-block" href="bbs.html">编辑</a><a class="btn-block" href="#">删除</a></span>
+              <span class="pull-right lineh45">下载数：<span class="label label-important lead">30</span></span>
+              <p><a href="bbs_in.html"><%=l.title %></a></p>
+              <p><%= l.body %>由<%=l.user_id %>于<%=l.created_at %>发表</p>
+            </div>
+          </div>
+        </div>
+        <%- end %>
+        <%- end %>
+        <div class="pagination">
+          <%- if param[:category] == "last"%>
+          <%= paginate @latest_topics %>
+          <%-else %>
+          <%= paginate @hot_topics %>
+          <%- end %>
+        </div><!-- pagination ends -->
+      </div><!--span10 pull-left well bbs_hot-->
+    </div><!--row-fluid bbs_reset-->
+      <div class="span2 pull-right">
+        <a href="bbs.html" class="btn btn-large btn-block">发布新帖</a>
+        <a href="bbs_hot.html" class="btn btn-large btn-block">资料下载</a>
+        <a href="bbs_hot.html" class="btn btn-large btn-block">最新新闻</a>
+        <a href="#" class="btn btn-large btn-block">使用规范</a>
+        <a href="#" class="btn btn-large btn-block">操作守则</a>
+      </div>
+  </div>
+
+
+
+
+
+
+1.互动中心具体加到哪里可能要等raecoo 这个还是有点问题登陆他昨个说要坐一下
+2.已更改，下载数暂时关闭
+3.没太懂
+4.已更改
+5.已更改
+6.已更改
+7.没太懂 一会过来 当面跟我说一下哈
+8.还是没太懂
+9.这个raecoo说先不加
+10.这个raecoo说先不加
+11.已更改
+12.好像好了
+13.已更改
+
+
+
+
+
+
+
+
+
+  <div class="span6 pull-right well bbs_home">
+        <div class="alert alert-info"><a href="/bbs_topics/list?category=hot" class="pull-right">MORE...</a>热门帖子</div>
+          <%- @hot_topics.each_with_index do |value, j| %>
+          <div class="bbs_coninfo">
+            <p><%=value %></p>
+          </div>
+          <%- end %>
+        </div>
+     </div>
+   </div>

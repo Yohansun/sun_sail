@@ -14,14 +14,12 @@
 #
 
 class BbsTopic < ActiveRecord::Base
-  include ActiveModel::ForbiddenAttributesProtection
-
-  attr_accessible :bbs_category_id, :title, :body
+  attr_accessible :bbs_category, :title, :body, :user, :bbs_category_id
 
   belongs_to :bbs_category
   belongs_to :user
 
-  scope :hot, order("download_count DESC")
+  scope :hot, order("read_count DESC")
   scope :latest, order("created_at DESC")
 
   validates :title, :body, presence: true

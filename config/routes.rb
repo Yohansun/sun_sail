@@ -2,12 +2,19 @@ require 'sidekiq/web'
 
 MagicOrders::Application.routes.draw do
   
-  resources :bbs_categories, only: [:show]
+  resources :bbs_categories 
   resources :bbs_topics do
     member do
       get :download
     end
+    collection do
+      get :list
+      get :data_download
+      get :news
+      get :standard_use
+    end
   end
+
 
   resources :trade_reports 
   resources :user_activities do 

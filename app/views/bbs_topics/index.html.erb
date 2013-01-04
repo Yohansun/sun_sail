@@ -1,11 +1,70 @@
 <ul class="breadcrumb">
-  <li><%= link_to '互动中心', bbs_topics_path %><span class="divider">&gt;&gt;</span></li>
-  <li><a href="#">社区</a> <span class="divider">&gt;</span></li>
-  <li class="active">热门帖子</li>
+  <li><%= link_to '互动中心', bbs_topics_path %>
 </ul>
 
-<div class="well">
+<!-- <div class="well">
   <%- @categories.each do |category| -%>
     <%= link_to category.name, bbs_category_path(category), class: 'btn btn-large btn-inline' %>
   <%- end -%>
-</div>
+</div> -->
+
+    <div class="well">
+      <!-- <a href="#" class="btn btn-xlarge btn-inline">发布新帖</a> -->
+      <%- @categories.each do |category| %>
+      <%=link_to category.name, bbs_category_path(category), :class => "btn btn-large btn-inline"%>
+      <%- end %>
+    </div>
+    <div class="row-fluid bbs_reset">
+      <div class="span6 pull-left well bbs_home">
+        <div class="alert alert-info"><a href="/bbs_topics/list?category=last" class="pull-right">MORE...</a>最新帖子</div>
+        <div class="bbs_coninfo">
+        <%-if @latest_topics.size == 0 %>
+          <div class="clearfix">
+            <p>该板块下暂无帖子</p>
+          </div>
+        <%- else %>
+        <%- @latest_topics.each_with_index do |topic, j| %>
+          <div class="clearfix">
+            <a class="pull-left" href="#"><img class="img-rounded" src="assets/admin_photo/admin_photo1.jpg"></a>
+            <div class="offset1">
+              <p>
+                <%=link_to topic.title, bbs_topic_path(topic) %>
+              </p>
+              <!-- <tr>
+				        <td><%=topic.body %></td>
+				        <td>
+				          <%=link_to "查看", bbs_topic_path(topic)%>
+				        </td>
+      				</tr> -->
+            </div>
+          </div>
+         <%- end %>
+         <%- end %>
+        </div>
+      </div><!--span6 pull-left well bbs_home-->
+    <footer>
+    	<div class="span6 pull-right well bbs_home">
+        <div class="alert alert-info"><a href="/bbs_topics/list?category=hot" class="pull-right">MORE...</a>热门帖子</div>
+        <div class="bbs_coninfo">
+        <%-if @latest_topics.size == 0 %>
+          <div class="clearfix">
+            <p>该板块下暂无帖子</p>
+          </div>
+        <%- else %>
+        <%- @hot_topics.each_with_index do |topic, j| %>
+          <div class="clearfix">
+            <a class="pull-left" href="#"><img class="img-rounded" src="assets/admin_photo/admin_photo1.jpg"></a>
+            <div class="offset1">
+              <p>
+                 <%=link_to topic.title, bbs_topic_path(topic) %>
+              </p>
+            </div>
+          </div>
+         <%- end %>
+         <%- end %>
+        </div>
+      </div><!--span6 pull-left well bbs_home-->
+      </div>
+      © Copyright 2011-2012 Do Order. All rights reserved.
+    </footer>
+  </div><!--container-fluid ends-->

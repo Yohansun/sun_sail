@@ -84,8 +84,8 @@ class StockProductsController < ApplicationController
   def update
     @seller = Seller.find params[:seller_id]
   	@product = StockProduct.find params[:id]
-    Rails.logger.info params[:seller_id].inspect
-  	if @product.update_attributes(params[:stock_product])
+    # Rails.logger.info params[:seller_id].inspect
+  	if @product.update_attributes params[:stock_product]
   		redirect_to seller_stocks_path(params[:seller_id])
   	else
   		render :edit
