@@ -4,13 +4,16 @@ class WangwangDataReprocess
   sidekiq_options :queue => :wangwang_data_reprocess
 
   def perform(start_date = nil, end_date = nil)
-    start_date ||= (Time.now - 41.day).to_date
-    end_date ||= (Time.now - 41.day).to_date
+    start_date ||= (Time.now - 1.day).to_date
+    end_date ||= (Time.now - 1.day).to_date
     if WangwangReplyState.all.map(&:reply_date).include?(start_date.to_s.to_time.to_i)
       p "delete_all"
       WangwangMemberContrast.delete_all
     end
     (start_date..end_date).each do |day|
+      start_time = (day.to_time - 1.day).beginning_of_day.strftime("%Y-%m-%d %H:%M:%S")
+      end_time = (day.to_time - 1.day).end_of_day.strftime("%Y-%m-%d %H:%M:%S")
+      WangwangPuller.new.get_wangwang_data(start_time, end_time)
       start_time = day.to_time.beginning_of_day.strftime("%Y-%m-%d %H:%M:%S")
       end_time = day.to_time.end_of_day.strftime("%Y-%m-%d %H:%M:%S")
       p "start member_brief_info"
@@ -44,28 +47,31 @@ class WangwangDataReprocess
     WangwangMember.all.each_with_index do |m, i|
       p i
       p m.user_id
-      #next if m.user_id != "立邦漆官方旗舰店:幻彩"
+      # next if m.user_id != "立邦漆官方旗舰店:千色"
       #当日接待
       daily_reply_count = WangwangReplyState.where(user_id: m.service_staff_id).where(reply_date: today).sum(:reply_num) || 0
 
       #当日询单（该数据须延迟一天统计)
-      daily_inquired_count = chatlogs.where(date: today).where(user_id: m.service_staff_id).count
+      daily_inquired_count = chatlogs.where(date: today).where(user_id: m.service_staff_id).map(&:buyer_nick).to_a.uniq.count
       #daily_inquired_count = WangwangChatpeer.where(user_id: m.service_staff_id).where(date: today).map(&:buyer_nick).uniq.count
 
       #下单订单: 前一日或当日询单，本旺旺落实当日下单订单
-
       result = chatlog_query(yesterday_created_trades, m.service_staff_id, "created")
-      yesterday_created_count = result.map{|t| t.buyer_nick}.to_a.uniq.count
+      yesterday_created_count = result.map(&:buyer_nick).to_a.uniq.count
       yesterday_created_payment = result.try(:sum, :payment) || 0
+      # if m.user_id == "立邦漆官方旗舰店:千色"
+      #   p "@@@@@@@@@@@@@@@@@@@@@@@@"
+      #   p result.map(&:tid)
+      # end
 
       #下单订单: 当日询单，本旺旺落实当日下单订单
       result = chatlog_query(daily_created_trades, m.service_staff_id, "created")
-      daily_created_count = result.map{|t| t.buyer_nick}.to_a.uniq.count
+      daily_created_count = result.map(&:buyer_nick).to_a.uniq.count
       daily_created_payment = result.try(:sum, :payment) || 0
 
       #当日询单，当日次日下单人数
       result = chatlog_query(tomorrow_created_trades, m.service_staff_id, "created")
-      tomorrow_created_count = result.map{|t| t.buyer_nick}.to_a.uniq.count
+      tomorrow_created_count = result.map(&:buyer_nick).to_a.uniq.count
       tomorrow_created_payment = result.try(:sum, :payment) || 0
 
       #当日询单，当日次日均未下单（延迟一天统计）
@@ -73,28 +79,28 @@ class WangwangDataReprocess
 
       #前一日或当日询单，本旺旺落实当日下单后最终未付款
       result = chatlog_query(yesterday_lost_trades, m.service_staff_id, "created")
-      yesterday_lost_count = result.map{|t| t.buyer_nick}.to_a.uniq.count
+      yesterday_lost_count = result.map(&:buyer_nick).to_a.uniq.count
       yesterday_lost_payment = result.try(:sum, :payment) || 0
 
       #前一日或当日询单，本旺旺落实当日下单当日付款
       result = chatlog_query(yesterday_paid_trades, m.service_staff_id, "created")
       second_result = chatlog_query(result, m.service_staff_id, "pay_time")
-      yesterday_paid_count = second_result.map{|t| t.buyer_nick}.to_a.uniq.count
+      yesterday_paid_count = second_result.map(&:buyer_nick).to_a.uniq.count
       yesterday_paid_payment = second_result.try(:sum, :payment) || 0
 
       #前一日或当日询单，本旺旺落实当日下单后最终付款
       result = chatlog_query(yesterday_final_paid_trades, m.service_staff_id, "created")
-      yesterday_final_paid_count = result.map{|t| t.buyer_nick}.to_a.uniq.count
+      yesterday_final_paid_count = result.map(&:buyer_nick).to_a.uniq.count
       yesterday_final_paid_payment = result.try(:sum, :payment) || 0
 
       ## 落实付款 ##
       #付款订单: 本旺旺落实当日付款订单
       result = chatlog_query(daily_paid_trades, m.service_staff_id, "pay_time")
-      daily_paid_count = result.map{|t| t.buyer_nick}.to_a.uniq.count
+      daily_paid_count = result.map(&:buyer_nick).to_a.uniq.count
       daily_paid_payment = result.try(:sum, :payment) || 0
       #本人单
       second_result = chatlog_query(result, m.service_staff_id, "created")
-      daily_self_paid_count = second_result.map{|t| t.buyer_nick}.to_a.uniq.count
+      daily_self_paid_count = second_result.map(&:buyer_nick).to_a.uniq.count
       daily_self_paid_payment = second_result.try(:sum, :payment) || 0
 
       #静默单
@@ -102,13 +108,8 @@ class WangwangDataReprocess
       daily_quiet_paid_payment = 0
       quiet_buyer = []
       result.each do |trade|
-        chatlog_count_1 = chatlogs.where(:end_time.lt => trade.created).where(buyer_nick: trade.buyer_nick).where(user_id: m.service_staff_id).count
-        chatlog_count_2 = chatlogs.where(:start_time.lte => trade.created, :end_time.gt => trade.created).where(buyer_nick: trade.buyer_nick).where(user_id: m.service_staff_id).count
-        if m.user_id == "立邦漆官方旗舰店:幻彩"
-        p "@@@@@@@@@@@@@@@@@@@@@@@@"
-        p chatlog_count_1
-        p chatlog_count_2
-        end
+        chatlog_count_1 = chatlogs.where(:end_time.lt => trade.created).where(buyer_nick: trade.buyer_nick).count
+        chatlog_count_2 = chatlogs.where(:start_time.lte => trade.created, :end_time.gt => trade.created).where(buyer_nick: trade.buyer_nick).count
         if (chatlog_count_1 + chatlog_count_2) == 0
           quiet_buyer << trade.buyer_nick
           daily_quiet_paid_payment += trade.payment
@@ -153,16 +154,32 @@ class WangwangDataReprocess
     tids = []
     chatlogs = WangwangChatlog.where(usable: true)
     trades.each do |trade|
-      chatlogs.where(user_id: user_id).where(buyer_nick: trade.buyer_nick).each do |log|
-        if log.start_time.to_i <= trade[time_status].to_i && log.end_time.to_i >= trade[time_status].to_i
-          p log.start_time
-          p log.end_time
+
+      #在谈话中动作
+      clert_chatlog = chatlogs.where(buyer_nick: trade.buyer_nick).where(:start_time.lte => trade[time_status], :end_time.gt => trade[time_status])
+      if clert_chatlog.count == 1 && user_id == clert_chatlog.first.user_id
+        p trade[time_status]
+        tids << trade.tid
+        p "^^^^^^^^^^^^^^^^^^^"
+        p trade.tid
+      elsif clert_chatlog.count > 1
+        max_time = 0
+        id = ''
+        clert_chatlog.each do |log|
+          if max_time < log.end_time.to_i
+            id = log.user_id
+            max_time = log.end_time.to_i
+          end
+        end
+        if user_id == id
           p trade[time_status]
           tids << trade.tid
-          p "^^^^^^^^^^^^^^^^^^^"
+          p "%%%%%%%%%%%%%%%%%%%%%"
           p trade.tid
         end
       end
+
+      #在谈话后动作
       clert_chatlog = chatlogs.where(buyer_nick: trade.buyer_nick)
       flag = false
       clert_chatlog.each{|log| flag = true if log.start_time.to_i <= trade[time_status].to_i && log.end_time.to_i >= trade[time_status].to_i}
