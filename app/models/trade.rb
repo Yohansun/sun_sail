@@ -209,6 +209,16 @@ class Trade
     emails
   end
 
+  # fetch all order cs_memo in a trade
+  def orders_cs_memo
+    orders.collect(&:cs_memo).compact.join(' ')
+  end 
+
+  # fetch trade cs_memo with order cs_memo
+  def trade_with_orders_cs_memo
+    "#{cs_memo}  #{orders_cs_memo}" 
+  end
+
   def nofity_stock(operation, op_seller)
     return unless TradeSetting.company == 'dulux'
 

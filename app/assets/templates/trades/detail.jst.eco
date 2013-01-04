@@ -122,7 +122,7 @@
           <tr>
             <td colspan="1"><b>客服备注</b></td>
             <td colspan="4" class="reedit_text">
-              <%= @trade.get('cs_memo') %>
+              <%= @trade.get("trade_with_orders_cs_memo")%>
             </td>
           </tr>
           <tr>
