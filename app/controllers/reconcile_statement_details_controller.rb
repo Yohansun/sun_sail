@@ -1,0 +1,2 @@
+class ReconcileStatementDetailsController < ApplicationController
+end

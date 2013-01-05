@@ -1,7 +1,7 @@
 require 'sidekiq/web'
 
 MagicOrders::Application.routes.draw do
-  
+
   resources :bbs_categories 
   resources :bbs_topics do
     member do
@@ -15,6 +15,15 @@ MagicOrders::Application.routes.draw do
     end
   end
 
+  resources :reconcile_statements, only: [:index, :show] do
+    member do
+      put :audit
+    end
+    collection do
+      get :exports
+    end
+    resources :reconcile_statement_details, only: [:show]
+  end
 
   resources :trade_reports 
   resources :user_activities do 
