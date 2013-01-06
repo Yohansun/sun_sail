@@ -31,4 +31,7 @@ FactoryGirl.define do
     reconcile_statement
   end
 
+  factory :alipay_trade_history do
+  end  
+
 end
