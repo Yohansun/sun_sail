@@ -25,4 +25,7 @@ class ReconcileStatementDetail < ActiveRecord::Base
   include ActiveModel::ForbiddenAttributesProtection
   belongs_to :reconcile_statement, class_name: "ReconcileStatement"
 
+  def self.to_xls_file(rs_ids)
+  	ReconcileStatementDetail.where(["reconcile_statement_id in (?)", rs_ids])
+  end
 end

@@ -32,9 +32,14 @@ class ReconcileStatementsController < ApplicationController
       flash[:error] = "不正确的参数，数据导出失败"
     else
       # send file. eg: CSV or other formats.
+      @rs_data = ReconcileStatementDetail.to_xls_file(params[:selected_rs])
       flash[:notice] = "数据导出成功"
     end
-    redirect_to reconcile_statements_url
+
+    respond_to do |format|
+      format.xls  { redirect_to reconcile_statements_url unless @rsd.present? }
+      format.html { redirect_to reconcile_statements_url }
+    end
   end
 
   private

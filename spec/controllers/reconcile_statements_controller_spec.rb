@@ -68,9 +68,13 @@ describe ReconcileStatementsController do
 
     context 'exports the data by params' do
       before do
-        3.times { create(:reconcile_statement) }
-        get :exports, selected_rs: ReconcileStatement.all.map(&:id)
+        3.times {
+          rs = create(:reconcile_statement)
+          create(:reconcile_statement_detail, reconcile_statement: rs)
+        }
+        get :exports, format: :xls, selected_rs: ReconcileStatement.all.map(&:id)
       end
+      it { assigns(:rs_data).should_not be_empty }
       it { should redirect_to(reconcile_statements_url) }
       it { flash[:notice].should_not be_blank }
     end
