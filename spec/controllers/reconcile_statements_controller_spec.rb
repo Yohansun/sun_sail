@@ -8,7 +8,9 @@ describe ReconcileStatementsController do
   end
 
   describe "GET #index" do
-
+    before do
+      @rs = create(:reconcile_statement)
+    end
     context 'by default loading' do
       before { get :index }
       it { should respond_with 200 }
@@ -18,15 +20,15 @@ describe ReconcileStatementsController do
     describe "search by date" do
 
       context 'with incorrectly date' do
-        before { get :index, date: (Time.now + 3.months).strftime('%Y-%m') }
+        before { get :index, date: (Time.now + 3.months) }
         it { assigns(:rs_set).should be_empty }
+        it { flash[:notice].should_not be_blank }
       end
 
       context 'with correctly date' do
-        before { get :index, date: 1.months.ago.strftime('%Y-%m') }
-        # it { assigns(:rs_set).should_not be_empty }
+        before { get :index, date: Time.now.to_date }
+        it { assigns(:rs_set).should be_empty }
       end
-
     end
 
   end

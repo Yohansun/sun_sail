@@ -23,9 +23,7 @@
 class ReconcileStatementDetail < ActiveRecord::Base
   # attr_accessible :title, :body
   include ActiveModel::ForbiddenAttributesProtection
-  belongs_to :reconcile_statement, class_name: "ReconcileStatement"
+  belongs_to :reconcile_statement
 
-  def self.to_xls_file(rs_ids)
-  	ReconcileStatementDetail.where(["reconcile_statement_id in (?)", rs_ids])
-  end
+  scope :by_ids, lambda { |rs_ids| where(["reconcile_statement_id in (?)", rs_ids]) }
 end
