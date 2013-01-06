@@ -7,20 +7,22 @@
     <div class="clearfix">
       <label class="pull-left">发送对象：</label>
       <select name="notify_receiver" id="notify_receiver">
-        <option value="buyer">客户</option>
         <% if MagicOrders.company == "nippon" && @trade.get("seller_id") :  %>
           <option value="interface">接口人(销售部)</option>
         <% end %>   
-        <% if  @trade.get("seller_id") : %> 
+        <% if MagicOrders.company != "nippon" && @trade.get("seller_id") : %> 
           <option value="seller">经销商</option>
         <% end %>  
+        <option value="buyer">客户</option>
       </select>
     </div>
     <div class="clearfix">
       <label class="pull-left">发送方式：</label>
       <select name="notify_type" id="notify_type">
         <option value="sms">短信</option>
-        <option value="email">Email</option>
+        <% if @trade.get("seller_id") : %> 
+          <option value="email">Email</option>
+        <% end %>  
       </select>
     </div>
     <div class="clearfix">
