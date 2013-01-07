@@ -59,10 +59,19 @@ describe ReconcileStatementsController do
       @rs = create(:reconcile_statement)
     end
 
-    context 'toggle audit status' do
+    context 'success' do
       before { put :audit, id: @rs.id }
       it { should respond_with 200 }
       it { assigns(:rs).audited.should be_true }
+    end
+
+    context 'fail' do
+      before {
+        ReconcileStatement.any_instance.stub(:update_attribute).and_return(false)
+        put :audit, id: @rs.id
+      }
+      it { should respond_with 304 }
+      it { assigns(:rs).audited.should be_false }
     end
   end
 
