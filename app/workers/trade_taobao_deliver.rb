@@ -6,11 +6,12 @@ class TradeTaobaoDeliver
   def perform(id)
     trade = TaobaoTrade.find(id)
     tid = trade.tid
+    source_id = trade.trade_source_id || TradeSetting.default_taobao_trade_source_id
     response = TaobaoQuery.get({
       method: 'taobao.logistics.offline.send',
       tid: trade.tid,
       out_sid: trade.logistic_waybill,
-      company_code: trade.logistic_code}, trade.try(:trade_source_id)
+      company_code: trade.logistic_code}, source_id
     )
 
     if response['error_response'].blank?
