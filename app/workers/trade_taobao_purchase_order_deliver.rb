@@ -9,7 +9,7 @@ class TradeTaobaoPurchaseOrderDeliver
     response = TaobaoQuery.get({
       :method => 'taobao.logistics.offline.send', :tid => trade.tid,
       :out_sid => trade.logistic_waybill,
-      :company_code => trade.logistic_code}, trade.trade_source_id
+      :company_code => trade.logistic_code}, source_id
      ) 
 
     if  response['error_response'].blank?
