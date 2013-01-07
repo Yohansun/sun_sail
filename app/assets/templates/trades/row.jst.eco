@@ -117,7 +117,10 @@
       <!-- <li><a data-toggle="modal" href="#" data-type="export_deliver_bill">导出发货单</a></li> -->
       <!-- <li><a data-toggle="modal" href="#" data-type="export_logistic_bill">导出物流单</a></li> -->
       <!-- <li><a data-toggle="modal" href="#" data-type="export_invoice">导出发票</a></li> -->
+      <% unless MagicOrders.company == 'dulux' and MagicOrders.role_key == 'seller' : %>
       <li><a data-toggle="modal" href="#" data-type="operation_log">订单日志</a></li>
+      <% end %>
+
       <% if MagicOrders.company == 'nippon' && (MagicOrders.role_key == 'admin' || MagicOrders.role_key == 'cs') : %>
         <li><a data-toggle="modal" href="#" data-type="manual_sms_or_email">发短信/邮件</a></li>
         <% if @trade.get('status_text') != "等待付款" : %>
@@ -128,10 +131,13 @@
   </div>
 </td>
 
-<td data-col='trade_source'><span class="label label-warning"><%= @trade.get('trade_source') %></span>
-<% if @trade.get('trade_source') == "分销平台" : %>
-  <br><span class="label label-info">店铺代码:<%= @trade.get('distributor_usercode') %></span></td>
-<% end %>
+<td data-col='trade_source'>
+  <span class="label label-warning"><%= @trade.get('trade_source') %></span>
+  <% if @trade.get('trade_source') == "分销平台" : %>
+    <br><span class="label label-info">店铺代码:<%= @trade.get('distributor_usercode') %></span>
+  <% end %>
+</td>
+
 <td data-col='tid'>
   <a href="#" data-type="detail">
     <% if @trade.get('splitted_tid'): %>
@@ -198,7 +204,8 @@
   <%= @trade.get('receiver_state') %> <%= @trade.get('receiver_city') %> <%= @trade.get('receiver_district') %> <br/>
   <%= @trade.get('receiver_address') %>
 </td>
-<% if MagicOrders.company == "dulux" && MagicOrders.role_key != 'seller' : %>
+
+<% if MagicOrders.role_key != 'seller' : %>
 <td data-col='buyer_message'>
   <% if @trade.get('buyer_message'): %>
   <a href="javascript:void(0)" rel="popover" data-content="<%= @trade.get 'buyer_message' %>" data-original-title="<b>买家留言</b>">
@@ -220,13 +227,19 @@
   <a href="javascript:void(0)" rel="popover" data-content="<%= @trade.get 'cs_memo' %><br/><br/><% for order in @trade.get('orders'): %><% if order.cs_memo: %><b><%= order.title %>:</b> <span style= 'color:#08C' ><%= order.cs_memo %></span><br/><% end %><% end %>" data-original-title="<b>客服备注</b>"><i class="icon-comm_serv"></i></a>
   <% end %>
 </td>
-<% if MagicOrders.company == "dulux" && (MagicOrders.role_key == 'admin' || MagicOrders.role_key == 'cs') : %>
+
+<% if (MagicOrders.role_key == 'admin' || MagicOrders.role_key == 'cs') : %>
 <td data-col='gift_memo'>
   <% if @trade.get('gift_memo') : %>
   <a href="javascript:void(0)" rel="popover" data-content="<%= @trade.get 'gift_memo' %>" data-original-title="<b>赠品备注</b>"><i class="icon-gift_memo"></i></a>
   <% end %>
 </td>
 <% end %>
+
+<td data-col='deliver_bill'>
+  <span class="label label-warning"><%= @trade.get('deliver_bill_count') %></span>
+</td>
+
 <td data-col='color_info'>
   <% if @trade.get('has_color_info') == true : %>
     <a href="#"><i class="icon-color" data-type="color_info"></i></a>
@@ -240,7 +253,7 @@
 <td data-col='point_fee'>
   <%= @trade.get('point_fee') %>
 </td>
-<% if MagicOrders.company == "dulux" and MagicOrders.role_key != 'seller' and MagicOrders.role_key != 'logistic' : %>
+<% if MagicOrders.role_key != 'seller' and MagicOrders.role_key != 'logistic' : %>
 <td data-col='total_fee'>
   ￥<%= @trade.get('payment') %>
 </td>

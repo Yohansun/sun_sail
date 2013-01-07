@@ -49,36 +49,28 @@ class MagicOrders.Routers.Trades extends Backbone.Router
 
     @isFixed = false
 
-    if @collection.length == 0 || @trade_type != trade_type
-      $('#content').html ""
-      @trade_type = trade_type
-      MagicOrders.trade_mode = trade_mode
-      MagicOrders.trade_type = trade_type
-      blocktheui()
-      @show_top_nav()
-      @collection.fetch data: {trade_type: trade_type}, success: (collection, response) =>
-        @mainView = new MagicOrders.Views.TradesIndex(collection: collection, trade_type: trade_type)
-        $('#content').html(@mainView.render().el)
-        $("a[rel=popover]").popover({placement: 'left', html:true})
-        switch trade_type
-          when 'undispatched_one_day' then $('.trade_nav').html('超过一天未分流')
-          when 'undelivered_two_days' then $('.trade_nav').html('超过两天未发货')
-          when 'unpaid_two_days' then $('.trade_nav').html('超过两天未付款')
-          when 'buyer_delay_deliver' then $('.trade_nav').html('买家延迟发货')
-          when 'seller_ignore_deliver' then $('.trade_nav').html('卖家长时间未发货')
-          when 'seller_lack_product' then $('.trade_nav').html('经销商缺货')
-          when 'seller_lack_color' then $('.trade_nav').html('经销商无法调色')
-          when 'buyer_demand_refund' then $('.trade_nav').html('买家要求退款')
-          when 'buyer_demand_return_product' then $('.trade_nav').html('买家要求退货')
-          when 'other_unusual_state' then $('.trade_nav').html('其他异常')
-          else
-            $('.trade_nav').html($("[data-trade-status=#{trade_type}]").html())
-        $('.order_search_form .datepickers').datepicker(format: 'yyyy-mm-dd')
-        $('.order_search_form .timepickers').timeEntry(show24Hours: true, showSeconds: true, spinnerImage: '/assets/spinnerUpDown.png', spinnerSize: [17, 26, 0], spinnerIncDecOnly: true)
-
-        unless MagicOrders.trade_mode in ['trades', 'deliver', 'logistics', 'send']
-          $("#search_toggle").hide()
-          $(".label_advanced").hide()
+    # if @collection.length == 0 || @trade_type != trade_type
+    $('#content').html ""
+    @trade_type = trade_type
+    MagicOrders.trade_mode = trade_mode
+    MagicOrders.trade_type = trade_type
+    blocktheui()
+    @show_top_nav()
+    @collection.fetch data: {trade_type: trade_type}, success: (collection, response) =>
+      @mainView = new MagicOrders.Views.TradesIndex(collection: collection, trade_type: trade_type)
+      $('#content').html(@mainView.render().el)
+      $("a[rel=popover]").popover({placement: 'left', html:true})
+      switch trade_type
+        when 'undispatched_one_day' then $('.trade_nav').html('超过一天未分流')
+        when 'undelivered_two_days' then $('.trade_nav').html('超过两天未发货')
+        when 'unpaid_two_days' then $('.trade_nav').html('超过两天未付款')
+        when 'buyer_delay_deliver' then $('.trade_nav').html('买家延迟发货')
+        when 'seller_ignore_deliver' then $('.trade_nav').html('卖家长时间未发货')
+        when 'seller_lack_product' then $('.trade_nav').html('经销商缺货')
+        when 'seller_lack_color' then $('.trade_nav').html('经销商无法调色')
+        when 'buyer_demand_refund' then $('.trade_nav').html('买家要求退款')
+        when 'buyer_demand_return_product' then $('.trade_nav').html('买家要求退货')
+        when 'other_unusual_state' then $('.trade_nav').html('其他异常')
         else
           $('.trade_nav').html($("[data-trade-status=#{trade_type}]").html())
       $('.order_search_form .datepickers').datepicker(format: 'yyyy-mm-dd')
@@ -88,23 +80,31 @@ class MagicOrders.Routers.Trades extends Backbone.Router
         $("#search_toggle").hide()
         $(".label_advanced").hide()
       else
-        $(".label_advanced").show()
-      @nav = $('.subnav')
-      @navTop = $('.subnav').length && $('.subnav').offset().top - 40
-      $(window).off 'scroll'
-      $(window).on 'scroll', @processScroll
-      @processScroll
+        $('.trade_nav').html($("[data-trade-status=#{trade_type}]").html())
+    $('.order_search_form .datepickers').datepicker(format: 'yyyy-mm-dd')
+    $('.order_search_form .timepickers').timeEntry(show24Hours: true, showSeconds: true, spinnerImage: '/assets/spinnerUpDown.png', spinnerSize: [17, 26, 0], spinnerIncDecOnly: true)
 
-      $.unblockUI()
+    unless MagicOrders.trade_mode in ['trades', 'deliver', 'logistics', 'send']
+      $("#search_toggle").hide()
+      $(".label_advanced").hide()
+    else
+      $(".label_advanced").show()
+    @nav = $('.subnav')
+    @navTop = $('.subnav').length && $('.subnav').offset().top - 40
+    $(window).off 'scroll'
+    $(window).on 'scroll', @processScroll
+    @processScroll
 
-      # # 新订单提醒相关
-      # if collection.models.length > 0
-      #   @latest_trade_timestamp = collection.models[0].get('created_timestamp')
-      # else
-      #   @latest_trade_timestamp = -1
+    $.unblockUI()
 
-      # clearInterval @newTradesNotiferInterval if @newTradesNotiferInterval
-      # @newTradesNotiferInterval = setInterval @newTradesNotifer, 300000
+    # # 新订单提醒相关
+    # if collection.models.length > 0
+    #   @latest_trade_timestamp = collection.models[0].get('created_timestamp')
+    # else
+    #   @latest_trade_timestamp = -1
+
+    # clearInterval @newTradesNotiferInterval if @newTradesNotiferInterval
+    # @newTradesNotiferInterval = setInterval @newTradesNotifer, 300000
 
 
   newTradesNotifer: =>
@@ -137,12 +137,20 @@ class MagicOrders.Routers.Trades extends Backbone.Router
                 process(data)
           })
         when 'deliver'
-          unless model.get('logistic_waybill')
-            $(modalDivID).find('.error').html('该订单没有设置物流商和物流单号，请去“物流单”下“未设置物流信息”中调整订单')
-            $('.deliver').hide()
-          else
+          if MagicOrders.company == 'nippon' and !(parseInt(MagicOrders.current_user_seller_id) in MagicOrders.enable_trade_deliver_bill_spliting_sellers)
             $(modalDivID).find('.error').html()
             $('.deliver').show()
+            if model.get('logistic_waybill')
+              $("#logistic_company").html(model.get('logistic_name'))
+            else
+              $("#logistic_company").html('其他')
+          else
+            unless model.get('logistic_waybill')
+              $(modalDivID).find('.error').html('该订单没有设置物流商和物流单号，请去“物流单”下“未设置物流信息”中调整订单')
+              $('.deliver').hide()
+            else
+              $(modalDivID).find('.error').html()
+              $('.deliver').show()
         when 'color'
           $('.color_typeahead').typeahead({
             source: (query, process)->

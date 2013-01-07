@@ -19,7 +19,7 @@
 class StockHistory < ActiveRecord::Base
 	paginates_per 20
 
-  attr_accessible :number, :operation, :stock_product_id, :tid, :reason, :note, :seller_id
+  attr_accessible :number, :operation, :stock_product_id, :tid, :reason, :note, :seller_id, :user_id
   belongs_to :stock_product
   belongs_to :user
   belongs_to :seller

@@ -238,11 +238,27 @@ class Trade
       if package.present?
         package.each do |data|
           stock_product = StockProduct.joins(:product).where("products.iid = ? AND seller_id = ?", data[:iid], op_seller).readonly(false).first
-          stock_product.update_quantity!(data[:number] * order.num, operation, op_seller, tid)
+          if stock_product.update_quantity!(data[:number] * order.num, operation)
+            StockHistory.create(
+              operation: operation,
+              number: data[:number] * order.num,
+              stock_product_id: stock_product.id,
+              seller_id: op_seller.id,
+              tid: tid
+            )
+          end
         end
       else
         stock_product = StockProduct.where(product_id: product.id, seller_id: op_seller).first
-        stock_product.update_quantity!(order.num, operation, op_seller, tid)
+        if stock_product.update_quantity!(order.num, operation)
+          StockHistory.create(
+            operation: operation,
+            number: order.num,
+            stock_product_id: stock_product.id,
+            seller_id: op_seller.id,
+            tid: tid
+          )
+        end
       end
     end
   end
@@ -313,13 +329,13 @@ class Trade
       case product.category.try(:name)
       when '輔助材料'
         divmod = 100000
-      when '木器漆' 
+      when '木器漆'
         divmod = 1
       else
         divmod = case product.quantity.try(:name)
         when '5L'
           3
-        when '10L', '15L'
+        when '10L', '15L', '1套'
           1
         else
           splited.clear

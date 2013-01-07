@@ -38,7 +38,7 @@ class StockProduct < ActiveRecord::Base
   	end
   end
 
-  def update_quantity!(num, opt_type, seller_id, tid = nil)
+  def update_quantity!(num, opt_type)
     opt_activity = 0
     opt_actual = 0
 
@@ -54,14 +54,6 @@ class StockProduct < ActiveRecord::Base
     when '发货'
       opt_actual = -num
     end
-
-    StockHistory.create!(
-      operation: opt_type,
-      number: num,
-      stock_product_id: id,
-      tid: tid,
-      seller_id: seller_id
-    )
 
     update_attributes(activity: activity + opt_activity, actual: actual + opt_actual)
   end

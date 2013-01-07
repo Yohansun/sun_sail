@@ -11,8 +11,8 @@ window.MagicOrders =
       #roles
       'cs_read':                 ['detail'],
       'cs':                      ['detail', 'logistic_waybill', 'seller', 'cs_memo', 'color', 'invoice', 'trade_split', 'recover', 'mark_unusual_state', 'reassign', 'refund', 'check_goods', 'operation_log', 'manual_sms_or_email', 'print_deliver_bill', 'deliver', 'confirm_color', 'seller_confirm_invoice', 'confirm_receive', 'logistic_memo', 'barcode', 'seller_confirm_deliver', 'request_return', 'confirm_refund', 'gift_memo', 'modify_payment'],
-      'seller':                  ['detail', 'logistic_waybill', 'setup_logistic','deliver', 'mark_unusual_state', 'logistic_split', 'print_logistic_bill', 'print_deliver_bill', 'barcode','confirm_color','confirm_check_goods','seller_confirm_deliver','cs_memo', 'confirm_receive', 'logistic_memo','confirm_return'],
-      'interface':               ['detail', 'logistic_waybill', 'seller_confirm_deliver'],
+      'seller':                  ['detail', 'operation_log', 'logistic_waybill', 'setup_logistic','deliver', 'mark_unusual_state', 'logistic_split', 'print_logistic_bill', 'print_deliver_bill', 'barcode','confirm_color','confirm_check_goods','seller_confirm_deliver','cs_memo', 'confirm_receive', 'logistic_memo','confirm_return'],
+      'interface':               ['detail', 'operation_log', 'logistic_waybill', 'seller_confirm_deliver'],
       'logistic':                ['detail', 'logistic_waybill', 'confirm_receive', 'logistic_memo'],
       'admin':                   ['*'],
 
@@ -101,7 +101,7 @@ window.MagicOrders =
 
     # 不同模式下可见订单列
     @trade_cols_visible_modes = {
-      'trades':                  ['trade_source','tid','status','status_history','receiver_id','receiver_name','receiver_mobile_phone','receiver_address','buyer_message','seller_memo','cs_memo','gift_memo','color_info','invoice_info', 'point_fee', 'total_fee','seller','logistic'],  #'deliver_bill','logistic_bill','operator','order_split'
+      'trades':                  ['trade_source','deliver_bill','tid','status','status_history','receiver_id','receiver_name','receiver_mobile_phone','receiver_address','buyer_message','seller_memo','cs_memo','gift_memo','color_info','invoice_info', 'point_fee', 'total_fee','seller','logistic'],  #'deliver_bill','logistic_bill','operator','order_split'
       'deliver':                 ['tid','status','status_history','deliver_bill_id','deliver_bill_status','trade_source','order_goods','receiver_name','receiver_mobile_phone','receiver_address','color_info','invoice_info','seller','cs_memo','logistic'],
       'logistics':               ['trade_source','tid','status','logistic_bill_status','status_history','receiver_id','receiver_name','receiver_mobile_phone','receiver_address','order_goods','color_info','seller','logistic', 'logistic_waybill'],
       'check':                   ['tid','status','deliver_bill_id','status_history','deliver_bill_status','trade_source','order_goods','receiver_name','receiver_mobile_phone','receiver_address','color_info','invoice_info','seller','cs_memo','operator'],
