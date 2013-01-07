@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130106055619) do
+ActiveRecord::Schema.define(:version => 20130107042609) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -38,6 +38,18 @@ ActiveRecord::Schema.define(:version => 20130106055619) do
   end
 
   add_index "alipay_trade_histories", ["trade_type"], :name => "index_alipay_trade_histories_on_trade_type"
+
+  create_table "alipay_trade_orders", :force => true do |t|
+    t.integer  "alipay_trade_history_id"
+    t.string   "original_trade_sn"
+    t.string   "trade_sn"
+    t.datetime "created_at",              :null => false
+    t.datetime "updated_at",              :null => false
+  end
+
+  add_index "alipay_trade_orders", ["alipay_trade_history_id"], :name => "index_alipay_trade_orders_on_alipay_trade_history_id"
+  add_index "alipay_trade_orders", ["original_trade_sn"], :name => "index_alipay_trade_orders_on_original_trade_sn"
+  add_index "alipay_trade_orders", ["trade_sn"], :name => "index_alipay_trade_orders_on_trade_sn"
 
   create_table "areas", :force => true do |t|
     t.string   "name"

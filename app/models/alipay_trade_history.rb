@@ -1,3 +1,4 @@
+# encoding: utf-8
 # == Schema Information
 #
 # Table name: alipay_trade_histories
@@ -20,5 +21,7 @@
 #
 
 class AlipayTradeHistory < ActiveRecord::Base
-  # attr_accessible :title, :body
+
+  scope :revenues, where("trade_type = '交易付款'")
+
 end
