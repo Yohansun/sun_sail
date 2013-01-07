@@ -32,7 +32,7 @@ group :test, :development do
   gem "shoulda-matchers"
   gem 'webrat'
   gem "capybara"
-  gem 'capybara-webkit'
+  # gem 'capybara-webkit'
 
   gem 'capistrano'
   gem "capistrano-ext"
@@ -93,6 +93,8 @@ gem 'httparty'
 
 #test mail
 gem "mails_viewer"
+
+gem "paperclip", "~> 2.4" 
 
 group :production do
   gem "exception_notification", "~> 2.6.1"

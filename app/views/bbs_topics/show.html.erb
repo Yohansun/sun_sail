@@ -16,14 +16,15 @@
         </div>
         <div class="bbs_coninfo">
           <p><%=@topic.body %></p>
-          <!-- <div>
-            <p>附件1：<a href="#">xxx.doc</a></p>
-            <p>附件2：<a href="#">xxx.ppt</a></p>
+          <div>
+            <p>附件1：<%=@topic.uploadfile_file_name %></p>
           </div>
           <div class="pagination-right">
-            <a href="#" class="btn btn-primary">下载</a>
-            <a href="#" class="btn btn-primary">打印</a>
-          </div> -->
+            <%=link_to "下载附件", download_bbs_topic_path(),  confirm: '确认要下载该附件嘛?', :class => 'btn btn-primary'%>
+            <%=link_to "打印", print_bbs_topic_path(),  confirm: '确认要打印该附件嘛?', :class => 'btn btn-primary'%>
+           <!--  <a href="#" class="btn btn-primary">下载</a>
+            <a href="#" class="btn btn-primary">打印</a> -->
+          </div>
         </div><!--bbs_coninfo-->
       </div><!--span10 pull-left well-->
     <%= render partial: 'categories', :locals => { :categories => @categories }%>

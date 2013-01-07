@@ -1,9 +1,28 @@
-  <%= form_for @topic, :html=> {:class => "form-horizontal"} do |f| %>
+  <%= form_for @topic, :html=> {:class => 'form-horizontal', :multipart => true} do |f| %>
     <div class="control-group alert alert-info">
-      <a href="#" class="pull-right"><img class="img-rounded" src="/assets/admin_photo/admin_photo1.jpg" /></a>
+      <%-if current_user.has_role? :admin %>
+        <a class="pull-left" href="#"><img class="img-rounded" src="/assets/admin_photo/admin_photo7.jpg"></a>
+      <%- elsif current_user.has_role? :seller %>
+        <a class="pull-left" href="#"><img class="img-rounded" src="/assets/admin_photo/admin_photo1.jpg"></a>
+      <%- elsif current_user.has_role? :interface %>
+        <a class="pull-left" href="#"><img class="img-rounded" src="/assets/admin_photo/admin_photo2.jpg"></a>
+      <%- elsif current_user.has_role? :cs %>
+        <a class="pull-left" href="#"><img class="img-rounded" src="/assets/admin_photo/admin_photo3.jpg"></a>
+      <%- end %>
       <label class="control-label">属于栏目：</label>
       <div class="controls">
-        <label class="radio inline">
+        <%- @categories.each_with_index do |category, index| %>
+          <label class="radio inline">
+            <%- if index==0 %>
+              <%=f.radio_button :bbs_category_id, category.id, { :checked => true } %>
+              <%= category.name %>
+            <%- else %>
+              <%=f.radio_button :bbs_category_id, category.id, { :checked => false } %>
+              <%= category.name %>
+            <%- end %>
+          </label>
+        <%- end %>
+        <!-- <label class="radio inline">
           <%=f.radio_button :bbs_category_id, "1", { :checked => true } %>
           资料下载
         </label>
@@ -14,7 +33,7 @@
         <label class="radio inline">
           <%=f.radio_button :bbs_category_id, "3" %>
           使用规范
-        </label><!-- 
+        </label> --><!-- 
         <label class="radio inline">
           <%=f.radio_button :bbs_category_id, "4" %>
           操作指南
@@ -36,9 +55,10 @@
       </div>
     </div>
     <div class="control-group">
-     <!--  <div class="controls">
-        <input type="file" class="lineh20" />
-      </div> -->
+      <div class="controls">
+        <!-- <input type="file" class="lineh20" /> -->
+        <%=f.file_field :uploadfile, :class => 'lineh20' %>
+      </div>
       <!-- <div class="controls">
         <input class="test_file lineh20" type="file" value="" />
       </div> -->

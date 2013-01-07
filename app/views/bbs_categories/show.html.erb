@@ -7,9 +7,9 @@
       <div class="span10 pull-left well bbs_hot">
         <div class="alert alert-info pagination-right">
           <%- if params[:category] == "last"%>
-          <p><a href="/bbs_topics/list?category=last">最新帖子</a>/<a href="/bbs_topics/list?category=hot">热门帖子</a></p>
+            <p><a href="/bbs_topics/list?category=last">最新帖子</a>/<a href="/bbs_topics/list?category=hot">热门帖子</a></p>
           <%- else %>
-           <p><a href="/bbs_topics/list?category=hot">热门帖子</a>/<a href="/bbs_topics/list?category=last">最新帖子</a></p>
+            <p><a href="/bbs_topics/list?category=hot">热门帖子</a>/<a href="/bbs_topics/list?category=last">最新帖子</a></p>
           <%- end %>
         </div>
         <%- if @topics.size == 0%>
@@ -20,11 +20,13 @@
         <%- @topics.each_with_index do |topic, j| %>
         <div class="bbs_coninfo">
           <div class="clearfix page-header">
-            <a class="pull-left" href="#"><img class="img-rounded" src="/assets/admin_photo/admin_photo1.jpg"></a>
+            <%= render partial: 'bbs_topics/img', :locals => { :user => topic.user }%>
             <div class="offset1">
               <span class="pull-right mar_l10">
                 <%=link_to "编辑", edit_bbs_topic_path(topic), :class => 'btn-block'%>
-                <%=link_to "删除", bbs_topic_path(topic, category: "category"), method: :delete, confirm: 'delete it?', :class => 'btn-block'%>
+                <%- if topic.user.username == "admin" %>
+                  <%=link_to "删除", bbs_topic_path(topic, category: "category"), method: :delete, confirm: 'delete it?', :class => 'btn-block'%>
+                <%- end %>
               </span>
               <!-- <span class="pull-right lineh45">下载数：<span class="label label-important lead">30</span></span> -->
               <p><%=link_to topic.title, bbs_topic_path(topic) %></p>
