@@ -9,13 +9,18 @@
 #  audited            :boolean(1)
 #  created_at         :datetime        not null
 #  updated_at         :datetime        not null
+#  audit_time         :datetime
 #
 
 class ReconcileStatement < ActiveRecord::Base
-  # attr_accessible :title, :body
+  attr_accessible :trade_store_source, :trade_store_name, :audited, :trade_store_name, :audit_time, :balance_amount, :audited
   include ActiveModel::ForbiddenAttributesProtection
   has_one :detail, class_name: "ReconcileStatementDetail"
 
-  scope :by_date, lambda { |date| where(["DATE_FORMAT(created_at, '%Y%m%d') = ? ", date.to_time(:local).utc.strftime('%Y%m%d')]) }
+  scope :by_date, lambda { |date| where(["DATE_FORMAT(audit_time, '%Y%m%d') = ? ", date.to_time(:local).utc.strftime('%Y%m%d')]) }
+
+  def self.get_last_month
+  	ReconcileStatement.where("audit_time = ?", (Time.now - 1.month).beginning_of_month)
+  end
 
 end

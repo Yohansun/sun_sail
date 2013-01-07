@@ -2,7 +2,7 @@ require 'sidekiq/web'
 
 MagicOrders::Application.routes.draw do
 
-  resources :bbs_categories 
+  resources :bbs_categories
   resources :bbs_topics do
     member do
       get :download
@@ -22,7 +22,8 @@ MagicOrders::Application.routes.draw do
     collection do
       get :exports
     end
-    resources :reconcile_statement_details, only: [:show]
+    resources :reconcile_statement_details, only: [:show] do
+    end
   end
 
   resources :trade_reports 

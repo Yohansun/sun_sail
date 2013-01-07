@@ -1,0 +1,71 @@
+<table class='table table-bordered table-hover'>
+  <thead>
+    <tr>
+      <th>项目</th>
+      <th>金额</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>支付宝收入</td>
+      <td><%= detail.alipay_revenue %></td>
+      <td><a href='checking_detail.html'>查看明细</a></td>
+    </tr>
+    <tr>
+      <td>运费收入</td>
+      <td><%= detail.postfee_revenue %></td>
+      <td><a href='#freight_income'>查看明细</a></td>
+    </tr>
+    <tr>
+      <td>交易成功后退款</td>
+      <td><%= detail.trade_success_refund %></td>
+      <td><a href='#success_refund'>查看明细</a></td>
+    </tr>
+    <tr>
+      <td>销售回款</td>
+      <td><%= detail.sell_refund %></td>
+      <td><!-- <a href='javascript:;'>查看明细</a> --></td>
+    </tr>
+    <tr>
+      <td><a href='#'>基础服务费</a></td>
+      <td><%= detail.base_service_fee %></td>
+      <td><a href='#sevices_fare'>查看明细</a></td>
+    </tr>
+    <tr>
+      <td><a href='#'>店铺服务奖励</a></td>
+      <td><%= detail.store_service_award %></td>
+      <td><a href='#shop_award'>查看明细</a></td>
+    </tr>
+    <tr>
+      <td><a href='#'>店员奖励</a></td>
+      <td><%= detail.staff_award %></td>
+      <td><a href='#clerk_award'>查看明细</a></td>
+    </tr>
+    <tr>
+      <td><a href='#'>淘宝费用</a></td>
+      <td><%= detail.taobao_cost %></td>
+      <td><a href='#taobao_fare'>查看明细</a></td>
+    </tr>
+    <tr>
+      <td>结算成本</td>
+      <td><%= detail.audit_cost %></td>
+      <td><!-- <a href='#success_detail'>查看明细</a> --></td>
+    </tr>
+    <tr>
+      <td>代收运费</td>
+      <td><%= detail.collecting_postfee %></td>
+      <td><a href='#collect_freight'>查看明细</a></td>
+    </tr>
+    <tr>
+      <td>结算金额</td>
+      <td><%= detail.audit_amount %></td>
+      <td><!-- <a href='#success_detail'>查看明细</a> --></td>
+    </tr>
+    <tr>
+      <td>调整金额</td>
+      <td><%= detail.adjust_amount %></td>
+      <td><a href='#adjust_account'>查看明细</a></td>
+    </tr>
+  </tbody>
+</table>

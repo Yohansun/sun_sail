@@ -12,9 +12,15 @@ describe ReconcileStatementsController do
       @rs = create(:reconcile_statement)
     end
     context 'by default loading' do
-      before { get :index }
+      before {
+        create(:reconcile_statement)
+        create(:trade_source)
+        get :index
+      }
       it { should respond_with 200 }
       it { should render_template :index }
+      it { assigns(:trade_sources).should_not be_empty }
+      it { assigns(:rs_set).should_not be_empty }
     end
 
     describe "search by date" do
@@ -40,7 +46,7 @@ describe ReconcileStatementsController do
     end
 
     context 'render sub-table with detail data' do
-      before { get :show, id: @rs.id }
+      before { get :show, id: @rs.id, format: :js }
       it { should respond_with 200 }
       it { assigns(:rs).should_not be_blank }
       it { assigns(:detail).should_not be_blank }
