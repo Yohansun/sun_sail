@@ -28,5 +28,20 @@ task :import_alipay_trade => :environment do
     end
     index += 1
   end
+
+  revenues_data = AlipayTradeHistory.revenues
+  rs = ReconcileStatement.new(trade_store_source: 'Alipay', trade_store_name: '和宝尊')
+  rs.detail = ReconcileStatementDetail.new
+  rs.audit_time = revenues_data.first.traded_at
+  rs.save
+  revenues_data.each do |trade|
+    AlipayTradeOrder.create(
+      reconcile_statement_id: rs.id,
+      alipay_trade_history_id: trade.id,
+      original_trade_sn: trade.merchant_trade_sn,
+      trade_sn: trade.merchant_trade_sn.split("P").last,
+      traded_at: trade.traded_at)
+  end
+
   puts '--- finished ---'
 end
