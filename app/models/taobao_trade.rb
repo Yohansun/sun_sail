@@ -150,15 +150,18 @@ class TaobaoTrade < Trade
   def dispatch!(seller = nil)
     return false unless dispatchable?
 
-    unless seller
-      seller = matched_seller
-    end
+    seller ||= matched_seller
 
     return false if seller.blank?
 
+    # 锁定库存
     nofity_stock '锁定', seller.id
 
+    # 更新订单状态为已分流
     update_attributes(seller_id: seller.id, seller_name: seller.name, dispatched_at: Time.now)
+
+    # 生成默认发货单
+    generate_deliver_bill
   end
 
   def matched_seller(area = nil)
@@ -230,5 +233,5 @@ class TaobaoTrade < Trade
         status
       end
     end
-  end  
+  end
 end

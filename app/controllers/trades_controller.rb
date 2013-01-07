@@ -140,6 +140,10 @@ class TradesController < ApplicationController
       state.repaired_at = Time.now
     end
 
+    if params[:logistic_ids].present?
+      @trade.split_logistic(params[:logistic_ids])
+    end
+
     if params[:confirm_color_at] == true
       @trade.confirm_color_at = Time.now
     end
@@ -298,87 +302,12 @@ class TradesController < ApplicationController
     @trades = Trade.find(params[:ids].split(','))
     respond_to do |format|
       format.html
-      format.xml
     end
-  end
-
-  def logistic_info
-    @trade = Trade.find params[:id]
-    xml = Logistic.find_by_id(@trade.logistic_id).try(:xml)
-    xml ||= @trade.matched_logistics.select{ |e| e[2].present? }.first.try(:at, 2)
-    render text: xml
-  end
-
-  def deliver_list
-    list = []
-    Trade.find(params[:ids]).each do |trade|
-      trade = TradeDecorator.decorate(trade)
-      list << {
-        name: trade.receiver_name,
-        tid: trade.tid,
-        address: trade.receiver_full_address,
-        logistic_name: trade.logistic_name || '',
-        logistic_waybill: trade.logistic_waybill || ''
-      }
-    end
-
-    respond_to do |format|
-      format.json { render json: list }
-    end
-  end
-
-  def setup_logistics
-    flag = true
-    logistic = Logistic.find_by_id params[:logistic]
-    if logistic && params[:data].present?
-      params[:data].values.each do |info|
-        trade = Trade.where(tid: info['tid']).first
-        trade.logistic_code = logistic.try(:code)
-        trade.logistic_waybill = info["logistic"].present? ? info["logistic"] : trade.tid
-        trade.logistic_name = logistic.try(:name)
-        trade.logistic_id = logistic.try(:id)
-        trade.save
-        trade.operation_logs.create(operated_at: Time.now, operation: '设置物流单号', operator_id: current_user.id, operator: current_user.name)
-      end
-    else
-      flag =false
-    end
-
-    render json: {isSuccess: flag}
   end
 
   def batch_deliver
     Trade.any_in(_id: params[:ids]).update_all(delivered_at: Time.now)
     render json: {isSuccess: true}
-  end
-
-  def batch_print_deliver
-    Trade.any_in(_id: params[:ids]).each do |trade|
-      trade.deliver_bill_printed_at = Time.now
-      trade.save
-      trade.operation_logs.create(operated_at: Time.now, operation: '打印发货单', operator_id: current_user.id, operator: current_user.name)
-    end
-
-    render json: {isSuccess: true}
-  end
-
-  def batch_print_logistic
-    logistic = Logistic.find_by_id params[:logistic]
-    success = true
-    Trade.any_in(_id: params[:ids]).each do |trade|
-      trade.logistic_printed_at = Time.now
-
-      if trade.logistic_waybill.blank?
-        trade.logistic_id = logistic.try(:id)
-        trade.logistic_name = logistic.try(:name)
-        trade.logistic_code = logistic.try(:code)
-      end
-
-      success = false unless trade.save
-      trade.operation_logs.create(operated_at: Time.now, operation: '打印物流单', operator_id: current_user.id, operator: current_user.name)
-    end
-
-    render json: {isSuccess: success}    
   end
 
   def recover

@@ -42,6 +42,7 @@ MagicOrders::Application.routes.draw do
   get "/stock_products", to: 'stock_products#index'
   get "/stock_products/search", to: 'stock_products#search'
   get "/sales/add_node", to: 'sales#add_node'
+  get "/api/logistics", to: 'logistics#logistic_templates'
 
   resources :colors do
     collection do
@@ -125,12 +126,13 @@ MagicOrders::Application.routes.draw do
   get "/trades/:id/split_trade", to: "trades#split_trade"
   get "/trades/:id/print_deliver_bill", to: "trades#print_deliver_bill"
   get "/trades/print_deliver_bill.:format", to: "trades#print_deliver_bill"
-  get "/trades/:id/logistic_info", to: "trades#logistic_info"
-  get "/trades/deliver_list", to: "trades#deliver_list"
-  get "/trades/setup_logistics", to: 'trades#setup_logistics'
+  get "/deliver_bills/print_deliver_bill.:format", to: "deliver_bills#print_deliver_bill"
+  get "/deliver_bills/:id/logistic_info", to: "deliver_bills#logistic_info"
+  get "/deliver_bills/deliver_list", to: "deliver_bills#deliver_list"
+  get "/deliver_bills/setup_logistics", to: 'deliver_bills#setup_logistics'
   get "/trades/batch_deliver", to: 'trades#batch_deliver'
-  get "/trades/batch-print-deliver", to: 'trades#batch_print_deliver'
-  get "/trades/batch-print-logistic", to: 'trades#batch_print_logistic'
+  get "/deliver_bills/batch-print-deliver", to: 'deliver_bills#batch_print_deliver'
+  get "/deliver_bills/batch-print-logistic", to: 'deliver_bills#batch_print_logistic'
   get "/logistic_rates", to: 'logistic_rates#index'
 
   scope 'api' do
@@ -150,6 +152,7 @@ MagicOrders::Application.routes.draw do
     end
 
     resources :products
+    resources :deliver_bills
   end
 
   authenticate :user do

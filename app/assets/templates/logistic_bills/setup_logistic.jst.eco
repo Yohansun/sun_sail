@@ -1,0 +1,48 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal">&times;</button>
+  <h3>设置物流单号</h3>
+</div>
+<div class="modal-body">
+  <fieldset>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>订单编号</th>
+          <th>订单状态</th>
+          <th>客户联系方式</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><%= @trade.get('tid') %></td>
+          <td><%= @trade.get('status')%></td>
+          <td>
+            <%= @trade.get('receiver_name') %><br>
+            <%= @trade.get('receiver_mobile_phone') %><br>
+            <%= @trade.get('receiver_state') %>
+            <%= @trade.get('receiver_city') %>
+            <%= @trade.get('receiver_district') %>
+            <%= @trade.get('receiver_address') %>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </fieldset>
+
+  <fieldset class='reset_width80'>
+    <div class="control-group form-inline">
+      <label for="" class="control-label">物流商：</label>
+      <select id="logistic_select" class="input-medium"></select>
+    </div>
+
+    <div class="control-group form-inline">
+      <label for="" class="control-label">物流单号：</label>
+      <input type="text" class="span3 waybill" placeholder="请输入物流单号">
+    </div>
+  </fieldset>
+</div>
+
+<div class="modal-footer">
+  <a href="#" class="btn" data-dismiss="modal" >取消</a>
+  <a class="btn btn-primary save">保存设置</a>
+</div><!-- modal-footer -->

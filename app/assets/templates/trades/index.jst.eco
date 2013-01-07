@@ -25,7 +25,7 @@
           <b class="caret"></b>
         </a>
         <ul class="dropdown-menu">
-          <li><a href="#" data-trade-mode="trades" data-trade-status="all">所有</a></li>
+          <li><a href="#trades" data-trade-mode="trades" data-trade-status="all">所有</a></li>
           <% if MagicOrders.role_key != 'seller' : %>
           <li><a href="#" data-trade-mode="trades" data-trade-status="unpaid">未付款</a></li>
           <li><a href="#" data-trade-mode="trades" data-trade-status="paid">已付款</a></li>
@@ -42,32 +42,26 @@
           <% end %>
         </ul>
       </li>
+      <% end %>
       <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">
           发货单
           <b class="caret"></b>
         </a>
         <ul class="dropdown-menu">
-          <!-- <li><a href="#" data-trade-mode="deliver">所有发货单</a></li> -->
-          <li><a href="#" data-trade-mode="deliver" data-trade-status="deliver_bill_unprinted">未打印</a></li>
-          <li><a href="#" data-trade-mode="deliver" data-trade-status="deliver_bill_printed">已打印</a></li>
-          <!-- <li><a href="#" data-trade-mode="deliver">有物流单号</a></li>
-          <li><a href="#" data-trade-mode="deliver">无物流单号</a></li>
-          <li><a href="#" data-trade-mode="deliver">退货订单</a></li>
-          <li><a href="#" data-trade-mode="deliver">交易关闭订单</a></li>
-          <li><a href="#" data-trade-mode="deliver">交易异常订单</a></li> -->
+          <li><a href="#" data-trade-mode="deliver_bills" data-trade-status="all">所有发货单</a></li>
+          <li><a href="#" data-trade-mode="deliver_bills" data-trade-status="unprinted">未打印</a></li>
+          <li><a href="#" data-trade-mode="deliver_bills" data-trade-status="printed">已打印</a></li>
         </ul>
       </li>
-      <% end %>
       <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
           物流单<b class="caret"></b>
         </a>
         <ul class="dropdown-menu">
-          <li><a href="#" data-trade-mode="logistics" data-trade-status="logistic_bill_unprinted">未打印物流单</a></li>
-          <li><a href="#" data-trade-mode="logistics" data-trade-status="logistic_bill_printed">已打印物流单</a></li>
-          <li><a href="#" data-trade-mode="logistics" data-trade-status="logistic_waybill_void">未设置物流信息</a></li>
-          <li><a href="#" data-trade-mode="logistics" data-trade-status="logistic_waybill_exist">已设置物流信息</a></li>
+          <li><a href="#" data-trade-mode="logistic_bills" data-trade-status="all">所有物流单</a></li>
+          <li><a href="#" data-trade-mode="logistic_bills" data-trade-status="unprinted">未打印物流单</a></li>
+          <li><a href="#" data-trade-mode="logistic_bills" data-trade-status="printed">已打印物流单</a></li>
         </ul>
       </li>
       <% unless MagicOrders.company == "dulux" and MagicOrders.role_key == 'logistic' : %>
@@ -306,17 +300,6 @@
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu">
-        <% if MagicOrders.trade_mode == 'deliver' : %>
-        <li><a data-toggle="modal" class='print_delivers' href='#'>批量打印发货单</a></li>
-        <% end %>
-        <% if MagicOrders.trade_mode == 'logistics' : %>
-          <% if MagicOrders.trade_type in ['logistic_bill_unprinted', 'logistic_bill_printed'] : %>
-            <li><a data-toggle="modal" class='print_logistics' href="#">批量打印物流单</a></li>
-          <% end %>
-          <% if MagicOrders.trade_type in ['logistic_waybill_void', 'logistic_waybill_exist'] : %>
-            <li><a data-toggle="modal" class='return_logistics' href='#'>批量设置物流信息</a></li>
-          <% end %>
-        <% end %>
         <% if MagicOrders.trade_mode == 'send' : %>
         <li><a data-toggle="modal" class='batch_deliver' href='#'>批量发货</a></li>
         <% end %>
@@ -399,66 +382,8 @@
   <span class="controls mar_t5" >当前显示：全部订单 <span class="complete_offset">0</span> 项中的 0 项</span>
   <% end %>
 </div>
-<div id="ord_logistics_billnum_mult" class="modal hide fade" tabindex="-1">
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal">&times;</button>
-    <h3>批量返回物流单号</h3>
-  </div><!-- modal-header -->
-  <div class="modal-body">
-    <p>此次共同返回<b class='logistic_count'></b>单. <span class='info' style='color:red'></span></p>
-    <fieldset>
-      <div class="control-group">
-        <div class="controls form-inline mar_t5">
-          <label class="input-small nomargin">物流商：</label>
-          <select class="input-medium logistic_select"></select>
-          <!-- <input class='logistic_name' type="text" value="圆通" disabled> -->
-        </div>
-        <div class="controls form-inline mar_t5">
-          <label class="input-small nomargin">开始单号：</label><input class='logistic_begin' type="text" value="">
-        </div>
-        <div class="controls form-inline mar_t5">
-          <label class="input-small nomargin">结束单号：</label><input class='logistic_end' type="text" value="">
-        </div>
-      </div>
-    </fieldset>
-  </div><!-- modal-body -->
 
-  <div class="modal-footer">
-    <a href="#" class="btn" data-dismiss="modal" >取消</a>
-    <a class="btn btn-primary confirm_return">确认</a>
-  </div>
-</div>
-
-<div id="ord_logistics_billnum_mult2" class="modal hide fade" tabindex="-1" style="width: 890px;margin-left: -445px;">
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal">&times;</button>
-    <h3>批量返回物流单号</h3>
-  </div><!-- modal-header -->
-  <div class="modal-body">
-    <p>此次共返回 <b class='logistic_count'></b> 单号，请确认并保存</p>
-    <fieldset>
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <th>订单编号</th>
-            <th>姓名</th>
-            <th>地址</th>
-            <th>物流单号</th>
-          </tr>
-        </thead>
-        <tbody>
-        </tbody>
-      </table>
-    </fieldset>
-  </div><!-- modal-body -->
-
-  <div class="modal-footer">
-    <a href="#" class="btn" data-dismiss="modal" >取消</a>
-    <button class="btn btn-primary confirm_logistics">确认保存</button>
-  </div>
-</div><!-- ord_logistics_billnum_mult2 -->
-
-<div id="batch_deliver" class="modal fade hide" tabindex="-1" style="width: 890px;margin-left: -445px;">
+<div id="batch_deliver" class="trade modal fade hide" tabindex="-1" style="width: 890px;margin-left: -445px;">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal">&times;</button>
     <h3>批量发货</h3>

@@ -8,6 +8,8 @@
     MagicOrders.logistics = new MagicOrders.Collections.Logistics();
     MagicOrders.logistics.reset(<%= raw @logistics.to_json %>);
     MagicOrders.deliver_bill_notice_info = "<%= TradeSetting.deliver_bill_notice_info %>"
+    MagicOrders.enable_trade_deliver_bill_spliting = <%= TradeSetting.enable_trade_deliver_bill_spliting == true %>
+    MagicOrders.enable_trade_deliver_bill_spliting_sellers = <%= TradeSetting.enable_trade_deliver_bill_spliting_sellers %>
   });
 </script>
 <% end -%>
@@ -16,36 +18,41 @@
   Loading...
 </div>
 
-<div id="trade_detail" class="modal fade hide" tabindex="-1" style="width: 890px; margin-left: -445px;"></div>
-<div id="trade_seller" class="modal fade hide" tabindex="-1"></div>
-<div id="trade_deliver" class="modal fade hide" tabindex="-1"></div>
-<div id="trade_cs_memo" class="modal fade hide" tabindex="-1"></div>
-<div id="trade_gift_memo" class="modal fade hide" tabindex="-1"></div>
-<div id="trade_color" class="modal fade hide" tabindex="-1"></div>
-<div id="trade_color_info" class="modal fade hide" tabindex="-1" style="width: 890px; margin-left: -445px;"></div>
-<div id="trade_invoice" class="modal fade hide" tabindex="-1"></div>
-<div id="trade_invoice_number" class="modal fade hide" tabindex="-1"></div>
-<div id="trade_seller_confirm_deliver" class="modal fade hide" tabindex="-1"></div>
-<div id="trade_seller_confirm_invoice" class="modal fade hide" tabindex="-1"></div>
-<div id="trade_barcode" class="modal fade hide" tabindex="-1"></div>
-<div id="trade_mark_unusual_state" class="modal fade hide" tabindex="-1"></div>
-<div id="trade_confirm_color" class="modal fade hide" tabindex="-1"></div>
-<div id="trade_confirm_check_goods" class="modal fade hide" tabindex="-1"></div>
-<div id="trade_operation_log" class="modal fade hide" tabindex="-1"></div>
-<div id="trade_manual_sms_or_email" class="modal fade hide" tabindex="-1"></div>
-<div id="trade_print_deliver_bill" class="modal fade hide" tabindex="-1" style="width: 890px; margin-left: -445px;"></div>
-<div id="trade_confirm_receive" class="modal fade hide" tabindex="-1"></div>
-<div id="trade_logistic_memo" class="modal fade hide" tabindex="-1"></div>
-<div id="trade_logistic_waybill" class="modal fade hide" tabindex="-1"></div>
-<div id="trade_request_return" class="modal fade hide" tabindex="-1"></div>
-<div id="trade_confirm_return" class="modal fade hide" tabindex="-1"></div>
-<div id="trade_confirm_refund" class="modal fade hide" tabindex="-1"></div>
-<div id="trade_splited" class="modal fade hide" tabindex="-1" style="width: 890px; margin-left: -445px;"></div>
-<div id="trade_print_logistic_bill" class="modal fade hide" tabindex="-1" style="width: 600px;"></div>
-<div id="trade_setup_logistic" class="modal fade hide" tabindex="-1"></div>
-<div id="seller_area" class="modal fade hide" tabindex="-1"></div>
-<div id="trade_recover" class="modal fade hide" tabindex="-1"></div>
-<div id="print_delivers" class="modal fade hide" tabindex="-1" style="width: 890px;margin-left: -445px;">
+<div id="trade_detail" class="trade modal fade hide" tabindex="-1" style="width: 890px; margin-left: -445px;"></div>
+<div id="trade_seller" class="trade modal fade hide" tabindex="-1"></div>
+<div id="trade_deliver" class="trade modal fade hide" tabindex="-1"></div>
+<div id="trade_cs_memo" class="trade modal fade hide" tabindex="-1"></div>
+<div id="trade_gift_memo" class="trade modal fade hide" tabindex="-1"></div>
+<div id="trade_color" class="trade modal fade hide" tabindex="-1"></div>
+<div id="trade_color_info" class="trade modal fade hide" tabindex="-1" style="width: 890px; margin-left: -445px;"></div>
+<div id="trade_invoice" class="trade modal fade hide" tabindex="-1"></div>
+<div id="trade_invoice_number" class="trade modal fade hide" tabindex="-1"></div>
+<div id="trade_seller_confirm_deliver" class="trade modal fade hide" tabindex="-1"></div>
+<div id="trade_seller_confirm_invoice" class="trade modal fade hide" tabindex="-1"></div>
+<div id="trade_barcode" class="trade modal fade hide" tabindex="-1"></div>
+<div id="trade_mark_unusual_state" class="trade modal fade hide" tabindex="-1"></div>
+<div id="trade_confirm_color" class="trade modal fade hide" tabindex="-1"></div>
+<div id="trade_confirm_check_goods" class="trade modal fade hide" tabindex="-1"></div>
+<div id="trade_operation_log" class="trade modal fade hide" tabindex="-1"></div>
+<div id="trade_confirm_receive" class="trade modal fade hide" tabindex="-1"></div>
+<div id="trade_logistic_memo" class="trade modal fade hide" tabindex="-1"></div>
+<div id="trade_logistic_waybill" class="trade modal fade hide" tabindex="-1"></div>
+<div id="trade_request_return" class="trade modal fade hide" tabindex="-1"></div>
+<div id="trade_confirm_return" class="trade modal fade hide" tabindex="-1"></div>
+<div id="trade_confirm_refund" class="trade modal fade hide" tabindex="-1"></div>
+<div id="trade_splited" class="trade modal fade hide" tabindex="-1" style="width: 890px; margin-left: -445px;"></div>
+<div id="trade_recover" class="trade modal fade hide" tabindex="-1"></div>
+<div id="trade_logistic_split" class="trade modal fade hide" tabindex="-1" style="width: 890px;margin-left: -445px;"></div>
+<div id="trade_manual_sms_or_email" class="trade modal fade hide" tabindex="-1"></div>
+
+<!-- deliver_bill modal -->
+<div id="deliver_bill_print_deliver_bill" class="delvier modal fade hide" tabindex="-1" style="width: 890px; margin-left: -445px;"></div>
+
+<!-- logistic_bill modal -->
+<div id="logistic_bill_print_logistic_bill" class="logistic_bill modal fade hide" tabindex="-1" style="width: 600px;"></div>
+<div id="logistic_bill_setup_logistic" class="logistic_bill modal fade hide" tabindex="-1"></div>
+
+<div id="print_delivers" class="delvier modal fade hide" tabindex="-1" style="width: 890px;margin-left: -445px;">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal">&times;</button>
     <h3>批量打印</h3>

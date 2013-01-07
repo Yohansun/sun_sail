@@ -16,6 +16,7 @@ json.array!(@trades) do |json, trade|
   json.buyer_message trade.buyer_message
   json.buyer_nick trade.buyer_nick
   json.seller_memo trade.seller_memo
+  json.has_split_deliver_bill trade.has_split_deliver_bill
   json.trade_source trade.trade_source
   json.created trade.created.strftime("%m-%d %H:%M") if trade.created
   json.created_timestamp trade.created.to_i if trade.created

@@ -172,7 +172,7 @@ function printfeedbacksize(str){ // 如果页面端需要知道 flash 当前的�
 
 function startPrint() {
   dd = getElement('logistic_print')
-  dd.startPrint(); //调用Flash 的打印命令 
+  dd.startPrint(); //调用Flash 的打印命令
   MagicOrders.hasPrint = true
 }
 
@@ -187,7 +187,7 @@ function bind_deliver_swf (id) {
 
 function bind_logistic_swf (id, xml) {
   var flashvars = {
-    'config': '/trades/print_deliver_bill.xml?ids='+ id,
+    'config': '/deliver_bills/print_deliver_bill.xml?ids='+ id,
     'ppHeight': '349',
     'ppWidth': '648',
     'template': 'default',
@@ -211,7 +211,7 @@ function bind_logistic_swf (id, xml) {
 
 function bind_swf(id, type, xml) {
   var flashvars = {
-    'config': '/trades/print_deliver_bill.xml?ids=' + id.toString(),
+    'config': '/deliver_bills/print_deliver_bill.xml?ids=' + id.toString(),
     'ppHeight': '349',
     'ppWidth': '648',
     'template': 'default',

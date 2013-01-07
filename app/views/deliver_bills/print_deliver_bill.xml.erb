@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <data>
-  <% @trades.each do |trade| %>
+  <% @bills.each do |bill| %>
+  <% trade = bill.trade %>
   <trade tid="<%= trade.tid %>" company="<%= TradeSetting.shopname %>" nameOfOrganization="<%= TradeSetting.shopname_taobao %>" 
-    num="<%= trade_item_count(trade) %>" phone="<%= trade.receiver_mobile %>" memo="<%= trade.cs_memo %>" 
+    num="<%= item_count(bill) %>" phone="<%= trade.receiver_mobile %>" memo="<%= trade.cs_memo %>" 
     copyright="Magic" receiver="<%= trade.receiver_name %>"
     address="<%= "#{trade.receiver_state} #{trade.receiver_city} #{trade.receiver_district} #{trade.receiver_address}" %>"
     address_xiangxi="" studiocamera="021-60956000转8128" kehu_receiver="<%= trade.receiver_name %>"
@@ -15,18 +16,8 @@
     addressee_xiangxi="<%= trade.receiver_address %>" jijian_date="<%= "#{Time.now.year} #{Time.now.month} #{Time.now.day}" %>"
     shoujian_date="">
 
-    <% trade.orders.each do |order| %>
-      <% order.bill_info.each do |info| %>
-      <%
-        color_cont = ''
-        if info[:colors].present?
-        info[:colors].each do |color, array|
-          color_cont += "#{array[0]}桶 #{color} #{array[1]}\r\n"
-        end
-        end
-      %>
-      <item code="<%= info[:storage_num] %>" num="<%= info[:number] * order.num %>" name="<%= info[:title] %>" color="&lt;font size='10'&gt;<%= color_cont %>&lt;/font&gt;" ></item>
-      <% end %>
+    <% bill.bill_products.each do |order| %>
+      <item code="<%= order.iid %>" num="<%= order.number %>" name="<%= order.title %>" color="&lt;font size='10'&gt;<%= order.color_info %>&lt;/font&gt;" ></item>
     <% end %>
   </trade>
   <% end %>

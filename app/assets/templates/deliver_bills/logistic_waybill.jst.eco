@@ -1,0 +1,27 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal">×</button>
+  <h3>输入物流单号</h3>
+</div><!-- modal-header -->
+<div class="modal-body">
+  <fieldset>
+    <table class="table table-bordered">
+      <tbody>
+        <tr>
+          <th>物流单号</th>
+        </tr>
+        <tr>
+          <td>
+            <div class="controls">
+              <input type="text" placeholder="请输入物流单号..." class="input-xlarge logistic_waybill" value="<%= @trade.get("logistic_waybill") %>">
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </fieldset>
+</div>
+
+<div class="modal-footer">
+  <a class="btn" data-dismiss="modal">取消</a>
+  <a class="btn btn-primary save">保存</a>
+</div><!-- modal-footer -->

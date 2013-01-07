@@ -6,10 +6,6 @@
   <fieldset>
     <table class="table table-bordered">
       <tbody>
-       <!--  <tr>
-          <th nowrap>订单编号</th>
-          <td><%= @trade.get("tid") %></td>
-        </tr> -->
         <tr>
           <th>商品</th>
           <th>色号</th>
@@ -25,11 +21,11 @@
                 <% if colors == undefined or colors == null : %>
                 <% colors = [] %>
                 <% end %>
-                <% if order.contents.length > 1 : %>
-                  <% for item in order.contents : %>
+                <% if order.bill_info.length > 1 : %>
+                  <% for item in order.bill_info : %>
                     <% for [0...item.number] : %>
                       <div class="controls">
-                        套装项目：<%= item.name %>
+                        套装项目：<%= item.title %>
                         <input type="text" data-provide="typeahead" placeholder="请输入色号..." class="color_typeahead input-xlarge color_num_<%= order.item_id %>_<%= count %>" value='<%= colors[i]%>'>
                       </div>
                       <% i = i + 1 %>
