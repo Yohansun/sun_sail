@@ -109,10 +109,13 @@
     $('.sure_id').text("确认结算"+ rs_month +"月份对账？");
   })
   $('.confirm_button').click(function(argument) {
-    $.get("/reconcile_statements/"+rs_id+"/audit", function(result){
+    $.ajax({
+      type: "PUT",
+      url: "/reconcile_statements/"+rs_id+"/audit"
+    }).done(function(result){
       $('#confirm_account').modal('hide');
       $("#rs_"+rs_id+" td:eq(5)").html("已结算");
-     });
+    })
   })
   $('.rs_row').click(function(argument) {
     rs_row = $(this).data('row');

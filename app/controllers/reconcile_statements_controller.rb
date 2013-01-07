@@ -22,8 +22,11 @@ class ReconcileStatementsController < ApplicationController
   end
 
   def audit
-    @rs.update_attribute(:audited, true)
-    head :ok
+    if @rs.update_attribute(:audited, true)
+      render :nothing => true, status: 200
+    else
+      render :nothing => true, status: 304
+    end
   end
 
   def exports
