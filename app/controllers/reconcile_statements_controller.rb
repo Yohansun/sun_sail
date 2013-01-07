@@ -9,7 +9,12 @@ class ReconcileStatementsController < ApplicationController
       # load data by filter params[:date]
       # load data by trade store
       # load data by trade store + filter params[:date]
-    @rs_set = []
+    if params[:date].present?
+      @rs_set = ReconcileStatement.by_date(params[:date])
+      unless @rs_set.present?
+        flash[:notice] = "当月还未生成"
+      end
+    end
   end
 
   def show
@@ -32,9 +37,14 @@ class ReconcileStatementsController < ApplicationController
       flash[:error] = "不正确的参数，数据导出失败"
     else
       # send file. eg: CSV or other formats.
+      @rs_data = ReconcileStatementDetail.by_ids(params[:selected_rs])
       flash[:notice] = "数据导出成功"
     end
-    redirect_to reconcile_statements_url
+
+    respond_to do |format|
+      format.xls  { redirect_to reconcile_statements_url unless @rsd.present? }
+      format.html { redirect_to reconcile_statements_url }
+    end
   end
 
   private

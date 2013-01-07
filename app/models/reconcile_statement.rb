@@ -16,4 +16,6 @@ class ReconcileStatement < ActiveRecord::Base
   include ActiveModel::ForbiddenAttributesProtection
   has_one :detail, class_name: "ReconcileStatementDetail"
 
+  scope :by_date, lambda { |date| where(["DATE_FORMAT(created_at, '%Y%m%d') = ? ", date.to_time(:local).utc.strftime('%Y%m%d')]) }
+
 end
