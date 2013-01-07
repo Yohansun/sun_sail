@@ -4,15 +4,16 @@ class TradeTaobaoPurchaseOrderDeliver
   sidekiq_options :queue => :taobao_purchase
   
   def perform(id)
-    source_id = trade.trade_source_id || TradeSetting.default_taobao_purchase_source_id
     trade = TaobaoPurchaseOrder.find(id)
+    source_id = trade.trade_source_id || TradeSetting.default_taobao_purchase_source_id
     response = TaobaoQuery.get({
-      :method => 'taobao.logistics.offline.send', :tid => trade.tid,
+      :method => 'taobao.logistics.offline.send', :tid => trade.deliver_id,
       :out_sid => trade.logistic_waybill,
       :company_code => trade.logistic_code}, source_id
      ) 
 
-    if  response['error_response'].blank?
+    errors = response['error_response']
+    if errors.blank?
       trade.update_attributes!(status: 'WAIT_BUYER_CONFIRM_GOODS')
       
       trade = TradeDecorator.decorate(trade)

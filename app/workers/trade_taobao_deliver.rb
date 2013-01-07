@@ -14,7 +14,8 @@ class TradeTaobaoDeliver
       company_code: trade.logistic_code}, source_id
     )
 
-    if response['error_response'].blank?
+    errors = response['error_response']
+    if errors.blank?
       trade.update_attributes!(status: 'WAIT_BUYER_CONFIRM_GOODS')
       
       trade = TradeDecorator.decorate(trade)
