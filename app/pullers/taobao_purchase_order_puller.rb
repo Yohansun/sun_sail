@@ -52,9 +52,13 @@ class TaobaoPurchaseOrderPuller
 
         trades.each do |trade|
           next if ($redis.sismember('TaobaoPurchaseOrderTids', trade['fenxiao_id']) || TaobaoPurchaseOrder.where(tid: trade['fenxiao_id']).exists?)
+        
+          deliver_id = trade['id']  
           trade.delete 'id'
           sub_orders = trade.delete('sub_purchase_orders')
           purchase_order = TaobaoPurchaseOrder.new(trade)
+          purchase_order.deliver_id = deliver_id
+          
           sub_orders = sub_orders['sub_purchase_order']
           
           unless sub_orders.is_a?(Array)
@@ -129,11 +133,13 @@ class TaobaoPurchaseOrderPuller
           trades.each do |trade|
             TaobaoPurchaseOrder.where(tid: trade['fenxiao_id']).each do |local_trade|
               next if trade['status'] == local_trade.status || (trade['status'] == "WAIT_SELLER_SEND_GOODS" && local_trade.delivered_at.present?)
+              
+              deliver_id = trade['id']  
               trade.delete 'id'
               sub_orders = trade.delete('sub_purchase_orders')
               local_trade.update_attributes trade
+              local_trade.update_attributes(deliver_id: deliver_id) 
               local_sub_orders = local_trade.taobao_sub_purchase_orders
-              
               sub_purchase_order = sub_orders['sub_purchase_order']
               
               unless sub_purchase_order.is_a?(Array)
