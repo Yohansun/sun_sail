@@ -19,8 +19,6 @@ class ReconcileStatement < ActiveRecord::Base
 
   scope :by_date, lambda { |date| where(["DATE_FORMAT(audit_time, '%Y%m%d') = ? ", date.to_time(:local).utc.strftime('%Y%m%d')]) }
 
-  def self.get_last_month
-  	ReconcileStatement.where("audit_time = ?", (Time.now - 1.month).beginning_of_month)
-  end
+  scope :recently_data, order("audit_time DESC")
 
 end

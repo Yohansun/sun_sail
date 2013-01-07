@@ -5,7 +5,7 @@ class ReconcileStatementsController < ApplicationController
 
   def index
     @trade_sources = TradeSource.all
-    @rs_set = ReconcileStatement.get_last_month
+    @rs_set = ReconcileStatement.recently_data.limit(1)
     if params[:date].present?
       @rs_set = ReconcileStatement.by_date(params[:date])
       unless @rs_set.present?
