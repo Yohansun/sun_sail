@@ -75,6 +75,7 @@
                 <% if current_user.has_role?(:admin) %>
                 <li><%= link_to '商品管理', products_path, class: "products" %></li>
                 <li><%= link_to '经销商管理', sellers_path %>
+                <li><%= link_to '财务管理', reconcile_statements_path %>
                 <li class= "divider"></li>
                 <li><a href="/users" class="users">系统设置</a></li>
                 <% end %>

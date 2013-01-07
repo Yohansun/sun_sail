@@ -25,6 +25,7 @@ FactoryGirl.define do
     trade_store_name '宝尊'
     balance_amount  1234569
     audited false
+    audit_time "2012-12-01 00:00:00".to_time(:local)
   end
 
   factory :reconcile_statement_detail do
@@ -33,5 +34,9 @@ FactoryGirl.define do
 
   factory :alipay_trade_history do
   end  
+
+  factory :trade_source do
+    name "淘宝商城"
+  end
 
 end

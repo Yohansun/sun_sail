@@ -4,11 +4,8 @@ class ReconcileStatementsController < ApplicationController
   before_filter :fetch_rs, only: [:show, :audit]
 
   def index
-    # TODO:
-      # load default data(eg. last month trade data)
-      # load data by filter params[:date]
-      # load data by trade store
-      # load data by trade store + filter params[:date]
+    @trade_sources = TradeSource.all
+    @rs_set = ReconcileStatement.get_last_month
     if params[:date].present?
       @rs_set = ReconcileStatement.by_date(params[:date])
       unless @rs_set.present?
@@ -18,25 +15,21 @@ class ReconcileStatementsController < ApplicationController
   end
 
   def show
-    # TODO:
-      # load details data by params[:id]
     @detail = @rs.detail
+    respond_to do |f|
+      f.js
+    end
   end
 
   def audit
-    # TODO:
-      # toggle the column [audited] of reconcile statement to ture/false
     @rs.update_attribute(:audited, true)
     head :ok
   end
 
   def exports
-    # TODO:
-      # export the data based on request reconcile statements(params[:selected_rs])
     if params[:selected_rs].blank?
       flash[:error] = "不正确的参数，数据导出失败"
     else
-      # send file. eg: CSV or other formats.
       @rs_data = ReconcileStatementDetail.by_ids(params[:selected_rs])
       flash[:notice] = "数据导出成功"
     end
