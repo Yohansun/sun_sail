@@ -40,9 +40,11 @@ ActiveRecord::Schema.define(:version => 20130107042609) do
   add_index "alipay_trade_histories", ["trade_type"], :name => "index_alipay_trade_histories_on_trade_type"
 
   create_table "alipay_trade_orders", :force => true do |t|
+    t.integer  "reconcile_statement_id"
     t.integer  "alipay_trade_history_id"
     t.string   "original_trade_sn"
     t.string   "trade_sn"
+    t.datetime "traded_at"
     t.datetime "created_at",              :null => false
     t.datetime "updated_at",              :null => false
   end
@@ -239,6 +241,7 @@ ActiveRecord::Schema.define(:version => 20130107042609) do
     t.boolean  "audited"
     t.datetime "created_at",         :null => false
     t.datetime "updated_at",         :null => false
+    t.datetime "audit_time"
   end
 
   add_index "reconcile_statements", ["created_at"], :name => "index_reconcile_statements_on_created_at"
