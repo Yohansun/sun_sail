@@ -51,14 +51,10 @@ class NipponOtherTradeReporter
       tid = trade.splitted? ? trade.splitted_tid : trade.tid
       trade_cs_memo = trade.cs_memo
       invoice_name = trade.invoice_name
+      post_fee = trade.post_fee
+      total_fee = trade.total_fee
       trade_orders.each do |order|
-        if current_user.has_role?(:seller) && trade._type == "TaobaoPurchaseOrder"
-          order_price = order.price
-        else
-          order_price = order.auction_price
-        end   
-        post_fee = trade.post_fee
-        total_fee = trade.total_fee
+        order_price = order.price
         order_title = order.title 
         order_num = order.num
         color_num = order.color_num 

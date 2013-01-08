@@ -3,7 +3,7 @@ class TaobaoPurchaseOrder < Trade
   include TaobaoProductsLockable
 
   field :tid, type: String,             as: :fenxiao_id
-  field :deliver_id, type: String,            
+  field :deliver_id, type: String            
   field :seller_memo, type: String,     as: :supplier_memo
   field :buyer_message, type:String,    as: :memo
   
@@ -42,6 +42,9 @@ class TaobaoPurchaseOrder < Trade
   field :total_fee, type: Float
   field :post_fee, type: Float
   field :distributor_payment, type: Float
+  #######################################
+  #REMEMBER TO UPDATE BUYER_PAYMENT TO FLOAT
+  field :buyer_payment, type: Float
   field :snapshot_url, type: String
   field :pay_time, type: DateTime
   field :consign_time, type: DateTime
@@ -125,4 +128,13 @@ class TaobaoPurchaseOrder < Trade
     cc_emails = super | (purchase_extra_cc || [])
     cc_emails.compact
   end  
+
+  def orders_total_fee
+    orders.inject(0) { |sum, order| sum + order.buyer_payment.to_f }
+  end 
+
+ def payment
+   orders_total_fee + post_fee
+ end 
+
 end

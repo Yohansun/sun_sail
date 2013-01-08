@@ -22,7 +22,7 @@ class NipponTaobaoTradeReporter
     bold = Spreadsheet::Format.new(:weight => :bold)
 
     row_number = 1
-    sheet1.row(1).concat ["订单来源", "订单编号", "当前状态", "下单时间", "付款时间", "分流时间", "发货时间", "送货经销商", "接口人", "买家地址-省", "买家地址-市", "买家地址-区", "买家地址", "买家姓名", "联系电话", "商品名", "数量", "商品标价", "实际单价", "卖家优惠", "单品总价", "商品总价（不含运费）", "运费", "订单总金额", "买家旺旺", "买家留言", "客服备注", "发票信息", "需要调色", "色号"]
+    sheet1.row(1).concat ["订单来源", "订单编号", "当前状态", "下单时间", "付款时间", "分流时间", "发货时间", "送货经销商", "接口人", "买家地址-省", "买家地址-市", "买家地址-区", "买家地址", "买家姓名", "联系电话", "商品名", "数量", "商品标价", "单品总价", "商品总价（不含运费）",  "卖家优惠", "运费", "订单总金额", "买家旺旺", "买家留言", "客服备注", "发票信息", "需要调色", "色号"]
      trades.each_with_index do |trade, trade_index|
       trade_orders = trade.orders
       trade_source = '淘宝'
@@ -47,17 +47,15 @@ class NipponTaobaoTradeReporter
       tid = trade.splitted? ? trade.splitted_tid : trade.tid
       trade_cs_memo = trade.cs_memo
       invoice_name = trade.invoice_name
-      sum_fee = trade.orders.inject(0) { |sum, order| sum + order.total_fee.to_f }
+      sum_fee = trade.total_fee
       post_fee = trade.post_fee
       total_fee = trade.payment
+      seller_discount = sum_fee + post_fee - total_fee
       trade_orders.each do |order|
         title = order.title 
         order_num = order.num
         color_num = order.color_num 
-        auction_price = order.price
-        order_total_fee = order.total_fee
-        order_discount_fee = order.discount_fee
-        price = (order_total_fee/order_num).to_f.round(2)
+        order_price = order.price
         cs_memo = "#{trade_cs_memo} #{order.cs_memo}"
         if order.color_num.present?
           color_num = order.color_num.join(",")
@@ -67,7 +65,7 @@ class NipponTaobaoTradeReporter
         need_color = has_color_info ? '是' : '否'
         row_number += 1
         sheet1.update_row row_number, trade_source, tid, taobao_status_memo, created, pay_time, dispatched_at, delivered_at, seller_name, interface_name, receiver_state, receiver_city, receiver_district, receiver_address, receiver_name, receiver_mobile, 
-        title, order_num, auction_price, price, order_discount_fee, order_total_fee, sum_fee, post_fee, total_fee, buyer_nick, buyer_message, cs_memo, invoice_name, need_color, color_num
+        title, order_num, order_price, sum_fee,  seller_discount, post_fee, total_fee, buyer_nick, buyer_message, cs_memo, invoice_name, need_color, color_num
         if trade_index.even?
           sheet1.row(row_number).default_format = yellow_format
         else

@@ -22,18 +22,14 @@ json.trade_source_name @trade.trade_source_name
 json.buyer_message @trade.buyer_message
 json.seller_memo @trade.seller_memo
 json.post_fee @trade.post_fee
-json.payment @trade.payment
 json.modify_payment @trade.modify_payment
 json.modify_payment_no @trade.modify_payment_no
 json.modify_payment_at @trade.modify_payment_at.strftime("%Y-%m-%d") if @trade.modify_payment_at
 json.modify_payment_memo @trade.modify_payment_memo
-
-unless TradeSetting.company == 'dulux' && (current_user.has_role?(:seller) || current_user.has_role?(:logistic))
-  json.seller_discount @trade.seller_discount
-  json.sum_fee @trade.sum_fee
-  json.point_fee @trade.point_fee
-  json.total_fee @trade.total_fee
-end
+json.seller_discount @trade.seller_discount
+json.sum_fee @trade.sum_fee
+json.point_fee @trade.point_fee
+json.total_fee @trade.total_fee
 
 json.created @trade.created.strftime("%m-%d %H:%M")
 json.pay_time @trade.pay_time.strftime("%m-%d %H:%M") if @trade.pay_time
@@ -82,22 +78,8 @@ json.orders OrderDecorator.decorate(@trade.orders) do |json, order|
   json.id order._id
   json.title order.title
   json.num order.num
-  unless TradeSetting.company == 'dulux' && current_user.has_role?(:seller)
-    if @trade._type == "TaobaoPurchaseOrder"
-      json.price order.auction_price
-      json.total_fee order.total_fee
-
-      unless current_user.has_role?(:seller)
-        json.buyer_price order.price
-      end
-    else
-      json.price order.price
-    end
-
-    json.auction_price order.auction_price
-    json.buyer_payment order.buyer_payment
-    json.distributor_payment order.distributor_payment
-  end
+  json.price order.price
+  
   json.item_id order.item_id
   json.sku_properties order.sku_properties
   json.item_outer_id order.item_outer_id

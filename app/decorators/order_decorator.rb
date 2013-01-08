@@ -23,39 +23,6 @@ class OrderDecorator < Draper::Base
 		end
 	end
 
-	def auction_price
-		case order._type
-		when 'TaobaoSubPurchaseOrder'
-			order.auction_price
-		when 'TaobaoOrder'
-			order.price
-		when 'JingdongOrder'
-			order.jd_price
-		end
-	end
-
-	def buyer_payment
-		case order._type
-		when 'TaobaoSubPurchaseOrder'
-			order.buyer_payment
-		when 'TaobaoOrder'
-			''
-		when 'JingdongOrder'
-			''
-		end
-	end
-
-	def distributor_payment
-		case order._type
-		when 'TaobaoSubPurchaseOrder'
-			order.distributor_payment
-		when 'TaobaoOrder'
-			''
-		when 'JingdongOrder'
-			''
-		end
-	end
-
 	def item_outer_id
 		case order._type
 		when 'TaobaoSubPurchaseOrder'
@@ -89,34 +56,15 @@ class OrderDecorator < Draper::Base
 		end
 	end
 
-	def total_fee
-		case order._type
-		when 'TaobaoSubPurchaseOrder'
-			order.buyer_payment
-		when 'TaobaoOrder'
-			order.total_fee
-		when 'JingdongOrder'
-			order.jd_price * order.item_total
-		end
-	end
-
-	def seller_total_fee
-	 case order._type
-	   when 'TaobaoSubPurchaseOrder'
-	    order.total_fee
-	   else
-	    self.total_fee
-	   end
-	end
-
 	def price
 		case order._type
 		when 'TaobaoSubPurchaseOrder'
+			order.auction_price
+	      when 'TaobaoOrder'
 			order.price
-		when 'TaobaoOrder'
-			(order.total_fee/order.num).to_f.round(2)
 		when 'JingdongOrder'
 			order.jd_price
 		end
 	end
+
 end
