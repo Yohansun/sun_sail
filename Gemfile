@@ -32,7 +32,7 @@ group :test, :development do
   gem "shoulda-matchers"
   gem 'webrat'
   gem "capybara"
-  # gem 'capybara-webkit'
+  gem 'capybara-webkit'
 
   gem 'capistrano'
   gem "capistrano-ext"

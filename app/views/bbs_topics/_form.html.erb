@@ -22,42 +22,27 @@
             <%- end %>
           </label>
         <%- end %>
-        <!-- <label class="radio inline">
-          <%=f.radio_button :bbs_category_id, "1", { :checked => true } %>
-          资料下载
-        </label>
-        <label class="radio inline">
-          <%=f.radio_button :bbs_category_id, "2" %>
-          最新新闻
-        </label>
-        <label class="radio inline">
-          <%=f.radio_button :bbs_category_id, "3" %>
-          使用规范
-        </label> --><!-- 
-        <label class="radio inline">
-          <%=f.radio_button :bbs_category_id, "4" %>
-          操作指南
-        </label> -->
       </div>
     </div>
     <div class="control-group">
       <label class="control-label" for="inputEmail">标题：</label>
       <div class="controls">
         <!-- <input type="text" class="input-xxlarge" /> -->
-        <%=f.text_field :title, :class => 'input-xxlarge', :placeholder=>"请输入文本..." %>
+        <%=f.text_field :title, :input_html => {:class => 'input-xxlarge'}, :placeholder=>"请输入标题...", :required=>"required" %>
       </div>
     </div>
     <div class="control-group">
       <label class="control-label" for="inputPassword">帖子内容：</label>
       <div class="controls">
-         <%=f.text_area :body, :class => 'input-xxlarge', :placeholder=>"请输入文本..." %>
+         <%=f.text_area :body, :class => 'input-xxlarge',  :placeholder=>"请输入文本...", :required=>"required" %>
          <!-- <textarea class="input-xxlarge" rows="13" ></textarea> -->
       </div>
     </div>
     <div class="control-group">
       <div class="controls">
         <!-- <input type="file" class="lineh20" /> -->
-        <%=f.file_field :uploadfile, :class => 'lineh20' %>
+        <div><%=f.file_field :uploadfile, :class => 'lineh20' %></div>
+        <a class='js-add_file' href="javascript:;">添加</a>
       </div>
       <!-- <div class="controls">
         <input class="test_file lineh20" type="file" value="" />
@@ -68,4 +53,29 @@
         <%= f.submit :class => 'btn btn-primary pull-right', :value => "提交"%>
       </div>
     </div>
+<% content_for :tail do -%>
+  <script type="text/javascript">
+    $(function(){
+      $('.js-add_file').click(function(){
+        $(this).prev().append('<div><input type="file" class="lineh20" /><a class="js-remove_file" href="javascript:;">删除</a></div>');
+      });
+      $('.js-remove_file').live('click',function(){
+        $(this).parent().remove()
+      });
+    });
+
+   $(function(){
+    if ($('.input-xxlarge').val() == '请输入标题....'){
+      alert('请输入标题!');
+      return false;
+    }else if($(.'input-xxlarge').val() == '请输入文本...'){
+      alert('请输入内容!');
+      return false;
+    }else{
+      return true;
+    }
+  });
+   </script>
+<% end %>
 <%- end %>
+  
