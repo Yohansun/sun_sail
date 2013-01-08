@@ -24,11 +24,11 @@
             <div class="offset1">
               <span class="pull-right mar_l10">
                 <%=link_to "编辑", edit_bbs_topic_path(topic), :class => 'btn-block'%>
-                <%- if topic.user.username == "admin" %>
+                <%- if current_user.has_role? (:admin) %>
                   <%=link_to "删除", bbs_topic_path(topic, category: "category"), method: :delete, confirm: 'delete it?', :class => 'btn-block'%>
                 <%- end %>
               </span>
-              <!-- <span class="pull-right lineh45">下载数：<span class="label label-important lead">30</span></span> -->
+              <span class="pull-right lineh45">下载数：<span class="label label-important lead"><%= topic.download_count %></span></span>
               <p><%=link_to topic.title, bbs_topic_path(topic) %></p>
               <p>由<%=topic.user.name %>于<%=topic.created_at.strftime('%Y-%m-%d %H:%M:%S') %>发表</p>
             </div>

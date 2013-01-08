@@ -6,7 +6,7 @@
     <div class="row-fluid bbs_reset">
       <div class="span10 pull-left well">
         <div class="alert alert-info">
-          <a href="#" class="pull-right"><img class="img-rounded" src="/assets/admin_photo/admin_photo1.jpg" /></a>
+          <%= render partial: 'bbs_topics/img', :locals => { :user => @topic.user }%>
           <h3 class="nomargin">
              <%=@topic.title %>
           </h3>

@@ -63,6 +63,9 @@ GEM
       rack-test (>= 0.5.4)
       selenium-webdriver (~> 2.0)
       xpath (~> 0.1.4)
+    capybara-webkit (0.13.0)
+      capybara (>= 1.0.0, < 1.2)
+      json
     carrierwave (0.6.2)
       activemodel (>= 3.2.0)
       activesupport (>= 3.2.0)
@@ -420,6 +423,7 @@ DEPENDENCIES
   capistrano
   capistrano-ext
   capybara
+  capybara-webkit
   carrierwave
   certified
   coffee-rails (~> 3.2.1)
