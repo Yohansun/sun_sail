@@ -524,7 +524,7 @@ class Trade
 
       # 异常订单(仅适用于没有京东订单的dulux)
       when 'unpaid_two_days'
-        trade_type_hash = {:created.lte => 2.days.ago, :pay_time.exists => false, :status.nin => closed_array}
+        trade_type_hash = {:created.lte => 2.days.ago, :pay_time.exists => false, status: "WAIT_BUYER_PAY"}
       when 'undispatched_one_day'
         trade_type_hash = {:pay_time.lte => 1.days.ago, :dispatched_at.exists => false, :seller_id.exists => false, :status.in => paid_not_deliver_array}
       when 'undelivered_two_days'
