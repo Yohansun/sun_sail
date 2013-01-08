@@ -33,7 +33,13 @@ FactoryGirl.define do
   end
 
   factory :alipay_trade_history do
-  end  
+  end
+
+  factory :alipay_trade_order do
+  end
+
+  factory :trade do
+  end
 
   factory :trade_source do
     name "淘宝商城"
