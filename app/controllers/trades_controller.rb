@@ -180,6 +180,22 @@ class TradesController < ApplicationController
       @trade.deliver_bill_printed_at = Time.now
     end
 
+    if params[:modify_payment]
+      @trade.modify_payment = params[:modify_payment]
+    end
+
+    if params[:modify_payment_at]
+      @trade.modify_payment_at = params[:modify_payment_at]
+    end
+
+    if params[:modify_payment_memo]
+      @trade.modify_payment_memo = params[:modify_payment_memo]
+    end
+
+    if params[:modify_payment_no]
+      @trade.modify_payment_no = params[:modify_payment_no]
+    end
+
     unless params[:orders].blank?
       params[:orders].each do |item|
         order = @trade.orders.find item[:id]
