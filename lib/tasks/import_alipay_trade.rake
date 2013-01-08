@@ -48,11 +48,26 @@ task :import_alipay_trade => :environment do
   orders = AlipayTradeOrder.where(["reconcile_statement_id = ?", rs.id])
   tids   = orders.map(&:trade_sn)
   trades = Trade.in(tid: tids)
-  rs_detail.alipay_revenue = rs_detail.postfee_revenue = 0
+  # rs_detail.alipay_revenue = rs_detail.postfee_revenue = 0
   trades.each do |trade|
     rs_detail.alipay_revenue  += trade.total_fee
     rs_detail.postfee_revenue += trade.post_fee
+    rs_detail.trade_success_refund += -(trade.modify_payment) if trade.modify_payment < 0
   end
+  rs_detail.sell_refund = rs_detail.alipay_revenue - rs_detail.postfee_revenue - trade_success_refund
+
+  # TODO: changs the precent data from store settings to instead of the fixed value
+  rs_detail.base_service_fee = rs_detail.sell_refund * 5%
+  rs_detail.store_service_award = rs_detail.sell_refund * 5%
+  rs_detail.staff_award = rs_detail.sell_refund * 5%
+  rs_detail.taobao_cost = rs_detail.alipay_revenue * 5%
+
+  rs_detail.audit_cost = rs_detail.sell_refund - rs_detail.base_service_fee - rs_detail.store_service_award - rs_detail.staff_award
+  # TODO: how to calculation?
+  rs_detail.collecting_postfee = 0
+  rs_detail.audit_amount = rs_detail.audit_cost - rs_detail.collecting_postfee
+
+
   rs_detail.save
   puts '--- finished ---'
 end
