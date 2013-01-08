@@ -219,10 +219,6 @@ class SalesController < ApplicationController
   end
 
   def product_analysis
-    render "/sales/product_analysis"
-  end
-
-  def real_product_analysis
     @start_date = params[:start_date] if params[:start_date].present?
     @end_date = params[:end_date] if params[:end_date].present?
     @start_time = params[:start_time] if params[:start_time].present?
@@ -242,14 +238,10 @@ class SalesController < ApplicationController
     if @trades && @old_trades
       @product_data = product_data(@trades, @old_trades)
     end
-    render "/sales/real_product_analysis"
+    render "/sales/product_analysis"
   end
 
   def area_analysis
-    render "/sales/area_analysis"
-  end
-
-  def real_area_analysis
     @start_date = params[:start_date] if params[:start_date].present?
     @end_date = params[:end_date] if params[:end_date].present?
     @start_time = params[:start_time] if params[:start_time].present?
@@ -263,14 +255,10 @@ class SalesController < ApplicationController
       end_at = Time.now
     end
     @area_data = area_data(start_at, end_at)
-    render "/sales/real_area_analysis"
+    render "/sales/area_analysis"
   end
 
   def price_analysis
-    render "/sales/price_analysis"
-  end
-
-  def real_price_analysis
     @start_date = params[:start_date] if params[:start_date].present?
     @end_date = params[:end_date] if params[:end_date].present?
     @start_time = params[:start_time] if params[:start_time].present?
@@ -283,14 +271,10 @@ class SalesController < ApplicationController
       end_at = Time.now
     end
     @price_data = price_data(start_at, end_at)
-    render "/sales/real_price_analysis"
+    render "/sales/price_analysis"
   end
 
   def time_analysis
-    render "/sales/time_analysis"
-  end
-
-  def real_time_analysis
     @start_date = params[:start_date] if params[:start_date].present?
     @end_date = params[:end_date] if params[:end_date].present?
     @start_time = params[:start_time] if params[:start_time].present?
@@ -307,11 +291,8 @@ class SalesController < ApplicationController
 
   def customer_analysis
   end
-  
+
   def frequency_analysis
-    render "/sales/frequency_analysis"
-  end
-  def real_frequency_analysis
     @start_date = params[:start_date] if params[:start_date].present?
     @end_date = params[:end_date] if params[:end_date].present?
     @start_time = params[:start_time] if params[:start_time].present?
@@ -320,18 +301,14 @@ class SalesController < ApplicationController
       start_at = "#{@start_date} #{@start_time}".to_time(:local)
       end_at = "#{@end_date} #{@end_time}".to_time(:local)
     else
-      start_at = 1.month.ago
+      start_at = 1.week.ago
       end_at = Time.now
     end
     @frequency_data = frequency_data(start_at, end_at)
-    render "/sales/real_frequency_analysis"
+    render "/sales/frequency_analysis"
   end
 
   def univalent_analysis
-    render "/sales/univalent_analysis"
-  end
-
-  def real_univalent_analysis
     @start_date = params[:start_date] if params[:start_date].present?
     @end_date = params[:end_date] if params[:end_date].present?
     @start_time = params[:start_time] if params[:start_time].present?
@@ -340,11 +317,11 @@ class SalesController < ApplicationController
       start_at = "#{@start_date} #{@start_time}".to_time(:local)
       end_at = "#{@end_date} #{@end_time}".to_time(:local)
     else
-      start_at = 1.month.ago
+      start_at = 1.week.ago
       end_at = Time.now
     end
     @univalent_data = univalent_data(start_at, end_at)
-    render "/sales/real_univalent_analysis"
+    render "/sales/univalent_analysis"
   end
 
 end
