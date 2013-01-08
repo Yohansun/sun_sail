@@ -3,7 +3,7 @@ class TaobaoPurchaseOrder < Trade
   include TaobaoProductsLockable
 
   field :tid, type: String,             as: :fenxiao_id
-  field :deliver_id, type: String,            
+  field :deliver_id, type: String
   field :seller_memo, type: String,     as: :supplier_memo
   field :buyer_message, type:String,    as: :memo
   

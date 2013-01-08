@@ -13,7 +13,7 @@ describe ReconcileStatementsController do
     end
     context 'by default loading' do
       before {
-        create(:reconcile_statement)
+        create(:reconcile_statement, audit_time: Time.now)
         create(:trade_source)
         get :index
       }
@@ -85,10 +85,8 @@ describe ReconcileStatementsController do
 
     context 'exports the data by params' do
       before do
-        3.times {
-          rs = create(:reconcile_statement)
-          create(:reconcile_statement_detail, reconcile_statement: rs)
-        }
+        rs = create(:reconcile_statement, audit_time: Time.now)
+        create(:reconcile_statement_detail, reconcile_statement: rs)
         get :exports, format: :xls, selected_rs: ReconcileStatement.all.map(&:id)
       end
       it { assigns(:rs_data).should_not be_empty }

@@ -26,4 +26,6 @@ class ReconcileStatementDetail < ActiveRecord::Base
   belongs_to :reconcile_statement
 
   scope :by_ids, lambda { |rs_ids| where(["reconcile_statement_id in (?)", rs_ids]) }
+
+  validates :reconcile_statement_id, uniqueness: true
 end

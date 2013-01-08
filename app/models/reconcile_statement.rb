@@ -21,4 +21,5 @@ class ReconcileStatement < ActiveRecord::Base
 
   scope :recently_data, order("audit_time DESC")
 
+  validates :audit_time, uniqueness: true
 end
