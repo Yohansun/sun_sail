@@ -26,4 +26,9 @@ class ReconcileStatementDetail < ActiveRecord::Base
   belongs_to :reconcile_statement
 
   scope :by_ids, lambda { |rs_ids| where(["reconcile_statement_id in (?)", rs_ids]) }
+
+  def select_trades(page)
+  	trade_tids = AlipayTradeOrder.where(reconcile_statement_id: self.reconcile_statement_id).map(&:trade_sn)
+  	trades = Trade.in(tid: trade_tids).page(page)
+  end
 end
