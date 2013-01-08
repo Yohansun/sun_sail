@@ -35,8 +35,7 @@ json.array!(@trades) do |json, trade|
   json.invoice_name trade.invoice_name
   json.invoice_content trade.invoice_content
   json.invoice_date trade.invoice_date.strftime("%Y-%m-%d") if trade.invoice_date
-  json.invoice_value trade.payment
-  json.payment trade.payment
+  json.invoice_value trade.total_fee
 
   json.point_fee trade.point_fee
   json.total_fee trade.total_fee

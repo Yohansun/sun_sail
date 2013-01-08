@@ -197,6 +197,8 @@ GEM
       i18n (>= 0.4.0)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
+    mails_viewer (0.0.3)
+      rails (>= 3.1.0)
     map_by_method (0.8.3)
     metaclass (0.0.1)
     method_source (0.8.1)
@@ -283,6 +285,8 @@ GEM
       thor (>= 0.14.6, < 2.0)
     rake (0.9.2.2)
     rb-fsevent (0.9.2)
+    rb-inotify (0.8.8)
+      ffi (>= 0.5.0)
     rdoc (3.12)
       json (~> 1.4)
     redis (3.0.1)
@@ -453,6 +457,7 @@ DEPENDENCIES
   kiqstand
   less-rails
   letter_opener
+  mails_viewer
   map_by_method
   mini_magick
   mongoid (= 3.0.13)
@@ -466,6 +471,7 @@ DEPENDENCIES
   rails (>= 3.2.3)
   rails-settings-cached
   rb-fsevent (~> 0.9.1)
+  rb-inotify (~> 0.8.8)
   redis-namespace
   rest-client
   rolify

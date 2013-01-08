@@ -51,6 +51,15 @@ class JingdongTrade < Trade
     return self[:invoice_name]
   end
 
+  def post_fee
+    freight_price.blank?  ?  0  :  freight_price
+  end 
+
+  def total_fee
+    order_seller_price.to_f + post_fee.to_f - seller_discount.to_f
+  end  
+
+
   def status=(status)
     case status
     when 'WAIT_BUYER_CONFIRM_GOODS'

@@ -10,12 +10,8 @@
       <th style="padding: 5px;background:#F2DEDE;ttext-align: center;border-right:1px dashed #FFFFFF;">调色信息</th>
       <% unless TradeSetting.company == "dulux"%>
       <th style="padding: 5px;background:#F2DEDE;ttext-align: center;border-right:1px dashed #FFFFFF;">标价</th>
-      <th style="padding: 5px;background:#F2DEDE;ttext-align: center;border-right:1px dashed #FFFFFF;">实际单价</th>
       <% end %>
       <th style="padding: 5px;background:#F2DEDE;ttext-align: center;border-right:1px dashed #FFFFFF;">数量</th>
-      <% unless TradeSetting.company == "dulux"%>
-      <th style="padding: 5px;background:#F2DEDE;ttext-align: center;border-right:1px dashed #FFFFFF;">商品总价</th>
-      <% end %>
     </tr>
     <%- @trade.orders.each do |object| %>
       <%- order = OrderDecorator.decorate(object) %>
@@ -32,15 +28,11 @@
         </td>
 
         <% unless TradeSetting.company == "dulux"%>
-        <td style="border-right:1px dashed #F2DEDE;padding: 5px;text-align: center;"><span class="font-blueb">¥<%= order.auction_price %></span></td>
         <td style="border-right:1px dashed #F2DEDE;padding: 5px;text-align: center;"><span class="font-gray">¥<%= order.price %></span></td>
         <% end %>
 
         <td style="border-right:1px dashed #F2DEDE;padding: 5px;text-align: center;"><%= info[:number] * order.num %></td>
-
-        <% unless TradeSetting.company == "dulux"%>
-        <td style="border-right:1px dashed #F2DEDE;padding: 5px;text-align: center;"><%= order.total_fee %></td>
-        <% end %>
+        
       </tr>
       <% end %>
     <%- end %>

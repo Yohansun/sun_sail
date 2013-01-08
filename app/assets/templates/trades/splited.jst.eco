@@ -21,7 +21,7 @@
           <%= @trade.get("receiver_mobile_phone") %><br/>
           <%= @trade.get('receiver_state') + @trade.get('receiver_city') + @trade.get('receiver_district') + @trade.get('receiver_address') %>
         </td>
-        <td><%= @trade.get("payment") %></td>
+        <td><%= @trade.get("total_fee") %></td>
       </tr>
     </tbody>
   </table>

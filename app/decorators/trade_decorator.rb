@@ -157,48 +157,34 @@ class TradeDecorator < Draper::Base
   end
 
   def post_fee
-    case trade._type
-      when 'TaobaoPurchaseOrder'
-        trade.post_fee
-      when 'TaobaoTrade'
-        trade.post_fee
-      when 'JingdongTrade'
-        unless trade.freight_price.blank?
-          trade.freight_price
-        else
-          0
-        end
-    end
+      trade.post_fee
   end
 
+  #TaobaoPurchaseOrder doesn't have seller_disount
   def seller_discount
     case trade._type
       when 'TaobaoPurchaseOrder'
-        trade.total_fee - (self.payment - trade.post_fee)
+        0
       when 'TaobaoTrade'
-        self.sum_fee + self.post_fee - trade.payment
+        trade.total_fee + trade.post_fee - trade.payment
       when 'JingdongTrade'
-       trade.seller_discount
+        trade.seller_discount
     end
   end
 
-  def payment
+  def distributor_payment
     case trade._type
     when 'TaobaoPurchaseOrder'
       trade.distributor_payment
-    when 'TaobaoTrade'
-      trade.payment
-    when 'JingdongTrade'
-      trade.order_seller_price
     end
   end
 
   def total_fee
     case trade._type
     when 'TaobaoPurchaseOrder'
-      self.sum_fee.to_f + self.post_fee.to_f
+      trade.payment
     when 'TaobaoTrade'
-      self.payment
+      trade.payment
     when 'JingdongTrade'
       trade.order_seller_price
     end
@@ -213,40 +199,16 @@ class TradeDecorator < Draper::Base
     end
   end
 
-  def seller_total_fee
-    case trade._type
-    when 'TaobaoPurchaseOrder'
-      self.seller_sum_fee.to_f + self.post_fee.to_f
-    when 'TaobaoTrade'
-      self.sum_fee.to_f + self.post_fee.to_f
-    when 'JingdongTrade'
-      trade.order_seller_price
-    end
-  end
-
   #总价
   def sum_fee
-    case trade._type
-    when 'TaobaoPurchaseOrder'
-      fee = trade.orders.inject(0) { |sum, order| sum + OrderDecorator.decorate(order).total_fee.to_f }
-    when 'TaobaoTrade'
-      fee = trade.total_fee
-    else
-      fee = self.total_fee.to_f + self.seller_discount.to_f - self.post_fee.to_f
-    end
-    fee.round(2)
-  end
-
-  #经销商看到的总价
-  def seller_sum_fee
-    case trade._type
-    when 'TaobaoPurchaseOrder'
-      trade.orders.inject(0) { |sum, order| sum + OrderDecorator.decorate(order).seller_total_fee.to_f }
-    when 'TaobaoTrade'
-      trade.orders.inject(0) { |sum, order| sum + order.payment.to_f }
-    else
-      self.total_fee.to_f + self.seller_discount.to_f - self.post_fee.to_f
-    end
+     case trade._type
+     when 'TaobaoPurchaseOrder'
+       trade.orders_total_fee
+     when 'TaobaoTrade'
+       trade.total_fee
+    when 'JingdongTrade' 
+       trade.total_fee
+    end  
   end
 
   def buyer_message

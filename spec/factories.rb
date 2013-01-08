@@ -37,6 +37,27 @@ FactoryGirl.define do
 
   factory :trade_source do
     name "淘宝商城"
+  end 
+  
+  factory :trade do
+  end
+
+  factory :taobao_order do
+  end
+
+  factory :jingdong_order do
+  end
+
+  factory :taobao_sub_purchase_order do
+  end
+
+  factory :taobao_trade do
+  end
+
+  factory :jingdong_trade do
+  end
+
+  factory :taobao_purchase_order do
   end
 
 end
