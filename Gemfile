@@ -67,7 +67,7 @@ gem 'kaminari'
 gem 'rolify'
 gem 'backbone-on-rails'
 
-gem 'taobao_fu_reload', "~> 1.1.1"
+gem 'taobao_fu_reload', "~> 1.1.2"
 gem 'jingdong_fu'
 
 gem 'hz2py'

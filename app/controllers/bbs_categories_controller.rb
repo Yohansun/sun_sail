@@ -11,6 +11,5 @@ class BbsCategoriesController < ApplicationController
   def fetch_categories
     @categories = BbsCategory.all
   end
-  
 
 end

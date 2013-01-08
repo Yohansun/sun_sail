@@ -1,0 +1,176 @@
+<% content_for :tail do -%>  
+  <script type="text/javascript">
+
+    var option = 1
+
+    // $('a[data-toggle="tab"]').on('shown', function (e) {
+    //   var a = e.target.id // activated tab
+    //   if(a == 'success_rate_2'){
+    //     chart2()
+    //   }else if(a == 'success_rate_3'){
+    //     chart3()
+    //   }else if(a == 'success_rate_4'){
+    //     chart4()
+    //   }else if(a == 'success_rate_5'){
+    //     chart5()
+    //   };
+    // })
+
+    var chart;
+    var chartData = [];
+    <%- @members.each_with_index do |member, i| %>
+      chartData.push({service_staff_id: $("#member_<%= i+1 %> td:eq(0)").text(), 人数: $("#member_<%= i+1 %> td").eq(option).text()})
+    <%- end %>
+
+    // SERIAL CHART
+    chart = new AmCharts.AmSerialChart();
+
+    chart.dataProvider = chartData;
+    chart.marginTop = 45;
+    chart.categoryField = "service_staff_id";
+    chart.pathToImages = "/assets/amcharts_images/";
+    // listen for "dataUpdated" event (fired when chart is inited) and call zoomChart method when it happens
+    chart.addListener("dataUpdated", zoomChart);
+
+    // AXES
+    // category
+    var categoryAxis = chart.categoryAxis;
+
+    categoryAxis.dashLength = 2;
+    categoryAxis.gridAlpha = 0.15;
+    categoryAxis.axisColor = "#ff6600";
+    categoryAxis.startOnAxis = true;
+    //categoryAxis.labelRotation = 90;
+    // categoryAxis.gridCount = 90;
+    // categoryAxis.autoGridCount = false;
+    // categoryAxis.equalSpacing = true;
+
+    // first value axis (on the left)
+    var valueAxis1 = new AmCharts.ValueAxis();
+    valueAxis1.axisColor = "#ff6600";
+    valueAxis1.axisThickness = 1;
+    valueAxis1.gridAlpha = 0.15;
+    chart.addValueAxis(valueAxis1);
+
+    // second value axis (on the right)
+    var valueAxis2 = new AmCharts.ValueAxis();
+    valueAxis2.position = "right"; // this line makes the axis to appear on the right
+    valueAxis2.axisColor = "#FCD202";
+    valueAxis2.axisThickness = 1;
+    valueAxis2.gridAlpha = 0.15;
+    valueAxis2.axisThickness = 1;
+    chart.addValueAxis(valueAxis2);/**/
+
+    // GRAPHS
+    // first graph
+    var graph1 = new AmCharts.AmGraph();
+    graph1.valueAxis = valueAxis1; // we have to indicate which value axis should be used
+    graph1.title = "人数";
+    graph1.valueField = "人数";
+    graph1.bullet = "round";
+    graph1.hideBulletsCount = 30;
+    chart.addGraph(graph1);
+
+    var graph2 = new AmCharts.AmGraph();
+    graph2.valueAxis = valueAxis2; // we have to indicate which value axis should be used
+    graph2.title = "金额";
+    graph2.valueField = "金额";
+    graph2.bullet = "square";
+    graph2.hideBulletsCount = 30;
+    chart.addGraph(graph2);
+
+
+    //Scrollbar
+    var chartScrollbar = new AmCharts.ChartScrollbar();
+    chart.addChartScrollbar(chartScrollbar);
+
+    // CURSOR
+    var chartCursor = new AmCharts.ChartCursor();
+    chartCursor.cursorPosition = "mouse";
+    chart.addChartCursor(chartCursor);
+
+    // LEGEND
+    var legend = new AmCharts.AmLegend();
+    legend.marginLeft = 110;
+    chart.addLegend(legend);
+
+    // WRITE
+    if(chartData == ""){
+      $('#chartdiv h4').replaceWith("<h4>无可显示的数据</h4>");
+      $('.chart_table').hide();
+      $('.chart_radio').hide();
+    } else {
+      chart.write("chartdiv");
+    };
+
+    $(".chart_opts input").click(function(){
+      option = $(this).val();
+      switch(option) {
+        case 'daily_reply_count':
+        case 'daily_inquired_count_2':
+        case 'daily_paid_count_2':
+          option = 1;
+          break;
+        case 'daily_inquired_count':
+        case 'tomorrow_lost_count':
+        case 'daily_quiet_paid_count':
+          option = 2;
+          break;
+        case 'yesterday_created_count':
+        case 'daily_created_count':
+        case 'yesterday_lost_count':
+        case 'daily_others_paid_count':
+          option = 3;
+          break;
+        case 'daily_paid_count':
+        case 'daily_created_payment':
+        case 'yesterday_lost_payment':
+        case 'daily_self_paid_count':
+          option = 4;
+          break;
+        case 'yesterday_created_payment':
+        case 'tomorrow_created_count':
+        case 'yesterday_paid_count':
+        case 'daily_paid_payment_2':
+          option = 5;
+          break;
+        case 'daily_paid_payment':
+        case 'tomorrow_created_payment':
+        case 'yesterday_paid_payment':
+        case 'daily_quiet_paid_payment':
+          option = 6;
+          break;
+        case 'payment_percentage':
+        case 'success_ratio':
+        case 'yesterday_final_paid_count':
+        case 'daily_others_paid_payment':
+          option = 7;
+          break;
+        case 'yesterday_final_paid_payment':
+        case 'daily_self_paid_payment':
+          option = 8;
+          break;
+        default:
+          option = 9;
+      }
+      changeData = [];
+      <%- @members.each_with_index do |member, i| %>
+      changeData.push({service_staff_id: $("#member_<%= i+1 %> td:eq(0)").html(), 人数: $("#member_<%= i+1 %> td").eq(option).html().replace("%",'') });
+      <%- end %>
+      if(changeData == []){
+        $('#chartdiv').html("<h4>无可显示的数据<h4>");
+        $('.chart_table').hide();
+        $('.chart_radio').hide();
+      }else{
+        chart.dataProvider = changeData;
+        chart.validateData();
+      };
+    });
+
+    function zoomChart() {
+      // different zoom methods can be used - zoomToIndexes, zoomToDates, zoomToCategoryValues
+      // chart.zoomToDates(new Date(2012, 9, 25, 0), new Date(2012, 9, 25, 2));
+      chart.zoomOut();
+    }
+  </script>
+<% end %>

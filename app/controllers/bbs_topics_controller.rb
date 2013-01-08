@@ -54,8 +54,7 @@ class BbsTopicsController < ApplicationController
   end
 
   def show
-    BbsTopic.increment_counter(:read_count, @topic.id)
-    # @attachements = @topic.attachements
+    @count = @topic.read_count + 1
   end
 
   def download

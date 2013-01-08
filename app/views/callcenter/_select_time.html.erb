@@ -1,0 +1,48 @@
+<ul class="breadcrumb" style="position:relative;">
+  <li><a href="#">Magic</a><span class="divider">/</span></li>
+  <li><a href="#">客服管理</a><span class="divider">/</span></li>
+  <li><a href="#">客服对比</a><span class="divider">/</span></li>
+  <li class="active">绩效对比</li>
+  <li style="position:absolute;right:15px;top:6px;"><i class="icon-cog"></i><a class="btn_alert" href="/callcenter/settings">系统设定</a></li>
+</ul><!-- breadcrumb -->
+
+
+<%- if controller_name == 'callcenter' %>
+<%- if action_name == 'contrastive_performance'%>
+<form action="/callcenter/contrastive_performance" class="well form-search">
+<%- elsif action_name == 'inquired_and_created'%>
+<form action="/callcenter/inquired_and_created" class="well form-search">
+<%- elsif action_name == 'created_and_paid'%>
+<form action="/callcenter/created_and_paid" class="well form-search">
+<%- elsif action_name == 'followed_paid'%>
+<form action="/callcenter/followed_paid" class="well form-search">
+<%- end %>
+  <fieldset class="form-inline">
+    <div class="controls">
+      <label class="control-label">开始时间：</label>
+      <input type="text" name="start_date" value="<%= (@start_date + 8.hours).strftime("%Y-%m-%d") if @start_date %>" class="input-small datepickers">
+      <label class="control-label">结束时间：</label>
+      <input type="text" name="end_date" value="<%= (@end_date + 8.hours).strftime("%Y-%m-%d") if @end_date %>" class="input-small datepickers">
+
+      <button type="submit" class="btn btn-info">过滤</button>
+      <%- if action_name == 'contrastive_performance'%>
+      <a href="/callcenter/contrastive_performance">昨天</a>
+      <a href="/callcenter/contrastive_performance?date_range=lastest_week">最近一周</a>
+      <a href="/callcenter/contrastive_performance?date_range=lastest_month">最近一月</a>
+      <%- elsif action_name == 'inquired_and_created'%>
+      <a href="/callcenter/inquired_and_created">昨天</a>
+      <a href="/callcenter/inquired_and_created?date_range=lastest_week">最近一周</a>
+      <a href="/callcenter/inquired_and_created?date_range=lastest_month">最近一月</a>
+      <%- elsif action_name == 'created_and_paid'%>
+      <a href="/callcenter/created_and_paid">昨天</a>
+      <a href="/callcenter/created_and_paid?date_range=lastest_week">最近一周</a>
+      <a href="/callcenter/created_and_paid?date_range=lastest_month">最近一月</a>
+      <%- elsif action_name == 'followed_paid'%>
+      <a href="/callcenter/followed_paid">昨天</a>
+      <a href="/callcenter/followed_paid?date_range=lastest_week">最近一周</a>
+      <a href="/callcenter/followed_paid?date_range=lastest_month">最近一月</a>
+      <%- end %>
+    </div>
+  </fieldset>
+</form>
+<%- end %>

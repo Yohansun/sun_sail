@@ -17,12 +17,17 @@
           </div>
         <% end %>
         
-        <% if current_user.has_role?(:cs) || current_user.has_role?(:seller)-%>
+        <% if current_user.has_role?(:seller)-%>
           <div>
             <a class="indexStart3" href="/trade_reports"><span>数据魔方</span></a>
           </div>
         <% end %>
-
+        
+        <% if current_user.has_role?(:cs) -%>
+          <div>
+            <a class="indexStart3" href="/sales"><span>数据魔方</span></a>
+          </div>
+        <% end %>
         <% if current_user.has_role?(:admin) -%>
           <div>
             <a class="indexStart3" href="/sales"><span>数据魔方</span></a>
@@ -35,6 +40,11 @@
           </div>
           <div>
             <a class="indexStart9" href="/reconcile_statements"><span>财务管理</span></a>
+          </div>
+        <% end %>
+        <% if TradeSetting.enable_module_wangwang == true %>
+          <div>
+            <a class="indexStart2" href="/callcenter/contrastive_performance"><span>客服管理</span></a>
           </div>
         <% end %>
       <% else -%>
