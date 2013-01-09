@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130107042609) do
+ActiveRecord::Schema.define(:version => 20130108112654) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -19,6 +19,40 @@ ActiveRecord::Schema.define(:version => 20130107042609) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
+
+  create_table "alipay_trade_histories", :force => true do |t|
+    t.string   "finance_trade_sn"
+    t.string   "business_trade_sn"
+    t.string   "merchant_trade_sn"
+    t.string   "product_name"
+    t.datetime "traded_at"
+    t.string   "account_info"
+    t.decimal  "revenue_amount",                   :precision => 10, :scale => 0
+    t.decimal  "outlay_amount",                    :precision => 10, :scale => 0
+    t.decimal  "balance_amount",                   :precision => 10, :scale => 0
+    t.string   "trade_source"
+    t.string   "trade_type"
+    t.string   "memo",              :limit => 500
+    t.datetime "created_at",                                                      :null => false
+    t.datetime "updated_at",                                                      :null => false
+  end
+
+  add_index "alipay_trade_histories", ["trade_type"], :name => "index_alipay_trade_histories_on_trade_type"
+
+  create_table "alipay_trade_orders", :force => true do |t|
+    t.integer  "reconcile_statement_id"
+    t.integer  "alipay_trade_history_id"
+    t.string   "original_trade_sn"
+    t.string   "trade_sn"
+    t.datetime "traded_at"
+    t.datetime "created_at",              :null => false
+    t.datetime "updated_at",              :null => false
+  end
+
+  add_index "alipay_trade_orders", ["alipay_trade_history_id"], :name => "index_alipay_trade_orders_on_alipay_trade_history_id"
+  add_index "alipay_trade_orders", ["original_trade_sn"], :name => "index_alipay_trade_orders_on_original_trade_sn"
+  add_index "alipay_trade_orders", ["reconcile_statement_id"], :name => "index_alipay_trade_orders_on_reconcile_statement_id"
+  add_index "alipay_trade_orders", ["trade_sn"], :name => "index_alipay_trade_orders_on_trade_sn"
 
   create_table "alipay_trade_histories", :force => true do |t|
     t.string   "finance_trade_sn"
@@ -399,6 +433,28 @@ ActiveRecord::Schema.define(:version => 20130107042609) do
     t.boolean  "high_pressure_valve", :default => false
   end
 
+<<<<<<< HEAD
+=======
+  create_table "uplaod_files", :force => true do |t|
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+    t.integer  "bbs_topic_id"
+    t.string   "file_file_name"
+    t.string   "file_content_type"
+    t.integer  "file_file_size"
+    t.datetime "file_updated_at"
+  end
+
+  create_table "upload_files", :force => true do |t|
+    t.string   "filedata_file_name"
+    t.string   "filedata_content_type"
+    t.integer  "filedata_file_size"
+    t.datetime "filedata_updated_at"
+    t.datetime "created_at",            :null => false
+    t.datetime "updated_at",            :null => false
+  end
+
+>>>>>>> 界面增加多个可分下载附件
   create_table "users", :force => true do |t|
     t.string   "username",                                              :null => false
     t.string   "name"

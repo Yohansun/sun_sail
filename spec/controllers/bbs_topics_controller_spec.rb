@@ -40,19 +40,35 @@ describe BbsTopicsController do
   describe "Create new topic" do
 
     it 'success' do
-      post :create, bbs_topic: { bbs_category_id: 1, title: 'rspec title', body: 'rspec body' }
+      post :create,  uploads: [] , bbs_topic: { bbs_category_id: 1, title: 'rspec title', body: 'rspec body' }
       assigns(:topic).should_not be_nil
-      # response.should redirect_to(bbs_category_url(:id => bbs_category_id))
+      response.should redirect_to(bbs_category_url(:id => 1))
     end
 
     it 'fail' do
-      post :create, bbs_topic: { bbs_category_id: 1, title: 'rspec title'}
+      post :create,  uploads: [] ,bbs_topic: { bbs_category_id: 1, title: 'rspec title'}
+      BbsTopic.any_instance.stub(:save).and_return(false)
       response.should render_template(:new)
       assigns(:topic).should have(1).errors_on(:body)
     end
 
   end
+ 
+   # describe "When create new topic" do
 
+   #    it 'if upload files ' do
+   #      post :create, bbs_topic: { bbs_category_id: 1, title: 'rspec title', body: 'rspec body' }
+   #      assigns(:topic).should_not be_nil
+   #      # response.should redirect_to(bbs_category_url(:id => bbs_category_id))
+   #    end
+
+   #    it 'fail' do
+   #      post :create, bbs_topic: { bbs_category_id: 1, title: 'rspec title'}
+   #      response.should render_template(:new)
+   #      assigns(:topic).should have(1).errors_on(:body)
+   #    end
+
+   #  end
 
   describe "GET edit" do
 
@@ -109,18 +125,18 @@ describe BbsTopicsController do
       before {
         controller.stub!(:render)
         controller.stub!(:send_file)
-        BbsTopic.any_instance.stub_chain(:uploadfile, :path).and_return("filepath")
-        get :download, id: @topic.id
+        UplaodFile.any_instance.stub(:find).with(1).and_return(true)
+        UplaodFile.any_instance.stub_chain(:file, :path).and_return("filepath")
+        get :download, id: @topic.id, fid: 1
       }
 
       it { @topic.reload.download_count.should == 1 }
-
     end
 
      context 'fail without upload file' do
       before {
-        BbsTopic.any_instance.stub(:uploadfile).and_return(false)
-        get :download, id: @topic.id
+        UplaodFile.should_receive(:find).with("1").and_return(false)
+        get :download, id: @topic.id, fid: 1
       }
 
       it { should respond_with 404 }
