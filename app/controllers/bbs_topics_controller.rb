@@ -54,13 +54,16 @@ class BbsTopicsController < ApplicationController
   end
 
   def show
-    @count = @topic.read_count + 1
+    BbsTopic.increment_counter(:read_count, @topic.id)
   end
 
   def download
-    # TODO: bind the attachments with request
-    BbsTopic.increment_counter(:download_count, @topic.id)
-    send_file @topic.uploadfile.path 
+    if @topic.uploadfile
+      BbsTopic.increment_counter(:download_count, @topic.id)
+      send_file @topic.uploadfile.path
+    else
+      render nothing: true, status: 404
+    end
   end
 
   def print
