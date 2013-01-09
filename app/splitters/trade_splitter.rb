@@ -1,6 +1,4 @@
 class TradeSplitter
-  include Dulux::Splitter
-
   attr_accessor :trade
 
   def initialize(trade)
@@ -8,37 +6,35 @@ class TradeSplitter
   end
 
   def split!
-    # 先获得 splitted_orders
-    @splitted_orders = splitted_orders
+    splitted_orders_container = []
+ 
+    splitted_orders_container = splitted_orders
 
-    if @splitted_orders.size == 1
-      # 无需拆单
-      return false
-    end
+    return false if splitted_orders_container.size == 1
+
+    new_trade_ids = []
 
     # 复制创建新 trade
     splitted_trades = []
-    @splitted_orders.each_with_index do |splitted_order, index|
-      new_trade = @trade.clone
+    splitted_orders_container.each_with_index do |splitted_order, index|
+      new_trade = trade.clone
       new_trade.orders = splitted_order[:orders]
-      new_trade.splitted_tid = "#{@trade.tid}-#{index+1}"
+      new_trade.splitted_tid = "#{trade.tid}-#{index+1}"
 
       # TODO 完善物流费用拆分逻辑
       new_trade.post_fee = splitted_order[:post_fee]
       new_trade.total_fee = splitted_order[:total_fee]
+      new_trade.payment = new_trade.orders.sum(:payment)
       new_trade.splitted = true
+
       new_trade.save
-
-      # 自动分流
-      # new_trade.auto_dispatch!
-
-      splitted_trades << new_trade
+      new_trade_ids << new_trade.id
     end
 
     # 删除旧 trade
-    @trade.delete
+    trade.delete
 
-    splitted_trades
+    new_trade_ids
   end
 
   def splitted_orders
