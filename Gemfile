@@ -33,7 +33,6 @@ group :test, :development do
   gem 'webrat'
   gem "capybara"
   gem 'capybara-webkit'
-  gem 'rb-inotify', '~> 0.8.8'
 
   gem 'capistrano'
   gem "capistrano-ext"
