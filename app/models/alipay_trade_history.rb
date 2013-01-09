@@ -24,4 +24,5 @@ class AlipayTradeHistory < ActiveRecord::Base
 
   scope :revenues, where("trade_type = '交易付款'")
 
+  validates :merchant_trade_sn, :uniqueness => {:scope => :business_trade_sn}
 end

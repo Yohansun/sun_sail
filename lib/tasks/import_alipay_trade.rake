@@ -14,15 +14,15 @@ task :import_alipay_trade => :environment do
       ath.finance_trade_sn = row[0]
       ath.business_trade_sn = row[1]
       ath.merchant_trade_sn = row[2]
-      ath.product_name = row[3].encode('UTF-8') if row[3]
+      ath.product_name = row[3]
       ath.traded_at = row[4]
-      ath.account_info = row[5].encode('UTF-8') if row[5]
+      ath.account_info = row[5]
       ath.revenue_amount = row[6]
       ath.outlay_amount = row[7]
       ath.balance_amount = row[8]
-      ath.trade_source = row[9].encode('UTF-8') if row[9]
-      ath.trade_type = row[10].encode('UTF-8') if row[10]
-      ath.memo = row[11].encode('UTF-8') if row[11]
+      ath.trade_source = row[9]
+      ath.trade_type = row[10]
+      ath.memo = row[11]
       ath.save
       puts '.'
     end
@@ -39,9 +39,33 @@ task :import_alipay_trade => :environment do
       reconcile_statement_id: rs.id,
       alipay_trade_history_id: trade.id,
       original_trade_sn: trade.merchant_trade_sn,
-      trade_sn: trade.merchant_trade_sn.split("P").last,
+      trade_sn: trade.merchant_trade_sn.split("P").last.gsub(/\t/, ''),
       traded_at: trade.traded_at)
   end
 
+  # rs.reload
+  rs_detail = rs.detail
+  orders = AlipayTradeOrder.where(["reconcile_statement_id = ?", rs.id])
+  tids   = orders.map(&:trade_sn)
+  trades = Trade.in(tid: tids)
+  trades.each do |trade|
+    rs_detail.alipay_revenue  += trade.total_fee
+    rs_detail.postfee_revenue += trade.post_fee
+    rs_detail.trade_success_refund += -(trade.modify_payment) if trade.try(:modify_payment) && trade.modify_payment < 0
+  end
+  rs_detail.sell_refund = rs_detail.alipay_revenue - rs_detail.postfee_revenue - rs_detail.trade_success_refund
+
+  # TODO: changs the precent data from store settings to instead of the fixed value
+  rs_detail.base_service_fee = rs_detail.sell_refund * 0.05
+  rs_detail.store_service_award = rs_detail.sell_refund * 0.05
+  rs_detail.staff_award = rs_detail.sell_refund * 0.05
+  rs_detail.taobao_cost = rs_detail.alipay_revenue * 0.05
+
+  rs_detail.audit_cost = rs_detail.sell_refund - rs_detail.base_service_fee - rs_detail.store_service_award - rs_detail.staff_award
+  # TODO: how to calculation?
+  rs_detail.collecting_postfee = 0
+  rs_detail.audit_amount = rs_detail.audit_cost - rs_detail.collecting_postfee
+
+  rs_detail.save
   puts '--- finished ---'
 end
