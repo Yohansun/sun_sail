@@ -5,6 +5,7 @@
     MagicOrders.role_key = "<%= current_user.roles.first.try(:name) %>";
     MagicOrders.company = "<%= TradeSetting.company %>"
     MagicOrders.user = "<%= current_user.name %>"
+    MagicOrders.current_user_seller_id = "<%= current_user.seller_id.to_i %>"
     MagicOrders.logistics = new MagicOrders.Collections.Logistics();
     MagicOrders.logistics.reset(<%= raw @logistics.to_json %>);
     MagicOrders.deliver_bill_notice_info = "<%= TradeSetting.deliver_bill_notice_info %>"

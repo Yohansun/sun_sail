@@ -6,11 +6,14 @@
           <a class="indexStart1" href="/app#trades"><span>订单管理</span></a>
         </div>
 
+        <% unless TradeSetting.company == 'nippon' and current_user.has_role?(:seller)%>
         <div>
           <%= link_to stock_path_by_user, class: 'indexStart4' do %>
             <span>仓库管理</span>
           <% end %>
         </div>
+        <% end %>
+
         <% if TradeSetting.enable_module_bbs %>
           <div>
             <a class="indexStart7" href="/bbs_topics"><span>互动中心</span></a>

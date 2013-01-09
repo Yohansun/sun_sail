@@ -96,6 +96,15 @@ class TradesController < ApplicationController
 
     if params[:delivered_at] == true
       @trade.delivered_at = Time.now
+      if params['logistic_info'] == '其他' and @trade.logistic_waybill.nil?
+        logistic = Logistic.find_by_name '其他'
+        if logistic
+          @trade.logistic_waybill = @trade.tid
+          @trade.logistic_name = logistic.name
+          @trade.logistic_code = logistic.code
+          @trade.logistic_id = logistic.id
+        end
+      end
     end
 
     if params[:setup_logistic] == true
