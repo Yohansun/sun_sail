@@ -13,7 +13,7 @@ describe ReconcileStatementsController do
     end
     context 'by default loading' do
       before {
-        create(:reconcile_statement)
+        create(:reconcile_statement, audit_time: Time.now)
         create(:trade_source)
         get :index
       }
@@ -56,7 +56,7 @@ describe ReconcileStatementsController do
 
   describe "PUT #audit" do
     before do
-      @rs = create(:reconcile_statement)
+      @rs = create(:reconcile_statement, audit_time: Time.now)
     end
 
     context 'success' do
@@ -77,9 +77,7 @@ describe ReconcileStatementsController do
 
   describe "POST #audits" do
     before do
-      3.times {
-        @rs = create(:reconcile_statement)
-     }
+      @rs = create(:reconcile_statement, audit_time: Time.now)
     end
 
     context 'audits the rs_ids by params' do
@@ -103,11 +101,9 @@ describe ReconcileStatementsController do
 
     context 'exports the data by params' do
       before do
-        3.times {
-          rs = create(:reconcile_statement)
-          create(:reconcile_statement_detail, reconcile_statement: rs)
-        }
-        get :exports, format: :xls, selected_rs: "1,2,3"
+        rs = create(:reconcile_statement, audit_time: Time.now)
+        create(:reconcile_statement_detail, reconcile_statement: rs)
+        get :exports, format: :xls, selected_rs: "1"
       end
       it { assigns(:rs_data).should_not be_present }
       it { should redirect_to(reconcile_statements_url) }
