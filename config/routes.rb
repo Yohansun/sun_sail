@@ -138,6 +138,7 @@ MagicOrders::Application.routes.draw do
   get "/deliver_bills/print_deliver_bill.:format", to: "deliver_bills#print_deliver_bill"
   get "/deliver_bills/:id/logistic_info", to: "deliver_bills#logistic_info"
   get "/deliver_bills/deliver_list", to: "deliver_bills#deliver_list"
+  get "/trades/deliver_list", to: "trades#deliver_list"
   get "/deliver_bills/setup_logistics", to: 'deliver_bills#setup_logistics'
   get "/trades/batch_deliver", to: 'trades#batch_deliver'
   get "/deliver_bills/batch-print-deliver", to: 'deliver_bills#batch_print_deliver'

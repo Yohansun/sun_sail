@@ -31,6 +31,8 @@ class TaobaoTradeSplitter
     sellers = nil
     op = Product.find_by_iid order.outer_iid
     return [] unless op
+    return [] if area.blank?
+
     color_num = order.color_num
     color_num.delete('')
     op_package = op.package_info

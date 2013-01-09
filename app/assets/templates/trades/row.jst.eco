@@ -205,7 +205,7 @@
   <%= @trade.get('receiver_address') %>
 </td>
 
-<% if MagicOrders.role_key != 'seller' : %>
+<% if MagicOrders.company == 'nippon' || (MagicOrders.company == 'dulux' and MagicOrders.role_key != 'seller') : %>
 <td data-col='buyer_message'>
   <% if @trade.get('buyer_message'): %>
   <a href="javascript:void(0)" rel="popover" data-content="<%= @trade.get 'buyer_message' %>" data-original-title="<b>买家留言</b>">
@@ -228,7 +228,7 @@
   <% end %>
 </td>
 
-<% if (MagicOrders.role_key == 'admin' || MagicOrders.role_key == 'cs') : %>
+<% if MagicOrders.company == 'nippon' || (MagicOrders.company == 'dulux' and (MagicOrders.role_key == 'admin' || MagicOrders.role_key == 'cs')) : %>
 <td data-col='gift_memo'>
   <% if @trade.get('gift_memo') : %>
   <a href="javascript:void(0)" rel="popover" data-content="<%= @trade.get 'gift_memo' %>" data-original-title="<b>赠品备注</b>"><i class="icon-gift_memo"></i></a>
@@ -253,9 +253,9 @@
 <td data-col='point_fee'>
   <%= @trade.get('point_fee') %>
 </td>
-<% if MagicOrders.role_key != 'seller' and MagicOrders.role_key != 'logistic' : %>
+<% if MagicOrders.company == 'nippon' || (MagicOrders.company == 'dulux' and MagicOrders.role_key != 'seller' and MagicOrders.role_key != 'logistic') : %>
 <td data-col='total_fee'>
-  ￥<%= @trade.get('payment') %>
+  ￥<%= @trade.get('total_fee') %>
 </td>
 <% end %>
 <!-- <td data-col='deliver_bill' ><!--发货单--</td> -->

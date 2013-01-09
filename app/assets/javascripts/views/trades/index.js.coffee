@@ -492,11 +492,11 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
       for trade in data
         html += '<tr>'
         html += '<td>' + trade.tid + '</td>'
-        html += '<td>' + trade.name + '</td>'
-        html += '<td>' + trade.address + '</td>'
-        html += '<td>' + trade.logistic_name + '</td>'
-        html += '<td>' + trade.logistic_waybill + '</td></tr>'
-        flag = false if trade.logistic_name == '' or trade.logistic_waybill == ''
+        html += "<td>#{trade.receiver_name}</td>"
+        html += "<td>#{trade.receiver_state + trade.receiver_city + trade.receiver_district + trade.receiver_address}</td>"
+        html += "<td>#{trade.logistic_name || ''}</td>"
+        html += "<td>#{trade.logistic_waybill || ''}</td></tr>"
+        flag = false if trade.logistic_name == null or trade.logistic_waybill == null
 
       $('.deliver_count').html(data.length)
       $('#batch_deliver tbody').html(html)
