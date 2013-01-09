@@ -14,7 +14,7 @@
     <div class="well">
       <dl class="unusual">
         <dt><span>系统自动预警</span></dt>
-        <dd><a href="/app#trades/unusual-unpaid_two_days">超过2天未付款订单<span>(<%= trades.where(:created.lte => 2.days.ago, :pay_time.exists => false, :status.nin => ["TRADE_CLOSED","TRADE_CANCELED","TRADE_CLOSED_BY_TAOBAO", "ALL_CLOSED"]).or({:has_buyer_message.ne => true}, {:buyer_message.ne => nil}).count %>)</span></a></dd>
+        <dd><a href="/app#trades/unusual-unpaid_two_days">超过2天未付款订单<span>(<%= trades.where(:created.lte => 2.days.ago, :pay_time.exists => false, status: "WAIT_BUYER_PAY").or({:has_buyer_message.ne => true}, {:buyer_message.ne => nil}).count %>)</span></a></dd>
         <dd><a href="/app#trades/unusual-undelivered_two_days">超过2天未发货订单<span>(<%= trades.where(:dispatched_at.lte => 2.days.ago, :consign_time.exists => false, :status.in => ["WAIT_SELLER_SEND_GOODS", "WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"]).or({:has_buyer_message.ne => true}, {:buyer_message.ne => nil}).count %>)</span></a></dd>
         <dd><a href="/app#trades/unusual-undispatched_one_day">超过1天未分流订单<span>(<%= trades.where(:pay_time.lte => 1.days.ago, :dispatched_at.exists => false, :seller_id.exists => false, :status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"]).or({:has_buyer_message.ne => true}, {:buyer_message.ne => nil}).count %>)</span></a></dd>
         <!-- <dd><a href="#">状态不同步订单<span>(10)</span></a></dd>
