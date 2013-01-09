@@ -93,7 +93,6 @@ describe BbsTopicsController do
     it 'should assign special topic with attached files' do
       get :show, id: @topic.id
       assigns(:topic).should_not be_nil
-      # assigns(:attachements).should_not be_true
     end
 
     it 'should increase the read count' do
@@ -106,13 +105,26 @@ describe BbsTopicsController do
 
   describe "GET download" do
 
-    it 'should increase the download count' do
-      expect {
+    context 'success' do
+      before {
         controller.stub!(:render)
+        controller.stub!(:send_file)
+        BbsTopic.any_instance.stub_chain(:uploadfile, :path).and_return("filepath")
         get :download, id: @topic.id
-      }.to change{ @topic.reload.download_count }.by(1)
+      }
+
+      it { @topic.reload.download_count.should == 1 }
+
     end
 
+     context 'fail without upload file' do
+      before {
+        BbsTopic.any_instance.stub(:uploadfile).and_return(false)
+        get :download, id: @topic.id
+      }
+
+      it { should respond_with 404 }
+    end
   end  
 
    describe "GET destroy" do
