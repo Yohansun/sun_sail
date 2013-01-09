@@ -10,18 +10,17 @@
     <tr>
       <td>支付宝收入</td>
       <td><%= detail.alipay_revenue %></td>
-      <!-- <td><%=link_to "查看明细", reconcile_statement_reconcile_statement_detail_path(detail) %></td> -->
-      <td><a href='/reconcile_statements/<%= detail.reconcile_statement_id %>/reconcile_statement_details/<%= detail.id %>?money_type=alipay_revenue'>查看明细</a></td>
+      <td><%=link_to "查看明细", reconcile_statement_reconcile_statement_detail_path(detail.reconcile_statement, detail, money_type: 'alipay_revenue') %></td>
     </tr>
     <tr>
       <td>运费收入</td>
       <td><%= detail.postfee_revenue %></td>
-      <td><a href='/reconcile_statements/<%= detail.reconcile_statement_id %>/reconcile_statement_details/<%= detail.id %>?money_type=postfee_revenue'>查看明细</a></td>
+      <td><%=link_to "查看明细", reconcile_statement_reconcile_statement_detail_path(detail.reconcile_statement, detail, money_type: 'postfee_revenue') %></td>
     </tr>
     <tr>
       <td>交易成功后退款</td>
       <td><%= detail.trade_success_refund %></td>
-      <td><a href='/reconcile_statements/<%= detail.reconcile_statement_id %>/reconcile_statement_details/<%= detail.id %>?money_type=trade_success_refund'>查看明细</a></td>
+      <td><%=link_to "查看明细", reconcile_statement_reconcile_statement_detail_path(detail.reconcile_statement, detail, money_type: 'trade_success_refund') %></td>
     </tr>
     <tr>
       <td>销售回款</td>
@@ -31,22 +30,22 @@
     <tr>
       <td><a href='#'>基础服务费</a></td>
       <td><%= detail.base_service_fee %></td>
-      <td><a href='/reconcile_statements/<%= detail.reconcile_statement_id %>/reconcile_statement_details/<%= detail.id %>?money_type=base_service_fee'>查看明细</a></td>
+      <td><%=link_to "查看明细", reconcile_statement_reconcile_statement_detail_path(detail.reconcile_statement, detail, money_type: 'base_service_fee') %></td>
     </tr>
     <tr>
       <td><a href='#'>店铺服务奖励</a></td>
       <td><%= detail.store_service_award %></td>
-      <td><a href='/reconcile_statements/<%= detail.reconcile_statement_id %>/reconcile_statement_details/<%= detail.id %>?money_type=store_service_award'>查看明细</a></td>
+      <td><%=link_to "查看明细", reconcile_statement_reconcile_statement_detail_path(detail.reconcile_statement, detail, money_type: 'store_service_award') %></td>
     </tr>
     <tr>
       <td><a href='#'>店员奖励</a></td>
       <td><%= detail.staff_award %></td>
-      <td><a href='/reconcile_statements/<%= detail.reconcile_statement_id %>/reconcile_statement_details/<%= detail.id %>?money_type=staff_award'>查看明细</a></td>
+      <td><%=link_to "查看明细", reconcile_statement_reconcile_statement_detail_path(detail.reconcile_statement, detail, money_type: 'staff_award') %></td>
     </tr>
     <tr>
       <td><a href='#'>淘宝费用</a></td>
       <td><%= detail.taobao_cost %></td>
-      <td><a href='/reconcile_statements/<%= detail.reconcile_statement_id %>/reconcile_statement_details/<%= detail.id %>?money_type=taobao_cost'>查看明细</a></td>
+      <td><%=link_to "查看明细", reconcile_statement_reconcile_statement_detail_path(detail.reconcile_statement, detail, money_type: 'taobao_cost') %></td>
     </tr>
     <tr>
       <td>结算成本</td>
@@ -56,7 +55,7 @@
     <tr>
       <td>代收运费</td>
       <td><%= detail.collecting_postfee %></td>
-      <td><a href='/reconcile_statements/<%= detail.reconcile_statement_id %>/reconcile_statement_details/<%= detail.id %>?money_type=collecting_postfee'>查看明细</a></td>
+      <td><%=link_to "查看明细", reconcile_statement_reconcile_statement_detail_path(detail.reconcile_statement, detail, money_type: 'collecting_postfee') %></td>
     </tr>
     <tr>
       <td>结算金额</td>
@@ -66,7 +65,7 @@
     <tr>
       <td>调整金额</td>
       <td><%= detail.adjust_amount %></td>
-      <td><a href='/reconcile_statements/<%= detail.reconcile_statement_id %>/reconcile_statement_details/<%= detail.id %>?money_type=adjust_amount'>查看明细</a></td>
+      <td><%=link_to "查看明细", reconcile_statement_reconcile_statement_detail_path(detail.reconcile_statement, detail, money_type: 'adjust_amount') %></td>
     </tr>
   </tbody>
 </table>
