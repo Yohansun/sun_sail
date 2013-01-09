@@ -22,7 +22,6 @@
 
 class ReconcileStatementDetail < ActiveRecord::Base
   attr_accessible :reconcile_statement_id, :alipay_revenue, :postfee_revenue, :trade_success_refund, :sell_refund, :base_service_fee, :store_service_award, :staff_award, :taobao_cost, :audit_cost, :collecting_postfee, :audit_amount, :adjust_amount
-  include ActiveModel::ForbiddenAttributesProtection
   belongs_to :reconcile_statement
 
   validates :reconcile_statement_id, uniqueness: true
