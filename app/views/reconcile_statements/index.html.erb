@@ -16,7 +16,7 @@
       <!-- <li style="position:absolute;right:15px;top:6px;"><a class="btn_alert" href="#">店铺维护</a></li> -->
     </ul><!-- breadcrumb -->
 
-    <form class="well form-search">
+    <%= form_tag reconcile_statements_path, :class=>"well form-search", :method => :get do %>
       <fieldset class="form-inline">
         <div class="controls">
           <label>店铺选择</label>
@@ -28,23 +28,22 @@
 
           <label class="control-label">选择时间：</label>
           <div class="input-append">
-            <input type="text" class="input-small datepickers">
-            <button type="button" class="btn btn-info">搜索</button>
+            <%=text_field_tag :date, params[:date] , :class=>"input-small datepickers"%>
+            <button type="submit" class="btn btn-info">搜索</button>
           </div>
         </div>
       </fieldset>
-    </form>
+    <% end %>
 
     <div class="btns">
-      <a href="javascript:;" class="btn btn-warning">导出数据</a>
-      <a data-toggle="modal" href="#confirm_account" class="btn btn-warning">确认结算</a>
+      <a href="javascript:;" class="btn btn-warning confirm_export">导出数据</a>
+      <a data-toggle="modal" href="#confirm_account1" class="btn btn-warning confirm_settlement_all">确认结算</a>
       <a href="javascript:;" class="btn btn-warning disabled">不可用确认结算</a>
     </div>
-
     <table class="table table-striped table-bordered td_colors table-hover mar_t">
       <thead>
         <tr>
-          <th><input type="checkbox"></th>
+          <th><input type="checkbox" id="checkbox" name="checkbox"></th>
           <th>月份</th>
           <th>店铺</th>
           <th></th>
@@ -56,7 +55,9 @@
       <tbody>
         <%@rs_set.each do |rs| %>
         <tr class="rs_row" id="rs_<%= rs.id %>" data-row="<%= rs.id %>">
-          <td><input type="checkbox"></td>
+          <td>
+            <input type="checkbox" id="audited_<%=rs.id%>" name="audited[]" value="<%=rs.id%>">
+          </td>
           <td><%= rs.audit_time.strftime("%Y-%m") %></td>
           <td><%= rs.trade_store_name %></td>
           <td><%= rs.trade_store_source %></td>
@@ -99,6 +100,21 @@
     <button class="btn btn-primary confirm_button" type="submit">确定</button>
   </div>
 </div><!-- confirm_account -->
+<div id="confirm_account1" class="modal hide fade" tabindex="-1">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h3>确定结算</h3>
+  </div><!-- modal-header -->
+  <div class="modal-body sure_id1">
+    <p>确认结算对账?</p>
+  </div>
+  <div class="modal-footer">
+    <%= form_tag audits_reconcile_statements_path, :method => :PUT, :onsubmit => 'return can_submit();' do %>
+    <input type="hidden" name="rs_ids" id="rs_ids">
+    <button class="btn btn-primary confirm_button1" type="submit">确定</button>
+    <% end %>
+  </div>
+</div><!-- confirm_account -->
 
 <%- content_for :tail do %>
 <script type = "text/javascript">
@@ -115,6 +131,7 @@
     }).done(function(result){
       $('#confirm_account').modal('hide');
       $("#rs_"+rs_id+" td:eq(5)").html("已结算");
+      $('#audited_'+ rs_id +'').attr("disabled","disabled");
     })
   })
   $('.rs_row').click(function(argument) {
@@ -122,5 +139,35 @@
     $.get("/reconcile_statements/"+rs_row+".js", function(result){
      });
   })
+
+  $('.confirm_settlement_all').click(function(argument) {
+    var chk_value =[];  
+    $("input[name='audited[]']:checked").each(function(){  
+      chk_value.push($(this).val());
+    });
+    $("#rs_ids").val(chk_value);
+  })
+
+  $('.confirm_export').click(function(argument) {
+    var chk_value =[];  
+    $("input[name='audited[]']:checked").each(function(){  
+      chk_value.push($(this).val());
+    });
+    window.location = "<%=exports_reconcile_statements_path%>.xls?selected_rs="+chk_value;
+  })
+
+  $("#checkbox").click(function() {
+     $("INPUT[type='checkbox']").attr('checked', $("#checkbox").is(':checked'));    
+  });
+
+
+  function can_submit () {
+    if ($('#rs_ids').val() == ''){
+      alert('请选择要结算的店铺!');
+      return false;
+    }else{
+      return true;
+    }
+  }
 </script>
 <%- end %>

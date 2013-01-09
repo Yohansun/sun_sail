@@ -75,6 +75,24 @@ describe ReconcileStatementsController do
     end
   end
 
+  describe "POST #audits" do
+    before do
+      3.times {
+        @rs = create(:reconcile_statement)
+     }
+    end
+
+    context 'audits the rs_ids by params' do
+      before { post :audits, rs_ids: @rs.id }
+      it { should redirect_to(reconcile_statements_url) }
+    end
+
+    context 'audits the rs_ids by params is null' do
+      before { post :audits, rs_ids: '' }
+      it { should redirect_to(reconcile_statements_url) }
+    end
+  end
+
   describe "GET #exports" do
 
     context 'when target params is blank' do
@@ -89,9 +107,9 @@ describe ReconcileStatementsController do
           rs = create(:reconcile_statement)
           create(:reconcile_statement_detail, reconcile_statement: rs)
         }
-        get :exports, format: :xls, selected_rs: ReconcileStatement.all.map(&:id)
+        get :exports, format: :xls, selected_rs: "1,2,3"
       end
-      it { assigns(:rs_data).should_not be_empty }
+      it { assigns(:rs_data).should_not be_present }
       it { should redirect_to(reconcile_statements_url) }
       it { flash[:notice].should_not be_blank }
     end

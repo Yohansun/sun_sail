@@ -29,16 +29,22 @@ class ReconcileStatementsController < ApplicationController
     end
   end
 
+  def audits
+    ReconcileStatement.update_all({:audited => true}, ["id in (?)", params[:rs_ids].split(',')]) if params[:rs_ids].present?
+    redirect_to reconcile_statements_url
+  end
+
   def exports
     if params[:selected_rs].blank?
       flash[:error] = "不正确的参数，数据导出失败"
     else
-      @rs_data = ReconcileStatementDetail.by_ids(params[:selected_rs])
+      ids = params[:selected_rs].to_a
+      @rs_data = ReconcileStatementDetail.by_ids(ids)
       flash[:notice] = "数据导出成功"
     end
 
     respond_to do |format|
-      format.xls  { redirect_to reconcile_statements_url unless @rsd.present? }
+      format.xls  { redirect_to reconcile_statements_url unless @rs_data.present? }
       format.html { redirect_to reconcile_statements_url }
     end
   end

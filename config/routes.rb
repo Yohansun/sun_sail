@@ -22,6 +22,7 @@ MagicOrders::Application.routes.draw do
     end
     collection do
       get :exports
+      put :audits
     end
     resources :reconcile_statement_details, only: [:show] do
     end
