@@ -41,7 +41,7 @@
     <div class="control-group">
       <div class="controls">
         <!-- <input type="file" class="lineh20" /> -->
-        <div><%=f.file_field :uploadfile, :class => 'lineh20' %></div>
+        <div><input type="file" name="uploads[]"/></div>
         <a class='js-add_file' href="javascript:;">添加</a>
       </div>
       <!-- <div class="controls">
@@ -50,14 +50,14 @@
     </div>
     <div class="control-group">
       <div class="controls input-xxlarge">
-        <%= f.submit :class => 'btn btn-primary pull-right', :value => "提交"%>
+        <%= f.submit :class => 'btn btn-primary pull-right', :disable_with => "提交中...",:value => "提交"%>
       </div>
     </div>
 <% content_for :tail do -%>
   <script type="text/javascript">
     $(function(){
       $('.js-add_file').click(function(){
-        $(this).prev().append('<div><input type="file" class="lineh20" /><a class="js-remove_file" href="javascript:;">删除</a></div>');
+        $(this).prev().append('<div><input type="file" name="uploads[]"/><a class="js-remove_file" href="javascript:;">删除</a></div>');
       });
       $('.js-remove_file').live('click',function(){
         $(this).parent().remove()
@@ -68,7 +68,7 @@
     if ($('.input-xxlarge').val() == '请输入标题....'){
       alert('请输入标题!');
       return false;
-    }else if($(.'input-xxlarge').val() == '请输入文本...'){
+    }else if($('.input-xxlarge').val() == '请输入文本...'){
       alert('请输入内容!');
       return false;
     }else{

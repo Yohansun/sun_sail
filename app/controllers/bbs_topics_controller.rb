@@ -10,14 +10,20 @@ class BbsTopicsController < ApplicationController
 
   def new
     @topic = BbsTopic.new
+    @topic.uplaod_files.build
+    @topic.uplaod_files.build
   end
 
   def create
     @topic = BbsTopic.new(topic_params)
     @topic.user_id = current_user.id
-    bbs_category_id = @topic.bbs_category_id
+    if params[:uploads].any?
+      params[:uploads].each do |uplaod_file|
+        @topic.uplaod_files << UplaodFile.new(file: uplaod_file)
+      end
+    end
     if @topic.save
-      redirect_to bbs_category_path(:id => bbs_category_id)
+      redirect_to bbs_category_path(:id => @topic.bbs_category_id)
     else
       render :new
     end
@@ -58,9 +64,10 @@ class BbsTopicsController < ApplicationController
   end
 
   def download
-    if @topic.uploadfile
+    target_file = UplaodFile.find(params[:fid])
+    if target_file
       BbsTopic.increment_counter(:download_count, @topic.id)
-      send_file @topic.uploadfile.path
+      send_file target_file.file.path
     else
       render nothing: true, status: 404
     end
@@ -81,7 +88,7 @@ class BbsTopicsController < ApplicationController
   end
 
   def topic_params
-    params.require(:bbs_topic).permit(:bbs_category_id, :title, :body, :uploadfile)
+    params.require(:bbs_topic).permit(:bbs_category_id, :title, :body, :uplaod_files)
   end
 
 
