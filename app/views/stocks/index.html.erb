@@ -276,7 +276,7 @@ var chartData = []
 
   AmCharts.ready(function () {
       console.log(chartData.length)
-      $('#chartdiv').height(chartData.length * 30)
+      $('#chartdiv').height(chartData.length * 30 +100)
       console.log($('#chartdiv').height())
         // SERIAL CHART
         chart = new AmCharts.AmSerialChart();
