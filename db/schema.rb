@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130108112654) do
+ActiveRecord::Schema.define(:version => 20130109073831) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -243,6 +243,7 @@ ActiveRecord::Schema.define(:version => 20130108112654) do
     t.datetime "created_at",         :null => false
     t.datetime "updated_at",         :null => false
     t.datetime "audit_time"
+    t.text     "exported"
   end
 
   add_index "reconcile_statements", ["created_at"], :name => "index_reconcile_statements_on_created_at"

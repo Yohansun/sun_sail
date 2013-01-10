@@ -7,6 +7,7 @@ describe ReconcileStatementsController do
     @current_user = create(:user)
     @current_user.add_role :admin
     sign_in(@current_user)
+    controller.stub(:check_module).and_return(true)
   end
 
   describe "GET #index" do
