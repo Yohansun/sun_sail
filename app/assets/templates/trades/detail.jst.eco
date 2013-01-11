@@ -19,7 +19,6 @@
   <div class="tab-content">
     <!-- tab1 -->
     <div class="tab-pane active" id="tab1">
-      <p>订单备注：<span class='js-trade-cs-memo-label'><%= @trade.get('cs_memo') %></span></p>
       <table class="table table-bordered table-condensed">
         <thead>
           <tr>
@@ -160,7 +159,7 @@
     <div class="tab-pane" id="tab2">
       <form class="">
         <div class="control-group">
-          <label class="control-label">订单备注：&nbsp;
+          <label class="control-label">客服备注：&nbsp;
             <input type="text" id="cs_memo_text" placeholder="输入文字..." class="input-xlarge" value="<%= @trade.get 'cs_memo' %>">
           </label>
         </div>
