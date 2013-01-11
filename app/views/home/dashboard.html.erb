@@ -45,9 +45,11 @@
           <div>
             <a class="indexStart8" href="/products"><span>商品管理</span></a>
           </div>
+          <% if TradeSetting.enable_module_reconcile_statements == true %>
           <div>
             <a class="indexStart9" href="/reconcile_statements"><span>财务管理</span></a>
           </div>
+          <% end %>
         <% end %>
         <% if TradeSetting.enable_module_wangwang == true %>
           <div>

@@ -2,6 +2,7 @@
 class ReconcileStatementsController < ApplicationController
   before_filter :authenticate_user!
   before_filter :fetch_rs, only: [:show, :audit]
+  before_filter :check_module
 
   def index
     @trade_sources = TradeSource.all
@@ -53,5 +54,10 @@ class ReconcileStatementsController < ApplicationController
 
   def fetch_rs
     @rs = ReconcileStatement.find(params[:id])
+  end
+
+  def check_module
+    redirect_to "/" if TradeSetting.enable_module_reconcile_statements != true
+    redirect_to "/" if !current_user.has_role?(:admin)
   end
 end
