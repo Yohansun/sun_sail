@@ -3,6 +3,7 @@ require 'spec_helper'
 describe ReconcileStatementDetailsController do
 	before do
       @current_user = create(:user)
+      @current_user.add_role :admin
       sign_in(@current_user)
     end
 
