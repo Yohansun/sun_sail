@@ -10,7 +10,7 @@
     MagicOrders.logistics.reset(<%= raw @logistics.to_json %>);
     MagicOrders.deliver_bill_notice_info = "<%= TradeSetting.deliver_bill_notice_info %>"
     MagicOrders.enable_trade_deliver_bill_spliting = <%= TradeSetting.enable_trade_deliver_bill_spliting == true %>
-    MagicOrders.enable_trade_deliver_bill_spliting_sellers = <%= TradeSetting.enable_trade_deliver_bill_spliting_sellers.to_i %>
+    MagicOrders.enable_trade_deliver_bill_spliting_sellers = <%= TradeSetting.enable_trade_deliver_bill_spliting_sellers || [] %>
   });
 </script>
 <% end -%>
