@@ -1,4 +1,4 @@
-source 'http://ruby.taobao.org'
+source 'https://rubygems.org/'
 
 gem 'rails', '>= 3.2.3'
 
@@ -47,7 +47,7 @@ group :test, :development do
   gem 'tinder'
   gem 'certified'
   gem "thin"
-  gem "letter_opener"  
+  gem "letter_opener"
 end
 
 gem 'strong_parameters'
@@ -94,7 +94,7 @@ gem 'httparty'
 #test mail
 gem "mails_viewer"
 
-gem "paperclip", "~> 2.4" 
+gem "paperclip", "~> 2.4"
 
 group :production do
   gem "exception_notification", "~> 2.6.1"
