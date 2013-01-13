@@ -212,20 +212,24 @@ class TradesController < ApplicationController
         if order.changed.include? 'cs_memo'
           notifer_seller_flag = true
         end
-        item[:color_num].each_with_index do |num, index|
-          if num.blank?
-            order.color_num[index] = nil
-            order.color_hexcode[index] = nil
-            order.color_name[index] = nil
-          else
-            order.color_num[index] = num
-            color = Color.find_by_num num
-            order.color_hexcode[index] = color.try(:hexcode)
-            order.color_name[index] = color.try(:name)
+        if item[:color_num]
+          item[:color_num].each_with_index do |num, index|
+            if num.blank?
+              order.color_num[index] = nil
+              order.color_hexcode[index] = nil
+              order.color_name[index] = nil
+            else
+              order.color_num[index] = num
+              color = Color.find_by_num num
+              order.color_hexcode[index] = color.try(:hexcode)
+              order.color_name[index] = color.try(:name)
+            end
           end
         end
-        item[:barcode].each_with_index do |code, index|
-          order.barcode[index] = code
+        if item[:barcode]
+          item[:barcode].each_with_index do |code, index|
+            order.barcode[index] = code
+          end
         end
       end
     end
