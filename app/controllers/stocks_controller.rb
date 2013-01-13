@@ -32,7 +32,7 @@ class StocksController < ApplicationController
   def home
     @enbaled_stocks_sellers =  Seller.where(has_stock: true)
     if params[:seller_name].present?
-      @enbaled_stocks_sellers = @enbaled_stocks_sellers.where(name: params[:seller_name])
+      @enbaled_stocks_sellers = @enbaled_stocks_sellers.where("sellers.name like ?", "%#{params[:seller_name].strip}%")
     end
     @enbaled_stocks_sellers = @enbaled_stocks_sellers.page params[:page]
   end

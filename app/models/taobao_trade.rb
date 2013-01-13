@@ -110,6 +110,7 @@ class TaobaoTrade < Trade
 
   def deliver!
     return unless self.deliverable?
+    update_attributes!(status: 'WAIT_BUYER_CONFIRM_GOODS')
     TradeTaobaoDeliver.perform_async(self.id)
   end
 

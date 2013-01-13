@@ -513,13 +513,13 @@ class Trade
     refund_array = ["TRADE_REFUNDING","WAIT_SELLER_AGREE","SELLER_REFUSE_BUYER","WAIT_BUYER_RETURN_GOODS","WAIT_SELLER_CONFIRM_GOODS","CLOSED", "SUCCESS"]
     succeed_array = ["TRADE_FINISHED","FINISHED_L"]
 
-    if current_user.has_role? "seller"
+    if current_user.has_role?(:seller) || current_user.has_role?(:interface)
       seller = current_user.seller
       self_and_descendants_ids = seller.self_and_descendants.map(&:id)
       trades = trades.any_in(seller_id: self_and_descendants_ids) if self_and_descendants_ids.present?
     end 
       
-    if current_user.has_role? 'logistic'
+    if current_user.has_role? :logistic
       logistic = current_user.logistic
       trades = trades.where(logistic_id: logistic.id) if logistic
     end

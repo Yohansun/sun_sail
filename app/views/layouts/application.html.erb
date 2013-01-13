@@ -38,7 +38,7 @@
             <li class="active trades" style="display:none"><a href="/app#trades">订单管理</a></li>
             <% if TradeSetting.company != 'dulux' %>
               <li class="trades" style="display:none"><a href="http://shop.nipponpaint.com.cn/admin/orders">官网订单</a></li>
-              <li class="trades" style="display:none"><a href="http://shop.nipponpaint.com.cn/admin/taobao_orders">淘宝订单</a></li>
+           <!--    <li class="trades" style="display:none"><a href="http://shop.nipponpaint.com.cn/admin/taobao_orders">淘宝订单</a></li> -->
             <% end %>
             <% if current_user.has_role?(:seller) && controller_name == 'stocks' %>
               <li class="stocks"><a href="#">仓库管理</a></li>

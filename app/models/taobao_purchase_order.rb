@@ -71,6 +71,7 @@ class TaobaoPurchaseOrder < Trade
 
   def deliver!
     return unless deliverable?
+    trade.update_attributes!(status: 'WAIT_BUYER_CONFIRM_GOODS')
     TradeTaobaoPurchaseOrderDeliver.perform_async(self.id)
   end
 
