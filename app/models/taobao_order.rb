@@ -12,7 +12,7 @@ class TaobaoOrder < Order
   field :sku_id, type: String
   field :num, type: Integer
   field :outer_sku_id, type: String
-  field :total_fee, type: Float
+  field :total_fee, type: Float, default: 0.0
   field :payment, type: Float
   field :discount_fee, type: Float
   field :adjust_fee, type: Float

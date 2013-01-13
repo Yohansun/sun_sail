@@ -56,7 +56,6 @@ class Product < ActiveRecord::Base
   validates_length_of :name, maximum: 100, message: "内容过长"
   validates_length_of :iid, :taobao_id, :storage_num, :price, maximum: 20, message: "内容过长"
   validates_length_of :technical_data, :description, maximum: 200, message: "内容过长"
-  validates_format_of :storage_num, with: /^[0-9A-Z-]+$/, message: "格式错误"
 
   def select_status
   	[['上架', "ON_SALE"], ['下架', "SOLD_OUT"]]

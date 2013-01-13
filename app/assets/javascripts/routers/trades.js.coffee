@@ -137,7 +137,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
                 process(data)
           })
         when 'deliver'
-          if MagicOrders.company == 'nippon' and !(parseInt(MagicOrders.current_user_seller_id) in MagicOrders.enable_trade_deliver_bill_spliting_sellers)
+          if MagicOrders.company == 'nippon' and !(model.get('seller_id') in MagicOrders.enable_trade_deliver_bill_spliting_sellers)
             $(modalDivID).find('.error').html()
             $('.deliver').show()
             if model.get('logistic_waybill')

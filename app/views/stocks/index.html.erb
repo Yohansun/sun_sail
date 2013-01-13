@@ -266,7 +266,6 @@
   }
 </script>
 <%- content_for :tail do %>
-<script src="js/amcharts/amcharts.js" type="text/javascript"></script>
 <script type="text/javascript">
 var chart;
 var chartData = []
@@ -275,13 +274,11 @@ var chartData = []
 
 
   AmCharts.ready(function () {
-      console.log(chartData.length)
-      $('#chartdiv').height(chartData.length * 30 +100)
-      console.log($('#chartdiv').height())
+      $('#chartdiv').height(chartData.length * 30 + 100)
         // SERIAL CHART
         chart = new AmCharts.AmSerialChart();
         chart.dataProvider = chartData;
-        chart.pathToImages = "js/amcharts/images/";
+        chart.pathToImages = "/assets/amcharts_images/";
         chart.categoryField = "commodity";
         chart.marginTop = 20;
         chart.rotate = true;

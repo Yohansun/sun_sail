@@ -162,11 +162,11 @@ module Dulux
 
   module SellerMatcher
     class << self
-      def match_item_seller(area, order, use_color=true)
-        match_item_sellers(area, order, true).first
+      def match_item_seller(area, order)
+        match_item_sellers(area, order).first
       end
 
-      def match_item_sellers(area, order, use_color)
+      def match_item_sellers(area, order)
         sellers = nil
         op = Product.find_by_iid order.outer_iid
         return [] unless op
@@ -183,7 +183,7 @@ module Dulux
           sql = "products.iid = '#{pp[:iid]}' AND stock_products.activity > #{pp[:number]}"
           products = StockProduct.joins(:product).where(sql)
 
-          if use_color && color_num.present?
+          if TradeSetting.enable_match_seller_user_color && color_num.present?
             color_num.each do |colors|
               next if colors.blank?
               colors = colors.shift(pp[:number]).flatten.compact.uniq
@@ -206,8 +206,8 @@ module Dulux
       def match_trade_seller(trade, area)
         matched_sellers = nil
         trade.orders.each do |o|
-          matched_sellers ||= match_item_sellers(area, o, true)
-          matched_sellers = matched_sellers & match_item_sellers(area, o, true)
+          matched_sellers ||= match_item_sellers(area, o)
+          matched_sellers = matched_sellers & match_item_sellers(area, o)
         end
 
         matched_sellers ||= []

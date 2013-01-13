@@ -270,12 +270,10 @@ class TradesController < ApplicationController
       seller_id = seller.id
       seller_name = seller.name
       dispatchable = true
-      if TradeSetting.company == 'dulux'
-        errors = can_lock_products?(trade, seller.id).join(',')
-        unless errors.blank?
-          seller_name += "(无法分流：#{errors})"
-          dispatchable = false
-        end
+      errors = can_lock_products?(trade, seller.id).join(',')
+      unless errors.blank?
+        seller_name += "(无法分流：#{errors})"
+        dispatchable = false
       end
     end
 
@@ -327,6 +325,12 @@ class TradesController < ApplicationController
     @trades = Trade.find(params[:ids].split(','))
     respond_to do |format|
       format.html
+    end
+  end
+
+  def deliver_list
+    respond_to do |format|
+      format.json { render json: Trade.find(params[:ids]).to_json }
     end
   end
 

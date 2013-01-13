@@ -63,4 +63,9 @@ FactoryGirl.define do
   factory :taobao_purchase_order do
   end
 
+  factory :product do
+    iid 'test'
+    name 'test'
+    storage_num '12345678a'
+  end
 end
