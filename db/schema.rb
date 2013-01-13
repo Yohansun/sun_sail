@@ -54,40 +54,6 @@ ActiveRecord::Schema.define(:version => 20130108112654) do
   add_index "alipay_trade_orders", ["reconcile_statement_id"], :name => "index_alipay_trade_orders_on_reconcile_statement_id"
   add_index "alipay_trade_orders", ["trade_sn"], :name => "index_alipay_trade_orders_on_trade_sn"
 
-  create_table "alipay_trade_histories", :force => true do |t|
-    t.string   "finance_trade_sn"
-    t.string   "business_trade_sn"
-    t.string   "merchant_trade_sn"
-    t.string   "product_name"
-    t.datetime "traded_at"
-    t.string   "account_info"
-    t.decimal  "revenue_amount",                   :precision => 10, :scale => 0
-    t.decimal  "outlay_amount",                    :precision => 10, :scale => 0
-    t.decimal  "balance_amount",                   :precision => 10, :scale => 0
-    t.string   "trade_source"
-    t.string   "trade_type"
-    t.string   "memo",              :limit => 500
-    t.datetime "created_at",                                                      :null => false
-    t.datetime "updated_at",                                                      :null => false
-  end
-
-  add_index "alipay_trade_histories", ["trade_type"], :name => "index_alipay_trade_histories_on_trade_type"
-
-  create_table "alipay_trade_orders", :force => true do |t|
-    t.integer  "reconcile_statement_id"
-    t.integer  "alipay_trade_history_id"
-    t.string   "original_trade_sn"
-    t.string   "trade_sn"
-    t.datetime "traded_at"
-    t.datetime "created_at",              :null => false
-    t.datetime "updated_at",              :null => false
-  end
-
-  add_index "alipay_trade_orders", ["alipay_trade_history_id"], :name => "index_alipay_trade_orders_on_alipay_trade_history_id"
-  add_index "alipay_trade_orders", ["original_trade_sn"], :name => "index_alipay_trade_orders_on_original_trade_sn"
-  add_index "alipay_trade_orders", ["reconcile_statement_id"], :name => "index_alipay_trade_orders_on_reconcile_statement_id"
-  add_index "alipay_trade_orders", ["trade_sn"], :name => "index_alipay_trade_orders_on_trade_sn"
-
   create_table "areas", :force => true do |t|
     t.string   "name"
     t.integer  "parent_id"
@@ -119,14 +85,10 @@ ActiveRecord::Schema.define(:version => 20130108112654) do
     t.integer  "user_id"
     t.string   "title"
     t.text     "body"
-    t.integer  "read_count",              :default => 0
-    t.integer  "download_count",          :default => 0
-    t.datetime "created_at",                             :null => false
-    t.datetime "updated_at",                             :null => false
-    t.string   "uploadfile_file_name"
-    t.string   "uploadfile_content_type"
-    t.integer  "uploadfile_file_size"
-    t.datetime "uploadfile_updated_at"
+    t.integer  "read_count",      :default => 0
+    t.integer  "download_count",  :default => 0
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
   end
 
   add_index "bbs_topics", ["bbs_category_id"], :name => "index_bbs_topics_on_bbs_category_id"
@@ -255,20 +217,20 @@ ActiveRecord::Schema.define(:version => 20130108112654) do
 
   create_table "reconcile_statement_details", :force => true do |t|
     t.integer  "reconcile_statement_id"
-    t.integer  "alipay_revenue"
-    t.integer  "postfee_revenue"
-    t.integer  "trade_success_refund"
-    t.integer  "sell_refund"
-    t.integer  "base_service_fee"
-    t.integer  "store_service_award"
-    t.integer  "staff_award"
-    t.integer  "taobao_cost"
-    t.integer  "audit_cost"
-    t.integer  "collecting_postfee"
-    t.integer  "audit_amount"
-    t.integer  "adjust_amount"
-    t.datetime "created_at",             :null => false
-    t.datetime "updated_at",             :null => false
+    t.integer  "alipay_revenue",         :default => 0
+    t.integer  "postfee_revenue",        :default => 0
+    t.integer  "trade_success_refund",   :default => 0
+    t.integer  "sell_refund",            :default => 0
+    t.integer  "base_service_fee",       :default => 0
+    t.integer  "store_service_award",    :default => 0
+    t.integer  "staff_award",            :default => 0
+    t.integer  "taobao_cost",            :default => 0
+    t.integer  "audit_cost",             :default => 0
+    t.integer  "collecting_postfee",     :default => 0
+    t.integer  "audit_amount",           :default => 0
+    t.integer  "adjust_amount",          :default => 0
+    t.datetime "created_at",                            :null => false
+    t.datetime "updated_at",                            :null => false
   end
 
   add_index "reconcile_statement_details", ["reconcile_statement_id"], :name => "index_reconcile_statement_details_on_reconcile_statement_id"
@@ -433,8 +395,6 @@ ActiveRecord::Schema.define(:version => 20130108112654) do
     t.boolean  "high_pressure_valve", :default => false
   end
 
-<<<<<<< HEAD
-=======
   create_table "uplaod_files", :force => true do |t|
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
@@ -445,16 +405,6 @@ ActiveRecord::Schema.define(:version => 20130108112654) do
     t.datetime "file_updated_at"
   end
 
-  create_table "upload_files", :force => true do |t|
-    t.string   "filedata_file_name"
-    t.string   "filedata_content_type"
-    t.integer  "filedata_file_size"
-    t.datetime "filedata_updated_at"
-    t.datetime "created_at",            :null => false
-    t.datetime "updated_at",            :null => false
-  end
-
->>>>>>> 界面增加多个可分下载附件
   create_table "users", :force => true do |t|
     t.string   "username",                                              :null => false
     t.string   "name"
