@@ -20,16 +20,20 @@
 
         <% if TradeSetting.enable_module_bbs %>
           <div>
-            <a class="indexStart7" href="/bbs_topics"><span>互动中心</span></a>
+            <%- if TradeSetting.company == 'nippon' -%>
+              <a class="indexStart7" href="http://npsellers.doorder.com/" target="_blank"><span>互动中心</span></a>
+            <%- else -%>
+              <a class="indexStart7" href="/bbs_topics"><span>互动中心</span></a>
+            <%- end -%>
           </div>
         <% end %>
-        
+
         <% if current_user.has_role?(:seller)-%>
           <div>
             <a class="indexStart3" href="/trade_reports"><span>数据魔方</span></a>
           </div>
         <% end %>
-        
+
         <% if current_user.has_role?(:cs) -%>
           <div>
             <a class="indexStart3" href="/sales"><span>数据魔方</span></a>
