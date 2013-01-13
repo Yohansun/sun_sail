@@ -16,8 +16,6 @@ class TradeTaobaoDeliver
 
     errors = response['error_response']
     if errors.blank?
-      trade.update_attributes!(status: 'WAIT_BUYER_CONFIRM_GOODS')
-      
       trade = TradeDecorator.decorate(trade)
       mobile = trade.receiver_mobile_phone
       if trade.splitted?
@@ -37,6 +35,7 @@ class TradeTaobaoDeliver
       Notifier.deliver_errors(id, errors).deliver
       trade.unusual_states.build(reason: "发货异常#{errors['sub_msg']}", key: 'other_unusual_state', created_at: Time.now)
       trade.save
+      trade.update_attributes!(status: 'WAIT_SELLER_SEND_GOODS')
     end
   end
   
