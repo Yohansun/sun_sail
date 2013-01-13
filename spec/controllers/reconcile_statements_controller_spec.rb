@@ -3,7 +3,9 @@ require 'spec_helper'
 describe ReconcileStatementsController do
 
   before do
+    TradeSetting.enable_module_reconcile_statements = true
     @current_user = create(:user)
+    @current_user.add_role :admin
     sign_in(@current_user)
   end
 
@@ -110,6 +112,6 @@ describe ReconcileStatementsController do
       it { flash[:notice].should_not be_blank }
     end
 
-  end  
+  end
 
 end
