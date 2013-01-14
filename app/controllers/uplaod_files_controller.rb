@@ -1,2 +1,0 @@
-class UplaodFilesController < ApplicationController
-end

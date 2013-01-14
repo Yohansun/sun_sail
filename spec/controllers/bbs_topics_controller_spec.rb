@@ -125,8 +125,8 @@ describe BbsTopicsController do
       before {
         controller.stub!(:render)
         controller.stub!(:send_file)
-        UplaodFile.any_instance.stub(:find).with(1).and_return(true)
-        UplaodFile.any_instance.stub_chain(:file, :path).and_return("filepath")
+        UploadFile.any_instance.stub(:find).with(1).and_return(true)
+        UploadFile.any_instance.stub_chain(:file, :path).and_return("filepath")
         get :download, id: @topic.id, fid: 1
       }
 
@@ -135,7 +135,7 @@ describe BbsTopicsController do
 
      context 'fail without upload file' do
       before {
-        UplaodFile.should_receive(:find).with("1").and_return(false)
+        UploadFile.should_receive(:find).with("1").and_return(false)
         get :download, id: @topic.id, fid: 1
       }
 
