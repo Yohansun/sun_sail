@@ -51,7 +51,6 @@ ActiveRecord::Schema.define(:version => 20130109073831) do
 
   add_index "alipay_trade_orders", ["alipay_trade_history_id"], :name => "index_alipay_trade_orders_on_alipay_trade_history_id"
   add_index "alipay_trade_orders", ["original_trade_sn"], :name => "index_alipay_trade_orders_on_original_trade_sn"
-  add_index "alipay_trade_orders", ["reconcile_statement_id"], :name => "index_alipay_trade_orders_on_reconcile_statement_id"
   add_index "alipay_trade_orders", ["trade_sn"], :name => "index_alipay_trade_orders_on_trade_sn"
 
   create_table "areas", :force => true do |t|
@@ -85,10 +84,14 @@ ActiveRecord::Schema.define(:version => 20130109073831) do
     t.integer  "user_id"
     t.string   "title"
     t.text     "body"
-    t.integer  "read_count",      :default => 0
-    t.integer  "download_count",  :default => 0
-    t.datetime "created_at",                     :null => false
-    t.datetime "updated_at",                     :null => false
+    t.integer  "read_count",              :default => 0
+    t.integer  "download_count",          :default => 0
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
+    t.string   "uploadfile_file_name"
+    t.string   "uploadfile_content_type"
+    t.integer  "uploadfile_file_size"
+    t.datetime "uploadfile_updated_at"
   end
 
   add_index "bbs_topics", ["bbs_category_id"], :name => "index_bbs_topics_on_bbs_category_id"
