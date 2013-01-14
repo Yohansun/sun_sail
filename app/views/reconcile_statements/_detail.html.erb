@@ -58,14 +58,14 @@
       <td><%=link_to "查看明细", reconcile_statement_reconcile_statement_detail_path(detail.reconcile_statement, detail, money_type: 'collecting_postfee') %></td>
     </tr>
     <tr>
-      <td>结算金额</td>
-      <td><%= detail.audit_amount %></td>
-      <td><!-- <a href='#success_detail'>查看明细</a> --></td>
-    </tr>
-    <tr>
       <td>调整金额</td>
       <td><%= detail.adjust_amount %></td>
       <td><%=link_to "查看明细", reconcile_statement_reconcile_statement_detail_path(detail.reconcile_statement, detail, money_type: 'adjust_amount') %></td>
+    </tr>
+    <tr>
+      <td>结算金额</td>
+      <td><%= detail.audit_amount %></td>
+      <td><!-- <a href='#success_detail'>查看明细</a> --></td>
     </tr>
   </tbody>
 </table>
