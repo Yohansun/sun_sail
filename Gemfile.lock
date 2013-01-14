@@ -474,7 +474,7 @@ DEPENDENCIES
   puma
   quiet_assets
   rabl
-  rails (>= 3.2.3)
+  rails (>= 3.2.11)
   rails-settings-cached
   rb-fsevent (~> 0.9.1)
   redis-namespace
