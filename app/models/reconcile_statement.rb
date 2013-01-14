@@ -10,7 +10,6 @@
 #  created_at         :datetime        not null
 #  updated_at         :datetime        not null
 #  audit_time         :datetime
-#  exported           :text
 #
 
 class ReconcileStatement < ActiveRecord::Base
