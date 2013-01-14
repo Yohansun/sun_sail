@@ -5,7 +5,7 @@ class DeliverBillsController < ApplicationController
   respond_to :json
 
   def index
-    @bills = DeliverBill
+    @bills = DeliverBill.all
     if params[:trade_type]
       case params[:trade_type]
       when 'unprinted'
