@@ -29,13 +29,13 @@ describe ReconcileStatementsController do
     describe "search by date" do
 
       context 'with incorrectly date' do
-        before { get :index, date: (Time.now + 3.months) }
+        before { get :index, date: (Time.now + 3.months).strftime('%Y-%m') }
         it { assigns(:rs_set).should be_empty }
         it { flash[:notice].should_not be_blank }
       end
 
       context 'with correctly date' do
-        before { get :index, date: Time.now.to_date }
+        before { get :index, date: (Time.now.to_date).strftime('%Y%m') }
         it { assigns(:rs_set).should be_empty }
       end
     end

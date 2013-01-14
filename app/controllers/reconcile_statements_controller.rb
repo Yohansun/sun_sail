@@ -13,6 +13,13 @@ class ReconcileStatementsController < ApplicationController
         flash[:notice] = "当月还未生成"
       end
     end
+    @is_clearing = true
+    if @rs_set.present?
+      rs = @rs_set.map &:audited
+      rs.each do |r|
+        return @is_clearing = r if r == false
+      end
+    end
   end
 
   def show
