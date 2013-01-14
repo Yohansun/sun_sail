@@ -17,7 +17,7 @@ class ReconcileStatement < ActiveRecord::Base
   include ActiveModel::ForbiddenAttributesProtection
   has_one :detail, class_name: "ReconcileStatementDetail"
 
-  scope :by_date, lambda { |date| where(["DATE_FORMAT(audit_time, '%Y%m') = ? ", date.to_time(:local).utc.strftime('%Y%m')]) }
+  scope :by_date, lambda { |date| where(["DATE_FORMAT(audit_time, '%Y%m') = ? ", date.sub(/-/,'')]) }
 
   scope :recently_data, order("audit_time DESC")
 
