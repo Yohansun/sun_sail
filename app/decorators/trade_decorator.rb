@@ -166,7 +166,7 @@ class TradeDecorator < Draper::Base
       when 'TaobaoPurchaseOrder'
         0
       when 'TaobaoTrade'
-        trade.total_fee + trade.post_fee - trade.payment
+        (trade.total_fee + trade.post_fee - trade.payment).round(2)
       when 'JingdongTrade'
         trade.seller_discount
     end

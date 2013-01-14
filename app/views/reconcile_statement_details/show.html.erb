@@ -2,24 +2,23 @@
   <header class="jumbotron subhead" id="overview">
     <div class="subnav">
       <ul class="nav nav-pills">
-        <li class="active"><a href="#">运营商对账</a></li>
-        <li><a href="#">经销商对账</a></li>
-        <li><a href="#">财务对账</a></li>
+        <li class="active"><a href="/reconcile_statements">运营商对账</a></li>
+        <!-- <li><a href="#">经销商对账</a></li>
+        <li><a href="#">财务对账</a></li> -->
       </ul>
     </div>
   </header>
   <div class="row-fluid">
     <ul class="breadcrumb" style="position:relative;">
-      <li><a href="#">Magic</a><span class="divider">/</span></li>
-      <li><a href="checking.html">财务管理</a><span class="divider">/</span></li>
-      <li><a href="#">运营商对账</a><span class="divider">/</span></li>
-      <li><a href="#">2012-06</a><span class="divider">/</span></li>
-      <li class="active">支付宝明细</li>
+      <li><a href="/">Magic</a><span class="divider">/</span></li>
+      <li><a href="/reconcile_statements">财务管理</a><span class="divider">/</span></li>
+      <li><a href="/reconcile_statements">运营商对账</a><span class="divider">/</span></li>
+      <li class="active" id="money_type" data-money_type ="<%= @money_type %>"><%= @rs.audit_time.strftime("%Y-%m") + " #{money_type_text(@money_type)}"%></li>
     </ul><!-- breadcrumb -->
 
     <div class="btns">
-      <a href="javascript:;" class="btn btn-warning">导出数据</a>
-      <a data-toggle="modal" href="javascript:;" class="btn btn-warning">打印</a>
+      <%= link_to '导出数据', export_detail_reconcile_statement_reconcile_statement_detail_path(@rs, @rs.detail, money_type: @money_type), class: 'btn btn-warning' %>
+      <%= flash[:notice] %>
     </div>
 
     <table class="table table-bordered table-hover mar_t5">
@@ -50,17 +49,6 @@
           <td><%= trade.status_text %></td>
         </tr>
         <% end %>
-        <tr>
-          <td>总计</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <% judge_money_type_total(@trade_details, @money_type).each do |info| %>
-          <th><%= info %></th>
-          <% end %>
-          <td></td>
-          <td></td>
-        </tr>
       </tbody>
     </table>
 

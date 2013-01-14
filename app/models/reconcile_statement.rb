@@ -10,10 +10,11 @@
 #  created_at         :datetime        not null
 #  updated_at         :datetime        not null
 #  audit_time         :datetime
+#  exported           :text
 #
 
 class ReconcileStatement < ActiveRecord::Base
-  attr_accessible :trade_store_source, :trade_store_name, :audited, :trade_store_name, :audit_time, :balance_amount, :audited
+  attr_accessible :trade_store_source, :trade_store_name, :audited, :trade_store_name, :audit_time, :balance_amount, :exported
   include ActiveModel::ForbiddenAttributesProtection
   has_one :detail, class_name: "ReconcileStatementDetail"
 
@@ -22,4 +23,6 @@ class ReconcileStatement < ActiveRecord::Base
   scope :recently_data, order("audit_time DESC")
 
   validates :audit_time, uniqueness: true
+
+  serialize :exported, Hash
 end

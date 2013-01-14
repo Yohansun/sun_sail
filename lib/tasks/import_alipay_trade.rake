@@ -30,7 +30,7 @@ task :import_alipay_trade => :environment do
   end
 
   revenues_data = AlipayTradeHistory.revenues
-  rs = ReconcileStatement.new(trade_store_source: 'Alipay', trade_store_name: '和宝尊')
+  rs = ReconcileStatement.new(trade_store_source: '天猫店', trade_store_name: '宝尊')
   rs.detail = ReconcileStatementDetail.new
   rs.audit_time = revenues_data.first.traded_at
   rs.save
@@ -49,7 +49,7 @@ task :import_alipay_trade => :environment do
   tids   = orders.map(&:trade_sn)
   trades = Trade.in(tid: tids)
   trades.each do |trade|
-    rs_detail.alipay_revenue  += trade.total_fee
+    rs_detail.alipay_revenue  += trade.payment
     rs_detail.postfee_revenue += trade.post_fee
     rs_detail.trade_success_refund += -(trade.modify_payment) if trade.try(:modify_payment) && trade.modify_payment < 0
   end
@@ -67,5 +67,9 @@ task :import_alipay_trade => :environment do
   rs_detail.audit_amount = rs_detail.audit_cost - rs_detail.collecting_postfee
 
   rs_detail.save
+
+  rs.balance_amount = rs_detail.audit_amount
+  rs.save
+
   puts '--- finished ---'
 end
