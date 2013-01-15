@@ -26,6 +26,7 @@ class TradeSplitter
       new_trade.total_fee = splitted_order[:total_fee]
       new_trade.payment = new_trade.orders.sum(:payment)
       new_trade.splitted = true
+      new_trade.has_color_info = new_trade.orders.any?{|order| order.color_num.present?}
 
       new_trade.save
       new_trade_ids << new_trade.id
