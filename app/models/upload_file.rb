@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: uplaod_files
+# Table name: upload_files
 #
 #  id                :integer(4)      not null, primary key
 #  created_at        :datetime        not null
@@ -12,7 +12,7 @@
 #  file_updated_at   :datetime
 #
 
-class UplaodFile < ActiveRecord::Base
+class UploadFile < ActiveRecord::Base
 	belongs_to :bbs_topic
   attr_accessible :bbs_topic_id, :file
   has_attached_file :file,

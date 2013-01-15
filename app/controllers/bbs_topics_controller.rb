@@ -10,16 +10,16 @@ class BbsTopicsController < ApplicationController
 
   def new
     @topic = BbsTopic.new
-    @topic.uplaod_files.build
-    @topic.uplaod_files.build
+    @topic.upload_files.build
+    @topic.upload_files.build
   end
 
   def create
     @topic = BbsTopic.new(topic_params)
     @topic.user_id = current_user.id
     if params[:uploads].any?
-      params[:uploads].each do |uplaod_file|
-        @topic.uplaod_files << UplaodFile.new(file: uplaod_file)
+      params[:uploads].each do |upload_file|
+        @topic.upload_files << UploadFile.new(file: upload_file)
       end
     end
     if @topic.save
@@ -64,7 +64,7 @@ class BbsTopicsController < ApplicationController
   end
 
   def download
-    target_file = UplaodFile.find(params[:fid])
+    target_file = UploadFile.find(params[:fid])
     if target_file
       BbsTopic.increment_counter(:download_count, @topic.id)
       send_file target_file.file.path
@@ -88,7 +88,7 @@ class BbsTopicsController < ApplicationController
   end
 
   def topic_params
-    params.require(:bbs_topic).permit(:bbs_category_id, :title, :body, :uplaod_files)
+    params.require(:bbs_topic).permit(:bbs_category_id, :title, :body, :upload_files)
   end
 
 

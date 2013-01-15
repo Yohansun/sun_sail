@@ -1,5 +1,5 @@
-class UplaodFileDecorator < Draper::Base
-  decorates :uplaod_file
+class UploadFileDecorator < Draper::Base
+  decorates :upload_file
 
   # Accessing Helpers
   #   You can access any helper via a proxy

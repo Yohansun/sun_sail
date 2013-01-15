@@ -21,7 +21,7 @@ class BbsTopic < ActiveRecord::Base
   attr_accessible :bbs_category, :title, :body, :user, :bbs_category_id
   belongs_to :bbs_category
   belongs_to :user
-  has_many :uplaod_files, :dependent => :destroy
+  has_many :upload_files, :dependent => :destroy
 
   scope :hot, order("read_count DESC")
   scope :latest, order("created_at DESC")

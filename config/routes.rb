@@ -2,7 +2,7 @@ require 'sidekiq/web'
 
 MagicOrders::Application.routes.draw do
 
-  resources :uplaod_files
+  resources :upload_files
 
   resources :bbs_categories
   resources :bbs_topics do

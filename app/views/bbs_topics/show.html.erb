@@ -17,7 +17,7 @@
         <div class="bbs_coninfo">
           <p><%=@topic.body %></p>
           <div>
-            <%- @topic.uplaod_files.each_with_index do |file, index| %>
+            <%- @topic.upload_files.each_with_index do |file, index| %>
             <p>
               附件<%= index+1 %>：<%=file.try(:file_file_name) %>
               <%=link_to "下载附件", download_bbs_topic_path(:id => @topic.id, :fid =>file.id),  confirm: '确认要下载该附件嘛?', :class => 'btn btn-primary'%>
