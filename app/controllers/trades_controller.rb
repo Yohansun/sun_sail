@@ -349,7 +349,8 @@ class TradesController < ApplicationController
 
     success = if parent_trade
       Trade.where(tid: trade.tid).delete_all
-      parent_trade.operation_logs.create(operated_at: Time.now, operation: '订单合并')
+      parent_trade.operation_logs.build(operated_at: Time.now, operation: '订单合并')
+      parent_trade.save
       parent_trade.restore
     end
 
