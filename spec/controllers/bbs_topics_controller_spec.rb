@@ -53,22 +53,6 @@ describe BbsTopicsController do
     end
 
   end
- 
-   # describe "When create new topic" do
-
-   #    it 'if upload files ' do
-   #      post :create, bbs_topic: { bbs_category_id: 1, title: 'rspec title', body: 'rspec body' }
-   #      assigns(:topic).should_not be_nil
-   #      # response.should redirect_to(bbs_category_url(:id => bbs_category_id))
-   #    end
-
-   #    it 'fail' do
-   #      post :create, bbs_topic: { bbs_category_id: 1, title: 'rspec title'}
-   #      response.should render_template(:new)
-   #      assigns(:topic).should have(1).errors_on(:body)
-   #    end
-
-   #  end
 
   describe "GET edit" do
 
@@ -125,9 +109,8 @@ describe BbsTopicsController do
       before {
         controller.stub!(:render)
         controller.stub!(:send_file)
-        UploadFile.any_instance.stub(:find).with(1).and_return(true)
         UploadFile.any_instance.stub_chain(:file, :path).and_return("filepath")
-        get :download, id: @topic.id, fid: 1
+        get :download, id: @topic.id, fid: create(:upload_file).id
       }
 
       it { @topic.reload.download_count.should == 1 }
