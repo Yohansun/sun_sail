@@ -15,9 +15,11 @@ FactoryGirl.define do
 
   factory :bbs_topic do
     bbs_category
-    user
     title "What's up?"
     body 'bbs topic content'
+  end
+
+  factory :upload_file do
   end
 
   factory :reconcile_statement do
