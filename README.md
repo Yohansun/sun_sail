@@ -1,3 +1,8 @@
+Build Status
+======
+
+![](https://semaphoreapp.com/api/v1/projects/f71834abbc015e87003ac869d8496d394ab8628d/19423/badge.png)
+
 Coding Guide
 ======
 
