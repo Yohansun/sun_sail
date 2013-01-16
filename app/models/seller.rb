@@ -32,7 +32,7 @@ class Seller < ActiveRecord::Base
   acts_as_nested_set :counter_cache => :children_count
 
   attr_accessible :has_stock, :mobile, :telephone, :cc_emails, :email, :pinyin, :interface, :fullname, :name,
-                  :parent_id, :address, :performance_score
+                  :parent_id, :address, :performance_score, :user_id
 
   has_many :users
   has_many :sellers_areas
