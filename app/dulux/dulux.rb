@@ -53,9 +53,9 @@ module Dulux
       grouped_orders.each do |key, value|
         splitted_orders << {
           orders: value,
-          post_fee: 0,
+          post_fee: trade.post_fee / grouped_orders.size ,
           default_seller: key,
-          total_fee: value.inject(0) { |sum, el| sum + el.total_fee }
+          total_fee: value.inject(0.0) { |sum, el| sum + el.price * el.num }
         }
       end
 

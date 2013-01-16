@@ -20,7 +20,7 @@ class TaobaoPurchaseOrderSplitter
         orders: value,
         post_fee: 0,
         default_seller: key,
-        total_fee: value.inject(0) { |sum, el| sum + el.total_fee }
+        total_fee: value.inject(0.0) { |sum, el| sum + el.price * el.num }
       }
     end
 
