@@ -59,6 +59,13 @@
         </div>
 
         <div class="control-group">
+          <label class="control-label" for="">抄送Email：</label>
+          <div class="controls">
+            <p class="mar_t5" style="white-space:normal;word-wrap:break-word;width:30%;"><%= @seller.cc_emails %></p>
+          </div>
+        </div>
+
+        <div class="control-group">
           <label class="control-label" for="">是否开通仓库功能：</label>
           <div class="controls">
             <p class="mar_t5"><%= @seller.has_stock ? '是' : '否' %></p>
