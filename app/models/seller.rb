@@ -7,15 +7,16 @@
 #  fullname          :string(255)
 #  address           :string(255)
 #  mobile            :string(255)
+#  phone             :string(255)
 #  created_at        :datetime        not null
 #  updated_at        :datetime        not null
 #  parent_id         :integer(4)
 #  lft               :integer(4)
 #  rgt               :integer(4)
 #  children_count    :integer(4)      default(0)
-#  email             :string(255)
+#  email             :text
 #  telephone         :string(255)
-#  cc_emails         :string(255)
+#  cc_emails         :text
 #  user_id           :integer(4)
 #  pinyin            :string(255)
 #  active            :boolean(1)      default(TRUE)

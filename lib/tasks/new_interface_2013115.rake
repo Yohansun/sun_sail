@@ -2,7 +2,7 @@
 desc "经销商北区组织架构调整"
 task :new_interface2013115 => :environment do
 
-  seller1 = Seller.where(parent_id: 1385,  name: '冀北销售部', mobile: '18630252356', email: 'zhangdayuan@nipponpaint.com.cn,wendyjiao@nipponpaint.com.cn' , cc_emails: 'zhangyuxue@nipponpaint.com.cn,huricha@nipponpaint.com.cn,ZhongJing@nipponpaint.com.cn, LuJingRNMD@nipponpaint.com.cn, ShenWeiYu@nipponpaint.com.cn, ZhangQin@nipponpaint.com.cn, WuHangJun@nipponpaint.com.cn, YanFei.Allen@nipponpaint.com.cn, ShaoLiXing@nipponpaint.com.cn, ZhaoMengMeng@nipponpaint.com.cn, CaoZhiXiong@nipponpaint.com.cn, GaoYuLin@nipponpaint.com.cn, YangYueYue@nipponpaint.com.cn, taohong@nipponpaint.com.cn,jixiao@nipponpaint.com.cn').first_or_create
+  seller1 = Seller.where(parent_id: 1385, fullname: '冀北销售部', name: '冀北销售部', mobile: '13383166816', email: 'zhangdayuan@nipponpaint.com.cn,guochunjie@nipponpaint.com.cn' , cc_emails: 'zhangyuxue@nipponpaint.com.cn,huricha@nipponpaint.com.cn,ZhongJing@nipponpaint.com.cn, LuJingRNMD@nipponpaint.com.cn, ShenWeiYu@nipponpaint.com.cn, ZhangQin@nipponpaint.com.cn, WuHangJun@nipponpaint.com.cn, YanFei.Allen@nipponpaint.com.cn, ShaoLiXing@nipponpaint.com.cn, ZhaoMengMeng@nipponpaint.com.cn, CaoZhiXiong@nipponpaint.com.cn, GaoYuLin@nipponpaint.com.cn, YangYueYue@nipponpaint.com.cn, taohong@nipponpaint.com.cn,jixiao@nipponpaint.com.cn').first_or_create
   user1 = User.where(username: '冀北销售部', name: '冀北销售部', email: 'zhangdayuan@nipponpaint.com.cn').first_or_create
   user1.update_attributes!(password: 123456) 
   seller1.update_attributes!(user_id: user1.id)

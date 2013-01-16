@@ -5,15 +5,15 @@
 #  id                :integer(4)      not null, primary key
 #  created_at        :datetime        not null
 #  updated_at        :datetime        not null
-#  bbs_topic_id      :integer(4)
 #  file_file_name    :string(255)
 #  file_content_type :string(255)
 #  file_file_size    :integer(4)
 #  file_updated_at   :datetime
+#  bbs_topic_id      :integer(4)
 #
 
 class UploadFile < ActiveRecord::Base
-	belongs_to :bbs_topic
+  belongs_to :bbs_topic
   attr_accessible :bbs_topic_id, :file
   has_attached_file :file,
                     :whiny_thumbnails => true,
