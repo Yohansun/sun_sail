@@ -6,8 +6,8 @@ module ReconcileStatementDetailsHelper
         info_array = ["订单实付金额", "订单总价", "积分", "优惠"]
       when 'postfee_revenue'
         info_array = ["运费收入", "订单总价", "积分", "优惠"]
-      # when 'trade_success_refund'
-      #   info_array = ["订单实付金额", "订单总价", "交易成功后退款", "优惠"]
+      when 'trade_success_refund'
+        info_array = ["订单实付金额", "订单总价", "交易成功后退款", "优惠"]
       when 'base_service_fee'
         info_array = ["订单实付金额", "基础服务费"]
       when 'store_service_award'
@@ -32,10 +32,10 @@ module ReconcileStatementDetailsHelper
         info_array = [trade.total_fee, (trade.sum_fee + trade.post_fee), trade.point_fee, trade.seller_discount]
       when 'postfee_revenue'
         info_array = [trade.post_fee, (trade.sum_fee + trade.post_fee), trade.point_fee, trade.seller_discount]
-      # when 'trade_success_refund'
-      #   refund_fee = calculate_refund_fee(trade)
-      #   discount = (trade.total_fee - trade.post_fee)/trade.sum_fee
-      #   info_array = [trade.total_fee, (trade.sum_fee + trade.post_fee), refund_fee, trade.seller_discount]
+      when 'trade_success_refund'
+        refund_fee = calculate_refund_fee(trade)
+        discount = (trade.total_fee - trade.post_fee)/trade.sum_fee
+        info_array = [trade.total_fee, (trade.sum_fee + trade.post_fee), refund_fee, trade.seller_discount]
       when 'base_service_fee'
         refund_fee = calculate_refund_fee(trade)
         base_service_point = 0.08 ##not defined, later
@@ -115,8 +115,8 @@ module ReconcileStatementDetailsHelper
         "支付宝收入"
       when 'postfee_revenue'
         "运费收入"
-      # when 'trade_success_refund'
-      #   "交易成功后退款"
+      when 'trade_success_refund'
+        "交易成功后退款"
       when 'base_service_fee'
         "基础服务费"
       when 'store_service_award'
