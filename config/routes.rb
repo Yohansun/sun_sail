@@ -174,8 +174,6 @@ MagicOrders::Application.routes.draw do
 
   root to: "home#dashboard"
 
-  match '/go/magicnippon', :to => 'go#magicnippon'
-
   match "/app", to: "home#index"
   match "*path", to: "home#index"
 end
