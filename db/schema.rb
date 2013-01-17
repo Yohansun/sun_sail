@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130116061845) do
+ActiveRecord::Schema.define(:version => 20130117075601) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -51,7 +51,6 @@ ActiveRecord::Schema.define(:version => 20130116061845) do
 
   add_index "alipay_trade_orders", ["alipay_trade_history_id"], :name => "index_alipay_trade_orders_on_alipay_trade_history_id"
   add_index "alipay_trade_orders", ["original_trade_sn"], :name => "index_alipay_trade_orders_on_original_trade_sn"
-  add_index "alipay_trade_orders", ["reconcile_statement_id"], :name => "index_alipay_trade_orders_on_reconcile_statement_id"
   add_index "alipay_trade_orders", ["trade_sn"], :name => "index_alipay_trade_orders_on_trade_sn"
 
   create_table "areas", :force => true do |t|
@@ -85,10 +84,14 @@ ActiveRecord::Schema.define(:version => 20130116061845) do
     t.integer  "user_id"
     t.string   "title"
     t.text     "body"
-    t.integer  "read_count",      :default => 0
-    t.integer  "download_count",  :default => 0
-    t.datetime "created_at",                     :null => false
-    t.datetime "updated_at",                     :null => false
+    t.integer  "read_count",              :default => 0
+    t.integer  "download_count",          :default => 0
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
+    t.string   "uploadfile_file_name"
+    t.string   "uploadfile_content_type"
+    t.integer  "uploadfile_file_size"
+    t.datetime "uploadfile_updated_at"
   end
 
   add_index "bbs_topics", ["bbs_category_id"], :name => "index_bbs_topics_on_bbs_category_id"
@@ -274,7 +277,6 @@ ActiveRecord::Schema.define(:version => 20130116061845) do
     t.string   "fullname"
     t.string   "address"
     t.string   "mobile"
-    t.string   "phone"
     t.datetime "created_at",                           :null => false
     t.datetime "updated_at",                           :null => false
     t.integer  "parent_id"
@@ -400,39 +402,47 @@ ActiveRecord::Schema.define(:version => 20130116061845) do
   create_table "upload_files", :force => true do |t|
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
+    t.integer  "bbs_topic_id"
     t.string   "file_file_name"
     t.string   "file_content_type"
     t.integer  "file_file_size"
     t.datetime "file_updated_at"
-    t.integer  "bbs_topic_id"
   end
 
   create_table "users", :force => true do |t|
-    t.string   "email",                  :default => "",    :null => false
-    t.string   "encrypted_password",     :default => "",    :null => false
+    t.string   "username",                                              :null => false
+    t.string   "name"
+    t.string   "email",                               :default => "",   :null => false
+    t.string   "encrypted_password",   :limit => 128, :default => "",   :null => false
+    t.string   "password_salt",                       :default => "",   :null => false
     t.string   "reset_password_token"
-    t.datetime "reset_password_sent_at"
+    t.string   "remember_token"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          :default => 0
+    t.integer  "sign_in_count",                       :default => 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.datetime "created_at",                                :null => false
-    t.datetime "updated_at",                                :null => false
-    t.boolean  "is_super_admin",         :default => false
-    t.string   "name"
-    t.boolean  "active",                 :default => true
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "role"
+    t.integer  "role_level",                          :default => 10
+    t.integer  "sellers_count",                       :default => 0
+    t.integer  "parent_id"
+    t.integer  "children_count",                      :default => 0
+    t.integer  "lft",                                 :default => 0
+    t.integer  "rgt",                                 :default => 0
+    t.boolean  "active",                              :default => true
     t.integer  "seller_id"
-    t.string   "username"
     t.integer  "logistic_id"
     t.integer  "failed_attempts"
     t.string   "unlock_token"
     t.datetime "locked_at"
   end
 
-  add_index "users", ["email"], :name => "index_users_on_email", :unique => true
-  add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
+  add_index "users", ["email"], :name => "index_admins_on_email", :unique => true
+  add_index "users", ["parent_id"], :name => "index_admins_on_parent_id"
+  add_index "users", ["reset_password_token"], :name => "index_admins_on_reset_password_token", :unique => true
   add_index "users", ["unlock_token"], :name => "index_users_on_unlock_token", :unique => true
 
   create_table "users_roles", :id => false, :force => true do |t|
