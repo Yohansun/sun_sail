@@ -17,11 +17,11 @@
       <td><%= detail.postfee_revenue %></td>
       <td><%=link_to "查看明细", reconcile_statement_reconcile_statement_detail_path(detail.reconcile_statement, detail, money_type: 'postfee_revenue') %></td>
     </tr>
-    <tr>
+    <!-- <tr>
       <td>交易成功后退款</td>
       <td><%= detail.trade_success_refund %></td>
       <td><%=link_to "查看明细", reconcile_statement_reconcile_statement_detail_path(detail.reconcile_statement, detail, money_type: 'trade_success_refund') %></td>
-    </tr>
+    </tr> -->
     <tr>
       <td>销售回款</td>
       <td><%= detail.sell_refund %></td>
