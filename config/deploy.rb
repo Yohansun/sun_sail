@@ -4,7 +4,7 @@ require "capistrano/ext/multistage"       #多stage部署所需
 require 'bundler/capistrano'       #添加之后部署时会调用bundle install
 require 'tinder'
 
-set :stages, %w(magicalpha magictest magicd magicnippon)
+set :stages, %w(magicalpha magictest magicd magicnippon magicd-test magic-solo)
 set :default_stage, "magictest"
 
 set :application, "magic_orders"
