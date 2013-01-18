@@ -3,6 +3,7 @@ require "spec_helper"
 describe "Split a TaobaoTrade's orders" do
 	before do
 		@trade = create(:taobao_trade)
+	  TradeSetting.trade_split_postfee_special_seller_ids = []
 	end
 
   context "while it has no orders" do
@@ -44,10 +45,6 @@ describe "Split a TaobaoTrade's orders" do
 	    end
 
 	    context "when has no special seller" do
-	    	before do
-	    	  TradeSetting.trade_split_postfee_special_seller_ids = []
-	    	end
-
 	    	subject { TaobaoTradeSplitter.split_orders(@trade) }
 
 	    	it { subject.inject(0.0) { |sum, el| sum + el[:post_fee] }.should == @trade.post_fee }
