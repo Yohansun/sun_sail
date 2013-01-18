@@ -5,11 +5,12 @@
 <div class="modal-body">
   <h4 class="tc"><%= @bill.get('shopname') %>发货单</h4>
   <div class="clearfix">
-    <span class="pull-left mar_r10">编号：<%= @bill.get("tid") %>D</span>
+    <span class="pull-left mar_r10">订单编号：<%= @bill.get("tid") %></span>
   </div>
   <div class="clearfix">
     <span class="pull-left mar_r10">收货人：<%= @bill.get('receiver_name') %></span>
-    <span class="pull-left mar_r10">电话：<%= @bill.get('receiver_mobile_phone') %></span>
+    <span class="pull-left mar_r10">手机：<%= @bill.get('receiver_mobile_phone') %></span>
+    <span class="pull-left mar_r10">座机：<%= @bill.get('receiver_phone') %></span>
   </div>
   <div class="clearfix">
     <span class="pull-left mar_r10">地址：
@@ -49,7 +50,6 @@
         <td colspan="1" class="fb"><%= count %></td>
         <td colspan="1"></td>
       </tr>
-
       <tr>
         <td colspan="2" rowspan="2" width="50%">
           <%= @bill.notice %>
@@ -57,6 +57,10 @@
         <td colspan="4">签收人：</td>
       </tr>
       <tr><td colspan="4">签收日期：</td></tr>
+      <tr>
+        <td colspan="1">赠品备注</td>
+        <td colspan="3"><%= @bill.get('gift_memo') %></td>
+      </tr>
     </tbody>
   </table>
 </div><!-- modal-body -->
