@@ -1,12 +1,13 @@
 require "spec_helper"
 
-describe "Split a TaobaoTrade's orders" do
+describe "Split a TaobaoPurchaseOrder's orders" do
 	before do
-		@trade = create(:taobao_trade)
+		@trade = create(:taobao_purchase_order)
+		@trade.stub(:default_area).and_return(Area.first)
 	end
 
   context "while it has no orders" do
-		subject { TaobaoTradeSplitter.split_orders(@trade) }
+		subject { TaobaoPurchaseOrderSplitter.split_orders(@trade) }
 
 		it { should be_a_kind_of(Array) }
   	it { should be_empty }
@@ -15,13 +16,12 @@ describe "Split a TaobaoTrade's orders" do
   context "while it has orders" do
   	before do
   		@trade.total_fee = 20.0
-  		@trade.payment = 40.0
   		@trade.post_fee = 20.0
-  		@order1 = @trade.orders.build(num: 2, payment: 10.0, total_fee: 10.0, price: 5.0)
-  		@order2 = @trade.orders.build(num: 1, payment: 10.0, total_fee: 10.0, price: 10.0)
+  		@order1 = @trade.orders.build(num: 2, total_fee: 10.0, price: 5.0)
+  		@order2 = @trade.orders.build(num: 1, total_fee: 10.0, price: 10.0)
 		end
 
-		subject { TaobaoTradeSplitter.split_orders(@trade) }
+		subject { TaobaoPurchaseOrderSplitter.split_orders(@trade) }
 
 		it { should be_a_kind_of(Array) }
   	it { should_not be_empty }
@@ -29,8 +29,8 @@ describe "Split a TaobaoTrade's orders" do
 
   	describe "post_fee should equal" do
 	    before do
-	      TaobaoTradeSplitter.stub(:match_item_sellers).with(Area.first, @order1).and_return([Seller.new(id: 1)])
-	      TaobaoTradeSplitter.stub(:match_item_sellers).with(Area.first, @order2).and_return([Seller.new(id: 2)])
+	      TaobaoPurchaseOrderSplitter.stub(:match_item_sellers).with(Area.first, @order1).and_return([Seller.new(id: 1)])
+	      TaobaoPurchaseOrderSplitter.stub(:match_item_sellers).with(Area.first, @order2).and_return([Seller.new(id: 2)])
 	    end
 
 	    context "when has special seller" do
@@ -38,7 +38,7 @@ describe "Split a TaobaoTrade's orders" do
 	    	  TradeSetting.trade_split_postfee_special_seller_ids = [1]
 	    	end
 
-	    	subject { TaobaoTradeSplitter.split_orders(@trade) }
+	    	subject { TaobaoPurchaseOrderSplitter.split_orders(@trade) }
 
 	    	it { subject.inject(0.0) { |sum, el| sum + el[:post_fee] }.should == @trade.post_fee }
 	    end
@@ -48,7 +48,7 @@ describe "Split a TaobaoTrade's orders" do
 	    	  TradeSetting.trade_split_postfee_special_seller_ids = []
 	    	end
 
-	    	subject { TaobaoTradeSplitter.split_orders(@trade) }
+	    	subject { TaobaoPurchaseOrderSplitter.split_orders(@trade) }
 
 	    	it { subject.inject(0.0) { |sum, el| sum + el[:post_fee] }.should == @trade.post_fee }
 	    end
@@ -63,7 +63,7 @@ describe "Match seller" do
 	end
 
 	context "when trade has no default area" do
-	  subject { TaobaoTradeSplitter.match_item_sellers(@trade.default_area, @order) }
+	  subject { TaobaoPurchaseOrderSplitter.match_item_sellers(@trade.default_area, @order) }
 
 	  it { should be_a_kind_of(Array) }
 	  it { should be_empty }
@@ -75,7 +75,7 @@ describe "Match seller" do
 		end
 
 		context "and order has no outer_iid" do
-			subject { TaobaoTradeSplitter.match_item_sellers(@trade.default_area, @order) }
+			subject { TaobaoPurchaseOrderSplitter.match_item_sellers(@trade.default_area, @order) }
 
 			it { should be_a_kind_of(Array) }
 	  	it { should be_empty }
@@ -86,10 +86,9 @@ describe "Match seller" do
 				Product.stub(:find_by_iid).and_return(create(:product))
 			end
 		  
-		  subject { TaobaoTradeSplitter.match_item_sellers(@trade.default_area, @order) }
+		  subject { TaobaoPurchaseOrderSplitter.match_item_sellers(@trade.default_area, @order) }
 
 		  it { should == [] }
 		end
 	end
-
 end
