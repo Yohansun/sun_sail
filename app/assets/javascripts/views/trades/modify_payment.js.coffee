@@ -27,7 +27,7 @@ class MagicOrders.Views.TradesModifyPayment extends Backbone.View
       $.unblockUI()
       return
 
-    unless @model.get('payment') + parseFloat($('#modify_payment').val()) >= 0
+    unless @model.get('total_fee') + parseFloat($('#modify_payment').val()) >= 0
       alert("价格调整幅度过大")
       $.unblockUI()
       return
