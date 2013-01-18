@@ -58,7 +58,7 @@
       </tr>
       <tr><td colspan="4">签收日期：</td></tr>
       <tr>
-        <td colspan="1">赠品备注</td>
+        <td colspan="1">赠品备注：</td>
         <td colspan="3"><%= @bill.get('gift_memo') %></td>
       </tr>
     </tbody>
