@@ -121,7 +121,7 @@
       <li><a data-toggle="modal" href="#" data-type="operation_log">订单日志</a></li>
       <% end %>
 
-      <% if MagicOrders.company == 'nippon' && (MagicOrders.role_key == 'admin' || MagicOrders.role_key == 'cs') : %>
+      <% if MagicOrders.company == 'dulux' && (MagicOrders.role_key == 'admin' || MagicOrders.role_key == 'cs') : %>
         <li><a data-toggle="modal" href="#" data-type="manual_sms_or_email">发短信/邮件</a></li>
         <% if @trade.get('status_text') != "等待付款" : %>
         <li><a data-toggle="modal" href="#" data-type="modify_payment">金额调整</a></li>
