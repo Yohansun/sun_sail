@@ -15,13 +15,24 @@ class TaobaoPurchaseOrderSplitter
       grouped_orders["#{seller_id}"] = tmp
     end
 
+    count = grouped_orders.select{|key| !TradeSetting.trade_split_postfee_special_seller_ids.include?(key.to_i)}.size
+
     grouped_orders.each do |key, value|
-      splitted_orders << {
-        orders: value,
-        post_fee: 0,
-        default_seller: key,
-        total_fee: value.inject(0.0) { |sum, el| sum + el.price * el.num }
-      }
+      if TradeSetting.trade_split_postfee_special_seller_ids.include?(key.to_i)
+        splitted_orders << {
+          orders: value,
+          post_fee: 0.0,
+          default_seller: key,
+          total_fee: value.inject(0.0) { |sum, el| sum + el.price * el.num }
+        }
+      else
+        splitted_orders << {
+          orders: value,
+          post_fee: trade.post_fee / count,
+          default_seller: key,
+          total_fee: value.inject(0.0) { |sum, el| sum + el.price * el.num }
+        }
+      end
     end
 
     splitted_orders
