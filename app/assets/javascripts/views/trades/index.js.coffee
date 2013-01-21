@@ -21,6 +21,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     'click #cols_filter input,label': 'keepColsFilterDropdownOpen'
     'click #advanced_btn': 'advancedSearch'
     'click .dropdown': 'dropdownTurnGray'
+    'click .btn-group': 'addBorderToTr'
 
   initialize: ->
     @trade_type = MagicOrders.trade_type
@@ -519,3 +520,9 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
   gotoDeliverBills: ->
     Backbone.history.navigate('deliver_bills', true)
+
+  addBorderToTr: (e)->
+    e.preventDefault();
+    $('tr').removeClass('notice_tr')
+    $(e.target).parents('tr').addClass('notice_tr')
+
