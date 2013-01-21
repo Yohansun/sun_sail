@@ -10,14 +10,12 @@ class BbsTopicsController < ApplicationController
 
   def new
     @topic = BbsTopic.new
-    @topic.upload_files.build
-    @topic.upload_files.build
   end
 
   def create
     @topic = BbsTopic.new(topic_params)
     @topic.user_id = current_user.id
-    if params[:uploads].any?
+    if params[:uploads].try(:any?)
       params[:uploads].each do |upload_file|
         @topic.upload_files << UploadFile.new(file: upload_file)
       end
