@@ -2,7 +2,7 @@
 set :rvm_ruby_string, '1.9.3'        # Or whatever env you want it to run in.
 set :rvm_type, :user
 
-set :repository, "git@github.com:nioteam/magic_orders.git"
+set :repository, "git@git.networking.io:nioteam/magic_orders.git"
 set :branch, "magicnippon"
 
 server "121.11.90.8", :web, :app, :db, primary: true
