@@ -2,14 +2,14 @@
 set :rvm_ruby_string, '1.9.3'        # Or whatever env you want it to run in.
 set :rvm_type, :system
 
-set :repository, "git@github.com:nioteam/magic_orders.git"
+set :repository, "git@git.networking.io:nioteam/magic_orders.git"
 set :branch, "master"
 
 server "magicnippon.networking.io", :web, :app, :db, primary: true
 set :user, "root"
 set :deploy_to, "/data/www/magic_orders"
 
-set :assets_dependencies, %w(app/assets lib/assets vendor/assets Gemfile.lock config/routes.rb)  
+set :assets_dependencies, %w(app/assets lib/assets vendor/assets Gemfile.lock config/routes.rb)
 
 # tasks
 namespace :deploy do
