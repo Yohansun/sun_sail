@@ -252,20 +252,22 @@
             </select>
           </fieldset>
         </div>
-      </div>
 
-      <div class="control-group">
-        <label class="control-label" ><code>配送：</code></label>
         <div class="controls clearfix">
-          <!-- <fieldset class="pull-left form-inline mar_r10">
+          <fieldset class="pull-left form-inline mar_r10">
             <label style="position: relative; ">分流时间：</label>
             <input type="text" style="margin-right:5px;" placeholder="年-月-日" class="input-small dispatch_start_date datepickers" value="<%= @dispatch_start_date %>">
             <input type="text" placeholder="00:00:00" class="input-small dispatch_start_time timepickers" value="<%= @dispatch_start_time %>">
             <i class="icon-arrow-right"></i>
             <input type="text" style="margin-right:5px;" placeholder="年-月-日" class="input-small dispatch_end_date datepickers" value="<%= @dispatch_end_date %>">
             <input type="text" placeholder="00:00:00" class="input-small dispatch_end_time timepickers" value="<%= @dispatch_end_time %>">
-          </fieldset> -->
+          </fieldset>
+        </div>
+      </div>
 
+      <div class="control-group">
+        <label class="control-label" ><code>配送：</code></label>
+        <div class="controls clearfix">
           <fieldset class="pull-left form-inline mar_r10">
             <div id="select_state"><!--买家地域--></div>
           </fieldset>
@@ -360,7 +362,6 @@
         <th data-col='logistic_bill_status'>物流单状态</th>
         <th data-col='order_goods'>商品详细</th>
         <!-- <th data-col='logistic_bill'>物流单</th> -->
-        <th data-col='logistic_waybill'>物流单号</th>
         <th data-col='logistic_company'>物流公司</th>
         <th data-col='invoice_type'>发票类型</th>
         <th data-col='invoice_name'>发票抬头</th>
@@ -370,6 +371,7 @@
         <!-- <th data-col='operator'>操作人</th> -->
         <th data-col='seller' nowrap>配送经销商</th>
         <th data-col='logistic' nowrap>物流配送商</th>
+        <th data-col='logistic_waybill'>物流单号</th>
       </tr>
     </thead>
     <tbody id="trade_rows">

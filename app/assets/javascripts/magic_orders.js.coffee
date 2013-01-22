@@ -101,7 +101,7 @@ window.MagicOrders =
 
     # 不同模式下可见订单列
     @trade_cols_visible_modes = {
-      'trades':                  ['trade_source','deliver_bill','tid','status','status_history','receiver_id','receiver_name','receiver_mobile_phone','receiver_address','buyer_message','seller_memo','cs_memo','gift_memo','color_info','invoice_info', 'point_fee', 'total_fee','seller','logistic'],  #'deliver_bill','logistic_bill','operator','order_split'
+      'trades':                  ['trade_source','deliver_bill','tid','status','status_history','receiver_id','receiver_name','receiver_mobile_phone','receiver_address','buyer_message','seller_memo','cs_memo','gift_memo','color_info','invoice_info', 'point_fee', 'total_fee','seller','logistic', 'logistic_waybill'],  #'deliver_bill','logistic_bill','operator','order_split'
       'deliver':                 ['tid','status','status_history','deliver_bill_id','deliver_bill_status','trade_source','order_goods','receiver_name','receiver_mobile_phone','receiver_address','color_info','invoice_info','seller','cs_memo','logistic'],
       'logistics':               ['trade_source','tid','status','logistic_bill_status','status_history','receiver_id','receiver_name','receiver_mobile_phone','receiver_address','order_goods','color_info','seller','logistic', 'logistic_waybill'],
       'check':                   ['tid','status','deliver_bill_id','status_history','deliver_bill_status','trade_source','order_goods','receiver_name','receiver_mobile_phone','receiver_address','color_info','invoice_info','seller','cs_memo','operator'],

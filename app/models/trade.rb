@@ -674,12 +674,12 @@ class Trade
         end
       end
 
-      # # 按分流时间筛选
-      # if params[:search] && params[:search][:dispatch_start_date].present? && params[:search][:dispatch_end_date].present?
-      #   dispatch_start_time = "#{params[:search][:dispatch_start_date]} #{params[:search][:dispatch_start_time]}".to_time(form = :local)
-      #   dispatch_end_time = "#{params[:search][:dispatch_end_date]} #{params[:search][:dispatch_end_time]}".to_time(form = :local)
-      #   dispatch_time_hash = {:dispatched_at.gte => dispatch_start_time, :dispatched_at.lte => dispatch_end_time}
-      # end
+      # 按分流时间筛选
+      if params[:search] && params[:search][:dispatch_start_date].present? && params[:search][:dispatch_end_date].present?
+        dispatch_start_time = "#{params[:search][:dispatch_start_date]} #{params[:search][:dispatch_start_time]}".to_time(form = :local)
+        dispatch_end_time = "#{params[:search][:dispatch_end_date]} #{params[:search][:dispatch_end_time]}".to_time(form = :local)
+        dispatch_time_hash = {"$and" => [{"dispatched_at" => {"$gte" => dispatch_start_time}}, {"dispatched_at" => {"$lte" => dispatch_end_time}}]}
+      end
 
       # 按来源筛选
       if params[:search][:type_option].present?
@@ -753,8 +753,9 @@ class Trade
       logistic_hash,               seller_memo_hash,         buyer_message_hash,
       has_color_info_hash,         has_cs_memo_hash,         invoice_all_hash,
       cs_memo_void_hash,           color_info_void_hash,     receiver_state_hash,
-      receiver_city_hash,          receiver_district_hash,   simple_search_hash
-      ].compact}
+      receiver_city_hash,          receiver_district_hash,   simple_search_hash,
+      dispatch_time_hash
+    ].compact}
     search_hash == {"$and"=>[]} ? search_hash = nil : search_hash
 
     ## 过滤有留言但还在抓取 + 总筛选
