@@ -4,7 +4,7 @@
 </div><!-- modal-header -->
 <div class="modal-body">
   <fieldset>
-    <table class="table table-bordered">
+    <table class="table table-bordered" id="input_barcode">
       <tbody>
        <!--  <tr>
           <th nowrap>订单编号</th>
@@ -17,9 +17,7 @@
         <tr>
           <td>
             <% for count in [0...order.num] : %>
-              <div class="controls">
-                <input type="text" placeholder="请输入条形码..." class="input-xlarge barcode_<%= order.item_id %>" value="<%= order.barcode[count] %>">
-              </div>
+              <input type="text" placeholder="请输入条形码..." class="input-xlarge barcode_<%= order.item_id %>" value="<%= order.barcode[count] %>">
             <% end %>
           </td>
         </tr>
