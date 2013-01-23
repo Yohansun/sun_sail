@@ -157,6 +157,9 @@ class MagicOrders.Routers.Trades extends Backbone.Router
               $.get '/colors/autocomplete', {num: query}, (data)->
                 process(data)
           })
+        when 'barcode'
+          $(modalDivID).on 'shown', ->
+            $("#input_barcode input:eq(0)").focus()
 
       $(modalDivID).modal('show')
 

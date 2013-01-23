@@ -4,6 +4,7 @@ class MagicOrders.Views.TradesBarcode extends Backbone.View
 
   events:
     'click .save': 'save'
+    'keydown #input_barcode input': 'enter_replace_tab'
 
   initialize: ->
     @model.on("fetch", @render, this)
@@ -11,6 +12,18 @@ class MagicOrders.Views.TradesBarcode extends Backbone.View
   render: ->
     $(@el).html(@template(trade: @model))
     this
+
+  enter_replace_tab: (e) ->
+    if $(e.currentTarget).next("input").length == 0
+      input = $(e.currentTarget).parents("tr").next().find("input:first")
+    else
+      input = $(e.currentTarget).next("input")
+    if e.which == 13
+      e.preventDefault()
+      if input.length > 0
+        input.focus()
+      else
+        $(e.currentTarget).blur()
 
   save: ->
     blocktheui()
