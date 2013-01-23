@@ -45,6 +45,7 @@ class Trade
   field :request_return_at, type: DateTime                # 退货相关
   field :confirm_return_at, type: DateTime
   field :confirm_refund_at, type: DateTime
+  field :promotion_fee, type: Float, default: 0.0         # trade.promotion_details中discount_fee的总和。
 
   # 拆单相关
   field :splitted, type: Boolean, default: false

@@ -16,23 +16,26 @@ class TaobaoTradeSplitter
     end
 
     count = grouped_orders.select{|key| !TradeSetting.trade_split_postfee_special_seller_ids.include?(key.to_i)}.size
+    post_fee = trade.post_fee / count
 
     grouped_orders.each do |key, value|
+      taotal_fee = value.inject(0.0) { |sum, el| sum + el.price * el.num }
+
+      oids = value.map(&:oid)
+      promotion_fee = trade.promotion_details.where(:oid.in => oids).inject(0.0) { |sum, el| sum + el.discount_fee }
+
       if TradeSetting.trade_split_postfee_special_seller_ids.include?(key.to_i)
-        splitted_orders << {
-          orders: value,
-          post_fee: 0.0,
-          default_seller: key,
-          total_fee: value.inject(0.0) { |sum, el| sum + el.price * el.num }
-        }
-      else
-        splitted_orders << {
-          orders: value,
-          post_fee: trade.post_fee / count,
-          default_seller: key,
-          total_fee: value.inject(0.0) { |sum, el| sum + el.price * el.num }
-        }
+        post_fee = 0.0
       end
+
+      splitted_orders << {
+        orders: value,
+        post_fee: post_fee,
+        default_seller: key,
+        total_fee: value.inject(0.0) { |sum, el| sum + el.price * el.num },
+        promotion_fee: promotion_fee,
+        payment: taotal_fee + post_fee - promotion_fee
+      }
     end
 
     splitted_orders

@@ -6,7 +6,7 @@ class DelayAutoDispatch
   def perform(id)
   	trade = Trade.where(_id: id).first
   	return unless trade
-   	trade.auto_dispatch!
-   	trade.save
+
+    trade.auto_dispatch! unless TradeSplitter.new(trade).split!
   end
 end

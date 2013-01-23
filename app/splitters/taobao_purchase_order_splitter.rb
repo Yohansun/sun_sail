@@ -22,15 +22,13 @@ class TaobaoPurchaseOrderSplitter
         splitted_orders << {
           orders: value,
           post_fee: 0.0,
-          default_seller: key,
-          total_fee: value.inject(0.0) { |sum, el| sum + el.price * el.num }
+          default_seller: key
         }
       else
         splitted_orders << {
           orders: value,
           post_fee: trade.post_fee / count,
-          default_seller: key,
-          total_fee: value.inject(0.0) { |sum, el| sum + el.price * el.num }
+          default_seller: key
         }
       end
     end

@@ -157,18 +157,18 @@ class TradeDecorator < Draper::Base
   end
 
   def post_fee
-      trade.post_fee
+    trade.post_fee
   end
 
   #TaobaoPurchaseOrder doesn't have seller_disount
   def seller_discount
     case trade._type
-      when 'TaobaoPurchaseOrder'
-        0
-      when 'TaobaoTrade'
-        (trade.total_fee + trade.post_fee - trade.payment).round(2)
-      when 'JingdongTrade'
-        trade.seller_discount
+    when 'TaobaoPurchaseOrder'
+      0.0
+    when 'TaobaoTrade'
+      trade.promotion_fee
+    when 'JingdongTrade'
+      trade.seller_discount
     end
   end
 
@@ -193,22 +193,24 @@ class TradeDecorator < Draper::Base
   def point_fee
     case trade._type
     when 'TaobaoPurchaseOrder'
+      0.0
     when 'TaobaoTrade'
       trade.point_fee
     when 'JingdongTrade'
+      0.0
     end
   end
 
   #总价
   def sum_fee
-     case trade._type
-     when 'TaobaoPurchaseOrder'
-       trade.orders_total_fee
-     when 'TaobaoTrade'
-       trade.total_fee
-    when 'JingdongTrade' 
-       trade.total_fee
-    end  
+    case trade._type
+    when 'TaobaoPurchaseOrder'
+      trade.orders_total_fee
+    when 'TaobaoTrade'
+      trade.total_fee
+    when 'JingdongTrade'
+      trade.total_fee
+    end
   end
 
   def buyer_message
