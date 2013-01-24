@@ -3,6 +3,9 @@ require "spec_helper"
 describe "Split a TaobaoTrade's orders" do
 	before do
 		@trade = create(:taobao_trade)
+		@trade.total_fee = 20.0
+  	@trade.payment = 40.0
+  	@trade.post_fee = 20.0
 	  TradeSetting.trade_split_postfee_special_seller_ids = []
 	end
 
@@ -15,9 +18,6 @@ describe "Split a TaobaoTrade's orders" do
 
   context "while it has orders" do
   	before do
-  		@trade.total_fee = 20.0
-  		@trade.payment = 40.0
-  		@trade.post_fee = 20.0
   		@order1 = @trade.orders.build(num: 2, payment: 10.0, total_fee: 10.0, price: 5.0)
   		@order2 = @trade.orders.build(num: 1, payment: 10.0, total_fee: 10.0, price: 10.0)
 		end
