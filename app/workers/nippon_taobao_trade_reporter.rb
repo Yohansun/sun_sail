@@ -50,11 +50,11 @@ class NipponTaobaoTradeReporter
       sum_fee = trade.total_fee
       post_fee = trade.post_fee
       total_fee = trade.payment
-      seller_discount = sum_fee + post_fee - total_fee
+      seller_discount = trade.promotion_fee
       trade_orders.each do |order|
-        title = order.title 
+        title = order.title
         order_num = order.num
-        color_num = order.color_num 
+        color_num = order.color_num
         order_price = order.price
         cs_memo = "#{trade_cs_memo} #{order.cs_memo}"
         if order.color_num.present?
