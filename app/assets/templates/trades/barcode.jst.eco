@@ -11,14 +11,20 @@
           <th>条形码</th>
         </tr>
         <% for order in @trade.get('orders'): %>
-        <tr>
-          <td><%= order.title %> x <%= order.num %></td>
-          <td>
-            <% for count in [0...order.num] : %>
-              <input type="text" placeholder="请输入条形码..." class="input-xlarge barcode_<%= order.item_id %>" value="<%= order.barcode[count] %>">
-            <% end %>
-          </td>
-        </tr>
+          <tr>
+            <td rowspan="<%= order.num + 1 %>"><%= order.title %> x <%= order.num %></td>
+          </tr>
+          <% for count in [0...order.num] : %>
+          <tr>
+            <td>
+              <% for item in order.bill_info : %>
+                <% for [0...item.number] : %>
+                  <input type="text" placeholder="请输入条形码..." class="input-xlarge barcode_<%= order.item_id %>" value="<%= order.barcode[count] %>">
+                <% end %>
+              <% end %>
+            </td>
+          </tr>
+          <% end %>
         <% end %>
       </tbody>
     </table>
