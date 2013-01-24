@@ -24,6 +24,7 @@ class MagicOrders.Views.TradesBarcode extends Backbone.View
         input.focus()
       else
         $(e.currentTarget).blur()
+        $(".save").click()
 
   save: ->
     blocktheui()
