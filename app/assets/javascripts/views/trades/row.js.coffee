@@ -16,7 +16,9 @@ class MagicOrders.Views.TradesRow extends Backbone.View
   initialize: ->
 
   render: ->
-   
+    if $("tr#trade_#{@model.get('id')}").hasClass('notice_tr')
+      $(@el).addClass('notice_tr')
+
     $(@el).attr("id", "trade_#{@model.get('id')}")
     $(@el).html(@template(trade: @model))
 
