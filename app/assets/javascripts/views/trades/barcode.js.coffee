@@ -15,7 +15,10 @@ class MagicOrders.Views.TradesBarcode extends Backbone.View
 
   enter_replace_tab: (e) ->
     if $(e.currentTarget).next("input").length == 0
-      input = $(e.currentTarget).parents("tr").next().find("input:first")
+      if $(e.currentTarget).parents("tr").next().find("input:first").length == 0
+        input = $(e.currentTarget).parents("tr").next().next().find("input:first")
+      else
+        input = $(e.currentTarget).parents("tr").next().find("input:first")
     else
       input = $(e.currentTarget).next("input")
     if e.which == 13
