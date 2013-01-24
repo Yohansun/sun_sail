@@ -131,11 +131,10 @@ class TaobaoPurchaseOrder < Trade
   end  
 
   def orders_total_fee
-    orders.inject(0) { |sum, order| sum + order.buyer_payment.to_f }
+    orders.inject(0.0) { |sum, order| sum + order.buyer_payment.to_f }
   end 
 
- def payment
-   orders_total_fee + post_fee
- end 
-
+  def payment
+    orders_total_fee + post_fee
+  end
 end

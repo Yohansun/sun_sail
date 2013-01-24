@@ -23,8 +23,19 @@ class TradeSplitter
 
       # TODO 完善物流费用拆分逻辑
       new_trade.post_fee = splitted_order[:post_fee]
-      new_trade.total_fee = splitted_order[:total_fee]
-      new_trade.payment = new_trade.orders.sum(:payment)
+
+      if splitted_order[:total_fee].present?
+        new_trade.total_fee = splitted_order[:total_fee]
+      end
+
+      if splitted_order[:payment].present?
+        new_trade.payment = splitted_order[:payment]
+      end
+
+      if splitted_order[:promotion_fee].present?
+        new_trade.promotion_fee = splitted_order[:promotion_fee]
+      end
+
       new_trade.splitted = true
       new_trade.has_color_info = new_trade.orders.any?{|order| order.color_num.present?}
 

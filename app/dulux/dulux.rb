@@ -50,12 +50,21 @@ module Dulux
         grouped_orders["#{seller_id}"] = tmp
       end
 
+      post_fee = trade.post_fee / grouped_orders.size
+
       grouped_orders.each do |key, value|
+        total_fee = value.inject(0.0) { |sum, el| sum + el.price * el.num }
+
+        oids = value.map(&:oid)
+        promotion_fee = trade.promotion_details.where(:oid.in => oids).inject(0.0) { |sum, el| sum + el.discount_fee }
+
         splitted_orders << {
           orders: value,
-          post_fee: trade.post_fee / grouped_orders.size ,
+          post_fee: post_fee,
           default_seller: key,
-          total_fee: value.inject(0.0) { |sum, el| sum + el.price * el.num }
+          total_fee: total_fee,
+          promotion_fee: promotion_fee,
+          payment: total_fee + post_fee - promotion_fee
         }
       end
 

@@ -75,7 +75,7 @@ class DuluxTaobaoTradeReporter
         post_fee = trade.post_fee
         total_fee = trade.payment
         modify_payment = trade.modify_payment
-        seller_discount  = sum_fee + post_fee - total_fee
+        seller_discount = trade.promotion_fee
         created = trade.created.try(:strftime,"%Y-%m-%d %H:%M:%S")
         pay_time = trade.pay_time.try(:strftime,"%Y-%m-%d %H:%M:%S")
         dispatched_at = trade.dispatched_at.try(:strftime,"%Y-%m-%d %H:%M:%S")

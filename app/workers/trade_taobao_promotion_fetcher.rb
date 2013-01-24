@@ -6,28 +6,27 @@ class TradeTaobaoPromotionFetcher
   def perform(tid)
     
     trade = TaobaoTrade.where(tid: tid).first
+    return unless trade
     
     result = TaobaoQuery.get({
       :method => 'taobao.trade.fullinfo.get',
       :fields => 'promotion_details',
-      :tid => tid }, trade.try(:trade_source_id)
+      :tid => trade.tid }, trade.trade_source_id
     )
 
-    if result["trade_fullinfo_get_response"] && result["trade_fullinfo_get_response"]['trade'] &&
-        result["trade_fullinfo_get_response"]["trade"]["promotion_details"]
-      promotion_details = result["trade_fullinfo_get_response"]["trade"]["promotion_details"]["promotion_detail"]
-      if promotion_details.to_a.present?
-        promotion_details.to_a.each do |pi|
-          trade.promotion_details.create(
-              :id => pi["id"],
-              :promotion_id => pi["promotion_id"],
-              :promotion_name => pi["promotion_name"],
-              :promotion_desc => pi["promotion_desc"],
-              :discount_fee => pi["discount_fee"]
-          )
-        end
+    if promotion_details = result.try(:[], "trade_fullinfo_get_response").try(:[], 'trade').try(:[], 'promotion_details').try(:[], 'promotion_detail')
+      trade.promotion_details.delete_all
+      promotion_details.each do |pi|
+        promotion = trade.promotion_details.new pi
+        promotion.oid = pi['id']
+        promotion.save
       end
     end
-  end 
-  
+
+    trade.update_attributes promotion_fee: trade.promotion_details.sum(:discount_fee), got_promotion: true
+
+    delay_time = TradeSetting.delay_time || 0
+
+    DelayAutoDispatch.perform_in(delay_time, trade.id)
+  end
 end

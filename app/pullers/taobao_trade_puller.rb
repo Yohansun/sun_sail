@@ -68,16 +68,6 @@ class TaobaoTradePuller
 
           $redis.sadd('TaobaoTradeTids',trade['tid'])
 
-          if trade.dispatchable? && trade.auto_dispatchable?
-            if TradeSetting.company == 'dulux'
-              DelayAutoDispatch.perform_in(TradeSetting.delay_time || 1.hours, trade.id)
-            else
-              unless TradeSplitter.new(trade).split!
-                trade.auto_dispatch!
-              end
-            end
-          end
-
           TradeTaobaoMemoFetcher.perform_async(trade.tid) 
           TradeTaobaoPromotionFetcher.perform_async(trade.tid)
         end

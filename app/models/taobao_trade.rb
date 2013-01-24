@@ -16,7 +16,7 @@ class TaobaoTrade < Trade
 
   field :price, type: Float
   field :seller_cod_fee, type: Float
-  field :discount_fee, type: Float
+  field :discount_fee, type: Float, default: 0.0
   field :point_fee, type: Float
   field :has_post_fee, type: Float
   field :total_fee, type: Float
@@ -86,6 +86,7 @@ class TaobaoTrade < Trade
   field :timeout_action_time, type: DateTime
   field :is_3D, type: Boolean
   field :promotion, type: String
+  field :got_promotion, type: Boolean, default: false  # 优惠信息是否抓到。
 
   embeds_many :taobao_orders
   embeds_many :promotion_details
@@ -115,7 +116,7 @@ class TaobaoTrade < Trade
   end
 
   def auto_dispatchable? 
-    !has_buyer_message && has_special_seller_memo?
+    !has_buyer_message && has_special_seller_memo? && dispatchable?
   end
 
   def has_special_seller_memo?
@@ -140,12 +141,16 @@ class TaobaoTrade < Trade
 
   def auto_dispatch!
     return unless auto_dispatchable?
+
     dispatch!
-    if seller_id
-      self.operation_logs.create!(operated_at: Time.now, operation: '延时自动分流')
-    else
-      self.operation_logs.create!(operated_at: Time.now, operation: '延时自动分流,未匹配到经销商')   
-    end
+
+    operation_desc =  if seller_id
+                        '自动分流'
+                      else
+                        '自动分流,未匹配到经销商'
+                      end
+
+    self.operation_logs.create(operated_at: Time.now, operation: operation_desc)
   end
 
   def dispatch!(seller = nil)
