@@ -1,6 +1,6 @@
 <div class="modal-header">
   <button type="button" class="close" data-dismiss="modal">×</button>
-  <h3>发货单</h3>
+  <h3>发货单打印</h3>
 </div><!-- modal-header -->
 <div class="modal-body">
   <h4 class="tc"><%= @trade.get('shopname') %>发货单</h4>
