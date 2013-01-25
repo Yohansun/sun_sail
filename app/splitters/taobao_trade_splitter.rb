@@ -16,7 +16,7 @@ class TaobaoTradeSplitter
     end
 
     count = grouped_orders.select{|key| !TradeSetting.trade_split_postfee_special_seller_ids.include?(key.to_i)}.size
-    post_fee = trade.post_fee / count
+    post_fee = (trade.post_fee / count).round(2)
 
     grouped_orders.each do |key, value|
       taotal_fee = value.inject(0.0) { |sum, el| sum + el.price * el.num }
