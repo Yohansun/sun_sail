@@ -16,7 +16,9 @@
 <td>
   <% for product in @bill.get('orders') : %>
     <%= product.title %> X <%= product.num %><br>
+    <% if MagicOrders.enable_module_colors == true : %>
     <span class="label label-info">调色信息</span><%= product.color_info %><br>
+    <% end %>
     <span class="label label-info">客服留言</span><%= product.cs_memo %>
   <% end %>
 </td>

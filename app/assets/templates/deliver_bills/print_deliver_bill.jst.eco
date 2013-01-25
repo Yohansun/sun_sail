@@ -31,7 +31,9 @@
         <th width="20%">产品编码</th>
         <th width="45%">商品名称</th>
         <th width="10%">产品数量</th>
+        <% if MagicOrders.enable_module_colors == true : %>
         <th width="25%">调色信息</th>
+        <% end %>
       </tr>
       <% count = 0 %>
       <% for order in @bill.get('orders') : %>
@@ -40,9 +42,9 @@
         <td><%= order.title %></td>
         <td><%= order.num  %></td>
         <% count = count + order.num %>
-        <td>
-          <%= order.color_info %>
-        </td>
+        <% if MagicOrders.enable_module_colors == true : %>
+        <td><%= order.color_info %></td>
+        <% end %>
       </tr>
       <% end %>
       <tr>

@@ -24,7 +24,9 @@
           <tr>
             <th width="50%">商品名称</th>
             <th width="">数量</th>
+            <% if MagicOrders.enable_module_colors == true : %>
             <th width="230">调色信息</th>
+            <% end %>
             <% unless @trade.get('total_fee') is undefined : %>
               <th width="">单价</th>
             <% end %>
@@ -44,11 +46,13 @@
                 <tr>
                   <td><%= info.title %></td>
                   <td><%= info.number * order.num %></td>
+                  <% if MagicOrders.enable_module_colors == true : %>
                   <td class='js-color-label-<%= order.id %>-<%= info.iid %>'>
                     <% for color, array of info['colors'] : %>
                       <%= array[0] %>桶 <%= color %> <%= array[1] %><br>
                     <% end %>
                   </td>
+                  <% end %>
                   <td>---</td>
                   <td>---</td>
                 </tr>
@@ -59,11 +63,13 @@
                 <tr>
                   <td><%= info.title %></td>
                   <td><%= info.number * order.num %></td>
+                  <% if MagicOrders.enable_module_colors == true : %>
                   <td class='js-color-label-<%= order.id %>'>
                     <% for color, array of info['colors'] : %>
                       <%= array[0] %>桶 <%= color %> <%= array[1] %><br>
                     <% end %>
                   </td>
+                  <% end %>
                   <% if @trade.get('total_fee') isnt undefined and order['bill_info'].length < 2 : %>
                     <td>￥<%= order.price %></td>
                   <% end %>
@@ -167,7 +173,9 @@
           <tbody>
             <tr>
               <th>商品</th>
+              <% if MagicOrders.enable_module_colors == true : %>
               <th width='160px'>调色</th>
+              <% end %>
               <th>备注</th>
             </tr>
             <% for order in @trade.get('orders'): %>
@@ -187,6 +195,7 @@
                 <% for info in order.bill_info : %>
                 <tr>
                   <td><%= info.title %></td>
+                  <% if MagicOrders.enable_module_colors == true : %>
                   <td>
                     <% existing_colors = [] %>
                     <%for key, value of info.colors : %>
@@ -199,6 +208,7 @@
                         value='<%= existing_colors[count] %>'><br/>
                     <% end %>
                   </td>
+                  <% end %>
                   <td>---</td>
                 </tr>
                 <% end %>
