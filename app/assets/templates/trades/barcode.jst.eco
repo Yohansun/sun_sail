@@ -15,11 +15,17 @@
             <td rowspan="<%= order.num + 1 %>"><%= order.title %> x <%= order.num %></td>
           </tr>
           <% for count in [0...order.num] : %>
+          <% barcodes = order.barcode[count] %>
+          <% if barcodes == undefined or barcodes == null : %>
+            <% barcodes = [] %>
+          <% end %>
           <tr>
             <td>
+              <% i = 0 %>
               <% for item in order.bill_info : %>
                 <% for [0...item.number] : %>
-                  <input type="text" placeholder="请输入条形码..." class="input-xlarge barcode_<%= order.item_id %>" value="<%= order.barcode[count] %>">
+                  <input type="text" placeholder="请输入条形码..." class="input-xlarge barcode_<%= order.item_id %>_<%= count %>" value="<%= barcodes[i] %>">
+                  <% i = i + 1 %>
                 <% end %>
               <% end %>
             </td>
