@@ -83,13 +83,6 @@
             </div>
           </div>
 
-          <div class="control-group">
-            <label class="control-label" for="">档次：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.grade.try(:name) %></p>
-            </div>
-          </div>
-
           <% if TradeSetting.enable_module_colors == true %>
           <div class="control-group">
             <label class="control-label" for="">颜色：</label>
@@ -98,40 +91,20 @@
             </div>
           </div>
           <% end %>
-
-          <div class="control-group">
-            <label class="control-label" for="">状态：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.present_status %></p>
+         </div>
+         
+         <% if @product.pic_url.present? %>
+           <div class="w_48 pull-left">
+            <div class="control-group">
+              <label class="control-label tl" for="">商品图片：</label>
+              <div class="controls">
+                <ul style="list-style-type:none;" class="clearfix good_img_size">
+                  <li><%= image_tag @product.pic_url %></li>
+                </ul>
+              </div>
             </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for="">技术参数：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.technical_data %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for="">描述：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.description %></p>
-            </div>
-          </div>
-        </div>
-        <div class="w_48 pull-left">
-          <div class="control-group">
-            <label class="control-label tl" for="">商品图片：</label>
-            <div class="controls">
-              <% if @product.product_image.present? %>
-              <ul style="list-style-type:none;" class="clearfix good_img_size">
-                <li><%= image_tag @product.product_image %></li>
-              </ul>
-              <% end %>
-            </div>
-          </div>
-          </div>
+           </div>
+          <% end %>  
       </fieldset>
 
       <fieldset>

@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 class TradeReport 
-	include ActionView::Helpers::NumberHelper
+  include ActionView::Helpers::NumberHelper
   include Mongoid::Document
   include Mongoid::Timestamps
   belongs_to :user
@@ -11,55 +11,58 @@ class TradeReport
   field :request_at, type:DateTime
 
   def export_report
-    DuluxTaobaoTradeReporter.perform_async(self.id)  if TradeSetting.company == "dulux"
-    if TradeSetting.company == "nippon" && conditions.fetch("search").fetch("type_option").present?
-      if conditions.fetch("search").fetch("type_option") == "TaobaoTrade"
+    if TradeSetting.company == "dulux"
+      DuluxTaobaoTradeReporter.perform_async(self.id) 
+    elsif TradeSetting.company == "nippon"
+      if conditions.fetch("search").fetch("type_option").present? && conditions.fetch("search").fetch("type_option") == "TaobaoTrade"
         NipponTaobaoTradeReporter.perform_async(self.id) 
       else 
-        NipponOtherTradeReporter.perform_async(self.id)   	
+        NipponOtherTradeReporter.perform_async(self.id)     
       end
+    else
+      NipponTaobaoTradeReporter.perform_async(self.id)    
     end
   end
 
   def username
-  	user = User.find_by_id self.user_id
-  	user.try(:name)
-  end	 	 
+    user = User.find_by_id self.user_id
+    user.try(:name)
+  end    
 
-  def status	
-  	if self.performed_at && File.exist?(self.url) && !File.zero?(self.url)
-  		"可用"
-  	else
-  		"不可用"
-  	end	
+  def status  
+    if self.performed_at && File.exist?(self.url) && !File.zero?(self.url)
+      "可用"
+    else
+      "不可用"
+    end 
   end
 
   def url
-  	"#{Rails.root}/data/#{self.id}.xls"
-  end	
+    "#{Rails.root}/data/#{self.id}.xls"
+  end 
 
   def size
-  	if self.performed_at && File.exist?(self.url) && !File.zero?(self.url)
-  		number_to_human_size(File.size(self.url))
-  	else
-  		"未知"
-  	end		
-  end	
+    if self.performed_at && File.exist?(self.url) && !File.zero?(self.url)
+      number_to_human_size(File.size(self.url))
+    else
+      "未知"
+    end   
+  end 
 
   def ext_name
-  	if self.performed_at && File.exist?(self.url) && !File.zero?(self.url)
-  		File.extname self.url
-  	else
-  		"未知"
-  	end
-  end	
+    if self.performed_at && File.exist?(self.url) && !File.zero?(self.url)
+      File.extname self.url
+    else
+      "未知"
+    end
+  end 
 
   def performed_time
-  	if self.performed_at && File.exist?(self.url) && !File.zero?(self.url)
-  		self.performed_at.to_s(:db)
-  	else
-  		"还未生成"
-  	end	
-  end	
+    if self.performed_at && File.exist?(self.url) && !File.zero?(self.url)
+      self.performed_at.to_s(:db)
+    else
+      "还未生成"
+    end 
+  end 
 
 end

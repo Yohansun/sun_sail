@@ -99,7 +99,6 @@ MagicOrders::Application.routes.draw do
     collection do
       get :fetch_products
     end
-    get :change_status
   end
 
   resources :logistics do
