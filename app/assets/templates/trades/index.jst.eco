@@ -35,7 +35,7 @@
           <li><a href="#" data-trade-mode="trades" data-trade-status="undelivered">已分流，未发货</a></li>
           <li><a href="#" data-trade-mode="trades" data-trade-status="delivered">已发货</a></li>
           <li><a href="#" data-trade-mode="trades" data-trade-status="deliver_unconfirmed">已发货，未确认发货</a></li>
-          <li><a href="#" data-trade-mode="trades" data-trade-status="refund">退货</a></li>
+         <!-- <li><a href="#" data-trade-mode="trades" data-trade-status="refund">退货</a></li> -->
           <% if MagicOrders.role_key != 'seller' : %>
           <li><a href="#" data-trade-mode="trades" data-trade-status="closed">交易关闭</a></li>
           <li><a href="#" data-trade-mode="trades" data-trade-status="unusual_trade">交易异常</a></li>
@@ -86,17 +86,16 @@
           <li><a href="#" data-trade-mode="send" data-trade-status="seller_delivered">已发货</a></li>
         </ul>
       </li>
-      <!-- <li class="dropdown">
+     <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
           退货
           <b class="caret"></b>
         </a>
         <ul class="dropdown-menu">
-          <li><a href="#" data-trade-mode="return">申请退货</a></li>
-          <li><a href="#">退货中</a></li>
-          <li><a href="#">退货完成</a></li>
+          <li><a href="#" data-trade-mode="return" data-trade-status="request_return">已申请退货</a></li>
+          <li><a href="#" data-trade-mode="return" data-trade-status="confirm_return">已确认退货</a></li>
         </ul>
-      </li> -->
+      </li>
       <!-- <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
           退款

@@ -5,6 +5,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     'trades/:trade_mode-:trade_type': 'index'
     'send/:trade_mode-:trade_type': 'index'
     'color/:trade_mode-:trade_type': 'index'
+    'return/:trade_mode-:trade_type': 'index'
     'trades/:id/splited': 'splited'
     'trades/:id/:operation': 'operation'
     'trades/print_deliver_bills': 'printDeliverBills'
