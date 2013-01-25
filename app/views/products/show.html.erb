@@ -90,12 +90,14 @@
             </div>
           </div>
 
+          <% if TradeSetting.enable_module_colors == true %>
           <div class="control-group">
             <label class="control-label" for="">颜色：</label>
             <div class="controls">
               <p class="mar_t5"><%= @product.colors.map(&:name).join(';') %></p>
             </div>
           </div>
+          <% end %>
 
           <div class="control-group">
             <label class="control-label" for="">状态：</label>

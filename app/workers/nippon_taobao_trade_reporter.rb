@@ -22,7 +22,12 @@ class NipponTaobaoTradeReporter
     bold = Spreadsheet::Format.new(:weight => :bold)
 
     row_number = 1
-    sheet1.row(1).concat ["订单来源", "订单编号", "当前状态", "下单时间", "付款时间", "分流时间", "发货时间", "送货经销商", "接口人", "买家地址-省", "买家地址-市", "买家地址-区", "买家地址", "买家姓名", "联系电话", "商品名", "数量", "商品标价", "单品总价", "商品总价（不含运费）",  "卖家优惠", "运费", "订单总金额", "买家旺旺", "买家留言", "客服备注", "发票信息", "需要调色", "色号"]
+    if TradeSetting.enable_module_colors == true
+      header = ["订单来源", "订单编号", "当前状态", "下单时间", "付款时间", "分流时间", "发货时间", "送货经销商", "接口人", "买家地址-省", "买家地址-市", "买家地址-区", "买家地址", "买家姓名", "联系电话", "商品名", "数量", "商品标价", "单品总价", "商品总价（不含运费）",  "卖家优惠", "运费", "订单总金额", "买家旺旺", "买家留言", "客服备注", "发票信息", "需要调色", "色号"]
+    else
+      header = ["订单来源", "订单编号", "当前状态", "下单时间", "付款时间", "分流时间", "发货时间", "送货经销商", "接口人", "买家地址-省", "买家地址-市", "买家地址-区", "买家地址", "买家姓名", "联系电话", "商品名", "数量", "商品标价", "单品总价", "商品总价（不含运费）",  "卖家优惠", "运费", "订单总金额", "买家旺旺", "买家留言", "客服备注", "发票信息"]
+    end
+    sheet1.row(1).concat(header)
      trades.each_with_index do |trade, trade_index|
       trade_orders = trade.orders
       trade_source = '淘宝'
@@ -43,7 +48,9 @@ class NipponTaobaoTradeReporter
       receiver_mobile = trade.receiver_mobile
       buyer_nick = trade.buyer_nick
       buyer_message = trade.buyer_message
-      has_color_info = trade.has_color_info
+      if TradeSetting.enable_module_colors == true
+        has_color_info = trade.has_color_info
+      end
       tid = trade.splitted? ? trade.splitted_tid : trade.tid
       trade_cs_memo = trade.cs_memo
       invoice_name = trade.invoice_name
@@ -54,18 +61,27 @@ class NipponTaobaoTradeReporter
       trade_orders.each do |order|
         title = order.title
         order_num = order.num
-        color_num = order.color_num
+        if TradeSetting.enable_module_colors == true
+          color_num = order.color_num
+        end
         order_price = order.price
         cs_memo = "#{trade_cs_memo} #{order.cs_memo}"
-        if order.color_num.present?
-          color_num = order.color_num.join(",")
-        else
-          color_num = ''
+        if TradeSetting.enable_module_colors == true
+          if order.color_num.present?
+            color_num = order.color_num.join(",")
+          else
+            color_num = ''
+          end
+          need_color = has_color_info ? '是' : '否'
         end
-        need_color = has_color_info ? '是' : '否'
         row_number += 1
-        sheet1.update_row row_number, trade_source, tid, taobao_status_memo, created, pay_time, dispatched_at, delivered_at, seller_name, interface_name, receiver_state, receiver_city, receiver_district, receiver_address, receiver_name, receiver_mobile, 
-        title, order_num, order_price, sum_fee,  seller_discount, post_fee, total_fee, buyer_nick, buyer_message, cs_memo, invoice_name, need_color, color_num
+        if TradeSetting.enable_module_colors == true
+          sheet1.update_row row_number, trade_source, tid, taobao_status_memo, created, pay_time, dispatched_at, delivered_at, seller_name, interface_name, receiver_state, receiver_city, receiver_district, receiver_address, receiver_name, receiver_mobile, 
+          title, order_num, order_price, sum_fee,  seller_discount, post_fee, total_fee, buyer_nick, buyer_message, cs_memo, invoice_name, need_color, color_num
+        else
+          sheet1.update_row row_number, trade_source, tid, taobao_status_memo, created, pay_time, dispatched_at, delivered_at, seller_name, interface_name, receiver_state, receiver_city, receiver_district, receiver_address, receiver_name, receiver_mobile, 
+          title, order_num, order_price, sum_fee,  seller_discount, post_fee, total_fee, buyer_nick, buyer_message, cs_memo, invoice_name
+        end
         if trade_index.even?
           sheet1.row(row_number).default_format = yellow_format
         else

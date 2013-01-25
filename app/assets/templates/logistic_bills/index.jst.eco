@@ -62,17 +62,19 @@
           <li><a href="#" data-trade-mode="send" data-trade-status="seller_delivered">已发货</a></li>
         </ul>
       </li>
-      <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-          调色
-          <b class="caret"></b>
-        </a>
-        <ul class="dropdown-menu">
-          <li><a href="#" data-trade-mode="color" data-trade-status="color_unmatched">未申请调色</a></li>
-          <li><a href="#" data-trade-mode="color" data-trade-status="color_matched">已申请,未确认调色</a></li>
-          <li><a href="#" data-trade-mode="color" data-trade-status="color_confirmed">已确认调色</a></li>
-        </ul>
-      </li>
+        <% if MagicOrders.enable_module_colors == true : %>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+            调色
+            <b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a href="#" data-trade-mode="color" data-trade-status="color_unmatched">未申请调色</a></li>
+            <li><a href="#" data-trade-mode="color" data-trade-status="color_matched">已申请,未确认调色</a></li>
+            <li><a href="#" data-trade-mode="color" data-trade-status="color_confirmed">已确认调色</a></li>
+          </ul>
+        </li>
+        <% end %>
       <% end %>
     </ul>
   </div>

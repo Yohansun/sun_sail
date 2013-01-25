@@ -7,7 +7,9 @@
     <tr>
       <th style="padding: 5px;background:#F2DEDE;border-right:1px dashed #fff;" width="350">商品名</th>
       <th style="padding: 5px;background:#F2DEDE;text-align: center;border-right:1px dashed #FFFFFF;">特殊属性</th>
+      <% if TradeSetting.enable_module_colors == true %>
       <th style="padding: 5px;background:#F2DEDE;ttext-align: center;border-right:1px dashed #FFFFFF;">调色信息</th>
+      <% end %>
       <% unless TradeSetting.company == "dulux"%>
       <th style="padding: 5px;background:#F2DEDE;ttext-align: center;border-right:1px dashed #FFFFFF;">标价</th>
       <% end %>
@@ -19,6 +21,7 @@
       <tr>
         <td style="border-right:1px dashed #F2DEDE;padding: 5px;"><%= info[:title] %></td>
         <td style="border-right:1px dashed #F2DEDE;padding: 5px;text-align: center;"><%= order.sku_properties %></td>
+        <% if TradeSetting.enable_module_colors == true %>
         <td style="border-right:1px dashed #F2DEDE;padding: 5px;text-align: center;">
         <%- if info[:colors].present? %>
           <%- info[:colors].each do |color, array| %>
@@ -26,6 +29,7 @@
           <%- end %>
         <%- end %>
         </td>
+        <% end %>
 
         <% unless TradeSetting.company == "dulux"%>
         <td style="border-right:1px dashed #F2DEDE;padding: 5px;text-align: center;"><span class="font-gray">¥<%= order.price %></span></td>

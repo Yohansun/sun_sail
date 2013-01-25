@@ -107,6 +107,7 @@
           <li><a href="#">退款完成</a></li>
         </ul>
       </li> -->
+      <% if MagicOrders.enable_module_colors == true : %>
       <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
           调色
@@ -118,6 +119,7 @@
           <li><a href="#" data-trade-mode="color" data-trade-status="color_confirmed">已确认调色</a></li>
         </ul>
       </li>
+      <% end %>
       <!-- <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
           发票
@@ -350,7 +352,9 @@
         <th data-col='gift_memo'>赠品<br/>备注</th>
         <% end %>
         <th data-col='deliver_bill'>发货单</th>
+        <% if MagicOrders.enable_module_colors == true : %>
         <th data-col='color_info'>调色<br/>信息</th>
+        <% end %>
         <th data-col='invoice_info'>发票<br/>信息</th>
         <th data-col='point_fee'>使用<br/>积分</th>
         <% if MagicOrders.company == 'nippon' || (MagicOrders.company == 'dulux' and MagicOrders.role_key != 'seller' and MagicOrders.role_key != 'logistic') : %>

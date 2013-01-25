@@ -1,6 +1,7 @@
 class ColorsController < ApplicationController
   before_filter :authenticate_user!
   before_filter :admin_only!, :except => [:autocomplete]
+  before_filter :check_module
 
   def index
   	@colors = Color.page params[:page]
@@ -42,5 +43,12 @@ class ColorsController < ApplicationController
     params[:num] = params[:num].gsub(/\W/, '') if params[:num].present?
     colors = Color.where("num LIKE '%#{params[:num]}%'")
     render json: colors.map { |c| c.num }
+  end
+
+  private
+
+  def check_module
+    redirect_to "/" and return if TradeSetting.enable_module_colors != true
+    redirect_to "/" and return if !current_user.has_role?(:admin)
   end
 end
