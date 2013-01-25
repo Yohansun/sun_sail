@@ -153,6 +153,7 @@ function dashboardFadeIn() {
 
 jsReady = false
 var dd
+var flash_path = "/swf/deliver_bill_<%= TradeSetting.company %>.swf"
 
 function isReady() { // //flash 会调用此方法检测页面 js 是否已经准备完毕；
   return jsReady
@@ -164,6 +165,10 @@ function pageInit() {   //flash 会检测页面 js 是否已经准备完毕；
 
 function printfeedback(str){  //如果flash 数据还未载入成功，会返回一个报错信息在str中；
   MagicOrders.hasPrint = true
+  console.log(str)
+  time = str.split('|')[0]
+  ids = str.split('|')[1]
+  $.get('/deliver_bills/batch-print-deliver', {ids: ids, time: time})
 }
 
 function printfeedbacksize(str){ // 如果页面端需要知道 flash 当前的真实高度，这里会返回一个 ［宽，高］ 数组；
@@ -181,8 +186,7 @@ function getElement(id){ //获取Flash 元素，尽量别用jquery ，以jquery�
 }
 
 function bind_deliver_swf (id) {
-  var ffd_type = 'ffd_' + MagicOrders.company
-  bind_swf(id, ffd_type)
+  bind_swf(id, 'ffd')
 }
 
 function bind_logistic_swf (id, xml) {
@@ -201,11 +205,11 @@ function bind_logistic_swf (id, xml) {
   if(xml == ''){
     $.get('/trades/'+id+'/logistic_info', {}, function(data){
       flashvars.templateUrl = data
-      swfobject.embedSWF("/swf/deliver_bill.swf", "logistic_print", "550", "300", "9.0.0","/swf/expressInstall.swf", flashvars);
+      swfobject.embedSWF(flash_path, "logistic_print", "550", "300", "10","/swf/expressInstall.swf", flashvars);
     })
   }else{
     flashvars.templateUrl = xml
-    swfobject.embedSWF("/swf/deliver_bill.swf", "logistic_print", "550", "300", "9.0.0","/swf/expressInstall.swf", flashvars);
+    swfobject.embedSWF(flash_path, "logistic_print", "550", "300", "10","/swf/expressInstall.swf", flashvars);
   }
 }
 
@@ -226,7 +230,7 @@ function bind_swf(id, type, xml) {
     flashvars.templateUrl = xml
   }
 
-  swfobject.embedSWF("/swf/deliver_bill.swf", "showbox", "83", "35", "9.0.0","/swf/expressInstall.swf", flashvars);
+  swfobject.embedSWF(flash_path, "showbox", "83", "35", "10","/swf/expressInstall.swf", flashvars);
 }
 
 function compressArray(original) {

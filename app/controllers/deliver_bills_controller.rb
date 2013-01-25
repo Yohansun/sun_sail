@@ -56,15 +56,17 @@ class DeliverBillsController < ApplicationController
   end
 
   def batch_print_deliver
-    DeliverBill.any_in(_id: params[:ids]).each do |bill|
-      bill.deliver_printed_at = Time.now
-      bill.save
-      bill.trade.operation_logs.create(
-        operated_at: Time.now,
-        operation: '打印发货单',
-        operator_id: current_user.id,
-        operator: current_user.name
-      )
+    if params[:ids] && params[:time]
+      time = params[:time].to_time(:local)
+      Trade.any_in(tid: params[:ids].split(',')).each do |trade|
+        trade.deliver_bills.update_all(deliver_printed_at: time)
+        trade.operation_logs.create(
+          operated_at: Time.now,
+          operation: '打印发货单',
+          operator_id: current_user.id,
+          operator: current_user.name
+        )
+      end
     end
 
     render json: {isSuccess: true}

@@ -56,11 +56,6 @@ class MagicOrders.Views.DeliverBillsIndex extends Backbone.View
 
     MagicOrders.idCarrier = tmp
 
-    $('#print_delivers').on 'hidden', ()->
-      if MagicOrders.hasPrint == true
-        $.get '/deliver_bills/batch-print-deliver', {ids: MagicOrders.idCarrier}
-      MagicOrders.hasPrint = false
-
     $.get '/deliver_bills/deliver_list', {ids: tmp}, (data) ->
       html = ''
       for trade in data
