@@ -49,7 +49,9 @@ class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
       $('#content').html(@mainView.render().el)
       $.unblockUI()
 
-  printLogistics: ->
+  printLogistics: (e)->
+    e.preventDefault()
+
     tmp = []
     logistics = {}
     length = $('.trade_check:checked').parents('tr').length
@@ -94,11 +96,11 @@ class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
         bind_swf(tmp, 'kdd', $('#logistic_select').val())
         $('.deliver_count').html(data.length)
         $('#print_delivers_tbody').html(html)
-        $('#print_delivers').on 'hidden', ()->
-          if MagicOrders.hasPrint == true
-            $.get '/deliver_bills/batch-print-logistic', {ids: MagicOrders.idCarrier, logistic: $("#logistic_select").find("option:selected").attr('lid')}
-
-          MagicOrders.hasPrint = false
+        $('#logistic_select').attr('data-printType', 'logistic')
+        $('#showbox').wrap("<div style='position:relative;width: 83px;height: 35px;float:right'></div>").after("<a class='print_button' href='javascript:;' style='position:absolute;left:0;top:0;width: 83px;height: 35px;z-index:1;'></a>")
+        $('.print_button').click ()->
+          dd = getElement('showbox')
+          dd.startPrint()
 
         flag = true
         notice = '其中'

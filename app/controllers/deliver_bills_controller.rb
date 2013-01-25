@@ -58,10 +58,10 @@ class DeliverBillsController < ApplicationController
   def batch_print_deliver
     if params[:ids] && params[:time]
       time = params[:time].to_time(:local)
-      Trade.any_in(tid: params[:ids].split(',')).each do |trade|
-        trade.deliver_bills.update_all(deliver_printed_at: time)
-        trade.operation_logs.create(
-          operated_at: Time.now,
+      DeliverBill.any_in(id: params[:ids].split(',')).each do |bill|
+        bill.update_attributes(deliver_printed_at: time)
+        bill.trade.operation_logs.create(
+          operated_at: time,
           operation: '打印发货单',
           operator_id: current_user.id,
           operator: current_user.name
@@ -124,7 +124,7 @@ class DeliverBillsController < ApplicationController
   def batch_print_logistic
     logistic = Logistic.find_by_id params[:logistic]
     success = true
-    DeliverBill.any_in(_id: params[:ids]).each do |bill|
+    DeliverBill.any_in(id: params[:ids].split(',')).each do |bill|
       trade = bill.trade
       trade.logistic_printed_at = Time.now
 
