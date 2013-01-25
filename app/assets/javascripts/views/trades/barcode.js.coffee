@@ -34,12 +34,18 @@ class MagicOrders.Views.TradesBarcode extends Backbone.View
 
     for order in @model.get('orders')
       barcode = []
-      for item in $(".barcode_" + order.item_id)
-        if (/^[0-9]{0,16}$/.test($(item).val())) is true
-          barcode.push $(item).val()
-        else
-          invalid = true
-          break
+
+      for count in [0...order.num]
+        tmp = []
+        for item in $(".barcode_" + order.item_id + '_' + count)
+          if (/^[0-9]{0,16}$/.test($(item).val())) is true
+            tmp.push $(item).val()
+          else
+            invalid = true
+            break
+
+        barcode.push tmp
+
       order.barcode = barcode
 
     if invalid is true
