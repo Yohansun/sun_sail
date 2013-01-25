@@ -600,6 +600,12 @@ class Trade
       # when 'invoice_sent'
       #   trade_type_hash = {:status.in => paid_and_delivered_array, :seller_confirm_invoice_at.exists => true}
 
+      #退货
+      when 'request_return'
+        trade_type_hash = {:request_return_at.exists => true}
+      when 'confirm_return'
+        trade_type_hash = {:confirm_return_at.exists => true}
+
       # 调色
       when "color_unmatched"
         trade_type_hash = {has_color_info: false, :status.in => paid_not_deliver_array}
