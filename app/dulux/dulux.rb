@@ -50,7 +50,7 @@ module Dulux
         grouped_orders["#{seller_id}"] = tmp
       end
 
-      post_fee = trade.post_fee / grouped_orders.size
+      post_fee = (trade.post_fee / grouped_orders.size).round(2)
 
       grouped_orders.each do |key, value|
         total_fee = value.inject(0.0) { |sum, el| sum + el.price * el.num }

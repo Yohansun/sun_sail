@@ -4,13 +4,13 @@ describe TradeDecorator do
   describe "Taobaotrade" do
     context '#post_fee, point_fee, seller_discount, total_fee, sum_fee' do
       before do 
-        @decorator = TradeDecorator.new(build(:taobao_trade, post_fee: 20, point_fee: 20, payment: 2000, total_fee: 3000))
+        @decorator = TradeDecorator.new(build(:taobao_trade, post_fee: 20, point_fee: 20, payment: 2000, total_fee: 3000, promotion_fee: 100))
       end
       it { @decorator.post_fee.should == 20 }
       it { @decorator.point_fee.should == 20 }
       it { @decorator.total_fee.should == 2000 }
       it { @decorator.sum_fee.should == 3000 }
-      it { @decorator.seller_discount.should == 1020 }
+      it { @decorator.seller_discount.should == 100 }
     end
   end
 

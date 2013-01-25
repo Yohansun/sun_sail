@@ -30,7 +30,7 @@ class TaobaoPurchaseOrderSplitter
       else
         splitted_orders << {
           orders: value,
-          post_fee: trade.post_fee / count,
+          post_fee: (trade.post_fee / count).round(2),
           default_seller: key,
           total_fee: total_fee
         }
