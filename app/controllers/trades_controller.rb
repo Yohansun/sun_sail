@@ -167,6 +167,7 @@ class TradesController < ApplicationController
 
     if params[:request_return_at] == true
       @trade.request_return_at = Time.now
+      SmsNotifier.perform_async('退货通知', @trade.seller.try(:mobile), @trade.tid, 'request_return')
     end
 
     if params[:confirm_return_at] == true
