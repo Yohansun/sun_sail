@@ -7,7 +7,7 @@
     <label class="control-label">整单备注：
       <div class="controls">
         <% unless MagicOrders.role_key == 'seller' : %>
-        <input type="text" placeholder="输入文字..." class="input-xlarge" id="cs_memo_text" value="<%= @trade.get 'cs_memo' %>">
+        <textarea id="cs_memo_text" style="width:515px;height:60px;resize:none;" placeholder="备注..."><%= @trade.get 'cs_memo' %></textarea>
         <% else : %>
         <label class="control-label"><%= @trade.get 'cs_memo' %>
         <% end %>
@@ -16,21 +16,9 @@
     
     <table class="table table-bordered">
       <tbody>
-        <!-- <tr>
-          <th nowrap>订单编号</th>
-          <td><%= @trade.get("tid") %></td>
-        </tr> -->
-        <!-- <tr>
-          <th>订单备注</th>
-          <td>
-            <div class="controls">
-              <input type="text" placeholder="输入文字..." class="input-xlarge" id="cs_memo_text" value="<%= @trade.get 'cs_memo' %>">
-            </div>
-          </td>
-        </tr> -->
         <tr>
-          <th>商品</th>
-          <th>备注</th>
+          <th width="45%">商品</th>
+          <th width="55%">备注</th>
         </tr>
         <% for order in @trade.get('orders'): %>
         <tr>
@@ -38,7 +26,7 @@
           <td>
             <div class="controls">
               <% unless MagicOrders.role_key == 'seller' : %>
-              <input type="text" placeholder="输入文字..." class="input-xlarge order_cs_memo" data-order-id="<%= order.id %>" value="<%= order.cs_memo %>">
+              <textarea class='order_cs_memo' data-order-id="<%= order.id %>" style="width:270px;height:60px;resize:none;" placeholder="备注..."><%= order.cs_memo %></textarea>
               <% else : %>
               <label class="control-label"><%= order.cs_memo %>
               <% end %>
