@@ -167,7 +167,9 @@ class TradesController < ApplicationController
 
     if params[:request_return_at] == true
       @trade.request_return_at = Time.now
-      SmsNotifier.perform_async('退货通知', @trade.seller.try(:mobile), @trade.tid, 'request_return')
+      trade_decorator = TradeDecorator.decorate(@trade)
+      content = "#{@trade.seller.try(:name)}经销商您好，您有一笔退货订单需要处理。订单号：#{@trade.tid}，买家姓名：#{trade_decorator.receiver_name}，手机：#{trade_decorator.receiver_mobile_phone}，请尽快登录系统查看！"
+      SmsNotifier.perform_async(content, @trade.seller.try(:mobile), @trade.tid, 'request_return')
     end
 
     if params[:confirm_return_at] == true
