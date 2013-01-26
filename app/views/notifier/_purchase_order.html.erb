@@ -6,9 +6,11 @@
     </tr>
     <tr>
       <th style="padding: 5px;background:#F2DEDE;border-right:1px dashed #fff;" width="350">商品名</th>
-      <th style="padding: 5px;text-align: center;background:#F2DEDE;border-right:1px dashed #fff;">特殊属性</th>
-      <% if TradeSetting.enable_module_colors == true %>
-      <th style="padding: 5px;text-align: center;background:#F2DEDE;border-right:1px dashed #fff;">调色信息</th>
+      <% if TradeSetting.enable_module_sku_properties == 1 %>
+        <th style="padding: 5px;background:#F2DEDE;text-align: center;border-right:1px dashed #FFFFFF;">特殊属性</th>
+      <%- end %>  
+      <% if TradeSetting.enable_module_colors == 1 %>
+        <th style="padding: 5px;background:#F2DEDE;ttext-align: center;border-right:1px dashed #FFFFFF;">调色信息</th>
       <% end %>
       <th style="padding: 5px;text-align: center;background:#F2DEDE;border-right:1px dashed #fff;">标价</th>
       <th style="padding: 5px;text-align: center;background:#F2DEDE;border-right:1px dashed #fff;">数量</th>
@@ -17,15 +19,16 @@
         <%- order = OrderDecorator.decorate(object) %>
         <tr>
           <td style="border-right:1px dashed #F2DEDE;padding: 5px;"><%= order.title %></td>
-          <td style="border-right:1px dashed #F2DEDE;padding: 5px;text-align: center;"><%= order.sku_properties %></td>
-          <% if MagicOrders.enable_module_colors == true : %>
-          <td style="border-right:1px dashed #F2DEDE;padding: 5px;text-align: center;">
-            <%- if order.color_num && order.color_num.present? %>
-              <%- order.color_num.each do |color| %>
-                <%- color_name = Color.find_by_num(color).try(:name) %>
-                <%= color %>  <%= color_name %>
-              <%-end %>  
-            <%- end %>          
+          <% if TradeSetting.enable_module_sku_properties == 1 %>
+            <td style="border-right:1px dashed #F2DEDE;padding: 5px;text-align: center;"><%= order.sku_properties %></td>
+          <%- end %>  
+          <% if TradeSetting.enable_module_colors == 1 %>
+            <td style="border-right:1px dashed #F2DEDE;padding: 5px;text-align: center;">
+            <%- if info[:colors].present? %>
+              <%- info[:colors].each do |color, array| %>
+                <%= array[0]%>桶 <%= color %>  <%= array[1] %><br>
+              <%- end %>
+            <%- end %>
           </td>
           <% end %>
           <td style="border-right:1px dashed #F2DEDE;padding: 5px;text-align: center;"><span class="font-gray">¥<%= order.price %></span></td>

@@ -12,6 +12,8 @@
     MagicOrders.enable_trade_deliver_bill_spliting = <%= TradeSetting.enable_trade_deliver_bill_spliting == true %>
     MagicOrders.enable_trade_deliver_bill_spliting_sellers = <%= TradeSetting.enable_trade_deliver_bill_spliting_sellers || [] %>
     MagicOrders.enable_module_colors = <%= TradeSetting.enable_module_colors %>
+    MagicOrders.enable_module_sku_properties = <%= TradeSetting.enable_module_sku_properties %>
+    MagicOrders.enable_module_interface = <%= TradeSetting.enable_module_interface %>
     MagicOrders.trade_pops = <%= raw TradeSetting.trade_pops.to_json %>
     MagicOrders.trade_modes = <%= raw TradeSetting.trade_modes.to_json %>
     MagicOrders.trade_cols_visible_modes = <%= raw TradeSetting.trade_cols_visible_modes.to_json %>

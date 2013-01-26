@@ -83,13 +83,22 @@
             </div>
           </div>
 
-          <% if TradeSetting.enable_module_colors == true %>
-          <div class="control-group">
-            <label class="control-label" for="">颜色：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.colors.map(&:name).join(';') %></p>
+          <% if TradeSetting.enable_module_colors == 1 %>
+            <div class="control-group">
+              <label class="control-label" for="">颜色：</label>
+              <div class="controls">
+                <p class="mar_t5"><%= @product.colors.map(&:name).join(';') %></p>
+              </div>
             </div>
-          </div>
+          <% end %>
+
+          <% if TradeSetting.enable_module_sku_properties == 1 %>
+            <div class="control-group">
+              <label class="control-label" for="">商品属性：</label>
+              <div class="controls">
+                <p class="mar_t5"><%= @product.sku_properties %></p>
+              </div>
+            </div>
           <% end %>
          </div>
          

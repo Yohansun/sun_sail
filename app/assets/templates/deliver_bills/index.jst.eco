@@ -47,17 +47,18 @@
         </ul>
       </li>
       <% unless MagicOrders.company == "dulux" and MagicOrders.role_key == 'logistic' : %>
-      <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-          发货
-          <b class="caret"></b>
-        </a>
-        <ul class="dropdown-menu">
-          <li><a href="#" data-trade-mode="send" data-trade-status="seller_undelivered">未发货</a></li>
-          <li><a href="#" data-trade-mode="send" data-trade-status="seller_delivered">已发货</a></li>
-        </ul>
-      </li>
-        <% if MagicOrders.enable_module_colors == true : %>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+            发货
+            <b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a href="#" data-trade-mode="send" data-trade-status="seller_undelivered">未发货</a></li>
+            <li><a href="#" data-trade-mode="send" data-trade-status="seller_delivered">已发货</a></li>
+          </ul>
+        </li>
+      <% end %>
+      <% if MagicOrders.enable_module_colors == 1 : %>
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">
             调色
@@ -69,7 +70,6 @@
             <li><a href="#" data-trade-mode="color" data-trade-status="color_confirmed">已确认调色</a></li>
           </ul>
         </li>
-        <% end %>
       <% end %>
     </ul>
   </div>

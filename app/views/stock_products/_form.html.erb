@@ -20,10 +20,10 @@
       <div class="controls">
         <p>注：当前无商品可上架，请去产品中心创建商品;</p>
       </div>
-      <% if TradeSetting.enable_module_colors == true %>
-      <fieldset class="form-inline">
-        <%= f.association :colors, label: '可选颜色：', as: :check_boxes, include_blank: false %>
-      </fieldset>
+      <% if TradeSetting.enable_module_colors == 1 %>
+        <fieldset class="form-inline">
+          <%= f.association :colors, label: '可选颜色：', as: :check_boxes, include_blank: false %>
+        </fieldset>
       <% end %>
     </div>
 

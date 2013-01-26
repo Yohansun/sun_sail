@@ -20,6 +20,7 @@ class TradeReport
         NipponOtherTradeReporter.perform_async(self.id)     
       end
     else
+      #普通淘宝品牌使用立邦报表模板即可
       NipponTaobaoTradeReporter.perform_async(self.id)    
     end
   end

@@ -14,6 +14,10 @@ class JingdongOrder < Order
     super(outer_sku_id)
   end
 
+  def sku_properties
+
+  end  
+
   def bill_info
     tmp = {}
     color_num.each do |nums|
