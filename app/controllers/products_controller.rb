@@ -13,9 +13,6 @@ class ProductsController < ApplicationController
       unless params[:product][:info_type].blank? || params[:product][:info].blank?
         @products = @products.where("#{params[:product][:info_type]} like ?", "%#{params[:product][:info].strip}%")
       end
-      unless params[:product][:item_level].blank?
-        @products = @products.where("level_id = ?", params[:product][:item_level])
-      end
       unless params[:product][:item_status].blank?
         @products = @products.where("status = ?", params[:product][:item_status])
       end
@@ -61,16 +58,6 @@ class ProductsController < ApplicationController
 
   def edit
     @product = Product.find params[:id]
-  end
-
-  def change_status
-    @product = Product.find params[:product_id]
-    if @product.status == "SOLD_OUT"
-      @product.status = "ON_SALE"
-    elsif @product.status == "ON_SALE"
-      @product.status = "SOLD_OUT"
-    end
-    @product.save
   end
 
   def update

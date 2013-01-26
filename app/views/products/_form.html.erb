@@ -19,32 +19,27 @@
     <% end %>
     <%= f.association :features, as: :check_boxes, label: '系列：'%>
     <%= f.association :category, label: '分类：', :input_html =>{ :class => "width_auto" } %>
-    <%= f.association :grade, label: '档次：', :input_html =>{ :class => "width_auto" } %>
     <% if TradeSetting.enable_module_colors == true %>
-    <fieldset class="form-inline">
-      <%= f.association :colors, label: '可选颜色：', as: :check_boxes, include_blank: false %>
-    </fieldset>
+      <fieldset class="form-inline">
+        <%= f.association :colors, label: '可选颜色：', as: :check_boxes, include_blank: false %>
+      </fieldset>
     <% end %>
-    <%= f.input :status, collection: @product.select_status, label: '状态：', :input_html =>{ :class => "width_auto" } %>
   </div>
 
-  <div class="w_48 pull-left">
-    <% unless @product.product_image.blank?%>
-    <div class="controls">
-      <%= image_tag("#{@product.product_image}") %>
-    </div>
-    <% end %>
-    <div class="controls mar_t10">
-    <%= f.input :product_image, as: :file, label: "请上传商品图片", :input_html =>{ id: "fileInput", class: "input-file" } %>
-    </div>
-  </div>
+  <% if @product.pic_url.present? %>
+     <div class="w_48 pull-left">
+      <div class="control-group">
+        <label class="control-label tl" for="">商品图片：</label>
+        <div class="controls">
+          <ul style="list-style-type:none;" class="clearfix good_img_size">
+            <li><%= image_tag @product.pic_url %></li>
+          </ul>
+        </div>
+      </div>
+     </div>
+    <% end %>  
 </fieldset>
 
-<fieldset>
-  <%= f.input :technical_data, as: :text, label: '技术参数：', :input_html =>{ :class => "input-xlarge" ,rows: 3} %>
-  <%= f.input :description, as: :text, label: '描述：', :input_html =>{ :class => "input-xlarge" ,rows: 3} %>
-</fieldset>
-  
 <div class="form-actions">
   <%= f.button :submit, "保存", :class => "btn btn-primary" %>
   <a href="/products" class="btn">取消</a>

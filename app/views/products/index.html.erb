@@ -38,9 +38,7 @@
         <%= f.input :info, input_html: {class: "w_specify" , style: "width:490px;"} ,label: false, required: false %>
       </fieldset>
       <fieldset class="form-inline mar_t5">
-        <%= f.input :item_grade, collection: Grade.all, input_html: {class: "mar_r10" }, label_html: {style: "margin-top:3px;" }, label: "档次：", required: false %>
         <%= f.input :item_quantity, collection: Quantity.all, input_html: {class: "width_auto mar_r10" },label_html: {style: "margin-top:3px;" }, label: "规格：", required: false %>
-        <%= f.input :item_status, collection: [["上架","ON_SALE"], ["下架","SOLD_OUT"]], input_html: {class: "width_auto mar_r10" },label_html: {style: "margin-top:3px;" }, label: "状态：", required: false %>      
         <%= f.input :item_category, collection: Category.all, input_html: {class: "width_auto mar_r10" },label_html: {style: "margin-top:3px;" }, label: "系列：", required: false %>
         <br />
         <br />
@@ -53,98 +51,6 @@
     <% end %>
 
     <div class="controls clearfix">
-      <!--<div class="btns btn-group pull-right">
-        <a href="#" class="btn btn-success btn_mar4">显示设置</a>
-         <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-success dropdown_check_btn"><span class="caret"></span></button>
-        <ul class="dropdown-menu dropdown_check" id="dropdown_check">
-          <li>
-            <label class="checkbox" style="padding-left:35px;">
-              <input type="checkbox" value="option1">
-              订单编号
-            </label>
-          </li>
-          <li>
-            <label class="checkbox" style="padding-left:35px;">
-              <input type="checkbox" value="option1">
-              当前状态
-            </label>
-          </li>
-          <li>
-            <label class="checkbox" style="padding-left:35px;">
-              <input type="checkbox" value="option1">
-              订单状态
-            </label>
-          </li>
-          <li>
-            <label class="checkbox" style="padding-left:35px;">
-              <input type="checkbox" value="option1">
-              经销商
-            </label>
-          </li>
-          <li>
-            <label class="checkbox" style="padding-left:35px;">
-              <input type="checkbox" value="option1">
-              接口人
-            </label>
-          </li>
-          <li>
-            <label class="checkbox" style="padding-left:35px;">
-              <input type="checkbox" value="option1">
-              客户姓名
-            </label>
-          </li>
-          <li>
-            <label class="checkbox" style="padding-left:35px;">
-              <input type="checkbox" value="option1">
-              客户联系方式
-            </label>
-          </li>
-          <li>
-            <label class="checkbox" style="padding-left:35px;">
-              <input type="checkbox" value="option1">
-              客户地址
-            </label>
-          </li>
-          <li>
-            <label class="checkbox" style="padding-left:35px;">
-              <input type="checkbox" value="option1">
-              订单内容
-            </label>
-          </li>
-
-          <li>
-            <label class="checkbox" style="padding-left:35px;">
-              <input type="checkbox" value="option1">
-              总价
-            </label>
-          </li>
-          <li>
-            <label class="checkbox" style="padding-left:35px;">
-              <input type="checkbox" value="option1">
-              客户备注
-            </label>
-          </li>
-          <li>
-            <label class="checkbox" style="padding-left:35px;">
-              <input type="checkbox" value="option1">
-              调色
-            </label>
-          </li>
-          <li>
-            <label class="checkbox" style="padding-left:35px;">
-              <input type="checkbox" value="option1">
-              客服备注
-            </label>
-          </li>
-          <li>
-            <label class="checkbox" style="padding-left:35px;">
-              <input type="checkbox" value="option1">
-              拆单数
-            </label>
-          </li>
-        </ul>
-      </div> -->
-
       <div class="btns btn-group pull-left">
         <%= link_to "导出数据", products_path(:format => "xls"), :class => "btn btn-warning", "data-toggle" =>"modal" %>
         </ul>
@@ -158,14 +64,9 @@
           <th nowrap>商品编码</th>
           <th nowrap>淘宝ID</th>
           <th nowrap>价格</th>
-          <th nowrap>商品图片</th>
           <th nowrap>规格</th>
           <th nowrap>分类</th>
           <th nowrap>系列</th>
-          <th nowrap>档次</th>
-          <th nowrap>状态</th>
-          <th nowrap>技术参数</th>
-          <th nowrap>描述</th>
           <th nowrap>操作</th>
         </tr>
       </thead>
