@@ -8,7 +8,7 @@ class TradeDispatchEmail
     seller = Seller.find seller_id
     email_operation = "发送邮件"
 
-    if TradeSetting.company == "dulux"
+    if TradeSetting.enable_module_interface == 0
       to_emails = seller.email.try(:split, ',')
     else
       to_emails = seller.interface_email   

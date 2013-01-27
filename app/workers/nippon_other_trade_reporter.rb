@@ -24,12 +24,7 @@ class NipponOtherTradeReporter
     bold = Spreadsheet::Format.new(:weight => :bold)
 
     row_number = 1
-    if TradeSetting.enable_module_colors == true
-      header = ["订单来源", "订单编号", "当前状态", "下单时间", "付款时间", "分流时间", "发货时间", "客户姓名", "联系电话", "联系地址", "客户留言", "卖家备注", "客服备注", "调色信息", "发票信息", "配送经销商", "店铺代码(分销)", "主订单号(分销)", "商品名称", "单价（实际销售）", "数量", "运费", "订单实付金额"]
-    else
-      header = ["订单来源", "订单编号", "当前状态", "下单时间", "付款时间", "分流时间", "发货时间", "客户姓名", "联系电话", "联系地址", "客户留言", "卖家备注", "客服备注", "发票信息", "配送经销商", "店铺代码(分销)", "主订单号(分销)", "商品名称", "单价（实际销售）", "数量", "运费", "订单实付金额"]
-    end
-    sheet1.row(1).concat(header)
+     sheet1.row(1).concat ["订单来源", "订单编号", "当前状态", "下单时间", "付款时间", "分流时间", "发货时间", "客户姓名", "联系电话", "联系地址", "客户留言", "卖家备注", "客服备注", "调色信息", "发票信息", "配送经销商", "店铺代码(分销)", "主订单号(分销)", "商品名称", "单价（实际销售）", "数量", "运费", "订单实付金额"] 
      trades.each_with_index do |trade, trade_index|
       if trade._type == "TaobaoPurchaseOrder"
         tc_order_id = trade.tc_order_id
@@ -52,9 +47,7 @@ class NipponOtherTradeReporter
       receiver_mobile_phone = trade.receiver_mobile_phone
       buyer_nick = trade.buyer_nick
       buyer_message = trade.buyer_message
-      unless TradeSetting.enable_module_colors == true
-        has_color_info = trade.has_color_info
-      end
+      has_color_info = trade.has_color_info
       tid = trade.splitted? ? trade.splitted_tid : trade.tid
       trade_cs_memo = trade.cs_memo
       invoice_name = trade.invoice_name
@@ -64,16 +57,11 @@ class NipponOtherTradeReporter
         order_price = order.price
         order_title = order.title
         order_num = order.num
-        unless TradeSetting.enable_module_colors == true
-          color_num = order.color_num
-        end
+        color_num = order.color_num
         cs_memo = "#{trade_cs_memo} #{order.cs_memo}"
         row_number += 1
-        if TradeSetting.enable_module_colors == true
-          sheet1.update_row row_number, trade_source, tid, status_text, created, pay_time, dispatched_at, delivered_at, receiver_name, receiver_mobile_phone, receiver_address, seller_memo, buyer_message, cs_memo, color_num, invoice_name, seller_name, distributor_usercode, tc_order_id, order_title, order_price, order_num, post_fee, total_fee  
-        else
-          sheet1.update_row row_number, trade_source, tid, status_text, created, pay_time, dispatched_at, delivered_at, receiver_name, receiver_mobile_phone, receiver_address, seller_memo, buyer_message, cs_memo, invoice_name, seller_name, distributor_usercode, tc_order_id, order_title, order_price, order_num, post_fee, total_fee          
-        end
+        sheet1.update_row row_number, trade_source, tid, status_text, created, pay_time, dispatched_at, delivered_at, receiver_name, receiver_mobile_phone, receiver_address, seller_memo, buyer_message, cs_memo, color_num, invoice_name, seller_name, distributor_usercode, tc_order_id, order_title, order_price, order_num, post_fee, total_fee    
+
         if trade_index.even?
           sheet1.row(row_number).default_format = yellow_format
         else

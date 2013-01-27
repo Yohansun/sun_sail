@@ -32,8 +32,11 @@
         <% end %>
         <th width="45%">商品名称</th>
         <th width="10%">产品数量</th>
-        <% if MagicOrders.enable_module_colors == true : %>
-        <th width="25%">调色信息</th>
+        <% if MagicOrders.enable_module_colors == 1 : %>
+          <th width="25%">调色信息</th>
+        <% end %>
+        <% if MagicOrders.enable_module_sku_properties == 1 : %>
+          <th width="25%">商品属性</th>
         <% end %>
       </tr>
 
@@ -42,19 +45,22 @@
       <% for info in order['bill_info'] : %>
       <tr>
         <% if MagicOrders.company != 'nippon' : %>
-        <td><%= info['storage_num'] %></td>
+          <td><%= info['storage_num'] %></td>
         <% end %>
         <td><%= info['title'] %></td>
         <td><%= info['number'] * order.num  %></td>
         <% count = count + info['number'] * order.num %>
-        <% if MagicOrders.enable_module_colors == true : %>
-        <td>
-          <% if info['colors'] != undefined : %>
-          <% for color, array of info['colors'] : %>
-          <%= array[0] %>桶 <%= color %> <%= array[1] %><br>
-          <% end %>
-          <% end %>
-        </td>
+        <% if MagicOrders.enable_module_colors == 1 : %>
+          <td>
+            <% if info['colors'] != undefined : %>
+            <% for color, array of info['colors'] : %>
+            <%= array[0] %>桶 <%= color %> <%= array[1] %><br>
+            <% end %>
+            <% end %>
+          </td>
+        <% end %>
+        <% if MagicOrders.enable_module_sku_properties == 1 : %>
+          <td><%= order.sku_properties %></td>
         <% end %>
       </tr>
       <% end %>

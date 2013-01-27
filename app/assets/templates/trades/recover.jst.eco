@@ -36,8 +36,11 @@
       <tr>
         <th>商品名称</th>
         <th nowrap>数量</th>
-        <% if MagicOrders.enable_module_colors == true : %>
-        <th nowrap>调色信息</th>
+        <% if MagicOrders.enable_module_colors == 1 : %>
+          <th nowrap>调色信息</th>
+        <% end %>
+        <% if MagicOrders.enable_module_sku_properties == 1 : %>
+          <th nowrap>商品属性</th>
         <% end %>
       </tr>
     </thead>
@@ -55,14 +58,17 @@
           <tr>
             <td><%= info['title'] %></td>
             <td><%= info['number'] * order.num  %></td>
-            <% if MagicOrders.enable_module_colors == true : %>
-            <td>
-              <% if info['colors'] != undefined : %>
-                <% for color, array of info['colors'] : %>
-                  <%= array[0] %>桶 <%= color %> <%= array[1] %><br>
+            <% if MagicOrders.enable_module_colors == 1 : %>
+              <td>
+                <% if info['colors'] != undefined : %>
+                  <% for color, array of info['colors'] : %>
+                    <%= array[0] %>桶 <%= color %> <%= array[1] %><br>
+                  <% end %>
                 <% end %>
-              <% end %>
-            </td>
+              </td>
+            <% end %>
+            <% if MagicOrders.enable_module_sku_properties == 1 : %>
+              <td><%= info['sku_properties']%></td>
             <% end %>
           </tr>
         <% end %>

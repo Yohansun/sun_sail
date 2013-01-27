@@ -12,7 +12,7 @@ class TradeDispatchSms
     if seller
       tid = trade.tid
       trade_from = trade.trade_source
-      if TradeSetting.company == "dulux"
+      if TradeSetting.enable_module_interface == 0
         area_name = trade.receiver_area_name
         mobiles = seller.mobile
         trade_info = "您好，#{area_name}有#{trade_from}新订单（订单号#{tid}）"

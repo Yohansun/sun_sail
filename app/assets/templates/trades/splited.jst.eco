@@ -32,16 +32,22 @@
           <tr>
             <th rowspan="<%= trade.orders.length + 1 %>">商品详细</th>
             <th>商品名</th>
-            <% if MagicOrders.enable_module_colors == true : %>
-            <th>调色信息</th>
+            <% if MagicOrders.enable_module_colors == 1 : %>
+              <th>调色信息</th>
+            <% end %>
+            <% if MagicOrders.enable_module_sku_properties == 1 : %>
+              <th>商品属性</th>
             <% end %>
             <th>数量</th>
           </tr>
           <% for order in trade.orders: %>
           <tr class="so">
             <td class="so_iid"><%= order.title %></td>
-            <% if MagicOrders.enable_module_colors == true : %>
-            <td class="so_color"><%= order.color_num %></td>
+            <% if MagicOrders.enable_module_colors == 1 : %>
+              <td class="so_color"><%= order.color_num %></td>
+            <% end %>
+            <% if MagicOrders.enable_module_sku_properties == 1 : %>
+              <td class="so_color"><%= order.sku_properties %></td>
             <% end %>
             <td class="so_num"><%= order.num %></td>
           </tr>

@@ -23,12 +23,7 @@ class DuluxTaobaoTradeReporter
 
     row_number = 1
     if current_user.has_role?(:seller) || current_user.has_role?(:logistic)
-      if TradeSetting.enable_module_colors == false
-        header = ["订单号", "下单时间", "付款时间", "分流时间", "订单状态", "送货经销商", "买家地址-省", "买家地址-市", "买家地址-区", "买家地址", "买家姓名", "收货人手机/座机", "商品名", "数量", "运费", "买家旺旺", "客服备注", "唯一码"]
-      else
-        header = ["订单号", "下单时间", "付款时间", "分流时间", "订单状态", "送货经销商", "买家地址-省", "买家地址-市", "买家地址-区", "买家地址", "买家姓名", "收货人手机/座机", "商品名", "数量", "运费", "买家旺旺", "客服备注", "需要调色", "色号","唯一码"]
-      end
-      sheet1.row(1).concat(header)
+      sheet1.row(1).concat ["订单号", "下单时间", "付款时间", "分流时间", "订单状态", "送货经销商", "买家地址-省", "买家地址-市", "买家地址-区", "买家地址", "买家姓名", "收货人手机/座机", "商品名", "数量", "运费", "买家旺旺", "客服备注", "需要调色", "色号","唯一码"]  
       trades.each_with_index do |trade, trade_index|
         trade_orders = trade.orders
         created = trade.created.try(:strftime,"%Y-%m-%d %H:%M:%S")
@@ -43,9 +38,7 @@ class DuluxTaobaoTradeReporter
         receiver_name = trade.receiver_name
         receiver_mobile = trade.receiver_mobile
         buyer_nick = trade.buyer_nick
-        unless TradeSetting.enable_module_colors == true
-          has_color_info = trade.has_color_info
-        end
+        has_color_info = trade.has_color_info
         tid = trade.splitted? ? trade.splitted_tid : trade.tid
         trade_cs_memo = trade.cs_memo
         trade_orders.each do |order|
@@ -55,12 +48,10 @@ class DuluxTaobaoTradeReporter
             order_cs_memo = order.cs_memo
             cs_memo = "#{trade_cs_memo} #{order_cs_memo}"
             num = info[:number] * num
-            unless TradeSetting.enable_module_colors == true
-              color_num = ''
-              if info[:colors].present?
-                info[:colors].each do |color, array|
-                  color_num += "#{array[0]}桶#{color}#{array[1]}"
-                end
+            color_num = ''
+            if info[:colors].present?
+              info[:colors].each do |color, array|
+                color_num += "#{array[0]}桶#{color}#{array[1]}"
               end
             end
             barcodes = ''
@@ -77,12 +68,7 @@ class DuluxTaobaoTradeReporter
         end
       end
     elsif current_user.has_role?(:cs) || current_user.has_role?(:admin)
-      if TradeSetting.enable_module_colors == false
-        header = ["订单号", "下单时间", "付款时间", "分流时间", "订单状态", "送货经销商", "买家地址-省", "买家地址-市", "买家地址-区", "买家地址", "买家姓名", "收货人手机/座机", "商品名", "数量", "商品标价",  "订单金额", "卖家优惠", "运费", "订单总金额", "调整金额", "买家旺旺", "客服备注", "需要调色", "色号", "唯一码"]
-      else
-        header = ["订单号", "下单时间", "付款时间", "分流时间", "订单状态", "送货经销商", "买家地址-省", "买家地址-市", "买家地址-区", "买家地址", "买家姓名", "收货人手机/座机", "商品名", "数量", "商品标价",  "订单金额", "卖家优惠", "运费", "订单总金额", "调整金额", "买家旺旺", "客服备注", "唯一码"]
-      end
-      sheet1.row(1).concat(header)
+      sheet1.row(1).concat ["订单号", "下单时间", "付款时间", "分流时间", "订单状态", "送货经销商", "买家地址-省", "买家地址-市", "买家地址-区", "买家地址", "买家姓名", "收货人手机/座机", "商品名", "数量", "商品标价",  "订单金额", "卖家优惠", "运费", "订单总金额", "调整金额", "买家旺旺", "客服备注", "需要调色", "色号", "唯一码"]  
       trades.each_with_index do |trade, trade_index|
         trade_orders = trade.orders
         sum_fee = trade.total_fee
@@ -102,9 +88,7 @@ class DuluxTaobaoTradeReporter
         receiver_name = trade.receiver_name
         receiver_mobile = trade.receiver_mobile
         buyer_nick = trade.buyer_nick
-        unless TradeSetting.enable_module_colors == true
-          has_color_info = trade.has_color_info
-        end
+        has_color_info = trade.has_color_info
         splitted_tid = trade.splitted_tid
         tid = trade.tid
         trade_cs_memo = trade.cs_memo
@@ -114,21 +98,14 @@ class DuluxTaobaoTradeReporter
           order_cs_memo = order.cs_memo
           cs_memo = "#{trade_cs_memo} #{order_cs_memo}"
           title = order.title
-          unless TradeSetting.enable_module_colors == true
-            color_num = ''
-            color_num = order.color_num.join(" ") if order.color_num.present?
-          end
+          color_num = ''
+          color_num = order.color_num.join(" ") if order.color_num.present?
           barcodes = ''
           barcodes = order.barcode.join(" ") if order.barcode.present?
-          unless TradeSetting.enable_module_colors == true
-            need_color = has_color_info ? '是' : '否'
-          end
+          need_color = has_color_info ? '是' : '否'
           row_number += 1
-          if TradeSetting.enable_module_colors == true
-            sheet1.update_row row_number, tid, created, pay_time, dispatched_at, taobao_status_memo, seller_name, receiver_state, receiver_city, receiver_district, receiver_address, receiver_name, receiver_mobile, title, num, order_price,  sum_fee, seller_discount, post_fee, total_fee, modify_payment, buyer_nick, cs_memo, need_color, color_num, barcodes
-          else
-            sheet1.update_row row_number, tid, created, pay_time, dispatched_at, taobao_status_memo, seller_name, receiver_state, receiver_city, receiver_district, receiver_address, receiver_name, receiver_mobile, title, num, order_price,  sum_fee, seller_discount, post_fee, total_fee, modify_payment, buyer_nick, cs_memo, barcodes
-          end
+          sheet1.update_row row_number, tid, created, pay_time, dispatched_at, taobao_status_memo, seller_name, receiver_state, receiver_city, receiver_district, receiver_address, receiver_name, receiver_mobile, title, num, order_price,  sum_fee, seller_discount, post_fee, total_fee, modify_payment, buyer_nick, cs_memo, need_color, color_num, barcodes  
+
           if trade_index.even?
             sheet1.row(row_number).default_format = yellow_format
           else

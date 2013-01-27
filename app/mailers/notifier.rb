@@ -41,7 +41,7 @@ class Notifier < ActionMailer::Base
       @tid = @trade.tid
       @trade_from = @trade.trade_source
 
-      if TradeSetting.company == "dulux"
+      if TradeSetting.enable_module_interface == 0
         @area_name = @trade.receiver_area_name
         to_emails = seller.email.try(:split, ',')
         cc_emails = []

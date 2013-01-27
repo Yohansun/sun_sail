@@ -14,8 +14,11 @@
 <td>
   <% for product in @bill.get('orders') : %>
     <%= product.title %> X <%= product.num %><br>
-    <% if MagicOrders.enable_module_colors == true : %>
-    <span class="label label-info">调色信息</span><%= product.color_info %><br>
+    <% if MagicOrders.enable_module_colors == 1 : %>
+      <span class="label label-info">调色信息</span><%= product.color_info %><br>
+    <% end %>
+    <% if MagicOrders.enable_module_sku_properties == 1 : %>
+      <span class="label label-info">商品属性</span><%= product.sku_properties %><br>
     <% end %>
     <span class="label label-info">客服留言</span><%= product.cs_memo %>
   <% end %>

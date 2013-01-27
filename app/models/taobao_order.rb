@@ -41,6 +41,10 @@ class TaobaoOrder < Order
     outer_iid
   end
 
+  def sku_properties
+
+  end  
+
   def product
     super(outer_iid)
   end
