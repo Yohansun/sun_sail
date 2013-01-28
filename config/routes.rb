@@ -60,6 +60,8 @@ MagicOrders::Application.routes.draw do
       get :autocomplete
     end
   end
+
+  resources :categories
   
   get 'callcenter/contrastive_performance'
   get 'callcenter/inquired_and_created'
