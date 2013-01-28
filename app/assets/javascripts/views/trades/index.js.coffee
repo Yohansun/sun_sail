@@ -4,7 +4,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
   events:
     'click .search': 'search'
-    'click [data-type=loadMoreTrades]': 'forceLoadMoreTrades'
+    'change [data-type=loadMoreTrades]': 'forceLoadMoreTrades'
     'click .export_orders': 'exportOrders'
     'change #cols_filter input[type=checkbox]': 'filterTradeColumns'
     'change #search_option' : 'changeInputFrame'
@@ -99,18 +99,11 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     if @collection.length != 0
       @collection.each(@appendTrade)
       $(".complete_offset").html(@collection.at(0).get("trades_count"))
-      unless parseInt($(".complete_offset").html()) <= @offset
-        $(".get_offset").html(@offset)
-        $("[data-type=loadMoreTrades]").replaceWith("<a href='#' data-type='loadMoreTrades' id='bottom_line' class='btn'>加载更多订单</a>")
-        $("#bottom_line").replaceWith("<a href='#' data-type='loadMoreTrades' id='bottom_line' class='btn'>加载更多订单</a>")
-      else
-        $(".get_offset").html($(".complete_offset").html())
-        $("[data-type=loadMoreTrades]").replaceWith("<span id='bottom_line'><b>当前为最后一条订单</b></span>")
+      $(".get_offset").html(@offset)
       $("a[rel=popover]").popover({placement: 'left', html:true})
     else
       $(".complete_offset").html(0)
       $(".get_offset").html(0)
-      $("[data-type=loadMoreTrades]").replaceWith("<span id='bottom_line'><b>当前无订单</b></span>")
     $.unblockUI()
 
   appendTrade: (trade) =>
@@ -216,14 +209,16 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
       @renderNew()
       $("#newTradesNotifer").hide()
 
-  forceLoadMoreTrades: (event) =>
-    event.preventDefault()
+  forceLoadMoreTrades: (e) =>
+    e.preventDefault()
     blocktheui()
 
-    @collection.fetch data: {trade_type: @trade_type, offset: @offset, search: {@simple_search_option, @simple_search_value, @from_deliver_print_date, @to_deliver_print_date, @from_deliver_print_time, @to_deliver_print_time, @from_logistic_print_date, @to_logistic_print_date, @from_logistic_print_time, @to_logistic_print_time, @search_start_date, @search_start_time, @search_end_date, @search_end_time, @pay_start_time, @pay_end_time, @pay_start_date, @pay_end_date, @dispatch_start_time, @dispatch_end_time, @dispatch_start_date, @dispatch_end_date, @status_option, @type_option, @state_option, @city_option, @district_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_cs_memo_void, @search_invoice, @search_color, @search_color_void, @search_logistic}}, success: (collection) =>
+    limit = $(e.target).val()
+    @collection.fetch data: {trade_type: @trade_type, limit: limit, offset: @offset, search: {@simple_search_option, @simple_search_value, @from_deliver_print_date, @to_deliver_print_date, @from_deliver_print_time, @to_deliver_print_time, @from_logistic_print_date, @to_logistic_print_date, @from_logistic_print_time, @to_logistic_print_time, @search_start_date, @search_start_time, @search_end_date, @search_end_time, @pay_start_time, @pay_end_time, @pay_start_date, @pay_end_date, @dispatch_start_time, @dispatch_end_time, @dispatch_start_date, @dispatch_end_date, @status_option, @type_option, @state_option, @city_option, @district_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_cs_memo_void, @search_invoice, @search_color, @search_color_void, @search_logistic}}, success: (collection) =>
       if collection.length >= 0
-        @offset = @offset + 20
+        @offset = @offset + parseInt(limit)
         @renderUpdate()
+        $(e.target).val('')
       else
         $.unblockUI()
 

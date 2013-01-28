@@ -380,7 +380,12 @@
     <tbody id="trade_rows">
     </tbody>
   </table>
-  <a href="#" data-type="loadMoreTrades" id="bottom_line" class="btn">加载更多订单</a>
+  <select data-type="loadMoreTrades" id="bottom_line">
+    <option>加载更多订单</option>
+    <option value='20'>加载20项</option>
+    <option value='50'>加载50项</option>
+    <option value='100'>加载100项</option>
+  </select>
   <% unless @trades.length == 0 : %>
   <span class="controls mar_t5" >当前显示：全部订单 <span class="complete_offset"><%= @trades.at(0).get('trades_count') %></span> 项中的 <span class="get_offset"></span> 项</span>
   <% else : %>
