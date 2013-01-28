@@ -1,7 +1,6 @@
 <% content_for :tail do -%>
 <script type="text/javascript">
   $(function() {
-    MagicOrders.init();
     MagicOrders.role_key = "<%= current_user.roles.first.try(:name) %>";
     MagicOrders.company = "<%= TradeSetting.company %>"
     MagicOrders.user = "<%= current_user.name %>"
@@ -14,10 +13,12 @@
     MagicOrders.enable_module_colors = <%= TradeSetting.enable_module_colors %>
     MagicOrders.enable_module_sku_properties = <%= TradeSetting.enable_module_sku_properties %>
     MagicOrders.enable_module_interface = <%= TradeSetting.enable_module_interface %>
+
     MagicOrders.trade_pops = <%= raw TradeSetting.trade_pops.to_json %>
     MagicOrders.trade_modes = <%= raw TradeSetting.trade_modes.to_json %>
     MagicOrders.trade_cols_visible_modes = <%= raw TradeSetting.trade_cols_visible_modes.to_json %>
     MagicOrders.trade_cols = <%= raw TradeSetting.trade_cols.to_json %>
+    MagicOrders.init();
   });
 </script>
 <% end -%>

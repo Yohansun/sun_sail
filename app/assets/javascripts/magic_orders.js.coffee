@@ -7,10 +7,10 @@ window.MagicOrders =
     $.cookie.defaults['expires'] = 365
 
     # 不同角色显示的“操作”弹出项
-    @trade_pops = {} #  MOVED TO TradeSetting.trade_pops
+    #@trade_pops = {} #  MOVED TO TradeSetting.trade_pops
 
     # 所有订单列
-    @trade_cols = {} #   MOVED TO TradeSetting.trade_cols
+    #@trade_cols = {} #   MOVED TO TradeSetting.trade_cols
     # cache keys
     @trade_cols_keys = _.keys(@trade_cols)
 
@@ -32,10 +32,10 @@ window.MagicOrders =
       @trade_cols_hidden[MagicOrders.trade_mode] = []
 
     # 订单模式可选项列表
-    @trade_modes = {} #MOVED TO TradeSetting.trade_cols_visible_modes  
+    #@trade_modes = {} #MOVED TO TradeSetting.trade_modes
 
     # 不同模式下可见订单列
-    @trade_cols_visible_modes = {} #MOVED TO TradeSetting.trade_cols_visible_modes  
+    #@trade_cols_visible_modes = {} #MOVED TO TradeSetting.trade_cols_visible_modes
 
     @original_path = 'trades'
     @cache_trade_number = 0

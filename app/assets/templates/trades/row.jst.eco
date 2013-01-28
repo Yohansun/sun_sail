@@ -248,11 +248,14 @@
   <span class="label label-warning"><%= @trade.get('deliver_bill_count') %></span>
 </td>
 
+<% if MagicOrders.enable_module_colors == 1 : %>
 <td data-col='color_info'>
   <% if @trade.get('has_color_info') == true : %>
     <a href="#"><i class="icon-color" data-type="color_info"></i></a>
   <% end %>
 </td>
+<% end %>
+
 <td data-col='invoice_info'>
   <% if @trade.get 'invoice_name' : %>
   <a href="javascript:void(0)" rel="popover" data-content="<%= @trade.get 'invoice_type' %><br/><%= @trade.get 'invoice_name' %><br/><%= @trade.get 'invoice_content' %>" data-original-title="<b>发票信息</b>"><i class="icon-invoice"></i></a>
