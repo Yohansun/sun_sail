@@ -114,7 +114,6 @@ class Trade
   before_update :set_has_color_info
   before_update :set_has_cs_memo
   before_update :set_has_unusual_state
-  before_update :set_has_refund_order
 
   def set_has_color_info
     self.orders.each do |order|
@@ -139,19 +138,6 @@ class Trade
     class_name   
   end 
 
-  def set_has_refund_order
-    unless self.confirm_receive_at.blank?
-      self.orders.each do |order|
-        if order.refund_status == 'WAIT_BUYER_RETURN_GOODS'
-          self.has_refund_order = true
-          return
-        end
-      end
-    end
-    self.has_refund_order = false
-    true
-  end
-
   def set_has_unusual_state
     if unusual_states.where(:repaired_at => nil).exists?
       self.has_unusual_state = true
@@ -160,7 +146,7 @@ class Trade
       self.has_unusual_state = false
       true
     end
-  end
+  end  
 
   def set_has_cs_memo
     unless self.cs_memo.blank?
@@ -511,7 +497,11 @@ class Trade
     paid_not_deliver_array = ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"]
     paid_and_delivered_array = ["WAIT_BUYER_CONFIRM_GOODS","WAIT_GOODS_RECEIVE_CONFIRM","WAIT_BUYER_CONFIRM_GOODS_ACOUNTED","WAIT_SELLER_SEND_GOODS_ACOUNTED"]
     closed_array = ["TRADE_CLOSED","TRADE_CANCELED","TRADE_CLOSED_BY_TAOBAO", "ALL_CLOSED"]
-    refund_array = ["TRADE_REFUNDING","WAIT_SELLER_AGREE","SELLER_REFUSE_BUYER","WAIT_BUYER_RETURN_GOODS","WAIT_SELLER_CONFIRM_GOODS","CLOSED", "SUCCESS"]
+
+    #contains TaobaoOrder and SubPurchaseOrder
+    taobao_trade_refund_array = ["TRADE_REFUNDED","TRADE_REFUNDING","WAIT_SELLER_AGREE","SELLER_REFUSE_BUYER","WAIT_BUYER_RETURN_GOODS","WAIT_SELLER_CONFIRM_GOODS","CLOSED", "SUCCESS"]
+    taobao_purchase_refund_array = ['TRADE_REFUNDED', 'TRADE_REFUNDING']
+
     succeed_array = ["TRADE_FINISHED","FINISHED_L"]
 
     if current_user.has_role?(:seller) || current_user.has_role?(:interface)
@@ -565,7 +555,9 @@ class Trade
       when 'delivered','seller_delivered'
         trade_type_hash = {:status.in => paid_and_delivered_array, :has_refund_order.in => [nil, false]}
       when 'refund'
-        trade_type_hash = {has_refund_order: true}
+        trade_type_hash ={"$or" => [{ :"taobao_orders.refund_status" => {:'$in' => taobao_trade_refund_array}}, {:"taobao_sub_purchase_orders.status" => {:'$in' => taobao_purchase_refund_array}}]}
+      when 'return'
+        trade_type_hash = {:request_return_at.ne => nil}  
       when 'closed'
         trade_type_hash = {:status.in => closed_array, :has_refund_order.in => [nil, false]}
       when 'unusual_trade'
@@ -755,7 +747,7 @@ class Trade
 
     # 集中筛选
     search_hash = {"$and" => [
-      deliver_print_time_hash,     create_time_hash,         pay_time_hash,
+      trade_type_hash, deliver_print_time_hash,     create_time_hash,         pay_time_hash,
       logistic_print_time_hash,    status_hash,              type_hash,
       logistic_hash,               seller_memo_hash,         buyer_message_hash,
       has_color_info_hash,         has_cs_memo_hash,         invoice_all_hash,
@@ -766,7 +758,7 @@ class Trade
     search_hash == {"$and"=>[]} ? search_hash = nil : search_hash
 
     ## 过滤有留言但还在抓取 + 总筛选
-    trades.where(trade_type_hash).where(search_hash).where({"$or" => [{"has_buyer_message" => {"$ne" => true}},{"buyer_message" => {"$ne" => nil}}]})
+    trades.where(search_hash).where({"$or" => [{"has_buyer_message" => {"$ne" => true}},{"buyer_message" => {"$ne" => nil}}]})
     ###筛选结束###
   end
 end
