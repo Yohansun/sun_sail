@@ -14,4 +14,5 @@
 class SellersArea < ActiveRecord::Base
   belongs_to :seller
   belongs_to :area
+  attr_accessible :area_id, :seller_id
 end
