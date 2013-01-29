@@ -42,7 +42,7 @@ class TaobaoOrder < Order
   end
 
   def sku_properties
-
+    sku_properties_name
   end  
 
   def product
