@@ -40,7 +40,6 @@ json.has_color_info @trade.has_color_info
 json.has_cs_memo @trade.has_cs_memo
 json.has_unusual_state @trade.has_unusual_state
 json.unusual_color_class @trade.unusual_color_class if @trade.unusual_color_class
-json.has_refund_order @trade.has_refund_order
 json.logistic_code @trade.logistic_code
 json.logistic_id @trade.logistic_id
 json.logistic_name @trade.logistic_name

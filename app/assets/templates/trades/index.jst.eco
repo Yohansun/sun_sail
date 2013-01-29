@@ -35,7 +35,8 @@
           <li><a href="#" data-trade-mode="trades" data-trade-status="undelivered">已分流，未发货</a></li>
           <li><a href="#" data-trade-mode="trades" data-trade-status="delivered">已发货</a></li>
           <li><a href="#" data-trade-mode="trades" data-trade-status="deliver_unconfirmed">已发货，未确认发货</a></li>
-         <!-- <li><a href="#" data-trade-mode="trades" data-trade-status="refund">退货</a></li> -->
+          <li><a href="#" data-trade-mode="trades" data-trade-status="refund">退款</a></li>
+         <!-- <li><a href="#" data-trade-mode="trades" data-trade-status="return">退货</a></li> -->
           <% if MagicOrders.role_key != 'seller' : %>
           <li><a href="#" data-trade-mode="trades" data-trade-status="closed">交易关闭</a></li>
           <li><a href="#" data-trade-mode="trades" data-trade-status="unusual_trade">交易异常</a></li>
@@ -241,7 +242,6 @@
               <option value="WAIT_BUYER_CONFIRM_GOODS_ACOUNTED">已付款（已分账），已发货</option>
               <option value="WAIT_SELLER_SEND_GOODS_ACOUNTED">已付款（已分账），待发货</option>
               <option value="TRADE_CLOSED_BY_TAOBAO">交易被淘宝关闭</option>
-              <option value="require_refund">申请退款</option>
             </select>
             <% end %>
 
