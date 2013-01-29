@@ -41,8 +41,8 @@ window.MagicOrders =
     @cache_trade_number = 0
     @idCarrier = []
     @hasPrint = false
-    @enable_trade_deliver_bill_spliting = false
-    @enable_trade_deliver_bill_spliting_sellers = []
+    #@enable_trade_deliver_bill_spliting = false
+    #@enable_trade_deliver_bill_spliting_sellers = []
 
     new MagicOrders.Routers.Trades()
     new MagicOrders.Routers.TradeSettings()
