@@ -69,7 +69,6 @@ class Trade
   field :has_color_info, type: Boolean, default: false
   field :has_cs_memo, type: Boolean, default: false
   field :has_unusual_state, type: Boolean, default: false
-  field :has_refund_order, type: Boolean, default: false
 
   field :modify_payment, type: Float
   field :modify_payment_no, type: String
@@ -90,7 +89,7 @@ class Trade
   index has_color_info: 1
   index has_cs_memo: 1
   index has_unusual_state: 1
-  index has_refund_order: 1
+
   index buyer_nick: 1
   index receiver_name: 1
   index receiver_mobile: 1
@@ -499,7 +498,7 @@ class Trade
     closed_array = ["TRADE_CLOSED","TRADE_CANCELED","TRADE_CLOSED_BY_TAOBAO", "ALL_CLOSED"]
 
     #contains TaobaoOrder and SubPurchaseOrder
-    taobao_trade_refund_array = ["TRADE_REFUNDED","TRADE_REFUNDING","WAIT_SELLER_AGREE","SELLER_REFUSE_BUYER","WAIT_BUYER_RETURN_GOODS","WAIT_SELLER_CONFIRM_GOODS","CLOSED", "SUCCESS"]
+    taobao_trade_refund_array = ["WAIT_SELLER_AGREE","SELLER_REFUSE_BUYER","WAIT_BUYER_RETURN_GOODS","WAIT_SELLER_CONFIRM_GOODS","CLOSED", "SUCCESS"]
     taobao_purchase_refund_array = ['TRADE_REFUNDED', 'TRADE_REFUNDING']
 
     succeed_array = ["TRADE_FINISHED","FINISHED_L"]
@@ -543,27 +542,27 @@ class Trade
       when 'all'
         trade_type_hash = nil
       when 'dispatched'
-        trade_type_hash = {:dispatched_at.ne => nil, :status.in => paid_not_deliver_array + paid_and_delivered_array, :has_refund_order.in => [nil, false]}
+        trade_type_hash = {:dispatched_at.ne => nil, :status.in => paid_not_deliver_array + paid_and_delivered_array}
       when 'undispatched'
         trade_type_hash = {:status.in => paid_not_deliver_array, seller_id: nil}
       when 'unpaid'
         trade_type_hash = {status: "WAIT_BUYER_PAY"}
       when 'paid'
-        trade_type_hash = {:status.in => paid_not_deliver_array + paid_and_delivered_array + succeed_array, :has_refund_order.in => [nil, false]}
+        trade_type_hash = {:status.in => paid_not_deliver_array + paid_and_delivered_array + succeed_array}
       when 'undelivered','seller_undelivered'
         trade_type_hash = {:dispatched_at.ne => nil, :status.in => paid_not_deliver_array}
       when 'delivered','seller_delivered'
-        trade_type_hash = {:status.in => paid_and_delivered_array, :has_refund_order.in => [nil, false]}
+        trade_type_hash = {:status.in => paid_and_delivered_array}
       when 'refund'
         trade_type_hash ={"$or" => [{ :"taobao_orders.refund_status" => {:'$in' => taobao_trade_refund_array}}, {:"taobao_sub_purchase_orders.status" => {:'$in' => taobao_purchase_refund_array}}]}
       when 'return'
         trade_type_hash = {:request_return_at.ne => nil}  
       when 'closed'
-        trade_type_hash = {:status.in => closed_array, :has_refund_order.in => [nil, false]}
+        trade_type_hash = {:status.in => closed_array}
       when 'unusual_trade'
-        trade_type_hash = {status: "TRADE_NO_CREATE_PAY", :has_refund_order.in => [nil, false]}
+        trade_type_hash = {status: "TRADE_NO_CREATE_PAY"}
       when 'deliver_unconfirmed'
-        trade_type_hash = {:seller_confirm_deliver_at.exists => false, :status.in => paid_and_delivered_array, :has_refund_order.in => [nil, false]}
+        trade_type_hash = {:seller_confirm_deliver_at.exists => false, :status.in => paid_and_delivered_array}
 
       # 发货单
       # 发货单是否已打印
@@ -666,11 +665,7 @@ class Trade
       # 按状态筛选
       if params[:search][:status_option].present?
         status_array = params[:search][:status_option].split(",")
-        if status_array == ['require_refund']
-          status_hash = {has_refund_order: true}
-        else
-          status_hash = {"$and" => [{"status" =>{"$in" => status_array}}, {"has_refund_order" => {"$in" => [nil, false]}}]}
-        end
+        status_hash = {"status" =>{"$in" => status_array}}
       end
 
       # 按分流时间筛选

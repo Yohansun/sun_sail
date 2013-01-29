@@ -210,21 +210,21 @@ ActiveRecord::Schema.define(:version => 20130125100356) do
   end
 
   create_table "reconcile_statement_details", :force => true do |t|
-    t.integer  "reconcile_statement_id"
-    t.integer  "alipay_revenue"
-    t.integer  "postfee_revenue"
-    t.integer  "trade_success_refund"
-    t.integer  "sell_refund"
-    t.integer  "base_service_fee"
-    t.integer  "store_service_award"
-    t.integer  "staff_award"
-    t.integer  "taobao_cost"
-    t.integer  "audit_cost"
-    t.integer  "collecting_postfee"
-    t.integer  "audit_amount"
-    t.integer  "adjust_amount"
-    t.datetime "created_at",             :null => false
-    t.datetime "updated_at",             :null => false
+    t.integer  "reconcile_statement_id"  
+    t.integer  "alipay_revenue",         :default => 0  
+    t.integer  "postfee_revenue",        :default => 0  
+    t.integer  "trade_success_refund",   :default => 0  
+    t.integer  "sell_refund",            :default => 0  
+    t.integer  "base_service_fee",       :default => 0  
+    t.integer  "store_service_award",    :default => 0  
+    t.integer  "staff_award",            :default => 0  
+    t.integer  "taobao_cost",            :default => 0  
+    t.integer  "audit_cost",             :default => 0  
+    t.integer  "collecting_postfee",     :default => 0  
+    t.integer  "audit_amount",           :default => 0  
+    t.integer  "adjust_amount",          :default => 0  
+    t.datetime "created_at",                            :null => false  
+    t.datetime "updated_at",                            :null => false
   end
 
   add_index "reconcile_statement_details", ["reconcile_statement_id"], :name => "index_reconcile_statement_details_on_reconcile_statement_id"
@@ -428,26 +428,6 @@ ActiveRecord::Schema.define(:version => 20130125100356) do
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
   add_index "users", ["unlock_token"], :name => "index_users_on_unlock_token", :unique => true
-
-  create_table "users_bak", :force => true do |t|
-    t.string   "email",                  :default => "",    :null => false
-    t.string   "encrypted_password",     :default => "",    :null => false
-    t.string   "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          :default => 0
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
-    t.string   "current_sign_in_ip"
-    t.string   "last_sign_in_ip"
-    t.datetime "created_at",                                :null => false
-    t.datetime "updated_at",                                :null => false
-    t.boolean  "is_super_admin",         :default => false
-    t.string   "name"
-  end
-
-  add_index "users_bak", ["email"], :name => "index_users_on_email", :unique => true
-  add_index "users_bak", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
 
   create_table "users_roles", :id => false, :force => true do |t|
     t.integer "user_id"
