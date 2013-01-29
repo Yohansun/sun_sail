@@ -34,6 +34,7 @@
               <th width="">单价</th>
             <% end %>
             <th width="">备注</th>
+            <th width="">退货状态</th>
           </tr>
         </thead>
         <tbody>
@@ -41,9 +42,14 @@
             <% if order.packaged : %>
               <!-- package order -->
               <tr>
-                <td colspan='3'><%= order.title %> * <%= order.num %> 套</td>
-                <td>￥ <%= order.price%></td>
-                <td><%= order.cs_memo%></td>
+              <% if MagicOrders.enable_module_colors == 1 : %>
+              <td colspan='3'><%= order.title %> * <%= order.num %> 套</td>
+              <% else : %>
+              <td colspan='2'><%= order.title %> * <%= order.num %> 套</td>
+              <% end %>
+              <td>￥ <%= order.price%></td>
+              <td><%= order.cs_memo%></td>
+              <td><%= order.refund_status_text %></td>
               </tr>
               <% for info in order['bill_info'] : %>
                 <tr>
@@ -59,6 +65,7 @@
                   <% if MagicOrders.enable_module_sku_properties == 1 : %>
                     <td><!-- 套装没有sku属性 --></td>
                   <% end %>
+                  <td>---</td>
                   <td>---</td>
                   <td>---</td>
                 </tr>
@@ -85,6 +92,7 @@
                     <td>￥<%= order.price %></td>
                   <% end %>
                   <td class='js-order-cs-memo-label-<%= order.id %>'><%= order.cs_memo %></td>
+                  <td><%= order.refund_status_text %></td>
                 </tr>
               <% end %>
             <% end %>

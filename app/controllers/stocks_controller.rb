@@ -4,7 +4,7 @@ class StocksController < ApplicationController
 	before_filter :check_stock_type, except: [:home]
 
   def index
-  	select_sql = "products.name, products.iid, products.taobao_id, products.category_id, products.status, stock_products.*"
+  	select_sql = "products.name, products.iid, products.taobao_id, products.category_id, stock_products.*"
   	@products = StockProduct.joins(:product).select(select_sql).where(seller_id: @seller.id)
 
     if params[:info_type].present? && params[:info].present?

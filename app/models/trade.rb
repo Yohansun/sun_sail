@@ -229,7 +229,7 @@ class Trade
               operation: operation,
               number: data[:number] * order.num,
               stock_product_id: stock_product.id,
-              seller_id: op_seller.id,
+              seller_id: op_seller,
               tid: tid
             )
           end
@@ -241,7 +241,7 @@ class Trade
             operation: operation,
             number: order.num,
             stock_product_id: stock_product.id,
-            seller_id: op_seller.id,
+            seller_id: op_seller,
             tid: tid
           )
         end
