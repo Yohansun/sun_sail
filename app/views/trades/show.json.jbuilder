@@ -87,6 +87,7 @@ json.orders OrderDecorator.decorate(@trade.orders) do |json, order|
   json.color_hexcode order.color_hexcode
   json.color_name order.color_name
   json.barcode order.barcode
+  json.refund_status_text order.refund_status_text
 
   if @trade._type == 'TaobaoTrade'
     json.refund_status order.refund_status

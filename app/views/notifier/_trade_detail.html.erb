@@ -16,6 +16,7 @@
       <th style="padding: 5px;background:#F2DEDE;ttext-align: center;border-right:1px dashed #FFFFFF;">标价</th>
       <% end %>
       <th style="padding: 5px;background:#F2DEDE;ttext-align: center;border-right:1px dashed #FFFFFF;">数量</th>
+      <th style="padding: 5px;background:#F2DEDE;ttext-align: center;border-right:1px dashed #FFFFFF;">退货状态</th>
     </tr>
     <%- @trade.orders.each do |object| %>
       <%- order = OrderDecorator.decorate(object) %>
@@ -40,6 +41,7 @@
         <% end %>
 
         <td style="border-right:1px dashed #F2DEDE;padding: 5px;text-align: center;"><%= info[:number] * order.num %></td>
+        <td style="border-right:1px dashed #F2DEDE;padding: 5px;text-align: center;"><%= order.refund_status_text %></td>
         
       </tr>
       <% end %>

@@ -1,3 +1,5 @@
+# -*- encoding:utf-8 -*-
+
 class TaobaoSubPurchaseOrder < Order
   field :status, type: String
   field :refund_fee, type: Float
@@ -56,5 +58,12 @@ class TaobaoSubPurchaseOrder < Order
       title: title,
       colors: tmp
     }]
+  end
+
+  def refund_status_text
+    case self.status
+      when "TRADE_REFUNDED" then "已退款"
+      when "TRADE_REFUNDING" then "退款中"
+    end
   end
 end

@@ -84,4 +84,15 @@ class TaobaoOrder < Order
       }]
     end
   end
+
+  def refund_status_text
+    case self.refund_status
+      when "WAIT_SELLER_AGREE" then "买家已经申请退款，等待卖家同意"
+      when "SELLER_REFUSE_BUYER" then "卖家拒绝退款"
+      when "WAIT_BUYER_RETURN_GOODS" then "卖家已经同意退款，等待买家退货"
+      when "WAIT_SELLER_CONFIRM_GOODS" then "买家已经退货，等待卖家确认收货"
+      when "CLOSED" then "退款关闭"
+      when "SUCCESS" then "退款成功"
+    end
+  end
 end

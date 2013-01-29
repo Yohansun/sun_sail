@@ -77,7 +77,6 @@
           <th>名称</th>
           <th>分类</th>
           <th>商品编码</th>
-          <th>商品状态</th>
           <th>库存状态</th>
           <th>可用库存</th>
           <th>实际库存</th>
@@ -91,7 +90,6 @@
           <td><%= product.name %></td>
           <td><%= product.product.try(:category).try(:name) %></td>
           <td><%= product.product.iid %></td>
-          <td><%= product.product.present_status %></td>
           <td><%= product.storage_status %></td>
           <td><%= product.activity %></td>
           <td><%= product.actual %></td>
