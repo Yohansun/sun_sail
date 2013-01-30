@@ -96,8 +96,9 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     $(@el).find('#select_print_time').html(view.render().el)
 
   renderUpdate: =>
-    if @collection.length != 0
-      @collection.each(@appendTrade)
+    @collection.each(@appendTrade)
+
+    if @collection.length > 0
       $(".complete_offset").html(@collection.at(0).get("trades_count"))
       unless parseInt($(".complete_offset").html()) <= @offset
         $(".get_offset").html(@offset)
@@ -105,9 +106,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
         $(".get_offset").html($(".complete_offset").html())
 
       $("a[rel=popover]").popover({placement: 'left', html:true})
-    else
-      $(".complete_offset").html(0)
-      $(".get_offset").html(0)
+
     $.unblockUI()
 
   appendTrade: (trade) =>
