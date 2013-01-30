@@ -3,8 +3,10 @@
     <div class="subnav">
       <ul class="nav nav-pills">
         <li><%= link_to '商品管理', products_path, class: "products" %></li>
-        <li class="active"><%= link_to '颜色管理', colors_path %></li>
-        <li><%= link_to '分类管理', categories_path %></li>
+        <% if TradeSetting.enable_module_colors == 1 %>
+          <li><%= link_to '颜色管理', colors_path %></li>
+        <% end %>
+        <li class="active"><%= link_to '分类管理', categories_path %></li>
       </ul>
     </div>
   </header>
@@ -14,27 +16,25 @@
         <%= link_to 'Magic', root_path %>
         <span class="divider">/</span>
       </li>
-      <li class="active">颜色管理</li>
+      <li class="active">分类管理</li>
       <li style="position:absolute;right:15px;top:6px;">
-        <%= link_to '新增颜色', new_color_path %>
+        <%= link_to '新增分类', new_category_path(parent_id: params[:parent_id]) %>
       </li>
     </ul><!-- breadcrumb -->
 
     <table class="table table-striped table-bordered table-condensed vertical_mid">
       <thead>
         <tr>
-          <th>颜色名</th>
-          <th>色号</th>
-          <th>编码</th>
+          <th>分类名</th>
+          <th>下级分类</th>
           <th>操作</th>
         </tr>
       </thead>
       <tbody>
-      	<% @colors.each do |color| %>
+      	<% @categories.each do |category| %>
         <tr>
-          <td><%= color.name %></td>
-          <td><%= color.num %></td>
-          <td><%= color.hexcode %></td>
+          <td><%= category.name %></td>
+          <td><%= category.descendants.map(&:name).join(',') %></td>
           <td>
             <div class="btn-group">
               <button data-toggle="dropdown" class="btn btn-info dropdown-toggle min_w">
@@ -42,8 +42,11 @@
                 <span class="caret"></span>
               </button>
               <ul class="dropdown-menu trade_pops" style="left:-115px;">
-                <li><%= link_to '编辑', edit_color_path(color) %></li>
-                <li><%= link_to '删除', color_path(color), method: :delete, confirm: '确认删除?' %></li>
+                <li><%= link_to '编辑', edit_category_path(category) %></li>
+                <%#- if category.descendants.count > 0 %>
+                  <li><%= link_to "管理下级", categories_path(:parent_id => category.id), :class=>"browse_children"%></li>
+                <%#- end %>  
+                <li><%= link_to '删除', category_path(category), method: :delete, confirm: '确认删除?' %></li>
               </ul>
             </div>
           </td>
@@ -52,6 +55,6 @@
       </tbody>
     </table>
 
-    <%= paginate @colors %>
+    <%= paginate @categories %>
   </div>
 </div>

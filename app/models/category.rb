@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 # == Schema Information
 #
 # Table name: categories
@@ -8,11 +9,11 @@
 #  updated_at :datetime        not null
 #
 
-# -*- encoding : utf-8 -*-
 class Category < ActiveRecord::Base
+  acts_as_nested_set	
   has_many :products
 
-  attr_accessible :name
+  attr_accessible :name, :parent_id, :lft, :rgt
 
   validates_uniqueness_of :name
   validates_presence_of :name

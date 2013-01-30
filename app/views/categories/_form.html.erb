@@ -1,0 +1,12 @@
+<%= simple_form_for @category, html: {class: 'well form-horizontal'} do |f| %>
+  <fieldset>
+    <%= f.input :name, label: '分类名' %>
+    <%= f.input :parent_id, label: "上级分类"  do %>
+    	<%= f.select :parent_id, nested_set_options(Category, @category) {|i| "#{'-' * i.level} #{i.name}" } %>
+    <% end %>
+    <div class="form-actions">
+      <%= link_to '取消', categories_path, class: 'btn' %>
+      <button type="submit" class="btn btn-primary">保存</button>
+    </div>
+  </fieldset>
+<% end %>

@@ -87,6 +87,7 @@ class TaobaoTrade < Trade
   field :is_3D, type: Boolean
   field :promotion, type: String
   field :got_promotion, type: Boolean, default: false  # 优惠信息是否抓到。
+  field :sku_properties_name, type: String
 
   embeds_many :taobao_orders
   embeds_many :promotion_details
