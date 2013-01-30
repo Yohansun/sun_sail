@@ -28,13 +28,13 @@
               <th width="230">调色信息</th>
             <% end %>
             <% if MagicOrders.enable_module_sku_properties == 1 : %>
-              <th width="230">商品属性</th>
+              <th width="100">商品属性</th>
             <% end %>
             <% unless @trade.get('total_fee') is undefined : %>
               <th width="">单价</th>
             <% end %>
             <th width="">备注</th>
-            <th width="">退货状态</th>
+            <th width="100">退货状态</th>
           </tr>
         </thead>
         <tbody>
@@ -42,10 +42,17 @@
             <% if order.packaged : %>
               <!-- package order -->
               <tr>
-              <% if MagicOrders.enable_module_colors == 1 : %>
-              <td colspan='3'><%= order.title %> * <%= order.num %> 套</td>
+              <% if MagicOrders.enable_module_colors == 1 || MagicOrders.enable_module_sku_properties == 1 : %>
+                <% if MagicOrders.enable_module_colors == 1 && MagicOrders.enable_module_sku_properties == 1 : %>
+                  <td colspan='4'><%= order.title %> * <%= order.num %> 套</td>
+                <% else : %>
+                  <td colspan='3'><%= order.title %> * <%= order.num %> 套</td>
+                <% end %>
               <% else : %>
               <td colspan='2'><%= order.title %> * <%= order.num %> 套</td>
+              <% end %>
+              <% if MagicOrders.enable_module_sku_properties == 1 : %>
+              <td><%= order.sku_properties%></td>
               <% end %>
               <td>￥ <%= order.price%></td>
               <td><%= order.cs_memo%></td>
@@ -84,9 +91,7 @@
                     </td>
                   <% end %>
                   <% if MagicOrders.enable_module_sku_properties == 1 : %>
-                    <td>
-                      <%= info['sku_properties']%>
-                    </td>
+                    <td><%= order.sku_properties %></td>
                   <% end %>
                   <% if @trade.get('total_fee') isnt undefined and order['bill_info'].length < 2 : %>
                     <td>￥<%= order.price %></td>
@@ -108,15 +113,30 @@
 
               <b class="mar_r10">物流费：￥<%= @trade.get('post_fee') %> </b>
             </td>
-
+            <% if MagicOrders.enable_module_colors == 1 || MagicOrders.enable_module_sku_properties == 1 : %>
+              <% if MagicOrders.enable_module_colors == 1 && MagicOrders.enable_module_sku_properties == 1 : %>
+                <td colspan="5" class="tr"><b>订单实付金额：￥<%= @trade.get('total_fee')%></b></td>
+              <% else : %>
+                <td colspan="4" class="tr"><b>订单实付金额：￥<%= @trade.get('total_fee')%></b></td>
+              <% end %>
+            <% else : %>
             <td colspan="3" class="tr"><b>订单实付金额：￥<%= @trade.get('total_fee')%></b></td>
+            <% end %>
           </tr>
           <% if (MagicOrders.role_key == 'admin' or MagicOrders.role_key == 'cs') and @trade.get('trade_type') == 'TaobaoPurchaseOrder' : %>
             <tr>
               <td colspan='2'>
                 <b class="mar_r10">分销商编号：<%= @trade.get('distributor_username') %></b>
               </td>
+              <% if MagicOrders.enable_module_colors == 1 || MagicOrders.enable_module_sku_properties == 1 : %>
+                <% if MagicOrders.enable_module_colors == 1 && MagicOrders.enable_module_sku_properties == 1 : %>
+                  <td colspan='5' class="tr">
+                <% else : %>
+                  <td colspan='4' class="tr">
+                <% end %>
+              <% else : %>
               <td colspan='3' class="tr">
+              <% end %>
                 <b>分销商实付金额：￥<%= @trade.get('distributor_payment') %></b>
               </td>
             </tr>
