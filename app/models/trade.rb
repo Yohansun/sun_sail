@@ -554,7 +554,7 @@ class Trade
       when 'delivered','seller_delivered'
         trade_type_hash = {:status.in => paid_and_delivered_array}
       when 'refund'
-        trade_type_hash ={"$or" => [{ :"taobao_orders.refund_status" => {:'$in' => taobao_trade_refund_array}}, {:"taobao_sub_purchase_orders.status" => {:'$in' => taobao_purchase_refund_array}}]}
+        trade_type_hash = {"$or" => [{ :"taobao_orders.refund_status" => {:'$in' => taobao_trade_refund_array}}, {:"taobao_sub_purchase_orders.status" => {:'$in' => taobao_purchase_refund_array}}]}
       when 'return'
         trade_type_hash = {:request_return_at.ne => nil}  
       when 'closed'
@@ -742,18 +742,19 @@ class Trade
 
     # 集中筛选
     search_hash = {"$and" => [
-      trade_type_hash, deliver_print_time_hash,     create_time_hash,         pay_time_hash,
-      logistic_print_time_hash,    status_hash,              type_hash,
-      logistic_hash,               seller_memo_hash,         buyer_message_hash,
-      has_color_info_hash,         has_cs_memo_hash,         invoice_all_hash,
-      cs_memo_void_hash,           color_info_void_hash,     receiver_state_hash,
-      receiver_city_hash,          receiver_district_hash,   simple_search_hash,
-      dispatch_time_hash
-    ].compact}
+      deliver_print_time_hash,     create_time_hash,              dispatch_time_hash,
+      pay_time_hash,               logistic_print_time_hash,      status_hash,
+      type_hash,                   logistic_hash,                 seller_memo_hash,
+      has_color_info_hash,         has_cs_memo_hash,              invoice_all_hash,
+      cs_memo_void_hash,           color_info_void_hash,          receiver_state_hash,
+      receiver_city_hash,          receiver_district_hash,        simple_search_hash,
+      buyer_message_hash
+      ].compact
+    }
     search_hash == {"$and"=>[]} ? search_hash = nil : search_hash
 
     ## 过滤有留言但还在抓取 + 总筛选
-    trades.where(search_hash).where({"$or" => [{"has_buyer_message" => {"$ne" => true}},{"buyer_message" => {"$ne" => nil}}]})
+    trades.where(search_hash).and(trade_type_hash, {"$or" => [{"has_buyer_message" => {"$ne" => true}},{"buyer_message" => {"$ne" => nil}}]})
     ###筛选结束###
   end
 end
