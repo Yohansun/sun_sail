@@ -4,7 +4,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
   events:
     'click .search': 'search'
-    'change [data-type=loadMoreTrades]': 'forceLoadMoreTrades'
+    'click [data-type=loadMoreTrades]': 'forceLoadMoreTrades'
     'click .export_orders': 'exportOrders'
     'change #cols_filter input[type=checkbox]': 'filterTradeColumns'
     'change #search_option' : 'changeInputFrame'
@@ -99,7 +99,11 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     if @collection.length != 0
       @collection.each(@appendTrade)
       $(".complete_offset").html(@collection.at(0).get("trades_count"))
-      $(".get_offset").html(@offset)
+      unless parseInt($(".complete_offset").html()) <= @offset
+        $(".get_offset").html(@offset)
+      else
+        $(".get_offset").html($(".complete_offset").html())
+
       $("a[rel=popover]").popover({placement: 'left', html:true})
     else
       $(".complete_offset").html(0)
@@ -213,10 +217,10 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     e.preventDefault()
     blocktheui()
 
-    limit = $(e.target).val()
-    @collection.fetch data: {trade_type: @trade_type, limit: limit, offset: @offset, search: {@simple_search_option, @simple_search_value, @from_deliver_print_date, @to_deliver_print_date, @from_deliver_print_time, @to_deliver_print_time, @from_logistic_print_date, @to_logistic_print_date, @from_logistic_print_time, @to_logistic_print_time, @search_start_date, @search_start_time, @search_end_date, @search_end_time, @pay_start_time, @pay_end_time, @pay_start_date, @pay_end_date, @dispatch_start_time, @dispatch_end_time, @dispatch_start_date, @dispatch_end_date, @status_option, @type_option, @state_option, @city_option, @district_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_cs_memo_void, @search_invoice, @search_color, @search_color_void, @search_logistic}}, success: (collection) =>
+    MagicOrders.trade_reload_limit = parseInt $('#load_count').val()
+    @collection.fetch data: {trade_type: @trade_type, limit: MagicOrders.trade_reload_limit, offset: @offset, search: {@simple_search_option, @simple_search_value, @from_deliver_print_date, @to_deliver_print_date, @from_deliver_print_time, @to_deliver_print_time, @from_logistic_print_date, @to_logistic_print_date, @from_logistic_print_time, @to_logistic_print_time, @search_start_date, @search_start_time, @search_end_date, @search_end_time, @pay_start_time, @pay_end_time, @pay_start_date, @pay_end_date, @dispatch_start_time, @dispatch_end_time, @dispatch_start_date, @dispatch_end_date, @status_option, @type_option, @state_option, @city_option, @district_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_cs_memo_void, @search_invoice, @search_color, @search_color_void, @search_logistic}}, success: (collection) =>
       if collection.length >= 0
-        @offset = @offset + parseInt(limit)
+        @offset = @offset + MagicOrders.trade_reload_limit
         @renderUpdate()
         $(e.target).val('')
       else
