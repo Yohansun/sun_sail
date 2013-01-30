@@ -7,7 +7,6 @@
 #  fullname          :string(255)
 #  address           :string(255)
 #  mobile            :string(255)
-#  phone             :string(255)
 #  created_at        :datetime        not null
 #  updated_at        :datetime        not null
 #  parent_id         :integer(4)
@@ -24,6 +23,7 @@
 #  interface         :string(255)
 #  has_stock         :boolean(1)      default(FALSE)
 #  stock_opened_at   :datetime
+#  account_id        :integer(4)
 #
 
 # -*- encoding : utf-8 -*-

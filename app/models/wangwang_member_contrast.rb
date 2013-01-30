@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 class WangwangMemberContrast
   include Mongoid::Document
-  
+  field :account_id,                   type: Integer
   field :user_id,                      type: String
   field :created_at,                   type: DateTime
 

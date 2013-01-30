@@ -4,6 +4,7 @@ class TradeReport
   include Mongoid::Document
   include Mongoid::Timestamps
   belongs_to :user
+  field :account_id,     type: Integer
   field :conditions, type: Hash  
   field :export_name, type: String 
   field :user_id, type: Integer 

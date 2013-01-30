@@ -1,6 +1,7 @@
 # -*- encoding : utf-8 -*-
 class WangwangMember
   include Mongoid::Document
+  field :account_id, type: Integer
   field :user_id, type: String
   field :name,    type: String
   field :decs,    type: String
