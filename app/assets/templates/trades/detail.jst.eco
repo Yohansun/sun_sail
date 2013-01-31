@@ -33,7 +33,7 @@
             <% unless @trade.get('total_fee') is undefined : %>
               <th width="">单价</th>
             <% end %>
-            <th width="">备注</th>
+            <th>备注</th>
             <th width="100">退货状态</th>
           </tr>
         </thead>
@@ -55,7 +55,7 @@
               <td><%= order.sku_properties%></td>
               <% end %>
               <td>￥ <%= order.price%></td>
-              <td><%= order.cs_memo%></td>
+              <td><p style="overflow:hidden;white-space:normal;word-wrap:break-word;width:100px;"><%= order.cs_memo%></p></td>
               <td><%= order.refund_status_text %></td>
               </tr>
               <% for info in order['bill_info'] : %>
@@ -96,7 +96,7 @@
                   <% if @trade.get('total_fee') isnt undefined and order['bill_info'].length < 2 : %>
                     <td>￥<%= order.price %></td>
                   <% end %>
-                  <td class='js-order-cs-memo-label-<%= order.id %>'><%= order.cs_memo %></td>
+                  <td class='js-order-cs-memo-label-<%= order.id %>'><p style="overflow:hidden;white-space:normal;word-wrap:break-word;width:300px;"><%= order.cs_memo %></p></td>
                   <td><%= order.refund_status_text %></td>
                 </tr>
               <% end %>
@@ -166,7 +166,7 @@
           <tr>
             <td colspan="1"><b>客服备注</b></td>
             <td colspan="4" class="reedit_text">
-              <%= @trade.get("trade_with_orders_cs_memo")%>
+              <p style="overflow:hidden;white-space:normal;word-wrap:break-word;width:600px;"> <%= @trade.get("trade_with_orders_cs_memo")%> </p>
             </td>
           </tr>
           <tr>
