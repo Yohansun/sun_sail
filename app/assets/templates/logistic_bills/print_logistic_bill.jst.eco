@@ -12,6 +12,6 @@
 </div><!-- modal-body -->
 <div class="modal-footer">
   <a href="#" class="btn" data-dismiss="modal" >取消</a>
-  <a href="javascript:void(0)" onclick='startPrint()' class="btn btn-primary">打印</a>
+  <a href="javascript:void(0)" onclick='startPrint()' class="btn btn-primary print_logistic_button">打印</a>
   <select id="logistic_select" class="input-medium nomargin pull-left"></select>
 </div><!-- modal-footer -->

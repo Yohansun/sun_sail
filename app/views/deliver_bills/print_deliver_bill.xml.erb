@@ -2,7 +2,8 @@
 <data>
   <% @bills.each do |bill| %>
   <% trade = bill.trade %>
-  <trade 
+  <trade
+    id='<%= bill.id %>'
     tid="<%= trade.tid %>" 
     company="<%= TradeSetting.shopname %>"
     phone="<%= trade.receiver_mobile %>" 
@@ -51,8 +52,8 @@
     xiadan_date="下单时间" 
     kdd_weight="重量"
     kdd_number="数量" 
-    kdd_pinming="内件品名" 
-    kdd_zifei="资费" 
+    kdd_pinming="内件品名"
+    kdd_zifei="资费"
     kdd_baojiafei="保价费" 
     kdd_zongfei="费用总计" 
     kdd_width="物品宽度" 
@@ -64,7 +65,8 @@
       code="<%= order.iid %>" 
       num="<%= order.number %>" 
       name="<%= order.title %>" 
-      color="&lt;font size='10'&gt;<%= order.color_info %>&lt;/font&gt;" ></item>
+      color="&lt;font size='10'&gt;<%= order.color_info %>&lt;/font&gt;" 
+    ></item>
     <% end %>
   </trade>
   <% end %>
