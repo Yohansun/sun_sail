@@ -57,7 +57,7 @@ class User < ActiveRecord::Base
   validates_presence_of :name, :email
   validates_presence_of :password, on: :create
 
-  validates :username, presence: true, uniqueness: { scope: :account_id }
+  validates :username, presence: true
 
   def display_name
     name || email
