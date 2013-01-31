@@ -42,8 +42,9 @@ class Seller < ActiveRecord::Base
   has_many :stock_history
   has_one :stock
 
-  validates_presence_of :fullname, :name
-  validates_uniqueness_of :fullname
+  validates :name, presence: true
+  validates :fullname, presence: true, uniqueness: { scope: :account_id }
+
 
   before_save :set_pinyin
 

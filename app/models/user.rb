@@ -40,6 +40,7 @@ class User < ActiveRecord::Base
   belongs_to :seller
   belongs_to :logistic
   has_many   :trade_reports
+  has_and_belongs_to_many :accounts
 
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
@@ -53,9 +54,10 @@ class User < ActiveRecord::Base
   attr_protected :cs, :cs_read, :seller, :interface, :stock_admin, :admin
   # attr_accessible :title, :body
 
-  validates_presence_of :name, :username, :email
+  validates_presence_of :name, :email
   validates_presence_of :password, on: :create
-  validates_uniqueness_of :username
+
+  validates :username, presence: true, uniqueness: { scope: :account_id }
 
   def display_name
     name || email

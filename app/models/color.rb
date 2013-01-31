@@ -13,8 +13,10 @@
 
 # -*- encoding : utf-8 -*-
 class Color < ActiveRecord::Base
-  validates_uniqueness_of :num
-  validates_presence_of :num, :name
+
+  validates :name, presence: true
+  validates :num, presence: true, uniqueness: { scope: :account_id }
+
   attr_accessible :num, :hexcode, :name
 
   has_many :colors_products

@@ -50,8 +50,8 @@ class Product < ActiveRecord::Base
   attr_accessible :good_type, :name, :iid, :taobao_id, :storage_num, :price, :quantity_id, :color_ids, :pic_url,
                   :category_id, :features, :product_image, :feature_ids, :cat_name, :props_str, :binds_str
 
-  validates_presence_of :iid, :name, :price, message: "信息不能为空"
-  validates_uniqueness_of :iid, :allow_blank => true, message: "信息已存在"
+  validates_presence_of :name, :price, message: "信息不能为空"
+  validates :iid, presence: { :message => "信息已存在" }, uniqueness: { scope: :account_id }, allow_blank: true
  
   validates_numericality_of :price, message: "所填项必须为数字"
   validates_length_of :name, maximum: 100, message: "内容过长"

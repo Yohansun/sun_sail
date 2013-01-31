@@ -11,4 +11,5 @@
 
 class Account < ActiveRecord::Base
   attr_accessible :key, :name
+  has_and_belongs_to_many :users
 end

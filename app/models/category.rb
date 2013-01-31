@@ -20,7 +20,7 @@ class Category < ActiveRecord::Base
 
   attr_accessible :name, :parent_id, :lft, :rgt
 
-  validates_uniqueness_of :name
-  validates_presence_of :name
+  validates :name, presence: true, uniqueness: { scope: :account_id }
+
 
 end
