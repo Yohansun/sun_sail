@@ -74,11 +74,13 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     if @identity == 'cs' or @identity == 'admin'
       $(@el).find(".trade_nav").text("未分流订单")
     $(@el).find(".get_offset").html(@offset)
+
     if parseInt($(@el).find(".complete_offset").html()) == @offset
       if @offset == 0
-        $(@el).find("#bottom_line").replaceWith("<span id='bottom_line'><b>当前无订单</b></span>")
+        $(@el).find(".trade_count_info").append("<span id='bottom_line'><b>当前无订单</b></span>")
       else
-        $(@el).find("#bottom_line").replaceWith("<span id='bottom_line'><b>当前为最后一条订单</b></span>")
+        $(@el).find(".trade_count_info").append("<span id='bottom_line'><b>当前为最后一条订单</b></span>")
+
     this
 
   optAll: (e) ->
