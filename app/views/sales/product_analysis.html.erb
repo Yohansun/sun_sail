@@ -45,7 +45,11 @@
                 <%- if p %>
                 <tr>
                   <td><%= i += 1 %></td>
-                   <td><%= image_tag p.pic_url %></td>   
+                   <td>
+                    <% if p.pic_url.present? %>
+                    <%= image_tag p.pic_url %>
+                    <% end %>
+                  </td>
                   <td width="200"><%= link_to "#{p.name}", product_path(p.id) %></td>
                   <td><%= value.try(:[],1) %></td>
                   <td><%= value.try(:[],0) %></td>
