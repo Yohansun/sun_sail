@@ -8,6 +8,7 @@
     MagicOrders.logistics = new MagicOrders.Collections.Logistics();
     MagicOrders.logistics.reset(<%= raw @logistics.to_json %>);
     MagicOrders.deliver_bill_notice_info = "<%= TradeSetting.deliver_bill_notice_info %>"
+    MagicOrders.enable_module_print_deliver_bill = <%= TradeSetting.enable_module_print_deliver_bill %>
     MagicOrders.enable_trade_deliver_bill_spliting = <%= TradeSetting.enable_trade_deliver_bill_spliting == true %>
     MagicOrders.enable_trade_deliver_bill_spliting_sellers = <%= TradeSetting.enable_trade_deliver_bill_spliting_sellers || [] %>
     MagicOrders.enable_module_colors = <%= TradeSetting.enable_module_colors %>

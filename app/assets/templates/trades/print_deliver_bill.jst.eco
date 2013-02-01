@@ -87,6 +87,8 @@
 </div><!-- modal-body -->
 <div class="modal-footer">
   <a class="btn" data-dismiss="modal" style='margin-top:-22px;'>关闭</a>
-  <div id="showbox">
+  <% if MagicOrders.enable_module_print_deliver_bill == 1 : %>
+    <div id="showbox">
+  <%- end %>    
   </div>
 </div><!-- modal-footer -->
