@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130128111518) do
+ActiveRecord::Schema.define(:version => 20130201084132) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -187,8 +187,8 @@ ActiveRecord::Schema.define(:version => 20130128111518) do
 
   create_table "products", :force => true do |t|
     t.string   "name",          :limit => 100,                               :default => "",  :null => false
-    t.string   "iid",           :limit => 20,                                :default => "",  :null => false
-    t.string   "taobao_id",     :limit => 20,                                :default => "",  :null => false
+    t.string   "outer_id",      :limit => 20,                                :default => "",  :null => false
+    t.string   "product_id",    :limit => 20,                                :default => "",  :null => false
     t.string   "storage_num",   :limit => 20,                                :default => "",  :null => false
     t.decimal  "price",                        :precision => 8, :scale => 2, :default => 0.0, :null => false
     t.integer  "quantity_id"
@@ -202,9 +202,10 @@ ActiveRecord::Schema.define(:version => 20130128111518) do
     t.datetime "updated_at"
     t.datetime "created_at"
     t.string   "cat_name"
-    t.text     "props_str"
-    t.text     "binds_str"
     t.string   "pic_url"
+    t.string   "detail_url"
+    t.string   "cid"
+    t.integer  "num_iid",       :limit => 8
   end
 
   create_table "quantities", :force => true do |t|
@@ -214,20 +215,20 @@ ActiveRecord::Schema.define(:version => 20130128111518) do
   end
 
   create_table "reconcile_statement_details", :force => true do |t|
-    t.integer  "reconcile_statement_id"  
-    t.integer  "alipay_revenue",         :default => 0  
-    t.integer  "postfee_revenue",        :default => 0  
-    t.integer  "trade_success_refund",   :default => 0  
-    t.integer  "sell_refund",            :default => 0  
-    t.integer  "base_service_fee",       :default => 0  
-    t.integer  "store_service_award",    :default => 0  
-    t.integer  "staff_award",            :default => 0  
-    t.integer  "taobao_cost",            :default => 0  
-    t.integer  "audit_cost",             :default => 0  
-    t.integer  "collecting_postfee",     :default => 0  
-    t.integer  "audit_amount",           :default => 0  
-    t.integer  "adjust_amount",          :default => 0  
-    t.datetime "created_at",                            :null => false  
+    t.integer  "reconcile_statement_id"
+    t.integer  "alipay_revenue",         :default => 0
+    t.integer  "postfee_revenue",        :default => 0
+    t.integer  "trade_success_refund",   :default => 0
+    t.integer  "sell_refund",            :default => 0
+    t.integer  "base_service_fee",       :default => 0
+    t.integer  "store_service_award",    :default => 0
+    t.integer  "staff_award",            :default => 0
+    t.integer  "taobao_cost",            :default => 0
+    t.integer  "audit_cost",             :default => 0
+    t.integer  "collecting_postfee",     :default => 0
+    t.integer  "audit_amount",           :default => 0
+    t.integer  "adjust_amount",          :default => 0
+    t.datetime "created_at",                            :null => false
     t.datetime "updated_at",                            :null => false
   end
 
@@ -312,6 +313,15 @@ ActiveRecord::Schema.define(:version => 20130128111518) do
 
   add_index "settings", ["thing_type", "thing_id", "var"], :name => "index_settings_on_thing_type_and_thing_id_and_var", :unique => true
 
+  create_table "skus", :force => true do |t|
+    t.integer "sku_id",          :limit => 8
+    t.integer "num_iid",         :limit => 8
+    t.string  "properties",                   :default => ""
+    t.string  "properties_name",              :default => ""
+    t.integer "quantity"
+    t.integer "product_id"
+  end
+
   create_table "stock_histories", :force => true do |t|
     t.string   "operation"
     t.integer  "number"
@@ -328,14 +338,16 @@ ActiveRecord::Schema.define(:version => 20130128111518) do
   add_index "stock_histories", ["seller_id"], :name => "index_stock_histories_on_seller_id"
 
   create_table "stock_products", :force => true do |t|
-    t.datetime "created_at",                :null => false
-    t.datetime "updated_at",                :null => false
-    t.integer  "max",        :default => 0
-    t.integer  "safe_value", :default => 0
-    t.integer  "activity",   :default => 0
-    t.integer  "actual",     :default => 0
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
+    t.integer  "max",                     :default => 0
+    t.integer  "safe_value",              :default => 0
+    t.integer  "activity",                :default => 0
+    t.integer  "actual",                  :default => 0
     t.integer  "product_id"
     t.integer  "seller_id"
+    t.integer  "sku_id",     :limit => 8
+    t.integer  "num_iid",    :limit => 8
   end
 
   add_index "stock_products", ["seller_id"], :name => "index_stock_products_on_seller_id"

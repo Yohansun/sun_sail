@@ -143,9 +143,9 @@
     <li><a href="#">Magic</a><span class="divider">/</span></li>
     <li><a href="#">订单管理</a><span class="divider">/</span></li>
     <li class="active trade_nav">所有订单</li>
-    <% if MagicOrders.role_key == 'admin' && MagicOrders.company != "dulux" : %>
-    <li style="position:absolute;right:15px;top:6px;"><i class="icon-cog"></i><a href="trade_sources/1">订单设置</a></li>
-    <% end %>
+    <%# if MagicOrders.role_key == 'admin' && MagicOrders.company != "dulux" : %>
+<!--     <li style="position:absolute;right:15px;top:6px;"><i class="icon-cog"></i><a href="trade_sources/1">订单设置</a></li> -->
+    <%# end %>
   </ul><!-- breadcrumb -->
 
   <form class="well form-horizontal reset_space order_search_form">

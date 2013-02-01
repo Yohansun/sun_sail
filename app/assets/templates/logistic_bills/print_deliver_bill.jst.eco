@@ -40,7 +40,7 @@
       <% count = 0 %>
       <% for order in @bill.get('orders') : %>
       <tr>
-        <td><%= order.iid %></td>
+        <td><%= order.outer_id %></td>
         <td><%= order.title %></td>
         <td><%= order.num  %></td>
         <% count = count + order.num %>

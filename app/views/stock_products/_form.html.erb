@@ -3,17 +3,12 @@
     <div class="control-group form-inline">
       <label class="control-label" for="">选择商品：</label>
       <div class="controls group re_height300">
-        <select class="span2 pull-left" multiple="multiple" id='category' name='category'>
+        <select class="span2 pull-left" style="width: 200px;" multiple="multiple" id='category' name='category'>
           <% Category.all.each do |c| %>
           <option value='<%= c.id%>'><%= c.name %></option>
           <% end %>
         </select>
-        <select class="span2 pull-left" multiple="multiple" id='feature' name='feature'>
-          <% Feature.all.each do |f| %>
-          <option value='<%= f.id%>'><%= f.name %></option>
-          <% end %>
-        </select>
-        <select class="span4 pull-left" multiple="multiple" id='product' name='stock_product[product_id]'>
+        <select class="span4 pull-left" style="width: 500px;" multiple="multiple" id='product' name='stock_product[product_id]'>
           <%= render partial: "products", :object => @products = Product.all %>
         </select>
       </div>
@@ -26,6 +21,10 @@
         </fieldset>
       <% end %>
     </div>
+
+    <fieldset class="form-inline">
+      <input class="string optional" id="properties_name" name="properties_name" size="4" type="text">
+    </fieldset>
 
     <%= f.input :max, hint: "(库存最大值)", label: '满仓值：', as: :string %>
     <%= f.input :safe_value, hint: "(低于安全值进入报警状态)", label: '安全值：', as: :string %>

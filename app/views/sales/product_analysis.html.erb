@@ -41,7 +41,7 @@
             <tbody>
               <%- i = 0 %>
               <% @product_data[0].each do |key, value| %>
-              <%- p = Product.find_by_iid(key) %>
+              <%- p = Product.find_by_outer_id(key) %>
                 <%- if p %>
                 <tr>
                   <td><%= i += 1 %></td>
@@ -83,7 +83,7 @@
             <tbody>
               <%- j = 0 %>
               <% @product_data[1].each do |value| %>
-              <%- lp = Product.find_by_iid(value[4]) %>
+              <%- lp = Product.find_by_outer_id(value[4]) %>
                 <%- if lp %>
                 <tr>
                   <td><%= j += 1 %></td>

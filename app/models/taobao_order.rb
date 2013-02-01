@@ -3,7 +3,7 @@
 class TaobaoOrder < Order
   field :oid, type: String
   field :status, type: String
-  field :iid, type: String
+  field :outer_id, type: String
   field :title, type: String
   field :price, type: Float
   field :num_iid, type: String
@@ -76,7 +76,7 @@ class TaobaoOrder < Order
       end
 
       [{
-        iid: '',
+        outer_id: '',
         number: 1,
         storage_num: '',
         title: title,

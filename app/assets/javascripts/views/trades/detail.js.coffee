@@ -41,14 +41,14 @@ class MagicOrders.Views.TradesDetail extends Backbone.View
         for info in order.bill_info
           infoArray = []
           for info_count in [0...(info.number*order.num)]
-            for item in $(".js-color-num-" + order.item_id + '-' + info.iid + '-' + info_count)
+            for item in $(".js-color-num-" + order.item_id + '-' + info.outer_id + '-' + info_count)
               infoArray.push($(item).val())
-            tmp[info['iid']] = infoArray
+            tmp[info['outer_id']] = infoArray
         for count in [0...order.num]
           suite = []
           for info in order.bill_info
             for info_index in [0...info.number]
-              suite.push(tmp[info.iid].shift())
+              suite.push(tmp[info.outer_id].shift())
           color_num.push(suite)
       else
         for count in [0...order.num]
@@ -110,13 +110,13 @@ class MagicOrders.Views.TradesDetail extends Backbone.View
               mergedColor = compressArray(colors[index])
               # console.log("mergedColor ->"+mergedColor)
               if mergedColor.length is 0
-                $('.js-color-label-'+order.id+"-"+order.bill_info[index].iid).html('')
+                $('.js-color-label-'+order.id+"-"+order.bill_info[index].outer_id).html('')
               else
                 colorHtml = ''
                 for color in mergedColor
                   colorHtml += color.count+"桶 "+color.value+"<br/>"
                 # console.log("colorHtml ->"+colorHtml)
-                $('.js-color-label-'+order.id+"-"+order.bill_info[index].iid).html(colorHtml)
+                $('.js-color-label-'+order.id+"-"+order.bill_info[index].outer_id).html(colorHtml)
           else
             mergedColor = compressArray(colors)
             if mergedColor.length is 0

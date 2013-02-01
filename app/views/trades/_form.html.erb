@@ -12,7 +12,7 @@
 
   <div class="w_48 pull-left">
     <%= simple_fields_for :orders do |o| %>
-      <%= o.input :outer_iid, label: '商品编号：', :input_html =>{ :class => "input-xlarge", value: "000" + Time.now.to_i.to_s } %>
+      <%= o.input :outer_iid, label: '商品编码：', :input_html =>{ :class => "input-xlarge", value: "000" + Time.now.to_i.to_s } %>
       <%= o.input :title, label: '商品名称：', :input_html =>{ :class => "input-xlarge", value: "银河系漫游指南" } %>
       <%= o.input :num, label: '商品数量：', :input_html =>{ :class => "input-xlarge", value: "1" } %>
       <%= o.input :sku_properties_name, label: '特殊属性：', :input_html =>{ :class => "input-xlarge", value: "沙草纸" } %>

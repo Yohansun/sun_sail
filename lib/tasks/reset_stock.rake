@@ -23,7 +23,7 @@ task :reset_stock => :environment do
   not_exist_sellers = []
 
   CSV.foreach("#{Rails.root}/lib/data_source/stock_20121109.csv") do |row|
-    product = Product.find_by_iid row[0]
+    product = Product.find_by_outer_id row[0]
     
     unless product
       puts "product #{row[0]} not exist"

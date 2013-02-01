@@ -219,11 +219,11 @@ class Trade
     return unless TradeSetting.company == 'dulux'
 
     orders.each do |order|
-      product = Product.find_by_iid order.outer_iid
+      product = Product.find_by_outer_id order.outer_iid
       package = product.package_info
       if package.present?
         package.each do |data|
-          stock_product = StockProduct.joins(:product).where("products.iid = ? AND seller_id = ?", data[:iid], op_seller).readonly(false).first
+          stock_product = StockProduct.joins(:product).where("products.outer_id = ? AND seller_id = ?", data[:outer_id], op_seller).readonly(false).first
           if stock_product.update_quantity!(data[:number] * order.num, operation)
             StockHistory.create(
               operation: operation,
@@ -294,7 +294,7 @@ class Trade
     orders.each do |order|
       bill.bill_products.create(
         title: order.title,
-        iid: order.outer_iid,
+        outer_id: order.outer_iid,
         colors: order.color_num,
         number: order.num,
         memo: order.cs_memo
@@ -305,7 +305,7 @@ class Trade
   def logistic_split
     splited = []
     orders.each do |order|
-      product = Product.find_by_iid order.outer_iid
+      product = Product.find_by_outer_id order.outer_iid
 
       unless product
         splited.clear
@@ -338,7 +338,7 @@ class Trade
               id: tid + ("%02d" % (splited.size + 1)),
               number: divmod,
               title: order.title,
-              iid: order.outer_iid
+              outer_id: order.outer_iid
             }
           }
         end
@@ -351,7 +351,7 @@ class Trade
               id: tid + ("%02d" % (splited.size + 1)),
               number: 1,
               title: order.title,
-              iid: order.outer_iid
+              outer_id: order.outer_iid
             }
           }
         end
@@ -366,8 +366,8 @@ class Trade
     deliver_bills.delete_all
 
     logistic_split.each do |item|
-      iid = item[:bill][:iid]
-      order = orders.select{|order| order.outer_iid == iid}.first
+      outer_id = item[:bill][:outer_id]
+      order = orders.select{|order| order.outer_iid == outer_id}.first
       color_num = order.color_num
       bill_number = item[:bill][:id]
 
@@ -378,7 +378,7 @@ class Trade
       )
 
       deliver_bill.bill_products.create(
-        iid: iid,
+        outer_id: outer_id,
         title: item[:bill][:title],
         number: item[:bill][:number],
         colors: color_num.pop(item[:bill][:number]),

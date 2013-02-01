@@ -178,19 +178,19 @@ module Dulux
 
       def match_item_sellers(area, order)
         sellers = nil
-        op = Product.find_by_iid order.outer_iid
+        op = Product.find_by_outer_id order.outer_iid
         return [] unless op
         color_num = order.color_num
         color_num.delete('')
         op_package = op.package_info
         op_package << {
-          iid: order.outer_iid,
+          outer_id: order.outer_iid,
           number: order.num,
           title: order.title
         } if op_package.blank?
 
         op_package.each do |pp|
-          sql = "products.iid = '#{pp[:iid]}' AND stock_products.activity > #{pp[:number]}"
+          sql = "products.outer_id = '#{pp[:outer_id]}' AND stock_products.activity > #{pp[:number]}"
           products = StockProduct.joins(:product).where(sql)
 
           if TradeSetting.enable_match_seller_user_color && color_num.present?

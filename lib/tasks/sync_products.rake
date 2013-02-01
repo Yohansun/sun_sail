@@ -11,13 +11,13 @@ task :sync_products => :environment do
   ]
 
   product_ids = []
-  product_iids.each do |iid|
-  	puts iid
-    product = Product.find_by_iid iid
+  product_iids.each do |outer_id|
+  	puts outer_id
+    product = Product.find_by_outer_id outer_id
     product ||= Product.create!(
-      name: iid,
-      iid: iid,
-      storage_num: iid
+      name: outer_id,
+      outer_id: outer_id,
+      storage_num: outer_id
     )
 
     product_ids << product.id
@@ -43,7 +43,7 @@ task :sync_products => :environment do
     'I1P04L10095C0V01'
   ]
 
-  p_ids = Product.where(iid: (a | product_iids)).map(&:id)
+  p_ids = Product.where(outer_id: (a | product_iids)).map(&:id)
   StockProduct.where("seller_id not in (?)", [1791,1792,1793,1794]).where("product_id in (?)", p_ids).delete_all
 
   product_ids = p_ids

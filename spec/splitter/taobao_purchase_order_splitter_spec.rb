@@ -80,7 +80,7 @@ describe "Match seller" do
 
 		context "and order has outer_iid" do
 			before do
-				Product.stub(:find_by_iid).and_return(create(:product))
+				Product.stub(:find_by_outer_id).and_return(create(:product))
 			end
 		  
 		  subject { TaobaoPurchaseOrderSplitter.match_item_sellers(@trade.default_area, @order) }

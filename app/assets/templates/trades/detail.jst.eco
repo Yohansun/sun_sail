@@ -63,7 +63,7 @@
                   <td><%= info.title %></td>
                   <td><%= info.number * order.num %></td>
                   <% if MagicOrders.enable_module_colors == 1 : %>
-                    <td class='js-color-label-<%= order.id %>-<%= info.iid %>'>
+                    <td class='js-color-label-<%= order.id %>-<%= info.outer_id %>'>
                       <% for color, array of info['colors'] : %>
                         <%= array[0] %>桶 <%= color %> <%= array[1] %><br>
                       <% end %>
@@ -243,7 +243,7 @@
                         <% end %>
                       <% end %>
                       <% for count in [0...(info.number*order.num)] : %>
-                          <input type="text" data-provide="typeahead" placeholder="请输入色号..." class="color_typeahead input-xlarge js-color-num-<%= order.item_id %>-<%= info.iid %>-<%= count %>"
+                          <input type="text" data-provide="typeahead" placeholder="请输入色号..." class="color_typeahead input-xlarge js-color-num-<%= order.item_id %>-<%= info.outer_id %>-<%= count %>"
                           value='<%= existing_colors[count] %>'><br/>
                       <% end %>
                     </td>

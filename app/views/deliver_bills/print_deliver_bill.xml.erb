@@ -62,7 +62,7 @@
   >
     <% bill.bill_products.each do |order| %>
     <item 
-      code="<%= order.iid %>" 
+      code="<%= order.outer_id %>" 
       num="<%= order.number %>" 
       name="<%= order.title %>" 
       color="&lt;font size='10'&gt;<%= order.color_info %>&lt;/font&gt;" 

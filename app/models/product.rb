@@ -5,8 +5,8 @@
 #
 #  id            :integer(4)      not null, primary key
 #  name          :string(100)     default(""), not null
-#  iid           :string(20)      default(""), not null
-#  taobao_id     :string(20)      default(""), not null
+#  outer_id      :string(20)      default(""), not null
+#  product_id    :string(20)      default(""), not null
 #  storage_num   :string(20)      default(""), not null
 #  price         :decimal(8, 2)   default(0.0), not null
 #  quantity_id   :integer(4)
@@ -20,21 +20,13 @@
 #  updated_at    :datetime
 #  created_at    :datetime
 #  cat_name      :string(255)
-#  props_str     :text
-#  binds_str     :text
 #  pic_url       :string(255)
+#  detail_url    :string(255)
+#  cid           :string(255)
+#  num_iid       :integer(8)
 #
 
 class Product < ActiveRecord::Base
-
-  # ========================
-  #  Attributes desc
-  #    - iid: 淘宝编码，从淘宝获取outer_iid
-  #    - taobao_id: 淘宝商品produc_id， 可作为淘宝商品的唯一标示，暂未使用''
-  #    - cat_name: 商品类目名称
-  #    - props_str: 产品的关键属性字符串列表.比如:品牌:诺基亚;型号:N73
-  #    - binds_str: 产品的非关键属性字符串列表
-  # ========================
 
   acts_as_nested_set
   belongs_to :category
@@ -45,16 +37,17 @@ class Product < ActiveRecord::Base
   has_many :colors, through: :colors_products
   has_many :packages
   has_many :stock_products
+  has_many :skus
 
-  attr_accessible :good_type, :name, :iid, :taobao_id, :storage_num, :price, :quantity_id, :color_ids, :pic_url,
-                  :category_id, :features, :product_image, :feature_ids, :cat_name, :props_str, :binds_str
+  attr_accessible :good_type, :name, :outer_id, :product_id, :storage_num, :price, :quantity_id, :color_ids, :pic_url, :category_id, :features, :product_image, :feature_ids, :cat_name, :detail_url, :num_iid, :cid
 
-  validates_presence_of :iid, :name, :price, message: "信息不能为空"
-  validates_uniqueness_of :iid, :allow_blank => true, message: "信息已存在"
+
+  validates_presence_of  :name, :price, message: "信息不能为空"
+  validates_uniqueness_of :outer_id, :allow_blank => true, message: "信息已存在"
  
   validates_numericality_of :price, message: "所填项必须为数字"
   validates_length_of :name, maximum: 100, message: "内容过长"
-  validates_length_of :iid, :taobao_id, :price, maximum: 20, message: "内容过长"
+  validates_length_of :outer_id, :product_id, :price, maximum: 20, message: "内容过长"
 
   def present_features
     features.map(&:name).join(',')
@@ -66,12 +59,12 @@ class Product < ActiveRecord::Base
     package_map.each do |p|
       p = p.split(',')
 
-      next if p[0].blank? || p[0] == iid
-      next unless Product.exists?(iid: p[0])
+      next if p[0].blank? || p[0] == outer_id
+      next unless Product.exists?(outer_id: p[0])
 
       packages.create(
         number: p[1],
-        iid: p[0]
+        outer_id: p[0]
       )
     end
   end
@@ -79,9 +72,9 @@ class Product < ActiveRecord::Base
   def package_info
     info = []
     packages.each do |item|
-      product = Product.find_by_iid(item.iid)
+      product = Product.find_by_outer_id(item.outer_id)
       info << {
-        iid: item.iid,
+        outer_id: item.outer_id,
         number: item.number,
         storage_num: product.try(:storage_num),
         title: product.try(:name)
@@ -110,7 +103,7 @@ class Product < ActiveRecord::Base
       end
 
       result = [{
-        iid: iid,
+        outer_id: outer_id,
         number: 1,
         storage_num: storage_num,
         title: name,

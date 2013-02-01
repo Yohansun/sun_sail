@@ -14,7 +14,7 @@ json.logistic_name @trade.logistic_name
 json.logistic_waybill @trade.logistic_waybill
 json.notice TradeSetting.deliver_bill_notice_info
 json.orders @bill.bill_products do |json, order|
-  json.iid order.iid
+  json.outer_id order.outer_id
   json.title order.title
   json.num order.number
   json.color_info order.color_info

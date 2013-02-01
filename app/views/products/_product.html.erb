@@ -1,11 +1,21 @@
 <tr id='product_<%= product.id %>'>
   <td><%= product.name  %></td>
-  <td><%= product.taobao_id %></td>
-  <td><%= product.iid %></td>
+  <td><%= product.outer_id %></td>
+  <td><%= product.product_id %></td>
   <td><%= product.price %></td>
-  <td><%= product.quantity.try(:name) %></td>
-  <td><%= product.category.try(:name) %></td>
-  <td><%= product.present_features %></td>
+<!--   <td><%#= product.quantity.try(:name) %></td> -->
+   <td><%= product.category.try(:name) %></td>
+  <td>
+    <% if product.good_type == 2 %>
+      套装：
+      <% product.packages.each do |package| %>
+        <%= "[#{package.outer_id}, #{package.number}]," %>
+      <% end %>
+    <% else %>
+      单品
+    <% end %>
+  </td>
+<!--   <td><%#= product.present_features %></td> -->
   <td>
     <div class="btn-group">
       <button data-toggle="dropdown" class="btn btn-info dropdown-toggle min_w"><i class="icon-wrench"></i> <span class="caret"></span></button>

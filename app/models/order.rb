@@ -10,6 +10,6 @@ class Order
   field :barcode, type: Array, default: []        # 条形码
 
   def product(product_id)
-    Product.find_by_iid product_id
+    Product.find_by_outer_id product_id
   end
 end

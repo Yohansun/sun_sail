@@ -1,12 +1,12 @@
 <%= simple_form_for @product, html: {class: 'well form-horizontal re_padding50'} do |f| %>
 <fieldset class="group">
   <div class="w_48 pull-left">
-    <%= f.input :iid, label: '淘宝ID：', :input_html =>{ :class => "input-xlarge" } %>
+    <%= f.input :outer_id, label: '淘宝ID：', :input_html =>{ :class => "input-xlarge" } %>
     <%= f.input :name, label: '商品名称：', :input_html =>{ :class => "input-xlarge" } %>
-    <%= f.input :taobao_id, label: '商品编码：', :input_html =>{ :class => "input-xlarge" } %>
+    <%= f.input :product_id, label: '商品编码：', :input_html =>{ :class => "input-xlarge" } %>
     <%= f.input :storage_num, label: '仓库编号：', :input_html =>{ :class => "input-xlarge" } %>
     <%= f.input :price, label: '价格：', as: :string, :input_html =>{ :class => "input-xlarge" } %>
-    <%= f.association :quantity, label: '规格：', :input_html =>{ :class => "width_auto" } %>
+    <%#= f.association :quantity, label: '规格：', :input_html =>{ :class => "width_auto" } %>
     <%= f.input :good_type, label: '商品类型：' do %>
       <label class="inline good_suit">
         <input type="radio" name="product[good_type]" value='1' <%= 'checked' if @product.good_type == 1 %>>单品
@@ -17,7 +17,7 @@
         <span class="help-inline">示例：[商品1,3],[商品2,1]</span>
       </label>
     <% end %>
-    <%= f.association :features, as: :check_boxes, label: '系列：'%>
+    <%#= f.association :features, as: :check_boxes, label: '系列：'%>
     <%= f.association :category, label: '分类：', :input_html =>{ :class => "width_auto" } %>
     <% if TradeSetting.enable_module_colors == 1 %>
       <fieldset class="form-inline">

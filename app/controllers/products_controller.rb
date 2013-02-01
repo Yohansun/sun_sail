@@ -9,23 +9,15 @@ class ProductsController < ApplicationController
 
   def index
     @products = Product
-    if params[:product].present?
-      unless params[:product][:info_type].blank? || params[:product][:info].blank?
-        @products = @products.where("#{params[:product][:info_type]} like ?", "%#{params[:product][:info].strip}%")
+    if params[:info_type].present? || params[:info].present?
+      if params[:info_type] == "sku_info"
+        @products = @products.joins(:skus).where("properties_name like ?", "%#{params[:info]}%")
+      else 
+        @products = @products.where("#{params[:info_type]} like ? or #{params[:info_type]} = ?", "%#{params[:info].strip}%", params[:info].strip)
       end
-      unless params[:product][:item_status].blank?
-        @products = @products.where("status = ?", params[:product][:item_status])
-      end
-      unless params[:product][:item_category].blank?
-        @products = @products.where("category_id = ?", params[:product][:item_category])
-      end
-      unless params[:product][:item_quantity].blank?
-        @products = @products.where("quantity_id = ?", params[:product][:item_quantity])
-      end
-      unless params[:product][:item_features] == [""]
-        feature_ids = params[:product][:item_features].collect{|i| i.to_i}
-        @products = @products.joins(:feature_product_relationships).where("feature_product_relationships.feature_id in (#{feature_ids.uniq.join(',')})")
-      end
+    end
+    if params[:category_id].present? && params[:category_id] != '0'
+      @products = @products.where("category_id = ?", params[:category_id])
     end
     @searched_products = @products
     @products = @products.order("updated_at DESC").page(params[:page])

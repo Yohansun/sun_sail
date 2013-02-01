@@ -35,7 +35,7 @@ task :build_test_trades => :environment do
   count = 0
 
 		
-	Product.where("iid not in (?)", (a | b)).each do |p|
+	Product.where("outer_id not in (?)", (a | b)).each do |p|
 
 		trade = TaobaoPurchaseOrder.skip(count).first
 		while trade.orders.size > 1
@@ -53,8 +53,8 @@ task :build_test_trades => :environment do
 		trade.dispatched_at = nil
 
 		order = trade.orders.first
-		order.title = "测试商品#{p.iid}"
-		order.item_outer_id = p.iid
+		order.title = "测试商品#{p.outer_id}"
+		order.item_outer_id = p.outer_id
 		order.color_num = []
 		
 		order.save
@@ -65,7 +65,7 @@ task :build_test_trades => :environment do
 
 	sp_trade_tids = []
 
-	Product.where("iid in (?)", a).each do |p|
+	Product.where("outer_id in (?)", a).each do |p|
 
 		trade = TaobaoPurchaseOrder.skip(count).first
 		while trade.orders.size > 1
@@ -83,8 +83,8 @@ task :build_test_trades => :environment do
 		trade.dispatched_at = nil
 
 		order = trade.orders.first
-		order.title = "测试商品#{p.iid}"
-		order.item_outer_id = p.iid
+		order.title = "测试商品#{p.outer_id}"
+		order.item_outer_id = p.outer_id
 		order.color_num = []
 		
 		order.save
@@ -96,7 +96,7 @@ task :build_test_trades => :environment do
 	areas = [['福建省','福州市','闽侯区'], ['辽宁省','沈阳市','皇姑区'], ['上海','上海市','闵行区'], ['河南省','三门峡市','湖滨区']]
 
 	sp_area_tids = []
-	product = Product.find_by_iid 'I1P18L40063C4V04'
+	product = Product.find_by_outer_id 'I1P18L40063C4V04'
 	return unless product
 
 	areas.each do |area|
@@ -116,8 +116,8 @@ task :build_test_trades => :environment do
 		trade.dispatched_at = nil
 
 		order = trade.orders.first
-		order.title = "测试商品#{product.iid}"
-		order.item_outer_id = product.iid
+		order.title = "测试商品#{product.outer_id}"
+		order.item_outer_id = product.outer_id
 		order.color_num = []
 		order.save
 		trade.save

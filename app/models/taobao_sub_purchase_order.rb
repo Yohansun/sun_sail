@@ -48,7 +48,7 @@ class TaobaoSubPurchaseOrder < Order
     end
 
     [{
-      iid: '',
+      outer_id: '',
       number: 1,
       storage_num: '',
       title: title,

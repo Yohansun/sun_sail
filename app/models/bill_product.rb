@@ -3,7 +3,7 @@ class BillProduct
   include NioHelper
 
   field :title, type: String
-  field :iid, type: String
+  field :outer_id, type: String
   field :colors, type: Array
   field :number, type: Integer
   field :memo, type: String
@@ -11,7 +11,7 @@ class BillProduct
   embedded_in :deliver_bill
 
   def product
-    Product.find_by_iid iid
+    Product.find_by_outer_id outer_id
   end
 
   def packaged?

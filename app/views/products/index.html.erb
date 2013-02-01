@@ -34,17 +34,28 @@
       <strong>提示</strong>该功能正在研发中...
     </div> -->
     <%= simple_form_for "product",url: products_path, html: { method: "get", class: "well form-search"} ,:wrapper => :search do |f| %>
-      <fieldset class="form-inline">
-        <%= f.input :info_type, collection: [["淘宝ID","iid"],["商品名称","name"],["商品编号","taobao_id"],["仓库编号","storage_num"]], input_html: {class: "mar_r10"}, label_html: {style: "margin-top:3px;" },label: "精确搜索：", required: false %>
-        <%= f.input :info, input_html: {class: "w_specify" , style: "width:490px;"} ,label: false, required: false %>
+      <fieldset class="form-inline mar_t5">
+        <div class="pull-left mar_r10">
+           <label class="control-label" style="margin-top:5px; margin-right: 19px">精确搜索：</label>
+            <select class="width_auto" name='info_type'>
+              <option value="outer_id" <%= 'selected' if params[:info_type] == 'outer_id' %>>商品编码</option>
+              <option value="product_id" <%= 'selected' if params[:info_type] == 'product_id' %>>淘宝ID</option>
+              <option value="name" <%= 'selected' if params[:info_type] == 'name' %>>商品名称</option>
+              <option value="sku_info" <%= 'selected' if params[:info_type] == 'sku_info' %>>商品属性</option>
+            </select>
+            <input type="text" name="info" style: "width:490px;" class="input-large" value='<%= params[:info] %>'>
+          </div>
       </fieldset>
       <fieldset class="form-inline mar_t5">
-        <%= f.input :item_quantity, collection: Quantity.all, input_html: {class: "width_auto mar_r10" },label_html: {style: "margin-top:3px;" }, label: "规格：", required: false %>
-        <%= f.input :item_category, collection: Category.all, input_html: {class: "width_auto mar_r10" },label_html: {style: "margin-top:3px;" }, label: "系列：", required: false %>
-        <br />
-        <br />
-        <%= f.input :item_features, as: :check_boxes, collection: Feature.all, input_html: {class: "width_auto mar_t5", label_style: "margin-top:-3px;"}, label: "分类：", required: false %>
-        <br />
+          <fieldset class="form-inline">
+            <label class="control-label" style="margin-top:5px; margin-right: 19px">商品分类：</label>
+            <select class="width_auto" name="category_id">
+              <option value="0" <%= 'selected' if params[:category_id] == '0' %>>全部</option>
+              <%- Category.all.each do |category| %>
+                <option value="<%= category.id %>" <%= 'selected' if params[:category_id] == category.id %>><%= category.name %></option>
+              <%- end %>
+            </select> 
+          </fieldset>                            
         <div>
           <%= f.button :submit, "过滤", class: "btn btn-primary pull-right" %>
         </div>
@@ -65,9 +76,8 @@
           <th nowrap>商品编码</th>
           <th nowrap>淘宝ID</th>
           <th nowrap>价格</th>
-          <th nowrap>规格</th>
           <th nowrap>分类</th>
-          <th nowrap>系列</th>
+          <th nowrap>商品类型</th>
           <th nowrap>操作</th>
         </tr>
       </thead>

@@ -1037,7 +1037,7 @@ task :special_products_sync => :environment do
 		'福建省-三明市-其它区'
 	]
 
-	product = Product.where(iid: 'I1P18L40063C4V04').first
+	product = Product.where(outer_id: 'I1P18L40063C4V04').first
 
 	unless product
 		puts 'I1P18L40063C4V04不存在'

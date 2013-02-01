@@ -3,7 +3,7 @@ module TaobaoProductsLockable
 	def can_lock_products?(trade, seller_id)
     lockable = []
     trade.orders.each do |order|
-      op = Product.find_by_iid order.outer_iid
+      op = Product.find_by_outer_id order.outer_iid
 
       if op.blank?
         lockable << "#{order.title}: 库存不足"
@@ -14,13 +14,13 @@ module TaobaoProductsLockable
       color_num = order.color_num
       color_num.delete('')
       op_package << {
-        iid: order.outer_iid,
+        outer_id: order.outer_iid,
         number: order.num,
         title: order.title
       } if op_package.blank?
 
       op_package.each do |pp|
-        product = StockProduct.joins(:product).where("stock_products.seller_id = #{seller_id} AND products.iid = '#{pp[:iid]}'").first
+        product = StockProduct.joins(:product).where("stock_products.seller_id = #{seller_id} AND products.outer_id = '#{pp[:outer_id]}'").first
         has_product = product.present? && (product.activity > pp[:number])
         p_colors = []
 

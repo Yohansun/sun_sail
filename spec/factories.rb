@@ -66,7 +66,7 @@ FactoryGirl.define do
   end
 
   factory :product do
-    iid 'test'
+    outer_id 'test'
     name 'test'
     storage_num '12345678a'
   end

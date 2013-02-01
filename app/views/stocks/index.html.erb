@@ -38,9 +38,10 @@
           
           <div class="pull-left mar_r10">
             <select class="width_auto" name='info_type'>
-              <option value="iid" <%= 'selected' if params[:info_type] == 'iid' %>>商品编号</option>
-              <option value="taobao_id" <%= 'selected' if params[:info_type] == 'taobao_id' %>>淘宝ID</option>
+              <option value="outer_id" <%= 'selected' if params[:info_type] == 'outer_id' %>>商品编码</option>
+              <option value="product_id" <%= 'selected' if params[:info_type] == 'product_id' %>>淘宝ID</option>
               <option value="name" <%= 'selected' if params[:info_type] == 'name' %>>商品名称</option>
+              <option value="sku_info" <%= 'selected' if params[:info_type] == 'sku_info' %>>商品属性</option>
             </select>
             <input type="text" name="info" class="input-large" value='<%= params[:info] %>'>
           </div>
@@ -51,12 +52,9 @@
               <label class="control-label width_auto">商品分类：</label>
               <select class="width_auto" name="category">
                 <option value="0" <%= 'selected' if params[:category] == '0' %>>全部</option>
-                <option value="1" <%= 'selected' if params[:category] == '1' %>>网络特供商品</option>
-                <option value="2" <%= 'selected' if params[:category] == '2' %>>内墙乳胶漆</option>
-                <option value="3" <%= 'selected' if params[:category] == '3' %>>外墙乳胶漆</option>
-                <option value="4" <%= 'selected' if params[:category] == '4' %>>木器漆</option>
-                <option value="5" <%= 'selected' if params[:category] == '5' %>>DIY色彩系列</option>
-                <option value="6" <%= 'selected' if params[:category] == '6' %>>輔助材料</option>
+                <%- Category.all.each do |category| %>
+                  <option value="<%= category.id %>" <%= 'selected' if params[:category] == category.id %>><%= category.name %></option>
+                <%- end %>
               </select> 
             </fieldset>                            
           </div>
@@ -73,8 +71,9 @@
     <table class="table table-striped table-bordered table-condensed vertical_mid">
       <thead>
         <tr>
-          <th>图片</th>
+        <!--   <th>图片</th> -->
           <th>名称</th>
+          <th>商品属性</th>
           <th>分类</th>
           <th>商品编码</th>
           <th>库存状态</th>
@@ -84,15 +83,16 @@
         </tr>
       </thead>
       <tbody>
-        <% @products.each do |product| %>
+        <% @stock_products.each do |stock_product| %>
         <tr>
-          <td></td>
-          <td><%= product.name %></td>
-          <td><%= product.product.try(:category).try(:name) %></td>
-          <td><%= product.product.iid %></td>
-          <td><%= product.storage_status %></td>
-          <td><%= product.activity %></td>
-          <td><%= product.actual %></td>
+       <!-- <td></td> -->
+          <td><%= stock_product.name %></td>
+          <td><%= stock_product.sku_name %></td>
+          <td><%= stock_product.product.try(:category).try(:name) %></td>
+          <td><%= stock_product.product.outer_id %></td>
+          <td><%= stock_product.storage_status %></td>
+          <td><%= stock_product.activity %></td>
+          <td><%= stock_product.actual %></td>
           <td>
             <div class="btn-group">
               <button data-toggle="dropdown" class="btn btn-info dropdown-toggle min_w">
@@ -100,12 +100,12 @@
                 <span class="caret"></span>
               </button>
               <ul class="dropdown-menu trade_pops" style="left:-115px;">
-                <li><a href='javascript:void(0)' onclick='show_storage_in(<%= product.id %>)' >入库</a></li>
-                <li><a href='javascript:void(0)' onclick='show_storage_out(<%= product.id %>)'>出库</a></li>
-                <li><%= link_to '进销记录', seller_stock_product_stock_history_index_path(params[:seller_id], product.id) %></li>
-                <li><%= link_to '编辑', edit_seller_stock_product_path(params[:seller_id], product.id) %></li>
+                <li><a href='javascript:void(0)' onclick='show_storage_in(<%= stock_product.id %>)' >入库</a></li>
+                <li><a href='javascript:void(0)' onclick='show_storage_out(<%= stock_product.id %>)'>出库</a></li>
+                <li><%= link_to '进销记录', seller_stock_product_stock_history_index_path(params[:seller_id], stock_product.id) %></li>
+                <li><%= link_to '编辑', edit_seller_stock_product_path(params[:seller_id], stock_product.id) %></li>
                 <li>
-                  <%= link_to '删除', seller_stock_product_path(params[:seller_id], product.id), method: :delete, confirm: '确认删除?' %>
+                  <%= link_to '删除', seller_stock_product_path(params[:seller_id], stock_product.id), method: :delete, confirm: '确认删除?' %>
                 </li>
               </ul>
             </div>
@@ -115,7 +115,7 @@
       </tbody>
     </table>
 
-    <%= paginate @products %>
+    <%= paginate @stock_products %>
   </div>
 </div>
 
@@ -267,8 +267,8 @@
 <script type="text/javascript">
 var chart;
 var chartData = []
-<%- @products.each do |p| %>
-  chartData.push({commodity: "<%= p.iid %>", stock_infact: "<%= p.actual %>", stock_safe: "<%= p.safe_value %>", stock_safe_end: "<%= p.safe_value %>", stock_avaliable: "<%= p.activity %>"})
+<%- @stock_products.each do |stock_product| %>
+  chartData.push({commodity: "<%= stock_product.product.outer_id %>", stock_infact: "<%= stock_product.actual %>", stock_safe: "<%= stock_product.safe_value %>", stock_safe_end: "<%= stock_product.safe_value %>", stock_avaliable: "<%= stock_product.activity %>"})
 
 
   AmCharts.ready(function () {
@@ -311,7 +311,7 @@ var chartData = []
         var graph = new AmCharts.AmGraph();
         graph.title = "安全值";
         // graph.labelText = "[[value]]";
-        graph.balloonText = "<%= p.name %> 安全库存: [[value]]";
+        graph.balloonText = "<%= stock_product.name %> 安全库存: [[value]]";
         // graph.valueField = "stock_safe";
         graph.type = "column";//graph.type = "line";//graph.type = "step";
         graph.lineAlpha = 1;//graph.lineAlpha = 1;
@@ -326,7 +326,7 @@ var chartData = []
         var graph = new AmCharts.AmGraph();
         graph.title = "可用库存";
         // graph.labelText = "[[value]]";
-        graph.balloonText = "<%= p.name %> 可用库存: [[value]]";
+        graph.balloonText = "<%= stock_product.name %> 可用库存: [[value]]";
         graph.valueField = "stock_avaliable";
         graph.type = "column";
         graph.lineAlpha = 0;
@@ -337,7 +337,7 @@ var chartData = []
         var graph = new AmCharts.AmGraph();
         graph.title = "实际库存";
         // graph.labelText = "[[value]]";
-        graph.balloonText = "<%= p.name %> 实际库存: [[value]]";
+        graph.balloonText = "<%= stock_product.name %> 实际库存: [[value]]";
         graph.valueField = "stock_infact";
         graph.type = "column";
         graph.lineAlpha = 0;

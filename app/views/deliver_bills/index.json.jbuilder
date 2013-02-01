@@ -13,7 +13,7 @@ json.array!(@bills) do |json, bill|
   json.logistic_name trade.logistic_name
   json.logistic_waybill trade.logistic_waybill
   json.orders bill.bill_products do |json, order|
-    json.iid order.iid
+    json.outer_id order.outer_id
     json.title order.title
     json.num order.number
     json.cs_memo order.memo
