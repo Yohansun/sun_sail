@@ -231,14 +231,13 @@ class SalesController < ApplicationController
       time_gap = (end_at - start_at).to_i
       @old_trades = TaobaoTrade.between(created: (start_at - time_gap.seconds)..start_at).in(status: ["TRADE_FINISHED","FINISHED_L"])
     else
-      @trades = TaobaoTrade.between(created: 1.week.ago..Time.now).in(status: ["TRADE_FINISHED","FINISHED_L"])
-      @old_trades = TaobaoTrade.between(created: 2.week.ago..1.week.ago).in(status: ["TRADE_FINISHED","FINISHED_L"])
+      @trades = TaobaoTrade.between(created: 1.month.ago..Time.now).in(status: ["TRADE_FINISHED","FINISHED_L"])
+      @old_trades = TaobaoTrade.between(created: 2.month.ago..1.month.ago).in(status: ["TRADE_FINISHED","FINISHED_L"])
     end
 
     if @trades && @old_trades
       @product_data = product_data(@trades, @old_trades)
     end
-    render "/sales/product_analysis"
   end
 
   def area_analysis
@@ -251,11 +250,10 @@ class SalesController < ApplicationController
       start_at = "#{@start_date} #{@start_time}".to_time(:local)
       end_at = "#{@end_date} #{@end_time}".to_time(:local)
     else
-      start_at = 1.week.ago
+      start_at = 1.month.ago
       end_at = Time.now
     end
     @area_data = area_data(start_at, end_at)
-    render "/sales/area_analysis"
   end
 
   def price_analysis
@@ -267,11 +265,10 @@ class SalesController < ApplicationController
       start_at = "#{@start_date} #{@start_time}".to_time(:local)
       end_at = "#{@end_date} #{@end_time}".to_time(:local)
     else
-      start_at = 1.week.ago
+      start_at = 1.month.ago
       end_at = Time.now
     end
     @price_data = price_data(start_at, end_at)
-    render "/sales/price_analysis"
   end
 
   def time_analysis
@@ -283,7 +280,7 @@ class SalesController < ApplicationController
       start_at = "#{@start_date} #{@start_time}".to_time(:local)
       end_at = "#{@end_date} #{@end_time}".to_time(:local)
     else
-      start_at = 1.week.ago
+      start_at = 1.month.ago
       end_at = Time.now  
     end
     @time_data = time_data(start_at, end_at)
@@ -301,11 +298,10 @@ class SalesController < ApplicationController
       start_at = "#{@start_date} #{@start_time}".to_time(:local)
       end_at = "#{@end_date} #{@end_time}".to_time(:local)
     else
-      start_at = 1.week.ago
+      start_at = 1.month.ago
       end_at = Time.now
     end
     @frequency_data = frequency_data(start_at, end_at)
-    render "/sales/frequency_analysis"
   end
 
   def univalent_analysis
@@ -317,11 +313,10 @@ class SalesController < ApplicationController
       start_at = "#{@start_date} #{@start_time}".to_time(:local)
       end_at = "#{@end_date} #{@end_time}".to_time(:local)
     else
-      start_at = 1.week.ago
+      start_at = 1.month.ago
       end_at = Time.now
     end
     @univalent_data = univalent_data(start_at, end_at)
-    render "/sales/univalent_analysis"
   end
 
 end
