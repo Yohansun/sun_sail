@@ -22,19 +22,19 @@
       <table class="table table-bordered table-condensed">
         <thead>
           <tr>
-            <th width="50%">商品名称</th>
+            <th width="35%">商品名称</th>
             <th width="">数量</th>
             <% if MagicOrders.enable_module_colors == 1 : %>
               <th width="230">调色信息</th>
             <% end %>
             <% if MagicOrders.enable_module_sku_properties == 1 : %>
-              <th width="100">商品属性</th>
+              <th width="28%">商品属性</th>
             <% end %>
             <% unless @trade.get('total_fee') is undefined : %>
               <th width="">单价</th>
             <% end %>
             <th>备注</th>
-            <th width="100">退货状态</th>
+            <th width="10%">退货状态</th>
           </tr>
         </thead>
         <tbody>

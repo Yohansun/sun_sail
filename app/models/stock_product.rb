@@ -32,8 +32,17 @@ class StockProduct < ActiveRecord::Base
   has_and_belongs_to_many :colors
 
   def sku_name
-    sku_name = sku.properties_name.present? ? sku.properties_name.gsub(properties, '') : ''
-    sku_name = sku_name[1..-1]
+    sku_name = ''
+    if sku.properties_name.present?
+      properties = sku.properties_name.split(';')
+      properties.each do |property|
+        sku_values = property.split(':')
+        sku_key =  sku_values[2]
+        sku_value =  sku_values[3]
+        sku_name = sku_name + sku_key + ':' + sku_value + '  '
+      end  
+    end
+    sku_name
   end  
 
   def storage_status

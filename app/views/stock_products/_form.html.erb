@@ -22,10 +22,6 @@
       <% end %>
     </div>
 
-    <fieldset class="form-inline">
-      <input class="string optional" id="properties_name" name="properties_name" size="4" type="text">
-    </fieldset>
-
     <%= f.input :max, hint: "(库存最大值)", label: '满仓值：', as: :string %>
     <%= f.input :safe_value, hint: "(低于安全值进入报警状态)", label: '安全值：', as: :string %>
 
