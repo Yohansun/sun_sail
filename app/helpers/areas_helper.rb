@@ -1,6 +1,6 @@
 module AreasHelper
-	#地区树形结构
-	def area
+  #地区树形结构
+  def area
     areas = Area.roots
     @areas = []
     areas.each do |a|
@@ -19,7 +19,7 @@ module AreasHelper
       end
     end
     @areas.to_json
-	end
+  end
 
   #地域三级联动
   def area_tree(current = nil, flag = 0)

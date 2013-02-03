@@ -14,6 +14,7 @@ json.array!(@bills) do |json, bill|
   json.logistic_waybill trade.logistic_waybill
   json.orders bill.bill_products do |json, order|
     json.outer_id order.outer_id
+    json.sku_name order.sku_name
     json.title order.title
     json.num order.number
     json.cs_memo order.memo

@@ -43,6 +43,7 @@
     prompt="温馨提示" 
     bianma="商品编码" 
     mingcheng="商品名称" 
+    shuxing="商品属性" 
     shuliang="单个数量数量" 
     tiaose="调色信息" 
     print_date="打印时间" 
@@ -63,6 +64,7 @@
     <% bill.bill_products.each do |order| %>
     <item 
       code="<%= order.outer_id %>" 
+      sku_name="<%= order.sku_name %>" 
       num="<%= order.number %>" 
       name="<%= order.title %>" 
       color="&lt;font size='10'&gt;<%= order.color_info %>&lt;/font&gt;" 

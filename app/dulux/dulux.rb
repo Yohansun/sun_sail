@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
 module Dulux
-	module Splitter
-		def matched_seller_info(trade)
-			# 向view层传递拆分信息
+  module Splitter
+    def matched_seller_info(trade)
+      # 向view层传递拆分信息
       info = []
       match_seller_with_conditions(trade).each do |split|
         seller = Seller.find_by_id(split[:default_seller])
@@ -28,9 +28,9 @@ module Dulux
     end
 
     def match_seller_with_conditions(trade)
-    	# 拆分商品
-    	# 运费还没有计算
-    	grouped_orders = {}
+      # 拆分商品
+      # 运费还没有计算
+      grouped_orders = {}
       splitted_orders = []
       rebuild_orders = []
 
@@ -136,7 +136,7 @@ module Dulux
       splitted_orders = []
 
       if auto
-      	splitted_orders = match_seller_with_conditions(trade)
+        splitted_orders = match_seller_with_conditions(trade)
       else
         splitted_orders = manual_match_seller_with_conditions(trade, split_hash)
       end
@@ -223,6 +223,6 @@ module Dulux
         matched_sellers ||= []
         matched_sellers.first
       end
-		end
+    end
   end
 end

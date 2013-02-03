@@ -75,7 +75,6 @@ class TaobaoProductsPuller
       begin
         #调用taobao.items.onsale.get获取获取当前用户作为卖家的出售中的商品num_iid
         items_onsale_response= TaobaoQuery.get({method: 'taobao.items.onsale.get', fields: 'num_iid', nick: nick}, trade_source_id)   
-      
         if  items_onsale_response['items_onsale_get_response']['items'].present? &&  items_onsale_response['items_onsale_get_response']['items']['item'].present?
           items = items_onsale_response['items_onsale_get_response']['items']['item']
           total_results = items_onsale_response['items_onsale_get_response']['total_results']

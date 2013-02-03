@@ -1,12 +1,17 @@
 # -*- encoding:utf-8 -*-
 module TaobaoProductsLockable
-	def can_lock_products?(trade, seller_id)
+  def can_lock_products?(trade, seller_id)
     lockable = []
     trade.orders.each do |order|
-      op = Product.find_by_outer_id order.outer_iid
-
+      
+      if order.sku_id.present?
+        op = Product.joins(:skus).where("skus.sku_id = #{order.sku_id}").first
+      else
+        op =  Product.find_by_num_iid order.num_iid
+      end
+        
       if op.blank?
-        lockable << "#{order.title}: 库存不足"
+        lockable << "#{op.name} #{op.stock_product.sku_name}: 商品不存在"
         next
       end
 

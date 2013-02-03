@@ -60,7 +60,7 @@
           </td>
         <% end %>
         <% if MagicOrders.enable_module_sku_properties == 1 : %>
-          <td><%= order.sku_properties %></td>
+          <td><%= order.get('sku_name') %></td>
         <% end %>
       </tr>
       <% end %>

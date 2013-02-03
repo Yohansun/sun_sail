@@ -216,15 +216,18 @@ class Trade
   end
 
   def nofity_stock(operation, op_seller)
-    return unless TradeSetting.company == 'dulux'
-
-    orders.each do |order|
-      product = Product.find_by_outer_id order.outer_iid
+      orders.each do |order|
+      if order.sku_id.present?
+        product = Product.joins(:skus).where("skus.sku_id = #{order.sku_id}").first
+      else
+        product =  Product.find_by_num_iid order.num_iid
+      end  
       package = product.package_info
       if package.present?
         package.each do |data|
           stock_product = StockProduct.joins(:product).where("products.outer_id = ? AND seller_id = ?", data[:outer_id], op_seller).readonly(false).first
-          if stock_product.update_quantity!(data[:number] * order.num, operation)
+          if stock_product
+            stock_product.update_quantity!(data[:number] * order.num, operation)
             StockHistory.create(
               operation: operation,
               number: data[:number] * order.num,
@@ -235,8 +238,9 @@ class Trade
           end
         end
       else
-        stock_product = StockProduct.where(product_id: product.id, seller_id: op_seller).first
-        if stock_product.update_quantity!(order.num, operation)
+        stock_product = product.where(seller_id: op_seller).first
+        if stock_product
+          stock_product.update_quantity!(order.num, operation)
           StockHistory.create(
             operation: operation,
             number: order.num,
@@ -292,9 +296,14 @@ class Trade
 
     bill = deliver_bills.create(deliver_bill_number: "#{tid}01", seller_id: seller_id, seller_name: seller_name)
     orders.each do |order|
+      sku = Sku.find_by_sku_id(order.sku_id) || Sku.find_by_sku_id(order.num_iid)
+      sku_name = sku.try(:name)
+      num_iid = order.num_iid.to_s
       bill.bill_products.create(
         title: order.title,
         outer_id: order.outer_iid,
+        num_iid: num_iid,
+        sku_name: sku_name,
         colors: order.color_num,
         number: order.num,
         memo: order.cs_memo

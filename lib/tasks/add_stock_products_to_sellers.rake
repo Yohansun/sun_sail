@@ -11,7 +11,7 @@ desc "添加新商品"
 task :add_stock_products_to_sellers => :environment do
   Seller.find_each do |seller|
     Sku.find_each do |sku|
-     next if  seller.stock_products.where(product_id: sku.product_id, num_iid: sku.num_iid).exists?
+     next if  seller.stock_products.where(product_id: sku.product_id, num_iid: sku.num_iid,  sku_id: sku.id).exists?
      p seller.id
      p sku.sku_id 
      seller.stock_products.create!(
