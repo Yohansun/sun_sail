@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class WangwangChatpeer
   include Mongoid::Document  
   field :user_id,    type: String

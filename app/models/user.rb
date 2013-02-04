@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 # == Schema Information
 #
 # Table name: users
@@ -26,7 +27,6 @@
 #  locked_at              :datetime
 #
 
-# -*- encoding : utf-8 -*-
 class User < ActiveRecord::Base
   rolify
   belongs_to :area
@@ -46,9 +46,11 @@ class User < ActiveRecord::Base
   attr_protected :cs, :cs_read, :seller, :interface, :stock_admin, :admin
   # attr_accessible :title, :body
 
-  validates_presence_of :name, :username, :email
+  validates_presence_of :name, :username
   validates_presence_of :password, on: :create
   validates_uniqueness_of :username
+
+  validates :email, :presence => true, :uniqueness => true, :format => {:with => /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i, :message => "请输入正确的邮箱格式" }
 
   def display_name
     name || email
