@@ -49,7 +49,11 @@ class TaobaoProductsPuller
           products.each do |product|
             local_product = Product.where(product_id: product['product_id']).first
             if local_product
-              category = Category.where(name: product['cat_name']).first_or_create
+              if product['cat_name'].present?
+                category = Category.where(name: product['cat_name']).first_or_create
+              else
+                category = Category.where(name: '其他').first_or_create  
+              end  
               local_product.category_id = category.id
               local_product.save!(validate: false)  
             end     
