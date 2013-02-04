@@ -3,9 +3,9 @@ class ProductsController < ApplicationController
   before_filter :authenticate_user!
   before_filter :admin_only!
 
-  cache_sweeper :product_sweeper
-  caches_action :show, :edit
-  caches_action :index, cache_path: Proc.new { |c| c.params }
+  # cache_sweeper :product_sweeper
+  # caches_action :show, :edit
+  # caches_action :index, cache_path: Proc.new { |c| c.params }
 
   def index
     @products = Product

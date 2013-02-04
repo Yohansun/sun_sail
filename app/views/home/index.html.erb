@@ -87,7 +87,11 @@
 
   <div class="modal-footer">
     <a href="#" class="btn" data-dismiss="modal" style=''>取消</a>
-    <div id='showbox'></div>
+    <% if TradeSetting.enable_module_print_deliver_bill  == 1  %>
+      <div id="showbox"></div>
+    <% else  %>  
+      <a class="btn btn-primary" style='margin-top:-22px;'>打印</a>
+    <% end %>
     <select id="logistic_select" class="input-medium nomargin pull-left"></select>
   </div>
 </div>

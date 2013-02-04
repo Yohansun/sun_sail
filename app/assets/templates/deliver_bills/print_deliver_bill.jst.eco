@@ -74,6 +74,9 @@
 </div><!-- modal-body -->
 <div class="modal-footer">
   <a class="btn" data-dismiss="modal" style='margin-top:-22px;'>关闭</a>
-  <div id="showbox">
-  </div>
+  <% if MagicOrders.enable_module_print_deliver_bill  == 1 : %>
+    <div id="showbox"></div>
+  <% else : %>  
+    <a class="btn btn-primary" style='margin-top:-22px;'>打印</a>
+  <% end %>  
 </div><!-- modal-footer -->
