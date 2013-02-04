@@ -2,20 +2,16 @@
 #
 # Table name: bbs_topics
 #
-#  id                      :integer(4)      not null, primary key
-#  bbs_category_id         :integer(4)
-#  user_id                 :integer(4)
-#  title                   :string(255)
-#  body                    :text
-#  read_count              :integer(4)      default(0)
-#  download_count          :integer(4)      default(0)
-#  created_at              :datetime        not null
-#  updated_at              :datetime        not null
-#  uploadfile_file_name    :string(255)
-#  uploadfile_content_type :string(255)
-#  uploadfile_file_size    :integer(4)
-#  uploadfile_updated_at   :datetime
-#  account_id              :integer(4)
+#  id              :integer(4)      not null, primary key
+#  bbs_category_id :integer(4)
+#  user_id         :integer(4)
+#  title           :string(255)
+#  body            :text
+#  read_count      :integer(4)      default(0)
+#  download_count  :integer(4)      default(0)
+#  created_at      :datetime        not null
+#  updated_at      :datetime        not null
+#  account_id      :integer(4)
 #
 
 class BbsTopic < ActiveRecord::Base

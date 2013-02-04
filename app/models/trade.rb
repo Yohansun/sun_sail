@@ -8,6 +8,7 @@ class Trade
 
   field :trade_source_id, type: Integer
 
+  field :account_id, type: Integer
   field :seller_id, type: Integer
   field :seller_alipay_no, type: String
   field :seller_mobile, type: String
@@ -116,7 +117,7 @@ class Trade
 
   def set_has_color_info
     self.orders.each do |order|
-      colors = order.color_num || []
+      colors = order.color_num.blank? ? [] : order.color_num
       if colors.flatten.select{|elem| elem.present?}.any?
         self.has_color_info = true
         return

@@ -56,6 +56,7 @@ ActiveRecord::Schema.define(:version => 20130130034546) do
 
   add_index "alipay_trade_orders", ["alipay_trade_history_id"], :name => "index_alipay_trade_orders_on_alipay_trade_history_id"
   add_index "alipay_trade_orders", ["original_trade_sn"], :name => "index_alipay_trade_orders_on_original_trade_sn"
+  add_index "alipay_trade_orders", ["reconcile_statement_id"], :name => "index_alipay_trade_orders_on_reconcile_statement_id"
   add_index "alipay_trade_orders", ["trade_sn"], :name => "index_alipay_trade_orders_on_trade_sn"
 
   create_table "areas", :force => true do |t|
@@ -90,14 +91,10 @@ ActiveRecord::Schema.define(:version => 20130130034546) do
     t.integer  "user_id"
     t.string   "title"
     t.text     "body"
-    t.integer  "read_count",              :default => 0
-    t.integer  "download_count",          :default => 0
-    t.datetime "created_at",                             :null => false
-    t.datetime "updated_at",                             :null => false
-    t.string   "uploadfile_file_name"
-    t.string   "uploadfile_content_type"
-    t.integer  "uploadfile_file_size"
-    t.datetime "uploadfile_updated_at"
+    t.integer  "read_count",      :default => 0
+    t.integer  "download_count",  :default => 0
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
     t.integer  "account_id"
   end
 
@@ -415,11 +412,11 @@ ActiveRecord::Schema.define(:version => 20130130034546) do
   create_table "upload_files", :force => true do |t|
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
-    t.integer  "bbs_topic_id"
     t.string   "file_file_name"
     t.string   "file_content_type"
     t.integer  "file_file_size"
     t.datetime "file_updated_at"
+    t.integer  "bbs_topic_id"
   end
 
   create_table "users", :force => true do |t|
@@ -457,6 +454,26 @@ ActiveRecord::Schema.define(:version => 20130130034546) do
   add_index "users", ["parent_id"], :name => "index_admins_on_parent_id"
   add_index "users", ["reset_password_token"], :name => "index_admins_on_reset_password_token", :unique => true
   add_index "users", ["unlock_token"], :name => "index_users_on_unlock_token", :unique => true
+
+  create_table "users_bak", :force => true do |t|
+    t.string   "email",                  :default => "",    :null => false
+    t.string   "encrypted_password",     :default => "",    :null => false
+    t.string   "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.integer  "sign_in_count",          :default => 0
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string   "current_sign_in_ip"
+    t.string   "last_sign_in_ip"
+    t.datetime "created_at",                                :null => false
+    t.datetime "updated_at",                                :null => false
+    t.boolean  "is_super_admin",         :default => false
+    t.string   "name"
+  end
+
+  add_index "users_bak", ["email"], :name => "index_users_on_email", :unique => true
+  add_index "users_bak", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
 
   create_table "users_roles", :id => false, :force => true do |t|
     t.integer "user_id"
