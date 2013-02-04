@@ -24,6 +24,15 @@
               <p class="mar_t5"><%= @product.name %></p>
             </div>
           </div>
+          
+          <% if TradeSetting.enable_module_sku_properties == 1  %>
+            <div class="control-group">
+              <label class="control-label" for=""><span class="atv">*</span>商品属性：</label>
+              <div class="controls">
+                <p class="mar_t5"><%= @product.avalibale_sku_names %></p>
+              </div>
+            </div>
+           <%- end %> 
 
           <div class="control-group">
             <label class="control-label" for=""><span class="atv">*</span>商品编码：</label>

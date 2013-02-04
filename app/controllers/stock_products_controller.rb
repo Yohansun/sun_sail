@@ -98,4 +98,18 @@ class StockProductsController < ApplicationController
     @product.destroy
     redirect_to seller_stocks_path params[:seller_id]
   end
+
+  def change_stock_product
+    product_id = params[:product_id].first
+    product  = Product.find_by_id product_id
+    if product
+      @product_id = product_id
+      respond_to do |format|
+        format.js
+      end
+    else
+      render nothing: true
+    end  
+  end  
+
 end

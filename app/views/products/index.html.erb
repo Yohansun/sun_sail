@@ -73,6 +73,9 @@
       <thead>
         <tr>
           <th nowrap>商品名称</th>
+          <% if TradeSetting.enable_module_sku_properties == 1 %>
+            <th width="20%">商品属性</th>
+          <% end %> 
           <th nowrap>商品编码</th>
           <th nowrap>淘宝ID</th>
           <th nowrap>价格</th>

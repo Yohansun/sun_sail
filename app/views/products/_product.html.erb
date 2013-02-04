@@ -1,5 +1,8 @@
 <tr id='product_<%= product.id %>'>
   <td><%= product.name  %></td>
+  <% if TradeSetting.enable_module_sku_properties == 1  %>
+    <td><%= product.avalibale_sku_names %></td>
+  <% end %> 
   <td><%= product.outer_id %></td>
   <td><%= product.product_id %></td>
   <td><%= product.price %></td>

@@ -84,6 +84,14 @@ class Product < ActiveRecord::Base
     info
   end
 
+  def avalibale_sku_names
+    sku_names = []
+    skus.map(&:name).each do |name|
+      sku_names << name.split(':').last
+    end  
+    sku_names.join(',')
+  end  
+
   def color_map(color_num)
     result = []
     if packages.count > 0

@@ -148,6 +148,7 @@ MagicOrders::Application.routes.draw do
   get "/deliver_bills/batch-print-deliver", to: 'deliver_bills#batch_print_deliver'
   get "/deliver_bills/batch-print-logistic", to: 'deliver_bills#batch_print_logistic'
   get "/logistic_rates", to: 'logistic_rates#index'
+  get "/change_stock_product", to: 'stock_products#change_stock_product'
 
   scope 'api' do
     get "areas", to: "areas#index"
