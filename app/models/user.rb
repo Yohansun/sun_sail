@@ -2,28 +2,35 @@
 #
 # Table name: users
 #
-#  id                     :integer(4)      not null, primary key
-#  email                  :string(255)     default(""), not null
-#  encrypted_password     :string(255)     default(""), not null
-#  reset_password_token   :string(255)
-#  reset_password_sent_at :datetime
-#  remember_created_at    :datetime
-#  sign_in_count          :integer(4)      default(0)
-#  current_sign_in_at     :datetime
-#  last_sign_in_at        :datetime
-#  current_sign_in_ip     :string(255)
-#  last_sign_in_ip        :string(255)
-#  created_at             :datetime        not null
-#  updated_at             :datetime        not null
-#  is_super_admin         :boolean(1)      default(FALSE)
-#  name                   :string(255)
-#  active                 :boolean(1)      default(TRUE)
-#  seller_id              :integer(4)
-#  username               :string(255)
-#  logistic_id            :integer(4)
-#  failed_attempts        :integer(4)
-#  unlock_token           :string(255)
-#  locked_at              :datetime
+#  id                   :integer(4)      not null, primary key
+#  username             :string(255)     not null
+#  name                 :string(255)
+#  email                :string(255)     default(""), not null
+#  encrypted_password   :string(128)     default(""), not null
+#  password_salt        :string(255)     default(""), not null
+#  reset_password_token :string(255)
+#  remember_token       :string(255)
+#  remember_created_at  :datetime
+#  sign_in_count        :integer(4)      default(0)
+#  current_sign_in_at   :datetime
+#  last_sign_in_at      :datetime
+#  current_sign_in_ip   :string(255)
+#  last_sign_in_ip      :string(255)
+#  created_at           :datetime
+#  updated_at           :datetime
+#  role                 :string(255)
+#  role_level           :integer(4)      default(10)
+#  sellers_count        :integer(4)      default(0)
+#  parent_id            :integer(4)
+#  children_count       :integer(4)      default(0)
+#  lft                  :integer(4)      default(0)
+#  rgt                  :integer(4)      default(0)
+#  active               :boolean(1)      default(TRUE)
+#  seller_id            :integer(4)
+#  logistic_id          :integer(4)
+#  failed_attempts      :integer(4)
+#  unlock_token         :string(255)
+#  locked_at            :datetime
 #
 
 # -*- encoding : utf-8 -*-
