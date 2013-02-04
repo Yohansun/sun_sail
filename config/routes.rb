@@ -45,7 +45,9 @@ MagicOrders::Application.routes.draw do
 
   get "callbacks/jingdong"
   get '/autologin', to: 'users#autologin'
-  devise_for :users, :path => '', :path_names => {:sign_in => 'login'}
+  devise_for :users, :path => '', :path_names => {:sign_in => 'login'},
+    controllers: { sessions: "sessions" }
+
   get "/stocks", to: 'stocks#home'
   get "/stock_products", to: 'stock_products#index'
   get "/stock_products/search", to: 'stock_products#search'
