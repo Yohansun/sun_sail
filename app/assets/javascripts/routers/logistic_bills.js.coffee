@@ -105,12 +105,13 @@ class MagicOrders.Routers.LogisticBills extends Backbone.Router
               bind_logistic_swf model.get('id'), $(this).val()
 
             $(modalDivID).on 'hidden', ()->
-              if MagicOrders.hasPrint == true
+              if $('.print_logistic_button').attr('data-click') == '1'
                 $.get '/deliver_bills/batch-print-logistic', {ids: [model.get('id')], logistic: $("#logistic_select").find("option:selected").attr('lid')}
 
-              MagicOrders.hasPrint = false
+              $('.print_logistic_button').removeAttr('data-click')
 
             $.get ('/deliver_bills/' + model.get('id') + '/logistic_info'), {}, (data)->
+              console.log 'sdfsfsf'
               if data == '' or data == null
                 ytong = $('#logistic_select').find('[lid="3"]')
                 data = ytong.val()
@@ -118,7 +119,7 @@ class MagicOrders.Routers.LogisticBills extends Backbone.Router
               else
                 $('#logistic_select').find('[value="' + data + '"]').attr('selected', 'selected')
 
-              bind_logistic_swf(model.get('id'), data)
               pageInit()
+              bind_logistic_swf(model.get('id'), data)
 
       $(modalDivID).modal('show')

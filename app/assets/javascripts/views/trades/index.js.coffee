@@ -74,11 +74,13 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     if @identity == 'cs' or @identity == 'admin'
       $(@el).find(".trade_nav").text("未分流订单")
     $(@el).find(".get_offset").html(@offset)
+
     if parseInt($(@el).find(".complete_offset").html()) == @offset
       if @offset == 0
-        $(@el).find("#bottom_line").replaceWith("<span id='bottom_line'><b>当前无订单</b></span>")
+        $(@el).find(".trade_count_info").append("<span id='bottom_line'><b>当前无订单</b></span>")
       else
-        $(@el).find("#bottom_line").replaceWith("<span id='bottom_line'><b>当前为最后一条订单</b></span>")
+        $(@el).find(".trade_count_info").append("<span id='bottom_line'><b>当前为最后一条订单</b></span>")
+
     this
 
   optAll: (e) ->
@@ -96,21 +98,17 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     $(@el).find('#select_print_time').html(view.render().el)
 
   renderUpdate: =>
-    if @collection.length != 0
-      @collection.each(@appendTrade)
+    @collection.each(@appendTrade)
+
+    if @collection.length > 0
       $(".complete_offset").html(@collection.at(0).get("trades_count"))
       unless parseInt($(".complete_offset").html()) <= @offset
         $(".get_offset").html(@offset)
-        $("[data-type=loadMoreTrades]").replaceWith("<a href='#' data-type='loadMoreTrades' id='bottom_line' class='btn'>加载更多订单</a>")
-        $("#bottom_line").replaceWith("<a href='#' data-type='loadMoreTrades' id='bottom_line' class='btn'>加载更多订单</a>")
       else
         $(".get_offset").html($(".complete_offset").html())
-        $("[data-type=loadMoreTrades]").replaceWith("<span id='bottom_line'><b>当前为最后一条订单</b></span>")
+
       $("a[rel=popover]").popover({placement: 'left', html:true})
-    else
-      $(".complete_offset").html(0)
-      $(".get_offset").html(0)
-      $("[data-type=loadMoreTrades]").replaceWith("<span id='bottom_line'><b>当前无订单</b></span>")
+
     $.unblockUI()
 
   appendTrade: (trade) =>
@@ -216,14 +214,16 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
       @renderNew()
       $("#newTradesNotifer").hide()
 
-  forceLoadMoreTrades: (event) =>
-    event.preventDefault()
+  forceLoadMoreTrades: (e) =>
+    e.preventDefault()
     blocktheui()
 
-    @collection.fetch data: {trade_type: @trade_type, offset: @offset, search: {@simple_search_option, @simple_search_value, @from_deliver_print_date, @to_deliver_print_date, @from_deliver_print_time, @to_deliver_print_time, @from_logistic_print_date, @to_logistic_print_date, @from_logistic_print_time, @to_logistic_print_time, @search_start_date, @search_start_time, @search_end_date, @search_end_time, @pay_start_time, @pay_end_time, @pay_start_date, @pay_end_date, @dispatch_start_time, @dispatch_end_time, @dispatch_start_date, @dispatch_end_date, @status_option, @type_option, @state_option, @city_option, @district_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_cs_memo_void, @search_invoice, @search_color, @search_color_void, @search_logistic}}, success: (collection) =>
+    MagicOrders.trade_reload_limit = parseInt $('#load_count').val()
+    @collection.fetch data: {trade_type: @trade_type, limit: MagicOrders.trade_reload_limit, offset: @offset, search: {@simple_search_option, @simple_search_value, @from_deliver_print_date, @to_deliver_print_date, @from_deliver_print_time, @to_deliver_print_time, @from_logistic_print_date, @to_logistic_print_date, @from_logistic_print_time, @to_logistic_print_time, @search_start_date, @search_start_time, @search_end_date, @search_end_time, @pay_start_time, @pay_end_time, @pay_start_date, @pay_end_date, @dispatch_start_time, @dispatch_end_time, @dispatch_start_date, @dispatch_end_date, @status_option, @type_option, @state_option, @city_option, @district_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_cs_memo_void, @search_invoice, @search_color, @search_color_void, @search_logistic}}, success: (collection) =>
       if collection.length >= 0
-        @offset = @offset + 20
+        @offset = @offset + MagicOrders.trade_reload_limit
         @renderUpdate()
+        $(e.target).val('')
       else
         $.unblockUI()
 
