@@ -59,6 +59,7 @@ json.confirm_color_at @trade.confirm_color_at.strftime("%m-%d %H:%M") if @trade.
 json.confirm_check_goods_at @trade.confirm_check_goods_at.strftime("%m-%d %H:%M") if @trade.confirm_check_goods_at
 json.confirm_receive_at @trade.confirm_receive_at.strftime("%m-%d %H:%M") if @trade.confirm_receive_at
 json.deliver_bill_printed_at @trade.deliver_bill_printed_at if @trade.deliver_bill_printed_at
+json.deliver_bill_count @trade.deliver_bills.count
 json.request_return_at @trade.request_return_at.strftime("%m-%d %H:%M") if @trade.request_return_at
 json.confirm_return_at @trade.confirm_return_at.strftime("%m-%d %H:%M") if @trade.confirm_return_at
 json.confirm_refund_at @trade.confirm_refund_at.strftime("%m-%d %H:%M") if @trade.confirm_refund_at
