@@ -1,11 +1,11 @@
 <div class="modal-header">
   <button type="button" class="close" data-dismiss="modal">×</button>
-  <h3>发货单</h3>
+  <h3>发货单打印</h3>
 </div><!-- modal-header -->
 <div class="modal-body">
   <h4 class="tc"><%= @bill.get('shopname') %>发货单</h4>
   <div class="clearfix">
-    <span class="pull-left mar_r10">编号：<%= @bill.get("tid") %>D</span>
+    <span class="pull-left mar_r10">订单编号：<%= @bill.get("tid") %>D</span>
   </div>
   <div class="clearfix">
     <span class="pull-left mar_r10">收货人：<%= @bill.get('receiver_name') %></span>
@@ -27,7 +27,7 @@
   <table class="table table-bordered mar_t10">
     <tbody>
       <tr>
-        <th width="20%">产品编码</th>
+        <th width="20%">商品编码</th>
         <th width="45%">商品名称</th>
         <th width="10%">产品数量</th>
         <% if MagicOrders.enable_module_colors == 1 : %>
@@ -48,7 +48,7 @@
           <td><%= order.color_num %></td>
         <% end %>
         <% if MagicOrders.enable_module_sku_properties == 1 : %>
-          <td><%= order.sku_properties %></td>
+          <td><%= order.sku_name %></td>
         <% end %>
       </tr>
       <% end %>
