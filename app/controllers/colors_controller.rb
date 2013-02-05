@@ -4,15 +4,15 @@ class ColorsController < ApplicationController
   before_filter :check_module
 
   def index
-  	@colors = Color.page params[:page]
+  	@colors = current_account.colors.page params[:page]
   end
 
   def edit
-  	@color = Color.find params[:id]
+  	@color = current_account.colors.find params[:id]
   end
 
   def update
-  	@color = Color.find params[:id]
+    @color = current_account.colors.find params[:id]
   	if @color.update_attributes(params[:color])
   		redirect_to colors_path
   	else
@@ -21,11 +21,11 @@ class ColorsController < ApplicationController
   end
 
   def new
-  	@color = Color.new
+  	@color = current_account.colors.new
   end
 
   def create
-  	@color = Color.create(params[:color])
+  	@color = current_account.colors.create(params[:color])
   	if @color.save
   		redirect_to colors_path
   	else
@@ -34,14 +34,14 @@ class ColorsController < ApplicationController
   end
 
   def destroy
-    @color = Color.find params[:id]
+    @color = current_account.colors.find params[:id]
     @color.destroy
     redirect_to colors_path
   end
 
   def autocomplete
     params[:num] = params[:num].gsub(/\W/, '') if params[:num].present?
-    colors = Color.where("num LIKE '%#{params[:num]}%'")
+    colors = current_account.colors.where("num LIKE '%#{params[:num]}%'")
     render json: colors.map { |c| c.num }
   end
 
