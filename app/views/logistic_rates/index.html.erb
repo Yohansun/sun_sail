@@ -46,7 +46,7 @@
           <div class="controls mar_t3">
             <select class="input-large" name="seller_id">
               <option value="all" <%="selected='selected'" if params[:seller_id].blank? %> >所有</option>
-              <%- Seller.leaves.each do |seller|%>;
+              <%- current_account.sellers.leaves.each do |seller|%>;
                 <option value="<%= seller.id %>" <%="selected='selected'" if params[:seller_id].to_i == seller.id %> ><%= seller.name %></option>
               <%- end %>
             </select>

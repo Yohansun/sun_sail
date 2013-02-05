@@ -32,7 +32,7 @@ class DeliverBillsController < ApplicationController
       end
 
       if attribute
-        trade_ids = Trade.where(attribute => params[:value]).map(&:id)
+        trade_ids = Trade.where(:account_id => current_account.id, attribute => params[:value]).map(&:id)
         @bills = @bills.any_in(trade_id: trade_ids)
       end
     end
