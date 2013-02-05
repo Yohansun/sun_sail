@@ -5,9 +5,11 @@ describe OrderDecorator do
   describe "TaobaoOrder" do
     context '#price,num' do
       before do 
-         @decorator = OrderDecorator.new(build(:taobao_order, price: 50, num: 3))
+        order = build(:taobao_order, price: 2050, num: 3)
+        order.stub(:promotion_discount_fee).and_return(150)
+        @decorator = TradeDecorator.new(order)
       end
-      it { @decorator.price.should == 50 }
+      it { @decorator.price.should == 2000 }
       it { @decorator.num.should == 3 }
     end
   end

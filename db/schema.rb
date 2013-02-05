@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130128111518) do
+ActiveRecord::Schema.define(:version => 20130131075319) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -214,20 +214,20 @@ ActiveRecord::Schema.define(:version => 20130128111518) do
   end
 
   create_table "reconcile_statement_details", :force => true do |t|
-    t.integer  "reconcile_statement_id"  
-    t.integer  "alipay_revenue",         :default => 0  
-    t.integer  "postfee_revenue",        :default => 0  
-    t.integer  "trade_success_refund",   :default => 0  
-    t.integer  "sell_refund",            :default => 0  
-    t.integer  "base_service_fee",       :default => 0  
-    t.integer  "store_service_award",    :default => 0  
-    t.integer  "staff_award",            :default => 0  
-    t.integer  "taobao_cost",            :default => 0  
-    t.integer  "audit_cost",             :default => 0  
-    t.integer  "collecting_postfee",     :default => 0  
-    t.integer  "audit_amount",           :default => 0  
-    t.integer  "adjust_amount",          :default => 0  
-    t.datetime "created_at",                            :null => false  
+    t.integer  "reconcile_statement_id"
+    t.integer  "alipay_revenue",         :default => 0
+    t.integer  "postfee_revenue",        :default => 0
+    t.integer  "trade_success_refund",   :default => 0
+    t.integer  "sell_refund",            :default => 0
+    t.integer  "base_service_fee",       :default => 0
+    t.integer  "store_service_award",    :default => 0
+    t.integer  "staff_award",            :default => 0
+    t.integer  "taobao_cost",            :default => 0
+    t.integer  "audit_cost",             :default => 0
+    t.integer  "collecting_postfee",     :default => 0
+    t.integer  "audit_amount",           :default => 0
+    t.integer  "adjust_amount",          :default => 0
+    t.datetime "created_at",                            :null => false
     t.datetime "updated_at",                            :null => false
   end
 
@@ -393,6 +393,13 @@ ActiveRecord::Schema.define(:version => 20130128111518) do
     t.integer  "fetch_quantity",      :default => 20
     t.integer  "fetch_time_circle",   :default => 15
     t.boolean  "high_pressure_valve", :default => false
+    t.integer  "sid"
+    t.integer  "cid"
+    t.datetime "created"
+    t.datetime "modified"
+    t.string   "bulletin"
+    t.string   "title"
+    t.string   "description"
   end
 
   create_table "upload_files", :force => true do |t|
