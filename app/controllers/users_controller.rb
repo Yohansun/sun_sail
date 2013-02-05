@@ -1,5 +1,6 @@
+# encoding: utf-8
 class UsersController < ApplicationController
-  before_filter :authenticate_user!, :except => ['autologin','edit','update']
+  before_filter :authenticate_user!, :except => ['autologin','edit','update', 'switch_account']
   before_filter :admin_only!, :except => ['autologin','edit','update']
 
   def autologin
@@ -39,12 +40,13 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(params[:user])
-    if @user.active == false
-      @user.lock_access!
+    existing = User.find_by_email(@user.email)
+    if existing
+      flash[:alert] = '用户邮箱已被使用'
+      redirect_to new_user_path and return
     end
-    if @user.active == true 
-      @user.unlock_access!
-    end
+    @user.active ? @user.unlock_access! : @user.lock_access!
+    @user.accounts << current_account
     if @user.save
       @user.add_role(:cs) if params[:cs] == '1'
       @user.add_role(:cs_read) if params[:cs_read] == '1'
@@ -101,4 +103,12 @@ class UsersController < ApplicationController
   def edit
     @user = User.find current_user.id
   end
+
+  def switch_account
+    if current_user.has_multiple_account?
+      account = current_user.accounts.find(params[:id])
+      session[:account_id] = account.id
+    end
+    redirect_to '/app#trades'
+  end  
 end

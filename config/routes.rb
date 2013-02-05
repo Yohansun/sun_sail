@@ -121,6 +121,7 @@ MagicOrders::Application.routes.draw do
     end
   end
 
+  match '/switch_account/:id', to: 'users#switch_account', as: :switch_account
   resources :users
   resources :areas
   resources :trade_sources

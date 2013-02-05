@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130130034546) do
+ActiveRecord::Schema.define(:version => 20130205015936) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -150,6 +150,7 @@ ActiveRecord::Schema.define(:version => 20130130034546) do
     t.string   "name"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.integer  "account_id"
   end
 
   create_table "logistic_areas", :force => true do |t|
@@ -157,6 +158,7 @@ ActiveRecord::Schema.define(:version => 20130130034546) do
     t.integer  "area_id"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+    t.integer  "account_id"
   end
 
   add_index "logistic_areas", ["area_id"], :name => "index_logistic_areas_on_area_id"
@@ -172,6 +174,7 @@ ActiveRecord::Schema.define(:version => 20130130034546) do
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
     t.integer  "taobao_rate_score"
+    t.integer  "account_id"
   end
 
   create_table "logistics", :force => true do |t|
@@ -181,6 +184,7 @@ ActiveRecord::Schema.define(:version => 20130130034546) do
     t.datetime "updated_at",                      :null => false
     t.string   "code",       :default => "OTHER"
     t.string   "xml"
+    t.integer  "account_id"
   end
 
   create_table "packages", :force => true do |t|
@@ -222,6 +226,7 @@ ActiveRecord::Schema.define(:version => 20130130034546) do
     t.string   "name"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.integer  "account_id"
   end
 
   create_table "reconcile_statement_details", :force => true do |t|
@@ -253,6 +258,7 @@ ActiveRecord::Schema.define(:version => 20130130034546) do
     t.datetime "updated_at",                            :null => false
     t.datetime "audit_time"
     t.text     "exported"
+    t.integer  "account_id"
   end
 
   add_index "reconcile_statements", ["created_at"], :name => "index_reconcile_statements_on_created_at"
@@ -349,6 +355,7 @@ ActiveRecord::Schema.define(:version => 20130130034546) do
     t.integer  "actual",     :default => 0
     t.integer  "product_id"
     t.integer  "seller_id"
+    t.integer  "account_id"
   end
 
   add_index "stock_products", ["seller_id"], :name => "index_stock_products_on_seller_id"
@@ -407,6 +414,13 @@ ActiveRecord::Schema.define(:version => 20130130034546) do
     t.integer  "fetch_quantity",      :default => 20
     t.integer  "fetch_time_circle",   :default => 15
     t.boolean  "high_pressure_valve", :default => false
+    t.integer  "sid"
+    t.integer  "cid"
+    t.datetime "created"
+    t.datetime "modified"
+    t.string   "bulletin"
+    t.string   "title"
+    t.string   "description"
   end
 
   create_table "upload_files", :force => true do |t|
@@ -451,29 +465,10 @@ ActiveRecord::Schema.define(:version => 20130130034546) do
   end
 
   add_index "users", ["email"], :name => "index_admins_on_email", :unique => true
+  add_index "users", ["email"], :name => "index_users_on_email"
   add_index "users", ["parent_id"], :name => "index_admins_on_parent_id"
   add_index "users", ["reset_password_token"], :name => "index_admins_on_reset_password_token", :unique => true
   add_index "users", ["unlock_token"], :name => "index_users_on_unlock_token", :unique => true
-
-  create_table "users_bak", :force => true do |t|
-    t.string   "email",                  :default => "",    :null => false
-    t.string   "encrypted_password",     :default => "",    :null => false
-    t.string   "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          :default => 0
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
-    t.string   "current_sign_in_ip"
-    t.string   "last_sign_in_ip"
-    t.datetime "created_at",                                :null => false
-    t.datetime "updated_at",                                :null => false
-    t.boolean  "is_super_admin",         :default => false
-    t.string   "name"
-  end
-
-  add_index "users_bak", ["email"], :name => "index_users_on_email", :unique => true
-  add_index "users_bak", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
 
   create_table "users_roles", :id => false, :force => true do |t|
     t.integer "user_id"

@@ -85,7 +85,21 @@
             </li>
             <li class="divider-vertical"></li>
           </ul>
-
+          <%- if current_user.has_multiple_account? -%>
+            <ul class="nav pull-right">
+              <li id="fat-menu" class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  帐户(<%= current_account.name %>)<b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                  <%- current_user.accounts.each do |account| -%>
+                  <li><%= link_to account.name, switch_account_path(id: account.id) %></li>
+                  <%- end -%>
+                </ul>
+              </li>
+              <li class="divider-vertical"></li>
+            </ul>
+          <%- end -%>
           <% if (current_user.has_role?(:seller) && current_user.seller) || (current_user.has_role?(:admin)) || (current_user.has_role?(:cs)) %>
             <ul class="nav pull-right">
               <li id="fat-menu" class="dropdown">

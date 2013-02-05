@@ -102,4 +102,8 @@ class User < ActiveRecord::Base
   def present_roles
     roles = self.roles.map {|r| r.role_s }.join(",")
   end
+
+  def has_multiple_account?
+    self.accounts.size > 1
+  end
 end

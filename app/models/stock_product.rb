@@ -12,10 +12,13 @@
 #  actual     :integer(4)      default(0)
 #  product_id :integer(4)
 #  seller_id  :integer(4)
+#  account_id :integer(4)
 #
 
 class StockProduct < ActiveRecord::Base
   paginates_per 20
+
+  belongs_to :account
 
   attr_accessible :max, :safe_value, :product_id, :seller_id, :color_ids, :actual, :activity
 
