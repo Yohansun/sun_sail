@@ -31,5 +31,6 @@ class Account < ActiveRecord::Base
   has_many :logistics
   has_many :logistic_areas
   has_many :logistic_rates
+  has_many :trade_sources
 
 end

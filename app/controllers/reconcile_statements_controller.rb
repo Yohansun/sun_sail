@@ -5,10 +5,10 @@ class ReconcileStatementsController < ApplicationController
   before_filter :check_module
 
   def index
-    @trade_sources = TradeSource.all
-    @rs_set = ReconcileStatement.recently_data.limit(1)
+    @trade_sources = current_account.trade_sources
+    @rs_set = current_account.reconcile_statements.recently_data.limit(1)
     if params[:date].present?
-      @rs_set = ReconcileStatement.by_date(params[:date])
+      @rs_set = current_account.reconcile_statements.by_date(params[:date])
       unless @rs_set.present?
         flash[:notice] = "当月还未生成"
       end
@@ -38,7 +38,7 @@ class ReconcileStatementsController < ApplicationController
   end
 
   def audits
-    ReconcileStatement.update_all({:audited => true}, ["id in (?)", params[:rs_ids].split(',')]) if params[:rs_ids].present?
+    current_account.reconcile_statements.update_all({:audited => true}, ["id in (?)", params[:rs_ids].split(',')]) if params[:rs_ids].present?
     redirect_to reconcile_statements_url
   end
 
@@ -60,7 +60,7 @@ class ReconcileStatementsController < ApplicationController
   private
 
   def fetch_rs
-    @rs = ReconcileStatement.find(params[:id])
+    @rs = current_account.reconcile_statements.find(params[:id])
   end
 
   def check_module
