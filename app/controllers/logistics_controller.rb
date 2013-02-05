@@ -4,16 +4,16 @@ class LogisticsController < ApplicationController
   before_filter :admin_only!, :except => :logistic_templates
 
   def index
-    @logistics = Logistic.page(params[:page])
+    @logistics = current_account.logistics.page(params[:page])
   end
 
   def new
-    @logistic = Logistic.new
+    @logistic = current_account.logistics.new
   end
 
   def create
     params[:logistic][:code].try(:upcase!)
-    @logistic = Logistic.new params[:logistic]
+    @logistic = current_account.logistics.new params[:logistic]
     if @logistic.save
       redirect_to logistics_path
     else
@@ -22,12 +22,12 @@ class LogisticsController < ApplicationController
   end
 
   def edit
-    @logistic = Logistic.find params[:id]
+    @logistic = current_account.logistics.find params[:id]
     render :new
   end
 
   def update
-    @logistic = Logistic.find params[:id]
+    @logistic = current_account.logistics.find params[:id]
     params[:logistic][:code].upcase!
     if @logistic.update_attributes params[:logistic]
       redirect_to logistics_path
@@ -37,7 +37,7 @@ class LogisticsController < ApplicationController
   end
 
 	def delete
-		logistics = Logistic.find params[:id]
+		logistics = current_account.logistics.find params[:id]
 		Logistic.destroy(logistics)
 		redirect_to logistics_path
 	end
@@ -125,10 +125,8 @@ class LogisticsController < ApplicationController
 
   def logistic_templates
     tmp = []
-    @logistics = Logistic
-    if params[:type] && params[:type] == 'all'
-      @logistics = @logistics.all
-    else
+    @logistics = current_account.logistics
+    unless params[:type] && params[:type] == 'all'
       @logistics = @logistics.where("xml is not null")
     end
 
