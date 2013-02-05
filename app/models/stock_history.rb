@@ -14,12 +14,14 @@
 #  reason           :string(255)
 #  note             :string(255)
 #  seller_id        :integer(4)
+#  account_id       :integer(4)
 #
 
 class StockHistory < ActiveRecord::Base
 	paginates_per 20
 
   attr_accessible :number, :operation, :stock_product_id, :tid, :reason, :note, :seller_id, :user_id
+  belongs_to :account
   belongs_to :stock_product
   belongs_to :user
   belongs_to :seller

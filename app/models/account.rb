@@ -25,6 +25,7 @@ class Account < ActiveRecord::Base
   has_many :sellers
   has_many :settings
   has_many :stocks
+  has_many :stock_histories
   has_many :stock_products
   has_many :features
   has_many :reconcile_statements

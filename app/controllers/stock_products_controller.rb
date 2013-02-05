@@ -23,25 +23,25 @@ class StockProductsController < ApplicationController
       area = Area.find_by_id area_id
       unless area
         if params[:format]
-          @sellers = Seller.joins(:sellers_areas, :stock_products).select('stock_products.id AS sp_id, stock_products.activity, sellers.name, sellers_areas.area_id AS a_name').where(where_sql)
+          @sellers = current_account.sellers.joins(:sellers_areas, :stock_products).select('stock_products.id AS sp_id, stock_products.activity, sellers.name, sellers_areas.area_id AS a_name').where(where_sql)
         else
-          @sellers = Seller.joins(:sellers_areas, :stock_products).select('stock_products.id AS sp_id, stock_products.activity, sellers.name, sellers_areas.area_id AS a_name').where(where_sql).page params[:page]
+          @sellers = current_account.sellers.joins(:sellers_areas, :stock_products).select('stock_products.id AS sp_id, stock_products.activity, sellers.name, sellers_areas.area_id AS a_name').where(where_sql).page params[:page]
         end
       else
         leaves = area.leaves
         leaves << area if leaves.blank?
         where_sql += " AND areas.id in (#{leaves.map(&:id).join(',')})"
         if params[:format]
-          @sellers = Seller.joins(:areas, :stock_products).select('stock_products.id AS sp_id, stock_products.activity, sellers.name, areas.id AS a_name').where(where_sql)
+          @sellers = current_account.sellers.joins(:areas, :stock_products).select('stock_products.id AS sp_id, stock_products.activity, sellers.name, areas.id AS a_name').where(where_sql)
         else
-          @sellers = Seller.joins(:areas, :stock_products).select('stock_products.id AS sp_id, stock_products.activity, sellers.name, areas.id AS a_name').where(where_sql).page params[:page]
+          @sellers = current_account.sellers.joins(:areas, :stock_products).select('stock_products.id AS sp_id, stock_products.activity, sellers.name, areas.id AS a_name').where(where_sql).page params[:page]
         end
       end
     else
       if params[:format]
-        @sellers = Seller.joins(:sellers_areas, :stock_products).select('stock_products.id AS sp_id, stock_products.activity, sellers.name, sellers_areas.area_id AS a_name').where(where_sql)
+        @sellers = current_account.sellers.joins(:sellers_areas, :stock_products).select('stock_products.id AS sp_id, stock_products.activity, sellers.name, sellers_areas.area_id AS a_name').where(where_sql)
       else 
-        @sellers = Seller.joins(:sellers_areas, :stock_products).select('stock_products.id AS sp_id, stock_products.activity, sellers.name, sellers_areas.area_id AS a_name').where(where_sql).page params[:page]
+        @sellers = current_account.sellers.joins(:sellers_areas, :stock_products).select('stock_products.id AS sp_id, stock_products.activity, sellers.name, sellers_areas.area_id AS a_name').where(where_sql).page params[:page]
       end
       
     end
@@ -53,13 +53,13 @@ class StockProductsController < ApplicationController
   end
 
   def new
-  	@product = StockProduct.new
-    @seller = Seller.find params[:seller_id]
+  	@product = current_account.stock_products.new
+    @seller = current_account.sellers.find params[:seller_id]
   end
 
   def create
-    @seller = Seller.find params[:seller_id]
-  	@product = StockProduct.new params[:stock_product]
+    @seller = current_account.sellers.find params[:seller_id]
+  	@product = current_account.stock_products.new params[:stock_product]
     @product.seller_id = params[:seller_id]
   	if @product.save
   		redirect_to seller_stocks_path(params[:seller_id])
@@ -69,7 +69,7 @@ class StockProductsController < ApplicationController
   end
 
   def show
-  	@stock_product = StockProduct.find params[:id]
+  	@stock_product = current_account.stock_products.find params[:id]
     @product = @stock_product.product
   	respond_to do |format|
   		format.json {render json: {name: @product.name, activity: @stock_product.activity, actual: @stock_product.actual}}
@@ -77,13 +77,13 @@ class StockProductsController < ApplicationController
   end
 
   def edit
-    @seller = Seller.find params[:seller_id]
-  	@product = StockProduct.find params[:id]
+    @seller = current_account.sellers.find params[:seller_id]
+  	@product = current_account.stock_products.find params[:id]
   end
 
   def update
-    @seller = Seller.find params[:seller_id]
-  	@product = StockProduct.find params[:id]
+    @seller = current_account.sellers.find params[:seller_id]
+  	@product = current_account.stock_products.find params[:id]
     # Rails.logger.info params[:seller_id].inspect
   	if @product.update_attributes params[:stock_product]
   		redirect_to seller_stocks_path(params[:seller_id])
@@ -93,7 +93,7 @@ class StockProductsController < ApplicationController
   end
 
   def destroy
-  	@product = StockProduct.find params[:id]
+  	@product = current_account.stock_products.find params[:id]
   	@product.destroy
   	redirect_to seller_stocks_path params[:seller_id]
   end

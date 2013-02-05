@@ -3,7 +3,7 @@ class StockHistoryController < ApplicationController
   before_filter :authenticate_user!
 
 	def index
-    @history = StockHistory
+    @history = current_account.stock_histories
 
     unless params[:bdate].blank? && params[:edate].blank?
       begin_time = "#{params[:bdate]} #{params[:btime] || '00:00:00'}".to_time(:local)
@@ -15,11 +15,11 @@ class StockHistoryController < ApplicationController
 	end
 
   def create
-  	@product = StockProduct.find params[:stock_history]['stock_product_id']
+  	@product = current_account.stock_products.find params[:stock_history]['stock_product_id']
   	number = params[:stock_history]['number'].to_i
 
   	if @product.update_quantity!(number, params[:stock_history]['operation'])
-      sh = StockHistory.new(params[:stock_history])
+      sh = current_account.stock_histories.new(params[:stock_history])
       sh.seller_id = params[:seller_id].to_i
       sh.user_id = current_user.id
       @flag = sh.save
@@ -33,7 +33,7 @@ class StockHistoryController < ApplicationController
   end
 
   def show
-  	@history = StockHistory.find params[:id]
+  	@history = current_account.stock_histories.find params[:id]
     @product = @history.stock_product.product
   end
 end

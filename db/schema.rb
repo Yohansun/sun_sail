@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130205060640) do
+ActiveRecord::Schema.define(:version => 20130205063653) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -341,6 +341,7 @@ ActiveRecord::Schema.define(:version => 20130205060640) do
     t.string   "reason"
     t.string   "note"
     t.integer  "seller_id"
+    t.integer  "account_id"
   end
 
   add_index "stock_histories", ["seller_id"], :name => "index_stock_histories_on_seller_id"
