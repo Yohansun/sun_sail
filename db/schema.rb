@@ -372,6 +372,12 @@ ActiveRecord::Schema.define(:version => 20130201084132) do
     t.datetime "last_refresh_at"
     t.integer  "trade_source_id"
     t.datetime "refresh_token_last_refresh_at"
+    t.integer  "re_expires_in",                 :limit => 8
+    t.integer  "r1_expires_in",                 :limit => 8
+    t.integer  "r2_expires_in",                 :limit => 8
+    t.integer  "w1_expires_in",                :limit => 8
+    t.integer  "w2_expires_in",                :limit => 8
+    t.boolean  "need_refresh",               :default => false
   end
 
   create_table "taobao_trade_rates", :force => true do |t|
