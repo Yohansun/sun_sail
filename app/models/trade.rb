@@ -491,8 +491,8 @@ class Trade
     end
   end
 
-  def self.filter(current_user, params)
-    trades = Trade.all
+  def self.filter(current_account, current_user, params)
+    trades = Trade.where(account_id: current_account.id)
     
     paid_not_deliver_array = ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"]
     paid_and_delivered_array = ["WAIT_BUYER_CONFIRM_GOODS","WAIT_GOODS_RECEIVE_CONFIRM","WAIT_BUYER_CONFIRM_GOODS_ACOUNTED","WAIT_SELLER_SEND_GOODS_ACOUNTED"]

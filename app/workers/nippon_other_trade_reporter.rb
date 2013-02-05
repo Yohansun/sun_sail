@@ -11,7 +11,7 @@ class NipponOtherTradeReporter
     current_user = User.find(report.user_id)
     hash = report.conditions
     hash = recursive_symbolize_keys! hash
-    trades = Trade.filter(current_user, hash).order_by(:created.desc)
+    trades = Trade.filter(current_account, current_user, hash).order_by(:created.desc)
     trades = TradeDecorator.decorate(trades)
     book = Spreadsheet::Workbook.new
     sheet1 = book.create_worksheet

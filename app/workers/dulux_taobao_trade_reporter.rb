@@ -11,7 +11,7 @@ class DuluxTaobaoTradeReporter
     current_user = User.find(report.user_id)
     hash = report.conditions
     hash = recursive_symbolize_keys! hash
-    trades = Trade.filter(current_user, hash).order_by(:created.desc)
+    trades = Trade.filter(current_account, current_user, hash).order_by(:created.desc)
     book = Spreadsheet::Workbook.new
     sheet1 = book.create_worksheet
     sheet1[0, 0] = "订单列表"
