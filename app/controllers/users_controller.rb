@@ -5,7 +5,7 @@ class UsersController < ApplicationController
 
   def autologin
   	redirect_url = '/'
-    user = User.find_by_name params[:username]
+    user = current_account.users.find_by_name params[:username]
     if user && user.magic_key == params[:key]
       sign_in :user, user
 
@@ -22,25 +22,25 @@ class UsersController < ApplicationController
 
   def index
     if params[:name].present?
-      @users = User.where("name LIKE '%#{params[:name]}%'")
+      @users = current_account.users.where("name LIKE '%#{params[:name]}%'")
     elsif params[:seller_id].present?
-      @users = User.where(seller_id: params[:seller_id])
+      @users = current_account.users.where(seller_id: params[:seller_id])
     else
-      @users = User.page params[:page]
+      @users = current_account.users.page params[:page]
     end
   end
 
   def show
-    @user = User.find params[:id]
+    @user = current_account.users.find params[:id]
   end
 
   def new
-    @user = User.new
+    @user = current_account.users.new
   end
 
   def create
-    @user = User.new(params[:user])
-    existing = User.find_by_email(@user.email)
+    @user = current_account.users.new(params[:user])
+    existing = current_account.users.find_by_email(@user.email)
     if existing
       flash[:alert] = '用户邮箱已被使用'
       redirect_to new_user_path and return
@@ -62,7 +62,7 @@ class UsersController < ApplicationController
   end
 
   def update
-    @user = User.find params[:id]
+    @user = current_account.users.find params[:id]
     if !params[:ac].present?
       @user.username = params[:user][:username] 
       @user.name = params[:user][:name]
@@ -101,7 +101,7 @@ class UsersController < ApplicationController
   end
 
   def edit
-    @user = User.find current_user.id
+    @user = current_account.users.find current_user.id
   end
 
   def switch_account
