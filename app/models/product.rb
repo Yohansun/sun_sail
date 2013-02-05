@@ -38,6 +38,7 @@ class Product < ActiveRecord::Base
   # ========================
 
   acts_as_nested_set
+  belongs_to :account
   belongs_to :category
   belongs_to :quantity
   has_many :feature_product_relationships

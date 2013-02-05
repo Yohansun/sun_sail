@@ -8,7 +8,7 @@ class ProductsController < ApplicationController
   caches_action :index, cache_path: Proc.new { |c| c.params }
 
   def index
-    @products = Product
+    @products = current_account.products
     if params[:product].present?
       unless params[:product][:info_type].blank? || params[:product][:info].blank?
         @products = @products.where("#{params[:product][:info_type]} like ?", "%#{params[:product][:info].strip}%")
@@ -36,15 +36,15 @@ class ProductsController < ApplicationController
   end
 
   def show
-    @product = Product.find params[:id]
+    @product = current_account.products.find params[:id]
   end
 
   def new
-    @product = Product.new
+    @product = current_account.products.new
   end
 
   def create
-    @product = Product.new params[:product]
+    @product = current_account.products.new params[:product]
 
     if @product.save
       if params[:product]['good_type'] == '2' && params[:child_iid].present?
@@ -57,11 +57,11 @@ class ProductsController < ApplicationController
   end
 
   def edit
-    @product = Product.find params[:id]
+    @product = current_account.products.find params[:id]
   end
 
   def update
-    @product = Product.find params[:id]
+    @product = current_account.products.find params[:id]
 
     if params[:product]['good_type'] == '2' && params[:child_iid].present?
       @product.packages.delete_all
@@ -76,12 +76,12 @@ class ProductsController < ApplicationController
   end
 
   def destroy
-    Product.delete(params[:id])
+    current_account.products.delete(params[:id])
     redirect_to products_path
   end
 
   def fetch_products
-    @products = Product.where(category_id: params[:category_id])
+    @products = current_account.products.where(category_id: params[:category_id])
     respond_to do |format|
       format.js
     end
