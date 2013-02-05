@@ -17,6 +17,6 @@
 #
 
 class TradeSource < ActiveRecord::Base
-  attr_accessible :account_id, :app_key, :name, :secret_key, :session
+  attr_accessible :account_id, :app_key, :name, :secret_key, :session, :sid, :cid, :bulletin, :title, :description, :created, :modified
   has_one :taobao_app_token
 end

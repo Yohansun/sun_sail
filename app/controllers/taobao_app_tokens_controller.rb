@@ -7,9 +7,27 @@ class TaobaoAppTokensController < ApplicationController
     token.refresh_token = auth_hash["credentials"]["refresh_token"]
     token.save
 
-    TradeSetting.enable_token_error_notify = true
+    trade_source = TradeSource.create
+    token.update_attributes(trade_source_id: trade_source.id) ## need optimize
+    response = TaobaoQuery.get({method: 'taobao.shop.get',
+                                fields: 'sid,cid,title,nick,desc,bulletin,created,modified',
+                                nick: "#{token.taobao_user_nick}" },
+                                trade_source.id
+                              )
 
-    redirect_to root_path
+    if response['shop_get_response']
+      source = response["shop_get_response"]["shop"]
+      source["account_id"] = token.account_id
+      source["description"] = source.delete("desc")
+      source["name"] = source.delete("nick")
+      trade_source.update_attributes(source)
+
+      TradeSetting.enable_token_error_notify = true
+      redirect_to root_path
+    else
+      render text: "response_get_failed"
+    end
+
   end
 
   protected

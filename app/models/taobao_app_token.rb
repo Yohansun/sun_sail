@@ -20,7 +20,7 @@ class TaobaoAppToken < ActiveRecord::Base
 
 	belongs_to :trade_source
 
-	attr_accessible :access_token, :refresh_token, :last_refresh_at, :refresh_token_last_refresh_at
+	attr_accessible :access_token, :refresh_token, :last_refresh_at, :refresh_token_last_refresh_at, :trade_source_id
 
 	def check_or_refresh!
 
