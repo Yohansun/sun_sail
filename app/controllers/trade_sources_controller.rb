@@ -4,11 +4,11 @@ class TradeSourcesController < ApplicationController
    before_filter :admin_only!
 
    def show
-      @trade_source = TradeSource.where(id: params[:id]).first
+      @trade_source = current_account.trade_sources.where(id: params[:id]).first
    end
 
    def update
-      @trade_source = TradeSource.where(id: params[:id]).first
+      @trade_source = current_account.trade_sources.where(id: params[:id]).first
 
       unless params[:trade_source][:app_key].blank?
          @trade_source.app_key = params[:trade_source][:app_key].strip

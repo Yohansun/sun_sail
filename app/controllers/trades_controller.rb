@@ -24,6 +24,7 @@ class TradesController < ApplicationController
 
   def export
     @report = TradeReport.new
+    @report.account_id = current_account.id
     @report.request_at = Time.now
     @report.user_id = current_user.id
     params['search'] =  params['search'] .select {|k,v| v != "undefined"  }   
@@ -89,7 +90,7 @@ class TradesController < ApplicationController
     notifer_seller_flag = false
 
     if params[:seller_id].present?
-      seller = Seller.find_by_id params[:seller_id]
+      seller = current_account.sellers.find_by_id params[:seller_id]
       @trade.dispatch!(seller) if seller
     elsif params[:seller_id].nil?
       @trade.reset_seller
@@ -98,7 +99,7 @@ class TradesController < ApplicationController
     if params[:delivered_at] == true
       @trade.delivered_at = Time.now
       if params['logistic_info'] == '其他' and @trade.logistic_waybill.nil?
-        logistic = Logistic.find_by_name '其他'
+        logistic = current_account.logistics.find_by_name '其他'
         if logistic
           @trade.logistic_waybill = @trade.tid
           @trade.logistic_name = logistic.name
@@ -109,7 +110,7 @@ class TradesController < ApplicationController
     end
 
     if params[:setup_logistic] == true
-      logistic = Logistic.find_by_id params[:logistic_id]
+      logistic = current_account.logistics.find_by_id params[:logistic_id]
       @trade.logistic_id = logistic.try(:id)
       @trade.logistic_name = logistic.try(:name)
       @trade.logistic_code = logistic.try(:code)
@@ -296,6 +297,7 @@ class TradesController < ApplicationController
 
   def create
     @trade = TaobaoTrade.new(params[:trade])
+    @trade.account_id = current_account.id
     @trade.taobao_orders.build(params[:orders])
     @trade.created = Time.now
     @trade.tid = "000000" + Time.now.to_i.to_s

@@ -2,12 +2,8 @@ class TradeReportsController < ApplicationController
 	before_filter :authenticate_user!
 
 	def index
-		reports = TradeReport
-		if current_user.has_role?(:admin)
-			reports = reports.all
-		else	
-			reports = reports.where(user_id: current_user.id)
-		end	
+		reports = TradeReport.where(account_id: current_account.id)
+    reports = reports.where(user_id: current_user.id) unless current_user.has_role?(:admin)
     @start_date = params[:start_date] if params[:start_date].present?
     @end_date =  params[:end_date] if params[:end_date].present?
     @start_time = params[:start_time] if params[:start_time].present?
