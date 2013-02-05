@@ -4,7 +4,7 @@ class SellersController < ApplicationController
   before_filter :admin_only!
 
   def index
-    @sellers = Seller
+    @sellers = current_account.sellers
     if params[:parent_id].present?
       @sellers = @sellers.where(parent_id: params[:parent_id])
     else
@@ -17,17 +17,18 @@ class SellersController < ApplicationController
   def search
     flag = false
     if params[:keyword].present?
+      @sellers = current_account.sellers
       if params[:where_name] == "id"
-        @sellers = Seller.where(id: params[:keyword].strip)
+        @sellers = @sellers.where(id: params[:keyword].strip)
       end
       if params[:where_name] == "fullname"
-        @sellers = Seller.where(["fullname like ?", "%#{params[:keyword].strip}%"])
+        @sellers = @sellers.where(["fullname like ?", "%#{params[:keyword].strip}%"])
       end
       if params[:where_name] == "name"
-        @sellers = Seller.where(["name like ?", "%#{params[:keyword].strip}%"])
+        @sellers = @sellers.where(["name like ?", "%#{params[:keyword].strip}%"])
       end
       if params[:where_name] == "address"
-        @sellers = Seller.where(["address like ?", "%#{params[:keyword].strip}%"])
+        @sellers = @sellers.where(["address like ?", "%#{params[:keyword].strip}%"])
       end
       @sellers = @sellers.page(params[:page])
       flag = true
@@ -42,29 +43,29 @@ class SellersController < ApplicationController
   end
 
   def latest
-    @sellers = Seller.where("created_at >= ? ", Time.now - 7.days).page(params[:page])
+    @sellers = current_account.sellers.where("created_at >= ? ", Time.now - 7.days).page(params[:page])
     render :index
   end
 
   def closed
-    @sellers = Seller.where(active: false).page(params[:page])
+    @sellers = current_account.sellers.where(active: false).page(params[:page])
     render :index
   end
 
   def new
-    @seller = Seller.new
+    @seller = current_account.sellers.new
   end
 
   def show
-    @sellers = Seller.where(parent_id: params[:id])
+    @sellers = current_account.sellers.where(parent_id: params[:id])
   end
 
   def edit
-    @seller = Seller.find params[:id]
+    @seller = current_account.sellers.find params[:id]
   end
 
   def create
-    @seller = Seller.new params[:seller]
+    @seller = current_account.sellers.new params[:seller]
     @seller.parent_id = params[:p_id] if params[:p_id]
     if @seller.save
       if params[:p_id].present?
@@ -78,7 +79,7 @@ class SellersController < ApplicationController
   end
 
   def update
-    @seller = Seller.find(params[:id])
+    @seller = current_account.sellers.find(params[:id])
     if @seller.update_attributes(params[:seller])
       if !@seller.parent_id.blank?
         redirect_to sellers_path(:parent_id => @seller.parent_id)
@@ -91,7 +92,7 @@ class SellersController < ApplicationController
   end
 
   def children
-    @seller = Seller.find params[:id]
+    @seller = current_account.sellers.find params[:id]
     @children = []
     @seller.children.each do |seller|
       @children << {
@@ -105,7 +106,7 @@ class SellersController < ApplicationController
   end
 
   def status_update
-    @seller = Seller.find params[:id]
+    @seller = current_account.sellers.find params[:id]
     users = User.where(seller_id: params[:id])
     if @seller.active == true
       @seller.active =  false
@@ -152,7 +153,7 @@ class SellersController < ApplicationController
   end
 
   def change_stock_type
-    @seller = Seller.find params[:id]
+    @seller = current_account.sellers.find params[:id]
     @seller.update_attribute(:has_stock, !@seller.has_stock)
     if @seller.has_stock && !@seller.stock_opened_at
       @seller.update_attribute(:stock_opened_at, Time.now)
@@ -207,7 +208,7 @@ class SellersController < ApplicationController
   end
 
   def info
-    @seller = Seller.find params[:id]
+    @seller = current_account.sellers.find params[:id]
   end
 
 end
