@@ -3,7 +3,7 @@ class CategoriesController < ApplicationController
   before_filter :admin_only!, :except => [:autocomplete]
 
   def index
-    @categories = Category
+    @categories = current_account.categories
     if params[:parent_id].present?
       @categories = @categories.where(parent_id: params[:parent_id])
     else
@@ -13,19 +13,19 @@ class CategoriesController < ApplicationController
   end
 
   def new
-    @category = Category.new
+    @category = current_account.categories.new
   end
 
   def show
-    @categories = Category.where(parent_id: params[:id])
+    @categories = current_account.categories.where(parent_id: params[:id])
   end
 
   def edit
-    @category = Category.find params[:id]
+    @category = current_account.categories.find params[:id]
   end
 
   def create
-    @category = Category.create params[:category]
+    @category = current_account.categories.create params[:category]
     if @category.save!
       p @category.inspect
       if @category.parent_id.present?
@@ -39,7 +39,7 @@ class CategoriesController < ApplicationController
   end
 
   def update
-    @category = Category.find(params[:id])
+    @category = current_account.categories.find(params[:id])
     if @category.update_attributes(params[:category])
       if !@category.parent_id.blank?
         redirect_to categories_path(:parent_id => @category.parent_id)
@@ -52,7 +52,7 @@ class CategoriesController < ApplicationController
   end
 
   def destroy
-    @category = Category.find params[:id]
+    @category = current_account.categories.find params[:id]
     @category.destroy
     redirect_to categories_path
   end
