@@ -1,4 +1,6 @@
 class TaobaoAppTokensController < ApplicationController
+
+  # Remember to create and bind account first.
   def create
     info = auth_hash['info']
     token = TaobaoAppToken.find_or_create_by_taobao_user_id(info['taobao_user_id'])

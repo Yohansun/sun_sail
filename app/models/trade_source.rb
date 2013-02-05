@@ -14,6 +14,13 @@
 #  fetch_quantity      :integer(4)      default(20)
 #  fetch_time_circle   :integer(4)      default(15)
 #  high_pressure_valve :boolean(1)      default(FALSE)
+#  sid                 :integer(4)
+#  cid                 :integer(4)
+#  created             :datetime
+#  modified            :datetime
+#  bulletin            :string(255)
+#  title               :string(255)
+#  description         :string(255)
 #
 
 class TradeSource < ActiveRecord::Base

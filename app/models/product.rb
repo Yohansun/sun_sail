@@ -23,7 +23,6 @@
 #  props_str     :text
 #  binds_str     :text
 #  pic_url       :string(255)
-#  account_id    :integer(4)
 #
 
 class Product < ActiveRecord::Base
