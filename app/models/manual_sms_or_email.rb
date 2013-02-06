@@ -25,7 +25,7 @@ class ManualSmsOrEmail
       if notify_receiver == "interface" 
         mobiles = seller.try(:interface_mobile)
       end  
-      TradeManualSmsNotifier.perform_async(mobiles, notify_content) if (mobiles.present? && notify_content.present?)     
+      TradeManualSmsNotifier.perform_async(self.trades.account_id, mobiles, notify_content) if (mobiles.present? && notify_content.present?)     
     else  
       if notify_receiver == "seller"
         emails = seller.try(:email).try(:split, ',') 

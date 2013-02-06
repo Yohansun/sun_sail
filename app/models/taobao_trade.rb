@@ -121,15 +121,11 @@ class TaobaoTrade < Trade
   end
 
   def has_special_seller_memo?
-    # if TradeSetting.company == 'dulux'
-    #   seller_memo.present? && (seller_memo.strip == "@送货上门".strip || seller_memo.strip == "@自提".strip)
-    # else
-      seller_memo.blank?
-    # end  
+    seller_memo.blank?
   end  
 
   def special_seller_memo
-    if TradeSetting.company == 'dulux'
+    if self.account.key == 'dulux'
       if seller_memo.present?
         if seller_memo.strip == "@送货上门".strip
           "@送货上门"
@@ -173,7 +169,7 @@ class TaobaoTrade < Trade
 
   def matched_seller(area = nil)
     area ||= default_area
-    if TradeSetting.company == 'dulux'
+    if self.account.key == 'dulux'
       Dulux::SellerMatcher.match_trade_seller(self, area) unless splitable?
     else
       Dulux::SellerMatcher.match_trade_seller(self, area)

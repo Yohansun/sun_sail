@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <% if TradeSetting.company == 'dulux' %>
-    <title><%= TradeSetting.site_title_basic %></title>
+    <% if current_account.key == 'dulux' %>
+    <title><%= current_account.setting('site_title_basic') %></title>
     <% else %>
     <title><%= content_for?(:title) ? yield(:title) : "Magic Orders" %></title>
     <% end %>
@@ -36,7 +36,7 @@
 
           <ul class="nav nav-pills" id="top-nav">
             <li class="active trades" style="display:none"><a href="/app#trades">订单管理</a></li>
-            <% if TradeSetting.company == 'nippon' %>
+            <% if current_account.key == 'nippon' %>
               <li class="trades" style="display:none"><a href="http://shop.nipponpaint.com.cn/admin/orders">官网订单</a></li>
            <!--    <li class="trades" style="display:none"><a href="http://shop.nipponpaint.com.cn/admin/taobao_orders">淘宝订单</a></li> -->
             <% end %>
@@ -75,7 +75,7 @@
                 <% if current_user.has_role?(:admin) %>
                 <li><%= link_to '商品管理', products_path, class: "products" %></li>
                 <li><%= link_to '经销商管理', sellers_path %>
-                <% if TradeSetting.enable_module_wangwang == true %>
+                <% if current_account.setting('enable_module_wangwang') == true %>
                 <li><a href="/callcenter/contrastive_performance">客服管理</a></li>
                 <% end %>
                 <li class= "divider"></li>

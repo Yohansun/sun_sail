@@ -193,7 +193,7 @@ module Dulux
           sql = "products.iid = '#{pp[:iid]}' AND stock_products.activity > #{pp[:number]}"
           products = StockProduct.joins(:product).where(sql)
 
-          if TradeSetting.enable_match_seller_user_color && color_num.present?
+          if op.account.setting('enable_match_seller_user_color') && color_num.present?
             color_num.each do |colors|
               next if colors.blank?
               colors = colors.shift(pp[:number]).flatten.compact.uniq

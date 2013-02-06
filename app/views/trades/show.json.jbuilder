@@ -4,8 +4,8 @@ json.trade_type @trade._type
 json.current_user_is_seller current_user.has_role?(:seller)
 json.splitted_tid @trade.splitted_tid
 json.seller_id @trade.seller_id
-json.default_seller_id TradeSetting.default_seller_id
-json.shopname TradeSetting.shopname
+json.default_seller_id current_account.setting('default_seller_id')
+json.shopname current_account.setting('shopname')
 json.seller_name @trade.seller.name if @trade.seller
 json.status @trade.status
 json.status_text @trade.status_text

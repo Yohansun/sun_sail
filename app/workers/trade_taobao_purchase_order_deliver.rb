@@ -5,7 +5,7 @@ class TradeTaobaoPurchaseOrderDeliver
   
   def perform(id)
     trade = TaobaoPurchaseOrder.find(id)
-    source_id = trade.trade_source_id || TradeSetting.default_taobao_purchase_source_id
+    source_id = trade.trade_source_id || trade.account.setting('default_taobao_purchase_source_id')
     response = TaobaoQuery.get({
       :method => 'taobao.logistics.offline.send', :tid => trade.deliver_id,
       :out_sid => trade.logistic_waybill,

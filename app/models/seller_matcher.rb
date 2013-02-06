@@ -19,8 +19,8 @@ protected
 		# 完善的匹配规则
 		seller = nil
 
-    default_seller_id = TradeSetting.default_seller_id
-		special_out_iids = TradeSetting.special_iids
+    default_seller_id = @trade.account.setting('default_seller_id')
+		special_out_iids = @trade.account.setting('special_iids')
 
 		trade_out_iids = @trade.out_iids || []
 

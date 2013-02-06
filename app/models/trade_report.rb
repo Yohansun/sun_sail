@@ -12,9 +12,9 @@ class TradeReport
   field :request_at, type:DateTime
 
   def export_report
-    if TradeSetting.company == "dulux"
+    if self.account.key == "dulux"
       DuluxTaobaoTradeReporter.perform_async(self.id) 
-    elsif TradeSetting.company == "nippon"
+    elsif self.account.key == "nippon"
       if conditions.fetch("search").fetch("type_option").present? && conditions.fetch("search").fetch("type_option") == "TaobaoTrade"
         NipponTaobaoTradeReporter.perform_async(self.id) 
       else 

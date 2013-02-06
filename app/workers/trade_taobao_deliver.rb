@@ -6,7 +6,7 @@ class TradeTaobaoDeliver
   def perform(id)
     trade = TaobaoTrade.find(id)
     tid = trade.tid
-    source_id = trade.trade_source_id || TradeSetting.default_taobao_trade_source_id
+    source_id = trade.trade_source_id || trade.account.setting('default_taobao_trade_source_id')
     response = TaobaoQuery.get({
       method: 'taobao.logistics.offline.send',
       tid: trade.tid,
@@ -18,10 +18,11 @@ class TradeTaobaoDeliver
     if errors.blank?
       trade = TradeDecorator.decorate(trade)
       mobile = trade.receiver_mobile_phone
+      shopname = trade.account.setting('shopname_taobao')
       if trade.splitted?
-        content = "亲您好，您的订单#{tid}已经发货，该订单将由地区发送，请注意查收。【#{TradeSetting.shopname_taobao}】"
+        content = "亲您好，您的订单#{tid}已经发货，该订单将由地区发送，请注意查收。【#{shopname}】"
       else
-        content = "亲您好，您的订单#{tid}已经发货，我们将尽快为您送达，请注意查收。【#{TradeSetting.shopname_taobao}】"
+        content = "亲您好，您的订单#{tid}已经发货，我们将尽快为您送达，请注意查收。【#{shopname}】"
       end
 
       notify_kind = "after_send_goods"

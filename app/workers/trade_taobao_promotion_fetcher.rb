@@ -25,7 +25,7 @@ class TradeTaobaoPromotionFetcher
 
     trade.update_attributes promotion_fee: trade.promotion_details.sum(:discount_fee), got_promotion: true
 
-    delay_time = TradeSetting.delay_time || 0
+    delay_time = trade.account.setting('delay_time') || 0
 
     DelayAutoDispatch.perform_in(delay_time, trade.id)
   end

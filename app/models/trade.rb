@@ -131,7 +131,7 @@ class Trade
     class_name = ''
     if has_unusual_state
       class_name = 'cs_error'
-      if TradeSetting.company == "nippon"
+      if self.account.key == "nippon"
         class_name = unusual_states.last.unusual_color_class  if unusual_states && unusual_states.last.present? && unusual_states.last.unusual_color_class.present?
       end
     end 
@@ -200,7 +200,7 @@ class Trade
         end
       }
       emails = cc.flatten.compact.map { |e| e.strip }
-      emails = emails | (TradeSetting.extra_cc || [])
+      emails = emails | (self.account.setting('extra_cc') || [])
     end
 
     emails
@@ -217,7 +217,7 @@ class Trade
   end
 
   def nofity_stock(operation, op_seller)
-    return unless TradeSetting.company == 'dulux'
+    return unless self.account.key == 'dulux'
 
     orders.each do |order|
       product = Product.find_by_iid order.outer_iid
