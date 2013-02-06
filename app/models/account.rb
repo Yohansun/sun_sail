@@ -48,4 +48,8 @@ class Account < ActiveRecord::Base
     var = TradeSetting.scoped_by_thing_type_and_thing_id('Account', self.id).where(var: key)
     var.try(:first).try(:value)
   end
+
+  def write_setting(key, value)
+    TradeSetting.create(thing_id: self.id, thing_type: 'Account', var: key, value: value)
+  end
 end

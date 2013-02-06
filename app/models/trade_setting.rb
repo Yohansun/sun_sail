@@ -12,5 +12,5 @@
 #
 
 class TradeSetting < RailsSettings::CachedSettings
-	attr_accessible :account_id, :var
+	attr_accessible :thing_id, :thing_type, :var, :value
 end

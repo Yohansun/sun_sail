@@ -24,7 +24,7 @@ class TaobaoAppTokensController < ApplicationController
       source["name"] = source.delete("nick")
       trade_source.update_attributes(source)
 
-      current_account.setting('enable_token_error_notify') = true
+      current_account.write_setting('enable_token_error_notify', true)
       redirect_to root_path
     else
       render text: "response_get_failed"

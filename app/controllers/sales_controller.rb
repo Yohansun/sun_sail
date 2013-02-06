@@ -11,9 +11,9 @@ class SalesController < ApplicationController
   def show
     ## 参数初始化
     @sale = current_account.sales.last
-    current_account.setting('test_time') = Time.now + 8.hour
-    current_account.setting('test_time_2') = current_account.setting('test_time')
-    current_account.setting('frequency') = 600   ## per second
+    current_account.write_setting('test_time', Time.now + 8.hour)
+    current_account.write_setting('test_time_2', current_account.setting('test_time'))
+    current_account.write_setting('frequency', 600)  ## per second
     unless @sale
       @sale = current_account.sales.create(name: "测试活动", earn_guess: 100000, start_at: current_account.setting('test_time'), end_at: current_account.setting('test_time') + 1.day)
       render action: :edit
@@ -179,7 +179,8 @@ class SalesController < ApplicationController
     time_now = current_account.setting('test_time_2')
     start_time = time_now
     end_time = time_now + frequency
-    current_account.setting('test_time_2') += frequency
+    current_account.write_setting('test_time_2', 
+      current_account.setting('test_time_2') + frequency)
 
     all_in_frequency = @sale.all_trade_fee(start_time, end_time)
     paid_in_frequency = @sale.paid_trade_fee(start_time, end_time)
