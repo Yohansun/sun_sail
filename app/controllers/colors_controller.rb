@@ -1,7 +1,7 @@
 class ColorsController < ApplicationController
   before_filter :authenticate_user!
   before_filter :admin_only!, :except => [:autocomplete]
-  before_filter :check_module
+  before_filter :check_module, :except => [:autocomplete]
 
   def index
   	@colors = Color.page params[:page]
