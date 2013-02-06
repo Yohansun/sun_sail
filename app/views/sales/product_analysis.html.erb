@@ -87,7 +87,11 @@
                 <%- if lp %>
                 <tr>
                   <td><%= j += 1 %></td>
-                  <td><a href="#"><img src="<%= lp.product_image %>" /></a></td>
+                  <td>
+                    <% if lp.pic_url.present? %>
+                    <%= image_tag lp.pic_url %>
+                    <% end %>
+                  </td>
                   <td width="200"><%= link_to "#{lp.name}", product_path(lp.id) %></td>
                   <td><%= (value.try(:[],3)*100).to_i.to_s + "%" %></td>
                   <td><%= value.try(:[],1) %></td>

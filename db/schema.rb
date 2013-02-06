@@ -458,6 +458,7 @@ ActiveRecord::Schema.define(:version => 20130206025907) do
     t.integer  "failed_attempts"
     t.string   "unlock_token"
     t.datetime "locked_at"
+    t.string   "phone"
   end
 
   add_index "users", ["email"], :name => "index_admins_on_email", :unique => true

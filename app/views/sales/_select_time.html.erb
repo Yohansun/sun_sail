@@ -14,21 +14,17 @@
 <%- else %>
 <form class="well form-search">
 <%- end %>
-  <form ation="/trades_reports" class="well form-horizontal">
-        <div class="control-group nomargin">
-          <label class="control-label" for="">生成时间：</label>
-          <div class="controls clearfix">
-            <fieldset class="pull-left form-inline mar_r10">
-                <input type="text" class="input-small datepickers" name="start_date" value="<%= @start_date %>">
-                <input type="text" class="input-mini timepickers" name="start_time" value="<%= @start_time %> ">
-                <i class="icon-arrow-right"></i>
-                <input type="text" class="input-small datepickers"  name="end_date" value="<%= @end_date %>">
-                <input type="text" class="input-mini timepickers" name="end_time" value="<%= @end_time %>">
-            </fieldset>
-              <button type="submit" class="btn btn-info">过滤</button>
-          </div>         
-        </div>
-  </form>  
-
+  <div class="control-group nomargin">
+    <label class="control-label" for="">生成时间：</label>
+    <div class="controls clearfix">
+      <fieldset class="pull-left form-inline mar_r10">
+          <input type="text" class="input-small datepickers" name="start_date" value="<%= @start_date %>">
+          <input type="text" class="input-mini timepickers" name="start_time" value="<%= @start_time %> ">
+          <i class="icon-arrow-right"></i>
+          <input type="text" class="input-small datepickers"  name="end_date" value="<%= @end_date %>">
+          <input type="text" class="input-mini timepickers" name="end_time" value="<%= @end_time %>">
+      </fieldset>
+        <button type="submit" class="btn btn-info">过滤</button>
+    </div>
+  </div>
 </form>
-<%- end %>

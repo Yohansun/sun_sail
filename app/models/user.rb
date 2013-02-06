@@ -31,6 +31,7 @@
 #  failed_attempts      :integer(4)
 #  unlock_token         :string(255)
 #  locked_at            :datetime
+#  phone                :string(255)
 #
 
 # -*- encoding : utf-8 -*-
@@ -54,8 +55,9 @@ class User < ActiveRecord::Base
   attr_protected :cs, :cs_read, :seller, :interface, :stock_admin, :admin
   # attr_accessible :title, :body
 
-  validates_presence_of :name, :email
+  validates_presence_of :phone, :email
   validates_presence_of :password, on: :create
+  validates_uniqueness_of :phone, :email
 
   validates :username, presence: true
 

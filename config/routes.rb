@@ -130,6 +130,14 @@ MagicOrders::Application.routes.draw do
   
   resources :areas
   resources :trade_sources
+  resources :taobao_app_tokens do
+    collection do
+      get :create_admin
+      get :rolling_scrollbars
+      get :auto_settings
+      get :create_roles
+    end  
+  end  
 
   get "/sales/area_analysis", to: 'sales#area_analysis'
   get "/sales/time_analysis", to: 'sales#time_analysis'
@@ -184,7 +192,7 @@ MagicOrders::Application.routes.draw do
   root to: "home#dashboard"
 
   match '/go/npsellers', :to => 'go#npsellers'
-
   match "/app", to: "home#index"
   match "*path", to: "home#index"
+
 end
