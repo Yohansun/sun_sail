@@ -17,11 +17,11 @@ class TaobaoPurchaseOrderPuller
       weeks = 0
       weeks = (time_range_digist/604800).floor 
       
-      (0..weeks) .each do |num|
+      (0..weeks).each do |num|
         range_begin  = start_time + num.weeks
         range_end = start_time + 1.week + num.weeks
         total_pages = nil
-        page_no = 0
+        page_no = 1
 
         begin
           response = TaobaoQuery.get({
@@ -81,6 +81,10 @@ class TaobaoPurchaseOrderPuller
       end  
     end
 
+    def updatable?(local_trade, remote_status)
+      !local_trade.splitted || (local_trade.splitted && remote_status != local_trade.status && remote_status != "WAIT_SELLER_SEND_GOODS" && local_trade.delivered_at.blank?)
+    end
+
     def update(start_time = nil, end_time = nil, source_id = nil)
       source_id ||= TradeSetting.default_taobao_purchase_source_id
 
@@ -97,11 +101,11 @@ class TaobaoPurchaseOrderPuller
       weeks = 0
       weeks = (time_range_digist/604800).floor 
 
-      (0..weeks) .each do |num|
+      (0..weeks).each do |num|
         range_begin  = start_time + num.weeks
         range_end = start_time + 1.week + num.weeks
         total_pages = nil
-        page_no = 0
+        page_no = 1
         
         begin
           response = TaobaoQuery.get({
@@ -132,7 +136,7 @@ class TaobaoPurchaseOrderPuller
 
           trades.each do |trade|
             TaobaoPurchaseOrder.where(tid: trade['fenxiao_id']).each do |local_trade|
-              next if trade['status'] == local_trade.status || (trade['status'] == "WAIT_SELLER_SEND_GOODS" && local_trade.delivered_at.present?)
+             next unless updatable?(local_trade, trade['status'])
               
               deliver_id = trade['id']  
               trade.delete 'id'

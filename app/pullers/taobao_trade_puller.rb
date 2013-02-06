@@ -3,7 +3,7 @@ class TaobaoTradePuller
   class << self
     def create(start_time = nil, end_time = nil, trade_source_id = nil)
       total_pages = nil
-      page_no = 0
+      page_no = 1
 
       if start_time.blank?
         latest_created_order = TaobaoTrade.only("created").order_by(:created.desc).limit(1).first
@@ -90,58 +90,66 @@ class TaobaoTradePuller
         trade_source_id = TradeSetting.default_taobao_trade_source_id
       end
 
-      has_next = true
-      page_no = 1
-      while has_next
-        has_next = false
-        Rails.logger.info "upate_orders: fetching page #{page_no}"
-        puts "upate_orders: fetching page #{page_no}"
+      #start_modified-and-end_modified, 查询条件(修改时间)跨度不能超过一天
+      time_range_digist = end_time - start_time
+      days = 0
+      days = (time_range_digist/86400).floor 
+      
+      (0..days).each do |num|
+        range_begin  = start_time + num.days
+        range_end = start_time + 1.day + num.days
+        total_pages = nil
+        page_no = 1
+        has_next = true
+        while has_next
+          has_next = false
+           p "starting update_orders: since #{range_begin}"
+          response = TaobaoQuery.get({:method => 'taobao.trades.sold.increment.get',
+            :fields => 'total_fee, tid, status, adjust_fee, post_fee, receiver_name, pay_time, receiver_state, receiver_city, receiver_district, receiver_address, receiver_zip, receiver_mobile, receiver_phone, buyer_nick, title, type, point_fee, modified, alipay_id, alipay_no, alipay_url, shipping_type, buyer_obtain_point_fee, cod_fee, cod_status, commission_fee, consign_time, received_payment, payment, timeout_action_time, has_buyer_message, real_point_fee, orders',
+            :start_modified => range_begin.strftime("%Y-%m-%d %H:%M:%S"),
+            :end_modified => range_end.strftime("%Y-%m-%d %H:%M:%S"),
+            :page_no => page_no,
+            :page_size => 40,
+            :use_has_next => true}, trade_source_id
+            )
 
-        response = TaobaoQuery.get({:method => 'taobao.trades.sold.increment.get',
-          :fields => 'total_fee, tid, status, adjust_fee, post_fee, receiver_name, pay_time, receiver_state, receiver_city, receiver_district, receiver_address, receiver_zip, receiver_mobile, receiver_phone, buyer_nick, title, type, point_fee, modified, alipay_id, alipay_no, alipay_url, shipping_type, buyer_obtain_point_fee, cod_fee, cod_status, commission_fee, consign_time, received_payment, payment, timeout_action_time, has_buyer_message, real_point_fee, orders',
-          :start_modified => start_time.strftime("%Y-%m-%d %H:%M:%S"),
-          :end_modified => end_time.strftime("%Y-%m-%d %H:%M:%S"),
-          :page_no => page_no,
-          :page_size => 40,
-          :use_has_next => true}, trade_source_id
-          )
+          page_no += 1
 
-        page_no += 1
+          unless response['trades_sold_increment_get_response']
+            p response
+            break
+          end
+          
+          has_next = response['trades_sold_increment_get_response']['has_next']
+          next unless response['trades_sold_increment_get_response']['trades']
 
-        unless response['trades_sold_increment_get_response']
-          p response
-          break
-        end
-        
-        has_next = response['trades_sold_increment_get_response']['has_next']
-        next unless response['trades_sold_increment_get_response']['trades']
+          trades = response['trades_sold_increment_get_response']['trades']['trade']
+          unless trades.is_a?(Array)
+            trades = [] << trades
+          end
+          next if trades.blank?
 
-        trades = response['trades_sold_increment_get_response']['trades']['trade']
-        unless trades.is_a?(Array)
-          trades = [] << trades
-        end
-        next if trades.blank?
-
-        trades.each do |trade|
-          TaobaoTrade.where(tid: trade['tid']).each do |local_trade|
-            next unless updatable?(local_trade, trade['status'])
-            orders = trade.delete('orders')
-            trade['trade_source_id'] = trade_source_id
-            local_trade.update_attributes(trade)      
-            local_trade.operation_logs.build(operated_at: Time.now, operation: "从淘宝更新订单,更新#{local_trade.changed.try(:join, ',')}") if local_trade.changed?
-            local_trade.save
-            if local_trade.dispatchable? && local_trade.auto_dispatchable?
-              if TradeSetting.company == 'dulux'
-                DelayAutoDispatch.perform_in(TradeSetting.delay_time || 1.hours, local_trade.id)
-              else
-                local_trade.auto_dispatch!
+          trades.each do |trade|
+            TaobaoTrade.where(tid: trade['tid']).each do |local_trade|
+              next unless updatable?(local_trade, trade['status'])
+              orders = trade.delete('orders')
+              trade['trade_source_id'] = trade_source_id
+              local_trade.update_attributes(trade)      
+              local_trade.operation_logs.build(operated_at: Time.now, operation: "从淘宝更新订单,更新#{local_trade.changed.try(:join, ',')}") if local_trade.changed?
+              local_trade.save
+              if local_trade.dispatchable? && local_trade.auto_dispatchable?
+                if TradeSetting.company == 'dulux'
+                  DelayAutoDispatch.perform_in(TradeSetting.delay_time || 1.hours, local_trade.id)
+                else
+                  local_trade.auto_dispatch!
+                end
               end
+              TradeTaobaoMemoFetcher.perform_async(local_trade.tid)
+              p "update trade #{trade['tid']}"
             end
-            TradeTaobaoMemoFetcher.perform_async(local_trade.tid)
-            p "update trade #{trade['tid']}"
           end
         end
-      end
+      end 
     end
 
     def updatable?(local_trade, remote_status)
@@ -150,7 +158,7 @@ class TaobaoTradePuller
 
     def update_by_created(start_time = nil, end_time = nil, trade_source_id = nil)
       total_pages = nil
-      page_no = 0
+      page_no = 1
 
       if start_time.blank?
         latest_created_order = TaobaoTrade.only("created").order_by(:created.desc).limit(1).first
@@ -195,7 +203,7 @@ class TaobaoTradePuller
           next unless TaobaoTrade.where(tid: trade['tid']).exists?
 
           TaobaoTrade.where(tid: trade['tid']).each do |local_trade|
-            next unless trade['status'] != local_trade.status
+            next unless updatable?(local_trade, trade['status'])
             orders = trade.delete('orders')
             trade['trade_source_id'] = trade_source_id
             local_trade.update_attributes(trade)
