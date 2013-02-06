@@ -30,7 +30,7 @@ class TradesController < ApplicationController
     params['search'] =  params['search'] .select {|k,v| v != "undefined"  }   
     @report.conditions = params.select {|k,v| !['limit','offset', 'action', 'controller'].include?(k)  } 
     #目前只有立邦具有多种订单
-    if TradeSetting.company == "nippon" && @report.conditions.fetch("search").fetch("type_option").blank?
+    if current_account.key == "nippon" && @report.conditions.fetch("search").fetch("type_option").blank?
       render :js => "alert('导出报表之前请在高级搜索中选择订单来源');$('.export_orders_disabled').addClass('export_orders').removeClass('export_orders_disabled disabled');"
     else
       @report.save
@@ -319,7 +319,7 @@ class TradesController < ApplicationController
 
   def split_trade
     @trade = Trade.find params[:id]
-    new_trade_ids = if TradeSetting.company == 'dulux'
+    new_trade_ids = if current_account.key == 'dulux'
       split_orders(@trade)
     else
       TradeSplitter.new(@trade).split!

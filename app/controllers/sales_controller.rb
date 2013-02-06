@@ -11,11 +11,11 @@ class SalesController < ApplicationController
   def show
     ## 参数初始化
     @sale = current_account.sales.last
-    TradeSetting.test_time = Time.now + 8.hour
-    TradeSetting.test_time_2 = TradeSetting.test_time
-    TradeSetting.frequency = 600   ## per second
+    current_account.setting('test_time') = Time.now + 8.hour
+    current_account.setting('test_time_2') = current_account.setting('test_time')
+    current_account.setting('frequency') = 600   ## per second
     unless @sale
-      @sale = current_account.sales.create(name: "测试活动", earn_guess: 100000, start_at: TradeSetting.test_time, end_at: TradeSetting.test_time + 1.day)
+      @sale = current_account.sales.create(name: "测试活动", earn_guess: 100000, start_at: current_account.setting('test_time'), end_at: current_account.setting('test_time') + 1.day)
       render action: :edit
     end
     @start_at = @sale.start_at
@@ -175,11 +175,11 @@ class SalesController < ApplicationController
 
   def add_node
     @sale = current_account.sales.last
-    frequency = TradeSetting.frequency
-    time_now = TradeSetting.test_time_2
+    frequency = current_account.setting('frequency')
+    time_now = current_account.setting('test_time_2')
     start_time = time_now
     end_time = time_now + frequency
-    TradeSetting.test_time_2 += frequency
+    current_account.setting('test_time_2') += frequency
 
     all_in_frequency = @sale.all_trade_fee(start_time, end_time)
     paid_in_frequency = @sale.paid_trade_fee(start_time, end_time)

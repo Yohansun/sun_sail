@@ -48,7 +48,7 @@ class ColorsController < ApplicationController
   private
 
   def check_module
-    redirect_to "/" and return if TradeSetting.enable_module_colors != true
+    redirect_to "/" and return if current_account.setting('enable_module_colors') != true
     redirect_to "/" and return if !current_user.has_role?(:admin)
   end
 end

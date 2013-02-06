@@ -143,7 +143,7 @@ class CallcenterController < ApplicationController
   private
 
   def check_module
-  	redirect_to "/" if TradeSetting.enable_module_wangwang != true
+  	redirect_to "/" if current_account.setting('enable_module_wangwang') != true
   	redirect_to "/" if !current_user.has_role?(:admin)
   end
 end
