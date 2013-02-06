@@ -3,7 +3,6 @@
 class Trade
   include Mongoid::Document
   include Mongoid::Paranoia
-  include Mongoid::Versioning
   include Mongoid::Timestamps
 
   field :trade_source_id, type: Integer

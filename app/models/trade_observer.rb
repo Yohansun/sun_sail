@@ -22,7 +22,7 @@ class TradeObserver < Mongoid::Observer
       dispatch_notify(object.id, object.seller_id)
     end
 
-    if object.account.key == "dulux" && object._type == "TaobaoTrade" && object.status_changed? && object.status == "TRADE_FINISHED" && !object.has_sent_send_logistic_rate_sms
+    if object.fetch_account.key == "dulux" && object._type == "TaobaoTrade" && object.status_changed? && object.status == "TRADE_FINISHED" && !object.has_sent_send_logistic_rate_sms
       send_rate_sms_to_buyer(object)
       create_rate_record(object)
       object.has_sent_send_logistic_rate_sms = true

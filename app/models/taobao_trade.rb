@@ -125,7 +125,7 @@ class TaobaoTrade < Trade
   end  
 
   def special_seller_memo
-    if self.account.key == 'dulux'
+    if self.fetch_account.key == 'dulux'
       if seller_memo.present?
         if seller_memo.strip == "@送货上门".strip
           "@送货上门"
@@ -169,7 +169,7 @@ class TaobaoTrade < Trade
 
   def matched_seller(area = nil)
     area ||= default_area
-    if self.account.key == 'dulux'
+    if self.fetch_account.key == 'dulux'
       Dulux::SellerMatcher.match_trade_seller(self, area) unless splitable?
     else
       Dulux::SellerMatcher.match_trade_seller(self, area)
