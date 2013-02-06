@@ -23,6 +23,7 @@
 #  interface         :string(255)
 #  has_stock         :boolean(1)      default(FALSE)
 #  stock_opened_at   :datetime
+#  account_id        :integer(4)
 #
 
 # -*- encoding : utf-8 -*-

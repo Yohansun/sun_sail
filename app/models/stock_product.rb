@@ -12,6 +12,7 @@
 #  actual     :integer(4)      default(0)
 #  product_id :integer(4)
 #  seller_id  :integer(4)
+#  account_id :integer(4)
 #
 
 class StockProduct < ActiveRecord::Base

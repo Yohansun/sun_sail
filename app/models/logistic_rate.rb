@@ -12,6 +12,7 @@
 #  created_at        :datetime        not null
 #  updated_at        :datetime        not null
 #  taobao_rate_score :integer(4)
+#  account_id        :integer(4)
 #
 
 # -*- encoding : utf-8 -*-

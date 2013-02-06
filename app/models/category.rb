@@ -11,6 +11,7 @@
 #  lft        :integer(4)
 #  rgt        :integer(4)
 #  depth      :integer(4)
+#  account_id :integer(4)
 #
 
 class Category < ActiveRecord::Base

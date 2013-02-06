@@ -11,6 +11,7 @@
 #  updated_at         :datetime        not null
 #  audit_time         :datetime
 #  exported           :text
+#  account_id         :integer(4)
 #
 
 class ReconcileStatement < ActiveRecord::Base

@@ -14,6 +14,7 @@
 #  reason           :string(255)
 #  note             :string(255)
 #  seller_id        :integer(4)
+#  account_id       :integer(4)
 #
 
 class StockHistory < ActiveRecord::Base

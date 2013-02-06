@@ -9,6 +9,7 @@
 #  updated_at :datetime        not null
 #  code       :string(255)     default("OTHER")
 #  xml        :string(255)
+#  account_id :integer(4)
 #
 
 # -*- encoding : utf-8 -*-
