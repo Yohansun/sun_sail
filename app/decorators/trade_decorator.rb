@@ -167,13 +167,12 @@ class TradeDecorator < Draper::Base
   #TaobaoPurchaseOrder doesn't have seller_disount
   def seller_discount
     case trade._type
-    when 'TaobaoPurchaseOrder'
-      0.0
     when 'TaobaoTrade'
-      trade.promotion_fee
+      discount = trade.promotion_fee 
     when 'JingdongTrade'
-      trade.seller_discount
+      discount = trade.seller_discount 
     end
+    discount ||= 0.0
   end
 
   def distributor_payment
