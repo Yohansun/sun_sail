@@ -34,6 +34,16 @@ class Account < ActiveRecord::Base
   has_many :logistic_rates
   has_many :trade_sources
 
+  # Warning: Don't use this method in the controller, if necessary please use current_account
+  # This method should be work with any Model/Worker and other non-controllers.
+  def self.current
+    Thread.current[:account]
+  end
+
+  def self.current=(account)
+    Thread.current[:account] = account
+  end
+
   def setting(key)
     var = TradeSetting.scoped_by_thing_type_and_thing_id('Account', self.id).where(var: key)
     var.try(:first).try(:value)
