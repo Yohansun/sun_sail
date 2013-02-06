@@ -23,7 +23,7 @@ class NipponTaobaoTradeReporter
 
     row_number = 1
     
-    header = ["订单来源", "订单编号", "当前状态", "下单时间", "付款时间", "分流时间", "发货时间", "送货经销商", "接口人", "买家地址-省", "买家地址-市", "买家地址-区", "买家地址", "买家姓名", "联系电话", "商品名", "数量", "商品标价", "商品总价（不含运费）",  "卖家优惠", "运费", "订单总金额", "买家旺旺", "买家留言", "客服备注", "发票信息", "需要调色", "色号", "商品属性" ,"退款状态"]
+    header = ["订单来源", "订单编号", "当前状态", "下单时间", "付款时间", "分流时间", "发货时间", "送货经销商", "接口人", "买家地址-省", "买家地址-市", "买家地址-区", "买家地址", "买家姓名", "联系电话", "商品名", "数量", "商品标价", "商品总价（不含运费）",  "卖家优惠", "运费", "订单总金额", "买家旺旺", "买家留言", "客服备注", "发票信息", "需要调色", "色号", "商品属性" ,"退款状态", "买家评价结果", "评价内容", "评价时间"]
     
     interface_index = header.index("接口人")
     header.delete_at(interface_index) if report.account.setting('enable_module_interface') == 0
@@ -70,6 +70,16 @@ class NipponTaobaoTradeReporter
         sku_properties = order.sku_properties 
         cs_memo = "#{trade_cs_memo} #{order.cs_memo}"
         refund_status_text = order.refund_status_text
+
+        refund_status_text = order.refund_status_text
+        rate_content = rate_created = rate_result = ''
+        rate = TaobaoTradeRate.where(oid: order.oid).first || TaobaoTradeRate.where(tid: trade.tid).first
+        if rate
+          rate_result = rate.result
+          rate_content = rate.content 
+          rate_created = rate.created
+        end  
+
         if order.color_num.present?
           color_num = order.color_num.join(",")
            need_color = '是' 
@@ -81,7 +91,7 @@ class NipponTaobaoTradeReporter
         row_number += 1 
         
         body = [trade_source, tid, taobao_status_memo, created, pay_time, dispatched_at, delivered_at, seller_name, interface_name, receiver_state, receiver_city, receiver_district, receiver_address, receiver_name, receiver_mobile, 
-          title, order_num, order_price, sum_fee,  seller_discount, post_fee, total_fee, buyer_nick, buyer_message, cs_memo, invoice_name, need_color, color_num, sku_properties, refund_status_text]
+          title, order_num, order_price, sum_fee,  seller_discount, post_fee, total_fee, buyer_nick, buyer_message, cs_memo, invoice_name, need_color, color_num, sku_properties, refund_status_text, rate_result, rate_content, rate_created]
         
         body.delete_at(interface_index) if report.account.setting('enable_module_interface') == 0
         body.delete_at(need_color_index ) if report.account.setting('enable_module_colors') == 0
