@@ -9,9 +9,8 @@
 #  thing_type :string(30)
 #  created_at :datetime        not null
 #  updated_at :datetime        not null
-#  account_id :integer(4)
 #
 
 class TradeSetting < RailsSettings::CachedSettings
-	attr_accessible :var
+	attr_accessible :account_id, :var
 end

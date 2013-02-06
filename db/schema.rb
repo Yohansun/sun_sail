@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130205063653) do
+ActiveRecord::Schema.define(:version => 20130206025907) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -62,16 +62,13 @@ ActiveRecord::Schema.define(:version => 20130205063653) do
   create_table "areas", :force => true do |t|
     t.string   "name"
     t.integer  "parent_id"
-    t.integer  "seller_id"
-    t.datetime "created_at",                        :null => false
-    t.datetime "updated_at",                        :null => false
+    t.datetime "created_at",                       :null => false
+    t.datetime "updated_at",                       :null => false
     t.boolean  "active",         :default => true
-    t.boolean  "is_1568",        :default => false
     t.string   "pinyin"
     t.integer  "children_count", :default => 0
     t.integer  "lft",            :default => 0
     t.integer  "rgt",            :default => 0
-    t.integer  "sellers_count",  :default => 0
     t.integer  "area_type"
     t.string   "zip"
   end
@@ -325,7 +322,6 @@ ActiveRecord::Schema.define(:version => 20130205063653) do
     t.string   "thing_type", :limit => 30
     t.datetime "created_at",               :null => false
     t.datetime "updated_at",               :null => false
-    t.integer  "account_id"
   end
 
   add_index "settings", ["thing_type", "thing_id", "var"], :name => "index_settings_on_thing_type_and_thing_id_and_var", :unique => true

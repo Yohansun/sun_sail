@@ -34,4 +34,8 @@ class Account < ActiveRecord::Base
   has_many :logistic_rates
   has_many :trade_sources
 
+  def setting(key)
+    var = TradeSetting.scoped_by_thing_type_and_thing_id('Account', self.id).where(var: key)
+    var.try(:first).try(:value)
+  end
 end
