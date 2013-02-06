@@ -28,13 +28,13 @@ class TaobaoAppToken < ActiveRecord::Base
 	  access_token_refresh = Time.now - (self.last_refresh_at || Time.now.yesterday)
 	  refresh_token_refresh = Time.now - (self.refresh_token_last_refresh_at || Time.now.yesterday)
 
-	  if (access_token_refresh >= 11536001 || refresh_token_refresh > 11536001) && self.account.setting('enable_token_error_notify') #1 hours
+	  if (access_token_refresh >= 11536001 || refresh_token_refresh > 11536001)
 
 			base_url = "https://oauth.taobao.com/token?"
 
 			params = {
-									client_id: self.account.setting('taobao_app_key'),
-									client_secret: self.account.setting('taobao_app_secret'),
+									client_id: TradeSetting.taobao_app_key,
+									client_secret: TradeSetting.taobao_app_secret,
 									grant_type: 'refresh_token',
 									refresh_token: self.refresh_token
 
@@ -45,12 +45,10 @@ class TaobaoAppToken < ActiveRecord::Base
 			if response['access_token'].present?
 				self.update_attributes(access_token: response['access_token'], last_refresh_at: Time.now, refresh_token: response['refresh_token'], refresh_token_last_refresh_at: Time.now)
 				p "successful update access_token and refresh_token"
-				self.account.setting('enable_token_error_notify') = true
 			else
 				p response['error_description']
 				if self.account.setting('enable_token_error_notify')
 			  	Notifier.app_token_errors(self,response).deliver
-			  	self.account.setting('enable_token_error_notify') = false
 			  end
 			end
 
