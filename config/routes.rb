@@ -119,7 +119,12 @@ MagicOrders::Application.routes.draw do
     end
   end
 
-  resources :users
+  resources :users do
+    collection do
+      post :search
+    end
+  end    
+  
   resources :areas
   resources :trade_sources
 

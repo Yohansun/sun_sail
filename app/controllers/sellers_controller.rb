@@ -15,30 +15,15 @@ class SellersController < ApplicationController
   end
 
   def search
-    flag = false
-    if params[:keyword].present?
-      if params[:where_name] == "id"
-        @sellers = Seller.where(id: params[:keyword].strip)
-      end
-      if params[:where_name] == "fullname"
-        @sellers = Seller.where(["fullname like ?", "%#{params[:keyword].strip}%"])
-      end
-      if params[:where_name] == "name"
-        @sellers = Seller.where(["name like ?", "%#{params[:keyword].strip}%"])
-      end
-      if params[:where_name] == "address"
-        @sellers = Seller.where(["address like ?", "%#{params[:keyword].strip}%"])
-      end
-      @sellers = @sellers.page(params[:page])
-      flag = true
-    else
-      flag = false
+    if  params[:where_name] && params[:keyword].present?
+      @sellers  = Seller.where(["#{params[:where_name]} like ?", "%#{params[:keyword].strip}%"])
+      @sellers  = @sellers.page(params[:page])
     end
-    if flag
+    if @sellers 
       render :index
     else
       redirect_to sellers_path
-    end
+    end   
   end
 
   def latest

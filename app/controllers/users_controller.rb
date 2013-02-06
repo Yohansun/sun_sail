@@ -29,6 +29,18 @@ class UsersController < ApplicationController
     end
   end
 
+  def search
+    if  params[:where_name] && params[:keyword].present?
+      @users = User.where(["#{params[:where_name]} like ?", "%#{params[:keyword].strip}%"])
+      @users = @users.page(params[:page])
+    end
+    if @users
+      render :index
+    else
+      redirect_to users_path
+    end   
+  end
+
   def show
     @user = User.find params[:id]
   end
