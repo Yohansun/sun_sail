@@ -115,6 +115,10 @@ class Trade
   before_update :set_has_cs_memo
   before_update :set_has_unusual_state
 
+  def fetch_account
+    Account.find_by_id(self.account_id)
+  end
+
   def set_has_color_info
     self.orders.each do |order|
       colors = order.color_num.blank? ? [] : order.color_num
@@ -131,7 +135,7 @@ class Trade
     class_name = ''
     if has_unusual_state
       class_name = 'cs_error'
-      if self.account.key == "nippon"
+      if fetch_account.key == "nippon"
         class_name = unusual_states.last.unusual_color_class  if unusual_states && unusual_states.last.present? && unusual_states.last.unusual_color_class.present?
       end
     end 
@@ -200,7 +204,7 @@ class Trade
         end
       }
       emails = cc.flatten.compact.map { |e| e.strip }
-      emails = emails | (self.account.setting('extra_cc') || [])
+      emails = emails | (fetch_account.setting('extra_cc') || [])
     end
 
     emails
@@ -217,7 +221,7 @@ class Trade
   end
 
   def nofity_stock(operation, op_seller)
-    return unless self.account.key == 'dulux'
+    return unless fetch_account.key == 'dulux'
 
     orders.each do |order|
       product = Product.find_by_iid order.outer_iid
