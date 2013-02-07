@@ -86,6 +86,8 @@ gem "mini_magick"
 
 gem 'redis-namespace'
 
+gem 'client_side_validations'
+gem 'client_side_validations-simple_form'
 gem 'omniauth'
 gem 'omniauth-oauth2'
 gem 'rest-client'
@@ -93,7 +95,7 @@ gem 'httparty'
 
 #test mail
 gem "mails_viewer"
-
+gem 'wicked'
 gem "paperclip", "~> 2.4"
 
 group :production do

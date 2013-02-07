@@ -1,3 +1,4 @@
+# encoding: utf-8
 # == Schema Information
 #
 # Table name: users
@@ -55,11 +56,13 @@ class User < ActiveRecord::Base
   attr_protected :cs, :cs_read, :seller, :interface, :stock_admin, :admin
   # attr_accessible :title, :body
 
-  validates_presence_of :phone, :email
-  validates_presence_of :password, on: :create
-  validates_uniqueness_of :phone, :email
+  EMAIL_FORMAT = /\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}\z/
+  validates :email, presence: true, format: { with: EMAIL_FORMAT}, uniqueness: true
+  PHONE_FORMAT = /^(13[0-9]|15[012356789]|18[0236789]|14[57])[0-9]{8}$/
+  validates :phone, presence: true, format: { with: PHONE_FORMAT}, uniqueness: true
 
-  validates :username, presence: true
+  validates_presence_of :password, on: :create
+  validates :username, :name, presence: true
 
   def display_name
     name || email

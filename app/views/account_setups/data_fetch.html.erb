@@ -1,0 +1,72 @@
+<body class='whiteSmoke_bg'>
+  <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <%= link_to image_tag("logo.png"), 'javascript:void(0)', class: 'brand' %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid clearfix">
+    <div class="row-fluid">
+      <div class="span2 bs-docs-sidebar">
+        <ul class="nav nav-list bs-docs-sidenav affix span2">
+          <li class="active"><a href="javascript:void(0)">
+            <i class="icon-chevron-right"></i> 一键开始</a>
+          </li>
+        </ul>
+      </div>
+      <div class="span10">
+        <ul class="nav nav-tabs">
+          <li><a href="javascript:void(0)">管理员设置</a></li>
+          <li class="active"><a href="javascript:void(0)">数据自动设置</a></li>
+          <li><a href="javascript:void(0)">自动化业务设置</a></li>
+          <li><a href="javascript:void(0)">设置系统登录用户</a></li>
+        </ul>
+        <div class="tab-content">
+          <form>
+            <fieldset>
+              <label class="input-large">正在配置商品分类：</label>
+              <div class="progress progress-info progress-striped active">
+                <div class="bar" style="width: 20%;"></div>
+              </div>
+              <label class="input-large">正在导入店铺商品：</label>
+              <div class="progress progress-success progress-striped active">
+                <div class="bar" style="width: 40%;"></div>
+              </div>
+              <label class="input-large">正在导入店铺库存：</label>
+              <div class="progress progress-warning progress-striped active">
+                <div class="bar" style="width: 60%;"></div>
+              </div>
+              <label class="input-large">正在配置物流信息：</label>
+              <div class="progress progress-danger progress-striped active">
+                <div class="bar" style="width: 80%;"></div>
+              </div>
+              <p>
+                <button class="btn">下一步</button>
+                <button class="btn">自定义配置</button>
+              </p>
+              <div class="control-group">
+                <button class="btn">设置</button>
+                <p class="span6 nomargin">若你需要对店铺进行其他设置，请进入店铺基础设置调整</p>
+              </div>
+              <div class="control-group">
+                <button class="btn">设置</button>
+                <p class="span6 nomargin">若你需要对商品分类进行其他设置，请进入商品基础设置调整</p>
+              </div>
+              <div class="control-group">
+                <button class="btn">设置</button>
+                <p class="span6 nomargin">若你需要对仓库信息进行其他设置，请进入仓库基础设置调整</p>
+              </div>
+              <div class="control-group">
+                <button class="btn">设置</button>
+                <p class="span6 nomargin">若你需要对物流信息进行其他设置，请进入物流基础设置调整</p>
+              </div>
+            </fieldset><!-- end -->
+          </form>
+        </div><!-- tab-content end -->
+      </div>
+    </div>
+  </div>
+</body>

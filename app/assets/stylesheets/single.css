@@ -1,0 +1,141 @@
+/*boostrap rebuild*/
+select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input{padding:2px 6px;}
+select{height:26px;line-height:26px;}
+.btn{padding:2px 10px;}
+.tab-content{overflow: visible;}
+/*magic copy*/
+body {
+  padding-top:45px;
+  position: relative;
+  background-color: #fff;
+}
+code{color: #08C;}
+
+.item_group{margin-top:3px;}
+.item_group label {display: block; float: left; border: 1px solid #d1d1d1; background: #FAFAFA; padding: 2px 5px; font-size:12px;color:#555;
+  -webkit-border-radius: 4px 0 0 4px!important;
+  -moz-border-radius: 4px 0 0 4px!important;
+  border-radius: 4px 0 0 4px!important;
+  border-right:0!important;
+}
+.item_group .unit_item{margin:0 5px 5px 0;}
+.item_group .unit_item button {float:left; padding: 4px 8px 8px;*padding: 2px 8px 6px; cursor: pointer; line-height: 12px; border: 1px solid #d5d5d5;border-left-width: 0; color: #525252; margin-left: -1px;
+ -webkit-border-radius: 0 4px 4px 0!important;
+  -moz-border-radius: 0 4px 4px 0!important;
+  border-radius: 0 4px 4px 0!important;
+}
+
+.none{display:none;}
+.nomargin{margin:0!important;}
+/*nav*/
+.navbar .brand{padding:0;}
+
+
+/*form*/
+.form-horizontal .controls.pull-left{margin:0 5px;height:26px;}
+.form-horizontal input.datepickers,.form-horizontal input.timepickers{vertical-align:top;}
+.form-horizontal .icon-arrow-right{margin-top:-7px;}
+.form-horizontal{position:relative;}
+.form-horizontal .control-group{margin-bottom:5px;}
+.open_advance{position:absolute;right:20px;top:85px;}
+.icon-arrow-up{background-position: -289px -96px!important;}
+
+.radius_no_tl{border-radius:0 4px 4px 0!important;}
+.radius_no_rb{border-radius:4px 0 0 4px!important;border-right:0!important;}
+.radius_no{border-radius:0!important;border-width:1px 0!important;}
+/*all orders*/
+.nav-tabs.affix,.nav-tabs.subnav{background:#e1e1e1;z-index:999;padding-top:3px;padding-left:25px;}
+.nav-tabs.affix + .tab-content{margin-top:40px;}
+.nav-tabs > li > a{padding:3px 15px;color:#000;font-size:12px;}
+.affix{width:100%;top:41px;left:0;right:0;}
+tr .btn-group{display:none;}
+tr .btn{padding:0 6px;}
+/*storage*/
+.form-horizontal .controls.item_group{margin-left:51px;}
+.unit_item label,.unit_item button{}
+.whiteSmoke_bg{background:whiteSmoke;}
+.font12 *{font-size:12px!important;}
+.span10 > ul{margin-bottom:0;}
+.span10 > ul + .tab-content{padding:20px 20px;background:#fff;border:1px solid #DDD;border-width:0 1px 1px;border-radius:0 0 4px 4px;-webkit-border-radius:0 0 4px 4px;
+-moz-border-radius:0 0 4px 4px;-webkit-box-shadow: 2px 2px 3px #ddd}
+  /*stock out*/
+.container-fluid > .row-fluid{margin-top:10px;}
+.form-horizontal .span6 .control-label{width:70px;text-align:left;}
+
+.input-medium.select2{width:164px!important;}
+.input-small.select2{width:104px!important;}
+
+/* Sidenav for Docs
+-------------------------------------------------- */
+.bs-docs-sidenav {
+  /*width: 228px;*/
+  margin: 40px 0 0 20px;
+  padding: 0;
+  background-color: #fff;
+  -webkit-border-radius: 4px;
+     -moz-border-radius: 4px;
+          border-radius: 4px;
+  -webkit-box-shadow: 0 1px 4px rgba(0,0,0,.065);
+     -moz-box-shadow: 0 1px 4px rgba(0,0,0,.065);
+          box-shadow: 0 1px 4px rgba(0,0,0,.065);
+}
+.bs-docs-sidenav > li > a {
+  display: block;
+  width: 190px \9;
+  margin: 0 0 -1px;
+  padding: 5px 14px;
+  border: 1px solid #e5e5e5;
+}
+.bs-docs-sidenav > li:first-child > a {
+  -webkit-border-radius: 4px 4px 0 0;
+     -moz-border-radius: 4px 4px 0 0;
+          border-radius: 4px 4px 0 0;
+}
+.bs-docs-sidenav > li:last-child > a {
+  -webkit-border-radius: 0 0 4px 4px;
+     -moz-border-radius: 0 0 4px 4px;
+          border-radius: 0 0 4px 4px;
+}
+.bs-docs-sidenav > .active > a {
+  position: relative;
+  z-index: 2;
+  padding: 5px 15px;
+  border: 0;
+  text-shadow: 0 1px 0 rgba(0,0,0,.15);
+  -webkit-box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
+     -moz-box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
+          box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
+}
+/* Chevrons */
+.bs-docs-sidenav .icon-chevron-right {
+  float: right;
+  margin-top: 2px;
+  margin-right: -6px;
+  opacity: .25;
+}
+.bs-docs-sidenav > li > a:hover {
+  background-color: #f5f5f5;
+}
+.bs-docs-sidenav a:hover .icon-chevron-right {
+  opacity: .5;
+}
+.bs-docs-sidenav .active .icon-chevron-right,
+.bs-docs-sidenav .active a:hover .icon-chevron-right {
+  background-image: url(../img/glyphicons-halflings-white.png);
+  opacity: 1;
+}
+.bs-docs-sidenav.affix {
+  top: 15px;
+  left:20px;
+}
+.bs-docs-sidenav.affix-bottom {
+  position: absolute;
+  top: auto;
+  bottom: 270px;
+}
+/* Sidenav for Docs ends
+-------------------------------------------------- */
+
+/*settings*/
+#autobusiness .control-group{margin-left:60px;}
+#autobusiness .controls{margin-left:80px;}

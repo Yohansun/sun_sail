@@ -1,9 +1,6 @@
 # -*- encoding : utf-8 -*-
 class TaobaoAppTokensController < ApplicationController
 
-  def index
-  end
-  
   def create
     info = auth_hash['info']
     token = TaobaoAppToken.find_or_create_by_taobao_user_id(info['taobao_user_id'])
@@ -13,7 +10,7 @@ class TaobaoAppTokensController < ApplicationController
     token.save
 
     trade_source = TradeSource.create
-    account = Account.create(name: "test", key: "test")  ## need optimize
+    account = Account.create(name: token.taobao_user_nick, key: token.taobao_user_id)
     token.update_attributes(trade_source_id: trade_source.id)
     response = TaobaoQuery.get({method: 'taobao.shop.get',
                                 fields: 'sid,cid,title,nick,desc,bulletin,created,modified',
@@ -30,52 +27,12 @@ class TaobaoAppTokensController < ApplicationController
 
       current_account.write_setting('enable_token_error_notify', true)
       MagicOneHitFetcher.perform(trade_source.id)
-      redirect_to "/taobao_app_tokens"
+      redirect_to account_setups_path(account_id: account.id)
     else
       render text: "response_get_failed"
     end
 
   end
-
-  def create_admin
-    @admin = User.create(email: params[:email], phone: params[:phone], password: "123456")
-    if @admin.save
-      @admin.add_role(:admin)
-      ##TODO: should send email or sms
-      render :js => "$('#start a[href=\"#autoset\"]').tab('show');"
-    else
-      render :js => "alert('输入信息无效，请重新输入');"
-    end
-  end
-  
-  def rolling_scrollbars
-    render :js => "$('#start a[href=\"#autobusiness\"]').tab('show');"
-  end
-
-  def auto_settings
-    TradeSetting.enable_auto_dispatch = params[:autodispatch].to_i
-    TradeSetting.enable_auto_check = params[:autocheck].to_i
-    TradeSetting.enable_auto_distribution = params[:autodistribution].to_i
-    render :js => "$('#start a[href=\"#set_login_user\"]').tab('show');"
-  end
-
-  def create_roles
-    cs = params[:cs]
-    cs.each do |cs|
-      ##TODO: regexp to distinguish between email and phone
-      if email
-        User.create(email: cs, password: "123456")
-      else
-        User.create(phone: cs, password: "123456")
-      end
-    end
-    #TODO: below are the same as cs
-    stock_admin = params[:stock_admin]
-    interface = params[:inter_face]
-    
-    #TODO: should send email or sms
-    redirect_to "/"
-  end  
 
   protected
 

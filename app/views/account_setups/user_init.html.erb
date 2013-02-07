@@ -1,0 +1,59 @@
+<body class='whiteSmoke_bg'>
+  <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <%= link_to image_tag("logo.png"), 'javascript:void(0)', class: 'brand' %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid clearfix">
+    <div class="row-fluid">
+      <div class="span2 bs-docs-sidebar">
+        <ul class="nav nav-list bs-docs-sidenav affix span2">
+          <li class="active"><a href="javascript:void(0)">
+            <i class="icon-chevron-right"></i> 一键开始</a>
+          </li>
+        </ul>
+      </div>
+      <div class="span10">
+        <ul class="nav nav-tabs">
+          <li><a href="javascript:void(0)">管理员设置</a></li>
+          <li><a href="javascript:void(0)">数据自动设置</a></li>
+          <li><a href="javascript:void(0)">自动化业务设置</a></li>
+          <li class="active"><a href="javascript:void(0)">设置系统登录用户</a></li>
+        </ul>
+        <div class="tab-content">
+          <%= simple_form_for User.new, url: account_setup_path, method: :put,
+            html: { class: 'form-horizontal', style: 'margin-top: 20px;'}, validate: true do |f| %>
+            <p class='offset1'>请选择您需要的角色权限：</p>
+            <div class="clearfix offset1">
+              <div class="span5">
+                <label>客服</label>
+                <input type="hidden" name='cs' class="multmail cs" placeholder="请输入用户登录邮箱或手机密码">
+              </div>
+              <div class="span5">
+                <label>仓库</label>
+                <input type="hidden" name='stock_admin' class="multmail stock_admin" placeholder="请输入用户登录邮箱或手机密码">
+              </div>
+            </div>
+            <div class="clearfix offset1">
+              <div class="span5">
+                <label>发货专员</label>
+                <input type="hidden" name='inter_face' class="multmail inter_face" placeholder="请输入用户登录邮箱或手机密码">
+              </div>
+            </div>
+            <div class="offset1">
+              <p class="text-error">系统将发送设置密码邮件到您输入的邮箱，请确保输入无误</p>
+              <p class="text-error">系统将初始密码发送到您的手机，请确保手机号码正确</p>
+            </div>
+            <div class="form-actions">
+              <%= f.button :submit, '完成', :"data-disable-with" => '提交中...' %>
+            </div>
+          <%- end -%>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>

@@ -130,14 +130,9 @@ MagicOrders::Application.routes.draw do
   
   resources :areas
   resources :trade_sources
-  resources :taobao_app_tokens do
-    collection do
-      get :create_admin
-      get :rolling_scrollbars
-      get :auto_settings
-      get :create_roles
-    end  
-  end  
+
+  resources :account_setups
+  resources :taobao_app_tokens, only: [:create]
 
   get "/sales/area_analysis", to: 'sales#area_analysis'
   get "/sales/time_analysis", to: 'sales#time_analysis'
