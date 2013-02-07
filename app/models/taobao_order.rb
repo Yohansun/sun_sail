@@ -103,10 +103,9 @@ class TaobaoOrder < Order
 
   def promotion_discount_fee
     if taobao_trades.promotion_details.present?
-      taobao_trades.promotion_details.where(oid: oid).sum(:discount_fee)
-    else
-      0
-    end    
+      discount_fee = taobao_trades.promotion_details.where(oid: oid).sum(:discount_fee)
+    end 
+    discount_fee ||  0   
   end 
 
 end
