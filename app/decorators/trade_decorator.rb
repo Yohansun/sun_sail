@@ -93,6 +93,10 @@ class TradeDecorator < Draper::Base
     trade.seller.try(:parent).try(:name)
   end
 
+  def interface_mobile
+    trade.seller.try(:parent).try(:mobile)
+  end
+
   def receiver_full_address
     "#{self.receiver_state} #{self.receiver_city} #{self.receiver_district} #{self.receiver_address}"
   end
