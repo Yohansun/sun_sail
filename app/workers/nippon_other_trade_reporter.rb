@@ -37,7 +37,7 @@ class NipponOtherTradeReporter
       pay_time = trade.pay_time.try(:strftime,"%Y-%m-%d %H:%M:%S")
       dispatched_at = trade.dispatched_at.try(:strftime,"%Y-%m-%d %H:%M:%S")
       delivered_at = trade.delivered_at.try(:strftime,"%Y-%m-%d %H:%M:%S")
-      seller_name = trade.seller_name
+     seller_name = seller_name trade.seller_name || trade.try(:seller).try(:name)
       seller_memo = trade.seller_memo
       receiver_state = trade.receiver_state
       receiver_city = trade.receiver_city
