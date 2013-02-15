@@ -185,7 +185,12 @@
               </tr>
               <tr>
                 <td colspan="1"><b>金额调整</b></td>
-                <td colspan="4" class="reedit_text js-gift-memo-label">¥ <%= @trade.get('modify_payment') %></td>
+                <td colspan="4" class="reedit_text js-gift-memo-label"> 
+                  <% if @trade.get('modify_payment') :%>
+                    ¥ 
+                  <% end %>
+                  <%= @trade.get('modify_payment') %>
+                </td>
               </tr>
             <% end %>
           <% else : %>

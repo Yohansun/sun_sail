@@ -117,7 +117,7 @@ class Trade
   def set_has_color_info
     self.orders.each do |order|
       colors = order.color_num || []
-      if colors.flatten.select{|elem| elem.present?}.any?
+      if colors.is_a?(Array) && colors.flatten.select{|elem| elem.present?}.any?
         self.has_color_info = true
         return
       end
