@@ -606,14 +606,14 @@ class Trade
         trade_type_hash = {has_color_info: true, :status.in => paid_not_deliver_array, :confirm_color_at.exists => true}
 
       # 登录时的默认显示
-      else
+      when "default"
         # 经销商登录默认显示未发货订单
         if current_user.has_role?(:seller)
           trades = trades.where(:dispatched_at.ne => nil, :status.in => paid_not_deliver_array)
         end
-        # 管理员，客服登录默认显示未分流订单
+        # 管理员，客服登录默认显示未分流淘宝订单
         if current_user.has_role?(:cs) || current_user.has_role?(:admin)
-          trades = trades.where(:status.in => paid_not_deliver_array, seller_id: nil)
+          trades = trades.where(:status.in => paid_not_deliver_array, seller_id: nil).where(_type: 'TaobaoTrade')
         end
       end
     end
