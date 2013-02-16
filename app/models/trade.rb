@@ -104,7 +104,7 @@ class Trade
   embeds_many :operation_logs
   embeds_many :manual_sms_or_emails
 
-  has_many :deliver_bills
+  has_many :deliver_bills, :dependent => :destroy
 
   attr_accessor :matched_seller
 

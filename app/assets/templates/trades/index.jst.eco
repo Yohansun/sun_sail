@@ -154,7 +154,6 @@
       <div class="controls clearfix">
         <fieldset class="pull-left form-inline mar_r10">
           <select id="search_option" class="input-large search_option">
-            <option value="">请选择筛选条件</option>
             <option value="tid">订单编号</option>
             <option value="buyer_nick">收货人ID</option>
             <option value="receiver_name">收货人姓名</option>
@@ -246,9 +245,8 @@
             <% end %>
 
             <select id="type_option" class="input-large type_option">
-              <option value="">订单来源</option>
-              <option value="JingdongTrade">京东</option>
               <option value="TaobaoTrade">淘宝</option>
+              <option value="JingdongTrade">京东</option>
               <option value="TaobaoPurchaseOrder">分销平台</option>
             </select>
           </fieldset>
