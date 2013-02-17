@@ -48,7 +48,7 @@ class AccountSetupsController < ApplicationController
       user = User.new
       if item.match(User::EMAIL_FORMAT)
         user.email = item
-      elsif if item.match(User::PHONE_FORMAT)
+      elsif item.match(User::PHONE_FORMAT)
         user.phone = item
       end
       user.password = '123456'
