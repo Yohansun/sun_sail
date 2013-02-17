@@ -2,7 +2,7 @@
 class SalesController < ApplicationController
   include SalesHelper
   before_filter :authenticate_user!
-  before_filter :admin_only! 
+  before_filter :admin_only!
 
   def index
     redirect_to "/sales/product_analysis"
@@ -11,11 +11,11 @@ class SalesController < ApplicationController
   def show
     ## 参数初始化
     @sale = current_account.sales.last
-    current_account.write_setting('test_time', Time.now + 8.hour)
-    current_account.write_setting('test_time_2', current_account.setting('test_time'))
-    current_account.write_setting('frequency', 600)  ## per second
+    current_account.settings.test_time = Time.now + 8.hour
+    current_account.settings.test_time_2 = current_account.settings.test_time
+    current_account.settings.frequency = 600  ## per second
     unless @sale
-      @sale = current_account.sales.create(name: "测试活动", earn_guess: 100000, start_at: current_account.setting('test_time'), end_at: current_account.setting('test_time') + 1.day)
+      @sale = current_account.sales.create(name: "测试活动", earn_guess: 100000, start_at: current_account.settings.test_time, end_at: current_account.settings.test_time + 1.day)
       render action: :edit
     end
     @start_at = @sale.start_at
@@ -175,12 +175,11 @@ class SalesController < ApplicationController
 
   def add_node
     @sale = current_account.sales.last
-    frequency = current_account.setting('frequency')
-    time_now = current_account.setting('test_time_2')
+    frequency = current_account.settings.frequency
+    time_now = current_account.settings.test_time_2
     start_time = time_now
     end_time = time_now + frequency
-    current_account.write_setting('test_time_2', 
-      current_account.setting('test_time_2') + frequency)
+    current_account.settings.test_time_2 = current_account.settings.test_time_2 + frequency
 
     all_in_frequency = @sale.all_trade_fee(start_time, end_time)
     paid_in_frequency = @sale.paid_trade_fee(start_time, end_time)
@@ -285,7 +284,7 @@ class SalesController < ApplicationController
       end_at = "#{@end_date} #{@end_time}".to_time(:local)
     else
       start_at = 1.week.ago
-      end_at = Time.now  
+      end_at = Time.now
     end
     @time_data = time_data(start_at, end_at)
   end

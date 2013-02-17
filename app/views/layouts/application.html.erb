@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <% if current_account.try(:key) == 'dulux' %>
-    <title><%= current_account.setting('site_title_basic') %></title>
+    <title><%= current_account.settings.site_title_basic %></title>
     <% else %>
     <title><%= content_for?(:title) ? yield(:title) : "Magic Orders" %></title>
     <% end %>
@@ -77,7 +77,7 @@
                 <% if current_user.has_role?(:admin) %>
                 <li><%= link_to '商品管理', products_path, class: "products" %></li>
                 <li><%= link_to '经销商管理', sellers_path %>
-                <% if current_account.setting('enable_module_wangwang') == true %>
+                <% if current_account.settings.enable_module_wangwang == true %>
                 <li><a href="/callcenter/contrastive_performance">客服管理</a></li>
                 <% end %>
                 <li class= "divider"></li>

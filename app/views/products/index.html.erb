@@ -3,7 +3,7 @@
     <div class="subnav">
       <ul class="nav nav-pills">
         <li class="active"><%= link_to '商品管理', products_path, class: "products" %></li>
-        <% if current_account.setting('enable_module_colors') == 1 %>
+        <% if current_account.settings.enable_module_colors == 1 %>
           <li><%= link_to '颜色管理', colors_path %></li>
         <% end %>
         <li><%= link_to '分类管理', categories_path %></li>

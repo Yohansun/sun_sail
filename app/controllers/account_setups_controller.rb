@@ -9,7 +9,7 @@ class AccountSetupsController < ApplicationController
   end
 
   def show
-    Rails.logger.debug "account setup ::: #{Account.current.inspect}" 
+    Rails.logger.debug "account setup ::: #{Account.current.inspect}"
     # case step
     # when :admin_init
     # when :data_fetch
@@ -29,9 +29,9 @@ class AccountSetupsController < ApplicationController
     when :data_fetch
 
     when :options_setup
-      Account.current.write_setting('enable_auto_dispatch', params[:autodispatch].to_i)
-      Account.current.write_setting('enable_auto_check', params[:autocheck].to_i)
-      Account.current.write_setting('enable_auto_distribution', params[:autodistribution].to_i)
+      Account.current.settings.enable_auto_dispatch = params[:autodispatch].to_i
+      Account.current.settings.enable_auto_check = params[:autocheck].to_i
+      Account.current.settings.enable_auto_distribution = params[:autodistribution].to_i
     when :user_init
       create_users(params[:cs], :cs)
       create_users(params[:stock], :stock_admin)

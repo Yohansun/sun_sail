@@ -7,17 +7,17 @@
     MagicOrders.current_user_seller_id = "<%= current_user.seller_id.to_i %>"
     MagicOrders.logistics = new MagicOrders.Collections.Logistics();
     MagicOrders.logistics.reset(<%= raw @logistics.to_json %>);
-    MagicOrders.deliver_bill_notice_info = "<%= current_account.setting('deliver_bill_notice_info') %>"
-    MagicOrders.enable_trade_deliver_bill_spliting = <%= current_account.setting('enable_trade_deliver_bill_spliting') == true %>
-    MagicOrders.enable_trade_deliver_bill_spliting_sellers = <%= current_account.setting('enable_trade_deliver_bill_spliting_sellers') || [] %>
-    MagicOrders.enable_module_colors = <%= current_account.setting('enable_module_colors') %>
-    MagicOrders.enable_module_sku_properties = <%= current_account.setting('enable_module_sku_properties') %>
-    MagicOrders.enable_module_interface = <%= current_account.setting('enable_module_interface') %>
+    MagicOrders.deliver_bill_notice_info = "<%= current_account.settings.deliver_bill_notice_info %>"
+    MagicOrders.enable_trade_deliver_bill_spliting = <%= current_account.settings.enable_trade_deliver_bill_spliting == true %>
+    MagicOrders.enable_trade_deliver_bill_spliting_sellers = <%= current_account.settings.enable_trade_deliver_bill_spliting_sellers || [] %>
+    MagicOrders.enable_module_colors = <%= current_account.settings.enable_module_colors %>
+    MagicOrders.enable_module_sku_properties = <%= current_account.settings.enable_module_sku_properties %>
+    MagicOrders.enable_module_interface = <%= current_account.settings.enable_module_interface %>
 
-    MagicOrders.trade_pops = <%= raw current_account.setting('trade_pops').to_json %>
-    MagicOrders.trade_modes = <%= raw current_account.setting('trade_modes').to_json %>
-    MagicOrders.trade_cols_visible_modes = <%= raw current_account.setting('trade_cols_visible_modes').to_json %>
-    MagicOrders.trade_cols = <%= raw current_account.setting('trade_cols').to_json %>
+    MagicOrders.trade_pops = <%= raw current_account.settings.trade_pops.to_json %>
+    MagicOrders.trade_modes = <%= raw current_account.settings.trade_modes.to_json %>
+    MagicOrders.trade_cols_visible_modes = <%= raw current_account.settings.trade_cols_visible_modes.to_json %>
+    MagicOrders.trade_cols = <%= raw current_account.settings.trade_cols.to_json %>
     MagicOrders.init();
   });
 </script>

@@ -4,8 +4,8 @@ json.trade_type @trade._type
 json.current_user_is_seller current_user.has_role?(:seller)
 json.splitted_tid @trade.splitted_tid
 json.seller_id @trade.seller_id
-json.default_seller_id current_account.setting('default_seller_id')
-json.shopname current_account.setting('shopname')
+json.default_seller_id current_account.settings.default_seller_id
+json.shopname current_account.settings.shopname
 json.seller_name @trade.seller.name if @trade.seller
 json.status @trade.status
 json.status_text @trade.status_text
@@ -79,7 +79,7 @@ json.orders OrderDecorator.decorate(@trade.orders) do |json, order|
   json.title order.title
   json.num order.num
   json.price order.price
-  
+
   json.item_id order.item_id
   json.sku_properties order.sku_properties
   json.item_outer_id order.item_outer_id

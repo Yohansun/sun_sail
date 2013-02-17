@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 class TradeObserver < Mongoid::Observer
 
-  observe :trade 
+  observe :trade
 
   def around_save(object)
 
@@ -9,7 +9,7 @@ class TradeObserver < Mongoid::Observer
 
     if object.status_changed? && object.status == "WAIT_SELLER_SEND_GOODS" && object.pay_time_changed? && object.pay_time.present?
       send_sms_to_buyer(object)
-    end 
+    end
 
     if object.delivered_at_changed? && object.delivered_at.present? && object.logistic_waybill.present?
       # 发货操作
@@ -34,12 +34,12 @@ class TradeObserver < Mongoid::Observer
   def dispatch_notify(id, seller_id)
     TradeDispatchEmail.perform_async(id, seller_id, 'new')
     TradeDispatchSms.perform_async(id, seller_id, 'new')
-  end 
+  end
   def send_sms_to_buyer(trade)
     trade = TradeDecorator.decorate(trade)
     mobile = trade.receiver_mobile_phone
     trade_tid = trade.tid
-    content = "亲您好，感谢您的购买，您的订单号为#{trade_tid}，我们会尽快为您安排发货。【#{trade.account.setting('shopname_taobao')}】"
+    content = "亲您好，感谢您的购买，您的订单号为#{trade_tid}，我们会尽快为您安排发货。【#{trade.fetch_account.settings.shopname_taobao}】"
     notify_kind = "before_send_goods"
     if content && mobile
       SmsNotifier.perform_async(content, mobile, trade_tid ,notify_kind)
@@ -58,7 +58,7 @@ class TradeObserver < Mongoid::Observer
     mobile = trade.receiver_mobile
     trade_tid = trade.tid
     notify_kind = "rate_sms_to_buyer"
-    content = "亲，感谢您对【#{trade.account.setting('shopname_taobao')}】的支持，若您对本次物流服务满意请回复“5“，若觉得物流有待提升请回复“3”，若觉得很不满意请回复“1“，本条短信回复免费。【#{trade.account.setting('shopname_taobao')}】"
+    content = "亲，感谢您对【#{trade.fetch_account.settings.shopname_taobao}】的支持，若您对本次物流服务满意请回复“5“，若觉得物流有待提升请回复“3”，若觉得很不满意请回复“1“，本条短信回复免费。【#{trade.fetch_account.settings.shopname_taobao}】"
     if content && mobile
       SmsNotifier.perform_async(content, mobile, trade_tid ,notify_kind)
     end

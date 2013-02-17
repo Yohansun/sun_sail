@@ -10,12 +10,14 @@
 #
 
 class Account < ActiveRecord::Base
+  include RailsSettings::Extend
+
   attr_accessible :key, :name
 
   has_and_belongs_to_many :users
 
   has_many :bbs_categories
-  has_many :bbs_topics  
+  has_many :bbs_topics
   has_many :categories
   has_many :colors
   has_many :packages
@@ -44,12 +46,4 @@ class Account < ActiveRecord::Base
     Thread.current[:account] = account
   end
 
-  def setting(key)
-    var = TradeSetting.scoped_by_thing_type_and_thing_id('Account', self.id).where(var: key)
-    var.try(:first).try(:value)
-  end
-
-  def write_setting(key, value)
-    TradeSetting.create(thing_id: self.id, thing_type: 'Account', var: key, value: value)
-  end
 end

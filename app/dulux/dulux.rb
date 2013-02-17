@@ -11,7 +11,7 @@ module Dulux
           seller_id = seller.id
           seller_name = seller.name
         else
-          seller = trade.default_area.sellers.first 
+          seller = trade.default_area.sellers.first
           seller_id = seller ? seller.id : nil
           seller_name = seller ? "#{seller.name}: 库存不足" : '无对应经销商'
         end
@@ -196,7 +196,7 @@ module Dulux
           sql = "products.iid = '#{pp[:iid]}' AND stock_products.activity > #{pp[:number]}"
           products = StockProduct.joins(:product).where(sql)
 
-          if op.account.setting('enable_match_seller_user_color') && color_num.present?
+          if op.account.settings.enable_match_seller_user_color && color_num.present?
             color_num.each do |colors|
               next if colors.blank?
               colors = colors.shift(pp[:number]).flatten.compact.uniq

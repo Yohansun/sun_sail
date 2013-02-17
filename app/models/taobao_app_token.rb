@@ -47,7 +47,7 @@ class TaobaoAppToken < ActiveRecord::Base
 				p "successful update access_token and refresh_token"
 			else
 				p response['error_description']
-				if self.account.setting('enable_token_error_notify')
+				if self.account.settings.enable_token_error_notify
 			  	Notifier.app_token_errors(self,response).deliver
 			  end
 			end

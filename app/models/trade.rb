@@ -129,7 +129,7 @@ class Trade
     self.has_color_info = false
     true
   end
-      
+
   def unusual_color_class
     class_name = ''
     if has_unusual_state
@@ -137,19 +137,19 @@ class Trade
       if fetch_account.key == "nippon"
         class_name = unusual_states.last.unusual_color_class  if unusual_states && unusual_states.last.present? && unusual_states.last.unusual_color_class.present?
       end
-    end 
-    class_name   
-  end 
+    end
+    class_name
+  end
 
   def set_has_unusual_state
     if unusual_states.where(:repaired_at => nil).exists?
       self.has_unusual_state = true
       return
-    else  
+    else
       self.has_unusual_state = false
       true
     end
-  end  
+  end
 
   def set_has_cs_memo
     unless self.cs_memo.blank?
@@ -203,7 +203,7 @@ class Trade
         end
       }
       emails = cc.flatten.compact.map { |e| e.strip }
-      emails = emails | (fetch_account.setting('extra_cc') || [])
+      emails = emails | (fetch_account.settings.extra_cc || [])
     end
 
     emails
@@ -212,11 +212,11 @@ class Trade
   # fetch all order cs_memo in a trade
   def orders_cs_memo
     orders.collect(&:cs_memo).compact.join(' ')
-  end 
+  end
 
   # fetch trade cs_memo with order cs_memo
   def trade_with_orders_cs_memo
-    "#{cs_memo}  #{orders_cs_memo}" 
+    "#{cs_memo}  #{orders_cs_memo}"
   end
 
   def nofity_stock(operation, op_seller)
@@ -303,7 +303,7 @@ class Trade
         number: order.num,
         memo: order.cs_memo
       )
-    end    
+    end
   end
 
   def logistic_split
@@ -496,7 +496,7 @@ class Trade
 
   def self.filter(current_account, current_user, params)
     trades = Trade.where(account_id: current_account.id)
-    
+
     paid_not_deliver_array = ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"]
     paid_and_delivered_array = ["WAIT_BUYER_CONFIRM_GOODS","WAIT_GOODS_RECEIVE_CONFIRM","WAIT_BUYER_CONFIRM_GOODS_ACOUNTED","WAIT_SELLER_SEND_GOODS_ACOUNTED"]
     closed_array = ["TRADE_CLOSED","TRADE_CANCELED","TRADE_CLOSED_BY_TAOBAO", "ALL_CLOSED"]
@@ -511,8 +511,8 @@ class Trade
       seller = current_user.seller
       self_and_descendants_ids = seller.self_and_descendants.map(&:id)
       trades = trades.any_in(seller_id: self_and_descendants_ids) if self_and_descendants_ids.present?
-    end 
-      
+    end
+
     if current_user.has_role? :logistic
       logistic = current_user.logistic
       trades = trades.where(logistic_id: logistic.id) if logistic
@@ -560,7 +560,7 @@ class Trade
       when 'refund'
         trade_type_hash = {"$or" => [{ :"taobao_orders.refund_status" => {:'$in' => taobao_trade_refund_array}}, {:"taobao_sub_purchase_orders.status" => {:'$in' => taobao_purchase_refund_array}}]}
       when 'return'
-        trade_type_hash = {:request_return_at.ne => nil}  
+        trade_type_hash = {:request_return_at.ne => nil}
       when 'closed'
         trade_type_hash = {:status.in => closed_array}
       when 'unusual_trade'

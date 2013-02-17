@@ -3,7 +3,7 @@
     <div class="subnav">
       <ul class="nav nav-pills">
         <li><%= link_to '商品管理', products_path, class: "products" %></li>
-        <% if current_account.setting('enable_module_colors') == 1 %>
+        <% if current_account.settings.enable_module_colors == 1 %>
           <li><%= link_to '颜色管理', colors_path %></li>
         <% end %>
         <li class="active"><%= link_to '分类管理', categories_path %></li>
@@ -45,7 +45,7 @@
                 <li><%= link_to '编辑', edit_category_path(category) %></li>
                 <%#- if category.descendants.count > 0 %>
                   <li><%= link_to "管理下级", categories_path(:parent_id => category.id), :class=>"browse_children"%></li>
-                <%#- end %>  
+                <%#- end %>
                 <li><%= link_to '删除', category_path(category), method: :delete, confirm: '确认删除?' %></li>
               </ul>
             </div>
