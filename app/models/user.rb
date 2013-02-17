@@ -31,6 +31,7 @@
 #  failed_attempts      :integer(4)
 #  unlock_token         :string(255)
 #  locked_at            :datetime
+#  phone                :string(255)
 #
 
 # -*- encoding : utf-8 -*-
