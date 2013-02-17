@@ -304,7 +304,8 @@
   <% end %>
 </td>
 <td data-col='interface' nowrap>
-  <%= @trade.get('interface_name') %>
+  <%= @trade.get('interface_name') %><br/>
+  <%= @trade.get('interface_mobile') %>
 </td>
 <td data-col='logistic' nowrap>
   <% if @trade.get 'logistic_id' : %>

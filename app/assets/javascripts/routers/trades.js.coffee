@@ -44,7 +44,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
   main: () ->
     Backbone.history.navigate('trades', true)
 
-  index: (trade_mode = "trades", trade_type = null) ->
+  index: (trade_mode = "trades", trade_type = "default") ->
     # reset the index stage, hide all popups
     $('.modal').modal('hide')
 
@@ -74,7 +74,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
         when 'other_unusual_state' then $('.trade_nav').html('其他异常')
         else
           $('.trade_nav').html($("[data-trade-status=#{trade_type}]").html())
-      $('.order_search_form .datepickers').datepicker(format: 'yyyy-mm-dd')
+      $('.order_search_form .datepickers').datetimepicker(format: 'yyyy-mm-dd',autoclose: true,minView: 2)
       $('.order_search_form .timepickers').timeEntry(show24Hours: true, showSeconds: true, spinnerImage: '/assets/spinnerUpDown.png', spinnerSize: [17, 26, 0], spinnerIncDecOnly: true)
 
       unless MagicOrders.trade_mode in ['trades', 'deliver', 'logistics', 'send']
@@ -82,7 +82,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
         $(".label_advanced").hide()
       else
         $('.trade_nav').html($("[data-trade-status=#{trade_type}]").html())
-    $('.order_search_form .datepickers').datepicker(format: 'yyyy-mm-dd')
+    $('.order_search_form .datepickers').datetimepicker(format: 'yyyy-mm-dd',autoclose: true,minView: 2)
     $('.order_search_form .timepickers').timeEntry(show24Hours: true, showSeconds: true, spinnerImage: '/assets/spinnerUpDown.png', spinnerSize: [17, 26, 0], spinnerIncDecOnly: true)
 
     unless MagicOrders.trade_mode in ['trades', 'deliver', 'logistics', 'send']
@@ -128,7 +128,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
 
       view = new MagicOrders.Views[viewClassName](model: model)
       $(modalDivID).html(view.render().el)
-      $(modalDivID + ' .datepickers').datepicker(format: 'yyyy-mm-dd')
+      $(modalDivID + ' .datepickers').datetimepicker(format: 'yyyy-mm-dd',autoclose: true,minView: 2)
 
       switch operation_key
         when 'detail'

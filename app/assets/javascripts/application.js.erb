@@ -19,7 +19,7 @@
 //= require underscore
 //= require underscore.string
 //= require backbone
-//= require bootstrap-datepicker
+//= require bootstrap-datetimepicker
 //
 //= require .//magic_orders
 //
@@ -278,9 +278,7 @@ $(document).ready(function(e) {
       $('.modal-backdrop').unbind('click');
     });
 
-    $('.datepickers').datepicker({
-      format: 'yyyy-mm-dd'
-    })
+    $('.datepickers').datetimepicker({format: 'yyyy-mm-dd',autoclose: true,minView: 2})
 
     $('.timepickers').timeEntry({
       show24Hours: true, // 24 hours format

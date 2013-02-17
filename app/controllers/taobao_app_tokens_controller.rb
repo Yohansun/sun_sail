@@ -9,7 +9,7 @@ class TaobaoAppTokensController < ApplicationController
     token.refresh_token = auth_hash["credentials"]["refresh_token"]
     token.save
 
-    trade_source = TradeSource.create
+    trade_source = TradeSource.find_or_create_by_name(token.taobao_user_nick)
     account = Account.create(name: token.taobao_user_nick, key: token.taobao_user_id)
     token.update_attributes(trade_source_id: trade_source.id)
     response = TaobaoQuery.get({method: 'taobao.shop.get',

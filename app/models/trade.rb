@@ -104,7 +104,7 @@ class Trade
   embeds_many :operation_logs
   embeds_many :manual_sms_or_emails
 
-  has_many :deliver_bills
+  has_many :deliver_bills, :dependent => :destroy
 
   attr_accessor :matched_seller
 
@@ -121,7 +121,7 @@ class Trade
   def set_has_color_info
     self.orders.each do |order|
       colors = order.color_num.blank? ? [] : order.color_num
-      if colors.flatten.select{|elem| elem.present?}.any?
+      if colors.is_a?(Array) && colors.flatten.select{|elem| elem.present?}.any?
         self.has_color_info = true
         return
       end
@@ -610,14 +610,14 @@ class Trade
         trade_type_hash = {has_color_info: true, :status.in => paid_not_deliver_array, :confirm_color_at.exists => true}
 
       # 登录时的默认显示
-      else
+      when "default"
         # 经销商登录默认显示未发货订单
         if current_user.has_role?(:seller)
           trades = trades.where(:dispatched_at.ne => nil, :status.in => paid_not_deliver_array)
         end
-        # 管理员，客服登录默认显示未分流订单
+        # 管理员，客服登录默认显示未分流淘宝订单
         if current_user.has_role?(:cs) || current_user.has_role?(:admin)
-          trades = trades.where(:status.in => paid_not_deliver_array, seller_id: nil)
+          trades = trades.where(:status.in => paid_not_deliver_array, seller_id: nil).where(_type: 'TaobaoTrade')
         end
       end
     end

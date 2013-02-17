@@ -46,7 +46,8 @@ class NipponTaobaoTradeReporter
       taobao_status_memo = trade.taobao_status_memo
       seller = Seller.find_by_id(trade.seller_id)
       interface_name = seller.try(:interface_name)
-      seller_name = trade.seller_name
+      interface_mobile = seller.try(:interface_mobile)
+      seller_name = trade.seller_name || trade.try(:seller).try(:name)
       receiver_state = trade.receiver_state
       receiver_city = trade.receiver_city
       receiver_district = trade.receiver_district
@@ -90,7 +91,7 @@ class NipponTaobaoTradeReporter
 
         row_number += 1
 
-        body = [trade_source, tid, taobao_status_memo, created, pay_time, dispatched_at, delivered_at, seller_name, interface_name, receiver_state, receiver_city, receiver_district, receiver_address, receiver_name, receiver_mobile,
+        body = [trade_source, tid, taobao_status_memo, created, pay_time, dispatched_at, delivered_at, seller_name, "#{interface_name} #{interface_mobile}", receiver_state, receiver_city, receiver_district, receiver_address, receiver_name, receiver_mobile,
           title, order_num, order_price, sum_fee,  seller_discount, post_fee, total_fee, buyer_nick, buyer_message, cs_memo, invoice_name, need_color, color_num, sku_properties, refund_status_text, rate_result, rate_content, rate_created]
 
         body.delete_at(interface_index) if report.fetch_account.settings.enable_module_interface == 0
