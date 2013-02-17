@@ -14,7 +14,7 @@
           <% end %>
         </select>
         <select class="span4 pull-left" multiple="multiple" id='product' name='stock_product[product_id]'>
-          <%= render partial: "products", :object => @products = Product.all %>
+          <%= render partial: "products", :object => @products = current_account.products %>
         </select>
       </div>
       <div class="controls">
@@ -22,7 +22,7 @@
       </div>
       <% if current_account.setting('enable_module_colors') == 1 %>
         <fieldset class="form-inline">
-          <%= f.association :colors, label: '可选颜色：', as: :check_boxes, include_blank: false %>
+          <%= f.association :colors, collection: current_account.colors,label: '可选颜色：', as: :check_boxes, include_blank: false %>
         </fieldset>
       <% end %>
     </div>
