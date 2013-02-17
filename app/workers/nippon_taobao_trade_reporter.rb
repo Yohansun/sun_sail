@@ -47,7 +47,7 @@ class NipponTaobaoTradeReporter
       seller = Seller.find_by_id(trade.seller_id)
       interface_name = seller.try(:interface_name) 
       interface_mobile = seller.try(:interface_mobile) 
-      seller_name = seller_name trade.seller_name || trade.try(:seller).try(:name)
+      seller_name = trade.seller_name || trade.try(:seller).try(:name)
       receiver_state = trade.receiver_state
       receiver_city = trade.receiver_city
       receiver_district = trade.receiver_district
