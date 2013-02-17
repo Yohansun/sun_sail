@@ -14,7 +14,9 @@
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
     <![endif]-->
-
+    <script type="text/javascript">
+      var current_account = <%= raw current_account.to_json %>;
+    </script>
     <%= stylesheet_link_tag "application", :media => "all" %>
   </head>
   <body>
@@ -44,13 +46,13 @@
               <li class="stocks"><a href="#">仓库管理</a></li>
             <% end %>
             <% if ['sales', 'user_activities', 'trade_reports'].include?(controller_name)  %>
-              <%- if current_user.has_role?(:admin) %>   
+              <%- if current_user.has_role?(:admin) %>
                 <li class="<%= 'active' if controller_name == 'user_activities'%>"><a href="/user_activities">人员</a></li>
                 <li class="<%= 'active' if controller_name == 'trade_reports'%>"><a href="/trade_reports">报表下载</a></li>
                 <li class="<%= 'active' if controller_name == 'sales'%>"><a href="/sales/product_analysis">销售</a></li>
                <%- else %>
                 <li class="<%= 'active' if controller_name == 'trade_reports'%>"><a href="/trade_reports">报表下载</a>
-               <%- end %>   
+               <%- end %>
             <% end %>
             <% if current_user.has_role?(:admin)  && controller_name != 'home' %>
               <li class="products"><a href="#"><%= top_nav_name %></a></li>
@@ -64,7 +66,7 @@
                 <li><a href="/app#trades" class="trades">订单管理</a></li>
                 <%- if  current_user.has_role?(:admin)%>
                   <li><a href="/sales">数据魔方</a></li>
-                <%- elsif  current_user.has_role?(:cs) ||  current_user.has_role?(:seller) %>  
+                <%- elsif  current_user.has_role?(:cs) ||  current_user.has_role?(:seller) %>
                   <li><a href="/trade_reports">数据魔方</a></li>
                 <%- end %>
                 <% if current_user.has_role?(:seller) && current_user.seller %>
