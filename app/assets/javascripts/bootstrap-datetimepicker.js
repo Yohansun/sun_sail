@@ -667,14 +667,16 @@
 						if (!target.is('.disabled')) {
 							if (target.is('.month')) {
 								this.viewDate.setUTCDate(1);
-								var year = this.viewDate.getUTCFullYear();
 								var month = target.parent().find('span').index(target);
 								this.viewDate.setUTCMonth(month);
 								this.element.trigger({
 									type: 'changeMonth',
 									date: this.viewDate
 								});
-								this._setDate(UTCDate(year, month));
+								if (this.minView == 3){
+								  var year = this.viewDate.getUTCFullYear();
+								  this._setDate(UTCDate(year, month, 1, 0, 0, 0, 0));
+								}
 							} else if (target.is('.year')) {
 								this.viewDate.setUTCDate(1);
 								var year = parseInt(target.text(), 10) || 0;

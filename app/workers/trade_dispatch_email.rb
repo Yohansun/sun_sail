@@ -16,7 +16,7 @@ class TradeDispatchEmail
 
     if to_emails.present?
       Notifier.dispatch(id, seller_id, notify_kind).deliver
-      email_operation += "到#{seller.email}"
+      email_operation += "到#{to_emails}"
     else
       email_operation += "失败，经销商没有绑定邮件"
     end
