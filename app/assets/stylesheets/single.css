@@ -48,8 +48,8 @@ code{color: #08C;}
 .nav-tabs.affix + .tab-content{margin-top:40px;}
 .nav-tabs > li > a{padding:3px 15px;color:#000;font-size:12px;}
 .affix{width:100%;top:41px;left:0;right:0;}
-tr .btn-group{display:none;}
-tr .btn{padding:0 6px;}
+/*tr .btn-group{display:none;}*/
+/*tr .btn{padding:0 6px;}*/
 /*storage*/
 .form-horizontal .controls.item_group{margin-left:51px;}
 .unit_item label,.unit_item button{}
