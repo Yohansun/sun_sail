@@ -16,23 +16,23 @@ class OperationLog
       if user.present?
     	  operationlog = "#{Time.now.to_i},#{operation},#{operated_at},#{operator},#{user.roles.map{|role| role.role_s}}, #{self._parent.tid}"
     	  if user.has_role?(:seller)
-          $redis.ZREMRANGEBYRANK('OperationLogToSeller', 0,-2001)
-    	  	$redis.ZADD('OperationLogToSeller', 1, operationlog)
+          $redis.ZREMRANGEBYRANK("account:#{Account.current.id}:OperationLogToSeller", 0,-2001)
+    	  	$redis.ZADD("account:#{Account.current.id}:OperationLogToSeller", 1, operationlog)
     	  end
 
     	  if user.has_role?(:cs)
-          $redis.ZREMRANGEBYRANK('OperationLogToCs', 0,-2001)
-    	  	$redis.ZADD('OperationLogToCs', 1, operationlog)
+          $redis.ZREMRANGEBYRANK("account:#{Account.current.id}:OperationLogToCs", 0,-2001)
+    	  	$redis.ZADD("account:#{Account.current.id}:OperationLogToCs", 1, operationlog)
     	  end
 
     	  if user.has_role?(:admin)
-          $redis.ZREMRANGEBYRANK('OperationLogToAdmin', 0,-2001)
-    	  	$redis.ZADD('OperationLogToAdmin', 1, operationlog)
-         
+          $redis.ZREMRANGEBYRANK("account:#{Account.current.id}:OperationLogToAdmin", 0,-2001)
+    	  	$redis.ZADD("account:#{Account.current.id}:OperationLogToAdmin", 1, operationlog)
+
     	  end
-        $redis.ZREMRANGEBYRANK('OperationLogToAll', 0,-2001)
-    	  $redis.ZADD('OperationLogToAll', 1, operationlog)
+        $redis.ZREMRANGEBYRANK("account:#{Account.current.id}:OperationLogToAll", 0,-2001)
+    	  $redis.ZADD("account:#{Account.current.id}:OperationLogToAll", 1, operationlog)
       end
-  	end	
+  	end
   end
 end

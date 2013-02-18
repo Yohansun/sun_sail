@@ -89,7 +89,7 @@ class MagicOrders.Routers.LogisticBills extends Backbone.Router
 
       view = new MagicOrders.Views[viewClassName](model: model)
       $(modalDivID).html(view.render().el)
-      $(modalDivID + ' .datepicker').datepicker(format: 'yyyy-mm-dd')
+      # $(modalDivID + ' .datepicker').datepicker(format: 'yyyy-mm-dd')
 
       switch operation_key
         when 'print_logistic_bill'
