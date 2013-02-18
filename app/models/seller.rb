@@ -42,6 +42,8 @@ class Seller < ActiveRecord::Base
   has_many :stock_history
   has_one :stock
 
+  scope :with_account, lambda {|account_id| where(account_id: account_id)}
+
   validates :name, presence: true
   validates :fullname, presence: true, uniqueness: { scope: :account_id }
 
@@ -85,5 +87,5 @@ class Seller < ActiveRecord::Base
   def area_name(id)
     Area.find_by_id(id).self_and_ancestors.map(&:name).join('-')
   end
-    
+
 end

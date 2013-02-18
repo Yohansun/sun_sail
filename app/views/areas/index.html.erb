@@ -33,7 +33,7 @@
             <td><%= area.name %></td>
             <td>
             <% if area.children.count == 0 %>
-            <%= area.sellers.first.try(:name) %>
+            <%= area.sellers.with_account(current_account.id).first.try(:name) %>
             <% else %>
             <%= area.children.count %>个下级经销商
             <% end %>
