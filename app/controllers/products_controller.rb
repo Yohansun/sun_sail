@@ -76,7 +76,8 @@ class ProductsController < ApplicationController
   end
 
   def destroy
-    current_account.products.delete(params[:id])
+    product = current_account.products.find(params[:id])
+    product.destroy
     redirect_to products_path
   end
 
