@@ -214,7 +214,7 @@ class TradeDecorator < Draper::Base
     when 'TaobaoPurchaseOrder'
       trade.orders_total_fee
     when 'TaobaoTrade'
-      trade.total_fee
+      trade.orders_total_price
     when 'JingdongTrade'
       trade.total_fee
     end

@@ -4,12 +4,14 @@ describe TradeDecorator do
   describe "Taobaotrade" do
     context '#post_fee, point_fee, seller_discount, total_fee, sum_fee' do
       before do 
-        @decorator = TradeDecorator.new(build(:taobao_trade, post_fee: 20, point_fee: 20, payment: 2000, total_fee: 3000, promotion_fee: 100))
+        trade = create(:taobao_trade, post_fee: 20, point_fee: 20, payment: 2000, total_fee: 3000, promotion_fee: 100)
+        trade.stub(:orders_total_price).and_return(1500)
+        @decorator = TradeDecorator.new(trade)
       end
       it { @decorator.post_fee.should == 20 }
       it { @decorator.point_fee.should == 20 }
       it { @decorator.total_fee.should == 2000 }
-      it { @decorator.sum_fee.should == 3000 }
+      it { @decorator.sum_fee.should == 1500 }
       it { @decorator.seller_discount.should == 100 }
     end
   end
@@ -31,8 +33,8 @@ describe TradeDecorator do
   describe "JingdongTrade" do
     context '#post_fee, seller_discount, total_fee, sum_fee' do
       before do 
-        @decorator = TradeDecorator.new(build(:jingdong_trade, freight_price: 20,  order_seller_price: 1000, seller_discount: 200))
-        @decorator_with_zero_freight_price = TradeDecorator.new(build(:jingdong_trade,  order_seller_price: 1000, seller_discount: 200))
+        @decorator = TradeDecorator.new(build(:jingdong_trade, freight_price: 20, order_seller_price: 1000, seller_discount: 200))
+        @decorator_with_zero_freight_price = TradeDecorator.new(build(:jingdong_trade, order_seller_price: 1000, seller_discount: 200))
       end
       it { @decorator.post_fee.should == 20 }
       it { @decorator.total_fee.should == 1000 }

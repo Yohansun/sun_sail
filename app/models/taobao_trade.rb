@@ -205,7 +205,11 @@ class TaobaoTrade < Trade
     args.each do |tid|
       TradeTaobaoMemoFetcher.perform_async(tid)
     end
-  end 
+  end
+
+  def orders_total_price
+    self.orders.inject(0) { |sum, order| sum + order.price*order.num}
+  end
 
   def taobao_status_memo
     case status
