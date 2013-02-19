@@ -39,7 +39,7 @@ class UsersController < ApplicationController
       render :index
     else
       redirect_to users_path
-    end   
+    end
   end
 
   def show
@@ -76,17 +76,17 @@ class UsersController < ApplicationController
   def update
     @user = current_account.users.find params[:id]
     if !params[:ac].present?
-      @user.username = params[:user][:username] 
+      @user.username = params[:user][:username]
       @user.name = params[:user][:name]
-      @user.active = params[:user][:active] 
-      if @user.active == false 
+      @user.active = params[:user][:active]
+      if @user.active == false
          @user.lock_access!
       end
       if @user.active == true
         @user.unlock_access!
       end
     end
-    @user.email = params[:user][:email] 
+    @user.email = params[:user][:email]
     if params[:user][:password].present?
       @user.password = params[:user][:password]
       @user.password_confirmation = params[:user][:password_confirmation]
@@ -122,6 +122,6 @@ class UsersController < ApplicationController
       session[:account_id] = account.id
       Account.current = account
     end
-    redirect_to '/app#trades'
-  end  
+    redirect_to '/'
+  end
 end
