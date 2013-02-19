@@ -3,15 +3,28 @@ module SalesHelper
 	def product_data(trades, old_trades)
 
     ##对数据map_reduce
-    map = %Q{
-      function() {
-      for(var i in this.taobao_orders) {
-        if(this.taobao_orders[i].outer_iid != null){
-          emit(this.taobao_orders[i].outer_iid, {total_fee: this.taobao_orders[i].total_fee, num: this.taobao_orders[i].num });
+    if TradeSetting.company == "vanward"
+      map = %Q{
+        function() {
+        for(var i in this.taobao_orders) {
+          if(this.taobao_orders[i].num_iid != null){
+            emit(this.taobao_orders[i].num_iid, {total_fee: this.taobao_orders[i].total_fee, num: this.taobao_orders[i].num });
+          }
+        }
         }
       }
+    else
+      map = %Q{
+        function() {
+        for(var i in this.taobao_orders) {
+          if(this.taobao_orders[i].outer_iid != null){
+            emit(this.taobao_orders[i].outer_iid, {total_fee: this.taobao_orders[i].total_fee, num: this.taobao_orders[i].num });
+          }
+        }
+        }
       }
-    }
+    end
+
     reduce = %Q{
       function(key, values) {
         var result = {total_fee: 0, num: 0};

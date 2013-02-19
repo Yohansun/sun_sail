@@ -31,6 +31,7 @@
       配送经销商：
       <% if MagicOrders.company == "vanward" : %><!--THIS IS TEMPORARY-->
         万和经销商
+        <div id="areas_inputs"></div>
         <input type="hidden" id="trade_seller_id" value="<%= @trade.get('default_seller_id') %>">
       <% else : %>
         <% if @trade.get('seller_id') != null: %>

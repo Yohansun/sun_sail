@@ -265,12 +265,7 @@ class TradesController < ApplicationController
 
   def seller_for_area
     trade = Trade.find params[:id]
-
-    if TradeSetting.company = "vanward"    ##THIS IS TEMPORARY
-      area = Area.find 999900
-    else
-      area = Area.find params[:area_id]
-    end
+    area = Area.find params[:area_id]
 
     seller = Dulux::SellerMatcher.match_trade_seller(trade, area)
     seller ||= trade.default_seller

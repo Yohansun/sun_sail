@@ -29,7 +29,7 @@
 
           <label class="control-label">选择时间：</label>
           <div class="input-append">
-            <%=text_field_tag :date, params[:date] ,"data-date-minviewmode"=>"months", :class=>"input-small monthpicker"%>
+            <%=text_field_tag :date, params[:date], "data-date-format"=>"mm-yyyy", :class=>"input-small date  monthpicker"%>
             <button type="submit" class="btn btn-info">搜索</button>
           </div>
         </div>
@@ -194,17 +194,14 @@
     }
   }
 
-  $(document).on('focus', '.datepickers', function (e) { 
-   $(this).datepicker({
-     format: 'yy-mm-dd'
-   });
- });
-$(document).on('focus', '.monthpicker', function (e) { 
-   $(this).datepicker({
-     format: 'yyyy-mm',
-     viewMode: 'months',
-     minViewMode: 'months'
-   });
- });
+  $(function(){
+    $('.monthpicker').datetimepicker({
+      format: 'yyyy-mm',
+      autoclose: true,
+      startView: 3,
+      minView: 3,
+    });
+  })
+
 </script>
 <%- end %>

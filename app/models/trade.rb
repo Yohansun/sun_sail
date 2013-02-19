@@ -602,7 +602,7 @@ class Trade
 
       #退货
       when 'request_return'
-        trade_type_hash = {:request_return_at.exists => true}
+        trade_type_hash = {:request_return_at.exists => true, :confirm_return_at.exists => false}
       when 'confirm_return'
         trade_type_hash = {:confirm_return_at.exists => true}
 
