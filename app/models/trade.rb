@@ -541,7 +541,7 @@ class Trade
         trades = trades.where(:dispatched_at.lte => 2.days.ago, :consign_time.exists => false, :status.in => paid_not_deliver_array)
         trade_type_hash = {:dispatched_at.lte => 2.days.ago, :consign_time.exists => false, :status.in => paid_not_deliver_array}
       when 'buyer_delay_deliver', 'seller_ignore_deliver', 'seller_lack_product', 'seller_lack_color', 'buyer_demand_refund', 'buyer_demand_return_product', 'other_unusual_state'
-        trade_type_hash = {:unusual_states.elem_match => {:key => type, :repaired_at.exists => false}}
+        trade_type_hash = {:unusual_states.elem_match => {:key => type, :repaired_at => {"$exists" => false}}}
       # 订单
       when 'all'
         trade_type_hash = nil
@@ -756,7 +756,6 @@ class Trade
       ].compact
     }
     search_hash == {"$and"=>[]} ? search_hash = nil : search_hash
-
     ## 过滤有留言但还在抓取 + 总筛选
     trades.where(search_hash).and(trade_type_hash, {"$or" => [{"has_buyer_message" => {"$ne" => true}},{"buyer_message" => {"$ne" => nil}}]})
     ###筛选结束###
