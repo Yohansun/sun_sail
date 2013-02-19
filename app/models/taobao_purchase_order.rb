@@ -125,7 +125,7 @@ class TaobaoPurchaseOrder < Trade
   end
 
   def cc_emails
-    purchase_extra_cc = self.account.settings.purchase_extra_cc
+    purchase_extra_cc = self.fetch_account.settings.purchase_extra_cc
     cc_emails = super | (purchase_extra_cc || [])
     cc_emails.compact
   end
