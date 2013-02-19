@@ -37,8 +37,13 @@ class ProductsController < ApplicationController
 
   def create
     @product = Product.new params[:product]
-
     if @product.save
+      if params[:skus] #THIS IS TEMPORARY
+        params[:skus]["sku_ids"].each do |s|
+          Sku.create(properties_name: "1:1:" + s, product_id: @product.id, sku_id: 12345678, num_iid: 12345678, properties: "1:1", quantity: 1) unless s == ''
+        end
+      end
+
       if params[:product]['good_type'] == '2' && params[:child_iid].present?
         @product.create_packages(params[:child_iid])
       end
@@ -58,6 +63,12 @@ class ProductsController < ApplicationController
     if params[:product]['good_type'] == '2' && params[:child_iid].present?
       @product.packages.delete_all
       @product.create_packages(params[:child_iid])
+    end
+
+    if params[:skus] #THIS IS TEMPORARY
+      params[:skus]["sku_ids"].each do |s|
+        Sku.create(properties_name: "1:1:" + s, product_id: @product.id, sku_id: 12345678, num_iid: 12345678, properties: "1:1", quantity: 1) unless s == ''
+      end
     end
 
     if @product.update_attributes(params[:product])

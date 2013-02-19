@@ -7,11 +7,11 @@ module TaobaoProductsLockable
       if order.sku_id.present?
         op = Product.joins(:skus).where("skus.sku_id = #{order.sku_id}").first
       else
-        op =  Product.find_by_num_iid order.num_iid
+        op = Product.find_by_num_iid order.num_iid
       end
         
       if op.blank?
-        lockable << "#{op.name} #{op.stock_product.sku_name}: 商品不存在"
+        lockable << "#{op.try(:name)} #{op.try(:stock_product).try(:sku_name)}: 商品不存在"
         next
       end
 

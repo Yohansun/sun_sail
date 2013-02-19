@@ -140,7 +140,7 @@ class TradesController < ApplicationController
     unless params[:reason].blank?
       state = @trade.unusual_states.create!(reason: params[:reason], plan_repair_at: params[:plan_repair_at], note: params[:state_note], created_at: Time.now, reporter: current_user.name)
       state.update_attributes(key: state.add_key)
-      role_key = current_user.has_role?(:interface) ? 'interface' : current_user.role_key 
+      role_key = current_user.roles.first.name
       state.update_attributes!(reporter_role: role_key)
     end
 
@@ -265,7 +265,12 @@ class TradesController < ApplicationController
 
   def seller_for_area
     trade = Trade.find params[:id]
-    area = Area.find params[:area_id]
+
+    if TradeSetting.company = "vanward"    ##THIS IS TEMPORARY
+      area = Area.find 999900
+    else
+      area = Area.find params[:area_id]
+    end
 
     seller = Dulux::SellerMatcher.match_trade_seller(trade, area)
     seller ||= trade.default_seller
