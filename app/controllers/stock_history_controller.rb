@@ -17,17 +17,18 @@ class StockHistoryController < ApplicationController
   def create
     @product = StockProduct.find params[:stock_history]['stock_product_id']
     number = params[:stock_history]['number'].to_i
-
-    if @product.update_quantity!(number, params[:stock_history]['operation'])
-      sh = StockHistory.new(params[:stock_history])
-      sh.seller_id = params[:seller_id].to_i
-      sh.user_id = current_user.id
-      @flag = sh.save
-    else
+    @product.update_quantity!(number, params[:stock_history]['operation'])
+    sh = StockHistory.new(params[:stock_history])
+    sh.seller_id = params[:seller_id].to_i
+    sh.user_id = current_user.id
+    @flag = sh.save
+    unless @flag
       if @product.errors[:activity].first == '数量不能小于零'
         @error_message = '当前库存商品不足，建议调整出库数量'
       elsif @product.errors[:activity].first == '数量必须小于满仓值'
         @error_message = '库存数量必须小于满仓值，建议调整入库数量'
+      else
+        @error_message = "请输入数量"
       end
     end
   end

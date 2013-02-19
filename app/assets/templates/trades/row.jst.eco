@@ -234,7 +234,7 @@
   <% end %>
 </td>
 
-<% if MagicOrders.company == 'nippon' || (MagicOrders.company == 'dulux' and (MagicOrders.role_key == 'admin' || MagicOrders.role_key == 'cs')) : %>
+<% if MagicOrders.company != 'dulux' or (MagicOrders.company == 'dulux' and (MagicOrders.role_key == 'admin' or MagicOrders.role_key == 'cs')) : %>
 <td data-col='gift_memo'>
   <% if @trade.get('gift_memo') : %>
   <a href="javascript:void(0)" rel="popover" data-content="<%= @trade.get 'gift_memo' %>" data-original-title="<b>赠品备注</b>"><i class="icon-gift_memo"></i></a>

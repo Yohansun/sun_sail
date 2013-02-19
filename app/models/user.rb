@@ -42,7 +42,7 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :role_level, :username, :active
+  attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :username, :active
   attr_protected :cs, :cs_read, :seller, :interface, :stock_admin, :admin
   # attr_accessible :title, :body
 
@@ -69,19 +69,6 @@ class User < ActiveRecord::Base
 
   def magic_key
     Digest::MD5.hexdigest "magic_magic_#{self.username}"
-  end
-
-  def role_key
-    case self.role_level
-    when 0
-      'admin'
-    when 10
-      'seller'
-    when 12
-      'interface'
-    when 15
-      'cs'
-    end
   end
 
   def modify_role(role, type)

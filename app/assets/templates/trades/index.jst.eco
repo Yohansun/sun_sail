@@ -211,12 +211,14 @@
             <label class="checkbox inline">
               <input type="checkbox" id="search_invoice"> 需要开票
             </label>
+            <% if MagicOrders.enable_module_colors == 1 : %>
             <label class="checkbox inline">
               <input type="checkbox" id="search_color"> 需要调色
             </label>
             <label class="checkbox inline">
               <input type="checkbox" id="search_color_void"> 不需要调色
             </label>
+            <% end %>
           </fieldset>
         </div>
 
@@ -348,7 +350,7 @@
         <% end %>
         <th data-col='seller_memo'>卖家<br/>备注</th>
         <th data-col='cs_memo'>客服<br/>备注</th>
-        <% if MagicOrders.company == 'nippon' || (MagicOrders.company == 'dulux' and (MagicOrders.role_key == 'admin' || MagicOrders.role_key == 'cs')) : %>
+        <% if MagicOrders.company != 'dulux' or (MagicOrders.company == 'dulux' and (MagicOrders.role_key == 'admin' or MagicOrders.role_key == 'cs')) : %>
         <th data-col='gift_memo'>赠品<br/>备注</th>
         <% end %>
         <th data-col='deliver_bill'>发货单</th>

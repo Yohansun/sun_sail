@@ -220,7 +220,7 @@ class Trade
       if order.sku_id.present?
         product = Product.joins(:skus).where("skus.sku_id = #{order.sku_id}").first
       else
-        product =  Product.find_by_num_iid order.num_iid
+        product = Product.find_by_num_iid order.num_iid
       end  
       package = product.package_info
       if package.present?
@@ -238,7 +238,7 @@ class Trade
           end
         end
       else
-        stock_product = product.where(seller_id: op_seller).first
+        stock_product = StockProduct.where(seller_id: op_seller).first
         if stock_product
           stock_product.update_quantity!(order.num, operation)
           StockHistory.create(
@@ -763,7 +763,11 @@ class Trade
     search_hash == {"$and"=>[]} ? search_hash = nil : search_hash
 
     ## 过滤有留言但还在抓取 + 总筛选
-    trades.where(search_hash).and(trade_type_hash, {"$or" => [{"has_buyer_message" => {"$ne" => true}},{"buyer_message" => {"$ne" => nil}}]})
+    if TradeSetting.company == "vanward" ## THIS IS TEMPORARY
+      trades.where(search_hash).and(trade_type_hash, {"trade_source_id" => 200}, {"$or" => [{"has_buyer_message" => {"$ne" => true}},{"buyer_message" => {"$ne" => nil}}]})
+    else
+      trades.where(search_hash).and(trade_type_hash, {"$or" => [{"has_buyer_message" => {"$ne" => true}},{"buyer_message" => {"$ne" => nil}}]})
+    end
     ###筛选结束###
   end
 end
