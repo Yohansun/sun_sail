@@ -74,6 +74,7 @@ class Trade
   field :modify_payment_no, type: String
   field :modify_payment_at, type: DateTime
   field :modify_payment_memo, type: String
+  field :deliver_bills_count, type: Integer, default: 0
 
   # add indexes for speed
   index tid: -1

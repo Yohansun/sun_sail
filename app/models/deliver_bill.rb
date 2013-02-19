@@ -7,7 +7,7 @@ class DeliverBill
   field :deliver_printed_at, type: DateTime
   field :logistic_printed_at, type: DateTime
 
-  belongs_to :trade
+  belongs_to :trade, counter_cache: true
   embeds_many :bill_products
 
   def logistic=(logistic)

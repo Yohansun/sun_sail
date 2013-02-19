@@ -51,7 +51,7 @@ group :test, :development do
 end
 
 gem 'strong_parameters'
-gem 'mongoid', '3.0.13'
+gem 'mongoid', '3.1.0'
 gem 'draper'
 gem 'inherited_resources'
 gem 'devise'
