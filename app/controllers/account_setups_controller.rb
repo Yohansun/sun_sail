@@ -1,5 +1,6 @@
 class AccountSetupsController < ApplicationController
   include Wicked::Wizard
+  before_filter :fetch_account, only: [:data_fetch_start, :data_fetch_check, :data_fetch_finish]
 
   steps :admin_init, :data_fetch, :options_setup, :user_init
 
@@ -26,8 +27,6 @@ class AccountSetupsController < ApplicationController
       user.password = '123456'
       user.save
       user.add_role(:admin)
-    when :data_fetch
-
     when :options_setup
       Account.current.settings.enable_auto_dispatch = params[:autodispatch].to_i
       Account.current.settings.enable_auto_check = params[:autocheck].to_i
@@ -38,6 +37,29 @@ class AccountSetupsController < ApplicationController
       create_users(params[:inter], :interface)
     end
     render_wizard Account.current
+  end
+
+  # invoke this action on fron-end view by JavaScript
+  def data_fetch_start
+    if @account && @account.settings.init_data_ready.blank?
+      @account.settings.init_data_ready = false
+      # do something like backend puller job.
+    end
+    head :ok
+  end
+
+  # invoke this action on front-end view by JavaScript
+  def data_fetch_check
+    result = @account ? @account.settings.init_data_ready == true : false
+    render json: {ready: result }
+  end
+
+  # Please send a PUT request with account id as params[:id] to this action when
+  # data fetch job finished in backend
+  # eg: http://magicorder.networking.io/account_setups/:id/data_fetch_finish
+  def data_fetch_finish
+    @account.settings.init_data_ready = true if @account
+    head :ok
   end
 
   private
@@ -58,6 +80,10 @@ class AccountSetupsController < ApplicationController
       user.save(validate: false)
       user.add_role(role)
     end
+  end
+
+  def fetch_account
+    @account = Account.find_by_id(params[:id]) if params[:id]
   end
 
 end

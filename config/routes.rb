@@ -33,9 +33,9 @@ MagicOrders::Application.routes.draw do
     end
   end
 
-  resources :trade_reports 
-  resources :user_activities do 
-    collection do 
+  resources :trade_reports
+  resources :user_activities do
+    collection do
       get :refresh
       get :all
     end
@@ -64,14 +64,14 @@ MagicOrders::Application.routes.draw do
   end
 
   resources :categories
-  
+
   get 'callcenter/contrastive_performance'
   get 'callcenter/inquired_and_created'
   get 'callcenter/created_and_paid'
   get 'callcenter/followed_paid'
   get 'callcenter/settings'
   get 'callcenter/adjust_filter'
-  
+
   resources :sellers do
     resources :stocks
     resources :stock_products do
@@ -126,12 +126,18 @@ MagicOrders::Application.routes.draw do
     collection do
       post :search
     end
-  end    
-  
+  end
+
   resources :areas
   resources :trade_sources
 
-  resources :account_setups
+  resources :account_setups do
+    member do
+      post :data_fetch_start
+      get  :data_fetch_check
+      put  :data_fetch_finish
+    end
+  end
   resources :taobao_app_tokens, only: [:create]
 
   get "/sales/area_analysis", to: 'sales#area_analysis'
