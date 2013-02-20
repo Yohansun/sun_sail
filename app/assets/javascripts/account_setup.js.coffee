@@ -10,7 +10,7 @@ class AccountSetup
       alert 'data fetch starting...'
       $.post "/account_setups/"+dom.data('account-id')+"/data_fetch_start"
       # checking the data fetch processing progress every 15*1000ms
-      # setInterval("AccountSetup.check_data_fetch(current_account.id)", 15 * 1000)
+      setInterval("AccountSetup.check_data_fetch(current_account.id)", 15 * 1000)
 
   check_data_fetch: (account_id)->
     $.ajax "/account_setups/"+account_id+"/data_fetch_check",
