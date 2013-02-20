@@ -85,7 +85,8 @@ class Seller < ActiveRecord::Base
   end
 
   def area_name(id)
-    Area.find_by_id(id).self_and_ancestors.map(&:name).join('-')
+    area = Area.find_by_id(id)
+    self_and_ancestors.map(&:name).join('-') if area
   end
 
 end
