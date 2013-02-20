@@ -7,8 +7,7 @@ set :branch, "master"
 
 server "magictest.networking.io", :web, :app, :db, primary: true
 set :user, "root"
-set :deploy_to, "/var/rails/magic_orders"
-
+set :deploy_to, "/bigdata/var/rails/magictest"
 
 # tasks
 namespace :deploy do
