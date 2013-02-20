@@ -11,6 +11,6 @@
 #  updated_at :datetime        not null
 #
 
-class TradeSetting < RailsSettings::CachedSettings
-	attr_accessible :thing_id, :thing_type, :var, :value
+class TradeSetting < RailsSettings::Settings
+	attr_accessible :var
 end

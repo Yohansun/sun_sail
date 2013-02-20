@@ -56,7 +56,7 @@ gem 'draper'
 gem 'inherited_resources'
 gem 'devise'
 gem 'devise-encryptable'
-gem 'rails-settings-cached'
+gem 'rails-settings', git: 'git://github.com/pomelolabs/rails-settings.git'
 gem 'twitter-bootstrap-rails', '>= 2.1.9'
 gem "less-rails"
 gem 'therubyracer'

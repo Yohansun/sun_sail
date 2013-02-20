@@ -10,7 +10,7 @@
 #
 
 class Account < ActiveRecord::Base
-  include RailsSettings::Extend
+  include RailsSettings
 
   attr_accessible :key, :name
 
