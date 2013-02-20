@@ -1,0 +1,48 @@
+<body class='whiteSmoke_bg'>
+  <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <%= link_to image_tag("logo.png"), 'javascript:void(0)', class: 'brand' %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid clearfix">
+    <div class="row-fluid">
+      <div class="span2 bs-docs-sidebar">
+        <ul class="nav nav-list bs-docs-sidenav affix span2">
+          <li class="active"><a href="javascript:void(0)">
+            <i class="icon-chevron-right"></i> 一键开始</a>
+          </li>
+        </ul>
+      </div>
+      <div class="span10">
+        <ul class="nav nav-tabs">
+          <li class="active"><a href="javascript:void(0)">管理员设置</a></li>
+          <li><a href="javascript:void(0)">数据自动设置</a></li>
+          <li><a href="javascript:void(0)">自动化业务设置</a></li>
+          <li><a href="javascript:void(0)">设置系统登录用户</a></li>
+        </ul>
+        <div class="tab-content">
+          <%= simple_form_for User.new, url: account_setup_path, method: :put,
+            html: { class: 'form-horizontal', style: 'margin-top: 20px;'}, validate: true do |f| %>
+            <div class='offset1'>
+              <p>请设置管理员账户信息</p>
+              <p>再次登录系统，请直接输入你的邮箱和密码即可</p>
+            </div>
+            <div class="clearfix">
+              <%= f.input :email, label: '登录邮箱', placeholder: 'example@doorder.com' %>
+              <%= f.input :phone, label: '手机号码', placeholder: '13312345678' %>
+              <%= f.input :username, :label => "用户名" %>
+              <%= f.input :name, :label => "姓名" %>
+            </div>
+            <div class="form-actions">
+              <%= f.button :submit, '下一步', :"data-disable-with" => '提交中...' %>
+            </div>
+          <% end %>  
+        </div>
+      </div>
+    </div>
+  </div>
+</body>

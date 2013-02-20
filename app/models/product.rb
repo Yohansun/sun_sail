@@ -24,11 +24,13 @@
 #  detail_url    :string(255)
 #  cid           :string(255)
 #  num_iid       :integer(8)
+#  account_id    :integer(4)
 #
 
 class Product < ActiveRecord::Base
 
   acts_as_nested_set
+  belongs_to :account
   belongs_to :category
   belongs_to :quantity
   has_many :feature_product_relationships
@@ -42,9 +44,10 @@ class Product < ActiveRecord::Base
   attr_accessible :good_type, :name, :outer_id, :product_id, :storage_num, :price, :quantity_id, :color_ids, :pic_url, :category_id, :features, :product_image, :feature_ids, :cat_name, :detail_url, :num_iid, :cid
 
 
-  validates_presence_of  :name, :price, message: "信息不能为空"
   validates_uniqueness_of :outer_id, :allow_blank => true, message: "信息已存在"
- 
+  validates_presence_of :name, :price, message: "信息不能为空"
+  validates :iid, presence: { :message => "信息已存在" }, uniqueness: { scope: :account_id }, allow_blank: true
+
   validates_numericality_of :price, message: "所填项必须为数字"
   validates_length_of :name, maximum: 100, message: "内容过长"
   validates_length_of :outer_id, :product_id, :price, maximum: 20, message: "内容过长"
@@ -88,9 +91,9 @@ class Product < ActiveRecord::Base
     sku_names = []
     skus.map(&:name).each do |name|
       sku_names << name.split(':').last
-    end  
+    end
     sku_names.join(',')
-  end  
+  end
 
   def color_map(color_num)
     result = []

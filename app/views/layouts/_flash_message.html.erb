@@ -1,0 +1,6 @@
+<% if flash.keys.any? -%>
+  <% kind = flash[:notice] ? 'success' : 'error' -%>
+  <div class='alert alert-<%= kind %>'>
+    <%= flash[:notice] || flash[:alert] %>
+  </div>
+<% end -%>

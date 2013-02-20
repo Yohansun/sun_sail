@@ -12,11 +12,12 @@
 #  created_at        :datetime        not null
 #  updated_at        :datetime        not null
 #  taobao_rate_score :integer(4)
+#  account_id        :integer(4)
 #
 
 # -*- encoding : utf-8 -*-
 class LogisticRate < ActiveRecord::Base
-
+  belongs_to :account
   attr_accessible  :logistic_id, :mobile, :send_at, :seller_id, :tid, :score, :taobao_rate_score
   
   def self.rates_array(seller_id, start_date, end_date, logistic_id)

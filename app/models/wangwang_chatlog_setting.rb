@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 class WangwangChatlogSetting
   include Mongoid::Document
-  
+  field :account_id,                type: Integer
   field :self_buyer_filter,         type: Boolean,  default: false
   #field :chitu_buyer_filter,       type: Boolean,  default: false
   #field :chitu_list,               type: Array

@@ -11,7 +11,7 @@ module Dulux
           seller_id = seller.id
           seller_name = seller.name
         else
-          seller = trade.default_area.sellers.first 
+          seller = trade.default_area.sellers.first
           seller_id = seller ? seller.id : nil
           seller_name = seller ? "#{seller.name}: 库存不足" : '无对应经销商'
         end
@@ -130,8 +130,11 @@ module Dulux
 
     def split_orders(trade, auto=true, split_hash=[])
       # 拆单并分流
+      trade_dec = TradeDecorator.decorate(trade)
+      return false unless trade_dec.pay_time.present? && trade.seller_id.blank?
+
       area = trade.default_area
-      return unless area
+      return false unless area
 
       splitted_orders = []
 
@@ -193,7 +196,7 @@ module Dulux
           sql = "products.outer_id = '#{pp[:outer_id]}' AND stock_products.activity > #{pp[:number]}"
           products = StockProduct.joins(:product).where(sql)
 
-          if TradeSetting.enable_match_seller_user_color && color_num.present?
+          if op.account.settings.enable_match_seller_user_color && color_num.present?
             color_num.each do |colors|
               next if colors.blank?
               colors = colors.shift(pp[:number]).flatten.compact.uniq

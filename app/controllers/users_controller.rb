@@ -1,10 +1,11 @@
+# encoding: utf-8
 class UsersController < ApplicationController
-  before_filter :authenticate_user!, :except => ['autologin','edit','update']
+  before_filter :authenticate_user!, :except => ['autologin','edit','update', 'switch_account']
   before_filter :admin_only!, :except => ['autologin','edit','update']
 
   def autologin
   	redirect_url = '/'
-    user = User.find_by_name params[:username]
+    user = current_account.users.find_by_name params[:username]
     if user && user.magic_key == params[:key]
       sign_in :user, user
 
@@ -21,30 +22,43 @@ class UsersController < ApplicationController
 
   def index
     if params[:name].present?
-      @users = User.where("name LIKE '%#{params[:name]}%'")
+      @users = current_account.users.where("name LIKE '%#{params[:name]}%'")
     elsif params[:seller_id].present?
-      @users = User.where(seller_id: params[:seller_id])
+      @users = current_account.users.where(seller_id: params[:seller_id])
     else
-      @users = User.page params[:page]
+      @users = current_account.users.page params[:page]
+    end
+  end
+
+  def search
+    if  params[:where_name] && params[:keyword].present?
+      @users = User.where(["#{params[:where_name]} like ?", "%#{params[:keyword].strip}%"])
+      @users = @users.page(params[:page])
+    end
+    if @users
+      render :index
+    else
+      redirect_to users_path
     end
   end
 
   def show
-    @user = User.find params[:id]
+    @user = current_account.users.find params[:id]
   end
 
   def new
-    @user = User.new
+    @user = current_account.users.new
   end
 
   def create
-    @user = User.new(params[:user])
-    if @user.active == false
-      @user.lock_access!
+    @user = current_account.users.new(params[:user])
+    existing = current_account.users.find_by_email(@user.email)
+    if existing
+      flash[:alert] = '用户邮箱已被使用'
+      redirect_to new_user_path and return
     end
-    if @user.active == true 
-      @user.unlock_access!
-    end
+    @user.active ? @user.unlock_access! : @user.lock_access!
+    @user.accounts << current_account
     if @user.save
       @user.add_role(:cs) if params[:cs] == '1'
       @user.add_role(:cs_read) if params[:cs_read] == '1'
@@ -60,19 +74,19 @@ class UsersController < ApplicationController
   end
 
   def update
-    @user = User.find params[:id]
+    @user = current_account.users.find params[:id]
     if !params[:ac].present?
-      @user.username = params[:user][:username] 
+      @user.username = params[:user][:username]
       @user.name = params[:user][:name]
-      @user.active = params[:user][:active] 
-      if @user.active == false 
+      @user.active = params[:user][:active]
+      if @user.active == false
          @user.lock_access!
       end
       if @user.active == true
         @user.unlock_access!
       end
     end
-    @user.email = params[:user][:email] 
+    @user.email = params[:user][:email]
     if params[:user][:password].present?
       @user.password = params[:user][:password]
       @user.password_confirmation = params[:user][:password_confirmation]
@@ -99,6 +113,15 @@ class UsersController < ApplicationController
   end
 
   def edit
-    @user = User.find current_user.id
+    @user = current_account.users.find current_user.id
+  end
+
+  def switch_account
+    if current_user.has_multiple_account?
+      account = current_user.accounts.find(params[:id])
+      session[:account_id] = account.id
+      Account.current = account
+    end
+    redirect_to '/'
   end
 end

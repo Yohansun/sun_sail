@@ -3,7 +3,7 @@
     <div class="subnav">
       <ul class="nav nav-pills">
         <li class="active"><%= link_to '商品管理', products_path, class: "products" %></li>
-        <% if TradeSetting.enable_module_colors == 1 %>
+        <% if current_account.settings.enable_module_colors == 1 %>
           <li><%= link_to '颜色管理', colors_path %></li>
         <% end %>
         <li><%= link_to '分类管理', categories_path %></li>
@@ -51,11 +51,11 @@
             <label class="control-label" style="margin-top:5px; margin-right: 19px">商品分类：</label>
             <select class="width_auto" name="category_id">
               <option value="0" <%= 'selected' if params[:category_id] == '0' %>>全部</option>
-              <%- Category.all.each do |category| %>
+              <%- current_account.categories.each do |category| %>
                 <option value="<%= category.id %>" <%= 'selected' if params[:category_id] == category.id %>><%= category.name %></option>
               <%- end %>
-            </select> 
-          </fieldset>                            
+            </select>
+          </fieldset>
         <div>
           <%= f.button :submit, "过滤", class: "btn btn-primary pull-right" %>
         </div>
@@ -73,9 +73,9 @@
       <thead>
         <tr>
           <th nowrap>商品名称</th>
-          <% if TradeSetting.enable_module_sku_properties == 1 %>
+          <% if current_account.settings.enable_module_sku_properties == 1 %>
             <th width="20%">商品属性</th>
-          <% end %> 
+          <% end %>
           <th nowrap>商品编码</th>
           <th nowrap>淘宝ID</th>
           <th nowrap>价格</th>

@@ -44,7 +44,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
   main: () ->
     Backbone.history.navigate('trades', true)
 
-  index: (trade_mode = "trades", trade_type = null) ->
+  index: (trade_mode = "trades", trade_type = "default") ->
     # reset the index stage, hide all popups
     $('.modal').modal('hide')
 

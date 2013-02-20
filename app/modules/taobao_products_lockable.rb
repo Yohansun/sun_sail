@@ -29,7 +29,7 @@ module TaobaoProductsLockable
         has_product = product.present? && (product.activity > pp[:number])
         p_colors = []
 
-        if TradeSetting.enable_match_seller_user_color and color_num.present?
+        if trade.fetch_account.settings.enable_match_seller_user_color and color_num.present?
           color_num.each do |colors|
             next if colors.blank?
             colors = colors.shift(pp[:number]).flatten.compact.uniq

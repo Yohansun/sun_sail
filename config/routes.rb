@@ -45,7 +45,9 @@ MagicOrders::Application.routes.draw do
 
   get "callbacks/jingdong"
   get '/autologin', to: 'users#autologin'
-  devise_for :users, :path => '', :path_names => {:sign_in => 'login'}
+  devise_for :users, :path => '', :path_names => {:sign_in => 'login'},
+    controllers: { sessions: "sessions" }
+
   get "/stocks", to: 'stocks#home'
   get "/stock_products", to: 'stock_products#index'
   get "/stock_products/search", to: 'stock_products#search'
@@ -119,9 +121,18 @@ MagicOrders::Application.routes.draw do
     end
   end
 
-  resources :users
+  match '/switch_account/:id', to: 'users#switch_account', as: :switch_account
+  resources :users do
+    collection do
+      post :search
+    end
+  end    
+  
   resources :areas
   resources :trade_sources
+
+  resources :account_setups
+  resources :taobao_app_tokens, only: [:create]
 
   get "/sales/area_analysis", to: 'sales#area_analysis'
   get "/sales/time_analysis", to: 'sales#time_analysis'
@@ -177,7 +188,7 @@ MagicOrders::Application.routes.draw do
   root to: "home#dashboard"
 
   match '/go/npsellers', :to => 'go#npsellers'
-
   match "/app", to: "home#index"
   match "*path", to: "home#index"
+
 end

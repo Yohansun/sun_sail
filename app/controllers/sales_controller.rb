@@ -2,7 +2,7 @@
 class SalesController < ApplicationController
   include SalesHelper
   before_filter :authenticate_user!
-  before_filter :admin_only! 
+  before_filter :admin_only!
 
   def index
     redirect_to "/sales/product_analysis"
@@ -10,12 +10,12 @@ class SalesController < ApplicationController
 
   def show
     ## 参数初始化
-    @sale = Sale.last
-    TradeSetting.test_time = Time.now + 8.hour
-    TradeSetting.test_time_2 = TradeSetting.test_time
-    TradeSetting.frequency = 600   ## per second
+    @sale = current_account.sales.last
+    current_account.settings.test_time = Time.now + 8.hour
+    current_account.settings.test_time_2 = current_account.settings.test_time
+    current_account.settings.frequency = 600  ## per second
     unless @sale
-      @sale = Sale.create(name: "测试活动", earn_guess: 100000, start_at: TradeSetting.test_time, end_at: TradeSetting.test_time + 1.day)
+      @sale = current_account.sales.create(name: "测试活动", earn_guess: 100000, start_at: current_account.settings.test_time, end_at: current_account.settings.test_time + 1.day)
       render action: :edit
     end
     @start_at = @sale.start_at
@@ -105,8 +105,8 @@ class SalesController < ApplicationController
       }
     }
 
-    created_trades = TaobaoTrade.between(created: (@start_at.to_time - 8.hours)..(@end_at.to_time - 8.hours))
-    paid_trades = TaobaoTrade.between(pay_time: (@start_at.to_time - 8.hours)..(@end_at.to_time - 8.hours))
+    created_trades = TaobaoTrade.where(account_id: current_account.id).between(created: (@start_at.to_time - 8.hours)..(@end_at.to_time - 8.hours))
+    paid_trades = TaobaoTrade.where(account_id: current_account.id).between(pay_time: (@start_at.to_time - 8.hours)..(@end_at.to_time - 8.hours))
     @amount_all = created_trades.try(:sum, :payment) || 0
     @amount_paid = paid_trades.try(:sum, :payment) || 0
     if @end_at.to_i - @start_at.to_i < 3.days.to_i
@@ -174,12 +174,12 @@ class SalesController < ApplicationController
   end
 
   def add_node
-    @sale = Sale.last
-    frequency = TradeSetting.frequency
-    time_now = TradeSetting.test_time_2
+    @sale = current_account.sales.last
+    frequency = current_account.settings.frequency
+    time_now = current_account.settings.test_time_2
     start_time = time_now
     end_time = time_now + frequency
-    TradeSetting.test_time_2 += frequency
+    current_account.settings.test_time_2 = current_account.settings.test_time_2 + frequency
 
     all_in_frequency = @sale.all_trade_fee(start_time, end_time)
     paid_in_frequency = @sale.paid_trade_fee(start_time, end_time)
@@ -194,14 +194,14 @@ class SalesController < ApplicationController
   end
 
   def edit
-    @sale = Sale.last
+    @sale = current_account.sales.last
     unless @sale
-      @sale = Sale.create(name: "测试活动", earn_guess: 100000, start_at: Time.now + 8.hour, end_at: Time.now + 8.hour + 1.day)
+      @sale = current_account.sales.create(name: "测试活动", earn_guess: 100000, start_at: Time.now + 8.hour, end_at: Time.now + 8.hour + 1.day)
     end
   end
 
   def update
-    @sale = Sale.last
+    @sale = current_account.sales.last
     start_at = "#{params[:times][:start_date]} #{params[:times][:start_time]}".to_time
     end_at = "#{params[:times][:end_date]} #{params[:times][:end_time]}".to_time
 
@@ -227,12 +227,12 @@ class SalesController < ApplicationController
     if @start_date && @end_date
       start_at = "#{@start_date} #{@start_time}".to_time(:local)
       end_at = "#{@end_date} #{@end_time}".to_time(:local)
-      @trades = TaobaoTrade.between(created: start_at..end_at).in(status: ["TRADE_FINISHED","FINISHED_L"])
+      @trades = TaobaoTrade.where(account_id: current_account.id).between(created: start_at..end_at).in(status: ["TRADE_FINISHED","FINISHED_L"])
       time_gap = (end_at - start_at).to_i
-      @old_trades = TaobaoTrade.between(created: (start_at - time_gap.seconds)..start_at).in(status: ["TRADE_FINISHED","FINISHED_L"])
+      @old_trades = TaobaoTrade.where(account_id: current_account.id).between(created: (start_at - time_gap.seconds)..start_at).in(status: ["TRADE_FINISHED","FINISHED_L"])
     else
-      @trades = TaobaoTrade.between(created: 1.month.ago..Time.now).in(status: ["TRADE_FINISHED","FINISHED_L"])
-      @old_trades = TaobaoTrade.between(created: 2.month.ago..1.month.ago).in(status: ["TRADE_FINISHED","FINISHED_L"])
+      @trades = TaobaoTrade.where(account_id: current_account.id).between(created: 1.month.ago..Time.now).in(status: ["TRADE_FINISHED","FINISHED_L"])
+      @old_trades = TaobaoTrade.where(account_id: current_account.id).between(created: 2.month.ago..1.month.ago).in(status: ["TRADE_FINISHED","FINISHED_L"])
     end
 
     if @trades && @old_trades
@@ -281,7 +281,7 @@ class SalesController < ApplicationController
       end_at = "#{@end_date} #{@end_time}".to_time(:local)
     else
       start_at = 1.month.ago
-      end_at = Time.now  
+      end_at = Time.now
     end
     @time_data = time_data(start_at, end_at)
   end

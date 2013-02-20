@@ -9,9 +9,11 @@
 #  stock_product_id :integer(4)
 #  created_at       :datetime        not null
 #  updated_at       :datetime        not null
+#  account_id       :integer(4)
 #
 
 class Stock < ActiveRecord::Base
   attr_accessible :name, :product_count, :seller_id, :stock_product_id
   belongs_to :seller
+  belongs_to :account
 end

@@ -30,7 +30,7 @@ class ReconcileStatementDetailsController < ApplicationController
   end
 
   def check_module
-    redirect_to "/" and return if TradeSetting.enable_module_reconcile_statements != true
+    redirect_to "/" and return if current_account.settings.enable_module_reconcile_statements != true
     redirect_to "/" and return if !current_user.has_role?(:admin)
   end
 end

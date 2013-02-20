@@ -72,7 +72,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     if @identity == 'logistic'
       $(@el).find(".trade_nav").text("物流单")
     if @identity == 'cs' or @identity == 'admin'
-      $(@el).find(".trade_nav").text("未分流订单")
+      $(@el).find(".trade_nav").text("未分流")
     $(@el).find(".get_offset").html(@offset)
 
     if parseInt($(@el).find(".complete_offset").html()) == @offset
@@ -201,11 +201,20 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     blocktheui()
     $("#trade_rows").html('')
 
+    if @trade_type == "default"
+      MagicOrders.trade_type = "undispatched"
+      @trade_type = "undispatched"
+
     @collection.fetch data: {trade_type: @trade_type, search: {@simple_search_option, @simple_search_value, @from_deliver_print_date, @to_deliver_print_date, @from_deliver_print_time, @to_deliver_print_time, @from_logistic_print_date, @to_logistic_print_date, @from_logistic_print_time, @to_logistic_print_time, @search_start_date, @search_start_time, @search_end_date, @search_end_time, @pay_start_time, @pay_end_time, @pay_start_date, @pay_end_date, @dispatch_start_time, @dispatch_end_time, @dispatch_start_date, @dispatch_end_date, @status_option, @type_option, @state_option, @city_option, @district_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_cs_memo_void, @search_invoice, @search_color, @search_color_void, @search_logistic}}, success: (collection) =>
-      if collection.length >= 0
+      if collection.length > 0
         @offset = @offset + 20
         @trade_number = 0
         @renderUpdate()
+
+      if collection.length == 0
+        $(@el).find(".get_offset").html(@offset)
+        $(@el).find(".complete_offset").html("0")
+        $.unblockUI()
       else
         $.unblockUI()
 
@@ -246,47 +255,52 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
   exportOrders: (e) =>
     e.preventDefault()
 
-    @simple_search_option = $(".search_option").val()
-    @simple_search_value = $(".search_value").val()
+    simple_search_option = $(".search_option").val()
+    simple_search_value = $(".search_value").val()
 
-    @status_option = $("#status_option").val()
-    @type_option = $("#type_option").val()
-    @state_option = $("#state_option").val()
-    @city_option = $("#city_option").val()
-    @district_option = $("#district_option").val()
+    status_option = $("#status_option").val()
+    type_option = $("#type_option").val()
+    state_option = $("#state_option").val()
+    city_option = $("#city_option").val()
+    district_option = $("#district_option").val()
 
-    @search_start_date = $(".search_start_date").val()
-    @search_end_date = $(".search_end_date").val()
-    @search_start_time = $(".search_start_time").val()
-    @search_end_time = $(".search_end_time").val()
-    @pay_start_date = $(".pay_start_date").val()
-    @pay_end_date = $(".pay_end_date").val()
-    @pay_start_time = $(".pay_start_time").val()
-    @pay_end_time = $(".pay_end_time").val()
-    @dispatch_start_date = $(".dispatch_start_date").val()
-    @dispatch_end_date = $(".dispatch_end_date").val()
-    @dispatch_start_time = $(".dispatch_start_time").val()
-    @dispatch_end_time = $(".dispatch_end_time").val()
-    @from_deliver_print_date = $("#deliver_print_start_date").val()
-    @to_deliver_print_date = $("#deliver_print_end_date").val()
-    @from_deliver_print_time = $("#deliver_print_start_time").val()
-    @to_deliver_print_time = $("#deliver_print_end_time").val()
-    @from_logistic_print_date = $("#logistic_print_start_date").val()
-    @to_logistic_print_date = $("#logistic_print_end_date").val()
-    @from_logistic_print_time = $("#logistic_print_start_time").val()
-    @to_logistic_print_time = $("#logistic_print_end_time").val()
+    search_start_date = $(".search_start_date").val()
+    search_end_date = $(".search_end_date").val()
+    search_start_time = $(".search_start_time").val()
+    search_end_time = $(".search_end_time").val()
+    pay_start_date = $(".pay_start_date").val()
+    pay_end_date = $(".pay_end_date").val()
+    pay_start_time = $(".pay_start_time").val()
+    pay_end_time = $(".pay_end_time").val()
+    dispatch_start_date = $(".dispatch_start_date").val()
+    dispatch_end_date = $(".dispatch_end_date").val()
+    dispatch_start_time = $(".dispatch_start_time").val()
+    dispatch_end_time = $(".dispatch_end_time").val()
+    from_deliver_print_date = $("#deliver_print_start_date").val()
+    to_deliver_print_date = $("#deliver_print_end_date").val()
+    from_deliver_print_time = $("#deliver_print_start_time").val()
+    to_deliver_print_time = $("#deliver_print_end_time").val()
+    from_logistic_print_date = $("#logistic_print_start_date").val()
+    to_logistic_print_date = $("#logistic_print_end_date").val()
+    from_logistic_print_time = $("#logistic_print_start_time").val()
+    to_logistic_print_time = $("#logistic_print_end_time").val()
+    search_logistic = $("#search_logistic").val()
 
-    @search_buyer_message = $("#search_buyer_message").is(':checked')
-    @search_seller_memo = $("#search_seller_memo").is(':checked')
-    @search_cs_memo = $("#search_cs_memo").is(':checked')
-    @search_cs_memo_void = $("#search_cs_memo_void").is(':checked')
-    @search_invoice = $("#search_invoice").is(':checked')
-    @search_color = $("#search_color").is(':checked')
-    @search_color_void = $("#search_color_void").is(':checked')
+    search_buyer_message = $("#search_buyer_message").is(':checked')
+    search_seller_memo = $("#search_seller_memo").is(':checked')
+    search_cs_memo = $("#search_cs_memo").is(':checked')
+    search_cs_memo_void = $("#search_cs_memo_void").is(':checked')
+    search_invoice = $("#search_invoice").is(':checked')
+    search_color = $("#search_color").is(':checked')
+    search_color_void = $("#search_color_void").is(':checked')
 
-    @search_logistic = $("#search_logistic").val()
+    if @trade_type == "default"
+      type_cache = "undispatched"
+    else
+      type_cache = @trade_type
+
     $('.export_orders').addClass('export_orders_disabled disabled').removeClass('export_orders')
-    $.get("/api/trades/export?trade_type=#{@trade_type}&search%5Bsimple_search_option%5D=#{@simple_search_option}&search%5Bsimple_search_value%5D=#{@simple_search_value}&search%5Bfrom_logistic_print_date%5D=#{@from_logistic_print_date}&search%5Bto_logistic_print_date%5D=#{@to_logistic_print_date}&search%5Bfrom_logistic_print_time%5D=#{@from_logistic_print_time}&search%5Bto_logistic_print_time%5D=#{@to_logistic_print_time}&search%5Bfrom_deliver_print_date%5D=#{@from_deliver_print_date}&search%5Bto_deliver_print_date%5D=#{@to_deliver_print_date}&search%5Bfrom_deliver_print_time%5D=#{@from_deliver_print_time}&search%5Bto_deliver_print_time%5D=#{@to_deliver_print_time}&search%5Bsearch_start_date%5D=#{@search_start_date}&search%5Bsearch_start_time%5D=#{@search_start_time}&search%5Bsearch_end_date%5D=#{@search_end_date}&search%5Bsearch_end_time%5D=#{@search_end_time}&search%5Bpay_start_time%5D=#{@pay_start_time}&search%5Bpay_end_time%5D=#{@pay_end_time}&search%5Bpay_start_date%5D=#{@pay_start_date}&search%5Bpay_end_date%5D=#{@pay_end_date}&search%5Bdispatch_start_time%5D=#{@dispatch_start_time}&search%5Bdispatch_end_time%5D=#{@dispatch_end_time}&search%5Bdispatch_start_date%5D=#{@dispatch_start_date}&search%5Bdispatch_end_date%5D=#{@dispatch_end_date}&search%5Bstatus_option%5D=#{@status_option}&search%5Btype_option%5D=#{@type_option}&search%5Bstate_option%5D=#{@state_option}&search%5Bcity_option%5D=#{@city_option}&search%5Bdistrict_option%5D=#{@district_option}&search%5Bsearch_buyer_message%5D=#{@search_buyer_message}&search%5Bsearch_seller_memo%5D=#{@search_seller_memo}&search%5Bsearch_cs_memo%5D=#{@search_cs_memo}&search%5Bsearch_cs_memo_void%5D=#{@search_cs_memo_void}&search%5Bsearch_invoice%5D=#{@search_invoice}&search%5Bsearch_color%5D=#{@search_color}&search%5Bsearch_color_void%5D=#{@search_color_void}&search%5Bsearch_logistic%5D=#{@search_logistic}&limit=0&offset=0")
+    $.get("/api/trades/export?trade_type=#{type_cache}&search%5Bsimple_search_option%5D=#{simple_search_option}&search%5Bsimple_search_value%5D=#{simple_search_value}&search%5Bfrom_logistic_print_date%5D=#{from_logistic_print_date}&search%5Bto_logistic_print_date%5D=#{to_logistic_print_date}&search%5Bfrom_logistic_print_time%5D=#{from_logistic_print_time}&search%5Bto_logistic_print_time%5D=#{to_logistic_print_time}&search%5Bfrom_deliver_print_date%5D=#{from_deliver_print_date}&search%5Bto_deliver_print_date%5D=#{to_deliver_print_date}&search%5Bfrom_deliver_print_time%5D=#{from_deliver_print_time}&search%5Bto_deliver_print_time%5D=#{to_deliver_print_time}&search%5Bsearch_start_date%5D=#{search_start_date}&search%5Bsearch_start_time%5D=#{search_start_time}&search%5Bsearch_end_date%5D=#{search_end_date}&search%5Bsearch_end_time%5D=#{search_end_time}&search%5Bpay_start_time%5D=#{pay_start_time}&search%5Bpay_end_time%5D=#{pay_end_time}&search%5Bpay_start_date%5D=#{pay_start_date}&search%5Bpay_end_date%5D=#{pay_end_date}&search%5Bdispatch_start_time%5D=#{dispatch_start_time}&search%5Bdispatch_end_time%5D=#{dispatch_end_time}&search%5Bdispatch_start_date%5D=#{dispatch_start_date}&search%5Bdispatch_end_date%5D=#{dispatch_end_date}&search%5Bstatus_option%5D=#{status_option}&search%5Btype_option%5D=#{type_option}&search%5Bstate_option%5D=#{state_option}&search%5Bcity_option%5D=#{city_option}&search%5Bdistrict_option%5D=#{district_option}&search%5Bsearch_buyer_message%5D=#{search_buyer_message}&search%5Bsearch_seller_memo%5D=#{search_seller_memo}&search%5Bsearch_cs_memo%5D=#{search_cs_memo}&search%5Bsearch_cs_memo_void%5D=#{search_cs_memo_void}&search%5Bsearch_invoice%5D=#{search_invoice}&search%5Bsearch_color%5D=#{search_color}&search%5Bsearch_color_void%5D=#{search_color_void}&search%5Bsearch_logistic%5D=#{search_logistic}&limit=0&offset=0")
     
   selectSameStatusTrade: (e) =>
     e.preventDefault()

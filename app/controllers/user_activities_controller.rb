@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 class UserActivitiesController < ApplicationController
   before_filter :authenticate_user!
-  before_filter :admin_only! 
+  before_filter :admin_only!
   def index
     @staffs = redis_operation_log(params[:key_value], -20,-1)
     @count = redis_operation_log_count(params[:key_value])
@@ -28,41 +28,41 @@ class UserActivitiesController < ApplicationController
     else
       staffs = redis_operation_log(params[:key], -20,-1)
     end
-    
+
     @staffs = Kaminari.paginate_array(staffs.sort {|x,y| y<=>x}).page(params[:page]).per(20)
   end
 
   def redis_operation_log(key,start,stop)
     if key.present?
       key = key.to_i
-      if key == 1 
-        $redis.ZRANGE "OperationLogToCs", start, stop
-      elsif key == 2 
-        $redis.ZRANGE "OperationLogToAdmin", start, stop
+      if key == 1
+        $redis.ZRANGE "account:#{Account.current.id}:OperationLogToCs", start, stop
+      elsif key == 2
+        $redis.ZRANGE "account:#{Account.current.id}:OperationLogToAdmin", start, stop
       elsif key == 3
-        $redis.ZRANGE "OperationLogToSeller", start, stop
+        $redis.ZRANGE "account:#{Account.current.id}:OperationLogToSeller", start, stop
       else
-        $redis.ZRANGE "OperationLogToAll", start, stop
+        $redis.ZRANGE "account:#{Account.current.id}:OperationLogToAll", start, stop
       end
     else
-      $redis.ZRANGE "OperationLogToAll", start, stop
+      $redis.ZRANGE "account:#{Account.current.id}:OperationLogToAll", start, stop
     end
   end
 
   def redis_operation_log_count(key)
     if key.present?
       key = key.to_i
-      if key == 1 
-        $redis.ZCOUNT "OperationLogToCs", "-inf", "+inf"
-      elsif key == 2 
-        $redis.ZCOUNT "OperationLogToAdmin", "-inf", "+inf"
+      if key == 1
+        $redis.ZCOUNT "account:#{Account.current.id}:OperationLogToCs", "-inf", "+inf"
+      elsif key == 2
+        $redis.ZCOUNT "account:#{Account.current.id}:OperationLogToAdmin", "-inf", "+inf"
       elsif key == 3
-        $redis.ZCOUNT "OperationLogToSeller", "-inf", "+inf"
+        $redis.ZCOUNT "account:#{Account.current.id}:OperationLogToSeller", "-inf", "+inf"
       else
-        $redis.ZCOUNT "OperationLogToAll", "-inf", "+inf"
+        $redis.ZCOUNT "account:#{Account.current.id}:OperationLogToAll", "-inf", "+inf"
       end
     else
-      $redis.ZCOUNT "OperationLogToAll", "-inf", "+inf"
+      $redis.ZCOUNT "account:#{Account.current.id}:OperationLogToAll", "-inf", "+inf"
     end
   end
 end

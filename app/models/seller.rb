@@ -7,7 +7,6 @@
 #  fullname          :string(255)
 #  address           :string(255)
 #  mobile            :string(255)
-#  phone             :string(255)
 #  created_at        :datetime        not null
 #  updated_at        :datetime        not null
 #  parent_id         :integer(4)
@@ -24,6 +23,7 @@
 #  interface         :string(255)
 #  has_stock         :boolean(1)      default(FALSE)
 #  stock_opened_at   :datetime
+#  account_id        :integer(4)
 #
 
 # -*- encoding : utf-8 -*-
@@ -42,8 +42,11 @@ class Seller < ActiveRecord::Base
   has_many :stock_history
   has_one :stock
 
-  validates_presence_of :fullname, :name
-  validates_uniqueness_of :fullname
+  scope :with_account, lambda {|account_id| where(account_id: account_id)}
+
+  validates :name, presence: true
+  validates :fullname, presence: true, uniqueness: { scope: :account_id }
+
 
   before_save :set_pinyin
 
@@ -84,5 +87,5 @@ class Seller < ActiveRecord::Base
   def area_name(id)
     Area.find_by_id(id).self_and_ancestors.map(&:name).join('-')
   end
-    
+
 end

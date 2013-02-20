@@ -14,10 +14,13 @@
 #  seller_id  :integer(4)
 #  sku_id     :integer(8)
 #  num_iid    :integer(8)
+#  account_id :integer(4)
 #
 
 class StockProduct < ActiveRecord::Base
   paginates_per 20
+
+  belongs_to :account
 
   attr_accessible :max, :safe_value, :product_id, :seller_id, :color_ids, :actual, :activity, :sku_id, :num_iid
 
@@ -40,10 +43,10 @@ class StockProduct < ActiveRecord::Base
         sku_key =  sku_values[2]
         sku_value =  sku_values[3]
         sku_name = sku_name + sku_key + ':' + sku_value + '  '
-      end  
+      end
     end
     sku_name
-  end  
+  end
 
   def storage_status
     if activity < safe_value
@@ -59,7 +62,7 @@ class StockProduct < ActiveRecord::Base
     opt_activity = 0
     opt_actual = 0
 
-    case opt_type 
+    case opt_type
     when '入库'
       opt_activity = opt_actual = num
     when '出库'

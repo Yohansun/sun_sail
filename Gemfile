@@ -51,12 +51,12 @@ group :test, :development do
 end
 
 gem 'strong_parameters'
-gem 'mongoid', '3.0.13'
+gem 'mongoid', '3.1.0'
 gem 'draper'
 gem 'inherited_resources'
 gem 'devise'
 gem 'devise-encryptable'
-gem 'rails-settings-cached'
+gem 'rails-settings', git: 'git://github.com/pomelolabs/rails-settings.git'
 gem 'twitter-bootstrap-rails', '>= 2.1.9'
 gem "less-rails"
 gem 'therubyracer'
@@ -86,6 +86,8 @@ gem "mini_magick"
 
 gem 'redis-namespace'
 
+gem 'client_side_validations'
+gem 'client_side_validations-simple_form'
 gem 'omniauth'
 gem 'omniauth-oauth2'
 gem 'rest-client'
@@ -93,7 +95,7 @@ gem 'httparty'
 
 #test mail
 gem "mails_viewer"
-
+gem 'wicked'
 gem "paperclip", "~> 2.4"
 
 group :production do

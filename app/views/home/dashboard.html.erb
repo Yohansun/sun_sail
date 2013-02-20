@@ -10,7 +10,7 @@
           <a class="indexStart1" href="/app#trades"><span>订单管理</span></a>
         </div>
 
-        <% unless TradeSetting.company == 'nippon' and (current_user.has_role?(:seller) || current_user.has_role?(:interface) ) %>
+        <% unless current_account.key == 'nippon' and (current_user.has_role?(:seller) || current_user.has_role?(:interface) ) %>
         <div>
           <%= link_to stock_path_by_user, class: 'indexStart4' do %>
             <span>仓库管理</span>
@@ -18,17 +18,17 @@
         </div>
         <% end %>
 
-        <% if TradeSetting.enable_module_bbs %>
-            <%- if TradeSetting.company == 'nippon' -%>
+        <% if current_account.settings.enable_module_bbs %>
+            <%- if current_account.key == 'nippon' -%>
               <% if current_user.has_role?(:seller) || current_user.has_role?(:interface) || current_user.has_role?(:admin) -%>
                 <div>
                   <a class="indexStart7" href="/go/npsellers" target="_blank"><span>互动中心</span></a>
                 </div>
-              <%- end %>  
+              <%- end %>
             <%- else -%>
               <div>
                 <a class="indexStart7" href="/bbs_topics"><span>互动中心</span></a>
-              </div>  
+              </div>
             <%- end -%>
         <% end %>
 
@@ -43,16 +43,16 @@
           </div>
           <div>
             <a class="indexStart8" href="/products"><span>商品管理</span></a>
-          </div>  
+          </div>
         <% end %>
         <% if current_user.has_role?(:admin) -%>
-          <% if TradeSetting.enable_module_reconcile_statements == true %>
+          <% if current_account.settings.enable_module_reconcile_statements == true %>
             <div>
               <a class="indexStart9" href="/reconcile_statements"><span>财务管理</span></a>
             </div>
           <% end %>
         <% end %>
-        <% if TradeSetting.enable_module_wangwang == true %>
+        <% if current_account.settings.enable_module_wangwang == true %>
           <div>
             <a class="indexStart2" href="/callcenter/contrastive_performance"><span>客服管理</span></a>
           </div>

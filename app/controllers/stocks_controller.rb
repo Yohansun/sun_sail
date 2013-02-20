@@ -4,11 +4,11 @@ class StocksController < ApplicationController
 
   def index
     select_sql = "skus.*, products.name, products.outer_id, products.product_id, products.category_id, stock_products.*"
-    @stock_products = StockProduct.joins(:product).joins(:sku).select(select_sql).where(seller_id: @seller.id).order("stock_products.product_id")
+    @stock_products = current_account.stock_products.joins(:product).joins(:sku).select(select_sql).where(seller_id: @seller.id).order("stock_products.product_id")
     if params[:info_type].present? && params[:info].present?
       if params[:info_type] == "sku_info"
         @stock_products = @stock_products.where("skus.properties_name like ?", "%#{params[:info]}%")
-      else 
+      else
         @stock_products = @stock_products.where("products.#{params[:info_type]} like ?", "%#{params[:info].strip}%")
       end
     end
@@ -30,7 +30,7 @@ class StocksController < ApplicationController
   end
 
   def home
-    @enbaled_stocks_sellers =  Seller.where(has_stock: true)
+    @enbaled_stocks_sellers =  current_account.sellers.where(has_stock: true)
     if params[:seller_name].present?
       @enbaled_stocks_sellers = @enbaled_stocks_sellers.where("sellers.name like ?", "%#{params[:seller_name].strip}%")
     end
@@ -40,7 +40,7 @@ class StocksController < ApplicationController
   private
   def check_stock_type
     if current_user.has_role?(:admin)
-      @seller = Seller.find_by_id params[:seller_id]
+      @seller = current_account.sellers.find_by_id params[:seller_id]
     else
       @seller = current_user.seller
     end

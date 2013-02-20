@@ -11,7 +11,7 @@ class NipponOtherTradeReporter
     current_user = User.find(report.user_id)
     hash = report.conditions
     hash = recursive_symbolize_keys! hash
-    trades = Trade.filter(current_user, hash).order_by(:created.desc)
+    trades = Trade.filter(current_account, current_user, hash).order_by(:created.desc)
     trades = TradeDecorator.decorate(trades)
     book = Spreadsheet::Workbook.new
     sheet1 = book.create_worksheet
@@ -37,7 +37,7 @@ class NipponOtherTradeReporter
       pay_time = trade.pay_time.try(:strftime,"%Y-%m-%d %H:%M:%S")
       dispatched_at = trade.dispatched_at.try(:strftime,"%Y-%m-%d %H:%M:%S")
       delivered_at = trade.delivered_at.try(:strftime,"%Y-%m-%d %H:%M:%S")
-      seller_name = trade.seller_name
+      seller_name = trade.seller_name || trade.try(:seller).try(:name)
       seller_memo = trade.seller_memo
       receiver_state = trade.receiver_state
       receiver_city = trade.receiver_city

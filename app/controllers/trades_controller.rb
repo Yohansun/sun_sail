@@ -11,7 +11,7 @@ class TradesController < ApplicationController
   def index
     offset = params[:offset] || 0
     limit = params[:limit] || 20
-    @trades = Trade.filter(current_user, params)
+    @trades = Trade.filter(current_account, current_user, params)
     @trades_count = @trades.count
 
     @trades = TradeDecorator.decorate(@trades.limit(limit).skip(offset).order_by(:created.desc))
@@ -24,12 +24,13 @@ class TradesController < ApplicationController
 
   def export
     @report = TradeReport.new
+    @report.account_id = current_account.id
     @report.request_at = Time.now
     @report.user_id = current_user.id
     params['search'] =  params['search'] .select {|k,v| v != "undefined"  }   
     @report.conditions = params.select {|k,v| !['limit','offset', 'action', 'controller'].include?(k)  } 
     #目前只有立邦具有多种订单
-    if TradeSetting.company == "nippon" && @report.conditions.fetch("search").fetch("type_option").blank?
+    if current_account.key == "nippon" && @report.conditions.fetch("search").fetch("type_option").blank?
       render :js => "alert('导出报表之前请在高级搜索中选择订单来源');$('.export_orders_disabled').addClass('export_orders').removeClass('export_orders_disabled disabled');"
     else
       @report.save
@@ -89,7 +90,7 @@ class TradesController < ApplicationController
     notifer_seller_flag = false
 
     if params[:seller_id].present?
-      seller = Seller.find_by_id params[:seller_id]
+      seller = current_account.sellers.find_by_id params[:seller_id]
       @trade.dispatch!(seller) if seller
     elsif params[:seller_id].nil?
       @trade.reset_seller
@@ -98,7 +99,7 @@ class TradesController < ApplicationController
     if params[:delivered_at] == true
       @trade.delivered_at = Time.now
       if params['logistic_info'] == '其他' and @trade.logistic_waybill.nil?
-        logistic = Logistic.find_by_name '其他'
+        logistic = current_account.logistics.find_by_name '其他'
         if logistic
           @trade.logistic_waybill = @trade.tid
           @trade.logistic_name = logistic.name
@@ -109,7 +110,7 @@ class TradesController < ApplicationController
     end
 
     if params[:setup_logistic] == true
-      logistic = Logistic.find_by_id params[:logistic_id]
+      logistic = current_account.logistics.find_by_id params[:logistic_id]
       @trade.logistic_id = logistic.try(:id)
       @trade.logistic_name = logistic.try(:name)
       @trade.logistic_code = logistic.try(:code)
@@ -296,6 +297,7 @@ class TradesController < ApplicationController
 
   def create
     @trade = TaobaoTrade.new(params[:trade])
+    @trade.account_id = current_account.id
     @trade.taobao_orders.build(params[:orders])
     @trade.created = Time.now
     @trade.tid = "000000" + Time.now.to_i.to_s
@@ -317,7 +319,7 @@ class TradesController < ApplicationController
 
   def split_trade
     @trade = Trade.find params[:id]
-    new_trade_ids = if TradeSetting.company == 'dulux'
+    new_trade_ids = if current_account.key == 'dulux'
       split_orders(@trade)
     else
       TradeSplitter.new(@trade).split!

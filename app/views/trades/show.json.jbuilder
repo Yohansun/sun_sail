@@ -4,8 +4,8 @@ json.trade_type @trade._type
 json.current_user_is_seller current_user.has_role?(:seller)
 json.splitted_tid @trade.splitted_tid
 json.seller_id @trade.seller_id
-json.default_seller_id TradeSetting.default_seller_id
-json.shopname TradeSetting.shopname
+json.default_seller_id current_account.settings.default_seller_id
+json.shopname current_account.settings.shopname
 json.seller_name @trade.seller.name if @trade.seller
 json.status @trade.status
 json.status_text @trade.status_text
@@ -59,6 +59,7 @@ json.confirm_color_at @trade.confirm_color_at.strftime("%m-%d %H:%M") if @trade.
 json.confirm_check_goods_at @trade.confirm_check_goods_at.strftime("%m-%d %H:%M") if @trade.confirm_check_goods_at
 json.confirm_receive_at @trade.confirm_receive_at.strftime("%m-%d %H:%M") if @trade.confirm_receive_at
 json.deliver_bill_printed_at @trade.deliver_bill_printed_at if @trade.deliver_bill_printed_at
+json.deliver_bill_count @trade.deliver_bills.count
 json.request_return_at @trade.request_return_at.strftime("%m-%d %H:%M") if @trade.request_return_at
 json.confirm_return_at @trade.confirm_return_at.strftime("%m-%d %H:%M") if @trade.confirm_return_at
 json.confirm_refund_at @trade.confirm_refund_at.strftime("%m-%d %H:%M") if @trade.confirm_refund_at
@@ -78,7 +79,7 @@ json.orders OrderDecorator.decorate(@trade.orders) do |json, order|
   json.title order.title
   json.num order.num
   json.price order.price
-  
+
   json.item_id order.item_id
   json.sku_properties order.sku_properties
   json.item_outer_id order.item_outer_id

@@ -89,6 +89,14 @@ class TradeDecorator < Draper::Base
     end
   end
 
+  def interface_name
+    trade.seller.try(:parent).try(:name)
+  end
+
+  def interface_mobile
+    trade.seller.try(:parent).try(:mobile)
+  end
+
   def receiver_full_address
     "#{self.receiver_state} #{self.receiver_city} #{self.receiver_district} #{self.receiver_address}"
   end
@@ -163,13 +171,12 @@ class TradeDecorator < Draper::Base
   #TaobaoPurchaseOrder doesn't have seller_disount
   def seller_discount
     case trade._type
-    when 'TaobaoPurchaseOrder'
-      0.0
     when 'TaobaoTrade'
-      trade.promotion_fee
+      discount = trade.promotion_fee 
     when 'JingdongTrade'
-      trade.seller_discount
+      discount = trade.seller_discount 
     end
+    discount ||= 0.0
   end
 
   def distributor_payment

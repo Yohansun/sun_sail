@@ -8,11 +8,11 @@ class ProductsController < ApplicationController
   # caches_action :index, cache_path: Proc.new { |c| c.params }
 
   def index
-    @products = Product
+    @products = current_account.products
     if params[:info_type].present? || params[:info].present?
       if params[:info_type] == "sku_info"
         @products = @products.joins(:skus).where("properties_name like ?", "%#{params[:info]}%")
-      else 
+      else
         @products = @products.where("#{params[:info_type]} like ? or #{params[:info_type]} = ?", "%#{params[:info].strip}%", params[:info].strip)
       end
     end
@@ -28,15 +28,15 @@ class ProductsController < ApplicationController
   end
 
   def show
-    @product = Product.find params[:id]
+    @product = current_account.products.find params[:id]
   end
 
   def new
-    @product = Product.new
+    @product = current_account.products.new
   end
 
   def create
-    @product = Product.new params[:product]
+    @product = current_account.products.new params[:product]
     if @product.save
       if params[:skus] #THIS IS TEMPORARY
         params[:skus]["sku_ids"].each do |s|
@@ -54,11 +54,11 @@ class ProductsController < ApplicationController
   end
 
   def edit
-    @product = Product.find params[:id]
+    @product = current_account.products.find params[:id]
   end
 
   def update
-    @product = Product.find params[:id]
+    @product = current_account.products.find params[:id]
 
     if params[:product]['good_type'] == '2' && params[:child_iid].present?
       @product.packages.delete_all
@@ -79,12 +79,13 @@ class ProductsController < ApplicationController
   end
 
   def destroy
-    Product.delete(params[:id])
+    product = current_account.products.find(params[:id])
+    product.destroy
     redirect_to products_path
   end
 
   def fetch_products
-    @products = Product.where(category_id: params[:category_id])
+    @products = current_account.products.where(category_id: params[:category_id])
     respond_to do |format|
       format.js
     end

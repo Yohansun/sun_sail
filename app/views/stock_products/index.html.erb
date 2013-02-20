@@ -30,7 +30,7 @@
       <fieldset class="form-inline">
         <div class="controls">
           <label for="" class="control-label">商品：</label>
-          <%= select 'product',:id, options_for_select(Product.all.collect { |c| [c.name, c.id] }, "#{params[:product][:id] if params[:product]}"), :selected =>  "", :include_blank => "--商品名--" %>
+          <%= select 'product',:id, options_for_select(current_account.products.collect { |c| [c.name, c.id] }, "#{params[:product][:id] if params[:product]}"), :selected =>  "", :include_blank => "--商品名--" %>
           <label for="" class="control-label">地域：</label>
           <select id="" class="level_1 input-medium" name="name_all">
             <option>地域名</option>
@@ -51,7 +51,7 @@
       </fieldset>
     <% end %>
     <div class="controls clearfix">
-      
+
       <div class="btns btn-group pull-left">
         <% if params[:product]%>
           <%= link_to "导出数据", stock_products_search_path(:format => "xls","product[id]" => "#{params[:product][:id]}",:name_all => "#{params[:name_all]}", :area_name_one => "#{params[:area_name_one]}", :area_name_two => "#{params[:area_name_two]}", :area_name_tree => "#{params[:area_name_tree]}" ), :class => "btn btn-warning", "data-toggle" =>"modal" %>

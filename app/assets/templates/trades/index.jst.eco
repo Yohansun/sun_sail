@@ -63,6 +63,8 @@
           <li><a href="#" data-trade-mode="logistic_bills" data-trade-status="all">所有物流单</a></li>
           <li><a href="#" data-trade-mode="logistic_bills" data-trade-status="unprinted">未打印物流单</a></li>
           <li><a href="#" data-trade-mode="logistic_bills" data-trade-status="printed">已打印物流单</a></li>
+          <li><a href="#" data-trade-mode="logistic_bills" data-trade-status="waybill_void">未设置物流信息</a></li>
+          <li><a href="#" data-trade-mode="logistic_bills" data-trade-status="waybill_exist">已设置物流信息</a></li>
         </ul>
       </li>
       <% unless MagicOrders.company == "dulux" and MagicOrders.role_key == 'logistic' : %>
@@ -154,7 +156,6 @@
       <div class="controls clearfix">
         <fieldset class="pull-left form-inline mar_r10">
           <select id="search_option" class="input-large search_option">
-            <option value="">请选择筛选条件</option>
             <option value="tid">订单编号</option>
             <option value="buyer_nick">收货人ID</option>
             <option value="receiver_name">收货人姓名</option>
@@ -249,8 +250,8 @@
 
             <select id="type_option" class="input-large type_option">
               <option value="">订单来源</option>
-              <option value="JingdongTrade">京东</option>
               <option value="TaobaoTrade">淘宝</option>
+              <option value="JingdongTrade">京东</option>
               <option value="TaobaoPurchaseOrder">分销平台</option>
             </select>
           </fieldset>
@@ -324,11 +325,14 @@
   <div class="alert alert-info hide" id="newTradesNotifer">
     <a href="#" id="newTradesNotiferLink">有<span>0</span>条新订单, 点击加载新订单数据</a>
   </div>
-  <% unless @trades.length == 0 : %>
-  <p class="controls mar_t5" >当前显示：全部订单 <span class="complete_offset"><%= @trades.at(0).get('trades_count') %></span> 项中的 <span class="get_offset"></span> 项</p>
-  <% else : %>
-  <p class="controls mar_t5" >当前显示：全部订单 <span class="complete_offset">0</span> 项中的 0 项</p>
-  <% end %>
+
+  <div class='trade_count_info'>
+    <% unless @trades.length == 0 : %>
+    <p class="controls mar_t5" >当前显示：全部订单 <span class="complete_offset"><%= @trades.at(0).get('trades_count') %></span> 项中的 <span class="get_offset"></span> 项</p>
+    <% else : %>
+    <p class="controls mar_t5" >当前显示：全部订单 <span class="complete_offset">0</span> 项中的 0 项</p>
+    <% end %>
+  </div>
 
   <table class="table table-striped table-bordered table-condensed td_colors" id="trades_table">
     <thead>
@@ -375,6 +379,7 @@
         <!-- <th data-col='order_split'>拆分</th> -->
         <!-- <th data-col='operator'>操作人</th> -->
         <th data-col='seller' nowrap>配送经销商</th>
+        <th data-col='interface' nowrap>上级经销商</th>
         <th data-col='logistic' nowrap>物流配送商</th>
         <th data-col='logistic_waybill'>物流单号</th>
       </tr>

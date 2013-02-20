@@ -3,11 +3,11 @@
 class Trade
   include Mongoid::Document
   include Mongoid::Paranoia
-  include Mongoid::Versioning
   include Mongoid::Timestamps
 
   field :trade_source_id, type: Integer
 
+  field :account_id, type: Integer
   field :seller_id, type: Integer
   field :seller_alipay_no, type: String
   field :seller_mobile, type: String
@@ -74,6 +74,7 @@ class Trade
   field :modify_payment_no, type: String
   field :modify_payment_at, type: DateTime
   field :modify_payment_memo, type: String
+  field :deliver_bills_count, type: Integer, default: 0
 
   # add indexes for speed
   index tid: -1
@@ -104,7 +105,7 @@ class Trade
   embeds_many :operation_logs
   embeds_many :manual_sms_or_emails
 
-  has_many :deliver_bills
+  has_many :deliver_bills, :dependent => :destroy
 
   attr_accessor :matched_seller
 
@@ -114,10 +115,14 @@ class Trade
   before_update :set_has_cs_memo
   before_update :set_has_unusual_state
 
+  def fetch_account
+    Account.find_by_id(self.account_id)
+  end
+
   def set_has_color_info
     self.orders.each do |order|
-      colors = order.color_num || []
-      if colors.flatten.select{|elem| elem.present?}.any?
+      colors = order.color_num.blank? ? [] : order.color_num
+      if colors.is_a?(Array) && colors.flatten.select{|elem| elem.present?}.any?
         self.has_color_info = true
         return
       end
@@ -125,27 +130,27 @@ class Trade
     self.has_color_info = false
     true
   end
-      
+
   def unusual_color_class
     class_name = ''
     if has_unusual_state
       class_name = 'cs_error'
-      if TradeSetting.company == "nippon"
+      if fetch_account.key == "nippon"
         class_name = unusual_states.last.unusual_color_class  if unusual_states && unusual_states.last.present? && unusual_states.last.unusual_color_class.present?
       end
-    end 
-    class_name   
-  end 
+    end
+    class_name
+  end
 
   def set_has_unusual_state
     if unusual_states.where(:repaired_at => nil).exists?
       self.has_unusual_state = true
       return
-    else  
+    else
       self.has_unusual_state = false
       true
     end
-  end  
+  end
 
   def set_has_cs_memo
     unless self.cs_memo.blank?
@@ -199,7 +204,7 @@ class Trade
         end
       }
       emails = cc.flatten.compact.map { |e| e.strip }
-      emails = emails | (TradeSetting.extra_cc || [])
+      emails = emails | (fetch_account.settings.extra_cc || [])
     end
 
     emails
@@ -208,20 +213,20 @@ class Trade
   # fetch all order cs_memo in a trade
   def orders_cs_memo
     orders.collect(&:cs_memo).compact.join(' ')
-  end 
+  end
 
   # fetch trade cs_memo with order cs_memo
   def trade_with_orders_cs_memo
-    "#{cs_memo}  #{orders_cs_memo}" 
+    "#{cs_memo}  #{orders_cs_memo}"
   end
 
   def nofity_stock(operation, op_seller)
-      orders.each do |order|
+    orders.each do |order|
       if order.sku_id.present?
         product = Product.joins(:skus).where("skus.sku_id = #{order.sku_id}").first
       else
         product = Product.find_by_num_iid order.num_iid
-      end  
+      end
       package = product.package_info
       if package.present?
         package.each do |data|
@@ -308,7 +313,7 @@ class Trade
         number: order.num,
         memo: order.cs_memo
       )
-    end    
+    end
   end
 
   def logistic_split
@@ -499,9 +504,9 @@ class Trade
     end
   end
 
-  def self.filter(current_user, params)
-    trades = Trade.all
-    
+  def self.filter(current_account, current_user, params)
+    trades = Trade.where(account_id: current_account.id)
+
     paid_not_deliver_array = ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"]
     paid_and_delivered_array = ["WAIT_BUYER_CONFIRM_GOODS","WAIT_GOODS_RECEIVE_CONFIRM","WAIT_BUYER_CONFIRM_GOODS_ACOUNTED","WAIT_SELLER_SEND_GOODS_ACOUNTED"]
     closed_array = ["TRADE_CLOSED","TRADE_CANCELED","TRADE_CLOSED_BY_TAOBAO", "ALL_CLOSED"]
@@ -516,8 +521,8 @@ class Trade
       seller = current_user.seller
       self_and_descendants_ids = seller.self_and_descendants.map(&:id)
       trades = trades.any_in(seller_id: self_and_descendants_ids) if self_and_descendants_ids.present?
-    end 
-      
+    end
+
     if current_user.has_role? :logistic
       logistic = current_user.logistic
       trades = trades.where(logistic_id: logistic.id) if logistic
@@ -546,7 +551,7 @@ class Trade
         trades = trades.where(:dispatched_at.lte => 2.days.ago, :consign_time.exists => false, :status.in => paid_not_deliver_array)
         trade_type_hash = {:dispatched_at.lte => 2.days.ago, :consign_time.exists => false, :status.in => paid_not_deliver_array}
       when 'buyer_delay_deliver', 'seller_ignore_deliver', 'seller_lack_product', 'seller_lack_color', 'buyer_demand_refund', 'buyer_demand_return_product', 'other_unusual_state'
-        trade_type_hash = {:unusual_states.elem_match => {:key => type, :repaired_at.exists => false}}
+        trade_type_hash = {:unusual_states.elem_match => {:key => type, :repaired_at => {"$exists" => false}}}
       # 订单
       when 'all'
         trade_type_hash = nil
@@ -565,7 +570,7 @@ class Trade
       when 'refund'
         trade_type_hash = {"$or" => [{ :"taobao_orders.refund_status" => {:'$in' => taobao_trade_refund_array}}, {:"taobao_sub_purchase_orders.status" => {:'$in' => taobao_purchase_refund_array}}]}
       when 'return'
-        trade_type_hash = {:request_return_at.ne => nil}  
+        trade_type_hash = {:request_return_at.ne => nil}
       when 'closed'
         trade_type_hash = {:status.in => closed_array}
       when 'unusual_trade'
@@ -615,14 +620,14 @@ class Trade
         trade_type_hash = {has_color_info: true, :status.in => paid_not_deliver_array, :confirm_color_at.exists => true}
 
       # 登录时的默认显示
-      else
+      when "default"
         # 经销商登录默认显示未发货订单
         if current_user.has_role?(:seller)
           trades = trades.where(:dispatched_at.ne => nil, :status.in => paid_not_deliver_array)
         end
-        # 管理员，客服登录默认显示未分流订单
+        # 管理员，客服登录默认显示未分流淘宝订单
         if current_user.has_role?(:cs) || current_user.has_role?(:admin)
-          trades = trades.where(:status.in => paid_not_deliver_array, seller_id: nil)
+          trades = trades.where(:status.in => paid_not_deliver_array, seller_id: nil).where(_type: 'TaobaoTrade')
         end
       end
     end
@@ -761,7 +766,6 @@ class Trade
       ].compact
     }
     search_hash == {"$and"=>[]} ? search_hash = nil : search_hash
-
     ## 过滤有留言但还在抓取 + 总筛选
     if TradeSetting.company == "vanward" ## THIS IS TEMPORARY
       trades.where(search_hash).and(trade_type_hash, {"trade_source_id" => 200}, {"$or" => [{"has_buyer_message" => {"$ne" => true}},{"buyer_message" => {"$ne" => nil}}]})

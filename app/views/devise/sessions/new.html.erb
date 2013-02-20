@@ -9,7 +9,7 @@
     <h5 class="iUser">登录</h5>
     <%= simple_form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f| %>
     <fieldset>
-      <%= f.input :email, :required => false, :autofocus => true, :label => "用户名/邮箱", :input_html =>{ :class => "input-large" } %>
+      <%= f.input :email, :required => false, :autofocus => true, :label => "邮箱", :input_html =>{ :class => "input-large" } %>
       <%= f.input :password, :required => false, :label => "密码", :input_html =>{ :class => "input-large" } %>
       <div class="form-actions">
         <%= f.button :submit, "登录", :class => "pull-right btn btn-primary" %>

@@ -2,15 +2,15 @@
 class TradeTaobaoPurchaseOrderDeliver
   include Sidekiq::Worker
   sidekiq_options :queue => :taobao_purchase
-  
+
   def perform(id)
     trade = TaobaoPurchaseOrder.find(id)
-    source_id = trade.trade_source_id || TradeSetting.default_taobao_purchase_source_id
+    source_id = trade.trade_source_id || trade.fetch_account.settings.default_taobao_purchase_source_id
     response = TaobaoQuery.get({
       :method => 'taobao.logistics.offline.send', :tid => trade.deliver_id,
       :out_sid => trade.logistic_waybill,
       :company_code => trade.logistic_code}, source_id
-     ) 
+     )
 
     errors = response['error_response']
     if errors.blank?
@@ -24,10 +24,10 @@ class TradeTaobaoPurchaseOrderDeliver
 
       # notify_kind = "after_send_goods"
       # if content && mobile
-      #   SmsNotifier.perform_async(content, mobile, tid ,notify_kind) 
+      #   SmsNotifier.perform_async(content, mobile, tid ,notify_kind)
       # end
-      
-      #FIXME, MOVE LATER                     
+
+      #FIXME, MOVE LATER
       trade.nofity_stock "发货", trade.seller_id
     else
       Notifier.deliver_errors(id, errors).deliver

@@ -7,7 +7,7 @@
       <li class="active"><%= @product.name %></li>
     </ul><!-- breadcrumb -->
 
-    
+
     <form class="well form-horizontal info_check">
       <fieldset class="clearfix">
         <div class="w_48 pull-left">
@@ -24,15 +24,15 @@
               <p class="mar_t5"><%= @product.name %></p>
             </div>
           </div>
-          
-          <% if TradeSetting.enable_module_sku_properties == 1  %>
+
+          <% if current_account.settings.enable_module_sku_properties == 1  %>
             <div class="control-group">
               <label class="control-label" for=""><span class="atv">*</span>商品属性：</label>
               <div class="controls">
                 <p class="mar_t5"><%= @product.avalibale_sku_names %></p>
               </div>
             </div>
-           <%- end %> 
+           <%- end %>
 
           <div class="control-group">
             <label class="control-label" for=""><span class="atv">*</span>商品编码：</label>
@@ -92,7 +92,7 @@
             </div>
           </div>
 
-          <% if TradeSetting.enable_module_colors == 1 %>
+          <% if current_account.settings.enable_module_colors == 1 %>
             <div class="control-group">
               <label class="control-label" for="">颜色：</label>
               <div class="controls">
@@ -100,9 +100,8 @@
               </div>
             </div>
           <% end %>
-          
          </div>
-         
+
          <% if @product.pic_url.present? %>
            <div class="w_48 pull-left">
             <div class="control-group">
@@ -114,7 +113,7 @@
               </div>
             </div>
            </div>
-          <% end %>  
+          <% end %>
       </fieldset>
 
       <fieldset>

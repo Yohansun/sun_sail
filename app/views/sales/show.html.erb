@@ -205,7 +205,7 @@
             $('#deal_money').html(deal_money)
             $('#paid_money').html(paid_money)
           });
-      }, <%= TradeSetting.frequency*1000 %>);
+      }, <%= current_account.settings.frequency*1000 %>);
     };
 
     if (time_now > end_date){

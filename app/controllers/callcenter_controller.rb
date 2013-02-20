@@ -8,16 +8,16 @@ class CallcenterController < ApplicationController
 		if params[:start_date].present? && params[:end_date].present?
 			@start_date = params[:start_date].to_time(:local)
 			@end_date = params[:end_date].to_time(:local)
-		else	
+		else
 			if params[:date_range].present?
 				if params[:date_range] == "lastest_week"
 					range_start = Time.now - 1.week + 1.day if params[:date_range] == "lastest_week"
 				elsif params[:date_range] == "lastest_month"
-				  range_start = Time.now - 1.month + 1.day	
+				  range_start = Time.now - 1.month + 1.day
 				end
-			else	
+			else
         range_start = Time.now - 30.day
-			end	
+			end
 			range_end = Time.now - 1.day
 			@start_date = range_start.beginning_of_day
 			@end_date = range_end.end_of_day
@@ -143,7 +143,7 @@ class CallcenterController < ApplicationController
   private
 
   def check_module
-  	redirect_to "/" if TradeSetting.enable_module_wangwang != true
+  	redirect_to "/" if current_account.settings.enable_module_wangwang != true
   	redirect_to "/" if !current_user.has_role?(:admin)
   end
 end

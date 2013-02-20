@@ -1,4 +1,4 @@
-json.shopname TradeSetting.shopname
+json.shopname current_account.settings.shopname
 json.tid @trade.tid
 json.status @trade.status_text
 json.receiver_name @trade.receiver_name
@@ -12,7 +12,7 @@ json.cs_memo @trade.cs_memo
 json.gift_memo @trade.gift_memo
 json.logistic_name @trade.logistic_name
 json.logistic_waybill @trade.logistic_waybill
-json.notice TradeSetting.deliver_bill_notice_info
+json.notice current_account.settings.deliver_bill_notice_info
 json.orders @bill.bill_products do |json, order|
   json.outer_id order.outer_id
   json.sku_name order.sku_name

@@ -95,4 +95,17 @@ class TaobaoOrder < Order
       when "SUCCESS" then "退款成功"
     end
   end
+
+  def price
+    origin_price =  attributes['price']
+    (origin_price - promotion_discount_fee/num).to_f.round(2)
+  end  
+
+  def promotion_discount_fee
+    if taobao_trades.promotion_details.present?
+      discount_fee = taobao_trades.promotion_details.where(oid: oid).sum(:discount_fee)
+    end 
+    discount_fee ||  0   
+  end 
+
 end

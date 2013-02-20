@@ -6,6 +6,8 @@ class TradeSplitter
   end
 
   def split!
+    trade = TradeDecorator.decorate(@trade)
+    return false unless trade.pay_time.present? && trade.seller_id.blank?
     splitted_orders_container = []
  
     splitted_orders_container = splitted_orders

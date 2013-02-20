@@ -6,7 +6,7 @@ class TaobaoPurchaseOrder < Trade
   field :deliver_id, type: String
   field :seller_memo, type: String,     as: :supplier_memo
   field :buyer_message, type:String,    as: :memo
-  
+
   #field :supplier_memo, type: String
   #field :memo, type: String
 
@@ -92,17 +92,17 @@ class TaobaoPurchaseOrder < Trade
     return unless auto_dispatchable?
     dispatch!
   end
-  
+
   def distributor_usercode
     case self.distributor_username.strip
-    when "满信家居专营店"  
+    when "满信家居专营店"
       "TBFX0001"
-    when ""  
-      "TBFX0002" 
+    when ""
+      "TBFX0002"
     else
       "无对应分销商编码"
-    end     
-  end  
+    end
+  end
 
   #手动分流应使用此方法
   def dispatch!(seller = nil)
@@ -125,14 +125,14 @@ class TaobaoPurchaseOrder < Trade
   end
 
   def cc_emails
-    purchase_extra_cc = TradeSetting.purchase_extra_cc
+    purchase_extra_cc = self.fetch_account.settings.purchase_extra_cc
     cc_emails = super | (purchase_extra_cc || [])
     cc_emails.compact
-  end  
+  end
 
   def orders_total_fee
     orders.inject(0.0) { |sum, order| sum + order.buyer_payment.to_f }
-  end 
+  end
 
   def payment
     orders_total_fee + post_fee

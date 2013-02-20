@@ -2,23 +2,23 @@
 <script type="text/javascript">
   $(function() {
     MagicOrders.role_key = "<%= current_user.roles.first.try(:name) %>";
-    MagicOrders.company = "<%= TradeSetting.company %>"
+    MagicOrders.company = "<%= current_account.key %>"
     MagicOrders.user = "<%= current_user.name %>"
     MagicOrders.current_user_seller_id = "<%= current_user.seller_id.to_i %>"
     MagicOrders.logistics = new MagicOrders.Collections.Logistics();
     MagicOrders.logistics.reset(<%= raw @logistics.to_json %>);
-    MagicOrders.deliver_bill_notice_info = "<%= TradeSetting.deliver_bill_notice_info %>"
-    MagicOrders.enable_module_print_deliver_bill = <%= TradeSetting.enable_module_print_deliver_bill %>
-    MagicOrders.enable_trade_deliver_bill_spliting = <%= TradeSetting.enable_trade_deliver_bill_spliting == true %>
-    MagicOrders.enable_trade_deliver_bill_spliting_sellers = <%= TradeSetting.enable_trade_deliver_bill_spliting_sellers || [] %>
-    MagicOrders.enable_module_colors = <%= TradeSetting.enable_module_colors %>
-    MagicOrders.enable_module_sku_properties = <%= TradeSetting.enable_module_sku_properties %>
-    MagicOrders.enable_module_interface = <%= TradeSetting.enable_module_interface %>
+    MagicOrders.deliver_bill_notice_info = "<%= current_account.settings.deliver_bill_notice_info %>"
+    MagicOrders.enable_module_print_deliver_bill = <%= current_account.settings.enable_module_print_deliver_bill %>
+    MagicOrders.enable_trade_deliver_bill_spliting = <%= current_account.settings.enable_trade_deliver_bill_spliting == true %>
+    MagicOrders.enable_trade_deliver_bill_spliting_sellers = <%= current_account.settings.enable_trade_deliver_bill_spliting_sellers || [] %>
+    MagicOrders.enable_module_colors = <%= current_account.settings.enable_module_colors %>
+    MagicOrders.enable_module_sku_properties = <%= current_account.settings.enable_module_sku_properties %>
+    MagicOrders.enable_module_interface = <%= current_account.settings.enable_module_interface %>
 
-    MagicOrders.trade_pops = <%= raw TradeSetting.trade_pops.to_json %>
-    MagicOrders.trade_modes = <%= raw TradeSetting.trade_modes.to_json %>
-    MagicOrders.trade_cols_visible_modes = <%= raw TradeSetting.trade_cols_visible_modes.to_json %>
-    MagicOrders.trade_cols = <%= raw TradeSetting.trade_cols.to_json %>
+    MagicOrders.trade_pops = <%= raw current_account.settings.trade_pops.to_json %>
+    MagicOrders.trade_modes = <%= raw current_account.settings.trade_modes.to_json %>
+    MagicOrders.trade_cols_visible_modes = <%= raw current_account.settings.trade_cols_visible_modes.to_json %>
+    MagicOrders.trade_cols = <%= raw current_account.settings.trade_cols.to_json %>
     MagicOrders.init();
   });
 </script>
@@ -87,9 +87,9 @@
 
   <div class="modal-footer">
     <a href="#" class="btn" data-dismiss="modal" style=''>取消</a>
-    <% if TradeSetting.enable_module_print_deliver_bill  == 1  %>
+    <% if current_account.settings.enable_module_print_deliver_bill == 1  %>
       <div id="showbox"></div>
-    <% else  %>  
+    <% else  %>
       <a class="btn btn-primary" style='margin-top:-22px;'>打印</a>
     <% end %>
     <select id="logistic_select" class="input-medium nomargin pull-left"></select>

@@ -13,6 +13,8 @@
 //= require jquery
 //= require jquery_ujs
 //= require twitter/bootstrap
+//= require rails.validations
+//= require rails.validations.simple_form
 //= require swfobjects
 //= require underscore
 //= require underscore.string
@@ -153,14 +155,14 @@ function dashboardFadeIn() {
 
 jsReady = false
 var dd
-var flash_path = "/swf/deliver_bill_<%= TradeSetting.company %>.swf"
+var flash_path = current_account ? "/swf/deliver_bill_"+ current_account.key +".swf" : '';
 
 function isReady() { // //flash 会调用此方法检测页面 js 是否已经准备完毕；
   return jsReady
 }
 
-function pageInit() {   //flash 会检测页面 js 是否已经准备完毕；  
-  jsReady = true       //flash 需要这个值；  
+function pageInit() {   //flash 会检测页面 js 是否已经准备完毕；
+  jsReady = true       //flash 需要这个值；
 }
 
 function printfeedback(str){  //如果flash 数据还未载入成功，会返回一个报错信息在str中；
@@ -287,3 +289,7 @@ $(document).ready(function(e) {
     });
   });
 });
+
+//select2
+$(".select2").select2();//待解决：如果统一用一个class的话select的默认值会不显示
+$('.multmail').select2({tags:["example@doorder.com"],placeholder: "example@doorder.com",width: "220px"})

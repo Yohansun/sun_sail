@@ -2,12 +2,12 @@
 class TradeTaobaoPromotionFetcher
 	include Sidekiq::Worker
   sidekiq_options :queue => :taobao_promotion_fetcher
-  
+
   def perform(tid)
-    
+
     trade = TaobaoTrade.where(tid: tid).first
     return unless trade
-    
+
     result = TaobaoQuery.get({
       :method => 'taobao.trade.fullinfo.get',
       :fields => 'promotion_details',
@@ -25,7 +25,7 @@ class TradeTaobaoPromotionFetcher
 
     trade.update_attributes promotion_fee: trade.promotion_details.sum(:discount_fee), got_promotion: true
 
-    delay_time = TradeSetting.delay_time || 0
+    delay_time = trade.fetch_account.settings.delay_time || 0
 
     DelayAutoDispatch.perform_in(delay_time, trade.id)
   end

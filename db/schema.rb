@@ -11,13 +11,18 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130201084132) do
+ActiveRecord::Schema.define(:version => 20130206025907) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
     t.string   "key"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+  end
+
+  create_table "accounts_users", :force => true do |t|
+    t.integer "account_id"
+    t.integer "user_id"
   end
 
   create_table "alipay_trade_histories", :force => true do |t|
@@ -57,16 +62,13 @@ ActiveRecord::Schema.define(:version => 20130201084132) do
   create_table "areas", :force => true do |t|
     t.string   "name"
     t.integer  "parent_id"
-    t.integer  "seller_id"
-    t.datetime "created_at",                        :null => false
-    t.datetime "updated_at",                        :null => false
+    t.datetime "created_at",                       :null => false
+    t.datetime "updated_at",                       :null => false
     t.boolean  "active",         :default => true
-    t.boolean  "is_1568",        :default => false
     t.string   "pinyin"
     t.integer  "children_count", :default => 0
     t.integer  "lft",            :default => 0
     t.integer  "rgt",            :default => 0
-    t.integer  "sellers_count",  :default => 0
     t.integer  "area_type"
     t.string   "zip"
   end
@@ -78,6 +80,7 @@ ActiveRecord::Schema.define(:version => 20130201084132) do
     t.string   "name"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.integer  "account_id"
   end
 
   create_table "bbs_topics", :force => true do |t|
@@ -89,6 +92,7 @@ ActiveRecord::Schema.define(:version => 20130201084132) do
     t.integer  "download_count",  :default => 0
     t.datetime "created_at",                     :null => false
     t.datetime "updated_at",                     :null => false
+    t.integer  "account_id"
   end
 
   add_index "bbs_topics", ["bbs_category_id"], :name => "index_bbs_topics_on_bbs_category_id"
@@ -102,6 +106,7 @@ ActiveRecord::Schema.define(:version => 20130201084132) do
     t.integer  "lft"
     t.integer  "rgt"
     t.integer  "depth"
+    t.integer  "account_id"
   end
 
   create_table "colors", :force => true do |t|
@@ -110,6 +115,7 @@ ActiveRecord::Schema.define(:version => 20130201084132) do
     t.string   "num"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.integer  "account_id"
   end
 
   add_index "colors", ["num"], :name => "index_colors_on_num"
@@ -141,6 +147,7 @@ ActiveRecord::Schema.define(:version => 20130201084132) do
     t.string   "name"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.integer  "account_id"
   end
 
   create_table "logistic_areas", :force => true do |t|
@@ -148,6 +155,7 @@ ActiveRecord::Schema.define(:version => 20130201084132) do
     t.integer  "area_id"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+    t.integer  "account_id"
   end
 
   add_index "logistic_areas", ["area_id"], :name => "index_logistic_areas_on_area_id"
@@ -163,6 +171,7 @@ ActiveRecord::Schema.define(:version => 20130201084132) do
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
     t.integer  "taobao_rate_score"
+    t.integer  "account_id"
   end
 
   create_table "logistics", :force => true do |t|
@@ -172,6 +181,7 @@ ActiveRecord::Schema.define(:version => 20130201084132) do
     t.datetime "updated_at",                      :null => false
     t.string   "code",       :default => "OTHER"
     t.string   "xml"
+    t.integer  "account_id"
   end
 
   create_table "packages", :force => true do |t|
@@ -203,6 +213,7 @@ ActiveRecord::Schema.define(:version => 20130201084132) do
     t.datetime "created_at"
     t.string   "cat_name"
     t.string   "pic_url"
+    t.integer  "account_id"
     t.string   "detail_url"
     t.string   "cid"
     t.integer  "num_iid",       :limit => 8
@@ -212,6 +223,7 @@ ActiveRecord::Schema.define(:version => 20130201084132) do
     t.string   "name"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.integer  "account_id"
   end
 
   create_table "reconcile_statement_details", :force => true do |t|
@@ -243,6 +255,7 @@ ActiveRecord::Schema.define(:version => 20130201084132) do
     t.datetime "updated_at",                            :null => false
     t.datetime "audit_time"
     t.text     "exported"
+    t.integer  "account_id"
   end
 
   add_index "reconcile_statements", ["created_at"], :name => "index_reconcile_statements_on_created_at"
@@ -266,6 +279,7 @@ ActiveRecord::Schema.define(:version => 20130201084132) do
     t.datetime "end_at"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.integer  "account_id"
   end
 
   create_table "sellers", :force => true do |t|
@@ -273,7 +287,6 @@ ActiveRecord::Schema.define(:version => 20130201084132) do
     t.string   "fullname"
     t.string   "address"
     t.string   "mobile"
-    t.string   "phone"
     t.datetime "created_at",                           :null => false
     t.datetime "updated_at",                           :null => false
     t.integer  "parent_id"
@@ -290,6 +303,7 @@ ActiveRecord::Schema.define(:version => 20130201084132) do
     t.string   "interface"
     t.boolean  "has_stock",         :default => false
     t.datetime "stock_opened_at"
+    t.integer  "account_id"
   end
 
   create_table "sellers_areas", :force => true do |t|
@@ -333,6 +347,7 @@ ActiveRecord::Schema.define(:version => 20130201084132) do
     t.string   "reason"
     t.string   "note"
     t.integer  "seller_id"
+    t.integer  "account_id"
   end
 
   add_index "stock_histories", ["seller_id"], :name => "index_stock_histories_on_seller_id"
@@ -346,6 +361,7 @@ ActiveRecord::Schema.define(:version => 20130201084132) do
     t.integer  "actual",                  :default => 0
     t.integer  "product_id"
     t.integer  "seller_id"
+    t.integer  "account_id"
     t.integer  "sku_id",     :limit => 8
     t.integer  "num_iid",    :limit => 8
   end
@@ -359,6 +375,7 @@ ActiveRecord::Schema.define(:version => 20130201084132) do
     t.integer  "stock_product_id"
     t.datetime "created_at",                      :null => false
     t.datetime "updated_at",                      :null => false
+    t.integer  "account_id"
   end
 
   create_table "taobao_app_tokens", :force => true do |t|
@@ -367,17 +384,17 @@ ActiveRecord::Schema.define(:version => 20130201084132) do
     t.string   "taobao_user_id"
     t.string   "taobao_user_nick"
     t.string   "refresh_token"
-    t.datetime "created_at",                    :null => false
-    t.datetime "updated_at",                    :null => false
+    t.datetime "created_at",                                                    :null => false
+    t.datetime "updated_at",                                                    :null => false
     t.datetime "last_refresh_at"
     t.integer  "trade_source_id"
     t.datetime "refresh_token_last_refresh_at"
     t.integer  "re_expires_in",                 :limit => 8
     t.integer  "r1_expires_in",                 :limit => 8
     t.integer  "r2_expires_in",                 :limit => 8
-    t.integer  "w1_expires_in",                :limit => 8
-    t.integer  "w2_expires_in",                :limit => 8
-    t.boolean  "need_refresh",               :default => false
+    t.integer  "w1_expires_in",                 :limit => 8
+    t.integer  "w2_expires_in",                 :limit => 8
+    t.boolean  "need_refresh",                               :default => false
   end
 
   create_table "taobao_trade_rates", :force => true do |t|
@@ -411,6 +428,13 @@ ActiveRecord::Schema.define(:version => 20130201084132) do
     t.integer  "fetch_quantity",      :default => 20
     t.integer  "fetch_time_circle",   :default => 15
     t.boolean  "high_pressure_valve", :default => false
+    t.integer  "sid"
+    t.integer  "cid"
+    t.datetime "created"
+    t.datetime "modified"
+    t.string   "bulletin"
+    t.string   "title"
+    t.string   "description"
   end
 
   create_table "upload_files", :force => true do |t|
@@ -424,31 +448,41 @@ ActiveRecord::Schema.define(:version => 20130201084132) do
   end
 
   create_table "users", :force => true do |t|
-    t.string   "email",                  :default => "",    :null => false
-    t.string   "encrypted_password",     :default => "",    :null => false
+    t.string   "username",                                              :null => false
+    t.string   "name"
+    t.string   "email",                               :default => "",   :null => false
+    t.string   "encrypted_password",   :limit => 128, :default => "",   :null => false
+    t.string   "password_salt",                       :default => "",   :null => false
     t.string   "reset_password_token"
-    t.datetime "reset_password_sent_at"
+    t.string   "remember_token"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          :default => 0
+    t.integer  "sign_in_count",                       :default => 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.datetime "created_at",                                :null => false
-    t.datetime "updated_at",                                :null => false
-    t.boolean  "is_super_admin",         :default => false
-    t.string   "name"
-    t.boolean  "active",                 :default => true
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "role"
+    t.integer  "role_level",                          :default => 10
+    t.integer  "sellers_count",                       :default => 0
+    t.integer  "parent_id"
+    t.integer  "children_count",                      :default => 0
+    t.integer  "lft",                                 :default => 0
+    t.integer  "rgt",                                 :default => 0
+    t.boolean  "active",                              :default => true
     t.integer  "seller_id"
-    t.string   "username"
     t.integer  "logistic_id"
     t.integer  "failed_attempts"
     t.string   "unlock_token"
     t.datetime "locked_at"
+    t.string   "phone"
   end
 
-  add_index "users", ["email"], :name => "index_users_on_email", :unique => true
-  add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
+  add_index "users", ["email"], :name => "index_admins_on_email", :unique => true
+  add_index "users", ["email"], :name => "index_users_on_email"
+  add_index "users", ["parent_id"], :name => "index_admins_on_parent_id"
+  add_index "users", ["reset_password_token"], :name => "index_admins_on_reset_password_token", :unique => true
   add_index "users", ["unlock_token"], :name => "index_users_on_unlock_token", :unique => true
 
   create_table "users_roles", :id => false, :force => true do |t|

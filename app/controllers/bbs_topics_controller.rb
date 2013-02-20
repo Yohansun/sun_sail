@@ -4,16 +4,16 @@ class BbsTopicsController < ApplicationController
   before_filter :fetch_topic, except: [:index, :new, :create, :list]
 
   def index
-    @hot_topics = BbsTopic.hot.limit(10)
-    @latest_topics = BbsTopic.latest.limit(10)
+    @hot_topics = current_account.bbs_topics.hot.limit(10)
+    @latest_topics = current_account.bbs_topics.latest.limit(10)
   end
 
   def new
-    @topic = BbsTopic.new
+    @topic = current_account.bbs_topics.new
   end
 
   def create
-    @topic = BbsTopic.new(topic_params)
+    @topic = current_account.bbs_topics.new(topic_params)
     @topic.user_id = current_user.id
     if params[:uploads].try(:any?)
       params[:uploads].each do |upload_file|
@@ -38,9 +38,9 @@ class BbsTopicsController < ApplicationController
   def list
     @name = current_user.username
     if params[:category] == "hot"
-    @hot_topics = BbsTopic.page(params[:page]).per(20)
+    @hot_topics = current_account.bbs_topics.page(params[:page]).per(20)
     else
-    @latest_topics = BbsTopic.page(params[:page]).per(20)
+    @latest_topics = current_account.bbs_topics.page(params[:page]).per(20)
     end
   end
 
@@ -78,11 +78,11 @@ class BbsTopicsController < ApplicationController
   private
 
   def fetch_categories
-    @categories = BbsCategory.all
+    @categories = current_account.bbs_categories
   end
 
   def fetch_topic
-    @topic = BbsTopic.find(params[:id])
+    @topic = current_account.bbs_topics.find(params[:id])
   end
 
   def topic_params

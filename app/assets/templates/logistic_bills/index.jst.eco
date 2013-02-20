@@ -50,6 +50,8 @@
           <li><a href="#" data-trade-mode="logistic_bills" data-trade-status="all">所有物流单</a></li>
           <li><a href="#" data-trade-mode="logistic_bills" data-trade-status="unprinted">未打印物流单</a></li>
           <li><a href="#" data-trade-mode="logistic_bills" data-trade-status="printed">已打印物流单</a></li>
+          <li><a href="#" data-trade-mode="logistic_bills" data-trade-status="waybill_void">未设置物流信息</a></li>
+          <li><a href="#" data-trade-mode="logistic_bills" data-trade-status="waybill_exist">已设置物流信息</a></li>
         </ul>
       </li>
       <% unless MagicOrders.company == "dulux" and MagicOrders.role_key == 'logistic' : %>
