@@ -3,7 +3,7 @@ module SalesHelper
 	def product_data(trades, old_trades)
 
     ##对数据map_reduce
-    if TradeSetting.company == "vanward"
+    if current_account.key == "vanward"
       map = %Q{
         function() {
         for(var i in this.taobao_orders) {

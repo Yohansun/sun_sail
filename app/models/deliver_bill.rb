@@ -1,6 +1,7 @@
 class DeliverBill
   include Mongoid::Document
-
+ 
+  field :account_id,     type: Integer
   field :deliver_bill_number, type: String
   field :seller_id, type: Integer
   field :seller_name, type: String

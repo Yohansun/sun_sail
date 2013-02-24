@@ -12,7 +12,7 @@
 
 # -*- encoding : utf-8 -*-
 class LogisticArea < ActiveRecord::Base
-	attr_accessible :logistic_id, :area_id
+  attr_accessible :logistic_id, :area_id, :account_id
   belongs_to :account
   belongs_to :logistic
   belongs_to :area

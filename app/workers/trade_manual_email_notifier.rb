@@ -3,7 +3,7 @@ class TradeManualEmailNotifier
   include Sidekiq::Worker
   sidekiq_options :queue => :trade_manual_notify
 
-  def perform(mails, notify_content, notify_theme)
-    Notifier.manual_notify(mails, notify_content, notify_theme).deliver
+  def perform(mails, notify_content, notify_theme, account_id)
+    Notifier.manual_notify(mails, notify_content, notify_theme, account_id).deliver
   end	
 end

@@ -33,17 +33,11 @@ class Account < ActiveRecord::Base
   has_many :reconcile_statements
   has_many :logistics
   has_many :logistic_areas
+  has_many :onsite_service_areas
   has_many :logistic_rates
   has_many :trade_sources
-
-  # Warning: Don't use this method in the controller, if necessary please use current_account
-  # This method should be work with any Model/Worker and other non-controllers.
-  def self.current
-    Thread.current[:account]
-  end
-
-  def self.current=(account)
-    Thread.current[:account] = account
-  end
+  
+  validates :name, presence: true
+  validates :key, presence: true, uniqueness: true
 
 end

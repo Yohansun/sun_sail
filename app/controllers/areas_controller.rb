@@ -10,7 +10,6 @@ class AreasController < ApplicationController
 
   def index
     @areas = Area.where(parent_id: params[:parent_id])
-
     respond_to do |format|
       format.html
       format.js

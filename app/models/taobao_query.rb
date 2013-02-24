@@ -4,12 +4,16 @@ require 'oauth2'
 module TaobaoQuery
   
   def self.get(options = {}, trade_source_id = nil)
-    if TradeSetting.taobao_auth_method == "oauth2"
-      oauth_get(options, trade_source_id)
-    else
-      TaobaoFu.select_source(trade_source_id)
-      TaobaoFu.get(options)
-    end  
+    source = TradeSource.find_by_id(trade_source_id)
+    account = Account.find_by_id(source.account_id)
+    if account
+      if account.settings.taobao_auth_method == "TOP"
+        TaobaoFu.select_source(trade_source_id)
+        TaobaoFu.get(options)
+      else
+        oauth_get(options, trade_source_id)
+      end
+    end    
   end
   
   def self.oauth_get(options, trade_source_id)

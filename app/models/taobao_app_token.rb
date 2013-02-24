@@ -19,7 +19,10 @@
 class TaobaoAppToken < ActiveRecord::Base
   belongs_to :account
   belongs_to :trade_source
-  attr_accessible :access_token, :refresh_token, :last_refresh_at, :refresh_token_last_refresh_at, :re_expires_in, :r1_expires_in, :r2_expires_in, :w1_expires_in,  :w2_expires_in
+  attr_accessible :account_id, :access_token, :refresh_token, :last_refresh_at, :refresh_token_last_refresh_at, :re_expires_in, :r1_expires_in, :r2_expires_in, :w1_expires_in,  :w2_expires_in
+  
+  validates :taobao_user_id, :taobao_user_nick, presence: true, uniqueness: true
+  
   def check_or_refresh!
     if last_refresh_at.nil? || r2_expires_in.nil? || (last_refresh_at.present? && r2_expires_in.present? && r2_expires_in < Time.now - last_refresh_at)
       base_url = "https://oauth.taobao.com/token?"
@@ -43,7 +46,7 @@ class TaobaoAppToken < ActiveRecord::Base
                                           )
       else
         if account.settings.enable_token_error_notify
-          Notifier.app_token_errors(self,response).deliver
+          Notifier.app_token_errors(self,response, account_id).deliver
         end
       end
     end

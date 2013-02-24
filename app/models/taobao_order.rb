@@ -37,6 +37,10 @@ class TaobaoOrder < Order
 
   embedded_in :taobao_trades
 
+  def account_id
+    taobao_trades.account_id
+  end  
+
   def item_outer_id
     outer_iid
   end

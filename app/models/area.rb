@@ -26,6 +26,7 @@ class Area < ActiveRecord::Base
   has_many :areas, foreign_key: :parent_id
   has_many :sellers_areas
   has_many :logistic_areas
+  has_many :onsite_service_areas
   has_many :sellers, through: :sellers_areas
   has_many :logistics, through: :logistic_areas
 
@@ -34,9 +35,17 @@ class Area < ActiveRecord::Base
   def set_pinyin
     self.pinyin = Hz2py.do(name).split(" ").map { |name| name[0, 1] }.join
   end
-  
+
+  def onsite_service_areas(account_id)
+    OnsiteServiceArea.where(area_id: leaves_areas, account_id: account_id)
+  end
+
+  def leaves_areas
+    descendants.leaves
+  end
+
   #查询卖家地址库
-  def self.seller_adrress
+  def self.seller_address
     response = TaobaoQuery.get({
       method: "taobao.logistics.address.search",
       fields: 'addresses'},nil

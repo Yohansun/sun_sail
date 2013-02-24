@@ -14,6 +14,7 @@
     MagicOrders.enable_module_colors = <%= current_account.settings.enable_module_colors %>
     MagicOrders.enable_module_sku_properties = <%= current_account.settings.enable_module_sku_properties %>
     MagicOrders.enable_module_interface = <%= current_account.settings.enable_module_interface %>
+    MagicOrders.enable_module_onsite_service = <%= current_account.settings.enable_module_onsite_service %>
 
     MagicOrders.trade_pops = <%= raw current_account.settings.trade_pops.to_json %>
     MagicOrders.trade_modes = <%= raw current_account.settings.trade_modes.to_json %>

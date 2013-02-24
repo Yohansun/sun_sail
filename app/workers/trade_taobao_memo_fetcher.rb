@@ -5,10 +5,11 @@ class TradeTaobaoMemoFetcher
   
   def perform(tid)
     trade = TaobaoTrade.where(tid: tid).first
+    source_id = trade.trade_source_id
     response = TaobaoQuery.get({
       method: 'taobao.trade.get',
       fields: 'buyer_message, seller_memo',
-      tid: tid}, trade.try(:trade_source_id)
+      tid: tid}, source_id
     )
 
     return unless response && response["trade_get_response"]

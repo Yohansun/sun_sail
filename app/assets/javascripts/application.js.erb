@@ -118,6 +118,12 @@ $(function () {
      });
    })
 
+   $('.onsite_service_area').click(function(argument) {
+     var state_id = $(this).attr('data-id');
+     $.get("/onsite_services/onsite_service_area", {state_id:state_id}, function(result){
+     });
+   })
+
    $('.logistic_login_acount').click(function(argument) {
     var logistic_id = $(this).attr('data-id');
     $("#logistic_id_container").html(logistic_id);

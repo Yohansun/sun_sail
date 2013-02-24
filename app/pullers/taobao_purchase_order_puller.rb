@@ -2,8 +2,10 @@
 
 class TaobaoPurchaseOrderPuller
   class << self
-    def create(start_time = nil, end_time = nil, source_id = nil)
-      source_id ||= TradeSetting.default_taobao_purchase_source_id     
+    def create(start_time = nil, end_time = nil, trade_source_id)
+      trade_source = TradeSource.find_by_id(trade_source_id)
+      account_id = trade_source.account_id
+      account = Account.find_by_id(account_id)     
       if start_time.blank?  
         latest_created_order = TaobaoPurchaseOrder.desc(:created).first
         start_time = latest_created_order.created - 1.hour
@@ -28,11 +30,11 @@ class TaobaoPurchaseOrderPuller
             method: 'taobao.fenxiao.orders.get',
             start_created: range_begin.strftime("%Y-%m-%d %H:%M:%S"),
             end_created: range_end.strftime("%Y-%m-%d %H:%M:%S"),
-            page_no: page_no, page_size: 50}, source_id
+            page_no: page_no, page_size: 50}, trade_source_id
           )
 
         if response['error_response']
-          Notifier.puller_errors(response['error_response']).deliver
+          Notifier.puller_errors(response['error_response'], account_id).deliver
           break
         end  
 
@@ -58,7 +60,8 @@ class TaobaoPurchaseOrderPuller
           sub_orders = trade.delete('sub_purchase_orders')
           purchase_order = TaobaoPurchaseOrder.new(trade)
           purchase_order.deliver_id = deliver_id
-          
+          purchase_order.trade_source_id = trade_source_id
+          purchase_order.account_id = account.id
           sub_orders = sub_orders['sub_purchase_order']
           
           unless sub_orders.is_a?(Array)
@@ -69,6 +72,7 @@ class TaobaoPurchaseOrderPuller
             sub_order.delete 'id'
             sub_purchase_order = purchase_order.taobao_sub_purchase_orders.build(sub_order)
           end
+          trade.set_has_onsite_service
           purchase_order.save  
           p "create TaobaoPurchaseOrder  #{trade['fenxiao_id']}"
           $redis.sadd('TaobaoPurchaseOrderTids', trade['fenxiao_id'])
@@ -85,8 +89,10 @@ class TaobaoPurchaseOrderPuller
       !local_trade.splitted || (local_trade.splitted && remote_status != local_trade.status && remote_status != "WAIT_SELLER_SEND_GOODS" && local_trade.delivered_at.blank?)
     end
 
-    def update(start_time = nil, end_time = nil, source_id = nil)
-      source_id ||= TradeSetting.default_taobao_purchase_source_id
+    def update(start_time = nil, end_time = nil, trade_source_id)
+      trade_source = TradeSource.find_by_id(trade_source_id)
+      account_id = trade_source.account_id
+      account = Account.find_by_id(account_id)
 
       if start_time.blank?
         latest_created_order = TaobaoPurchaseOrder.only("modified").order_by(:modified.desc).limit(1).first
@@ -112,13 +118,13 @@ class TaobaoPurchaseOrderPuller
             method: 'taobao.fenxiao.orders.get',
             start_created: range_begin.strftime("%Y-%m-%d %H:%M:%S"),
             end_created: range_end.strftime("%Y-%m-%d %H:%M:%S"),
-            page_no: page_no, page_size: 50}, source_id
+            page_no: page_no, page_size: 50}, trade_source_id
           )
 
           p "starting upate_orders: since #{range_begin}"
 
           if response['error_response']
-            Notifier.puller_errors(response['error_response']).deliver
+            Notifier.puller_errors(response['error_response'], account_id).deliver
             break
           end
           

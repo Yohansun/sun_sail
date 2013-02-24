@@ -3,7 +3,7 @@ require 'spec_helper'
 describe ReconcileStatementsController do
 
   before do
-    TradeSetting.enable_module_reconcile_statements = true
+    Account.current.settings.enable_module_reconcile_statements = true
     @current_user = create(:user)
     @current_user.add_role :admin
     sign_in(@current_user)

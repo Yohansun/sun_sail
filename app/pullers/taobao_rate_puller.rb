@@ -2,11 +2,11 @@
 class TaobaoRatePuller
   class << self
     # Every 1 Day
-    def create(start_time = nil, end_time = nil, trade_source_id = nil)
+    def create(start_time = nil, end_time = nil, trade_source_id)
+      trade_source = TradeSource.find_by_id(trade_source_id)
       
       start_time ||= Time.now - 1.day
       end_time ||= Time.now
-      trade_source_id ||= TradeSetting.default_taobao_trade_source_id
 
       response = TaobaoQuery.get({:method => 'taobao.traderates.get',
         :fields => 'tid',

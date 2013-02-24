@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class StockProductsController < ApplicationController
   before_filter :authenticate_user!
 
@@ -53,13 +54,13 @@ class StockProductsController < ApplicationController
   end
 
   def new
-  	@product = current_account.stock_products.new
+    @product = current_account.stock_products.new
     @seller = current_account.sellers.find params[:seller_id]
   end
 
   def create
     @seller = current_account.sellers.find params[:seller_id]
-  	@product = current_account.stock_products.new params[:stock_product]
+    @product = current_account.stock_products.new params[:stock_product]
     @product.seller_id = params[:seller_id]
     if @product.save
       redirect_to seller_stocks_path(params[:seller_id])
@@ -69,7 +70,7 @@ class StockProductsController < ApplicationController
   end
 
   def show
-  	@stock_product = current_account.stock_products.find params[:id]
+    @stock_product = current_account.stock_products.find params[:id]
     @product = @stock_product.product
     respond_to do |format|
       format.json {render json: {name: @product.name, activity: @stock_product.activity, actual: @stock_product.actual}}
@@ -78,12 +79,12 @@ class StockProductsController < ApplicationController
 
   def edit
     @seller = current_account.sellers.find params[:seller_id]
-  	@product = current_account.stock_products.find params[:id]
+    @product = current_account.stock_products.find params[:id]
   end
 
   def update
     @seller = current_account.sellers.find params[:seller_id]
-  	@product = current_account.stock_products.find params[:id]
+    @product = current_account.stock_products.find params[:id]
     # Rails.logger.info params[:seller_id].inspect
     if @product.update_attributes params[:stock_product]
       redirect_to seller_stocks_path(params[:seller_id])
@@ -93,9 +94,9 @@ class StockProductsController < ApplicationController
   end
 
   def destroy
-  	@product = current_account.stock_products.find params[:id]
-  	@product.destroy
-  	redirect_to seller_stocks_path params[:seller_id]
+    @product = current_account.stock_products.find params[:id]
+    @product.destroy
+    redirect_to seller_stocks_path params[:seller_id]
   end
 
   def change_stock_product

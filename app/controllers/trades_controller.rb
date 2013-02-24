@@ -28,6 +28,9 @@ class TradesController < ApplicationController
     @report.request_at = Time.now
     @report.user_id = current_user.id
     params['search'] =  params['search'] .select {|k,v| v != "undefined"  }   
+    params['search'].each do |k,v|
+      params['search'][k]  = v.encode('UTF-8','GBK') rescue "bad encoding"
+    end  
     @report.conditions = params.select {|k,v| !['limit','offset', 'action', 'controller'].include?(k)  } 
     #目前只有立邦具有多种订单
     if current_account.key == "nippon" && @report.conditions.fetch("search").fetch("type_option").blank?

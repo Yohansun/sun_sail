@@ -1,21 +1,22 @@
 # encoding : utf-8 -*-
 class TaobaoLogisticsOrdersPuller
   class << self
-    def create(start_time = nil, end_time = nil, trade_source_id = nil)
+    def create(start_time = nil, end_time = nil, trade_source_id)
       total_pages = nil
       page_no = 0
 
       start_time ||= Time.now - 3.months
       end_time ||= Time.now
 
-      trade_source_id ||= TradeSetting.default_taobao_trade_source_id
+      trade_source = TradeSource.find_by_id(trade_source_id)
+      account_id = trade_source.try(:account_id)
 
       p "starting add_logistics.................."
 
       logistics_response = TaobaoQuery.get({method: 'taobao.logistics.companies.get', fields: 'code,name'}, trade_source_id)
       logistics = {}.tap do |lg|
         logistics_response['logistics_companies_get_response']['logistics_companies']['logistics_company'].each do |info|
-          new_lg = Logistic.create(name: info["name"], code: info["code"])
+          new_lg = Logistic.where(name: info["name"], code: info["code"], account_id: account_id).first_or_create
           lg[info["name"]] = [new_lg.id, info["code"]]
         end
       end

@@ -13,6 +13,10 @@ class ManualSmsOrEmail
 
   after_create :send_notify
 
+  def account_id
+    trades.account_id
+  end  
+
   def send_notify
     seller = Seller.find_by_id self.trades.seller_id
     if notify_type == "sms"    
@@ -25,7 +29,7 @@ class ManualSmsOrEmail
       if notify_receiver == "interface" 
         mobiles = seller.try(:interface_mobile)
       end  
-      TradeManualSmsNotifier.perform_async(self.trades.account_id, mobiles, notify_content) if (mobiles.present? && notify_content.present?)     
+      TradeManualSmsNotifier.perform_async(self.trades.account_id, mobiles, notify_content, account_id) if (mobiles.present? && notify_content.present?)     
     else  
       if notify_receiver == "seller"
         emails = seller.try(:email).try(:split, ',') 
@@ -33,7 +37,7 @@ class ManualSmsOrEmail
       if notify_receiver == "interface"
         emails = seller.try(:interface_email) 
       end  
-      TradeManualEmailNotifier.perform_async(emails, notify_content, notify_theme) if (emails.present? && notify_content.present?)    
+      TradeManualEmailNotifier.perform_async(emails, notify_content, notify_theme, account_id) if (emails.present? && notify_content.present?)    
     end                        
   end
 end

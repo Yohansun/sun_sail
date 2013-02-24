@@ -8,10 +8,11 @@ class NipponOtherTradeReporter
 
   def perform(id)
     report = TradeReport.find(id)
+    account = report.fetch_account
     current_user = User.find(report.user_id)
     hash = report.conditions
     hash = recursive_symbolize_keys! hash
-    trades = Trade.filter(current_account, current_user, hash).order_by(:created.desc)
+    trades = Trade.filter(account, current_user, hash).order_by(:created.desc)
     trades = TradeDecorator.decorate(trades)
     book = Spreadsheet::Workbook.new
     sheet1 = book.create_worksheet
@@ -24,7 +25,7 @@ class NipponOtherTradeReporter
     bold = Spreadsheet::Format.new(:weight => :bold)
 
     row_number = 1
-     sheet1.row(1).concat ["订单来源", "订单编号", "当前状态", "下单时间", "付款时间", "分流时间", "发货时间", "客户姓名", "联系电话", "联系地址", "客户留言", "卖家备注", "客服备注", "调色信息", "发票信息", "配送经销商", "店铺代码(分销)", "主订单号(分销)", "商品名称", "单价（实际销售）", "数量", "运费", "订单实付金额" ,"退款状态"]
+     sheet1.row(1).concat ["订单来源", "订单编号", "当前状态", "下单时间", "付款时间", "分流时间", "发货时间", "客户姓名", "联系电话", "联系地址", "客户留言", "卖家备注", "整单备注", "单品备注", "调色信息", "发票信息", "配送经销商", "店铺代码(分销)", "主订单号(分销)", "商品名称", "单价（实际销售）", "数量", "运费", "订单实付金额" ,"退款状态"]
      trades.each_with_index do |trade, trade_index|
       if trade._type == "TaobaoPurchaseOrder"
         tc_order_id = trade.tc_order_id
@@ -58,11 +59,10 @@ class NipponOtherTradeReporter
         order_title = order.title
         order_num = order.num
         color_num = order.color_num
-        cs_memo = "#{trade_cs_memo} #{order.cs_memo}"
+        order_cs_memo = order.cs_memo
         refund_status_text = order.refund_status_text
         row_number += 1
-        sheet1.update_row row_number, trade_source, tid, status_text, created, pay_time, dispatched_at, delivered_at, receiver_name, receiver_mobile_phone, receiver_address, seller_memo, buyer_message, cs_memo, color_num, invoice_name, seller_name, distributor_usercode, tc_order_id, order_title, order_price, order_num, post_fee, total_fee, refund_status_text
-
+        sheet1.update_row row_number, trade_source, tid, status_text, created, pay_time, dispatched_at, delivered_at, receiver_name, receiver_mobile_phone, receiver_address, seller_memo, buyer_message, trade_cs_memo, order_cs_memo, color_num, invoice_name, seller_name, distributor_usercode, tc_order_id, order_title, order_price, order_num, post_fee, total_fee, refund_status_text
         if trade_index.even?
           sheet1.row(row_number).default_format = yellow_format
         else

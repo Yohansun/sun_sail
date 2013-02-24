@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class StocksController < ApplicationController
   before_filter :authenticate_user!
   before_filter :check_stock_type, except: [:home]
@@ -25,7 +26,7 @@ class StocksController < ApplicationController
         @stock_products = @stock_products.where("stock_products.actual != stock_products.max AND stock_products.activity >= stock_products.safe_value")
       end
     end
-
+    @stock_products = @stock_products.where(" good_type != 2 OR good_type IS NULL ") if current_user.has_role?(:seller)
     @stock_products = @stock_products.page params[:page]
   end
 

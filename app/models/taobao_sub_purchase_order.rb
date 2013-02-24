@@ -24,6 +24,10 @@ class TaobaoSubPurchaseOrder < Order
 
   embedded_in :taobao_purchase_order
 
+  def account_id
+    taobao_purchase_order.account_id
+  end  
+
   def outer_iid
     item_outer_id
   end 

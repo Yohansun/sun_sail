@@ -1,6 +1,7 @@
 class AccountSetup
 
   bindEvents: ->
+    # invoke only once.
     this.start_data_fetch()
 
   start_data_fetch: ->

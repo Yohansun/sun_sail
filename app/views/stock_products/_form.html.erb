@@ -9,7 +9,12 @@
           <% end %>
         </select>
         <select class="span4 pull-left" style="width: 500px;" multiple="multiple" id='product' name='stock_product[product_id]'>
-          <%= render partial: "products", :object => @products = current_account.products %>
+          <%- if current_user.has_role?(:seller) %>
+            <%- products = current_account.products.single%>
+          <%- else %>  
+            <%- products =current_account.products %>
+          <%- end %>
+          <%= render partial: "products", :object => @products = products %>
         </select>
       </div>
       <div class="controls">

@@ -5,8 +5,9 @@ class TradeTaobaoDeliver
 
   def perform(id)
     trade = TaobaoTrade.find(id)
+    account = trade.fetch_account
     tid = trade.tid
-    source_id = trade.trade_source_id || trade.fetch_account.settings.default_taobao_trade_source_id
+    source_id = trade.trade_source_id
     response = TaobaoQuery.get({
       method: 'taobao.logistics.offline.send',
       tid: trade.tid,
@@ -18,7 +19,7 @@ class TradeTaobaoDeliver
     if errors.blank?
       trade = TradeDecorator.decorate(trade)
       mobile = trade.receiver_mobile_phone
-      shopname = trade.fetch_account.settings.shopname_taobao
+      shopname = account.settings.shopname_taobao
       if trade.splitted?
         content = "亲您好，您的订单#{tid}已经发货，该订单将由地区发送，请注意查收。【#{shopname}】"
       else
@@ -33,7 +34,7 @@ class TradeTaobaoDeliver
       #FIXME, MOVE LATER
       trade.nofity_stock "发货", trade.seller_id
     else
-      Notifier.deliver_errors(id, errors).deliver
+      Notifier.deliver_errors(id, errors, trade.account_id).deliver
       trade.unusual_states.build(reason: "发货异常#{errors['sub_msg']}", key: 'other_unusual_state', created_at: Time.now)
       trade.save
       trade.update_attributes!(status: 'WAIT_SELLER_SEND_GOODS')

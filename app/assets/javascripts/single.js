@@ -3,7 +3,7 @@ $(function(){
 	$('.timepickers').timeEntry({
 	    show24Hours: true,
 	    showSeconds: true,
-	    spinnerImage: 'images/spinnerUpDown.png',
+	    spinnerImage: '/assets/spinnerUpDown.png',
 	    spinnerSize: [17, 26, 0],
 	    spinnerIncDecOnly: true
 	});

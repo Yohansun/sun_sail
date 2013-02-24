@@ -11,6 +11,9 @@
         <li class="dropdown active">
           <a >物流商管理</a>
         </li>
+        <% if current_account.settings.enable_module_onsite_service == 1  %>
+          <li><a href="/onsite_services">上门服务</a></li>
+        <%- end %>
       </ul>
     </div>
   </header>

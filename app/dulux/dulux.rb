@@ -11,7 +11,7 @@ module Dulux
           seller_id = seller.id
           seller_name = seller.name
         else
-          seller = trade.default_area.sellers.first
+          seller = trade.default_area.sellers.where(account_id: trade.account_id).first
           seller_id = seller ? seller.id : nil
           seller_name = seller ? "#{seller.name}: 库存不足" : '无对应经销商'
         end
@@ -206,7 +206,7 @@ module Dulux
           end
 
           product_seller_ids = products.map &:seller_id
-          a_sellers = area.sellers.where(id: product_seller_ids, active: true).reorder("performance_score DESC")
+          a_sellers = area.sellers.where(id: product_seller_ids, active: true, account_id: order.account_id).reorder("performance_score DESC")
           if sellers
             sellers = sellers & a_sellers
           else

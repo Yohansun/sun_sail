@@ -42,9 +42,6 @@
               <li class="trades" style="display:none"><a href="http://shop.nipponpaint.com.cn/admin/orders">官网订单</a></li>
            <!--    <li class="trades" style="display:none"><a href="http://shop.nipponpaint.com.cn/admin/taobao_orders">淘宝订单</a></li> -->
             <% end %>
-            <% if current_user.has_role?(:seller) && controller_name == 'stocks' %>
-              <li class="stocks"><a href="#">仓库管理</a></li>
-            <% end %>
             <% if ['sales', 'user_activities', 'trade_reports'].include?(controller_name)  %>
               <%- if current_user.has_role?(:admin) %>
                 <li class="<%= 'active' if controller_name == 'user_activities'%>"><a href="/user_activities">人员</a></li>
@@ -69,9 +66,9 @@
                 <%- elsif  current_user.has_role?(:cs) ||  current_user.has_role?(:seller) %>
                   <li><a href="/trade_reports">数据魔方</a></li>
                 <%- end %>
-                <% if current_user.has_role?(:seller) && current_user.seller %>
+                <% if current_user.has_role?(:seller) && current_user.seller  && current_account.key != 'nippon' %>
                   <li><%= link_to '仓库管理', seller_stocks_path(current_user.seller.id), class: "stocks" %></li>
-                <% elsif current_user.has_role?(:admin) %>
+                <% elsif current_user.has_role?(:admin) || current_user.has_role?(:cs)%>
                   <li><%= link_to '仓库管理', stocks_path, class: "stocks" %></li>
                 <% end %>
                 <% if current_user.has_role?(:admin) %>

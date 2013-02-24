@@ -8,20 +8,20 @@ class TradeDispatchSms
     object = Trade.find id
     trade = TradeDecorator.decorate(object)
     seller = Seller.find seller_id
+    account = object.fetch_account
 
     if seller
       tid = trade.tid
       trade_from = trade.trade_source
-      if trade.fetch_account.settings.enable_module_interface == 0
+      if account.settings.enable_module_interface == 0
         area_name = trade.receiver_area_name
         mobiles = seller.mobile
         trade_info = "您好，#{area_name}有#{trade_from}新订单（订单号#{tid}）"
       else
         area_name = seller.interface_name
         mobiles = seller.interface_mobile
-
         if object._type == "TaobaoPurchaseOrder"
-          extra_mobiles = trade.fetch_account.settings.purchase_extra_mobiles || []
+          extra_mobiles = account.settings.purchase_extra_mobiles || []
           mobiles_string = ",#{extra_mobiles.join(',')}"
           mobiles += mobiles_string
         end
@@ -41,10 +41,10 @@ class TradeDispatchSms
         content = "#{trade_info}调整，买家地址为#{area_full_name}，请及时发货。"
       end
 
-      sms = Sms.new(trade.fetch_account, content, mobiles)
+      sms = Sms.new(account, content, mobiles)
       success = false
-      success = true if trade.fetch_account.key == "dulux" && sms.transmit.parsed_response == "0"
-      success = true if trade.fetch_account.key == "nippon" && sms.transmit.fetch(:description) == "成功"
+      success = true if account.key == "dulux" && sms.transmit.parsed_response == "0"
+      success = true if account.key == "nippon" && sms.transmit.fetch(:description) == "成功"
       sms_operation = "发送短信"
       if success
         if mobiles.present?
@@ -55,7 +55,6 @@ class TradeDispatchSms
       else
         sms_operation += "失败，请检查短信平台是否正常连接"
       end
-
       trade.operation_logs.create(operated_at: Time.now, operation: sms_operation)
     end
   end

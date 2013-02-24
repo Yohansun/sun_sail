@@ -11,11 +11,13 @@
         </div>
 
         <% unless current_account.key == 'nippon' and (current_user.has_role?(:seller) || current_user.has_role?(:interface) ) %>
-        <div>
-          <%= link_to stock_path_by_user, class: 'indexStart4' do %>
-            <span>仓库管理</span>
-          <% end %>
-        </div>
+          <% if (!current_user.has_role?(:cs))||(current_user.has_role?(:cs) && current_account.settings.disable_module_cs_stocks == 1) %>
+           <div>
+            <%= link_to stock_path_by_user, class: 'indexStart4' do %>
+              <span>仓库管理</span>
+            <% end %>
+            </div>
+          <% end %>  
         <% end %>
 
         <% if current_account.settings.enable_module_bbs %>
@@ -41,9 +43,11 @@
           <div>
             <a class="indexStart5" href="/sellers"><span>经销商管理</span></a>
           </div>
-          <div>
-            <a class="indexStart8" href="/products"><span>商品管理</span></a>
-          </div>
+          <% if (!current_user.has_role?(:cs))||(current_user.has_role?(:cs) &&current_account.settings.disable_module_cs_products == 1) %>
+            <div>
+              <a class="indexStart8" href="/products"><span>商品管理</span></a>
+            </div>
+          <% end %>
         <% end %>
         <% if current_user.has_role?(:admin) -%>
           <% if current_account.settings.enable_module_reconcile_statements == true %>

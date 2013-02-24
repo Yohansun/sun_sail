@@ -120,7 +120,6 @@ class UsersController < ApplicationController
     if current_user.has_multiple_account?
       account = current_user.accounts.find(params[:id])
       session[:account_id] = account.id
-      Account.current = account
     end
     redirect_to '/'
   end

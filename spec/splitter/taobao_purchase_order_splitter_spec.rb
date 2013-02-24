@@ -4,7 +4,7 @@ describe "Split a TaobaoPurchaseOrder's orders" do
 	before do
 		@trade = create(:taobao_purchase_order)
 		@trade.stub(:default_area).and_return(Area.first)
-		TradeSetting.trade_split_postfee_special_seller_ids = []
+		Account.current.settings.trade_split_postfee_special_seller_ids = []
 	end
 
   context "while it has no orders" do
@@ -36,7 +36,7 @@ describe "Split a TaobaoPurchaseOrder's orders" do
 
 	    context "when has special seller" do
 	    	before do
-	    	  TradeSetting.trade_split_postfee_special_seller_ids = [1]
+	    	  Account.current.settings.trade_split_postfee_special_seller_ids = [1]
 	    	end
 
 	    	subject { TaobaoPurchaseOrderSplitter.split_orders(@trade) }

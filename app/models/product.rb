@@ -41,16 +41,16 @@ class Product < ActiveRecord::Base
   has_many :stock_products
   has_many :skus
 
-  attr_accessible :good_type, :name, :outer_id, :product_id, :storage_num, :price, :quantity_id, :color_ids, :pic_url, :category_id, :features, :product_image, :feature_ids, :cat_name, :detail_url, :num_iid, :cid
+  attr_accessible :good_type, :name, :outer_id, :product_id, :storage_num, :price, :quantity_id, :color_ids, :pic_url, :category_id, :features, :product_image, :feature_ids, :cat_name, :detail_url, :num_iid, :cid, :account_id
 
 
   validates_uniqueness_of :outer_id, :allow_blank => true, message: "信息已存在"
   validates_presence_of :name, :price, message: "信息不能为空"
-  validates :iid, presence: { :message => "信息已存在" }, uniqueness: { scope: :account_id }, allow_blank: true
-
   validates_numericality_of :price, message: "所填项必须为数字"
   validates_length_of :name, maximum: 100, message: "内容过长"
   validates_length_of :outer_id, :product_id, :price, maximum: 20, message: "内容过长"
+
+  scope :single, lambda{where(" good_type != 2 OR good_type IS NULL ")}
 
   def present_features
     features.map(&:name).join(',')
@@ -83,7 +83,15 @@ class Product < ActiveRecord::Base
         title: product.try(:name)
       }
     end
+    info
+  end
 
+  def child_outer_id
+    info = []
+    packages.each do |item|
+      product = Product.find_by_outer_id(item.outer_id)
+      info << [item.outer_id, item.number]
+    end
     info
   end
 

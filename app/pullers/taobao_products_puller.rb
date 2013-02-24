@@ -5,10 +5,10 @@ class TaobaoProductsPuller
 
     # Below methods are strongly recommed to use oauth2.
 
-    def sync_pic(trade_source_id = nil)
-      trade_source_id ||= TradeSetting.default_taobao_trade_source_id
-      trade_source = TradeSource.find trade_source_id
-      if TradeSetting.company == "nippon"
+    def sync_pic(trade_source_id)
+      trade_source = TradeSource.find_by_id(trade_source_id)
+      account = Account.find_by_id(trade_source.account_id)
+      if account.key == "nippon"
         nick = '立邦漆官方旗舰店'
       else
         nick = trade_source.name
@@ -28,13 +28,12 @@ class TaobaoProductsPuller
     end 
 
     # after create products, remember to sync cat_name
-    def sync_cat_name(trade_source_id = nil)
-     
+    def sync_cat_name(trade_source_id)
+      trade_source = TradeSource.find_by_id(trade_source_id)
+      account = Account.find_by_id(trade_source.account_id)
       total_pages = nil
       page_no = 0
-      trade_source_id ||= TradeSetting.default_taobao_trade_source_id
-      trade_source = TradeSource.find trade_source_id
-      if  TradeSetting.company == "nippon"
+      if  account.key == "nippon"
         nick = '立邦漆官方旗舰店'
       else
         nick = trade_source.name
@@ -50,7 +49,7 @@ class TaobaoProductsPuller
             local_product = Product.where(product_id: product['product_id']).first
             if local_product
               if product['cat_name'].present?
-                category = Category.where(name: product['cat_name']).first_or_create
+                category = Category.where(name: product['cat_name'], account_id: account.id).first_or_create
               else
                 category = Category.where(name: '其他').first_or_create  
               end  
@@ -60,40 +59,38 @@ class TaobaoProductsPuller
           end 
         end
         page_no += 1
-      end until(page_no > total_pages || total_pages == 0)     
+      end until(total_pages.nil? || total_pages == 0 || page_no > total_pages )       
 
     end 
 
-    def create(trade_source_id = nil)
+    def create(trade_source_id)
+      trade_source = TradeSource.find_by_id(trade_source_id)
+      account = Account.find_by_id(trade_source.account_id)
       total_pages = nil
       page_no = 0
-      trade_source_id ||= TradeSetting.default_taobao_trade_source_id
-      trade_source = TradeSource.find trade_source_id
 
-      if TradeSetting == "nippon "
+      if account.key == "nippon "
         nick = '立邦漆官方旗舰店'
       else
         nick = trade_source.name
       end
 
+      num_iids = []
       begin
         #调用taobao.items.onsale.get获取获取当前用户作为卖家的出售中的商品num_iid
-        items_onsale_response= TaobaoQuery.get({method: 'taobao.items.onsale.get', fields: 'num_iid', nick: nick}, trade_source_id)   
+        items_onsale_response = TaobaoQuery.get({method: 'taobao.items.onsale.get', fields: 'num_iid', nick: nick}, trade_source_id)   
         if  items_onsale_response['items_onsale_get_response']['items'].present? &&  items_onsale_response['items_onsale_get_response']['items']['item'].present?
           items = items_onsale_response['items_onsale_get_response']['items']['item']
           total_results = items_onsale_response['items_onsale_get_response']['total_results']
           total_pages ||= total_results / 100
-          num_iids = []
-
           if total_results > 0
             items.each do |item|
               num_iids << item['num_iid']
             end
           end 
-
         end 
       page_no += 1
-      end until(page_no > total_pages || total_pages == 0)     
+      end until(total_pages.nil? || total_pages == 0 || page_no > total_pages )     
 
       num_iids.each do |num_iid|
         #通过num_iid调用taobao.item.get获取sku相关信息
@@ -112,7 +109,7 @@ class TaobaoProductsPuller
           #Create product and sku
           #Remember to add account_id
           #Remember to sync nippon and dulux stock
-          local_product = Product.create(name: name, detail_url: detail_url, outer_id: outer_id,  num_iid: num_iid, product_id: product_id, cid: cid, pic_url: pic_url, price: price) unless Product.find_by_num_iid(num_iid)
+          local_product = Product.create(account_id: account.id, name: name, detail_url: detail_url, outer_id: outer_id,  num_iid: num_iid, product_id: product_id, cid: cid, pic_url: pic_url, price: price) unless Product.find_by_num_iid(num_iid)
           if sku_items['skus'] && sku_items['skus']['sku'].count > 0
             sku_items['skus']['sku'].each do |sku|
               sku_id = sku['sku_id']

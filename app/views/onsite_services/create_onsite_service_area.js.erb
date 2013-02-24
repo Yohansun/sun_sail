@@ -1,0 +1,11 @@
+html = "<tr><th>地区编号</th><th>省</th><th>市</th><th>区</th><th>操作</th></tr>"
+<% if @onsite_service_areas.present? %>
+  <% @onsite_service_areas.each do |onsite_service_area| %>
+    html += "<tr id='area<%= onsite_service_area.area_id %>'><td><%= onsite_service_area.area_id %></td>" + 
+    		"<td><%= onsite_service_area.area.try(:parent).try(:parent).try(:name)%></td>" +
+            "<td><%= onsite_service_area.area.try(:parent).try(:name)%></td>" +
+            "<td><%= onsite_service_area.area.name%></td>" +
+            "<td><a href='/onsite_services/remove_onsite_service_area?area_id=<%= onsite_service_area.area_id %>&state_id=<%= @state.id %>' data-method='get' data-remote='true'>解除绑定</a></td></tr>"
+  <% end %>
+<% end %>
+$('#onsite_service_area_list').html(html)

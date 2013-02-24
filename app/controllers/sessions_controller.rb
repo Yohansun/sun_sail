@@ -6,7 +6,6 @@ class SessionsController < Devise::SessionsController
     sign_in(resource_name, resource)
     current_account = self.resource.accounts.first
     session[:account_id] = current_account.id
-    Account.current = current_account
     respond_with resource, :location => after_sign_in_path_for(resource)
   end
 

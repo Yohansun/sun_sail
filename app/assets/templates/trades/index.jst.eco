@@ -361,6 +361,9 @@
         <% if MagicOrders.enable_module_colors == 1 : %>
           <th data-col='color_info'>调色<br/>信息</th>
         <% end %>
+        <% if MagicOrders.enable_module_onsite_service == 1 : %>
+          <th data-col='onsite_service'>上门<br/>服务</th>
+        <% end %>  
         <th data-col='invoice_info'>发票<br/>信息</th>
         <th data-col='point_fee'>使用<br/>积分</th>
         <% if MagicOrders.company == 'nippon' || (MagicOrders.company == 'dulux' and MagicOrders.role_key != 'seller' and MagicOrders.role_key != 'logistic') : %>

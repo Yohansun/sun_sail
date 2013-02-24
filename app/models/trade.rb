@@ -69,6 +69,7 @@ class Trade
   field :has_color_info, type: Boolean, default: false
   field :has_cs_memo, type: Boolean, default: false
   field :has_unusual_state, type: Boolean, default: false
+  field :has_onsite_service, type: Boolean, default: false
 
   field :modify_payment, type: Float
   field :modify_payment_no, type: String
@@ -79,17 +80,36 @@ class Trade
   # add indexes for speed
   index tid: -1
   index status: 1
+  index _type: -1
+
   index created: -1
+  index deleted_at: -1
   index delivered_at: -1
   index dispatched_at: -1
+  index rate_created: -1
+
+  index seller_confirm_deliver_at: -1
+  index seller_confirm_invoice_at: -1
+  index confirm_check_goods_at: -1
+  index confirm_receive_at: -1
+  index confirm_color_at: -1
+
+  index request_return_at: -1
+  index confirm_return_at: -1
+  index confirm_refund_at: -1
+  index deliver_bill_printed_at: -1
+  index logistic_printed_at: -1  
+  
+  index has_buyer_message: -1
+  index buyer_message: -1
   index splitted: -1
   index splitted_tid: -1
   index seller_id: -1
   index trade_source_id: 1
-  index deleted_at: 1
   index has_color_info: 1
   index has_cs_memo: 1
   index has_unusual_state: 1
+  index has_onsite_service: 1
 
   index buyer_nick: 1
   index receiver_name: 1
@@ -98,8 +118,6 @@ class Trade
   index receiver_state: 1
   index receiver_district: 1
   index receiver_city: 1
-  index deliver_bill_printed_at: -1
-  index logistic_printed_at: -1
 
   embeds_many :unusual_states
   embeds_many :operation_logs
@@ -150,6 +168,10 @@ class Trade
       self.has_unusual_state = false
       true
     end
+  end
+
+  def set_has_onsite_service
+    self.has_onsite_service = true if OnsiteServiceArea.where(area_id: default_area.id, account_id: account_id).present?
   end
 
   def set_has_cs_memo
@@ -227,7 +249,7 @@ class Trade
       else
         product = Product.find_by_num_iid order.num_iid
       end
-      package = product.package_info
+      package = product.try(:package_info)
       if package.present?
         package.each do |data|
           stock_product = StockProduct.joins(:product).where("products.outer_id = ? AND seller_id = ?", data[:outer_id], op_seller).readonly(false).first
@@ -270,11 +292,11 @@ class Trade
 
   def default_seller(area = nil)
     area ||= default_area
-    area.sellers.where(active: true).first
+    area.sellers.where(active: true, account_id: account_id).first
   end
 
   def matched_seller_with_default(area)
-    matched_seller(area) || default_seller(area)
+    matched_seller(area, account_id) || default_seller(area, account_id)
   end
 
   def matched_seller(area = nil)
@@ -296,10 +318,9 @@ class Trade
   def generate_deliver_bill
     return if _type == 'JingdongTrade'
     #分流时生成默认发货单, 不支持京东订单
-
     deliver_bills.delete_all
 
-    bill = deliver_bills.create(deliver_bill_number: "#{tid}01", seller_id: seller_id, seller_name: seller_name)
+    bill = deliver_bills.create(deliver_bill_number: "#{tid}01", seller_id: seller_id, seller_name: seller_name, account_id: account_id)
     orders.each do |order|
       sku = Sku.find_by_sku_id(order.sku_id) || Sku.find_by_sku_id(order.num_iid)
       sku_name = sku.try(:name)
@@ -767,11 +788,7 @@ class Trade
     }
     search_hash == {"$and"=>[]} ? search_hash = nil : search_hash
     ## 过滤有留言但还在抓取 + 总筛选
-    if TradeSetting.company == "vanward" ## THIS IS TEMPORARY
-      trades.where(search_hash).and(trade_type_hash, {"trade_source_id" => 200}, {"$or" => [{"has_buyer_message" => {"$ne" => true}},{"buyer_message" => {"$ne" => nil}}]})
-    else
       trades.where(search_hash).and(trade_type_hash, {"$or" => [{"has_buyer_message" => {"$ne" => true}},{"buyer_message" => {"$ne" => nil}}]})
-    end
     ###筛选结束###
   end
 end

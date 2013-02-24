@@ -1,0 +1,47 @@
+function zTreeBeforeCheck(treeId, treeNode) {
+    if($("#" + treeNode.tId + "_check").hasClass("checkbox_false_full_focus") == true){
+      $.get("/onsite_services/create_onsite_service_area", {area_id:treeNode.id}, function(result){
+       });
+    }else{
+      $.get("/onsite_services/remove_onsite_service_area", {area_id:treeNode.id}, function(result){
+       });
+    }
+};
+var setting = {
+  check: {
+    enable: true
+  },
+  data: {
+    simpleData: {
+      enable: true
+    }
+  },
+  callback: {
+    beforeCheck: zTreeBeforeCheck
+  }
+};
+
+var zNodes = <%= raw area(@state.id) %>;
+
+var code;
+
+html = "<tr><th>地区编号</th><th>省</th><th>市</th><th>区</th><th>操作</th></tr>"
+<% if @onsite_service_areas.present? %>
+  <% @onsite_service_areas.each do |onsite_service_area| %>
+    html += "<tr id='area<%= onsite_service_area.area_id %>'><td><%=onsite_service_area.area_id%></td>" + 
+            "<td><%= onsite_service_area.area.try(:parent).try(:parent).try(:name)%></td>" +
+            "<td><%= onsite_service_area.area.try(:parent).try(:name)%></td>" +
+            "<td><%= onsite_service_area.area.name%></td>" +
+            "<td><a href='/onsite_services/remove_onsite_service_area?area_id=<%=onsite_service_area.area_id%>&state_id=<%= @state.id %>' data-method='get' data-remote='true'>解除绑定</a></td></tr>"
+  <% end %>
+<% end %>
+$('#onsite_service_area_list').html(html)
+
+$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+var zTree = $.fn.zTree.getZTreeObj("treeDemo");  
+<% if @onsite_service_areas.present? %>
+  <% @onsite_service_areas.each do |onsite_service_area| %>
+    treenode = zTree.getNodeByParam("id", <%= onsite_service_area.area_id %>);
+    zTree.checkNode(treenode, true);
+  <% end%>
+<% end %>

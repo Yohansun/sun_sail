@@ -4,7 +4,8 @@ class TradeManualSmsNotifier
   sidekiq_options :queue => :trade_manual_notify
 
   def perform(account_id, mobiles, notify_content)
-    sms = Sms.new(Account.find_by_id(account_id), notify_content, mobiles)
+    account = Account.find_by_id(account_id)	
+    sms = Sms.new(account, notify_content, mobiles)
     sms.transmit
   end
   

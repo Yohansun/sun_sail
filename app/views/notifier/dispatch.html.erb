@@ -17,7 +17,7 @@
 <%- end %>
 <%= render "buyer_info"  %>
 <b>买家留言：</b><%= @trade.buyer_message %> <br>
-<%- if TradeSetting.company == "nippon" %>
+<%- if @account.key == "nippon" %>
     <b>发票信息: </b><%= @trade.invoice_name %> <br>
 <%- end %>    
 <b>客服备注：</b><%= @trade.cs_memo %> <br>

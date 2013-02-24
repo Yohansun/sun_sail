@@ -25,13 +25,13 @@
           <li><a href="javascript:void(0)">设置系统登录用户</a></li>
         </ul>
         <div class="tab-content">
-        <form>
+          <%= form_tag('/account_setups/options_setup', :method => :put)  do %>
             <p>请选择您的自动化业务设置：</p>
             <fieldset>
               <label>自动发货</label>
               <div class="control-group">
                 <label class="radio pull-left">
-                  <input type="radio" name="autodispatch">是
+                  <input type="radio" name="autodispatch"  value="on" >是
                 </label>
                 <div class="controls">
                   <p class="muted">当订单在打印物流面单的同时，就同步将物流面单的参数返回淘宝</p>
@@ -41,7 +41,7 @@
 
               <div class="control-group">
                 <label class="radio pull-left">
-                  <input type="radio" checked="" name="autodispatch">否
+                  <input type="radio" checked="" name="autodispatch" value="off">否
                 </label>
                 <div class="controls">
                   <p class="muted">需要点击发货的按钮，订单才会自动发货</p>
@@ -52,7 +52,7 @@
               <label>自动审单</label>
               <div class="control-group">
                 <label class="radio pull-left">
-                  <input type="radio" name="autocheck">是
+                  <input type="radio" name="autocheck"  value="on" >是
                 </label>
                 <div class="controls">
                   <p class="muted">当订单已付款没有客户备注，客服备注，并且库存充足无需要拆单，知道审单通过</p>
@@ -61,7 +61,7 @@
 
               <div class="control-group">
                 <label class="radio pull-left">
-                  <input type="radio" checked="" name="autocheck">否
+                  <input type="radio" checked="" name="autocheck"  value="off">否
                 </label>
                 <div class="controls">
                   <p class="muted">需要客服在系统内操作按钮“审单”，订单状态才会改为已审单</p>
@@ -72,7 +72,7 @@
               <label>自动分派</label>
               <div class="control-group">
                 <label class="radio pull-left">
-                  <input type="radio" name="autodistribution">是
+                  <input type="radio" name="autodistribution"   value="on">是
                 </label>
                 <div class="controls">
                   <p class="muted">当审单通过的订单，自动分派到仓库</p>
@@ -81,7 +81,7 @@
 
               <div class="control-group">
                 <label class="radio pull-left">
-                  <input type="radio" checked="" name="autodistribution">否
+                  <input type="radio" checked="" name="autodistribution"  value="off">否
                 </label>
                 <div class="controls">
                   <p class="muted">需要客服在系统内操作按钮“分派”。订单分到仓库</p>
@@ -89,7 +89,7 @@
               </div>
             </fieldset><!-- end -->
             <button class="btn">下一步</button>
-          </form>
+          <% end %>
         </div><!-- tab-content end -->
       </div>
     </div>

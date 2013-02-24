@@ -6,7 +6,7 @@ describe "Split a TaobaoTrade's orders" do
     @trade.total_fee = 20.0
     @trade.payment = 40.0
     @trade.post_fee = 20.0
-    TradeSetting.trade_split_postfee_special_seller_ids = []
+    Account.current.settings.trade_split_postfee_special_seller_ids = []
   end
 
   context "while it has no orders" do
@@ -36,7 +36,7 @@ describe "Split a TaobaoTrade's orders" do
 
       context "when has special seller" do
         before do
-          TradeSetting.trade_split_postfee_special_seller_ids = [1]
+          Account.current.settings.trade_split_postfee_special_seller_ids = [1]
         end
 
         subject { TaobaoTradeSplitter.split_orders(@trade) }

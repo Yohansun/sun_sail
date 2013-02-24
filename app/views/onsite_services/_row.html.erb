@@ -1,0 +1,18 @@
+<% @states.each do |state| %>
+<tr id="state_<%=state.id%>">
+  <td><%= state.id %></td>
+  <td><%= state.name %></td>
+  <td><%= state.onsite_service_areas(current_account.id).count %></td>
+  <td>
+    <div class="btn-group">
+      <button data-toggle="dropdown" class="btn btn-info dropdown-toggle min_w">
+        <i class="icon-wrench"></i>
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" style="left:-115px;">
+        <li><a data-toggle="modal" href="#onsite_service_area" data-type="onsite_service_area" data-id="<%= state.id %>" class="onsite_service_area">上门服务</a></li>
+      </ul>
+    </div>
+  </td>
+</tr>
+<% end %>

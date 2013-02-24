@@ -10,6 +10,10 @@ class JingdongOrder < Order
 
   embedded_in :jingdong_trades
 
+  def account_id
+    jingdong_trades.account_id
+  end
+
   def product
     super(outer_sku_id)
   end

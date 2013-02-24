@@ -1,6 +1,6 @@
 <tr id='product_<%= product.id %>'>
   <td><%= product.name  %></td>
-  <% if TradeSetting.enable_module_sku_properties == 1  %>
+  <% if current_account.settings.enable_module_sku_properties == 1  %>
     <td><%= product.avalibale_sku_names %></td>
   <% end %> 
   <td><%= product.outer_id %></td>
@@ -10,10 +10,7 @@
    <td><%= product.category.try(:name) %></td>
   <td>
     <% if product.good_type == 2 %>
-      套装：
-      <% product.packages.each do |package| %>
-        <%= "[#{package.outer_id}, #{package.number}]," %>
-      <% end %>
+      套装：<%= product.child_outer_id %>
     <% else %>
       单品
     <% end %>

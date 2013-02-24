@@ -6,13 +6,13 @@
     </tr>
     <tr>
       <th style="padding: 5px;background:#F2DEDE;border-right:1px dashed #fff;" width="350">商品名</th>
-      <% if TradeSetting.enable_module_sku_properties == 1 %>
+      <% if @account.settings.enable_module_sku_properties == 1 %>
         <th style="padding: 5px;background:#F2DEDE;text-align: center;border-right:1px dashed #FFFFFF;">特殊属性</th>
       <%- end %>  
-      <% if TradeSetting.enable_module_colors == 1 %>
+      <% if @account.settings.enable_module_colors == 1 %>
         <th style="padding: 5px;background:#F2DEDE;ttext-align: center;border-right:1px dashed #FFFFFF;">调色信息</th>
       <% end %>
-      <% unless TradeSetting.company == "dulux"%>
+      <% unless @account.key == "dulux"%>
       <th style="padding: 5px;background:#F2DEDE;ttext-align: center;border-right:1px dashed #FFFFFF;">标价</th>
       <% end %>
       <th style="padding: 5px;background:#F2DEDE;ttext-align: center;border-right:1px dashed #FFFFFF;">数量</th>
@@ -23,10 +23,10 @@
       <% object.bill_info.each do |info| %>
       <tr>
         <td style="border-right:1px dashed #F2DEDE;padding: 5px;"><%= info[:title] %></td>
-        <% if TradeSetting.enable_module_sku_properties == 1 %>
+        <% if @account.settings.enable_module_sku_properties == 1 %>
           <td style="border-right:1px dashed #F2DEDE;padding: 5px;text-align: center;"><%= order.sku_properties %></td>
         <%- end %>  
-        <% if TradeSetting.enable_module_colors == 1 %>
+        <% if @account.settings.enable_module_colors == 1 %>
           <td style="border-right:1px dashed #F2DEDE;padding: 5px;text-align: center;">
           <%- if info[:colors].present? %>
             <%- info[:colors].each do |color, array| %>
@@ -36,7 +36,7 @@
         </td>
         <% end %>
 
-        <% unless TradeSetting.company == "dulux"%>
+        <% unless @account.settings.key == "dulux"%>
         <td style="border-right:1px dashed #F2DEDE;padding: 5px;text-align: center;"><span class="font-gray">¥<%= order.price %></span></td>
         <% end %>
 
@@ -49,7 +49,7 @@
   </table>
 </div>
 
-<% if TradeSetting.company == "dulux"%>
+<% if @account.key == "dulux"%>
 <div class="pb5 pt5">
   <label class="label75"><span class="font-14b"><b>运输费用：</b></span></label>&nbsp;
   <span class="font-gray">¥</span> <span class="font-blueb"><%= @trade.post_fee %></span>

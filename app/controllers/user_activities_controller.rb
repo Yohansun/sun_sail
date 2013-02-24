@@ -36,16 +36,16 @@ class UserActivitiesController < ApplicationController
     if key.present?
       key = key.to_i
       if key == 1
-        $redis.ZRANGE "account:#{Account.current.id}:OperationLogToCs", start, stop
+        $redis.ZRANGE "account:#{current_account.id}:OperationLogToCs", start, stop
       elsif key == 2
-        $redis.ZRANGE "account:#{Account.current.id}:OperationLogToAdmin", start, stop
+        $redis.ZRANGE "account:#{current_account.id}:OperationLogToAdmin", start, stop
       elsif key == 3
-        $redis.ZRANGE "account:#{Account.current.id}:OperationLogToSeller", start, stop
+        $redis.ZRANGE "account:#{current_account.id}:OperationLogToSeller", start, stop
       else
-        $redis.ZRANGE "account:#{Account.current.id}:OperationLogToAll", start, stop
+        $redis.ZRANGE "account:#{current_account.id}:OperationLogToAll", start, stop
       end
     else
-      $redis.ZRANGE "account:#{Account.current.id}:OperationLogToAll", start, stop
+      $redis.ZRANGE "account:#{current_account.id}:OperationLogToAll", start, stop
     end
   end
 
@@ -53,16 +53,16 @@ class UserActivitiesController < ApplicationController
     if key.present?
       key = key.to_i
       if key == 1
-        $redis.ZCOUNT "account:#{Account.current.id}:OperationLogToCs", "-inf", "+inf"
+        $redis.ZCOUNT "account:#{current_account.id}:OperationLogToCs", "-inf", "+inf"
       elsif key == 2
-        $redis.ZCOUNT "account:#{Account.current.id}:OperationLogToAdmin", "-inf", "+inf"
+        $redis.ZCOUNT "account:#{current_account.id}:OperationLogToAdmin", "-inf", "+inf"
       elsif key == 3
-        $redis.ZCOUNT "account:#{Account.current.id}:OperationLogToSeller", "-inf", "+inf"
+        $redis.ZCOUNT "account:#{current_account.id}:OperationLogToSeller", "-inf", "+inf"
       else
-        $redis.ZCOUNT "account:#{Account.current.id}:OperationLogToAll", "-inf", "+inf"
+        $redis.ZCOUNT "account:#{current_account.id}:OperationLogToAll", "-inf", "+inf"
       end
     else
-      $redis.ZCOUNT "account:#{Account.current.id}:OperationLogToAll", "-inf", "+inf"
+      $redis.ZCOUNT "account:#{current_account.id}:OperationLogToAll", "-inf", "+inf"
     end
   end
 end

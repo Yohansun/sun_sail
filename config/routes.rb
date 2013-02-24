@@ -121,6 +121,14 @@ MagicOrders::Application.routes.draw do
     end
   end
 
+   resources :onsite_services do
+    collection do
+      get :onsite_service_area
+      get :remove_onsite_service_area
+      get :create_onsite_service_area
+    end
+  end
+
   match '/switch_account/:id', to: 'users#switch_account', as: :switch_account
   resources :users do
     collection do

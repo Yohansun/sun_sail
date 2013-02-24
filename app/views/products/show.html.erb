@@ -14,7 +14,7 @@
           <div class="control-group">
             <label class="control-label" for=""><span class="atv">*</span>淘宝ID：</label>
             <div class="controls">
-              <p class="mar_t5"><%= @product.outer_id %></p>
+              <p class="mar_t5"><%= @product.product_id %></p>
             </div>
           </div>
 
@@ -37,7 +37,7 @@
           <div class="control-group">
             <label class="control-label" for=""><span class="atv">*</span>商品编码：</label>
             <div class="controls">
-              <p class="mar_t5"><%= @product.product_id %></p>
+              <p class="mar_t5"><%= @product.outer_id %></p>
             </div>
           </div>
 
@@ -67,10 +67,7 @@
             <div class="controls">
               <p class="mar_t5">
                 <% if @product.good_type == 2 %>
-                  套装：
-                  <% @product.packages.each do |package| %>
-                    <%= "[#{package.outer_id}, #{package.number}]," %>
-                  <% end %>
+                  套装：<%= @product.child_outer_id %>
                 <% else %>
                   单品
                 <% end %>

@@ -1,19 +1,12 @@
 # -*- encoding : utf-8 -*-
 class TradeChecker
-  def self.taobao_trade_status(start_time = nil, end_time = nil, trade_source_id = nil, send_email = true)
+  def self.taobao_trade_status(start_time = nil, end_time = nil, trade_source_id)
     # 抓取最近 37 ~ 1 小时订单, 检查本地状态和淘宝状态是否匹配
-    
-    if start_time.blank?
-      start_time = Time.now - 37.hours
-    end
-
-    if end_time.blank?
-      end_time = Time.now - 1.hour
-    end
-    
-    if trade_source_id.blank?
-      trade_source_id = TradeSetting.default_taobao_trade_source_id
-    end 
+    start_time ||= Time.now - 37.hours
+    end_time ||= Time.now - 1.hour
+    trade_source = TradeSource.find_by_id(trade_source_id)
+    account_id = trade_source.account_id
+    account = Account.find_by_id(account_id)  
 
     Rails.logger.info "starting check_status: since #{start_time}"
     puts "starting check_status: since #{start_time}"
@@ -66,9 +59,7 @@ class TradeChecker
     bad_status_orders = TaobaoTrade.only(:tid, :status, :track_goods_status).where(:status.in => ["WAIT_SELLER_SEND_GOODS"], :track_goods_status.in => ["INIT"]).all.map { |e| e.tid }      
     hidden_orders = TaobaoTrade.only(:tid, :has_buyer_message, :buyer_message).where(has_buyer_message: true, buyer_message:nil).map(&:tid) 
     TaobaoTrade.rescue_buyer_message(hidden_orders)
-    if send_email
-      DailyOrdersNotifier.check_status_result(start_time, end_time, lost_orders, wrong_orders, bad_status_orders, hidden_orders).deliver
-    end
+    DailyOrdersNotifier.check_status_result(account_id, start_time, end_time, lost_orders, wrong_orders, bad_status_orders, hidden_orders).deliver
   end
 
 end

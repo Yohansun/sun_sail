@@ -79,6 +79,7 @@
           <th>库存状态</th>
           <th>可用库存</th>
           <th>实际库存</th>
+          <th>安全库存</th>
           <th>操作</th>
         </tr>
       </thead>
@@ -93,6 +94,7 @@
           <td><%= stock_product.storage_status %></td>
           <td><%= stock_product.activity %></td>
           <td><%= stock_product.actual %></td>
+          <td><%= stock_product.safe_value %></td>
           <td>
             <div class="btn-group">
               <button data-toggle="dropdown" class="btn btn-info dropdown-toggle min_w">

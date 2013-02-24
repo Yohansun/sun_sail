@@ -1,21 +1,21 @@
-# encoding : utf-8 -*-
+  # encoding : utf-8 -*-
 class TaobaoTradePuller
   class << self
-    def create(start_time = nil, end_time = nil, trade_source_id = nil)
+    def create(start_time = nil, end_time = nil, trade_source_id)
       total_pages = nil
       page_no = 1
 
+      trade_source = TradeSource.find_by_id(trade_source_id)
+      account_id = trade_source.account_id
+      account = Account.find_by_id(account_id)
+
       if start_time.blank?
-        latest_created_order = TaobaoTrade.only("created").order_by(:created.desc).limit(1).first
+        latest_created_order = TaobaoTrade.only("created, account_id").where(account_id: account_id).order_by(:created.desc).limit(1).first
         start_time = latest_created_order.created - 1.hour
       end
 
       if end_time.blank?
         end_time = Time.now
-      end
-
-      if trade_source_id.blank?
-        trade_source_id = TradeSetting.default_taobao_trade_source_id
       end
 
       begin
@@ -30,6 +30,7 @@ class TaobaoTradePuller
 
         unless response['trades_sold_get_response']
           p response
+          Notifier.puller_errors(response, account_id).deliver
           break
         end
 
@@ -51,6 +52,8 @@ class TaobaoTradePuller
 
           trade.trade_source_id = trade_source_id
 
+          trade.account_id = account_id
+
           order = orders['order']
 
           unless order.is_a?(Array)
@@ -61,6 +64,8 @@ class TaobaoTradePuller
           end
 
           trade.operation_logs.build(operated_at: Time.now, operation: '从淘宝抓取订单')
+
+          trade.set_has_onsite_service
 
           trade.save
 
@@ -76,18 +81,29 @@ class TaobaoTradePuller
       end until(page_no > total_pages || total_pages == 0)
     end
 
-    def update(start_time = nil, end_time = nil, trade_source_id = nil)
+    def update_end_time
+        trades = Trade.where(end_time: nil).and(status: 'TRADE_FINISHED')   
+        trades.each do |trade| 
+          response = TaobaoQuery.get({method: 'taobao.trade.get', fields: 'end_time', tid: trade.tid}, trade.trade_source_id)
+          if response["trade_get_response"] && response["trade_get_response"]["trade"] && response["trade_get_response"]["trade"]["end_time"]
+            trade.update_attributes(end_time: response["trade_get_response"]["trade"]["end_time"])
+          end  
+        end  
+    end
+
+    def update(start_time = nil, end_time = nil, trade_source_id)
+
+      trade_source = TradeSource.find_by_id(trade_source_id)
+      account_id = trade_source.account_id
+      account = Account.find_by_id(account_id)
+
       if start_time.blank?
-        latest_created_order = TaobaoTrade.only("modified").order_by(:modified.desc).limit(1).first
+        latest_created_order = TaobaoTrade.only("modified, account_id").where(account_id: account_id).order_by(:modified.desc).limit(1).first
         start_time = latest_created_order.modified - 4.hour
       end
 
       if end_time.blank?
         end_time = start_time + 1.day
-      end
-
-      if trade_source_id.blank?
-        trade_source_id = TradeSetting.default_taobao_trade_source_id
       end
 
       #start_modified-and-end_modified, 查询条件(修改时间)跨度不能超过一天
@@ -105,7 +121,7 @@ class TaobaoTradePuller
           has_next = false
            p "starting update_orders: since #{range_begin}"
           response = TaobaoQuery.get({:method => 'taobao.trades.sold.increment.get',
-            :fields => 'total_fee, tid, status, adjust_fee, post_fee, receiver_name, pay_time, receiver_state, receiver_city, receiver_district, receiver_address, receiver_zip, receiver_mobile, receiver_phone, buyer_nick, title, type, point_fee, modified, alipay_id, alipay_no, alipay_url, shipping_type, buyer_obtain_point_fee, cod_fee, cod_status, commission_fee, consign_time, received_payment, payment, timeout_action_time, has_buyer_message, real_point_fee, orders',
+            :fields => 'total_fee, tid, status, adjust_fee, post_fee, receiver_name, pay_time, end_time, receiver_state, receiver_city, receiver_district, receiver_address, receiver_zip, receiver_mobile, receiver_phone, buyer_nick, title, type, point_fee, modified, alipay_id, alipay_no, alipay_url, shipping_type, buyer_obtain_point_fee, cod_fee, cod_status, commission_fee, consign_time, received_payment, payment, timeout_action_time, has_buyer_message, real_point_fee, orders',
             :start_modified => range_begin.strftime("%Y-%m-%d %H:%M:%S"),
             :end_modified => range_end.strftime("%Y-%m-%d %H:%M:%S"),
             :page_no => page_no,
@@ -117,6 +133,7 @@ class TaobaoTradePuller
 
           unless response['trades_sold_increment_get_response']
             p response
+            Notifier.puller_errors(response, account_id).deliver
             break
           end
           
@@ -138,8 +155,8 @@ class TaobaoTradePuller
               local_trade.operation_logs.build(operated_at: Time.now, operation: "从淘宝更新订单,更新#{local_trade.changed.try(:join, ',')}") if local_trade.changed?
               local_trade.save
               if local_trade.dispatchable? && local_trade.auto_dispatchable?
-                if TradeSetting.company == 'dulux'
-                  DelayAutoDispatch.perform_in(TradeSetting.delay_time || 1.hours, local_trade.id)
+                if account.key == 'dulux'
+                  DelayAutoDispatch.perform_in(account.settings.delay_time || 1.hours, local_trade.id)
                 else
                   local_trade.auto_dispatch!
                 end
@@ -156,7 +173,7 @@ class TaobaoTradePuller
       !local_trade.splitted || (local_trade.splitted && remote_status != local_trade.status && remote_status != "WAIT_SELLER_SEND_GOODS" && local_trade.delivered_at.blank?)
     end
 
-    def update_by_created(start_time = nil, end_time = nil, trade_source_id = nil)
+    def update_by_created(start_time = nil, end_time = nil, trade_source_id)
       total_pages = nil
       page_no = 1
 
@@ -169,14 +186,13 @@ class TaobaoTradePuller
         end_time = Time.now
       end
 
-      if trade_source_id.blank?
-        trade_source_id = TradeSetting.default_taobao_trade_source_id
-      end
+      trade_source = TradeSource.find_by_id(trade_source_id)
+      account = Account.find_by_id(trade_source.account_id)
 
       begin
         response = TaobaoQuery.get({
           method: 'taobao.trades.sold.get',
-          fields: 'total_fee, created, tid, status, post_fee, receiver_name, pay_time, receiver_state, receiver_city, receiver_district, receiver_address, receiver_zip, receiver_mobile, receiver_phone, buyer_nick, tile, type, point_fee, is_lgtype, is_brand_sale, is_force_wlb, modified, alipay_id, alipay_no, alipay_url, shipping_type, buyer_obtain_point_fee, cod_fee, cod_status, commission_fee, seller_nick, consign_time, received_payment, payment, timeout_action_time, has_buyer_message, real_point_fee, orders',
+          fields: 'total_fee, created, tid, status, post_fee, receiver_name, pay_time, end_time, receiver_state, receiver_city, receiver_district, receiver_address, receiver_zip, receiver_mobile, receiver_phone, buyer_nick, tile, type, point_fee, is_lgtype, is_brand_sale, is_force_wlb, modified, alipay_id, alipay_no, alipay_url, shipping_type, buyer_obtain_point_fee, cod_fee, cod_status, commission_fee, seller_nick, consign_time, received_payment, payment, timeout_action_time, has_buyer_message, real_point_fee, orders',
           start_created: start_time.strftime("%Y-%m-%d %H:%M:%S"), end_created: end_time.strftime("%Y-%m-%d %H:%M:%S"),
           page_no: page_no, page_size: 40}, trade_source_id
           )
@@ -210,8 +226,8 @@ class TaobaoTradePuller
             local_trade.operation_logs.build(operated_at: Time.now, operation: "订单状态核查,更新#{local_trade.changed.try(:join, ',')}") if local_trade.changed?
             local_trade.save
             if local_trade.dispatchable? && local_trade.auto_dispatchable?
-              if TradeSetting.company == 'dulux'
-                DelayAutoDispatch.perform_in(TradeSetting.delay_time || 1.hours, local_trade.id)
+              if account.key == 'dulux'
+                DelayAutoDispatch.perform_in(account.settings.delay_time || 1.hours, local_trade.id)
               else
                 local_trade.auto_dispatch!
               end

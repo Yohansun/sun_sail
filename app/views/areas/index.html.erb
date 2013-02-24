@@ -5,6 +5,9 @@
         <li><a href="/users">用户管理</a></li>
         <li class="active"><a href="#">地域管理</a></li>
         <li><a href="/logistics">物流商管理</a></li>
+        <% if current_account.settings.enable_module_onsite_service == 1  %>
+          <li><a href="/onsite_services">上门服务</a></li>
+        <%- end %>
       </ul>
     </div>
   </header>

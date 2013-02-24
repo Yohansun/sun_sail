@@ -3,7 +3,7 @@ set :rvm_ruby_string, '1.9.3'
 set :rvm_type, :system
 
 set :repository, "git@git.networking.io:nioteam/magic_orders.git"
-set :branch, "magic-solo"
+set :branch, "onehitfetcher"
 
 server "magic-solo.networking.io", :web, :app, :db, primary: true
 set :user, "root"
@@ -33,6 +33,7 @@ namespace :deploy do
   desc "Symlink shared resources on each release"
   task :symlink_shared, :roles => :app do
     run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
+    run "ln -nfs #{shared_path}/config/sidekiq.yml #{release_path}/config/sidekiq.yml"
     run "ln -nfs #{shared_path}/config/mailers.yml #{release_path}/config/mailers.yml"
     run "ln -nfs #{shared_path}/config/magic_setting.yml #{release_path}/config/magic_setting.yml"
     run "ln -nfs #{shared_path}/config/jingdong.yml #{release_path}/config/jingdong.yml"

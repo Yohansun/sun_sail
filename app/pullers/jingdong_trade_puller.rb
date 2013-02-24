@@ -2,10 +2,12 @@
 
 class JingdongTradePuller
   class << self
-    def create(start_time = nil, end_time = nil)
+    def create(start_time = nil, end_time = nil, account_id)
       total_pages = nil
       page_no = 1
       
+      account = Account.find_by_id(account_id)
+
       if start_time.blank?  
         latest_created_order = JingdongTrade.only("created").order_by(:created.desc).limit(1).first
         start_time = latest_created_order.created - 1.hour
@@ -31,7 +33,7 @@ class JingdongTradePuller
         total_pages = total_results / 10 
         next if total_results < 1 
 
-        default_seller_id = TradeSetting.default_seller_id
+        default_seller_id = account.settings.default_seller_id
 
         trades = response['order_search_response']['order_search']['order_info_list']
         next if trades.blank?
@@ -43,6 +45,7 @@ class JingdongTradePuller
             orders.each do |order|
               order = trade.jingdong_orders.build(order)
             end
+            trade.account_id = account.id
             trade.save
             $redis.sadd('JingdongTradeTids',t['order_id'])
 

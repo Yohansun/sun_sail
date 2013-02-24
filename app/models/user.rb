@@ -56,14 +56,22 @@ class User < ActiveRecord::Base
   # attr_accessible :title, :body
 
   EMAIL_FORMAT = /\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}\z/
-  validates :email, presence: true, format: { with: EMAIL_FORMAT}, uniqueness: true
+  validates :email, format: { with: EMAIL_FORMAT}, uniqueness: true,  allow_blank: true
   PHONE_FORMAT = /^(13[0-9]|15[012356789]|18[0236789]|14[57])[0-9]{8}$/
-  validates :phone, presence: true, format: { with: PHONE_FORMAT}, uniqueness: true
+  validates :phone, format: { with: PHONE_FORMAT}, uniqueness: true, allow_blank: true
 
   validates_presence_of :password, on: :create
-  validates :username, :name, presence: true
 
-  validates :email, :presence => true, :uniqueness => true, :format => {:with => /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i, :message => "请输入正确的邮箱格式" }
+  validate :has_phone_or_email?
+ 
+  before_save :set_pseudo_username
+
+  def set_pseudo_username
+    unless username
+      sudo_username = email || phone
+      self.username = sudo_username 
+    end
+  end 
 
   def display_name
     name || email
@@ -99,4 +107,12 @@ class User < ActiveRecord::Base
   def has_multiple_account?
     self.accounts.size > 1
   end
+
+  def has_phone_or_email?
+     if email.blank? && phone.blank?
+        errors.add(:email, "至少输入手机号或者邮箱")
+        errors.add(:phone, "至少输入手机号或者邮箱")
+     end  
+  end
+
 end

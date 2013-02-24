@@ -5,10 +5,19 @@ class SmsNotifier
 
   def perform(content, mobile, tid, notify_kind)
     trade = Trade.where(tid: tid).first
-    sms = Sms.new(trade.fetch_account, content, mobile)
+    account = trade.fetch_account
+    sms = Sms.new(account, content, mobile)
     success = false
-    success = true if trade.fetch_account.key == "dulux" && sms.transmit.parsed_response == "0"
-    success = true if trade.fetch_account.key == "nippon" && sms.transmit.fetch(:description) == "成功"
+    success = true
+    if account.key == "nippon"
+      if sms.transmit.fetch(:description) == "成功"
+        success = true
+      end
+    else
+      if  sms.transmit.parsed_response == "0"
+        success = true
+      end
+    end     
 
     if success
       operation = case notify_kind
