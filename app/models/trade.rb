@@ -99,8 +99,8 @@ class Trade
   index confirm_return_at: -1
   index confirm_refund_at: -1
   index deliver_bill_printed_at: -1
-  index logistic_printed_at: -1  
-  
+  index logistic_printed_at: -1
+
   index has_buyer_message: -1
   index buyer_message: -1
   index splitted: -1
@@ -634,6 +634,8 @@ class Trade
           trade_type_hash = {:unusual_states.elem_match => {:key => type, :repair_man => current_user.name, :repaired_at => {"$exists" => false}}}
         when 'unusual_for_you'
           trade_type_hash = {:unusual_states.elem_match => {:repair_man => current_user.name}}
+        when 'unusual_all'
+          trade_type_hash = {:unusual_states.nin => [[],nil]}
         when 'all'
           trade_type_hash = nil
         when 'dispatched'
@@ -751,7 +753,7 @@ class Trade
               if value_array[0].present? && value_array[1].present?
                 start_time = value_array[0].to_time(:local)
                 end_time = value_array[1].to_time(:local)
-                search_tags_hash.update({key => {"$gte" => start_time, "$lte" => end_time}})
+                search_tags_hash.update({key => {"$gte" => start_time, "$lt" => end_time}})
               end
             end
 
