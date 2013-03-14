@@ -5,6 +5,7 @@ class TradeDispatchEmail
 
   def perform(id, seller_id, notify_kind)
     trade = Trade.find id
+    return unless trade
     seller = Seller.find seller_id
     email_operation = "发送邮件"
 

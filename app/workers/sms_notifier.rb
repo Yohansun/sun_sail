@@ -5,6 +5,7 @@ class SmsNotifier
 
   def perform(content, mobile, tid, notify_kind)
     trade = Trade.where(tid: tid).first
+    return unless trade
     account = trade.fetch_account
     sms = Sms.new(account, content, mobile)
     success = false

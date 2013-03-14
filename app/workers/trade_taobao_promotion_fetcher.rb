@@ -5,10 +5,9 @@ class TradeTaobaoPromotionFetcher
 
   def perform(tid)
     trade = TaobaoTrade.where(tid: tid).first
+    return unless trade
     account = trade.fetch_account
     source_id = trade.trade_source_id
-    return unless trade
-
     result = TaobaoQuery.get({
       :method => 'taobao.trade.fullinfo.get',
       :fields => 'promotion_details',

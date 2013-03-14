@@ -8,6 +8,7 @@ class DuluxTaobaoTradeReporter
 
   def perform(id)
     report = TradeReport.find(id)
+    return unless report
     current_user = User.find(report.user_id)
     hash = report.conditions
     hash = recursive_symbolize_keys! hash

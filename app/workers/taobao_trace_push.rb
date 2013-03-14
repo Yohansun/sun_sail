@@ -4,9 +4,9 @@ class TaobaoLogisticsTracePush
   sidekiq_options :queue => :taobao
   
   def perform(tid)
-    
     code = false
     trade = TaobaoTrade.where(tid: tid).first
+    return unless trade
     response = TaobaoQuery.get({
       method: 'taobao.logistics.ordertrace.push',
       mail_no: trade.tid,                         #快递单号        

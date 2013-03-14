@@ -5,6 +5,7 @@ class TradeTaobaoPurchaseOrderDeliver
 
   def perform(id)
     trade = TaobaoPurchaseOrder.find(id)
+    return unless trade
     account = trade.fetch_account
     source_id = trade.trade_source_id
     response = TaobaoQuery.get({

@@ -5,6 +5,7 @@ class TradeTaobaoDeliver
 
   def perform(id)
     trade = TaobaoTrade.find(id)
+    return unless trade
     account = trade.fetch_account
     tid = trade.tid
     source_id = trade.trade_source_id

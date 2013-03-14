@@ -8,6 +8,7 @@ class NipponTaobaoTradeReporter
 
   def perform(id)
     report = TradeReport.find(id)
+    return unless report
     account = report.fetch_account
     current_user = User.find(report.user_id)
     hash = report.conditions
