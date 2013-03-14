@@ -99,8 +99,8 @@ class Trade
   index confirm_return_at: -1
   index confirm_refund_at: -1
   index deliver_bill_printed_at: -1
-  index logistic_printed_at: -1  
-  
+  index logistic_printed_at: -1
+
   index has_buyer_message: -1
   index buyer_message: -1
   index splitted: -1
@@ -596,34 +596,26 @@ class Trade
           trade_type_hash = {_type: 'ShopTrade'}
       end
 
-      # 异常订单(仅适用于没有京东订单的dulux)
+      # 异常订单(仅适用于没有京东订单的帐户)
       auto_unusual = current_account.settings.auto_settings["auto_mark_unusual_trade"]
       unusual_auto_setting = current_account.settings.auto_settings["unusual_conditions"]
       if auto_unusual && unusual_auto_setting
         case type
         when 'unpaid_for_days'
           if unusual_auto_setting['unusual_waitpay']
-            if unusual_auto_setting['max_unpay_days'].present?
-              trade_type_hash = {:created.lte => unusual_auto_setting['max_unpay_days'].to_i.days.ago, :pay_time.exists => false, status: "WAIT_BUYER_PAY"}
-            else
-              trade_type_hash = {:created.lte => 2.days.ago, :pay_time.exists => false, status: "WAIT_BUYER_PAY"}
-            end
+            trade_type_hash = {:created.lte => unusual_auto_setting['max_unpay_days'].to_i.days.ago, :pay_time.exists => false, status: "WAIT_BUYER_PAY"}
           end
         when 'undispatched_for_days'
           if unusual_auto_setting['unusual_dispatch']
-            if unusual_auto_setting['max_undispatch_days'].present?
-              trade_type_hash = {:pay_time.lte => unusual_auto_setting['max_undispatch_days'].to_i.days.ago, :dispatched_at.exists => false, :seller_id.exists => false, :status.in => paid_not_deliver_array}
-            else
-              trade_type_hash = {:pay_time.lte => 1.days.ago, :dispatched_at.exists => false, :seller_id.exists => false, :status.in => paid_not_deliver_array}
-            end
+            trade_type_hash = {:pay_time.lte => unusual_auto_setting['max_undispatch_days'].to_i.days.ago, :dispatched_at.exists => false, :seller_id.exists => false, :status.in => paid_not_deliver_array}
           end
         when 'undelivered_for_days'
           if unusual_auto_setting['unusual_deliver']
-            if unusual_auto_setting['max_undeliver_days'].present?
-              trade_type_hash = {:dispatched_at.lte => unusual_auto_setting['max_undeliver_days'].to_i.days.ago, :consign_time.exists => false, :status.in => paid_not_deliver_array}
-            else
-              trade_type_hash = {:dispatched_at.lte => 2.days.ago, :consign_time.exists => false, :status.in => paid_not_deliver_array}
-            end
+            trade_type_hash = {:dispatched_at.lte => unusual_auto_setting['max_undeliver_days'].to_i.days.ago, :consign_time.exists => false, :status.in => paid_not_deliver_array}
+          end
+        when 'unreceived_for_days'
+          if unusual_auto_setting['unusual_receive']
+            trade_type_hash = {:unusual_states.elem_match => {key: "unreceived_in_#{unusual_auto_setting['max_unreceived_days']}_days", :repaired_at => {"$exists" => false}}}
           end
         end
       end
@@ -634,6 +626,8 @@ class Trade
           trade_type_hash = {:unusual_states.elem_match => {:key => type, :repair_man => current_user.name, :repaired_at => {"$exists" => false}}}
         when 'unusual_for_you'
           trade_type_hash = {:unusual_states.elem_match => {:repair_man => current_user.name}}
+        when 'unusual_all'
+          trade_type_hash = {:unusual_states.nin => [[],nil]}
         when 'all'
           trade_type_hash = nil
         when 'dispatched'
@@ -751,7 +745,7 @@ class Trade
               if value_array[0].present? && value_array[1].present?
                 start_time = value_array[0].to_time(:local)
                 end_time = value_array[1].to_time(:local)
-                search_tags_hash.update({key => {"$gte" => start_time, "$lte" => end_time}})
+                search_tags_hash.update({key => {"$gte" => start_time, "$lt" => end_time}})
               end
             end
 

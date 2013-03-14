@@ -102,7 +102,7 @@
     <li><a href="#" data-trade-mode="trades" data-trade-status="undispatched">待分派</a></li>
     <li><a href="#" data-trade-mode='trades' data-trade-status='undelivered'>待发货</a></li>
     <li><a href="#" data-trade-mode='trades' data-trade-status='delivered'>已发货</a></li>
-    <li><a href="#" data-trade-mode='trades' data-trade-status='unusual_trade'>问题订单</a></li>
+    <li><a href="#" data-trade-mode='trades' data-trade-status='unusual_all'>问题订单</a></li>
     <li><a href="#" data-trade-mode="deliver_bills" data-trade-status="all">发货单</a></li>
     <li><a href="#" data-trade-mode="logistic_bills" data-trade-status="all">物流单</a></li>
     <!-- <li class=''><a href="#after_order" data-toggle="tab">售后订单</a></li> -->

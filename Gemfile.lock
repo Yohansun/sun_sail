@@ -87,6 +87,8 @@ GEM
       simple_form (~> 2.0.3)
     climate_control (0.0.3)
       activesupport (>= 3.0)
+    clockwork (0.5.0)
+      tzinfo (~> 0.3.35)
     cocaine (0.5.1)
       climate_control (>= 0.0.3, < 1.0)
     coderay (1.0.8)
@@ -450,6 +452,7 @@ DEPENDENCIES
   certified
   client_side_validations
   client_side_validations-simple_form
+  clockwork (~> 0.5.0)
   coffee-rails (~> 3.2.1)
   collections
   crack
