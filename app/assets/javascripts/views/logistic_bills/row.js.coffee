@@ -8,6 +8,7 @@ class MagicOrders.Views.LogisticBillsRow extends Backbone.View
     'click [data-type]': 'show_type'
     'click a[rel=popover]': "addHover"
     'click': 'highlight'
+    'click input.trade_check': 'toggleOperationMenu'
 
   initialize: ->
 
@@ -40,3 +41,10 @@ class MagicOrders.Views.LogisticBillsRow extends Backbone.View
     $('.popover_close_btn').click ->
       $('.lovely_pop').click()
       $('.lovely_pop').toggleClass('lovely_pop')
+
+  toggleOperationMenu: (e) ->
+    if $('#all_orders input.trade_check:checked').length > 1
+      $('#op-toolbar .index_pops').css('display', 'none')
+    else
+      $('#op-toolbar .index_pops').removeAttr('style')
+      trade = $('#all_orders input.trade_check:checked')[0]

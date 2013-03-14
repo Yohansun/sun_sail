@@ -31,6 +31,10 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     $("#top-nav li").hide()
     $("#top-nav li.trades").show()
 
+  form_height: ->
+    out_height = $('.js-affix').outerHeight();
+    $('.btn-toolbar').css('top', out_height + 71 + 'px');
+
   processScroll: =>
     scrollTop = $(window).scrollTop()
     if scrollTop >= @navTop && !@isFixed
@@ -40,11 +44,14 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       if scrollTop <= @navTop && @isFixed
         @isFixed = false
         @nav.removeClass('subnav-fixed')
+    $('.js-affix').affix()
+    @form_height()
+
 
   main: () ->
     Backbone.history.navigate('trades', true)
 
-  index: (trade_mode = "trades", trade_type = "default") ->
+  index: (trade_mode = "trades", trade_type = 'all') ->
     # reset the index stage, hide all popups
     $('.modal').modal('hide')
 
@@ -62,9 +69,9 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $('#content').html(@mainView.render().el)
       $("a[rel=popover]").popover({placement: 'left', html:true})
       switch trade_type
-        when 'undispatched_one_day' then $('.trade_nav').html('超过一天未分流')
-        when 'undelivered_two_days' then $('.trade_nav').html('超过两天未发货')
-        when 'unpaid_two_days' then $('.trade_nav').html('超过两天未付款')
+        when 'undispatched_for_days' then $('.trade_nav').html('未分流时间过长')
+        when 'undelivered_for_days' then $('.trade_nav').html('未发货时间过长')
+        when 'unpaid_for_days' then $('.trade_nav').html('未付款时间过长')
         when 'buyer_delay_deliver' then $('.trade_nav').html('买家延迟发货')
         when 'seller_ignore_deliver' then $('.trade_nav').html('卖家长时间未发货')
         when 'seller_lack_product' then $('.trade_nav').html('经销商缺货')
@@ -74,17 +81,13 @@ class MagicOrders.Routers.Trades extends Backbone.Router
         when 'other_unusual_state' then $('.trade_nav').html('其他异常')
         else
           $('.trade_nav').html($("[data-trade-status=#{trade_type}]").html())
-      $('.order_search_form .datepickers').datetimepicker(format: 'yyyy-mm-dd',autoclose: true,minView: 2)
-      $('.order_search_form .timepickers').timeEntry(show24Hours: true, showSeconds: true, spinnerImage: '/assets/spinnerUpDown.png', spinnerSize: [17, 26, 0], spinnerIncDecOnly: true)
-
+      $('.order_search_form .datepickers').datetimepicker(weekStart:1,todayBtn:1,autoclose:1,todayHighlight:1,startView:2,forceParse:0,showMeridian:1)
       unless MagicOrders.trade_mode in ['trades', 'deliver', 'logistics', 'send']
         $("#search_toggle").hide()
         $(".label_advanced").hide()
       else
         $('.trade_nav').html($("[data-trade-status=#{trade_type}]").html())
-    $('.order_search_form .datepickers').datetimepicker(format: 'yyyy-mm-dd',autoclose: true,minView: 2)
-    $('.order_search_form .timepickers').timeEntry(show24Hours: true, showSeconds: true, spinnerImage: '/assets/spinnerUpDown.png', spinnerSize: [17, 26, 0], spinnerIncDecOnly: true)
-
+    $('.order_search_form .datepickers').datetimepicker(weekStart:1,todayBtn:1,autoclose:1,todayHighlight:1,startView:2,forceParse:0,showMeridian:1)
     unless MagicOrders.trade_mode in ['trades', 'deliver', 'logistics', 'send']
       $("#search_toggle").hide()
       $(".label_advanced").hide()
@@ -95,6 +98,19 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     $(window).off 'scroll'
     $(window).on 'scroll', @processScroll
     @processScroll
+    $('.js-affix').affix()
+    $('.label_advanced').bind 'click', ->
+
+      $(this).parents("fieldset").siblings(".search_advanced").toggle 0, ->
+        out_height = $('.js-affix').outerHeight()
+        $('.btn-toolbar').css('top', out_height + 71 + 'px')
+
+      $(this).parent().toggleClass('open_advance')
+      # $(this).find('i').toggleClass('icon-arrow-up')
+      className = $('.js-open_advance').find('i').hasClass('icon-arrow-down')
+      $('.js-open_advance').find('i').toggleClass( className ? 'icon-arrow-up' : 'icon-arrow-down')
+      $('.js-open_advance').find('i').removeClass('icon-arrow-down').addClass('icon-arrow-up')
+
 
     $.unblockUI()
 

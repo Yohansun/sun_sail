@@ -41,8 +41,7 @@ class Product < ActiveRecord::Base
   has_many :stock_products
   has_many :skus
 
-  attr_accessible :good_type, :name, :outer_id, :product_id, :storage_num, :price, :quantity_id, :color_ids, :pic_url, :category_id, :features, :product_image, :feature_ids, :cat_name, :detail_url, :num_iid, :cid, :account_id
-
+  attr_accessible :good_type, :name, :outer_id, :product_id, :storage_num, :price, :quantity_id, :color_ids, :pic_url, :category_id, :features, :product_image, :feature_ids, :cat_name, :detail_url, :num_iid, :cid, :account_id, :logistic_group_id
 
   validates_uniqueness_of :outer_id, :allow_blank => true, message: "信息已存在"
   validates_presence_of :name, :price, message: "信息不能为空"

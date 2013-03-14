@@ -27,13 +27,15 @@ class TradesController < ApplicationController
     @report.account_id = current_account.id
     @report.request_at = Time.now
     @report.user_id = current_user.id
-    params['search'] =  params['search'] .select {|k,v| v != "undefined"  }   
-    params['search'].each do |k,v|
-      params['search'][k]  = v.encode('UTF-8','GBK') rescue "bad encoding"
-    end  
-    @report.conditions = params.select {|k,v| !['limit','offset', 'action', 'controller'].include?(k)  } 
+    if params['search']
+      params['search'] =  params['search'] .select {|k,v| v != "undefined"  }   
+      params['search'].each do |k,v|
+        params['search'][k]  = v.encode('UTF-8','GBK') rescue "bad encoding"
+      end
+    end    
+    @report.conditions = params.select {|k,v| !['limit','offset', 'action', 'controller'].include?(k)} 
     #目前只有立邦具有多种订单
-    if current_account.key == "nippon" && @report.conditions.fetch("search").fetch("type_option").blank?
+    if current_account.key == "nippon" && @report.conditions.fetch("search").fetch("_type").blank?
       render :js => "alert('导出报表之前请在高级搜索中选择订单来源');$('.export_orders_disabled').addClass('export_orders').removeClass('export_orders_disabled disabled');"
     else
       @report.save
@@ -41,7 +43,7 @@ class TradesController < ApplicationController
       respond_to do |format|
         format.js
       end
-    end  
+    end
   end
 
   def notifer
@@ -101,6 +103,7 @@ class TradesController < ApplicationController
 
     if params[:delivered_at] == true
       @trade.delivered_at = Time.now
+      @trade.status = 'WAIT_BUYER_CONFIRM_GOODS' if @trade._type = "CustomTrade"
       if params['logistic_info'] == '其他' and @trade.logistic_waybill.nil?
         logistic = current_account.logistics.find_by_name '其他'
         if logistic
@@ -126,7 +129,31 @@ class TradesController < ApplicationController
         notifer_seller_flag = true
       end
     end
+
+    # 赠品更新
     @trade.gift_memo = params[:gift_memo].strip if params[:gift_memo]
+    if params[:delete_gifts]
+      params[:delete_gifts].each do |gift_tid|
+        trade_gift = @trade.trade_gifts.where(gift_tid: gift_tid).first
+        if trade_gift
+          Trade.where(tid: gift_tid).first.delete if trade_gift.delivered_at == nil && trade_gift.trade_id.present?
+          @trade.trade_gifts.where(gift_tid: gift_tid).first.delete
+        end
+      end
+    end
+    if params[:add_gifts]
+      params[:add_gifts].each do |key, value|
+        if value['trade_id'].present? #NEED ADAPTION?
+          fields = @trade.fields_for_gift_trade
+          fields["tid"] = value['gift_tid']
+          fields["main_trade_id"] = value['trade_id']
+          gift_trade = CustomTrade.create(fields)
+          gift_trade.add_gift_order(value)
+        end
+        @trade.trade_gifts.create!(value)
+      end
+    end
+
     @trade.invoice_type = params[:invoice_type].strip if params[:invoice_type]
     @trade.invoice_name = params[:invoice_name].strip if params[:invoice_name]
     @trade.invoice_content = params[:invoice_content].strip if params[:invoice_content]
@@ -142,7 +169,7 @@ class TradesController < ApplicationController
     end
 
     unless params[:reason].blank?
-      state = @trade.unusual_states.create!(reason: params[:reason], plan_repair_at: params[:plan_repair_at], note: params[:state_note], created_at: Time.now, reporter: current_user.name)
+      state = @trade.unusual_states.create!(reason: params[:reason], plan_repair_at: params[:plan_repair_at], note: params[:state_note], created_at: Time.now, reporter: current_user.name, repair_man: params[:repair_man])
       state.update_attributes(key: state.add_key)
       role_key = current_user.roles.first.name
       state.update_attributes!(reporter_role: role_key)
@@ -168,6 +195,7 @@ class TradesController < ApplicationController
 
     if params[:confirm_receive_at] == true
       @trade.confirm_receive_at = Time.now
+      @trade.status = 'TRADE_FINISHED' if @trade._type = "CustomTrade"
     end
 
     if params[:request_return_at] == true
@@ -215,40 +243,42 @@ class TradesController < ApplicationController
 
     unless params[:orders].blank?
       params[:orders].each do |item|
-        order = @trade.orders.find item[:id]
-        order.cs_memo = item[:cs_memo]
-        if order.changed.include? 'cs_memo'
-          notifer_seller_flag = true
-        end
-        if item[:color_num]
-          item[:color_num].each_with_index do |num, index|
-            if num.blank?
-              order.color_num[index] = nil
-              order.color_hexcode[index] = nil
-              order.color_name[index] = nil
-            else
-              order.color_num[index] = num
-              color = Color.find_by_num num
-              order.color_hexcode[index] = color.try(:hexcode)
-              order.color_name[index] = color.try(:name)
+        order = @trade.orders.where(_id: item[:id]).first
+        if order
+          order.cs_memo = item[:cs_memo]
+          if order.changed.include? 'cs_memo'
+            notifer_seller_flag = true
+          end
+          if item[:color_num]
+            item[:color_num].each_with_index do |num, index|
+              if num.blank?
+                order.color_num[index] = nil
+                order.color_hexcode[index] = nil
+                order.color_name[index] = nil
+              else
+                order.color_num[index] = num
+                color = Color.find_by_num num
+                order.color_hexcode[index] = color.try(:hexcode)
+                order.color_name[index] = color.try(:name)
+              end
             end
           end
-        end
-        if item[:barcode]
-          item[:barcode].each_with_index do |code, index|
-            order.barcode[index] = code
+          if item[:barcode]
+            item[:barcode].each_with_index do |code, index|
+              order.barcode[index] = code
+            end
           end
         end
       end
     end
-    
+
     unless params[:notify_content].blank?
-      notify = @trade.manual_sms_or_emails.create(notify_sender: params[:notify_sender], 
-                                          notify_receiver: params[:notify_receiver], 
-                                          notify_theme: params[:notify_theme], 
-                                          notify_content: params[:notify_content], 
+      notify = @trade.manual_sms_or_emails.create(notify_sender: params[:notify_sender],
+                                          notify_receiver: params[:notify_receiver],
+                                          notify_theme: params[:notify_theme],
+                                          notify_content: params[:notify_content],
                                           notify_type: params[:notify_type] )
-    end  
+    end
 
     if @trade.save
       @trade = TradeDecorator.decorate(@trade)

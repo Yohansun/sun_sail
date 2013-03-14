@@ -66,6 +66,16 @@
         </div>
       </div>
 
+      <div class="control-group">
+        <div class="controls">指派给:
+          <select class="input-medium nomargin select2" id="repair_man">
+          <% for user in MagicOrders.users.models: %>
+            <option value="<%= user.get('name') %>" ><%= user.get('name') %></option>
+          <% end %>
+          </select>
+        </div>
+      </div>
+
       <div class="control-group pick_plan_detail">
         <div class="controls">预计处理时间：<input type="text" class="input-small datepickers nomargin" id="plan_repair_at"></div>
       </div>

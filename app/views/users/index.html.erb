@@ -8,6 +8,7 @@
         <% if current_account.settings.enable_module_onsite_service == 1 %>
           <li><a href="/onsite_services">上门服务</a></li>
         <%- end %>
+        <li><a href="/logistic_groups">物流分组管理</a></li>
       </ul>
     </div>
   </header>
@@ -31,7 +32,7 @@
         </div>
       </fieldset>
     <% end %>
-    
+
     <table class="table table-striped table-bordered table-condensed td_colors mar_t">
       <thead>
         <tr>
@@ -70,7 +71,7 @@
         <% end %>
       </tbody>
     </table>
-    
+
     <%= paginate @users %>
   </div>
 </div>

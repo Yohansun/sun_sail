@@ -18,6 +18,16 @@
       var current_account = <%= raw current_account.to_json %>;
     </script>
     <%= stylesheet_link_tag "application", :media => "all" %>
+
+    <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?6b23b42f4ba1488b687b3730263fe7da";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
   </head>
   <body>
 
@@ -40,7 +50,6 @@
             <li class="active trades" style="display:none"><a href="/app#trades">订单管理</a></li>
             <% if current_account.key == 'nippon' %>
               <li class="trades" style="display:none"><a href="http://shop.nipponpaint.com.cn/admin/orders">官网订单</a></li>
-           <!--    <li class="trades" style="display:none"><a href="http://shop.nipponpaint.com.cn/admin/taobao_orders">淘宝订单</a></li> -->
             <% end %>
             <% if ['sales', 'user_activities', 'trade_reports'].include?(controller_name)  %>
               <%- if current_user.has_role?(:admin) %>
@@ -113,9 +122,9 @@
             <li id="fat-menu" class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="badge badge-info" style="background-color:#FF0000"></span>&nbsp;异常订单 <b class="caret"></b></a>
               <ul class="dropdown-menu">
-                <li><a href="/trades/unpaid_two_days">超过2天未付款</a></li>
-                <li><a href="/trades/undispatched_one_day">已付款1天未分流</a></li>
-                <li><a href="/trades/undelivered_two_days">已分流2天未发货</a></li>
+                <li><a href="/trades/unpaid_for_days">未付款时间过长</a></li>
+                <li><a href="/trades/undispatched_for_days">未分流时间过长</a></li>
+                <li><a href="/trades/undelivered_for_days">未发货时间过长</a></li>
                 <li class= "divider"></li>
                 <li><a href="trades/buyer_delay_deliver">买家延迟发货</a></li>
                 <li><a href="trades/seller_ignore_deliver">卖家长时间未发货</a></li>

@@ -24,7 +24,13 @@ class TaobaoTradeRate < ActiveRecord::Base
   validates_uniqueness_of :oid
   attr_accessible  :tid, :oid, :content, :created, :item_price, :item_title, :nick, :rated_nick, :result, :role, :reply
 
-   def self.export_reports(start_time = nil, end_time = nil, time_type = nil)
+  after_create :write_created_to_mongo
+
+  def write_created_to_mongo
+    TaobaoTrade.where(tid: tid).update_all(rate_created: created) 
+  end 
+  
+  def self.export_reports(start_time = nil, end_time = nil, time_type = nil)
     start_time ||= Time.now - 7.day
     end_time ||= Time.now
 

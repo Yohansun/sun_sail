@@ -31,7 +31,7 @@ json.sum_fee @trade.sum_fee
 json.point_fee @trade.point_fee
 json.total_fee @trade.total_fee
 
-json.created @trade.created.strftime("%m-%d %H:%M")
+json.created @trade.created.strftime("%m-%d %H:%M") if @trade.created
 json.pay_time @trade.pay_time.strftime("%m-%d %H:%M") if @trade.pay_time
 json.cs_memo @trade.cs_memo
 json.trade_with_orders_cs_memo @trade.trade_with_orders_cs_memo
@@ -116,12 +116,24 @@ json.unusual_states @trade.unusual_states do |json, state|
 end
 
 json.operation_logs @trade.operation_logs do |json, log|
-  json.id log.id
+  json.id log._id
   json.operator log.operator
   json.operator_id log.operator_id
   json.operated_at log.operated_at.strftime("%m-%d %H:%M:%S") if log.operated_at
   json.operation log.operation
 end
+
+json.trade_gifts @trade.trade_gifts do |json, gift|
+  json.id gift._id
+  json.gift_tid gift.gift_tid
+  json.trade_id gift.trade_id
+  json.gift_title gift.gift_title
+  json.product_id gift.product_id
+  json.delivered_at gift.delivered_at
+end
+
+#for gift_trade only!
+json.main_trade_id @trade.main_trade_id if @trade.main_trade_id
 
 if params[:splited]
   json.splited @splited_orders

@@ -2,6 +2,9 @@ require 'sidekiq/web'
 
 MagicOrders::Application.routes.draw do
 
+  resources :logistic_groups
+
+
   resources :upload_files
 
   resources :bbs_categories
@@ -140,6 +143,10 @@ MagicOrders::Application.routes.draw do
   resources :trade_sources
 
   resources :account_setups do
+    collection do
+      get  :edit_auto_settings
+      put  :update_auto_settings
+    end
     member do
       post :data_fetch_start
       get  :data_fetch_check

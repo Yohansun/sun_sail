@@ -8,13 +8,16 @@ class TradeTaobaoDeliver
     account = trade.fetch_account
     tid = trade.tid
     source_id = trade.trade_source_id
-    response = TaobaoQuery.get({
-      method: 'taobao.logistics.offline.send',
-      tid: trade.tid,
-      out_sid: trade.logistic_waybill,
-      company_code: trade.logistic_code}, source_id
-    )
-
+    if trade._type = "CustomTrade" # NEED ADAPTION?
+      response = {}
+    else
+      response = TaobaoQuery.get({
+        method: 'taobao.logistics.offline.send',
+        tid: trade.tid,
+        out_sid: trade.logistic_waybill,
+        company_code: trade.logistic_code}, source_id
+      )
+    end
     errors = response['error_response']
     if errors.blank?
       trade = TradeDecorator.decorate(trade)
@@ -40,5 +43,4 @@ class TradeTaobaoDeliver
       trade.update_attributes!(status: 'WAIT_SELLER_SEND_GOODS')
     end
   end
-
 end

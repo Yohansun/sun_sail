@@ -7,6 +7,10 @@
     MagicOrders.current_user_seller_id = "<%= current_user.seller_id.to_i %>"
     MagicOrders.logistics = new MagicOrders.Collections.Logistics();
     MagicOrders.logistics.reset(<%= raw @logistics.to_json %>);
+    MagicOrders.users = new MagicOrders.Collections.Users();
+    MagicOrders.users.reset(<%= raw @users.to_json %>);
+    MagicOrders.gifts = new MagicOrders.Collections.Products();
+    MagicOrders.gifts.reset(<%= raw @gift_products.to_json %>);
     MagicOrders.deliver_bill_notice_info = "<%= current_account.settings.deliver_bill_notice_info %>"
     MagicOrders.enable_module_print_deliver_bill = <%= current_account.settings.enable_module_print_deliver_bill %>
     MagicOrders.enable_trade_deliver_bill_spliting = <%= current_account.settings.enable_trade_deliver_bill_spliting == true %>
@@ -33,7 +37,7 @@
 <div id="trade_seller" class="trade modal fade hide" tabindex="-1"></div>
 <div id="trade_deliver" class="trade modal fade hide" tabindex="-1"></div>
 <div id="trade_cs_memo" class="trade modal fade hide" tabindex="-1"></div>
-<div id="trade_gift_memo" class="trade modal fade hide" tabindex="-1"></div>
+<div id="trade_gift_memo" class="trade modal fade hide modal_w7" tabindex="-1"></div>
 <div id="trade_color" class="trade modal fade hide" tabindex="-1"></div>
 <div id="trade_color_info" class="trade modal fade hide" tabindex="-1" style="width: 890px; margin-left: -445px;"></div>
 <div id="trade_invoice" class="trade modal fade hide" tabindex="-1"></div>

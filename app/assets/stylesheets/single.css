@@ -11,15 +11,15 @@ body {
 }
 code{color: #08C;}
 
-.item_group{margin-top:3px;}
-.item_group label {display: block; float: left; border: 1px solid #d1d1d1; background: #FAFAFA; padding: 2px 5px; font-size:12px;color:#555;
+.search_tags_group{margin-top:3px;}
+.search_tags_group label {display: block; float: left; /*border: 1px solid #fff;*/ background: #FAFAFA; padding: 2px 5px; font-size:12px;color:#555;
   -webkit-border-radius: 4px 0 0 4px!important;
   -moz-border-radius: 4px 0 0 4px!important;
   border-radius: 4px 0 0 4px!important;
   border-right:0!important;
 }
-.item_group .unit_item{margin:0 5px 5px 0;}
-.item_group .unit_item button {float:left; padding: 4px 8px 8px;*padding: 2px 8px 6px; cursor: pointer; line-height: 12px; border: 1px solid #d5d5d5;border-left-width: 0; color: #525252; margin-left: -1px;
+.search_tags_group .search_tag{margin:0 5px 5px 0;}
+.search_tags_group .search_tag button {float:left; padding: 4px 8px 8px;*padding: 2px 8px 6px; cursor: pointer; line-height: 12px; border: 0; /*color: #525252;*/ margin-left: -1px;
  -webkit-border-radius: 0 4px 4px 0!important;
   -moz-border-radius: 0 4px 4px 0!important;
   border-radius: 0 4px 4px 0!important;
@@ -27,17 +27,21 @@ code{color: #08C;}
 
 .none{display:none;}
 .nomargin{margin:0!important;}
+.mt5{margin-top:5px!important;}
+.ml210{margin-left:210px!important;}
 /*nav*/
 .navbar .brand{padding:0;}
 
 
 /*form*/
 .form-horizontal .controls.pull-left{margin:0 5px;height:26px;}
-.form-horizontal input.datepickers,.form-horizontal input.timepickers{vertical-align:top;}
-.form-horizontal .icon-arrow-right{margin-top:-7px;}
+/*.form-horizontal input.datepickers,.form-horizontal input.timepickers{vertical-align:top;}*/
 .form-horizontal{position:relative;}
+.form-horizontal.affix{position:fixed;}
 .form-horizontal .control-group{margin-bottom:5px;}
 .open_advance{position:absolute;right:20px;top:85px;}
+#all_orders .open_advance{top:133px;}
+.affix .open_advance{right:40px;}
 .icon-arrow-up{background-position: -289px -96px!important;}
 
 .radius_no_tl{border-radius:0 4px 4px 0!important;}
@@ -48,11 +52,17 @@ code{color: #08C;}
 .nav-tabs.affix + .tab-content{margin-top:40px;}
 .nav-tabs > li > a{padding:3px 15px;color:#000;font-size:12px;}
 .affix{width:100%;top:41px;left:0;right:0;}
-/*tr .btn-group{display:none;}*/
-/*tr .btn{padding:0 6px;}*/
+#all_orders .affix{top:72px;z-index:3;width:auto;margin:0 18px;border-radius:0 0 3px 3px;}
+#all_orders .btn-toolbar .dropdown-menu a.disabled {
+  color: #ddd;
+}
+#all_orders .btn-toolbar.affix{top:153px;z-index:3;background:#fff;/*-webkit-box-shadow: 2px 2px 3px #ddd;*/padding:10px;border:1px solid #e3e3e3;}
+#all_orders .btn-toolbar.toggle_affixtop.affix{top:277px;}
+.js-table tr .btn-group{display:none;}
+.js-table tr .btn{padding:0 6px;}
 /*storage*/
-.form-horizontal .controls.item_group{margin-left:51px;}
-.unit_item label,.unit_item button{}
+.form-horizontal .controls.search_tags_group{margin-left:51px;}
+.search_tag label,.search_tag button{background:#2F96B4 -webkit-linear-gradient(top, #5BC0DE, #2F96B4);color:#fff;}
 .whiteSmoke_bg{background:whiteSmoke;}
 .font12 *{font-size:12px!important;}
 .span10 > ul{margin-bottom:0;}
@@ -139,3 +149,39 @@ code{color: #08C;}
 /*settings*/
 #autobusiness .control-group{margin-left:60px;}
 #autobusiness .controls{margin-left:80px;}
+/*autoset setting_auto.html*/
+.nav .collapse{border: 1px solid #E5E5E5;border-width:0 1px;margin-left: 0px;padding-left: 26px;list-style: none;}
+.nav .collapse li{line-height:14px;padding:5px 0;}
+.nav .collapse li.active{list-style:circle;margin-left:15px;}
+.nav .collapse li a{text-decoration:none;}
+.timeEntry_control{border-radius:0 4px 4px 0;}
+.noborder td,.noborder th{border:0!important;}
+
+/*search*/
+@media (max-width: 1280px) {
+  .input-large.radius_no_tl{width:185px;}
+}
+@media (max-width: 1024px) {
+    .form-horizontal .control-group > .controls.pull-left{margin-bottom:5px;}
+    #all_orders .btn-toolbar.affix{top:184px;}
+    #all_orders .btn-toolbar.toggle_affixtop.affix{top:328px;}
+    #all_orders .open_advance{top:174px;}
+    code{color:#08C!important;}
+    .input-large.radius_no_tl{width:210px;}
+}
+
+/*icon*/
+[class^="icon-flag_"],
+[class*=" icon-flag_"] {
+  background-image:url(../images/flags.jpg);
+  width:27px;height:30px;
+}
+.icon-flag_red{background-position:0 0;}
+.icon-flag_purple{background-position:-40px 0;}
+
+/*gifts*/
+.mar_b15{margin-bottom:15px;}
+
+/*modal*/
+.modal_w7{width:760px;margin-left:-380px;}
+.modal_w7 textarea{width:98%;}

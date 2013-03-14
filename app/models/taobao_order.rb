@@ -36,6 +36,7 @@ class TaobaoOrder < Order
   field :cid, type: Integer
 
   embedded_in :taobao_trades
+  embedded_in :gift_trades
 
   def account_id
     taobao_trades.account_id
@@ -47,7 +48,7 @@ class TaobaoOrder < Order
 
   def sku_properties
     sku_properties_name
-  end  
+  end
 
   def product
     super(outer_iid)
@@ -103,13 +104,14 @@ class TaobaoOrder < Order
   def price
     origin_price =  attributes['price']
     (origin_price - promotion_discount_fee/num).to_f.round(2)
-  end  
+  end
 
   def promotion_discount_fee
-    if taobao_trades.promotion_details.present?
-      discount_fee = taobao_trades.promotion_details.where(oid: oid).sum(:discount_fee)
-    end 
-    discount_fee ||  0   
-  end 
-
+    if taobao_trades
+      if taobao_trades.promotion_details.present?
+        discount_fee = taobao_trades.promotion_details.where(oid: oid).sum(:discount_fee)
+      end
+    end
+    discount_fee ||  0
+  end
 end

@@ -56,18 +56,37 @@
       <tr>
         <td colspan="2" class="tr fb" style='text-align:right'>产品数量：</td>
         <td colspan="1" class="fb"><%= count %></td>
+        <% if MagicOrders.enable_module_colors == 1 ^ MagicOrders.enable_module_sku_properties == 1 : %>
         <td colspan="1"></td>
+        <% else if MagicOrders.enable_module_colors == 1 && MagicOrders.enable_module_sku_properties == 1 : %>
+        <td colspan="2"></td>
+        <% else : %>
+        <% end %>
       </tr>
       <tr>
         <td colspan="2" rowspan="2" width="50%">
           <%= @bill.notice %>
         </td>
+        <% if MagicOrders.enable_module_colors == 1 ^ MagicOrders.enable_module_sku_properties == 1 : %>
         <td colspan="4">签收人：</td>
+        <% else if MagicOrders.enable_module_colors == 1 && MagicOrders.enable_module_sku_properties == 1 : %>
+        <td colspan="5">签收人：</td>
+        <% else : %>
+        <td colspan="3">签收人：</td>
+        <% end %>
       </tr>
-      <tr><td colspan="4">签收日期：</td></tr>
+      <tr>
+        <% if MagicOrders.enable_module_colors == 1 ^ MagicOrders.enable_module_sku_properties == 1 : %>
+        <td colspan="4">签收日期：</td>
+        <% else if MagicOrders.enable_module_colors == 1 && MagicOrders.enable_module_sku_properties == 1 : %>
+        <td colspan="5">签收日期：</td>
+        <% else : %>
+        <td colspan="3">签收日期：</td>
+        <% end %>
+      </tr>
       <tr>
         <td colspan="1">赠品备注：</td>
-        <td colspan="3"><%= @bill.get('gift_memo') %></td>
+        <td colspan="4"><%= @bill.get('gift_memo') %></td>
       </tr>
     </tbody>
   </table>
@@ -77,6 +96,6 @@
   <% if MagicOrders.enable_module_print_deliver_bill  == 1 : %>
     <div id="showbox"></div>
   <% else : %>  
-    <a class="btn btn-primary" style='margin-top:-22px;'>打印</a>
+    <a href="javascript:void(0)" class="btn btn-primary" onclick='startPrint()' style='margin-top:-22px;'>打印</a>
   <% end %>  
 </div><!-- modal-footer -->

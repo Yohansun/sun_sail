@@ -1,11 +1,15 @@
 <td></td>
 <td><input class='trade_check' type="checkbox" value="option1"></td>
-<td nowrap><!--操作-->
+<!--操作 start-->
+<!--
+<td nowrap>
   <div class="btn-group">
     <button data-toggle="dropdown" class="btn btn-info dropdown-toggle min_w">
       <i class="icon-wrench"></i>
       <span class="caret"></span>
     </button>
+-->
+<!--
     <ul class="dropdown-menu trade_pops">
       <li><a data-toggle="modal" href="#" data-type="detail">订单详情</a></li>
       <% if @trade.get('status_text') == '已付款，待发货' : %>
@@ -24,7 +28,7 @@
           <li><a data-toggle="modal" href="#" data-type="trade_split">订单拆分</a></li>
           <% end %>
         <% end %>
-        
+
         <% if MagicOrders.trade_type in ['logistic_waybill_exist', 'logistic_waybill_void'] : %>
           <li><a data-toggle="modal" href="#" data-type="setup_logistic">物流单号设置</a></li>
         <% end %>
@@ -50,9 +54,10 @@
       <% end %>
       <li><a data-toggle="modal" href="#" data-type="logistic_memo">物流商备注</a></li>
       <% end %>
+-->
       <!-- <li><a data-toggle="modal" href="#" data-type="reassign">订单转交</a></li> -->
       <!-- <li><a data-toggle="modal" href="#" data-type="logistic_company">物流公司</a></li> -->
-
+<!--
       <li class= "divider"></li>
 
       <% if @trade.get('status_text') == '已付款，待发货' : %>
@@ -106,7 +111,7 @@
           <li><a data-toggle="modal" href="#" data-type="confirm_refund">确认退款</a></li>
         <% end %>
       <li><a data-toggle="modal" href="#" data-type="invoice_number">发票号设置</a></li>
-
+ -->
       <!-- <li><a data-toggle="modal" href="#" data-type="check_goods">验货</a></li> -->
       <!-- <li><a data-toggle="modal" href="#" data-type="confirm_check_goods">确认验货</a></li> -->
       <!-- <li><a data-toggle="modal" href="#" data-type="refund">申请退款</a></li> -->
@@ -114,11 +119,12 @@
       <!-- <li><a data-toggle="modal" href="#" data-type="agree_return_goods">同意退货</a></li> -->
       <!-- <li><a data-toggle="modal" href="#" data-type="invoice_notice">开票通知</a></li> -->
 
-      <li class= "divider"></li>
+      <!-- <li class= "divider"></li> -->
 
       <!-- <li><a data-toggle="modal" href="#" data-type="export_deliver_bill">导出发货单</a></li> -->
       <!-- <li><a data-toggle="modal" href="#" data-type="export_logistic_bill">导出物流单</a></li> -->
       <!-- <li><a data-toggle="modal" href="#" data-type="export_invoice">导出发票</a></li> -->
+<!--
       <% unless MagicOrders.company == 'dulux' and MagicOrders.role_key == 'seller' : %>
       <li><a data-toggle="modal" href="#" data-type="operation_log">订单日志</a></li>
       <% end %>
@@ -126,14 +132,18 @@
       <% if MagicOrders.role_key == 'admin' || MagicOrders.role_key == 'cs' : %>
         <% if MagicOrders.company == 'nippon' : %>
           <li><a data-toggle="modal" href="#" data-type="manual_sms_or_email">发短信/邮件</a></li>
-        <% end %>  
+        <% end %>
         <% if MagicOrders.company == 'dulux'  && @trade.get('status_text') != "等待付款" : %>
           <li><a data-toggle="modal" href="#" data-type="modify_payment">金额调整</a></li>
         <% end %>
       <% end %>
-    </ul> 
+ -->
+<!--
+      </ul>
   </div>
 </td>
+-->
+<!--操作 end-->
 
 <td data-col='trade_source'>
   <span class="label label-warning"><%= @trade.get('trade_source') %></span>
@@ -143,7 +153,7 @@
 </td>
 
 <td data-col='tid'>
-  <a href="#" data-type="detail">
+  <a href="#" data-toggle="modal" data-type="detail" class="pop_detail">
     <% if @trade.get('splitted_tid'): %>
       <span class="label label-info">拆分订单</span>
       <br/>
@@ -236,8 +246,12 @@
 
 <% if MagicOrders.company != 'dulux' or (MagicOrders.company == 'dulux' and (MagicOrders.role_key == 'admin' or MagicOrders.role_key == 'cs')) : %>
 <td data-col='gift_memo'>
-  <% if @trade.get('gift_memo') : %>
-  <a href="javascript:void(0)" rel="popover" data-content="<%= @trade.get 'gift_memo' %>" data-original-title="<b>赠品备注</b>"><i class="icon-gift_memo"></i></a>
+  <% if @trade.get('gift_memo') || @trade.get('trade_gifts').length != 0 || @trade.get('tid').slice(-2,-1) == "G" : %>
+    <% if @trade.get('tid').slice(-2,-1) == "G" : %>
+    <a href="#" data-toggle='modal' data-type="detail" class="gift_trade_pop">主订单号:</br><%= @trade.get('tid').slice(0,-3)%></a>
+    <% else : %>
+    <a href="javascript:void(0)" rel="popover" data-content="<%= @trade.get 'gift_memo' %><br/><br/><% for gift in @trade.get('trade_gifts'): %><%= gift.gift_title %>:</b><%= gift.gift_tid %></span><br/><% end %>" data-original-title="<b>赠品备注</b>"><i class="icon-gift_memo"></i></a>
+    <% end %>
   <% end %>
 </td>
 <% end %>

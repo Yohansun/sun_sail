@@ -10,6 +10,7 @@ class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
     'click .js-confirm-return': 'confirmReturn'
     'click .return_logistics': 'returnLogistics'
     'click .js-confirm-logistics': 'confirmLogistics'
+    'click .index_pops li a[data-type]': 'show_type'
 
   initialize: ->
     @collection.on("fetch", @renderUpdate, this)
@@ -17,6 +18,7 @@ class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
   render: =>
     $(@el).html(@template(bills: @collection))
     @collection.each(@prependTrade)
+    $(@el).find('a[data-trade-mode='+MagicOrders.trade_mode+'][data-trade-status="'+MagicOrders.trade_type+'"]').parents('li').addClass('active')
     this
 
   selectSameStatusTrade: (e) =>
@@ -211,3 +213,15 @@ class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
         $('#ord_logistics_billnum_mult2').modal('hide')
       else
         alert('失败')
+
+  show_type: (e) ->
+    e.preventDefault()
+    length = $('.trade_check:checked').parents('tr').length
+    if length <= 1
+      if length == 1
+        trade_id = $('.trade_check:checked').parents('tr').attr('id').slice(6)
+        type = $(e.target).data('type')
+        MagicOrders.cache_trade_number = parseInt($('.trade_check:checked').parents('tr').children('td:first').html())
+        Backbone.history.navigate('logistic_bills/' + trade_id + "/#{type}", true)
+      else
+        alert("请勾选要操作的订单。")

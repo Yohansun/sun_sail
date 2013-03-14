@@ -75,4 +75,16 @@ json.array!(@trades) do |json, trade|
     json.color_hexcode order.color_hexcode
     json.color_name order.color_name
   end
+
+  json.trade_gifts trade.trade_gifts do |json, gift|
+    json.id gift._id
+    json.gift_tid gift.gift_tid
+    json.trade_id gift.trade_id
+    json.gift_title gift.gift_title
+    json.product_id gift.product_id
+    json.delivered_at gift.delivered_at
+  end
+
+  #for gift_trade only!
+  json.main_trade_id trade.main_trade_id if trade.main_trade_id
 end

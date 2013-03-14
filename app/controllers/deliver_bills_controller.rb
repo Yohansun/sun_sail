@@ -59,13 +59,26 @@ class DeliverBillsController < ApplicationController
     if params[:ids] && params[:time]
       time = params[:time].to_time(:local)
       DeliverBill.any_in(id: params[:ids].split(',')).each do |bill|
+        trade = bill.trade
+        is_first_print = !trade.deliver_bill_printed_at.present?
+        trade.update_attributes(deliver_bill_printed_at: time)
+
         bill.update_attributes(deliver_printed_at: time)
-        bill.trade.operation_logs.create(
+        trade.operation_logs.create(
           operated_at: time,
           operation: '打印发货单',
           operator_id: current_user.id,
           operator: current_user.name
         )
+
+        #如果满足自动化设置条件，打印发货单后订单自动发货
+        auto_settings = current_account.settings.auto_settings
+        if auto_settings['auto_deliver'] && current_account.can_auto_deliver_right_now? && is_first_print
+          if auto_settings["deliver_condition"] == "deliver_bill_printed_trade"
+            trade.update_attributes(delivered_at: Time.now)
+            trade.operation_logs.create(operated_at: Time.now, operation: "订单自动发货")
+          end
+        end
       end
     end
 
@@ -126,6 +139,7 @@ class DeliverBillsController < ApplicationController
     success = true
     DeliverBill.any_in(id: params[:ids].split(',')).each do |bill|
       trade = bill.trade
+      is_first_print = !trade.logistic_printed_at.present?
       trade.logistic_printed_at = Time.now
 
       if trade.logistic_waybill.blank?
@@ -140,6 +154,15 @@ class DeliverBillsController < ApplicationController
       else
         success = false
       end
+
+      #如果满足自动化设置条件，打印物流单后订单自动发货
+      auto_settings = current_account.settings.auto_settings
+      if auto_settings['auto_deliver'] && current_account.can_auto_deliver_right_now? && is_first_print
+        if auto_settings["deliver_condition"] == "logistic_bill_printed_trade"
+          trade.update_attributes(delivered_at: Time.now)
+          trade.operation_logs.create(operated_at: Time.now, operation: "订单自动发货")
+        end
+      end
     end
 
     render json: {isSuccess: success}
@@ -151,12 +174,22 @@ class DeliverBillsController < ApplicationController
     if logistic && params[:data].present?
       params[:data].values.each do |info|
         trade = Trade.where(tid: info['tid']).first
+        is_first_set = !trade.logistic_waybill.present?
         trade.logistic_code = logistic.try(:code)
         trade.logistic_waybill = info["logistic"].present? ? info["logistic"] : trade.tid
         trade.logistic_name = logistic.try(:name)
         trade.logistic_id = logistic.try(:id)
         trade.save
         trade.operation_logs.create(operated_at: Time.now, operation: '设置物流单号', operator_id: current_user.id, operator: current_user.name)
+
+        #如果满足自动化设置条件，设置物流单号后订单自动发货
+        auto_settings = current_account.settings.auto_settings
+        if current_account.settings.auto_settings['auto_deliver'] && current_account.can_auto_deliver_right_now? && is_first_set
+          if auto_settings["deliver_condition"] == "has_logistic_waybill_trade"
+            trade.update_attributes(delivered_at: Time.now)
+            trade.operation_logs.create(operated_at: Time.now, operation: "订单自动发货")
+          end
+        end
       end
     else
       flag =false

@@ -13,6 +13,7 @@ class MagicOrders.Views.TradesDetail extends Backbone.View
   render: ->
     $(@el).html(@template(trade: @model))
     $('#myTab a:first').tab('show');
+    $('div.modal-header h3 span').parents('.modal').removeClass('bigtoggle_parents');
     this
 
   print: (e) ->

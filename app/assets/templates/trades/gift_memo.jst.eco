@@ -1,14 +1,67 @@
 <div class="modal-header">
-  <button type="button" class="close" data-dismiss="modal">×</button>
-  <h3>赠品备注</h3>
-</div><!-- modal-header -->
+  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+  <h3>赠品管理</h3>
+</div>
 <div class="modal-body">
-  <fieldset>
-  	<% console.log(@trade) %>
-    <textarea placeholder="输入赠品备注..." style="resize:none;width:510px;height:150px;padding:5px;" id="gift_memo_text"><%= @trade.get('gift_memo') %></textarea>
+  <fieldset class="form-inline mar_b15">
+    <p>新增赠品：</p>
+    <select class="input-large" id="select_gift">
+      <% for gift in MagicOrders.gifts.models: %>
+        <option value="<%= gift.get('id') %>" ><%= gift.get('name') %></option>
+      <% end %>
+      <option>选择赠品</option>
+    </select>
+    <label class="checkbox">
+      <input type="checkbox" id="add_gift_tid">是否拆分
+    </label>
+    <button class="btn" id="add_gift_to_list">添加</button>
   </fieldset>
-</div><!-- modal-body -->
+  <fieldset class="mar_b15">
+    <p>赠品备注：</p>
+    <textarea placeholder="输入赠品备注..." style="resize:none;width:719px;height:50px;padding:5px;" id="gift_memo_text"><%= @trade.get('gift_memo') %></textarea>
+  </fieldset>
+  <fieldset class="mar_b15">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th width="15%">赠品编号</th>
+          <th width="40%">赠品名称</th>
+          <th width="20%">关联订单</th>
+          <th width="15%">是否拆分</th>
+          <th width="10%">操作</th>
+        </tr>
+      </thead>
+      <tbody id="gift_list">
+        <% for tg in @trade.get('trade_gifts'): %>
+        <tr class="product_<%= tg.product_id %>">
+          <td><%= tg.gift_tid %></td>
+          <td><%= tg.gift_title %></td>
+          <td>
+            <% if tg.trade_id != '' : %>
+              <%= tg.gift_tid.slice(0,-3) %>
+            <% end %>
+          </td>
+          <td>
+            <% if tg.trade_id != '' : %>
+            拆分
+            <% else : %>
+            不拆分
+            <% end %>
+          </td>
+          <td>
+            <% if tg.delivered_at == null : %>
+            <button class="btn delete_a_gift">删除</button>
+            <% else : %>
+            已发货
+            <% end %>
+          </td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </fieldset>
+</div>
 <div class="modal-footer">
-  <a class="btn" data-dismiss="modal">取消</a>
+  <a class="btn" data-dismiss="modal">关闭</a>
   <a class="btn btn-primary save">保存</a>
 </div>

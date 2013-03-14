@@ -7,12 +7,14 @@ class MagicOrders.Views.DeliverBillsIndex extends Backbone.View
     'click [data-trade-status]': 'selectSameStatusTrade'
     'click .print_delivers': 'printDelivers'
     'click .js-search': 'search'
+    'click .index_pops li a[data-type]': 'show_type'
 
   initialize: ->
 
   render: =>
     $(@el).html(@template(bills: @collection))
     @collection.each(@prependDeliverBill)
+    $(@el).find('a[data-trade-mode='+MagicOrders.trade_mode+'][data-trade-status="'+MagicOrders.trade_type+'"]').parents('li').addClass('active')
     this
 
   selectSameStatusTrade: (e) =>
@@ -83,7 +85,14 @@ class MagicOrders.Views.DeliverBillsIndex extends Backbone.View
       $('#content').html(@mainView.render().el)
       $.unblockUI()
 
-
-
-
-
+  show_type: (e) ->
+    e.preventDefault()
+    length = $('.trade_check:checked').parents('tr').length
+    if length <= 1
+      if length == 1
+        trade_id = $('.trade_check:checked').parents('tr').attr('id').slice(6)
+        type = $(e.target).data('type')
+        MagicOrders.cache_trade_number = parseInt($('.trade_check:checked').parents('tr').children('td:first').html())
+        Backbone.history.navigate('deliver_bills/' + trade_id + "/#{type}", true)
+      else
+        alert("请勾选要操作的订单。")

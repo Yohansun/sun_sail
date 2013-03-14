@@ -26,7 +26,7 @@
 <td data-col='receiver_name'><%= @bill.get('receiver_name') %></td>
 <td data-col='receiver_mobile'><%= @bill.get('receiver_mobile') %></td>
 <td data-col='receiver_address'><%= @bill.get('receiver_address') %></td>
-<td>
+<!-- <td>
   <div class="btn-group">
     <button data-toggle="dropdown" class="btn btn-info dropdown-toggle min_w">
       <i class="icon-wrench"></i><span class="caret"></span>
@@ -35,4 +35,4 @@
       <li><a data-toggle="modal" href="#" data-type="print_deliver_bill">打印发货单</a></li>
     </ul>
   </div>
-</td>
+</td> -->

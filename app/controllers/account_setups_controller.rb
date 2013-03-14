@@ -35,7 +35,7 @@ class AccountSetupsController < ApplicationController
     render_wizard @account
   end
 
-  # invoke this action on fron-end view by JavaScript
+  # invoke this action on front-end view by JavaScript
   def data_fetch_start
     if @account && @account.settings.init_data_ready.blank?
       @account.settings.init_data_ready = false
@@ -57,6 +57,19 @@ class AccountSetupsController < ApplicationController
     account = Account.find_by_id(params[:id] )
     account.settings.init_data_ready = true if account
     head :ok
+  end
+
+  def edit_auto_settings
+    @setting = @account.settings.auto_settings
+    @setting['split_conditions'] = {} if !@setting['split_conditions'].present?
+    @setting['dispatch_conditions'] = {} if !@setting['dispatch_conditions'].present?
+    @setting['unusual_conditions'] = {} if !@setting['unusual_conditions'].present?
+  end
+
+  def update_auto_settings
+    @setting = decorate_auto_settings(params[:auto_settings])
+    @account.settings.auto_settings = @setting
+    render edit_auto_settings_account_setups_path
   end
 
   private
@@ -83,4 +96,21 @@ class AccountSetupsController < ApplicationController
     @account = Account.find_by_id(session[:account_id] ) if session[:account_id] 
   end
 
+  def decorate_auto_settings(hash)
+    hash.each do |key, value|
+      if value.is_a?(Hash)
+        value.each do |sub_key, sub_value|
+          hash[key][sub_key] = 1 if sub_value == "on"
+          hash[key][sub_key] = nil if sub_value == "0"
+        end
+      else
+        hash[key] = 1 if value == "on"
+        hash[key] = nil if value == "0"
+      end
+    end
+    hash['split_conditions'] = {} if !hash['split_conditions'].present?
+    hash['dispatch_conditions'] = {} if !hash['dispatch_conditions'].present?
+
+    hash
+  end
 end

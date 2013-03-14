@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130206025907) do
+ActiveRecord::Schema.define(:version => 20130307084715) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -62,13 +62,16 @@ ActiveRecord::Schema.define(:version => 20130206025907) do
   create_table "areas", :force => true do |t|
     t.string   "name"
     t.integer  "parent_id"
-    t.datetime "created_at",                       :null => false
-    t.datetime "updated_at",                       :null => false
+    t.integer  "seller_id"
+    t.datetime "created_at",                        :null => false
+    t.datetime "updated_at",                        :null => false
     t.boolean  "active",         :default => true
+    t.boolean  "is_1568",        :default => false
     t.string   "pinyin"
     t.integer  "children_count", :default => 0
     t.integer  "lft",            :default => 0
     t.integer  "rgt",            :default => 0
+    t.integer  "sellers_count",  :default => 0
     t.integer  "area_type"
     t.string   "zip"
   end
@@ -161,6 +164,16 @@ ActiveRecord::Schema.define(:version => 20130206025907) do
   add_index "logistic_areas", ["area_id"], :name => "index_logistic_areas_on_area_id"
   add_index "logistic_areas", ["logistic_id"], :name => "index_logistic_areas_on_logistic_id"
 
+  create_table "logistic_groups", :force => true do |t|
+    t.integer  "account_id"
+    t.string   "name"
+    t.integer  "split_number"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
+  add_index "logistic_groups", ["account_id"], :name => "index_logistic_groups_on_account_id"
+
   create_table "logistic_rates", :force => true do |t|
     t.integer  "seller_id"
     t.integer  "logistic_id"
@@ -184,30 +197,46 @@ ActiveRecord::Schema.define(:version => 20130206025907) do
     t.integer  "account_id"
   end
 
+  create_table "onsite_service_areas", :force => true do |t|
+    t.string   "account_id"
+    t.string   "onsite_service_id"
+    t.integer  "area_id"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+  end
+
+  create_table "onsite_services", :force => true do |t|
+    t.integer  "account_id"
+    t.string   "options"
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "packages", :force => true do |t|
-    t.string   "iid"
+    t.string   "outer_id"
     t.integer  "number",     :default => 1
     t.integer  "product_id"
     t.datetime "created_at",                :null => false
     t.datetime "updated_at",                :null => false
   end
 
-  add_index "packages", ["iid"], :name => "index_packages_on_iid"
+  add_index "packages", ["outer_id"], :name => "index_packages_on_iid"
   add_index "packages", ["product_id"], :name => "index_packages_on_product_id"
 
   create_table "products", :force => true do |t|
-    t.string   "name",          :limit => 100,                               :default => "",  :null => false
-    t.string   "outer_id",      :limit => 20,                                :default => "",  :null => false
-    t.string   "product_id",    :limit => 20,                                :default => "",  :null => false
-    t.string   "storage_num",   :limit => 20,                                :default => "",  :null => false
-    t.decimal  "price",                        :precision => 8, :scale => 2, :default => 0.0, :null => false
+    t.string   "name",              :limit => 100,                               :default => "",  :null => false
+    t.string   "outer_id",          :limit => 20,                                :default => "",  :null => false
+    t.string   "product_id",        :limit => 20,                                :default => "",  :null => false
+    t.string   "storage_num",       :limit => 20,                                :default => "",  :null => false
+    t.decimal  "price",                            :precision => 8, :scale => 2, :default => 0.0, :null => false
     t.integer  "quantity_id"
     t.integer  "category_id"
     t.string   "features"
     t.string   "product_image"
     t.integer  "parent_id"
-    t.integer  "lft",                                                        :default => 0
-    t.integer  "rgt",                                                        :default => 0
+    t.integer  "lft",                                                            :default => 0
+    t.integer  "rgt",                                                            :default => 0
     t.integer  "good_type"
     t.datetime "updated_at"
     t.datetime "created_at"
@@ -216,7 +245,8 @@ ActiveRecord::Schema.define(:version => 20130206025907) do
     t.integer  "account_id"
     t.string   "detail_url"
     t.string   "cid"
-    t.integer  "num_iid",       :limit => 8
+    t.integer  "num_iid",           :limit => 8
+    t.integer  "logistic_group_id"
   end
 
   create_table "quantities", :force => true do |t|
@@ -361,9 +391,9 @@ ActiveRecord::Schema.define(:version => 20130206025907) do
     t.integer  "actual",                  :default => 0
     t.integer  "product_id"
     t.integer  "seller_id"
-    t.integer  "account_id"
     t.integer  "sku_id",     :limit => 8
     t.integer  "num_iid",    :limit => 8
+    t.integer  "account_id"
   end
 
   add_index "stock_products", ["seller_id"], :name => "index_stock_products_on_seller_id"
@@ -480,7 +510,6 @@ ActiveRecord::Schema.define(:version => 20130206025907) do
   end
 
   add_index "users", ["email"], :name => "index_admins_on_email", :unique => true
-  add_index "users", ["email"], :name => "index_users_on_email"
   add_index "users", ["parent_id"], :name => "index_admins_on_parent_id"
   add_index "users", ["reset_password_token"], :name => "index_admins_on_reset_password_token", :unique => true
   add_index "users", ["unlock_token"], :name => "index_users_on_unlock_token", :unique => true

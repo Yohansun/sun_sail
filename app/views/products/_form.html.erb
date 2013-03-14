@@ -7,9 +7,13 @@
     <%= f.input :storage_num, label: '仓库编号：', :input_html =>{ :class => "input-xlarge" } %>
     <%= f.input :price, label: '价格：', as: :string, :input_html =>{ :class => "input-xlarge" } %>
     <%#= f.association :quantity, collection: current_account.quantities, label: '规格：', :input_html =>{ :class => "width_auto" } %>
+    <%= f.input :logistic_group_id, collection: current_account.logistic_groups, label: '物流分组编码' %>
     <%= f.input :good_type, label: '商品类型：' do %>
       <label class="inline good_suit">
         <input type="radio" name="product[good_type]" value='1' <%= 'checked' if @product.good_type == 1 %>>单品
+      </label>
+      <label class="inline good_suit">
+        <input type="radio" name="product[good_type]" value='3' <%= 'checked' if @product.good_type == 3 %>>赠品
       </label>
       <label class="inline good_suit">
         <input type="radio" name="product[good_type]" value='2' <%= 'checked' if @product.good_type == 2 %>>套装

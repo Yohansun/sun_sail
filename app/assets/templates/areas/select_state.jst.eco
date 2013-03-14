@@ -1,20 +1,18 @@
-<label>买家地域：</label>
-
-<select class="input-small" id="state_option" name="select_state" >
+<select class="input-small pull-left radius_no_rb select2" id="state_option" name="select_state" >
   <option value="">请选择...</option>
   <% for area in @states.models: %>
   <option value="<%= area.get('name') %>" data-id="<%= area.get('id') %>" <%= "selected" if area.get('name') == @state %>><%= area.get('name') %></option>
   <% end %>
 </select>
-  <select class="input-small" id="city_option" name="select_city">
-    <option value="">请选择...</option>
-    <% for area in @cities.models: %>
-      <option value="<%= area.get('name') %>" data-id="<%= area.get('id') %>" <%= "selected" if area.get('name') == @city %>><%= area.get('name') %></option>
-    <% end %>
-  </select>
-  <select class="input-small" id="district_option">
-    <option value="">请选择...</option>
-    <% for area in @districts.models: %>
-      <option value="<%= area.get('name') %>" data-id="<%= area.get('id') %>"><%= area.get('name') %></option>
-    <% end %>
-  </select>
+<select class="input-small pull-left radius_no select2" id="city_option" name="select_city">
+  <option value="">请选择...</option>
+  <% for area in @cities.models: %>
+    <option value="<%= area.get('name') %>" data-id="<%= area.get('id') %>" <%= "selected" if area.get('name') == @city %>><%= area.get('name') %></option>
+  <% end %>
+</select>
+<select class="input-small pull-left radius_no_tl select2" id="district_option">
+  <option value="">请选择...</option>
+  <% for area in @districts.models: %>
+    <option value="<%= area.get('name') %>" data-id="<%= area.get('id') %>"><%= area.get('name') %></option>
+  <% end %>
+</select>

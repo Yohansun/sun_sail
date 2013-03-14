@@ -78,7 +78,22 @@ class TaobaoPurchaseOrderPuller
           $redis.sadd('TaobaoPurchaseOrderTids', trade['fenxiao_id'])
           
           # 分流 或 拆分订单
-          purchase_order.auto_dispatch! unless TradeSplitter.new(purchase_order).split!
+          acc = current_account
+
+          if acc.settings.auto_settings["auto_split"]
+            if acc.can_auto_preprocess_right_now?
+              can_split = TradeSplitter.new(purchase_order).split!
+            end
+          else
+            can_split = false
+          end
+
+          if acc.settings.auto_settings["auto_dispatch"]
+            if acc.can_auto_dispatch_right_now?
+              purchase_order.auto_dispatch! unless can_split
+            end
+          end
+          # purchase_order.auto_dispatch! unless TradeSplitter.new(purchase_order).split!
         end
         page_no += 1
         end until(page_no > total_pages || total_pages == 0) 
@@ -121,7 +136,7 @@ class TaobaoPurchaseOrderPuller
             page_no: page_no, page_size: 50}, trade_source_id
           )
 
-          p "starting upate_orders: since #{range_begin}"
+          p "starting update_orders: since #{range_begin}"
 
           if response['error_response']
             Notifier.puller_errors(response['error_response'], account_id).deliver
@@ -164,8 +179,12 @@ class TaobaoPurchaseOrderPuller
                 local_sub_order.update_attributes sub_order
               end
 
-              # 分流 
-              local_trade.auto_dispatch!
+              # 分流
+              if acc.settings.auto_settings["auto_dispatch"]
+                if acc.can_auto_dispatch_right_now?
+                  local_trade.auto_dispatch!
+                end
+              end
 
               # 拆分订单
               # TradeSplitter.new(local_trade).split!

@@ -7,6 +7,20 @@ class DelayAutoDispatch
     trade = Trade.where(_id: id).first
     return unless trade
 
-    trade.auto_dispatch! unless TradeSplitter.new(trade).split!
+    acc = current_account
+    if acc.settings.auto_settings["auto_split"]
+      if acc.can_auto_preprocess_right_now?
+        can_split = TradeSplitter.new(trade).split!
+      end
+    else
+      can_split = false
+    end
+
+    if acc.settings.auto_settings["auto_dispatch"]
+      if acc.can_auto_dispatch_right_now?
+        trade.auto_dispatch! unless can_split
+      end
+    end
+
   end
 end

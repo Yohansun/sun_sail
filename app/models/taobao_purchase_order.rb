@@ -85,7 +85,18 @@ class TaobaoPurchaseOrder < Trade
   end
 
   def auto_dispatchable?
-    memo.blank? && supplier_memo.blank?
+    acc = current_account.settings.auto_settings["dispatch_options"]
+    if acc["void_buyer_message"] && acc["void_seller_memo"]
+      can_auto_dispatch = memo.blank? && supplier_memo.blank?
+    elsif acc["void_buyer_message"] == 1 && acc["void_seller_memo"] == nil
+      can_auto_dispatch = memo.blank?
+    elsif acc["void_buyer_message"] == nil && acc["void_seller_memo"] == 1
+      can_auto_dispatch = supplier_memo.blank?
+    else
+      can_auto_dispatch = true
+    end
+
+    can_auto_dispatch
   end
 
   def auto_dispatch!
@@ -118,6 +129,14 @@ class TaobaoPurchaseOrder < Trade
     end
 
     self.update_attributes(seller_id: seller.id, dispatched_at: Time.now) if seller
+
+    #如果满足自动化设置条件，分流后订单自动发货
+    if auto_settings['auto_deliver'] && current_account.can_auto_deliver_right_now? && self.dispatched_at
+      if auto_settings["deliver_condition"] == "dispatched_trade"
+        update_attributes(delivered_at: Time.now)
+        self.operation_logs.create(operated_at: Time.now, operation: "订单自动发货")
+      end
+    end
   end
 
   def out_iids

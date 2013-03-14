@@ -5,7 +5,7 @@ class MagicOrders.Views.AreasSelectState extends Backbone.View
   events:
     'change #state_option': 'refresh_cities'
     'change #city_option': 'refresh_districts'
-  
+
   initialize: ->
     @state = $("#state_option").val()
     @city = $("#city_option").val()
@@ -15,7 +15,7 @@ class MagicOrders.Views.AreasSelectState extends Backbone.View
     @districts = new MagicOrders.Collections.Areas()
 
     @states.fetch()
-    
+
     @states.on("reset", @render, this)
     @cities.on("reset", @render, this)
     @districts.on("reset", @render, this)
@@ -26,12 +26,20 @@ class MagicOrders.Views.AreasSelectState extends Backbone.View
 
   refresh_cities: ->
     newid = $("#state_option").val()
-    @state = $("#state_option option[value=#{newid}]").data("id") unless newid == '请选择...'
-    @cities.fetch {data: {parent_id: @state}}
+    if newid == ''
+      @city = ''
+      @cities.fetch {data: {parent_id: @state}}
+      @districts.fetch data: {parent_id: @city}
+    else
+      @state = $("#state_option option[value=#{newid}]").data("id")
+      @cities.fetch {data: {parent_id: @state}}
     @state = $("#state_option").val()
 
   refresh_districts: =>
     newid = $("#city_option").val()
-    @city = $("#city_option option[value=#{newid}]").data("id") unless newid == '请选择...'
-    @districts.fetch data: {parent_id: @city}
+    if newid == ''
+      @districts.fetch data: {parent_id: @city}
+    else
+      @city = $("#city_option option[value=#{newid}]").data("id")
+      @districts.fetch data: {parent_id: @city}
     @city = $("#city_option").val()

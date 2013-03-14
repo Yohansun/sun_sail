@@ -24,6 +24,8 @@ window.MagicOrders =
 
     @trade_type = ''
 
+    @enabled_operation_items = []
+
     # 初始化时需要隐藏的订单列
     @trade_cols_hidden = []
     if $.cookie("trade_cols_hidden_#{MagicOrders.trade_mode}")

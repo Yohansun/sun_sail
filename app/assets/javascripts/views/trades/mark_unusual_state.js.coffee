@@ -11,9 +11,10 @@ class MagicOrders.Views.TradesMarkUnusualState extends Backbone.View
   initialize: ->
     @model.on("fetch", @render, this)
 
- 	render: ->
- 	  $(@el).html(@template(trade: @model))
- 	  this
+  render: ->
+    $(@el).html(@template(trade: @model))
+    $(@el).find(".select2").select2();
+    this
 
   save: ->
     blocktheui()
@@ -39,6 +40,7 @@ class MagicOrders.Views.TradesMarkUnusualState extends Backbone.View
 
     @model.set "plan_repair_at", $("#plan_repair_at").val()
     @model.set "state_note", $("#state_note").val()
+    @model.set "repair_man", $("#repair_man").val()
     @model.set "operation", "标注异常"
     @model.save {'reason': @reason},
       success: (model, response) =>

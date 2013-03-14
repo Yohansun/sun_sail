@@ -8,10 +8,12 @@ class MagicOrders.Views.TradesRow extends Backbone.View
   template: JST['trades/row']
 
   events:
-    'click [data-type]': 'show_type'
-    'click [data-type=trade_split]': 'show_split'
+    'click .trade_pops li a[data-type]': 'show_type'
+    'click .pop_detail' : 'show_type'
+    'click .gift_trade_pop': 'showMainTrade'
     'click a[rel=popover]': "addHover"
     'click': 'highlight'
+    'click input.trade_check': 'toggleOperationMenu'
 
   initialize: ->
 
@@ -41,22 +43,21 @@ class MagicOrders.Views.TradesRow extends Backbone.View
       $(@el).find("td[data-col=#{col}]").hide()
 
     $("a[rel=popover]").popover({placement: 'left', html:true})
-
     if MagicOrders.cache_trade_number != 0
       $(@el).find("td:first").html("#{MagicOrders.cache_trade_number}")
+      #$(@el).find('.trade_check').attr("checked","checked")
     this
 
   show_type: (e) ->
     e.preventDefault()
     type = $(e.target).data('type')
-    if type isnt 'trade_split'
-      MagicOrders.cache_trade_number = parseInt($(@el).find("td:first").html())
-      Backbone.history.navigate('trades/' + @model.get("id") + "/#{type}", true)
-
-  show_split: (e) ->
-    e.preventDefault()
     MagicOrders.cache_trade_number = parseInt($(@el).find("td:first").html())
-    Backbone.history.navigate('trades/' + @model.get("id") + '/splited', true)
+    Backbone.history.navigate('trades/' + @model.get("id") + "/#{type}", true)
+
+  showMainTrade: (e) ->
+    e.preventDefault()
+    console.log(@model.get("tid"))
+    Backbone.history.navigate('trades/' + @model.get('main_trade_id') + "/detail", true)
 
   highlight: (e) =>
     $("#trades_table tr").removeClass 'info'
@@ -73,3 +74,32 @@ class MagicOrders.Views.TradesRow extends Backbone.View
     $('.popover_close_btn').click ->
       $('.lovely_pop').click()
       $('.lovely_pop').toggleClass('lovely_pop')
+
+  toggleOperationMenu: (e) ->
+    if $('#all_orders input.trade_check:checked').length > 1
+      $('#op-toolbar .dropdown-menu').css('display', 'none')
+    else
+      trade = $('#all_orders input.trade_check:checked')[0]
+      if trade
+        $('#op-toolbar .dropdown-menu').removeAttr('style')
+        $('#op-toolbar').find('[data-type]').each ->
+          $(this).removeAttr('style')
+
+        tradeId = $(trade).parents('tr').attr('id').split('trade_')[1]
+        checkedItem = new MagicOrders.Models.Trade(id: tradeId)
+        checkedItem.fetch success: (model, response) =>
+          menu_items = $('#op-toolbar').find('[data-type]')
+          items = model.check_operations()
+          console.log model.attributes.id, items
+          MagicOrders.enabled_operation_items = items
+          menu_items.each ->
+            if $.inArray($(this).data('type')+'', MagicOrders.enabled_operation_items) is -1
+              $(this).css('display', 'none')
+
+          $('#op-toolbar .dropdown-menu').each ->
+            if $(this).find('li a[style]').length is $(this).find('li a').length
+              $(this).css('display', 'none')
+      else
+        $('#op-toolbar .dropdown-menu').removeAttr('style')
+        $('#op-toolbar').find('[data-type]').each ->
+          $(this).removeAttr('style')
