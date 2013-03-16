@@ -3,7 +3,7 @@ class TradeTaobaoMemoFetcher
 	include Sidekiq::Worker
   sidekiq_options :queue => :taobao_memo_fetcher
 
-  def perform(tid)
+  def perform(tid, is_create_method)
     if tid.slice!(/_G[0-9]$/) == nil #NEED ADAPTION?
       trade = TaobaoTrade.where(tid: tid).first
       return unless trade
@@ -20,6 +20,6 @@ class TradeTaobaoMemoFetcher
       trade.update_attributes(seller_memo: remote_trade['seller_memo']) if remote_trade['seller_memo']
       trade.save
     end
+    TradeTaobaoPromotionFetcher.perform_async(tid, is_create_method) if is_create_method
   end
-
 end

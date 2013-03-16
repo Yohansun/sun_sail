@@ -10,7 +10,7 @@ class TaobaoTradePuller
       account = Account.find_by_id(account_id)
 
       if start_time.blank?
-        latest_created_order = TaobaoTrade.only("created, account_id").where(account_id: account_id).order_by(:created.desc).limit(1).first
+        latest_created_order = TaobaoTrade.only(:created, :account_id).where(account_id: account_id).order_by(:created.desc).limit(1).first
         start_time = latest_created_order.created - 1.hour
       end
 
@@ -73,8 +73,7 @@ class TaobaoTradePuller
 
           $redis.sadd('TaobaoTradeTids',trade['tid'])
 
-          TradeTaobaoMemoFetcher.perform_async(trade.tid) 
-          TradeTaobaoPromotionFetcher.perform_async(trade.tid)
+          TradeTaobaoMemoFetcher.perform_async(trade.tid, true)
         end
 
         page_no += 1
@@ -98,7 +97,7 @@ class TaobaoTradePuller
       account = Account.find_by_id(account_id)
 
       if start_time.blank?
-        latest_created_order = TaobaoTrade.only("modified, account_id").where(account_id: account_id).order_by(:modified.desc).limit(1).first
+        latest_created_order = TaobaoTrade.only(:modified, :account_id).where(account_id: account_id).order_by(:modified.desc).limit(1).first
         start_time = latest_created_order.modified - 4.hour
       end
 
@@ -162,7 +161,7 @@ class TaobaoTradePuller
                 end
               end
               if current_account.settings.auto_settings["auto_sync_memo"] && can_auto_preprocess_right_now?
-                TradeTaobaoMemoFetcher.perform_async(local_trade.tid)
+                TradeTaobaoMemoFetcher.perform_async(local_trade.tid, false)
               end
               p "update trade #{trade['tid']}"
             end
@@ -180,7 +179,7 @@ class TaobaoTradePuller
       page_no = 1
 
       if start_time.blank?
-        latest_created_order = TaobaoTrade.only("created").order_by(:created.desc).limit(1).first
+        latest_created_order = TaobaoTrade.only(:created, :account_id).where(account_id: account_id).order_by(:created.desc).limit(1).first
         start_time = latest_created_order.created - 1.hour
       end
 
@@ -234,7 +233,7 @@ class TaobaoTradePuller
                 local_trade.auto_dispatch!
               end
             end
-             TradeTaobaoMemoFetcher.perform_async(local_trade.tid)
+             TradeTaobaoMemoFetcher.perform_async(local_trade.tid, false)
             p "update trade #{trade['tid']}"
           end
         end

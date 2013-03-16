@@ -7,7 +7,7 @@ class TaobaoPurchaseOrderPuller
       account_id = trade_source.account_id
       account = Account.find_by_id(account_id)     
       if start_time.blank?  
-        latest_created_order = TaobaoPurchaseOrder.desc(:created).first
+        latest_created_order = TaobaoPurchaseOrder.desc(:created, :account_id).where(account_id: account_id).first
         start_time = latest_created_order.created - 1.hour
       end
       
@@ -110,7 +110,7 @@ class TaobaoPurchaseOrderPuller
       account = Account.find_by_id(account_id)
 
       if start_time.blank?
-        latest_created_order = TaobaoPurchaseOrder.only("modified").order_by(:modified.desc).limit(1).first
+        latest_created_order = TaobaoPurchaseOrder.only(:modified, :account_id).where(account_id: account_id).order_by(:modified.desc).limit(1).first
         start_time = latest_created_order.modified - 4.hour
       end
       

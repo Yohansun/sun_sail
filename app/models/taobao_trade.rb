@@ -225,7 +225,7 @@ class TaobaoTrade < Trade
 
   def self.rescue_buyer_message(args)
     args.each do |tid|
-      TradeTaobaoMemoFetcher.perform_async(tid)
+      TradeTaobaoMemoFetcher.perform_async(tid, false)
     end
   end
 

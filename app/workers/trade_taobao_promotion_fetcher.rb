@@ -3,7 +3,7 @@ class TradeTaobaoPromotionFetcher
 	include Sidekiq::Worker
   sidekiq_options :queue => :taobao_promotion_fetcher
 
-  def perform(tid)
+  def perform(tid, is_create_method)
     trade = TaobaoTrade.where(tid: tid).first
     return unless trade
     account = trade.fetch_account
@@ -15,18 +15,32 @@ class TradeTaobaoPromotionFetcher
     )
 
     if promotion_details = result.try(:[], "trade_fullinfo_get_response").try(:[], 'trade').try(:[], 'promotion_details').try(:[], 'promotion_detail')
-      trade.promotion_details.delete_all
-      promotion_details.each do |pi|
-        promotion = trade.promotion_details.new pi
-        promotion.oid = pi['id']
-        promotion.save
-      end
+      if trade.splitted
+        trades = TaobaoTrade.where(tid: tid)
+        trades.each do |trade|
+          trade.promotion_details.delete_all
+          promotion_details.each do |pi|
+            promotion = trade.promotion_details.new pi
+            promotion.oid = pi['id']
+            promotion.save
+          end
+        end
+      else 
+        trade.promotion_details.delete_all
+        promotion_details.each do |pi|
+          promotion = trade.promotion_details.new pi
+          promotion.oid = pi['id']
+          promotion.save
+        end
+      end  
     end
-    promotion_fee = trade.promotion_details.sum(:discount_fee) || 0
-    trade.update_attributes promotion_fee: promotion_fee, got_promotion: true
+    
+    # Abandon this later.
+    # got_promotion and promotion_fee is useless.
+    trade.update_attributes promotion_fee: trade.promotion_details.sum(:discount_fee), got_promotion: true
 
-    delay_time = account.settings.delay_time || 0
+    delay_time = TradeSetting.delay_time || 0
 
-    DelayAutoDispatch.perform_in(delay_time, trade.id)
+    DelayAutoDispatch.perform_in(delay_time, trade.id)  if is_create_method
   end
 end
