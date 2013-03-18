@@ -6,10 +6,10 @@
   <fieldset class="form-inline mar_b15">
     <p>新增赠品：</p>
     <select class="input-large" id="select_gift">
+      <option value="void">选择赠品</option>
       <% for gift in MagicOrders.gifts.models: %>
         <option value="<%= gift.get('id') %>" ><%= gift.get('name') %></option>
       <% end %>
-      <option>选择赠品</option>
     </select>
     <label class="checkbox">
       <input type="checkbox" id="add_gift_tid">是否拆分
