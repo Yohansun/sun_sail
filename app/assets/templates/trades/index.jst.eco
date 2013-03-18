@@ -202,7 +202,9 @@
                 <option value="false">没有</option>
               </select>
               <select class="input-medium pull-left radius_no select2">
+                <% if MagicOrders.enable_module_colors is 1 : %>
                 <option value="has_color_info">调色信息</option>
+                <% end %>
                 <option value="has_invoice_info">发票信息</option>
                 <option value="has_product_info">商品信息</option>
                 <option value="has_cs_memo">客服备注</option>
@@ -406,7 +408,7 @@
           <th data-col='receiver_name' nowrap>客户姓名</th>
           <th data-col='receiver_mobile_phone'>联系电话</th>
           <th data-col='receiver_address' style="min-width:100px">联系地址</th>
-          <% if MagicOrders.company != 'dulux' || (MagicOrders.company == 'dulux' and MagicOrders.role_key != 'seller') : %>
+          <% if MagicOrders.company == 'nippon' || (MagicOrders.company == 'dulux' and MagicOrders.role_key != 'seller') : %>
           <th data-col='buyer_message'>客户<br/>留言</th>
           <% end %>
           <th data-col='seller_memo'>卖家<br/>备注</th>
@@ -420,7 +422,7 @@
           <% end %>
           <% if MagicOrders.enable_module_onsite_service == 1 : %>
             <th data-col='onsite_service'>上门<br/>服务</th>
-          <% end %> 
+          <% end %>
           <th data-col='invoice_info'>发票<br/>信息</th>
           <th data-col='point_fee'>使用<br/>积分</th>
           <% if MagicOrders.company != 'dulux' || (MagicOrders.company == 'dulux' and MagicOrders.role_key != 'seller' and MagicOrders.role_key != 'logistic') : %>

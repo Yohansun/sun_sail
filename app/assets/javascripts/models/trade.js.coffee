@@ -17,7 +17,7 @@ class MagicOrders.Models.Trade extends Backbone.Model
     state = this.attributes.status
     type = this.attributes.trade_type
     if MagicOrders.role_key == "super_admin"
-      enabled_items.push('seller') #分流重置
+      enabled_items.push('seller') #订单分流,分流重置
     switch state
       # when "TRADE_NO_CREATE_PAY" # "没有创建支付宝交易"
       when "WAIT_BUYER_PAY" # "等待付款"
@@ -25,9 +25,9 @@ class MagicOrders.Models.Trade extends Backbone.Model
       when "WAIT_SELLER_SEND_GOODS" # "已付款，待发货"
         if this.attributes.seller_id
           if MagicOrders.role_key == 'admin' || MagicOrders.role_key == 'cs'
-            enabled_items.push('seller') unless $.inArray('seller', enabled_items) #分流重置
+            enabled_items.push('seller')
         else
-          enabled_items.push('seller') unless $.inArray('seller', enabled_items)   #订单分流
+          enabled_items.push('seller') unless $.inArray('seller', enabled_items)   #订单分流,分流重置
 
         if this.attributes.splitted_tid
           enabled_items.push('recover') #订单合并

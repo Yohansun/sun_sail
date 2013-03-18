@@ -22,20 +22,23 @@ class MagicOrders.Views.TradesGiftMemo extends Backbone.View
 
     product_id = $("#select_gift").val()
     gift_title = $("#select_gift").children('option:selected').text()
-    gift_tid = @model.get('tid')+"_G"+(gift_num+1)
-    if $('#add_gift_tid').is(':checked')
-      trade_tid = @model.get('tid')
-      split_text = "拆分"
+    gift_tid = @model.get('tid')+"G"+(gift_num+1)
+    if product_id == "void"
+      alert("请选择赠品（如果没有可选赠品,请先进入商品管理模块添加赠品）")
     else
-      trade_tid = ''
-      split_text = "不拆分"
-    $('#gift_list').append("<tr class='product_"+product_id+" new_add_gift'>"+
-                           "  <td>"+gift_tid+"</td>"+
-                           "  <td>"+gift_title+"</td>"+
-                           "  <td>"+trade_tid+"</td>"+
-                           "  <td>"+split_text+"</td>"+
-                           "  <td><button class='btn delete_a_gift'>删除</button></td>"+
-                           "</tr>")
+      if $('#add_gift_tid').is(':checked')
+        trade_tid = @model.get('tid')
+        split_text = "拆分"
+      else
+        trade_tid = ''
+        split_text = "不拆分"
+      $('#gift_list').append("<tr class='product_"+product_id+" new_add_gift'>"+
+                             "  <td>"+gift_tid+"</td>"+
+                             "  <td>"+gift_title+"</td>"+
+                             "  <td>"+trade_tid+"</td>"+
+                             "  <td>"+split_text+"</td>"+
+                             "  <td><button class='btn delete_a_gift'>删除</button></td>"+
+                             "</tr>")
 
   delete_gift: (e) ->
     e.preventDefault()
