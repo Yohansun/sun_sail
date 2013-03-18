@@ -19,6 +19,8 @@ class Role < ActiveRecord::Base
 
   def role_s
     case name
+    when 'super_admin'
+      '超级管理员'
     when 'admin'
       '系统管理员'
     when 'seller'

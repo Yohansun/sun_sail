@@ -42,6 +42,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
   render: =>
     $.unblockUI()
+
     if !@first_rendered
       $(@el).html(@template(trades: @collection))
       #initial mode=trades
@@ -89,6 +90,14 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     $(@el).find('a[data-trade-mode='+MagicOrders.trade_mode+'][data-trade-status="'+MagicOrders.trade_type+'"]').parents('li').addClass('active')
     $(@el).find(".select2").select2();
     $(@el).find(".search_logistic").hide()  #一定要放在select2()初始化之后！
+
+    $(@el).find(".index_pops li").hide()
+    for pop in MagicOrders.trade_pops[MagicOrders.trade_mode]
+      if MagicOrders.role_key == 'admin'
+        $(@el).find(".index_pops li [data-type=#{pop}]").parent().show()
+      else
+        if pop in MagicOrders.trade_pops[MagicOrders.role_key]
+          $(@el).find(".index_pops li [data-type=#{pop}]").parent().show()
 
     this
 

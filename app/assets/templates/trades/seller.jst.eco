@@ -55,7 +55,7 @@
 <div class="modal-footer">
   <a href='javascript:void(0)' class="btn" data-dismiss="modal">取消</a>
   <% if @trade.get('seller_id') != null : %>
-    <% unless @trade.get('logistic_waybill') : %>
+    <% unless @trade.get('logistic_waybill') && MagicOrders.role_key != "super_admin" : %>
       <a class="btn btn-primary reset_seller">分流重置</a>
     <% end %>
   <% else : %>
