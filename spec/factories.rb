@@ -4,8 +4,8 @@ FactoryGirl.define do
     # name "foofoo"
     sequence(:name) { |n| "foo-name-#{n}" }
     username Faker::Name.name
-    password "foobar"  
-    password_confirmation { |u| u.password }  
+    password "foobar"
+    password_confirmation { |u| u.password }
     email Faker::Internet.email
   end
 
@@ -69,5 +69,10 @@ FactoryGirl.define do
     outer_id 'test'
     name 'test'
     storage_num '12345678a'
+  end
+
+  factory :account do
+    name "test_account"
+    key "test"
   end
 end

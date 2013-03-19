@@ -10,7 +10,6 @@
 #  file_content_type :string(255)
 #  file_file_size    :integer(4)
 #  file_updated_at   :datetime
-#  bbs_topic_id      :integer(4)
 #
 
 class UploadFile < ActiveRecord::Base

@@ -13,6 +13,12 @@
 #  last_refresh_at               :datetime
 #  trade_source_id               :integer(4)
 #  refresh_token_last_refresh_at :datetime
+#  re_expires_in                 :integer(8)
+#  r1_expires_in                 :integer(8)
+#  r2_expires_in                 :integer(8)
+#  w1_expires_in                 :integer(8)
+#  w2_expires_in                 :integer(8)
+#  need_refresh                  :boolean(1)      default(FALSE)
 #
 
 # encoding : utf-8 -*-

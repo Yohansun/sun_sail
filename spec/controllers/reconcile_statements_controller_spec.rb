@@ -3,21 +3,21 @@ require 'spec_helper'
 describe ReconcileStatementsController do
 
   before do
-    Account.current.settings.enable_module_reconcile_statements = true
-    @current_user = create(:user)
+    @current_account = create(:account)
+    @current_user = create(:user, account_ids: [@current_account.id])
     @current_user.add_role :admin
     sign_in(@current_user)
     controller.stub(:check_module).and_return(true)
   end
 
   describe "GET #index" do
-    before do
-      @rs = create(:reconcile_statement)
-    end
+    # before do
+    #   @rs = create(:reconcile_statement, account_id: @current_account.id)
+    # end
     context 'by default loading' do
       before {
-        create(:reconcile_statement, audit_time: Time.now)
-        create(:trade_source)
+        create(:trade_source, account_id: @current_account.id)
+        create(:reconcile_statement, audit_time: Time.now, account_id: @current_account.id)
         get :index
       }
       it { should respond_with 200 }
@@ -44,7 +44,7 @@ describe ReconcileStatementsController do
 
   describe "GET #show" do
     before do
-      @rs = create(:reconcile_statement)
+      @rs = create(:reconcile_statement, account_id: @current_account.id)
       create(:reconcile_statement_detail, reconcile_statement: @rs)
     end
 
@@ -59,7 +59,7 @@ describe ReconcileStatementsController do
 
   describe "PUT #audit" do
     before do
-      @rs = create(:reconcile_statement, audit_time: Time.now)
+      @rs = create(:reconcile_statement, audit_time: Time.now, account_id: @current_account.id)
     end
 
     context 'success' do
@@ -80,7 +80,7 @@ describe ReconcileStatementsController do
 
   describe "POST #audits" do
     before do
-      @rs = create(:reconcile_statement, audit_time: Time.now)
+      @rs = create(:reconcile_statement, audit_time: Time.now, account_id: @current_account.id)
     end
 
     context 'audits the rs_ids by params' do
@@ -104,7 +104,7 @@ describe ReconcileStatementsController do
 
     context 'exports the data by params' do
       before do
-        rs = create(:reconcile_statement, audit_time: Time.now)
+        rs = create(:reconcile_statement, audit_time: Time.now, account_id: @current_account.id)
         create(:reconcile_statement_detail, reconcile_statement: rs)
         get :exports, format: :xls, selected_rs: "1"
       end

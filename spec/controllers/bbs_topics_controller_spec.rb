@@ -3,10 +3,12 @@ require 'spec_helper'
 describe BbsTopicsController do
 
   before do
-    @current_user = create(:user)
-    3.times { create(:bbs_category) }
+    @current_account = create(:account)
+    @current_user = create(:user, account_ids: [@current_account.id])
+
+    3.times { create(:bbs_category, account_id: @current_account.id) }
     sign_in(@current_user)
-    @topic = create(:bbs_topic, user: @current_user)
+    @topic = create(:bbs_topic, user: @current_user, account_id: @current_account.id)
   end
 
   describe "GET index" do
@@ -32,7 +34,7 @@ describe BbsTopicsController do
       response.should be_success
       response.should render_template(:new)
       assigns(:topic).should_not be_nil
-      assigns(:categories).should_not be_empty      
+      assigns(:categories).should_not be_empty
     end
 
   end
@@ -61,7 +63,7 @@ describe BbsTopicsController do
       response.should be_success
       response.should render_template(:edit)
       assigns(:topic).should_not be_nil
-      assigns(:categories).should_not be_empty         
+      assigns(:categories).should_not be_empty
     end
 
   end
@@ -77,10 +79,10 @@ describe BbsTopicsController do
     it 'fail' do
       put :update, id: @topic.id, bbs_topic: { title: nil}
       response.should render_template(:edit)
-      assigns(:topic).should have(1).errors_on(:title)      
+      assigns(:topic).should have(1).errors_on(:title)
     end
 
-  end  
+  end
 
   describe "GET show" do
 
@@ -124,23 +126,23 @@ describe BbsTopicsController do
 
       it { should respond_with 404 }
     end
-  end  
+  end
 
    describe "GET destroy" do
-    
+
     it 'if params[:category]="hot" should be success' do
-      delete :destroy, id: @topic.id, category: "hot" 
+      delete :destroy, id: @topic.id, category: "hot"
       assigns(:topic).should_not be_nil
       response.should redirect_to(list_bbs_topics_url(category: "hot"))
     end
 
     it 'fail' do
-      delete :destroy, id: @topic.id, category: "hot" 
-      assigns(:topic).should_not be_nil 
+      delete :destroy, id: @topic.id, category: "hot"
+      assigns(:topic).should_not be_nil
       response.should redirect_to(list_bbs_topics_url(category: "hot"))
 
     end
-    
+
   end
 
 

@@ -2,11 +2,12 @@ require "spec_helper"
 
 describe "Split a TaobaoTrade's orders" do
   before do
-    @trade = create(:taobao_trade)
+    @current_account = create(:account)
+    @trade = create(:taobao_trade, account_id: @current_account.id)
     @trade.total_fee = 20.0
     @trade.payment = 40.0
     @trade.post_fee = 20.0
-    Account.current.settings.trade_split_postfee_special_seller_ids = []
+    @current_account.settings.trade_split_postfee_special_seller_ids = []
   end
 
   context "while it has no orders" do
@@ -36,7 +37,7 @@ describe "Split a TaobaoTrade's orders" do
 
       context "when has special seller" do
         before do
-          Account.current.settings.trade_split_postfee_special_seller_ids = [1]
+          @current_account.settings.trade_split_postfee_special_seller_ids = [1]
         end
 
         subject { TaobaoTradeSplitter.split_orders(@trade) }
@@ -55,7 +56,8 @@ end
 
 describe "Match seller" do
   before do
-    @trade = create(:taobao_trade)
+    @current_account = create(:account)
+    @trade = create(:taobao_trade, account_id: @current_account.id)
     @order = @trade.orders.build(num: 10)
   end
 
