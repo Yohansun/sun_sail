@@ -779,13 +779,13 @@ class Trade
                 search_tags_hash.update({"taobao_orders" => {"$elemMatch" => {"$and" => [{"color_num" => words},{"color_hexcode" => words},{"color_name" => words}]}}}) if words
               elsif key == "has_cs_memo"
                 search_tags_hash.update(Hash[key.to_sym, true])
-                search_tags_hash.update({"$and" => [{"cs_memo" => words},{"taobao_orders" => {"$elemMatch" => {"cs_memo" => words}}}]}) if words
+                search_tags_hash.update({"$or" => [{"cs_memo" => words},{"taobao_orders" => {"$elemMatch" => {"cs_memo" => words}}}]}) if words
               elsif key == "has_seller_memo"
-                search_tags_hash.update({"$or" => [{"seller_memo" => not_void}, {"delivery_type" => not_void}, {"invoice_info" => not_void}]})
-                search_tags_hash.update({"$and" => [{"seller_memo" => words}, {"delivery_type" => words}, {"invoice_info" => words}]}) if words
+                search_tags_hash.update({"seller_memo" => not_void})
+                search_tags_hash.update({"seller_memo" => words}) if words
               elsif key == "has_invoice_info"
                 search_tags_hash.update({"$or" => [{"invoice_name" => not_void},{"invoice_type" => not_void},{"invoice_content" => not_void}]})
-                search_tags_hash.update({"$and" => [{"invoice_name" => words}, {"invoice_type" => words}, {"invoice_content" => words}]}) if words
+                search_tags_hash.update({"$or" => [{"invoice_name" => words}, {"invoice_type" => words}, {"invoice_content" => words}]}) if words
               elsif key == "has_product_info"
                 search_tags_hash.update({"taobao_orders" => {"$elemMatch" => {"title" => not_void}}})
                 search_tags_hash.update({"taobao_orders" => {"$elemMatch" => {"title" => words}}}) if words

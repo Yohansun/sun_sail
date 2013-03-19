@@ -19,21 +19,29 @@ class DeliverBillsController < ApplicationController
       end
     end
 
-    if params[:condition] && params[:value]
-      attribute = case params[:condition]
-      when 'tid'
-        :tid
-      when 'r_name'
-        :receiver_name
-      when 'r_mobile'
-        :receiver_mobile
-      when 's_name'
-        :seller_name
+    if params[:diliver_bill_search]
+      if params[:diliver_bill_search][:condition].present? && params[:diliver_bill_search][:value].present?
+        attribute = case params[:diliver_bill_search][:condition]
+        when 'tid'
+          :tid
+        when 'r_name'
+          :receiver_name
+        when 'r_mobile'
+          :receiver_mobile
+        when 's_name'
+          :seller_name
+        end
+
+        if attribute
+          trade_ids = Trade.where(:account_id => current_account.id, attribute => params[:diliver_bill_search][:value]).map(&:id)
+          @bills = @bills.any_in(trade_id: trade_ids)
+        end
       end
 
-      if attribute
-        trade_ids = Trade.where(:account_id => current_account.id, attribute => params[:value]).map(&:id)
-        @bills = @bills.any_in(trade_id: trade_ids)
+      if params[:diliver_bill_search][:from_batch_num].present? && params[:diliver_bill_search][:to_batch_num].present?
+        min = params[:diliver_bill_search][:from_batch_num].to_i
+        max = params[:diliver_bill_search][:to_batch_num].to_i
+        @bills = @bills.where(:print_batches.elem_match => {"$and" => [{batch_num: {"$gte" => min}}, {batch_num: {"$lte" => max}}]})
       end
     end
 
@@ -87,6 +95,10 @@ class DeliverBillsController < ApplicationController
 
    def print_deliver_bill
     @bills = DeliverBill.find(params[:ids].split(','))
+    print_batch_number = Time.now.to_s(:number).to_i
+    @bills.each_with_index do |bill, index|
+      bill.print_batches.create(batch_num: (print_batch_number*10000+index+1))
+    end
     respond_to do |format|
       format.xml
     end
