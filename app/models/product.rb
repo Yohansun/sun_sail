@@ -3,28 +3,29 @@
 #
 # Table name: products
 #
-#  id            :integer(4)      not null, primary key
-#  name          :string(100)     default(""), not null
-#  outer_id      :string(20)      default(""), not null
-#  product_id    :string(20)      default(""), not null
-#  storage_num   :string(20)      default(""), not null
-#  price         :decimal(8, 2)   default(0.0), not null
-#  quantity_id   :integer(4)
-#  category_id   :integer(4)
-#  features      :string(255)
-#  product_image :string(255)
-#  parent_id     :integer(4)
-#  lft           :integer(4)      default(0)
-#  rgt           :integer(4)      default(0)
-#  good_type     :integer(4)
-#  updated_at    :datetime
-#  created_at    :datetime
-#  cat_name      :string(255)
-#  pic_url       :string(255)
-#  detail_url    :string(255)
-#  cid           :string(255)
-#  num_iid       :integer(8)
-#  account_id    :integer(4)
+#  id                :integer(4)      not null, primary key
+#  name              :string(100)     default(""), not null
+#  outer_id          :string(20)      default(""), not null
+#  product_id        :string(20)      default(""), not null
+#  storage_num       :string(20)      default(""), not null
+#  price             :decimal(8, 2)   default(0.0), not null
+#  quantity_id       :integer(4)
+#  category_id       :integer(4)
+#  features          :string(255)
+#  product_image     :string(255)
+#  parent_id         :integer(4)
+#  lft               :integer(4)      default(0)
+#  rgt               :integer(4)      default(0)
+#  good_type         :integer(4)
+#  updated_at        :datetime
+#  created_at        :datetime
+#  cat_name          :string(255)
+#  pic_url           :string(255)
+#  detail_url        :string(255)
+#  cid               :string(255)
+#  num_iid           :integer(8)
+#  account_id        :integer(4)
+#  logistic_group_id :integer(4)
 #
 
 class Product < ActiveRecord::Base
