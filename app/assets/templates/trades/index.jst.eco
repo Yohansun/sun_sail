@@ -167,7 +167,7 @@
           </div>
         </fieldset>
 
-        <% unless MagicOrders.trade_mode in ['deliver', 'logistics', 'send'] : %>
+        <% if MagicOrders.trade_mode == "trades" && MagicOrders.trade_type == "all" : %>
         <fieldset>
           <div class="control-group">
             <label class="pull-left"><code>状态：</code></label>
