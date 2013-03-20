@@ -42,11 +42,13 @@ class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
   search: (e)->
     blocktheui()
     e.preventDefault()
-    search_botton = $(e.currentTarget)
-    s_condition = search_botton.parents('form').find('#deliver_bill_search_condition').val()
-    s_value = search_botton.siblings('#deliver_bill_search_value').val()
+    search_hash = {}
+    search_hash['condition'] = $('#deliver_bill_search_condition').val()
+    search_hash['value'] = $('#deliver_bill_search_value').val()
+    search_hash['from_batch_num'] = $('#from_batch_num').val()
+    search_hash['to_batch_num'] = $('#to_batch_num').val()
 
-    @collection.fetch data: {condition: s_condition, value: s_value}, success: (collection, response) =>
+    @collection.fetch data: {diliver_bill_search: search_hash}, success: (collection, response) =>
       @mainView = new MagicOrders.Views.LogisticBillsIndex(collection: collection)
       $('#content').html(@mainView.render().el)
       $.unblockUI()

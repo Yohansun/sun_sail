@@ -114,6 +114,14 @@
 
           <div class="input-append">
             <input type="text" id="deliver_bill_search_value" class="search-query w_specify">
+          </div>
+
+          <div class="input-append">
+            <label class="pull-left mar_t3">打印批次搜索：</label>
+            <input type="text" id="from_batch_num" class="search-query w_specify pull-left mar_r5">
+            <!-- <i class="icon-arrow-right" style="margin-top:0px;"></i> -->
+            <label class="pull-left mar_t3 mar_r5">至</label>
+            <input type="text" id="to_batch_num" class="search-query w_specify pull-left">
             <button type="button" class="btn js-search">搜索</button>
           </div>
         </div>
