@@ -50,7 +50,6 @@ $(function(){
 	//affix position
 	function form_height (){
 		var form_height = $('.js-affix').outerHeight();
-		console.log(form_height)
 		$('.btn-toolbar').css('top',form_height + 71 + 'px');
 	};
 	form_height();

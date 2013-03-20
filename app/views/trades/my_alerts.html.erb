@@ -12,6 +12,12 @@
     <%- end %>
 
     <div class="well">
+      <dl class="your_unusual">
+        <dt>
+          <a href="/app#trades/unusual-unusual_for_you"><span>指派给您的异常订单有(<%= trades.where({:unusual_states.elem_match => {:repair_man => current_user.name}}).or({:has_buyer_message.ne => true}, {:buyer_message.ne => nil}).count %>)个</span></a>
+        </dt>
+      </dl>
+
       <%- if current_account.settings.auto_settings["auto_mark_unusual_trade"] %>
       <%- unusual_auto_settings = current_account.settings.auto_settings["unusual_conditions"] %>
       <dl class="auto_unusual">
@@ -36,18 +42,29 @@
       </dl>
       <% end %>
 
-      <dl class="mark_unusual">
+      <dl class="mark_unusual" style="display: none;">
         <dt><span>客服异常预警</span></dt>
-        <dd><a href="/app#trades/unusual-buyer_delay_deliver">买家延迟发货<span>(<%= trades.where("$and" => [{"unusual_states" => {"$elemMatch" => {key: "buyer_delay_deliver", repaired_at: {"$exists" => false}}}}, {"$or" => [{:has_buyer_message.ne => true}, {:buyer_message.ne => nil}]}]).count %>)</span></a></dd>
-        <dd><a href="/app#trades/unusual-seller_ignore_deliver">卖家长时间未发货<span>(<%= trades.where("$and" => [{"unusual_states" => {"$elemMatch" => {key: "seller_ignore_deliver", repaired_at: {"$exists" => false}}}}, {"$or" => [{:has_buyer_message.ne => true}, {:buyer_message.ne => nil}]}]).count %>)</span></a></dd>
-        <dd><a href="/app#trades/unusual-seller_lack_product">经销商缺货<span>(<%= trades.where("$and" => [{"unusual_states" => {"$elemMatch" => {key: "seller_lack_product", repaired_at: {"$exists" => false}}}}, {"$or" => [{:has_buyer_message.ne => true}, {:buyer_message.ne => nil}]}]).count %>)</span></a></dd>
+        <dd><a href="/app#trades/unusual-buyer_delay_deliver">买家延迟发货<span>(<%= trades.where("$and" => [{"unusual_states" => {"$elemMatch" => {key: "buyer_delay_deliver", repair_man: current_user.name, repaired_at: {"$exists" => false}}}}, {"$or" => [{:has_buyer_message.ne => true}, {:buyer_message.ne => nil}]}]).count %>)</span></a></dd>
+        <dd><a href="/app#trades/unusual-seller_ignore_deliver">卖家长时间未发货<span>(<%= trades.where("$and" => [{"unusual_states" => {"$elemMatch" => {key: "seller_ignore_deliver", repair_man: current_user.name, repaired_at: {"$exists" => false}}}}, {"$or" => [{:has_buyer_message.ne => true}, {:buyer_message.ne => nil}]}]).count %>)</span></a></dd>
+        <dd><a href="/app#trades/unusual-seller_lack_product">经销商缺货<span>(<%= trades.where("$and" => [{"unusual_states" => {"$elemMatch" => {key: "seller_lack_product", repair_man: current_user.name, repaired_at: {"$exists" => false}}}}, {"$or" => [{:has_buyer_message.ne => true}, {:buyer_message.ne => nil}]}]).count %>)</span></a></dd>
         <%- if current_account.settings.enable_module_colors == 1 %>
-          <dd><a href="/app#trades/unusual-seller_lack_color">经销商无法调色<span>(<%= trades.where("$and" => [{"unusual_states" => {"$elemMatch" => {key: "seller_lack_color", repaired_at: {"$exists" => false}}}}, {"$or" => [{:has_buyer_message.ne => true}, {:buyer_message.ne => nil}]}]).count %>)</span></a></dd>
+          <dd><a href="/app#trades/unusual-seller_lack_color">经销商无法调色<span>(<%= trades.where("$and" => [{"unusual_states" => {"$elemMatch" => {key: "seller_lack_color", repair_man: current_user.name, repaired_at: {"$exists" => false}}}}, {"$or" => [{:has_buyer_message.ne => true}, {:buyer_message.ne => nil}]}]).count %>)</span></a></dd>
         <% end %>
-        <dd><a href="/app#trades/unusual-buyer_demand_refund">买家要求退款<span>(<%= trades.where("$and" => [{"unusual_states" => {"$elemMatch" => {key: "buyer_demand_refund", repaired_at: {"$exists" => false}}}}, {"$or" => [{:has_buyer_message.ne => true}, {:buyer_message.ne => nil}]}]).count %>)</span></a></dd>
-        <dd><a href="/app#trades/unusual-buyer_demand_return_product">买家要求退货<span>(<%= trades.where("$and" => [{"unusual_states" => {"$elemMatch" => {key: "buyer_demand_return_product", repaired_at: {"$exists" => false}}}}, {"$or" => [{:has_buyer_message.ne => true}, {:buyer_message.ne => nil}]}]).count %>)</span></a></dd>
-        <dd><a href="/app#trades/unusual-other_unusual_state">其他异常<span>(<%= trades.where("$and" => [{"unusual_states" => {"$elemMatch" => {key: "other_unusual_state", repaired_at: {"$exists" => false}}}}, {"$or" => [{:has_buyer_message.ne => true}, {:buyer_message.ne => nil}]}]).count %>)</span></a></dd>
+        <dd><a href="/app#trades/unusual-buyer_demand_refund">买家要求退款<span>(<%= trades.where("$and" => [{"unusual_states" => {"$elemMatch" => {key: "buyer_demand_refund", repair_man: current_user.name, repaired_at: {"$exists" => false}}}}, {"$or" => [{:has_buyer_message.ne => true}, {:buyer_message.ne => nil}]}]).count %>)</span></a></dd>
+        <dd><a href="/app#trades/unusual-buyer_demand_return_product">买家要求退货<span>(<%= trades.where("$and" => [{"unusual_states" => {"$elemMatch" => {key: "buyer_demand_return_product", repair_man: current_user.name, repaired_at: {"$exists" => false}}}}, {"$or" => [{:has_buyer_message.ne => true}, {:buyer_message.ne => nil}]}]).count %>)</span></a></dd>
+        <dd><a href="/app#trades/unusual-other_unusual_state">其他异常<span>(<%= trades.where("$and" => [{"unusual_states" => {"$elemMatch" => {key: "other_unusual_state", repair_man: current_user.name, repaired_at: {"$exists" => false}}}}, {"$or" => [{:has_buyer_message.ne => true}, {:buyer_message.ne => nil}]}]).count %>)</span></a></dd>
       </dl>
     </div>
   </div>
 </div>
+<% content_for :tail do -%>
+  <script type="text/javascript">
+    var length = $('.mark_unusual').find('span').length
+    for (var i=1;i<length;i++){
+      if($('.mark_unusual').find("span:eq("+i+")").text() == '(0)'){
+        $('.mark_unusual').find("span:eq("+i+")").parents('dd').hide();
+      }
+    }
+    $('.mark_unusual').show()
+  </script>
+<% end %>

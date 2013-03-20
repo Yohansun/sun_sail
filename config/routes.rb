@@ -165,6 +165,7 @@ MagicOrders::Application.routes.draw do
   resources :sales
 
   match '/alerts', to: 'trades#alerts'
+  match '/my_alerts', to: 'trades#my_alerts'
   get "trades/new", to: "trades#new"
   get "trades/create", to: "trades#create"
   get "/trades/:id/sellers_info", to: "trades#sellers_info"
