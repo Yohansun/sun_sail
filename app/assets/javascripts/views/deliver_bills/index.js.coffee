@@ -132,11 +132,11 @@ class MagicOrders.Views.DeliverBillsIndex extends Backbone.View
 
   appendTrade: (trade) =>
     if $("#trade_#{trade.get('id')}").length == 0
-      MagicOrders.cache_trade_number = 0
-      @trade_number += 1
+      # MagicOrders.cache_trade_number = 0
+      # @trade_number += 1
       view = new MagicOrders.Views.DeliverBillsRow(model: trade)
       $(@el).find("#trade_rows").append(view.render().el)
-      $(@el).find("#trade_#{trade.get('id')} td:first").html("#{@trade_number}")
+      #$(@el).find("#trade_#{trade.get('id')} td:first").html("#{@trade_number}")
 
   changeInputFrame: ->
     if $(".search_option").children('option:selected').val() == "logistic_name"

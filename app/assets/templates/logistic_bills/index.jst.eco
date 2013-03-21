@@ -303,7 +303,7 @@
       </div>
     </div>
 
-    <table class="table table-striped table-bordered table-condensed td_colors" id="trades_table">
+    <table class="table table-striped table-bordered table-condensed td_colors" id="trades_table" style="min-width:1530px">
       <thead>
         <tr>
           <th><input id="checkbox_all" type="checkbox" value="option1">全选</th>
