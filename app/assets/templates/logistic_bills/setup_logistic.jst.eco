@@ -30,7 +30,7 @@
   </fieldset>
 
   <fieldset class='reset_width80'>
-    <div class="control-group form-inline">
+    <div class="control-group form-inline set_logistic_waybill">
       <label for="" class="control-label">物流商：</label>
       <select id="logistic_select" class="input-medium"></select>
     </div>
