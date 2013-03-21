@@ -286,6 +286,8 @@
           <li><a href="#" data-toggle="modal" data-type="gift_memo">赠品备注</a></li>
           <li><a href="#" data-toggle="modal" data-type="invoice">发票内容</a></li>
           <li><a href="#" data-toggle="modal" data-type="color">订单调色</a></li>
+          <li><a href="#" data-toggle="modal" data-type="confirm_color">确认调色</a></li>
+          <li><a href="#" data-toggle="modal" data-type="seller_confirm_invoice">确认开票</a></li>
           <li><a href="#" data-toggle="modal" data-type="splited">订单拆分</a></li>
           <li><a href="#" data-toggle="modal" data-type="recover">订单合并</a></li>
           <!-- <li><a href="#" data-toggle="modal">取消审核</a></li> -->
@@ -300,8 +302,6 @@
         </button>
         <ul class="dropdown-menu index_pops">
           <li><a href="#" data-toggle="modal" data-type="seller">设置分流</a></li>
-          <li><a href="#" data-toggle="modal" data-type="confirm_color">确认调色</a></li>
-          <li><a href="#" data-toggle="modal" data-type="seller_confirm_invoice">确认开票</a></li>
         </ul>
       </div>
 

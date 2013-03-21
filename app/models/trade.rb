@@ -647,6 +647,10 @@ class Trade
           if unusual_auto_setting['unusual_receive']
             trade_type_hash = {:unusual_states.elem_match => {key: "unreceived_in_#{unusual_auto_setting['max_unreceived_days']}_days", :repaired_at => {"$exists" => false}}}
           end
+        when 'unrepaired_for_days'
+          if unusual_auto_setting['unusual_repair']
+            trade_type_hash = {:unusual_states.elem_match => {:repaired_at => nil, :plan_repair_at => {"$gte" => (Time.now - unusual_auto_setting['max_unrepaired_days'].to_i.days)}}}
+          end
         end
       end
 
