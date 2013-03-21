@@ -86,6 +86,19 @@ class Product < ActiveRecord::Base
     info
   end
 
+  def package_products
+    products = []
+    if good_type == 2 && packages.present?
+      packages.each do |package|
+        product = package.product 
+        products << Array.new(package.number,product) if product
+      end    
+    else
+      products =  [self]  
+    end  
+    products = products.flatten
+  end  
+
   def child_outer_id
     info = []
     packages.each do |item|
