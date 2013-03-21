@@ -1,95 +1,88 @@
 <div class="modal-header">
-  <button type="button" class="close" data-dismiss="modal">×</button>
+  <button type="button" class="close" data-dismiss="modal">&times;</button>
   <h3>发货单</h3>
 </div><!-- modal-header -->
 <div class="modal-body">
   <h4 class="tc"><%= @bill.get('shopname') %>发货单</h4>
-  <div class="clearfix">
-    <span class="pull-left mar_r10">订单编号：<%= @bill.get("tid") %></span>
-  </div>
-  <div class="clearfix">
-    <span class="pull-left mar_r10">收货人：<%= @bill.get('receiver_name') %></span>
-    <span class="pull-left mar_r10">手机：<%= @bill.get('receiver_mobile_phone') %></span>
-    <span class="pull-left mar_r10">座机：<%= @bill.get('receiver_phone') %></span>
-  </div>
-  <div class="clearfix">
-    <span class="pull-left mar_r10">地址：
+  <div class="clearfix"><span class="pull-left mar_r10">订单编号：<%= @bill.get("tid") %></span></div>
+  <div class="clearfix"><span class="pull-left mar_r10">旺旺ID：<%= @bill.get("buyer_nick") %></span><span class="pull-left mar_r10">姓名：<%= @bill.get('receiver_name') %></span><span class="pull-left mar_r10">联系电话：<%= @bill.get('receiver_mobile_phone') %></span></div>
+  <div class="clearfix"><span class="pull-left mar_r10">地址：
       <%= @bill.get('receiver_state') %>
       <%= @bill.get('receiver_city') %>
       <%= @bill.get('receiver_district') %>
-      <%= @bill.get('receiver_address') %>
-    </span>
-  </div>
-  <div class="clearfix">
-    <span class="pull-left mar_r10">
-      整单备注：<%= @bill.get('cs_memo') %>
-    </span>
-  </div>
+      <%= @bill.get('receiver_address') %></span></div>
   <table class="table table-bordered mar_t10">
     <tbody>
       <tr>
-        <th width="20%">商品编码</th>
-        <th width="45%">商品名称</th>
-        <th width="10%">产品数量</th>
-        <% if MagicOrders.enable_module_colors == 1 : %>
-          <th width="25%">调色信息</th>
-        <% end %>
-        <% if MagicOrders.enable_module_sku_properties == 1 : %>
-          <th width="25%">商品属性</th>
-        <% end %>
+        <th width="15%">购买日期</th>
+        <th width="20%">宝贝</th>
+        <th width="10%">商品属性</th>
+        <th width="15%">数量</th>
+        <th width="10%">原价</th>
+        <th width="20%">优惠</th>
+        <th width="10%">价格</th>
       </tr>
-      <% count = 0 %>
       <% for order in @bill.get('orders') : %>
-      <tr>
-        <td><%= order.outer_id %></td>
-        <td><%= order.title %></td>
-        <td><%= order.num  %></td>
-        <% count = count + order.num %>
-        <% if MagicOrders.enable_module_colors == 1 : %>
-          <td><%= order.color_num %></td>
-        <% end %>
-        <% if MagicOrders.enable_module_sku_properties == 1 : %>
-          <td><%= order.sku_name %></td>
-        <% end %>
-      </tr>
+        <tr>
+          <td><%= order.created %></td>
+          <td><%= order.title %></td>
+          <% if MagicOrders.enable_module_colors == 1 : %>
+            <td><%= order.color_num %></td>
+          <% end %>
+          <% if MagicOrders.enable_module_sku_properties == 1 : %>
+            <td><%= order.sku_name %></td>
+          <% end %>
+          <td><%= order.num %></td>
+          <td><%= order.price %></td>
+          <td><%= order.promotion_desc %></td>
+          <td><%= order.payment %></td>
+        </tr>
       <% end %>
       <tr>
-        <td colspan="2" class="tr fb" style='text-align:right'>产品数量：</td>
-        <td colspan="1" class="fb"><%= count %></td>
-        <% if MagicOrders.enable_module_colors == 1 ^ MagicOrders.enable_module_sku_properties == 1 : %>
-        <td colspan="1"></td>
-        <% else if MagicOrders.enable_module_colors == 1 && MagicOrders.enable_module_sku_properties == 1 : %>
-        <td colspan="2"></td>
-        <% else : %>
-        <% end %>
+        <td>总计</td>
+        <td></td>
+        <td></td>
+        <td><%= @bill.get('product_num') %></td>
+        <td></td>
+        <td></td>
+        <td><%= @bill.get('total_payment') %></td>
       </tr>
       <tr>
-        <td colspan="2" rowspan="2" width="50%">
-          <%= @bill.notice %>
-        </td>
-        <% if MagicOrders.enable_module_colors == 1 ^ MagicOrders.enable_module_sku_properties == 1 : %>
-        <td colspan="4">签收人：</td>
-        <% else if MagicOrders.enable_module_colors == 1 && MagicOrders.enable_module_sku_properties == 1 : %>
-        <td colspan="5">签收人：</td>
-        <% else : %>
-        <td colspan="3">签收人：</td>
-        <% end %>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>配送运费</td>
+        <td><%= @bill.get('post_fee') %></td>
       </tr>
       <tr>
-        <% if MagicOrders.enable_module_colors == 1 ^ MagicOrders.enable_module_sku_properties == 1 : %>
-        <td colspan="4">签收日期：</td>
-        <% else if MagicOrders.enable_module_colors == 1 && MagicOrders.enable_module_sku_properties == 1 : %>
-        <td colspan="5">签收日期：</td>
-        <% else : %>
-        <td colspan="3">签收日期：</td>
-        <% end %>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>合计</td>
+        <td><%= @bill.get('total') %></td>
       </tr>
       <tr>
-        <td colspan="1">赠品备注：</td>
-        <td colspan="4"><%= @bill.get('gift_memo') %></td>
+        <td>客户备注</td>
+        <td colspan="6"></td>
       </tr>
     </tbody>
   </table>
+
+  <div class="clearfix"><span class="pull-left mar_r10">公司名称：<%= @bill.get('company_name') %></span></div>
+  <div class="clearfix"><span class="pull-left mar_r10">联系电话：<%= @bill.get('company_phone') %></span></div>
+  <div class="clearfix"><span class="pull-left mar_r10">联系地址：<%= @bill.get('company_address') %></span></div><br>
+  <div>如有疑问，请及时联系我们的在线客服！</div>
+  <div class="clearfix">
+    <div class="pull-right">
+      <div>制单人：</div>
+      <div>跟单人：</div>
+      <div>制单日期：<%= @bill.get('print_date') %></div>
+    </div>
+  </div>
 </div><!-- modal-body -->
 <div class="modal-footer">
   <a class="btn" data-dismiss="modal" style='margin-top:-22px;'>关闭</a>
