@@ -86,14 +86,16 @@ class MagicOrders.Models.Trade extends Backbone.Model
       if MagicOrders.role_key isnt 'seller'
         enabled_items.push('barcode') #输入唯一码
 
-    if this.attributes.request_return_at is undefined
-      enabled_items.push('request_return') #申请退货
+    if this.attributes.consign_time # 发货后才可操作
+      if this.attributes.request_return_at is undefined
+        enabled_items.push('request_return') #申请退货
 
-    if this.attributes.request_return_at && this.attributes.confirm_return_at is undefined
-      enabled_items.push('confirm_return') #确认退货
+      if this.attributes.request_return_at && this.attributes.confirm_return_at is undefined
+        enabled_items.push('confirm_return') #确认退货
 
-    if this.attributes.confirm_return_at && this.attributes.confirm_refund_at is undefined
-      enabled_items.push('confirm_refund') #确认退款
+    if this.attributes.pay_time # 付款后才可操作
+      if this.attributes.confirm_return_at && this.attributes.confirm_refund_at is undefined
+        enabled_items.push('confirm_refund') #确认退款
 
     # enabled_items.push('check_goods') #验货
     # enabled_items.push('confirm_check_goods')#确认验货
@@ -120,5 +122,6 @@ class MagicOrders.Models.Trade extends Backbone.Model
       enabled_items.push('invoice_number') #发票号设置
 
     enabled_items.push('mark_unusual_state') #标注异常
+    enabled_items.push('cs_memo') #客服备注
     enabled_items.push('detail') #订单详情
     enabled_items
