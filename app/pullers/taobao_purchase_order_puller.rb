@@ -77,19 +77,17 @@ class TaobaoPurchaseOrderPuller
           p "create TaobaoPurchaseOrder  #{trade['fenxiao_id']}"
           $redis.sadd('TaobaoPurchaseOrderTids', trade['fenxiao_id'])
           
-          # 分流 或 拆分订单
-          acc = current_account
 
-          if acc.settings.auto_settings["auto_split"]
-            if acc.can_auto_preprocess_right_now?
+          if account.settings.auto_settings["auto_split"]
+            if account.can_auto_preprocess_right_now?
               can_split = TradeSplitter.new(purchase_order).split!
             end
           else
             can_split = false
           end
 
-          if acc.settings.auto_settings["auto_dispatch"]
-            if acc.can_auto_dispatch_right_now?
+          if account.settings.auto_settings["auto_dispatch"]
+            if account.can_auto_dispatch_right_now?
               purchase_order.auto_dispatch! unless can_split
             end
           end
@@ -180,8 +178,8 @@ class TaobaoPurchaseOrderPuller
               end
 
               # 分流
-              if acc.settings.auto_settings["auto_dispatch"]
-                if acc.can_auto_dispatch_right_now?
+              if account.settings.auto_settings["auto_dispatch"]
+                if account.can_auto_dispatch_right_now?
                   local_trade.auto_dispatch!
                 end
               end

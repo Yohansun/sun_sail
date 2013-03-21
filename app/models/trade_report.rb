@@ -18,6 +18,8 @@ class TradeReport
   def export_report
     if self.fetch_account.key == "dulux"
       DuluxTaobaoTradeReporter.perform_async(self.id)
+    elsif self.fetch_account.key == 'brands'
+      BrandsTaobaoTradeReporter.perform_async(self.id)  
     elsif self.fetch_account.key == "nippon"
       if conditions.fetch("search").fetch("type_option").present? && conditions.fetch("search").fetch("type_option") == "TaobaoTrade"
         NipponTaobaoTradeReporter.perform_async(self.id)

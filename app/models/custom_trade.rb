@@ -132,12 +132,12 @@ class CustomTrade < Trade
   end
 
   # def auto_dispatchable?
-  #   acc = trade_account.settings.auto_settings["dispatch_options"]
-  #   if acc["void_buyer_message"] && acc["void_seller_memo"]
+  #   dispatch_options = self.fetch_account.settings.auto_settings["dispatch_options"]
+  #   if dispatch_options["void_buyer_message"] && dispatch_options["void_seller_memo"]
   #     can_auto_dispatch = !has_buyer_message && self.seller_memo.blank?
-  #   elsif acc["void_buyer_message"] == 1 && acc["void_seller_memo"] == nil
+  #   elsif dispatch_options["void_buyer_message"] == 1 && dispatch_options["void_seller_memo"] == nil
   #     can_auto_dispatch = !has_buyer_message
-  #   elsif acc["void_buyer_message"] == nil && acc["void_seller_memo"] == 1
+  #   elsif dispatch_options["void_buyer_message"] == nil && dispatch_options["void_seller_memo"] == 1
   #     can_auto_dispatch = self.seller_memo.blank?
   #   else
   #     can_auto_dispatch = true
@@ -190,8 +190,8 @@ class CustomTrade < Trade
     update_attributes(seller_id: seller.id, seller_name: seller.name, dispatched_at: Time.now)
 
     # 如果满足自动化设置条件，分流后订单自动发货
-    auto_settings = trade_account.settings.auto_settings
-    if auto_settings['auto_deliver'] && trade_account.can_auto_deliver_right_now?
+    auto_settings = self.fetch_account.settings.auto_settings
+    if auto_settings['auto_deliver'] && self.fetch_account.can_auto_deliver_right_now?
       if auto_settings["deliver_condition"] == "dispatched_trade" && deliverable?
         deliver!
         self.operation_logs.create(operated_at: Time.now, operation: "订单自动发货")
@@ -239,10 +239,6 @@ class CustomTrade < Trade
     args.each do |tid|
       TradeTaobaoMemoFetcher.perform_async(tid, false)
     end
-  end
-
-  def trade_account
-    Account.find(self.account_id)
   end
 
   def taobao_status_memo

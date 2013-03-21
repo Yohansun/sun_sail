@@ -160,7 +160,7 @@ class TaobaoTradePuller
                   local_trade.auto_dispatch!
                 end
               end
-              if current_account.settings.auto_settings["auto_sync_memo"] && can_auto_preprocess_right_now?
+              if account.settings.auto_settings["auto_sync_memo"] && account.can_auto_preprocess_right_now?
                 TradeTaobaoMemoFetcher.perform_async(local_trade.tid, false)
               end
               p "update trade #{trade['tid']}"

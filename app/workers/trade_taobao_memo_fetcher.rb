@@ -2,7 +2,7 @@
 class TradeTaobaoMemoFetcher
 	include Sidekiq::Worker
   sidekiq_options :queue => :taobao_memo_fetcher
-
+  
   def perform(tid, is_create_method)
     if tid.slice!(/_G[0-9]$/) == nil #NEED ADAPTION?
       trade = TaobaoTrade.where(tid: tid).first

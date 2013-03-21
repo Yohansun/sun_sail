@@ -15,7 +15,9 @@ class TaobaoTradeSplitter
       grouped_orders["#{seller_id}"] = tmp
     end
 
-    count = grouped_orders.select{|key| !trade.fetch_account.settings.trade_split_postfee_special_seller_ids.include?(key.to_i)}.size
+    trade_split_postfee_special_seller_ids = trade.fetch_account.settings.trade_split_postfee_special_seller_ids || []
+
+    count = grouped_orders.select{|key| !trade_split_postfee_special_seller_ids.include?(key.to_i)}.size
     post_fee = (trade.post_fee / count).round(2)
 
     grouped_orders.each do |key, value|
@@ -24,7 +26,7 @@ class TaobaoTradeSplitter
       oids = value.map(&:oid)
       promotion_fee = trade.promotion_details.where(:oid.in => oids).inject(0.0) { |sum, el| sum + el.discount_fee }
 
-      if trade.fetch_account.settings.trade_split_postfee_special_seller_ids.include?(key.to_i)
+      if trade_split_postfee_special_seller_ids.include?(key.to_i)
         post_fee = 0.0
       end
 

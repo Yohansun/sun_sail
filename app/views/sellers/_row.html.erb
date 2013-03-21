@@ -64,10 +64,12 @@
           <% end %>
           <li><a data-toggle="modal" href="#dealer_area" data-type="seller_area" data-id="<%= seller.id%>" class="area_management">管辖地区</a></li>
           <li><a data-toggle="modal" href="#dealer_login" data-id="<%= seller.id%>" class="login_acount">登录账号</a></li>
-          <li class="divider"></li>
-          <li>
-            <%= link_to "管理下级", sellers_path(:parent_id => seller.id), :class=>"browse_children"%>
-          </li>
+          <% if seller.children.count > 0 %>
+            <li class="divider"></li>
+            <li>
+              <%= link_to "管理下级", sellers_path(:parent_id => seller.id), :class=>"browse_children"%>
+            </li>
+          <%- end %>  
         </ul>
       </div>
     </td>

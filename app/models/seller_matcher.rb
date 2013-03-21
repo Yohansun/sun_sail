@@ -20,7 +20,7 @@ protected
 		seller = nil
 
     default_seller_id = @trade.fetch_account.settings.default_seller_id
-		special_out_iids = @trade.fetch_account.settings.special_iids
+		special_out_iids = @trade.fetch_account.settings.special_iids || []
 
 		trade_out_iids = @trade.out_iids || []
 

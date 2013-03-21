@@ -95,6 +95,14 @@ class Product < ActiveRecord::Base
     info
   end
 
+  def child_outer_id_at(index)
+    packages[index].try(:outer_id)
+  end
+
+  def child_number_at(index)
+    packages[index].try(:number)
+  end
+
   def avalibale_sku_names
     sku_names = []
     skus.map(&:name).each do |name|

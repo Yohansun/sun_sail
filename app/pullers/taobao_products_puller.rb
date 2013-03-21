@@ -63,6 +63,50 @@ class TaobaoProductsPuller
 
     end 
 
+
+    def create_item(trade_source_id, num_iid)
+      trade_source = TradeSource.find_by_id(trade_source_id)
+      account = Account.find_by_id(trade_source.account_id)
+      if account.key == "nippon "
+        nick = '立邦漆官方旗舰店'
+      else
+        nick = trade_source.name
+      end
+      item_get_response = TaobaoQuery.get({method: 'taobao.item.get',  fields: 'num,detail_url,title,sku.properties_name,sku.properties,sku.quantity, sku.sku_id, outer_id, product_id, pic_url,cid,price', num_iid: num_iid, nick: nick}, trade_source_id)   
+      sku_items = item_get_response['item_get_response']['item']
+      sku_items_count = sku_items.count
+      if sku_items_count > 0
+        name = sku_items['title']
+        detail_url = sku_items['detail_url']
+        outer_id =  sku_items['outer_id']
+        product_id = sku_items['product_id']
+        cid = sku_items['cid']
+        pic_url = sku_items['pic_url']
+        price = sku_items['price']
+        
+        #Create product and sku
+        #Remember to add account_id
+        #Remember to sync nippon and dulux stock
+        local_product = Product.create(account_id: account.id, name: name, detail_url: detail_url, outer_id: outer_id,  num_iid: num_iid, product_id: product_id, cid: cid, pic_url: pic_url, price: price) unless Product.find_by_num_iid(num_iid)
+        if local_product
+          if sku_items['skus'] && sku_items['skus']['sku'].count > 0
+            sku_items['skus']['sku'].each do |sku|
+              sku_id = sku['sku_id']
+              quantity = sku['quantity']
+              properties_name = sku['properties_name']
+              properties = sku['properties']
+              #Remember to add account_id
+              Sku.create!(product_id: local_product.id, quantity: quantity, num_iid: num_iid, sku_id: sku_id, properties_name:properties_name, properties: properties)  unless Sku.find_by_sku_id(sku_id)
+            end  
+          else
+            quantity = sku_items['num']
+            #Remember to add account_id
+            Sku.create!(product_id: local_product.id, quantity: quantity, num_iid: num_iid) unless Sku.find_by_num_iid(num_iid)
+          end    
+        end
+      end    
+    end  
+
     def create(trade_source_id)
       trade_source = TradeSource.find_by_id(trade_source_id)
       account = Account.find_by_id(trade_source.account_id)
@@ -110,20 +154,22 @@ class TaobaoProductsPuller
           #Remember to add account_id
           #Remember to sync nippon and dulux stock
           local_product = Product.create(account_id: account.id, name: name, detail_url: detail_url, outer_id: outer_id,  num_iid: num_iid, product_id: product_id, cid: cid, pic_url: pic_url, price: price) unless Product.find_by_num_iid(num_iid)
-          if sku_items['skus'] && sku_items['skus']['sku'].count > 0
-            sku_items['skus']['sku'].each do |sku|
-              sku_id = sku['sku_id']
-              quantity = sku['quantity']
-              properties_name = sku['properties_name']
-              properties = sku['properties']
+          if local_product
+            if sku_items['skus'] && sku_items['skus']['sku'].count > 0
+              sku_items['skus']['sku'].each do |sku|
+                sku_id = sku['sku_id']
+                quantity = sku['quantity']
+                properties_name = sku['properties_name']
+                properties = sku['properties']
+                #Remember to add account_id
+                Sku.create!(product_id: local_product.id, quantity: quantity, num_iid: num_iid, sku_id: sku_id, properties_name:properties_name, properties: properties)  unless Sku.find_by_sku_id(sku_id)
+              end  
+            else
+              quantity = sku_items['num']
               #Remember to add account_id
-              Sku.create!(product_id: local_product.id, quantity: quantity, num_iid: num_iid, sku_id: sku_id, properties_name:properties_name, properties: properties)  unless Sku.find_by_sku_id(sku_id)
-            end  
-          else
-            quantity = sku_items['num']
-            #Remember to add account_id
-            Sku.create!(product_id: local_product.id, quantity: quantity, num_iid: num_iid) unless Sku.find_by_num_iid(num_iid)
-          end    
+              Sku.create!(product_id: local_product.id, quantity: quantity, num_iid: num_iid) unless Sku.find_by_num_iid(num_iid)
+            end    
+          end  
         end  
       end # num_iids each ends
         

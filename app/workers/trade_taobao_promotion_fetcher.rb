@@ -14,6 +14,7 @@ class TradeTaobaoPromotionFetcher
       :tid => trade.tid }, source_id
     )
 
+    
     if promotion_details = result.try(:[], "trade_fullinfo_get_response").try(:[], 'trade').try(:[], 'promotion_details').try(:[], 'promotion_detail')
       if trade.splitted
         trades = TaobaoTrade.where(tid: tid)
