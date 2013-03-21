@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 # -*- encoding : utf-8 -*-
 
 class TradesController < ApplicationController
@@ -103,7 +105,7 @@ class TradesController < ApplicationController
 
     if params[:delivered_at] == true
       @trade.delivered_at = Time.now
-      @trade.status = 'WAIT_BUYER_CONFIRM_GOODS' if @trade._type = "CustomTrade"
+      @trade.status = 'WAIT_BUYER_CONFIRM_GOODS' if @trade._type == "CustomTrade"
       if params['logistic_info'] == '其他' and @trade.logistic_waybill.nil?
         logistic = current_account.logistics.find_by_name '其他'
         if logistic

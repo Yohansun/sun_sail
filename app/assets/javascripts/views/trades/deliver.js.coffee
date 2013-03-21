@@ -19,7 +19,7 @@ class MagicOrders.Views.TradesDeliver extends Backbone.View
     @model.save {'logistic_info': $("#logistic_company").html()},
       error: (model, error, response) ->
         $.unblockUI()
-        alert(error)
+        alert(response)
       success: (model, response) ->
         $.unblockUI()
         if MagicOrders.trade_mode == 'send'
