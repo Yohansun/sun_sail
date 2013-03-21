@@ -273,9 +273,6 @@
           <li><a href="#" data-toggle="modal" data-type="invoice_number">发票号设置</a></li>
           <li><a href="#" data-toggle="modal" data-type="barcode">输入唯一码</a></li>
           <li><a href="#" data-toggle="modal" data-type="manual_sms_or_email">发短信/邮件</a></li>
-          <li><a href="#" data-toggle="modal" data-type="request_return">申请退货</a></li>
-          <li><a href="#" data-toggle="modal" data-type="confirm_return">确认退货</a></li>
-          <li><a href="#" data-toggle="modal" data-type="confirm_refund">确认退款</a></li>
         </ul>
       </div>
 
@@ -314,14 +311,17 @@
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu index_pops">
-          <li><a data-toggle="modal" href="#" data-type="deliver">订单发货</a></li>
-          <li><a data-toggle="modal" href="#" data-type="seller_confirm_deliver">确认发货</a></li>
-          <li><a data-toggle="modal" href="#" data-type="logistic_split">物流拆分</a></li>
-          <li><a data-toggle="modal" href="#" data-type="logistic_memo">物流商备注</a></li>
-          <li><a data-toggle="modal" href="#" data-type="logistic_waybill">输入物流单号</a></li>
-          <li><a data-toggle="modal" href="#" data-type="confirm_check_goods">确认验货</a></li>
-          <li><a data-toggle="modal" href="#" data-type="confirm_receive">确认买家已收货</a></li>
-          <li><a data-toggle="modal" href="#" data-type="setup_logistic">返回物流单号</a></li>
+          <li><a href="#" data-toggle="modal" data-type="deliver">订单发货</a></li>
+          <li><a href="#" data-toggle="modal" data-type="seller_confirm_deliver">确认发货</a></li>
+          <li><a href="#" data-toggle="modal" data-type="logistic_split">物流拆分</a></li>
+          <li><a href="#" data-toggle="modal" data-type="logistic_memo">物流商备注</a></li>
+          <li><a href="#" data-toggle="modal" data-type="logistic_waybill">输入物流单号</a></li>
+          <li><a href="#" data-toggle="modal" data-type="confirm_check_goods">确认验货</a></li>
+          <li><a href="#" data-toggle="modal" data-type="confirm_receive">确认买家已收货</a></li>
+          <li><a href="#" data-toggle="modal" data-type="setup_logistic">返回物流单号</a></li>
+          <li><a href="#" data-toggle="modal" data-type="request_return">申请退货</a></li>
+          <li><a href="#" data-toggle="modal" data-type="confirm_return">确认退货</a></li>
+          <li><a href="#" data-toggle="modal" data-type="confirm_refund">确认退款</a></li>
           <!-- <li><a data-toggle="modal" href="#" data-type="reassign">订单转交</a></li> -->
           <!-- <li><a data-toggle="modal" href="#" data-type="logistic_company">物流公司</a></li> -->
         </ul>

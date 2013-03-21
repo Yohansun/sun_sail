@@ -52,12 +52,7 @@ class MagicOrders.Routers.LogisticBills extends Backbone.Router
       @mainView = new MagicOrders.Views.LogisticBillsIndex(collection: collection, trade_type: trade_type)
       $('#content').html(@mainView.render().el)
       $("a[rel=popover]").popover(placement: 'left')
-
-      unless MagicOrders.trade_mode in ['trades', 'deliver', 'logistics', 'send']
-        $("#search_toggle").hide()
-        $(".label_advanced").hide()
-      else
-        $(".label_advanced").show()
+      $('.order_search_form .datepickers').datetimepicker(weekStart:1,todayBtn:1,autoclose:1,todayHighlight:1,startView:2,forceParse:0,showMeridian:1)
       @nav = $('.subnav')
       @navTop = $('.subnav').length && $('.subnav').offset().top - 40
       $(window).off 'scroll'
@@ -66,7 +61,6 @@ class MagicOrders.Routers.LogisticBills extends Backbone.Router
       switch trade_type
         when 'unprinted' then $('.trade_nav').html('未打印')
         when 'printed' then $('.trade_nav').html('已打印')
-
       $.unblockUI()
 
   newTradesNotifer: =>

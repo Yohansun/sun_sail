@@ -54,6 +54,28 @@ class MagicOrders.Views.TradesRow extends Backbone.View
     MagicOrders.cache_trade_number = parseInt($(@el).find("td:first").html())
     Backbone.history.navigate('trades/' + @model.get("id") + "/#{type}", true)
 
+  # renderUpdate: =>
+  #   @collection.each(@appendTrade)
+
+  #   if @collection.length > 0
+  #     $(".complete_offset").html(@collection.at(0).get("trades_count"))
+  #     unless parseInt($(".complete_offset").html()) <= @offset
+  #       $(".get_offset").html(@offset)
+  #     else
+  #       $(".get_offset").html($(".complete_offset").html())
+
+  #     $("a[rel=popover]").popover({placement: 'left', html:true})
+
+  #   $.unblockUI()
+
+  # appendTrade: (trade) =>
+  #   if $("#trade_#{trade.get('id')}").length == 0
+  #     MagicOrders.cache_trade_number = 0
+  #     @trade_number += 1
+  #     view = new MagicOrders.Views.TradesRow(model: trade)
+  #     $(@el).find("#trade_rows").append(view.render().el)
+  #     $(@el).find("#trade_#{trade.get('id')} td:first").html("#{@trade_number}")
+
   showMainTrade: (e) ->
     e.preventDefault()
     console.log(@model.get("tid"))
@@ -76,8 +98,9 @@ class MagicOrders.Views.TradesRow extends Backbone.View
       $('.lovely_pop').toggleClass('lovely_pop')
 
   toggleOperationMenu: (e) ->
+    $('#op-toolbar .dropdown-menu').parents('div.btn-group').removeAttr('style')
     if $('#all_orders input.trade_check:checked').length > 1
-      $('#op-toolbar .dropdown-menu').css('display', 'none')
+      $('#op-toolbar .dropdown-menu').parents('div.btn-group').css('display', 'none')
     else
       trade = $('#all_orders input.trade_check:checked')[0]
       if trade
@@ -98,7 +121,8 @@ class MagicOrders.Views.TradesRow extends Backbone.View
 
           $('#op-toolbar .dropdown-menu').each ->
             if $(this).find('li a[style]').length is $(this).find('li a').length
-              $(this).css('display', 'none')
+              $(this).parents('div.btn-group').css('display', 'none')
+
       else
         $('#op-toolbar .dropdown-menu').removeAttr('style')
         $('#op-toolbar').find('[data-type]').each ->
