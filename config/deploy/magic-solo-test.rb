@@ -10,6 +10,7 @@ set :user, "root"
 set :deploy_to, "/bigdata/var/rails/magic-solo-test"
 
 set :assets_dependencies, %w(app/assets lib/assets vendor/assets Gemfile.lock config/routes.rb)
+set :keep_releases, 5
 
 # tasks
 namespace :deploy do

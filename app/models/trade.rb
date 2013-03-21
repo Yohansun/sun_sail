@@ -166,7 +166,7 @@ class Trade
     gift_sku = Sku.where(product_id: value['product_id'].to_i).first
     gift_product = Product.find(value['product_id'].to_i)
     self.taobao_orders.create!(_type: "TaobaoOrder",
-                               oid: self.tid.slice(/_G[0-9]$/),
+                               oid: self.tid.slice(/G[0-9]$/),
                                status: "WAIT_SELLER_SEND_GOODS",
                                title: value['gift_title'],
                                price: 0,
@@ -225,7 +225,7 @@ class Trade
       self.has_onsite_service = true
     else
       self.has_onsite_service = false
-    end    
+    end
   end
 
   def set_has_cs_memo
