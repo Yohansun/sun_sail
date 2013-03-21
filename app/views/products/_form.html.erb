@@ -33,11 +33,6 @@
         </div>
       </fieldset>
     <% end %>
-      <fieldset class="form-inline"><!--THIS IS TEMPORARY-->
-        <%= simple_fields_for :skus do |o| %>
-          <%= o.input :sku_ids, label: '商品属性：', collection: Sku.all.map{|s| (s.name == "" || s.properties_name.include?(";")) ? nil : s.name}.to_a.uniq.compact, as: :check_boxes, include_blank: false  %>
-        <% end %>
-      </fieldset>
   </div>
 
   <% if @product.pic_url.present? %>
