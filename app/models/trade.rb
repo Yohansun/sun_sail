@@ -338,6 +338,7 @@ class Trade
     return unless seller_id
     nofity_stock "解锁", seller_id
     update_attributes(seller_id: nil, seller_name: nil, dispatched_at: nil)
+    deliver_bills.delete_all 
   end
 
   def seller(sid = seller_id)
