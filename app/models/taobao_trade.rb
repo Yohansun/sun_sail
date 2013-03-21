@@ -108,12 +108,11 @@ class TaobaoTrade < Trade
       trade.orders.where(:refund_status.in => ['NO_REFUND', 'CLOSED']).size != 0
     end
 
-    (trades.map(&:status) - ["WAIT_SELLER_SEND_GOODS"]).size == 0 && !trades.map(&:delivered_at).include?(nil)
+    (trades.map(&:status) - ["WAIT_BUYER_CONFIRM_GOODS"]).size == 0 && !trades.map(&:delivered_at).include?(nil)
   end
 
   def deliver!
     return unless self.deliverable?
-    update_attributes!(status: 'WAIT_BUYER_CONFIRM_GOODS')
     TradeTaobaoDeliver.perform_async(self.id)
   end
 
