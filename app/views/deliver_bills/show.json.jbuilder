@@ -1,6 +1,8 @@
 json.shopname current_account.settings.shopname
 json.tid @trade.tid
 json.status @trade.status_text
+json.buyer_nick @trade.buyer_nick
+json.seller_nick @trade.seller_nick
 json.receiver_name @trade.receiver_name
 json.receiver_mobile_phone @trade.receiver_mobile_phone
 json.receiver_phone @trade.receiver_phone
@@ -20,4 +22,16 @@ json.orders @bill.bill_products do |json, order|
   json.num order.number
   json.color_info order.color_info
   json.packaged order.packaged?
+  json.promotion_desc ""
+  json.price ""
+  json.payment ""
+  json.created @trade.created.strftime("%Y-%m-%d")
 end
+json.product_num @bill.bill_products.sum(:number)
+json.total_payment ""
+json.post_fee ""
+json.total ""
+json.company_name @trade.fetch_account.settings.company_name
+json.company_phone @trade.fetch_account.settings.company_phone
+json.company_address @trade.fetch_account.settings.company_address
+json.print_date Time.now.strftime("%Y-%m-%d")
