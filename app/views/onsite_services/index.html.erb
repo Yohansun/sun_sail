@@ -23,6 +23,18 @@
       <li class="active">上门服务</li>
     </ul><!-- breadcrumb -->
 
+    <%= form_tag onsite_services_path, :class=>"well form-search", method:'get' do %>
+      <fieldset class="form-inline">
+        <div class="controls">
+          <%= select_tag "keyword", options_for_select([["地域名","name"]]), :value => "#{params[:keyword]}" %>
+          <div class="input-append">
+            <%= text_field_tag "value", '',:value => "#{params[:value] if params[:value]}", :class => "input-large"%>
+            <%= button_tag "过滤", :class => "btn" %>
+          </div>
+        </div>
+      </fieldset>
+    <% end %>
+
     <table class="table table-striped table-bordered table-condensed td_colors mar_t">
       <thead>
         <tr>

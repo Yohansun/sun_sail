@@ -67,6 +67,7 @@ class Trade
 
   #创建新订单
   field :tid, type:String
+  field :area_id, type: Integer
   field :status, type:String
   field :receiver_name, type:String
   field :receiver_mobile, type:String
@@ -195,7 +196,12 @@ class Trade
   end
 
   def set_has_onsite_service
-    self.has_onsite_service = true if OnsiteServiceArea.where(area_id: default_area.id, account_id: account_id).present?
+    self.area_id = default_area.try(:id)
+    if OnsiteServiceArea.where(area_id: default_area.id, account_id: account_id).present?
+      self.has_onsite_service = true
+    else
+      self.has_onsite_service = false
+    end    
   end
 
   def set_has_cs_memo

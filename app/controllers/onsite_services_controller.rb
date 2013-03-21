@@ -4,7 +4,14 @@ class OnsiteServicesController < ApplicationController
   before_filter :admin_only!
 
   def index
-    @states = Area.roots.page(params[:page]) 
+
+    @states = Area.roots
+
+    if params[:keyword] && params[:value].present?
+      @states = @states.where(["#{params[:keyword]} like ?", "%#{params[:value].strip}%"])
+    end
+
+    @states = @states.page(params[:page]) 
   end
 
   def onsite_service_area
