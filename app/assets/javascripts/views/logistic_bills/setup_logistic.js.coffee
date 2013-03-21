@@ -14,8 +14,7 @@ class MagicOrders.Views.LogisticBillsSetupLogistic extends Backbone.View
       html_options = ''
       for item in t_data
         html_options += '<option lid="' + item.id + '" value="' + item.xml + '">' + item.name + '</option>'
-      $('#logistic_select').html(html_options)
-
+      $('.set_logistic_waybill #logistic_select').html(html_options)
     this
 
   save: ->

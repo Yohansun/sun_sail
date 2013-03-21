@@ -85,35 +85,37 @@ class MagicOrders.Routers.LogisticBills extends Backbone.Router
       $(modalDivID).html(view.render().el)
       $(modalDivID + ' .datepicker').datetimepicker(format: 'yyyy-mm-dd',autoclose: true,minView: 2)
 
-      switch operation_key
-        when 'print_logistic_bill'
-          $.get '/logistics/logistic_templates', {}, (t_data)->
-            html_options = ''
-            for item in t_data
-              html_options += '<option lid="' + item.id + '" value="' + item.xml + '">' + item.name + '</option>'
+      if operation_key == 'print_logistic_bill'
+        $.get '/logistics/logistic_templates', {}, (t_data)->
+          html_options = ''
+          for item in t_data
+            html_options += '<option lid="' + item.id + '" value="' + item.xml + '">' + item.name + '</option>'
 
-            $('#logistic_select').html(html_options)
-            $('#logistic_select').show()
+          $('#logistic_select').html(html_options)
+          $('#logistic_select').show()
+          $('#logistic_select').change ()->
+            bind_logistic_swf model.get('id'), $(this).val()
 
-            $('#logistic_select').change ()->
-              bind_logistic_swf model.get('id'), $(this).val()
+          $(modalDivID).on 'hidden', ()->
+            if $('.print_logistic_button').attr('data-click') == '1'
+              $.get '/deliver_bills/batch-print-logistic', {ids: [model.get('id')], logistic: $("#logistic_select").find("option:selected").attr('lid')}
 
-            $(modalDivID).on 'hidden', ()->
-              if $('.print_logistic_button').attr('data-click') == '1'
-                $.get '/deliver_bills/batch-print-logistic', {ids: [model.get('id')], logistic: $("#logistic_select").find("option:selected").attr('lid')}
+            $('.print_logistic_button').removeAttr('data-click')
 
-              $('.print_logistic_button').removeAttr('data-click')
+          $.get ('/deliver_bills/' + model.get('id') + '/logistic_info'), {}, (data)->
+            console.log 'sdfsfsf'
+            if data == '' or data == null
+              ytong = $('#logistic_select').find('[lid="3"]')
+              data = ytong.val()
+              $('#logistic_select').find('[lid="3"]').attr('selected', 'selected')
+            else
+              $('#logistic_select').find('[value="' + data + '"]').attr('selected', 'selected')
 
-            $.get ('/deliver_bills/' + model.get('id') + '/logistic_info'), {}, (data)->
-              console.log 'sdfsfsf'
-              if data == '' or data == null
-                ytong = $('#logistic_select').find('[lid="3"]')
-                data = ytong.val()
-                $('#logistic_select').find('[lid="3"]').attr('selected', 'selected')
-              else
-                $('#logistic_select').find('[value="' + data + '"]').attr('selected', 'selected')
-
-              pageInit()
-              bind_logistic_swf(model.get('id'), data)
-
-      $(modalDivID).modal('show')
+            pageInit()
+            bind_logistic_swf(model.get('id'), data)
+        if model.get('logistic_name') != null
+          $(modalDivID).modal('show')
+        else
+          alert("请先设置物流单号")
+      else
+        $(modalDivID).modal('show')
