@@ -28,6 +28,9 @@
         <%- if unusual_auto_settings['unusual_receive'] %>
         <dd><a href="/app#trades/unusual-unreceived_for_days">超过<%= unusual_auto_settings['max_unreceived_days'] %>天买家实际未收货<span>(<%= trades.where("$and" => [{"unusual_states" => {"$elemMatch" => {key: "unreceived_in_#{unusual_auto_settings['max_unreceived_days']}_days", repaired_at: nil}}}, {"$or" => [{:has_buyer_message.ne => true}, {:buyer_message.ne => nil}]}]).count %>)</span></a></dd>
         <%- end %>
+        <%- if unusual_auto_settings['unusual_repair'] %>
+        <dd><a href="/app#trades/unusual-unrepaired_for_days">超过<%= unusual_auto_settings['max_unrepaired_days'] %>天未处理异常<span>(<%= trades.where("$and" => [{"unusual_states" => {"$elemMatch" => {key: "unreceived_in_#{unusual_auto_settings['max_unrepaired_days']}_days", repaired_at: nil}}}, {"$or" => [{:has_buyer_message.ne => true}, {:buyer_message.ne => nil}]}]).count %>)</span></a></dd>
+        <%- end %>
         <!-- <dd><a href="#">状态不同步订单<span>(10)</span></a></dd>
         <dd><a href="#">状态不同步订单<span>(10)</span></a></dd>
         <dd><a href="#">状态不同步订单<span>(10)</span></a></dd>

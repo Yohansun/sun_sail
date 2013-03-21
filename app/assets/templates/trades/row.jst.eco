@@ -146,7 +146,11 @@
 <!--操作 end-->
 
 <td data-col='trade_source'>
-  <span class="label label-warning"><%= @trade.get('trade_source') %></span>
+  <% if @trade.get('trade_source') == "赠品" : %>
+    <span class="label label-important"><%= @trade.get('trade_source') %></span>
+  <% else : %>
+    <span class="label label-warning"><%= @trade.get('trade_source') %></span>
+  <% end %>
   <% if @trade.get('trade_source') == "分销平台" : %>
     <br><span class="label label-info">店铺代码:<%= @trade.get('distributor_usercode') %></span>
   <% end %>

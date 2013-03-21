@@ -188,7 +188,16 @@
                                   <option value= "<%= i %>" <%= 'selected' if @setting['unusual_conditions']["max_unreceived_days"] == i.to_s %>><%= i %></option>
                                   <% end %>
                                 </select>天未实际收货
-                                <!-- <input type="text" name="auto_settings[unusual_conditions][max_unreceived_days]" class="input-mini" value="<%= @setting['unusual_conditions']['max_unreceived_days']%>"/> -->
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <input type="checkbox" class="pull-left" style="margin-top:4px;" name="auto_settings[unusual_conditions][unusual_repair]" <%= 'checked' if @setting['unusual_conditions']['unusual_repair'] == 1 %>>当订单已标记，超过
+                                <select name="auto_settings[unusual_conditions][max_unrepaired_days]" class="input-mini">
+                                  <% (1..7).each do |i| %>
+                                  <option value= "<%= i %>" <%= 'selected' if @setting['unusual_conditions']["max_unrepaired_days"] == i.to_s %>><%= i %></option>
+                                  <% end %>
+                                </select>天未处理异常
                             </td>
                           </tr>
                         </tbody>
