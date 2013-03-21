@@ -95,30 +95,6 @@ class CustomTrade < Trade
 
   embeds_many :taobao_orders
 
-  def add_gift_order(value)
-    gift_sku = Sku.where(product_id: value['product_id'].to_i).first
-    gift_product = Product.find(value['product_id'].to_i)
-    self.taobao_orders.create!(_type: "TaobaoOrder",
-                               oid: self.tid.slice(/_G[0-9]$/),
-                               status: "WAIT_SELLER_SEND_GOODS",
-                               title: value['gift_title'],
-                               price: 0,
-                               total_fee: 0,
-                               payment: 0,
-                               discount_fee: 0,
-                               adjust_fee: 0,
-                               num_iid: gift_sku.num_iid,
-                               sku_id: gift_sku.sku_id,
-                               num: 1, # NEED ADAPTION?
-                               pic_path: gift_product.pic_url,
-                               refund_status: "NO_REFUND",
-                               sku_properties_name: "赠品", # NEED ADAPTION?
-                               buyer_rate: false,
-                               seller_rate: false,
-                               seller_type: "B",
-                               cid: gift_product.cid)
-  end
-
   def orders
     self.taobao_orders
   end

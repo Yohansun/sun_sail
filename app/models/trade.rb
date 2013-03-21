@@ -162,6 +162,30 @@ class Trade
     return fields
   end
 
+  def add_gift_order(value)
+    gift_sku = Sku.where(product_id: value['product_id'].to_i).first
+    gift_product = Product.find(value['product_id'].to_i)
+    self.taobao_orders.create!(_type: "TaobaoOrder",
+                               oid: self.tid.slice(/_G[0-9]$/),
+                               status: "WAIT_SELLER_SEND_GOODS",
+                               title: value['gift_title'],
+                               price: 0,
+                               total_fee: 0,
+                               payment: 0,
+                               discount_fee: 0,
+                               adjust_fee: 0,
+                               num_iid: gift_sku.num_iid,
+                               sku_id: gift_sku.sku_id,
+                               num: 1, # NEED ADAPTION?
+                               pic_path: gift_product.pic_url,
+                               refund_status: "NO_REFUND",
+                               sku_properties_name: "赠品", # NEED ADAPTION?
+                               buyer_rate: false,
+                               seller_rate: false,
+                               seller_type: "B",
+                               cid: gift_product.cid)
+  end
+
   def set_has_color_info
     self.orders.each do |order|
       colors = order.color_num.blank? ? [] : order.color_num
@@ -628,12 +652,14 @@ class Trade
 
       # 订单
       case type
-        when 'buyer_delay_deliver', 'seller_ignore_deliver', 'seller_lack_product', 'seller_lack_color', 'buyer_demand_refund', 'buyer_demand_return_product', 'other_unusual_state'
+        when 'my_buyer_delay_deliver', 'my_seller_ignore_deliver', 'my_seller_lack_product', 'my_seller_lack_color', 'my_buyer_demand_refund', 'my_buyer_demand_return_product', 'my_other_unusual_state'
           trade_type_hash = {:unusual_states.elem_match => {:key => type, :repair_man => current_user.name, :repaired_at => {"$exists" => false}}}
         when 'unusual_for_you'
           trade_type_hash = {:unusual_states.elem_match => {:repair_man => current_user.name}}
+        when 'buyer_delay_deliver', 'seller_ignore_deliver', 'seller_lack_product', 'seller_lack_color', 'buyer_demand_refund', 'buyer_demand_return_product', 'other_unusual_state'
+          trade_type_hash = {:unusual_states.elem_match => {:key => type, :repaired_at => {"$exists" => false}}}
         when 'unusual_all'
-          trade_type_hash = {:unusual_states.nin => [[],nil]}
+          trade_type_hash = {:unusual_states.nin => [[],nil], :unusual_states.elem_match =>{:repaired_at => nil}}
         when 'all'
           trade_type_hash = nil
         when 'dispatched'

@@ -10,7 +10,7 @@ class MagicOrders.Views.TradesRow extends Backbone.View
   events:
     'click .trade_pops li a[data-type]': 'show_type'
     'click .pop_detail' : 'show_type'
-    'click .gift_trade_pop': 'showMainTrade'
+    'click .gift_trade_pop': 'showTrade'
     'click a[rel=popover]': "addHover"
     'click': 'highlight'
     'click input.trade_check': 'toggleOperationMenu'
@@ -76,10 +76,14 @@ class MagicOrders.Views.TradesRow extends Backbone.View
   #     $(@el).find("#trade_rows").append(view.render().el)
   #     $(@el).find("#trade_#{trade.get('id')} td:first").html("#{@trade_number}")
 
-  showMainTrade: (e) ->
+  showTrade: (e) ->
     e.preventDefault()
-    console.log(@model.get("tid"))
-    Backbone.history.navigate('trades/' + @model.get('main_trade_id') + "/detail", true)
+    if @model.get("tid").slice(-2, -1) == "G"
+      $('.search_value').val(@model.get("tid").slice(0,-2))
+    else
+      $('.search_value').val($.trim($(e.currentTarget).text()))
+    $('#simple_search_button').click()
+
 
   highlight: (e) =>
     $("#trades_table tr").removeClass 'info'

@@ -7,7 +7,7 @@
     <table class="table table-bordered" id="input_barcode">
       <tbody>
         <tr>
-          <th nowrap>订单编号</th>
+          <th nowrap>商品名称</th>
           <th>条形码</th>
         </tr>
         <% for order in @trade.get('orders'): %>

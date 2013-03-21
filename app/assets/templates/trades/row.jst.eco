@@ -250,7 +250,7 @@
     <% if @trade.get('tid').slice(-2,-1) == "G" : %>
     <a href="#" data-toggle='modal' data-type="detail" class="gift_trade_pop">主订单号:</br><%= @trade.get('tid').slice(0,-2)%></a>
     <% else : %>
-    <a href="javascript:void(0)" rel="popover" data-content="<%= @trade.get 'gift_memo' %><br/><br/><% for gift in @trade.get('trade_gifts'): %><%= gift.gift_title %>:</b><%= gift.gift_tid %></span><br/><% end %>" data-original-title="<b>赠品备注</b>"><i class="icon-gift_memo"></i></a>
+    <a href="javascript:void(0)" rel="popover" data-content="<% for gift in @trade.get('trade_gifts'): %><%= gift.gift_title %>:<% if gift.trade_id == '' : %><%= gift.gift_tid %><% else : %><a href class='gift_trade_pop'><%= gift.gift_tid %></a><% end %></span><br/><% end %><%= @trade.get 'gift_memo' %><br/>" data-original-title="<b>赠品备注</b>"><i class="icon-gift_memo"></i></a>
     <% end %>
   <% end %>
 </td>
