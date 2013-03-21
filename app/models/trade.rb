@@ -370,6 +370,21 @@ class Trade
     end
   end
 
+
+  def can_deliver_in_logistic_group?
+    enable = fetch_account.settings.enable_module_logistic_group
+    return false unless enable == 1
+    items = [] 
+    taobao_orders.each do |order|
+      product = Product.find_by_num_iid(order.num_iid)
+      product.package_products.each do |p| 
+        items << p.logistic_group_id
+      end
+    end
+    !items.include?(nil) 
+  end 
+
+
   def logistic_group_products
     items = [] 
     taobao_orders.each do |order|
@@ -415,59 +430,68 @@ class Trade
     return if _type == 'JingdongTrade'
     #分流时生成默认发货单, 不支持京东订单
     deliver_bills.delete_all
-
-    logistic_groups.each do |logistic_group_id, divmod|     
-      logistic_group = LogisticGroup.find_by_id(logistic_group_id)
-      split_number = logistic_group.split_number
-      all_items = logistic_group(logistic_group_id)
-      div = divmod[0]
-      mod = divmod[1]
-      count = 0
-      div.times{
-        items = all_items.first(split_number)
-        all_items = all_items - items
-        bill = deliver_bills.create(deliver_bill_number: "#{tid}#{logistic_group_id}#{count}", seller_id: seller_id, seller_name: seller_name, account_id: account_id) 
-        items.each do |item|
-          order_id = item.fetch(:order_id)
-          order = taobao_orders.where(id: order_id).first
-          num_iid = order.num_iid        
-          sku_id = order.sku_id
-          outer_iid = order.outer_iid
-          title = order.title
-          sku = Sku.find_by_sku_id(sku_id) || Sku.find_by_sku_id(num_iid)
-          sku_name = sku.try(:name)       
-          bill_product = bill.bill_products.where(outer_id: outer_iid, num_iid: num_iid).first
-          if bill_product
-            bill_product.number += 1
-            bill_product.save   
-          else
-            bill.bill_products.create(title: title,outer_id: outer_iid, num_iid: num_iid, sku_name: sku_name, colors: order.color_num,number: 1, memo: order.cs_memo)
+    if can_deliver_in_logistic_group?
+      logistic_groups.each do |logistic_group_id, divmod|     
+        logistic_group = LogisticGroup.find_by_id(logistic_group_id)
+        split_number = logistic_group.split_number
+        all_items = logistic_group(logistic_group_id)
+        div = divmod[0]
+        mod = divmod[1]
+        count = 0
+        div.times{
+          items = all_items.first(split_number)
+          all_items = all_items - items
+          bill = deliver_bills.create(deliver_bill_number: "#{tid}#{logistic_group_id}#{count}", seller_id: seller_id, seller_name: seller_name, account_id: account_id) 
+          items.each do |item|
+            order_id = item.fetch(:order_id)
+            order = taobao_orders.where(id: order_id).first
+            num_iid = order.num_iid        
+            sku_id = order.sku_id
+            outer_iid = order.outer_iid
+            title = order.title
+            sku = Sku.find_by_sku_id(sku_id) || Sku.find_by_sku_id(num_iid)
+            sku_name = sku.try(:name)       
+            bill_product = bill.bill_products.where(outer_id: outer_iid, num_iid: num_iid).first
+            if bill_product
+              bill_product.number += 1
+              bill_product.save   
+            else
+              bill.bill_products.create(title: title,outer_id: outer_iid, num_iid: num_iid, sku_name: sku_name, colors: order.color_num,number: 1, memo: order.cs_memo)
+            end
           end
+          count += 1
+        }    
+        if mod > 0
+          count += 1
+          bill = deliver_bills.create(deliver_bill_number: "#{tid}#{logistic_group_id}#{count}", seller_id: seller_id, seller_name: seller_name, account_id: account_id) 
+          all_items.each do |item|
+            order_id = item.fetch(:order_id)
+            order = taobao_orders.where(id: order_id).first
+            num_iid = order.num_iid        
+            sku_id = order.sku_id
+            outer_iid = order.outer_iid
+            title = order.title
+            sku = Sku.find_by_sku_id(sku_id) || Sku.find_by_sku_id(num_iid)
+            sku_name = sku.try(:name)       
+            bill_product = bill.bill_products.where(outer_id: outer_iid, num_iid: num_iid).first
+            if bill_product
+              bill_product.number += 1
+              bill_product.save   
+            else
+              bill.bill_products.create(title: title,outer_id: outer_iid, num_iid: num_iid, sku_name: sku_name, colors: order.color_num,number: 1, memo: order.cs_memo)
+            end
+          end 
         end
-        count += 1
-      }    
-      if mod > 0
-        count += 1
-        bill = deliver_bills.create(deliver_bill_number: "#{tid}#{logistic_group_id}#{count}", seller_id: seller_id, seller_name: seller_name, account_id: account_id) 
-        all_items.each do |item|
-          order_id = item.fetch(:order_id)
-          order = taobao_orders.where(id: order_id).first
-          num_iid = order.num_iid        
-          sku_id = order.sku_id
-          outer_iid = order.outer_iid
-          title = order.title
-          sku = Sku.find_by_sku_id(sku_id) || Sku.find_by_sku_id(num_iid)
-          sku_name = sku.try(:name)       
-          bill_product = bill.bill_products.where(outer_id: outer_iid, num_iid: num_iid).first
-          if bill_product
-            bill_product.number += 1
-            bill_product.save   
-          else
-            bill.bill_products.create(title: title,outer_id: outer_iid, num_iid: num_iid, sku_name: sku_name, colors: order.color_num,number: 1, memo: order.cs_memo)
-          end
-        end 
       end
-    end 
+    else
+      bill = deliver_bills.create(deliver_bill_number: "#{tid}01", seller_id: seller_id, seller_name: seller_name, account_id: account_id)
+      orders.each do |order|
+        sku = Sku.find_by_sku_id(order.sku_id) || Sku.find_by_sku_id(order.num_iid)
+        sku_name = sku.try(:name)
+        num_iid = order.num_iid.to_s
+        bill.bill_products.create(title: order.title, outer_id: order.outer_iid, num_iid: num_iid, sku_name: sku_name, colors: order.color_num, number: order.num, memo: order.cs_memo)
+      end
+    end   
   end      
 
 
