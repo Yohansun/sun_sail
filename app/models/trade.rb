@@ -669,15 +669,15 @@ class Trade
         when 'dispatched'
           trade_type_hash = {:dispatched_at.ne => nil, :status.in => paid_not_deliver_array + paid_and_delivered_array}
         when 'undispatched'
-          trade_type_hash = {:status.in => paid_not_deliver_array, seller_id: nil}
+          trade_type_hash = {:status.in => paid_not_deliver_array, seller_id: nil, has_unusual_state: false}
         when 'unpaid'
           trade_type_hash = {status: "WAIT_BUYER_PAY"}
         when 'paid'
           trade_type_hash = {:status.in => paid_not_deliver_array + paid_and_delivered_array + succeed_array}
         when 'undelivered','seller_undelivered'
-          trade_type_hash = {:dispatched_at.ne => nil, :status.in => paid_not_deliver_array}
+          trade_type_hash = {:dispatched_at.ne => nil, :status.in => paid_not_deliver_array, has_unusual_state: false}
         when 'delivered','seller_delivered'
-          trade_type_hash = {:status.in => paid_and_delivered_array}
+          trade_type_hash = {:status.in => paid_and_delivered_array, has_unusual_state: false}
         when 'refund'
           trade_type_hash = {"$or" => [{ :"taobao_orders.refund_status" => {:'$in' => taobao_trade_refund_array}}, {:"taobao_sub_purchase_orders.status" => {:'$in' => taobao_purchase_refund_array}}]}
         when 'return'
