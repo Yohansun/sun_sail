@@ -112,20 +112,17 @@ class MagicOrders.Views.TradesRow extends Backbone.View
         $('#op-toolbar').find('[data-type]').each ->
           $(this).removeAttr('style')
 
-        tradeId = $(trade).parents('tr').attr('id').split('trade_')[1]
-        checkedItem = new MagicOrders.Models.Trade(id: tradeId)
-        checkedItem.fetch success: (model, response) =>
-          menu_items = $('#op-toolbar').find('[data-type]')
-          items = model.check_operations()
-          console.log model.attributes.id, items
-          MagicOrders.enabled_operation_items = items
-          menu_items.each ->
-            if $.inArray($(this).data('type')+'', MagicOrders.enabled_operation_items) is -1
-              $(this).css('display', 'none')
+        selected_trade = @model.collection.get($(trade).parents('tr').attr('id').split('trade_')[1])
+        items =  selected_trade.check_operations()
+        MagicOrders.enabled_operation_items = items
+        menu_items = $('#op-toolbar').find('[data-type]')
+        menu_items.each ->
+          if $.inArray($(this).data('type')+'', MagicOrders.enabled_operation_items) is -1
+            $(this).css('display', 'none')
 
-          $('#op-toolbar .dropdown-menu').each ->
-            if $(this).find('li a[style]').length is $(this).find('li a').length
-              $(this).parents('div.btn-group').css('display', 'none')
+        $('#op-toolbar .dropdown-menu').each ->
+          if $(this).find('li a[style]').length is $(this).find('li a').length
+            $(this).parents('div.btn-group').css('display', 'none')
 
       else
         $('#op-toolbar .dropdown-menu').removeAttr('style')
