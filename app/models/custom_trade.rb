@@ -101,7 +101,7 @@ class CustomTrade < Trade
 
   def deliver!
     gift_tid = tid.dup
-    tid.slice!(/_G[0-9]$/)
+    tid.slice!(/G[0-9]$/)
     # NEED ADAPTION?
     Trade.where(tid: tid).first.trade_gifts.where(gift_tid: gift_tid).first.update_attributes(delivered_at: Time.now)
     TradeTaobaoDeliver.perform_async(self.id)
