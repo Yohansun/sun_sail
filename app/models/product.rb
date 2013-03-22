@@ -34,6 +34,7 @@ class Product < ActiveRecord::Base
   belongs_to :account
   belongs_to :category
   belongs_to :quantity
+  belongs_to :logistic_group
   has_many :feature_product_relationships
   has_many :features, :through => :feature_product_relationships
   has_many :colors_products

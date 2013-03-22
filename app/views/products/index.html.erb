@@ -81,6 +81,9 @@
           <th nowrap>商品数字ID</th>
           <th nowrap>价格</th>
           <th nowrap>分类</th>
+          <% if current_account.settings.enable_module_logistic_group == 1 %>
+            <th nowrap>物流分组</th>
+          <% end %>  
           <th nowrap>商品类型</th>
           <th nowrap>操作</th>
         </tr>
