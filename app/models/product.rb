@@ -91,7 +91,7 @@ class Product < ActiveRecord::Base
     products = []
     if good_type == 2 && packages.present?
       packages.each do |package|
-        product = package.product 
+        product = Product.find_by_outer_id(package.outer_id) 
         products << Array.new(package.number,product) if product
       end    
     else
