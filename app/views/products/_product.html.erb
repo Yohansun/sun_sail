@@ -8,7 +8,10 @@
   <td><%= product.num_iid %></td>
   <td><%= product.price %></td>
 <!--   <td><%#= product.quantity.try(:name) %></td> -->
-   <td><%= product.category.try(:name) %></td>
+  <td><%= product.category.try(:name) %></td>
+  <% if current_account.settings.enable_module_logistic_group == 1 %>
+    <td><%= product.logistic_group.try(:name) %></td>
+  <% end %>
   <td>
     <% if product.good_type == 2 %>
       套装：<%= product.child_outer_id %>
@@ -22,7 +25,7 @@
       <button data-toggle="dropdown" class="btn btn-info dropdown-toggle min_w"><i class="icon-wrench"></i> <span class="caret"></span></button>
       <ul class="dropdown-menu" style="left:-115px;">
         <li><%= link_to '查看', product_path(product) %></li>
-        <!--li><%#= link_to '编辑', edit_product_path(product) %></li>-->
+        <li><%= link_to '编辑', edit_product_path(product) %></li>
         <!--li><%#= link_to '删除', product_path(product), :confirm => "确定删除?", :method=>:delete %></li>-->
       </ul>
     </div>
