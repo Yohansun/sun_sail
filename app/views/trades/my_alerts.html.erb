@@ -18,33 +18,6 @@
         </dt>
       </dl>
 
-      <%- if current_account.settings.auto_settings["auto_mark_unusual_trade"] %>
-      <%- unusual_auto_settings = current_account.settings.auto_settings["unusual_conditions"] %>
-      <dl class="auto_unusual">
-        <dt><span>系统自动预警</span></dt>
-        <%- if unusual_auto_settings['unusual_waitpay'] %>
-          <dd><a href="/app#trades/unusual-unpaid_for_days">超过<%= unusual_auto_settings['max_unpay_days'] %>天未付款订单<span>(<%= trades.where(:created.lte => unusual_auto_settings['max_unpay_days'].to_i.days.ago, :pay_time.exists => false, status: "WAIT_BUYER_PAY").or({:has_buyer_message.ne => true}, {:buyer_message.ne => nil}).count %>)</span></a></dd>
-        <%- end %>
-        <%- if unusual_auto_settings['unusual_deliver'] %>
-          <dd><a href="/app#trades/unusual-undelivered_for_days">超过<%= unusual_auto_settings['max_undeliver_days'] %>天未发货订单<span>(<%= trades.where(:dispatched_at.lte => unusual_auto_settings['max_undeliver_days'].to_i.days.ago, :consign_time.exists => false, :status.in => ["WAIT_SELLER_SEND_GOODS", "WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"]).or({:has_buyer_message.ne => true}, {:buyer_message.ne => nil}).count %>)</span></a></dd>
-        <%- end %>
-        <%- if unusual_auto_settings['unusual_dispatch'] %>
-          <dd><a href="/app#trades/unusual-undispatched_for_days">超过<%= unusual_auto_settings['max_undispatch_days'] %>天未分流订单<span>(<%= trades.where(:pay_time.lte => unusual_auto_settings['max_undispatch_days'].to_i.days.ago, :dispatched_at.exists => false, :seller_id.exists => false, :status.in => ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"]).or({:has_buyer_message.ne => true}, {:buyer_message.ne => nil}).count %>)</span></a></dd>
-        <%- end %>
-        <%- if unusual_auto_settings['unusual_receive'] %>
-        <dd><a href="/app#trades/unusual-unreceived_for_days">超过<%= unusual_auto_settings['max_unreceived_days'] %>天买家实际未收货<span>(<%= trades.where("$and" => [{"unusual_states" => {"$elemMatch" => {key: "unreceived_in_#{unusual_auto_settings['max_unreceived_days']}_days", repaired_at: nil}}}, {"$or" => [{:has_buyer_message.ne => true}, {:buyer_message.ne => nil}]}]).count %>)</span></a></dd>
-        <%- end %>
-        <%- if unusual_auto_settings['unusual_repair'] %>
-        <dd><a href="/app#trades/unusual-unrepaired_for_days">超过<%= unusual_auto_settings['max_unrepaired_days'] %>天未处理异常<span>(<%= trades.where("$and" => [{"unusual_states" => {"$elemMatch" => {key: "unreceived_in_#{unusual_auto_settings['max_unrepaired_days']}_days", repaired_at: nil}}}, {"$or" => [{:has_buyer_message.ne => true}, {:buyer_message.ne => nil}]}]).count %>)</span></a></dd>
-        <%- end %>
-        <!-- <dd><a href="#">状态不同步订单<span>(10)</span></a></dd>
-        <dd><a href="#">状态不同步订单<span>(10)</span></a></dd>
-        <dd><a href="#">状态不同步订单<span>(10)</span></a></dd>
-        <dd><a href="#">库存预警商品<span>(40)</span></a></dd>
-        <dd><a href="#">无库存商品<span>(10)</span></a></dd> -->
-      </dl>
-      <% end %>
-
       <dl class="mark_unusual" style="display: none;">
         <dt><span>客服异常预警</span></dt>
         <dd><a href="/app#trades/unusual-my_buyer_delay_deliver">买家延迟发货<span>(<%= trades.where("$and" => [{"unusual_states" => {"$elemMatch" => {key: "buyer_delay_deliver", repair_man: current_user.name, repaired_at: nil}}}, {"$or" => [{:has_buyer_message.ne => true}, {:buyer_message.ne => nil}]}]).count %>)</span></a></dd>
