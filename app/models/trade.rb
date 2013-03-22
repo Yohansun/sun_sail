@@ -761,11 +761,11 @@ class Trade
       # 订单
       case type
       when 'my_buyer_delay_deliver', 'my_seller_ignore_deliver', 'my_seller_lack_product', 'my_seller_lack_color', 'my_buyer_demand_refund', 'my_buyer_demand_return_product', 'my_other_unusual_state'
-        trade_type_hash = {:unusual_states.elem_match => {:key => type, :repair_man => current_user.name, :repaired_at => {"$exists" => false}}}
+        trade_type_hash = {:unusual_states.elem_match => {:key => type.slice(3..-1), :repair_man => current_user.name, :repaired_at => nil}}
       when 'unusual_for_you'
-        trade_type_hash = {:unusual_states.elem_match => {:repair_man => current_user.name}}
+        trade_type_hash = {:unusual_states.elem_match => {:repair_man => current_user.name, repaired_at: nil}}
       when 'buyer_delay_deliver', 'seller_ignore_deliver', 'seller_lack_product', 'seller_lack_color', 'buyer_demand_refund', 'buyer_demand_return_product', 'other_unusual_state'
-        trade_type_hash = {:unusual_states.elem_match => {:key => type, :repaired_at => {"$exists" => false}}}
+        trade_type_hash = {:unusual_states.elem_match => {:key => type, repaired_at: nil}}
       when 'unusual_all'
         trade_type_hash = {:unusual_states.nin => [[],nil], :unusual_states.elem_match =>{:repaired_at => nil}}
       when 'all'
