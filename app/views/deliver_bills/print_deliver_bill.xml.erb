@@ -4,7 +4,7 @@
   <% trade = bill.trade %>
   <trade
     id='<%= bill.id %>'
-    batch_number = '<%= bill.print_batches.last.batch_num %>'
+    batch_number = '<%= bill.print_batches.last.try(:batch_num) %>'
     tid="<%= trade.tid %>"
     company="<%= current_account.settings.shopname %>"
     phone="<%= trade.receiver_mobile %>"
