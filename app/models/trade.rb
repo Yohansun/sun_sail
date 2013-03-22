@@ -439,16 +439,17 @@ class Trade
         mod = divmod[1]
         count = 0
         div.times{
-          items = all_items.first(split_number)
-          all_items = all_items - items
+          items = all_items.pop(split_number)
           bill = deliver_bills.create(deliver_bill_number: "#{tid}#{logistic_group_id}#{count}", seller_id: seller_id, seller_name: seller_name, account_id: account_id)
           items.each do |item|
+            product_id = item.fetch(:product_id)
+            product = Product.find_by_id(product_id)
             order_id = item.fetch(:order_id)
             order = taobao_orders.where(id: order_id).first
             num_iid = order.num_iid
             sku_id = order.sku_id
-            outer_iid = order.outer_iid
-            title = order.title
+            outer_iid = product.outer_id
+            title = product.name
             sku = Sku.find_by_sku_id(sku_id) || Sku.find_by_sku_id(num_iid)
             sku_name = sku.try(:name)
             bill_product = bill.bill_products.where(outer_id: outer_iid, num_iid: num_iid).first
@@ -456,21 +457,23 @@ class Trade
               bill_product.number += 1
               bill_product.save
             else
-              bill.bill_products.create(title: title,outer_id: outer_iid, num_iid: num_iid, sku_name: sku_name, colors: order.color_num,number: 1, memo: order.cs_memo)
+              bill.bill_products.create(title: title ,outer_id: outer_iid, num_iid: num_iid, sku_name: sku_name, colors: order.color_num,number: 1, memo: order.cs_memo)
             end
           end
           count += 1
         }
         if mod > 0
-          count += 1
+          count = div.times.to_a.count
           bill = deliver_bills.create(deliver_bill_number: "#{tid}#{logistic_group_id}#{count}", seller_id: seller_id, seller_name: seller_name, account_id: account_id)
           all_items.each do |item|
+            product_id = item.fetch(:product_id)
+            product = Product.find_by_id(product_id)
             order_id = item.fetch(:order_id)
             order = taobao_orders.where(id: order_id).first
-            num_iid = order.num_iid
+            num_iid = product.num_iid
             sku_id = order.sku_id
-            outer_iid = order.outer_iid
-            title = order.title
+            outer_iid = product.outer_id
+            title = product.name
             sku = Sku.find_by_sku_id(sku_id) || Sku.find_by_sku_id(num_iid)
             sku_name = sku.try(:name)
             bill_product = bill.bill_products.where(outer_id: outer_iid, num_iid: num_iid).first
@@ -478,7 +481,7 @@ class Trade
               bill_product.number += 1
               bill_product.save
             else
-              bill.bill_products.create(title: title,outer_id: outer_iid, num_iid: num_iid, sku_name: sku_name, colors: order.color_num,number: 1, memo: order.cs_memo)
+              bill.bill_products.create(title: title, outer_id: outer_iid, num_iid: num_iid, sku_name: sku_name, colors: order.color_num,number: 1, memo: order.cs_memo)
             end
           end
         end
