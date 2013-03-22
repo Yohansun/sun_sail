@@ -113,8 +113,12 @@ class DeliverBillsController < ApplicationController
     render json: {isSuccess: true}
   end
 
-   def print_deliver_bill
+  def print_deliver_bill
     @bills = DeliverBill.find(params[:ids].split(','))
+    if @bills.count == 1
+      print_batch_number = Time.now.to_s(:number).to_i
+      @bills.first.print_batches.create(batch_num: (print_batch_number*10000+1))
+    end
     respond_to do |format|
       format.xml
     end
@@ -224,7 +228,7 @@ class DeliverBillsController < ApplicationController
         end
       end
     else
-      flag =false
+      flag = false
     end
 
     render json: {isSuccess: flag}
