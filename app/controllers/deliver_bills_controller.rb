@@ -1,4 +1,4 @@
-# -*- encoding : utf-8 -*-
+# encoding: utf-8
 
 class DeliverBillsController < ApplicationController
   before_filter :authenticate_user!
@@ -28,6 +28,12 @@ class DeliverBillsController < ApplicationController
 
     if params[:deliver_bill_search]
       batch_nums = params[:deliver_bill_search][:batch].split(";")
+      if batch_nums[0].size == 14
+        batch_nums[0] = batch_nums[0] + "0000"
+      end
+      if batch_nums[1].size == 14
+        batch_nums[1] = batch_nums[1] + "9999"
+      end
       min = batch_nums[0].to_i
       max = batch_nums[1].to_i
       @bills = @bills.where(:print_batches.elem_match => {"$and" => [{batch_num: {"$gte" => min}}, {batch_num: {"$lte" => max}}]})
@@ -109,10 +115,6 @@ class DeliverBillsController < ApplicationController
 
    def print_deliver_bill
     @bills = DeliverBill.find(params[:ids].split(','))
-    print_batch_number = Time.now.to_s(:number).to_i
-    @bills.each_with_index do |bill, index|
-      bill.print_batches.create(batch_num: (print_batch_number*10000+index+1))
-    end
     respond_to do |format|
       format.xml
     end
@@ -144,11 +146,15 @@ class DeliverBillsController < ApplicationController
 
   def deliver_list
     list = []
-    DeliverBill.find(params[:ids]).each do |bill|
+    print_batch_number = Time.now.to_s(:number).to_i
+    DeliverBill.find(params[:ids]).each_with_index do |bill, index|
+      bill.print_batches.create(batch_num: (print_batch_number*10000+index+1))
       trade = TradeDecorator.decorate(bill.trade)
       list << {
         name: trade.receiver_name,
         tid: trade.tid,
+        batch_sequence: bill.print_batches.last.batch_num.to_s[0..-5],
+        batch_index: bill.print_batches.last.batch_num.to_s[-4..-1],
         address: trade.receiver_full_address,
         logistic_name: trade.logistic_name || '',
         logistic_waybill: trade.logistic_waybill || ''

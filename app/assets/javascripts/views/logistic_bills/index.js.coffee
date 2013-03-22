@@ -89,6 +89,8 @@ class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
         logistics[lname] += 1
         html += '<tr>'
         html += '<td>' + trade.tid + '</td>'
+        html += '<td>' + trade.batch_sequence + '</td>'
+        html += '<td>' + trade.batch_index + '</td>'
         html += '<td>' + trade.name + '</td>'
         html += '<td>' + trade.address + '</td></tr>'
 
