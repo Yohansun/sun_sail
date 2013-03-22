@@ -338,7 +338,7 @@ class Trade
     return unless seller_id
     nofity_stock "解锁", seller_id
     update_attributes(seller_id: nil, seller_name: nil, dispatched_at: nil)
-    deliver_bills.delete_all 
+    deliver_bills.delete_all
   end
 
   def seller(sid = seller_id)
@@ -374,38 +374,38 @@ class Trade
   def can_deliver_in_logistic_group?
     enable = fetch_account.settings.enable_module_logistic_group
     return false unless enable == 1
-    items = [] 
+    items = []
     taobao_orders.each do |order|
       product = Product.find_by_num_iid(order.num_iid)
-      product.package_products.each do |p| 
+      product.package_products.each do |p|
         items << p.logistic_group_id
       end
     end
-    !items.include?(nil) 
-  end 
+    !items.include?(nil)
+  end
 
 
   def logistic_group_products
-    items = [] 
+    items = []
     taobao_orders.each do |order|
       product = Product.find_by_num_iid(order.num_iid)
       order.num.times{
-        product.package_products.each do |p| 
+        product.package_products.each do |p|
           item = {order_id: order.id, product_id: p.id, num: 1, logistic_group_id: p.logistic_group_id}
           items << item
         end
       }
-    end 
-    items  
-  end  
+    end
+    items
+  end
 
   def logistic_groups
     groups = {}
     logistic_group_products.each do |product|
       logistic_group_id = product.fetch(:logistic_group_id)
       groups[logistic_group_id] ||= 0
-      groups[logistic_group_id] += product.fetch(:num) 
-    end  
+      groups[logistic_group_id] += product.fetch(:num)
+    end
 
     splited_groups = {}
     groups.each do |logistic_group_id, num|
@@ -413,25 +413,25 @@ class Trade
       split_number = logistic_group.split_number
       divmod = num.divmod(split_number)
       splited_groups[logistic_group_id] = [divmod[0], divmod[1]]
-    end 
+    end
     splited_groups
-  end   
+  end
 
   def logistic_group(id)
     products = []
     logistic_group_products.each do |logistic_group_product|
       logistic_group_id = logistic_group_product.fetch(:logistic_group_id)
       products << logistic_group_product if logistic_group_id == id
-    end 
+    end
     products
-  end  
+  end
 
   def generate_deliver_bill
     return if _type == 'JingdongTrade'
     #分流时生成默认发货单, 不支持京东订单
     deliver_bills.delete_all
     if can_deliver_in_logistic_group?
-      logistic_groups.each do |logistic_group_id, divmod|     
+      logistic_groups.each do |logistic_group_id, divmod|
         logistic_group = LogisticGroup.find_by_id(logistic_group_id)
         split_number = logistic_group.split_number
         all_items = logistic_group(logistic_group_id)
@@ -441,46 +441,46 @@ class Trade
         div.times{
           items = all_items.first(split_number)
           all_items = all_items - items
-          bill = deliver_bills.create(deliver_bill_number: "#{tid}#{logistic_group_id}#{count}", seller_id: seller_id, seller_name: seller_name, account_id: account_id) 
+          bill = deliver_bills.create(deliver_bill_number: "#{tid}#{logistic_group_id}#{count}", seller_id: seller_id, seller_name: seller_name, account_id: account_id)
           items.each do |item|
             order_id = item.fetch(:order_id)
             order = taobao_orders.where(id: order_id).first
-            num_iid = order.num_iid        
+            num_iid = order.num_iid
             sku_id = order.sku_id
             outer_iid = order.outer_iid
             title = order.title
             sku = Sku.find_by_sku_id(sku_id) || Sku.find_by_sku_id(num_iid)
-            sku_name = sku.try(:name)       
+            sku_name = sku.try(:name)
             bill_product = bill.bill_products.where(outer_id: outer_iid, num_iid: num_iid).first
             if bill_product
               bill_product.number += 1
-              bill_product.save   
+              bill_product.save
             else
               bill.bill_products.create(title: title,outer_id: outer_iid, num_iid: num_iid, sku_name: sku_name, colors: order.color_num,number: 1, memo: order.cs_memo)
             end
           end
           count += 1
-        }    
+        }
         if mod > 0
           count += 1
-          bill = deliver_bills.create(deliver_bill_number: "#{tid}#{logistic_group_id}#{count}", seller_id: seller_id, seller_name: seller_name, account_id: account_id) 
+          bill = deliver_bills.create(deliver_bill_number: "#{tid}#{logistic_group_id}#{count}", seller_id: seller_id, seller_name: seller_name, account_id: account_id)
           all_items.each do |item|
             order_id = item.fetch(:order_id)
             order = taobao_orders.where(id: order_id).first
-            num_iid = order.num_iid        
+            num_iid = order.num_iid
             sku_id = order.sku_id
             outer_iid = order.outer_iid
             title = order.title
             sku = Sku.find_by_sku_id(sku_id) || Sku.find_by_sku_id(num_iid)
-            sku_name = sku.try(:name)       
+            sku_name = sku.try(:name)
             bill_product = bill.bill_products.where(outer_id: outer_iid, num_iid: num_iid).first
             if bill_product
               bill_product.number += 1
-              bill_product.save   
+              bill_product.save
             else
               bill.bill_products.create(title: title,outer_id: outer_iid, num_iid: num_iid, sku_name: sku_name, colors: order.color_num,number: 1, memo: order.cs_memo)
             end
-          end 
+          end
         end
       end
     else
@@ -491,8 +491,8 @@ class Trade
         num_iid = order.num_iid.to_s
         bill.bill_products.create(title: order.title, outer_id: order.outer_iid, num_iid: num_iid, sku_name: sku_name, colors: order.color_num, number: order.num, memo: order.cs_memo)
       end
-    end   
-  end      
+    end
+  end
 
 
   def logistic_split
@@ -753,7 +753,7 @@ class Trade
           end
         when 'unrepaired_for_days'
           if unusual_auto_setting['unusual_repair']
-            trade_type_hash = {:unusual_states.elem_match => {:repaired_at => nil, :plan_repair_at => {"$gte" => (Time.now - unusual_auto_setting['max_unrepaired_days'].to_i.days)}}}
+            trade_type_hash = {:unusual_states.elem_match => {:repaired_at => nil, :plan_repair_at => {"$lte" => (Time.now - unusual_auto_setting['max_unrepaired_days'].to_i.days)}}}
           end
         end
       end
