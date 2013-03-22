@@ -77,6 +77,8 @@ class MagicOrders.Views.DeliverBillsIndex extends Backbone.View
       for trade in data
         html += '<tr>'
         html += '<td>' + trade.tid + '</td>'
+        html += '<td>' + trade.batch_sequence + '</td>'
+        html += '<td>' + trade.batch_index + '</td>'
         html += '<td>' + trade.name + '</td>'
         html += '<td>' + trade.address + '</td></tr>'
 
