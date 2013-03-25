@@ -5,12 +5,14 @@ class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
   events:
     'click #checkbox_all': 'optAll'
     'click [data-trade-status]': 'selectSameStatusTrade'
-    #'click .js-search': 'search'
     'click .print_logistics': 'printLogistics'
     'click .js-confirm-return': 'confirmReturn'
     'click .return_logistics': 'returnLogistics'
     'click .js-confirm-logistics': 'confirmLogistics'
     'click .index_pops li a[data-type]': 'show_type'
+
+    # 加载更多订单相关
+    'click [data-type=loadMoreTrades]': 'forceLoadMoreTrades'
 
     # 搜索相关
     'click .search': 'search'
@@ -26,11 +28,15 @@ class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
 
 
   initialize: ->
+    @offset = @collection.length
     @collection.on("fetch", @renderUpdate, this)
 
   render: =>
     $(@el).html(@template(bills: @collection))
-    @collection.each(@prependTrade)
+    @collection.each(@appendTrade)
+    $("a[rel=popover]").popover({placement: 'left', html:true})
+    $(@el).find(".get_offset").html(@offset)
+    #@collection.each(@prependTrade)
     $(@el).find('a[data-trade-mode='+MagicOrders.trade_mode+'][data-trade-status="'+MagicOrders.trade_type+'"]').parents('li').addClass('active')
     @render_select_state()
     $(@el).find(".select2").select2();
@@ -232,6 +238,20 @@ class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
       else
         alert("请勾选要操作的订单。")
 
+  # 加载更多订单
+  forceLoadMoreTrades: (e) =>
+    e.preventDefault()
+    blocktheui()
+
+    MagicOrders.trade_reload_limit = parseInt $('#load_count').val()
+    @collection.fetch data: {trade_type: @trade_type, limit: MagicOrders.trade_reload_limit, offset: @offset, search: @search_hash, deliver_bill_search: @deliver_bill_search_hash}, success: (collection) =>
+      if collection.length >= 0
+        @offset = @offset + MagicOrders.trade_reload_limit
+        @renderUpdate()
+        $(e.target).val('')
+      else
+        $.unblockUI()
+
   ## 搜索相关 ##
 
   # 用于对齐高级搜索栏和操作菜单栏
@@ -253,7 +273,7 @@ class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
     @collection.each(@appendTrade)
 
     if @collection.length > 0
-      $(".complete_offset").html(@collection.at(0).get("trades_count"))
+      $(".complete_offset").html(@collection.at(0).get("bills_count"))
       unless parseInt($(".complete_offset").html()) <= @offset
         $(".get_offset").html(@offset)
       else
@@ -453,6 +473,9 @@ class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
           name = $(this).attr('name')
           value = $(this).val()
           deliver_bill_search_hash[name] = value
+
+    @deliver_bill_search_hash = deliver_bill_search_hash
+    @search_hash = search_hash
     @offset = 0
     blocktheui()
     $("#trade_rows").html('')
@@ -466,12 +489,10 @@ class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
         @offset = @offset + 20
         @trade_number = 0
         @renderUpdate()
-
-      if collection.length == 0
+        $.unblockUI()
+      else if collection.length == 0
         $(@el).find(".get_offset").html(@offset)
         $(@el).find(".complete_offset").html("0")
-        $.unblockUI()
-      else
         $.unblockUI()
 
   # search: (e)->

@@ -270,7 +270,7 @@
       </div>
       <fieldset>
         <label class="pull-left" ><code>当前搜索条件：</code></label>
-        <div class="controls clearfix search_tags_group">
+        <div class="controls clearfix search_tags_group"></div>
       </fieldset>
     </form>
 
@@ -314,5 +314,18 @@
       <tbody id="trade_rows">
       </tbody>
     </table>
+    <div class='trade_count_info'>
+      <select id='load_count' class='nomargin input-medium'>
+        <option value='20'>加载20项</option>
+        <option value='50'>加载50项</option>
+        <option value='100'>加载100项</option>
+      </select>
+      <a href="#" data-type="loadMoreTrades" id="bottom_line" class="btn">加载更多发货单</a>
+      <% unless @bills.length == 0 : %>
+      <span class="controls mar_t5" >当前显示：全部发货单 <span class="complete_offset"><%= @bills.at(0).get('bills_count') %></span> 项中的 <span class="get_offset"></span> 项</span>
+      <% else : %>
+      <span class="controls mar_t5" >当前显示：全部发货单 <span class="complete_offset">0</span> 项中的 0 项</span>
+      <% end %>
+    </div>
   </div>
 </div>
