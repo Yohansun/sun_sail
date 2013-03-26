@@ -1,0 +1,31 @@
+<div class="span2 bs-docs-sidebar">
+  <ul class="nav nav-list bs-docs-sidenav affix span2">
+    <li class="<%= "active" if params[:controller] == "users" %>">
+      <a href="/users" ><i class="<%= "icon-chevron-right" if params[:controller] == "users" %>"></i>用户管理</a>
+    </li>
+    <li class="<%= "active" if params[:controller] == "areas" %>" >
+      <a href="/areas">
+        <i class="<%= "icon-chevron-right" if params[:controller] == "areas" %>"></i>地域管理
+      </a>
+    </li>
+    <li class="<%= "active" if params[:controller] == "logistics" %>">
+      <a href="/logistics">
+        <i class="<%= "icon-chevron-right" if params[:controller] == "logistics" %>"></i>物流商管理
+      </a>
+    </li>
+    <% if current_account.settings.enable_module_onsite_service == 1 %>
+      <li class="<%= "active" if params[:controller] == "onsite_services" %>">
+        <a href="/onsite_services">
+          <i class="<%= "icon-chevron-right" if params[:controller] == "onsite_services" %>"></i>上门服务
+        </a>
+      </li>
+    <%- end %>
+    <% if current_account.settings.enable_module_logistic_group == 1 %>
+      <li class="<%= "active" if params[:controller] == "logistic_groups" %>">
+        <a href="/logistic_groups">
+          <i class="<%= "icon-chevron-right" if params[:controller] == "logistic_groups" %>"></i>物流分组管理
+        </a>
+      </li>
+    <%- end %>
+  </ul>
+</div>
