@@ -5,6 +5,9 @@ class DeliverBillsController < ApplicationController
   respond_to :json
 
   def index
+    offset = params[:offset] || 0
+    limit = params[:limit] || 20
+
     if params[:trade_type]
       case params[:trade_type]
       when 'unprinted'
@@ -39,32 +42,6 @@ class DeliverBillsController < ApplicationController
       @bills = @bills.where(:print_batches.elem_match => {"$and" => [{batch_num: {"$gte" => min}}, {batch_num: {"$lte" => max}}]})
     end
 
-    # if params[:deliver_bill_search]
-    #   if params[:deliver_bill_search][:condition].present? && params[:deliver_bill_search][:value].present?
-    #     attribute = case params[:deliver_bill_search][:condition]
-    #     when 'tid'
-    #       :tid
-    #     when 'r_name'
-    #       :receiver_name
-    #     when 'r_mobile'
-    #       :receiver_mobile
-    #     when 's_name'
-    #       :seller_name
-    #     end
-
-    #     if attribute
-    #       trade_ids = Trade.where(:account_id => current_account.id, attribute => params[:deliver_bill_search][:value]).map(&:id)
-    #       @bills = @bills.any_in(trade_id: trade_ids)
-    #     end
-    #   end
-
-    #   if params[:deliver_bill_search][:from_batch_num].present? && params[:deliver_bill_search][:to_batch_num].present?
-    #     min = params[:deliver_bill_search][:from_batch_num].to_i
-    #     max = params[:deliver_bill_search][:to_batch_num].to_i
-    #     @bills = @bills.where(:print_batches.elem_match => {"$and" => [{batch_num: {"$gte" => min}}, {batch_num: {"$lte" => max}}]})
-    #   end
-    # end
-
     if current_user.has_role? :seller
       ids = []
 
@@ -74,7 +51,14 @@ class DeliverBillsController < ApplicationController
       @bills = @bills.any_in(seller_id: ids)
     end
 
-    respond_with @bills
+    @bills_count = @bills.count
+    @bills = @bills.limit(limit).skip(offset).order_by(:created.desc)
+
+    if @bills_count > 0
+      respond_with @trades
+    else
+      render json: []
+    end
   end
 
   def show

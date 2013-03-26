@@ -3,7 +3,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
   template: JST['trades/index']
 
   events:
-    'click [data-type=loadMoreTrades]': 'forceLoadMoreTrades'
     'click .export_orders': 'exportOrders'
     'click [data-trade-status]': 'selectSameStatusTrade'
     'click .print_delivers': 'printDelivers'
@@ -13,6 +12,9 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     'click .confirm_batch_deliver': 'confirmBatchDeliver'
     'click .deliver_bills li' : 'gotoDeliverBills'
     'click .index_pops li a[data-type]': 'show_type'
+
+    # 加载更多订单相关
+    'click [data-type=loadMoreTrades]': 'forceLoadMoreTrades'
 
     # 搜索相关
     'click .search': 'search'
@@ -140,22 +142,10 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
         Backbone.history.navigate('trades/' + trade_id + "/#{type}", true)
       else
         alert("请勾选要操作的订单。")
+
   fetchMoreTrades: (event, direction) =>
     if direction == 'down'
       @forceLoadMoreTrades(event)
-
-  forceLoadMoreTrades: (e) =>
-    e.preventDefault()
-    blocktheui()
-
-    MagicOrders.trade_reload_limit = parseInt $('#load_count').val()
-    @collection.fetch data: {trade_type: @trade_type, limit: MagicOrders.trade_reload_limit, offset: @offset, search: {@simple_search_option, @simple_search_value, @from_deliver_print_date, @to_deliver_print_date, @from_deliver_print_time, @to_deliver_print_time, @from_logistic_print_date, @to_logistic_print_date, @from_logistic_print_time, @to_logistic_print_time, @search_start_date, @search_start_time, @search_end_date, @search_end_time, @pay_start_time, @pay_end_time, @pay_start_date, @pay_end_date, @dispatch_start_time, @dispatch_end_time, @dispatch_start_date, @dispatch_end_date, @status_option, @type_option, @state_option, @city_option, @district_option, @search_buyer_message, @search_seller_memo, @search_cs_memo, @search_cs_memo_void, @search_invoice, @search_color, @search_color_void, @search_logistic}}, success: (collection) =>
-      if collection.length >= 0
-        @offset = @offset + MagicOrders.trade_reload_limit
-        @renderUpdate()
-        $(e.target).val('')
-      else
-        $.unblockUI()
 
   dropdownTurnGray: (e) ->
     e.preventDefault()
@@ -451,6 +441,20 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
       view = new MagicOrders.Views.TradesRow(model: trade)
       $(@el).find("#trade_rows").prepend(view.render().el)
       $(@el).find("#trade_#{trade.get('id')} td:first").html("#{@trade_number}")
+
+  # 加载更多订单
+  forceLoadMoreTrades: (e) =>
+    e.preventDefault()
+    blocktheui()
+
+    MagicOrders.trade_reload_limit = parseInt $('#load_count').val()
+    @collection.fetch data: {trade_type: @trade_type, limit: MagicOrders.trade_reload_limit, offset: @offset, search: @search_hash}, success: (collection) =>
+      if collection.length >= 0
+        @offset = @offset + MagicOrders.trade_reload_limit
+        @renderUpdate()
+        $(e.target).val('')
+      else
+        $.unblockUI()
 
   ## 搜索相关 ##
 
