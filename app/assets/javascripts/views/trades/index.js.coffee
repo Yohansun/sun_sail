@@ -111,10 +111,11 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
   optAll: (e) ->
     if $('#checkbox_all')[0].checked
       $('.trade_check').attr('checked', 'checked')
-      $('#op-toolbar .dropdown-menu').css('display', 'none')
+      $('#op-toolbar .dropdown-menu').parents('div.btn-group').css('display', 'none')
+      $('#op-toolbar .batch_ops').show()
     else
       $('.trade_check').removeAttr('checked')
-      $('#op-toolbar .dropdown-menu').attr('style', '')
+      $('#op-toolbar .dropdown-menu').parents('div.btn-group').removeAttr('style')
 
   keepColsFilterDropdownOpen: (event) ->
     event.stopPropagation()

@@ -103,19 +103,15 @@ class MagicOrders.Routers.LogisticBills extends Backbone.Router
             $('.print_logistic_button').removeAttr('data-click')
 
           $.get ('/deliver_bills/' + model.get('id') + '/logistic_info'), {}, (data)->
-            console.log 'sdfsfsf'
-            if data == '' or data == null
-              ytong = $('#logistic_select').find('[lid="3"]')
-              data = ytong.val()
-              $('#logistic_select').find('[lid="3"]').attr('selected', 'selected')
+            if data == " "
+              #ytong = $('#logistic_select').find('[lid="3"]')
+              data = $("#logistic_select").find("option:first").val()
+              $('#logistic_select').find("option:first").attr('selected', 'selected')
             else
               $('#logistic_select').find('[value="' + data + '"]').attr('selected', 'selected')
 
             pageInit()
             bind_logistic_swf(model.get('id'), data)
-        if model.get('logistic_name') != null
-          $(modalDivID).modal('show')
-        else
-          alert("请先设置物流单号")
+        $(modalDivID).modal('show')
       else
         $(modalDivID).modal('show')

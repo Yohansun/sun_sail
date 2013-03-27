@@ -776,7 +776,7 @@ class Trade
       when 'dispatched'
         trade_type_hash = {:dispatched_at.ne => nil, :status.in => paid_not_deliver_array + paid_and_delivered_array}
       when 'undispatched'
-        trade_type_hash = {:status.in => paid_not_deliver_array, seller_id: nil, has_unusual_state: false}
+        trade_type_hash = {:status.in => paid_not_deliver_array, seller_id: nil, has_unusual_state: false, :pay_time.exists => true}
       when 'unpaid'
         trade_type_hash = {status: "WAIT_BUYER_PAY"}
       when 'paid'

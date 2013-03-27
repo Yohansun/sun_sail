@@ -285,7 +285,7 @@
         </ul>
       </div>
 
-      <div class="btns btn-group">
+      <div class="btns btn-group batch_ops">
         <a href="javascript:void(0)" class="btn btn-warning">批量操作</a>
         <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-warning btn_left4">
           <span class="caret"></span>
