@@ -12,8 +12,8 @@ class TaobaoProductsPuller
         nick = '立邦漆官方旗舰店'
       else
         nick = trade_source.name
-       end 
-          
+      end 
+
       response = TaobaoQuery.get({method: 'taobao.products.get', nick: nick, fields: 'pic_url, name'}, trade_source_id)   
       if  response['products_get_response']['products'].present? &&  response['products_get_response']['products']['product'].present?
         products = response['products_get_response']['products']['product']
@@ -133,13 +133,15 @@ class TaobaoProductsPuller
             end
           end 
         end 
-      page_no += 1
+        page_no += 1
       end until(total_pages.nil? || total_pages == 0 || page_no > total_pages )     
 
       num_iids.each do |num_iid|
         #通过num_iid调用taobao.item.get获取sku相关信息
         item_get_response = TaobaoQuery.get({method: 'taobao.item.get',  fields: 'num,detail_url,title,sku.properties_name,sku.properties,sku.quantity, sku.sku_id, outer_id, product_id, pic_url,cid,price', num_iid: num_iid, nick: nick}, trade_source_id)   
+        next unless item_get_response['item_get_response']
         sku_items = item_get_response['item_get_response']['item']
+        next unless sku_items
         sku_items_count = sku_items.count
         if sku_items_count > 0
           name = sku_items['title']
@@ -172,8 +174,55 @@ class TaobaoProductsPuller
           end  
         end  
       end # num_iids each ends
-        
+
     end # create ends
 
+
+    def create_from_trades(trade_source_id)
+      trade_source = TradeSource.find_by_id(trade_source_id)
+      account = Account.find_by_id(trade_source.account_id)
+
+      trades = Trade.where(trade_source_id: trade_source_id).only(:trade_source_id, "taobao_orders.num_iid").where(trade_source_id: trade_source_id)
+      num_iids = trades.map(&:taobao_orders).flatten.map(&:values).flatten.uniq
+      num_iids.each do |num_iid|
+        #通过num_iid调用taobao.item.get获取sku相关信息
+        item_get_response = TaobaoQuery.get({method: 'taobao.item.get',  fields: 'num,detail_url,title,sku.properties_name,sku.properties,sku.quantity, sku.sku_id, outer_id, product_id, pic_url,cid,price', num_iid: num_iid}, trade_source_id)   
+        next unless item_get_response['item_get_response']
+        sku_items = item_get_response['item_get_response']['item']
+        next unless sku_items
+        sku_items_count = sku_items.count
+        if sku_items_count > 0
+          name = sku_items['title']
+          detail_url = sku_items['detail_url']
+          outer_id =  sku_items['outer_id']
+          product_id = sku_items['product_id']
+          cid = sku_items['cid']
+          pic_url = sku_items['pic_url']
+          price = sku_items['price']
+          
+          #Create product and sku
+          #Remember to add account_id
+          #Remember to sync nippon and dulux stock
+          local_product = Product.create(account_id: account.id, name: name, detail_url: detail_url, outer_id: outer_id,  num_iid: num_iid, product_id: product_id, cid: cid, pic_url: pic_url, price: price) unless Product.find_by_num_iid(num_iid)
+          if local_product
+            if sku_items['skus'] && sku_items['skus']['sku'].count > 0
+              sku_items['skus']['sku'].each do |sku|
+                sku_id = sku['sku_id']
+                quantity = sku['quantity']
+                properties_name = sku['properties_name']
+                properties = sku['properties']
+                #Remember to add account_id
+                Sku.create!(product_id: local_product.id, quantity: quantity, num_iid: num_iid, sku_id: sku_id, properties_name:properties_name, properties: properties)  unless Sku.find_by_sku_id(sku_id)
+              end  
+            else
+              quantity = sku_items['num']
+              #Remember to add account_id
+              Sku.create!(product_id: local_product.id, quantity: quantity, num_iid: num_iid) unless Sku.find_by_num_iid(num_iid)
+            end    
+          end  
+        end  
+      end # num_iids each ends
+    end # create_from_trades ends
+
    end  #self chain ends
-end
+ end
