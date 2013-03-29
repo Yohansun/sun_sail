@@ -14,12 +14,13 @@ class MagicOrders.Views.DeliverBillsIndex extends Backbone.View
     # 搜索相关
     'click .search': 'search'
     'click .add_time_search_tag': 'addTimeSearchTag'
+    'click .add_money_search_tag': 'addMoneySearchTag'
     'click .add_status_search_tag': 'addStatusSearchTag'
     'click .add_memo_search_tag' : 'addMemoSearchTag'
     'click .add_source_search_tag': 'addSourceSearchTag'
     'click .add_area_search_tag': 'addAreaSearchTag'
     'click .add_batch_search_tag': 'addBatchSearchTag'
-    'click #advanced_btn': 'advancedSearch'
+    'click .advanced_btn': 'advancedSearch'
     'click .remove_search_tag': 'removeSearchTag'
     'change .search_option' : 'changeInputFrame'
 
@@ -177,6 +178,7 @@ class MagicOrders.Views.DeliverBillsIndex extends Backbone.View
     $("#search_toggle").toggle()
     @catchSearchMotion()
     $("#simple_search_button").toggleClass 'simple_search'
+    $('.advanced_in_the_air').toggleClass 'simple_search'
 
   getText: (element,child_one,sibling='div',child_two='option:selected') ->
     $(element).siblings(sibling).children(child_one).children(child_two).text()
@@ -203,6 +205,29 @@ class MagicOrders.Views.DeliverBillsIndex extends Backbone.View
         alert("请输入完整的起始时间。")
     else
       alert("已经添加过 "+time_type_text+" 搜索条件，一个时间条件只能添加一次")
+
+  addMoneySearchTag: (e) ->
+    e.preventDefault()
+    money_type = @getSearchValue('.add_money_search_tag','select')
+    money_type_text = @getText('.add_money_search_tag','select')
+    min_money = @getSearchValue('.add_money_search_tag','input:first')
+    max_money = @getSearchValue('.add_money_search_tag','input:last')
+
+    tag = $(".search_tags_group input[name="+money_type+"]").attr('name')
+    if tag == undefined
+      if min_money != '' and max_money != ''
+        if /^[0-9.]*$/.test(min_money) and /^[0-9.]*$/.test(min_money)
+          $('.search_tags_group').append("<span class='search_tag pull-left money_search'>"+
+                                         "<label class='help-inline'>"+money_type_text+" "+min_money+" 至 "+max_money+"</label>"+
+                                         "<input type='hidden' name='"+money_type+"' value='"+min_money+";"+max_money+"'>"+
+                                         "<button class='remove_search_tag' value=''> x </button></span>")
+        else
+          alert("金额格式不正确。")
+        @catchSearchMotion()
+      else
+        alert("请输入完整的区间。")
+    else
+      alert("已经添加过 "+money_type_text+" 搜索条件，一个金额条件只能添加一次")
 
   addStatusSearchTag: (e) ->
     e.preventDefault()

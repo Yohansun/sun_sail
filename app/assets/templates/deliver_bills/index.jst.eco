@@ -90,7 +90,7 @@
     <li><a href="#" data-trade-mode="trades" data-trade-status="undispatched">待分派</a></li>
     <li><a href="#" data-trade-mode='trades' data-trade-status='undelivered'>待发货</a></li>
     <li><a href="#" data-trade-mode='trades' data-trade-status='delivered'>已发货</a></li>
-    <li><a href="#" data-trade-mode='trades' data-trade-status='unusual_trade'>问题订单</a></li>
+    <li><a href="#" data-trade-mode='trades' data-trade-status='unusual_all'>问题订单</a></li>
     <li><a href="#" data-trade-mode="deliver_bills" data-trade-status="all">发货单</a></li>
     <li><a href="#" data-trade-mode="logistic_bills" data-trade-status="all">物流单</a></li>
     <!-- <li class=''><a href="#after_order" data-toggle="tab">售后订单</a></li> -->
@@ -148,7 +148,7 @@
           <div class="pull-left mar_r10" id="select_print_time"></div>
           <div class="pull-left">
             <button type="button pull-left" class="btn btn-info search" id="simple_search_button">筛选</button>
-            <label class="help-inline js-open_advance label_advanced"><a id="advanced_btn" href="#"><i class="icon-arrow-down"></i> 高级搜索</a></label>
+            <label class="help-inline js-open_advance label_advanced"><a class="advanced_btn advanced_in_the_air" href="#"><i class="icon-arrow-down"></i> 高级搜索</a></label>
           </div>
         </div>
       </fieldset>
@@ -170,6 +170,21 @@
               <input type="text" placeholder="年-月-日 时:分:秒" class="input-medium end_at datepickers" readonly>
             </div>
             <a class="add_time_search_tag" href="#" title="添加搜索"><i class="icon-plus"></i>添加搜索</a>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <div class="control-group">
+            <label class="pull-left"><code>金额：</code></label>
+            <div class="controls pull-left">
+              <select class="input-medium pull-left radius_no_rb select2">
+                <option value="payment">订单金额</option>
+              </select>
+              <input type="text" placeholder="请输入最小金额" class="input-medium min_money radius_no_tl">
+              <i class="icon-arrow-right" style="margin-top:0px;"></i>
+              <input type="text" placeholder="请输入最大金额" class="input-medium max_money">
+            </div>
+            <a class="add_money_search_tag" href="#" title="添加搜索"><i class="icon-plus"></i>添加搜索</a>
           </div>
         </fieldset>
 
@@ -263,15 +278,16 @@
           </div>
         </fieldset>
 
-        <br />
         <fieldset>
-          <button class="pull-right btn btn-info search" type="button">筛选</button>
+          <label class="pull-left" ><code>当前搜索条件：</code></label>
+          <div class="controls clearfix search_tags_group"></div>
+        </fieldset>
+
+        <fieldset>
+          <button class="pull-left btn btn-info search" type="button">筛选</button>
+          <label class="help-inline js-open_advance label_advanced"><a class="advanced_btn" href="#"><i class="icon-arrow-up"></i> 简单搜索</a></label>
         </fieldset>
       </div>
-      <fieldset>
-        <label class="pull-left" ><code>当前搜索条件：</code></label>
-        <div class="controls clearfix search_tags_group"></div>
-      </fieldset>
     </form>
 
     <div id='op-toolbar' class="btn-toolbar js-affix" data-spy="affix" data-offset-top="144">
