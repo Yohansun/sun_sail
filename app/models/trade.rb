@@ -740,19 +740,19 @@ class Trade
         case type
         when 'unpaid_for_days'
           if unusual_auto_setting['unusual_waitpay']
-            trade_type_hash = {:created.lte => unusual_auto_setting['max_unpay_days'].to_i.days.ago, :pay_time.exists => false, status: "WAIT_BUYER_PAY"}
+            trade_type_hash = {:created.lte => unusual_auto_setting['max_unpay_days'].to_i.days.ago, pay_time: nil, status: "WAIT_BUYER_PAY"}
           end
         when 'undispatched_for_days'
           if unusual_auto_setting['unusual_dispatch']
-            trade_type_hash = {:pay_time.lte => unusual_auto_setting['max_undispatch_days'].to_i.days.ago, :dispatched_at.exists => false, :seller_id.exists => false, :status.in => paid_not_deliver_array}
+            trade_type_hash = {:pay_time.lte => unusual_auto_setting['max_undispatch_days'].to_i.days.ago, dispatched_at: nil, seller_id: nil, :status.in => paid_not_deliver_array}
           end
         when 'undelivered_for_days'
           if unusual_auto_setting['unusual_deliver']
-            trade_type_hash = {:dispatched_at.lte => unusual_auto_setting['max_undeliver_days'].to_i.days.ago, :consign_time.exists => false, :status.in => paid_not_deliver_array}
+            trade_type_hash = {:dispatched_at.lte => unusual_auto_setting['max_undeliver_days'].to_i.days.ago, consign_time: nil, :status.in => paid_not_deliver_array}
           end
         when 'unreceived_for_days'
           if unusual_auto_setting['unusual_receive']
-            trade_type_hash = {:unusual_states.elem_match => {key: "unreceived_in_#{unusual_auto_setting['max_unreceived_days']}_days", :repaired_at => {"$exists" => false}}}
+            trade_type_hash = {:unusual_states.elem_match => {key: "unreceived_in_#{unusual_auto_setting['max_unreceived_days']}_days", :repaired_at => nil}}
           end
         when 'unrepaired_for_days'
           if unusual_auto_setting['unusual_repair']
@@ -776,7 +776,7 @@ class Trade
       when 'dispatched'
         trade_type_hash = {:dispatched_at.ne => nil, :status.in => paid_not_deliver_array + paid_and_delivered_array}
       when 'undispatched'
-        trade_type_hash = {:status.in => paid_not_deliver_array, seller_id: nil, has_unusual_state: false, :pay_time.exists => true}
+        trade_type_hash = {:status.in => paid_not_deliver_array, seller_id: nil, has_unusual_state: false, :pay_time.ne => nil}
       when 'unpaid'
         trade_type_hash = {status: "WAIT_BUYER_PAY"}
       when 'paid'
@@ -794,48 +794,48 @@ class Trade
       when 'unusual_trade'
         trade_type_hash = {status: "TRADE_NO_CREATE_PAY"}
       when 'deliver_unconfirmed'
-        trade_type_hash = {:seller_confirm_deliver_at.exists => false, :status.in => paid_and_delivered_array}
+        trade_type_hash = {seller_confirm_deliver_at: nil, :status.in => paid_and_delivered_array}
 
         # 发货单
         # 发货单是否已打印
       when "deliver_bill_unprinted"
-        trade_type_hash = {:deliver_bill_printed_at.exists => false, :dispatched_at.ne => nil, :status.in => paid_not_deliver_array + paid_and_delivered_array}
+        trade_type_hash = {deliver_bill_printed_at: nil, :dispatched_at.ne => nil, :status.in => paid_not_deliver_array + paid_and_delivered_array}
       when "deliver_bill_printed"
-        trade_type_hash = {:deliver_bill_printed_at.exists => true, :dispatched_at.ne => nil, :status.in => paid_not_deliver_array + paid_and_delivered_array}
+        trade_type_hash = {:deliver_bill_printed_at.ne => nil, :dispatched_at.ne => nil, :status.in => paid_not_deliver_array + paid_and_delivered_array}
 
         # 物流单
       when "logistic_waybill_void"
-        trade_type_hash = {:logistic_waybill.exists => false, :status.in => paid_not_deliver_array}
+        trade_type_hash = {logistic_waybill: nil, :status.in => paid_not_deliver_array}
       when "logistic_waybill_exist"
-        trade_type_hash = {:logistic_waybill.exists => true, :status.in => paid_not_deliver_array + paid_and_delivered_array + succeed_array}
+        trade_type_hash = {:logistic_waybill.ne => nil, :status.in => paid_not_deliver_array + paid_and_delivered_array + succeed_array}
       when "logistic_bill_unprinted"
-        trade_type_hash = {"$and" => [{"logistic_printed_at" =>{"$exists" => false}}, {"$or" => [{status: 'WAIT_SELLER_SEND_GOODS'}, {status: 'WAIT_BUYER_CONFIRM_GOODS', "delivered_at" => {"$gt" => 23.hours.ago}}]}]}
+        trade_type_hash = {"$and" => [{"logistic_printed_at" => nil}, {"$or" => [{status: 'WAIT_SELLER_SEND_GOODS'}, {status: 'WAIT_BUYER_CONFIRM_GOODS', "delivered_at" => {"$gt" => 23.hours.ago}}]}]}
       when "logistic_bill_printed"
-        trade_type_hash = {"$and" => [{"logistic_printed_at" =>{"$exists" => true}}, {"$or" => [{status: 'WAIT_SELLER_SEND_GOODS'}, {status: 'WAIT_BUYER_CONFIRM_GOODS', "delivered_at" => {"$gt" => 23.hours.ago}}]}]}
+        trade_type_hash = {"$and" => [{"logistic_printed_at" =>{"$ne" => nil}}, {"$or" => [{status: 'WAIT_SELLER_SEND_GOODS'}, {status: 'WAIT_BUYER_CONFIRM_GOODS', "delivered_at" => {"$gt" => 23.hours.ago}}]}]}
 
         # # 发票
         # when 'invoice_all'
-        #   trade_type_hash = {:invoice_name.exists => true}
+        #   trade_type_hash = {:invoice_name.ne => nil}
         # when 'invoice_unfilled'
-        #   trade_type_hash = {:seller_confirm_invoice_at.exists => false}
+        #   trade_type_hash = {seller_confirm_invoice_at: nil}
         # when 'invoice_filled'
-        #   trade_type_hash = {:seller_confirm_invoice_at.exists => true}
+        #   trade_type_hash = {:seller_confirm_invoice_at.ne => nil}
         # when 'invoice_sent'
-        #   trade_type_hash = {:status.in => paid_and_delivered_array, :seller_confirm_invoice_at.exists => true}
+        #   trade_type_hash = {:status.in => paid_and_delivered_array, :seller_confirm_invoice_at.ne => nil}
 
         #退货
       when 'request_return'
-        trade_type_hash = {:request_return_at.exists => true, :confirm_return_at.exists => false}
+        trade_type_hash = {:request_return_at.ne => nil, confirm_return_at: nil}
       when 'confirm_return'
-        trade_type_hash = {:confirm_return_at.exists => true}
+        trade_type_hash = {:confirm_return_at.ne => nil}
 
         # 调色
       when "color_unmatched"
         trade_type_hash = {has_color_info: false, :status.in => paid_not_deliver_array}
       when "color_matched"
-        trade_type_hash = {has_color_info: true, :status.in => paid_not_deliver_array, :confirm_color_at.exists => false}
+        trade_type_hash = {has_color_info: true, :status.in => paid_not_deliver_array, confirm_color_at: nil}
       when "color_confirmed"
-        trade_type_hash = {has_color_info: true, :status.in => paid_not_deliver_array, :confirm_color_at.exists => true}
+        trade_type_hash = {has_color_info: true, :status.in => paid_not_deliver_array, :confirm_color_at.ne => nil}
 
         # 登录时的默认显示
       when "default"
