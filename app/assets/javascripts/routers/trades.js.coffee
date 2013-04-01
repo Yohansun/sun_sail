@@ -109,9 +109,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       className = $('.js-open_advance').find('i').hasClass('icon-arrow-down')
       $('.js-open_advance').find('i').toggleClass( className ? 'icon-arrow-up' : 'icon-arrow-down')
       $('.js-open_advance').find('i').removeClass('icon-arrow-down').addClass('icon-arrow-up')
-
-
-    $.unblockUI()
+      # $.unblockUI()
 
     # # 新订单提醒相关
     # if collection.models.length > 0

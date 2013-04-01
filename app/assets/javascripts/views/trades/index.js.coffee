@@ -37,7 +37,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     @collection.on("fetch", @renderUpdate, this)
 
   render: =>
-    $.unblockUI()
 
     if !@first_rendered
       $(@el).html(@template(trades: @collection))
@@ -90,6 +89,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
         if pop in MagicOrders.trade_pops[MagicOrders.role_key]
           $(@el).find(".index_pops li [data-type=#{pop}]").parent().show()
 
+    $.unblockUI()
     this
 
   optAll: (e) ->
