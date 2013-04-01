@@ -54,28 +54,6 @@ class MagicOrders.Views.TradesRow extends Backbone.View
     MagicOrders.cache_trade_number = parseInt($(@el).find("td:first").html())
     Backbone.history.navigate('trades/' + @model.get("id") + "/#{type}", true)
 
-  # renderUpdate: =>
-  #   @collection.each(@appendTrade)
-
-  #   if @collection.length > 0
-  #     $(".complete_offset").html(@collection.at(0).get("trades_count"))
-  #     unless parseInt($(".complete_offset").html()) <= @offset
-  #       $(".get_offset").html(@offset)
-  #     else
-  #       $(".get_offset").html($(".complete_offset").html())
-
-  #     $("a[rel=popover]").popover({placement: 'left', html:true})
-
-  #   $.unblockUI()
-
-  # appendTrade: (trade) =>
-  #   if $("#trade_#{trade.get('id')}").length == 0
-  #     MagicOrders.cache_trade_number = 0
-  #     @trade_number += 1
-  #     view = new MagicOrders.Views.TradesRow(model: trade)
-  #     $(@el).find("#trade_rows").append(view.render().el)
-  #     $(@el).find("#trade_#{trade.get('id')} td:first").html("#{@trade_number}")
-
   showTrade: (e) ->
     e.preventDefault()
     if @model.get("tid").slice(-2, -1) == "G"

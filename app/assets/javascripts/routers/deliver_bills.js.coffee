@@ -49,8 +49,9 @@ class MagicOrders.Routers.DeliverBills extends Backbone.Router
     @collection.fetch data: {trade_type: trade_type}, success: (collection, response) =>
       @mainView = new MagicOrders.Views.DeliverBillsIndex(collection: collection, trade_type: trade_type)
       $('#content').html(@mainView.render().el)
+      @searchView = new MagicOrders.Views.TradesAdvancedSearch()
+      $("#search_form").html(@searchView.render().el)
       $("a[rel=popover]").popover(placement: 'left')
-      $('.order_search_form .datepickers').datetimepicker(weekStart:1,todayBtn:1,autoclose:1,todayHighlight:1,startView:2,forceParse:0,showMeridian:1)
       @nav = $('.subnav')
       @navTop = $('.subnav').length && $('.subnav').offset().top - 40
       $(window).off 'scroll'
