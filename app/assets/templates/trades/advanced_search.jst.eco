@@ -107,6 +107,7 @@
             <option value="has_buyer_message">买家备注</option>
             <option value="has_logistic_memo">物流商备注</option>
             <option value="has_gift_memo">赠品备注</option>
+            <option value="has_unusual_state">异常备注</option>
           </select>
           <select class="input-small pull-left radius_no select2">
             <option value="true">包含</option>

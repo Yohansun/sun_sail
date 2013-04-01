@@ -463,7 +463,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
       $(@el).find("#trade_rows").append(view.render().el)
       $(@el).find("#trade_#{trade.get('id')} td:first").html("#{@trade_number}")
 
-
   search: (e) ->
     e.preventDefault()
 

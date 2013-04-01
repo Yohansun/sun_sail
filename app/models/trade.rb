@@ -859,7 +859,7 @@ class Trade
         value_array = value.split(";")
         length = value_array.length
         case length
-          # 简单搜索＋来源搜索
+        # 简单搜索＋来源搜索
         when 1
           if value.present?
             regexp_value = /#{value.strip}/
@@ -877,7 +877,7 @@ class Trade
             end
           end
 
-          # 状态筛选＋时间筛选＋金额筛选
+        # 状态筛选＋时间筛选＋金额筛选
         when 2
           if value_array[1] == "true" || value_array[1] == "false"
             if value_array[0].present?
@@ -898,7 +898,7 @@ class Trade
             end
           end
 
-          # 地域筛选
+        # 地域筛选
         when 3
             # 按省筛选
             if value_array[2].present?
@@ -918,7 +918,7 @@ class Trade
             area_search_hash = {"$and" => [state_search_hash,city_search_hash,district_hash].compact}
             area_search_hash == {"$and"=>[]} ? area_search_hash = nil : area_search_hash
 
-          # 留言筛选
+        # 信息筛选
         when 4
           words = (value_array[3] == "true" ? /#{value_array[2]}/ : /^[^#{value_array[2]}]+$/) if value_array[2].present?
           if value_array[1] == "true"
@@ -929,6 +929,9 @@ class Trade
             elsif key == "has_cs_memo"
               search_tags_hash.update(Hash[key.to_sym, true])
               search_tags_hash.update({"$or" => [{"cs_memo" => words},{"taobao_orders" => {"$elemMatch" => {"cs_memo" => words}}}]}) if words
+            elsif key == "has_unusual_state"
+              search_tags_hash.update(Hash[key.to_sym, true])
+              search_tags_hash.update({"$or" => [{"unusual_states" => {"$elemMatch" => {"reason" => words}}},{"note" => words}]}) if words
             elsif key == "has_seller_memo"
               search_tags_hash.update({"seller_memo" => not_void})
               search_tags_hash.update({"seller_memo" => words}) if words
@@ -947,7 +950,7 @@ class Trade
             end
           elsif value_array[1] == "false"
             void = {"$in" => ['', nil]}
-            if key == "has_cs_memo" || key == "has_color_info"
+            if key == "has_cs_memo" || key == "has_color_info" || key == "has_unusual_state"
               search_tags_hash.update(Hash[key.to_sym, false])
             elsif key == "has_seller_memo"
               search_tags_hash.update({"$and" => [{value_array[0] => void}, {"supplier_memo" => void}]})
