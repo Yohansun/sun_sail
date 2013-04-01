@@ -79,44 +79,56 @@ class Trade
   field :has_unusual_state, type: Boolean, default: false
   field :has_onsite_service, type: Boolean, default: false
 
-  # add indexes for speed
+  # ADD INDEXES TO SPEED UP
+  # 简单搜索index
   index tid: -1
-  index status: 1
-  index _type: -1
+  index buyer_nick: 1
+  index receiver_name: 1
+  index receiver_mobile: 1
+  index seller_id: 1
+  index logistic_name: 1
+  index logistic_waybill: -1
+  index "unusual_states.repair_man" => 1
 
+  # 时间搜索index
   index created: -1
-  index deleted_at: -1
-  index delivered_at: -1
+  index pay_time: -1
   index dispatched_at: -1
+  index delivered_at: -1
+  index consign_time: -1
   index rate_created: -1
-
-  index seller_confirm_deliver_at: -1
-  index seller_confirm_invoice_at: -1
-  index confirm_check_goods_at: -1
-  index confirm_receive_at: -1
-  index confirm_color_at: -1
-
-  index request_return_at: -1
-  index confirm_return_at: -1
-  index confirm_refund_at: -1
   index deliver_bill_printed_at: -1
   index logistic_printed_at: -1
+  # index seller_confirm_deliver_at: -1
+  # index seller_confirm_invoice_at: -1
+  # index confirm_check_goods_at: -1
+  # index confirm_receive_at: -1
+  # index confirm_color_at: -1
+  # index request_return_at: -1
+  # index confirm_return_at: -1
+  # index confirm_refund_at: -1
 
-  index has_buyer_message: -1
-  index buyer_message: -1
-  index splitted: -1
-  index splitted_tid: -1
-  index seller_id: -1
-  index trade_source_id: 1
+
+  # 金额搜索index
+  index payment: 1
+
+  # 状态搜索index
+  index status: 1
+  # index splitted: -1
+  # index splitted_tid: -1
+  # index trade_source_id: 1
+
+  # 信息搜索index
   index has_color_info: 1
   index has_cs_memo: 1
   index has_unusual_state: 1
   index has_onsite_service: 1
+  index has_buyer_message: 1
 
-  index buyer_nick: 1
-  index receiver_name: 1
-  index receiver_mobile: 1
-  index logistic_waybill: 1
+  # 来源搜索index
+  index _type: 1
+
+  # 区域搜索index
   index receiver_state: 1
   index receiver_district: 1
   index receiver_city: 1
@@ -756,7 +768,7 @@ class Trade
           end
         when 'unrepaired_for_days'
           if unusual_auto_setting['unusual_repair']
-            trade_type_hash = {:unusual_states.elem_match => {:repaired_at => nil, :plan_repair_at => {"$lte" => (Time.now - unusual_auto_setting['max_unrepaired_days'].to_i.days)}}}
+            trade_type_hash = {:unusual_states.elem_match => {:plan_repair_at => {"$lte" => (Time.now - unusual_auto_setting['max_unrepaired_days'].to_i.days)}, repaired_at: nil}}
           end
         end
       end
@@ -764,13 +776,13 @@ class Trade
       # 订单
       case type
       when 'my_buyer_delay_deliver', 'my_seller_ignore_deliver', 'my_seller_lack_product', 'my_seller_lack_color', 'my_buyer_demand_refund', 'my_buyer_demand_return_product', 'my_other_unusual_state'
-        trade_type_hash = {:unusual_states.elem_match => {:key => type.slice(3..-1), :repair_man => current_user.name, :repaired_at => nil}}
+        trade_type_hash = {:unusual_states.elem_match => {:repair_man => current_user.name, :key => type.slice(3..-1), :repaired_at => nil}}
       when 'unusual_for_you'
         trade_type_hash = {:unusual_states.elem_match => {:repair_man => current_user.name, repaired_at: nil}}
       when 'buyer_delay_deliver', 'seller_ignore_deliver', 'seller_lack_product', 'seller_lack_color', 'buyer_demand_refund', 'buyer_demand_return_product', 'other_unusual_state'
         trade_type_hash = {:unusual_states.elem_match => {:key => type, repaired_at: nil}}
       when 'unusual_all'
-        trade_type_hash = {:unusual_states.nin => [[],nil], :unusual_states.elem_match =>{:repaired_at => nil}}
+        trade_type_hash = {:unusual_states.elem_match =>{:repaired_at => nil}, :unusual_states.nin => [[],nil]}
       when 'all'
         trade_type_hash = nil
       when 'dispatched'
@@ -967,24 +979,10 @@ class Trade
           end
         end
       end
-
-      # 发货单打印时间筛选
-      if params[:search][:from_deliver_print_date].present? && params[:search][:to_deliver_print_date].present?
-        deliver_print_start_time = "#{params[:search][:from_deliver_print_date]} #{params[:search][:from_deliver_print_time]}".to_time(form = :local)
-        deliver_print_end_time = "#{params[:search][:to_deliver_print_date]} #{params[:search][:to_deliver_print_time]}".to_time(form = :local)
-        deliver_print_time_hash = {"$and" => [{"deliver_bill_printed_at" => {"$gte" => deliver_print_start_time}}, {"deliver_bill_printed_at" => {"$lte" => deliver_print_end_time}}]}
-      end
-
-      # 物流单打印时间筛选
-      if params[:search][:from_logistic_print_date].present? && params[:search][:to_logistic_print_date].present?
-        logistic_print_start_time = "#{params[:search][:from_logistic_print_date]} #{params[:search][:from_logistic_print_time]}".to_time(form = :local)
-        logistic_print_end_time = "#{params[:search][:to_logistic_print_date]} #{params[:search][:to_logistic_print_time]}".to_time(form = :local)
-        logistic_print_time_hash = {"$and" => [{"logistic_printed_at" => {"$gte" => logistic_print_start_time}}, {"logistic_printed_at" => {"$lte" => logistic_print_end_time}}]}
-      end
     end
 
     # 集中筛选
-    search_hash = {"$and" => [deliver_print_time_hash,logistic_print_time_hash,search_tags_hash,area_search_hash].compact}
+    search_hash = {"$and" => [search_tags_hash,area_search_hash].compact}
     search_hash == {"$and"=>[]} ? search_hash = nil : search_hash
     ## 过滤有留言但还在抓取 + 总筛选
     trades.where(search_hash).and(trade_type_hash, {"$or" => [{"has_buyer_message" => {"$ne" => true}},{"buyer_message" => {"$ne" => nil}}]})
