@@ -65,7 +65,9 @@ class MagicOrders.Views.DeliverBillsRow extends Backbone.View
 
   toggleOperationMenu: (e) ->
     if $('#all_orders input.trade_check:checked').length > 1
-      $('#op-toolbar .index_pops').css('display', 'none')
+      $('#op-toolbar .dropdown-menu').parents('div.btn-group').css('display', 'none')
+      $('#op-toolbar .batch_ops').show()
     else
-      $('#op-toolbar .index_pops').removeAttr('style')
+      $('#op-toolbar .dropdown-menu').parents('div.btn-group').removeAttr('style')
+      $('#op-toolbar .batch_ops').css('display', 'none')
       trade = $('#all_orders input.trade_check:checked')[0]

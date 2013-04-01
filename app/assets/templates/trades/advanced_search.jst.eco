@@ -1,0 +1,165 @@
+<form class="well well-small form-horizontal font12 js-affix order_search_form" data-spy="affix" data-offset-top="103">
+  <fieldset>
+    <div class="control-group">
+      <label class="pull-left" for=""><code>精准：</code></label>
+      <div class="controls pull-left">
+        <select class="input-medium pull-left select2 radius_no_rb search_option">
+          <option value="tid">订单编号</option>
+          <option value="buyer_nick">收货人ID</option>
+          <option value="receiver_name">收货人姓名</option>
+          <option value="receiver_mobile">收货人手机</option>
+          <option value="seller_id">经销商名称</option>
+          <option value="logistic_name">物流商名称</option>
+          <option value="logistic_waybill">物流单号</option>
+          <option value="repair_man">异常指派人</option>
+        </select>
+        <input type="text" class="search_value input-large radius_no_tl" id＝"simple_search_text" value="<%= @search_value %>">
+        <select class="input-large radius_no_tl search_logistic">
+          <% for logi in MagicOrders.logistics.models: %>
+          <option value="<%= logi.get('name') %>" ><%= logi.get('name') %></option>
+          <% end %>
+        </select>
+      </div>
+
+      <div class="pull-left mar_r10" id="select_print_time"></div>
+      <div class="pull-left">
+        <button type="button pull-left" class="btn btn-info search" id="simple_search_button">筛选</button>
+        <label class="help-inline js-open_advance label_advanced"><a class="advanced_btn advanced_in_the_air" href="#"><i class="icon-arrow-down"></i> 高级搜索</a></label>
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="search_advanced none fieldset_group" id="search_toggle">
+    <fieldset>
+      <div class="control-group">
+        <label class="pull-left"><code>时间：</code></label>
+        <div class="controls pull-left">
+          <select class="input-medium pull-left radius_no_rb select2">
+            <option value="created">下单时间</option>
+            <option value="pay_time">付款时间</option>
+            <option value="dispatched_at">分流时间</option>
+            <option value="delivered_at">发货时间</option>
+            <option value="rate_created">评价时间</option>
+          </select>
+          <input type="text" placeholder="年-月-日 时:分:秒" class="input-medium start_at datepickers radius_no_tl" readonly>
+          <i class="icon-arrow-right" style="margin-top:0px;"></i>
+          <input type="text" placeholder="年-月-日 时:分:秒" class="input-medium end_at datepickers" readonly>
+        </div>
+        <a class="add_time_search_tag" href="#" title="添加搜索"><i class="icon-plus"></i>添加搜索</a>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <div class="control-group">
+        <label class="pull-left"><code>金额：</code></label>
+        <div class="controls pull-left">
+          <select class="input-medium pull-left radius_no_rb select2">
+            <option value="payment">订单金额</option>
+          </select>
+          <input type="text" placeholder="请输入最小金额" class="input-medium min_money radius_no_tl">
+          <i class="icon-arrow-right" style="margin-top:0px;"></i>
+          <input type="text" placeholder="请输入最大金额" class="input-medium max_money">
+        </div>
+        <a class="add_money_search_tag" href="#" title="添加搜索"><i class="icon-plus"></i>添加搜索</a>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <div class="control-group">
+        <label class="pull-left"><code>状态：</code></label>
+        <div class="controls pull-left">
+          <select class="input-mini pull-left radius_no_rb select2">
+            <option value="true">是</option>
+            <option value="false">不是</option>
+          </select>
+          <select id="status_option" class="input-large pull-left radius_no_tl select2">
+            <option value="status,WAIT_BUYER_PAY">等待付款订单</option>
+            <option value="status,WAIT_SELLER_SEND_GOODS,WAIT_SELLER_DELIVERY,WAIT_SELLER_STOCK_OUT">已付款，待发货订单</option>
+            <option value="status,WAIT_BUYER_CONFIRM_GOODS,WAIT_GOODS_RECEIVE_CONFIRM">已付款，已发货订单</option>
+            <option value="status,TRADE_FINISHED,FINISHED_L">交易成功订单</option>
+            <option value="status,TRADE_CLOSED,TRADE_CANCELED">交易已关闭订单</option>
+            <option value="status,WAIT_BUYER_CONFIRM_GOODS_ACOUNTED">已付款（已分账），已发货订单</option>
+            <option value="status,WAIT_SELLER_SEND_GOODS_ACOUNTED">已付款（已分账），待发货订单</option>
+            <option value="status,TRADE_CLOSED_BY_TAOBAO">交易被淘宝关闭订单</option>
+            <option value="has_onsite_service">上门服务</option>
+          </select>
+        </div>
+        <a class="add_status_search_tag" href="#" title="添加搜索"><i class="icon-plus"></i>添加搜索</a>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <div class="control-group">
+        <label class="pull-left"><code>信息：</code></label>
+        <div class="controls pull-left">
+          <select class="input-mini pull-left radius_no_rb select2">
+            <option value="true">有</option>
+            <option value="false">没有</option>
+          </select>
+          <select class="input-medium pull-left radius_no select2">
+            <% if MagicOrders.enable_module_colors is 1 : %>
+            <option value="has_color_info">调色信息</option>
+            <% end %>
+            <option value="has_invoice_info">发票信息</option>
+            <option value="has_product_info">商品信息</option>
+            <option value="has_cs_memo">客服备注</option>
+            <option value="has_seller_memo">卖家备注</option>
+            <option value="has_buyer_message">买家备注</option>
+            <option value="has_logistic_memo">物流商备注</option>
+            <option value="has_gift_memo">赠品备注</option>
+          </select>
+          <select class="input-small pull-left radius_no select2">
+            <option value="true">包含</option>
+            <option value="false">不包含</option>
+          </select>
+          <input type="text" class="input-medium radius_no_tl" placeholder="关键字...">
+        </div>
+        <a class="add_memo_search_tag pull-left" href="#" title="添加搜索"><i class="icon-plus"></i>添加搜索</a>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <div class="control-group">
+        <label class="pull-left" ><code>来源：</code></label>
+        <div class="controls pull-left">
+          <select class="input-small pull-left select2">
+            <option value="TaobaoTrade" selected="selected" >淘宝</option>
+            <option value="JingdongTrade">京东</option>
+            <option value="TaobaoPurchaseOrder">分销平台</option>
+          </select>
+        </div>
+        <a class="add_source_search_tag" href="#" title="添加搜索"><i class="icon-plus"></i>添加搜索</a>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <div class="control-group">
+        <label class="pull-left" ><code>配送地区：</code></label>
+        <div class="controls pull-left" id="select_state"><!--买家地域--></div>
+        <a class="add_area_search_tag" href="#" title="添加搜索"><i class="icon-plus"></i>添加搜索</a>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <div class="control-group">
+        <label class="pull-left"><code>打印批次：</code></label>
+        <div class="controls pull-left">
+          <input type="text" placeholder="起始批次单号" id="from_batch_num" class="input-medium radius_no_tl">
+          <i class="icon-arrow-right" style="margin-top:0px;"></i>
+          <input type="text" placeholder="结束批次单号" id="to_batch_num" class="input-medium">
+        </div>
+        <a class="add_batch_search_tag" href="#" title="添加搜索"><i class="icon-plus"></i>添加搜索</a>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <label class="pull-left" ><code>当前搜索条件：</code></label>
+      <div class="controls clearfix search_tags_group"></div>
+    </fieldset>
+
+    <fieldset>
+      <button class="pull-left btn btn-info search" type="button">筛选</button>
+      <label class="help-inline js-open_advance label_advanced"><a class="advanced_btn" href="#"><i class="icon-arrow-up"></i> 简单搜索</a></label>
+    </fieldset>
+  </div>
+</form>

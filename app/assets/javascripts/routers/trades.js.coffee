@@ -67,6 +67,8 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     @collection.fetch data: {trade_type: trade_type}, success: (collection, response) =>
       @mainView = new MagicOrders.Views.TradesIndex(collection: collection, trade_type: trade_type)
       $('#content').html(@mainView.render().el)
+      @searchView = new MagicOrders.Views.TradesAdvancedSearch()
+      $("#search_form").html(@searchView.render().el)
       $("a[rel=popover]").popover({placement: 'left', html:true})
       switch trade_type
         when 'undispatched_for_days' then $('.trade_nav').html('未分流时间过长')
@@ -81,13 +83,11 @@ class MagicOrders.Routers.Trades extends Backbone.Router
         when 'other_unusual_state' then $('.trade_nav').html('其他异常')
         else
           $('.trade_nav').html($("[data-trade-status=#{trade_type}]").html())
-      $('.order_search_form .datepickers').datetimepicker(weekStart:1,todayBtn:1,autoclose:1,todayHighlight:1,startView:2,forceParse:0,showMeridian:1)
       unless MagicOrders.trade_mode in ['trades', 'deliver', 'logistics', 'send']
         $("#search_toggle").hide()
         $(".label_advanced").hide()
       else
         $('.trade_nav').html($("[data-trade-status=#{trade_type}]").html())
-    $('.order_search_form .datepickers').datetimepicker(weekStart:1,todayBtn:1,autoclose:1,todayHighlight:1,startView:2,forceParse:0,showMeridian:1)
     unless MagicOrders.trade_mode in ['trades', 'deliver', 'logistics', 'send']
       $("#search_toggle").hide()
       $(".label_advanced").hide()
@@ -100,7 +100,6 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     @processScroll
     $('.js-affix').affix()
     $('.label_advanced').bind 'click', ->
-
       $(this).parents("fieldset").siblings(".search_advanced").toggle 0, ->
         out_height = $('.js-affix').outerHeight()
         $('.btn-toolbar').css('top', out_height + 71 + 'px')

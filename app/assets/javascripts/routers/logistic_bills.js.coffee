@@ -51,8 +51,9 @@ class MagicOrders.Routers.LogisticBills extends Backbone.Router
     @collection.fetch data: {trade_type: trade_type}, success: (collection, response) =>
       @mainView = new MagicOrders.Views.LogisticBillsIndex(collection: collection, trade_type: trade_type)
       $('#content').html(@mainView.render().el)
+      @searchView = new MagicOrders.Views.TradesAdvancedSearch()
+      $("#search_form").html(@searchView.render().el)
       $("a[rel=popover]").popover(placement: 'left')
-      $('.order_search_form .datepickers').datetimepicker(weekStart:1,todayBtn:1,autoclose:1,todayHighlight:1,startView:2,forceParse:0,showMeridian:1)
       @nav = $('.subnav')
       @navTop = $('.subnav').length && $('.subnav').offset().top - 40
       $(window).off 'scroll'
@@ -103,19 +104,15 @@ class MagicOrders.Routers.LogisticBills extends Backbone.Router
             $('.print_logistic_button').removeAttr('data-click')
 
           $.get ('/deliver_bills/' + model.get('id') + '/logistic_info'), {}, (data)->
-            console.log 'sdfsfsf'
-            if data == '' or data == null
-              ytong = $('#logistic_select').find('[lid="3"]')
-              data = ytong.val()
-              $('#logistic_select').find('[lid="3"]').attr('selected', 'selected')
+            if data == " "
+              #ytong = $('#logistic_select').find('[lid="3"]')
+              data = $("#logistic_select").find("option:first").val()
+              $('#logistic_select').find("option:first").attr('selected', 'selected')
             else
               $('#logistic_select').find('[value="' + data + '"]').attr('selected', 'selected')
 
             pageInit()
             bind_logistic_swf(model.get('id'), data)
-        if model.get('logistic_name') != null
-          $(modalDivID).modal('show')
-        else
-          alert("请先设置物流单号")
+        $(modalDivID).modal('show')
       else
         $(modalDivID).modal('show')

@@ -776,7 +776,7 @@ class Trade
       when 'dispatched'
         trade_type_hash = {:dispatched_at.ne => nil, :status.in => paid_not_deliver_array + paid_and_delivered_array}
       when 'undispatched'
-        trade_type_hash = {:status.in => paid_not_deliver_array, seller_id: nil, has_unusual_state: false}
+        trade_type_hash = {:status.in => paid_not_deliver_array, seller_id: nil, has_unusual_state: false, :pay_time.exists => true}
       when 'unpaid'
         trade_type_hash = {status: "WAIT_BUYER_PAY"}
       when 'paid'
@@ -877,7 +877,7 @@ class Trade
             end
           end
 
-          # 状态筛选＋时间筛选
+          # 状态筛选＋时间筛选＋金额筛选
         when 2
           if value_array[1] == "true" || value_array[1] == "false"
             if value_array[0].present?
@@ -886,9 +886,15 @@ class Trade
             end
           else
             if value_array[0].present? && value_array[1].present?
-              start_time = value_array[0].to_time(:local)
-              end_time = value_array[1].to_time(:local)
-              search_tags_hash.update({key => {"$gte" => start_time, "$lt" => end_time}})
+              if value_array[0].include?('-')
+                start_time = value_array[0].to_time(:local)
+                end_time = value_array[1].to_time(:local)
+                search_tags_hash.update({key => {"$gte" => start_time, "$lt" => end_time}})
+              else
+                min_money = value_array[0].to_f
+                max_money = value_array[1].to_f
+                search_tags_hash.update({key => {"$gte" => min_money, "$lt" => max_money}})
+              end
             end
           end
 
