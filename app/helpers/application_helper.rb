@@ -22,7 +22,7 @@ module ApplicationHelper
       '经销商管理'
     when 'products'
       '商品管理'
-    when 'logistics', 'users', 'areas'
+    when 'logistics', 'users', 'areas', 'account_setups'
       '系统设置'
     else
       ''

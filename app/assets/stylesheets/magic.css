@@ -1,4 +1,4 @@
- /*Add additional stylesheets below
+/*Add additional stylesheets below
 -------------------------------------------------- */
 /*
   Bootstrap's documentation styles
@@ -352,7 +352,6 @@ code{color:#08C;font-size:14px;margin-bottom:5px;}
 .search_all input[type="text"]{padding:2px 5px;}
 select, textarea, input{padding:2px 5px!important;}
 select, input[type="file"]{height:26px;}
-.btn{padding:2px 8px;}
 .noradius{
   -webkit-border-radius:0px!important;
   -moz-border-radius:0px!important;

@@ -1,5 +1,6 @@
 class AccountSetupsController < ApplicationController
   include Wicked::Wizard
+  before_filter :authenticate_user!
   before_filter :fetch_account, except: [:data_fetch_finish]
 
   skip_before_filter :verify_authenticity_token, only: [:data_fetch_finish]

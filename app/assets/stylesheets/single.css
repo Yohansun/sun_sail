@@ -1,7 +1,6 @@
 /*boostrap rebuild*/
 select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input{padding:2px 6px;}
 select{height:26px;line-height:26px;}
-.btn{padding:2px 10px;}
 .tab-content{overflow: visible;}
 /*magic copy*/
 body {
@@ -24,6 +23,7 @@ code{color: #08C;}
   -moz-border-radius: 0 4px 4px 0!important;
   border-radius: 0 4px 4px 0!important;
 }
+#simple_search_button{padding:2px 8px;}
 
 .none{display:none;}
 .nomargin{margin:0!important;}
@@ -156,6 +156,8 @@ code{color: #08C;}
 .nav .collapse li a{text-decoration:none;}
 .timeEntry_control{border-radius:0 4px 4px 0;}
 .noborder td,.noborder th{border:0!important;}
+.mar_l80{margin-left:80px;}
+#auto_settings_button{padding: 6px 24px;font-size: 15px;}
 
 /*search*/
 @media (max-width: 1280px) {
@@ -185,3 +187,5 @@ code{color: #08C;}
 /*modal*/
 .modal_w7{width:760px;margin-left:-380px;}
 .modal_w7 textarea{width:98%;}
+
+
