@@ -288,7 +288,7 @@
           <table class="table table-bordered table-condensed">
             <tr>
               <th width='50%'>开票信息</th>
-              <th>赠品信息</th>
+              <!-- <th>赠品信息</th> -->
             </tr>
             <tr>
               <td>
@@ -314,12 +314,12 @@
                   </label>
                 </div>
               </td>
-              <td>
+              <!-- <td>
                 <fieldset>
                   <textarea placeholder="输入赠品备注..." style="resize:none;width:96%;height:150px;padding:5px;"
                     id="gift_memo_text" ><%= @trade.get 'gift_memo' %></textarea>
                 </fieldset>
-              </td>
+              </td> -->
             </tr>
           </table>
         </div>

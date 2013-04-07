@@ -63,11 +63,13 @@ class MagicOrders.Views.DeliverBillsRow extends Backbone.View
       $('.lovely_pop').click()
       $('.lovely_pop').toggleClass('lovely_pop')
 
-  toggleOperationMenu: (e) ->
+  toggleOperationMenu: ->
     if $('#all_orders input.trade_check:checked').length > 1
       $('#op-toolbar .dropdown-menu').parents('div.btn-group').css('display', 'none')
       $('#op-toolbar .batch_ops').show()
-    else
+    else if $('#all_orders input.trade_check:checked').length == 1
       $('#op-toolbar .dropdown-menu').parents('div.btn-group').removeAttr('style')
       $('#op-toolbar .batch_ops').css('display', 'none')
       trade = $('#all_orders input.trade_check:checked')[0]
+    else
+      $('#op-toolbar .dropdown-menu').parents('div.btn-group').removeAttr('style')

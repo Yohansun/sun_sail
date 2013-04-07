@@ -119,14 +119,14 @@ class Trade
   # index trade_source_id: 1
 
   # 信息搜索index
-  index has_color_info: 1
-  index has_cs_memo: 1
-  index has_unusual_state: 1
-  index has_onsite_service: 1
-  index has_buyer_message: 1
+  # index has_color_info: 1
+  # index has_cs_memo: 1
+  # index has_unusual_state: 1
+  # index has_onsite_service: 1
+  # index has_buyer_message: 1
 
   # 来源搜索index
-  index _type: 1
+  # index _type: 1
 
   # 区域搜索index
   index receiver_state: 1
@@ -138,7 +138,7 @@ class Trade
   embeds_many :manual_sms_or_emails
   embeds_many :trade_gifts
 
-  has_many :deliver_bills, :dependent => :destroy
+  has_many :deliver_bills
 
   attr_accessor :matched_seller
 
@@ -147,6 +147,7 @@ class Trade
   before_update :set_has_color_info
   before_update :set_has_cs_memo
   before_update :set_has_unusual_state
+  after_destroy :check_associate_deliver_bills
 
   def fetch_account
     Account.find_by_id(self.account_id)
@@ -178,16 +179,16 @@ class Trade
     gift_sku = Sku.where(product_id: value['product_id'].to_i).first
     gift_product = Product.find(value['product_id'].to_i)
     self.taobao_orders.create!(_type: "TaobaoOrder",
-     oid: self.tid.slice(/G[0-9]$/),
-     status: "WAIT_SELLER_SEND_GOODS",
-     title: value['gift_title'],
-     price: 0,
-     total_fee: 0,
-     payment: 0,
-     discount_fee: 0,
-     adjust_fee: 0,
-     num_iid: gift_sku.num_iid,
-     sku_id: gift_sku.sku_id,
+                               oid: self.tid.slice(/G[0-9]$/),
+                               status: "WAIT_SELLER_SEND_GOODS",
+                               title: value['gift_title'],
+                               price: 0,
+                               total_fee: 0,
+                               payment: 0,
+                               discount_fee: 0,
+                               adjust_fee: 0,
+                               num_iid: gift_sku.num_iid,
+                               sku_id: gift_sku.sku_id,
                                num: 1, # NEED ADAPTION?
                                pic_path: gift_product.pic_url,
                                refund_status: "NO_REFUND",
@@ -196,18 +197,6 @@ class Trade
                                seller_rate: false,
                                seller_type: "B",
                                cid: gift_product.cid)
-  end
-
-  def set_has_color_info
-    self.orders.each do |order|
-      colors = order.color_num.blank? ? [] : order.color_num
-      if colors.is_a?(Array) && colors.flatten.select{|elem| elem.present?}.any?
-        self.has_color_info = true
-        return
-      end
-    end
-    self.has_color_info = false
-    true
   end
 
   def unusual_color_class
@@ -219,41 +208,6 @@ class Trade
       end
     end
     class_name
-  end
-
-  def set_has_unusual_state
-    if unusual_states.where(:repaired_at => nil).exists?
-      self.has_unusual_state = true
-      return
-    else
-      self.has_unusual_state = false
-      true
-    end
-  end
-
-  def set_has_onsite_service
-    self.area_id = default_area.try(:id)
-    if OnsiteServiceArea.where(area_id: default_area.id, account_id: account_id).present?
-      self.has_onsite_service = true
-    else
-      self.has_onsite_service = false
-    end
-  end
-
-  def set_has_cs_memo
-    unless self.cs_memo.blank?
-      self.has_cs_memo = true
-      return
-    else
-      self.orders.each do |order|
-        unless order.cs_memo.blank?
-          self.has_cs_memo = true
-          return
-        end
-      end
-      self.has_cs_memo = false
-    end
-    true
   end
 
   def color_num_do_not_exist
@@ -382,7 +336,6 @@ class Trade
     end
   end
 
-
   def can_deliver_in_logistic_group?
     enable = fetch_account.settings.enable_module_logistic_group
     return false unless enable == 1
@@ -395,7 +348,6 @@ class Trade
     end
     !items.include?(nil)
   end
-
 
   def logistic_group_products
     items = []
@@ -706,6 +658,7 @@ class Trade
     end
   end
 
+  # 订单筛选
   def self.filter(current_account, current_user, params)
     trades = Trade.where(account_id: current_account.id)
 
@@ -988,4 +941,56 @@ class Trade
     trades.where(search_hash).and(trade_type_hash, {"$or" => [{"has_buyer_message" => {"$ne" => true}},{"buyer_message" => {"$ne" => nil}}]})
     ###筛选结束###
   end
+
+  private
+    def check_associate_deliver_bills
+      DeliverBill.where(trade_id: self._id).delete_all if self.deleted_at != nil
+    end
+
+    def set_has_color_info
+      self.orders.each do |order|
+        colors = order.color_num.blank? ? [] : order.color_num
+        if colors.is_a?(Array) && colors.flatten.select{|elem| elem.present?}.any?
+          self.has_color_info = true
+          return
+        end
+      end
+      self.has_color_info = false
+      true
+    end
+
+    def set_has_cs_memo
+      unless self.cs_memo.blank?
+        self.has_cs_memo = true
+        return
+      else
+        self.orders.each do |order|
+          unless order.cs_memo.blank?
+            self.has_cs_memo = true
+            return
+          end
+        end
+        self.has_cs_memo = false
+      end
+      true
+    end
+
+    def set_has_unusual_state
+      if unusual_states.where(:repaired_at => nil).exists?
+        self.has_unusual_state = true
+        return
+      else
+        self.has_unusual_state = false
+        true
+      end
+    end
+
+    def set_has_onsite_service
+      self.area_id = default_area.try(:id)
+      if OnsiteServiceArea.where(area_id: default_area.id, account_id: account_id).present?
+        self.has_onsite_service = true
+      else
+        self.has_onsite_service = false
+      end
+    end
 end
