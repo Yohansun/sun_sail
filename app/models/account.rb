@@ -76,14 +76,14 @@ class Account < ActiveRecord::Base
   end
 
   def can_auto_preprocess_right_now
-    return in_time_gap(self.settings["start_preprocess_at"], self.settings["end_preprocess_at"])
+    return in_time_gap(self.settings.auto_settings["start_preprocess_at"], self.settings.auto_settings["end_preprocess_at"])
   end
 
   def can_auto_dispatch_right_now
-    return in_time_gap(self.settings["start_dispatch_at"], self.settings["end_dispatch_at"])
+    return in_time_gap(self.settings.auto_settings["start_dispatch_at"], self.settings.auto_settings["end_dispatch_at"])
   end
 
   def can_auto_deliver_right_now
-    return in_time_gap(self.settings["start_deliver_at"], self.settings["end_deliver_at"])
+    return in_time_gap(self.settings.auto_settings["start_deliver_at"], self.settings.auto_settings["end_deliver_at"])
   end
 end

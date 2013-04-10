@@ -139,7 +139,7 @@ class CustomTrade < Trade
       main_trade.trade_gifts.where(gift_tid: gift_tid).first.update_attributes(delivered_at: Time.now)
     end
     result = self.fetch_account.can_auto_deliver_right_now
-    TradeTaobaoDeliver.perform_in((result == true ? 0 : result), self.id)
+    TradeTaobaoAutoDeliver.perform_in((result == true ? 0 : result), self.id)
   end
 
   #### CustomTrade 目前默认不能自动分派 ####
@@ -201,9 +201,7 @@ class CustomTrade < Trade
     # 如果满足自动化设置条件，分派后订单自动发货
     auto_settings = self.fetch_account.settings.auto_settings
     if auto_settings['auto_deliver'] && auto_settings["deliver_condition"] == "dispatched_trade"
-      if
-        auto_deliver!
-      end
+      auto_deliver!
     end
 
     # 生成默认发货单

@@ -65,7 +65,7 @@ class DeliverBillsController < ApplicationController
     @trade = TradeDecorator.decorate @bill.trade
     respond_with @bill
   end
-  
+
   #PUT /deliver_bills/1/split_invoice
   def split_invoice
     @bill = DeliverBill.find params[:id]
@@ -133,12 +133,19 @@ class DeliverBillsController < ApplicationController
   def update
     @bill = DeliverBill.find params[:id]
     trade = @bill.trade
+    is_first_set = !trade.logistic_waybill.present?
     logistic = Logistic.find_by_id params['logistic_id']
     trade.logistic_id = logistic.id
     trade.logistic_name = logistic.name
     trade.logistic_code = logistic.code
     trade.logistic_waybill = params["logistic_waybill"]
     trade.save
+
+    # 如果满足自动化设置条件，设置物流单号后订单自动发货
+    auto_settings = current_account.settings.auto_settings
+    if current_account.settings.auto_settings['auto_deliver'] && auto_settings["deliver_condition"] == "has_logistic_waybill_trade" && is_first_set
+      trade.auto_deliver!
+    end
 
     render json: @bill.to_json, status: :ok
   end

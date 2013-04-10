@@ -51,9 +51,9 @@
                   <div class="controls ml210">
                     <div class="control-group">
                       <select name="auto_settings[deliver_condition]" class="input-large">
-                        <option value= "dispatched_trade" <%= 'selected' if @setting['deliver_condition'] == 'dispatched_trade' %>>订单分派时自动发货</option>
+                        <!-- <option value= "dispatched_trade" <%= 'selected' if @setting['deliver_condition'] == 'dispatched_trade' %>>订单分派时自动发货</option>
                         <option value= "deliver_bill_printed_trade" <%= 'selected' if @setting['deliver_condition'] == 'deliver_bill_printed_trade' %>>打印发货单时自动发货</option>
-                        <option value= "logistic_bill_printed_trade" <%= 'selected' if @setting['deliver_condition'] == 'logistic_bill_printed_trade' %>>打印物流单时自动发货</option>
+                        <option value= "logistic_bill_printed_trade" <%= 'selected' if @setting['deliver_condition'] == 'logistic_bill_printed_trade' %>>打印物流单时自动发货</option> -->
                         <option value= "has_logistic_waybill_trade" <%= 'selected' if @setting['deliver_condition'] == 'has_logistic_waybill_trade' %>>返回物流单号时自动发货</option>
                       </select>
                     </div>

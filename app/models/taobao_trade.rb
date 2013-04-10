@@ -123,6 +123,25 @@ class TaobaoTrade < Trade
     seller_id.blank? && status == 'WAIT_SELLER_SEND_GOODS'
   end
 
+  def auto_dispatchable?
+    settings = self.fetch_account.settings.auto_settings
+    if settings["auto_dispatch"]
+      dispatch_conditions = settings["dispatch_conditions"]
+      if dispatch_conditions["void_buyer_message"] && dispatch_conditions["void_seller_memo"]
+        can_auto_dispatch = !has_buyer_message && self.seller_memo.blank?
+      elsif dispatch_conditions["void_buyer_message"] == 1 && dispatch_conditions["void_seller_memo"] == nil
+        can_auto_dispatch = !has_buyer_message
+      elsif dispatch_conditions["void_buyer_message"] == nil && dispatch_conditions["void_seller_memo"] == 1
+        can_auto_dispatch = self.seller_memo.blank?
+      else
+        can_auto_dispatch = true
+      end
+    else
+      can_auto_dispatch = false
+    end
+    can_auto_dispatch && has_special_seller_memo? && dispatchable?
+  end
+
   def splitable?
     match_seller_with_conditions(self).size > 1
   end
@@ -200,10 +219,8 @@ class TaobaoTrade < Trade
   end
 
   def auto_deliver!
-    return unless self.deliverable?
     result = self.fetch_account.can_auto_deliver_right_now
-    TradeTaobaoDeliver.perform_in((result == true ? 0 : result), self.id)
-    trade.operation_logs.create(operated_at: Time.now, operation: "订单自动发货")
+    TradeTaobaoAutoDeliver.perform_in((result == true ? 0 : result), self.id)
   end
 
   ## model属性方法 ##
