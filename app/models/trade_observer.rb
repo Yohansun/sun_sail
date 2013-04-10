@@ -29,7 +29,7 @@ class TradeObserver < Mongoid::Observer
     end
 
   end
-  
+
   def after_save(object)
     transaction_histories = object.customer.try(:transaction_histories)
     if transaction_histories.present?

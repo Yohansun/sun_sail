@@ -7,6 +7,7 @@ FactoryGirl.define do
     password "foobar"
     password_confirmation { |u| u.password }
     email Faker::Internet.email
+    phone "13153183333"
   end
 
   factory :bbs_category do

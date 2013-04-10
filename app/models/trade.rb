@@ -1043,4 +1043,5 @@ class Trade
         true
       end
     end
+
 end

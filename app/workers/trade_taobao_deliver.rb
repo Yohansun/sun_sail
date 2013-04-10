@@ -9,41 +9,43 @@ class TradeTaobaoDeliver
     account = trade.fetch_account
     tid = trade.tid
     source_id = trade.trade_source_id
-    if trade._type = "CustomTrade" # NEED ADAPTION?
-      response = {}
-    else
+    if trade._type != "CustomTrade"
       response = TaobaoQuery.get({
         method: 'taobao.logistics.offline.send',
         tid: trade.tid,
         out_sid: trade.logistic_waybill,
         company_code: trade.logistic_code}, source_id
       )
-    end
-    errors = response['error_response']
-    if errors.blank?
-      trade = TradeDecorator.decorate(trade)
-      mobile = trade.receiver_mobile_phone
-      shopname = account.settings.shopname_taobao
-      if trade.splitted?
-        content = "亲您好，您的订单#{tid}已经发货，该订单将由地区发送，请注意查收。【#{shopname}】"
+      errors = response['error_response']
+      if errors.blank?
+        trade = TradeDecorator.decorate(trade)
+        mobile = trade.receiver_mobile_phone
+        shopname = account.settings.shopname_taobao
+        if trade.splitted?
+          content = "亲您好，您的订单#{tid}已经发货，该订单将由地区发送，请注意查收。【#{shopname}】"
+        else
+          content = "亲您好，您的订单#{tid}已经发货，我们将尽快为您送达，请注意查收。【#{shopname}】"
+        end
+
+        notify_kind = "after_send_goods"
+        if content && mobile
+          SmsNotifier.perform_async(content, mobile, tid ,notify_kind)
+        end
+
+        unless account.settings.enable_module_third_party_stock == 1
+          trade.stock_out_bill.decrease_actual
+        end
+
       else
-        content = "亲您好，您的订单#{tid}已经发货，我们将尽快为您送达，请注意查收。【#{shopname}】"
+        Notifier.deliver_errors(id, errors, trade.account_id).deliver
+        trade.unusual_states.build(reason: "发货异常#{errors['sub_msg']}", key: 'other_unusual_state', created_at: Time.now)
+        trade.save
+        trade.update_attributes!(status: 'WAIT_SELLER_SEND_GOODS')
       end
-
-      notify_kind = "after_send_goods"
-      if content && mobile
-        SmsNotifier.perform_async(content, mobile, tid ,notify_kind)
-      end
-
+    else
       unless account.settings.enable_module_third_party_stock == 1
         trade.stock_out_bill.decrease_actual
-      end  
-      
-    else
-      Notifier.deliver_errors(id, errors, trade.account_id).deliver
-      trade.unusual_states.build(reason: "发货异常#{errors['sub_msg']}", key: 'other_unusual_state', created_at: Time.now)
-      trade.save
-      trade.update_attributes!(status: 'WAIT_SELLER_SEND_GOODS')
+      end
     end
   end
 end

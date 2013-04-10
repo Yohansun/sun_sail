@@ -128,22 +128,22 @@ describe BbsTopicsController do
     end
   end
 
-   describe "GET destroy" do
+   # describe "GET destroy" do
 
-    it 'if params[:category]="hot" should be success' do
-      delete :destroy, id: @topic.id, category: "hot"
-      assigns(:topic).should_not be_nil
-      response.should redirect_to(list_bbs_topics_url(category: "hot"))
-    end
+   #  it 'if params[:category]="hot" should be success' do
+   #    delete :destroy, id: @topic.id, category: "hot"
+   #    assigns(:topic).should_not be_nil
+   #    response.should redirect_to(list_bbs_topics_url(category: "hot"))
+   #  end
 
-    it 'fail' do
-      delete :destroy, id: @topic.id, category: "hot"
-      assigns(:topic).should_not be_nil
-      response.should redirect_to(list_bbs_topics_url(category: "hot"))
+   #  it 'fail' do
+   #    delete :destroy, id: @topic.id, category: "hot"
+   #    assigns(:topic).should_not be_nil
+   #    response.should redirect_to(list_bbs_topics_url(category: "hot"))
 
-    end
+   #  end
 
-  end
+  # end
 
 
 end

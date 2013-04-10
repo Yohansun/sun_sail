@@ -31,14 +31,13 @@
               <label>自动发货</label>
               <div class="control-group">
                 <label class="radio pull-left">
-                  <input type="radio" name="autodispatch"  value="on" >是
+                  <input type="radio" name="auto_deliver"  value="on" >是
                 </label>
                 <div class="controls">
-                  <p class="muted">当订单在打印物流面单的同时，就同步将物流面单的参数返回淘宝</p>
+                  <p class="muted">当订单在返回物流单号的同时，就同步将物流面单的参数返回淘宝</p>
                   <p class="text-error">注意：若有订单是物流信息出错的，淘宝发货状态将失败</p>
                 </div>
               </div>
-
               <div class="control-group">
                 <label class="radio pull-left">
                   <input type="radio" checked="" name="autodispatch" value="off">否
@@ -48,7 +47,8 @@
                 </div>
               </div>
             </fieldset><!-- end -->
-            <fieldset>
+
+            <!-- <fieldset>
               <label>自动审单</label>
               <div class="control-group">
                 <label class="radio pull-left">
@@ -58,7 +58,6 @@
                   <p class="muted">当订单已付款没有客户备注，客服备注，并且库存充足无需要拆单，知道审单通过</p>
                 </div>
               </div>
-
               <div class="control-group">
                 <label class="radio pull-left">
                   <input type="radio" checked="" name="autocheck"  value="off">否
@@ -67,12 +66,13 @@
                   <p class="muted">需要客服在系统内操作按钮“审单”，订单状态才会改为已审单</p>
                 </div>
               </div>
-            </fieldset><!-- end -->
+            </fieldset> -->
+
             <fieldset>
               <label>自动分派</label>
               <div class="control-group">
                 <label class="radio pull-left">
-                  <input type="radio" name="autodistribution"   value="on">是
+                  <input type="radio" name="auto_dispatch"   value="on">是
                 </label>
                 <div class="controls">
                   <p class="muted">当审单通过的订单，自动分派到仓库</p>
@@ -81,7 +81,7 @@
 
               <div class="control-group">
                 <label class="radio pull-left">
-                  <input type="radio" checked="" name="autodistribution"  value="off">否
+                  <input type="radio" checked="" name="auto_dispatch"  value="off">否
                 </label>
                 <div class="controls">
                   <p class="muted">需要客服在系统内操作按钮“分派”。订单分到仓库</p>
