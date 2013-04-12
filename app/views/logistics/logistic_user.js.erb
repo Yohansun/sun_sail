@@ -1,10 +1,10 @@
-html = "<tr><th>用户编号</th><th>用户名称</th><th>所属用户组</th><th>账户状态</th><th>操作</th></tr>"
+html = "<tr><th>用户编号</th><th>用户名称</th><th>所属角色</th><th>账户状态</th><th>操作</th></tr>"
 <% if @logistic_user.present? %>
 	<% @logistic_user.each do |list| %>
 		html += "<tr id='seller_<%=list.id%>'><td><%=list.id%></td>" +
 	          "<td><%= list.name%></td>" +
 	          "<td><%= list.roles.map{|r| r.role_s}.join(',') %></td>" +
-	          "<td><%= list.active ? '生效' : '禁止'%></td>" +
+	          "<td><%= list.access_locked? ? '禁止' : '生效'%></td>" +
 	          "<td><a href='/logistics/remove_logistic_user?u_id=<%=list.id%>' data-method='get' data-remote='true'>解除绑定</a></td></tr>"
 	<% end %>
 <% end %>

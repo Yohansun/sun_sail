@@ -6,9 +6,11 @@
     <div class="control-group">
       <%= f.input :name, :label => "姓名：", class: 'input-xlarge' %>
     </div>
-
     <div class="control-group">
       <%= f.input :email, :label => "邮箱：", class: 'input-xlarge' %>
+    </div>
+    <div class="control-group">
+      <%= f.input :phone, :label => "手机：", class: 'input-xlarge' %>
     </div>
   </fieldset>
 
@@ -24,46 +26,46 @@
 
   <fieldset class="add_unit">
     <div class="control-group">
-      <label class="control-label" for="">用户组：</label>
+      <label class="control-label" for="">角色：</label>
       <div class="controls">
-        <label class="checkbox inline">
+        <label class="checkbox">
           <%= check_box_tag :cs, '1', @user.has_role?(:cs) %>
           客服
         </label>
       </div>
       <div class="controls">
-        <label class="checkbox inline">
+        <label class="checkbox">
           <%= check_box_tag :cs_read, '1', @user.has_role?(:cs_read) %>
           客服（限浏览权限）
         </label>
       </div>
       <div class="controls">
-        <label class="checkbox inline">
+        <label class="checkbox">
           <%#= f.check_box :seller, class: 'input-xlarge', :checked => (@user.has_role? :seller) ? 'checked' : '' %>
           <%= check_box_tag :seller, '1', @user.has_role?(:seller) %>
           经销商
         </label>
       </div>
       <div class="controls">
-        <label class="checkbox inline">
+        <label class="checkbox">
           <%= check_box_tag :logistic, '1', @user.has_role?(:logistic) %>
           物流配送商
         </label>
       </div>
       <div class="controls">
-        <label class="checkbox inline">
+        <label class="checkbox">
           <%= check_box_tag :interface, '1', @user.has_role?(:interface) %>
           销售部联络人
         </label>
       </div>
       <div class="controls">
-        <label class="checkbox inline">
+        <label class="checkbox">
           <%= check_box_tag :stock_admin, '1', @user.has_role?(:stock_admin) %>
           仓库管理员
         </label>
       </div>
       <div class="controls">
-        <label class="checkbox inline">
+        <label class="checkbox">
           <%= check_box_tag :admin, '1', @user.has_role?(:admin) %>
           系统管理员
         </label>

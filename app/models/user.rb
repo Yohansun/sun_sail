@@ -70,6 +70,10 @@ class User < ActiveRecord::Base
     name || email
   end
 
+  def status
+    access_locked? ? '禁止' : '生效'
+  end  
+
   class << self
     def find_for_database_authentication(conditions)
       user = find(:first, :conditions => conditions)

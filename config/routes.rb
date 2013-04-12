@@ -136,6 +136,12 @@ MagicOrders::Application.routes.draw do
   resources :users do
     collection do
       post :search
+      get :roles
+      get :limits
+      post :delete_users
+      post :lock_users
+      post :unlock_users
+      post :users_muti
     end
   end
 

@@ -42,6 +42,10 @@ class UsersController < ApplicationController
     end
   end
 
+  def roles
+    @roles = Role.all
+  end  
+
   def show
     @user = current_account.users.find params[:id]
   end
@@ -115,6 +119,10 @@ class UsersController < ApplicationController
   def edit
     @user = current_account.users.find current_user.id
   end
+
+  def lock_users
+
+  end  
 
   def switch_account
     if current_user.has_multiple_account?

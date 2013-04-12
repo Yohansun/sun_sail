@@ -1,0 +1,200 @@
+<div class="container-fluid">
+  <div class="row-fluid">
+    <%= render partial: "layouts/setting_nav" %>
+    <div class="span10">
+      <ul class="nav nav-tabs ">
+        <li><a href="/users">用户</a></li>
+        <li><a href="/users/roles">角色</a></li>
+        <li class="active"><a href="/users/limits">权限</a></li>
+      </ul><!-- nav-tabs -->
+      <div class="tab-content">
+        <div class="limits" id="limits">
+            <form class="form-horizontal">
+              <fieldset class="form-inline mar_b15">
+                <label>角色名：</label><input type="text" placeholder="请输入角色名">
+              </fieldset>
+              <p>请选择该角色需要的模块和功能</p>
+              <fieldset class="form-inline">
+                <h6 class="checkbox">
+                  <input type="checkbox"> 订单模块
+                </h6>
+                <div class="controls">
+                  <p class="nomargin">订单状态查看权限</p>
+                  <label class="checkbox inline">
+                    <input type="checkbox"> 未付款
+                  </label>
+                  <label class="checkbox inline">
+                    <input type="checkbox"> 已付款
+                  </label>
+                  <label class="checkbox inline">
+                    <input type="checkbox"> 未分流
+                  </label>
+                  <label class="checkbox inline">
+                    <input type="checkbox"> 已分流
+                  </label>
+                  <label class="checkbox inline">
+                    <input type="checkbox"> 已分流，未发货
+                  </label>
+                  <label class="checkbox inline">
+                    <input type="checkbox"> 交易关闭
+                  </label>
+                  <label class="checkbox inline">
+                    <input type="checkbox"> 已发货
+                  </label>
+                  <label class="checkbox inline">
+                    <input type="checkbox"> 已发货，未确认发货
+                  </label>
+                  <label class="checkbox inline">
+                    <input type="checkbox"> 退货
+                  </label>
+                  <label class="checkbox inline">
+                    <input type="checkbox"> 线下订单
+                  </label>
+                  <label class="checkbox inline">
+                    <input type="checkbox"> 交易异常
+                  </label>
+                </div>
+              
+                <div class="controls">
+                  <p class="nomargin">订单操作权限</p>
+                  <label class="checkbox inline">
+                    <input type="checkbox"> 订单编辑
+                  </label>
+                  <label class="checkbox inline">
+                    <input type="checkbox"> 订单发票
+                  </label>
+                  <label class="checkbox inline">
+                    <input type="checkbox"> 异常标注
+                  </label>
+                  <label class="checkbox inline">
+                    <input type="checkbox"> 订单导入
+                  </label>
+                  <label class="checkbox inline">
+                    <input type="checkbox"> 取消订单
+                  </label>
+                  <label class="checkbox inline">
+                    <input type="checkbox"> 订单派分重置
+                  </label>
+                  <label class="checkbox inline">
+                    <input type="checkbox"> 订单备注
+                  </label>
+                  <label class="checkbox inline">
+                    <input type="checkbox"> 订单删除
+                  </label>
+                  <label class="checkbox inline">
+                    <input type="checkbox"> 订单审单
+                  </label>
+                  <label class="checkbox inline">
+                    <input type="checkbox"> 订单派分
+                  </label>
+                </div>
+              </fieldset>
+
+              <fieldset class="form-inline">
+                <h6 class="checkbox">
+                  <input type="checkbox"> 商品模块
+                </h6>
+                <div class="controls">
+                  <p class="nomargin">商品查看权限</p>
+                  <label class="checkbox inline">
+                    <input type="checkbox"> 可查看商品详细信息
+                  </label>
+                </div>
+
+                <div class="controls">
+                  <p class="nomargin">商品操作权限</p>
+                  <label class="checkbox inline">
+                    <input type="checkbox"> 编辑商品
+                  </label>
+                  <label class="checkbox inline">
+                    <input type="checkbox"> 上传商品
+                  </label>
+                  <label class="checkbox inline">
+                    <input type="checkbox"> 删除商品
+                  </label>
+                  <label class="checkbox inline">
+                    <input type="checkbox"> 新建活动商品
+                  </label>
+                  <label class="checkbox inline">
+                    <input type="checkbox"> 编辑活动商品
+                  </label>
+                </div>
+              </fieldset>
+
+              <fieldset class="form-inline">
+                <h6 class="checkbox">
+                  <input type="checkbox"> 仓库模块
+                </h6>
+                <div class="controls">
+                  <p class="nomargin">仓库查看权限</p>
+                  <label class="checkbox inline">
+                    <input type="checkbox"> 商品出库查看
+                  </label>
+                  <label class="checkbox inline">
+                    <input type="checkbox"> 商品入库查看
+                  </label>
+                  <label class="checkbox inline">
+                    <input type="checkbox"> 商品进销存查看
+                  </label>
+                  <label class="checkbox inline">
+                    <input type="checkbox"> 仓库商品库存查看
+                  </label>
+                </div>
+
+                <div class="controls">
+                  <p class="nomargin">仓库操作权限</p>
+                  <label class="checkbox inline">
+                    <input type="checkbox"> 建立仓库
+                  </label>
+                  <label class="checkbox inline">
+                    <input type="checkbox"> 管理仓库商品库存
+                  </label>
+                  <label class="checkbox inline">
+                    <input type="checkbox"> 仓库出入库操作
+                  </label>
+                  <label class="checkbox inline">
+                    <input type="checkbox"> 仓库进销存操作
+                  </label>
+                </div>
+              </fieldset>
+
+              <fieldset class="form-inline">
+                <h6 class="checkbox">
+                  <input type="checkbox"> 物流模块
+                </h6>
+                <div class="controls">
+                  <p class="nomargin">物流查看权限</p>
+                  <label class="checkbox inline">
+                    <input type="checkbox"> 查看物流地域
+                  </label>
+                  <label class="checkbox inline">
+                    <input type="checkbox"> 查看物流面单
+                  </label>
+                </div>
+
+                <div class="controls">
+                  <p class="nomargin">物流操作权限</p>
+                  <label class="checkbox inline">
+                    <input type="checkbox"> 编辑物流地域
+                  </label>
+                  <label class="checkbox inline">
+                    <input type="checkbox"> 设置物流面单
+                  </label>
+                  <label class="checkbox inline">
+                    <input type="checkbox"> 添加物流地域
+                  </label>
+                  <label class="checkbox inline">
+                    <input type="checkbox"> 删除物流地域
+                  </label>
+                </div>
+              </fieldset>
+              <div class="controls mar_t20">
+                <button class="btn btn-primary">保存角色</button>
+              </div>
+            </form>
+          </div><!-- limits end -->
+        </div><!-- tab-content end -->
+      </div>
+    </div>
+  </div>
+</div>
