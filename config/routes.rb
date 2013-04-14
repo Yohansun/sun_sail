@@ -138,6 +138,8 @@ MagicOrders::Application.routes.draw do
       post :search
       get :roles
       get :limits
+      get :edit_with_role
+      put :update_permissions
       post :delete_users
       post :lock_users
       post :unlock_users

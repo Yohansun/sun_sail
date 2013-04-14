@@ -2,6 +2,7 @@
 class StocksController < ApplicationController
   before_filter :authenticate_user!
   before_filter :check_stock_type, except: [:home]
+  before_filter :authorize
 
   def index
     select_sql = "skus.*, products.name, products.outer_id, products.product_id, products.category_id, stock_products.*"

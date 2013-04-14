@@ -48,7 +48,9 @@
           </div>
 
           <ul class="nav nav-pills" id="top-nav">
+            <% if current_user.allow_read?(:trades) %>
             <li class="active trades" style="display:none"><a href="/app#trades">订单管理</a></li>
+            <% end %>
             <% if current_account.key == 'nippon' %>
               <li class="trades" style="display:none"><a href="http://shop.nipponpaint.com.cn/admin/orders">官网订单</a></li>
             <% end %>
@@ -70,25 +72,31 @@
             <li id="fat-menu" class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Magic<b class="caret"></b></a>
               <ul class="dropdown-menu">
+                <% if current_user.allow_read?(:trades) %>
                 <li><a href="/app#trades" class="trades">订单管理</a></li>
+                <% end %>
                 <%- if  current_user.has_role?(:admin)%>
                   <li><a href="/sales">数据魔方</a></li>
                 <%- elsif  current_user.has_role?(:cs) ||  current_user.has_role?(:seller) %>
                   <li><a href="/trade_reports">数据魔方</a></li>
                 <%- end %>
-                <% if current_user.has_role?(:seller) && current_user.seller  && current_account.key != 'nippon' %>
-                  <li><%= link_to '仓库管理', seller_stocks_path(current_user.seller.id), class: "stocks" %></li>
-                <% elsif current_user.has_role?(:admin) || current_user.has_role?(:cs)%>
+                <% if current_user.allow_read?(:stocks)  && current_account.key != 'nippon' %>
+                  <li><%= link_to '仓库管理', (seller_stocks_path(current_user.seller.id) rescue ''), class: "stocks" %></li>
+                <% elsif current_user.allow_read?(:stocks)%>
                   <li><%= link_to '仓库管理', stocks_path, class: "stocks" %></li>
                 <% end %>
-                <% if current_user.has_role?(:admin) %>
+                <% if current_user.allow_read?(:products) %>
                 <li><%= link_to '商品管理', products_path, class: "products" %></li>
+                <% if current_user.has_role?(:admin) %>
                 <li><%= link_to '经销商管理', sellers_path %>
+                  <% end %>
                 <% if current_account.settings.enable_module_wangwang == true %>
                 <li><a href="/callcenter/contrastive_performance">客服管理</a></li>
                 <% end %>
-                <li class= "divider"></li>
+                <% if current_user.has_role?(:admin) %>
+                <li class= "divider"></li>                
                 <li><a href="/users" class="users">系统设置</a></li>
+                <% end %>
                 <% end %>
               </ul>
             </li>

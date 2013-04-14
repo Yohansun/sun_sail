@@ -2,6 +2,7 @@
 class LogisticsController < ApplicationController
   before_filter :authenticate_user!
   before_filter :admin_only!, :except => :logistic_templates
+  before_filter :authorize,:only => [:index,:new,:create,:edit,:update,:delete]
 
   def index
     @logistics = current_account.logistics.page(params[:page])

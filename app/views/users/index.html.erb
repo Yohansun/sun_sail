@@ -22,7 +22,7 @@
           </fieldset>
         <% end %>
 
-
+        <%= form_tag edit_with_role_users_path,:method => :get,:id => "edit_user" do %>
         <div class="btn-toolbar">
           <div class="btn-group">
             <button class="btn btn-warning">操作</button>
@@ -30,7 +30,7 @@
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
-              <li><a id="user_edit">编辑</a></li>
+              <li><a id="user_edit" href="javascript:$('#edit_user').submit()">编辑</a></li>
               <li><a id="delete_users">删除</a></li>
               <li><a id="unlock_users">开启</a></li>
               <li><a id="lock_users">禁用</a></li>
@@ -56,7 +56,7 @@
           <tbody>
             <% @users.each do |user| %>
             <tr>
-              <td><input type="checkbox" value="<%= user.id %>"></td>  
+              <td><input type="checkbox" value="<%= user.id %>" name="user_id"></td>  
               <td><%= user.username %></td>
               <td><%= user.present_roles %></td>
               <td><%= user.phone %></td>
@@ -67,6 +67,7 @@
             <% end %>
           </tbody>
         </table>
+        <% end %>
       </div></div>
       <%= paginate @users %>
     </div>

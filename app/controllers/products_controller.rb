@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 class ProductsController < ApplicationController
   before_filter :authenticate_user!
-  before_filter :admin_only!
+  before_filter :authorize,:except => :fetch_products
 
   # cache_sweeper :product_sweeper
   # caches_action :show, :edit

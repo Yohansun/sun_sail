@@ -49,11 +49,12 @@ class User < ActiveRecord::Base
   # attr_accessible :title, :body
 
   EMAIL_FORMAT = /\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}\z/
-  validates :email, format: { with: EMAIL_FORMAT}, uniqueness: true,  allow_blank: true
+  validates :email, format: { with: EMAIL_FORMAT}, uniqueness: true, presence: true
   PHONE_FORMAT = /^(13[0-9]|15[012356789]|18[0236789]|14[57])[0-9]{8}$/
   validates :phone, format: { with: PHONE_FORMAT}, uniqueness: true, allow_blank: true
 
   validates_presence_of :password, on: :create
+  validates :username , uniqueness: true, presence: true
 
   validate :has_phone_or_email?
  
@@ -65,9 +66,41 @@ class User < ActiveRecord::Base
       self.username = sudo_username 
     end
   end 
+  
+  #需要依赖http://wiki.networking.io/pages/viewpage.action?pageId=2555990 中的TradeSetting.trade_pops配置
+  #此方法仅列出那样的格式进行替换key
+  def permissions
+    @trade_pops = {}
+    roles.each do |x|
+      h = x.permissions[x.name].dup rescue next
+      h[x.name] = h.delete("trades")
+      @trade_pops.merge!(h) {|a,b,c| b | c}
+    end
+    @trade_pops
+  end
+  
+  def allow_read?(var)
+    return true if has_role?(:admin)
+    permission_manages[var.to_s].include?("detail") rescue false
+  end
+  
+  def permission_manages
+    @permission = {}
+    roles.map(&:permissions).each do |permission|
+      permission = permission.values.first
+      next if !permission.is_a?(Hash)
+      @permission.merge!(permission) {|key,firth,lath| firth | lath }
+    end
+    @permission
+  end
 
   def display_name
     name || email
+  end
+  
+  def allowed_to?(control,action)
+    arys = permission_manages[control.to_s] & MagicOrder::ActionDelega.keys
+    MagicOrder::ActionDelega.slice(*arys).any?{|x,y| y.include?(action)}
   end
 
   def status
