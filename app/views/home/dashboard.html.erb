@@ -19,7 +19,7 @@
         <% end %>
 
         <% if current_account.settings.enable_module_bbs %>
-              <% if current_user.has_role?(:seller) || current_user.has_role?(:interface) && current_account.key == 'nippon' -%>
+              <% if current_user.allowed_to?("go","npsellers") && current_account.key == 'nippon' -%>
                 <div>
                   <a class="indexStart7" href="/go/npsellers" target="_blank"><span>互动中心</span></a>
                 </div>
@@ -35,7 +35,7 @@
         </div>
 
 
-        <% if current_user.has_role?(:admin) -%>
+        <% if current_user.allowed_to?("sellers","index") -%>
           <div>
             <a class="indexStart5" href="/sellers"><span>经销商管理</span></a>
           </div>
@@ -45,7 +45,7 @@
               <a class="indexStart8" href="/products"><span>商品管理</span></a>
             </div>
           <% end %>
-        <% if current_user.has_role?(:admin) -%>
+        <% if current_user.allowed_to?("reconcile_statements","index") -%>
           <% if current_account.settings.enable_module_reconcile_statements == true %>
             <div>
               <a class="indexStart9" href="/reconcile_statements"><span>财务管理</span></a>

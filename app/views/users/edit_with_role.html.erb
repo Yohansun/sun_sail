@@ -13,17 +13,7 @@
 
     <%= simple_form_for @user,:url => user_path(@user,:from_path => "edit_with_role"), html: {:class =>'well form-horizontal'} do |f| %>
     
-    <fieldset class="form-inline mar_b15">
-      <%= f.label :name,"用户名:"%>
-      <%= @user.name %>
-    </fieldset>
-    
-      <%= render :partial => 'edit_roles',:locals => {:f => f} %>
-
-      <div class="form-actions">
-         <input type='hidden' name="ac" value="<%= params[:ac] ? params[:ac] : params[:action] %>"/>
-         <%= f.button :submit, :value => "保存", class: "btn btn-primary edit"%>
-      </div>
+      <%= render :partial => 'form',:locals => {:f => f} %>
     <% end %>
   </div>
 </div>

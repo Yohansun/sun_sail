@@ -1,12 +1,9 @@
-class Unauthorized < Exception; end
 class ApplicationController < ActionController::Base
   protect_from_forgery
   helper_method :current_account
 
-  rescue_from ::Unauthorized, :with => :deny_access
   
   def authorize(ctrl = params[:controller], action = params[:action])
-    return true if current_user.has_role?(:admin)
     allowed = current_user.allowed_to?(ctrl,action)
     if allowed
       true
@@ -16,7 +13,7 @@ class ApplicationController < ActionController::Base
   end
 
   def admin_only!
-    unless user_signed_in? && current_user.has_role?(:admin)
+    unless user_signed_in? && authorize
       redirect_to root_path
       return false
     end

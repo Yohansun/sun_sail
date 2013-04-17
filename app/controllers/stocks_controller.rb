@@ -27,7 +27,7 @@ class StocksController < ApplicationController
         @stock_products = @stock_products.where("stock_products.actual != stock_products.max AND stock_products.activity >= stock_products.safe_value")
       end
     end
-    @stock_products = @stock_products.where(" good_type != 2 OR good_type IS NULL ") if current_user.has_role?(:seller)
+    @stock_products = @stock_products.where(" good_type != 2 OR good_type IS NULL ") if current_user.seller.present?
     @stock_products = @stock_products.page params[:page]
   end
 
@@ -41,7 +41,7 @@ class StocksController < ApplicationController
 
   private
   def check_stock_type
-    if current_user.has_role?(:admin)
+    if current_user.allow_read?(:stocks)
       @seller = current_account.sellers.find_by_id params[:seller_id]
     else
       @seller = current_user.seller

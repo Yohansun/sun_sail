@@ -1,0 +1,17 @@
+  <%= form_tag update_permissions_users_path,:class => "js-modal modal hide fade", :role => "dialog"  ,"aria-labelledby" => "" , "aria-hidden" => "true", :id => "user_edit",:method => :put do %>
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      <h3 id="">新增角色</h3>
+    </div>
+    <div class="modal-body">
+      <fieldset class="form-inline mar_b15">
+        <label class="span2">角色名称：</label>
+        <input type="text" placeholer="请输入用户名" name="role[name]" id="role_name">
+      </fieldset>
+      
+    </div>
+    <div class="modal-footer">
+      <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+      <button class="btn btn-primary" onclick="if($('#role_name').val() == ''){alert('角色名称不能为空');return false}">保存</button>
+    </div>
+<% end %><!-- user_edit -->

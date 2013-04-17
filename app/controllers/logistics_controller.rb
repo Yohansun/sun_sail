@@ -1,8 +1,7 @@
 # -*- encoding : utf-8 -*-
 class LogisticsController < ApplicationController
   before_filter :authenticate_user!
-  before_filter :admin_only!, :except => :logistic_templates
-  before_filter :authorize,:only => [:index,:new,:create,:edit,:update,:delete]
+  before_filter :authorize,:except => [:logistic_templates,:edit,:user_list,:logistic_user_list]
 
   def index
     @logistics = current_account.logistics.page(params[:page])

@@ -8,7 +8,7 @@ class StockProductsController < ApplicationController
   def search
     area_id = nil
     where_sql = "stock_products.product_id = #{params[:product][:id].to_i}"
-    if current_user.has_role?(:seller) && current_user.seller
+    if current_user.seller.present?
       where_sql += " and sellers.id = #{current_user.seller.id}"
     end
     if params[:area_name_tree].present?

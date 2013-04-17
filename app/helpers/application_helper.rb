@@ -3,7 +3,7 @@
 module ApplicationHelper
   def user_stock_path
     return '#' unless current_user
-    if current_user.has_role? :admin
+    if current_user.allow_read?(:stocks)
       "/stocks"
     else
       if current_user.seller
@@ -12,6 +12,10 @@ module ApplicationHelper
         '#'
       end
     end
+  end
+  
+  def authorize?(control=params[:controller],act=params[:action])
+    current_user.allowed_to?(control,act)
   end
   
   def l_or_humanize(s, options={})

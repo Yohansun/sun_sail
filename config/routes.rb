@@ -36,7 +36,9 @@ MagicOrders::Application.routes.draw do
     end
   end
 
-  resources :trade_reports
+  resources :trade_reports do
+    put :download, :on => :member
+  end
   resources :user_activities do
     collection do
       get :refresh
@@ -139,11 +141,14 @@ MagicOrders::Application.routes.draw do
       get :roles
       get :limits
       get :edit_with_role
+      post :batch_update
       put :update_permissions
+      post :destroy_role
       post :delete_users
       post :lock_users
       post :unlock_users
       post :users_muti
+      post :delete
     end
   end
 

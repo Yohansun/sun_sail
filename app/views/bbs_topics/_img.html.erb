@@ -1,9 +1,1 @@
-<%-if user.has_role? :admin %>
   <a class="pull-left" href="#"><img class="img-rounded" src="/assets/admin_photo/admin_photo7.jpg"></a>
-<%- elsif user.has_role? :seller %>
-  <a class="pull-left" href="#"><img class="img-rounded" src="/assets/admin_photo/admin_photo1.jpg"></a>
-<%- elsif user.has_role? :interface %>
-  <a class="pull-left" href="#"><img class="img-rounded" src="/assets/admin_photo/admin_photo2.jpg"></a>
-<%- elsif user.has_role? :cs %>
-  <a class="pull-left" href="#"><img class="img-rounded" src="/assets/admin_photo/admin_photo3.jpg"></a>
-<%- end %>

@@ -1,24 +1,6 @@
 #encoding: utf-8
 module MagicOrder
   ActionDelega = {"detail" => ["index","home",'show'],"create" => ["new","create"],"update" => ["edit","update"],"destroy" => ["destroy","delete"]}.freeze
-  TradPops = {
-              "cs_read"   => ["detail"],
-              "cs"        => ["detail", "logistic_waybill", "seller", "cs_memo", "color", "invoice", "trade_split", "recover", "mark_unusual_state", "reassign", "refund", "check_goods", "operation_log", "manual_sms_or_email", "print_deliver_bill", "deliver", "confirm_color", "seller_confirm_invoice", "confirm_receive", "logistic_memo", "barcode", "seller_confirm_deliver", "request_return","confirm_return", "confirm_refund", "gift_memo", "modify_payment"],
-              "seller"    => ["detail", "operation_log", "logistic_waybill", "setup_logistic","deliver", "mark_unusual_state", "logistic_split", "print_logistic_bill", "print_deliver_bill", "barcode","confirm_color","confirm_check_goods","seller_confirm_deliver","cs_memo", "confirm_receive", "logistic_memo", "request_return","confirm_return", "confirm_refund"],
-              "interface" => ["detail", "operation_log", "logistic_waybill", "seller_confirm_deliver"],
-              "logistic"  => ["detail", "logistic_waybill", "confirm_receive", "logistic_memo"],
-              "admin"     => ["*"],
-              "trades"    => ["deliver", "logistic_waybill", "confirm_receive", "logistic_memo", "detail", "seller", "cs_memo", "color", "invoice", "trade_split", "recover", "mark_unusual_state", "reassign", "request_return", "confirm_return", "check_goods", "deliver", "seller_confirm_deliver", "seller_confirm_invoice", "barcode", "check_goods", "logistic_split", "print_logistic_bill", "print_deliver_bill", "confirm_refund", "operation_log", "manual_sms_or_email","confirm_color","confirm_check_goods", "logistic_waybill", "gift_memo", "modify_payment"],
-              "deliver"   => ["detail", "print_deliver_bill"],
-              "logistics" => ["detail", "setup_logistic","logistic_waybill", "confirm_receive", "logistic_memo", "print_logistic_bill"],
-              "check"     => ["detail"],
-              "send"      => ["deliver", "logistic_waybill", "seller_confirm_deliver","detail"],
-              "return"    => ["detail","confirm_return"],
-              "refund"    => ["detail"],
-              "invoice"   => ["invoice_number","detail"],
-              "unusual"   => ["detail", "mark_unusual_state"],
-              "color"     => ["color","confirm_color","detail"]
-              }.freeze
               
   class AccessControl
     class << self
@@ -77,12 +59,26 @@ MagicOrder::AccessControl.map do |map|
   map.project_module :products do |map|
     map.permission :reads,      ["detail"]
     map.permission :operations, ["create","update","destroy"]
+
   end
   
   map.project_module :stocks do |map|
     map.permission :reads,      ["detail"]
-    map.permission :operations, ["create","update","destroy"]
-  end  
+#    map.permission :operations, ["create","update","destroy"]
+    map.permission :operations, ["audit","sync","new_single_storage","new_storehouse","increase_in_commodity","determine_the_library","determine_the_storage"]
+  end
+  
+  map.project_module :datas do |map|
+    map.permission :reads,      ["user_activities#index","user_activities#all","trade_reports#index","sales#product_analysis"]
+    map.permission :operations, ["reports#download"]
+  end
+  
+  map.project_module :system_settings do |map|
+    map.permission :reads,      ["users#index","users#roles","users#limits","areas#index","logistics#index","account_setups#edit_auto_settings","logistics#logistic_user","categories#index"]
+    map.permission :operations, ["users#update","users#delete","users#batch_update","users#create","users#destroy_role","logistics#update","logistics#delete","logistics#create_logistic_area",
+      "logistics#remove_logistic_area","logistics#logistic_user_list","logistics#remove_logistic_user","logistics#logistic_user","account_setups#update_auto_settings","users#update_permissions",
+      "categories#update","categories#create","categories#destroy"]
+  end
   
 #  map.project_module :logistics do |map|
 #    map.permission :reads,      ["detail"]

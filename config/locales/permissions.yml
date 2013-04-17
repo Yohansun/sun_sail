@@ -6,7 +6,9 @@ zh-CN:
   permissions_cs_read: "客服（只读权限）"
   permissions_trades: "订单管理"
   permissions_products: "商品管理"
+  permissions_system_settings: "系统设置"  
   permissions_stocks: 仓库模块
+  permissions_datas: 数据模块
   permissions_refund: "refund"
   permissions_seller_confirm_invoice: "seller_confirm_invoice"
   permissions_request_return: "request_return"
@@ -93,3 +95,39 @@ zh-CN:
   permissions_tag_invoice_name: 发票抬头
   permissions_tag_logistic_bill_status: 物流单状态
   permissions_tag_logistic_bill: 物流单
+  permissions_tag_audit: 审核
+  permissions_tag_sync: 同步/撤销
+  permissions_tag_new_single_storage: 新增入库单
+  permissions_tag_new_storehouse: 新增出库单
+  permissions_tag_increase_in_commodity: 增加商品
+  permissions_tag_determine_the_library: 确定出库
+  permissions_tag_determine_the_storage: 确定入库
+  permissions_tag_user_activities#index: "人员查看"
+  permissions_tag_user_activities#all: "查看所有人员"
+  permissions_tag_trade_reports#index: "报表查看"
+  permissions_tag_sales#product_analysis: "销售查看"
+  permissions_tag_reports#download: "报表下载"
+  permissions_tag_users#index: "查看用户"
+  permissions_tag_users#roles: "查看角色"
+  permissions_tag_users#limits: "查看权限"
+  permissions_tag_areas#index: "地域管理"
+  permissions_tag_account_setups#edit_auto_settings: "查看自动化设置"
+  permissions_tag_users#update: "编辑用户"
+  permissions_tag_users#delete: "删除用户"
+  permissions_tag_users#batch_update: "批量(开启/禁用)用户"
+  permissions_tag_users#create: "创建用户"
+  permissions_tag_users#update_permissions: "编辑权限"
+  permissions_tag_users#destroy_role: "删除角色"
+  permissions_tag_logistics#index: "物流商管理"  
+  permissions_tag_logistics#update: "编辑物流商"
+  permissions_tag_logistics#delete: "删除物流商"
+  permissions_tag_logistics#create_logistic_area: "物流商添加管辖地区"
+  permissions_tag_logistics#remove_logistic_area: "物流商删除管辖地区"
+  permissions_tag_logistics#logistic_user_list: "物流商添加登陆账号"
+  permissions_tag_logistics#remove_logistic_user: "物流商删除登陆账号"
+  permissions_tag_logistics#logistic_user: "查看物流商登陆账号"
+  permissions_tag_account_setups#update_auto_settings: "更新自动化设置"
+  permissions_tag_categories#index: "查看分类"
+  permissions_tag_categories#create: "创建分类"
+  permissions_tag_categories#update: "更新分类"
+  permissions_tag_categories#destroy: "删除分类"      

@@ -5,7 +5,6 @@
        <ul class="nav nav-tabs">
           <li class="active"><a href="/users">用户</a></li>
           <li><a href="/users/roles">角色</a></li>
-          <li><a href="/users/limits">权限</a></li>
         </ul><!-- nav-tabs -->
         <div class="tab-content">
         <div class="tab-pane active" id="users">
@@ -22,18 +21,22 @@
           </fieldset>
         <% end %>
 
-        <%= form_tag edit_with_role_users_path,:method => :get,:id => "edit_user" do %>
+        <%= form_tag edit_with_role_users_path,:method => :post,:id => "edit_user" do %>
         <div class="btn-toolbar">
           <div class="btn-group">
-            <button class="btn btn-warning">操作</button>
-            <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
+            <b class="btn btn-warning">操作</b>
+            <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown" onclick="return false">
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
-              <li><a id="user_edit" href="javascript:$('#edit_user').submit()">编辑</a></li>
-              <li><a id="delete_users">删除</a></li>
-              <li><a id="unlock_users">开启</a></li>
-              <li><a id="lock_users">禁用</a></li>
+              <li>
+                <%= link_to "编辑", "#",:onclick => "validateValues(this)",:goto => edit_with_role_users_path,:request => "get" %>
+              </li>
+              <li>
+                <%= link_to "删除","#",:onclick => "validateValues(this)",:id => "delete_users", :goto => "/users/delete",:request => "post",:confirm => "确认删除?"%>
+              <li><%=link_to "开启", "#", :onclick => "validateValues(this)",:goto => "/users/batch_update?operation=unlock",:request => "post",:confirm => "确认开启吗?" %></li>
+              <li>
+                <%=link_to "禁用", "#",:onclick => "validateValues(this)",:goto => "/users/batch_update?operation=lock",:request => "post",:confirm => "确认禁用?"%>
             </ul>
           </div><!-- btn-group -->
           <div class="btn-group">
@@ -46,7 +49,7 @@
             <tr>
               <th width="1%"><input type="checkbox"></th>
               <th width="10%">用户名</th>
-              <th width="15%">角色</th>
+              <th width="15%">角色名称</th>
               <th width="25%">手机</th>
               <th width="25%">邮箱</th>
               <th width="10%">姓名</th>
@@ -56,9 +59,9 @@
           <tbody>
             <% @users.each do |user| %>
             <tr>
-              <td><input type="checkbox" value="<%= user.id %>" name="user_id"></td>  
+              <td><input type="checkbox" value="<%= user.id %>" name="user_ids[]"></td>  
               <td><%= user.username %></td>
-              <td><%= user.present_roles %></td>
+              <td><%= user.roles.map(&:name).try(:join,',') %></td>
               <td><%= user.phone %></td>
               <td><%= user.email %></td>
               <td><%= user.name %></td>
@@ -73,3 +76,16 @@
     </div>
   </div>
 </div>
+<script>
+function validateValues(item){
+  var check_values = $('input:checked').map(function(){if($(this).val() != 'on'){return ($(this).val())}});
+  if($('input:checked').length < 1) {  
+    alert('请选择');  
+  } else if($.inArray('<%= current_user.id %>',check_values) >= 0 && $(item).attr("goto") != "/users/edit_with_role"){  
+    alert('不能操作自己哦 ╮(╯_╰)╭');
+  } else {
+    $('#edit_user').attr({action: $(item).attr("goto") ,method: $(item).attr("request") });  
+    $('#edit_user').submit();  
+  }  
+}
+</script>

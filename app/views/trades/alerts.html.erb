@@ -5,9 +5,9 @@
       <li class="active">异常中心</li>
     </ul><!-- breadcrumb -->
 
-    <%- if current_user.has_role?(:seller) && current_user.seller %>
+    <%- if current_user.allow_read?(:trades,:seller) && current_user.seller %>
       <%- trades = Trade.where(account_id: current_account.id, seller_id: current_user.seller.id) %>
-    <%- elsif current_user.has_role?(:admin) || current_user.has_role?(:cs) %>
+    <%- else %>
       <%- trades = Trade.where(account_id: current_account.id) %>
     <%- end %>
 

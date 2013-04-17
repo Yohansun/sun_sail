@@ -1,7 +1,7 @@
 <% content_for :tail do -%>
 <script type="text/javascript">
   $(function() {
-    MagicOrders.role_key = "<%= current_user.roles.first.try(:name) %>";
+    MagicOrders.role_key = "trades";
     MagicOrders.company = "<%= current_account.key %>"
     MagicOrders.user = "<%= current_user.name %>"
     MagicOrders.current_user_seller_id = "<%= current_user.seller_id.to_i %>"
@@ -20,7 +20,8 @@
     MagicOrders.enable_module_interface = <%= current_account.settings.enable_module_interface %>
     MagicOrders.enable_module_onsite_service = <%= current_account.settings.enable_module_onsite_service %>
     
-    MagicOrders.trade_pops = <%= raw MagicOrder::TradPops.merge(current_user.permissions).to_json %>
+    MagicOrders.current_rolenames = <%= raw current_user.roles.map(&:name).to_json %>
+    MagicOrders.trade_pops = <%= raw current_user.permissions.to_json %>
     MagicOrders.trade_modes = <%= raw current_account.settings.trade_modes.to_json %>
     MagicOrders.trade_cols_visible_modes = <%= raw current_account.settings.trade_cols_visible_modes.to_json %>
     MagicOrders.trade_cols = <%= raw current_account.settings.trade_cols.to_json %>

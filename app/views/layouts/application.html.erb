@@ -55,16 +55,12 @@
               <li class="trades" style="display:none"><a href="http://shop.nipponpaint.com.cn/admin/orders">官网订单</a></li>
             <% end %>
             <% if ['sales', 'user_activities', 'trade_reports'].include?(controller_name)  %>
-              <%- if current_user.has_role?(:admin) %>
-                <li class="<%= 'active' if controller_name == 'user_activities'%>"><a href="/user_activities">人员</a></li>
-                <li class="<%= 'active' if controller_name == 'trade_reports'%>"><a href="/trade_reports">报表下载</a></li>
-                <li class="<%= 'active' if controller_name == 'sales'%>"><a href="/sales/product_analysis">销售</a></li>
-               <%- else %>
-                <li class="<%= 'active' if controller_name == 'trade_reports'%>"><a href="/trade_reports">报表下载</a>
-               <%- end %>
-            <% end %>
-            <% if current_user.has_role?(:admin)  && controller_name != 'home' %>
-              <li class="products"><a href="#"><%= top_nav_name %></a></li>
+                <li class="<%= 'active' if controller_name == 'user_activities'%>">
+                  <%= link_to "人员",user_activities_path if authorize?("user_activities","index")  %>
+                <li class="<%= 'active' if controller_name == 'trade_reports'%>">
+                  <%= link_to "报表下载",trade_reports_path if authorize?("trade_reports","index")%></li>
+                <li class="<%= 'active' if controller_name == 'sales'%>">
+                  <%= link_to "销售", sales_product_analysis_path if authorize?("sales","product_analysis")  %></li>
             <% end %>
           </ul>
 
@@ -75,9 +71,9 @@
                 <% if current_user.allow_read?(:trades) %>
                 <li><a href="/app#trades" class="trades">订单管理</a></li>
                 <% end %>
-                <%- if  current_user.has_role?(:admin)%>
+                <%- if  current_user.allowed_to?("sales","product_analysis")%>
                   <li><a href="/sales">数据魔方</a></li>
-                <%- elsif  current_user.has_role?(:cs) ||  current_user.has_role?(:seller) %>
+                <%- elsif  current_user.allow_read?(:datas,"trade_reports#index") %>
                   <li><a href="/trade_reports">数据魔方</a></li>
                 <%- end %>
                 <% if current_user.allow_read?(:stocks)  && current_account.key != 'nippon' %>
@@ -87,14 +83,16 @@
                 <% end %>
                 <% if current_user.allow_read?(:products) %>
                 <li><%= link_to '商品管理', products_path, class: "products" %></li>
-                <% if current_user.has_role?(:admin) %>
-                <li><%= link_to '经销商管理', sellers_path %>
+                <!--
+                <% if current_user.allow_read?(:trades,:seller) %>
+                <li><#%= link_to '经销商管理', sellers_path %>
                   <% end %>
+                -->
                 <% if current_account.settings.enable_module_wangwang == true %>
                 <li><a href="/callcenter/contrastive_performance">客服管理</a></li>
                 <% end %>
-                <% if current_user.has_role?(:admin) %>
-                <li class= "divider"></li>                
+                <% if current_user.allowed_to?("users","index") %>
+                <li class= "divider"></li>       
                 <li><a href="/users" class="users">系统设置</a></li>
                 <% end %>
                 <% end %>
@@ -117,7 +115,7 @@
               <li class="divider-vertical"></li>
             </ul>
           <%- end -%>
-          <% if (current_user.has_role?(:seller) && current_user.seller) || (current_user.has_role?(:admin)) || (current_user.has_role?(:cs)) %>
+          <% if current_user.allow_read?(:alerts) %>
             <ul class="nav pull-right">
               <li id="fat-menu" class="dropdown">
                 <a href="/alerts"><span class="badge badge-important" style="background:red;">New</span>异常中心</a>

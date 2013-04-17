@@ -35,6 +35,7 @@ class User < ActiveRecord::Base
   belongs_to :logistic
   has_many   :trade_reports
   has_and_belongs_to_many :accounts
+  has_and_belongs_to_many :roles,:join_table =>  "users_roles"
 
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
@@ -67,31 +68,17 @@ class User < ActiveRecord::Base
     end
   end 
   
-  #需要依赖http://wiki.networking.io/pages/viewpage.action?pageId=2555990 中的TradeSetting.trade_pops配置
-  #此方法仅列出那样的格式进行替换key
   def permissions
     @trade_pops = {}
-    roles.each do |x|
-      h = x.permissions[x.name].dup rescue next
-      h[x.name] = h.delete("trades")
-      @trade_pops.merge!(h) {|a,b,c| b | c}
-    end
+    raise "用户所属店铺为空" if self.account_ids.blank?
+    roles.where(:account_id => self.account_ids).each {|x | @trade_pops.merge!(x.permissions) {|key,firth,lath| firth | lath} }
     @trade_pops
   end
   
-  def allow_read?(var)
-    return true if has_role?(:admin)
-    permission_manages[var.to_s].include?("detail") rescue false
-  end
-  
-  def permission_manages
-    @permission = {}
-    roles.map(&:permissions).each do |permission|
-      permission = permission.values.first
-      next if !permission.is_a?(Hash)
-      @permission.merge!(permission) {|key,firth,lath| firth | lath }
-    end
-    @permission
+  def allow_read?(var,data=false)
+    data = data.to_s if data.is_a?(Symbol)
+    sym = data || "detail"
+    permissions[var.to_s].include?(sym) rescue false
   end
 
   def display_name
@@ -99,8 +86,9 @@ class User < ActiveRecord::Base
   end
   
   def allowed_to?(control,action)
-    arys = permission_manages[control.to_s] & MagicOrder::ActionDelega.keys
-    MagicOrder::ActionDelega.slice(*arys).any?{|x,y| y.include?(action)}
+    arys = permissions[control.to_s] & MagicOrder::ActionDelega.keys
+    MagicOrder::ActionDelega.slice(*arys).any?{|x,y| y.include?(action)} ||
+    permissions.select {|x,y| y.grep(/^#{control}##{action}$/).present? }.present?
   end
 
   def status
@@ -144,5 +132,4 @@ class User < ActiveRecord::Base
         errors.add(:phone, "至少输入手机号或者邮箱")
      end  
   end
-
 end

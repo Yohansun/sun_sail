@@ -719,13 +719,13 @@ class Trade
 
     succeed_array = ["TRADE_FINISHED","FINISHED_L"]
 
-    if current_user.has_role?(:seller) || current_user.has_role?(:interface)
+    if current_user.seller.present?
       seller = current_user.seller
       self_and_descendants_ids = seller.self_and_descendants.map(&:id)
       trades = trades.any_in(seller_id: self_and_descendants_ids) if self_and_descendants_ids.present?
     end
 
-    if current_user.has_role? :logistic
+    if current_user.logistic.present?
       logistic = current_user.logistic
       trades = trades.where(logistic_id: logistic.id) if logistic
     end
@@ -852,11 +852,11 @@ class Trade
         # 登录时的默认显示
       when "default"
           # 经销商登录默认显示未发货订单
-          if current_user.has_role?(:seller)
+          if current_user.seller.present?
             trades = trades.where(:dispatched_at.ne => nil, :status.in => paid_not_deliver_array)
-          end
+          else
           # 管理员，客服登录默认显示未分流淘宝订单
-          if current_user.has_role?(:cs) || current_user.has_role?(:admin)
+#          if current_user.has_role?(:cs) || current_user.has_role?(:admin)
             trades = trades.where(:status.in => paid_not_deliver_array, seller_id: nil).where(_type: 'TaobaoTrade')
           end
         end

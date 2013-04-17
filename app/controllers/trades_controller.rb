@@ -6,6 +6,7 @@ class TradesController < ApplicationController
   layout false, :only => :print_deliver_bill
   before_filter :authenticate_user!
   respond_to :json, :xls
+  before_filter :authorize,:only => [:index,:print_deliver_bill]
 
   include TaobaoProductsLockable
   include Dulux::Splitter
@@ -54,7 +55,7 @@ class TradesController < ApplicationController
 
     @trades = Trade
 
-    if current_user.has_role?(:seller)
+    if current_user.seller.present?
       unless current_user.seller == nil
         @trades = @trades.where seller_id: current_user.seller.try(:id)
       else
