@@ -96,7 +96,7 @@ json.orders OrderDecorator.decorate(@trade.orders) do |json, order|
 
   json.contents @trade._type == 'TaobaoTrade' ? get_package(order.outer_iid, @trade.created_at) : []
   json.bill_info order.bill_info
-  json.packaged order.product.try(:good_type) == 2
+  json.packaged order.packaged?
 end
 
 if @trade._type == "TaobaoPurchaseOrder"

@@ -1,0 +1,166 @@
+  <div class="row-fluid">
+   <div class="span2 bs-docs-sidebar">
+    <ul class="nav nav-list bs-docs-sidenav affix span2">
+      <li class="active"><a href="#"><i class="icon-chevron-right"></i>默认仓库</a></li>
+    </ul>
+  </div>
+
+  <div class="span10">
+    <ul class="nav nav-tabs">
+      <li><%= link_to "库存查询", stocks_path %></li>
+      <li><%= link_to "入库单", stock_in_bills_path %></li>
+      <li class="active"><%= link_to "出库单", stock_out_bills_path %></li>
+      <li><%= link_to "所有进销", stock_bills_path %></li>
+    </ul><!-- nav-tabs -->  
+
+    <div class="tab-content">
+      <div class="tab-pane active" id="stock_check">
+        <form class="well well-small form-horizontal font12">
+          <fieldset>
+            <div class="control-group">
+              <label class="pull-left"><code>精准：</code></label>
+              <div class="controls pull-left">
+                <select class="input-small pull-left select2 radius_no_rb">
+                  <option value="所有">商品名称</option>
+                  <option value="">商品编码</option>
+                  <option value="">淘宝ID</option>
+                </select>
+                <input type="text" class="input-medium radius_no_tl" placeholder="输入关键字...">
+              </div>
+              <div class="pull-left">
+                <button type="button pull-left" class="btn btn-small btn-info">搜索</button>
+                <label class="help-inline js-stock_advance"><i class="icon-arrow-down"></i>高级搜索</label>
+              </div>
+            </div>
+          </fieldset><!-- form line1 area -->
+
+          <div class="search_advanced none">
+            <fieldset>
+              <div class="control-group">
+                <label class="pull-left"><code>状态：</code></label>
+                <div class="controls pull-left">
+                  <select class="input-small pull-left select2">
+                    <option value="满仓">满仓</option>
+                    <option value="">预警</option>
+                    <option value="">缺货</option>
+                    <option value="">正常</option>
+                  </select>
+                </div>
+              </div>
+            </fieldset><!-- form line2 area -->
+
+            <fieldset>
+              <div class="control-group">
+                <label class="pull-left"><code>分类：</code></label>
+                <div class="controls pull-left">
+                  <select class="input-small pull-left radius_no_rb select2">
+                    <option value="分类一">分类一</option>
+                  </select>
+                  <select class="input-small pull-left radius_no select2">
+                    <option value="系列">系列</option>
+                  </select>
+                  <select class="input-small pull-left radius_no_tl select2">
+                    <option value="产品型号">产品型号</option>
+                  </select>
+                </div>
+              </div>
+              <fieldset>
+                <label class="pull-left"><code>当前：</code></label>
+                <div class="controls clearfix item_group">
+                </div>
+              </fieldset><!-- current -->
+            </div>
+          </form>
+
+          <div class="btn-toolbar">
+            <div class="btn-group">
+              <button class="btn btn-warning">操作</button>
+              <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu">
+                <li><a href="#">审核</a></li> 
+                <li><a href="#">同步</a></li> 
+                <li><a href="#">撤销</a></li>  
+              </ul>
+            </div><!-- btn-group -->
+          </div>
+
+          <table class="table table-hover table-bordered table-striped table-condensed">
+            <thead>
+              <tr>
+                <th width="1%"><input type="checkbox"></th>
+                <th width="5%">序号</th>
+                <th width="10%">状态</th>
+                <th width="15%">历史状态</th>
+                <th width="10%">出库单编号</th>
+                <th width="5%">类型</th>
+                <th width="8%">商品数量</th>
+                <th width="10%">商品总价</th>
+                <th width="10%">仓库名称</th>
+                <th width="10%">操作者</th> 
+              </tr>
+            </thead>
+            <tbody>
+              <%- @bills.each_with_index do |bill, index| %>
+              <tr>
+                <td><input type="checkbox"></td>
+                <td><%=  index + 1  %></td>
+                <td><%= bill.status %></td>
+                <td>
+                  <%- if bill.checked_at.present? -%>
+                    <span class='label '>
+                      审核 <%= raw bill.checked_at.strftime("%m-%d %H:%M:%S") -%>
+                    </span>
+                    <%- end -%>
+                    <%- if bill.sync_at.present? -%>
+                      <span class='label '>
+                        同步 <%= raw bill.sync_at.strftime("%m-%d %H:%M:%S") -%>
+                      </span>
+                    <%- end -%>
+                    <%- if bill.sync_failed_at.present? -%>
+                      <span class='label '>
+                        同步失败 <%= raw bill.failed_at.strftime("%m-%d %H:%M:%S") -%>
+                      </span>
+                    <%- end -%>
+                    <%- if bill.sync_succeded_at.present? -%>
+                      <span class='label '>
+                        同步成功 <%= raw bill.succeded_at.strftime("%m-%d %H:%M:%S") -%>
+                      </span>
+                    <%- end -%>
+                    <%- if bill.canceled_at.present? -%>
+                      <span class='label '>
+                        取消 <%= raw bill.canceled_at.strftime("%m-%d %H:%M:%S") -%>
+                      </span>
+                    <%- end -%>
+                    <%- if bill.cancel_failed_at.present? -%>
+                      <span class='label '>
+                        取消失败 <%= raw bill.cancel_failed_at.strftime("%m-%d %H:%M:%S") -%>
+                      </span>
+                    <%- end -%>
+                    <%- if bill.cancel_succeded_at.present? -%>
+                      <span class='label '>
+                        取消成功 <%= raw bill.cancel_succeded_at.strftime("%m-%d %H:%M:%S") -%>
+                      </span>
+                    <%- end -%>
+                    <%- if bill.confirm_stocked_at.present? -%>
+                      <span class='label '>
+                        确认出库 <%= raw bill.confirm_stocked_at.strftime("%m-%d %H:%M:%S") -%>
+                      </span>
+                  <%- end -%>
+                </td>
+                <td><%= bill.tid %></td>
+                <td><%= bill.stock_type %></td>
+                <td><%= bill.bill_products_mumber %></td>
+                <td><%= bill.bill_products_price %></td>
+                <td>默认仓库</td>
+                <td><%= bill.operator_name %></td>
+              </tr>
+              <%- end %>
+            </tbody>
+          </table>
+        </div><!--span10 -->
+      </div><!-- tab-content -->
+    </div><!-- span10 -->
+</div><!--row-fluid
+

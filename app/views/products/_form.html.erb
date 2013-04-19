@@ -9,19 +9,6 @@
     <%= f.input :price, label: '价格：', as: :string, :input_html =>{ :class => "input-xlarge" } %>
     <%#= f.association :quantity, collection: current_account.quantities, label: '规格：', :input_html =>{ :class => "width_auto" } %>
     <%= f.input :logistic_group_id, collection: current_account.logistic_groups, label: '物流分组编码' %>
-    <%= f.input :good_type, label: '商品类型：' do %>
-      <label class="inline good_suit">
-        <input type="radio" name="product[good_type]" value='1' <%= 'checked' if @product.good_type == 1 %>>单品
-      </label>
-      <label class="inline good_suit">
-        <input type="radio" name="product[good_type]" value='3' <%= 'checked' if @product.good_type == 3 %>>赠品
-      </label>
-      <label class="inline good_suit">
-        <input type="radio" name="product[good_type]" value='2' <%= 'checked' if @product.good_type == 2 %>>套装
-        <input type="text" placeholder="输入关联的产品编号及数量，以逗号隔开" name='child_iid' value='<%= package_items(@product) %>'>
-        <span class="help-inline">示例：[商品1,3],[商品2,1]</span>
-      </label>
-    <% end %>
     <%#= f.association :features, collection: current_account.features, as: :check_boxes, label: '系列：'%>
     <%= f.association :category, collection: current_account.categories, label: '分类：', :input_html =>{ :class => "width_auto" } %>
     <% if current_account.settings.enable_module_colors == 1 %>

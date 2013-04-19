@@ -1,4 +1,4 @@
-# -*- encoding : utf-8 -*-
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       # -*- encoding : utf-8 -*-
 
 class TaobaoProductsPuller
   class << self   
@@ -18,8 +18,13 @@ class TaobaoProductsPuller
       if  response['products_get_response']['products'].present? &&  response['products_get_response']['products']['product'].present?
         products = response['products_get_response']['products']['product']
         products.each do |product|
-          local_product = Product.where(name: product['name']).first
-          if local_product
+          taobao_product = TaobaoProduct.where(name: product['name']).first
+          if taobao_product
+            taobao_product.pic_url = product['pic_url']
+            taobao_product.save!(validate: false) 
+
+            local_product = Product.find_by_num_iid(taobao_product.num_iid)
+            next unless local_product
             local_product.pic_url = product['pic_url']
             local_product.save!(validate: false)  
           end     
@@ -46,14 +51,19 @@ class TaobaoProductsPuller
           total_results = products.count
           total_pages ||= total_results / 100
           products.each do |product|
-            local_product = Product.where(product_id: product['product_id']).first
-            if local_product
+            taobao_product = TaobaoProduct.where(product_id: product['product_id']).first
+            if taobao_product
               if product['cat_name'].present?
                 category = Category.where(name: product['cat_name'], account_id: account.id).first_or_create
               else
                 category = Category.where(name: '其他').first_or_create  
               end  
-              local_product.category_id = category.id
+              taobao_product.category_id = category.id
+              taobao_product.save!(validate: false)  
+
+              local_product = Product.find_by_num_iid(taobao_product.num_iid)
+              next unless local_product
+              local_product.pic_url = product['pic_url']
               local_product.save!(validate: false)  
             end     
           end 
@@ -84,10 +94,7 @@ class TaobaoProductsPuller
         pic_url = sku_items['pic_url']
         price = sku_items['price']
         
-        #Create product and sku
-        #Remember to add account_id
-        #Remember to sync nippon and dulux stock
-        local_product = Product.create(account_id: account.id, name: name, detail_url: detail_url, outer_id: outer_id,  num_iid: num_iid, product_id: product_id, cid: cid, pic_url: pic_url, price: price) unless Product.find_by_num_iid(num_iid)
+        local_product = Product.create(account_id: account.id, name: name, detail_url: detail_url, outer_id: outer_id,  num_iid: num_iid, product_id: product_id, cid: cid, pic_url: pic_url, price: price) unless TaobaoProduct.find_by_num_iid(num_iid)
         if local_product
           if sku_items['skus'] && sku_items['skus']['sku'].count > 0
             sku_items['skus']['sku'].each do |sku|
@@ -102,7 +109,10 @@ class TaobaoProductsPuller
             quantity = sku_items['num']
             #Remember to add account_id
             Sku.create!(product_id: local_product.id, quantity: quantity, num_iid: num_iid) unless Sku.find_by_num_iid(num_iid)
-          end    
+          end
+          unless TaobaoProduct.find_by_num_iid(local_product.num_iid)
+            local_product.taobao_products.create(account_id: account.id, category_id: local_product.category_id, num_iid: local_product.num_iid, price: local_product.price, outer_id: local_product.outer_id, product_id: local_product.product_id, cat_name: local_product.cat_name, pic_url: local_product.pic_url, cid: local_product.cid, name: local_product.name) 
+          end   
         end
       end    
     end  
@@ -152,11 +162,8 @@ class TaobaoProductsPuller
           pic_url = sku_items['pic_url']
           price = sku_items['price']
           
-          #Create product and sku
-          #Remember to add account_id
-          #Remember to sync nippon and dulux stock
-          local_product = Product.create(account_id: account.id, name: name, detail_url: detail_url, outer_id: outer_id,  num_iid: num_iid, product_id: product_id, cid: cid, pic_url: pic_url, price: price) unless Product.find_by_num_iid(num_iid)
-          if local_product
+          taobao_product = local_product.create(account_id: account.id, name: name, detail_url: detail_url, outer_id: outer_id,  num_iid: num_iid, product_id: product_id, cid: cid, pic_url: pic_url, price: price) unless TaobaoProduct.find_by_num_iid(num_iid)
+          if taobao_product
             if sku_items['skus'] && sku_items['skus']['sku'].count > 0
               sku_items['skus']['sku'].each do |sku|
                 sku_id = sku['sku_id']
@@ -170,6 +177,9 @@ class TaobaoProductsPuller
               quantity = sku_items['num']
               #Remember to add account_id
               Sku.create!(product_id: local_product.id, quantity: quantity, num_iid: num_iid) unless Sku.find_by_num_iid(num_iid)
+            end 
+            unless TaobaoProduct.find_by_num_iid(local_product.num_iid)
+              local_product.taobao_products.create(account_id: account.id, category_id: local_product.category_id, num_iid: local_product.num_iid, price: local_product.price, outer_id: local_product.outer_id, product_id: local_product.product_id, cat_name: local_product.cat_name, pic_url: local_product.pic_url, cid: local_product.cid, name: local_product.name) 
             end    
           end  
         end  
@@ -199,27 +209,25 @@ class TaobaoProductsPuller
           cid = sku_items['cid']
           pic_url = sku_items['pic_url']
           price = sku_items['price']
-          
-          #Create product and sku
-          #Remember to add account_id
-          #Remember to sync nippon and dulux stock
-          local_product = Product.create(account_id: account.id, name: name, detail_url: detail_url, outer_id: outer_id,  num_iid: num_iid, product_id: product_id, cid: cid, pic_url: pic_url, price: price) unless Product.find_by_num_iid(num_iid)
-          if local_product
-            if sku_items['skus'] && sku_items['skus']['sku'].count > 0
-              sku_items['skus']['sku'].each do |sku|
-                sku_id = sku['sku_id']
-                quantity = sku['quantity']
-                properties_name = sku['properties_name']
-                properties = sku['properties']
-                #Remember to add account_id
-                Sku.create!(product_id: local_product.id, quantity: quantity, num_iid: num_iid, sku_id: sku_id, properties_name:properties_name, properties: properties)  unless Sku.find_by_sku_id(sku_id)
-              end  
-            else
-              quantity = sku_items['num']
+
+          local_product = Product.create(account_id: account.id, name: name, detail_url: detail_url, outer_id: outer_id,  num_iid: num_iid, product_id: product_id, cid: cid, pic_url: pic_url, price: price) unless TaobaoProduct.find_by_num_iid(num_iid)         
+          if sku_items['skus'] && sku_items['skus']['sku'].count > 0
+            sku_items['skus']['sku'].each do |sku|
+              sku_id = sku['sku_id']
+              quantity = sku['quantity']
+              properties_name = sku['properties_name']
+              properties = sku['properties']
               #Remember to add account_id
-              Sku.create!(product_id: local_product.id, quantity: quantity, num_iid: num_iid) unless Sku.find_by_num_iid(num_iid)
-            end    
+              Sku.create!(product_id: local_product.id, quantity: quantity, num_iid: num_iid, sku_id: sku_id, properties_name:properties_name, properties: properties)  unless Sku.find_by_sku_id(sku_id)
+            end  
+          else
+            quantity = sku_items['num']
+            #Remember to add account_id
+            Sku.create!(product_id: local_product.id, quantity: quantity, num_iid: num_iid) unless Sku.find_by_num_iid(num_iid)
           end  
+          unless TaobaoProduct.find_by_num_iid(local_product.num_iid)
+            local_product.taobao_products.create(account_id: account.id, category_id: local_product.category_id, num_iid: local_product.num_iid, price: local_product.price, outer_id: local_product.outer_id, product_id: local_product.product_id, cat_name: local_product.cat_name, pic_url: local_product.pic_url, cid: local_product.cid, name: local_product.name) 
+          end   
         end  
       end # num_iids each ends
     end # create_from_trades ends

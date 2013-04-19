@@ -396,6 +396,12 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
   confirmBatchDeliver: ->
     $.get '/trades/batch_deliver', {ids: MagicOrders.idCarrier}, (data)->
       if data.isSuccess == true
+        for id in MagicOrders.idCarrier 
+          model = new MagicOrders.Models.Trade(id: id)
+          model.fetch success: (model, response) =>
+            view = new MagicOrders.Views.TradesRow(model: model)
+            $("#trade_#{model.get('id')}").replaceWith(view.render().el)
+            $("a[rel=popover]").popover({placement: 'left', html:true})
         $('#batch_deliver').modal('hide')
       else
         alert('失败')

@@ -9,6 +9,8 @@ class BillProduct
   field :colors, type: Array
   field :number, type: Integer
   field :memo, type: String
+  field :price, type: Float
+  field :total_price, type: Float
 
   belongs_to :sku
   embedded_in :deliver_bill
@@ -18,7 +20,7 @@ class BillProduct
   end
 
   def packaged?
-    product && product.good_type == 2
+    false
   end
 
   def color_info

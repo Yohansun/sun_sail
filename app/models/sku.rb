@@ -28,5 +28,18 @@ class Sku < ActiveRecord::Base
       end  
     end
     sku_name
-  end  
+  end 
+
+   def value
+    value = ''
+    if properties_name.present?
+      properties = properties_name.split(';')
+      properties.each do |property|
+        sku_values = property.split(':')
+        sku_value =  sku_values[3]
+        value = sku_value + ' '
+      end  
+    end
+    value
+  end 
 end

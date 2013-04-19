@@ -139,6 +139,7 @@ class Trade
   embeds_many :trade_gifts
 
   has_many :deliver_bills
+  has_one :stock_out_bill
 
   attr_accessor :matched_seller
 
@@ -262,47 +263,8 @@ class Trade
     "#{cs_memo}  #{orders_cs_memo}"
   end
 
-  def nofity_stock(operation, op_seller)
-    orders.each do |order|
-      if order.sku_id.present?
-        product = Product.joins(:skus).where("skus.sku_id = #{order.sku_id}").first
-      else
-        product = Product.find_by_num_iid order.num_iid
-      end
-      package = product.try(:package_info)
-      if package.present?
-        package.each do |data|
-          stock_product = StockProduct.joins(:product).where("products.outer_id = ? AND seller_id = ?", data[:outer_id], op_seller).readonly(false).first
-          if stock_product
-            stock_product.update_quantity!(data[:number] * order.num, operation)
-            StockHistory.create(
-              operation: operation,
-              number: data[:number] * order.num,
-              stock_product_id: stock_product.id,
-              seller_id: op_seller,
-              tid: tid
-              )
-          end
-        end
-      else
-        stock_product = StockProduct.where(seller_id: op_seller).first
-        if stock_product
-          stock_product.update_quantity!(order.num, operation)
-          StockHistory.create(
-            operation: operation,
-            number: order.num,
-            stock_product_id: stock_product.id,
-            seller_id: op_seller,
-            tid: tid
-            )
-        end
-      end
-    end
-  end
-
   def reset_seller
     return unless seller_id
-    nofity_stock "解锁", seller_id
     update_attributes(seller_id: nil, seller_name: nil, dispatched_at: nil)
     deliver_bills.delete_all
   end
@@ -341,8 +303,7 @@ class Trade
     return false unless enable == 1
     items = []
     taobao_orders.each do |order|
-      product = Product.find_by_num_iid(order.num_iid)
-      product.package_products.each do |p|
+      order.package_products.each do |p|
         items << p.logistic_group_id
       end
     end
@@ -352,9 +313,8 @@ class Trade
   def logistic_group_products
     items = []
     taobao_orders.each do |order|
-      product = Product.find_by_num_iid(order.num_iid)
       order.num.times{
-        product.package_products.each do |p|
+        order.package_products.products.each do |p|
           item = {order_id: order.id, product_id: p.id, num: 1, logistic_group_id: p.logistic_group_id}
           items << item
         end
@@ -388,6 +348,30 @@ class Trade
       products << logistic_group_product if logistic_group_id == id
     end
     products
+  end
+
+  def generate_stock_out_bill
+    return if stock_out_bill.present?
+    bill = StockOutBill.create(trade_id: _id, tid: tid, op_state:receiver_state, op_city: receiver_city, op_district: receiver_district, op_address: receiver_address,
+      op_name: receiver_name, op_mobile: receiver_mobile, op_zip: receiver_zip, op_phone: receiver_phone, logistic_id: logistic_id, remark: cs_memo,
+      stock_type: "CM", account_id: account_id, checked_at: Time.now, created_at: Time.now
+    )
+    orders.each do |order|
+      next unless order.products.present?
+      order.products.each do |product|
+        bill.bill_products.create(
+          title: product.name,
+          outer_id: product.outer_id,
+          price: product.price,
+          total_price: product.price * product.number(order.product.id),
+          number: product.number(order.product.id),
+          remark: order.cs_memo
+        )
+      end  
+    end
+    bill.bill_products_mumber = bill.bill_products.sum(:number)
+    bill.bill_products_price = bill.bill_products.sum(:total_price)
+    bill.save
   end
 
   def generate_deliver_bill
@@ -461,97 +445,97 @@ class Trade
     end
   end
 
+  #should be removed as deprecation  
+  # def logistic_split
+  #   splited = []
+  #   orders.each do |order|
+  #     product = Product.find_by_outer_id order.outer_iid
 
-  def logistic_split
-    splited = []
-    orders.each do |order|
-      product = Product.find_by_outer_id order.outer_iid
+  #     unless product
+  #       splited.clear
+  #       break
+  #     end
 
-      unless product
-        splited.clear
-        break
-      end
+  #     case product.category.try(:name)
+  #     when '輔助材料'
+  #       divmod = 100000
+  #     when '木器漆'
+  #       divmod = 1
+  #     else
+  #       divmod = case product.quantity.try(:name)
+  #       when '5L'
+  #         3
+  #       when '10L', '15L', '1套'
+  #         1
+  #       else
+  #         splited.clear
+  #         break
+  #       end
+  #     end
 
-      case product.category.try(:name)
-      when '輔助材料'
-        divmod = 100000
-      when '木器漆'
-        divmod = 1
-      else
-        divmod = case product.quantity.try(:name)
-        when '5L'
-          3
-        when '10L', '15L', '1套'
-          1
-        else
-          splited.clear
-          break
-        end
-      end
+  #     div = order.num.divmod divmod
 
-      div = order.num.divmod divmod
+  #     if div[0] != 0
+  #       div[0].times do
+  #         splited << {
+  #           bill: {
+  #             id: tid + ("%02d" % (splited.size + 1)),
+  #             number: divmod,
+  #             title: order.title,
+  #             outer_id: order.outer_iid
+  #           }
+  #         }
+  #       end
+  #     end
 
-      if div[0] != 0
-        div[0].times do
-          splited << {
-            bill: {
-              id: tid + ("%02d" % (splited.size + 1)),
-              number: divmod,
-              title: order.title,
-              outer_id: order.outer_iid
-            }
-          }
-        end
-      end
+  #     if div[1] != 0
+  #       div[1].times do
+  #         splited << {
+  #           bill: {
+  #             id: tid + ("%02d" % (splited.size + 1)),
+  #             number: 1,
+  #             title: order.title,
+  #             outer_id: order.outer_iid
+  #           }
+  #         }
+  #       end
+  #     end
+  #   end
 
-      if div[1] != 0
-        div[1].times do
-          splited << {
-            bill: {
-              id: tid + ("%02d" % (splited.size + 1)),
-              number: 1,
-              title: order.title,
-              outer_id: order.outer_iid
-            }
-          }
-        end
-      end
-    end
+  #   splited
+  # end
 
-    splited
-  end
+  # def split_logistic(logistic_ids)
+  #   # 清空默认发货单
+  #   deliver_bills.delete_all
 
-  def split_logistic(logistic_ids)
-    # 清空默认发货单
-    deliver_bills.delete_all
+  #   logistic_split.each do |item|
+  #     outer_id = item[:bill][:outer_id]
+  #     order = orders.select{|order| order.outer_iid == outer_id}.first
+  #     color_num = order.color_num
+  #     bill_number = item[:bill][:id]
 
-    logistic_split.each do |item|
-      outer_id = item[:bill][:outer_id]
-      order = orders.select{|order| order.outer_iid == outer_id}.first
-      color_num = order.color_num
-      bill_number = item[:bill][:id]
+  #     deliver_bill = deliver_bills.create(
+  #       deliver_bill_number: bill_number,
+  #       seller_id: seller_id,
+  #       seller_name: seller_name
+  #       )
 
-      deliver_bill = deliver_bills.create(
-        deliver_bill_number: bill_number,
-        seller_id: seller_id,
-        seller_name: seller_name
-        )
+  #     deliver_bill.bill_products.create(
+  #       outer_id: outer_id,
+  #       title: item[:bill][:title],
+  #       number: item[:bill][:number],
+  #       colors: color_num.pop(item[:bill][:number]),
+  #       memo: order.cs_memo
+  #       )
 
-      deliver_bill.bill_products.create(
-        outer_id: outer_id,
-        title: item[:bill][:title],
-        number: item[:bill][:number],
-        colors: color_num.pop(item[:bill][:number]),
-        memo: order.cs_memo
-        )
+  #     logistic_id = logistic_ids[bill_number]
+  #     logistic = Logistic.find logistic_id
+  #     deliver_bill.logistic = logistic
+  #   end
 
-      logistic_id = logistic_ids[bill_number]
-      logistic = Logistic.find logistic_id
-      deliver_bill.logistic = logistic
-    end
-
-    update_attributes has_split_deliver_bill: true
-  end
+  #   update_attributes has_split_deliver_bill: true
+  # end
 
   def default_area
     address = self.receiver_address_array

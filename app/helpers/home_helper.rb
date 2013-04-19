@@ -6,10 +6,8 @@ module HomeHelper
 			else
 				'#'
 			end
-		elsif current_user.has_role?(:admin)
+		elsif current_user.has_role?(:admin) || current_user.has_role?(:cs)
 			stocks_path
-		elsif current_user.has_role?(:cs)
-			stock_products_path
 		else
 			'#'
 		end

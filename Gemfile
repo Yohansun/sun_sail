@@ -77,7 +77,8 @@ gem 'slim'
 gem 'sinatra', :require => nil
 
 gem 'httparty'
-gem 'savon', '1.1.0'
+gem 'savon', '2.1.0'
+gem 'wash_out', '0.6.1'
 gem 'collections'
 gem 'spreadsheet'
 gem 'ekuseru'

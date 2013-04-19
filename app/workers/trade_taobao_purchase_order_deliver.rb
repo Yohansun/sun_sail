@@ -17,8 +17,6 @@ class TradeTaobaoPurchaseOrderDeliver
     errors = response['error_response']
     if errors.blank?
       trade = TradeDecorator.decorate(trade)
-      #FIXME, MOVE LATER
-      trade.nofity_stock "发货", trade.seller_id
     else
       Notifier.deliver_errors(id, errors, trade.account_id).deliver
       trade.unusual_states.build(reason: "发货异常#{errors['sub_msg']}", key: 'other_unusual_state', created_at: Time.now)

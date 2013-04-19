@@ -61,15 +61,15 @@ $(function(){
 		form_height();
 	});
 	//advance open
-	// $('.js-open_advance').click(function(){
-	// 	$(this).parents('fieldset').siblings('.search_advanced').toggle(0,function(){
-	// 		form_height()
-	// 	});
-	// 	$(this).parent()
-	// 		.toggleClass('open_advance');
-	// 	$(this).children('i')
-	// 		.toggleClass('icon-arrow-up');
-	// })
+	$('.js-stock_advance').click(function(){
+		$(this).parents('fieldset').siblings('.search_advanced').toggle(0,function(){
+			form_height()
+		});
+		$(this).parent()
+			.toggleClass('open_advance');
+		$(this).children('i')
+			.toggleClass('icon-arrow-up');
+	})
 	$('.js-remove_unit_item').click(function(){
 		$(this).parent('.unit_item').remove()
 	})

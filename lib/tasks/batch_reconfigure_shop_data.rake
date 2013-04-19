@@ -83,27 +83,6 @@ task :configure_areas_sellers=> :environment do
   p missing_seller
 end
 
-task :configure_stocks => :environment do
-  account = Account.find_by_id(ENV['account_id'])
-  break unless account 
-  products = account.products 
-  break unless products.present? 
-  sellers = account.sellers.where("parent_id IS NOT NULL")
-  break unless sellers.present?
-  sellers.update_all(has_stock: true, stock_opened_at: Time.now)
-  sellers.each do |seller|
-    products.each do |product|
-      skus = product.skus
-      break unless skus.present? 
-      skus.each do |sku|
-        next if seller.stock_products.where(account_id: account.id, product_id: sku.product_id, num_iid: sku.num_iid,  sku_id: sku.id).exists?
-        seller.stock_products.create!(account_id: account.id, product_id: sku.product_id, safe_value:20, max:9000, activity:1000, actual:1000, sku_id:sku.id, num_iid: sku.num_iid)
-      end
-    end    
-  end
-end
-
-
 task :batch_reconfigure_sellers => :environment do
   CSV.foreach("#{Rails.root}/lib/tasks/sellers.csv") do |row|
     seller_id     = row[0] #经销商id
@@ -138,37 +117,4 @@ task :batch_reconfigure_sellers => :environment do
       user.save
     end  
   end
-end
-
-task :batch_reconfigure_special_stocks => :environment do
-  #Product id: 264, name: "净享居竹炭五合一 套装 1套"
-  product_id = ENV['product_id']
-  CSV.foreach("#{Rails.root}/lib/tasks/stocks.csv") do |row|
-   seller_name = row[0]
-   number = row[1].to_i
-   operation = row[2]
-   note = row[3]
-   seller = Seller.find_by_name(seller_name)
-   if seller
-     stock = seller.stock_products.where(product_id: product_id).first
-     stock = seller.stock_products.new(product_id: product_id, max: 99999, safe_value: 20) unless stock
-     stock.activity = stock.activity + number
-     stock.actual = stock.actual + number
-     if stock.save(validate: false)
-       stock_history = StockHistory.new
-       stock_history.operation = operation
-       stock_history.number = number
-       stock_history.stock_product_id = stock.id
-       stock_history.user_id = 6
-       stock_history.seller_id = stock.seller_id
-       stock_history.note = note
-       stock_history.reason = 'o0'
-       stock_history.save(validate: false) 
-     else
-       p "seller #{seller.name} update stock false"
-     end  
-   else
-     p "seller #{seller_name} not found"
-   end
- end 
 end

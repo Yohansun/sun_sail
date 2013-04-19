@@ -2,11 +2,14 @@ require 'sidekiq/web'
 
 MagicOrders::Application.routes.draw do
 
+  resources :stock_in_bills
+  resources :stock_out_bills
+  resources :stock_bills
+
+  wash_out :stock_api
+
   resources :logistic_groups
-
-
   resources :upload_files
-
   resources :bbs_categories
   resources :bbs_topics do
     member do
@@ -51,9 +54,7 @@ MagicOrders::Application.routes.draw do
   devise_for :users, :path => '', :path_names => {:sign_in => 'login'},
     controllers: { sessions: "sessions" }
 
-  get "/stocks", to: 'stocks#home'
-  get "/stock_products", to: 'stock_products#index'
-  get "/stock_products/search", to: 'stock_products#search'
+  get "/stocks", to: 'stocks#index'
   get "/sales/add_node", to: 'sales#add_node'
   get "/api/logistics", to: 'logistics#logistic_templates'
   get 'callcenter/wangwang_list', to: 'callcenter#wangwang_list'

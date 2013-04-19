@@ -8,7 +8,7 @@ class TradesController < ApplicationController
   respond_to :json, :xls
 
   include TaobaoProductsLockable
-  include Dulux::Splitter
+  #include Dulux::Splitter
 
   def index
     offset = params[:offset] || 0
@@ -86,9 +86,9 @@ class TradesController < ApplicationController
 
   def show
     @trade = TradeDecorator.decorate(Trade.where(_id: params[:id]).first)
-    if params[:splited]
-      @splited_orders = matched_seller_info(@trade)
-    end
+    # if params[:splited]
+    #   @splited_orders = matched_seller_info(@trade)
+    # end
     respond_with @trade
   end
 
@@ -185,9 +185,10 @@ class TradesController < ApplicationController
       state.repaired_at = Time.now
     end
 
-    if params[:logistic_ids].present?
-      @trade.split_logistic(params[:logistic_ids])
-    end
+    #should be deprecation
+    # if params[:logistic_ids].present?
+    #   @trade.split_logistic(params[:logistic_ids])
+    # end
 
     if params[:confirm_color_at] == true
       @trade.confirm_color_at = Time.now
@@ -305,7 +306,7 @@ class TradesController < ApplicationController
     trade = Trade.find params[:id]
     area = Area.find params[:area_id]
 
-    seller = Dulux::SellerMatcher.match_trade_seller(trade, area)
+    seller = SellerMatcher.match_trade_seller(trade, area)
     seller ||= trade.default_seller
 
     seller_id = nil
@@ -382,7 +383,11 @@ class TradesController < ApplicationController
   end
 
   def batch_deliver
-    Trade.any_in(_id: params[:ids]).update_all(delivered_at: Time.now)
+    Trade.any_in(_id: params[:ids]).each do |trade|
+      trade.delivered_at = Time.now
+      trade.status = "WAIT_BUYER_CONFIRM_GOODS"
+      trade.save # this will trigger observer.
+    end  
     render json: {isSuccess: true}
   end
 

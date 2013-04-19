@@ -27,11 +27,11 @@ class StockProduct < ActiveRecord::Base
   validates_numericality_of :safe_value, :actual, :activity, less_than_or_equal_to: :max, message: '数量必须小于满仓值'
   validates_numericality_of :safe_value, :actual, :activity, :max, greater_than_or_equal_to: 0, message: '数量不能小于零'
   validates_numericality_of :activity, less_than_or_equal_to: :actual
-  validates_presence_of :product_id, :seller_id, message: '必填项'
-  validates_uniqueness_of :sku_id, scope: :seller_id
+  validates_presence_of :product_id, :account_id, message: '必填项'
+  validates_uniqueness_of :sku_id, scope: :account_id
   belongs_to :product
   belongs_to :sku
-  belongs_to :seller
+  # belongs_to :seller
   has_and_belongs_to_many :colors
 
   def sku_name
@@ -47,6 +47,19 @@ class StockProduct < ActiveRecord::Base
     end
     sku_name
   end
+
+  def sku_values
+    values = ''
+    if sku.properties_name.present?
+      properties = sku.properties_name.split(';')
+      properties.each do |property|
+        sku_properties = property.split(':')
+        sku_value = sku_properties[3]
+        values = sku_value + ' '
+      end
+    end
+    values
+  end  
 
   def storage_status
     if activity < safe_value

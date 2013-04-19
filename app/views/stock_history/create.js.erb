@@ -1,7 +1,0 @@
-<% if @flag %>
-$('#storage_in').modal('hide')
-$('#storage_out').modal('hide')
-location.reload()
-<% else %>
-alert('<%= @error_message %>')
-<% end %>

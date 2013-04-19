@@ -34,9 +34,7 @@ class TradeTaobaoDeliver
       if content && mobile
         SmsNotifier.perform_async(content, mobile, tid ,notify_kind)
       end
-
-      #FIXME, MOVE LATER
-      trade.nofity_stock "发货", trade.seller_id
+      
     else
       Notifier.deliver_errors(id, errors, trade.account_id).deliver
       trade.unusual_states.build(reason: "发货异常#{errors['sub_msg']}", key: 'other_unusual_state', created_at: Time.now)

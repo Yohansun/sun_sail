@@ -155,11 +155,11 @@ class TaobaoTradePuller
               trade.set_has_onsite_service
               local_trade.save
               if local_trade.dispatchable? && local_trade.auto_dispatchable?
-                if account.key == 'dulux'
+                # if account.key == 'dulux'
                   DelayAutoDispatch.perform_in(account.settings.delay_time || 1.hours, local_trade.id)
-                else
-                  local_trade.auto_dispatch!
-                end
+                # else
+                #   local_trade.auto_dispatch!
+                # end
               end
               if account.settings.auto_settings["auto_sync_memo"] && account.can_auto_preprocess_right_now?
                 TradeTaobaoMemoFetcher.perform_async(local_trade.tid, false)
@@ -228,11 +228,11 @@ class TaobaoTradePuller
             local_trade.operation_logs.build(operated_at: Time.now, operation: "订单状态核查,更新#{local_trade.changed.try(:join, ',')}") if local_trade.changed?
             local_trade.save
             if local_trade.dispatchable? && local_trade.auto_dispatchable?
-              if account.key == 'dulux'
-                DelayAutoDispatch.perform_in(account.settings.delay_time || 1.hours, local_trade.id)
-              else
-                local_trade.auto_dispatch!
-              end
+              # if account.key == 'dulux'
+                 DelayAutoDispatch.perform_in(account.settings.delay_time || 1.hours, local_trade.id)
+              # else
+              #  local_trade.auto_dispatch!
+              # end
             end
              TradeTaobaoMemoFetcher.perform_async(local_trade.tid, false)
             p "update trade #{trade['tid']}"

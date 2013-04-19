@@ -12,13 +12,6 @@
   <% if current_account.settings.enable_module_logistic_group == 1 %>
     <td><%= product.logistic_group.try(:name) %></td>
   <% end %>
-  <td>
-    <% if product.good_type == 2 %>
-      套装：<%= product.child_outer_id %>
-    <% else %>
-      单品
-    <% end %>
-  </td>
 <!--   <td><%#= product.present_features %></td> -->
   <td>
     <div class="btn-group">

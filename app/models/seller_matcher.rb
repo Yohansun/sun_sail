@@ -1,33 +1,52 @@
 class SellerMatcher
-
-	def initialize(trade)
-		@trade = trade
+	def self.match_item_seller(area, order)
+		match_item_sellers(area, order).first
 	end
 
-	def matched_seller(area)
-		all_special_products_seller || area_seller(area)
-	end
+	def self.match_item_sellers(area, order)
+		sellers = nil
+		taobao_product = TaobaoProduct.find_by_outer_id order.outer_iid
+		return [] unless taobao_product
+		color_num = order.color_num
+		color_num.delete('')
+		op_package = taobao_product.package_info
+		op_package << {
+		outer_id: order.outer_iid,
+		number: order.num,
+		title: order.title
+		} if op_package.blank?
 
-protected
+		op_package.each do |pp|
+			sql = "products.outer_id = '#{pp[:outer_id]}' AND stock_products.activity > #{pp[:number]}"
+			products = StockProduct.joins(:product).where(sql)
 
-	def area_seller(area)
-    area.sellers.first
-	end
+			if op.account.settings.enable_match_seller_user_color && color_num.present?
+				color_num.each do |colors|
+					next if colors.blank?
+					colors = colors.shift(pp[:number]).flatten.compact.uniq
+					colors.delete('')
+					products = products.select {|p| (colors - p.colors.map(&:num)).size == 0}
+				end
+			end
 
-	def all_special_products_seller
-		# TODO
-		# 完善的匹配规则
-		seller = nil
-
-    default_seller_id = @trade.fetch_account.settings.default_seller_id
-		special_out_iids = @trade.fetch_account.settings.special_iids || []
-
-		trade_out_iids = @trade.out_iids || []
-
-		if trade_out_iids.size > 0 && (trade_out_iids - special_out_iids).size == 0
-			seller = Seller.find default_seller_id
+			product_seller_ids = products.map &:seller_id
+			a_sellers = area.sellers.where(id: product_seller_ids, active: true, account_id: order.account_id).reorder("performance_score DESC")
+			if sellers
+				sellers = sellers & a_sellers
+			else
+				sellers = a_sellers
+			end
 		end
+		sellers
+	end	
 
-		seller
-	end
-end
+	def self.match_trade_seller(trade, area)
+		matched_sellers = nil
+		trade.orders.each do |o|
+			matched_sellers ||= match_item_sellers(area, o)
+			matched_sellers = matched_sellers & match_item_sellers(area, o)
+		end
+		matched_sellers ||= []
+		matched_sellers.first
+	end	
+end	

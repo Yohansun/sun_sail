@@ -51,8 +51,12 @@ class TaobaoOrder < Order
   end
 
   def product
-    super(outer_iid)
+    TaobaoProduct.find_by_outer_id(outer_iid) || TaobaoProduct.find_by_num_iid(num_iid) 
   end
+
+  def products
+    product.products
+  end  
 
   # 匹配套装内单品调色信息
   #

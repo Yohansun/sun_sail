@@ -76,11 +76,7 @@
                 <%- elsif  current_user.has_role?(:cs) ||  current_user.has_role?(:seller) %>
                   <li><a href="/trade_reports">数据魔方</a></li>
                 <%- end %>
-                <% if current_user.has_role?(:seller) && current_user.seller  && current_account.key != 'nippon' %>
-                  <li><%= link_to '仓库管理', seller_stocks_path(current_user.seller.id), class: "stocks" %></li>
-                <% elsif current_user.has_role?(:admin) || current_user.has_role?(:cs)%>
-                  <li><%= link_to '仓库管理', stocks_path, class: "stocks" %></li>
-                <% end %>
+                <li><%= link_to '仓库管理', stock_path_by_user, class: "stocks" %></li>
                 <% if current_user.has_role?(:admin) %>
                 <li><%= link_to '商品管理', products_path, class: "products" %></li>
                 <li><%= link_to '经销商管理', sellers_path %>
@@ -117,28 +113,6 @@
               <li class="divider-vertical"></li>
             </ul>
           <%- end %>
-
-          <!--/.nav-collapse -->
-          <!-- <ul class="nav pull-right">
-            <li id="fat-menu" class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="badge badge-info" style="background-color:#FF0000"></span>&nbsp;异常订单 <b class="caret"></b></a>
-              <ul class="dropdown-menu">
-                <li><a href="/trades/unpaid_for_days">未付款时间过长</a></li>
-                <li><a href="/trades/undispatched_for_days">未分流时间过长</a></li>
-                <li><a href="/trades/undelivered_for_days">未发货时间过长</a></li>
-                <li class= "divider"></li>
-                <li><a href="trades/buyer_delay_deliver">买家延迟发货</a></li>
-                <li><a href="trades/seller_ignore_deliver">卖家长时间未发货</a></li>
-                <li><a href="trades/seller_lack_product">经销商缺货</a></li>
-                <li><a href="trades/seller_lack_color">经销商无法调色</a></li>
-                <li><a href="trades/buyer_demand_refund">买家要求退款</a></li>
-                <li><a href="trades/buyer_demand_return_product">买家要求退货</a></li>
-                <li><a href="trades/other_unusual_state">其他异常</a></li>
-              </ul>
-            </li>
-            <li class="divider-vertical"></li>
-          </ul> -->
-
           <% end %>
         </div>
       </div>
@@ -146,16 +120,8 @@
 
     <div class="container-fluid">
       <%= yield %>
-
-      <footer>
-        <p>&copy; Doorder/NIO team 2012</p>
-      </footer>
     </div> <!-- /container -->
-
-    <!-- Javascripts
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-
+    <footer><p>&copy; Doorder/NIO team 2012</p></footer>
     <%= javascript_include_tag "application" %>
     <%= javascript_include_tag "/areas.js" %>
     <%= yield :tail -%>

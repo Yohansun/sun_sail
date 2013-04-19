@@ -2,7 +2,7 @@
 
 class TaobaoTrade < Trade
   include TaobaoProductsLockable
-  include Dulux::Splitter
+  #include Dulux::Splitter
 
   field :tid, type: String
   field :num, type: Integer
@@ -168,9 +168,6 @@ class TaobaoTrade < Trade
 
     return false if seller.blank?
 
-    # 锁定库存
-    nofity_stock '锁定', seller.id
-
     # 更新订单状态为已分流
     update_attributes(seller_id: seller.id, seller_name: seller.name, dispatched_at: Time.now)
 
@@ -186,15 +183,12 @@ class TaobaoTrade < Trade
 
     # 生成默认发货单
     generate_deliver_bill
+    generate_stock_out_bill
   end
 
   def matched_seller(area = nil)
     area ||= default_area
-    if self.fetch_account.key == 'dulux'
-      Dulux::SellerMatcher.match_trade_seller(self, area) unless splitable?
-    else
-      Dulux::SellerMatcher.match_trade_seller(self, area)
-    end
+    SellerMatcher.match_trade_seller(self, area)
   end
 
   def splitable?
