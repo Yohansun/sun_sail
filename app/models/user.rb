@@ -29,6 +29,7 @@
 #
 
 class User < ActiveRecord::Base
+  include RailsSettings
   rolify
   belongs_to :area
   belongs_to :seller

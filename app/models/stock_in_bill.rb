@@ -1,11 +1,10 @@
 # -*- encoding:utf-8 -*-
 class StockInBill < StockBill 
 	include Mongoid::Document
+  include MagicEnum  
 	embeds_many :bml_input_backs
 
-  def account
-    Account.find_by_id(trade.account_id)
-  end 
+  enum_attr :stock_type,[["调拨入库", "IR"], ["正常入库", "FG"], ["拆分入库", "CF"], ["加工入库", "OT"], ["退货入库", "RR"], ["特殊入库(免费)", "MF"]]
 
 	def xml
 		stock = ::Builder::XmlMarkup.new

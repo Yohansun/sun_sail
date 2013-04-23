@@ -1,121 +1,138 @@
-  <div class="row-fluid">
-    <div class="span2 bs-docs-sidebar">
-      <ul class="nav nav-list bs-docs-sidenav affix span2">
-        <li class="active"><a href="#"><i class="icon-chevron-right"></i>默认仓库</a></li>
-      </ul>
-    </div>
+<div class="row-fluid">
+  <div class="span2 bs-docs-sidebar">
+    <ul class="nav nav-list bs-docs-sidenav affix span2">
+      <li class="active"><a href="#"><i class="icon-chevron-right"></i>默认仓库</a></li>
+    </ul>
+  </div>
 
-    <div class="span10">
-      <ul class="nav nav-tabs">
-        <li><%= link_to "库存查询", stocks_path %></li>
-        <li class="active"><%= link_to "入库单", stock_in_bills_path %></li>
-        <li><%= link_to "出库单", stock_out_bills_path %></li>
-        <li><%= link_to "所有进销", stock_bills_path %></li>
-      </ul><!-- nav-tabs -->  
-      <div class="tab-content">
-        <div class="tab-pane active" id="stock_check">
-          <form class="well well-small form-horizontal font12">
+  <div class="span10">
+    <ul class="nav nav-tabs">
+      <li><%= link_to "库存查询", stocks_path %></li>
+      <li class="active"><%= link_to "入库单", stock_in_bills_path %></li>
+      <li><%= link_to "出库单", stock_out_bills_path %></li>
+      <li><%= link_to "所有进销", stock_bills_path %></li>
+    </ul><!-- nav-tabs -->  
+    <div class="tab-content">
+      <div class="tab-pane active" id="stock_check">
+        <form class="well well-small form-horizontal font12">
+          <fieldset>
+            <div class="control-group">
+              <label class="pull-left"><code>精准：</code></label>
+              <div class="controls pull-left">
+                <select class="input-small pull-left select2 radius_no_rb">
+                  <option value="所有">商品名称</option>
+                  <option value="">商品编码</option>
+                  <option value="">淘宝ID</option>
+                </select>
+                <input type="text" class="input-medium radius_no_tl" placeholder="输入关键字...">
+              </div>
+              <div class="pull-left">
+                <button type="button pull-left" class="btn btn-small btn-info">搜索</button>
+                <label class="help-inline js-stock_advance"><i class="icon-arrow-down"></i>高级搜索</label>
+              </div>
+            </div>
+          </fieldset><!-- form line1 area -->
+
+          <div class="search_advanced none">
             <fieldset>
               <div class="control-group">
-                <label class="pull-left"><code>精准：</code></label>
+                <label class="pull-left"><code>状态：</code></label>
                 <div class="controls pull-left">
-                  <select class="input-small pull-left select2 radius_no_rb">
-                    <option value="所有">商品名称</option>
-                    <option value="">商品编码</option>
-                    <option value="">淘宝ID</option>
+                  <select class="input-small pull-left select2">
+                    <option value="满仓">满仓</option>
+                    <option value="">预警</option>
+                    <option value="">缺货</option>
+                    <option value="">正常</option>
                   </select>
-                  <input type="text" class="input-medium radius_no_tl" placeholder="输入关键字...">
-                </div>
-                <div class="pull-left">
-                  <button type="button pull-left" class="btn btn-small btn-info">搜索</button>
-                  <label class="help-inline js-stock_advance"><i class="icon-arrow-down"></i>高级搜索</label>
                 </div>
               </div>
-            </fieldset><!-- form line1 area -->
+            </fieldset><!-- form line2 area -->
 
-            <div class="search_advanced none">
-              <fieldset>
-                <div class="control-group">
-                  <label class="pull-left"><code>状态：</code></label>
-                  <div class="controls pull-left">
-                    <select class="input-small pull-left select2">
-                      <option value="满仓">满仓</option>
-                      <option value="">预警</option>
-                      <option value="">缺货</option>
-                      <option value="">正常</option>
-                    </select>
-                  </div>
+            <fieldset>
+              <div class="control-group">
+                <label class="pull-left"><code>分类：</code></label>
+                <div class="controls pull-left">
+                  <select class="input-small pull-left radius_no_rb select2">
+                    <option value="分类一">分类一</option>
+                  </select>
+                  <select class="input-small pull-left radius_no select2">
+                    <option value="系列">系列</option>
+                  </select>
+                  <select class="input-small pull-left radius_no_tl select2">
+                    <option value="产品型号">产品型号</option>
+                  </select>
                 </div>
-              </fieldset><!-- form line2 area -->
-
-              <fieldset>
-                <div class="control-group">
-                  <label class="pull-left"><code>分类：</code></label>
-                  <div class="controls pull-left">
-                    <select class="input-small pull-left radius_no_rb select2">
-                      <option value="分类一">分类一</option>
-                    </select>
-                    <select class="input-small pull-left radius_no select2">
-                      <option value="系列">系列</option>
-                    </select>
-                    <select class="input-small pull-left radius_no_tl select2">
-                      <option value="产品型号">产品型号</option>
-                    </select>
-                  </div>
-                </div>
-                <fieldset>
-                  <label class="pull-left"><code>当前：</code></label>
-                  <div class="controls clearfix item_group">
-                  </div>
-                </fieldset><!-- current -->
               </div>
-            </form>
-            <%= form_tag "/",:method => "post",:id => "stock_in_bills_form", :remote => true do %>
-            <div class="btn-toolbar">
-              <div class="btn-group">
-                <button class="btn btn-warning">操作</button>
-                <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
-                  <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu">
-                 <li>
-                  <%= link_to "审核","javascript:if($('input:checked').length < 1){
-                  alert('请选择');
-                  }else{
-                    confirm('确认审核吗?');                      
-                    $('#stock_in_bills_form').attr({action: '/stock_bills/check',method: 'post'});
-                    $('#stock_in_bills_form').submit();
+              <fieldset>
+                <label class="pull-left"><code>当前：</code></label>
+                <div class="controls clearfix item_group">
+                </div>
+              </fieldset><!-- current -->
+            </div>
+          </form>
+          <%= form_tag "/",:method => "post",:id => "stock_in_bills_form", :remote => true do %>
+          <div class="btn-toolbar">
+            <div class="btn-group">
+              <button class="btn btn-warning">操作</button>
+              <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu">
+                <li>
+                  <%= link_to "新建", new_stock_in_bill_path %>
+                </li>
+                <li>
+                  <%= link_to "查看","javascript:if($('input:checked').length < 1){
+                  alert('请选择一个入库单');
+                  }else{ 
+                    var bill_id = $(\"input[name='bill_ids[]']:checked:first\").val();                   
+                    $(location).attr('href','/stock_in_bills/'+bill_id);
                   }"  %>
                 </li>
-                <%- if current_account.settings.enable_module_third_party_stock == 1 %>
+                <li>
+                  <%= link_to "审核","javascript:if($('input:checked').length < 1){
+                  alert('请选择至少一个入库单');
+                  }else{
+                    var flag = confirm('确认审核吗?');
+                    if(flag==true){
+                      $('#stock_in_bills_form').attr({action: '/stock_in_bills/check',method: 'post'});
+                      $('#stock_in_bills_form').submit();
+                      }else{return false};  
+                    }"  %>
+                  </li>
+                  <%- if current_account.settings.enable_module_third_party_stock == 1 %>
                   <li>
                     <%= link_to "同步","javascript:
                     if($('input:checked').length < 1){
-                      alert('请选择');
+                      alert('请选择至少一个入库单');
                       }else{
-                        confirm('确认同步吗?');
-                        $('#stock_in_bills_form').attr({action: '/stock_bills/sync',method: 'post'});
-                        $('#stock_in_bills_form').submit();
-                      }" %>
-                    </li>
-                    <li>
-                      <%= link_to "撤销","javascript:
-                      if($('input:checked').length < 1){
-                        alert('请选择');
-                        }else{
-                          confirm('确认撤销吗?');                      
-                          $('#stock_in_bills_form').attr({action: '/stock_bills/rollback',method: 'post'});
+                        var flag = confirm('确认同步吗?');
+                        if(flag==true){
+                          $('#stock_in_bills_form').attr({action: '/stock_in_bills/sync',method: 'post'});
                           $('#stock_in_bills_form').submit();
-                        }"%>
-                    </li>
-                  <%- end %>  
-                  </ul>
-                </div><!-- btn-group -->
-              </div>
-              <%= render "stock_bills/table" %>
-              <%- end %>
-              <%= paginate @bills %>
-            </div><!--span10 -->
-          </div><!-- tab-content -->
-        </div><!-- span10 -->
+                          }else{return false};  
+                        }" %>
+                      </li>
+                      <li>
+                        <%= link_to "撤销","javascript:
+                        if($('input:checked').length < 1){
+                          alert('请选择至少一个入库单');
+                          }else{
+                            var flag = confirm('确认撤销吗?');
+                            if(flag==true){                      
+                              $('#stock_in_bills_form').attr({action: '/stock_in_bills/rollback',method: 'post'});
+                              $('#stock_in_bills_form').submit();
+                              }else{return false};   
+                            }"%>
+                          </li>
+                          <%- end %>  
+                        </ul>
+                      </div><!-- btn-group -->
+                    </div>
+                    <%= render "table" %>
+                    <%- end %>
+                    <%= paginate @bills %>
+                  </div><!--span10 -->
+                </div><!-- tab-content -->
+              </div><!-- span10 -->
 </div><!--row-fluid

@@ -1,12 +1,11 @@
 # -*- encoding:utf-8 -*-
 class StockOutBill < StockBill
   include Mongoid::Document
+  include MagicEnum  
   belongs_to :trade
   embeds_many :bml_output_backs
-
-  def account
-    Account.find_by_id(trade.account_id)
-  end 
+  
+  enum_attr :stock_type, [["拆分出库", "RS"], ["调拨出库", "DB"], ["加工出库", "KT"], ["退货出库", "TT"], ["销售出库", "CM"], ["报废出库", "OT"], ["补货出库", "WR"], ["特殊出库(免费)", "MF"], ["退大货出库", "TD"]]
 
   def xml
     stock = ::Builder::XmlMarkup.new
@@ -24,7 +23,7 @@ class StockOutBill < StockBill
         stock.payment "" 
         stock.orderTime ""
         stock.website ""
-        stock.freight trade.post_fee 
+        stock.freight trade.try(:post_fee) 
         stock.serviceCharge 0.00
         stock.payTime ""
         stock.isCashsale ""
@@ -84,14 +83,14 @@ class StockOutBill < StockBill
   def so_to_wms
     client = Savon.client(wsdl: "http://58.210.118.230:9021/order/BMLservices/BMLQuery?wsdl")
     # if Rails.env.production?
-    response = client.call(:so_to_wms, message:{CustomerId:"ALLYES", PWD:"BML33570",xml: xml})
-    result_xml = response.body[:so_to_wms_response][:out]
-    result = Hash.from_xml(result_xml).as_json
-    if result['Response']['success'] == 'true'
-      update_attributes!(sync_succeded_at: Time.now)
-    else
-      update_attributes!(sync_failed_at: Time.now, failed_desc: result['Response']['desc'])
-    end 
+      response = client.call(:so_to_wms, message:{CustomerId:"ALLYES", PWD:"BML33570",xml: xml})
+      result_xml = response.body[:so_to_wms_response][:out]
+      result = Hash.from_xml(result_xml).as_json
+      if result['Response']['success'] == 'true'
+        update_attributes!(sync_succeded_at: Time.now)
+      else
+        update_attributes!(sync_failed_at: Time.now, failed_desc: result['Response']['desc'])
+      end 
     # else
     #   p "stock operation not allowed out of production stage"
     # end
@@ -101,17 +100,17 @@ class StockOutBill < StockBill
   def cancel_order_rx
     client = Savon.client(wsdl:"http://58.210.118.230:9021/order/BMLservices/BMLQuery?wsdl")
     # if Rails.env.production?
-    response = client.call(:cancel_order_rx) do
-      message CustomerId:"ALLYES", PWD:"BML33570", AsnNo: tid 
-    end
-    result_xml = response.body[:cancel_order_rx_response][:out]
-    result = Hash.from_xml(result_xml).as_json
-    if result['Response']['success'] == 'true'
-      update_attributes!(cancel_succeded_at: Time.now)
-      restore_stock
-    else
-      update_attributes!(cancel_failed_at: Time.now, failed_desc: result['Response']['desc'])
-    end
+      response = client.call(:cancel_order_rx) do
+        message CustomerId:"ALLYES", PWD:"BML33570", AsnNo: tid 
+      end
+      result_xml = response.body[:cancel_order_rx_response][:out]
+      result = Hash.from_xml(result_xml).as_json
+      if result['Response']['success'] == 'true'
+        update_attributes!(cancel_succeded_at: Time.now)
+        restore_stock
+      else
+        update_attributes!(cancel_failed_at: Time.now, failed_desc: result['Response']['desc'])
+      end
     # else
     #   p "stock operation not allowed out of production stage"
     # end

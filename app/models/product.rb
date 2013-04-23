@@ -15,5 +15,6 @@ class Product < ActiveRecord::Base
   validates_presence_of :name, :price, message: "信息不能为空"
   validates_numericality_of :price, message: "所填项必须为数字"
   validates_length_of :name, maximum: 100, message: "内容过长"
+  scope :current_products, ->(current_account_id) { where(account_id: current_account_id) }
 
 end

@@ -1,0 +1,36 @@
+<div class="btn-toolbar" style="top: 71px;">
+  <%= button_tag "删除",:onclick => "$('#form_products').submit()" ,:class => "btn btn-warning btn-small" %>  
+</div>
+
+<%= form_tag remove_product_stock_in_bills_path,:class => "form-horizontal",:id => "form_products",:remote => true do  %>
+<div class="tab-content noborder_content">
+  <div>
+    <table class="table table-hover table-bordered table-striped table-condensed js-table">
+      <thead>
+        <tr>
+          <th width="5%"><input type="checkbox"></th>
+          <th width="">商品编码</th>
+          <th width="">商品名称</th>
+          <th width="">商品单价</th>          
+          <th width="">商品数量</th>          
+          <th width="">商品总价</th>
+        </tr>
+      </thead>
+      <tbody>
+        <%- products.each do |product| %>
+        <%= hidden_field_tag "id",params[:id] %>
+        <tr id="product_<%= product.id %>">
+          <td><input type="checkbox" name="bill_product_ids[]" value="<%= product.id %>"></td>
+          <td><%= product.outer_id %></td>
+          <td><%= product.title %></td>
+          <td><%= product.price %></td>          
+          <td><%= product.number %></td>
+          <td><%= product.total_price %></td>
+        </tr>
+        <%- end %>  
+      </tbody>
+    </table>
+  </div>
+
+</div><!--tab-content -->
+<% end %>

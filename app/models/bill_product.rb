@@ -13,7 +13,7 @@ class BillProduct
   field :price, type: Float
   field :total_price, type: Float
 
-  embedded_in :deliver_bill
+  embedded_in :deliver_bill, :inverse_of => :bill_product
   embedded_in :stock_bill
 
   def product

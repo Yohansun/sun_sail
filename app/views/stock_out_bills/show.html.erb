@@ -1,0 +1,151 @@
+<div class="row-fluid">
+	<div class="span2 bs-docs-sidebar">
+		<ul class="nav nav-list bs-docs-sidenav affix span2">
+			<li class="active"><a href="#"><i class="icon-chevron-right"></i>默认仓库</a></li>
+		</ul>
+	</div>
+
+	<div class="span10">
+		<ul class="nav nav-tabs">
+			<li class="active"><%= link_to "#{@bill.tid}出库单", stock_out_bills_path %></li>
+			<li><%= link_to "库存查询", stocks_path %></li>
+			<li><%= link_to "入库单", stock_out_bills_path %></li>
+			<li><%= link_to "出库单", stock_out_bills_path %></li>
+			<li><%= link_to "所有进销", stock_bills_path %></li>
+		</ul><!-- nav-tabs -->  
+		<form class="form-horizontal mar_t30">
+			<div class="well clearfix">
+				<fieldset class="span6">
+					<div class="form-inline">
+						<label>出库单编号：</label><%= @bill.tid %>
+					</div>
+					<div class="form-inline">
+						<label>收货人：</label><%= @bill.op_name %>
+					</div>
+					<div class="form-inline">
+						<label>手机：</label><%= @bill.op_mobile %>
+					</div>
+					<div class="form-inline">
+						<label>邮编：</label><%= @bill.op_zip %>
+					</div>
+					<div class="form-inline">
+						<label>市：</label><%= @bill.op_city %>
+					</div>
+					<div class="form-inline">
+						<label>发货仓库：</label>默认仓库
+					</div>
+					<div class="form-inline">
+						<label>出库类型：</label><%= @bill.stock_type_name %>
+					</div>
+					<fieldset class="form-inline">
+						<label>备注：</label><%= @bill.remark %>
+					</fieldset>
+					<fieldset class="form-inline">
+						<fieldset class="form-inline">
+						<label>历史状态：</label>
+						<%- if @bill.created_at.present? -%>	
+						<span class='label '>
+							创建 <%= raw @bill.created_at.strftime("%m-%d %H:%M:%S") -%>
+						</span>	
+						<%- end -%>
+						<%- if @bill.checked_at.present? -%>	
+						<span class='label '>
+							审核 <%= raw @bill.checked_at.strftime("%m-%d %H:%M:%S") -%>
+						</span>
+						<%- end -%>
+						<%- if @bill.sync_at.present? -%>
+						<span class='label '>
+							同步 <%= raw @bill.sync_at.strftime("%m-%d %H:%M:%S") -%>
+						</span>
+						<%- end -%>
+						<%- if @bill.sync_failed_at.present? -%>
+						<span class='label '>
+							同步失败 <%= raw @bill.sync_failed_at.strftime("%m-%d %H:%M:%S") -%>
+						</span>
+						<%- end -%>
+						<%- if @bill.sync_succeded_at.present? -%>
+						<span class='label '>
+							同步成功 <%= raw @bill.sync_succeded_at.strftime("%m-%d %H:%M:%S") -%>
+						</span>
+						<%- end -%>
+						<%- if @bill.canceled_at.present? -%>
+						<span class='label '>
+							取消 <%= raw @bill.canceled_at.strftime("%m-%d %H:%M:%S") -%>
+						</span>
+						<%- end -%>
+						<%- if @bill.cancel_failed_at.present? -%>
+						<span class='label '>
+							取消失败 <%= raw @bill.cancel_failed_at.strftime("%m-%d %H:%M:%S") -%>
+						</span>
+						<%- end -%>
+						<%- if @bill.cancel_succeded_at.present? -%>
+						<span class='label '>
+							取消成功 <%= raw @bill.cancel_succeded_at.strftime("%m-%d %H:%M:%S") -%>
+						</span>
+						<%- end -%>
+						<%- if @bill.confirm_stocked_at.present? -%>
+						<span class='label '>
+							确认出库 <%= raw @bill.confirm_stocked_at.strftime("%m-%d %H:%M:%S") -%>
+						</span>
+						<%- end -%>
+					</fieldset>
+					</fieldset>
+				</fieldset><!-- form left area -->
+				<fieldset class="span6">
+					<div class="form-inline">
+						<label>当前状态：</label><%= @bill.status %>
+					</div>
+					<div class="form-inline">
+						<label>固定电话：</label><%= @bill.op_phone %>
+					</div>
+					<div class="form-inline">
+						<label>收货地址：</label><%= @bill.op_address %>
+					</div>
+					<div class="form-inline">
+						<label>省：</label><%= @bill.op_state %>
+					</div>
+					<div class="form-inline">
+						<label>区：</label><%= @bill.op_district %>
+					</div>
+					<div class="form-inline">
+						<label>物流公司：</label><%= @bill.logistic_name %>
+					</div>
+					<div class="form-inline">
+						<label>出库时间：</label><%= @bill.stocked_at %>
+					</div>
+				</fieldset>   
+			</form>
+		</div>
+		<div class="clearfix">
+			<ul class="nav nav-tabs">
+				<li class="active"><a href="#good_info" data-toggle="tab">商品信息</a></li>
+			</ul>
+			<div class="tab-content noborder_content">
+				<div class="tab-pane active">
+					<table class="table table-hover table-bordered table-striped table-condensed">
+						<thead>
+							<tr>	
+								<th width="">商品编码</th>
+								<th width="">商品名称</th>
+								<th width="">商品单价</th>
+								<th width="">商品数量</th>
+								<th width="">商品总价</th>
+							</tr>
+						</thead>
+						<tbody>
+							<%- @bill.bill_products.each do |product| %>
+							<tr>
+								<td><%= product.outer_id %></td>
+								<td><%= product.title %></td>
+								<td><%= product.price %></td>          
+								<td><%= product.number %></td>
+								<td><%= product.total_price %></td>
+							</tr>
+							<%- end %>	
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

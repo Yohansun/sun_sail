@@ -368,7 +368,7 @@ class Trade
             if stock_product
               bill.bill_products.build(
                 stock_product_id: stock_product.id,
-                title: product.name,
+                title: sku.title,
                 outer_id: product.outer_id,
                 sku_id: sku_id,
                 price: product.price,
@@ -417,9 +417,10 @@ class Trade
             order = taobao_orders.where(id: order_id).first
             num_iid = order.num_iid
             outer_iid = product.outer_id
-            title = product.name
-            sku_id = order.sku.try(:id)
-            sku_name =  order.sku.try(:name)
+            sku = order.sku
+            sku_id = sku.try(:id)
+            sku_name = sku.try(:name)
+            title = sku.try(:title)
             num_iid = order.num_iid.to_s
             bill_product = bill.bill_products.where(outer_id: outer_iid, num_iid: num_iid).first
             if bill_product
@@ -441,9 +442,10 @@ class Trade
             order = taobao_orders.where(id: order_id).first
             num_iid = product.num_iid
             outer_iid = product.outer_id
-            title = product.name
-            sku_id = order.sku.try(:id)
-            sku_name =  order.sku.try(:name)
+            sku = order.sku
+            sku_id = sku.try(:id)
+            sku_name = sku.try(:name)
+            title = sku.try(:title)
             num_iid = order.num_iid.to_s
             bill_product = bill.bill_products.where(outer_id: outer_iid, num_iid: num_iid).first
             if bill_product

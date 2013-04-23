@@ -2,17 +2,24 @@ require 'sidekiq/web'
 
 MagicOrders::Application.routes.draw do
 
-  resources :stock_in_bills
-  resources :stock_out_bills
+  resources :stock_in_bills do
+    post :add_product   , :on => :collection
+    post :remove_product, :on => :collection
+    post :sync, :on => :collection
+    post :check, :on => :collection
+    post :rollback, :on => :collection
+  end
+  resources :stock_out_bills do
+    post :add_product   , :on => :collection
+    post :remove_product, :on => :collection
+    post :sync, :on => :collection
+    post :check, :on => :collection
+    post :rollback, :on => :collection
+  end
+  
   resources :stocks, only: [:index]
 
-  resources :stock_bills do
-    collection do
-      post :sync
-      post :check
-      post :rollback
-    end
-  end
+  resources :stock_bills
 
   wash_out :stock_api
 

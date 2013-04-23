@@ -9,7 +9,7 @@ class DeliverBill
   field :logistic_printed_at, type: DateTime
 
   belongs_to :trade, counter_cache: true
-  embeds_many :bill_products
+  embeds_many :bill_products,:inverse_of => :deliver_bill
   embeds_many :print_batches
 
   def logistic=(logistic)

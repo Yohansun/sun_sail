@@ -18,6 +18,7 @@ end
 gem 'jquery-rails'
 
 group :test, :development do
+  gem "debugger"
   gem "guard"
   gem "guard-bundler"
   gem "guard-rspec"

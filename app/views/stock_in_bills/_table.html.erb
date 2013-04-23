@@ -7,10 +7,10 @@
       <th width="15%">历史状态</th>
       <th width="10%">编号</th>
       <th width="10%">类型</th>
-      <th width="5%">数量</th>
+      <th width="8%">商品数量</th>
       <th width="10%">商品总价</th>
       <th width="10%">仓库名称</th>
-      <th width="">操作者</th> 
+      <th width="10%">操作者</th> 
     </tr>
   </thead>
   <tbody>
@@ -62,7 +62,7 @@
         <%- end -%>
       </td>
       <td><%= bill.tid %></td>
-      <td><%= bill.stock_type %></td>
+      <td><%= bill.stock_type_name %></td>
       <td><%= bill.bill_products_mumber %></td>
       <td><%= bill.bill_products_price %></td>
       <td>默认仓库</td>

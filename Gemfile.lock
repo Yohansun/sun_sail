@@ -100,11 +100,19 @@ GEM
       execjs
     coffee-script-source (1.4.0)
     collections (0.1.4)
+    columnize (0.3.6)
     commonjs (0.2.6)
     connection_pool (1.0.0)
     crack (0.3.2)
     daemons (1.1.9)
     database_cleaner (0.9.1)
+    debugger (1.2.4)
+      columnize (>= 0.3.1)
+      debugger-linecache (~> 1.1.1)
+      debugger-ruby_core_source (~> 1.1.7)
+    debugger-linecache (1.1.2)
+      debugger-ruby_core_source (>= 1.1.1)
+    debugger-ruby_core_source (1.1.7)
     devise (2.2.1)
       bcrypt-ruby (~> 3.0)
       orm_adapter (~> 0.1)
@@ -459,6 +467,7 @@ DEPENDENCIES
   collections
   crack
   database_cleaner
+  debugger
   devise
   devise-encryptable
   draper

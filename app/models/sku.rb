@@ -17,6 +17,12 @@ class Sku < ActiveRecord::Base
   belongs_to :product
   has_many :sku_bindings
   has_many :taobao_skus, through: :sku_bindings
+
+  def title
+    sku_name = Sku.find_by_id(sku_id)
+    "#{product.name}#{name}"
+  end
+
   def name
     sku_name = ''
     if properties_name.present?

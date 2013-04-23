@@ -1,0 +1,2 @@
+console.log(<%= @bills.count %>)
+$("#bills_table").html("<%=escape_javascript(render('table', :locals => {:@bills => @bills}))%>");
