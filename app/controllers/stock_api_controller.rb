@@ -31,6 +31,7 @@ class StockApiController < ApplicationController
           received_time: Time.try(:parse,asns['ExpectedArriveTime'])
         )    
         details = asns['Details']['Detail']
+        details = [] << details unless details.is_a?(Array)
         details.each do |detail|
           record.bml_sku_with_lotatts.create(
           sku_code: detail['SkuCode'],
@@ -51,9 +52,11 @@ class StockApiController < ApplicationController
           lotatt12: detail['lotatt12']
           )
         end  
-        if record.sync_stock 
+        if stock_in_bill.sync_stock 
+          stock_in_bill.update_attributes!(confirm_stocked_at: Time.now)
           render soap: "SUCCESS"
         else
+          stock_in_bill.update_attributes!(confirm_failed_at: Time.now)
           render soap: "FAILED"
         end  
       else
@@ -95,14 +98,17 @@ class StockApiController < ApplicationController
           weight: output_back['weight']
         )
         skus = output_back['send']['sku']
+        skus = [] << skus unless skus.is_a?(Array)
         skus.each do |sku|
           sku = sku['skuCode']
           num = sku['numNum'].to_i
           record.bml_sku_with_nums.create(sku: sku, num: num)
         end  
-        if record.sync_stock 
+        if stock_out_bill.decrease_actual 
+          stock_out_bill.update_attributes!(confirm_stocked_at: Time.now)
           render soap: "SUCCESS"
         else
+          stock_out_bill.update_attributes!(confirm_failed_at: Time.now)
           render soap: "FAILED"
         end          
       else

@@ -314,7 +314,7 @@ class Trade
     items = []
     taobao_orders.each do |order|
       order.num.times{
-        order.package_products.products.each do |p|
+        order.package_products.each do |p|
           item = {order_id: order.id, product_id: p.id, num: 1, logistic_group_id: p.logistic_group_id}
           items << item
         end
@@ -357,23 +357,44 @@ class Trade
       stock_type: "CM", account_id: account_id, checked_at: Time.now, created_at: Time.now
     )
     orders.each do |order|
-      next unless order.products.present?
-      order.products.each do |product|
-        bill.bill_products.create(
-          title: product.name,
-          outer_id: product.outer_id,
-          price: product.price,
-          total_price: product.price * product.number(order.product.id),
-          number: product.number(order.product.id),
-          remark: order.cs_memo
-        )
+      if order.sku_bindings.present?
+        order.sku_bindings.each do |binding|
+          sku_id = binding.sku_id
+          sku = Sku.find_by_id(binding.sku_id)
+          product = sku.try(:product)
+          if product
+            binding_number = binding.number
+            stock_product = fetch_account.stock_products.where(product_id: product.id, sku_id: sku_id).first
+            if stock_product
+              bill.bill_products.build(
+                stock_product_id: stock_product.id,
+                title: product.name,
+                outer_id: product.outer_id,
+                sku_id: sku_id,
+                price: product.price,
+                total_price: product.price * binding_number,
+                number: binding_number,
+                remark: order.cs_memo
+              )
+            else
+              # DO SOME RESCUE
+            end  
+          else
+              # DO SOME RESCUE
+          end  
+        end  
+      else
+        # DO SOME RESCUE    
       end  
     end
     bill.bill_products_mumber = bill.bill_products.sum(:number)
     bill.bill_products_price = bill.bill_products.sum(:total_price)
     bill.save
+    bill.decrease_activity #减去仓库的可用库存
   end
 
+
+  # SKU属性不全 
   def generate_deliver_bill
     return if _type == 'JingdongTrade'
     #分流时生成默认发货单, 不支持京东订单
@@ -395,17 +416,17 @@ class Trade
             order_id = item.fetch(:order_id)
             order = taobao_orders.where(id: order_id).first
             num_iid = order.num_iid
-            sku_id = order.sku_id
             outer_iid = product.outer_id
             title = product.name
-            sku = Sku.find_by_sku_id(sku_id) || Sku.find_by_sku_id(num_iid)
-            sku_name = sku.try(:name)
+            sku_id = order.sku.try(:id)
+            sku_name =  order.sku.try(:name)
+            num_iid = order.num_iid.to_s
             bill_product = bill.bill_products.where(outer_id: outer_iid, num_iid: num_iid).first
             if bill_product
               bill_product.number += 1
               bill_product.save
             else
-              bill.bill_products.create(title: title ,outer_id: outer_iid, num_iid: num_iid, sku_name: sku_name, colors: order.color_num,number: 1, memo: order.cs_memo)
+              bill.bill_products.create(title: title ,outer_id: outer_iid, stock_product_id: stock_product.id, num_iid: num_iid, sku_id: sku_id, sku_name: sku_name, colors: order.color_num,number: 1, memo: order.cs_memo)
             end
           end
           count += 1
@@ -419,17 +440,17 @@ class Trade
             order_id = item.fetch(:order_id)
             order = taobao_orders.where(id: order_id).first
             num_iid = product.num_iid
-            sku_id = order.sku_id
             outer_iid = product.outer_id
             title = product.name
-            sku = Sku.find_by_sku_id(sku_id) || Sku.find_by_sku_id(num_iid)
-            sku_name = sku.try(:name)
+            sku_id = order.sku.try(:id)
+            sku_name =  order.sku.try(:name)
+            num_iid = order.num_iid.to_s
             bill_product = bill.bill_products.where(outer_id: outer_iid, num_iid: num_iid).first
             if bill_product
               bill_product.number += 1
               bill_product.save
             else
-              bill.bill_products.create(title: title, outer_id: outer_iid, num_iid: num_iid, sku_name: sku_name, colors: order.color_num,number: 1, memo: order.cs_memo)
+              bill.bill_products.create(title: title, outer_id: outer_iid, num_iid: num_iid, sku_id: sku_id, sku_name: sku_name, colors: order.color_num, number: 1, memo: order.cs_memo)
             end
           end
         end
@@ -437,105 +458,105 @@ class Trade
     else
       bill = deliver_bills.create(deliver_bill_number: "#{tid}01", seller_id: seller_id, seller_name: seller_name, account_id: account_id)
       orders.each do |order|
-        sku = Sku.find_by_sku_id(order.sku_id) || Sku.find_by_sku_id(order.num_iid)
-        sku_name = sku.try(:name)
-        num_iid = order.num_iid.to_s
-        bill.bill_products.create(title: order.title, outer_id: order.outer_iid, num_iid: num_iid, sku_name: sku_name, colors: order.color_num, number: order.num, memo: order.cs_memo)
+        taobao_sku = order.taobao_sku
+        sku_id = taobao_sku.try(:id)
+        sku_name = taobao_sku.try(:name)
+        bill.bill_products.create(title: order.title, outer_id: order.outer_iid, num_iid: order.num_iid, sku_id: sku_id, sku_name: sku_name, colors: order.color_num, number: order.num, memo: order.cs_memo)
       end
     end
+
   end
 
-  #should be removed as deprecation  
-  # def logistic_split
-  #   splited = []
-  #   orders.each do |order|
-  #     product = Product.find_by_outer_id order.outer_iid
+  def logistic_split
+    splited = []
+    # orders.each do |order|
+    #   product = Product.find_by_outer_id order.outer_iid
 
-  #     unless product
-  #       splited.clear
-  #       break
-  #     end
+    #   unless product
+    #     splited.clear
+    #     break
+    #   end
 
-  #     case product.category.try(:name)
-  #     when '輔助材料'
-  #       divmod = 100000
-  #     when '木器漆'
-  #       divmod = 1
-  #     else
-  #       divmod = case product.quantity.try(:name)
-  #       when '5L'
-  #         3
-  #       when '10L', '15L', '1套'
-  #         1
-  #       else
-  #         splited.clear
-  #         break
-  #       end
-  #     end
+    #   case product.category.try(:name)
+    #   when '輔助材料'
+    #     divmod = 100000
+    #   when '木器漆'
+    #     divmod = 1
+    #   else
+    #     divmod = case product.quantity.try(:name)
+    #     when '5L'
+    #       3
+    #     when '10L', '15L', '1套'
+    #       1
+    #     else
+    #       splited.clear
+    #       break
+    #     end
+    #   end
 
-  #     div = order.num.divmod divmod
+    #   div = order.num.divmod divmod
 
-  #     if div[0] != 0
-  #       div[0].times do
-  #         splited << {
-  #           bill: {
-  #             id: tid + ("%02d" % (splited.size + 1)),
-  #             number: divmod,
-  #             title: order.title,
-  #             outer_id: order.outer_iid
-  #           }
-  #         }
-  #       end
-  #     end
+    #   if div[0] != 0
+    #     div[0].times do
+    #       splited << {
+    #         bill: {
+    #           id: tid + ("%02d" % (splited.size + 1)),
+    #           number: divmod,
+    #           title: order.title,
+    #           outer_id: order.outer_iid
+    #         }
+    #       }
+    #     end
+    #   end
 
-  #     if div[1] != 0
-  #       div[1].times do
-  #         splited << {
-  #           bill: {
-  #             id: tid + ("%02d" % (splited.size + 1)),
-  #             number: 1,
-  #             title: order.title,
-  #             outer_id: order.outer_iid
-  #           }
-  #         }
-  #       end
-  #     end
-  #   end
+    #   if div[1] != 0
+    #     div[1].times do
+    #       splited << {
+    #         bill: {
+    #           id: tid + ("%02d" % (splited.size + 1)),
+    #           number: 1,
+    #           title: order.title,
+    #           outer_id: order.outer_iid
+    #         }
+    #       }
+    #     end
+    #   end
+    # end
 
-  #   splited
-  # end
+    # splited
+  end
 
-  # def split_logistic(logistic_ids)
-  #   # 清空默认发货单
-  #   deliver_bills.delete_all
+  def split_logistic(logistic_ids)
+    # 清空默认发货单
+    deliver_bills.delete_all
 
-  #   logistic_split.each do |item|
-  #     outer_id = item[:bill][:outer_id]
-  #     order = orders.select{|order| order.outer_iid == outer_id}.first
-  #     color_num = order.color_num
-  #     bill_number = item[:bill][:id]
+    logistic_split.each do |item|
+      outer_id = item[:bill][:outer_id]
+      order = orders.select{|order| order.outer_iid == outer_id}.first
+      color_num = order.color_num
+      bill_number = item[:bill][:id]
 
-  #     deliver_bill = deliver_bills.create(
-  #       deliver_bill_number: bill_number,
-  #       seller_id: seller_id,
-  #       seller_name: seller_name
-  #       )
+      deliver_bill = deliver_bills.create(
+        deliver_bill_number: bill_number,
+        seller_id: seller_id,
+        seller_name: seller_name
+        )
 
-  #     deliver_bill.bill_products.create(
-  #       outer_id: outer_id,
-  #       title: item[:bill][:title],
-  #       number: item[:bill][:number],
-  #       colors: color_num.pop(item[:bill][:number]),
-  #       memo: order.cs_memo
-  #       )
+      deliver_bill.bill_products.create(
+        outer_id: outer_id,
+        title: item[:bill][:title],
+        number: item[:bill][:number],
+        colors: color_num.pop(item[:bill][:number]),
+        memo: order.cs_memo
+        )
 
-  #     logistic_id = logistic_ids[bill_number]
-  #     logistic = Logistic.find logistic_id
-  #     deliver_bill.logistic = logistic
-  #   end
+      logistic_id = logistic_ids[bill_number]
+      logistic = Logistic.find logistic_id
+      deliver_bill.logistic = logistic
+    end
 
-  #   update_attributes has_split_deliver_bill: true
-  # end
+    update_attributes has_split_deliver_bill: true
+  end
 
   def default_area
     address = self.receiver_address_array

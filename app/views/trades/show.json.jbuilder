@@ -94,9 +94,9 @@ json.orders OrderDecorator.decorate(@trade.orders) do |json, order|
     json.refund_status order.refund_status
   end
 
-  json.contents @trade._type == 'TaobaoTrade' ? get_package(order.outer_iid, @trade.created_at) : []
+  json.contents @trade._type == 'TaobaoTrade' ? get_package(order, @trade.created_at) : []
   json.bill_info order.bill_info
-  json.packaged order.packaged?
+  json.packaged false
 end
 
 if @trade._type == "TaobaoPurchaseOrder"

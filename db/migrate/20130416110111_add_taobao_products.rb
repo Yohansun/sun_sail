@@ -11,7 +11,6 @@ class AddTaobaoProducts < ActiveRecord::Migration
 			t.string  :pic_url
 			t.string  :cid
 			t.string  :name    
-			t.timestamps
 		end 
 	end
 end

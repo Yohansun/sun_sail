@@ -16,7 +16,8 @@ class StockBill
   field :created_at, type: DateTime
   field :checked_at, type: DateTime
   field :stocked_at, type: DateTime 
-  field :confirm_stocked_at, type: DateTime 
+  field :confirm_stocked_at, type: DateTime #标杆反馈,确认出库时间
+  field :confirm_failed_at, type: DateTime #标杆反馈,系统操作失败时间
   field :canceled_at, type: DateTime  
   field :cancel_succeded_at, type: DateTime
   field :cancel_failed_at, type: DateTime
@@ -45,7 +46,7 @@ class StockBill
       serial = Time.now.to_s(:number)
       salt = SecureRandom.hex(10).upcase[0, 3]
       serial_num = serial + salt
-      update_attributes(tid: serial_num) 
+      update_attributes!(tid: serial_num) 
     end  
   end
 

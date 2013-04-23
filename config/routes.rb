@@ -4,7 +4,15 @@ MagicOrders::Application.routes.draw do
 
   resources :stock_in_bills
   resources :stock_out_bills
-  resources :stock_bills
+  resources :stocks, only: [:index]
+
+  resources :stock_bills do
+    collection do
+      post :sync
+      post :check
+      post :rollback
+    end
+  end
 
   wash_out :stock_api
 
@@ -54,7 +62,6 @@ MagicOrders::Application.routes.draw do
   devise_for :users, :path => '', :path_names => {:sign_in => 'login'},
     controllers: { sessions: "sessions" }
 
-  get "/stocks", to: 'stocks#index'
   get "/sales/add_node", to: 'sales#add_node'
   get "/api/logistics", to: 'logistics#logistic_templates'
   get 'callcenter/wangwang_list', to: 'callcenter#wangwang_list'
@@ -77,11 +84,6 @@ MagicOrders::Application.routes.draw do
   get 'callcenter/adjust_filter'
 
   resources :sellers do
-    resources :stocks
-    resources :stock_products do
-      resources :stock_history
-    end
-
     member do
       get :info
       get :change_stock_type

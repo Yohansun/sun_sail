@@ -50,30 +50,56 @@ class TaobaoOrder < Order
     sku_properties_name
   end
 
-  def product
-    TaobaoProduct.find_by_outer_id(outer_iid) || TaobaoProduct.find_by_num_iid(num_iid) 
+  def taobao_sku
+    if sku_id.present?
+      TaobaoSku.find_by_sku_id(sku_id) 
+    else
+      TaobaoSku.find_by_num_iid(num_iid)
+    end  
   end
 
-  def products
-    product.products
+  def sku_bindings
+    taobao_sku.sku_bindings
   end  
 
-  # 匹配套装内单品调色信息
-  #
-  # def map_products_by_colors
-  #   tmp_p = product
-  #   return {} unless tmp_p
-  #   tmp_p.map_packages_by_colors color_num
-  # end
 
-  def bill_info
-    if product
-      product.color_map(color_num)
+  def package_products
+    info = []
+    sku_bindings.each do |binding|
+      product = binding.sku.try(product)    
+      number = binding.number
+      info << Array.new(number,product)
+    end  
+    info = info.flatten
+  end 
+
+  def child_outer_id
+    info = []
+    sku_bindings.each do |binding|
+      product = binding.sku.try(product)    
+      number = binding.number
+      info << [product, number]
+    end
+    info
+  end
+  
+  def avalibale_sku_names
+    sku_names = []
+    taobao_skus.map(&:name).each do |name|
+      sku_names << name.split(':').last
+    end
+    sku_names.join(',')
+  end
+
+
+  def color_map(color_num)
+    result = []
+    if products.count > 0
+      result = package_color_map(color_num)
     else
       tmp = {}
       color_num.each do |nums|
         next if nums.blank?
-
         num = nums[0]
         next if num.blank?
 
@@ -84,14 +110,83 @@ class TaobaoOrder < Order
         end
       end
 
-      [{
+      result = [{
+        outer_id: outer_id,
+        number: 1,
+        storage_num: storage_num,
+        title: name,
+        colors: tmp
+      }]
+    end
+
+    result
+  end
+
+  def package_color_map(color_num)
+    tmp_hash = package_info
+    color_num.each do |nums|
+      i = 0
+      next if nums.blank?
+      package_info.each_with_index do |package, index|
+        colors = tmp_hash[index][:colors] || {}
+        package[:number].times do
+          color = nums[i]
+          i += 1
+          next if color.blank?
+          if colors.has_key? color
+            colors["#{color}"][0] += 1
+          else
+            colors["#{color}"] = [1, Color.find_by_num(color).try(:name)]
+          end
+          tmp_hash[index][:colors]  = colors
+        end
+      end
+    end
+    tmp_hash
+  end
+
+  # 匹配套装内单品调色信息
+  #
+  # def map_products_by_colors
+  #   tmp_p = product
+  #   return {} unless tmp_p
+  #   tmp_p.map_packages_by_colors color_num
+  # end
+
+  def bill_info
+    # if product
+    #   product.color_map(color_num)
+    # else
+    #   tmp = {}
+    #   color_num.each do |nums|
+    #     next if nums.blank?
+
+    #     num = nums[0]
+    #     next if num.blank?
+
+    #     if tmp.has_key? num
+    #       tmp["#{num}"][0] += 1
+    #     else
+    #       tmp["#{num}"] = [1, Color.find_by_num(num).try(:name)]
+    #     end
+    #   end
+
+    #   [{
+    #     outer_id: '',
+    #     number: 1,
+    #     storage_num: '',
+    #     title: title,
+    #     colors: []
+    #   }]
+    # end
+
+    [{
         outer_id: '',
         number: 1,
         storage_num: '',
         title: title,
-        colors: tmp
+        colors: []
       }]
-    end
   end
 
   def refund_status_text

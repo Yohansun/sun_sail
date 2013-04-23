@@ -60,7 +60,7 @@
           <% if seller.has_stock != true %>
           <li><a data-toggle="modal" href="#storage_pop" data-id="<%= seller.id%>" class='goto_stock'>仓库管理</a></li>
           <% else %>
-          <li><%= link_to '仓库管理', seller_stocks_path(seller) %></li>
+          <!-- <li><%#= link_to '仓库管理', seller_stocks_path(seller) %></li> -->
           <% end %>
           <li><a data-toggle="modal" href="#dealer_area" data-type="seller_area" data-id="<%= seller.id%>" class="area_management">管辖地区</a></li>
           <li><a data-toggle="modal" href="#dealer_login" data-id="<%= seller.id%>" class="login_acount">登录账号</a></li>

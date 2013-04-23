@@ -4,9 +4,7 @@ class BmlSkusPuller
   class << self   
   	def sync_local_from_bml(account_id = 2)
   		return unless account
-		  seller = account.sellers.first
-		  return unless seller
-		  local_stocks = seller.stock_products 
+		  local_stocks = account.stock_products 
 		  return unless local_stocks
 		  local_stocks.each do |local_stock|
 		  	product = local_stock.product
