@@ -3,24 +3,31 @@ class ProductsController < ApplicationController
   before_filter :authenticate_user!
   before_filter :admin_only!
 
-  # cache_sweeper :product_sweeper
-  # caches_action :show, :edit
-  # caches_action :index, cache_path: Proc.new { |c| c.params }
-
   def index
     @products = current_account.products
     if params[:info_type].present? || params[:info].present?
       if params[:info_type] == "sku_info"
         @products = @products.joins(:skus).where("properties_name like ?", "%#{params[:info]}%")
       else
-        @products = @products.where("#{params[:info_type]} like ? or #{params[:info_type]} = ?", "%#{params[:info].strip}%", params[:info].strip)
+        @products = @products.where("BINARY #{params[:info_type]} like ? or #{params[:info_type]} = ?", "%#{params[:info].strip}%", params[:info].strip)
       end
     end
     if params[:category_id].present? && params[:category_id] != '0'
       @products = @products.where("category_id = ?", params[:category_id])
     end
+
+    if params[:on_sale].present?
+      if params[:on_sale] == "on"
+        @products = @products.where("on_sale = ?", true)
+      elsif params[:on_sale] == "off"
+        @products = @products.where("on_sale = ?", false)
+      end
+    end
+
     @searched_products = @products
-    @products = @products.order("updated_at DESC").page(params[:page])
+
+    @products = @products.order("updated_at DESC").page(params[:page]).per(20)
+
     respond_to do |format|
       format.xls
       format.html
@@ -53,7 +60,7 @@ class ProductsController < ApplicationController
 
   def update
     @product = current_account.products.find params[:id]
-    
+
     if params[:product]['good_type'] == '2' && params[:child_iid].present?
       @product.packages.delete_all
       @product.create_packages(params[:child_iid])
@@ -77,5 +84,64 @@ class ProductsController < ApplicationController
     respond_to do |format|
       format.js
     end
+  end
+
+  def pick_product
+    picked_product = (current_account.settings.picked_product == nil ? [] : current_account.settings.picked_product)
+    if params[:product_id]
+      picked_product.push(params[:product_id])
+    elsif params[:product_ids]
+      picked_product.push(params[:product_ids])
+      picked_product = picked_product.flatten.uniq
+    end
+    current_account.settings.picked_product = picked_product
+    render :nothing => true, status: 200
+  end
+
+  def abandon_product
+    picked_product = current_account.settings.picked_product
+    if params[:product_id]
+      picked_product.delete(params[:product_id])
+    elsif params[:product_ids]
+      params[:product_ids].each{|product_id| picked_product.delete(product_id)}
+    end
+    current_account.settings.picked_product = picked_product
+    render :nothing => true, status: 200
+  end
+
+  def export_products
+    @products = current_account.products.where("id in (?)", current_account.settings.picked_product)
+    current_account.settings.picked_product = []
+    respond_to do |format|
+      format.xls
+    end
+  end
+
+  def update_on_sale
+    @products = current_account.products.where("id in (?)", current_account.settings.picked_product)
+    if params[:on_sale] == "上架"
+      @products.update_all(on_sale: false)
+    elsif params[:on_sale] == "下架"
+      @products.update_all(on_sale: true)
+    end
+    current_account.settings.picked_product = []
+    render :nothing => true, status: 200
+  end
+
+  def taobao_products
+    @products = current_account.taobao_products
+    if params[:key] && params[:value] && params[:value] != ''
+      @products = @products.where("BINARY #{params[:key]} like ? ", "%#{params[:value].strip}%")
+    end
+    @products = @products.order("updated_at DESC").page(params[:page]).per(40)
+
+    respond_to do |format|
+      format.xls
+      format.html
+    end
+  end
+
+  def taobao_product
+    @product = current_account.taobao_products.find params[:id]
   end
 end

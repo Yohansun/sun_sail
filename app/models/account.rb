@@ -22,6 +22,7 @@ class Account < ActiveRecord::Base
   has_many :colors
   has_many :packages
   has_many :products
+  has_many :taobao_products
   has_many :quantities
   has_many :sales
   has_many :sellers

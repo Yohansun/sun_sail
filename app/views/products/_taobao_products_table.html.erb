@@ -1,0 +1,42 @@
+<table class="table table-hover table-bordered table-striped table-condensed" id="taobao_product_table">
+  <thead>
+    <tr>
+      <th width="5%"><!-- <input type="radio"> --></th>
+      <th width="20%">淘宝ID</th>
+      <th width="15%">淘宝商品名</th>
+      <th width="25%">商品类目名称</th>
+      <th width="25%">商品外部编码</th>
+      <th width="10%">是否已绑定本地SKU</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- <tr>
+      <td><input type="radio"></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td>
+        <div class="btn-group pull-left">
+          <button data-toggle="dropdown" class="btn btn-info btn dropdown-toggle"><i class="icon-wrench"></i> <span class="caret"></span></button>
+          <ul class="dropdown-menu">
+            <li><a href="#">1</a></li>
+          </ul>
+        </div>
+      </td>
+    </tr> -->
+    <%- @products.each do |product| %>
+    <tr id='product_<%= product.id %>'>
+      <td><input class='taobao_product_check' name="taobao_product_radio" type="radio"></td>
+      <td><%= product.product_id %></td>
+      <td><%= product.name %></td>
+      <td><%= product.cat_name %></td>
+      <td><%= product.outer_id %></td>
+      <td></td>
+    </tr>
+    <%- end %>
+  </tbody>
+</table>
+
+<%= paginate @products %>

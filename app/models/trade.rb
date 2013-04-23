@@ -378,14 +378,14 @@ class Trade
               )
             else
               # DO SOME RESCUE
-            end  
+            end
           else
               # DO SOME RESCUE
-          end  
-        end  
+          end
+        end
       else
-        # DO SOME RESCUE    
-      end  
+        # DO SOME RESCUE
+      end
     end
     bill.bill_products_mumber = bill.bill_products.sum(:number)
     bill.bill_products_price = bill.bill_products.sum(:total_price)
@@ -393,8 +393,7 @@ class Trade
     bill.decrease_activity #减去仓库的可用库存
   end
 
-
-  # SKU属性不全 
+  # SKU属性不全
   def generate_deliver_bill
     return if _type == 'JingdongTrade'
     #分流时生成默认发货单, 不支持京东订单
@@ -448,9 +447,15 @@ class Trade
             title = sku.try(:title)
             num_iid = order.num_iid.to_s
             bill_product = bill.bill_products.where(outer_id: outer_iid, num_iid: num_iid).first
-            if bill_product
-              bill_product.number += 1
-              bill_product.save
+            if stock_product
+              stock_product_id = stock_product.id
+              bill_product = bill.bill_products.where(outer_id: outer_iid, num_iid: num_iid).first
+              if bill_product
+                bill_product.number += 1
+                bill_product.save
+              else
+                bill.bill_products.create(title: title, outer_id: outer_iid, num_iid: num_iid, sku_id: sku_id, sku_name: sku_name, colors: order.color_num,number: 1, memo: order.cs_memo)
+              end
             else
               bill.bill_products.create(title: title, outer_id: outer_iid, num_iid: num_iid, sku_id: sku_id, sku_name: sku_name, colors: order.color_num, number: 1, memo: order.cs_memo)
             end

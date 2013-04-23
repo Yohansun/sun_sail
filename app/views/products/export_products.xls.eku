@@ -1,0 +1,14 @@
+__filename = "商品统计数据.xls"
+sheet1 = xls.create_worksheet
+sheet1[0, 0] = "商品统计数据"
+
+sheet1.row(1).concat ["商品ID", "商品名称", "商品分类", "商品编码", "商品属性", "是否上架"]
+
+@products.all.each_with_index do |product, i|
+  sheet1.update_row i+2, product.id, product.name, product.category.try(:name), product.outer_id, product.sku_names, product.is_on_sale
+end
+
+title_format = Spreadsheet::Format.new(:color => :blue, :weight => :bold, :size => 14)
+sheet1.row(0).set_format(0, title_format)
+bold = Spreadsheet::Format.new(:pattern_fg_color => :yellow, :weight => :bold)
+sheet1.row(1).default_format = bold

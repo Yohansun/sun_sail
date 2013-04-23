@@ -1,0 +1,80 @@
+<div class="container-fluid">
+  <div class="row-fluid">
+    <ul class="breadcrumb" style="position:relative;">
+      <li><a href="/">Magic</a><span class="divider">/</span></li>
+      <li><%= link_to "淘宝商品管理", taobao_products_products_path %><span class="divider">/</span></li>
+      <li class="active"><%= @product.name %></li>
+    </ul><!-- breadcrumb -->
+
+    <form class="well form-horizontal info_check">
+      <fieldset class="clearfix">
+        <div class="w_48 pull-left">
+          <div class="control-group">
+            <label class="control-label" for=""><span class="atv"></span>淘宝商品数字ID：</label>
+            <div class="controls">
+              <p class="mar_t5"><%= @product.num_iid %></p>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label" for=""><span class="atv"></span>商家外部编码：</label>
+            <div class="controls">
+              <p class="mar_t5"><%= @product.outer_id %></p>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label" for=""><span class="atv"></span>商品类目ID：</label>
+            <div class="controls">
+              <p class="mar_t5"><%= @product.cid %></p>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label" for=""><span class="atv"></span>商品类目名称：</label>
+            <div class="controls">
+              <p class="mar_t5"><%= @product.cat_name %></p>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label" for=""><span class="atv"></span>商品名称：</label>
+            <div class="controls">
+              <p class="mar_t5"><%= @product.name %></p>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label" for=""><span class="atv"></span>市场价：</label>
+            <div class="controls">
+              <p class="mar_t5"><%= @product.price %></p>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label" for=""><span class="atv"></span>创建时间：</label>
+            <div class="controls">
+              <p class="mar_t5"><%= @product.created_at.strftime("%Y-%m-%d") %></p>
+            </div>
+          </div>
+
+          <% if @product.pic_url.present? %>
+          <div class="control-group">
+            <label class="control-label" for="">商品图片：</label>
+            <div class="controls">
+              <ul style="list-style-type:none;" class="clearfix">
+                <li><%= image_tag @product.pic_url, :size => "500x500" %></li>
+              </ul>
+            </div>
+          </div>
+          <% end %>
+      </fieldset>
+
+      <!-- <fieldset>
+        <div class="form-actions">
+          <a href="#" class="btn btn-info" onclick="javascript:window.history.go(-1);return false;">返回上一级</a>
+        </div>
+      </fieldset> -->
+    </form>
+  </div>
+</div>

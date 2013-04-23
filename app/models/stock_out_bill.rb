@@ -1,34 +1,34 @@
 # -*- encoding:utf-8 -*-
 class StockOutBill < StockBill
   include Mongoid::Document
-  include MagicEnum  
+  include MagicEnum
   belongs_to :trade
   embeds_many :bml_output_backs
-  
+
   enum_attr :stock_type, [["拆分出库", "RS"], ["调拨出库", "DB"], ["加工出库", "KT"], ["退货出库", "TT"], ["销售出库", "CM"], ["报废出库", "OT"], ["补货出库", "WR"], ["特殊出库(免费)", "MF"], ["退大货出库", "TD"]]
 
   def xml
     stock = ::Builder::XmlMarkup.new
-    stock.RequestOrderList do 
+    stock.RequestOrderList do
       stock.RequestOrderInfo do
         stock.warehouseid "BML_KSWH"
         stock.customerId "ALLYES"
-        stock.orderCode tid 
-        stock.systemId tid 
+        stock.orderCode tid
+        stock.systemId tid
         stock.orderType stock_type
         stock.shipping logistic_code
-        stock.issuePartyId "" 
-        stock.issuePartyName "" 
+        stock.issuePartyId ""
+        stock.issuePartyName ""
         stock.customerName op_name
-        stock.payment "" 
+        stock.payment ""
         stock.orderTime ""
         stock.website ""
-        stock.freight trade.try(:post_fee) 
+        stock.freight trade.try(:post_fee)
         stock.serviceCharge 0.00
         stock.payTime ""
         stock.isCashsale ""
         stock.priority ""
-        stock.expectedTime "" 
+        stock.expectedTime ""
         stock.requiredTime ""
         stock.name op_name
         stock.postcode op_zip
@@ -37,7 +37,7 @@ class StockOutBill < StockBill
         stock.prov op_state
         stock.city op_city
         stock.district op_district
-        stock.address op_address 
+        stock.address op_address
         stock.itemsValue bill_products_price
         stock.items do
           bill_products.each do |product|
@@ -47,13 +47,13 @@ class StockOutBill < StockBill
               stock.itemCount product.number
               stock.itemValue product.total_price
             end
-          end 
+          end
         end
-        stock.remark remark      
+        stock.remark remark
       end
-    end 
+    end
     stock.target!
-  end 
+  end
 
   def check
     return if checked_at.present?
@@ -63,21 +63,21 @@ class StockOutBill < StockBill
         decrease_actual
       else
         sync_stock
-      end 
-    end 
-  end 
-  
+      end
+    end
+  end
+
   def sync
     return if (checked_at.blank?  || sync_succeded_at.present? || (sync_at.present? && sync_failed_at.blank?) )
     update_attributes!(sync_at: Time.now)
     so_to_wms
-  end 
+  end
 
   def rollback
-    if sync_succeded_at.present?  
+    if sync_succeded_at.present?
       cancel_order_rx
-    end 
-  end 
+    end
+  end
 
   #推送出库单至仓库
   def so_to_wms
@@ -90,18 +90,18 @@ class StockOutBill < StockBill
         update_attributes!(sync_succeded_at: Time.now)
       else
         update_attributes!(sync_failed_at: Time.now, failed_desc: result['Response']['desc'])
-      end 
+      end
     # else
     #   p "stock operation not allowed out of production stage"
     # end
-  end  
+  end
 
   #发送订单取消信息至仓库
   def cancel_order_rx
     client = Savon.client(wsdl:"http://58.210.118.230:9021/order/BMLservices/BMLQuery?wsdl")
     # if Rails.env.production?
       response = client.call(:cancel_order_rx) do
-        message CustomerId:"ALLYES", PWD:"BML33570", AsnNo: tid 
+        message CustomerId:"ALLYES", PWD:"BML33570", AsnNo: tid
       end
       result_xml = response.body[:cancel_order_rx_response][:out]
       result = Hash.from_xml(result_xml).as_json
@@ -114,7 +114,7 @@ class StockOutBill < StockBill
     # else
     #   p "stock operation not allowed out of production stage"
     # end
-  end  
+  end
 
   def sync_stock #确认出库
     bill_products.each do |stock_out|
@@ -124,9 +124,9 @@ class StockOutBill < StockBill
         stock_product.update_attributes!(actual: stock_product.actual - stock_out.number, activity: stock_product.activity - stock_out.number)
         true
       else
-        # DO SOME ERROR NOTIFICATION 
-        false  
-      end 
+        # DO SOME ERROR NOTIFICATION
+        false
+      end
     end
   end
 
@@ -135,13 +135,13 @@ class StockOutBill < StockBill
       stock_product = StockProduct.find_by_id(stock_out.stock_product_id)
       if stock_product
         stock_product.update_attributes!(actual: stock_product.actual + stock_out.number, activity: stock_product.activity + stock_out.number)
-        true 
+        true
       else
-        # DO SOME ERROR NOTIFICATION 
-        false 
-      end 
+        # DO SOME ERROR NOTIFICATION
+        false
+      end
     end
-  end 
+  end
 
   def increase_activity #恢复仓库的可用库存
     bill_products.each do |stock_out|
@@ -150,10 +150,10 @@ class StockOutBill < StockBill
         stock_product.update_attributes!(activity: stock_product.activity - stock_out.number)
         true
       else
-        # DO SOME ERROR NOTIFICATION  
-        false 
-      end 
-    end 
+        # DO SOME ERROR NOTIFICATION
+        false
+      end
+    end
   end
 
   def decrease_activity #减去仓库的可用库存
@@ -163,11 +163,11 @@ class StockOutBill < StockBill
         stock_product.update_attributes!(activity: stock_product.activity - stock_out.number)
         true
       else
-        # DO SOME ERROR NOTIFICATION 
-        false  
-      end 
-    end 
-  end 
+        # DO SOME ERROR NOTIFICATION
+        false
+      end
+    end
+  end
 
   def decrease_actual #减去仓库的实际库存
     bill_products.each do |stock_out|
@@ -176,9 +176,9 @@ class StockOutBill < StockBill
         stock_product.update_attributes!(actual: stock_product.actual - stock_out.number)
         true
       else
-        # DO SOME ERROR NOTIFICATION  
-        false 
-      end 
+        # DO SOME ERROR NOTIFICATION
+        false
+      end
     end
   end
 

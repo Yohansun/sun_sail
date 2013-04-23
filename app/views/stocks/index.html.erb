@@ -11,7 +11,7 @@
       <li><%= link_to "入库单", stock_in_bills_path %></li>
       <li><%= link_to "出库单", stock_out_bills_path %></li>
       <li><%= link_to "所有进销", stock_bills_path %></li>
-    </ul><!-- nav-tabs -->  
+    </ul><!-- nav-tabs -->
     <div class="tab-content">
       <div class="tab-pane active" id="stock_check">
         <form class="well well-small form-horizontal font12">
@@ -63,45 +63,47 @@
                   </select>
                 </div>
               </div>
-              <fieldset>
-                <label class="pull-left"><code>当前：</code></label>
-                <div class="controls clearfix item_group">
-                </div>
-              </fieldset><!-- current -->
-            </div>
-          </form>
+            </fieldset>
 
-          <%= form_tag "/",:method => "post",:id => "stocks_index_form", :remote => true do %>
-            <table class="table table-hover table-bordered table-striped table-condensed js-table">
-              <thead>
-                <tr>
-                  <th width="5%"><input type="checkbox"></th>
-                  <th>名称</th>
-                  <th>商品属性</th>
-                  <th>商品编码</th>
-                  <th>库存状态</th>
-                  <th>可用库存</th>
-                  <th>实际库存</th>
-                </tr>
-              </thead>
-              <tbody>
-                <% @stock_products.each do |stock_product| %>
-                <tr>
-                  <td width="5%"><input type="checkbox"></td>
-                  <td><%= stock_product.name %></td>
-                  <td><%= stock_product.sku_values %></td>
-                  <td><%= stock_product.product.outer_id %></td>
-                  <td><%= stock_product.storage_status %></td>
-                  <td><%= stock_product.activity %></td>
-                  <td><%= stock_product.actual %></td>
-                </tr>
-                <% end %>
-              </tbody>
-            </table>
-            <%= paginate @stock_products %>
-          <%- end %>  
-        </div><!--span10 -->
-      </div><!-- tab-content -->
-    </div><!-- span10 -->
-</div><!--row-fluid
+            <fieldset>
+              <label class="pull-left"><code>当前：</code></label>
+              <div class="controls clearfix item_group">
+              </div>
+            </fieldset><!-- current -->
+          </div>
+        </form>
+
+        <%= form_tag "/",:method => "post",:id => "stocks_index_form", :remote => true do %>
+          <table class="table table-hover table-bordered table-striped table-condensed js-table">
+            <thead>
+              <tr>
+                <th width="5%"><input type="checkbox"></th>
+                <th>名称</th>
+                <th>商品属性</th>
+                <th>商品编码</th>
+                <th>库存状态</th>
+                <th>可用库存</th>
+                <th>实际库存</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @stock_products.each do |stock_product| %>
+              <tr>
+                <td width="5%"><input type="checkbox"></td>
+                <td><%= stock_product.name %></td>
+                <td><%= stock_product.sku_values %></td>
+                <td><%= stock_product.product.outer_id %></td>
+                <td><%= stock_product.storage_status %></td>
+                <td><%= stock_product.activity %></td>
+                <td><%= stock_product.actual %></td>
+              </tr>
+              <% end %>
+            </tbody>
+          </table>
+          <%= paginate @stock_products %>
+        <%- end %>
+      </div><!--span10 -->
+    </div><!-- tab-content -->
+  </div><!-- span10 -->
+</div><!--row-fluid-->
 

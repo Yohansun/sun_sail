@@ -9,7 +9,7 @@ class StockInBillsController < ApplicationController
   end
 
   def create
-    @bill = StockInBill.new(params[:stock_in_bill].merge!({account_id: current_account.id})) 
+    @bill = StockInBill.new(params[:stock_in_bill].merge!({account_id: current_account.id}))
     bill_product_ids = params[:bill_product_ids].split(',')
     build_product(@bill,bill_product_ids)
     @bill.update_bill_products
@@ -22,7 +22,7 @@ class StockInBillsController < ApplicationController
       render :new
     end
   end
-  
+
   def edit
     @bill = StockInBill.find_by(account_id: current_account.id,:id => params[:id])
     @products = @bill.bill_products
@@ -33,7 +33,7 @@ class StockInBillsController < ApplicationController
     @bill = StockInBill.find_by(account_id: current_account.id,:id => params[:id])
     @products = @bill.bill_products
   end
-  
+
   def update
     @bill = StockInBill.find_by(account_id: current_account.id,:id => params[:id])
     parse_area(@bill)
@@ -50,15 +50,15 @@ class StockInBillsController < ApplicationController
   def fetch_bills
     bills = StockInBill.where(account_id: current_account.id).desc(:checked_at)
     unchecked, checked = bills.partition { |b| b.checked_at.nil? }
-    @bills = unchecked + checked  
-    @bills = Kaminari.paginate_array(@bills).page(params[:page]).per(20) 
-  end 
+    @bills = unchecked + checked
+    @bills = Kaminari.paginate_array(@bills).page(params[:page]).per(20)
+  end
 
   def sync
     StockInBill.any_in(_id: params[:bill_ids]).each do |bill|
       #PUT INTO QUEUE LATER
-      bill.sync 
-    end  
+      bill.sync
+    end
     respond_to do |f|
       f.js
     end
@@ -77,13 +77,13 @@ class StockInBillsController < ApplicationController
   def rollback
     StockInBill.any_in(_id: params[:bill_ids]).each do |bill|
       #PUT INTO QUEUE LATER
-      bill.rollback 
+      bill.rollback
     end
     respond_to do |f|
       f.js
     end
   end
-  
+
   def add_product
     @bill = StockInBill.find_by(account_id: current_account.id, id: params[:id]) rescue false
 
@@ -99,7 +99,7 @@ class StockInBillsController < ApplicationController
       format.js
     end
   end
-  
+
   def remove_product
     @bill = StockInBill.find_by(account_id: current_account.id, id: params[:id]) rescue false
     if @bill.present?
@@ -117,7 +117,7 @@ class StockInBillsController < ApplicationController
   end
 
   private
-  
+
   def update_areas!(bill)
     op_state ,op_city,op_district = bill.op_state, bill.op_city, bill.op_district
     bill.op_state    = Area.find(op_state).name     if Area.exists?(op_state)
@@ -125,12 +125,12 @@ class StockInBillsController < ApplicationController
     bill.op_district = Area.find(op_district).name  if Area.exists?(op_district)
     bill.save!
   end
-  
+
   def build_product(bill,bill_product_ids)
     @tmp_products = current_user.settings.tmp_products.select {|x| bill_product_ids.include?(x.id.to_s)}
     @tmp_products.each {|product| bill.bill_products.build(product.marshal_dump)  }
   end
-  
+
    def add_tmp_product(product)
     validate_parameter(product)
     sku = Sku.find_by_id(product["sku_id"])
@@ -151,7 +151,7 @@ class StockInBillsController < ApplicationController
     raise "number 不能为空"       if number.blank?
     raise "total_price 不能为空"  if total_price.blank?
   end
-  
+
   def parse_area(bill)
     bill.op_state     = Area.find_by_name(bill.op_state).try(:id)
     bill.op_city      = Area.find_by_name(bill.op_city).try(:id)
@@ -160,12 +160,12 @@ class StockInBillsController < ApplicationController
 
   def new_products(tmp_products)
     @new_products = []
-    
-    tmp_product_groups = tmp_products.group_by {|i| i.sku_id} 
-    tmp_product_groups.each do |sku_id,collections| 
+
+    tmp_product_groups = tmp_products.group_by {|i| i.sku_id}
+    tmp_product_groups.each do |sku_id,collections|
      product_statis = {:sku_id => sku_id, :id => sku_id}
-     collections.collect do |tmp_bill_product| 
-      product_statis.merge!(tmp_bill_product.marshal_dump.except(:sku_id)) {|x,y,z| y.to_i + z.to_i  } 
+     collections.collect do |tmp_bill_product|
+      product_statis.merge!(tmp_bill_product.marshal_dump.except(:sku_id)) {|x,y,z| y.to_i + z.to_i  }
       product_statis.merge!({:price => tmp_bill_product.price})
     end
      @new_products += [OpenStruct.new(product_statis)]
