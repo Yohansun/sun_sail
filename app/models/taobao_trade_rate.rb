@@ -27,9 +27,9 @@ class TaobaoTradeRate < ActiveRecord::Base
   after_create :write_created_to_mongo
 
   def write_created_to_mongo
-    TaobaoTrade.where(tid: tid).update_all(rate_created: created) 
-  end 
-  
+    TaobaoTrade.where(tid: tid).update_all(rate_created: created)
+  end
+
   def self.export_reports(start_time = nil, end_time = nil, time_type = nil)
     start_time ||= Time.now - 7.day
     end_time ||= Time.now
@@ -38,7 +38,7 @@ class TaobaoTradeRate < ActiveRecord::Base
       trade_rates = TaobaoTradeRate.where(:created => start_time..end_time)
     else
       rated_tids = TaobaoTrade.only(:tid, :created).where(:created => start_time..end_time).all.map(&:tid)
-      trade_rates = TaobaoTradeRate.where("tid in (#{rated_tids.join(',')})")
+      trade_rates = TaobaoTradeRate.where(tid: rated_tids)
     end
     account = Trade.where(tid: trade_rates.first.tid).first.fetch_account if trade_rates.any?
     CSV.open("data/taobao_rates.csv", 'wb') do |csv|
