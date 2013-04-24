@@ -166,7 +166,7 @@ class StockInBillsController < ApplicationController
      product_statis = {:sku_id => sku_id, :id => sku_id}
      collections.collect do |tmp_bill_product|
       product_statis.merge!(tmp_bill_product.marshal_dump.except(:sku_id)) {|x,y,z| y.to_i + z.to_i  }
-      product_statis.merge!({:price => tmp_bill_product.price})
+      product_statis.merge!({:price => tmp_bill_product.price,:title => tmp_bill_product.title,:outer_id => tmp_bill_product.outer_id})
     end
      @new_products += [OpenStruct.new(product_statis)]
     end
