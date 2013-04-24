@@ -1,98 +1,188 @@
 <div class="container-fluid">
-  <header class="jumbotron subhead" id="overview">
-    <div class="subnav">
-      <ul class="nav nav-pills">
-        <li class="active"><%= link_to '商品管理', products_path, class: "products" %></li>
-        <% if current_account.settings.enable_module_colors == 1 %>
-          <li><%= link_to '颜色管理', colors_path %></li>
-        <% end %>
-        <li><%= link_to '分类管理', categories_path %></li>
-      </ul>
-    </div>
-  </header>
-  <!-- <header class="jumbotron subhead" id="overview">
-    <div class="subnav">
-      <ul class="nav nav-pills">
-        <li class="">
-          <a href="#">渠道分布</a>
-        </li>
-        <li>
-          <a href="#">销售排行</a>
-        </li>
-      </ul>
-    </div>
-  </header> -->
-  <div class="row-fluid">
-    <ul class="breadcrumb" style="position:relative;">
-      <li><a href="/">Magic</a><span class="divider">/</span></li>
-      <li class="active">商品管理</li>
-      <li style="position:absolute;right:15px;top:6px;"><a class="btn_alert" href="/products/new">新增商品</a></li>
-   </ul><!-- breadcrumb -->
 
-    <!-- <div class="alert fade in">
-      <button type="button" class="close" data-dismiss="alert">&times;</button>
-      <strong>提示</strong>该功能正在研发中...
-    </div> -->
-    <%= simple_form_for "product",url: products_path, html: { method: "get", class: "well form-search"} ,:wrapper => :search do |f| %>
-      <fieldset class="form-inline mar_t5">
-        <div class="pull-left mar_r10">
-           <label class="control-label" style="margin-top:5px; margin-right: 19px">精确搜索：</label>
-            <select class="width_auto" name='info_type'>
-              <option value="outer_id" <%= 'selected' if params[:info_type] == 'outer_id' %>>商品编码</option>
-              <option value="product_id" <%= 'selected' if params[:info_type] == 'product_id' %>>淘宝ID</option>
-              <option value="name" <%= 'selected' if params[:info_type] == 'name' %>>商品名称</option>
-              <option value="sku_info" <%= 'selected' if params[:info_type] == 'sku_info' %>>商品属性</option>
-            </select>
-            <input type="text" name="info" style: "width:490px;" class="input-large" value='<%= params[:info] %>'>
-          </div>
-      </fieldset>
-      <fieldset class="form-inline mar_t5">
-          <fieldset class="form-inline">
-            <label class="control-label" style="margin-top:5px; margin-right: 19px">商品分类：</label>
-            <select class="width_auto" name="category_id">
-              <option value="0" <%= 'selected' if params[:category_id] == '0' %>>全部</option>
-              <%- current_account.categories.each do |category| %>
-                <option value="<%= category.id %>" <%= 'selected' if params[:category_id] == category.id %>><%= category.name %></option>
-              <%- end %>
-            </select>
-          </fieldset>
-        <div>
+  <ul class="nav nav-tabs affix">
+    <li><a href="/products/taobao_products">淘宝商品</a></li>
+    <li class="active"><a href="/products">本地单品</a></li>
+    <!-- <li><a href="#set_good" data-toggle="tab">套装</a></li>
+    <li><a href="#active_goods" data-toggle="tab">活动商品</a></li> -->
+  </ul><!-- nav-tabs -->
+
+  <%= simple_form_for "product", url: products_path, html: { method: "get", class: "well form-search form-horizontal font12", style: "margin-top:50px;"}, :wrapper => :search do |f| %>
+    <fieldset class="form-inline mar_t5">
+      <div class="pull-left mar_r10">
+        <label class="pull-left"><code>精准：</code></label>
+        <div class="controls pull-left">
+          <select name="info_type" class="input-small pull-left select2 radius_no_rb">
+            <option value="name" <%= 'selected' if params[:info_type] == 'name' %>>名称</option>
+            <option value="outer_id" <%= 'selected' if params[:info_type] == 'outer_id' %>>商品编码</option>
+          </select>
+          <input type="text" class="input-medium radius_no_tl" name="info" value='<%= params[:info] %>' placeholder="输入关键字...">
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="pull-left"><code>分类：</code></label>
+        <div class="controls pull-left">
+          <select name="category_id" class="input-small pull-left select2">
+            <option value="0" <%= 'selected' if params[:category_id] == '0' %>>全部</option>
+            <% current_account.categories.each do |category| %>
+            <option value="<%= category.id %>" <%= 'selected' if params[:category_id] == category.id %>><%= category.name %></option>
+            <% end %>
+          </select>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="pull-left"><code>状态：</code></label>
+        <div class="controls pull-left">
+          <select name="on_sale" class="input-small pull-left select2">
+            <option value="on" <%= 'selected' if params[:on_sale] == "on" %>>上架</option>
+            <option value="off" <%= 'selected' if params[:on_sale] == "off" %>>下架</option>
+          </select>
+        </div>
+        <div class="pull-left">
           <%= f.button :submit, "过滤", class: "btn btn-primary pull-right" %>
         </div>
-      </fieldset>
-    <% end %>
-
-    <div class="controls clearfix">
-      <div class="btns btn-group pull-left">
-        <%= link_to "导出数据", products_path(:format => "xls"), :class => "btn btn-warning", "data-toggle" =>"modal" %>
-        </ul>
       </div>
-    </div>
+    </fieldset>
+  <% end %>
 
-    <table class="table table-striped table-bordered table-condensed td_colors mar_t">
-      <thead>
-        <tr>
-          <th nowrap>商品名称</th>
-          <% if current_account.settings.enable_module_sku_properties == 1 %>
-            <th width="20%">商品属性</th>
-          <% end %>
-          <th nowrap>商品编码</th>
-          <th nowrap>淘宝ID</th>
-          <th nowrap>商品数字ID</th>
-          <th nowrap>价格</th>
-          <th nowrap>分类</th>
-          <% if current_account.settings.enable_module_logistic_group == 1 %>
-            <th nowrap>物流分组</th>
-          <% end %>  
-          <th nowrap>操作</th>
-        </tr>
-      </thead>
-      <tbody>
-        <%= render @products %>
-      </tbody>
-    </table>
+  <div class="btn-toolbar">
+    <div class="btn-group">
+      <button class="btn btn-warning" id="product_operations">操作</button>
+      <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li><a href="#" id="show_product">查看</a></li>
+        <li><a href="#" id="edit_product">编辑</a></li>
+        <li><a href="#" id="product_on_sale">上/下架</a></li>
+        <li><a href="#" id="export_products">导出</a><%#= link_to "导出", products_path(:format => "xls"), id: "export_products" %></li>
+      </ul>
+    </div><!-- btn-group -->
+    <a class="btn btn-warning" id="new_product" href="/products/new">新增商品</a>
+  </div><!-- btn-groups end -->
 
-    <%= paginate @products %>
+  <div class="tab-content">
+    <div class="tab-pane" id="taobao_goods">
+    </div><!-- all_goods end -->
+
+    <div class="tab-pane active" id="native_goods">
+      <%= render 'products_table' %>
+    </div><!-- single_good end -->
 
   </div>
+
 </div>
+
+<% content_for :tail do %>
+<script type="text/javascript">
+
+  $('#show_product').on('click', function(event){
+    event.preventDefault()
+    if($('#product_table input:checked').length == 1){
+      var product_id = $('#product_table input:checked').attr('id')
+      product_id = _.trim(product_id, "check_")
+      window.location.href = "/products/"+product_id
+    } else{
+      alert("请选择一件商品。")
+    }
+  })
+
+  $('#edit_product').on('click', function(event){
+    event.preventDefault()
+    if($('#product_table input:checked').length == 1){
+      var product_id = $('#product_table input:checked').attr('id')
+      product_id = _.trim(product_id, "check_")
+      window.location.href = "/products/"+product_id+"/edit"
+    } else{
+      alert("请选择一件商品。")
+    }
+  })
+
+  // 挑选商品
+  $('#check_all_products').on('click', function(){
+    var product_ids = $('#product_table input').map(function(){return _.trim($(this).attr('id'), "check_")}).get();
+    if($('#check_all_products').attr('checked') == 'checked'){
+      $('.product_check').attr('checked', 'checked');
+      $.get("/products/pick_product", {product_ids: product_ids}, function(result){});
+      $('#show_product').hide();
+      $('#edit_product').hide();
+    } else {
+      $('.product_check').removeAttr('checked')
+      $.get("/products/abandon_product", {product_ids: product_ids}, function(result){});
+      $('#show_product').show();
+      $('#edit_product').show();
+    }
+  })
+  $('.product_check').on('click', function(event){
+    var product_id = _.trim($(event.target).attr('id'), "check_")
+    if($(event.target).attr("checked") == "checked"){
+      $.get("/products/pick_product", {product_id: product_id}, function(result){});
+    } else {
+      $.get("/products/abandon_product", {product_id: product_id}, function(result){});
+    }
+    hide_show_edit();
+  })
+  var picked_products = <%= raw current_account.settings.picked_product.to_json %>
+  for (var i in picked_products){
+    $("#check_"+picked_products[i]).attr("checked", "checked")
+  }
+  var product_ids = $('#product_table input:checked').map(function(){return _.trim($(this).attr('id'), "check_")}).get();
+  if(product_ids.length < 21){
+    $('#check_all_products').attr("checked",false)
+  }
+  if(product_ids.length == 20 && $('#check_all_products').attr("checked") != "checked"){
+    $('#check_all_products').attr("checked",true)
+  }
+  hide_show_edit();
+
+  // 导出操作
+  $('#export_products').on('click', function(){
+    if($('#product_table input:checked').length == 0){
+      alert("请选择一件商品。")
+    } else {
+      window.location.href = "/products/export_products.xls"
+    }
+  })
+
+  // 上下架操作
+  $('#product_on_sale').on('click', function(){
+    if($('#product_table input:checked').length == 0){
+      alert("请选择一件商品。")
+    } else {
+      var same_status = true
+      var product_ids = $('#product_table input:checked').map(function(){return _.trim($(this).attr('id'), "check_")}).get();
+      var status = $("#product_"+product_ids[0]).children('td:last').text()
+      if(product_ids.length != 1){
+        var status = $("#product_"+product_ids[1]).children('td:last').text()
+        for(var i in product_ids){
+          var current_on_sale = $("#product_"+product_ids[i]).children('td:last').text()
+          if(status != current_on_sale && current_on_sale != ""){
+            same_status = false;
+            break;
+          }
+        }
+      }
+      if(same_status == false){
+        alert("只能选取同一状态的商品。");
+      } else {
+        $.post("/products/update_on_sale", {on_sale: status}, function(result){});
+        window.location.href = "/products"
+      }
+      hide_show_edit();
+    }
+  })
+
+  function hide_show_edit(){
+    if($('#product_table input:checked').length == 1){
+      $('#show_product').show();
+      $('#edit_product').show();
+    } else if($('#product_table input:checked').length > 1){
+      $('#show_product').hide();
+      $('#edit_product').hide();
+    } else {
+      $('#show_product').show();
+      $('#edit_product').show();
+    }
+  }
+</script>
+<% end %>

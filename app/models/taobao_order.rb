@@ -40,7 +40,7 @@ class TaobaoOrder < Order
 
   def account_id
     taobao_trades.account_id
-  end  
+  end
 
   def item_outer_id
     outer_iid
@@ -52,37 +52,36 @@ class TaobaoOrder < Order
 
   def taobao_sku
     if sku_id.present?
-      TaobaoSku.find_by_sku_id(sku_id) 
+      TaobaoSku.find_by_sku_id(sku_id)
     else
       TaobaoSku.find_by_num_iid(num_iid)
-    end  
+    end
   end
 
   def sku_bindings
     taobao_sku.sku_bindings
-  end  
-
+  end
 
   def package_products
     info = []
     sku_bindings.each do |binding|
-      product = binding.sku.try(product)    
+      product = binding.sku.try(product)
       number = binding.number
       info << Array.new(number,product)
-    end  
+    end
     info = info.flatten
-  end 
+  end
 
   def child_outer_id
     info = []
     sku_bindings.each do |binding|
-      product = binding.sku.try(product)    
+      product = binding.sku.try(product)
       number = binding.number
       info << [product, number]
     end
     info
   end
-  
+
   def avalibale_sku_names
     sku_names = []
     taobao_skus.map(&:name).each do |name|

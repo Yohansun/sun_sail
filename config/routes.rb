@@ -16,7 +16,7 @@ MagicOrders::Application.routes.draw do
     post :check, :on => :collection
     post :rollback, :on => :collection
   end
-  
+
   resources :stocks, only: [:index]
 
   resources :stock_bills
@@ -113,8 +113,16 @@ MagicOrders::Application.routes.draw do
   end
 
   resources :products do
+    member do
+      get :taobao_product
+    end
     collection do
       get :fetch_products
+      get :taobao_products
+      get :pick_product
+      get :abandon_product
+      get :export_products
+      post :update_on_sale
     end
   end
 

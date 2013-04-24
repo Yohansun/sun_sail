@@ -32,10 +32,10 @@ class Sku < ActiveRecord::Base
         sku_key =  sku_values[2]
         sku_value =  sku_values[3]
         sku_name = sku_name + sku_key + ':' + sku_value + '  '
-      end  
+      end
     end
     sku_name
-  end 
+  end
 
    def value
     value = ''
@@ -45,8 +45,8 @@ class Sku < ActiveRecord::Base
         sku_values = property.split(':')
         sku_value =  sku_values[3]
         value = sku_value + ' '
-      end  
+      end
     end
     value
-  end 
+  end
 end

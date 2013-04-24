@@ -1,0 +1,117 @@
+<div class="container-fluid">
+  <!-- <div class="row-fluid"> -->
+  <ul class="nav nav-tabs affix">
+    <li class="active"><a href="/products/taobao_products">淘宝商品</a></li>
+    <li><a href="/products">本地单品</a></li>
+    <!-- <li><a href="#set_good" data-toggle="tab">套装</a></li>
+    <li><a href="#active_goods" data-toggle="tab">活动商品</a></li> -->
+  </ul><!-- nav-tabs -->
+
+  <form class="well well-small form-horizontal font12" style="margin-top:50px;">
+    <fieldset>
+      <div class="control-group">
+        <label class="pull-left"><code>精准：</code></label>
+        <div class="controls pull-left">
+          <select name="key" class="input-small pull-left select2 radius_no_rb">
+            <option value="name" <%= 'selected' if params[:key] == "name" %>>名称</option>
+            <option value="outer_id" <%= 'selected' if params[:key] == "outer_id" %>>商品外部编码</option>
+            <option value="cat_name" <%= 'selected' if params[:key] == "cat_name" %>>商品类目名称</option>
+          </select>
+          <input type="text" class="input-medium radius_no_tl" name="value" value="<%= params[:value] %>" placeholder="输入关键字...">
+        </div>
+        <div class="pull-left">
+          <button type="button pull-left" class="btn btn-small btn-primary">搜索</button>
+        </div>
+      </div>
+    </fieldset><!-- form line1 area -->
+  </form>
+
+  <div class="btn-toolbar">
+    <div class="btn-group">
+      <button class="btn btn-warning">操作</button>
+      <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li><a href="#" id="show_taobao_product">查看</a></li>
+        <li><a href="#">绑定本地SKU</a></li>
+      </ul>
+    </div><!-- btn-group -->
+    <div class="btn btn-warning">同步淘宝数据</div>
+  </div><!-- btn-groups end -->
+
+  <div class="tab-content">
+    <div class="tab-pane active" id="taobao_goods">
+      <%= render 'taobao_products_table' %>
+    </div><!-- all_goods end -->
+
+    <div class="tab-pane" id="native_goods">
+    </div><!-- single_good end -->
+
+  </div>
+</div>
+
+<!-- Modal -->
+<form id="goods_edit" class="js-modal modal hide fade modal_w7" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="">商品绑定</h3>
+  </div>
+  <div class="modal-body">
+    <fieldset class="control-group form-inline">
+      <label>套装名称：竹炭12</label>
+      <label class="mar_l80">淘宝ID：123456</label>
+    </fieldset>
+    <fieldset class="control-group form-inline">
+      <label class="width_100 pagination-right">选择绑定商品：</label>
+      <select class="input-medium select2">
+        <option>选择需要绑定的商品</option>
+      </select>
+    </fieldset>
+    <fieldset class="control-group form-inline">
+      <label class="width_100 pagination-right">数量：</label>
+      <input type="text" placeholder="2" class="input-medium">
+      <button class="btn btn-small mar_l80">添加</button>
+    </fieldset>
+    <table class="table table-bordered table-condensed">
+      <thead>
+        <tr>
+          <th width="20%">淘宝ID</th>
+          <th width="20%">淘宝商品名称</th>
+          <th width="20%">商品编码</th>
+          <th width="20%">数量</th>
+          <th width="20%">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>001</td>
+          <td>aaa</td>
+          <td>456</td>
+          <td>9</td>
+          <td><button class="btn btn-small">删除</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-small" data-dismiss="modal" aria-hidden="true">关闭</button>
+    <button class="btn btn-small btn-primary">保存</button>
+  </div>
+</form><!-- mark -->
+
+
+<% content_for :tail do %>
+<script type="text/javascript">
+  $('#show_taobao_product').on('click', function(event){
+    event.preventDefault()
+    if($('#taobao_product_table input:checked').length == 1){
+      var product_id = $('#taobao_product_table input:checked').parents('tr').attr('id')
+      product_id = _.trim(product_id, "product_")
+      window.location.href = "/products/"+product_id+"/taobao_product"
+    } else{
+      alert("请选择一件商品。")
+    }
+  })
+</script>
+<% end %>
