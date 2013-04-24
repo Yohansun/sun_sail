@@ -10,64 +10,21 @@
       <th width="5%">数量</th>
       <th width="10%">商品总价</th>
       <th width="10%">仓库名称</th>
-      <th width="">操作者</th> 
     </tr>
   </thead>
   <tbody>
     <%- @bills.each_with_index do |bill, index| %>
-    <tr>
-      <td><input type="checkbox" name="bill_ids[]" value="<%= bill.id%>" ></td>
-      <td><%=  index + 1  %></td>
-      <td><%= bill.status %></td>
-      <td>
-        <%- if bill.checked_at.present? -%>
-        <span class='label '>
-          审核 <%= raw bill.checked_at.strftime("%m-%d %H:%M:%S") -%>
-        </span>
-        <%- end -%>
-        <%- if bill.sync_at.present? -%>
-        <span class='label '>
-          同步 <%= raw bill.sync_at.strftime("%m-%d %H:%M:%S") -%>
-        </span>
-        <%- end -%>
-        <%- if bill.sync_failed_at.present? -%>
-        <span class='label '>
-          同步失败 <%= raw bill.sync_failed_at.strftime("%m-%d %H:%M:%S") -%>
-        </span>
-        <%- end -%>
-        <%- if bill.sync_succeded_at.present? -%>
-        <span class='label '>
-          同步成功 <%= raw bill.sync_succeded_at.strftime("%m-%d %H:%M:%S") -%>
-        </span>
-        <%- end -%>
-        <%- if bill.canceled_at.present? -%>
-        <span class='label '>
-          取消 <%= raw bill.canceled_at.strftime("%m-%d %H:%M:%S") -%>
-        </span>
-        <%- end -%>
-        <%- if bill.cancel_failed_at.present? -%>
-        <span class='label '>
-          取消失败 <%= raw bill.cancel_failed_at.strftime("%m-%d %H:%M:%S") -%>
-        </span>
-        <%- end -%>
-        <%- if bill.cancel_succeded_at.present? -%>
-        <span class='label '>
-          取消成功 <%= raw bill.cancel_succeded_at.strftime("%m-%d %H:%M:%S") -%>
-        </span>
-        <%- end -%>
-        <%- if bill.confirm_stocked_at.present? -%>
-        <span class='label '>
-          确认出库 <%= raw bill.confirm_stocked_at.strftime("%m-%d %H:%M:%S") -%>
-        </span>
-        <%- end -%>
-      </td>
-      <td><%= bill.tid %></td>
-      <td><%= bill.stock_type_name %></td>
-      <td><%= bill.bill_products_mumber %></td>
-      <td><%= bill.bill_products_price %></td>
-      <td>默认仓库</td>
-      <td><%= bill.operator_name %></td>
-    </tr>
+      <tr id='<%= bill.id %>'>
+        <td><input type="checkbox" name="bill_ids[]" value="<%= bill.id%>" ></td>
+        <td><%=  index + 1  %></td>
+        <%= render "status", bill: bill%>
+        <%= render "operation", bill: bill%>
+        <td><%= bill.tid %></td>
+        <td><%= bill.stock_type_name %></td>
+        <td><%= bill.bill_products_mumber %></td>
+        <td><%= bill.bill_products_price %></td>
+        <td>默认仓库</td>
+      </tr>
     <%- end %>
   </tbody>
-</table> 
+</table>

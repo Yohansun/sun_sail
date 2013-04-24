@@ -57,7 +57,8 @@ class StockOutBillsController < ApplicationController
   end
 
   def sync
-    StockOutBill.any_in(_id: params[:bill_ids]).each do |bill|
+    @operated_bills = StockOutBill.any_in(_id: params[:bill_ids])
+    @operated_bills.each do |bill|
       #PUT INTO QUEUE LATER
       bill.sync
     end
@@ -67,7 +68,8 @@ class StockOutBillsController < ApplicationController
   end
 
   def check
-    StockOutBill.any_in(_id: params[:bill_ids]).each do |bill|
+    @operated_bills = StockOutBill.any_in(_id: params[:bill_ids])
+    @operated_bills.each do |bill|
       #PUT INTO QUEUE LATER
       bill.check
     end
@@ -77,7 +79,8 @@ class StockOutBillsController < ApplicationController
   end
 
   def rollback
-    StockOutBill.any_in(_id: params[:bill_ids]).each do |bill|
+    @operated_bills = StockOutBill.any_in(_id: params[:bill_ids])
+    @operated_bills.each do |bill|
       #PUT INTO QUEUE LATER
       bill.rollback
     end

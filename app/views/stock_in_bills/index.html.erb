@@ -92,7 +92,8 @@
                 }"  %>
               </li>
               <li>
-                <%= link_to "审核","javascript:if($('input:checked').length < 1){
+                <%= link_to "审核","javascript:
+                if($('input:checked').length < 1){
                 alert('请选择至少一个入库单');
                 }else{
                   var flag = confirm('确认审核吗?');
