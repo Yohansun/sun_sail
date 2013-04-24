@@ -12,7 +12,7 @@
 			<li><%= link_to "入库单", stock_out_bills_path %></li>
 			<li><%= link_to "出库单", stock_out_bills_path %></li>
 			<li><%= link_to "所有进销", stock_bills_path %></li>
-		</ul><!-- nav-tabs -->  
+		</ul><!-- nav-tabs -->
 		<form class="form-horizontal mar_t30">
 			<div class="well clearfix">
 				<fieldset class="span6">
@@ -43,50 +43,14 @@
 					<fieldset class="form-inline">
 						<fieldset class="form-inline">
 						<label>历史状态：</label>
-						<%- if @bill.created_at.present? -%>	
-						<span class='label '>
-							创建 <%= raw @bill.created_at.strftime("%m-%d %H:%M:%S") -%>
-						</span>	
-						<%- end -%>
-						<%- if @bill.checked_at.present? -%>	
-						<span class='label '>
-							审核 <%= raw @bill.checked_at.strftime("%m-%d %H:%M:%S") -%>
-						</span>
-						<%- end -%>
-						<%- if @bill.sync_at.present? -%>
-						<span class='label '>
-							同步 <%= raw @bill.sync_at.strftime("%m-%d %H:%M:%S") -%>
-						</span>
-						<%- end -%>
-						<%- if @bill.sync_failed_at.present? -%>
-						<span class='label '>
-							同步失败 <%= raw @bill.sync_failed_at.strftime("%m-%d %H:%M:%S") -%>
-						</span>
-						<%- end -%>
-						<%- if @bill.sync_succeded_at.present? -%>
-						<span class='label '>
-							同步成功 <%= raw @bill.sync_succeded_at.strftime("%m-%d %H:%M:%S") -%>
-						</span>
-						<%- end -%>
-						<%- if @bill.canceled_at.present? -%>
-						<span class='label '>
-							取消 <%= raw @bill.canceled_at.strftime("%m-%d %H:%M:%S") -%>
-						</span>
-						<%- end -%>
-						<%- if @bill.cancel_failed_at.present? -%>
-						<span class='label '>
-							取消失败 <%= raw @bill.cancel_failed_at.strftime("%m-%d %H:%M:%S") -%>
-						</span>
-						<%- end -%>
-						<%- if @bill.cancel_succeded_at.present? -%>
-						<span class='label '>
-							取消成功 <%= raw @bill.cancel_succeded_at.strftime("%m-%d %H:%M:%S") -%>
-						</span>
-						<%- end -%>
-						<%- if @bill.confirm_stocked_at.present? -%>
-						<span class='label '>
-							确认出库 <%= raw @bill.confirm_stocked_at.strftime("%m-%d %H:%M:%S") -%>
-						</span>
+						<%- if @bill.operation_logs.present? -%>
+							<br/>
+							<%- @bill.operation_logs.each do |log| %>
+								<label>
+									<%= "#{log.operated_at.strftime("%Y-%m-%d %H:%M:%S")}, #{log.operation}  #{log.operator}" %>
+								</label>
+								<br/>
+							<%- end %>
 						<%- end -%>
 					</fieldset>
 					</fieldset>
@@ -113,7 +77,7 @@
 					<div class="form-inline">
 						<label>出库时间：</label><%= @bill.stocked_at %>
 					</div>
-				</fieldset>   
+				</fieldset>
 			</form>
 		</div>
 		<div class="clearfix">
@@ -124,7 +88,7 @@
 				<div class="tab-pane active">
 					<table class="table table-hover table-bordered table-striped table-condensed">
 						<thead>
-							<tr>	
+							<tr>
 								<th width="">商品编码</th>
 								<th width="">商品名称</th>
 								<th width="">商品单价</th>
@@ -137,11 +101,11 @@
 							<tr>
 								<td><%= product.outer_id %></td>
 								<td><%= product.title %></td>
-								<td><%= product.price %></td>          
+								<td><%= product.price %></td>
 								<td><%= product.number %></td>
 								<td><%= product.total_price %></td>
 							</tr>
-							<%- end %>	
+							<%- end %>
 						</tbody>
 					</table>
 				</div>

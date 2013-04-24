@@ -59,11 +59,7 @@ class StockOutBill < StockBill
     return if checked_at.present?
     update_attributes!(checked_at: Time.now)
     if account && account.settings.enable_module_third_party_stock != 1
-      if trade_id.present?
-        decrease_actual
-      else
-        sync_stock
-      end
+      sync_stock
     end
   end
 
@@ -88,8 +84,10 @@ class StockOutBill < StockBill
       result = Hash.from_xml(result_xml).as_json
       if result['Response']['success'] == 'true'
         update_attributes!(sync_succeded_at: Time.now)
+        operation_logs.create(operated_at: Time.now, operation: '同步成功')
       else
         update_attributes!(sync_failed_at: Time.now, failed_desc: result['Response']['desc'])
+        operation_logs.create(operated_at: Time.now, operation: "同步失败,#{result['Response']['desc']}")
       end
     # else
     #   p "stock operation not allowed out of production stage"
@@ -107,9 +105,11 @@ class StockOutBill < StockBill
       result = Hash.from_xml(result_xml).as_json
       if result['Response']['success'] == 'true'
         update_attributes!(cancel_succeded_at: Time.now)
+        operation_logs.create(operated_at: Time.now, operation: '取消成功')
         restore_stock
       else
         update_attributes!(cancel_failed_at: Time.now, failed_desc: result['Response']['desc'])
+        operation_logs.create(operated_at: Time.now, operation: "取消失败,#{result['Response']['desc']}")
       end
     # else
     #   p "stock operation not allowed out of production stage"

@@ -8,11 +8,12 @@ class OperationLog
   field :operator_id,    type: Integer
 
   embedded_in :trades
+  embedded_in :stock_bill
   after_create :transfer_to_redis
 
   def account_id
-    trades.account_id
-  end  
+    trades.try(:account_id) || stock_bill.try(:account_id)
+  end
 
   def transfer_to_redis
   	if operator_id.present?

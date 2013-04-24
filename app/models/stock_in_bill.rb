@@ -15,7 +15,7 @@ class StockInBill < StockBill
 			stock.customerId "ALLYES"
 			stock.ZDRQ created_at.try(:strftime, "%Y-%m-%d %H:%M")
 			stock.DHRQ stocked_at.try(:strftime, "%Y-%m-%d %H:%M")
-			stock.ZDR  operator_name
+			stock.ZDR op_name
 			stock.BZ  remark
 			stock.products do
 				bill_products.each do |product|
@@ -61,9 +61,11 @@ class StockInBill < StockBill
       result_xml = response.body[:ans_to_wms_response][:out]
       result = Hash.from_xml(result_xml).as_json
       if result['Response']['success'] == 'true'
-      	update_attributes!(sync_succeded_at: Time.now)
+        update_attributes!(sync_succeded_at: Time.now)
+        operation_logs.create(operated_at: Time.now, operation: '同步成功')
       else
-      	update_attributes!(sync_failed_at: Time.now, failed_desc: result['Response']['desc'])
+        update_attributes!(sync_failed_at: Time.now, failed_desc: result['Response']['desc'])
+        operation_logs.create(operated_at: Time.now, operation: "同步失败,#{result['Response']['desc']}")
       end
     # else
     #   p "stock operation not allowed out of production stage"
@@ -80,10 +82,12 @@ class StockInBill < StockBill
       result_xml = response.body[:cancel_asn_rx_response][:out]
       result = Hash.from_xml(result_xml).as_json
       if result['Response']['success'] == 'true'
-      	update_attributes!(cancel_succeded_at: Time.now)
-      	restore_stock
+        update_attributes!(cancel_succeded_at: Time.now)
+        operation_logs.create(operated_at: Time.now, operation: '取消成功')
+        restore_stock
       else
-      	update_attributes!(cancel_failed_at: Time.now, failed_desc: result['Response']['desc'])
+        update_attributes!(cancel_failed_at: Time.now, failed_desc: result['Response']['desc'])
+        operation_logs.create(operated_at: Time.now, operation: "取消失败,#{result['Response']['desc']}")
       end
     # else
     #   p "stock operation not allowed out of production stage"

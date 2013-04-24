@@ -54,9 +54,11 @@ class StockApiController < ApplicationController
         end
         if stock_in_bill.sync_stock
           stock_in_bill.update_attributes!(confirm_stocked_at: Time.now)
+          operation_logs.create(operated_at: Time.now, operation: '确认入库成功')
           render soap: "SUCCESS"
         else
           stock_in_bill.update_attributes!(confirm_failed_at: Time.now)
+          operation_logs.create(operated_at: Time.now, operation: '确认入库失败')
           render soap: "FAILED"
         end
       else
@@ -106,9 +108,11 @@ class StockApiController < ApplicationController
         end
         if stock_out_bill.decrease_actual
           stock_out_bill.update_attributes!(confirm_stocked_at: Time.now)
+          operation_logs.create(operated_at: Time.now, operation: '确认出库成功')
           render soap: "SUCCESS"
         else
           stock_out_bill.update_attributes!(confirm_failed_at: Time.now)
+          operation_logs.create(operated_at: Time.now, operation: '确认出库失败')
           render soap: "FAILED"
         end
       else

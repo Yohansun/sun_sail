@@ -86,7 +86,6 @@
               <th>商品数量</th>
               <th>商品总价</th>
               <th>仓库名称</th>
-              <th>操作者</th>
             </tr>
           </thead>
           <tbody>
@@ -104,7 +103,6 @@
                   <td><%= product.try(:number) %></td>
                   <td><%= product.try(:total_price) %></td>
                   <td>默认仓库</td>
-                  <td><%= bill.operator_name %></td>
                 </tr>
                 <%- num += 1 %>
               <%- end %>

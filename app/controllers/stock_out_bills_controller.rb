@@ -61,6 +61,7 @@ class StockOutBillsController < ApplicationController
     @operated_bills.each do |bill|
       #PUT INTO QUEUE LATER
       bill.sync
+      bill.operation_logs.create(operated_at: Time.now, operator: current_user.name, operator_id: current_user.id, operation: '同步')
     end
     respond_to do |f|
       f.js
@@ -72,6 +73,7 @@ class StockOutBillsController < ApplicationController
     @operated_bills.each do |bill|
       #PUT INTO QUEUE LATER
       bill.check
+      bill.operation_logs.create(operated_at: Time.now, operator: current_user.name, operator_id: current_user.id, operation: '审核')
     end
     respond_to do |f|
       f.js
@@ -83,6 +85,7 @@ class StockOutBillsController < ApplicationController
     @operated_bills.each do |bill|
       #PUT INTO QUEUE LATER
       bill.rollback
+      bill.operation_logs.create(operated_at: Time.now, operator: current_user.name, operator_id: current_user.id, operation: '取消')
     end
     respond_to do |f|
       f.js
