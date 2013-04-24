@@ -102,40 +102,25 @@
                     $('#stock_in_bills_form').submit();
                     }else{return false};
                   }"  %>
-              </li>
-              <%- if current_account.settings.enable_module_third_party_stock == 1 %>
-              <li>
-                <%= link_to "同步","javascript:
-                if($('input:checked').length < 1){
-                  alert('请选择至少一个入库单');
-                }else{
-                  var flag = confirm('确认同步吗?');
-                  if(flag==true){
-                    $('#stock_in_bills_form').attr({action: '/stock_in_bills/sync',method: 'post'});
-                    $('#stock_in_bills_form').submit();
-                    }else{return false};
-                }" %>
-              </li>
-              <li>
-                <%= link_to "撤销","javascript:
-                if($('input:checked').length < 1){
-                  alert('请选择至少一个入库单');
-                }else{
-                  var flag = confirm('确认撤销吗?');
-                  if(flag==true){
-                    $('#stock_in_bills_form').attr({action: '/stock_in_bills/rollback',method: 'post'});
-                    $('#stock_in_bills_form').submit();
-                    }else{return false};
-                }"%>
-              </li>
-              <%- end %>
-            </ul>
-          </div><!-- btn-group -->
-        </div>
-        <%= render "table" %>
-        <%- end %>
-        <%= paginate @bills %>
-      </div><!--span10 -->
-    </div><!-- tab-content -->
-  </div><!-- span10 -->
-</div><!--row-fluid-->
+                </li>
+                <li>
+                  <%= link_to "审核", "#",:onclick => "processRequest(this)",:goto => "/stock_in_bills/check",:request_method => "post",:mesg => "确认审核吗?"  %>
+                  </li>
+                  <%- if current_account.settings.enable_module_third_party_stock == 1 %>
+                  <li>
+                    <%= link_to "同步", "#",:onclick => "processRequest(this)",:goto => "/stock_in_bills/sync",:request_method => "post",:mesg => "确认同步吗?"  %>
+                      </li>
+                      <li>
+                        <%= link_to "撤销", "#",:onclick => "processRequest(this)",:goto => "/stock_in_bills/rollback",:request_method => "post",:mesg => "确认撤销吗?"  %>
+                          </li>
+                          <%- end %>
+                        </ul>
+                      </div><!-- btn-group -->
+                    </div>
+                    <%= render "table" %>
+                    <%- end %>
+                    <%= paginate @bills %>
+                  </div><!--span10 -->
+                </div><!-- tab-content -->
+              </div><!-- span10 -->
+</div><!--row-fluid

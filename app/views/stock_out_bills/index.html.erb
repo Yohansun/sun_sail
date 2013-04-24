@@ -64,80 +64,51 @@
                   </select>
                 </div>
               </div>
-            </fieldset>
-
-            <fieldset>
-              <label class="pull-left"><code>当前：</code></label>
-              <div class="controls clearfix item_group">
-              </div>
-            </fieldset><!-- current -->
-          </div>
-        </form>
-        <%= form_tag "/",:method => "post",:id => "stock_out_bills_form", :remote => true do %>
-        <div class="btn-toolbar">
-          <div class="btn-group">
-            <button class="btn btn-warning">操作</button>
-            <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
-              <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu">
-              <li>
-                <%= link_to "新建", new_stock_out_bill_path %>
-              </li>
-              <li>
-                <%= link_to "查看","javascript:if($('input:checked').length < 1){
-                alert('请选择一个出库单');
-                }else{
-                  var bill_id = $(\"input[name='bill_ids[]']:checked:first\").val();
-                  $(location).attr('href','/stock_out_bills/'+bill_id);
-                }"  %>
-              </li>
-              <li>
-                <%= link_to "审核","javascript:
-                if($('input:checked').length < 1){
-                  alert('请选择至少一个出库单');
-                }else{
-                  var flag = confirm('确认审核吗?');
-                  if(flag==true){
-                    $('#stock_out_bills_form').attr({action: '/stock_out_bills/check',method: 'post'});
-                    $('#stock_out_bills_form').submit();
-                    }else{return false};
-                }"%>
-              </li>
-              <%- if current_account.settings.enable_module_third_party_stock == 1 %>
-              <li>
-                <%= link_to "同步","javascript:
-                if($('input:checked').length < 1){
-                  alert('请选择至少一个出库单');
-                }else{
-                  var flag = confirm('确认同步吗?');
-                  if(flag==true){
-                    $('#stock_out_bills_form').attr({action: '/stock_out_bills/sync',method: 'post'});
-                    $('#stock_out_bills_form').submit();
-                    }else{return false};
-                }" %>
-              </li>
-              <li>
-                <%= link_to "撤销","javascript:
-                if($('input:checked').length < 1){
-                  alert('请选择至少一个出库单');
-                }else{
-                  var flag = confirm('确认撤销吗?');
-                  if(flag==true){
-                    $('#stock_out_bills_form').attr({action: '/stock_out_bills/rollback',method: 'post'});
-                    $('#stock_out_bills_form').submit();
-                    }else{return false};
-                }"%>
-              </li>
-              <%- end %>
-            </ul>
-          </div><!-- btn-group -->
-        </div>
-        <%= render "table" %>
-        <%- end %>
-        <%= paginate @bills %>
-      </div><!--span10 -->
-    </div><!-- tab-content -->
-  </div><!-- span10 -->
-</div><!--row-fluid-->
+              <fieldset>
+                <label class="pull-left"><code>当前：</code></label>
+                <div class="controls clearfix item_group">
+                </div>
+              </fieldset><!-- current -->
+            </div>
+          </form>
+          <%= form_tag "/",:method => "post",:id => "stock_out_bills_form", :remote => true do %>
+          <div class="btn-toolbar">
+            <div class="btn-group">
+              <button class="btn btn-warning">操作</button>
+              <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu">
+                <li>
+                  <%= link_to "新建", new_stock_out_bill_path %>
+                </li>
+                <li>
+                  <%= link_to "查看","javascript:if($('input:checked').length < 1){
+                  alert('请选择一个出库单');
+                  }else{
+                    var bill_id = $(\"input[name='bill_ids[]']:checked:first\").val();
+                    $(location).attr('href','/stock_out_bills/'+bill_id);
+                  }"  %>
+                </li>
+                <li>
+                  <%= link_to "撤销", "#",:onclick => "processRequest(this)",:goto => "/stock_out_bills/check",:request_method => "post",:mesg => "确认审核吗?"  %>
+                  </li>
+                  <%- if current_account.settings.enable_module_third_party_stock == 1 %>
+                  <li>
+                    <%= link_to "同步", "#",:onclick => "processRequest(this)",:goto => "/stock_out_bills/sync",:request_method => "post",:mesg => "确认同步吗?"  %>
+                      </li>
+                      <li>
+                        <%= link_to "撤销", "#",:onclick => "processRequest(this)",:goto => "/stock_out_bills/rollback",:request_method => "post",:mesg => "确认撤销吗?"  %>
+                          </li>
+                          <%- end %>
+                        </ul>
+                      </div><!-- btn-group -->
+                    </div>
+                    <%= render "table" %>
+                    <%- end %>
+                    <%= paginate @bills %>
+                  </div><!--span10 -->
+                </div><!-- tab-content -->
+              </div><!-- span10 -->
+</div><!--row-fluid
 

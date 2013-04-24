@@ -31,13 +31,7 @@
     <%= simple_form_for @bill,:html => {:class => "form-horizontal"} do |f| %>
     <%= hidden_field_tag "bill_product_ids" %>
     <div class="btn-toolbar">
-      <%= f.submit "保存",:onclick => "
-      if($('input[name=\"bill_product_ids[]\"]').length < 1){
-        alert('请选择至少一个商品');
-        return false;
-        }else{
-          var checked_ids = $('input[name=\"bill_product_ids[]\"]:checked').map(function(){ return this.value }).get().join(',');$('#bill_product_ids').val(checked_ids)
-        }",:class => "btn btn-warning btn-small" %>
+      <%= f.submit "保存",:onclick => "validateStockBill()",:class => "btn btn-warning btn-small" %>
         <%= link_to "取消","/stock_in_bills" ,:class => "btn btn-warning btn-small" %>
       </div>
       <div class="well clearfix">
@@ -91,7 +85,7 @@
       <%= form_tag add_product_stock_in_bills_path,:class => "form-horizontal",:remote => true do  %>
       <%= hidden_field_tag "id",params[:id] %>
       <div class="btn-toolbar">
-        <%= button_tag "添加",:class => "btn btn-warning btn-small", :onclick => "if($('#product_title').val() == ''){alert('bunengweikong');return false}" %>
+        <%= button_tag "添加",:class => "btn btn-warning btn-small" ,:onclick => "validateProductValues()" %>
       </div>
       <fieldset>
         <div class="control-group">
@@ -103,11 +97,11 @@
         <fieldset class="span6">
           <div class="control-group">
             <label class="control-label">数量：</label>
-            <input type="text" class="input-medium" name="product[number]" placeholder="10">
+            <input type="text" class="input-medium" name="product[number]" placeholder="10" id="product_number">
           </div>
           <div class="control-group">
             <label class="control-label">单价：</label>
-            <input type="text" class="input-medium" placeholder="100" name="product[price]">
+            <input type="text" class="input-medium" placeholder="100" name="product[price]" id="product_price">
           </div>
         </fieldset><!-- form left area -->
         <fieldset class="span6">
@@ -119,7 +113,7 @@
         </div>
         <div class="control-group">
           <label class="control-label">实际总价：</label>
-          <input type="text" class="input-medium" placeholder="500" name="product[total_price]">
+          <input type="text" class="input-medium" placeholder="500" name="product[total_price]" id="product_total_price">
         </div>
       </fieldset><!-- form right area -->
     </div> 
@@ -129,18 +123,3 @@
     </div>
   </div><!--span10 -->
 </div><!--row-fluid -->
-
-<% content_for :tail do -%>
-<%= javascript_include_tag "LinkageSelect.js" %>
-<script type="text/javascript">
-$(function() {
-  var options = {
-    data  : linkage_data
-  }
-  var sel = new LinkageSelect(options);
-  sel.bind('.level_1','<%= @bill.op_state %>');
-  sel.bind('.level_2','<%= @bill.op_city %>');
-  sel.bind('.level_3','<%= @bill.op_district %>');
-});
-</script>
-<% end -%>
