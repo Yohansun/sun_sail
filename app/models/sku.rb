@@ -13,14 +13,13 @@
 #
 
 class Sku < ActiveRecord::Base
-  attr_accessible :num_iid, :properties, :properties_name, :quantity, :sku_id, :taobao_product_id
+  attr_accessible :num_iid, :properties, :properties_name, :quantity, :sku_id, :taobao_product_id, :account_id
   belongs_to :product
   has_many :sku_bindings
   has_many :taobao_skus, through: :sku_bindings
 
   def title
-    sku_name = Sku.find_by_id(sku_id)
-    "#{product.name}#{name}"
+    "#{product.try(:name)}#{name}"
   end
 
   def name
@@ -37,7 +36,7 @@ class Sku < ActiveRecord::Base
     sku_name
   end
 
-   def value
+  def value
     value = ''
     if properties_name.present?
       properties = properties_name.split(';')

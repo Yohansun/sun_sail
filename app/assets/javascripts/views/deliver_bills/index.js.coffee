@@ -79,7 +79,6 @@ class MagicOrders.Views.DeliverBillsIndex extends Backbone.View
         html += '<td>' + trade.name + '</td>'
         html += '<td>' + trade.address + '</td></tr>'
 
-
       bind_swf(tmp, 'ffd', '')
       $('#logistic_select').hide()
       $('.deliver_count').html(data.length)

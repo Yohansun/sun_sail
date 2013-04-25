@@ -123,6 +123,9 @@ MagicOrders::Application.routes.draw do
       get :abandon_product
       get :export_products
       post :update_on_sale
+      get :taobao_skus
+      get :change_taobao_skus
+      post :tie_to_native_skus
     end
   end
 
