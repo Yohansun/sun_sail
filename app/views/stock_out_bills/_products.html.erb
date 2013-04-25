@@ -1,5 +1,5 @@
 <div class="btn-toolbar" style="top: 71px;">
-  <%= button_tag "删除",:onclick => "$('#form_products').submit()" ,:class => "btn btn-warning btn-small" %>  
+  <%= button_tag "删除",:onclick => "if($('input[name=\"bill_product_ids[]\"]:checked').length < 1){alert('请选择商品');return false}else{$('#form_products').submit()}" ,:class => "btn btn-warning btn-small" %>  
 </div>
 
 <%= form_tag remove_product_stock_out_bills_path,:class => "form-horizontal",:id => "form_products",:remote => true do  %>
@@ -8,7 +8,7 @@
     <table class="table table-hover table-bordered table-striped table-condensed js-table">
       <thead>
         <tr>
-          <th width="5%"><input type="checkbox"></th>
+          <th width="5%"><input type="checkbox" onclick="$(this).parents().find(':checkbox').prop('checked',$(this).prop('checked'))"></th>
           <th width="">商品编码</th>
           <th width="">商品名称</th>
           <th width="">商品单价</th>          
