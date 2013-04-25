@@ -39,7 +39,7 @@ class Seller < ActiveRecord::Base
   has_many :users
   has_many :sellers_areas
   has_many :areas, through: :sellers_areas
-  # has_many :stock_products
+  has_many :stock_products
   has_many :stock_history
   has_one :stock
 

@@ -7,7 +7,7 @@ class TradesController < ApplicationController
   before_filter :authenticate_user!
   respond_to :json, :xls
 
-  include TaobaoProductsLockable
+  include StockProductsLockable
   #include Dulux::Splitter
 
   def index
@@ -184,7 +184,7 @@ class TradesController < ApplicationController
       state.repair_man = current_user.name
       state.repaired_at = Time.now
     end
-    
+
     if params[:logistic_ids].present?
       @trade.split_logistic(params[:logistic_ids])
     end
@@ -317,7 +317,7 @@ class TradesController < ApplicationController
       seller_name = seller.name
       dispatchable = true
       errors = can_lock_products?(trade, seller.id).join(',')
-      unless errors.blank?
+      if errors.present?
         seller_name += "(无法分流：#{errors})"
         dispatchable = false
       end
@@ -386,7 +386,7 @@ class TradesController < ApplicationController
       trade.delivered_at = Time.now
       trade.status = "WAIT_BUYER_CONFIRM_GOODS"
       trade.save # this will trigger observer.
-    end  
+    end
     render json: {isSuccess: true}
   end
 

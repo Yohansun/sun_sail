@@ -447,17 +447,11 @@ class Trade
             title = sku.try(:title)
             num_iid = order.num_iid.to_s
             bill_product = bill.bill_products.where(outer_id: outer_iid, num_iid: num_iid).first
-            if stock_product
-              stock_product_id = stock_product.id
-              bill_product = bill.bill_products.where(outer_id: outer_iid, num_iid: num_iid).first
-              if bill_product
-                bill_product.number += 1
-                bill_product.save
-              else
-                bill.bill_products.create(title: title, outer_id: outer_iid, num_iid: num_iid, sku_id: sku_id, sku_name: sku_name, colors: order.color_num,number: 1, memo: order.cs_memo)
-              end
+            if bill_product
+              bill_product.number += 1
+              bill_product.save
             else
-              bill.bill_products.create(title: title, outer_id: outer_iid, num_iid: num_iid, sku_id: sku_id, sku_name: sku_name, colors: order.color_num, number: 1, memo: order.cs_memo)
+              bill.bill_products.create(title: title, outer_id: outer_iid, num_iid: num_iid, sku_id: sku_id, sku_name: sku_name, colors: order.color_num,number: 1, memo: order.cs_memo)
             end
           end
         end

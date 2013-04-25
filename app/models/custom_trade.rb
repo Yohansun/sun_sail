@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 
 class CustomTrade < Trade
-  include TaobaoProductsLockable
+  include StockProductsLockable
 
   field :tid, type: String
   field :num, type: Integer
@@ -173,7 +173,7 @@ class CustomTrade < Trade
 
     # 生成默认发货单
     generate_deliver_bill
-    
+
     generate_stock_out_bill
   end
 

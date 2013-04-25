@@ -1,6 +1,6 @@
 #-*- encoding : utf-8 -*-
 class TaobaoPurchaseOrder < Trade
-  include TaobaoProductsLockable
+  include StockProductsLockable
 
   field :tid, type: String,             as: :fenxiao_id
   field :deliver_id, type: String

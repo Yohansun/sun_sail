@@ -62,10 +62,27 @@ class TaobaoOrder < Order
     taobao_sku.sku_bindings
   end
 
+  def package_info
+    info = []
+    sku_bindings.each do |binding|
+      sku = binding.sku
+      product = sku.product
+      stock_product_ids = StockProduct.where(product_id: product.id, sku_id: sku.id).map(&:id)
+      info << {
+        sku_id: binding.sku_id,
+        outer_id: product.outer_id,
+        stock_product_ids: stock_product_ids,
+        number: binding.number,
+        title: sku.title
+      }
+    end
+    info
+  end
+
   def package_products
     info = []
     sku_bindings.each do |binding|
-      product = binding.sku.try(product)
+      product = binding.sku.try(:product)
       number = binding.number
       info << Array.new(number,product)
     end
@@ -75,7 +92,7 @@ class TaobaoOrder < Order
   def child_outer_id
     info = []
     sku_bindings.each do |binding|
-      product = binding.sku.try(product)
+      product = binding.sku.try(:product)
       number = binding.number
       info << [product, number]
     end

@@ -30,63 +30,7 @@ class StockProduct < ActiveRecord::Base
   validates_uniqueness_of :sku_id, scope: :account_id, message: '必填项'
   belongs_to :product
   belongs_to :sku
-  # belongs_to :seller
+  belongs_to :seller
   has_and_belongs_to_many :colors
 
-  def sku_name
-    sku_name = ''
-    if sku.properties_name.present?
-      properties = sku.properties_name.split(';')
-      properties.each do |property|
-        sku_values = property.split(':')
-        sku_key =  sku_values[2]
-        sku_value =  sku_values[3]
-        sku_name = sku_name + sku_key + ':' + sku_value + '  '
-      end
-    end
-    sku_name
-  end
-
-  def sku_values
-    values = ''
-    if sku.properties_name.present?
-      properties = sku.properties_name.split(';')
-      properties.each do |property|
-        sku_properties = property.split(':')
-        sku_value = sku_properties[3]
-        values = sku_value + ' '
-      end
-    end
-    values
-  end  
-
-  def storage_status
-    if activity < safe_value
-      '预警'
-    elsif actual == max
-      '满仓'
-    else
-      '正常'
-    end
-  end
-
-  def update_quantity!(num, opt_type)
-    opt_activity = 0
-    opt_actual = 0
-
-    case opt_type
-    when '入库'
-      opt_activity = opt_actual = num
-    when '出库'
-      opt_activity = opt_actual = -num
-    when '锁定'
-      opt_activity = -num
-    when '解锁'
-      opt_activity = num
-    when '发货'
-      opt_actual = -num
-    end
-
-    update_attributes(activity: activity + opt_activity, actual: actual + opt_actual)
-  end
 end

@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 
 class TaobaoTrade < Trade
-  include TaobaoProductsLockable
+  include StockProductsLockable
   #include Dulux::Splitter
 
   field :tid, type: String

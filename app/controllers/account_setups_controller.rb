@@ -4,7 +4,7 @@ class AccountSetupsController < ApplicationController
   before_filter :fetch_account, except: [:data_fetch_finish]
 
   skip_before_filter :verify_authenticity_token, only: [:data_fetch_finish]
-  
+
   steps :admin_init, :data_fetch, :options_setup, :user_init
 
   def show
@@ -14,7 +14,7 @@ class AccountSetupsController < ApplicationController
 
   def update
     case step
-    when :admin_init       
+    when :admin_init
       user = User.new(params[:user])
       user.password = SecureRandom.hex(3)
       user.save
@@ -22,7 +22,8 @@ class AccountSetupsController < ApplicationController
       Notifier.init_user_notifications(user.email, user.password, @account.id).deliver if user.email.present?
       if user.phone.present?
         # USE SYSTEM SMS INTERFACE.
-      end 
+      end
+      # CREATE SELLER IN ORDER TO SYNC STOCK FOR SOME REASON.
     when :options_setup
       # auto_settings should be init as a hash.
       @account.settings.auto_settings["autodispatch"] = params[:autodispatch]
@@ -89,12 +90,12 @@ class AccountSetupsController < ApplicationController
       Notifier.init_user_notifications(user.email, user.password, @account.id).deliver if user.email.present?
       if user.phone.present?
         # USE SYSTEM SMS INTERFACE.
-      end 
+      end
     end
   end
 
   def fetch_account
-    @account = Account.find_by_id(session[:account_id] ) if session[:account_id] 
+    @account = Account.find_by_id(session[:account_id] ) if session[:account_id]
   end
 
   def decorate_auto_settings(hash)

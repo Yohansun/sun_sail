@@ -8,16 +8,4 @@ class TaobaoProduct < ActiveRecord::Base
 
   validates_uniqueness_of :outer_id, :allow_blank => true, message: "信息已存在"
 
-  def package_info
-    info = []
-    products.each do |product|
-      info << {
-        outer_id: product.outer_id,
-        number: product.number(id),
-        storage_num: product.try(:storage_num),
-        title: product.try(:name)
-      }
-    end
-    info
-  end
 end
