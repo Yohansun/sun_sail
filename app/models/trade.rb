@@ -352,10 +352,17 @@ class Trade
 
   def generate_stock_out_bill
     return if stock_out_bill.present?
-    bill = StockOutBill.create(trade_id: _id, tid: tid, op_state:receiver_state, op_city: receiver_city, op_district: receiver_district, op_address: receiver_address,
+    bill = StockOutBill.create(trade_id: _id, op_state:receiver_state, op_city: receiver_city, op_district: receiver_district, op_address: receiver_address,
       op_name: receiver_name, op_mobile: receiver_mobile, op_zip: receiver_zip, op_phone: receiver_phone, logistic_id: logistic_id, remark: cs_memo,
       stock_type: "CM", account_id: account_id, checked_at: Time.now, created_at: Time.now
     )
+
+    if splitted
+      bill.tid = splitted_tid
+    else
+      bill.tid = tid
+    end
+
     orders.each do |order|
       if order.sku_bindings.present?
         order.sku_bindings.each do |binding|

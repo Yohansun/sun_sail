@@ -54,7 +54,11 @@ class StockBill
       serial = Time.now.to_s(:number)
       salt = SecureRandom.hex(10).upcase[0, 3]
       serial_num = serial + salt
-      update_attributes!(tid: serial_num)
+      if StockBill.where(tid: serial_num).exists?
+        generate_tid
+      else
+        update_attributes!(tid: serial_num)
+      end
     end
   end
 
