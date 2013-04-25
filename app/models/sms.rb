@@ -29,18 +29,31 @@ class Sms
   end
 
   def soap_transmit
-    client = Savon::Client.new(@account.settings.sms_soap_gateway)
     loginName = @account.settings.loginName
     loginPswd = @account.settings.loginPswd
-    mobiles = @account.settings.sms_test_mobile
+    sms_test_mobile = @account.settings.sms_test_mobile
+
+    client = Savon.client(wsdl: @account.settings.sms_soap_gateway)
     if Rails.env.production?
-      response = client.request(:batch_send) do
-        soap.body = "<loginName>#{loginName}</loginName><loginPswd>#{loginPswd}</loginPswd><mobiles>#{self.mobiles}</mobiles><content>#{self.content}</content><fixedTime></fixedTime><sendId></sendId><extid></extid>"
+      response = client.call(:batch_send) do
+        message loginName: loginName,
+                loginPswd: loginPswd,
+                mobiles: self.mobiles,
+                content: self.content,
+                fixedTime: '',
+                sendId: '',
+                extid: ''
       end
       response.body[:batch_send_response][:out]
     else
-      response = client.request(:batch_send) do
-        soap.body = "<loginName>#{loginName}</loginName><loginPswd>#{loginPswd}</loginPswd><mobiles>#{mobiles}</mobiles><content>#{self.content}</content><fixedTime></fixedTime><sendId></sendId><extid></extid>"
+      response = client.call(:batch_send) do
+        message loginName: loginName,
+                loginPswd: loginPswd,
+                mobiles: sms_test_mobile,
+                content: self.content,
+                fixedTime: '',
+                sendId: '',
+                extid: ''
       end
       response.body[:batch_send_response][:out]
     end
