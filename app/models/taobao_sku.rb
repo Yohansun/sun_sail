@@ -1,5 +1,5 @@
 class TaobaoSku < ActiveRecord::Base
-  attr_accessible :sku_id, :num_iid, :properties, :properties_name, :quantity
+  attr_accessible :sku_id, :num_iid, :properties, :properties_name, :quantity, :taobao_product_id
   has_many :sku_bindings
   has_many :skus, through: :sku_bindings
   belongs_to :taobao_product

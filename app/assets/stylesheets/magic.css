@@ -27,7 +27,7 @@ body {
 .login .form-horizontal .control-label {width:80px;}
 .login .form-horizontal .form-actions {padding-left:0px;padding-top:0; margin:0; text-align:right; background:none; border:none;}
 .iUser { background: url(/assets/user.png) no-repeat 12px; }
-.login .loginPanel h5 { font-weight: normal; padding: 9px 12px 9px 35px; float: none; } 
+.login .loginPanel h5 { font-weight: normal; padding: 9px 12px 9px 35px; float: none; }
 .modal-backdrop{ opacity:0.1;}
 
 /*list*/
@@ -146,7 +146,6 @@ input.checkallbox{margin:-4px 10px 0 0;}
 
 }
 
-.row-fluid{min-height:700px;}
 .the-icons{list-style:none;margin-left:0;overflow: hidden;}
 
 .td_colors td span.match_color{display: block;border-radius:3px;margin:3px;height:13px;width:13px;}

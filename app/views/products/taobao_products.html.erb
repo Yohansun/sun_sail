@@ -1,8 +1,8 @@
 <div class="container-fluid">
   <!-- <div class="row-fluid"> -->
   <ul class="nav nav-tabs affix">
-    <li class="active"><a href="/products/taobao_products">淘宝商品</a></li>
     <li><a href="/products">本地单品</a></li>
+    <li class="active"><a href="/products/taobao_products">淘宝商品</a></li>
     <!-- <li><a href="#set_good" data-toggle="tab">套装</a></li>
     <li><a href="#active_goods" data-toggle="tab">活动商品</a></li> -->
   </ul><!-- nav-tabs -->
@@ -34,71 +34,84 @@
       </button>
       <ul class="dropdown-menu">
         <li><a href="#" id="show_taobao_product">查看</a></li>
-        <li><a href="#">绑定本地SKU</a></li>
+        <li><a href="#" id="tie_to_native_skus">绑定本地SKU</a></li>
       </ul>
     </div><!-- btn-group -->
     <div class="btn btn-warning">同步淘宝数据</div>
   </div><!-- btn-groups end -->
 
   <div class="tab-content">
-    <div class="tab-pane active" id="taobao_goods">
-      <%= render 'taobao_products_table' %>
-    </div><!-- all_goods end -->
-
     <div class="tab-pane" id="native_goods">
     </div><!-- single_good end -->
 
+    <div class="tab-pane active" id="taobao_goods">
+      <%= render 'taobao_products_table' %>
+    </div><!-- all_goods end -->
   </div>
 </div>
 
 <!-- Modal -->
-<form id="goods_edit" class="js-modal modal hide fade modal_w7" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+<form id="sku_binding" class="js-modal modal hide fade modal_w7" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-    <h3 id="">商品绑定</h3>
+    <h3 id="">绑定本地SKU</h3>
   </div>
   <div class="modal-body">
-    <fieldset class="control-group form-inline">
-      <label>套装名称：竹炭12</label>
-      <label class="mar_l80">淘宝ID：123456</label>
-    </fieldset>
-    <fieldset class="control-group form-inline">
-      <label class="width_100 pagination-right">选择绑定商品：</label>
-      <select class="input-medium select2">
-        <option>选择需要绑定的商品</option>
-      </select>
-    </fieldset>
-    <fieldset class="control-group form-inline">
-      <label class="width_100 pagination-right">数量：</label>
-      <input type="text" placeholder="2" class="input-medium">
-      <button class="btn btn-small mar_l80">添加</button>
-    </fieldset>
+    <span class="span7 nomargin">
+      <fieldset class="control-group form-inline">
+        <label class="width_100 pagination-right">商品ID：<span id="taobao_product_id"></span></label>
+      </fieldset>
+      <fieldset class="control-group form-inline">
+        <label class="width_100 pagination-right">名称：<span id="taobao_product_name"></span></label>
+      </fieldset>
+      <fieldset class="control-group form-inline">
+        <label class="width_100 pagination-right">商品类目：<span id="taobao_product_cat_name"></span></label>
+      </fieldset>
+      <fieldset class="control-group form-inline">
+        <label class="width_100 pagination-right">商家外部编码：<span id="taobao_product_outer_id"></span></label>
+      </fieldset>
+      <fieldset class="control-group form-inline">
+        <label class="width_100 pagination-right">选择淘宝SKU：</label>
+        <select class="input-xlarge change_taobao_skus">
+        </select>
+      </fieldset>
+      <fieldset class="control-group form-inline">
+        <label class="width_100 pagination-right">选择SKU：</label>
+        <select class="input-large select2 native_skus_list">
+          <% @native_skus.each do |sku| %>
+          <option value="<%= sku.id %>"><%= sku.title %></option>
+          <% end %>
+        </select>
+        <input class="input-small" type="text" id="native_sku_num" placeholder="数量">
+        <a class="btn btn-small btn-info" type="button" id="add_sku_binding">添加</a>
+      </fieldset>
+    </span>
+    <!-- <span class="span5">
+      <ul class="thumbnails">
+        <li class="span12">
+          <a href="#" class="thumbnail">
+            <img data-src="holder.js/300x200" alt="" src="images/logo.png">
+          </a>
+        </li>
+      </ul>
+    </span> -->
     <table class="table table-bordered table-condensed">
       <thead>
         <tr>
-          <th width="20%">淘宝ID</th>
-          <th width="20%">淘宝商品名称</th>
-          <th width="20%">商品编码</th>
+          <th width="25%">SKU ID</th>
+          <th width="40%">SKU名称</th>
           <th width="20%">数量</th>
-          <th width="20%">操作</th>
+          <th width="15%">操作</th>
         </tr>
       </thead>
-      <tbody>
-        <tr>
-          <td>001</td>
-          <td>aaa</td>
-          <td>456</td>
-          <td>9</td>
-          <td><button class="btn btn-small">删除</button></td>
-        </tr>
-      </tbody>
+      <tbody id="sku_bindings_table"></tbody>
     </table>
   </div>
   <div class="modal-footer">
     <button class="btn btn-small" data-dismiss="modal" aria-hidden="true">关闭</button>
-    <button class="btn btn-small btn-primary">保存</button>
+    <button class="btn btn-small btn-primary" id="save_sku_bindings">保存</button>
   </div>
-</form><!-- mark -->
+</form><!-- binding -->
 
 
 <% content_for :tail do %>
@@ -110,8 +123,114 @@
       product_id = _.trim(product_id, "product_")
       window.location.href = "/products/"+product_id+"/taobao_product"
     } else{
+      alert("请选择一件商品。");
+    }
+  })
+
+  $('#tie_to_native_skus').on('click', function(event){
+    event.preventDefault();
+    if($('#taobao_product_table input:checked').length == 1){
+      var product_id = $('#taobao_product_table input:checked').parents('tr').attr('id')
+      product_id = _.trim(product_id, "product_")
+      $.get("/products/taobao_skus", {product_id: product_id}).done(function(data){
+        if(data.has_skus == false){
+          alert("此商品没有SKU");
+        } else {
+          $('#taobao_product_id').text(data.product.id)
+          $('#taobao_product_name').text(data.product.name)
+          $('#taobao_product_cat_name').text(data.product.cat_name)
+          $('#taobao_product_outer_id').text(data.product.outer_id)
+          var skus_list = ""
+          for(var i in data.skus){
+            skus_list += "<option value="+data.skus[i].id+">"+data.skus[i].name+"</option>"
+          }
+          $('.change_taobao_skus').html(skus_list)
+          if(data.sku_bindings.length != 0){
+            var sku_bindings_list = ""
+            for(var i in data.sku_bindings){
+              sku_bindings_list += '<tr><td>' + data.sku_bindings[i].sku_id + '</td>'
+              sku_bindings_list += '<td>' + data.sku_bindings[i].name + '</td>'
+              sku_bindings_list += '<td>' + data.sku_bindings[i].num + '</td>'
+              sku_bindings_list += '<td><a class="btn btn-small btn-info delete_sku_binding">删除</a></td></tr>'
+            }
+          }
+          $('#sku_bindings_table').html(sku_bindings_list)
+          $('#sku_binding').modal('show');
+        }
+      });
+    } else {
       alert("请选择一件商品。")
     }
+  })
+
+  $('.change_taobao_skus').on('change',function(event){
+    var taobao_sku_id = $('.change_taobao_skus option:selected').val()
+    $.get("/products/change_taobao_skus", {taobao_sku_id: taobao_sku_id}).done(function(data){
+      if(data.sku_bindings.length != 0){
+        var sku_bindings_list = ""
+        for(var i in data.sku_bindings){
+          sku_bindings_list += '<tr><td>' + data.sku_bindings[i].sku_id + '</td>'
+          sku_bindings_list += '<td>' + data.sku_bindings[i].name + '</td>'
+          sku_bindings_list += '<td>' + data.sku_bindings[i].num + '</td>'
+          sku_bindings_list += '<td><a class="btn btn-small btn-info delete_sku_binding">删除</a></td></tr>'
+        }
+        $('#sku_bindings_table').html(sku_bindings_list)
+      } else {
+        $('#sku_bindings_table').html("")
+      }
+    })
+  })
+
+  $('#add_sku_binding').on('click', function(event){
+    event.preventDefault()
+    var sku_id = $('.native_skus_list option:selected').val()
+    var name = $('.native_skus_list option:selected').text()
+    var num = $('#native_sku_num').val()
+    if(num == ''){
+      alert("数量不能为空。")
+    } else if(/^[1-9]{1}[0-9]*$/.test(num) != true){
+      alert("数量格式不正确。")
+    } else {
+      var sku_ids = $('#sku_bindings_table tr').map(function(){
+        if($(this).attr('class') != "need_delete"){
+          return $(this).find('td:first').text()
+        }
+      }).get();
+      if($.inArray(sku_id, sku_ids) != -1){
+        alert("已添加过SKU")
+      } else {
+        var new_sku_binding = ""
+        new_sku_binding += '<tr class="new_add"><td>' + sku_id + '</td>'
+        new_sku_binding += '<td>' + name + '</td>'
+        new_sku_binding += '<td>' + num + '</td>'
+        new_sku_binding += '<td><a class="btn btn-small btn-info delete_sku_binding">删除</a></td></tr>'
+        $('#sku_bindings_table').append(new_sku_binding)
+      }
+    }
+  })
+
+  $(document).on('click', '.delete_sku_binding', function(event){
+    event.preventDefault()
+    if($(event.target).parents('tr').attr('class') == "new_add"){
+      $(event.target).parents('tr').remove()
+    } else {
+      $(event.target).parents('tr').addClass("need_delete")
+      $(event.target).parents('tr').hide()
+    }
+  })
+
+  $('#save_sku_bindings').on('click', function(event){
+    event.preventDefault()
+    var taobao_sku_id = $('.change_taobao_skus option:selected').val()
+    var table_length = $('#sku_bindings_table').children('tr').length
+    var infos = []
+    for(var i = 0; i < table_length; i++){
+      var $tr = $('#sku_bindings_table tr:eq('+i+')')
+      var info = $tr.attr('class')+","+$tr.find('td:eq(0)').text()+","+$tr.find('td:eq(2)').text()
+      infos.push(info)
+    }
+    $.post("/products/tie_to_native_skus", {taobao_sku_id: taobao_sku_id, infos: infos}, function(result){});
+    $('#sku_binding').modal('hide');
   })
 </script>
 <% end %>

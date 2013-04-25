@@ -1,8 +1,8 @@
 <div class="container-fluid">
 
   <ul class="nav nav-tabs affix">
-    <li><a href="/products/taobao_products">淘宝商品</a></li>
     <li class="active"><a href="/products">本地单品</a></li>
+    <li><a href="/products/taobao_products">淘宝商品</a></li>
     <!-- <li><a href="#set_good" data-toggle="tab">套装</a></li>
     <li><a href="#active_goods" data-toggle="tab">活动商品</a></li> -->
   </ul><!-- nav-tabs -->
@@ -62,13 +62,12 @@
   </div><!-- btn-groups end -->
 
   <div class="tab-content">
-    <div class="tab-pane" id="taobao_goods">
-    </div><!-- all_goods end -->
-
     <div class="tab-pane active" id="native_goods">
       <%= render 'products_table' %>
     </div><!-- single_good end -->
 
+    <div class="tab-pane" id="taobao_goods">
+    </div><!-- all_goods end -->
   </div>
 
 </div>
@@ -138,7 +137,7 @@
   // 导出操作
   $('#export_products').on('click', function(){
     if($('#product_table input:checked').length == 0){
-      alert("请选择一件商品。")
+      alert("请选择商品。")
     } else {
       window.location.href = "/products/export_products.xls"
     }
@@ -147,7 +146,7 @@
   // 上下架操作
   $('#product_on_sale').on('click', function(){
     if($('#product_table input:checked').length == 0){
-      alert("请选择一件商品。")
+      alert("请选择商品。")
     } else {
       var same_status = true
       var product_ids = $('#product_table input:checked').map(function(){return _.trim($(this).attr('id'), "check_")}).get();

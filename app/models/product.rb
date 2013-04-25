@@ -2,7 +2,7 @@
 class Product < ActiveRecord::Base
   belongs_to :account
   belongs_to :category
-  has_many :skus
+  has_many :skus, dependent: :destroy
   belongs_to :logistic_group
   has_many :feature_product_relationships
   has_many :features, through: :feature_product_relationships
