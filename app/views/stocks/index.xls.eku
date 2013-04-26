@@ -1,0 +1,22 @@
+__filename = "库存查询数据#{Time.now.strftime("%Y/%m/%d-%H:%M:%S")}.xls"
+sheet1 = xls.create_worksheet
+sheet1[0, 0] = "库存查询数据"
+
+sheet1.row(1).concat ["SKU编码", "商品SKU名称", "商品编码", "商品分类", "可用库存", "实际库存","安全库存","库存状态"]
+i = 0
+@stock_products.find_each  do |stock_product|
+sheet1.update_row i+=2, 
+stock_product.sku.try(:sku_id),
+stock_product.sku.try(:title),
+stock_product.product.try(:outer_id),
+stock_product.category.try(:name),
+stock_product.activity,
+stock_product.actual,
+stock_product.safe_value,
+stock_product.storage_status
+end
+
+title_format = Spreadsheet::Format.new(:color => :blue, :weight => :bold, :size => 14)
+sheet1.row(0).set_format(0, title_format)
+bold = Spreadsheet::Format.new(:pattern_fg_color => :yellow, :weight => :bold)
+sheet1.row(1).default_format = bold

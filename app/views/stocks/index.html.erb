@@ -14,88 +14,42 @@
     </ul><!-- nav-tabs -->
     <div class="tab-content">
       <div class="tab-pane active" id="stock_check">
-        <form class="well well-small form-horizontal font12">
-          <fieldset>
-            <div class="control-group">
-              <label class="pull-left"><code>精准：</code></label>
-              <div class="controls pull-left">
-                <select class="input-small pull-left select2 radius_no_rb">
-                  <option value="所有">商品名称</option>
-                  <option value="">商品编码</option>
-                  <option value="">淘宝ID</option>
-                </select>
-                <input type="text" class="input-medium radius_no_tl" placeholder="输入关键字...">
-              </div>
-              <div class="pull-left">
-                <button type="button pull-left" class="btn btn-small btn-info">搜索</button>
-                <label class="help-inline js-stock_advance"><i class="icon-arrow-down"></i>高级搜索</label>
-              </div>
-            </div>
-          </fieldset><!-- form line1 area -->
-
-          <div class="search_advanced none">
-            <fieldset>
-              <div class="control-group">
-                <label class="pull-left"><code>状态：</code></label>
-                <div class="controls pull-left">
-                  <select class="input-small pull-left select2">
-                    <option value="满仓">满仓</option>
-                    <option value="">预警</option>
-                    <option value="">缺货</option>
-                    <option value="">正常</option>
-                  </select>
-                </div>
-              </div>
-            </fieldset><!-- form line2 area -->
-
-            <fieldset>
-              <div class="control-group">
-                <label class="pull-left"><code>分类：</code></label>
-                <div class="controls pull-left">
-                  <select class="input-small pull-left radius_no_rb select2">
-                    <option value="分类一">分类一</option>
-                  </select>
-                  <select class="input-small pull-left radius_no select2">
-                    <option value="系列">系列</option>
-                  </select>
-                  <select class="input-small pull-left radius_no_tl select2">
-                    <option value="产品型号">产品型号</option>
-                  </select>
-                </div>
-              </div>
-            </fieldset>
-
-            <fieldset>
-              <label class="pull-left"><code>当前：</code></label>
-              <div class="controls clearfix item_group">
-              </div>
-            </fieldset><!-- current -->
-          </div>
-        </form>
+        <%= form_for @search ,:url => stocks_path , :html => {:class => "well well-small form-horizontal font12",:id => "search"},:method => :get do |f| %>
+          <%= render :partial => "search",:locals => {:f => f} %>
+        <% end %>
+      </div>          
+      <div class="pull-left">
+      <p style="width: 150px;float:left">共有<%= @count %>条数据</p>          
+        <%= link_to "导出","#",:onclick => "processChecked('#{stocks_path(:search => params[:search],:format => :xls,:on => '?')}')",:class => "btn btn-small btn-info" %>
+      </div>
 
         <%= form_tag "/",:method => "post",:id => "stocks_index_form", :remote => true do %>
           <table class="table table-hover table-bordered table-striped table-condensed js-table">
             <thead>
               <tr>
                 <th width="5%"><input type="checkbox"></th>
-                <th>名称</th>
-                <th>商品属性</th>
-                <th>商品编码</th>
+                <th><%= sort_link @search, :sku_sku_id,"SKU编码" %> </th>
+                <th><%= sort_link @search, :product_name,"商品SKU名称" %> </th>
+                <th><%= sort_link @search, :product_outer_id,"商品编码" %></th>
+                <th><%= sort_link @search, :category_name,"商品分类" %></th>
+                <th><%= sort_link @search, :activity,"可用库存" %></th>
+                <th><%= sort_link @search, :actual,"实际库存" %></th>
+                <th><%= sort_link @search, :safe_value,"安全库存" %></th>                
                 <th>库存状态</th>
-                <th>可用库存</th>
-                <th>实际库存</th>
               </tr>
             </thead>
             <tbody>
               <% @stock_products.each do |stock_product| %>
               <tr>
-                <td width="5%"><input type="checkbox"></td>
-                <td><%= stock_product.name %></td>
-                <td><%= stock_product.sku_values %></td>
-                <td><%= stock_product.product.outer_id %></td>
-                <td><%= stock_product.storage_status %></td>
+                <td width="5%"><input type="checkbox" name="stock_product_ids[]" value="<%= stock_product.id %>"></td>
+                <td><%= stock_product.sku.try(:sku_id) %></td>
+                <td><%= stock_product.sku.try(:title) %></td>
+                <td><%= stock_product.product.try(:outer_id) %></td>
+                <td><%= stock_product.category.try(:name) %></td>
                 <td><%= stock_product.activity %></td>
                 <td><%= stock_product.actual %></td>
+                <td><%= stock_product.safe_value %></td>
+                <td><%= stock_product.storage_status %></td>
               </tr>
               <% end %>
             </tbody>
@@ -107,3 +61,9 @@
   </div><!-- span10 -->
 </div><!--row-fluid-->
 
+<script>
+function processChecked(full_url){
+  var stock_product_ids = $('input[name=\"stock_product_ids[]\"]:checked').map(function(){ return $(this).val()}).get().join(',');
+  $(location).attr('href', full_url + '&export_ids=' + stock_product_ids);
+}
+</script>
