@@ -15,12 +15,14 @@
 # -*- encoding : utf-8 -*-
 class Logistic < ActiveRecord::Base
   mount_uploader :xml, LogisticXmlUploader
-  attr_accessible :name, :code, :xml
-
   belongs_to :account
   has_many :logistic_areas
   has_many :areas, through: :logistic_areas ,:dependent => :destroy
   has_many :users
+  has_one :print_flash_setting, :dependent => :destroy
+  accepts_nested_attributes_for :print_flash_setting
+
+  attr_accessible :name, :code, :xml
   validates :name, presence: true, uniqueness: { scope: :account_id }
 
   validates_presence_of :code
@@ -30,7 +32,7 @@ class Logistic < ActiveRecord::Base
     map = %Q{
       function() {
         if(this.logistic_id != null){
-        emit(this.logistic_id, {num: 1});
+          emit(this.logistic_id, {num: 1});
         }
       }
     }

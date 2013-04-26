@@ -2,7 +2,10 @@
   <fieldset class="add_unit">
     <%= f.input :name, :label => "物流商名称：",class: 'input-xlarge' %>
     <%= f.input :code, :label => "物流商Code：",class: 'input-xlarge' %>
-    <%= f.input :xml, :label => "物流单模板：" %>
+    <%= f.input :xml, :label => "物流单模板图片：" %>
+    <div class="control-group">
+    <label class="control-label" style="padding-left:121px;"><%= link_to "编辑物流单模版", logistic_print_flash_setting_path(@logistic, @logistic.print_flash_setting) %></label>
+    </div>
   </fieldset>
 
   <div class="form-actions">

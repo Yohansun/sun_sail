@@ -131,6 +131,7 @@ MagicOrders::Application.routes.draw do
     end
   end
 
+  get "/print_flash_settings/info_list.:format", to: "print_flash_settings#info_list"
   resources :logistics do
     member do
       get :delete
@@ -145,9 +146,15 @@ MagicOrders::Application.routes.draw do
       get :logistic_user
       get :logistic_user_list
     end
+    resources :print_flash_settings, only: [:show] do
+      member do
+        get :print_infos
+        post :update_infos
+      end
+    end
   end
 
-   resources :onsite_services do
+  resources :onsite_services do
     collection do
       get :onsite_service_area
       get :remove_onsite_service_area

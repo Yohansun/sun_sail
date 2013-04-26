@@ -1,0 +1,35 @@
+<div class="container-fluid">
+  <div class="row-fluid">
+    <%= render partial: "layouts/setting_nav" %>
+    <div class="span10">
+     <div class="row-fluid">
+        <ul class="breadcrumb" style="position:relative;">
+          <li><a href="/">Magic</a><span class="divider">/</span></li>
+          <li><a href="/logistics/<%= @logistic.id %>/edit"><%= @logistic.name %></a><span class="divider">/</span></li>
+          <li class="active">编辑物流单模版</li>
+        </ul><!-- breadcrumb -->
+        <div id="setup_logistic_print"></div>
+     </div>
+    </div>
+  </div>
+</div>
+<% content_for :tail do %>
+<script type="text/javascript">
+function bind_adapt_swf() {
+  var flashvars = {
+    'ppHeight': '349',
+    'ppWidth': '648',
+    'template': 'default',
+    'config': "/logistics/<%= @setting.logistic_id %>/print_flash_settings/<%= @setting.id %>/print_infos.xml",
+    'items': '/print_flash_settings/info_list.xml',
+    'view': 'true',
+    'allowScriptAccess': 'always',
+    'needfeedbacksize': 'false',
+  }
+
+  // flashvars.templateUrl = data
+  swfobject.embedSWF("/swf/adapt_deliver_bill.swf", "setup_logistic_print", "960", "600", "10","/swf/expressInstall.swf", flashvars);
+}
+bind_adapt_swf();
+</script>
+<% end %>
