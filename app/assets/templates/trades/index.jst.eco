@@ -198,6 +198,7 @@
             </button>
             <ul class="dropdown-menu">
               <li><a data-toggle="modal" class='batch_deliver' href='#'>批量发货</a></li>
+              <li><a data-toggle="modal" class='batch_check_goods' href='#'>批量验货</a></li>
             </ul>
           </div>
         <% end %>

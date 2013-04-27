@@ -10,24 +10,24 @@
   <orderc><%= @logistic.xml %></orderc>
   <saveurl>/logistics/<%= @logistic.id %>/print_flash_settings/<%= @setting.id %>/update_infos.xml</saveurl>
   <ipos>
-    <% @setting.xml_hash.each do |key, value| %>
-      <%- if value.is_a?(Hash) %>
-      <item en_name="<%= key %>" cn_name="<%= value['text']%>">
-        <![CDATA[{"x":"<%= value['x'] %>",
-                  "y":"<%= value['y'] %>",
-                  "font":"<%= value['font'] %>",
-                  "color":"<%= value['color'] %>",
-                  "size":"<%= value['size'] %>",
-                  "align":"<%= value['align'] %>",
-                  "isbold":"<%= value['isbold'] %>",
-                  "underline":"<%= value['underline'] %>",
-                  "width":"<%= value['width'] %>",
-                  "height":"<%= value['height'] %>",
-                  "text":"<%= value['text'] %>",
-                  "type":"<%= value['type'] %>",
-                  "italic":"<%= value['italic'] %>"}]]>
-      </item>
-      <%- end %>
-    <% end %>
+    <%- if @setting.xml_hash['ipos'] != nil %>
+      <% @setting.xml_hash['ipos'].each do |item| %>
+        <item en_name="<%= item['key'] %>" cn_name="<%= item['text']%>">
+          <![CDATA[{"x":"<%= item['x'] %>",
+                    "y":"<%= item['y'] %>",
+                    "font":"<%= item['font'] %>",
+                    "color":"<%= item['color'] %>",
+                    "size":"<%= item['size'] %>",
+                    "align":"<%= item['align'] %>",
+                    "isbold":"<%= item['isbold'] %>",
+                    "underline":"<%= item['underline'] %>",
+                    "width":"<%= item['width'] %>",
+                    "height":"<%= item['height'] %>",
+                    "text":"<%= item['text'] %>",
+                    "type":"<%= item['type'] %>",
+                    "italic":"<%= item['italic'] %>"}]]>
+        </item>
+      <% end %>
+    <%- end %>
   </ipos>
 </data>

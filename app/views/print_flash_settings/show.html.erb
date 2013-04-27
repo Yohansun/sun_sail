@@ -28,8 +28,15 @@ function bind_adapt_swf() {
   }
 
   // flashvars.templateUrl = data
-  swfobject.embedSWF("/swf/adapt_deliver_bill.swf", "setup_logistic_print", "960", "600", "10","/swf/expressInstall.swf", flashvars);
+  swfobject.embedSWF("/swf/adapt_deliver_bill.swf", "setup_logistic_print", "960", "600", "10", "/swf/expressInstall.swf", flashvars);
 }
 bind_adapt_swf();
+
+function saveok(str){
+  if(str == 1){
+    window.location.href = "/logistics/<%= @setting.logistic_id %>/edit"
+  } else {
+  }
+}
 </script>
 <% end %>

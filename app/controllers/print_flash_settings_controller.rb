@@ -22,7 +22,7 @@ class PrintFlashSettingsController < ApplicationController
 
   def update_infos
     @setting.update_attributes(xml_hash: JSON.parse(params[:data]))
-    render :js => "alert('模版保存成功。');"
+    render text: "1"
   end
 
   private

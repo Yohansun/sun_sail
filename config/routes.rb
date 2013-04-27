@@ -219,6 +219,7 @@ MagicOrders::Application.routes.draw do
   get "/trades/deliver_list", to: "trades#deliver_list"
   get "/deliver_bills/setup_logistics", to: 'deliver_bills#setup_logistics'
   get "/trades/batch_deliver", to: 'trades#batch_deliver'
+  get "/trades/batch_check_goods", to: 'trades#batch_check_goods'
   get "/deliver_bills/batch-print-deliver", to: 'deliver_bills#batch_print_deliver'
   get "/deliver_bills/batch-print-logistic", to: 'deliver_bills#batch_print_logistic'
   get "/logistic_rates", to: 'logistic_rates#index'
