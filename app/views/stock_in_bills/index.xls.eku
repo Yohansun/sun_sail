@@ -1,0 +1,24 @@
+__filename = "入库单查询数据#{Time.now.strftime("%Y/%m/%d-%H:%M:%S")}.xls"
+sheet1 = xls.create_worksheet
+sheet1[0, 0] = "库存查询数据"
+
+sheet1.row(1).concat ["出库单编号","创建时间", "出库时间", "当前状态", "历史状态", "出库类型", "商品数量", "商品总价", "关联订单号", "最后操作人"]
+
+@search.each_with_index  do |bill,index|
+sheet1.update_row index+2, 
+bill.tid,
+bill.created_at.try(:to_s,:db),
+bill.stocked_at.try(:to_s,:db),
+bill.status,
+bill.checked_at,
+bill.stock_type_name,
+bill.bill_products_mumber,
+bill.bill_products_price,
+"默认仓库",
+(bill.last_record.operator rescue "") 
+end
+
+title_format = Spreadsheet::Format.new(:color => :blue, :weight => :bold, :size => 14)
+sheet1.row(0).set_format(0, title_format)
+bold = Spreadsheet::Format.new(:pattern_fg_color => :yellow, :weight => :bold)
+sheet1.row(1).default_format = bold

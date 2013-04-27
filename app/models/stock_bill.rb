@@ -1,8 +1,8 @@
 # -*- encoding:utf-8 -*-
 class StockBill
-	include Mongoid::Document
+  include Mongoid::Document
   include Mongoid::Timestamps
- 	embeds_many :bill_products
+  embeds_many :bill_products
   embeds_many :operation_logs
 
   field :tid, type: String
@@ -87,6 +87,10 @@ class StockBill
   def logistic_name
     Logistic.find_by_id(logistic_id).try(:name)
   end
+  
+  def last_record
+    operation_logs.desc("id").first
+  end
 
   def status
     if checked_at
@@ -95,5 +99,4 @@ class StockBill
       "未审核"
     end
   end
-
 end
