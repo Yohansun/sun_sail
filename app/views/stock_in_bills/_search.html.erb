@@ -1,0 +1,54 @@
+<%= form_tag stock_in_bills_path,:method => "get"  do %>
+<% params[:search] ||= {} %>
+<fieldset>
+  <div class="control-group">
+    <div>
+      <%= label_tag "search[tid_eq]","编号",:class => "pull-left" %>
+      <%= text_field_tag "search[tid_eq]",params[:search][:tid_eq] %>
+    </div>
+<div>
+  <%= label_tag "search[checked_at_nu]","状态",:class => "pull-left" %>
+  <%= select_tag "search[checked_at_nu]",options_for_select([["已审核",true],["未审核",false]],params["search"]["checked_at_nu"]),:include_blank => true %>
+</div>
+<div>
+  <%= label_tag "order_id","关联订单",:class => "pull-left" %>
+  <%= text_field_tag "order_id_eq" %>
+</div>
+<div>
+  <%= label_tag "search[stock_type_eq]","出库类型",:class => "pull-left" %>
+    <%= select_tag "search[stock_type_eq]",options_for_select(StockInBill::STOCK_TYPE),:include_blank => true %>
+  
+<div>
+  <%= label_tag "search[created_a
+t_gte]","创建时间",:class => "pull-left" %>
+  <%= text_field_tag "search[created_at_gte]",params["search"]["created_at_gte"],:class => "input-small datepickers" %>
+
+  <%= text_field_tag "search[created_at_lte]",params["search"]["created_at_lte"],:class => "input-small datepickers" %>
+</div>
+<div>
+  <%= label_tag "search[stocked_at_gte]", "出库时间",:class => "pull-left" %>
+  <%= text_field_tag "search[stocked_at_gte]",params["search"]["stocked_at_lte"],:class => "input-small datepickers" %>
+
+  <%= text_field_tag "search[stocked_at_lte]",params["search"]["stocked_at_lte"],:class => "input-small datepickers" %>  
+</div>
+<div>
+    <label class="control-label">地域：</label>
+    <select id="" class="level_1 input-medium input-small pull-left radius_no_rb select2" name="op_state">
+      <option>省</option>
+    </select>
+    <select id="" class="level_2 input-medium input-small pull-left radius_no select2" name="op_city">
+      <option>市</option>
+    </select>
+    <select id="" class="level_3 input-medium input-small pull-left radius_no_tl select2" name="op_district">
+      <option>区</option>
+    </select>
+  </div>
+  <div class="pull-left">
+    <button type="button pull-left" class="btn btn-small btn-info">搜索</button>
+  </div>
+  </div>
+</fieldset><!-- form line1 area -->
+
+<% end %>
+
+
