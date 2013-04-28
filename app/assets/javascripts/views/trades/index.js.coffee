@@ -118,16 +118,17 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     $.cookie("trade_cols_hidden_#{MagicOrders.trade_mode}", MagicOrders.trade_cols_hidden[MagicOrders.trade_mode].join(","))
 
   show_type: (e) ->
-    e.preventDefault()
-    length = $('.trade_check:checked').parents('tr').length
-    if length <= 1
-      if length == 1
-        trade_id = $('.trade_check:checked').parents('tr').attr('id').slice(6)
-        type = $(e.target).data('type')
-        MagicOrders.cache_trade_number = parseInt($('.trade_check:checked').parents('tr').children('td:first').html())
-        Backbone.history.navigate('trades/' + trade_id + "/#{type}", true)
-      else
-        alert("请勾选要操作的订单。")
+    type = $(e.target).data('type')
+    if type != 'export_orders'
+      e.preventDefault()
+      length = $('.trade_check:checked').parents('tr').length
+      if length <= 1
+        if length == 1
+          trade_id = $('.trade_check:checked').parents('tr').attr('id').slice(6)
+          MagicOrders.cache_trade_number = parseInt($('.trade_check:checked').parents('tr').children('td:first').html())
+          Backbone.history.navigate('trades/' + trade_id + "/#{type}", true)
+        else
+          alert("请勾选要操作的订单。")
 
   batchCheckGoods: (e) ->
     e.preventDefault()

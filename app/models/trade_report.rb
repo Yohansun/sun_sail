@@ -1,6 +1,7 @@
 # -*- encoding : utf-8 -*-
 class TradeReport
   include ActionView::Helpers::NumberHelper
+  include BaseHelper
   include Mongoid::Document
   include Mongoid::Timestamps
   belongs_to :user
@@ -12,62 +13,82 @@ class TradeReport
   field :request_at, type:DateTime
 
   def fetch_account
-    Account.find_by_id(self.account_id)
+    Account.find_by_id(account_id)
+  end
+
+  def fetch_user
+    User.find_by_id(user_id)
   end
 
   def export_report
-    if self.fetch_account.key == "dulux"
-      DuluxTaobaoTradeReporter.perform_async(self.id)
-    elsif self.fetch_account.key == 'brands'
-      BrandsTaobaoTradeReporter.perform_async(self.id)  
-    elsif self.fetch_account.key == "nippon"
-      if conditions.fetch("search").fetch("type_option").present? && conditions.fetch("search").fetch("type_option") == "TaobaoTrade"
-        NipponTaobaoTradeReporter.perform_async(self.id)
-      else
-        NipponOtherTradeReporter.perform_async(self.id)
-      end
-    else
-      #普通淘宝品牌使用立邦报表模板即可
-      NipponTaobaoTradeReporter.perform_async(self.id)
-    end
+    TaobaoTradeReporter.perform_async(id)
   end
 
   def username
-    user = User.find_by_id self.user_id
-    user.try(:name)
+    fetch_user.try(:name)
   end
 
   def status
-    if self.performed_at && File.exist?(self.url) && !File.zero?(self.url)
+    if performed_at && File.exist?(url) && !File.zero?(url)
       "可用"
     else
       "不可用"
     end
   end
 
+  def trades_conditions
+    recursive_symbolize_keys! conditions
+  end  
+
+  def keys
+    trades_conditions.keys
+  end
+
+  def deep_searched?
+    (keys - [:trade_type]).present?
+  end
+
+  def only_trade_type_filtered?
+    (keys - [:trade_type]).blank?
+  end
+  
+  def adjust
+    if only_trade_type_filtered?
+      st = (Time.now - 1.month).strftime("%Y-%m-%d %H:%M")
+      et = Time.now.strftime("%Y-%m-%d %H:%M")
+      self.conditions['search'] = {}
+      self.conditions['search']['created'] = "#{st};#{et}"
+      self.save
+    end    
+  end
+
+  def trades
+    Trade.filter(fetch_account, fetch_user, trades_conditions)
+  end  
+
   def url
-    "#{Rails.root}/data/#{self.id}.xls"
+    "#{Rails.root}/data/#{id}.xls"
   end
 
   def size
-    if self.performed_at && File.exist?(self.url) && !File.zero?(self.url)
-      number_to_human_size(File.size(self.url))
+    if performed_at && File.exist?(url) && !File.zero?(url)
+      number_to_human_size(File.size(url))
     else
       "未知"
     end
   end
 
   def ext_name
-    if self.performed_at && File.exist?(self.url) && !File.zero?(self.url)
-      File.extname self.url
+    if performed_at && File.exist?(url) && !File.zero?(url)
+      File.extname url
     else
       "未知"
     end
   end
 
   def performed_time
-    if self.performed_at && File.exist?(self.url) && !File.zero?(self.url)
-      self.performed_at.to_s(:db)
+    if performed_at && File.exist?(url) && !File.zero?(url)
+      performed_at.to_s(:db)
     else
       "还未生成"
     end

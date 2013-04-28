@@ -15,6 +15,7 @@
 class Sku < ActiveRecord::Base
   attr_accessible :num_iid, :properties, :properties_name, :quantity, :sku_id, :taobao_product_id, :account_id
   belongs_to :product
+  belongs_to :account
   has_many :sku_bindings
   has_many :stock_products
   has_many :taobao_skus, through: :sku_bindings

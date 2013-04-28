@@ -124,7 +124,8 @@
         <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
           <span class="caret"></span>
         </button>
-        <ul class="dropdown-menu index_pops">
+        <ul class="dropdown-menu index_pops"> 
+          <li><a href="#" data-toggle="modal" data-type="export_orders" class="export_orders">导出数据</a></li>
           <!-- <li><a href="javascript:void(0);" data-toolbar-item='1'>编辑</a></li> -->
           <!-- <li><a href="javascript:void(0);" data-toolbar-item='2'>删除</a></li> -->
           <!-- <li><a href="javascript:void(0);" data-toolbar-item='3'>导出</a></li> -->
@@ -203,45 +204,8 @@
           </div>
         <% end %>
       <% end %>
-      <div class="btns btn-group">
-        <a data-toggle="modal" class="btn btn-warning export_orders">导出数据</a>
-      </div>
     </div>
 
-    <!--
-    <div class="controls clearfix">
-      <div class="btns btn-group pull-right">
-        <a href="#" class="btn btn-success btn_mar4">显示设置</a>
-        <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-success dropdown_check_btn"><span class="caret"></span></button>
-        <ul class="dropdown-menu dropdown_check" id="cols_filter">
-          <% for key in _.keys(window.MagicOrders.trade_cols): %>
-          <li data-col="<%= key %>">
-            <label class="checkbox" style="padding-left:35px;">
-              <input type="checkbox" value="<%= key %>">
-              <%= window.MagicOrders.trade_cols[key] %>
-            </label>
-          </li>
-          <% end %>
-        </ul>
-      </div>
-      <% unless MagicOrders.trade_mode == 'trades' : %>
-      <div class="btns btn-group pull-left">
-        <a href="javascript:void(0)" class="btn btn-warning"><i class="icon-user icon-white"></i>批量操作</a>
-        <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-warning btn_left4">
-          <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu">
-          <% if MagicOrders.trade_mode == 'send' : %>
-          <li><a data-toggle="modal" class='batch_deliver' href='#'>批量发货</a></li>
-          <% end %>
-        </ul>
-      </div>
-      <% end %>
-      <div class="btns btn-group pull-left">
-        <a data-toggle="modal" class="btn btn-warning export_orders">导出数据</a>
-      </div>
-    </div>
-    -->
 
     <div class="alert alert-info hide" id="newTradesNotifer">
       <a href="#" id="newTradesNotiferLink">有<span>0</span>条新订单, 点击加载新订单数据</a>
