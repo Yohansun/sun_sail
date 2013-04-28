@@ -2,6 +2,23 @@
 class StockInBillsController < ApplicationController
 	before_filter :authenticate_user!
   before_filter :fetch_bills
+  
+  def index
+    params[:search] ||= {}
+    params[:search][:id_in] = params[:export_ids].split(',') if params[:export_ids].present?
+    
+    @bills = StockInBill.where(account_id: current_account.id).desc(:checked_at)
+    @search = @bills.search(params[:search])    
+    unchecked, checked = @search.partition { |b| b.checked_at.nil? }
+    @bills = unchecked + checked
+    @bills = Kaminari.paginate_array(@bills).page(params[:page]).per(20)
+    @count = @search.count
+    respond_to do |format|
+      format.html
+      format.xls
+    end
+  end
+  
 
 	def new
     @products = (current_user.settings.tmp_products ||= [])

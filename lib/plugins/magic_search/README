@@ -1,0 +1,10 @@
+
+Trade.search(:field_name_eq       => "foo")     #字段名等于"foo"
+Trade.search(:field_name_like     => "foo")     #字段模糊查询
+                        _gt                     #大于
+                        _gte                    #大于等于
+                        _lt                     #小于
+                        _lte                    #小于等于
+                        _not_eq                 #不等于
+                        _in                     #in
+                        _nu                     #不为空

@@ -14,64 +14,13 @@
     </ul><!-- nav-tabs -->
     <div class="tab-content">
       <div class="tab-pane active" id="stock_check">
-        <form class="well well-small form-horizontal font12">
-          <fieldset>
-            <div class="control-group">
-              <label class="pull-left"><code>精准：</code></label>
-              <div class="controls pull-left">
-                <select class="input-small pull-left select2 radius_no_rb">
-                  <option value="所有">商品名称</option>
-                  <option value="">商品编码</option>
-                  <option value="">淘宝ID</option>
-                </select>
-                <input type="text" class="input-medium radius_no_tl" placeholder="输入关键字...">
-              </div>
-              <div class="pull-left">
-                <button type="button pull-left" class="btn btn-small btn-info">搜索</button>
-                <label class="help-inline js-stock_advance"><i class="icon-arrow-down"></i>高级搜索</label>
-              </div>
-            </div>
-          </fieldset><!-- form line1 area -->
-
-          <div class="search_advanced none">
-            <fieldset>
-              <div class="control-group">
-                <label class="pull-left"><code>状态：</code></label>
-                <div class="controls pull-left">
-                  <select class="input-small pull-left select2">
-                    <option value="满仓">满仓</option>
-                    <option value="">预警</option>
-                    <option value="">缺货</option>
-                    <option value="">正常</option>
-                  </select>
-                </div>
-              </div>
-            </fieldset><!-- form line2 area -->
-
-            <fieldset>
-              <div class="control-group">
-                <label class="pull-left"><code>分类：</code></label>
-                <div class="controls pull-left">
-                  <select class="input-small pull-left radius_no_rb select2">
-                    <option value="分类一">分类一</option>
-                  </select>
-                  <select class="input-small pull-left radius_no select2">
-                    <option value="系列">系列</option>
-                  </select>
-                  <select class="input-small pull-left radius_no_tl select2">
-                    <option value="产品型号">产品型号</option>
-                  </select>
-                </div>
-              </div>
-            </fieldset>
-
-            <fieldset>
-              <label class="pull-left"><code>当前：</code></label>
-              <div class="controls clearfix item_group">
-              </div>
-            </fieldset><!-- current -->
-          </div>
-        </form>
+        <%= render "search"%>
+        
+        <div class="pull-left">  
+          <p style="width: 150px;float:left">共有<%= @count %>条数据</p>            
+          <%= link_to "导出","#",:onclick => "processChecked('#{stock_in_bills_path(:search => params[:search],:format => :xls,:on => '?')}')",:class => "btn btn-small btn-info" %>  
+        </div>  
+        
         <%= form_tag "/",:method => "post",:id => "stock_in_bills_form", :remote => true do %>
         <div class="btn-toolbar">
           <div class="btn-group">
@@ -123,4 +72,10 @@
                   </div><!--span10 -->
                 </div><!-- tab-content -->
               </div><!-- span10 -->
-</div><!--row-fluid
+</div><!--row-fluid -->
+
+<script>
+function processChecked(full_url){
+  var bill_ids = $('input[name=\"bill_ids[]\"]:checked').map(function(){ return $(this).val()}).get().join(',');
+  $(location).attr('href', full_url + '&export_ids=' + bill_ids);
+}
