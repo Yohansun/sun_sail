@@ -15,77 +15,32 @@
 
     <div class="tab-content">
       <div class="tab-pane active" id="stock_check">
-        <form class="well well-small form-horizontal font12">
-          <fieldset>
-            <div class="control-group">
-              <label class="pull-left"><code>精准：</code></label>
-              <div class="controls pull-left">
-                <select class="input-small pull-left select2 radius_no_rb">
-                  <option value="所有">商品名称</option>
-                  <option value="">商品编码</option>
-                  <option value="">淘宝ID</option>
-                </select>
-                <input type="text" class="input-medium radius_no_tl" placeholder="输入关键字...">
-              </div>
-              <div class="pull-left">
-                <button type="button pull-left" class="btn btn-small btn-info">搜索</button>
-                <label class="help-inline js-stock_advance"><i class="icon-arrow-down"></i>高级搜索</label>
-              </div>
-            </div>
-          </fieldset><!-- form line1 area -->
+        <%= render "search" %>
+        
+        <div class="pull-left">  
+          <p style="width: 150px;float:left">共有<%= @count %>条数据</p> 
 
-          <div class="search_advanced none">
-            <fieldset>
-              <div class="control-group">
-                <label class="pull-left"><code>状态：</code></label>
-                <div class="controls pull-left">
-                  <select class="input-small pull-left select2">
-                    <option value="满仓">满仓</option>
-                    <option value="">预警</option>
-                    <option value="">缺货</option>
-                    <option value="">正常</option>
-                  </select>
-                </div>
-              </div>
-            </fieldset><!-- form line2 area -->
-
-            <fieldset>
-              <div class="control-group">
-                <label class="pull-left"><code>分类：</code></label>
-                <div class="controls pull-left">
-                  <select class="input-small pull-left radius_no_rb select2">
-                    <option value="分类一">分类一</option>
-                  </select>
-                  <select class="input-small pull-left radius_no select2">
-                    <option value="系列">系列</option>
-                  </select>
-                  <select class="input-small pull-left radius_no_tl select2">
-                    <option value="产品型号">产品型号</option>
-                  </select>
-                </div>
-              </div>
-            </fieldset><!-- form line3 area -->
-            <fieldset>
-              <label class="pull-left"><code>当前：</code></label>
-              <div class="controls clearfix item_group">
-              </div>
-            </fieldset><!-- current -->
-          </div>
-        </form>
+          <% params[:search] ||= {} %>         
+          <% if sku_id = params[:search][:bill_products_sku_id_eq].present? %>
+          <p style="float:left">
+            <%= sku = Sku.find_by_id(sku_id); "#{sku.title}(#{sku.sku_id})"%>
+          </p>
+          <% end %>
+          <%= link_to "导出","#",:onclick => "processChecked('#{stock_bills_path(:search => params[:search],:format => :xls,:on => '?')}')",:class => "btn btn-small btn-info" %>  
+        </div>  
 
         <table class="table table-hover table-bordered table-striped table-condensed">
           <thead>
             <tr>
               <th width="1%"><input type="checkbox"></th>
               <th width="5%">序号</th>
-              <th width="10%">状态</th>
-              <th width="10%">出/入库时间</th>
               <th width="10%">出/入库单编号</th>
+              <th width="10%">状态</th>
               <th width="15%">商品编码</th>
               <th width="15%">商品名称</th>
-              <th>商品数量</th>
-              <th>商品总价</th>
-              <th>仓库名称</th>
+              <th width="10%">类型</th>
+              <th width="10%">创建时间</th>                              
+              <th width="10%">出/入库时间</th>                
             </tr>
           </thead>
           <tbody>
@@ -93,16 +48,15 @@
             <%- @bills.each_with_index do |bill| %>
               <%- bill.bill_products.each do |product|%>
                 <tr>
-                  <td><input type="checkbox"></td>
+                  <td><input type="checkbox" name="stock_bill_ids[]" value="<%= bill.id %>"></td>
                   <td><%= num %></td>
+                  <td><%= bill.tid %></td>                  
                   <td><%= bill.status %></td>
-                  <td><%= bill.stocked_at.try(:strftime, "%Y-%m-%d %H:%M") %></td>
-                  <td><%= bill.tid %></td>
-                  <td><%= product.try(:outer_id) %></td>
+                  <td><%= product.try(:sku_id) %></td>
                   <td><%= product.try(:title) %></td>
-                  <td><%= product.try(:number) %></td>
-                  <td><%= product.try(:total_price) %></td>
-                  <td>默认仓库</td>
+                  <td><%= bill._type.constantize.stock_type_name rescue ""  %></td>
+                  <td><%= bill.created_at.try(:to_s,:db) %></td>
+                  <td><%= bill.stocked_at.try(:strftime, "%Y-%m-%d %H:%M") %></td>                                    
                 </tr>
                 <%- num += 1 %>
               <%- end %>
@@ -113,4 +67,12 @@
       </div><!--span10 -->
     </div><!-- tab-content -->
   </div><!-- span10 -->
-</div><!--row-fluid
+</div><!--row-fluid -->
+
+<script>
+function processChecked(full_url){
+  var bill_ids = $('input[name=\"stock_bill_ids[]\"]:checked').map(function(){ return $(this).val()}).get().join(',');
+  $(location).attr('href', full_url + '&export_ids=' + bill_ids);
+}
+</script>
+  

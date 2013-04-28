@@ -8,7 +8,7 @@
     </div>
 <div>
   <%= label_tag "search[checked_at_nu]","状态",:class => "pull-left" %>
-  <%= select_tag "search[checked_at_nu]",options_for_select([["已审核",true],["未审核",false]],params["search"]["checked_at_nu"]),:include_blank => true %>
+  <%= select_tag "search[checked_at_nu]",options_for_select([["已审核",true],["未审核",false]],params["search"]["checked_at_nu"]),:include_blank => true,:class => "input-medium select2"  %>
 </div>
 <div>
   <%= label_tag "order_id","关联订单",:class => "pull-left" %>
@@ -16,20 +16,20 @@
 </div>
 <div>
   <%= label_tag "search[stock_type_eq]","出库类型",:class => "pull-left" %>
-    <%= select_tag "search[stock_type_eq]",options_for_select(StockInBill::STOCK_TYPE),:include_blank => true %>
+    <%= select_tag "search[stock_type_eq]",options_for_select(StockInBill::STOCK_TYPE),:include_blank => true,:class => "input-medium select2"  %>
   
 <div>
   <%= label_tag "search[created_a
 t_gte]","创建时间",:class => "pull-left" %>
-  <%= text_field_tag "search[created_at_gte]",params["search"]["created_at_gte"],:class => "input-small datepickers" %>
+  <%= text_field_tag "search[created_at_gte]",params["search"]["created_at_gte"],:class => "input-medium datetimepicker_full" %>
 
-  <%= text_field_tag "search[created_at_lte]",params["search"]["created_at_lte"],:class => "input-small datepickers" %>
+  <%= text_field_tag "search[created_at_lte]",params["search"]["created_at_lte"],:class => "input-medium datetimepicker_full" %>
 </div>
 <div>
   <%= label_tag "search[stocked_at_gte]", "出库时间",:class => "pull-left" %>
-  <%= text_field_tag "search[stocked_at_gte]",params["search"]["stocked_at_lte"],:class => "input-small datepickers" %>
+  <%= text_field_tag "search[stocked_at_gte]",params["search"]["stocked_at_lte"],:class => "input-medium datetimepicker_full" %>
 
-  <%= text_field_tag "search[stocked_at_lte]",params["search"]["stocked_at_lte"],:class => "input-small datepickers" %>  
+  <%= text_field_tag "search[stocked_at_lte]",params["search"]["stocked_at_lte"],:class => "input-medium datetimepicker_full" %>  
 </div>
 <div>
     <label class="control-label">地域：</label>
@@ -52,3 +52,18 @@ t_gte]","创建时间",:class => "pull-left" %>
 <% end %>
 
 
+<% content_for :tail do -%>
+  <%= javascript_include_tag "LinkageSelect.js" %>
+  <script type="text/javascript">
+    $(function() {
+      var options = {
+        data  : linkage_data
+      }
+
+      var sel = new LinkageSelect(options);
+      sel.bind('.level_1','<%= params[:op_state] %>');
+      sel.bind('.level_2','<%= params[:op_city] %>');
+      sel.bind('.level_3','<%= params[:op_district] %>');
+    });
+</script>
+<% end -%>

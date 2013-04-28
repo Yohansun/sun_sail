@@ -5,7 +5,13 @@ class StockOutBillsController < ApplicationController
   
   def index
     params[:search] ||= {}
-    params[:search][:id_in] = params[:export_ids].split(',') if params[:export_ids].present?
+    params[:search][:_id_in] = params[:export_ids].split(',') if params[:export_ids].present?
+    
+    op_state,op_city,op_district = params["op_state"],params["op_city"], params["op_district"]
+    search  = params[:search]
+    search["op_state_eq"]     = Area.find_by_id(op_state).try(:name)    if op_state.present?
+    search["op_city_eq"]      = Area.find_by_id(op_city).try(:name)     if op_city.present?
+    search["op_district_eq"]  = Area.find_by_id(op_district).try(:name) if op_district.present?
 
     @bills = StockOutBill.where(account_id: current_account.id).desc(:checked_at)
     @search = @bills.search(params[:search])
