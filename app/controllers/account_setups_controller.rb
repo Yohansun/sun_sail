@@ -4,7 +4,9 @@ class AccountSetupsController < ApplicationController
   before_filter :fetch_account, except: [:data_fetch_finish]
 
   skip_before_filter :verify_authenticity_token, only: [:data_fetch_finish]
-
+  
+  before_filter :authorize,:only => [:edit_auto_settings,:update_auto_settings]
+  
   steps :admin_init, :data_fetch, :options_setup, :user_init
 
   def show

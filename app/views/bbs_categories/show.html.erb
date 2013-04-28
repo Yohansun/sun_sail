@@ -24,7 +24,7 @@
             <div class="offset1">
               <span class="pull-right mar_l10">
                 <%=link_to "编辑", edit_bbs_topic_path(topic), :class => 'btn-block'%>
-                <%- if current_user.has_role? (:admin) %>
+                <%- if current_user.allowed_to?("bbs_topics","destroy") %>
                   <%=link_to "删除", bbs_topic_path(topic, category: "category"), method: :delete, confirm: 'delete it?', :class => 'btn-block'%>
                 <%- end %>
               </span>

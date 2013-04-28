@@ -1,21 +1,11 @@
 $(function(){
-
-	//timepicker
-	$('.timepickers').timeEntry({
-	    show24Hours: true,
-	    showSeconds: true,
-	    spinnerImage: '/assets/spinnerUpDown.png',
-	    spinnerSize: [17, 26, 0],
-	    spinnerIncDecOnly: true
-	});
-
 	//tab.js
 	$('.js-nav_tabs a:first').tab('show');
 	/*$('a[data-toggle="tab"]').on('shown', function (e) {
-
+		
 	})*/
 	$('.subnav').affix();
-
+	
 	if($('.js-datetimepicker').length > 0){
 		$('.js-datetimepicker').datetimepicker({
 			language:  'zh-CN',
@@ -37,7 +27,7 @@ $(function(){
 	// var linkage_options	= {
 	// 	data	: data
 	// }
-
+	
 	// var sel = new LinkageSelect(linkage_options);
 	// sel.bind('.linkage_select .js-linkage_1','1');
 	// sel.bind('.linkage_select .js-linkage_1');
@@ -46,10 +36,11 @@ $(function(){
 //modal
 	$('.js-modal').modal({show:false});
 //advance btn
-	// $('.js-affix').affix();
+	$('.js-affix').affix();
 	//affix position
 	function form_height (){
 		var form_height = $('.js-affix').outerHeight();
+		// console.log(form_height)
 		$('.btn-toolbar').css('top',form_height + 71 + 'px');
 	};
 	form_height();
@@ -61,7 +52,7 @@ $(function(){
 		form_height();
 	});
 	//advance open
-	$('.js-stock_advance').click(function(){
+	$('.js-open_advance').click(function(){
 		$(this).parents('fieldset').siblings('.search_advanced').toggle(0,function(){
 			form_height()
 		});
@@ -85,5 +76,19 @@ $(function(){
 	var $first_tr_checkbox = $('.js-table tr:first').find(':checkbox');
 	$first_tr_checkbox.click(function(){
 		$first_tr_checkbox.parents('.js-table').find(':checkbox').prop('checked',$first_tr_checkbox.prop('checked'))
+	});
+
+//stock_out add good
+	$('.js-add_item').on('click', function(){
+		var len = $('.js-table_goods tbody tr').length;
+		// console.log(len)
+		$('.js-table_goods tbody').append('<tr><td><input type="checkbox"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>')
+	});
+//stock_out remove good
+	$('.js-remove_item').click(function(){
+		var $checked_good = $('.js-table_goods tbody').find('input:checked');
+		if ($checked_good.length > 0) {
+			$checked_good.parents('tr').remove()
+		};
 	});
 });

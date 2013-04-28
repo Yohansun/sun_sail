@@ -1,6 +1,6 @@
 class CategoriesController < ApplicationController
   before_filter :authenticate_user!
-  before_filter :admin_only!, :except => [:autocomplete]
+  before_filter :authorize,:except => [:autocomplete,:new,:show,:edit]
 
   def index
     @categories = current_account.categories

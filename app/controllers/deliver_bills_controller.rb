@@ -42,7 +42,7 @@ class DeliverBillsController < ApplicationController
       @bills = @bills.where(:print_batches.elem_match => {"$and" => [{batch_num: {"$gte" => min}}, {batch_num: {"$lte" => max}}]})
     end
 
-    if current_user.has_role? :seller
+    if current_user.seller.present?
       ids = []
 
       seller = current_user.seller

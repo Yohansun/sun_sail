@@ -1,94 +1,52 @@
-<%= simple_form_for @user, html: {:class =>'well form-horizontal'} do |f| %>
-  <fieldset class="add_unit">
-    <div class="control-group">
-      <%= f.input :username, :label => "用户名：",class: 'input-xlarge' %>
-    </div>
-    <div class="control-group">
-      <%= f.input :name, :label => "姓名：", class: 'input-xlarge' %>
-    </div>
-
-    <div class="control-group">
-      <%= f.input :email, :label => "邮箱：", class: 'input-xlarge' %>
-    </div>
-  </fieldset>
-
-  <fieldset class="add_unit">
-    <div class="control-group">
-      <%= f.input :password, :label => "密码：", class: 'input-xlarge' %>
-    </div>
-
-    <div class="control-group">
-      <%= f.input :password_confirmation, :label => "确认密码：", class: 'input-xlarge' %>
-    </div>
-  </fieldset>
-
-  <fieldset class="add_unit">
-    <div class="control-group">
-      <label class="control-label" for="">用户组：</label>
-      <div class="controls">
-        <label class="checkbox inline">
-          <%= check_box_tag :cs, '1', @user.has_role?(:cs) %>
-          客服
-        </label>
-      </div>
-      <div class="controls">
-        <label class="checkbox inline">
-          <%= check_box_tag :cs_read, '1', @user.has_role?(:cs_read) %>
-          客服（限浏览权限）
-        </label>
-      </div>
-      <div class="controls">
-        <label class="checkbox inline">
-          <%#= f.check_box :seller, class: 'input-xlarge', :checked => (@user.has_role? :seller) ? 'checked' : '' %>
-          <%= check_box_tag :seller, '1', @user.has_role?(:seller) %>
-          经销商
-        </label>
-      </div>
-      <div class="controls">
-        <label class="checkbox inline">
-          <%= check_box_tag :logistic, '1', @user.has_role?(:logistic) %>
-          物流配送商
-        </label>
-      </div>
-      <div class="controls">
-        <label class="checkbox inline">
-          <%= check_box_tag :interface, '1', @user.has_role?(:interface) %>
-          销售部联络人
-        </label>
-      </div>
-      <div class="controls">
-        <label class="checkbox inline">
-          <%= check_box_tag :stock_admin, '1', @user.has_role?(:stock_admin) %>
-          仓库管理员
-        </label>
-      </div>
-      <div class="controls">
-        <label class="checkbox inline">
-          <%= check_box_tag :admin, '1', @user.has_role?(:admin) %>
-          系统管理员
-        </label>
-      </div>
-    </div>
-
-    <div class="control-group">
-      <label class="control-label" for="">状态：</label>
-      <div class="controls">
-        <select class="width_auto" id='user_active' name="user[active]">
-          <option value='1'
-          <% if @user.active == true %>
-          selected
-          <% end %>>生效</option>
-          <option value='0'
-          <% if @user.active == false %>
-          selected
-          <% end %>>禁用</option>
-        </select>
-      </div>
-    </div>
-  </fieldset>
-
-
-  <div class="form-actions">
-     <%= f.button :submit, :value => "保存", class: "btn btn-primary edit"%>
+<fieldset class="add_unit">
+  <div class="control-group">
+    <% if @user.new_record? %>
+    <%= f.input :username,:label => "用户名",:class => 'input-xlarge' %>
+    <% else %>
+    <label class="string required control-label"></abbr> 用户名：</label>
+    <div class="controls"><%= @user.username %></div>
+    <% end %>
   </div>
-<% end %>
+  <div class="control-group">
+    <%= f.input :name, :label => "姓名：", class: 'input-xlarge' %>
+  </div>
+  <div class="control-group">
+    <%= f.input :email, :label => "邮箱：", class: 'input-xlarge' %>
+  </div>
+  <div class="control-group">
+    <%= f.input :phone, :label => "手机：", class: 'input-xlarge' %>
+  </div>
+  
+  <div class="control-group">
+    <label class="control-label" for="">角色：</label>
+    <% @roles.each do |role| %>
+    <div class="controls">
+      <label class="checkbox">
+        <%= check_box_tag "user[role_ids][]",role.id,@user.role_ids.try(:include?,role.id) %>
+        <%= role.name %>
+      </label>
+    </div>
+    <% end %>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label" for="">状态：</label>
+    <div class="controls">
+      <%= f.select :active,[["生效",true],["禁用",false]],:clsas => "width_auto" %>
+    </div>
+  </div>
+
+</fieldset>
+<fieldset class="add_unit">
+  <div class="control-group">
+    <%= f.input :password, :label => "密码：", class: 'input-xlarge' %>
+  </div>
+
+  <div class="control-group">
+    <%= f.input :password_confirmation, :label => "确认密码：", class: 'input-xlarge' %>
+  </div>
+</fieldset>
+  
+<div class="form-actions">
+  <%= f.button :submit, :value => "保存", class: "btn btn-primary edit"%>
+</div>

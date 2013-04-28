@@ -6,27 +6,23 @@
   <div class="indexWrap">
     <div class="centerDashboard hide">
       <% if user_signed_in? %>
-        <div>
-          <a class="indexStart1" href="/app#trades"><span>订单管理</span></a>
-        </div>
+      <% if current_user.allow_read?(:trades) %>
+        <div><a class="indexStart1" href="/app#trades"><span>订单管理</span></a></div>
+        <% end %>
 
-        <% unless current_account.key == 'nippon' and (current_user.has_role?(:seller) || current_user.has_role?(:interface) ) %>
-          <% if (!current_user.has_role?(:cs))||(current_user.has_role?(:cs) && current_account.settings.disable_module_cs_stocks == 1) %>
+          <% if current_user.allow_read?(:stocks) && current_account.key != 'nippon' %>
            <div>
             <%= link_to stock_path_by_user, class: 'indexStart4' do %>
               <span>仓库管理</span>
             <% end %>
             </div>
-          <% end %>  
         <% end %>
 
         <% if current_account.settings.enable_module_bbs %>
-            <%- if current_account.key == 'nippon' -%>
-              <% if current_user.has_role?(:seller) || current_user.has_role?(:interface) || current_user.has_role?(:admin) -%>
+              <% if current_user.allowed_to?("go","npsellers") && current_account.key == 'nippon' -%>
                 <div>
                   <a class="indexStart7" href="/go/npsellers" target="_blank"><span>互动中心</span></a>
                 </div>
-              <%- end %>
             <%- else -%>
               <div>
                 <a class="indexStart7" href="/bbs_topics"><span>互动中心</span></a>
@@ -39,17 +35,17 @@
         </div>
 
 
-        <% if current_user.has_role?(:cs) || current_user.has_role?(:admin) -%>
+        <% if current_user.allowed_to?("sellers","index") -%>
           <div>
             <a class="indexStart5" href="/sellers"><span>经销商管理</span></a>
           </div>
-          <% if (!current_user.has_role?(:cs))||(current_user.has_role?(:cs) &&current_account.settings.disable_module_cs_products == 1) %>
+        <% end %>
+          <% if current_user.allow_read?(:products) %>
             <div>
               <a class="indexStart8" href="/products"><span>商品管理</span></a>
             </div>
           <% end %>
-        <% end %>
-        <% if current_user.has_role?(:admin) -%>
+        <% if current_user.allowed_to?("reconcile_statements","index") -%>
           <% if current_account.settings.enable_module_reconcile_statements == true %>
             <div>
               <a class="indexStart9" href="/reconcile_statements"><span>财务管理</span></a>

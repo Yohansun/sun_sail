@@ -1,7 +1,8 @@
 # -*- encoding : utf-8 -*-
 class StocksController < ApplicationController
   before_filter :authenticate_user!
-  before_filter :check_permission
+  before_filter :check_stock_type, except: [:home]
+  before_filter :authorize
 
   def index
     condition_relation = current_account.stock_products
@@ -44,12 +45,21 @@ class StocksController < ApplicationController
         @stock_products = @stock_products.where("stock_products.actual != stock_products.max AND stock_products.activity >= stock_products.safe_value")
       end
     end
+    
+    @stock_products = @stock_products.where(" good_type != 2 OR good_type IS NULL ") if current_user.seller.present?
     @stock_products = @stock_products.page params[:page]
     
   end
 
 
   private
-  def check_permission
+  def check_stock_type
+    if current_user.allow_read?(:stocks)
+      @seller = current_account.sellers.find_by_id params[:seller_id]
+    else
+      @seller = current_user.seller
+    end
+
+    redirect_to root_path unless @seller && @seller.has_stock
   end
 end

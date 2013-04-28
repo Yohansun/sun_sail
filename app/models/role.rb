@@ -14,8 +14,28 @@
 class Role < ActiveRecord::Base
   has_and_belongs_to_many :users, :join_table => :users_roles
   belongs_to :resource, :polymorphic => true
+  belongs_to :account
+#  validates :byname ,:presence => true  ,:uniqueness => {:if => proc {|attr| Role.exists?(:byname => attr['byname'] ,:account_id => attr[:account_id])} }
+#  validates :name   ,:presence => true  ,:uniqueness => {:if => proc {|attr| Role.exists?(:name   => attr['name']   ,:account_id => attr[:account_id])} }
+  validates :name   ,:presence => true ,:uniqueness => true
+  validates :account_id,:presence => true
+  attr_accessible :name
+  serialize :permissions, Hash
+  
+  
+  def add_all_permissions
+    per =  Hash.new {|k,v| k[v] = []}
+    MagicOrder::AccessControl.permissions.group_by{|x| x.project_module}.each do |project_name,permissions| 
+      permissions.each do |permission|
+        permission.actions.each do |action|
+          per[project_name.to_s] << action
+        end
+      end
+    end
+    self.permissions = per
+    self.save!
+  end
 
-  scopify
 
   def role_s
     case name

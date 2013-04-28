@@ -1,5 +1,6 @@
 class TradeReportsController < ApplicationController
   before_filter :authenticate_user!
+  before_filter :authorize
 
   def index
     reports = TradeReport.where(account_id: current_account.id)
@@ -19,7 +20,7 @@ class TradeReportsController < ApplicationController
     @reports = reports.page params[:page]
   end 
 
-  def show
+  def download
     send_data open("#{Rails.root}/data/#{params[:id]}.xls").read, :filename => "#{params[:id]}.xls"
   end
 end

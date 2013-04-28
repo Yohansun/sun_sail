@@ -36,6 +36,7 @@ class User < ActiveRecord::Base
   belongs_to :logistic
   has_many   :trade_reports
   has_and_belongs_to_many :accounts
+  has_and_belongs_to_many :roles,:join_table =>  "users_roles"
 
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
@@ -50,11 +51,12 @@ class User < ActiveRecord::Base
   # attr_accessible :title, :body
 
   EMAIL_FORMAT = /\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}\z/
-  validates :email, format: { with: EMAIL_FORMAT}, uniqueness: true,  allow_blank: true
+  validates :email, format: { with: EMAIL_FORMAT}, uniqueness: true, presence: true
   PHONE_FORMAT = /^(13[0-9]|15[012356789]|18[0236789]|14[57])[0-9]{8}$/
   validates :phone, format: { with: PHONE_FORMAT}, uniqueness: true, allow_blank: true
 
   validates_presence_of :password, on: :create
+  validates :username , uniqueness: true, presence: true
 
   validate :has_phone_or_email?
  
@@ -66,10 +68,33 @@ class User < ActiveRecord::Base
       self.username = sudo_username 
     end
   end 
+  
+  def permissions
+    @trade_pops = {}
+    raise "用户所属店铺为空" if self.account_ids.blank?
+    roles.where(:account_id => self.account_ids).each {|x | @trade_pops.merge!(x.permissions) {|key,firth,lath| firth | lath} }
+    @trade_pops
+  end
+  
+  def allow_read?(var,data=false)
+    data = data.to_s if data.is_a?(Symbol)
+    sym = data || "detail"
+    permissions[var.to_s].include?(sym) rescue false
+  end
 
   def display_name
     name || email
   end
+  
+  def allowed_to?(control,action)
+    arys = permissions[control.to_s] & MagicOrder::ActionDelega.keys
+    MagicOrder::ActionDelega.slice(*arys).any?{|x,y| y.include?(action)} ||
+    permissions.select {|x,y| y.grep(/^#{control}##{action}$/).present? }.present?
+  end
+
+  def status
+    access_locked? ? '禁止' : '生效'
+  end  
 
   class << self
     def find_for_database_authentication(conditions)
@@ -108,5 +133,4 @@ class User < ActiveRecord::Base
         errors.add(:phone, "至少输入手机号或者邮箱")
      end  
   end
-
 end

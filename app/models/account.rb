@@ -38,6 +38,7 @@ class Account < ActiveRecord::Base
   has_many :logistic_rates
   has_many :logistic_groups
   has_many :trade_sources
+  has_many :roles
 
   validates :name, presence: true
   validates :key, presence: true, uniqueness: true
