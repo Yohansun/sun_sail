@@ -2,7 +2,7 @@ __filename = "出库单查询数据#{Time.now.strftime("%Y/%m/%d-%H:%M:%S")}.xls
 sheet1 = xls.create_worksheet
 sheet1[0, 0] = "库存查询数据"
 
-sheet1.row(1).concat ["出库单编号","创建时间", "出库时间", "当前状态", "历史状态", "出库类型", "商品数量", "商品总价", "关联订单号", "最后操作人"]
+sheet1.row(1).concat ["出库单编号","创建时间", "出库时间", "当前状态", "历史状态", "出库类型", "商品数量", "商品总价",  "最后操作人"]
 
 @search.each_with_index  do |bill,index|
 sheet1.update_row index+2, 
@@ -14,7 +14,6 @@ bill.checked_at,
 bill.stock_type_name,
 bill.bill_products_mumber,
 bill.bill_products_price,
-"默认仓库",
 (bill.last_record.operator rescue "") 
 end
 

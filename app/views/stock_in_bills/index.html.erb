@@ -79,3 +79,4 @@ function processChecked(full_url){
   var bill_ids = $('input[name=\"bill_ids[]\"]:checked').map(function(){ return $(this).val()}).get().join(',');
   $(location).attr('href', full_url + '&export_ids=' + bill_ids);
 }
+</script>

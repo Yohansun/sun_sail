@@ -1,0 +1,24 @@
+__filename = "所有进销查询数据#{Time.now.strftime("%Y/%m/%d-%H:%M:%S")}.xls"
+sheet1 = xls.create_worksheet
+sheet1[0, 0] = "所有进销查询数据"
+
+sheet1.row(1).concat ["出/入库单编", "状态", "商品编码", "商品名称", "类型", "创建时间", "出/入库时间"]
+
+@num = 0
+@search.each_with_index do |bill|
+  bill.bill_products.each do |product|
+   sheet1.update_row @num+=2, 
+   bill.tid,
+   bill.status,
+   product.try(:sku_id),
+   product.try(:title),
+   (bill._type.constantize.stock_type_name rescue ""),
+   bill.created_at.try(:to_s,:db),
+   bill.stocked_at.try(:to_s,:db)
+  end
+end
+
+title_format = Spreadsheet::Format.new(:color => :blue, :weight => :bold, :size => 14)
+sheet1.row(0).set_format(0, title_format)
+bold = Spreadsheet::Format.new(:pattern_fg_color => :yellow, :weight => :bold)
+sheet1.row(1).default_format = bold
