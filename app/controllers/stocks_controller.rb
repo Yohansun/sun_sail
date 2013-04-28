@@ -4,6 +4,24 @@ class StocksController < ApplicationController
   before_filter :check_permission
 
   def index
+    condition_relation = current_account.stock_products
+    
+    condition_relation = condition_relation.where(StockProduct::STORAGE_STATUS[params[:storage_status]]).scoped if params[:storage_status].present?
+    params[:search] ||= {}
+    params[:search][:id_in] = params[:export_ids].split(',') if params[:export_ids].present?
+    
+    @search = condition_relation.search(params[:search])
+    @stock_products = @search.page params[:page]
+    @count = @search.count
+    respond_to do |format|
+      format.html
+      format.xls
+    end
+  end
+  
+  
+  def old
+    
     select_sql = "skus.*, products.name, products.outer_id, products.product_id, products.category_id, stock_products.*"
     @stock_products = current_account.stock_products.joins(:product).joins(:sku).select(select_sql).order("stock_products.product_id")
     if params[:info_type].present? && params[:info].present?
@@ -27,6 +45,7 @@ class StocksController < ApplicationController
       end
     end
     @stock_products = @stock_products.page params[:page]
+    
   end
 
 

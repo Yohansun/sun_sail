@@ -1,0 +1,41 @@
+<style>
+  .input-small.select2.product {
+  width: 504px!important;
+  }
+</style>
+<fieldset>
+  <div class="control-group">
+    
+    <div class="controls pull-left">
+      <%= f.label :category_id_eq,raw("<code>商品分类</code>"),:class => "pull-left" %>
+      <%= f.select :category_id_eq,current_account.categories.collect {|x| [x.name,x.id]},
+      {:include_blank => true},{:class => "input-small pull-left select2"}  %>
+    </div>
+  </div>
+    <div class="control-group">
+  <div class="controls pull-left">
+    <%= f.label :product_id_eq,raw("<code>商品名称</code>"),:class => "pull-left" %>
+    <%= f.select :product_id_eq,current_account.skus.collect {|x| [x.title,x.id]},
+    {:include_blank => true},{:class => "input-small pull-left select2 product"}  %>
+  </div>
+</div>
+  <div class="control-group">
+  <div class="controls pull-left">
+    <%= f.label :product_outer_id_eq,raw("<code>商品编码</code>"),:class => "pull-left" %>
+    <%= f.text_field :product_outer_id_eq%>
+  </div>  
+</div>
+  <div class="control-group">
+  <div class="controls pull-left">
+    <%= f.label :sku_sku_id_eq,raw("<code>SKU编码</code>"),:class => "pull-left" %>
+    <%= f.text_field :sku_sku_id_eq%>
+  </div>  
+</div>
+  <div class="controls pull-left">
+    <%= label_tag "storage_status",raw("<code>库存状态</code>"),:class => "pull-left" %>
+    <%= select_tag "storage_status",options_for_select(StockProduct::STORAGE_STATUS.keys,params["storage_status"]),{:include_blank => true,:class => "input-small pull-left select2"} %>
+  </div>  
+  <div class="pull-left">
+    <button type="button pull-left" class="btn btn-small btn-info">搜索</button>
+  </div>
+</fieldset><!-- form line1 area -->
