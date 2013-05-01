@@ -76,10 +76,9 @@ class User < ActiveRecord::Base
     @trade_pops
   end
   
-  def allow_read?(var,data=false)
-    data = data.to_s if data.is_a?(Symbol)
-    sym = data || "detail"
-    permissions[var.to_s].include?(sym) rescue false
+  def allow_read?(control,action="index")
+    arys = parsed_permission[control.to_s] & MagicOrder::ActionDelega.keys
+    MagicOrder::ActionDelega.slice(*arys).any?{|x,y| y.include?(action)}
   end
 
   def display_name
@@ -87,9 +86,28 @@ class User < ActiveRecord::Base
   end
   
   def allowed_to?(control,action)
-    arys = permissions[control.to_s] & MagicOrder::ActionDelega.keys
-    MagicOrder::ActionDelega.slice(*arys).any?{|x,y| y.include?(action)} ||
-    permissions.select {|x,y| y.grep(/^#{control}##{action}$/).present? }.present?
+    allow_read?(control,action) || parsed_permission[control.to_s].include?(action.to_s) 
+  end
+  
+  #parse {:stocks => ["stock_in_bills#detail"],"detail"} to {:stocks => ["detail"],:stock_in_bills => ["detail"]}
+  def parsed_permission
+    @strip_permissions = []
+    @parse_permission = Hash.new {|k,v| k[v] = [] }
+    @format_permissions = @parse_permission.dup
+    permissions.tap do |h| 
+      h.each do |x , y | 
+        t , h[x] =  y.partition {|v| /#/.match(v)}
+       @strip_permissions += t
+      end
+      @format_permissions.merge!(h)
+    end
+    @strip_permissions.each do |x| 
+      x = x.split(/#/)
+      x.replace [x.first,[x.last]]
+      @format_permissions.merge!(Hash[*(x)]) {|old,x,y| x | y}
+    end
+    
+    @format_permissions
   end
 
   def status

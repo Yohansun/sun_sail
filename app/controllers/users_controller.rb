@@ -1,6 +1,5 @@
 # encoding: utf-8
 class UsersController < ApplicationController
-  before_filter :authenticate_user!, :except => ['autologin','edit','update', 'switch_account']
   before_filter :authorize,:except => [:autologin,:search,:show,:new,:edit,:switch_account,:edit_with_role]
 
   def autologin

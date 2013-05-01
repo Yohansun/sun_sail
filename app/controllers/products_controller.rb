@@ -1,6 +1,5 @@
 # -*- encoding : utf-8 -*-
 class ProductsController < ApplicationController
-  before_filter :authenticate_user!
   before_filter :authorize,:except => :fetch_products
 
   def index

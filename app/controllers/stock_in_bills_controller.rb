@@ -1,8 +1,7 @@
 # -*- encoding : utf-8 -*-
 class StockInBillsController < ApplicationController
-	before_filter :authenticate_user!
   before_filter :fetch_bills
-  
+  before_filter :authorize,:except => :fetch_bils
   def index
     params[:search] ||= {}
     params[:search][:_id_in] = params[:export_ids].split(',') if params[:export_ids].present?

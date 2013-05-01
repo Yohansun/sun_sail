@@ -1,7 +1,5 @@
 # -*- encoding : utf-8 -*-
 class TradeSourcesController < ApplicationController
-   before_filter :authenticate_user!
-   before_filter :admin_only!
 
    def show
       @trade_source = current_account.trade_sources.where(id: params[:id]).first

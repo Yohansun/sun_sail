@@ -1,7 +1,6 @@
 # -*- encoding : utf-8 -*-
 class ReconcileStatementDetailsController < ApplicationController
   include ReconcileStatementDetailsHelper
-  before_filter :authenticate_user!
   before_filter :fetch_rsd, only: [:show, :export_detail]
   before_filter :check_module
 

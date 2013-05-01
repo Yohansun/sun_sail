@@ -40,18 +40,6 @@
                   $(location).attr('href','/stock_in_bills/'+bill_id);
                 }"  %>
               </li>
-              <li>
-                <%= link_to "审核","javascript:
-                if($('input:checked').length < 1){
-                alert('请选择至少一个入库单');
-                }else{
-                  var flag = confirm('确认审核吗?');
-                  if(flag==true){
-                    $('#stock_in_bills_form').attr({action: '/stock_in_bills/check',method: 'post'});
-                    $('#stock_in_bills_form').submit();
-                    }else{return false};
-                  }"  %>
-                </li>
                 <li>
                   <%= link_to "审核", "#",:onclick => "processRequest(this)",:goto => "/stock_in_bills/check",:request_method => "post",:mesg => "确认审核吗?"  %>
                   </li>

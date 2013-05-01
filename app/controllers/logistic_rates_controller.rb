@@ -1,6 +1,5 @@
 # -*- encoding : utf-8 -*-
 class LogisticRatesController < ApplicationController
-	before_filter :authenticate_user!
 	def index
     @rates = current_account.logistic_rates.group(:seller_id, :logistic_id)
     if params[:start_date].present? && params[:end_date].present?

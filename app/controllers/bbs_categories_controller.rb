@@ -1,5 +1,4 @@
 class BbsCategoriesController < ApplicationController
-	before_filter :authenticate_user!
 	before_filter :fetch_categories
 	def show
 		@category = current_account.bbs_categories.find(params[:id])

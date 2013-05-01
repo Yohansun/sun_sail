@@ -1,8 +1,6 @@
 # -*- encoding : utf-8 -*-
 class SalesController < ApplicationController
   include SalesHelper
-  before_filter :authenticate_user!
-  before_filter :admin_only!
 
   def index
     redirect_to "/sales/product_analysis"

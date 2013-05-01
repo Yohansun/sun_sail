@@ -2,7 +2,9 @@
   <header class="jumbotron subhead" id="overview">
     <div class="subnav">
       <ul class="nav nav-pills">
+        <% if current_user.allow_read?(:products) %>
         <li><%= link_to '商品管理', products_path, class: "products" %></li>
+        <% end %>
         <% if current_account.settings.enable_module_colors == 1 %>
           <li><%= link_to '颜色管理', colors_path %></li>
         <% end %>

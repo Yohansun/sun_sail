@@ -1,6 +1,5 @@
 # -*- encoding : utf-8 -*-
 class SellersController < ApplicationController
-  before_filter :authenticate_user!
   before_filter :authorize
 
   def index

@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
   helper_method :current_account
+  before_filter :authenticate_user!
 
   
   def authorize(ctrl = params[:controller], action = params[:action])
@@ -8,19 +9,8 @@ class ApplicationController < ActionController::Base
     if allowed
       true
     else
-      deny_access
-    end
-  end
-
-  def admin_only!
-    unless user_signed_in? && authorize
       redirect_to root_path
-      return false
     end
-  end
-  
-  def deny_access
-    redirect_to root_path
   end
 
   def current_account

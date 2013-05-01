@@ -34,24 +34,27 @@
           <a class="indexStart3" href="/trade_reports"><span>数据魔方</span></a>
         </div>
 
-
-        <% if current_user.allowed_to?("sellers","index") -%>
+        <!--
+        <#% if current_user.allowed_to?("sellers","index") -%>
           <div>
             <a class="indexStart5" href="/sellers"><span>经销商管理</span></a>
           </div>
-        <% end %>
+        <#% end %>
+      -->
           <% if current_user.allow_read?(:products) %>
             <div>
               <a class="indexStart8" href="/products"><span>商品管理</span></a>
             </div>
           <% end %>
-        <% if current_user.allowed_to?("reconcile_statements","index") -%>
-          <% if current_account.settings.enable_module_reconcile_statements == true %>
+          <!--
+        <#% if current_user.allowed_to?("reconcile_statements","index") -%>
+          <#% if current_account.settings.enable_module_reconcile_statements == true %>
             <div>
               <a class="indexStart9" href="/reconcile_statements"><span>财务管理</span></a>
             </div>
-          <% end %>
-        <% end %>
+          <#% end %>
+        <#% end %>
+      -->
         <% if current_account.settings.enable_module_wangwang == true %>
           <div>
             <a class="indexStart2" href="/callcenter/contrastive_performance"><span>客服管理</span></a>

@@ -4,7 +4,6 @@
 
 class TradesController < ApplicationController
   layout false, :only => :print_deliver_bill
-  before_filter :authenticate_user!
   respond_to :json, :xls
   before_filter :authorize,:only => [:index,:print_deliver_bill]
 

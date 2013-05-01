@@ -76,13 +76,12 @@
                 <%- elsif  current_user.allow_read?(:datas,"trade_reports#index") %>
                   <li><a href="/trade_reports">数据魔方</a></li>
                 <%- end %>
-                <% if current_user.allow_read?(:stocks)  && current_account.key != 'nippon' %>
-                  <li><%= link_to '仓库管理', (seller_stocks_path(current_user.seller.id) rescue ''), class: "stocks" %></li>
-                <% elsif current_user.allow_read?(:stocks)%>
-                  <li><%= link_to '仓库管理', stocks_path, class: "stocks" %></li>
+                <%  if current_user.allow_read?(:stocks) %>
+                <li><%= link_to '仓库管理', stocks_path, class: "stocks" %></li>
                 <% end %>
                 <% if current_user.allow_read?(:products) %>
                 <li><%= link_to '商品管理', products_path, class: "products" %></li>
+                <% end %>
                 <!--
                 <% if current_user.allow_read?(:trades,:seller) %>
                 <li><#%= link_to '经销商管理', sellers_path %>
@@ -94,7 +93,6 @@
                 <% if current_user.allowed_to?("users","index") %>
                 <li class= "divider"></li>       
                 <li><a href="/users" class="users">系统设置</a></li>
-                <% end %>
                 <% end %>
               </ul>
             </li>

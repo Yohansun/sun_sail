@@ -1,6 +1,5 @@
 # -*- encoding : utf-8 -*-
 class LogisticsController < ApplicationController
-  before_filter :authenticate_user!
   before_filter :authorize,:except => [:logistic_templates,:edit,:user_list,:logistic_user_list]
 
   def index

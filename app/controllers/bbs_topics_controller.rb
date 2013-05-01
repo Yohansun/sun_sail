@@ -1,5 +1,4 @@
 class BbsTopicsController < ApplicationController
-  before_filter :authenticate_user!
   before_filter :fetch_categories, except: [:download, :create]
   before_filter :fetch_topic, except: [:index, :new, :create, :list]
 

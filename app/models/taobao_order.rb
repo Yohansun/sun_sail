@@ -59,7 +59,7 @@ class TaobaoOrder < Order
   end
 
   def sku_bindings
-    taobao_sku.sku_bindings
+    taobao_sku.sku_bindings rescue []
   end
 
   def package_info

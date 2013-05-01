@@ -1,7 +1,5 @@
 # -*- encoding : utf-8 -*-
 class StocksController < ApplicationController
-  before_filter :authenticate_user!
-  before_filter :check_stock_type, except: [:home]
   before_filter :authorize
 
   def index
@@ -22,7 +20,6 @@ class StocksController < ApplicationController
   
   
   def old
-    
     select_sql = "skus.*, products.name, products.outer_id, products.product_id, products.category_id, stock_products.*"
     @stock_products = current_account.stock_products.joins(:product).joins(:sku).select(select_sql).order("stock_products.product_id")
     if params[:info_type].present? && params[:info].present?
@@ -49,17 +46,5 @@ class StocksController < ApplicationController
     @stock_products = @stock_products.where(" good_type != 2 OR good_type IS NULL ") if current_user.seller.present?
     @stock_products = @stock_products.page params[:page]
     
-  end
-
-
-  private
-  def check_stock_type
-    if current_user.allow_read?(:stocks)
-      @seller = current_account.sellers.find_by_id params[:seller_id]
-    else
-      @seller = current_user.seller
-    end
-
-    redirect_to root_path unless @seller && @seller.has_stock
   end
 end

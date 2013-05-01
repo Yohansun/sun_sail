@@ -1,6 +1,6 @@
 class StockBillsController < ApplicationController
 
-  before_filter :authenticate_user!
+  before_filter :authorize,:except => :fetch_bils
   before_filter :fetch_bills
   
   def index

@@ -1,6 +1,5 @@
 # encoding: utf-8
 class ReconcileStatementsController < ApplicationController
-  before_filter :authenticate_user!
   before_filter :fetch_rs, only: [:show, :audit]
   before_filter :check_module
 

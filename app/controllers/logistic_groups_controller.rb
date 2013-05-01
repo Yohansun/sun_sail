@@ -1,7 +1,5 @@
 # encoding: utf-8
 class LogisticGroupsController < ApplicationController
-  before_filter :authenticate_user!
-  before_filter :admin_only!
   before_filter :fetch_group, only: [:destroy]
 
   def index
