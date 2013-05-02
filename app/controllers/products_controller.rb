@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 class ProductsController < ApplicationController
-  before_filter :authorize,:except => :fetch_products
+  before_filter :authorize,:except => [:fetch_products,:pick_product,:abandon_product]
 
   def index
     @products = current_account.products
