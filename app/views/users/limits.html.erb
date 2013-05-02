@@ -40,7 +40,7 @@
                   <label class="checkbox inline">
                     <% (params["permissions"] ||= {}) && params["permissions"]["#{@role.name}"] ||= {} %>
                     <% permission_name = "#{project_name}_#{action}" %>
-                    <%= check_box_tag "permissions[#{project_name}][]",action,params["permissions"][action].try(:include?,permission_name) || (@role.permissions[project_name].try(:include?,action) rescue false)  %><%= l_or_humanize(action,:prefix => "permissions_tag_") %>
+                    <%= check_box_tag "permissions[#{project_name}][]",action,params["permissions"][action].try(:include?,permission_name) || (@role.permissions[project_name.to_s].try(:include?,action) )  %><%= l_or_humanize(action,:prefix => "permissions_tag_") %>
                   </label>
                   <% end %>
                 </div>
