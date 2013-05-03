@@ -12,7 +12,7 @@
 class Account < ActiveRecord::Base
   include RailsSettings
 
-  attr_accessible :key, :name
+  attr_accessible :key, :name, :seller_name, :address, :deliver_bill_info, :phone, :website, :point_out 
 
   has_and_belongs_to_many :users
 

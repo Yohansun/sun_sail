@@ -1,5 +1,8 @@
 <div class="span2 bs-docs-sidebar">
   <ul class="nav nav-list bs-docs-sidenav affix span2">
+    <li class="<%= "active" if params[:controller] == "accounts" %>">
+      <a href="/accounts" ><i class="<%= "icon-chevron-right" if params[:controller] == "accounts" %>"></i>店铺设置</a>
+    </li>
     <li class="<%= "active" if params[:controller] == "users" %>">
       <a href="/users" ><i class="<%= "icon-chevron-right" if params[:controller] == "users" %>"></i>用户管理</a>
     </li>
