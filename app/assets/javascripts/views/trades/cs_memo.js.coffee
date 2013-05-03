@@ -4,6 +4,8 @@ class MagicOrders.Views.TradesCsMemo extends Backbone.View
 
   events:
     'click .save': 'save'
+    'blur #cs_memo_text': 'check_chars_num'
+    'blur .order_cs_memo': 'check_chars_num'
 
   initialize: ->
     @model.on("fetch", @render, this)
@@ -12,9 +14,13 @@ class MagicOrders.Views.TradesCsMemo extends Backbone.View
     $(@el).html(@template(trade: @model))
     this
 
+  check_chars_num: (e) ->
+    if $(e.currentTarget).val().length > 51
+      alert("字数不得超过50个")
+      $(e.currentTarget).focus()
+
   save: ->
     blocktheui()
-
     order_cs_memos = {}
     for item in $(".order_cs_memo")
       order_id = $(item).data("order-id")

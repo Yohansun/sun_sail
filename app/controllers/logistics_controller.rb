@@ -13,6 +13,7 @@ class LogisticsController < ApplicationController
   def create
     params[:logistic][:code].try(:upcase!)
     @logistic = current_account.logistics.new params[:logistic]
+    @logistic.build_print_flash_setting
     if @logistic.save
       redirect_to logistics_path
     else
@@ -22,7 +23,7 @@ class LogisticsController < ApplicationController
 
   def edit
     @logistic = current_account.logistics.find params[:id]
-    render :new
+    render :edit
   end
 
   def update

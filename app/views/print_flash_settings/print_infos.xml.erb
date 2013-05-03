@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+  <mobid>1</mobid>
+  <mobname><%= @setting.xml_hash["mobname"] %></mobname>
+  <mobwidth><%= @setting.xml_hash["mobwidth"] %></mobwidth>
+  <mobheight><%= @setting.xml_hash["mobheight"] %></mobheight>
+  <offsetx><%= @setting.xml_hash["offsetx"] %></offsetx>
+  <offsety><%= @setting.xml_hash["offsety"] %></offsety>
+  <bgsrc>/print_files/bg.png</bgsrc>
+  <orderc><%= @logistic.xml %></orderc>
+  <saveurl>/logistics/<%= @logistic.id %>/print_flash_settings/<%= @setting.id %>/update_infos.xml</saveurl>
+  <ipos>
+    <%- if @setting.xml_hash['ipos'] != nil %>
+      <% @setting.xml_hash['ipos'].each do |item| %>
+        <item en_name="<%= item['key'] %>" cn_name="<%= item['text']%>">
+          <![CDATA[{"x":"<%= item['x'] %>",
+                    "y":"<%= item['y'] %>",
+                    "font":"<%= item['font'] %>",
+                    "color":"<%= item['color'] %>",
+                    "size":"<%= item['size'] %>",
+                    "align":"<%= item['align'] %>",
+                    "isbold":"<%= item['isbold'] %>",
+                    "underline":"<%= item['underline'] %>",
+                    "width":"<%= item['width'] %>",
+                    "height":"<%= item['height'] %>",
+                    "text":"<%= item['text'] %>",
+                    "type":"<%= item['type'] %>",
+                    "italic":"<%= item['italic'] %>"}]]>
+        </item>
+      <% end %>
+    <%- end %>
+  </ipos>
+</data>

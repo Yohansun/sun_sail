@@ -9,6 +9,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     'click .print_logistics': 'printLogistics'
     'click .return_logistics': 'returnLogistics'
     'click .batch_deliver': 'batchDeliver'
+    'click .batch_check_goods': 'batchCheckGoods'
     'click .confirm_batch_deliver': 'confirmBatchDeliver'
     'click .deliver_bills li' : 'gotoDeliverBills'
     'click .index_pops li a[data-type]': 'show_type'
@@ -127,6 +128,14 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
         Backbone.history.navigate('trades/' + trade_id + "/#{type}", true)
       else
         alert("请勾选要操作的订单。")
+
+  batchCheckGoods: (e) ->
+    e.preventDefault()
+    length = $('.trade_check:checked').parents('tr').length
+    if length < 1
+      alert("请勾选要操作的订单。")
+    else
+      Backbone.history.navigate('trades/batch_check_goods', true)
 
   fetchMoreTrades: (event, direction) =>
     if direction == 'down'
@@ -396,7 +405,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
   confirmBatchDeliver: ->
     $.get '/trades/batch_deliver', {ids: MagicOrders.idCarrier}, (data)->
       if data.isSuccess == true
-        for id in MagicOrders.idCarrier 
+        for id in MagicOrders.idCarrier
           model = new MagicOrders.Models.Trade(id: id)
           model.fetch success: (model, response) =>
             view = new MagicOrders.Views.TradesRow(model: model)

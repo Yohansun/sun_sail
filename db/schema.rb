@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130307084715) do
+ActiveRecord::Schema.define(:version => 20130426002113) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -199,16 +199,7 @@ ActiveRecord::Schema.define(:version => 20130307084715) do
 
   create_table "onsite_service_areas", :force => true do |t|
     t.string   "account_id"
-    t.string   "onsite_service_id"
     t.integer  "area_id"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
-  end
-
-  create_table "onsite_services", :force => true do |t|
-    t.integer  "account_id"
-    t.string   "options"
-    t.string   "name"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
@@ -224,12 +215,20 @@ ActiveRecord::Schema.define(:version => 20130307084715) do
   add_index "packages", ["outer_id"], :name => "index_packages_on_iid"
   add_index "packages", ["product_id"], :name => "index_packages_on_product_id"
 
+  create_table "print_flash_settings", :force => true do |t|
+    t.text     "xml_hash"
+    t.integer  "account_id"
+    t.integer  "logistic_id"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
   create_table "products", :force => true do |t|
-    t.string   "name",              :limit => 100,                               :default => "",  :null => false
-    t.string   "outer_id",          :limit => 20,                                :default => "",  :null => false
-    t.string   "product_id",        :limit => 20,                                :default => "",  :null => false
-    t.string   "storage_num",       :limit => 20,                                :default => "",  :null => false
-    t.decimal  "price",                            :precision => 8, :scale => 2, :default => 0.0, :null => false
+    t.string   "name",              :limit => 100,                               :default => "",   :null => false
+    t.string   "outer_id",          :limit => 20,                                :default => "",   :null => false
+    t.string   "product_id",        :limit => 20,                                :default => "",   :null => false
+    t.string   "storage_num",       :limit => 20,                                :default => "",   :null => false
+    t.decimal  "price",                            :precision => 8, :scale => 2, :default => 0.0,  :null => false
     t.integer  "quantity_id"
     t.integer  "category_id"
     t.string   "features"
@@ -242,11 +241,12 @@ ActiveRecord::Schema.define(:version => 20130307084715) do
     t.datetime "created_at"
     t.string   "cat_name"
     t.string   "pic_url"
-    t.integer  "account_id"
     t.string   "detail_url"
     t.string   "cid"
     t.integer  "num_iid",           :limit => 8
+    t.integer  "account_id"
     t.integer  "logistic_group_id"
+    t.boolean  "on_sale",                                                        :default => true
   end
 
   create_table "quantities", :force => true do |t|
@@ -317,6 +317,7 @@ ActiveRecord::Schema.define(:version => 20130307084715) do
     t.string   "fullname"
     t.string   "address"
     t.string   "mobile"
+    t.string   "phone"
     t.datetime "created_at",                           :null => false
     t.datetime "updated_at",                           :null => false
     t.integer  "parent_id"
@@ -357,6 +358,12 @@ ActiveRecord::Schema.define(:version => 20130307084715) do
 
   add_index "settings", ["thing_type", "thing_id", "var"], :name => "index_settings_on_thing_type_and_thing_id_and_var", :unique => true
 
+  create_table "sku_bindings", :force => true do |t|
+    t.integer "sku_id",        :limit => 8
+    t.integer "taobao_sku_id", :limit => 8
+    t.integer "number",        :limit => 8
+  end
+
   create_table "skus", :force => true do |t|
     t.integer "sku_id",          :limit => 8
     t.integer "num_iid",         :limit => 8
@@ -364,6 +371,7 @@ ActiveRecord::Schema.define(:version => 20130307084715) do
     t.string  "properties_name",              :default => ""
     t.integer "quantity"
     t.integer "product_id"
+    t.integer "account_id"
   end
 
   create_table "stock_histories", :force => true do |t|
@@ -425,6 +433,37 @@ ActiveRecord::Schema.define(:version => 20130307084715) do
     t.integer  "w1_expires_in",                 :limit => 8
     t.integer  "w2_expires_in",                 :limit => 8
     t.boolean  "need_refresh",                               :default => false
+  end
+
+  create_table "taobao_products", :force => true do |t|
+    t.integer  "category_id"
+    t.integer  "account_id"
+    t.integer  "num_iid"
+    t.decimal  "price",       :precision => 10, :scale => 0
+    t.string   "outer_id"
+    t.string   "product_id"
+    t.string   "cat_name"
+    t.string   "pic_url"
+    t.string   "cid"
+    t.string   "name"
+    t.datetime "created_at",                                 :null => false
+    t.datetime "updated_at",                                 :null => false
+  end
+
+  create_table "taobao_products_products", :force => true do |t|
+    t.integer "product_id"
+    t.integer "taobao_product_id"
+    t.integer "number"
+  end
+
+  create_table "taobao_skus", :force => true do |t|
+    t.integer "sku_id",            :limit => 8
+    t.integer "taobao_product_id", :limit => 8
+    t.integer "num_iid",           :limit => 8
+    t.string  "properties",                     :default => ""
+    t.string  "properties_name",                :default => ""
+    t.integer "quantity"
+    t.integer "account_id"
   end
 
   create_table "taobao_trade_rates", :force => true do |t|
