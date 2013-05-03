@@ -1,38 +1,52 @@
-<%= form_tag stock_out_bills_path,:method => "get"  do %>
 <% params[:search] ||= {} %>
-<fieldset>
-  <div class="control-group">
-    <div>
-      <%= label_tag "search[tid_eq]","编号",:class => "pull-left" %>
-      <%= text_field_tag "search[tid_eq]",params[:search][:tid_eq] %>
-    </div>
-<div>
-  <%= label_tag "search[checked_at_nu]","状态",:class => "pull-left" %>
-  <%= select_tag "search[checked_at_nu]",options_for_select([["已审核",true],["未审核",false]],params["search"]["checked_at_nu"]),:include_blank => true,:class => "input-medium select2" %>
+
+
+<div class="control-group">
+    <%= label_tag "search[tid_eq]","编号",:class => "control-label" %>
+  <div class="controls">
+    <%= text_field_tag "search[tid_eq]",params[:search][:tid_eq] %>
+  </div>
 </div>
-<div>
-  <%= label_tag "order_id","关联订单",:class => "pull-left" %>
-  <%= text_field_tag "order_id_eq" %>
+<div class="control-group">
+    <%= label_tag "search[checked_at_nu]","状态",:class => "control-label" %>
+  <div class="controls">
+    <%= select_tag "search[checked_at_nu]",options_for_select([["已审核",true],["未审核",false]],params["search"]["checked_at_nu"]),:include_blank => true,:class => "input-medium select2" %>
+  </div>
 </div>
-<div>
-  <%= label_tag "search[stock_type_eq]","出库类型",:class => "pull-left" %>
+<div class="control-group">
+    <%= label_tag "order_id","关联订单",:class => "control-label" %>
+  <div class="controls">
+    <%= text_field_tag "order_id_eq" %>
+  </div>
+</div>
+<div class="control-group">
+    <%= label_tag "search[stock_type_eq]","出库类型",:class => "control-label" %>
+  <div class="controls">
     <%= select_tag "search[stock_type_eq]",options_for_select(StockInBill::STOCK_TYPE),:include_blank => true,:class => "input-medium select2" %>
-  
-<div>
+  </div>
+</div>
+<div class="control-group">
   <%= label_tag "search[created_a
-t_gte]","创建时间",:class => "pull-left" %>
-  <%= text_field_tag "search[created_at_gte]",params["search"]["created_at_gte"],:class => "input-medium datetimepicker_full" %>
+  t_gte]","创建时间",:class => "control-label" %>
+  <div class="controls">
 
-  <%= text_field_tag "search[created_at_lte]",params["search"]["created_at_lte"],:class => "input-medium datetimepicker_full" %>
-</div>
-<div>
-  <%= label_tag "search[stocked_at_gte]", "出库时间",:class => "pull-left" %>
-  <%= text_field_tag "search[stocked_at_gte]",params["search"]["stocked_at_lte"],:class => "input-medium datetimepicker_full" %>
+    <%= text_field_tag "search[created_at_gte]",params["search"]["created_at_gte"],:class => "input-medium datetimepicker_full" %>~
 
-  <%= text_field_tag "search[stocked_at_lte]",params["search"]["stocked_at_lte"],:class => "input-medium datetimepicker_full" %>  
+    <%= text_field_tag "search[created_at_lte]",params["search"]["created_at_lte"],:class => "input-medium datetimepicker_full" %>
+  </div>
 </div>
-<div>
-    <label class="control-label">地域：</label>
+<div class="control-group">
+    <%= label_tag "search[stocked_at_gte]", "出库时间",:class => "control-label" %>
+  <div class="controls">
+
+    <%= text_field_tag "search[stocked_at_gte]",params["search"]["stocked_at_lte"],:class => "input-medium datetimepicker_full" %>~
+
+    <%= text_field_tag "search[stocked_at_lte]",params["search"]["stocked_at_lte"],:class => "input-medium datetimepicker_full" %>  
+  </div>
+</div>
+<div class="control-group">
+  <label class="control-label">地域：</label>
+  <div class="controls">
     <select id="" class="level_1 input-medium input-small pull-left radius_no_rb select2" name="op_state">
       <option>省</option>
     </select>
@@ -43,13 +57,15 @@ t_gte]","创建时间",:class => "pull-left" %>
       <option>区</option>
     </select>
   </div>
-  <div class="pull-left">
-    <button type="button pull-left" class="btn btn-small btn-info">搜索</button>
-  </div>
-  </div>
-</fieldset><!-- form line1 area -->
+</div>
 
-<% end %>
+<div class="control-group">
+  <div class="controls">
+    <button type="submit" class="btn">搜索</button>
+  </div>
+</div>
+
+
 
 
 <% content_for :tail do -%>

@@ -17,9 +17,11 @@
         <%= form_for @search ,:url => stocks_path , :html => {:class => "well well-small form-horizontal font12",:id => "search"},:method => :get do |f| %>
           <%= render :partial => "search",:locals => {:f => f} %>
         <% end %>
-      </div>          
+      </div>    
       <div class="pull-left">
-      <p style="width: 150px;float:left">共有<%= @count %>条数据</p>          
+        <span class="label label-info">共有<%= @count %>条数据</span>
+      </div>
+      <div class="pull-right">
         <%= link_to "导出","#",:onclick => "processChecked('#{stocks_path(:search => params[:search],:format => :xls,:on => '?')}')",:class => "btn btn-small btn-info" %>
       </div>
 
