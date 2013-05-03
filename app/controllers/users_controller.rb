@@ -71,6 +71,7 @@ class UsersController < ApplicationController
     params[:user].except!(:password,:password_confirmation) if params[:user][:password].blank?
     params[:user].except!(:active)                          if current_user == @user
 
+    params[:user][:role_ids] = nil if params[:user][:role_ids].blank?
     if @user.update_attributes(params[:user])
       @user.active == true ? @user.unlock_access! : @user.lock_access!
       redirect_to users_path
