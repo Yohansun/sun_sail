@@ -14,12 +14,17 @@
     </ul><!-- nav-tabs -->
     <div class="tab-content">
       <div class="tab-pane active" id="stock_check">
-        <%= render "search"%>
-        
-        <div class="pull-left">  
-          <p style="width: 150px;float:left">共有<%= @count %>条数据</p>            
-          <%= link_to "导出","#",:onclick => "processChecked('#{stock_in_bills_path(:search => params[:search],:format => :xls,:on => '?')}')",:class => "btn btn-small btn-info" %>  
-        </div>  
+        <%= form_tag stock_in_bills_path,:method => "get",:class => "well well-small form-horizontal font12"  do %>
+        <%= render :partial => "search" %>
+        <% end %>
+      </div>
+      
+      <div class="pull-left">
+        <span class="label label-info">共有<%= @count %>条数据</span>
+      </div>
+      <div class="pull-right">
+        <%= link_to "导出","#",:onclick => "processChecked('#{stock_in_bills_path(:search => params[:search],:format => :xls,:on => '?')}')",:class => "btn btn-small btn-info"%>
+      </div></br>
         
         <%= form_tag "/",:method => "post",:id => "stock_in_bills_form", :remote => true do %>
         <div class="btn-toolbar">
