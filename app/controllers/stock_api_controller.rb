@@ -99,6 +99,14 @@ class StockApiController < ApplicationController
           bml_stock_id: output_back['bgNo'],
           weight: output_back['weight']
         )
+        trade = stock_out_bill.trade
+        logistic = Logistic.find_by_code(output_back['carrierID'])
+        trade.update_attributes(
+          logistic_waybill: output_back['shipNo'],
+          logistic_name: output_back['carrierName'],
+          logistic_code: output_back['carrierID'],
+          logistic_id: logistic.try(:id)
+        )  
         skus = output_back['send']['sku']
         skus = [] << skus unless skus.is_a?(Array)
         skus.each do |sku|
