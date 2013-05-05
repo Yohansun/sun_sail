@@ -182,6 +182,7 @@ MagicOrders::Application.routes.draw do
 
   resources :areas
   resources :trade_sources
+  resources :accounts
 
   resources :account_setups do
     collection do

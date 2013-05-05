@@ -1,0 +1,43 @@
+<%= form_tag accounts_path(@account), :class =>'well form-horizontal', :method => :post do %>
+  <fieldset class="add_seller_css">
+    <div class="control-group">
+        <label class="string optional control-label">店铺名称：</label>
+      <div class="controls">
+       <input type="text" id="add_name" class="string optional" data-provide="typeahead" name="name" value=<%= @current_account.name %> >
+      </div>
+    </div>
+    <div class="control-group">
+        <label class="string optional control-label">网址：</label>
+      <div class="controls">
+       <input type="text" id="add_website" class="string optional" data-provide="typeahead" name="website" >
+      </div>
+    </div>
+    <div class="control-group">
+       <label class="string optional control-label">联系人：</label>
+      <div class="controls">
+       <input type="text" id="add_seller_name" class="string optional" data-provide="typeahead" name="seller_name" >
+      </div>
+    </div>
+    <div class="control-group">
+       <label class="string optional control-label">联系电话：</label>
+      <div class="controls">
+       <input type="text" id="add_phone" class="string optional" data-provide="typeahead" name="phone" >
+      </div>
+    </div>
+    <div class="control-group">
+        <label class="string optional control-label">地址：</label>
+      <div class="controls">
+        <input type="text" id="add_address" class="string optional" data-provide="typeahead" name="address" >
+      </div>
+    </div>
+    <div class="control-group">
+       <label class="string optional control-label">温馨提示：</label>
+      <div class="controls">
+       <input type="text" id="add_point_out" class="string optional" data-provide="typeahead" name="point_out" >
+      </div>
+    </div>
+  </fieldset>
+  <div class="form-actions">
+    <%= submit_tag "保存",:class => 'btn btn btn-primary edit seller_submit', :disable_with => "提交中..." %>
+  </div>
+<% end %>

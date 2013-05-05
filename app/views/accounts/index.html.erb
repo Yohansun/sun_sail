@@ -1,0 +1,45 @@
+<% content_for :tail do -%>
+  <script type="text/javascript">
+    $(function(){
+     $('.seller_submit').click(function(){
+       if ($('#add_seller_name').val() == ''){
+        alert('请输入店铺联系人姓名!');
+        return false;
+       }else if($('#add_name').val() == ''){
+        alert('请输入店铺名称!');
+        return false;
+       }else if($('#add_phone').val() == ''){
+        alert('请输入您的店铺联系方式!');
+        return false;
+       }else if($('#add_address').val() == ''){
+        alert('请输入您的店铺地址!');
+        return false;
+       }else if($('#add_deliver_bill_info').val() == ''){
+        alert('请输入您发货单上的信息!');
+        return false;
+       }
+       else if($('#add_website').val() == ''){
+        alert('请输入店铺网址!');
+        return false;
+       }else{
+        return true;
+      }
+     })
+    });
+
+   </script>
+<% end %>
+<div class="container-fluid">
+  <div class="row-fluid">
+    <%= render partial: "layouts/setting_nav" %>
+    <div class="span10">
+     <div class="row-fluid">
+        <ul class="breadcrumb" style="position:relative;">
+          <li><a href="/">Magic</a><span class="divider">/</span></li>
+          <li class="active">店铺设置</li>
+        </ul><!-- breadcrumb -->
+        <%= render partial: 'form' %>
+     </div>
+    </div>
+  </div>
+</div>
