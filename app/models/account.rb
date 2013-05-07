@@ -41,6 +41,7 @@ class Account < ActiveRecord::Base
   has_many :roles
   has_many :skus
   has_many :taobao_skus
+  has_one :trade_source
 
   validates :name, presence: true
   validates :key, presence: true, uniqueness: true
