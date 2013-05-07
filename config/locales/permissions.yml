@@ -111,11 +111,14 @@ zh-CN:
   permissions_tag_users#roles: "查看角色"
   permissions_tag_users#limits: "查看权限"
   permissions_tag_areas#detail: "地域管理"
+  permissions_tag_sync_taobao_products: 同步淘宝商品
+  permissions_tag_confirm_sync: 确认同步(淘宝商品)
   permissions_tag_account_setups#edit_auto_settings: "查看自动化设置"
   permissions_tag_users#update: "编辑用户"
   permissions_tag_users#delete: "删除用户"
   permissions_tag_users#batch_update: "批量(开启/禁用)用户"
   permissions_tag_users#create: "创建用户"
+  permissions_tag_users#create_role: "创建权限"
   permissions_tag_users#update_permissions: "编辑权限"
   permissions_tag_users#destroy_role: "删除角色"
   permissions_tag_logistics#detail: "物流商管理"

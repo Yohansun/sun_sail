@@ -48,6 +48,7 @@ class User < ActiveRecord::Base
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :username, :active
   attr_protected :cs, :cs_read, :seller, :interface, :stock_admin, :admin
+  attr_accessor :current_account_id
   # attr_accessible :title, :body
 
   EMAIL_FORMAT = /\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}\z/
@@ -72,7 +73,8 @@ class User < ActiveRecord::Base
   def permissions
     @trade_pops = {}
     raise "用户所属店铺为空" if self.account_ids.blank?
-    roles.where(:account_id => self.account_ids).each {|x | @trade_pops.merge!(x.permissions) {|key,firth,lath| firth | lath} }
+    condis = @current_account_id || self.account_ids
+    roles.where(:account_id => condis).each {|x | @trade_pops.merge!(x.permissions) {|key,firth,lath| firth | lath} }
     @trade_pops
   end
   

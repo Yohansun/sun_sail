@@ -169,6 +169,7 @@ MagicOrders::Application.routes.draw do
     collection do
       post :search
       get :roles
+      put :create_role
       get :limits
       get :edit_with_role
       post :batch_update
