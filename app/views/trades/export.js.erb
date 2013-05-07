@@ -1,2 +1,12 @@
-alert("订单报表已开始生成，请稍后在“数据魔方”下载。\n注意您选择的订单来源为“淘宝订单”，如果想导出其他平台订单，可修改对应筛选条件。");
+<%- if @report.trades.count > 60000 %>
+	alert("由于数据量过大，请分批导出报表");
+<%- else %>
+	<%- if @report.only_trade_type_filtered? -%>
+		alert("默认导出近一个月内订单，请去数据魔方-报表管理下载");
+		<%- @report.adjust %>
+	<%- else -%>
+		alert("订单报表已开始生成，请稍后在“数据魔方”下载");
+	<%- end -%>
+	<%- @report.export_report %>
+<%- end %>
 $('.export_orders_disabled').addClass('export_orders').removeClass('export_orders_disabled disabled')

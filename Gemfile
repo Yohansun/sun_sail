@@ -96,6 +96,7 @@ gem 'omniauth'
 gem 'omniauth-oauth2'
 gem 'rest-client'
 gem 'httparty'
+gem 'rchardet19'
 
 #test mail
 gem "mails_viewer"

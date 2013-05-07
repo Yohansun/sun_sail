@@ -110,9 +110,9 @@ class TaobaoOrder < Order
 
   def color_map(color_num)
     result = []
-    if products.count > 0
-      result = package_color_map(color_num)
-    else
+    # if products.count > 0
+    #   result = package_color_map(color_num)
+    # else
       tmp = {}
       color_num.each do |nums|
         next if nums.blank?
@@ -133,33 +133,33 @@ class TaobaoOrder < Order
         title: name,
         colors: tmp
       }]
-    end
+    # end
 
-    result
+    # result
   end
 
-  def package_color_map(color_num)
-    tmp_hash = package_info
-    color_num.each do |nums|
-      i = 0
-      next if nums.blank?
-      package_info.each_with_index do |package, index|
-        colors = tmp_hash[index][:colors] || {}
-        package[:number].times do
-          color = nums[i]
-          i += 1
-          next if color.blank?
-          if colors.has_key? color
-            colors["#{color}"][0] += 1
-          else
-            colors["#{color}"] = [1, Color.find_by_num(color).try(:name)]
-          end
-          tmp_hash[index][:colors]  = colors
-        end
-      end
-    end
-    tmp_hash
-  end
+  # def package_color_map(color_num)
+  #   tmp_hash = package_info
+  #   color_num.each do |nums|
+  #     i = 0
+  #     next if nums.blank?
+  #     package_info.each_with_index do |package, index|
+  #       colors = tmp_hash[index][:colors] || {}
+  #       package[:number].times do
+  #         color = nums[i]
+  #         i += 1
+  #         next if color.blank?
+  #         if colors.has_key? color
+  #           colors["#{color}"][0] += 1
+  #         else
+  #           colors["#{color}"] = [1, Color.find_by_num(color).try(:name)]
+  #         end
+  #         tmp_hash[index][:colors]  = colors
+  #       end
+  #     end
+  #   end
+  #   tmp_hash
+  # end
 
   # 匹配套装内单品调色信息
   #
@@ -216,10 +216,18 @@ class TaobaoOrder < Order
     end
   end
 
-  def price
-    origin_price =  attributes['price']
-    (origin_price - promotion_discount_fee/num).to_f.round(2)
+  def order_price
+    order_payment / num
   end
+
+  def order_payment
+    if taobao_trades.orders.count == 1
+      fee = payment - taobao_trades.post_fee
+    else  
+      fee = payment
+    end
+    fee
+  end  
 
   def promotion_discount_fee
     if taobao_trades

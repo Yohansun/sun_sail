@@ -1,7 +1,5 @@
 # encoding: utf-8
-
-# -*- encoding : utf-8 -*-
-
+require 'rchardet19'
 class TradesController < ApplicationController
   layout false, :only => :print_deliver_bill
   respond_to :json, :xls
@@ -33,22 +31,25 @@ class TradesController < ApplicationController
     @report.account_id = current_account.id
     @report.request_at = Time.now
     @report.user_id = current_user.id
-    if params['search']
-      params['search'] =  params['search'] .select {|k,v| v != "undefined"  }
-      params['search'].each do |k,v|
-        params['search'][k]  = v.encode('UTF-8','GBK') rescue "bad encoding"
-      end
-    end
+    
+    if params[:search]
+      params['search'] =  params['search'].select {|k,v| v != "undefined"  }
+      params['search'].each do |k,v|  
+        guess_encoding = CharDet.detect(v, :silent => true).encoding
+        if guess_encoding != "utf-8"
+          v.force_encoding(guess_encoding)
+          v.encode!("utf-8")
+        else
+          v.force_encoding("utf-8")
+        end
+        params['search'][k] = v
+      end 
+    end   
+         
     @report.conditions = params.select {|k,v| !['limit','offset', 'action', 'controller'].include?(k)}
-    #目前只有立邦具有多种订单
-    if current_account.key == "nippon" && @report.conditions.fetch("search").fetch("_type").blank?
-      render :js => "alert('导出报表之前请在高级搜索中选择订单来源');$('.export_orders_disabled').addClass('export_orders').removeClass('export_orders_disabled disabled');"
-    else
-      @report.save
-      @report.export_report
-      respond_to do |format|
-        format.js
-      end
+    @report.save
+    respond_to do |format|
+      format.js
     end
   end
 

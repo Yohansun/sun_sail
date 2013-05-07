@@ -3,6 +3,7 @@ class TaobaoSku < ActiveRecord::Base
   has_many :sku_bindings
   has_many :skus, through: :sku_bindings
   belongs_to :taobao_product
+  belongs_to :account
 
   def name
     sku_name = ''

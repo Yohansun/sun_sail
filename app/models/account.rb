@@ -39,6 +39,8 @@ class Account < ActiveRecord::Base
   has_many :logistic_groups
   has_many :trade_sources
   has_many :roles
+  has_many :skus
+  has_many :taobao_skus
 
   validates :name, presence: true
   validates :key, presence: true, uniqueness: true
@@ -65,8 +67,5 @@ class Account < ActiveRecord::Base
   def can_auto_deliver_right_now?
     in_time_gap?(self.settings["start_deliver_at"], self.settings["end_deliver_at"]) ? true : false
   end
-
-  def skus
-    Sku.where(account_id: id)
-  end  
+ 
 end

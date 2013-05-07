@@ -36,8 +36,6 @@ class TradeTaobaoPromotionFetcher
       end  
     end
     
-    # Abandon this later.
-    # got_promotion and promotion_fee is useless.
     trade.update_attributes promotion_fee: trade.promotion_details.sum(:discount_fee), got_promotion: true
 
     delay_time = TradeSetting.delay_time || 0
