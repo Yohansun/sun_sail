@@ -55,7 +55,7 @@ MagicOrders::Application.routes.draw do
   end
 
   resources :trade_reports do
-    put :download, :on => :member
+    get :download, :on => :member
   end
   resources :user_activities do
     collection do

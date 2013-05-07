@@ -72,7 +72,7 @@ MagicOrder::AccessControl.map do |map|
   
   map.project_module :datas do |map|
     map.permission :reads,      ["user_activities#detail","user_activities#all","trade_reports#detail","sales#product_analysis"]
-    map.permission :operations, ["reports#download"]
+    map.permission :operations, ["trade_reports#download"]
   end
   
   map.project_module :system_settings do |map|

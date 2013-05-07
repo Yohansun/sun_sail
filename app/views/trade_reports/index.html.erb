@@ -52,7 +52,7 @@
                   <%- if report.status == "可用" %> 
                     <button data-toggle="dropdown" class="btn btn-info dropdown-toggle min_w"><i class="icon-wrench"></i> <span class="caret"></span></button>
                     <ul class="dropdown-menu" style=" min-width: 70px;left: -14px">
-                      <li><a class="download_tips" data-toggle="modal" href="/trade_reports/<%= report.id %>">下载</a></li> 
+                      <li><a class="download_tips" data-toggle="modal" href="/trade_reports/<%= report.id %>/download">下载</a></li> 
                     </ul>
                   <%- else %> 
                     <button data-toggle="dropdown" class="btn btn-info dropdown-toggle min_w disabled"><i class="icon-wrench"></i> <span class="caret"></span></button>
