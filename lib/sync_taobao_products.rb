@@ -151,7 +151,12 @@ class CompareProduct
           #如果有从淘宝抓过来的记录,替换之
           taobao_onsale_skus_attributes = taobao_onsale_sku.marshal_dump.except(:created, :modified, :outer_id, :price)
           if taobao_product.present?
-            taobao_onsale_sku.attributes = taobao_onsale_skus_attributes
+            self.taobao_skus.each do |taobao_sku|
+              if taobao_sku.sku_id == taobao_onsale_skus_attributes[:sku_id].to_i ||
+                ( taobao_sku.sku_id.blank? && taobao_sku.num_iid == taobao_onsale_skus_attributes[:num_iid].to_i)
+                taobao_sku.attributes = taobao_onsale_skus_attributes
+              end
+            end
           else
             #否则重新生成
             self.taobao_skus.build(taobao_onsale_skus_attributes)
@@ -164,7 +169,7 @@ class CompareProduct
     end
     
     def matchs?(taobao_onsale_sku)
-      self.num_iid == taobao_onsale_sku.num_iid
+      self.num_iid == taobao_onsale_sku.num_iid.to_i
     end
   end
 end

@@ -52,24 +52,22 @@
             <td><%= product.name %></td>
             <td><%= product.outer_id %></td>
             <td>
-                <% product.changes.each do |key,values| %>
-                    <%= key %>: <span class="label label-important">-<%= values.first %></span>
-                                <span class="label label-success">+<%= values.last %></span></br>
-                  <% end %>
+              <% product.changes.each do |key,values| %>
+              <%= key %>: <span class="label label-important">-<%= values.first %></span>
+                          <span class="label label-success">+<%= values.last %></span></br>
+              <% end %>
                   
               <% product.taobao_skus.each do |taobao_sku| %>
-                <% next if !taobao_sku.changed? || !taobao_sku.new_record?%>
-                  <% if taobao_sku.new_record? %>
-                    Sku: <span class="label label-success">+<%= taobao_sku.attributes.collect {|x,y| "#{x}:#{y}"}.join(',')  %></span></br>
-                  <% end%>
-              
-              
-              <% taobao_sku.changes.each do |key,values| %>
-                  <%= key %>: <span class="label label-important">-<%= values.first %></span>
-                  <span class="label label-success">+<%= values.last %></span></br>
+                Skus-<%=taobao_sku.id%>:</br>
+                <% if taobao_sku.new_record? %>
+                <span class="label label-success">+<%= taobao_sku.attributes.collect {|x,y| "#{x}:#{y}"}.join(',')  %></span></br>
+                <% else %>
+		                <% taobao_sku.changes.each do |key,values| %>
+                    <%= key %>: <span class="label label-important">-<%= values.first %></span><span class="label label-success">+<%= values.last %></span></br>
+                    <% end %>
                 <% end %>
-            <% end %>
-          </td>
+              <% end %>
+            </td>
           </tr>
           <% end %>
         </tbody>
@@ -80,3 +78,4 @@
       <td><button type="button" class="btn btn-info">取消</button></td>
     </div>
   </div>
+</div>
