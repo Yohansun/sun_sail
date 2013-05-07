@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130426002113) do
+ActiveRecord::Schema.define(:version => 20130507033739) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -109,14 +109,47 @@ ActiveRecord::Schema.define(:version => 20130426002113) do
 
   create_table "categories", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
     t.integer  "parent_id"
     t.integer  "lft"
     t.integer  "rgt"
     t.integer  "depth"
     t.integer  "account_id"
+    t.integer  "status",     :default => 1
   end
+
+  add_index "categories", ["status"], :name => "index_categories_on_status"
+
+  create_table "categories_category_properties", :id => false, :force => true do |t|
+    t.integer "category_id"
+    t.integer "category_property_id"
+  end
+
+  add_index "categories_category_properties", ["category_id"], :name => "index_categories_category_properties_on_category_id"
+  add_index "categories_category_properties", ["category_property_id"], :name => "index_categories_category_properties_on_category_property_id"
+
+  create_table "category_properties", :force => true do |t|
+    t.string   "name"
+    t.integer  "value_type"
+    t.integer  "taobao_id"
+    t.integer  "status"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "category_properties", ["status"], :name => "index_category_properties_on_status"
+
+  create_table "category_property_values", :force => true do |t|
+    t.integer  "category_property_id"
+    t.string   "value"
+    t.integer  "taobao_id"
+    t.datetime "created_at",           :null => false
+    t.datetime "updated_at",           :null => false
+  end
+
+  add_index "category_property_values", ["category_property_id"], :name => "index_category_property_values_on_category_property_id"
+  add_index "category_property_values", ["taobao_id"], :name => "index_category_property_values_on_taobao_id"
 
   create_table "colors", :force => true do |t|
     t.string   "hexcode"
@@ -456,6 +489,12 @@ ActiveRecord::Schema.define(:version => 20130426002113) do
     t.string   "name"
     t.datetime "created_at",                                 :null => false
     t.datetime "updated_at",                                 :null => false
+  end
+
+  create_table "taobao_products_products", :force => true do |t|
+    t.integer "product_id"
+    t.integer "taobao_product_id"
+    t.integer "number"
   end
 
   create_table "taobao_skus", :force => true do |t|

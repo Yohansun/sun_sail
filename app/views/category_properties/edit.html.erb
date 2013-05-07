@@ -1,0 +1,5 @@
+<%
+  breadcrumb << ["商品属性管理", categories_path] << [@category_property.name]
+%>
+<%- model_class = CategoryProperty -%>
+      <%= render :partial => 'form' %>

@@ -1,0 +1,40 @@
+<%
+  breadcrumb << ["商品属性管理", categories_path]
+%>
+
+        <div class="nav">
+          <%=link_to "新建商品属性", new_category_property_path, :class=>"btn btn-primary"%>
+        </div>
+
+        <table class="table table-striped table-bordered table-condensed vertical_mid">
+          <thead>
+            <tr>
+              <th>属性名称</th>
+              <th>值类型</th>
+              <th>值</th>
+              <th>状态</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+          	<%  @category_properties.each do |category_property|  %>
+            <tr>
+              <td><%= category_property.name %></td>
+              <td><%= category_property.value_type_name %></td>
+              <td><%= category_property.values.map(&:value) *' | ' %></td>
+              <td><%= category_property.status_name %></td>
+              <td>
+
+                <%= link_to '编辑', edit_category_property_path(category_property),:class=>"btn btn-primary" %>
+                <%= link_to '删除', category_property_path(category_property), method: :delete, confirm: '确认删除?',:class=>"btn btn-danger" %>
+              </td>
+            </tr>
+            <% end %>
+          </tbody>
+        </table>
+
+        <%= paginate @category_properties %>
+
+
+
+

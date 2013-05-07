@@ -1,9 +1,13 @@
 class CategoriesController < ApplicationController
+
+  layout "management"
+
   before_filter :authorize,:except => [:autocomplete,:new,:show,:edit]
 
   def index
     @categories = current_account.categories
     if params[:parent_id].present?
+      @parents = Category.find(params[:parent_id]).self_and_ancestors
       @categories = @categories.where(parent_id: params[:parent_id])
     else
       @categories = @categories.roots

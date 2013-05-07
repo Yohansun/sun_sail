@@ -1,11 +1,5 @@
-<div class="container-fluid">
-  <div class="row-fluid">
-    <ul class="breadcrumb" style="position:relative;">
-      <li><%= link_to 'Magic', root_path %><span class="divider">/</span></li>
-      <li><a href="/categories">分类管理</a><span class="divider">/</span></li>
-      <li class="active">编辑分类</li>
-    </ul><!-- breadcrumb -->
+<%
+  breadcrumb << ["商品类别管理", categories_path]
+%>
 
     <%= render 'form' %>
-  </div>
-</div>

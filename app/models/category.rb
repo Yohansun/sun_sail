@@ -15,10 +15,15 @@
 #
 
 class Category < ActiveRecord::Base
+  include MagicEnum
+  enum_attr :status,  [["禁用",0],["启用",1]]
+  
   acts_as_nested_set
   has_many :products
+  has_and_belongs_to_many  :category_properties
+  accepts_nested_attributes_for :category_properties#, :allow_destroy => true
 
-  attr_accessible :name, :parent_id, :lft, :rgt
+  attr_accessible :name, :parent_id, :lft, :rgt,  :status, :category_property_ids
 
   validates :name, presence: true, uniqueness: { scope: :account_id }
 

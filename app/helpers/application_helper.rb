@@ -37,4 +37,9 @@ module ApplicationHelper
       ''
     end
   end
+  
+  def breadcrumb
+    @breadcrumb ||= [['Magic', root_path]]
+    @breadcrumb
+  end
 end

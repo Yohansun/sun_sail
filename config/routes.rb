@@ -84,6 +84,8 @@ MagicOrders::Application.routes.draw do
   end
 
   resources :categories
+  resources :category_properties
+  
 
   get 'callcenter/contrastive_performance'
   get 'callcenter/inquired_and_created'
