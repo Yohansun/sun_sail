@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
 
   
   def authorize(ctrl = params[:controller], action = params[:action])
+    current_user.current_account_id = session[:account_id]
     allowed = current_user.allowed_to?(ctrl,action)
     if allowed
       true

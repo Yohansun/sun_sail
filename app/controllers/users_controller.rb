@@ -128,13 +128,20 @@ class UsersController < ApplicationController
     end
   end
   
+  def create_role
+    @role = current_account.roles.build(params[:role])
+
+    if @role.save
+      redirect_to :action => :roles
+    else
+      
+      render :text => ((view_context.link_to "返回", roles_users_path) + view_context.tag("br") + @role.errors.full_messages.join('</br>') )
+    end
+  end
+  
   def update_permissions
     prefixs = MagicOrder::AccessControl.permissions.map(&:project_module).uniq
-    if params[:role_id].present?
-      @role = current_account.roles.find(params[:role_id])
-    else
-      @role = current_account.roles.build(params[:role])
-    end
+    @role = current_account.roles.find(params[:role_id])
 
     #permissions = params[@role.name] || []
     #
@@ -145,7 +152,6 @@ class UsersController < ApplicationController
     #    @permission.merge!({formats[1] => [formats[3]]}) { |x,y,z| y | z} rescue ""
     #  end
     #end
-    
     
     @role.permissions =  params[:permissions]
     if @role.update_attributes(params[:role])
