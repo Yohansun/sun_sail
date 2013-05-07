@@ -21,6 +21,10 @@
 //= require backbone
 //= require bootstrap-datetimepicker
 //
+//= require jquery.jeditable.mini
+//= require jquery.dataTables.min
+//= require jquery.dataTables.editable
+//
 //= require .//magic_orders
 //
 //= require_tree ../templates/
@@ -297,4 +301,43 @@ $(document).ready(function(e) {
       spinnerIncDecOnly: true // Only up and down arrows
     });
   });
+});
+
+$(function () {
+  var oTable = $('#stock_table').dataTable({
+    "bLengthChange": true,
+    "bPaginate": false,
+    "bFilter": false,
+    "bInfo": false,
+    "bAutoWidth": false,
+    "bSort": false
+  }).makeEditable({
+      fnOnEditing: function()
+      {
+        return true;
+      },
+      fnOnEdited: function(status)
+      {
+      },
+      fnShowError: function (message, action)
+      {
+        alert("数据输入错误!!!");
+      },
+      "aoColumns": [
+        null,
+        null,
+        {
+          tooltip: '双击进行编辑',
+          type: 'text',
+          width: '60',
+          loadtext: '请等待...',
+          onblur: 'submit',
+          sUpdateURL: "/stocks/edit_safe_stock",
+          placeholder: '',
+          fnOnCellUpdated: function(sStatus, sValue, row, column, settings){
+          }
+        }
+      ]
+
+    });
 });

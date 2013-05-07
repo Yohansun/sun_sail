@@ -13,7 +13,7 @@
 <div class="control-group">
   <%= f.label :product_id_eq,"商品名称",:class => "control-label" %>
   <div class="controls">
-    <%= f.select :product_id_eq,current_account.skus.collect {|x| [x.title,x.id]},
+    <%= f.select :product_id_eq,current_account.skus.collect {|x| [x.title,x.product_id]},
     {:include_blank => true},{:class => "input-small pull-left select2 product"}  %>
   </div>
 </div>

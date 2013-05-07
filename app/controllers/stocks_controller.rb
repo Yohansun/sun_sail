@@ -47,4 +47,59 @@ class StocksController < ApplicationController
     @stock_products = @stock_products.page params[:page]
     
   end
+
+  def safe_stock
+    p params
+    condition_relation = current_account.stock_products
+    condition_relation = condition_relation.where(StockProduct::STORAGE_STATUS[params[:storage_status]]).scoped if params[:storage_status].present?
+    
+    params[:product_id_eq] ||= nil
+    params[:stock] = {"product_id_eq"=> params[:product_id_eq]}
+    if params[:stock].blank?
+      @search = condition_relation.search
+    else
+      @search = condition_relation.search(params[:stock])
+    end
+
+    @stock_products = @search.page params[:page]
+    @count = @search.count
+    respond_to do |format|
+      format.html
+      format.xls
+    end
+  end
+
+  def change_product_type
+    @stock_products_name = current_account.stock_products.collect {|x| { id: x.product_id, text: x.product.name}}
+    @stock_products_id = current_account.stock_products.collect {|x| { id: x.product_id, text: x.product.product_id}}
+    data = [@stock_products_name, @stock_products_id]
+
+    render :json => data
+  end
+
+  def edit_safe_stock
+    stock_product_id = params[:id]
+    value = params[:value]
+    bool = false
+
+    @stock_product = StockProduct.find(stock_product_id)
+    if @stock_product.blank?
+    else
+      if value =~ /\d/
+        @stock_product = @stock_product.update_attribute(:safe_value, value)
+        if @stock_product
+          bool = true
+        end
+      end
+    end
+
+    if bool
+      result = "ok"
+    else
+      result = 'err'
+    end
+    
+    render :text => result
+  end
+
 end

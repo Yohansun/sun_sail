@@ -18,6 +18,9 @@ MagicOrders::Application.routes.draw do
   end
 
   resources :stocks, only: [:index]
+  match "/stocks/safe_stock", to: 'stocks#safe_stock'
+  post "/stocks/edit_safe_stock", to: 'stocks#edit_safe_stock'
+  match "/stocks/change_product_type", to: 'stocks#change_product_type'
 
   resources :stock_bills
 
