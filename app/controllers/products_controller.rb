@@ -1,6 +1,7 @@
 # -*- encoding : utf-8 -*-
 class ProductsController < ApplicationController
   before_filter :authorize,:except => [:fetch_products,:pick_product,:abandon_product]
+  before_filter :get_products,:only => [:sync_taobao_products,:confirm_sync]
 
   def index
     @products = current_account.products
@@ -76,6 +77,27 @@ class ProductsController < ApplicationController
     product = current_account.products.find(params[:id])
     product.destroy
     redirect_to products_path
+  end
+  
+  #GET /products/sync_taobao_products
+  def sync_taobao_products
+  end
+  
+  #PUT /products/confirm_sync
+  def confirm_sync
+    #upsert_news_products!(@news_products)
+    
+    #update_products!
+    TaobaoProduct.transaction do
+      TaobaoSku.transaction do
+        @changes_products.map(&:save!)
+        @news_products.map(&:insert!)
+      end
+    end
+    
+    redirect_to :action => :taobao_products
+  rescue Exception => e
+    render :text => e.message
   end
 
   def fetch_products
@@ -189,5 +211,15 @@ class ProductsController < ApplicationController
       end
     end
     render :nothing => true, status: 200
+  end
+  
+  private
+  require 'sync_taobao_products'
+  def get_products
+    products          =  CompareProduct.new(current_account)
+    @news_products    = products.not_exists
+    @changes_products = products.changes
+  rescue Exception => e
+    render :text => e.message
   end
 end

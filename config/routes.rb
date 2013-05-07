@@ -130,6 +130,8 @@ MagicOrders::Application.routes.draw do
       get :taobao_skus
       get :change_taobao_skus
       post :tie_to_native_skus
+      get :sync_taobao_products
+      put :confirm_sync
     end
   end
 

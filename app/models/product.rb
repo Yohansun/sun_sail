@@ -2,14 +2,18 @@
 class Product < ActiveRecord::Base
   belongs_to :account
   belongs_to :category
-  has_many :skus, dependent: :destroy
+  has_many :skus, dependent: :destroy,:inverse_of => :product
   belongs_to :logistic_group
   has_many :feature_product_relationships
   has_many :features, through: :feature_product_relationships
   has_many :colors_products
   has_many :colors, through: :colors_products
+  accepts_nested_attributes_for :skus, :allow_destroy => true
 
-  attr_accessible :name, :product_id, :outer_id, :storage_num, :price, :color_ids, :pic_url, :category_id, :features, :feature_ids, :cat_name, :detail_url, :num_iid, :cid, :account_id, :logistic_group_id, :on_sale
+  attr_accessible :name, :product_id, :outer_id, :storage_num, :price, :color_ids, :pic_url, :category_id, :features, :feature_ids, :cat_name, :detail_url, :num_iid, :cid, :account_id, :logistic_group_id, :on_sale,:skus_attributes
+  
+
+  
 
   validates_uniqueness_of :outer_id, :allow_blank => true, message: "信息已存在"
   validates_presence_of :name, :price, message: "信息不能为空"
