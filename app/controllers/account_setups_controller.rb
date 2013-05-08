@@ -63,7 +63,7 @@ class AccountSetupsController < ApplicationController
   end
 
   def edit_auto_settings
-    @setting = @account.settings.auto_settings
+    @setting = @account.settings.auto_settings || {}
     @setting['split_conditions'] = {} if !@setting['split_conditions'].present?
     @setting['dispatch_conditions'] = {} if !@setting['dispatch_conditions'].present?
     @setting['unusual_conditions'] = {} if !@setting['unusual_conditions'].present?

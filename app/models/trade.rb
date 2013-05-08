@@ -955,6 +955,15 @@ class Trade
     ###筛选结束###
   end
 
+  def set_has_onsite_service
+    self.area_id = default_area.try(:id)
+    if OnsiteServiceArea.where(area_id: default_area.id, account_id: account_id).present?
+      self.has_onsite_service = true
+    else
+      self.has_onsite_service = false
+    end
+  end
+
   private
     def check_associate_deliver_bills
       DeliverBill.where(trade_id: self._id).delete_all if self.deleted_at != nil
@@ -995,15 +1004,6 @@ class Trade
       else
         self.has_unusual_state = false
         true
-      end
-    end
-
-    def set_has_onsite_service
-      self.area_id = default_area.try(:id)
-      if OnsiteServiceArea.where(area_id: default_area.id, account_id: account_id).present?
-        self.has_onsite_service = true
-      else
-        self.has_onsite_service = false
       end
     end
 end

@@ -117,35 +117,38 @@ class TaobaoTrade < Trade
   end
 
   def auto_dispatchable?
-    dispatch_options = self.fetch_account.settings.auto_settings["dispatch_options"]
-    if dispatch_options["void_buyer_message"] && dispatch_options["void_seller_memo"]
-      can_auto_dispatch = !has_buyer_message && self.seller_memo.blank?
-    elsif dispatch_options["void_buyer_message"] == 1 && dispatch_options["void_seller_memo"] == nil
-      can_auto_dispatch = !has_buyer_message
-    elsif dispatch_options["void_buyer_message"] == nil && dispatch_options["void_seller_memo"] == 1
-      can_auto_dispatch = self.seller_memo.blank?
+    if !fetch_account || !fetch_account.settings.auto_settings || !self.fetch_account.settings.auto_settings["dispatch_options"]
+      can_auto_dispatch = false
     else
-      can_auto_dispatch = true
-    end
-
-    can_auto_dispatch && has_special_seller_memo? && dispatchable?
-  end
-
-  def has_special_seller_memo?
-    special_seller_memo.blank?
-  end
-
-  def special_seller_memo
-    if self.fetch_account.key == 'dulux'
-      if seller_memo.present?
-        if seller_memo.strip == "@送货上门".strip
-          "@送货上门"
-        elsif seller_memo.strip == "@自提".strip
-          "@自提"
-        end
+      dispatch_options = self.fetch_account.settings.auto_settings["dispatch_options"]
+      if dispatch_options["void_buyer_message"] && dispatch_options["void_seller_memo"]
+        can_auto_dispatch = !has_buyer_message && self.seller_memo.blank?
+      elsif dispatch_options["void_buyer_message"] == 1 && dispatch_options["void_seller_memo"] == nil
+        can_auto_dispatch = !has_buyer_message
+      elsif dispatch_options["void_buyer_message"] == nil && dispatch_options["void_seller_memo"] == 1
+        can_auto_dispatch = self.seller_memo.blank?
+      else
+        can_auto_dispatch = true
       end
-    end
+    end  
+    can_auto_dispatch && dispatchable?
   end
+
+  # def has_special_seller_memo?
+  #   special_seller_memo.blank?
+  # end
+
+  # def special_seller_memo
+  #   if self.fetch_account.key == 'dulux'
+  #     if seller_memo.present?
+  #       if seller_memo.strip == "@送货上门".strip
+  #         "@送货上门"
+  #       elsif seller_memo.strip == "@自提".strip
+  #         "@自提"
+  #       end
+  #     end
+  #   end
+  # end
 
   def auto_dispatch!
     return unless auto_dispatchable?
