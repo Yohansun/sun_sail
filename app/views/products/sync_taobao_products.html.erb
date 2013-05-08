@@ -58,10 +58,11 @@
               <% end %>
                   
               <% product.taobao_skus.each do |taobao_sku| %>
-                Skus-<%=taobao_sku.id%>:</br>
                 <% if taobao_sku.new_record? %>
+                Skus:<%=taobao_sku.id%>:</br>
                 <span class="label label-success">+<%= taobao_sku.attributes.collect {|x,y| "#{x}:#{y}"}.join(',')  %></span></br>
-                <% else %>
+                <% elsif taobao_sku.changed? %>
+                Skus:<%=taobao_sku.id%>:</br>
 		                <% taobao_sku.changes.each do |key,values| %>
                     <%= key %>: <span class="label label-important">-<%= values.first %></span><span class="label label-success">+<%= values.last %></span></br>
                     <% end %>
