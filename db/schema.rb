@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130508060522) do
+ActiveRecord::Schema.define(:version => 20130508105658) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -493,16 +493,16 @@ ActiveRecord::Schema.define(:version => 20130508060522) do
   create_table "taobao_products", :force => true do |t|
     t.integer  "category_id"
     t.integer  "account_id"
-    t.integer  "num_iid"
-    t.decimal  "price",       :precision => 10, :scale => 0
+    t.integer  "num_iid",     :limit => 8
+    t.decimal  "price",                    :precision => 10, :scale => 0
     t.string   "outer_id"
     t.string   "product_id"
     t.string   "cat_name"
     t.string   "pic_url"
     t.string   "cid"
     t.string   "name"
-    t.datetime "created_at",                                 :null => false
-    t.datetime "updated_at",                                 :null => false
+    t.datetime "created_at",                                              :null => false
+    t.datetime "updated_at",                                              :null => false
   end
 
   create_table "taobao_skus", :force => true do |t|
