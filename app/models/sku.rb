@@ -19,41 +19,45 @@ class Sku < ActiveRecord::Base
   has_many :sku_bindings
   has_many :stock_products
   has_many :taobao_skus, through: :sku_bindings
-  has_many :properties, class_name: "SkuProperty"
+  has_many :sku_properties,  :dependent=>:destroy
 
   def title
     "#{product.try(:name)}#{name}"
   end
 
   def name
-    properties.map(&:text) * "|"
+    sku_properties.map(&:text) * "|"
   end
 
   def value
-    properties.map(&:cached_property_value) * "|"
+    sku_properties.map(&:cached_property_value) * "|"
   end
 
-  # migrate skus.properties_name to :properties association
+  # migrate skus.properties_name to :sku_properties association
   def migrate_taobao_sku_props
     # if not migrated (props != blank && properties = blank)
-    if !properties_name.blank? && properties.blank?
-      pid,uid,pname,pvalue = properties_name.split(':')
+    if !properties_name.blank? && sku_properties.blank?
+      props = properties_name.split(';')
+      props.each{|prop|
+        pid,uid,pname,pvalue = prop.split(':')
 
-      # may create 3 data : category_property, category_property_value, 
-      #  and association between properties and categories
+        # may create 4 data : category_property, category_property_value, 
+        #  and association between properties and categories
+        #  and sku_properties
 
-      property_value = CategoryPropertyValue.find_or_create_by_name_value(pname,pvalue)
-      property = property_value.category_property
+        property_value = CategoryPropertyValue.find_or_create_by_name_value(pname,pvalue)
+        property = property_value.category_property
 
-      # association exist ?
-      category = product && product.category
-      if category
-        if !category.category_properties.name_eq(property.name).first
-          category.category_properties << property
+        # association exist ?
+        category = product && product.category
+        if category
+          if !category.category_properties.name_eq(property.name).first
+            category.category_properties << property
+          end
         end
-      end
 
-      self.properties.create(category_property_value:property_value)
+        self.sku_properties.create(category_property_value:property_value)
+      }
     end
   end
 

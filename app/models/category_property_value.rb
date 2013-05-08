@@ -8,6 +8,8 @@ class CategoryPropertyValue < ActiveRecord::Base
 
 
   def self.find_or_create_by_name_value(pname,pvalue)
+    pname.strip!
+    pvalue.strip!
     # category exist ?
     property = CategoryProperty.name_eq(pname).first
     property = CategoryProperty.create(name:pname,
