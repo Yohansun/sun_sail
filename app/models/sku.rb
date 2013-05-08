@@ -19,6 +19,7 @@ class Sku < ActiveRecord::Base
   has_many :sku_bindings
   has_many :stock_products
   has_many :taobao_skus, through: :sku_bindings
+  has_many :properties, class_name: "SkuProperty"
 
   def title
     "#{product.try(:name)}#{name}"
@@ -50,4 +51,28 @@ class Sku < ActiveRecord::Base
     end
     value
   end
+
+  # migrate skus.properties_name to :properties association
+  def migrate_taobao_sku_props
+    # if not migrated (props != blank && properties = blank)
+    if !properties_name.blank? && properties.blank?
+      pid,uid,pname,pvalue = properties_name.split(':')
+
+      # may create 3 data : category_property, category_property_value, 
+      #  and association between properties and categories
+
+      property_value = CategoryPropertyValue.find_or_create_by_name_value(pname,pvalue)
+      property = property_value.category_property
+
+      # association exist ?
+      category = product && product.category
+      if category
+        if !category.category_properties.name_eq(property.name).first
+          category.category_properties << property
+        end
+      end
+    end
+  end
+
+
 end

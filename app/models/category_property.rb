@@ -1,10 +1,17 @@
 # -*- encoding:utf-8 -*-
 class CategoryProperty < ActiveRecord::Base
 
+  STATUS_ENABLED = 1
+  STATUS_DISABLED = 0
+
+  VALUE_TYPE_SINGLE = 1
+  VALUE_TYPE_MULTIPLE = 2
+  VALUE_TYPE_INPUT = 3
+
   include MagicEnum
 
-  enum_attr :value_type,[["单选",1],["多选",2],["输入",3]]
-  enum_attr :status,[["启用",1],["禁用",0]]
+  enum_attr :value_type,[["单选",VALUE_TYPE_SINGLE],["多选",VALUE_TYPE_MULTIPLE],["输入",VALUE_TYPE_INPUT]]
+  enum_attr :status,[["启用",STATUS_ENABLED],["禁用",STATUS_DISABLED]]
 
   attr_accessor :value_text
   attr_accessible :name, :status, :value_type, :value_text, :values_attributes
@@ -15,9 +22,16 @@ class CategoryProperty < ActiveRecord::Base
   
   before_save :init_values
   
+  scope :name_eq, ->(name){ where(["category_properties.name = ?",name])}
+
+
+
+
   def value_text
     @value_text ||= values.map(&:value)*"\n"
   end
+
+
   
   def init_values
     old_values = []

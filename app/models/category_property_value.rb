@@ -2,5 +2,25 @@ class CategoryPropertyValue < ActiveRecord::Base
   attr_accessible :category_property_id, :taobao_id, :value
   
   belongs_to  :category_property
+
+  scope :value_eq, ->(value){where(["category_property_values.value = ?", value])}
+
+
+
+  def self.find_or_create_by_name_value(pname,pvalue)
+    # category exist ?
+    property = CategoryProperty.name_eq(pname).first
+    property = CategoryProperty.create(name:pname,
+            status:CategoryProperty::STATUS_ENABLED,
+            value_type:CategoryProperty::VALUE_TYPE_SINGLE) if property.nil?
+
+
+    # value exist ?
+    property_value = property.values.value_eq(pvalue).first
+    property_value = property.values.create(value:pvalue) if property_value.nil?
+
+    property_value
+  end
+
   
 end
