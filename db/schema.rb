@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130507033739) do
+ActiveRecord::Schema.define(:version => 20130508060522) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -138,6 +138,7 @@ ActiveRecord::Schema.define(:version => 20130507033739) do
     t.datetime "updated_at", :null => false
   end
 
+  add_index "category_properties", ["name"], :name => "index_category_properties_on_name"
   add_index "category_properties", ["status"], :name => "index_category_properties_on_status"
 
   create_table "category_property_values", :force => true do |t|
@@ -150,6 +151,7 @@ ActiveRecord::Schema.define(:version => 20130507033739) do
 
   add_index "category_property_values", ["category_property_id"], :name => "index_category_property_values_on_category_property_id"
   add_index "category_property_values", ["taobao_id"], :name => "index_category_property_values_on_taobao_id"
+  add_index "category_property_values", ["value"], :name => "index_category_property_values_on_value"
 
   create_table "colors", :force => true do |t|
     t.string   "hexcode"
@@ -405,6 +407,18 @@ ActiveRecord::Schema.define(:version => 20130507033739) do
     t.integer "number",        :limit => 8
   end
 
+  create_table "sku_properties", :force => true do |t|
+    t.integer  "sku_id"
+    t.integer  "category_property_value_id"
+    t.string   "cached_property_name"
+    t.string   "cached_property_value"
+    t.datetime "created_at",                 :null => false
+    t.datetime "updated_at",                 :null => false
+  end
+
+  add_index "sku_properties", ["category_property_value_id"], :name => "index_sku_properties_on_category_property_value_id"
+  add_index "sku_properties", ["sku_id"], :name => "index_sku_properties_on_sku_id"
+
   create_table "skus", :force => true do |t|
     t.integer "sku_id",          :limit => 8
     t.integer "num_iid",         :limit => 8
@@ -489,12 +503,6 @@ ActiveRecord::Schema.define(:version => 20130507033739) do
     t.string   "name"
     t.datetime "created_at",                                 :null => false
     t.datetime "updated_at",                                 :null => false
-  end
-
-  create_table "taobao_products_products", :force => true do |t|
-    t.integer "product_id"
-    t.integer "taobao_product_id"
-    t.integer "number"
   end
 
   create_table "taobao_skus", :force => true do |t|

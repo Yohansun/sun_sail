@@ -57,8 +57,8 @@ MagicOrder::AccessControl.map do |map|
     map.permission :operations, ["logistic_waybill", "seller", "cs_memo", "mark_unusual_state", "check_goods", "operation_log", "manual_sms_or_email", "print_deliver_bill", "deliver", "seller_confirm_invoice", "seller_confirm_deliver", "request_return", "confirm_refund", "gift_memo", "setup_logistic", "logistic_split", "print_logistic_bill"]
   end
   map.project_module :products do |map|
-    map.permission :reads,      ["detail","taobao_products"]
-    map.permission :operations, ["create","update","export_products","update_on_sale","tie_to_native_skus","sync_taobao_products","confirm_sync"]
+    map.permission :reads,      ["detail","taobao_products", "taobao_product"]
+    map.permission :operations, ["create","update", "taobao_skus", "export_products","update_on_sale","tie_to_native_skus","sync_taobao_products","confirm_sync"]
 
   end
   
