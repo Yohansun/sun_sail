@@ -26,30 +26,11 @@ class Sku < ActiveRecord::Base
   end
 
   def name
-    sku_name = ''
-    if properties_name.present?
-      properties = properties_name.split(';')
-      properties.each do |property|
-        sku_values = property.split(':')
-        sku_key =  sku_values[2]
-        sku_value =  sku_values[3]
-        sku_name = sku_name + sku_key + ':' + sku_value + '  '
-      end
-    end
-    sku_name
+    properties.map(&:text) * "|"
   end
 
   def value
-    value = ''
-    if properties_name.present?
-      properties = properties_name.split(';')
-      properties.each do |property|
-        sku_values = property.split(':')
-        sku_value =  sku_values[3]
-        value = sku_value + ' '
-      end
-    end
-    value
+    properties.map(&:cached_property_value) * "|"
   end
 
   # migrate skus.properties_name to :properties association
@@ -71,6 +52,8 @@ class Sku < ActiveRecord::Base
           category.category_properties << property
         end
       end
+
+      self.properties.create(category_property_value:property_value)
     end
   end
 
