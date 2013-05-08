@@ -5,6 +5,10 @@ class TaobaoSku < ActiveRecord::Base
   belongs_to :taobao_product
   belongs_to :account
 
+  def title
+    "#{taobao_product.try(:name)}#{name}"
+  end
+
   def name
     sku_name = ''
     if properties_name.present?

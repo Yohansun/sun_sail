@@ -174,7 +174,7 @@ class ProductsController < ApplicationController
     else
       taobao_skus = []
       @product.taobao_skus.each do |sku|
-        taobao_skus << {id: sku.id, name: sku.name}
+        taobao_skus << {id: sku.id, name: sku.title}
       end
       first_bindings = @product.taobao_skus.first.sku_bindings rescue false
       first_sku_bindings = []
