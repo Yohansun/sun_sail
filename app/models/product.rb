@@ -12,9 +12,6 @@ class Product < ActiveRecord::Base
 
   attr_accessible :name, :product_id, :outer_id, :storage_num, :price, :color_ids, :pic_url, :category_id, :features, :feature_ids, :cat_name, :detail_url, :num_iid, :cid, :account_id, :logistic_group_id, :on_sale,:skus_attributes
   
-
-  
-
   validates_uniqueness_of :outer_id, :allow_blank => true, message: "信息已存在"
   validates_presence_of :name, :price, message: "信息不能为空"
   validates_numericality_of :price, message: "所填项必须为数字"

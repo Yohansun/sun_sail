@@ -180,7 +180,9 @@ class ProductsController < ApplicationController
       first_sku_bindings = []
       if first_bindings.present?
         first_bindings.each do |binding|
-          first_sku_bindings << {sku_id: binding.sku_id, name: binding.sku.title, num: binding.number}
+          if binding.sku.present?
+            first_sku_bindings << {sku_id: binding.sku_id, name: binding.sku.title, num: binding.number}
+          end
         end
       end
       render json: {has_skus: true, product: @product, skus: taobao_skus, sku_bindings: first_sku_bindings}
@@ -192,7 +194,9 @@ class ProductsController < ApplicationController
     sku_bindings = []
     if bindings.present?
       bindings.each do |binding|
-        sku_bindings << {sku_id: binding.sku_id, name: binding.sku.title, num: binding.number}
+        if binding.sku.present?
+          sku_bindings << {sku_id: binding.sku_id, name: binding.sku.title, num: binding.number}
+        end
       end
     end
     render json: {sku_bindings: sku_bindings}

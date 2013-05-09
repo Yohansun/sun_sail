@@ -108,13 +108,19 @@ class TaobaoProductsPuller
               quantity = sku['quantity']
               properties_name = sku['properties_name']
               properties = sku['properties']
-              taobao_sku = taobao_product.taobao_skus.where(taobao_product_id: taobao_product.id, num_iid: num_iid, sku_id: sku_id, properties_name:properties_name, properties: properties).first_or_create
-              sku = local_product.skus.where(product_id: local_product.id, num_iid: num_iid, sku_id: sku_id, properties_name: properties_name, properties: properties).first_or_create
+              taobao_sku = taobao_product.taobao_skus.where(account_id: account.id, taobao_product_id: taobao_product.id, num_iid: num_iid, sku_id: sku_id).first
+              unless taobao_sku
+                taobao_sku = taobao_product.taobao_skus.create(taobao_product_id: taobao_product.id, num_iid: num_iid, sku_id: sku_id, properties_name: properties_name, properties: properties)
+              end  
+              sku = local_product.skus.where(account_id: account.id, product_id: local_product.id, num_iid: num_iid, sku_id: sku_id).first
+              unless sku
+                sku = local_product.skus.create(product_id: local_product.id, num_iid: num_iid, sku_id: sku_id, properties_name: properties_name, properties: properties)
+              end  
             end
           else
             quantity = sku_items['num']
-            taobao_sku = taobao_product.taobao_skus.where(taobao_product_id: taobao_product.id, num_iid: num_iid).first_or_create
-            sku = local_product.skus.where(product_id: local_product.id, num_iid: num_iid).first_or_create
+            taobao_sku = taobao_product.taobao_skus.where(account_id: account.id, taobao_product_id: taobao_product.id, num_iid: num_iid).first_or_create
+            sku = local_product.skus.where(account_id: account.id, product_id: local_product.id, num_iid: num_iid).first_or_create
             # NEED SELLER TO SYNC STOCK FOR SOME REASON.
           end
           SkuBinding.where(sku_id: sku.id, taobao_sku_id: taobao_sku.id, number: 1).first_or_create
@@ -179,14 +185,20 @@ class TaobaoProductsPuller
                 quantity = sku['quantity']
                 properties_name = sku['properties_name']
                 properties = sku['properties']
-                taobao_sku = taobao_product.taobao_skus.where(taobao_product_id: taobao_product.id, num_iid: num_iid, sku_id: sku_id, properties_name:properties_name, properties: properties).first_or_create
-                sku = local_product.skus.where(product_id: local_product.id, num_iid: num_iid, sku_id: sku_id, properties_name: properties_name, properties: properties).first_or_create
+                taobao_sku = taobao_product.taobao_skus.where(account_id: account.id, taobao_product_id: taobao_product.id, num_iid: num_iid, sku_id: sku_id).first
+                unless taobao_sku
+                  taobao_sku = taobao_product.taobao_skus.create(taobao_product_id: taobao_product.id, num_iid: num_iid, sku_id: sku_id, properties_name: properties_name, properties: properties)
+                end  
+                sku = local_product.skus.where(account_id: account.id, product_id: local_product.id, num_iid: num_iid, sku_id: sku_id).first
+                unless sku
+                  sku = local_product.skus.create(product_id: local_product.id, num_iid: num_iid, sku_id: sku_id, properties_name: properties_name, properties: properties)
+                end
                 # NEED SELLER TO SYNC STOCK FOR SOME REASON.
               end
             else
               quantity = sku_items['num']
-              taobao_sku = taobao_product.taobao_skus.where(taobao_product_id: taobao_product.id, num_iid: num_iid).first_or_create
-              sku = local_product.skus.where(product_id: local_product.id, num_iid: num_iid).first_or_create
+              taobao_sku = taobao_product.taobao_skus.where(account_id: account.id, taobao_product_id: taobao_product.id, num_iid: num_iid).first_or_create
+              sku = local_product.skus.where(account_id: account.id, product_id: local_product.id, num_iid: num_iid).first_or_create
               # NEED SELLER TO SYNC STOCK FOR SOME REASON.
             end
             SkuBinding.create(sku_id: sku.id, taobao_sku_id: taobao_sku.id, number: 1)
@@ -231,14 +243,20 @@ class TaobaoProductsPuller
                 quantity = sku['quantity']
                 properties_name = sku['properties_name']
                 properties = sku['properties']
-                taobao_sku = taobao_product.taobao_skus.where(taobao_product_id: taobao_product.id, num_iid: num_iid, sku_id: sku_id, properties_name:properties_name, properties: properties).first_or_create
-                sku = local_product.skus.where(product_id: local_product.id, num_iid: num_iid, sku_id: sku_id, properties_name: properties_name, properties: properties).first_or_create
+                taobao_sku = taobao_product.taobao_skus.where(account_id: account.id, taobao_product_id: taobao_product.id, num_iid: num_iid, sku_id: sku_id).first
+                unless taobao_sku
+                  taobao_sku = taobao_product.taobao_skus.create(taobao_product_id: taobao_product.id, num_iid: num_iid, sku_id: sku_id, properties_name: properties_name, properties: properties)
+                end  
+                sku = local_product.skus.where(account_id: account.id, product_id: local_product.id, num_iid: num_iid, sku_id: sku_id).first
+                unless sku
+                  sku = local_product.skus.create(product_id: local_product.id, num_iid: num_iid, sku_id: sku_id, properties_name: properties_name, properties: properties)
+                end
                 # NEED SELLER TO SYNC STOCK FOR SOME REASON.
               end
             else
               quantity = sku_items['num']
-              taobao_sku = taobao_product.taobao_skus.where(taobao_product_id: taobao_product.id, num_iid: num_iid).first_or_create
-              sku = local_product.skus.where(product_id: local_product.id, num_iid: num_iid).first_or_create
+              taobao_sku = taobao_product.taobao_skus.where(account_id: account.id, taobao_product_id: taobao_product.id, num_iid: num_iid).first_or_create
+              sku = local_product.skus.where(account_id: account.id, product_id: local_product.id, num_iid: num_iid).first_or_create
               # NEED SELLER TO SYNC STOCK FOR SOME REASON.
             end
             SkuBinding.where(sku_id: sku.id, taobao_sku_id: taobao_sku.id, number: 1).first_or_create

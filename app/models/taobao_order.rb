@@ -66,7 +66,9 @@ class TaobaoOrder < Order
     info = []
     sku_bindings.each do |binding|
       sku = binding.sku
+      next unless sku
       product = sku.product
+      next unless product
       stock_product_ids = StockProduct.where(product_id: product.id, sku_id: sku.id).map(&:id)
       info << {
         sku_id: binding.sku_id,
