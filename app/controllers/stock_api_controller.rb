@@ -2,7 +2,7 @@
 class StockApiController < ApplicationController
 	include WashOut::SOAP
 
-  skip_before_filter :verify_authenticity_token
+  skip_before_filter :verify_authenticity_token, :authenticate_user!
 
   soap_action "input_back", args: {login: :string, passwd: :string, xml: :string}, return: :string
 
