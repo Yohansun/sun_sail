@@ -106,7 +106,7 @@ zh-CN:
   permissions_tag_user_activities#all: "查看所有人员"
   permissions_tag_trade_reports#detail: "报表查看"
   permissions_tag_sales#product_analysis: "销售查看"
-  permissions_tag_reports#download: "报表下载"
+  permissions_tag_trade_reports#download: "报表下载"
   permissions_tag_users#detail: "查看用户"
   permissions_tag_users#roles: "查看角色"
   permissions_tag_users#limits: "查看权限"
