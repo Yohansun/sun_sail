@@ -1,0 +1,28 @@
+<%= simple_form_for [@product, @sku], :html => { :class => 'form-horizontal' } do |f| %>
+  <%= f.input :sku_id,  :as=>:string %>
+  <%= f.input :num_iid %>
+  <%= f.input :properties %>
+  <%= f.input :properties_name %>
+  <%= f.input :quantity %>
+  <%= f.input :sku_properties, label:"选择属性" do%>
+      <%= f.fields_for :sku_properties do |pf|%>
+        <%
+            exist_property_ids = @sku.sku_properties.map(&:category_property_id)
+            category = @product.category
+            category.category_properties.each{|cp|
+              @sku.sku_properties.build(category_property:cp) if !exist_property_ids.include?(cp.id)
+            }
+        %>
+        <%= pf.input :category_property_id, :as=>:hidden%>
+        <%= pf.association :category_property_value, :collection=>pf.object.category_property.values,value_method: :id,label_method: :value, :label=>pf.object.category_property.name%>
+
+
+      <%end%>
+  <%end%>
+  
+  <div class="form-actions">
+    <%= f.button :submit, :class => 'btn-primary', :value=>@sku.new_record? ? "Create" : "Update" %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                [@product, :skus], :class => 'btn' %>
+  </div>
+<% end %>

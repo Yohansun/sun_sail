@@ -3,6 +3,7 @@ class CategoryPropertyValue < ActiveRecord::Base
   
   belongs_to  :category_property
 
+  scope :category_property_id_eq, ->(id){where(["category_property_values.category_property_id = ?", id])}
   scope :value_eq, ->(value){where(["category_property_values.value = ?", value])}
 
 

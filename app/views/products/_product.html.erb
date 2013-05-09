@@ -4,6 +4,7 @@
   <td><%= product.name %></td>
   <td><%= product.category.try(:name) %></td>
   <td><%= product.outer_id %></td>
-  <td><%= product.sku_names %></td>
+  <td><%= product.category_property_names %></td>
   <td><%= product.is_on_sale %></td>
+  <td><%= link_to "SKUs", product_skus_path(product)%></td>
 </tr>

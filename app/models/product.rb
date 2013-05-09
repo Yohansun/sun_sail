@@ -33,4 +33,8 @@ class Product < ActiveRecord::Base
   def sku_names
     self.skus.map(&:name).join(",")
   end
+
+  def category_property_names
+    self.category.category_properties.map(&:name)*" | " if self.category
+  end
 end
