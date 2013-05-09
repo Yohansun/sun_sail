@@ -1,0 +1,76 @@
+<% content_for :tail do -%>
+  <script type="text/javascript">
+		$(function() {
+		      $.get("/stocks/change_product_type",
+		          function (data, textStatus, jqXHR) {
+		            var data = [
+		                data[0],
+		                data[1]
+		            ];
+		            $('#product_type').select2().on('change', function() {
+		                $('#product_id_eq').select2({data:data[$(this).val()]});
+		            }).trigger('change');
+		      });
+		  });
+	</script>
+<% end %>
+<div class="container-fluid">
+  <div class="row-fluid">
+    <%= render partial: "layouts/setting_nav" %>
+    <div class="span10">
+       <ul class="nav nav-tabs">
+          <li class="active"><a href="/stocks/safe_stock">安全库存管理</a></li>
+          <!-- <li><a href="/stocks/safe_stock">仓库编辑</a></li> -->
+        </ul><!-- nav-tabs -->
+        <div class="tab-content">
+	        <div class="tab-pane active" id="users">
+
+		        <%= simple_form_for "stock", url: stocks_safe_stock_path, html: { method: "get", class: "well form-search form-horizontal font12"}, :wrapper => :search do |f| %>
+				    <fieldset class="form-inline">
+				      <div class="pull-left">
+				        <div class="controls pull-left">
+
+							<select id="product_type" name="product_type" style="width: 120px; display: none;">
+							    <option value="0">商品名称</option>
+							    <option value="1">商品编码</option>
+							</select>
+							<input type="hidden" style="width: 600px; display: none;" id="product_id_eq" name="product_id_eq">
+        
+				        </div>
+
+				      </div>
+				      <div class="control-group">
+				        <div class="pull-left">
+				          <button type="submit pull-left" class="btn btn-info search" id="simple_search_button">过滤</button>
+				        </div>
+				      </div>
+				    </fieldset>
+				  <% end %>
+
+		        <%= form_tag edit_with_role_users_path,:method => :post,:id => "edit_user" do %>
+			        <table class="table table-hover table-bordered table-striped table-condensed js-table" id="stock_table">
+			          <thead>
+			            <tr>
+			              <th width="49%">商品名称</th>
+			              <th width="25%">属性</th>
+			              <th width="25%">安全值</th>
+			            </tr>
+			          </thead>
+			          <tbody>
+			            <% @stock_products.each do |stock_product| %>
+			            <tr id="<%=h stock_product.id %>">
+			              <td><%= stock_product.product.name %></td>
+			              <td><%= stock_product.sku.value %></td>
+			              <td><%= stock_product.safe_value %></td>
+			            </tr>
+			            <% end %>
+			          </tbody>
+			        </table>
+		        <% end %>
+	      </div>
+	  </div>
+      <%= paginate @stock_products %>
+    </div>
+  </div>
+</div>
+
