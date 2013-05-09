@@ -72,12 +72,12 @@
       </fieldset>
       <fieldset class="control-group form-inline">
         <label class="width_100 pagination-right">选择淘宝SKU：</label>
-        <select class="input-xlarge change_taobao_skus">
+        <select class="input-xxlarge change_taobao_skus">
         </select>
       </fieldset>
       <fieldset class="control-group form-inline">
         <label class="width_100 pagination-right">选择SKU：</label>
-        <select class="input-large select2 native_skus_list">
+        <select class="input-xlarge select2 native_skus_list">
           <% @native_skus.each do |sku| %>
           <option value="<%= sku.id %>"><%= sku.title %></option>
           <% end %>
