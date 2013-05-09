@@ -49,7 +49,6 @@ class StocksController < ApplicationController
   end
 
   def safe_stock
-    p params
     condition_relation = current_account.stock_products
     condition_relation = condition_relation.where(StockProduct::STORAGE_STATUS[params[:storage_status]]).scoped if params[:storage_status].present?
     
