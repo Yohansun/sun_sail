@@ -48,7 +48,7 @@
                   }"  %>
                 </li>
                 <li>
-                  <%= link_to "撤销", "#",:onclick => "processRequest(this)",:goto => "/stock_out_bills/check",:request_method => "post",:mesg => "确认审核吗?"  %>
+                  <%= link_to "审核", "#",:onclick => "processRequest(this)",:goto => "/stock_out_bills/check",:request_method => "post",:mesg => "确认审核吗?"  %>
                   </li>
                   <%- if current_account.settings.enable_module_third_party_stock == 1 %>
                   <li>

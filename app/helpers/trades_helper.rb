@@ -4,7 +4,9 @@ module TradesHelper
     tmp = []
     order.sku_bindings.each do |binding|
       sku = Sku.find_by_id(binding.sku_id)
+      next unless sku
       product = sku.product
+      nex unless product
       number = binding.number
       tmp << {
         name: product.name,
