@@ -46,8 +46,6 @@ class Account < ActiveRecord::Base
 
   validates :name, presence: true
   validates :key, presence: true, uniqueness: true
-  
-  before_create :create_role
 
   def in_time_gap?(start_at, end_at)
     if start_at != nil && end_at != nil
@@ -70,10 +68,5 @@ class Account < ActiveRecord::Base
 
   def can_auto_deliver_right_now?
     in_time_gap?(self.settings["start_deliver_at"], self.settings["end_deliver_at"]) ? true : false
-  end
-  
-  private
-  def create_role
-    self.roles.build(:name => "管理员").add_all_permissions(false)
   end
 end
