@@ -23,6 +23,8 @@ class Sku < ActiveRecord::Base
   has_many :sku_properties,  :dependent=>:destroy
   accepts_nested_attributes_for :sku_properties
 
+  after_save  :migrate_taobao_sku_props
+
   def title
     "#{product.try(:name)}#{name}"
   end
