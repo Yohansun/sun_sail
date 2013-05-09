@@ -74,7 +74,7 @@ class StockBill
       bp.outer_id = product.outer_id
       bp.num_iid = product.num_iid
       stock_product = account.stock_products.where(sku_id: sku.id, product_id: product.id).first
-      bp.stock_product_id = stock_product.id
+      bp.stock_product_id = stock_product.try(:id)
     end
     self.bill_products_mumber = bill_products.sum(:number)
     self.bill_products_price = bill_products.sum(:total_price)
