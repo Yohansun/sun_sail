@@ -1,3 +1,5 @@
+#encoding: utf-8
+
 # == Schema Information
 #
 # Table name: accounts
@@ -8,7 +10,6 @@
 #  created_at :datetime        not null
 #  updated_at :datetime        not null
 #
-
 class Account < ActiveRecord::Base
   include RailsSettings
 
@@ -38,13 +39,15 @@ class Account < ActiveRecord::Base
   has_many :logistic_rates
   has_many :logistic_groups
   has_many :trade_sources
-  has_many :roles
+  has_many :roles, :dependent => :destroy
   has_many :skus
   has_many :taobao_skus
   has_one :trade_source
 
   validates :name, presence: true
   validates :key, presence: true, uniqueness: true
+  
+  before_create :create_role
 
   def in_time_gap?(start_at, end_at)
     if start_at != nil && end_at != nil
@@ -68,5 +71,9 @@ class Account < ActiveRecord::Base
   def can_auto_deliver_right_now?
     in_time_gap?(self.settings["start_deliver_at"], self.settings["end_deliver_at"]) ? true : false
   end
- 
+  
+  private
+  def create_role
+    self.roles.build(:name => "管理员").add_all_permissions(false)
+  end
 end
