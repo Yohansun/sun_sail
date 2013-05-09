@@ -117,6 +117,7 @@ MagicOrders::Application.routes.draw do
   end
 
   resources :products do
+    resources :skus
     member do
       get :taobao_product
     end
