@@ -29,9 +29,12 @@ class CategoryProperty < ActiveRecord::Base
 
 
   def value_text
-    @value_text ||= values.map(&:value)*"\n"
+    values_name*"\n"
   end
-
+  
+  def values_name
+    @value_text ||= values.map(&:value)
+  end
 
   
   def init_values

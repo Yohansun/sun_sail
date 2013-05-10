@@ -35,7 +35,11 @@ class Sku < ActiveRecord::Base
   end
 
   def value
-    sku_properties.map(&:cached_property_value) * "|"
+     values_name * "|"
+  end
+  
+  def values_name
+    sku_properties.map(&:cached_property_value)
   end
 
   # migrate skus.properties_name to :sku_properties association

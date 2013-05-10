@@ -31,6 +31,14 @@ class Product < ActiveRecord::Base
   def sku_names
     self.skus.map(&:name).join(",")
   end
+  
+  def skus_attributes
+    @_skus_attributes = {}
+    skus.each_with_index do |sku,index|
+      @_skus_attributes.merge!({"#{index}" => sku.attributes})
+    end
+    @_skus_attributes
+  end
 
   def category_property_names
     self.category.category_properties.map(&:name)*" | " if self.category

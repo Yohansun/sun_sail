@@ -1,8 +1,8 @@
 <%= simple_form_for @product, html: {class: 'well form-horizontal re_padding50'} do |f| %>
 <fieldset class="group">
   <div class="w_48 pull-left">
-    <%= f.input :product_id, label: '淘宝ID：', :input_html =>{ :class => "input-xlarge" } %>
-    <%= f.input :num_iid, label: '商品数字ID：', :input_html =>{ :class => "input-xlarge" } %>
+    <%#= f.input :product_id, label: '淘宝ID：', :input_html =>{ :class => "input-xlarge" } %>
+    <%#= f.input :num_iid, label: '商品数字ID：', :input_html =>{ :class => "input-xlarge" } %>
     <%= f.input :name, label: '商品名称：', :input_html =>{ :class => "input-xlarge" } %>
     <%= f.input :outer_id, label: '商品编码：', :input_html =>{ :class => "input-xlarge" } %>
     <%= f.input :storage_num, label: '仓库编号：', :input_html =>{ :class => "input-xlarge" } %>
@@ -10,7 +10,7 @@
     <%#= f.association :quantity, collection: current_account.quantities, label: '规格：', :input_html =>{ :class => "width_auto" } %>
     <%= f.input :logistic_group_id, collection: current_account.logistic_groups, label: '物流分组编码' %>
     <%#= f.association :features, collection: current_account.features, as: :check_boxes, label: '系列：'%>
-    <%= f.association :category, collection: current_account.categories, label: '分类：', :input_html =>{ :class => "width_auto" } %>
+    <%= f.association :category, collection: current_account.categories, label: '分类：', :input_html =>{ :class => "width_auto",:id => "category" } %>
     <% if current_account.settings.enable_module_colors == 1 %>
       <fieldset class="form-inline">
         <%= f.association :colors, label: '可选颜色：', as: :check_boxes, include_blank: false, wrapper_html: { id: 'check_color' }%>
@@ -43,11 +43,56 @@
 </div>
 <% end %>
 
+<ul class="nav nav-tabs js-nav_tabs">
+  <li class="active"><a href="#good_info" data-toggle="tab">SKU信息</a></li>
+</ul>
+<%= form_tag add_sku_products_path,:remote => true ,:class => "well well-small form-horizontal font12" do %>
+<div class="btn-toolbar">
+  <%= button_tag "添加",:class => "btn btn-warning btn-small" %>
+</div>
+<%= hidden_field_tag "id", @product.id %>
+<div id="add_properties">
+  <%= render :partial => "add_category_property",:locals => {:category_properties => @category_properties} %>
+  
+</div>
+<% end %>
+
+
+
+
+<%= form_tag remove_sku_products_path,:remote => true,:method => :put,:class => "form-horizontal"  do %>
+<div class="btn-toolbar" style="top: 71px;">
+  <%= button_tag "删除" ,:class => "btn btn-warning btn-small" %>  
+</div>
+<%= hidden_field_tag "id",@product.id %>
+<div id="skus">
+  <%= render :partial => "skus",:locals => {:skus => @skus }  %>
+</div>
+
+<% end %>
+
 <% content_for :tail do -%>
 <script type="text/javascript">
   var $last_tr_checkbox = $('#stock_product_color_all')
   $last_tr_checkbox.click(function(){
     $('#check_color').find(':checkbox').prop('checked',$last_tr_checkbox.prop('checked'))
   });
+  
+  $(function(){
+    
+    if( $("#category").val() != ''){ zAb() };
+    
+    $("#category").change(function(){
+      zAb();
+    });
+    
+    function zAb(){
+      var category_id = $("#category").val();
+      $.ajax({
+        url: "<%= fetch_category_properties_products_path %>",
+        data: { category_id: category_id }
+      })
+    };
+  })
 </script>
 <% end %>

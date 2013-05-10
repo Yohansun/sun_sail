@@ -1,0 +1,5 @@
+<% if @error_message.blank?  %>
+  $('#skus').html("<%= escape_javascript(render :partial => 'skus',:locals => {:skus => @skus}) %>");
+<% else %>
+  alert("<%= @error_message %>" );
+<% end %>
