@@ -136,6 +136,9 @@ MagicOrders::Application.routes.draw do
       post :tie_to_native_skus
       get :sync_taobao_products
       put :confirm_sync
+      get :fetch_category_properties
+      post :add_sku
+      put :remove_sku
     end
   end
 

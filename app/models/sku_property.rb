@@ -21,7 +21,10 @@ class SkuProperty < ActiveRecord::Base
 
 :private
   def cache_name_value
-    self.cached_property_name = self.category_property.name
+    if self.category_property.blank? && self.category_property_value.present?
+      self.category_property_id = self.category_property_value.try(:category_property_id)
+    end
+    self.cached_property_name = self.category_property.try(:name)
     self.cached_property_value = self.category_property_value.value if self.category_property_value
   end
 
