@@ -25,6 +25,8 @@ class MagicOrders.Models.Trade extends Backbone.Model
         if $.inArray('modify_payment',trades) > -1
           enabled_items.push('modify_payment') #金额调整
       when "WAIT_SELLER_SEND_GOODS" # "已付款，待发货"
+        if this.attributes.trade_source == "人工"
+          enabled_items.push('edit_handmade_trade')
         if this.attributes.seller_id
           if MagicOrders.role_key == 'admin' || $.inArray('seller',trades) > -1
             enabled_items.push('seller')

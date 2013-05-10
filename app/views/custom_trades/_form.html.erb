@@ -1,0 +1,188 @@
+<div class="tab-content">
+  <div class="tab-pane active" id="add_order">
+    <%= simple_form_for @custom_trade, wrapper: :add_trade, html: {class: 'form-horizontal '} do |f| %>
+      <div class="well clearfix">
+        <fieldset class="span6">
+          <%= f.input :receiver_name, label: '收货人姓名：', :input_html =>{ :class => "input-large"} %>
+          <%= f.input :receiver_mobile, label: '收货人手机：', :input_html =>{ :class => "input-large"} %>
+          <%= f.input :created, label: '下单时间：', :input_html =>{ :class => "input-large js-datetimepicker", :value => "#{@custom_trade.pay_time.try(:strftime, '%Y-%m-%d %H:%M:%S')}"}, readonly: true %>
+          <div class="control-group string required">
+            <label class="string required control-label">
+              <abbr title="必填的">*</abbr> 收货人地域：
+            </label>
+            <select id="" class="trade_level_1 input-medium input-small pull-left radius_no_rb select2 required" name="custom_trade[receiver_state]">
+              <option>省</option>
+            </select>
+            <select id="" class="trade_level_2 input-medium input-small pull-left radius_no select2 required" name="custom_trade[receiver_city]">
+              <option>市</option>
+            </select>
+            <select id="" class="trade_level_3 input-medium input-small pull-left radius_no_tl select2 required" name="custom_trade[receiver_district]">
+              <option>区</option>
+            </select>
+          </div>
+          <%= f.input :receiver_address, label: '详细地址：', :input_html =>{ :class => "input-xxlarge" } %>
+        </fieldset><!-- form left area -->
+        <fieldset class="span6">
+          <%= f.input :receiver_phone, label: '固定电话：', :input_html =>{ :class => "input-large" } %>
+          <%= f.input :receiver_zip, label: '收货人邮编：', :input_html =>{ :class => "input-large" } %>
+          <%= f.input :pay_time, label: '付款时间：', :input_html =>{ :class => "input-large js-datetimepicker", :value => "#{@custom_trade.pay_time.try(:strftime, '%Y-%m-%d %H:%M:%S')}"}, readonly: true %>
+          <%= f.input :status, label: '订单状态：', collection: [["已付款，待发货","WAIT_SELLER_SEND_GOODS"],["交易已关闭","TRADE_CLOSED"]], :input_html =>{ :class => "input-large select2" }, selected: ["已付款，待发货","WAIT_SELLER_SEND_GOODS"] %>
+          <%= f.input :seller_memo, as: :text, label: '备注：', :input_html =>{ :class => "span4", rows: 3 } %>
+        </fieldset><!-- form right area -->
+      </div>
+
+      <div>
+        <ul class="nav nav-tabs js-nav_tabs">
+          <!-- <li><a href="#good_info" data-toggle="tab">商品信息</a></li> -->
+          <li class="active"><a href="#add_good" data-toggle="tab">新增商品</a></li>
+        </ul>
+        <div class="tab-content noborder_content">
+          <div class="tab-pane active" id="good_info">
+            <form class="form-horizontal">
+              <fieldset>
+                <div class="control-group">
+                  <label class="control-label" style="text-align:left;">选择淘宝商品：</label>
+                  <select class="input-xxlarge pull-left select2 taobao_product_list">
+                    <% @taobao_products.each do |product| %>
+                      <option value="<%= product.num_iid %>"><%= product.name %></option>
+                    <% end %>
+                  </select>
+                </div>
+                <div class="control-group">
+                  <label class="control-label">选择对应SKU：</label>
+                  <select id="taobao_skus_options" class="input-xlarge">
+                  </select>
+                  <input class="input-small" type="text" id="taobao_order_num" placeholder="数量">
+                  <input class="input-small" type="text" id="taobao_order_payment" placeholder="实付金额">
+                  <a class="btn btn-small btn-warning" type="button" id="add_taobao_product">添加</a>
+                </div>
+              </fieldset><!-- form area -->
+            </form>
+            <table class="table table-hover table-bordered table-striped table-condensed js-table_goods">
+              <thead>
+                <tr>
+                  <th width="10%">商品编码</th><!--num_iid-->
+                  <th width="35%">商品名称</th><!--title-->
+                  <th width="15%">商品SKU</th><!--sku_id-->
+                  <th width="10%">商品数量</th><!--num-->
+                  <th width="10%">商品实付金额</th><!--payment-->
+                  <th width="10%"></th>
+                </tr>
+              </thead>
+              <tbody id="taobao_orders_table">
+                <% @custom_trade.taobao_orders.each do |order| %>
+                <tr>
+                  <td><%= order.num_iid %></td>
+                  <td><%= order.title %></td>
+                  <td>此商品没有SKU</td>
+                  <td><%= order.num %></td>
+                  <td><%= order.payment %></td>
+                  <td><a class="btn btn-small btn-info delete_taobao_order">删除</a></td>
+                  <input type='hidden' name='taobao_orders[]' value="<%= order.num_iid %>;<%= order.sku_id %>;<%= order.num %>;<%= order.payment%>;<%= order.title %>;"></input>
+                </tr>
+                <% end %>
+              </tbody>
+            </table>
+
+            <div class="btn-toolbar">
+              <%= f.button :submit, "保存", :class => "btn btn-warning btn-small save_orders" %>
+              <a href="/app#trades" class="btn btn-warning btn-small">取消</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div><!-- add_order end -->
+</div><!-- tab-content end -->
+
+<% content_for :tail do %>
+<script type="text/javascript">
+  pick_taobao_skus()
+
+  $('.taobao_product_list').on('change',function(event){
+    pick_taobao_skus()
+  })
+
+  function pick_taobao_skus () {
+    var num_iid = $('.taobao_product_list option:selected').val()
+    $.get("/custom_trades/change_taobao_products", {num_iid: num_iid}).done(function(data){
+      if(data.taobao_skus.length != 0){
+        var data_array = []
+        var taobao_skus_option = ""
+        for(var i in data.taobao_skus){
+          taobao_skus_option += "<option value="+data.taobao_skus[0].sku_id+">"+data.taobao_skus[0].name+"</option>"
+        }
+        if (data.taobao_skus.length == 1 && data.taobao_skus[0].sku_id == null){
+          $('#taobao_skus_options').html("<option value='0'>此商品没有SKU</option>")
+        } else {
+          $('#taobao_skus_options').html(taobao_skus_option)
+        }
+      } else {
+        $('#taobao_skus_options').html("<option value='0'>此商品没有SKU</option>")
+      }
+    })
+  }
+
+  $('#add_taobao_product').on('click', function(event){
+    event.preventDefault()
+    var num_iid = $('.taobao_product_list option:selected').val()
+    var name = $('.taobao_product_list option:selected').text()
+    var sku_name = $('#taobao_skus_options').text()
+    var sku_id = $('#taobao_skus_options').val()
+    var num = $('#taobao_order_num').val()
+    var payment = $('#taobao_order_payment').val()
+    if(num == '' || payment == ''){
+      alert("数量,实付金额不能为空。")
+    } else if(/^[1-9]{1}[0-9]*$/.test(num) != true){
+      alert("数量格式不正确。")
+    } else if(/^[0-9]+(\.[0-9]*)?$/.test(payment) != true){
+      alert("实付金额格式不正确。")
+    } else {
+      var product_ids = $('#taobao_orders_table tr').map(function(){return $(this).find('td:first').text()}).get();
+      if($.inArray(num_iid, product_ids) != -1){
+        alert("已添加过商品")
+      } else {
+        var new_taobao_order = ""
+        new_taobao_order += '<tr><td>' + num_iid + '</td>'
+        new_taobao_order += '<td>' + name + '</td>'
+        new_taobao_order += '<td>' + sku_name + '</td>'
+        new_taobao_order += '<td>' + num + '</td>'
+        new_taobao_order += '<td>' + payment + '</td>'
+        new_taobao_order += '<td><a class="btn btn-small btn-info delete_taobao_order">删除</a></td>'
+        new_taobao_order += "<input type='hidden' name='taobao_orders[]' value='"+num_iid+";"+sku_id+";"+num+";"+payment+";"+name+"'></input></tr>"
+        $('#taobao_orders_table').append(new_taobao_order)
+      }
+    }
+  });
+
+  $(document).on('click', '.delete_taobao_order', function(event){
+    event.preventDefault()
+    $(event.target).parents('tr').remove()
+  });
+
+  $('.save_orders').on('click', function(event){
+    if($('#taobao_orders_table tr:visible').length == 0){
+      event.preventDefault();
+      alert("商品不能为空");
+    }
+    if($('.trade_level_1 option:selected').val() == "" || $('.trade_level_2 option:selected').val() == ""){
+      event.preventDefault();
+      alert("无匹配此地域经销商");
+    }
+    if($('.trade_level_2 option:selected').val() != "" && $('.trade_level_3 option:selected').val() == "" && $('.trade_level_3 option:last').text() != "请选择"){
+      event.preventDefault();
+      alert("无匹配此地域经销商");
+    }
+  });
+
+  $(function() {
+    var options = {
+      data  : linkage_data
+    }
+    var sel = new LinkageSelect(options);
+    sel.bind('.trade_level_1','<%= @area_ids[0] %>');
+    sel.bind('.trade_level_2','<%= @area_ids[1] %>');
+    sel.bind('.trade_level_3','<%= @area_ids[2] %>');
+  });
+</script>
+<% end %>

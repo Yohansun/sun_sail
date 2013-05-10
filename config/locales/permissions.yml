@@ -46,6 +46,8 @@ zh-CN:
   permissions_tag_operation_log: 日志
   permissions_tag_modify_payment: 金额调整
   permissions_tag_manual_sms_or_email: 发短信/邮件
+  permissions_tag_create_handmade_trade: 新增人工订单
+  permissions_tag_edit_handmade_trade: 编辑人工订单
   permissions_tag_cs_memo: 客服备注
   permissions_tag_gift_memo: 赠品备注
   permissions_tag_mark_unusual_state: 标注异常

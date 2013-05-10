@@ -130,7 +130,7 @@ class TaobaoTrade < Trade
       else
         can_auto_dispatch = true
       end
-    end  
+    end
     can_auto_dispatch && dispatchable?
   end
 

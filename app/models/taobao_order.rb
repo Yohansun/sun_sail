@@ -36,7 +36,7 @@ class TaobaoOrder < Order
   field :cid, type: Integer
 
   embedded_in :taobao_trades
-  embedded_in :gift_trades
+  embedded_in :custom_trades
 
   def account_id
     taobao_trades.account_id
@@ -225,11 +225,11 @@ class TaobaoOrder < Order
   def order_payment
     if taobao_trades.orders.count == 1
       fee = payment - taobao_trades.post_fee
-    else  
+    else
       fee = payment
     end
     fee
-  end  
+  end
 
   def promotion_discount_fee
     if taobao_trades

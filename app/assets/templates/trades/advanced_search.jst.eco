@@ -5,11 +5,11 @@
       <div class="controls pull-left">
         <select class="input-medium pull-left select2 radius_no_rb search_option">
           <option value="tid">订单编号</option>
-          <option value="buyer_nick">收货人ID</option>
-          <option value="receiver_name">收货人姓名</option>
-          <option value="receiver_mobile">收货人手机</option>
-          <option value="seller_id">经销商名称</option>
-          <option value="logistic_name">物流商名称</option>
+          <option value="buyer_nick">客户ID</option>
+          <option value="receiver_name">客户姓名</option>
+          <option value="receiver_mobile">联系电话</option>
+          <option value="seller_id">配送经销商</option>
+          <option value="logistic_name">物流配送商</option>
           <option value="logistic_waybill">物流单号</option>
           <option value="repair_man">异常指派人</option>
         </select>
@@ -127,8 +127,10 @@
         <div class="controls pull-left">
           <select class="input-small pull-left select2">
             <option value="TaobaoTrade" selected="selected" >淘宝</option>
-            <option value="JingdongTrade">京东</option>
-            <option value="TaobaoPurchaseOrder">分销平台</option>
+            <!-- <option value="JingdongTrade">京东</option> -->
+            <!-- <option value="TaobaoPurchaseOrder">分销平台</option> -->
+            <option value="CustomTrade-gift_trade">赠品订单</option>
+            <option value="CustomTrade-handmade_trade">人工订单</option>
           </select>
         </div>
         <a class="add_source_search_tag" href="#" title="添加搜索"><i class="icon-plus"></i>添加搜索</a>

@@ -124,7 +124,7 @@
         <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
           <span class="caret"></span>
         </button>
-        <ul class="dropdown-menu index_pops"> 
+        <ul class="dropdown-menu index_pops">
           <li><a href="#" data-toggle="modal" data-type="export_orders" class="export_orders">导出数据</a></li>
           <!-- <li><a href="javascript:void(0);" data-toolbar-item='1'>编辑</a></li> -->
           <!-- <li><a href="javascript:void(0);" data-toolbar-item='2'>删除</a></li> -->
@@ -135,6 +135,8 @@
           <li><a href="#" data-toggle="modal" data-type="modify_payment">金额调整</a></li>
           <li><a href="#" data-toggle="modal" data-type="invoice_number">发票号设置</a></li>
           <li><a href="#" data-toggle="modal" data-type="barcode">输入唯一码</a></li>
+          <li><a href="/custom_trades/new" data-type="create_handmade_trade">新增人工订单</a></li>
+          <li><a href="#" data-type="edit_handmade_trade">编辑人工订单</a></li>
         </ul>
       </div>
 

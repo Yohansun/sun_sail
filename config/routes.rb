@@ -218,8 +218,7 @@ MagicOrders::Application.routes.draw do
   #get "/sales/customer_analysis", to: 'sales#customer_analysis'
   resources :sales
 
-
-  resource :custom_trades do
+  resources :custom_trades do
     collection do
       get :change_taobao_products
     end
@@ -234,9 +233,6 @@ MagicOrders::Application.routes.draw do
   get "/trades/:id/print_deliver_bill", to: "trades#print_deliver_bill"
   get "/trades/batch_deliver", to: 'trades#batch_deliver'
   get "/trades/batch_check_goods", to: 'trades#batch_check_goods'
-  # get "/trades/change_taobao_products"
-  # get "/update_native_trades"
-
   get "/deliver_bills/print_deliver_bill.:format", to: "deliver_bills#print_deliver_bill"
   get "/deliver_bills/:id/logistic_info", to: "deliver_bills#logistic_info"
   get "/deliver_bills/deliver_list", to: "deliver_bills#deliver_list"

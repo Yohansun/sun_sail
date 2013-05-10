@@ -4,22 +4,20 @@ class TradeTaobaoMemoFetcher
   sidekiq_options :queue => :taobao_memo_fetcher
 
   def perform(tid, is_create_method)
-    if tid.slice!(/G[0-9]$/) == nil #NEED ADAPTION?
-      trade = TaobaoTrade.where(tid: tid).first
-      return unless trade
-      source_id = trade.trade_source_id
-      response = TaobaoQuery.get({
-        method: 'taobao.trade.get',
-        fields: 'buyer_message, seller_memo',
-        tid: tid}, source_id
-      )
-      return unless response && response["trade_get_response"]
-      remote_trade = response["trade_get_response"]["trade"]
-      return unless remote_trade
-      trade.update_attributes(buyer_message: remote_trade['buyer_message']) if remote_trade['buyer_message']
-      trade.update_attributes(seller_memo: remote_trade['seller_memo']) if remote_trade['seller_memo']
-      trade.save
-    end
+    trade = TaobaoTrade.where(tid: tid).first
+    return unless trade && trade._type != "CustomTrade"
+    source_id = trade.trade_source_id
+    response = TaobaoQuery.get({
+      method: 'taobao.trade.get',
+      fields: 'buyer_message, seller_memo',
+      tid: tid}, source_id
+    )
+    return unless response && response["trade_get_response"]
+    remote_trade = response["trade_get_response"]["trade"]
+    return unless remote_trade
+    trade.update_attributes(buyer_message: remote_trade['buyer_message']) if remote_trade['buyer_message']
+    trade.update_attributes(seller_memo: remote_trade['seller_memo']) if remote_trade['seller_memo']
+    trade.save
     TradeTaobaoPromotionFetcher.perform_async(tid, is_create_method) if is_create_method
   end
 end

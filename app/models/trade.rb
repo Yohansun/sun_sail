@@ -850,6 +850,9 @@ class Trade
               search_tags_hash.update({"$or" => [{receiver_mobile: regexp_value}, {"consignee_info.mobile" => regexp_value}, {"receiver.mobile_phone" => regexp_value}]})
             elsif key == 'repair_man'
               search_tags_hash.update({"unusual_states" =>{"$elemMatch" => {"repair_man" => regexp_value}}})
+            elsif key == '_type'
+              values = value.split("-")
+              search_tags_hash.update({"_type" => values[0], "custom_type" => values[1]})
             else
               search_tags_hash.update(Hash[key.to_sym, value])
             end

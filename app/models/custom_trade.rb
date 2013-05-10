@@ -90,23 +90,41 @@ class CustomTrade < Trade
   field :got_promotion, type: Boolean, default: false  # 优惠信息是否抓到。
   field :sku_properties_name, type: String
   field :custom_type, type: String                     # 用于分类之后的本地化订单
-  #Special field for gift_trade ONLY
+
+  # 赠品订单特有
   field :main_trade_id, type: String
 
   embeds_many :taobao_orders
+
+  validates_presence_of :tid, :receiver_name, :receiver_mobile, :receiver_state, :receiver_city, :receiver_address, :created, :pay_time, message: "信息不完整"
+  validates_uniqueness_of :tid, message: "操作频率过大，请重试"
+  validates_length_of :receiver_name, maximum: 20, message: "内容过长"
+  validates_length_of :receiver_address, maximum: 100, message: "内容过长"
+  validates_length_of :cs_memo, maximum: 400, message: "内容过长"
+  CH_EN_NUM_FORMAT = /^(\w|[\u4E00-\u9FA5])+$/
+  validates :receiver_name, format: { with: CH_EN_NUM_FORMAT, message: "姓名格式不正确"}
+  validates :receiver_address, format: { with: CH_EN_NUM_FORMAT, message: "地址格式不正确"}
+  MOBILE_FORMAT = /^(13[0-9]|15[012356789]|18[0236789]|14[57])[0-9]{8}$/
+  validates :receiver_mobile, format: { with: MOBILE_FORMAT, message: "手机号格式不正确"}
+  validates_length_of :receiver_phone, maximum: 15, message: "内容过长", allow_blank: true
+  validates :receiver_phone, format: { with: /^[0-9-]+$/, message: "座机号格式不正确"}, allow_blank: true
+  validates :receiver_zip, format: { with: /^[0-9]{6}$/, message: "邮编格式不正确"}, allow_blank: true
 
   def orders
     self.taobao_orders
   end
 
   def deliver!
-    gift_tid = tid.dup
-    tid.slice!(/G[0-9]$/)
-    # NEED ADAPTION?
-    Trade.where(tid: tid).first.trade_gifts.where(gift_tid: gift_tid).first.update_attributes(delivered_at: Time.now)
+    main_trade = Trade.where(_id: main_trade_id).first
+    # 如果是赠品订单，更新主订单赠品发货时间
+    if main_trade
+      gift_tid = tid.dup
+      main_trade.trade_gifts.where(gift_tid: gift_tid).first.update_attributes(delivered_at: Time.now)
+    end
     TradeTaobaoDeliver.perform_async(self.id)
   end
 
+  #### CustomTrade 目前默认不能自动分流 ####
   # def auto_dispatchable?
   #   dispatch_options = self.fetch_account.settings.auto_settings["dispatch_options"]
   #   if dispatch_options["void_buyer_message"] && dispatch_options["void_seller_memo"]
@@ -199,7 +217,8 @@ class CustomTrade < Trade
   end
 
   def calculate_fee
-    0
+    goods_fee = self.orders.inject(0) { |sum, order| sum + order.total_fee.to_f}
+    goods_fee.to_f + self.post_fee.to_f
   end
 
   def bill_infos_count
@@ -237,5 +256,60 @@ class CustomTrade < Trade
     else
       status
     end
+  end
+
+  def self.make_new_trade(trade, current_account, current_user)
+    trade[:receiver_state] = Area.find(trade[:receiver_state]).try(:name) rescue nil
+    trade[:receiver_city]  = Area.find(trade[:receiver_city]).try(:name) rescue nil
+    trade[:receiver_district] = Area.find(trade[:receiver_district]).try(:name) rescue nil
+    custom_trade = new(trade)
+    custom_trade.account_id = current_account.id
+    custom_trade.tid = (Time.now.to_i.to_s + current_user.id.to_s + rand(10..99).to_s + "H" )
+    custom_trade.custom_type = "handmade_trade"
+    custom_trade
+  end
+
+  def change_params(trade)
+    trade[:receiver_state] = Area.find(trade[:receiver_state]).try(:name) rescue nil
+    trade[:receiver_city]  = Area.find(trade[:receiver_city]).try(:name) rescue nil
+    trade[:receiver_district] = Area.find(trade[:receiver_district]).try(:name) rescue nil
+    trade.each do |key, value|
+      self[key] = value
+    end
+  end
+
+  def change_orders(orders, status, action_name)
+    taobao_orders.delete_all
+    orders.each do |order|
+      order_array = order.split(";")
+      if action_name == 'create'
+        new_order = taobao_orders.new()
+      elsif action_name == 'update'
+        new_order = taobao_orders.create()
+      end
+      new_order.oid = tid
+      new_order.status = status
+      new_order.refund_status = "NO_REFUND"
+      new_order.seller_type = "B"
+      new_order.num_iid = order_array[0]
+      new_order.sku_id = order_array[1]
+      new_order.num = order_array[2]
+      new_order.payment = order_array[3]
+      new_order.title = order_array[4]
+      order_product = TaobaoProduct.find_by_num_iid(order_array[0])
+      new_order.price = order_product.price
+      new_order.cid =  order_product.cid
+      new_order.pic_path = order_product.pic_url
+    end
+    self.payment = taobao_orders.inject(0){|sum, order| sum += order.payment }
+    self.total_fee = taobao_orders.inject(0){|sum, order| sum += (order.price * order.num) }
+  end
+
+  def find_area_ids
+    state_id = Area.where(parent_id: nil).find_by_name(receiver_state).id
+    city_id = Area.where(parent_id: state_id).find_by_name(receiver_city).id
+    district_id = Area.where(parent_id: city_id).find_by_name(receiver_district).id rescue nil
+    area_ids = [state_id, city_id, district_id]
+    area_ids
   end
 end

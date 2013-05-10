@@ -1,6 +1,7 @@
 # -*- encoding : utf-8 -*-
 class ProductsController < ApplicationController
-  before_filter :authorize,:except => [:fetch_products,:pick_product,:abandon_product,:fetch_category_properties]
+
+  before_filter :authorize,:except => [:fetch_products,:pick_product,:abandon_product,:fetch_category_properties, :taobao_skus]
   before_filter :get_products,:only => [:sync_taobao_products,:confirm_sync]
   before_filter :tmp_skus, :only => [:new,:create,:add_sku,:remove_sku]
 
@@ -48,7 +49,7 @@ class ProductsController < ApplicationController
     @skus.each do |sku|
       @product.skus.build({:account_id => current_account.id}.merge(sku.attributes))
     end
-    
+
     if @product.save
       if params[:product]['good_type'] == '2' && params[:child_iid].present?
         @product.create_packages(params[:child_iid])
@@ -85,11 +86,11 @@ class ProductsController < ApplicationController
     product.destroy
     redirect_to products_path
   end
-  
+
   #GET /products/sync_taobao_products
   def sync_taobao_products
   end
-  
+
   #PUT /products/confirm_sync
   def confirm_sync
     TaobaoProduct.transaction do
@@ -98,22 +99,22 @@ class ProductsController < ApplicationController
         @news_products.map(&:insert!)
       end
     end
-    
+
     redirect_to :action => :taobao_products
   rescue Exception => e
     render :text => e.message
   end
-  
+
   #GET /products/fetch_category_properties
   def fetch_category_properties
     @category = current_account.categories.find(params[:category_id])
     @category_properties = @category.category_properties
-    
+
     respond_to do |format|
       format.js
     end
   end
-  
+
   #POST /products/add_sku
   def add_sku
     sku = OpenStruct.new({:id =>Time.now.strftime("%Y%m%d%k%M%S%L") }.merge!(params[:tmp_sku] || {}))
@@ -123,38 +124,38 @@ class ProductsController < ApplicationController
       sku.sku_properties << OpenStruct.new(v.merge(:id => k))
     end
     sku.attributes = {"sku_properties_attributes" => params[:sku_property]}
-    
+
     @product = current_account.products.find_by_id params[:id]
-    
+
     if @product.blank?
-      @skus = current_user.settings.tmp_skus += Array.wrap(sku) 
+      @skus = current_user.settings.tmp_skus += Array.wrap(sku)
     else
       Sku.create(:account_id => current_account.id,:product_id => params[:id],:sku_properties_attributes => params[:sku_property])
       @skus = @product.skus
     end
-    
+
   rescue Exception => e
     @error_message = e.message
     @error_message = "Sku信息不能为空" if params[:sku_property].blank?
-    
+
     respond_to do |format|
       format.js
     end
   end
-  
+
   #PUT /products/remove_sku
   def remove_sku
     sku_ids = params[:sku_ids]
     @skus.delete_if {|sku| sku_ids.include?(sku.id) }
     @product = current_account.products.find_by_id params[:id]
-    
+
     if @product.blank?
       current_user.settings.tmp_skus = @skus
     else
       @product.skus.where(:id => sku_ids).delete_all
       @skus = @product.skus
     end
-    
+
     respond_to do |format|
       format.js
     end
@@ -276,9 +277,9 @@ class ProductsController < ApplicationController
     end
     render :nothing => true, status: 200
   end
-  
+
   private
-  
+
   require 'sync_taobao_products'
   def get_products
     products          =  CompareProduct.new(current_account)
@@ -287,7 +288,7 @@ class ProductsController < ApplicationController
   rescue Exception => e
     render :text => e.message
   end
-  
+
   def tmp_skus
     @skus = (current_user.settings.tmp_skus ||= [])
   end

@@ -5,6 +5,7 @@ class PrintBatch
   include Mongoid::Timestamps
 
   field :batch_num,      type: Integer
+  field :serial_num,     type: Integer
 
   embedded_in :deliver_bills
 

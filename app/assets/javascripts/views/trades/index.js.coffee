@@ -127,16 +127,21 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
   show_type: (e) ->
     type = $(e.target).data('type')
-    if type != 'export_orders'
+    if type != 'export_orders' && type != 'create_handmade_trade'
       e.preventDefault()
       length = $('.trade_check:checked').parents('tr').length
       if length <= 1
         if length == 1
           trade_id = $('.trade_check:checked').parents('tr').attr('id').slice(6)
           MagicOrders.cache_trade_number = parseInt($('.trade_check:checked').parents('tr').children('td:first').html())
-          Backbone.history.navigate('trades/' + trade_id + "/#{type}", true)
+          if type == 'edit_handmade_trade'
+            $(location).attr('href', '/custom_trades/'+trade_id+'/edit')
+          else
+            Backbone.history.navigate('trades/' + trade_id + "/#{type}", true)
         else
           alert("请勾选要操作的订单。")
+    else if type == 'create_handmade_trade'
+      $(location).attr('href', '/custom_trades/new')
 
   batchCheckGoods: (e) ->
     e.preventDefault()
