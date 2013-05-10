@@ -152,7 +152,7 @@ class TaobaoTradePuller
               trade['trade_source_id'] = trade_source_id
               local_trade.update_attributes(trade)      
               local_trade.operation_logs.build(operated_at: Time.now, operation: "从淘宝更新订单,更新#{local_trade.changed.try(:join, ',')}") if local_trade.changed?
-              trade.set_has_onsite_service
+              local_trade.set_has_onsite_service
               local_trade.save
               if local_trade.dispatchable? && local_trade.auto_dispatchable?
                 # if account.key == 'dulux'
@@ -226,6 +226,7 @@ class TaobaoTradePuller
             trade['trade_source_id'] = trade_source_id
             local_trade.update_attributes(trade)
             local_trade.operation_logs.build(operated_at: Time.now, operation: "订单状态核查,更新#{local_trade.changed.try(:join, ',')}") if local_trade.changed?
+            local_trade.set_has_onsite_service
             local_trade.save
             if local_trade.dispatchable? && local_trade.auto_dispatchable?
               # if account.key == 'dulux'
