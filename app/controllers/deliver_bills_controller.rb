@@ -99,8 +99,8 @@ class DeliverBillsController < ApplicationController
   def print_deliver_bill
     @bills = DeliverBill.find(params[:ids].split(','))
     if @bills.count == 1
-      print_batch_number = Time.now.to_s(:number).to_i
-      @bills.first.print_batches.create(batch_num: (print_batch_number*10000+1))
+      print_time = Time.now.to_s(:number).to_i - 2*10**13
+      @bills.first.print_batches.create(batch_num: print_time, serial_num: (print_time*10000+1))
     end
     respond_to do |format|
       format.xml
@@ -140,45 +140,49 @@ class DeliverBillsController < ApplicationController
 
   def deliver_list
     list = []
-    print_batch_number = Time.now.to_s(:number).to_i
+    print_time = Time.now.to_s(:number).to_i - 2*10**13
     DeliverBill.find(params[:ids]).each_with_index do |bill, index|
-      bill.print_batches.create(batch_num: (print_batch_number*10000+index+1))
       trade = TradeDecorator.decorate(bill.trade)
+      bill.print_batches.create(batch_num: print_time, serial_num: (print_time*10000+index+1))
       list << {
         name: trade.receiver_name,
         tid: trade.tid,
-        batch_sequence: bill.print_batches.last.batch_num.to_s[0..-5],
-        batch_index: bill.print_batches.last.batch_num.to_s[-4..-1],
+        batch_num: print_time,
+        serial_num: bill.print_batches.last.serial_num.to_s[-4..-1],
         address: trade.receiver_full_address,
         logistic_name: trade.logistic_name || '',
         logistic_waybill: trade.logistic_waybill || ''
       }
     end
-
     respond_to do |format|
       format.json { render json: list }
     end
   end
 
-  def batch_print_logistic
-    logistic = Logistic.find_by_id params[:logistic]
-    success = true
-    DeliverBill.any_in(id: params[:ids].split(',')).each do |bill|
-      trade = bill.trade
-      is_first_print = !trade.logistic_printed_at.present?
-      trade.logistic_printed_at = Time.now
-
-      if trade.logistic_waybill.blank?
-        trade.logistic_id = logistic.try(:id)
-        trade.logistic_name = logistic.try(:name)
-        trade.logistic_code = logistic.try(:code)
-      end
-
-      if trade.save
-        bill.update_attribute(:logistic_printed_at, Time.now)
-        trade.operation_logs.create(operated_at: Time.now, operation: '打印物流单', operator_id: current_user.id, operator: current_user.name)
+  def logistic_waybill_list
+    list = []
+    DeliverBill.find(params[:ids]).each do |bill|
+      trade = TradeDecorator.decorate(bill.trade)
+      if bill.print_batches.last != nil
+        list << {
+          name: trade.receiver_name,
+          tid: trade.tid,
+          batch_num: bill.print_batches.last.batch_num,
+          serial_num: bill.print_batches.last.serial_num.to_s[-4..-1],
+          address: trade.receiver_full_address,
+          logistic_name: trade.logistic_name || '',
+          logistic_waybill: trade.logistic_waybill || ''
+        }
       else
-        success = false
+        list << {
+          name: trade.receiver_name,
+          tid: trade.tid,
+          batch_num: "无批次号",
+          serial_num: "无流水号",
+          address: trade.receiver_full_address,
+          logistic_name: trade.logistic_name || '',
+          logistic_waybill: trade.logistic_waybill || ''
+        }
       end
 
       #如果满足自动化设置条件，打印物流单后订单自动发货
@@ -191,7 +195,20 @@ class DeliverBillsController < ApplicationController
       end
     end
 
-    render json: {isSuccess: success}
+    respond_to do |format|
+      format.json { render json: list }
+    end
+  end
+
+  def verify_logistic_waybill
+    error = ""
+    waybills = params[:data]
+    existed_waybills = Trade.where(:logistic_waybill.in => waybills, logistic_id: params[:logistic]).only(:logistic_waybill).collect(&:logistic_waybill).compact
+    if existed_waybills == []
+      render json: {existed_waybills: false}
+    else
+      render json: {existed_waybills: existed_waybills}
+    end
   end
 
   def setup_logistics
@@ -220,7 +237,30 @@ class DeliverBillsController < ApplicationController
     else
       flag = false
     end
-
     render json: {isSuccess: flag}
+  end
+
+  def batch_print_logistic
+    logistic = Logistic.find_by_id params[:logistic]
+    success = true
+    DeliverBill.any_in(id: params[:ids].split(',')).each do |bill|
+      trade = bill.trade
+      trade.logistic_printed_at = Time.now
+
+      if trade.logistic_waybill.blank?
+        trade.logistic_id = logistic.try(:id)
+        trade.logistic_name = logistic.try(:name)
+        trade.logistic_code = logistic.try(:code)
+      end
+
+      if trade.save
+        bill.update_attribute(:logistic_printed_at, Time.now)
+        trade.operation_logs.create(operated_at: Time.now, operation: '打印物流单', operator_id: current_user.id, operator: current_user.name)
+      else
+        success = false
+      end
+    end
+
+    render json: {isSuccess: success}
   end
 end

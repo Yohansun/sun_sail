@@ -74,8 +74,8 @@ class MagicOrders.Views.DeliverBillsIndex extends Backbone.View
       for trade in data
         html += '<tr>'
         html += '<td>' + trade.tid + '</td>'
-        html += '<td>' + trade.batch_sequence + '</td>'
-        html += '<td>' + trade.batch_index + '</td>'
+        html += '<td>' + trade.batch_num + '</td>'
+        html += '<td>' + trade.serial_num + '</td>'
         html += '<td>' + trade.name + '</td>'
         html += '<td>' + trade.address + '</td></tr>'
 
@@ -83,6 +83,11 @@ class MagicOrders.Views.DeliverBillsIndex extends Backbone.View
       $('#logistic_select').hide()
       $('.deliver_count').html(data.length)
       $('#print_delivers_tbody').html(html)
+      $('#print_delivers').on 'hidden', ()->
+        # if MagicOrders.hasPrint == true
+        #   $.get '/trades/batch-print-deliver', {ids: MagicOrders.idCarrier}
+        MagicOrders.hasPrint = false
+
       $('#print_delivers').modal('show')
 
   show_type: (e) ->
@@ -112,7 +117,6 @@ class MagicOrders.Views.DeliverBillsIndex extends Backbone.View
         $.unblockUI()
 
   ## 搜索相关 ##
-
   renderUpdate: =>
     @collection.each(@appendTrade)
 

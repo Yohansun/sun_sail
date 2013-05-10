@@ -64,13 +64,13 @@ code{color: #08C;}
 .search_tag label,.search_tag button{background:#2F96B4 -webkit-linear-gradient(top, #5BC0DE, #2F96B4);color:#fff;}
 .whiteSmoke_bg{background:whiteSmoke;}
 .font12 *{font-size:12px!important;}
-.span10 > ul{margin-bottom:0;}
-.span10 > ul + .tab-content{padding:20px 20px;background:#fff;border:1px solid #DDD;border-width:0 1px 1px;border-radius:0 0 4px 4px;-webkit-border-radius:0 0 4px 4px;
+.span10 > ul,.add_order > ul{margin-bottom:0;}
+.span10 > ul + .tab-content,.add_order > ul + .tab-content{padding:20px 20px;background:#fff;border:1px solid #DDD;border-width:0 1px 1px;border-radius:0 0 4px 4px;-webkit-border-radius:0 0 4px 4px;
 -moz-border-radius:0 0 4px 4px;-webkit-box-shadow: 2px 2px 3px #ddd}
   /*stock out*/
 .container-fluid > .row-fluid{margin-top:10px;}
 .form-horizontal .span6 .control-label{width:70px;text-align:left;}
-
+.add_order .form-horizontal .control-label{width:100px;text-align:left;}
 .input-medium.select2{width:164px!important;}
 .input-small.select2{width:104px!important;}
 

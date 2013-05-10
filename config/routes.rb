@@ -88,7 +88,7 @@ MagicOrders::Application.routes.draw do
 
   resources :categories
   resources :category_properties
-  
+
 
   get 'callcenter/contrastive_performance'
   get 'callcenter/inquired_and_created'
@@ -218,6 +218,13 @@ MagicOrders::Application.routes.draw do
   #get "/sales/customer_analysis", to: 'sales#customer_analysis'
   resources :sales
 
+
+  resource :custom_trades do
+    collection do
+      get :change_taobao_products
+    end
+  end
+
   match '/alerts', to: 'trades#alerts'
   match '/my_alerts', to: 'trades#my_alerts'
   get "trades/new", to: "trades#new"
@@ -225,16 +232,24 @@ MagicOrders::Application.routes.draw do
   get "/trades/:id/sellers_info", to: "trades#sellers_info"
   get "/trades/:id/split_trade", to: "trades#split_trade"
   get "/trades/:id/print_deliver_bill", to: "trades#print_deliver_bill"
-  get "/trades/print_deliver_bill.:format", to: "trades#print_deliver_bill"
+  get "/trades/batch_deliver", to: 'trades#batch_deliver'
+  get "/trades/batch_check_goods", to: 'trades#batch_check_goods'
+  # get "/trades/change_taobao_products"
+  # get "/update_native_trades"
+
   get "/deliver_bills/print_deliver_bill.:format", to: "deliver_bills#print_deliver_bill"
   get "/deliver_bills/:id/logistic_info", to: "deliver_bills#logistic_info"
   get "/deliver_bills/deliver_list", to: "deliver_bills#deliver_list"
-  get "/trades/deliver_list", to: "trades#deliver_list"
-  get "/deliver_bills/setup_logistics", to: 'deliver_bills#setup_logistics'
-  get "/trades/batch_deliver", to: 'trades#batch_deliver'
-  get "/trades/batch_check_goods", to: 'trades#batch_check_goods'
+  get "/deliver_bills/logistic_waybill_list", to: "deliver_bills#logistic_waybill_list"
+  get "/deliver_bills/verify_logistic_waybill", to: "deliver_bills#verify_logistic_waybill"
+
   get "/deliver_bills/batch-print-deliver", to: 'deliver_bills#batch_print_deliver'
   get "/deliver_bills/batch-print-logistic", to: 'deliver_bills#batch_print_logistic'
+  get "/deliver_bills/setup_logistics", to: 'deliver_bills#setup_logistics'
+
+  # get "/trades/deliver_list", to: "trades#deliver_list"
+  # get "/deliver_bills/setup_logistics", to: 'deliver_bills#setup_logistics'
+
   get "/logistic_rates", to: 'logistic_rates#index'
   get "/change_stock_product", to: 'stock_products#change_stock_product'
 

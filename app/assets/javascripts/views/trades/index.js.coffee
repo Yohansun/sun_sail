@@ -5,14 +5,10 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
   events:
     'click .export_orders': 'exportOrders'
     'click [data-trade-status]': 'selectSameStatusTrade'
-    'click .print_delivers': 'printDelivers'
-    'click .print_logistics': 'printLogistics'
-    'click .return_logistics': 'returnLogistics'
     'click .batch_deliver': 'batchDeliver'
     'click .batch_check_goods': 'batchCheckGoods'
     'click .manual_sms_or_email': 'manualSmsOrEmail'
     'click .confirm_batch_deliver': 'confirmBatchDeliver'
-    'click .deliver_bills li' : 'gotoDeliverBills'
     'click .index_pops li a[data-type]': 'show_type'
 
     # 加载更多订单相关
@@ -27,6 +23,8 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     'click .dropdown': 'dropdownTurnGray'
     'click .btn-group': 'addBorderToTr'
     'change #cols_filter input[type=checkbox]': 'filterTradeColumns'
+
+    # 'click .deliver_bills li' : 'gotoDeliverBills'
 
   initialize: ->
     @trade_type = MagicOrders.trade_type
@@ -215,159 +213,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
       else
         $(@el).find(".trade_pops li [data-type=#{pop}]").parent().show()
 
-  printDelivers: ->
-    tmp = []
-    length = $('.trade_check:checked').parents('tr').length
-
-    if length < 1
-      alert('未选择订单！')
-      return
-
-    if length > 300
-      alert('请选择小于300个订单！')
-      return
-
-    $('.trade_check:checked').parents('tr').each (index, el) ->
-      input = $(el).find('.trade_check')
-      a = input[0]
-
-      if a.checked
-        trade_id = $(el).attr('id').replace('trade_', '')
-        tmp.push trade_id
-
-    MagicOrders.idCarrier = tmp
-
-    $.get '/trades/deliver_list', {ids: tmp}, (data) ->
-      html = ''
-      for trade in data
-        html += '<tr>'
-        html += '<td>' + trade.tid + '</td>'
-        html += '<td>' + trade.name + '</td>'
-        html += '<td>' + trade.address + '</td></tr>'
-
-
-      bind_swf(tmp, 'ffd', '')
-      $('#logistic_select').hide()
-      $('.deliver_count').html(data.length)
-      $('#print_delivers_tbody').html(html)
-      $('#print_delivers').on 'hidden', ()->
-        if MagicOrders.hasPrint == true
-          $.get '/trades/batch-print-deliver', {ids: MagicOrders.idCarrier}
-
-        MagicOrders.hasPrint = false
-
-      $('#print_delivers').modal('show')
-
-  printLogistics: ->
-    tmp = []
-    logistics = {}
-    length = $('.trade_check:checked').parents('tr').length
-
-    if length < 1
-      alert('未选择订单！')
-      return
-
-    if length > 300
-      alert('请选择小于300个订单！')
-      return
-
-    $('.trade_check:checked').parents('tr').each (index, el) ->
-      input = $(el).find('.trade_check')
-      a = input[0]
-
-      if a.checked
-        trade_id = $(el).attr('id').replace('trade_', '')
-        tmp.push trade_id
-
-    MagicOrders.idCarrier = tmp
-
-    $.get '/trades/deliver_list', {ids: tmp}, (data) ->
-      html = ''
-      for trade in data
-        lname = trade.logistic_name
-        lname = '无物流商' if lname == ''
-        logistics[lname] = logistics[lname] || 0
-        logistics[lname] += 1
-        html += '<tr>'
-        html += '<td>' + trade.tid + '</td>'
-        html += '<td>' + trade.name + '</td>'
-        html += '<td>' + trade.address + '</td></tr>'
-
-      $.get '/logistics/logistic_templates', {}, (t_data)->
-        html_options = ''
-        for item in t_data
-          html_options += '<option lid="' + item.id + '" value="' + item.xml + '">' + item.name + '</option>'
-
-        $('#logistic_select').html(html_options)
-        $('#logistic_select').show()
-        bind_swf(tmp, 'kdd', $('#logistic_select').val())
-        $('.deliver_count').html(data.length)
-        $('#print_delivers_tbody').html(html)
-        $('#print_delivers').on 'hidden', ()->
-          if MagicOrders.hasPrint == true
-            $.get '/trades/batch-print-logistic', {ids: MagicOrders.idCarrier, logistic: $("#logistic_select").find("option:selected").attr('lid')}
-
-          MagicOrders.hasPrint = false
-
-        flag = true
-        notice = '其中'
-        for key, value of logistics
-          notice += key + value + '单， '
-          flag = false if value == 20
-
-        $('#print_delivers .notice').html(notice) if flag = true
-        $('#print_delivers').modal('show')
-
-  returnLogistics: ->
-    tmp = []
-    length = $('.trade_check:checked').parents('tr').length
-
-    if length < 1
-      alert('未选择订单！')
-      return
-
-    if length > 300
-      alert('请选择小于300个订单！')
-      return
-
-    $('.trade_check:checked').parents('tr').each (index, el) ->
-      input = $(el).find('.trade_check')
-      a = input[0]
-
-      if a.checked
-        trade_id = $(el).attr('id').replace('trade_', '')
-        tmp.push trade_id
-    $('.logistic_count').html(length)
-    MagicOrders.idCarrier = tmp
-
-    logistics = {}
-    $.get '/trades/deliver_list', {ids: tmp}, (data) ->
-      for trade in data
-        lname = trade.logistic_name
-        lname = '无物流商' if lname == ''
-        logistics[lname] = logistics[lname] || 0
-        logistics[lname] += 1
-
-      flag = ''
-      notice = '其中'
-      for key, value of logistics
-        notice += key + value + '单'
-        flag = key if value == tmp.length
-
-      $.get '/logistics/logistic_templates', {type: 'all'}, (t_data)->
-        html_options = ''
-        for item in t_data
-          html_options += '<option lid="' + item.id + '" value="' + item.xml + '">' + item.name + '</option>'
-
-        $('#ord_logistics_billnum_mult .logistic_select').html(html_options)
-
-        if flag == ''
-          $('#ord_logistics_billnum_mult .info').html(notice)
-        else
-          $("#ord_logistics_billnum_mult option:contains('" + flag + "')").attr('selected', 'selected')
-
-        $('#ord_logistics_billnum_mult').modal('show')
-
   batchDeliver: ->
     tmp = []
     length = $('.trade_check:checked').parents('tr').length
@@ -426,8 +271,8 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
       else
         alert('失败')
 
-  gotoDeliverBills: ->
-    Backbone.history.navigate('deliver_bills', true)
+  # gotoDeliverBills: ->
+  #   Backbone.history.navigate('deliver_bills', true)
 
   addBorderToTr: (e)->
     e.preventDefault();

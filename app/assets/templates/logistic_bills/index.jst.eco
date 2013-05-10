@@ -165,11 +165,11 @@
   </div>
 </div>
 
-<div id="ord_logistics_billnum_mult" class="logistic_bill modal hide fade" tabindex="-1">
+<div id="ord_logistics_billnum_mult" class="logistic_bill modal hide fade" tabindex="-1" style="width: 890px;margin-left: -445px;">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal">&times;</button>
     <h3>批量返回物流单号</h3>
-  </div><!-- modal-header -->
+  </div>
   <div class="modal-body">
     <p>此次共同返回<b class='logistic_count'></b>单. <span class='info' style='color:red'></span></p>
     <fieldset>
@@ -177,21 +177,27 @@
         <div class="controls form-inline mar_t5">
           <label class="input-small nomargin">物流商：</label>
           <select class="input-medium logistic_select"></select>
-          <!-- <input class='logistic_name' type="text" value="圆通" disabled> -->
         </div>
-        <div class="controls form-inline mar_t5">
-          <label class="input-small nomargin">开始单号：</label><input class='logistic_begin' type="text" value="">
-        </div>
-        <div class="controls form-inline mar_t5">
-          <label class="input-small nomargin">结束单号：</label><input class='logistic_end' type="text" value="">
-        </div>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th nowrap>订单编号</th>
+              <th nowrap>打印批次</th>
+              <th nowrap>流水号</th>
+              <th nowrap>姓名</th>
+              <th style="min-width:135px">地址</th>
+              <th>设置物流单号</th>
+            </tr>
+          </thead>
+          <tbody id='set_logistics_tbody'></tbody>
+        </table>
       </div>
     </fieldset>
-  </div><!-- modal-body -->
+  </div>
 
   <div class="modal-footer">
-    <a href="#" class="btn" data-dismiss="modal" >取消</a>
-    <a class="btn btn-primary js-confirm-return">确认</a>
+    <a href="#" class="btn" data-dismiss="modal">取消</a>
+    <a class="btn btn-primary confirm_return">确认</a>
   </div>
 </div>
 
@@ -199,16 +205,18 @@
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal">&times;</button>
     <h3>批量返回物流单号</h3>
-  </div><!-- modal-header -->
+  </div>
   <div class="modal-body">
     <p>此次共返回 <b class='logistic_count'></b> 单号，请确认并保存</p>
     <fieldset>
       <table class="table table-bordered">
         <thead>
           <tr>
-            <th>订单编号</th>
-            <th>姓名</th>
-            <th>地址</th>
+            <th nowrap>订单编号</th>
+            <th nowrap>打印批次</th>
+            <th nowrap>流水号</th>
+            <th nowrap>姓名</th>
+            <th style="min-width:135px">地址</th>
             <th>物流单号</th>
           </tr>
         </thead>
@@ -216,10 +224,10 @@
         </tbody>
       </table>
     </fieldset>
-  </div><!-- modal-body -->
+  </div>
 
   <div class="modal-footer">
     <a href="#" class="btn" data-dismiss="modal" >取消</a>
-    <button class="btn btn-primary js-confirm-logistics">确认保存</button>
+    <button class="btn btn-primary confirm_logistics">确认保存</button>
   </div>
 </div><!-- ord_logistics_billnum_mult2 -->

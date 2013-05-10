@@ -6,9 +6,10 @@ class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
     'click #checkbox_all': 'optAll'
     'click [data-trade-status]': 'selectSameStatusTrade'
     'click .print_logistics': 'printLogistics'
-    'click .js-confirm-return': 'confirmReturn'
+    'click .confirm_return': 'confirmReturn'
     'click .return_logistics': 'returnLogistics'
-    'click .js-confirm-logistics': 'confirmLogistics'
+    'click .confirm_logistics': 'confirmLogistics'
+    'keydown #set_logistics_tbody input': 'enterReplaceTab'
     'click .index_pops li a[data-type]': 'show_type'
 
     # 加载更多订单相关
@@ -52,7 +53,6 @@ class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
 
   printLogistics: (e)->
     e.preventDefault()
-
     tmp = []
     logistics = {}
     length = $('.trade_check:checked').parents('tr').length
@@ -84,8 +84,8 @@ class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
         logistics[lname] += 1
         html += '<tr>'
         html += '<td>' + trade.tid + '</td>'
-        html += '<td>' + trade.batch_sequence + '</td>'
-        html += '<td>' + trade.batch_index + '</td>'
+        html += '<td>' + trade.batch_num + '</td>'
+        html += '<td>' + trade.serial_num + '</td>'
         html += '<td>' + trade.name + '</td>'
         html += '<td>' + trade.address + '</td></tr>'
 
@@ -99,11 +99,10 @@ class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
         bind_swf(tmp, 'kdd', $('#logistic_select').val())
         $('.deliver_count').html(data.length)
         $('#print_delivers_tbody').html(html)
-        $('#logistic_select').attr('data-printType', 'logistic')
-        $('#showbox').wrap("<div style='position:relative;width: 83px;height: 35px;float:right'></div>").after("<a class='print_button' href='javascript:;' style='position:absolute;left:0;top:0;width: 83px;height: 35px;z-index:1;'></a>")
-        $('.print_button').click ()->
-          dd = getElement('showbox')
-          dd.startPrint()
+        $('#print_delivers').on 'hidden', ()->
+          # if MagicOrders.hasPrint == true
+          #   $.get '/trades/batch-print-logistic', {ids: MagicOrders.idCarrier, logistic: $("#logistic_select").find("option:selected").attr('lid')}
+          MagicOrders.hasPrint = false
 
         flag = true
         notice = '其中'
@@ -137,8 +136,19 @@ class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
     MagicOrders.idCarrier = tmp
 
     logistics = {}
-    $.get '/deliver_bills/deliver_list', {ids: tmp}, (data) ->
+    $.get '/deliver_bills/logistic_waybill_list', {ids: tmp}, (data) ->
+      html = ''
       for trade in data
+        html += '<tr>'
+        html += '<td nowrap>' + trade.tid + '</td>'
+        html += '<td nowrap>' + trade.batch_num + '</td>'
+        html += '<td nowrap>' + trade.serial_num + '</td>'
+        html += '<td nowrap>' + trade.name + '</td>'
+        html += '<td>' + trade.address + '</td>'
+        html += '<td><input class="logistic_waybill" type="text"></td></tr>'
+
+        $('#set_logistics_tbody').html(html)
+
         lname = trade.logistic_name
         lname = '无物流商' if lname == ''
         logistics[lname] = logistics[lname] || 0
@@ -164,41 +174,105 @@ class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
 
         $('#ord_logistics_billnum_mult').modal('show')
 
+        $('#ord_logistics_billnum_mult').on 'shown', ->
+          $("#set_logistics_tbody input:first").focus()
+
+  enterReplaceTab: (e)->
+    input = $(e.currentTarget).parents("tr").next().find("input:first")
+    if e.which == 13
+      e.preventDefault()
+      if input.length > 0
+        input.focus()
+      else
+        $(e.currentTarget).blur()
+
   confirmReturn: ->
     flag = $(".logistic_select").find("option:selected").html() in ['其他', '虹迪', '雄瑞']
 
-    begin = $('.logistic_begin').val()
-    end = $('.logistic_end').val()
-    begin_pre = begin.slice(0, -4)
-    begin_last_number = begin.slice(-4) * 1
-    end_pre = end.slice(0, -4)
-    end_last_number = end.slice(-4) * 1
+    # begin = $('.logistic_begin').val()
+    # end = $('.logistic_end').val()
+    # begin_pre = begin.slice(0, -4)
+    # begin_last_number = begin.slice(-4) * 1
+    # end_pre = end.slice(0, -4)
+    # end_last_number = end.slice(-4) * 1
 
-    unless (!begin or !end) and flag
-      unless /^\w+$/.test(begin) and /^\w+$/.test(end)
-        alert('输入单号不符合规则')
-        return
+    # unless (!begin or !end) and flag
+    #   unless /^\w+$/.test(begin) and /^\w+$/.test(end)
+    #     alert('输入单号不符合规则')
+    #     return
+
+    logistic_waybill_array = []
+    $('#ord_logistics_billnum_mult').find('td .logistic_waybill').each ->
+      if $(this).val() != "" && $(this).val() != undefined && $(this).val() != null
+        logistic_waybill_array.push($(this).val())
+
+      unless flag
+        unless /^\w+$/.test($(this).val())
+          alert('输入单号不符合规则')
+          return
 
     unless flag
-      if (end_last_number - begin_last_number + 1) != MagicOrders.idCarrier.length
+      if logistic_waybill_array.length != MagicOrders.idCarrier.length
         alert('物流单号与选中产品个数不匹配')
         return
+      else
+        unique_array = logistic_waybill_array.slice()
+        if $.unique(unique_array).length != logistic_waybill_array.length
+          diff_array = $.same(logistic_waybill_array).join(",")
+          alert("有重复单号 "+diff_array+"，请检查")
+          return
 
-    $.get '/deliver_bills/deliver_list', {ids: MagicOrders.idCarrier}, (data) ->
-      html = ''
-      for trade, i in data
-        html += '<tr>'
-        html += '<td class="tid">' + trade.tid + '</td>'
-        html += '<td>' + trade.name + '</td>'
-        html += '<td>' + trade.address + '</td>'
-        if begin and end
-          html += '<td class="logistic_bill">' + begin_pre + (begin_last_number + i) + '</td></tr>'
+    unless flag
+      logistic = $('#ord_logistics_billnum_mult .logistic_select').find("option:selected").attr('lid')
+      $.get '/deliver_bills/verify_logistic_waybill', {data: logistic_waybill_array, logistic: logistic}, (data)->
+        if data.existed_waybills
+          waybills_msg = data.existed_waybills.join(", ")
+          alert(waybills_msg+" 物流单号被使用过，请检查")
+          return
         else
-          html += '<td class="logistic_bill"></td></tr>'
+          $.get '/deliver_bills/logistic_waybill_list', {ids: MagicOrders.idCarrier}, (data) ->
+            html = ''
+            for trade, i in data
+              html += '<tr>'
+              html += '<td class="tid" nowrap>' + trade.tid + '</td>'
+              html += '<td nowrap>' + trade.batch_num + '</td>'
+              html += '<td nowrap>' + trade.serial_num + '</td>'
+              html += '<td nowrap>' + trade.name + '</td>'
+              html += '<td>' + trade.address + '</td>'
+              if logistic_waybill_array[i] != undefined
+                html += '<td class="logistic_bill">' + logistic_waybill_array[i] + '</td></tr>'
+              else
+                html += '<td class="logistic_bill"></td></tr>'
+              # if begin and end
+              #   html += '<td class="logistic_bill">' + begin_pre + (begin_last_number + i) + '</td></tr>'
+              # else
+              #   html += '<td class="logistic_bill"></td></tr>'
 
-      $('#ord_logistics_billnum_mult2 tbody').html(html)
-      $('#ord_logistics_billnum_mult').modal('hide')
-      $('#ord_logistics_billnum_mult2').modal('show')
+            $('#ord_logistics_billnum_mult2 tbody').html(html)
+            $('#ord_logistics_billnum_mult').modal('hide')
+            $('#ord_logistics_billnum_mult2').modal('show')
+    else
+      $.get '/deliver_bills/logistic_waybill_list', {ids: MagicOrders.idCarrier}, (data) ->
+          html = ''
+          for trade, i in data
+            html += '<tr>'
+            html += '<td class="tid" nowrap>' + trade.tid + '</td>'
+            html += '<td nowrap>' + trade.batch_num + '</td>'
+            html += '<td nowrap>' + trade.serial_num + '</td>'
+            html += '<td nowrap>' + trade.name + '</td>'
+            html += '<td>' + trade.address + '</td>'
+            if logistic_waybill_array[i] != undefined
+              html += '<td class="logistic_bill">' + logistic_waybill_array[i] + '</td></tr>'
+            else
+              html += '<td class="logistic_bill"></td></tr>'
+            # if begin and end
+            #   html += '<td class="logistic_bill">' + begin_pre + (begin_last_number + i) + '</td></tr>'
+            # else
+            #   html += '<td class="logistic_bill"></td></tr>'
+
+          $('#ord_logistics_billnum_mult2 tbody').html(html)
+          $('#ord_logistics_billnum_mult').modal('hide')
+          $('#ord_logistics_billnum_mult2').modal('show')
 
   confirmLogistics: ->
     bb = []
@@ -209,7 +283,9 @@ class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
       h = {tid: tid, logistic: logistic}
       bb.push(h)
 
-    $.get '/deliver_bills/setup_logistics', {data: bb, logistic: $('#ord_logistics_billnum_mult .logistic_select').find("option:selected").attr('lid')}, (data)->
+    logistic = $('#ord_logistics_billnum_mult .logistic_select').find("option:selected").attr('lid')
+
+    $.get '/deliver_bills/setup_logistics', {data: bb, logistic: logistic}, (data)->
       if data.isSuccess == true
         $('#ord_logistics_billnum_mult2').modal('hide')
       else

@@ -1,5 +1,6 @@
-# encoding: utf-8
+# -*- encoding : utf-8 -*-
 require 'rchardet19'
+
 class TradesController < ApplicationController
   layout false, :only => :print_deliver_bill
   respond_to :json, :xls
@@ -31,10 +32,10 @@ class TradesController < ApplicationController
     @report.account_id = current_account.id
     @report.request_at = Time.now
     @report.user_id = current_user.id
-    
+
     if params[:search]
       params['search'] =  params['search'].select {|k,v| v != "undefined"  }
-      params['search'].each do |k,v|  
+      params['search'].each do |k,v|
         guess_encoding = CharDet.detect(v, :silent => true).encoding
         if guess_encoding != "utf-8"
           v.force_encoding(guess_encoding)
@@ -43,9 +44,9 @@ class TradesController < ApplicationController
           v.force_encoding("utf-8")
         end
         params['search'][k] = v
-      end 
-    end   
-         
+      end
+    end
+
     @report.conditions = params.select {|k,v| !['limit','offset', 'action', 'controller'].include?(k)}
     @report.save
     respond_to do |format|
@@ -338,24 +339,6 @@ class TradesController < ApplicationController
     end
   end
 
-  def new
-    @trade = Trade.new
-  end
-
-  def create
-    @trade = TaobaoTrade.new(params[:trade])
-    @trade.account_id = current_account.id
-    @trade.taobao_orders.build(params[:orders])
-    @trade.created = Time.now
-    @trade.tid = "000000" + Time.now.to_i.to_s
-    @trade.taobao_orders.first.total_fee = 1
-    if @trade.save
-      redirect_to "/app#trades"
-    else
-      render trades_new_path
-    end
-  end
-
   def sellers_info
     trade = Trade.find params[:id]
     logger.debug matched_seller_info(trade).inspect
@@ -375,19 +358,6 @@ class TradesController < ApplicationController
     @trade.operation_logs.build(operated_at: Time.now, operation: '拆单', operator_id: current_user.id, operator: current_user.name)
     respond_to do |format|
       format.json { render json: {ids: new_trade_ids} }
-    end
-  end
-
-  def print_deliver_bill
-    @trades = Trade.find(params[:ids].split(','))
-    respond_to do |format|
-      format.html
-    end
-  end
-
-  def deliver_list
-    respond_to do |format|
-      format.json { render json: Trade.find(params[:ids]).to_json }
     end
   end
 
