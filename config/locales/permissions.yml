@@ -1,12 +1,12 @@
 #encoding: utf-8
 zh-CN:
   permissions_operations: "可操作权限"
-  permissions_reads: 可查看权限  
+  permissions_reads: 可查看权限
   permissions_modes: 可查看权限
   permissions_cs_read: "客服（只读权限）"
   permissions_trades: "订单管理"
   permissions_products: "商品管理"
-  permissions_system_settings: "系统设置"  
+  permissions_system_settings: "系统设置"
   permissions_stocks: 仓库模块
   permissions_datas: 数据模块
   permissions_refund: "refund"
@@ -27,15 +27,16 @@ zh-CN:
   permissions_invoice: 发票模式
   permissions_unusual: 异常模式
   permissions_color: 调色模式
-  
+
   permissions_tag_stock_products: 库存查询
   permissions_tag_stock_history: 进销记录
-  
+
   permissions_tag_create: 创建
   permissions_tag_update: 编辑
-  permissions_tag_destroy: 删除    
+  permissions_tag_destroy: 删除
+  permissions_tag_export_orders: 导出数据
   permissions_tag_detail: 详细
-  permissions_tag_ogistic_waybill: 物流单
+  permissions_tag_logistic_waybill: 物流单
   permissions_tag_operation_log: 日志
   permissions_tag_modify_payment: 金额调整
   permissions_tag_manual_sms_or_email: 发短信/邮件
@@ -134,9 +135,11 @@ zh-CN:
   permissions_tag_categories#create: "创建分类"
   permissions_tag_categories#update: "更新分类"
   permissions_tag_categories#destroy: "删除分类"
-  permissions_tag_taobao_products: "查看淘宝商品"
+  permissions_tag_taobao_product: "查看淘宝商品列表"
+  permissions_tag_taobao_products: "查看单个淘宝商品详细"
   permissions_tag_export_products: "导出本地订单"
   permissions_tag_update_on_sale: "商品上/下架"
+  permissions_tag_taobao_skus: "查看绑定的本地SKU"
   permissions_tag_tie_to_native_skus: "绑定本地SKU"
   permissions_tag_stock_in_bills#detail: "查看入库单"
   permissions_tag_stock_out_bills#detail: "查看出库单"

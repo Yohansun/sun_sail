@@ -166,7 +166,11 @@ class TaobaoTradeReporter
         order.package_info.each_with_index do |product, index|
           body << "#{product.fetch(:outer_id)}"
           body << "#{product.fetch(:number)}"
-        end        
+        end      
+
+        empty_cols_count = (max_skus_count -  order.package_info.count) * 2 
+
+        empty_cols_count.times {body << ""}
         
         body +=[price,                       #读取淘宝该商品市场价
                 order_price,                 #读取淘宝该商品原价

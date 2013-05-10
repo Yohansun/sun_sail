@@ -35,7 +35,7 @@ class StockInBillsController < ApplicationController
     bill_product_ids = params[:bill_product_ids].split(',')
     build_product(@bill,bill_product_ids)
     @bill.update_bill_products
-    if @bill.save!
+    if @bill.save
       update_areas!(@bill)
       current_user.settings.tmp_products = []
       redirect_to stock_in_bills_path
@@ -116,7 +116,7 @@ class StockInBillsController < ApplicationController
       @tmp_products = @bill.bill_products
       @bill.bill_products.build(params[:product])
       @bill.update_bill_products
-      @bill.save!
+      @bill.save
     else
       add_tmp_product(params[:product])
     end
@@ -148,7 +148,7 @@ class StockInBillsController < ApplicationController
     bill.op_state    = Area.find(op_state).name     if Area.exists?(op_state)
     bill.op_city     = Area.find(op_city).name      if Area.exists?(op_city)
     bill.op_district = Area.find(op_district).name  if Area.exists?(op_district)
-    bill.save!
+    bill.save
   end
 
   def build_product(bill,bill_product_ids)

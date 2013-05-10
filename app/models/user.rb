@@ -79,6 +79,7 @@ class User < ActiveRecord::Base
   end
   
   def allow_read?(control,action="index")
+    return true if self.superadmin?
     arys = parsed_permission[control.to_s] & MagicOrder::ActionDelega.keys
     MagicOrder::ActionDelega.slice(*arys).any?{|x,y| y.include?(action)}
   end
@@ -89,6 +90,16 @@ class User < ActiveRecord::Base
   
   def allowed_to?(control,action)
     allow_read?(control,action) || parsed_permission[control.to_s].include?(action.to_s) 
+  end
+  
+  def superadmin!
+    self.superadmin = true
+    self.save!
+  end
+  
+  def remove_superadmin!
+    self.superadmin = false
+    self.save!
   end
   
   #parse {:stocks => ["stock_in_bills#detail"],"detail"} to {:stocks => ["detail"],:stock_in_bills => ["detail"]}
