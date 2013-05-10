@@ -156,7 +156,7 @@ class TaobaoTradePuller
               local_trade.save
               if local_trade.dispatchable? && local_trade.auto_dispatchable?
                 # if account.key == 'dulux'
-                  DelayAutoDispatch.perform_in(account.settings.delay_time || 1.hours, local_trade.id)
+                  DelayAutoDispatch.perform_async(local_trade.id)
                 # else
                 #   local_trade.auto_dispatch!
                 # end
@@ -230,7 +230,7 @@ class TaobaoTradePuller
             local_trade.save
             if local_trade.dispatchable? && local_trade.auto_dispatchable?
               # if account.key == 'dulux'
-                 DelayAutoDispatch.perform_in(account.settings.delay_time || 1.hours, local_trade.id)
+                 DelayAutoDispatch.perform_async(local_trade.id)
               # else
               #  local_trade.auto_dispatch!
               # end
