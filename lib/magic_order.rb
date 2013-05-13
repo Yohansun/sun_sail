@@ -1,6 +1,6 @@
 #encoding: utf-8
 module MagicOrder
-  ActionDelega = {"detail" => ["index","home",'show'],"create" => ["new","create"],"update" => ["edit","update"],"destroy" => ["destroy","delete"]}.freeze
+  ActionDelega = {"detail" => ["index","home",'show','fetch_group'],"create" => ["new","create"],"update" => ["edit","update"],"destroy" => ["destroy","delete"]}.freeze
 
   class AccessControl
     class << self
@@ -65,6 +65,11 @@ MagicOrder::AccessControl.map do |map|
   map.project_module :areas do |map|
     map.permission :reads,      ["detail","autocomplete", "area_search", "export"]
     map.permission :operations, ["create","update"]
+  end
+
+  map.project_module :logistic_groups do |map|
+    map.permission :reads,      ["detail"]
+    map.permission :operations, ["create","destroy"]
   end
 
   map.project_module :stocks do |map|
