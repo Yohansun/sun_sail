@@ -29,7 +29,7 @@ class CategoryProperty < ActiveRecord::Base
 
 
   def value_text
-    values_name*"\n"
+    Array.wrap(values_name)*"\n"
   end
   
   def values_name
