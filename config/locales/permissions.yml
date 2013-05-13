@@ -6,6 +6,7 @@ zh-CN:
   permissions_cs_read: "客服（只读权限）"
   permissions_trades: "订单管理"
   permissions_products: "商品管理"
+  permissions_areas: "地区管理"
   permissions_system_settings: "系统设置"
   permissions_stocks: 仓库模块
   permissions_datas: 数据模块
@@ -34,6 +35,10 @@ zh-CN:
   permissions_tag_create: 创建
   permissions_tag_update: 编辑
   permissions_tag_destroy: 删除
+  permissions_tag_export: 导出
+  permissions_tag_search: 搜索
+  permissions_tag_area_search: 搜索
+  permissions_tag_autocomplete: 自动补全
   permissions_tag_export_orders: 导出数据
   permissions_tag_detail: 详细
   permissions_tag_logistic_waybill: 物流单
@@ -143,6 +148,7 @@ zh-CN:
   permissions_tag_update_on_sale: "商品上/下架"
   permissions_tag_taobao_skus: "查看绑定的本地SKU"
   permissions_tag_tie_to_native_skus: "绑定本地SKU"
+
   permissions_tag_stock_in_bills#detail: "查看入库单"
   permissions_tag_stock_out_bills#detail: "查看出库单"
   permissions_tag_stock_bills#detail: "查看所有进销"

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130508105658) do
+ActiveRecord::Schema.define(:version => 20130509035645) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -266,9 +266,9 @@ ActiveRecord::Schema.define(:version => 20130508105658) do
 
   create_table "products", :force => true do |t|
     t.string   "name",              :limit => 100,                               :default => "",   :null => false
-    t.string   "outer_id",          :limit => 20,                                :default => "",   :null => false
-    t.string   "product_id",        :limit => 20,                                :default => "",   :null => false
-    t.string   "storage_num",       :limit => 20,                                :default => "",   :null => false
+    t.string   "outer_id",          :limit => 20,                                :default => ""
+    t.string   "product_id",        :limit => 20,                                :default => ""
+    t.string   "storage_num",       :limit => 20,                                :default => ""
     t.decimal  "price",                            :precision => 8, :scale => 2, :default => 0.0,  :null => false
     t.integer  "quantity_id"
     t.integer  "category_id"
@@ -414,8 +414,10 @@ ActiveRecord::Schema.define(:version => 20130508105658) do
     t.string   "cached_property_value"
     t.datetime "created_at",                 :null => false
     t.datetime "updated_at",                 :null => false
+    t.integer  "category_property_id"
   end
 
+  add_index "sku_properties", ["category_property_id"], :name => "index_sku_properties_on_category_property_id"
   add_index "sku_properties", ["category_property_value_id"], :name => "index_sku_properties_on_category_property_value_id"
   add_index "sku_properties", ["sku_id"], :name => "index_sku_properties_on_sku_id"
 
@@ -509,8 +511,8 @@ ActiveRecord::Schema.define(:version => 20130508105658) do
     t.integer "sku_id",            :limit => 8
     t.integer "taobao_product_id", :limit => 8
     t.integer "num_iid",           :limit => 8
-    t.string  "properties",                     :default => ""
-    t.string  "properties_name",                :default => ""
+    t.string  "properties"
+    t.string  "properties_name"
     t.integer "quantity"
     t.integer "account_id"
   end
@@ -587,6 +589,7 @@ ActiveRecord::Schema.define(:version => 20130508105658) do
     t.string   "unlock_token"
     t.datetime "locked_at"
     t.string   "phone"
+    t.boolean  "superadmin",             :default => false, :null => false
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

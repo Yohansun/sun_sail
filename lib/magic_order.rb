@@ -62,6 +62,11 @@ MagicOrder::AccessControl.map do |map|
 
   end
 
+  map.project_module :areas do |map|
+    map.permission :reads,      ["detail","autocomplete", "area_search", "export"]
+    map.permission :operations, ["create","update"]
+  end
+
   map.project_module :stocks do |map|
     map.permission :reads,      ["detail","stock_in_bills#detail","stock_out_bills#detail","stock_bills#detail"]
 #    map.permission :operations, ["create","update","destroy"]
