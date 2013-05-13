@@ -26,49 +26,60 @@
         </ul>
         <div class="tab-content">
           <fieldset>
-            <div class="js-data-fetch"
+            <div 
               style='display: <%= current_account.settings.init_data_ready == true ? "none" : "block" %>'>
               <label class="input-large">正在配置商品分类：</label>
               <div class="progress progress-info progress-striped active">
-                <div class="bar" style="width: 20%;"></div>
+                <div class="bar" style="width: 20%;margin-left:-20%"></div>
               </div>
               <label class="input-large">正在导入店铺商品：</label>
               <div class="progress progress-success progress-striped active">
-                <div class="bar" style="width: 40%;"></div>
+                <div class="bar" style="width: 20%;margin-left:-20%"></div>
               </div>
               <label class="input-large">正在导入店铺库存：</label>
               <div class="progress progress-warning progress-striped active">
-                <div class="bar" style="width: 60%;"></div>
+                <div class="bar" style="width: 20%;margin-left:-20%"></div>
               </div>
               <label class="input-large">正在配置物流信息：</label>
               <div class="progress progress-danger progress-striped active">
-                <div class="bar" style="width: 80%;"></div>
+                <div class="bar" style="width: 20%;margin-left:-20%"></div>
               </div>
-              <p>
-                <button class="btn js-data-start" data-account-id='<%= current_account.id %>'>下一步</button>
+              <p class="js-data-fetch">
+                <button class="btn js-data-start" data-account-id='<%= current_account.id %>' data-disable-with= '正在导入数据...'>下一步</button>
+
+
               </p>
+              <%= simple_form_for User.new, url: account_setup_path, method: :put,
+                  html: { class: 'form-horizontal', style: 'margin-top: 20px;'}, validate: true do |f| %>
+              <p class="js-data-next-step" style="display:none">
+
+                  <%= f.button :submit, '下一步', :"data-disable-with" => '提交中...' %>
+                  <button type="button" id="custom_setting_btn"custom_setting_btn>自定义设置</button>
+
+
+              </p>
+              <%end%>
             </div>
             <div class="js-data-other-settings"
               style='display: <%= current_account.settings.init_data_ready == true ? "block" : "none" %>'>
               <div class="control-group">
-                <button class="btn">设置</button>
+                <%=link_to "设置",accounts_path, :class=>"btn"%>
                 <p class="span6 nomargin">若你需要对店铺进行其他设置，请进入店铺基础设置调整</p>
               </div>
               <div class="control-group">
-                <button class="btn">设置</button>
+                <%=link_to "设置",categories_path, :class=>"btn"%>
                 <p class="span6 nomargin">若你需要对商品分类进行其他设置，请进入商品基础设置调整</p>
               </div>
               <div class="control-group">
-                <button class="btn">设置</button>
+                <%=link_to "设置","/stocks/safe_stock", :class=>"btn"%>
                 <p class="span6 nomargin">若你需要对仓库信息进行其他设置，请进入仓库基础设置调整</p>
               </div>
               <div class="control-group">
-                <button class="btn">设置</button>
+                <%=link_to "设置",logistics_path, :class=>"btn"%>
                 <p class="span6 nomargin">若你需要对物流信息进行其他设置，请进入物流基础设置调整</p>
               </div>
-               <p>
-                <button class="btn options-setup-start" data-account-id='<%= current_account.id %>'>下一步</button>
-              </p>
+                <p>
+                </p>
             </div>
           </fieldset><!-- end -->
         </div><!-- tab-content end -->
@@ -81,6 +92,29 @@
   <script type="text/javascript">
     $(function(){
       AccountSetup.bindEvents();
+
+      $("button.js-data-start").click(function(){
+        // rolling progres bar
+        $(".progress .bar").each(function(){
+          var bar = $(this);
+          $(this).data("timer", setInterval(function(){
+            var left = bar.data("left");
+            if(left == null) left = -20;
+            bar.css("margin-left",left+"%");
+            left += 2;
+            if(left >= 100) {
+              left  = -20;
+            }
+            bar.data("left",left);
+          },100));
+        })
+      }).click();
+
+      $("#custom_setting_btn").click(function(){
+        $(".js-data-other-settings").toggle();
+      })
+
+
     });
    </script>
 <% end %>

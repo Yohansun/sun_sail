@@ -8,7 +8,7 @@ class AccountSetup
     $('.account-setup .js-data-start').bind 'click', (e) ->
       dom = $(e.currentTarget)
       dom.attr('disabled', true)
-      alert 'data fetch starting...'
+      # alert 'data fetch starting...'
       $.post "/account_setups/"+dom.data('account-id')+"/data_fetch_start"
       # checking the data fetch processing progress every 15*1000ms
       setInterval("AccountSetup.check_data_fetch(current_account.id)", 15 * 1000)
@@ -19,9 +19,13 @@ class AccountSetup
       dataType: 'json'
       success: (response) ->
         if response.ready is true
+          $(".progress .bar").each ->
+            clearInterval($(this).data("timer"));
+            $(this).css("margin-left","0").css("width","100%");
+
           $('.js-data-fetch').toggle()
-          $('.js-data-other-settings').toggle()
+          $('.js-data-next-step').toggle()
         else
-          alert 'processing...'
+          # alert 'processing...'
 
 window.AccountSetup ?= new AccountSetup

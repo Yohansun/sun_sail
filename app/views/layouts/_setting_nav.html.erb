@@ -77,12 +77,23 @@
           <li class="active"><a href="/orders">自定义查询</a></li>
         </ul>
     </li>
+    
+    <li class="<%= "active" if params[:controller] == "accounts" %>">
+      <a href="#" class="" data-toggle="collapse" data-target="#basic_settings">
+        <i class="icon-chevron-right"></i> 基础设置
+      </a>
+        <ul id="basic_settings" class="collapse in">
+          <li class="active"><a href="/accounts">店铺基础设置</a></li>
+        </ul>
+    </li>
 
     <li class="<%= "active" if params[:controller] == "areas" %>" >
       <a href="/areas">
         <i class="<%= "icon-chevron-right" if params[:controller] == "areas" %>"></i>地域管理
       </a>
     </li>
+
+
     
     <% if current_account.settings.enable_module_onsite_service == 1 %>
       <li class="<%= "active" if params[:controller] == "onsite_services" %>">
