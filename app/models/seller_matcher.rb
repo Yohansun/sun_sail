@@ -26,7 +26,6 @@ class SellerMatcher
   end
 
   def self.match_trade_seller(trade, area)
-    account ＝ trade.fetch_account
     matched_sellers = nil
     trade.orders.each do |order|
       matched_sellers ||= match_item_sellers(area, order)
