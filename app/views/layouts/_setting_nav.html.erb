@@ -8,47 +8,49 @@
     </li> -->
 
     <li class="<%= "active" if params[:controller] == "account_setups" %>">
-      <a href="#" class="" data-toggle="collapse" data-target="#autoset_menu">
+      <a href="/account_setups/edit_auto_settings" class="" data-toggle="collapse" data-target="#autoset_menu">
         <i class="icon-chevron-right"></i> 自动化设置
       </a>
         <ul id="autoset_menu" class="collapse in">
-          <li class="active"><a href="/account_setups/edit_auto_settings">订单预处理</a></li>
+          <li class="<%= "active" if params[:controller] == "account_setups" && params[:action] =~ /edit_auto_settings/ %>">
+            <a href="/account_setups/edit_auto_settings">订单预处理</a>
+          </li>
           <li class=""><a href="#">自动分派</a></li>
           <li class=""><a href="#">自动发货</a></li>
         </ul>
     </li>
 
-    <!-- <li class="<%= "active" if params[:controller] == "users" %>">
-      <a href="/users" ><i class="<%= "icon-chevron-right" if params[:controller] == "users" %>"></i>用户管理</a>
-    </li> -->
-
     <li class="<%= "active" if params[:controller] == "users" %>">
-      <a href="#" class="" data-toggle="collapse" data-target="#users_menu">
+      <a href="/users" class="" data-toggle="collapse" data-target="#users_menu">
         <i class="icon-chevron-right"></i> 用户管理
       </a>
         <ul id="users_menu" class="collapse in">
-          <li class="active"><a href="/users">用户</a></li>
+          <li class="<%= "active" if params[:controller] == "users" %>"><a href="/users">用户</a></li>
           <li class=""><a href="#">角色</a></li>
           <li class=""><a href="#">权限</a></li>
         </ul>
     </li>
 
-    <li class="<%= "active" if params[:controller] == "products" %>">
-      <a href="#" class="" data-toggle="collapse" data-target="#stocks_menu">
+    <li class="<%= "active" if params[:controller] == "stocks" %>">
+      <a href="/stocks/safe_stock" class="" data-toggle="collapse" data-target="#stocks_menu">
         <i class="icon-chevron-right"></i> 仓库设置
       </a>
         <ul id="stocks_menu" class="collapse in">
-          <li class="active"><a href="#">安全库存管理</a></li>
+          <li class="<%= "active" if params[:controller] == "stocks" && params[:action] =~ /safe_stock|change_product_type/ %>">
+            <a href="/stocks/safe_stock">安全库存管理</a>
+          </li>
           <li class=""><a href="#">仓库编辑</a></li>
         </ul>
     </li>
 
-    <li class="<%= "active" if params[:controller] == "products" %>">
-      <a href="#" class="" data-toggle="collapse" data-target="#shipments_menu">
+    <li class="<%= "active" if params[:controller] == "logistic_groups" %>">
+      <a href="/logistic_groups" class="" data-toggle="collapse" data-target="#shipments_menu">
         <i class="icon-chevron-right"></i> 发货管理
       </a>
         <ul id="shipments_menu" class="collapse in">
-          <li class="active"><a href="/logistic_groups">发货拆分管理</a></li>
+          <li class="<%= "active" if params[:controller] == "logistic_groups" && params[:action] =~ // %>">
+            <a href="/logistic_groups">发货拆分管理</a>
+          </li>
           <li class=""><a href="#">发货单管理</a></li>
         </ul>
     </li>
@@ -58,14 +60,14 @@
         <i class="icon-chevron-right"></i> 商品设置
       </a>
         <ul id="products_menu" class="collapse in">
-          <li class="active"><a href="/categories">分类管理</a></li>
-          <li class=""><a href="/category_properties">属性管理</a></li>
+          <li class="<%= "active" if params[:controller] == "categories" && params[:action] =~ // %>"><a href="/categories">分类管理</a></li>
+          <li class="<%= "active" if params[:controller] == "category_properties" && params[:action] =~ // %>"><a href="/category_properties">属性管理</a></li>
         </ul>
     </li>
 
-    <li class="<%= "active" if params[:controller] == "logistics" %>">
+    <li class="<%= "active" if params[:controller] =~ /logistics/ %>">
       <a href="/logistics">
-        <i class="<%= "icon-chevron-right" if params[:controller] == "logistics" %>"></i>物流商管理
+        <i class="<%= "active" if params[:controller] == "logistics" %>"></i>物流商管理
       </a>
     </li>
 
@@ -74,7 +76,9 @@
         <i class="icon-chevron-right"></i> 订单管理
       </a>
         <ul id="orders_menu" class="collapse in">
-          <li class="active"><a href="/orders">自定义查询</a></li>
+          <li class="<%= "active" if params[:controller] == "orders" && params[:action] =~ // %>">
+            <a href="#">自定义查询</a>
+          </li>
         </ul>
     </li>
     
@@ -83,7 +87,7 @@
         <i class="icon-chevron-right"></i> 基础设置
       </a>
         <ul id="basic_settings" class="collapse in">
-          <li class="active"><a href="/accounts">店铺基础设置</a></li>
+          <li class="<%= "active" if params[:controller] == "accounts" && params[:action] =~ // %>"><a href="/accounts">店铺基础设置</a></li>
         </ul>
     </li>
 
