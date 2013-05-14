@@ -69,13 +69,13 @@ class Sms
     content = self.content.encode!('GBK')
     uid = @account.settings.sms_http_uid
     pwd = @account.settings.sms_http_pwd
-    if Rails.env.production?
-      request = "uid=#{uid}&pwd=#{pwd}&mobile=#{mobiles}&Msg=#{content}&spnum=0&OpType=0"
-    else
-      request = "uid=#{uid}&pwd=#{pwd}&mobile=#{@account.settings.sms_test_mobile}&Msg=#{content}&spnum=0&OpType=0"
+    params = {uid:uid,pwd:pwd,mobile:mobiles,Msg:content,spnum:0,OpType:0}
+    if !Rails.env.production?
+      params[:mobile]=@account.settings.sms_test_mobile
     end
-    full_resquest = URI.escape(client + request)
-    send_request = HTTParty.get(full_resquest)
+    request = params.to_query
+    full_request = client + request
+    send_request = HTTParty.get(full_request)
   end
 
   def self.http_receive(account_id)

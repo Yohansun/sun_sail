@@ -10,6 +10,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     'click .return_logistics': 'returnLogistics'
     'click .batch_deliver': 'batchDeliver'
     'click .batch_check_goods': 'batchCheckGoods'
+    'click .manual_sms_or_email': 'manualSmsOrEmail'
     'click .confirm_batch_deliver': 'confirmBatchDeliver'
     'click .deliver_bills li' : 'gotoDeliverBills'
     'click .index_pops li a[data-type]': 'show_type'
@@ -116,6 +117,15 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
     MagicOrders.trade_cols_hidden[MagicOrders.trade_mode] = _.uniq(MagicOrders.trade_cols_hidden[MagicOrders.trade_mode])
     $.cookie("trade_cols_hidden_#{MagicOrders.trade_mode}", MagicOrders.trade_cols_hidden[MagicOrders.trade_mode].join(","))
+
+  manualSmsOrEmail: (e) ->
+    e.preventDefault()
+    length = $('.trade_check:checked').parents('tr').length
+    if length < 1
+      alert("请勾选要操作的订单。")
+    else
+      Backbone.history.navigate('trades/manual_sms_or_email', true)
+
 
   show_type: (e) ->
     type = $(e.target).data('type')

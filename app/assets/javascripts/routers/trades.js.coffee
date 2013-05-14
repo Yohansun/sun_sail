@@ -11,6 +11,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     'trades/print_deliver_bills': 'printDeliverBills'
     'trades/:id/recover': 'recover'
     'trades/batch_check_goods': 'batch_check_goods'
+    'trades/manual_sms_or_email': 'manual_sms_or_email'
 
   initialize: ->
     @trade_type = null
@@ -153,6 +154,32 @@ class MagicOrders.Routers.Trades extends Backbone.Router
         view = new MagicOrders.Views.TradesBatchCheckGoods(collection: collection)
         $('#trade_batch_check_goods').html(view.render().el)
         $('#trade_batch_check_goods').modal('show')
+
+  manual_sms_or_email: ->
+    modalDivID = "#trade_manual_sms_or_email"
+
+    tmp = []
+    length = $('.trade_check:checked').parents('tr').length
+    if length > 300
+      alert('请选择小于300个订单！')
+      return
+
+    $('.trade_check:checked').parents('tr').each (index, el) ->
+      input = $(el).find('.trade_check')
+      a = input[0]
+      if a.checked
+        trade_id = $(el).attr('id').replace('trade_', '')
+        tmp.push trade_id
+
+    MagicOrders.idCarrier = tmp
+    flag = true
+    if tmp.length != 0
+      @collection.fetch data: {ids: tmp, batch_option: true}, success: (collection, response) =>
+        view = new MagicOrders.Views.TradesManualSmsOrEmail(collection: collection)
+        $(modalDivID).html(view.render().el)
+        $(modalDivID + ' .datepickers').datetimepicker(format: 'yyyy-mm-dd', autoclose: true, minView: 2)
+        $(modalDivID).modal('show')
+
 
   operation: (id, operation_key) ->
     viewClassName = "Trades" + _.classify(operation_key)
