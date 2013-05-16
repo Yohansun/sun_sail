@@ -17,7 +17,10 @@ MagicOrders::Application.routes.draw do
     post :rollback, :on => :collection
   end
 
-  resources :stocks, only: [:index]
+  resources :stocks, only: [:index] do
+    get :edit_depot,:on => :collection
+    put :update_depot,:on => :member
+  end
   match "/stocks/safe_stock", to: 'stocks#safe_stock'
   post "/stocks/edit_safe_stock", to: 'stocks#edit_safe_stock'
   match "/stocks/change_product_type", to: 'stocks#change_product_type'

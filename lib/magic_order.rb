@@ -1,6 +1,12 @@
 #encoding: utf-8
 module MagicOrder
-  ActionDelega = {"detail" => ["index","home",'show','fetch_group'],"create" => ["new","create"],"update" => ["edit","update"],"destroy" => ["destroy","delete"]}.freeze
+  ActionDelega = {
+    "detail" =>   ["index","home",'show','fetch_group'],
+    "create" =>   ["new","create"],
+    "update" =>   ["edit","update"],
+    "destroy" =>  ["destroy","delete"],
+    "edit_depot" => ["edit_depot","update_depot"]
+  }.freeze
 
   class AccessControl
     class << self
@@ -75,7 +81,7 @@ MagicOrder::AccessControl.map do |map|
   map.project_module :stocks do |map|
     map.permission :reads,      ["detail","stock_in_bills#detail","stock_out_bills#detail","stock_bills#detail"]
 #    map.permission :operations, ["create","update","destroy"]
-    map.permission :operations, ["audit","sync","new_single_storage","new_storehouse","increase_in_commodity","determine_the_library","determine_the_storage",
+    map.permission :operations, ["edit_depot","audit","sync","new_single_storage","new_storehouse","increase_in_commodity","determine_the_library","determine_the_storage",
       "stock_in_bills#create","stock_out_bills#create","stock_in_bills#sync","stock_out_bills#sync","stock_in_bills#check","stock_out_bills#check","stock_in_bills#rollback",
       "stock_out_bills#rollback","stock_in_bills#add_product","stock_out_bills#add_product","stock_in_bills#remove_product","stock_out_bills#remove_product"]
   end
