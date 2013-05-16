@@ -33,7 +33,7 @@ class CategoryProperty < ActiveRecord::Base
   end
   
   def values_name
-    values.map(&:value)
+    @value_text ||= values.map(&:value)
   end
 
   
