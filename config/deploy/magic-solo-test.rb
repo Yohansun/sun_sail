@@ -6,7 +6,7 @@ set :repository, "git@git.networking.io:nioteam/magic_orders.git"
 set :branch, "solo_dev"
 
 server "magic-solo-test.networking.io", :web, :app, :db, primary: true
-set :user, "root"
+set :user, "rails"
 set :deploy_to, "/bigdata/var/rails/magic-solo-test"
 
 set :assets_dependencies, %w(app/assets lib/assets vendor/assets Gemfile.lock config/routes.rb)
