@@ -238,6 +238,7 @@ MagicOrders::Application.routes.draw do
   get "/trades/batch_check_goods", to: 'trades#batch_check_goods'
   get "/deliver_bills/print_deliver_bill.:format", to: "deliver_bills#print_deliver_bill"
   get "/deliver_bills/:id/logistic_info", to: "deliver_bills#logistic_info"
+  put "/deliver_bills/:id/split_invoice", to: "deliver_bills#split_invoice"
   get "/deliver_bills/deliver_list", to: "deliver_bills#deliver_list"
   get "/deliver_bills/logistic_waybill_list", to: "deliver_bills#logistic_waybill_list"
   get "/deliver_bills/verify_logistic_waybill", to: "deliver_bills#verify_logistic_waybill"

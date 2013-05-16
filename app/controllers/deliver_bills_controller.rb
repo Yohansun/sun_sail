@@ -65,6 +65,14 @@ class DeliverBillsController < ApplicationController
     @trade = TradeDecorator.decorate @bill.trade
     respond_with @bill
   end
+  
+  #PUT /deliver_bills/1/split_invoice
+  def split_invoice
+    @bill = DeliverBill.find params[:id]
+    @bill.split_invoice(params[:split_invoice_id])
+    redirect_to "/app#deliver_bills/deliver_bills-all"
+  end
+
 
   def batch_print_deliver
     if params[:ids] && params[:time]

@@ -1,0 +1,181 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal">×</button>
+  <h3 class="pr" style="margin-right:15px;">
+    <span big-toggle="bigtoggle"></span>物流拆分
+    <small class="help-inline">订单编号 <strong><%= @bill.get("tid") %></strong></small>
+    <small class="help-inline">订单状态 <strong><%= @bill.get("status_text") %></strong></small>
+  </h3>
+</div><!-- modal-header -->
+<div class="modal-body">
+  <!-- tab menus -->
+  <ul class="nav nav-tabs" id="myTab">
+    <li class="active"><a href="#tab1" data-toggle="tab" class="active">详情</a></li>
+  </ul>
+  <!-- tab container -->
+  <div class="tab-content">
+    <!-- tab1 -->
+    <div class="tab-pane active" id="tab1">
+      <table class="table table-bordered table-condensed">
+        <thead>
+          <tr>
+            <th width="35%">商品名称</th>
+            <th width="">数量</th>
+            <th width="28%">商品属性</th>
+            <th width="">单价</th>
+            <th>备注</th>
+            <th width="10%">退货状态</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for order in @bill.get('orders') : %>
+          <tr>
+            <td><%= order.sku_name%></td>
+            <td><%= order.num%></td>
+            <td><%= order.sku_properties%></td>
+            <td>￥ <%= order.price%></td>
+            <td><p style="overflow:hidden;white-space:normal;word-wrap:break-word;width:100px;"><%= order.cs_memo%></p></td>
+            <td><%= order.refund_status_text %></td>
+          </tr>
+          <% end %>
+          <tr>
+            <td colspan="2">
+              <b class="mar_r10">订单金额：￥<%= @bill.get('sum_fee') %></b>
+
+              <% unless @bill.get('trade_type') == 'TaobaoPurchaseOrder' : %>
+                <b class="mar_r10">积分：￥<%= @bill.get('point_fee') || 0 %></b>
+                <b class="mar_r10">活动优惠：￥<%= @bill.get('seller_discount') %></b>
+              <% end %>
+
+              <b class="mar_r10">物流费：￥<%= @bill.get('post_fee') %> </b>
+            </td>
+            <% if MagicOrders.enable_module_colors == 1 || MagicOrders.enable_module_sku_properties == 1 : %>
+              <% if MagicOrders.enable_module_colors == 1 && MagicOrders.enable_module_sku_properties == 1 : %>
+                <td colspan="5" class="tr"><b>订单实付金额：￥<%= @bill.get('total_fee')%></b></td>
+              <% else : %>
+                <td colspan="4" class="tr"><b>订单实付金额：￥<%= @bill.get('total_fee')%></b></td>
+              <% end %>
+            <% else : %>
+            <td colspan="3" class="tr"><b>订单实付金额：￥<%= @bill.get('total_fee')%></b></td>
+            <% end %>
+          </tr>
+          <% if (MagicOrders.role_key == 'admin' or MagicOrders.role_key == 'cs') and @bill.get('trade_type') == 'TaobaoPurchaseOrder' : %>
+            <tr>
+              <td colspan='2'>
+                <b class="mar_r10">分销商编号：<%= @bill.get('distributor_username') %></b>
+              </td>
+              <% if MagicOrders.enable_module_colors == 1 || MagicOrders.enable_module_sku_properties == 1 : %>
+                <% if MagicOrders.enable_module_colors == 1 && MagicOrders.enable_module_sku_properties == 1 : %>
+                  <td colspan='5' class="tr">
+                <% else : %>
+                  <td colspan='4' class="tr">
+                <% end %>
+              <% else : %>
+              <td colspan='3' class="tr">
+              <% end %>
+                <b>分销商实付金额：￥<%= @bill.get('distributor_payment') %></b>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <table class="table table-condensed">
+        <tbody>
+          <tr>
+            <td><b>收货人信息</b></td>
+            <td><%= @bill.get('receiver_name') %></td>
+            <td>手机:<%= @bill.get('receiver_mobile_phone') %> 座机:<%= @bill.get('receiver_phone') %></td>
+            <td>
+              <%= @bill.get('receiver_state') %>
+              <%= @bill.get('receiver_city') %>
+              <%= @bill.get('receiver_district') %>
+              <%= @bill.get('receiver_address') %>
+            </td>
+            <td><%= @bill.get('receiver_zip') %></td>
+          </tr>
+          <%if @bill.get("seller_id") : %>
+          <tr>
+            <td colspan="1"><b>配送商信息</b></td>
+            <td colspan="4" class="reedit_select"><%= @bill.get("seller_name")%></td>
+          </tr>
+          <% end %>
+          <tr>
+            <td colspan="1"><b>客服备注</b></td>
+            <td colspan="4" class="reedit_text">
+              <p style="overflow:hidden;white-space:normal;word-wrap:break-word;width:600px;"> <%= @bill.get("trade_with_orders_cs_memo")%> </p>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="1"><b>开票信息</b></td>
+            <td colspan="4" class="reedit_text js-invoice-label">
+              <% if @bill.get('invoice_name') : %>
+                <%= @bill.get('invoice_type')%> <%= @bill.get('invoice_name')%> <%= @bill.get('invoice_content')%> <%= @bill.get('invoice_date')%>
+              <% end %>
+            </td>
+          </tr>
+          <% if MagicOrders.company == "dulux" : %>
+            <% if (MagicOrders.role_key == 'admin' or MagicOrders.role_key == 'cs') : %>
+              <tr>
+                <td colspan="1"><b>赠品信息</b></td>
+                <td colspan="4" class="reedit_text js-gift-memo-label"><%= @bill.get('gift_memo') %></td>
+              </tr>
+              <tr>
+                <td colspan="1"><b>金额调整</b></td>
+                <td colspan="4" class="reedit_text js-gift-memo-label"> 
+                  <% if @bill.get('modify_payment') :%>
+                    ¥ 
+                  <% end %>
+                  <%= @bill.get('modify_payment') %>
+                </td>
+              </tr>
+            <% end %>
+          <% else : %>
+            <tr>
+              <td colspan="1"><b>赠品信息</b></td>
+              <td colspan="4" class="reedit_text js-gift-memo-label"><%= @bill.get('gift_memo') %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <form action="/deliver_bills/<%= @bill.get("id") %>/split_invoice" method="post" data-ajax='true' id="split_invoice_form">
+        <input name="utf8" type="hidden" value="&#x2713;" />
+        <input name="_method" type="hidden" value="put" />
+        <input name="authenticity_token" type="hidden" value="" />
+  
+        <div class="modal-body">
+          <div class="dualboxs">
+            <div class="control-group">
+              <button class="btn btn-mini js-dualboxs_add" type="button">新增</button>
+            </div>
+            <div class="clearfix manually_split_selects js-manually_split">
+              <feildset class="pull-left splits_select">
+                <select multiple="multiple" id="splits_select1" class="js-selects" name="split_invoice_id[1][]">
+                  <% for order in  @bill.get("orders") : %>
+                  <option value="<%= order.id %>" selected><%= order.title %></option>
+                  <% end %>
+                </select>
+                <!-- <div class="control-group hidden">
+                  <button class="btn btn-mini" type="button">删除</button>
+                  </div> -->
+                </feildset>
+                <feildset class="pull-left splits_select">
+                  <label class="pull-left dualcontrol">
+                    <i class="icon-chevron-left"></i><br>
+                    <i class="icon-chevron-right"></i>
+                  </label>
+                  <select multiple="multiple" class="js-selects" name="split_invoice_id[2][]">
+              
+                  </select>
+                  <div class="control-group hidden">
+                    <button class="btn btn-mini js-remove" type="button">删除</button>
+                  </div>
+                </feildset>
+              </div>
+            </div>
+          </div><!-- modal-body -->
+          <div class="modal-footer">
+            <button class="btn">确认物流拆分</button>
+          </div>
+        </div>
+      </div>
+    </div><!-- modal-body -->
+  </form>
