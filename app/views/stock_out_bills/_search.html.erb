@@ -16,13 +16,13 @@
 <div class="control-group">
     <%= label_tag "order_id","关联订单",:class => "control-label" %>
   <div class="controls">
-    <%= text_field_tag "order_id_eq" %>
+    <%= text_field_tag "order_id_eq",params[:order_id_eq] %>
   </div>
 </div>
 <div class="control-group">
     <%= label_tag "search[stock_type_eq]","出库类型",:class => "control-label" %>
   <div class="controls">
-    <%= select_tag "search[stock_type_eq]",options_for_select(StockInBill::STOCK_TYPE),:include_blank => true,:class => "input-medium select2" %>
+    <%= select_tag "search[stock_type_eq]",options_for_select((StockOutBill::STOCK_TYPE),params[:search][:stock_type_eq]),:include_blank => true,:class => "input-medium select2" %>
   </div>
 </div>
 <div class="control-group">
@@ -39,7 +39,7 @@
     <%= label_tag "search[stocked_at_gte]", "出库时间",:class => "control-label" %>
   <div class="controls">
 
-    <%= text_field_tag "search[stocked_at_gte]",params["search"]["stocked_at_lte"],:class => "input-medium datetimepicker_full" %>~
+    <%= text_field_tag "search[stocked_at_gte]",params["search"]["stocked_at_gte"],:class => "input-medium datetimepicker_full" %>~
 
     <%= text_field_tag "search[stocked_at_lte]",params["search"]["stocked_at_lte"],:class => "input-medium datetimepicker_full" %>  
   </div>
