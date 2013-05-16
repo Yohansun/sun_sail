@@ -75,6 +75,19 @@ class StocksController < ApplicationController
 
     render :json => data
   end
+  
+  def edit_depot
+    @depot = current_account.sellers.first
+  end
+  
+  def update_depot
+    @depot = current_account.sellers.find_by_id params[:id]
+    if @depot.update_attributes(params[:seller])
+      redirect_to :action => "edit_depot"
+    else
+      render :action => "edit_depot"
+    end
+  end
 
   def edit_safe_stock
     stock_product_id = params[:id]
