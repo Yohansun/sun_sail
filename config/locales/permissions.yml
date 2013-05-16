@@ -125,6 +125,7 @@ zh-CN:
   permissions_tag_confirm_sync: 确认同步(淘宝商品)
   permissions_tag_remove_sku: 删除商品SKU
   permissions_tag_add_sku: 添加商品SKU
+  permissions_tag_split_invoice: 手动拆分物流单
   permissions_tag_account_setups#edit_auto_settings: "查看自动化设置"
   permissions_tag_users#update: "编辑用户"
   permissions_tag_users#delete: "删除用户"
