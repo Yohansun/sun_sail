@@ -1,6 +1,13 @@
 require 'sidekiq/web'
 
 MagicOrders::Application.routes.draw do
+  resources :customers ,:only => [:index] do
+
+    collection do
+      get :potential
+      get :paid
+    end
+  end
 
   resources :stock_in_bills do
     post :add_product   , :on => :collection

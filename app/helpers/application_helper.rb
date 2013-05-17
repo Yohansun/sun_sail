@@ -22,6 +22,11 @@ module ApplicationHelper
     k = "#{options[:prefix]}#{s}".to_sym
     ::I18n.t(k, :default => s.to_s.humanize)
   end
+  
+  def format_url(var)
+    url = request.fullpath
+    url.include?('?') ? url.gsub('?',".#{var}?") : (url.to_s << ".#{var}?") 
+  end
 
   def top_nav_name
     case controller_name

@@ -54,13 +54,15 @@
             <% if current_account.key == 'nippon' %>
               <li class="trades" style="display:none"><a href="http://shop.nipponpaint.com.cn/admin/orders">官网订单</a></li>
             <% end %>
-            <% if ['sales', 'user_activities', 'trade_reports'].include?(controller_name)  %>
+            <% if ['sales', 'user_activities', 'trade_reports','customers'].include?(controller_name)  %>
                 <li class="<%= 'active' if controller_name == 'user_activities'%>">
                   <%= link_to "人员",user_activities_path if authorize?("user_activities","index")  %>
                 <li class="<%= 'active' if controller_name == 'trade_reports'%>">
                   <%= link_to "报表下载",trade_reports_path if authorize?("trade_reports","index")%></li>
                 <li class="<%= 'active' if controller_name == 'sales'%>">
                   <%= link_to "销售", sales_product_analysis_path if authorize?("sales","product_analysis")  %></li>
+                  <li class="<%= 'active' if controller_name == 'customers'%>">
+                    <%= link_to "顾客管理",customers_path if authorize?("customers","index")%></li>
             <% end %>
           </ul>
 

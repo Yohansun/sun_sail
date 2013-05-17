@@ -151,7 +151,10 @@ class TaobaoTradePuller
               orders = trade.delete('orders')
               trade['trade_source_id'] = trade_source_id
               local_trade.update_attributes(trade)      
-              local_trade.operation_logs.build(operated_at: Time.now, operation: "从淘宝更新订单,更新#{local_trade.changed.try(:join, ',')}") if local_trade.changed?
+              if local_trade.changed?
+                local_trade.operation_logs.build(operated_at: Time.now, operation: "从淘宝更新订单,更新#{local_trade.changed.try(:join, ',')}")
+                local_trade.news = 1
+              end
               local_trade.set_has_onsite_service
               local_trade.save
               if local_trade.dispatchable? && local_trade.auto_dispatchable?
@@ -164,6 +167,7 @@ class TaobaoTradePuller
               if account.settings.auto_settings["auto_sync_memo"] && account.can_auto_preprocess_right_now?
                 TradeTaobaoMemoFetcher.perform_async(local_trade.tid, false)
               end
+              CustomerFetch.perform_async
               p "update trade #{trade['tid']}"
             end
           end

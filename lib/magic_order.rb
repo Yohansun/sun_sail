@@ -5,7 +5,8 @@ module MagicOrder
     "create" =>   ["new","create"],
     "update" =>   ["edit","update"],
     "destroy" =>  ["destroy","delete"],
-    "edit_depot" => ["edit_depot","update_depot"]
+    "edit_depot" => ["edit_depot","update_depot"],
+    "customers_detail" => ["index","potential","paid"]
   }.freeze
 
   class AccessControl
@@ -88,7 +89,7 @@ MagicOrder::AccessControl.map do |map|
 
   map.project_module :datas do |map|
     map.permission :reads,      ["user_activities#detail","user_activities#all","trade_reports#detail","sales#product_analysis"]
-    map.permission :operations, ["trade_reports#download"]
+    map.permission :operations, ["trade_reports#download","customers#customers_detail"]
   end
 
   map.project_module :system_settings do |map|
