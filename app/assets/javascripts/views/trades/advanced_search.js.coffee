@@ -13,11 +13,43 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
     'click .advanced_btn': 'advancedSearch'
     'click .remove_search_tag': 'removeSearchTag'
     'change .search_option' : 'changeInputFrame'
+    'change #load_search_criteria': 'loadSearchCriteria'
+    'click #save_search_criteria': 'saveSearchCriteria'
 
   initialize: ->
+    @updateSearchCriteriaSelection()
 
   render: ->
     $(@el).html(@template())
+    self = this
+
+    $.validator.addMethod "search_criteria_uniq", ((value) ->
+      for search_criteria in self.criteria_collection.models
+        if search_criteria.get("name") ==  value
+           return false
+      return true
+      ), "名称已经存在"
+
+    $("#save_search_criteria_form",@el).validate
+      rules:
+        name: 
+          required:true
+          maxlength:7
+          search_criteria_uniq: true
+      messages:
+        name:
+          required:"请输入名称"
+          maxlength:"名称不能超过7个字符"
+
+      highlight: (element)  ->
+        $(element).closest('.control-group').removeClass('success').addClass('error')
+      success: (element) ->
+       element
+       .text('OK!').addClass('valid')
+       .closest('.control-group').removeClass('error').addClass('success')
+      errorPlacement: (error, element) ->
+        element.closest('.control-group').find('span.help-inline').html(error.text())
+
     $(@el).find('.order_search_form .datepickers').datetimepicker(weekStart:1,todayBtn:1,autoclose:1,todayHighlight:1,startView:2,forceParse:0,showMeridian:1)
     @render_select_state()
     @render_select_print_time()
@@ -222,3 +254,61 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
     e.preventDefault()
     $(e.currentTarget).parent('.search_tag').remove()
     @catchSearchMotion()
+
+  saveSearchCriteria:(e)->
+    self = this
+    e.preventDefault()
+    criteria = new MagicOrders.Models.TradeSearch
+    $("#save_search_criteria_modal").modal("show")
+    $("#save_search_criteria_form").submit ()->
+      form = $(this)
+      if !form.valid()
+        return false
+      $("#save_search_criteria_modal").modal("hide")
+      name = $("input[name=name]",form).val()
+      if name == null || name.trim() == ''
+        return
+      criteria.save {
+       html:$(".search_tags_group").html(),
+       name:name
+      }, success: (model,response) ->
+        #@search_criterias.push(model)
+        self.updateSearchCriteriaSelection()
+      return false
+      
+
+
+
+
+  loadSearchCriteria:(e)->
+    e.preventDefault()
+    criteria_id = e.target.value
+    criteria = $.grep @search_criterias,(obj)->
+      if(obj.get("_id")==criteria_id)
+        return true
+    criteria = criteria[0]
+    if criteria
+      $('.search_tags_group').html(criteria.get("html"))
+
+    
+
+  updateSearchCriteriaSelection: ->
+    self = this
+    @criteria_collection = new MagicOrders.Collections.TradeSearches
+    @criteria_collection.fetch success: (collection)->
+      self.search_criterias = collection.models
+      $("#load_search_criteria").html('').append("<option value=''>加载搜索条件</option>")
+      $("#global-menus a[data-search-criteria]").parent("li").remove()
+      $("#global-menus li.seprator").remove()
+      $("#global-menus").append("<li class='seprator'><a>|</a></li>")
+      $(self.search_criterias).each (index,criteria)->
+        $("#load_search_criteria").append("<option value='"+criteria.get("_id")+"'>"+criteria.get("name")+"</option>")
+        if criteria.get("show_in_tabs")
+          $("#global-menus").append("<li><a href='#' data-search-criteria='"+criteria.get("_id")+"'>"+criteria.get("name")+"</a></li>")
+
+
+
+
+
+
+

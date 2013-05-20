@@ -10,6 +10,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     'click .manual_sms_or_email': 'manualSmsOrEmail'
     'click .confirm_batch_deliver': 'confirmBatchDeliver'
     'click .index_pops li a[data-type]': 'show_type'
+    'click [data-search-criteria]': 'switchSearchCriteria'
 
     # 加载更多订单相关
     'click [data-type=loadMoreTrades]': 'forceLoadMoreTrades'
@@ -381,3 +382,10 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
         $.unblockUI()
       else
         $.unblockUI()
+
+  switchSearchCriteria: (e) ->
+    e.preventDefault()
+    $("#load_search_criteria").val($(e.target).attr("data-search-criteria")).change()
+    if(!$("#search_toggle").is(":visible"))
+      $(".advanced_btn:first").click()
+    $(".search").click()
