@@ -139,6 +139,7 @@
           <li><a href="#" data-toggle="modal" data-type="barcode">输入唯一码</a></li>
           <li><a href="/custom_trades/new" data-type="create_handmade_trade">新增人工订单</a></li>
           <li><a href="#" data-type="edit_handmade_trade">编辑人工订单</a></li>
+          <li><a href="#" data-toggle="modal" data-modal-action='true' data-type="modify_receiver_information">订单用户信息修改</a></li>
         </ul>
       </div>
 

@@ -1,0 +1,159 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal">&times;</button>
+  <h3>用户订单信息修改</h3>
+</div>
+<div class="modal-body">
+      <table class="table table-bordered table-condensed">
+        <thead>
+          <tr>
+            <th width="35%">商品名称</th>
+            <th width="">数量</th>
+            <% if MagicOrders.enable_module_colors == 1 : %>
+              <th width="230">调色信息</th>
+            <% end %>
+            <% if MagicOrders.enable_module_sku_properties == 1 : %>
+              <th width="28%">商品属性</th>
+            <% end %>
+            <% unless @trade.get('total_fee') is undefined : %>
+              <th width="">单价</th>
+            <% end %>
+            <th>备注</th>
+            <th width="10%">退货状态</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for order in @trade.get('orders') : %>
+            <% if order.packaged : %>
+              <!-- package order -->
+              <tr>
+              <% if MagicOrders.enable_module_colors == 1 || MagicOrders.enable_module_sku_properties == 1 : %>
+                <% if MagicOrders.enable_module_colors == 1 && MagicOrders.enable_module_sku_properties == 1 : %>
+                  <td colspan='4'><%= order.title %> * <%= order.num %> 套</td>
+                <% else : %>
+                  <td colspan='3'><%= order.title %> * <%= order.num %> 套</td>
+                <% end %>
+              <% else : %>
+              <td colspan='2'><%= order.title %> * <%= order.num %> 套</td>
+              <% end %>
+              <% if MagicOrders.enable_module_sku_properties == 1 : %>
+              <td><%= order.sku_properties%></td>
+              <% end %>
+              <td>￥ <%= order.price%></td>
+              <td><p style="overflow:hidden;white-space:normal;word-wrap:break-word;width:100px;"><%= order.cs_memo%></p></td>
+              <td><%= order.refund_status_text %></td>
+              </tr>
+              <% for info in order['bill_info'] : %>
+                <tr>
+                  <td><%= info.title %></td>
+                  <td><%= info.number * order.num %></td>
+                  <% if MagicOrders.enable_module_colors == 1 : %>
+                    <td class='js-color-label-<%= order.id %>-<%= info.outer_id %>'>
+                      <% for color, array of info['colors'] : %>
+                        <%= array[0] %>桶 <%= color %> <%= array[1] %><br>
+                      <% end %>
+                    </td>
+                  <% end %>
+                  <% if MagicOrders.enable_module_sku_properties == 1 : %>
+                    <td><!-- 套装没有sku属性 --></td>
+                  <% end %>
+                  <td>---</td>
+                  <td>---</td>
+                  <td>---</td>
+                </tr>
+              <% end %>
+            <% else : %>
+              <!-- independent order -->
+              <% for info in order['bill_info'] : %>
+                <tr>
+                  <td><%= info.title %></td>
+                  <td><%= info.number * order.num %></td>
+                  <% if MagicOrders.enable_module_colors == 1 : %>
+                    <td class='js-color-label-<%= order.id %>'>
+                      <% for color, array of info['colors'] : %>
+                        <%= array[0] %>桶 <%= color %> <%= array[1] %><br>
+                      <% end %>
+                    </td>
+                  <% end %>
+                  <% if MagicOrders.enable_module_sku_properties == 1 : %>
+                    <td><%= order.sku_properties %></td>
+                  <% end %>
+                  <% if @trade.get('total_fee') isnt undefined and order['bill_info'].length < 2 : %>
+                    <td>￥<%= order.price %></td>
+                  <% end %>
+                  <td class='js-order-cs-memo-label-<%= order.id %>'><p style="overflow:hidden;white-space:normal;word-wrap:break-word;width:300px;"><%= order.cs_memo %></p></td>
+                  <td><%= order.refund_status_text %></td>
+                </tr>
+              <% end %>
+            <% end %>
+          <% end %>
+          <tr>
+            <td colspan="4">
+              <b class="mar_r10">订单金额：￥<%= @trade.get('sum_fee') %></b>
+
+              <% unless @trade.get('trade_type') == 'TaobaoPurchaseOrder' : %>
+                <b class="mar_r10">积分：￥<%= @trade.get('point_fee') || 0 %></b>
+                <b class="mar_r10">活动优惠：￥<%= @trade.get('seller_discount') %></b>
+              <% end %>
+
+              <b class="mar_r10">物流费：￥<%= @trade.get('post_fee') %> </b>
+            </td>
+            <% if MagicOrders.enable_module_colors == 1 || MagicOrders.enable_module_sku_properties == 1 : %>
+              <% if MagicOrders.enable_module_colors == 1 && MagicOrders.enable_module_sku_properties == 1 : %>
+                <td colspan="5" class="tr"><b>订单实付金额：￥<%= @trade.get('total_fee')%></b></td>
+              <% else : %>
+                <td colspan="4" class="tr"><b>订单实付金额：￥<%= @trade.get('total_fee')%></b></td>
+              <% end %>
+            <% else : %>
+            <td colspan="3" class="tr"><b>订单实付金额：￥<%= @trade.get('total_fee')%></b></td>
+            <% end %>
+          </tr>
+          <% if (MagicOrders.role_key == 'admin' or MagicOrders.role_key == 'cs') and @trade.get('trade_type') == 'TaobaoPurchaseOrder' : %>
+            <tr>
+              <td colspan='2'>
+                <b class="mar_r10">分销商编号：<%= @trade.get('distributor_username') %></b>
+              </td>
+              <% if MagicOrders.enable_module_colors == 1 || MagicOrders.enable_module_sku_properties == 1 : %>
+                <% if MagicOrders.enable_module_colors == 1 && MagicOrders.enable_module_sku_properties == 1 : %>
+                  <td colspan='5' class="tr">
+                <% else : %>
+                  <td colspan='4' class="tr">
+                <% end %>
+              <% else : %>
+              <td colspan='3' class="tr">
+              <% end %>
+                <b>分销商实付金额：￥<%= @trade.get('distributor_payment') %></b>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+
+  <form id='modify_receiver_form' class='form-horizontal'>
+    <div class='control-group'>
+      <label class="control-label">联系人：</label>
+      <div class='controls'>
+        <input type='text' name='name' value='<%=@trade.get("receiver_name")%>'/>
+        <span class="help-inline"></span>
+      </div>
+    </div>
+    <div class='control-group'>
+      <label class="control-label">联系方式：</label>
+      <div class='controls'>
+        <input type='text' name='mobile' value='<%=@trade.get("receiver_mobile_phone")%>'/>
+        <span class="help-inline"></span>
+      </div>
+    </div>
+    <div class='control-group'>
+      <label class="control-label">收货地址：</label>
+      <div class='controls'>
+        <span id="modify_receiver_select_state"> <!--买家地域--> </span>
+        <input type='text' name='address' value='<%= @trade.get('receiver_address') %>' placeholder='收货地址'/>
+      </div>
+      <span class="help-inline"></span>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+    <a class="btn" data-dismiss="modal">取消</a>
+    <a class="btn btn-primary save">保存</a>
+</div>

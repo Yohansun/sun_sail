@@ -16,6 +16,7 @@ class MagicOrders.Views.TradesRow extends Backbone.View
     'click input.trade_check': 'toggleOperationMenu'
 
   initialize: ->
+    @model.on("reset",@render, this)
 
   render: ->
     if $("tr#trade_#{@model.get('id')}").hasClass('notice_tr')
