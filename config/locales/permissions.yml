@@ -46,6 +46,13 @@ zh-CN:
   permissions_tag_operation_log: 日志
   permissions_tag_modify_payment: 金额调整
   permissions_tag_manual_sms_or_email: 发短信/邮件
+  permissions_tag_request_add_ref: 补充不足货品(申请补货)
+  permissions_tag_confirm_add_ref: 补充不足货品(确认补货)
+  permissions_tag_add_ref: 补充不足货品
+  permissions_tag_request_return_ref: 退除多余货品(申请退货)
+  permissions_tag_confirm_return_ref: 退除多余货品(确认退货，退款)
+  permissions_tag_cancel_return_ref: 退除多余货品(取消退货)
+  permissions_tag_return_ref: 退除多余货品
   permissions_tag_create_handmade_trade: 新增人工订单
   permissions_tag_edit_handmade_trade: 编辑人工订单
   permissions_tag_cs_memo: 客服备注

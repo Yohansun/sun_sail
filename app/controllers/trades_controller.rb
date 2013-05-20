@@ -290,6 +290,43 @@ class TradesController < ApplicationController
                                           notify_type: params[:notify_type] )
     end
 
+    # 多退少补
+    if params[:add_ref_hash] && params[:add_ref_hash][:ref_batch]
+      ref_batch = @trade.ref_batches.create(batch_num: @trade.ref_batches.count + 1,
+                                            ref_type: "add_ref",
+                                            status: params[:add_ref_hash][:ref_batch][:status],
+                                            ref_payment: params[:add_ref_hash][:ref_batch][:ref_payment])
+      ref_batch.change_ref_orders(params[:add_ref_hash][:ref_order_array])
+    end
+
+    if params[:add_ref_status]
+      @trade.ref_batches.where(ref_type: "add_ref").first.update_attributes(status: params[:add_ref_status])
+    end
+
+    if params[:return_ref_hash] && params[:return_ref_hash][:ref_batch]
+      ref_batch = @trade.ref_batches.where(ref_type: "return_ref").last
+      if ref_batch.present?
+        ref_batch.update_attributes(status: params[:return_ref_hash][:ref_batch][:status],
+                                    ref_payment: params[:return_ref_hash][:ref_batch][:ref_payment])
+      else
+        ref_batch = @trade.ref_batches.create(batch_num: @trade.ref_batches.count + 1,
+                                              ref_type: "return_ref",
+                                              status: params[:return_ref_hash][:ref_batch][:status],
+                                              ref_payment: params[:return_ref_hash][:ref_batch][:ref_payment])
+      end
+      ref_batch.change_ref_orders(params[:return_ref_hash][:ref_order_array])
+      ref_batch.add_ref_log(current_user, params[:return_ref_hash][:ref_memo])
+    end
+
+    if params[:return_ref_status]
+      ref_batch = @trade.ref_batches.where(ref_type: "return_ref").first
+      ref_batch.update_attributes(status: params[:return_ref_status])
+      ref_batch.add_ref_log(current_user, params[:return_ref_memo])
+      if params[:return_ref_status] == 'cancel_return_ref'
+        ref_batch.ref_orders.delete_all
+      end
+    end
+
     if @trade.save
       @trade = TradeDecorator.decorate(@trade)
       if notifer_seller_flag && @trade.status == "WAIT_SELLER_SEND_GOODS" && @trade.seller

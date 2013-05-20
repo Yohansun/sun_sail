@@ -91,17 +91,31 @@ class MagicOrders.Views.TradesRow extends Backbone.View
       $('#op-toolbar').find('[data-type]').each ->
         $(this).removeAttr('style')
 
-      selected_trade = @model.collection.get($(trade).parents('tr').attr('id').split('trade_')[1])
-      items = selected_trade.check_operations()
-      MagicOrders.enabled_operation_items = items
-      menu_items = $('#op-toolbar').find('[data-type]')
-      menu_items.each ->
-        if $.inArray($(this).data('type')+'', MagicOrders.enabled_operation_items) is -1
-          $(this).css('display', 'none')
+      if @model.collection == undefined
+        selected_trade = new MagicOrders.Models.Trade(id: $(trade).parents('tr').attr('id').split('trade_')[1])
+        selected_trade.fetch success: (model) =>
+          items = selected_trade.check_operations()
+          MagicOrders.enabled_operation_items = items
+          menu_items = $('#op-toolbar').find('[data-type]')
+          menu_items.each ->
+            if $.inArray($(this).data('type')+'', MagicOrders.enabled_operation_items) is -1
+              $(this).css('display', 'none')
 
-      $('#op-toolbar .dropdown-menu').each ->
-        if $(this).find('li a[style]').length is $(this).find('li a').length
-          $(this).parents('div.btn-group').css('display', 'none')
+          $('#op-toolbar .dropdown-menu').each ->
+            if $(this).find('li a[style]').length is $(this).find('li a').length
+              $(this).parents('div.btn-group').css('display', 'none')
+      else
+        selected_trade = @model.collection.get($(trade).parents('tr').attr('id').split('trade_')[1])
+        items = selected_trade.check_operations()
+        MagicOrders.enabled_operation_items = items
+        menu_items = $('#op-toolbar').find('[data-type]')
+        menu_items.each ->
+          if $.inArray($(this).data('type')+'', MagicOrders.enabled_operation_items) is -1
+            $(this).css('display', 'none')
+
+        $('#op-toolbar .dropdown-menu').each ->
+          if $(this).find('li a[style]').length is $(this).find('li a').length
+            $(this).parents('div.btn-group').css('display', 'none')
     else
       MagicOrders.enabled_operation_items = MagicOrders.trade_pops[MagicOrders.trade_mode]
       $('#op-toolbar').find('[data-type]').each ->

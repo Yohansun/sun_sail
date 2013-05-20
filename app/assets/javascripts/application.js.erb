@@ -137,7 +137,6 @@ $(function () {
 
   $('#logistic_select').change(function(){
     xml = $(this).val()
-    console.log(xml)
     bind_swf(MagicOrders.idCarrier, 'kdd', xml)
   })
 });
@@ -290,7 +289,7 @@ $(document).ready(function(e) {
     });
 
     $('.datepickers').datetimepicker({format: 'yyyy-mm-dd',autoclose: true,minView: 2});
-    
+
     $(".datetimepicker_full").datetimepicker({weekStart:1,todayBtn:1,autoclose:1,todayHighlight:1,startView:2,forceParse:0,showMeridian:1});
 
     $('.timepickers').timeEntry({

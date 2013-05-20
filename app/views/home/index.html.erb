@@ -19,7 +19,7 @@
     MagicOrders.enable_module_sku_properties = <%= current_account.settings.enable_module_sku_properties %>
     MagicOrders.enable_module_interface = <%= current_account.settings.enable_module_interface %>
     MagicOrders.enable_module_onsite_service = <%= current_account.settings.enable_module_onsite_service %>
-    
+
     MagicOrders.current_rolenames = <%= raw current_user.roles.map(&:name).to_json %>
     MagicOrders.trade_pops = <%= raw current_user.permissions.to_json %>
     MagicOrders.trade_modes = <%= raw current_account.settings.trade_modes.to_json %>
@@ -58,6 +58,8 @@
 <div id="trade_confirm_return" class="trade modal fade hide" tabindex="-1"></div>
 <div id="trade_confirm_refund" class="trade modal fade hide" tabindex="-1"></div>
 <div id="trade_modify_payment" class="trade modal fade hide" tabindex="-1"></div>
+<div id="trade_add_ref" class="trade modal fade hide" tabindex="-1"></div>
+<div id="trade_return_ref" class="trade modal fade hide" tabindex="-1"></div>
 <div id="trade_splited" class="trade modal fade hide" tabindex="-1" style="width: 890px; margin-left: -445px;"></div>
 <div id="trade_recover" class="trade modal fade hide" tabindex="-1"></div>
 <div id="trade_logistic_split" class="trade modal fade hide" tabindex="-1" style="width: 890px;margin-left: -445px;"></div>
