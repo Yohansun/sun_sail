@@ -5,7 +5,7 @@ class TaobaoOrder < Order
   field :status, type: String
   field :outer_id, type: String
   field :title, type: String
-  field :price, type: Float
+  field :price, type: Float, default: 0.0
   field :num_iid, type: String
   field :item_meal_id, type: String
   field :item_meal_name, type: String
@@ -13,8 +13,8 @@ class TaobaoOrder < Order
   field :num, type: Integer
   field :outer_sku_id, type: String
   field :total_fee, type: Float, default: 0.0
-  field :payment, type: Float
-  field :discount_fee, type: Float
+  field :payment, type: Float, default: 0.0
+  field :discount_fee, type: Float, default: 0.0
   field :adjust_fee, type: Float
   field :modified, type: DateTime
   field :sku_properties_name, type: String
@@ -223,9 +223,13 @@ class TaobaoOrder < Order
   end
 
   def order_payment
-    if taobao_trades.orders.count == 1
-      fee = payment - taobao_trades.post_fee
-    else
+    if taobao_trades
+      if taobao_trades.orders.count == 1
+        fee = payment - taobao_trades.post_fee
+      else
+        fee = payment
+      end
+    elsif custom_trades
       fee = payment
     end
     fee

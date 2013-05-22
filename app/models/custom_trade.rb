@@ -312,4 +312,21 @@ class CustomTrade < Trade
     area_ids = [state_id, city_id, district_id]
     area_ids
   end
+
+  # 模拟淘宝订单
+  def vip_discount
+    0
+  end
+
+  def shop_bonus
+    0
+  end
+
+  def shop_discount
+    0
+  end
+
+  def other_discount
+    0
+  end
 end
