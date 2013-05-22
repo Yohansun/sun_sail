@@ -20,7 +20,7 @@ class TaobaoTradeReporter
     bold = Spreadsheet::Format.new(:weight => :bold)
 
     row_number = 1
-    
+
     header = ["订单来源",
               "订单编号",
               "当前状态",
@@ -41,13 +41,13 @@ class TaobaoTradeReporter
               "商品名",
               "商品编码",
               "商品数量"]
-    
-    max_skus_count = account.taobao_skus.map(&:skus).map(&:count).max        
-   
-    (1..max_skus_count).each do |index| 
+
+    max_skus_count = account.taobao_skus.map(&:skus).map(&:count).max
+
+    (1..max_skus_count).each do |index|
       header << "子商品#{index}编码"
-      header << "子商品#{index}数量"    
-    end  
+      header << "子商品#{index}数量"
+    end
 
     header += [ "商品单价",               #读取淘宝该商品原价
                 "商品售价",               #读取淘宝该商品市场价
@@ -61,6 +61,8 @@ class TaobaoTradeReporter
                 "运费",                   #读取运费，如果一笔订单里商品多，则只要显示在第一行就好
                 "订单总金额",              #读取订单的总金额，如果一笔订单里商品多，则只要显示在第一行就好
                 "订单实付金额",            #读取订单的实付金额，如果一笔订单里商品多，则只要显示在第一行就好
+                "多退金额",
+                "少补金额",
                 "买家留言",
                 "客服备注",
                 "单品备注",
@@ -75,7 +77,7 @@ class TaobaoTradeReporter
 
     sheet1.row(1).concat(header)
      trades.each_with_index do |trade, trade_index|
-      trade_source = '淘宝'
+      trade_source = trade.type_text
       tid = trade.splitted? ? trade.splitted_tid : trade.tid
       taobao_status_memo = trade.taobao_status_memo
       created = trade.created.try(:strftime,"%Y-%m-%d %H:%M:%S")
@@ -90,6 +92,8 @@ class TaobaoTradeReporter
       trade_total_fee = trade.total_fee
       trade_payment = trade.payment
       seller_discount = trade.promotion_fee || 0
+      trade_add_ref_money = trade.ref_batches.where(ref_type: 'add_ref').first.ref_payment rescue nil
+      trade_return_ref_money = -(trade.ref_batches.where(ref_type: 'return_ref').last.ref_payment) rescue nil
 
       receiver_state = trade.receiver_state
       receiver_city = trade.receiver_city
@@ -125,11 +129,11 @@ class TaobaoTradeReporter
         order_price = order.order_price
         sku_properties = order.sku_properties
         order_cs_memo = order.cs_memo
-        refund_status_text = order.refund_status_text       
-        
-        order_discount_fee = (order.discount_fee/order_num).to_f.round(2)   
-        trade_discount_fee = (price - order_price - order_discount_fee).to_f.round(2) 
-        order_payment = (order.order_payment/order_num).to_f.round(2) 
+        refund_status_text = order.refund_status_text
+
+        order_discount_fee = (order.discount_fee/order_num).to_f.round(2)
+        trade_discount_fee = (price - order_price - order_discount_fee).to_f.round(2)
+        order_payment = (order.order_payment/order_num).to_f.round(2)
 
         rate_content = rate_created = rate_result = ''
         rate = TaobaoTradeRate.where(oid: order.oid).first || TaobaoTradeRate.where(tid: trade.tid).first
@@ -160,21 +164,21 @@ class TaobaoTradeReporter
                 receiver_mobile,           #读取买家联系电话-手机
                 receiver_phone,            #读取买家联系电话-座机
                 title,                     #读取淘宝商品名
-                outer_iid,                 #读取淘宝商品编码 
+                outer_iid,                 #读取淘宝商品编码
                 order_num]
 
         order.package_info.each_with_index do |product, index|
           body << "#{product.fetch(:outer_id)}"
           body << "#{product.fetch(:number)}"
-        end      
+        end
 
-        empty_cols_count = (max_skus_count -  order.package_info.count) * 2 
+        empty_cols_count = (max_skus_count -  order.package_info.count) * 2
 
         empty_cols_count.times {body << ""}
-        
+
         body +=[price,                       #读取淘宝该商品市场价
                 order_price,                 #读取淘宝该商品原价
-                order_discount_fee,          #读取商品优惠 
+                order_discount_fee,          #读取商品优惠
                 trade_discount_fee,          #除“商品优惠”外的其他优惠的总和
                 order_payment,
                 vip_discount,                #读取VIP优惠，没有的话为空
@@ -183,7 +187,9 @@ class TaobaoTradeReporter
                 other_discount,              #除可读到优惠以外第三方造成的优惠
                 post_fee,                    #读取运费，如果一笔订单里商品多，则只要显示在第一行就好
                 trade_total_fee,             #读取订单的总金额，如果一笔订单里商品多，则只要显示在第一行就好
-                trade_payment,               #读取订单的实付金额，如果一笔订单里商品多，则只要显示在第一行就好 
+                trade_payment,               #读取订单的实付金额，如果一笔订单里商品多，则只要显示在第一行就好
+                trade_add_ref_money,         #读取订单的少补货金额
+                trade_return_ref_money,      #读取订单的多退货金额
                 buyer_message,               #读取买家留言，没有的话为空
                 trade_cs_memo,               #读取客服备注，没有的话为空
                 order_cs_memo,               #读取单品备注，没有的话为空

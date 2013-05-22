@@ -969,6 +969,18 @@ class Trade
     end
   end
 
+  def type_text
+    if self.custom_type.present?
+      if self.custom_type == 'gift_trade'
+        '赠品'
+      elsif self.custom_type == 'handmade_trade'
+        '人工'
+      end
+    else
+      '淘宝'
+    end
+  end
+
   private
     def check_associate_deliver_bills
       DeliverBill.where(trade_id: self._id).delete_all if self.deleted_at != nil
