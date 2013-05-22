@@ -135,10 +135,12 @@ class Trade
 
   embeds_many :unusual_states
   embeds_many :operation_logs
+  embeds_many :ref_batches
   embeds_many :manual_sms_or_emails
   embeds_many :trade_gifts
 
   has_many :deliver_bills
+
   has_one :stock_out_bill
 
   attr_accessor :matched_seller

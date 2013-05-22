@@ -25,8 +25,8 @@ class MagicOrders.Models.Trade extends Backbone.Model
         if $.inArray('modify_payment',trades) > -1
           enabled_items.push('modify_payment') #金额调整
       when "WAIT_SELLER_SEND_GOODS" # "已付款，待发货"
-        if this.attributes.trade_source == "人工"
-          enabled_items.push('edit_handmade_trade')
+        if this.attributes.trade_source == "人工" && not this.attributes.seller_id
+          enabled_items.push('edit_handmade_trade') #编辑人工订单
         if this.attributes.seller_id
           if MagicOrders.role_key == 'admin' || $.inArray('seller',trades) > -1
             enabled_items.push('seller')
@@ -65,6 +65,16 @@ class MagicOrders.Models.Trade extends Backbone.Model
             enabled_items.push('confirm_color') #确认调色
 
       when "WAIT_BUYER_CONFIRM_GOODS" # "已付款，已发货"
+        if this.attributes.add_ref && this.attributes.add_ref['status'] == 'request_add_ref' && $.inArray('confirm_add_ref',trades) > -1
+          enabled_items.push('add_ref') #确认补货
+        if (this.attributes.add_ref == null) && $.inArray('request_add_ref',trades) > -1
+          enabled_items.push('add_ref') #申请补货
+        if (this.attributes.return_ref == null || this.attributes.return_ref['status'] == 'cancel_return_ref') && $.inArray('request_return_ref',trades) > -1
+          enabled_items.push('return_ref') #申请退货
+        if this.attributes.return_ref && (this.attributes.return_ref['status'] == 'confirm_return_ref' || this.attributes.return_ref['status'] == 'request_return_ref') && $.inArray('confirm_return_ref',trades) > -1
+          enabled_items.push('return_ref') #确认退货
+        if this.attributes.return_ref && this.attributes.return_ref['status'] == 'return_ref_money' && $.inArray('cancel_return_ref',trades) > -1
+          enabled_items.push('return_ref') #取消退货
         if $.inArray('logistic_memo',trades) > -1
           enabled_items.push('logistic_memo') #物流商备注
 

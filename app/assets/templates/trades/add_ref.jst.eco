@@ -1,0 +1,71 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+  <h3>补货</h3>
+</div>
+<% if @trade.get('add_ref') == null : %>
+<div class="modal-body">
+  <fieldset class="form-inline mar_b15">
+    <div class="control-group">
+      <p>订单补货：</p>
+      <select class="input-medium skus_in_order">
+        <option>此订单无SKU</option>
+      </select>
+      <input class="input-medium add_ref_num" type="text" placeholder="输入补货数量">
+      <a class="btn add_ref_sku">添加补货产品</a>
+    </div>
+
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th width="50%">产品名称</th>
+          <th width="20%">总数量</th>
+          <th width="20%">补货数量</th>
+          <th width="10%">操作</th>
+        </tr>
+      </thead>
+      <tbody class="ref_table">
+      </tbody>
+    </table>
+  </fieldset>
+  <fieldset class="form-inline">
+    <label>补货金额：</label>
+    <input type="text" class="input-medium ref_payment" placeholder="输入金额">
+  </fieldset>
+</div>
+<div class="modal-footer">
+  <a class="btn" data-dismiss="modal">取消</a>
+  <a class="btn btn-primary request_add_ref">申请补货</a>
+</div>
+<% else if @trade.get('add_ref')['status'] == "request_add_ref" : %>
+<div class="modal-body">
+  <fieldset class="form-inline mar_b15">
+    <div class="control-group">
+      <p>订单补货：</p>
+    </div>
+
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th width="80%">产品名称</th>
+          <th width="20%">补货数量</th>
+        </tr>
+      </thead>
+      <tbody class="ref_table">
+        <% for order in @trade.get('add_ref')['ref_orders'] : %>
+        <tr>
+          <td><%= order['title'] %></td>
+          <td><%= order['num'] %></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </fieldset>
+  <fieldset class="form-inline">
+    <label>补货金额：<%= @trade.get('add_ref')['ref_payment'] %></label>
+  </fieldset>
+</div>
+<div class="modal-footer">
+  <a class="btn" data-dismiss="modal">取消</a>
+  <a class="btn btn-primary confirm_add_ref">确定补货</a>
+</div>
+<% end %>

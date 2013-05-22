@@ -135,6 +135,8 @@
           <li><a href="#" data-toggle="modal" data-type="modify_payment">金额调整</a></li>
           <li><a href="#" data-toggle="modal" data-type="invoice_number">发票号设置</a></li>
           <li><a href="#" data-toggle="modal" data-type="barcode">输入唯一码</a></li>
+          <li><a href="#" data-toggle="modal" data-type="add_ref">补充不足货品</a></li>
+          <li><a href="#" data-toggle="modal" data-type="return_ref">退除多余货品</a></li>
           <li><a href="/custom_trades/new" data-type="create_handmade_trade">新增人工订单</a></li>
           <li><a href="#" data-type="edit_handmade_trade">编辑人工订单</a></li>
         </ul>
@@ -198,12 +200,12 @@
             </button>
             <ul class="dropdown-menu">
               <li><a href="#" data-toggle="modal" class="manual_sms_or_email">发短信/邮件</a></li>
-      <% if MagicOrders.trade_mode == 'trades' : %>
-        <% if MagicOrders.trade_type == 'undelivered' : %>
+            <% if MagicOrders.trade_mode == 'trades' : %>
+            <% if MagicOrders.trade_type == 'undelivered' : %>
               <li><a data-toggle="modal" class='batch_deliver' href='#'>批量发货</a></li>
               <li><a data-toggle="modal" class='batch_check_goods' href='#'>批量验货</a></li>
-        <% end %>
-      <% end %>
+            <% end %>
+            <% end %>
             </ul>
           </div>
     </div>

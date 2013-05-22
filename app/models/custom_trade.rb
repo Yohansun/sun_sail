@@ -292,7 +292,7 @@ class CustomTrade < Trade
       new_order.refund_status = "NO_REFUND"
       new_order.seller_type = "B"
       new_order.num_iid = order_array[0]
-      new_order.sku_id = order_array[1]
+      new_order.sku_id = (order_array[1] == "0" ? nil : order_array[1])
       new_order.num = order_array[2]
       new_order.payment = order_array[3]
       new_order.title = order_array[4]

@@ -6,11 +6,13 @@ module TradesHelper
       sku = Sku.find_by_id(binding.sku_id)
       next unless sku
       product = sku.product
-      nex unless product
+      next unless product
       number = binding.number
       tmp << {
         name: product.name,
-        number: number
+        number: number,
+        sku_id: binding.sku_id,
+        sku_title: sku.title
       }
     end
     tmp
