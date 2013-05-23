@@ -1,6 +1,7 @@
 class AccountSetupsController < ApplicationController
   include Wicked::Wizard
   before_filter :fetch_account, except: [:data_fetch_finish]
+  before_filter :check_account_wizard_status, only:[:show]
 
   skip_before_filter :verify_authenticity_token, only: [:data_fetch_finish]
   
@@ -9,6 +10,7 @@ class AccountSetupsController < ApplicationController
   steps :admin_init, :data_fetch, :options_setup, :user_init
 
   def show
+    (redirect_to root_path; return) if current_account.settings[:wizard_step] == :finish
     Rails.logger.debug "account setup ::: #{@account.inspect}"
     render_wizard
   end
@@ -25,6 +27,7 @@ class AccountSetupsController < ApplicationController
         # USE SYSTEM SMS INTERFACE.
       end
       # CREATE SELLER IN ORDER TO SYNC STOCK FOR SOME REASON.
+      current_account.settings[:wizard_step] = ""
     when :options_setup
       # auto_settings should be init as a hash.
       @account.settings.auto_settings["autodispatch"] = params[:autodispatch]
@@ -35,6 +38,7 @@ class AccountSetupsController < ApplicationController
       create_users(params[:stock_admin], :stock_admin)
       create_users(params[:interface], :interface)
     end
+    current_account.settings[:wizard_step] = next_step
     render_wizard @account
   end
 
