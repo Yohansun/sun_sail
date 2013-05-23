@@ -26,7 +26,7 @@
         </ul>
         <div class="tab-content">
           <%= simple_form_for User.new, url: account_setup_path, method: :put,
-            html: { class: 'form-horizontal', style: 'margin-top: 20px;'}, validate: true do |f| %>
+            html: { class: 'form-horizontal', style: 'margin-top: 20px;'}, validate: false do |f| %>
             <div class='offset1'>
               <p>请设置管理员账户信息</p>
               <p>再次登录系统，请直接输入你的邮箱和密码即可</p>
@@ -46,3 +46,21 @@
     </div>
   </div>
 </body>
+<%content_for :tail do%>
+<script>
+
+  $("#new_user").validate({
+    messages:{
+      "user[email]":{
+        required:"Email 不能为空",
+        email:"请输入正确的 Email"
+      },
+      "user[username]":{
+        required:"用户名不能为空"
+      }
+    }
+  }
+)
+
+</script>
+<%end%>

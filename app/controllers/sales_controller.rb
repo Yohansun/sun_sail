@@ -1,5 +1,6 @@
 # -*- encoding : utf-8 -*-
 class SalesController < ApplicationController
+  before_filter :authorize
   include SalesHelper
 
   def index

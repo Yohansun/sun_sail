@@ -1,5 +1,7 @@
 class HomeController < ApplicationController
 
+  before_filter :check_account_wizard_status
+
   def index
     @logistics = current_account.logistics
     #FIX ME
