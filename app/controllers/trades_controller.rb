@@ -251,6 +251,16 @@ class TradesController < ApplicationController
       @trade.modify_payment_no = params[:modify_payment_no]
     end
 
+
+    [
+      # for modify receiver informations
+      :receiver_name, :receiver_mobile, :receiver_state, :receiver_city, :receiver_district, :receiver_address
+    ].each{|key|
+      @trade[key] = params[key] if params[key]
+    }
+
+
+
     unless params[:orders].blank?
       params[:orders].each do |item|
         order = @trade.orders.where(_id: item[:id]).first

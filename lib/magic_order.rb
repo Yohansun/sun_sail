@@ -60,7 +60,7 @@ MagicOrder::AccessControl.map do |map|
   map.project_module :trades do |map|
     map.permission :reads,      ["detail", 'request_add_ref', 'confirm_add_ref', 'request_return_ref', 'confirm_return_ref', 'cancel_return_ref']
 #    map.permission :operations, ["logistic_waybill", "seller", "cs_memo", "color", "invoice", "trade_split", "recover", "mark_unusual_state", "reassign", "refund", "check_goods", "operation_log", "manual_sms_or_email", "print_deliver_bill", "deliver", "confirm_color", "seller_confirm_invoice", "confirm_receive", "logistic_memo", "barcode", "seller_confirm_deliver", "request_return", "confirm_return", "confirm_refund", "gift_memo", "modify_payment", "setup_logistic", "logistic_split", "print_logistic_bill", "confirm_check_goods"]
-    map.permission :operations, ["add_ref","return_ref","edit_handmade_trade","create_handmade_trade","export_orders","logistic_waybill", "seller", "cs_memo", "mark_unusual_state", "check_goods", "operation_log", "manual_sms_or_email", "print_deliver_bill", "deliver", "seller_confirm_invoice", "seller_confirm_deliver", "request_return", "confirm_refund", "gift_memo", "setup_logistic", "logistic_split", "print_logistic_bill"]
+    map.permission :operations, ["add_ref","return_ref","edit_handmade_trade","create_handmade_trade","export_orders","logistic_waybill", "seller", "cs_memo", "mark_unusual_state", "check_goods", "operation_log", "manual_sms_or_email", "print_deliver_bill", "deliver", "seller_confirm_invoice", "seller_confirm_deliver", "request_return", "confirm_refund", "gift_memo", "setup_logistic", "logistic_split", "print_logistic_bill","modify_receiver_information"]
   end
   map.project_module :products do |map|
     map.permission :reads,      ["detail","taobao_products", "taobao_product"]

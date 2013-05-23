@@ -1,0 +1,13 @@
+<%= simple_form_for(@trade_search, :remote=>request.xhr?, :html => { :class => 'form-horizontal'}) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%=f.input :name,   :label=>"名称"%>
+    <%=f.input :enabled,    :label=>"启用", :as=>:boolean%>
+    <%=f.input :show_in_tabs, :label=>'显示在标签页', :as=>:boolean%>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit, :value=>"更新" %>
+  </div>
+<% end %>

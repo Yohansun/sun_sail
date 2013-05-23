@@ -29,6 +29,7 @@ MagicOrders::Application.routes.draw do
 
   wash_out :stock_api
 
+  resources :trade_searches
   resources :logistic_groups
   resources :upload_files
   resources :bbs_categories
@@ -271,6 +272,7 @@ MagicOrders::Application.routes.draw do
 
     resources :products
     resources :deliver_bills
+    resources :trade_searches
   end
 
   authenticate :user do

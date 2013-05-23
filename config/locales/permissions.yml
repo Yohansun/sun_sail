@@ -79,6 +79,7 @@ zh-CN:
   permissions_tag_confirm_color: 确认调色
   permissions_tag_trade_split: 订单拆分
   permissions_tag_recover: 订单合并
+  permissions_tag_modify_receiver_information: 订单用户信息修改
   permissions_tag_reassign: 订单转交
   permissions_tag_check_goods: 验货
   permissions_tag_confirm_check_goods: 确认验货

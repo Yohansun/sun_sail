@@ -105,6 +105,8 @@
     <li><a href="#" data-trade-mode='trades' data-trade-status='unusual_all'>问题订单</a></li>
     <li><a href="#" data-trade-mode="deliver_bills" data-trade-status="all">发货单</a></li>
     <li><a href="#" data-trade-mode="logistic_bills" data-trade-status="all">物流单</a></li>
+    <li><a href="#" data-search-criteria="">test</a></li>
+    <li><a href="#"  data-search-criteria="">test2</a></li>
     <!-- <li class=''><a href="#after_order" data-toggle="tab">售后订单</a></li> -->
   </ul>
 
@@ -120,8 +122,8 @@
 
     <div id='op-toolbar' class="btn-toolbar js-affix" data-spy="affix" data-offset-top="144">
       <div class="btn-group">
-        <button class="btn btn-warning">操作</button>
         <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
+          操作
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu index_pops">
@@ -139,12 +141,13 @@
           <li><a href="#" data-toggle="modal" data-type="return_ref">退除多余货品</a></li>
           <li><a href="/custom_trades/new" data-type="create_handmade_trade">新增人工订单</a></li>
           <li><a href="#" data-type="edit_handmade_trade">编辑人工订单</a></li>
+          <li><a href="#" data-toggle="modal" data-modal-action='true' data-type="modify_receiver_information">订单用户信息修改</a></li>
         </ul>
       </div>
 
       <div class="btn-group">
-        <button class="btn btn-warning">审单</button>
         <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
+          审单
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu index_pops">
@@ -162,8 +165,8 @@
       </div>
 
       <div class="btn-group">
-        <button class="btn btn-warning">分派</button>
         <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
+          分派
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu index_pops">
@@ -172,8 +175,8 @@
       </div>
 
       <div class="btn-group">
-        <button class="btn btn-warning">发货</button>
         <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
+          发货
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu index_pops">
@@ -194,8 +197,8 @@
       </div>
 
           <div class="btns btn-group batch_ops">
-            <a href="javascript:void(0)" class="btn btn-warning">批量操作</a>
             <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-warning btn_left4">
+              批量操作
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">

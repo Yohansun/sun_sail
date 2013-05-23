@@ -10,6 +10,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     'click .manual_sms_or_email': 'manualSmsOrEmail'
     'click .confirm_batch_deliver': 'confirmBatchDeliver'
     'click .index_pops li a[data-type]': 'show_type'
+    'click [data-search-criteria]': 'switchSearchCriteria'
 
     # 加载更多订单相关
     'click [data-type=loadMoreTrades]': 'forceLoadMoreTrades'
@@ -124,7 +125,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     else
       Backbone.history.navigate('trades/manual_sms_or_email', true)
 
-
   show_type: (e) ->
     type = $(e.target).data('type')
     if type != 'export_orders' && type != 'create_handmade_trade'
@@ -136,12 +136,25 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
           MagicOrders.cache_trade_number = parseInt($('.trade_check:checked').parents('tr').children('td:first').html())
           if type == 'edit_handmade_trade'
             $(location).attr('href', '/custom_trades/'+trade_id+'/edit')
+          else if $(e.target).data('modal-action')==true
+            @do_modal_action e
           else
             Backbone.history.navigate('trades/' + trade_id + "/#{type}", true)
         else
           alert("请勾选要操作的订单。")
     else if type == 'create_handmade_trade'
       $(location).attr('href', '/custom_trades/new')
+
+  do_modal_action:(e) ->
+    type = $(e.target).data('type')
+    this[type](e)
+
+  modify_receiver_information: (e)->
+    trade_id = $('.trade_check:checked').parents('tr').attr('id').slice(6)
+    model = @collection.get trade_id
+    model.fetch success: (model, response) =>
+      view = new MagicOrders.Views.TradesModifyReveiverInformation(model:model)
+      $("#trade_modify_receiver_information").html(view.render().el).modal("show")
 
   batchCheckGoods: (e) ->
     e.preventDefault()
@@ -381,3 +394,10 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
         $.unblockUI()
       else
         $.unblockUI()
+
+  switchSearchCriteria: (e) ->
+    e.preventDefault()
+    $("#load_search_criteria").val($(e.target).attr("data-search-criteria")).change()
+    if(!$("#search_toggle").is(":visible"))
+      $(".advanced_btn:first").click()
+    $(".search").click()
