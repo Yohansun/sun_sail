@@ -9,7 +9,8 @@ class TaobaoAppTokensController < ApplicationController
     end
     trade_source = TradeSource.where(name: info['taobao_user_nick']).first_or_create
     trade_source_id = trade_source.id
-    account = Account.where(name: info['taobao_user_nick'], key: info['taobao_user_id']).first_or_create
+    account = Account.where(name: info['taobao_user_nick']).first_or_create
+    account.update_attributes(key: info['taobao_user_id']) if account.key.blank?
     session[:account_id] = account.id
     token.update_attributes(trade_source_id: trade_source_id, account_id: account.id)
     trade_source.update_attributes(account_id: account.id)
