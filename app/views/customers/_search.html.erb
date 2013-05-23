@@ -1,0 +1,85 @@
+<% params[:search] ||= {} %>
+<% params[:search][:transaction_history] ||= {} %>
+<%= form_tag path, :class => "well well-small form-horizontal font12 js-affix order_search_form" do %>
+<fieldset>
+  <div class="control-group">
+    <label class="pull-left" for=""><code>精准：</code></label>
+    <div class="controls pull-left">
+      <%= select_tag "exact_phrase",options_for_select(Customer::EXACT_PHRASE,params[:exact_phrase]),:class => "input-medium pull-left select2 radius_no_rb search_option",:id => "exact_phrase",:include_blank => true %>
+      <%= text_field_tag params[:exact_phrase].to_s,params["search_name"],:id => "search_name",:class => "search_value input-large radius_no_tl" %>
+    </div>
+
+    <div class="pull-left mar_r10" id="select_print_time"></div>
+    <div class="pull-left">
+      <button type="button pull-left" class="btn btn-info search" id="simple_search_button">筛选</button>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="pull-left" for=""><code>状态：</code></label>
+    <div class="controls pull-left" style="height: auto">
+      <%= select_tag "search[transaction_histories_status_in][]",options_for_select(Trade::STATUS,params[:search][:transaction_histories_status_in]),:class => "input-medium pull-left",:id => "exact_phrase",:include_blank => true %>
+      <!-- mutiple select -->
+      <!-- <span class="toggle-multiselect">&nbsp;</span> -->
+    </div>
+  </div>
+  
+  <div class="control-group">
+    <label class="pull-left"><code>时间：</code></label>
+    <div class="controls pull-left">
+      <%= text_field_tag "search[transaction_histories_created_gte]",params[:search][:transaction_histories_created_gte],:class => "input-medium end_at datetimepicker_full",:placeholder => "年-月-日 时:分:秒",:readonly => true %>
+      <i class="icon-arrow-right" style="margin-top:0px;"></i>
+      <%= text_field_tag "search[transaction_histories_created_lte]",params[:search][:transaction_histories_created_lte],:class => "input-medium end_at datetimepicker_full",:placeholder => "年-月-日 时:分:秒",:readonly => true %>
+    </div>
+  </div>
+  
+  <div class="control-group">
+    <label class="control pull-left"><code>地域：</code></label>
+    <div class="controls pull-left">
+      <select id="" class="level_1 input-medium input-small pull-left radius_no_rb select2" name="op_state">
+        <option>省</option>
+      </select>
+      <select id="" class="level_2 input-medium input-small pull-left radius_no select2" name="op_city">
+        <option>市</option>
+      </select>
+      <select id="" class="level_3 input-medium input-small pull-left radius_no_tl select2" name="op_district">
+        <option>区</option>
+      </select>
+    </div>
+  </div>
+  
+  <div class="control-group">
+    <label class="pull-left"><code>价格区间：</code></label>
+    <div class="controls pull-left">
+      <%= text_field_tag "search[transaction_histories_payment_gte]",params[:search][:transaction_histories_payment_gte],:class => "input-medium" %>~
+      <%= text_field_tag "search[transaction_histories_payment_lte]",params[:search][:transaction_histories_payment_lte],:class => "input-medium" %>
+    </div>
+    
+</fieldset>
+<% end %>
+<%= content_for :tail do %>
+<script type="text/javascript" charset="utf-8">
+$(function(){
+  var text_field = $(":selected").val()
+  <% field_name = params[:exact_phrase].to_s.gsub(/(^.+\[)|(\]$)/,"") %>
+  $("#serch_name").attr("name","<%= params[:exact_phrase] %>")
+  $("input[name='" + text_field + "']").val("<%= params[:search][field_name] rescue "" %>");
+  
+  $("select").change(function() {
+    var input_name = $(this).val()
+    $("#search_name").attr("name",input_name)
+  });
+});
+$(function() {
+  var options = {
+    data  : linkage_data
+  }
+
+  var sel = new LinkageSelect(options);
+  sel.bind('.level_1','<%= params[:op_state] %>');
+  sel.bind('.level_2','<%= params[:op_city] %>');
+  sel.bind('.level_3','<%= params[:op_district] %>');
+  
+  initFilters();
+});
+</script>
+<% end %>

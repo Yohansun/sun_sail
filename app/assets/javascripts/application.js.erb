@@ -231,6 +231,12 @@ function bind_logistic_swf (id, xml) {
   }
 }
 
+function exportChecked(full_url){
+  var name = $(".export_excel input:checked").attr("name")
+  var ids = $('.export_excel input:checked').map(function(){ return name + "=" + $(this).val()}).get().join('&');
+  $(location).attr('href', full_url + '&' + ids);
+}
+
 function bind_swf(id, type, xml) {
   var flashvars = {
     'config': '/deliver_bills/print_deliver_bill.xml?ids=' + id.toString(),
@@ -279,6 +285,21 @@ function compressArray(original) {
   }
   return compressed;
 };
+
+//toggle mutiple select input
+function toggleMultiSelect(el) {
+  if (el.attr('multiple')) {
+    el.removeAttr('multiple');
+  } else {
+    el.attr('multiple', true);
+  }
+};
+
+function initFilters() {
+  $('.toggle-multiselect').live('click', function() {
+    toggleMultiSelect($(this).siblings('select'));
+  });
+}
 
 //datepicker & timepicker
 $(document).ready(function(e) {

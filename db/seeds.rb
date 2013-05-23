@@ -9,3 +9,6 @@
 u = User.new(email: "admin@doorder.com", password: "doorder", password_confirmation: "doorder", name: 'admin', username: 'admin')
 u.save!
 u.add_role :admin
+
+#生成本地订单的顾客信息
+CustomersPuller.initialize!

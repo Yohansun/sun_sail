@@ -89,11 +89,18 @@ class TaobaoTrade < Trade
   field :promotion, type: String
   field :got_promotion, type: Boolean, default: false  # 优惠信息是否抓到。
   field :sku_properties_name, type: String
+  
+  field :news, type: Integer , default: 0 #是否从淘宝更新数据
+  #  淘宝抓取过来的数据,本地老的数据进行更新后标记为"已更新",
+  #  待其他操作(更新本地顾客)处理完毕后标记为已处理
+  enum_attr :news, [["无更新",0],["已更新",1],["已处理",2]]
 
   embeds_many :taobao_orders
   embeds_many :promotion_details
 
   accepts_nested_attributes_for :taobao_orders
+  
+  attr_accessor :search_fields
 
   def orders
     self.taobao_orders
