@@ -1,6 +1,12 @@
 #encoding: utf-8
 module MagicOrder
-  ActionDelega = {"detail" => ["index","home",'show','fetch_group'],"create" => ["new","create"],"update" => ["edit","update"],"destroy" => ["destroy","delete"]}.freeze
+  ActionDelega = {
+    "detail" =>   ["index","home",'show','fetch_group'],
+    "create" =>   ["new","create"],
+    "update" =>   ["edit","update"],
+    "destroy" =>  ["destroy","delete"],
+    "edit_depot" => ["edit_depot","update_depot"]
+  }.freeze
 
   class AccessControl
     class << self
@@ -52,9 +58,9 @@ end
 #oerations 不同角色显示的“操作”弹出项
 MagicOrder::AccessControl.map do |map|
   map.project_module :trades do |map|
-    map.permission :reads,      ["detail"]
+    map.permission :reads,      ["detail", 'request_add_ref', 'confirm_add_ref', 'request_return_ref', 'confirm_return_ref', 'cancel_return_ref']
 #    map.permission :operations, ["logistic_waybill", "seller", "cs_memo", "color", "invoice", "trade_split", "recover", "mark_unusual_state", "reassign", "refund", "check_goods", "operation_log", "manual_sms_or_email", "print_deliver_bill", "deliver", "confirm_color", "seller_confirm_invoice", "confirm_receive", "logistic_memo", "barcode", "seller_confirm_deliver", "request_return", "confirm_return", "confirm_refund", "gift_memo", "modify_payment", "setup_logistic", "logistic_split", "print_logistic_bill", "confirm_check_goods"]
-    map.permission :operations, ["edit_handmade_trade","create_handmade_trade","export_orders","logistic_waybill", "seller", "cs_memo", "mark_unusual_state", "check_goods", "operation_log", "manual_sms_or_email", "print_deliver_bill", "deliver", "seller_confirm_invoice", "seller_confirm_deliver", "request_return", "confirm_refund", "gift_memo", "setup_logistic", "logistic_split", "print_logistic_bill","modify_receiver_information"]
+    map.permission :operations, ["add_ref","return_ref","edit_handmade_trade","create_handmade_trade","export_orders","logistic_waybill", "seller", "cs_memo", "mark_unusual_state", "check_goods", "operation_log", "manual_sms_or_email", "print_deliver_bill", "deliver", "seller_confirm_invoice", "seller_confirm_deliver", "request_return", "confirm_refund", "gift_memo", "setup_logistic", "logistic_split", "print_logistic_bill","modify_receiver_information"]
   end
   map.project_module :products do |map|
     map.permission :reads,      ["detail","taobao_products", "taobao_product"]
@@ -75,7 +81,7 @@ MagicOrder::AccessControl.map do |map|
   map.project_module :stocks do |map|
     map.permission :reads,      ["detail","stock_in_bills#detail","stock_out_bills#detail","stock_bills#detail"]
 #    map.permission :operations, ["create","update","destroy"]
-    map.permission :operations, ["audit","sync","new_single_storage","new_storehouse","increase_in_commodity","determine_the_library","determine_the_storage",
+    map.permission :operations, ["edit_depot","audit","sync","new_single_storage","new_storehouse","increase_in_commodity","determine_the_library","determine_the_storage",
       "stock_in_bills#create","stock_out_bills#create","stock_in_bills#sync","stock_out_bills#sync","stock_in_bills#check","stock_out_bills#check","stock_in_bills#rollback",
       "stock_out_bills#rollback","stock_in_bills#add_product","stock_out_bills#add_product","stock_in_bills#remove_product","stock_out_bills#remove_product"]
   end

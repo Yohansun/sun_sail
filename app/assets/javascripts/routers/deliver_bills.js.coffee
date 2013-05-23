@@ -2,6 +2,7 @@ class MagicOrders.Routers.DeliverBills extends Backbone.Router
   routes:
     'deliver_bills': 'index'
     'deliver_bills/:trade_mode-:trade_type': 'index'
+    'deliver_bills/:id/split_invoice': "split_invoice"
     'deliver_bills/:id/:operation': 'operation'
 
   initialize: ->
@@ -96,3 +97,11 @@ class MagicOrders.Routers.DeliverBills extends Backbone.Router
             MagicOrders.hasPrint = false
 
       $(modalDivID).modal('show')
+    
+  split_invoice: (id) ->
+    @model = new MagicOrders.Models.DeliverBill({id: id})
+    @model.fetch success: (model,response) =>
+      $.unblockUI()
+      view = new MagicOrders.Views.DeliverBillsSplitInvoice({model: model})
+      $('#split_invoice').html(view.render().el)
+      $('#split_invoice').modal('show')

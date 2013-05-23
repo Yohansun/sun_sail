@@ -1,3 +1,4 @@
+#encoding: utf-8
 # == Schema Information
 #
 # Table name: sellers
@@ -26,15 +27,15 @@
 #  stock_opened_at   :datetime
 #  account_id        :integer(4)
 #
-
-# -*- encoding : utf-8 -*-
 require 'hz2py'
 
 class Seller < ActiveRecord::Base
+  include MagicEnum
   acts_as_nested_set :counter_cache => :children_count
+  enum_attr :has_stock, [["启用",true],["禁用",false]]
 
   attr_accessible :has_stock, :stock_opened_at,:mobile, :telephone, :cc_emails, :email, :pinyin, :interface, :fullname, :name,
-                  :parent_id, :address, :performance_score, :user_id
+                  :parent_id, :address, :performance_score, :user_id,:stock_name,:stock_user_id
 
   has_many :users
   has_many :sellers_areas

@@ -154,10 +154,9 @@
   })
 
   $('.confirm_settlement_all').click(function(argument) {
-    console.log($("input[name='audited[]']:checked").length)
     if($("input[name='audited[]']:checked").length > 0){
-      var chk_value =[];  
-      $("input[name='audited[]']:checked").each(function(){  
+      var chk_value =[];
+      $("input[name='audited[]']:checked").each(function(){
         chk_value.push($(this).val());
       });
       $("#rs_ids").val(chk_value);
@@ -173,15 +172,15 @@
   })
 
   $('.confirm_export').click(function(argument) {
-    var chk_value =[];  
-    $("input[name='audited[]']:checked").each(function(){  
+    var chk_value =[];
+    $("input[name='audited[]']:checked").each(function(){
       chk_value.push($(this).val());
     });
     window.location = "<%=exports_reconcile_statements_path%>.xls?selected_rs="+chk_value;
   })
 
   $("#checkbox").click(function() {
-     $("INPUT[type='checkbox']").attr('checked', $("#checkbox").is(':checked'));    
+     $("INPUT[type='checkbox']").attr('checked', $("#checkbox").is(':checked'));
   });
 
 

@@ -54,7 +54,6 @@ class MagicOrders.Views.TradesGiftMemo extends Backbone.View
         if $('#gift_list').find("tr:eq("+num+")").attr('style') == "display: none;"
           gift_tid = $('#gift_list').find("tr:eq("+num+")").children("td:eq(0)").text()
           @delete_gifts.push(gift_tid)
-          console.log(@delete_gifts)
         else
           if $('#gift_list').find("tr:eq("+num+")").attr('class').slice(-12) == "new_add_gift"
             product_id = $('#gift_list').find("tr:eq("+num+")").attr('class').slice(8, -13)
@@ -65,7 +64,6 @@ class MagicOrders.Views.TradesGiftMemo extends Backbone.View
             else
               trade_id = @model.get('id')
             @add_gifts[num] = {"product_id": product_id, "gift_tid": gift_tid, "gift_title": gift_title, "trade_id": trade_id}
-            console.log(@add_gifts)
 
     @model.set "operation", "赠品修改"
     @model.set "delete_gifts", @delete_gifts

@@ -7,11 +7,11 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     'color/:trade_mode-:trade_type': 'index'
     'return/:trade_mode-:trade_type': 'index'
     'trades/:id/splited': 'splited'
-    'trades/:id/:operation': 'operation'
     'trades/print_deliver_bills': 'printDeliverBills'
     'trades/:id/recover': 'recover'
     'trades/batch_check_goods': 'batch_check_goods'
     'trades/manual_sms_or_email': 'manual_sms_or_email'
+    'trades/:id/:operation': 'operation'
 
   initialize: ->
     @trade_type = null

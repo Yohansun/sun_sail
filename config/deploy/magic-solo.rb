@@ -30,6 +30,12 @@ namespace :deploy do
     run "touch #{deploy_to}/current/tmp/restart.txt"
   end
 
+
+  desc "force reload monit config"
+  task :monit_force_reload do
+    run "service monit force-reload"
+  end
+
   desc "Symlink shared resources on each release"
   task :symlink_shared, :roles => :app do
     run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
@@ -47,6 +53,8 @@ namespace :deploy do
 end
 
 after 'deploy:finalize_update', 'deploy:symlink_shared'
+before "deploy:restart", "deploy:monit_force_reload"
+
 namespace :db do
   desc "migrate db"
   task :migrate, :roles => :app do
@@ -54,12 +62,3 @@ namespace :db do
   end
 end
 
-# namespace :sidekiq do
-#   desc "restart sidekiq"
-#   task :restart, :roles => :app do
-#     run "rvmsudo god restart magic_orders"
-#     run "rvmsudo god restart magic_orders_pullers"
-#   end
-# end
-
-# after 'deploy:create_symlink', 'sidekiq:restart'

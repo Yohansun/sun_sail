@@ -17,7 +17,6 @@ class MagicOrders.Views.TradesBatchCheckGoods extends Backbone.View
     trade_ids = @collection.map((trade)->
       return trade.id
     )
-    console.log(trade_ids)
     $.get '/trades/batch_check_goods', {ids: trade_ids}, (result) ->
       $.unblockUI()
       $('#trade_batch_check_goods').modal('hide')

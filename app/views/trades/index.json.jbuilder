@@ -88,4 +88,7 @@ json.array!(@trades) do |json, trade|
 
   #for gift_trade only!
   json.main_trade_id trade.main_trade_id if trade.main_trade_id
+
+  json.add_ref trade.ref_batches.where(ref_type: "add_ref").first
+  json.return_ref trade.ref_batches.where(ref_type: "return_ref").last
 end

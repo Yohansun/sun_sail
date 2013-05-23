@@ -1,13 +1,13 @@
 # -*- encoding : utf-8 -*-
 class TaobaoAppTokensController < ApplicationController
-
+  skip_before_filter :authenticate_user!
   def create
     info = auth_hash['info']
     token = TaobaoAppToken.where(taobao_user_id: info['taobao_user_id']).first
     unless token
       token = TaobaoAppToken.create(taobao_user_id: info['taobao_user_id'], taobao_user_nick: info['taobao_user_nick'], access_token: auth_hash["credentials"]["token"], refresh_token: auth_hash["credentials"]["refresh_token"])
     end
-    trade_source = TradeSourcet.where(name: info['taobao_user_nick']).first_or_create
+    trade_source = TradeSource.where(name: info['taobao_user_nick']).first_or_create
     trade_source_id = trade_source.id
     account = Account.where(name: info['taobao_user_nick'], key: info['taobao_user_id']).first_or_create
     session[:account_id] = account.id
@@ -16,9 +16,11 @@ class TaobaoAppTokensController < ApplicationController
     response = TaobaoQuery.get({method: 'taobao.shop.get', fields: 'sid,cid,title,nick,desc,bulletin,created,modified', nick: "#{info['taobao_user_nick']}" }, trade_source_id )
     if response['shop_get_response']
       source = response["shop_get_response"]["shop"]
-      source["description"] = source.delete("desc")
-      source["name"] = source.delete("nick")
-      trade_source.update_attributes(source)
+      if source
+        source["description"] = source.delete("desc")
+        source["name"] = source.delete("nick")
+        trade_source.update_attributes(source)
+      end  
       account.settings.enable_token_error_notify = true
       MagicOneHitFetcher.perform_async(trade_source_id)
       redirect_to account_setups_path

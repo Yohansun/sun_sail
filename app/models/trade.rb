@@ -135,10 +135,12 @@ class Trade
 
   embeds_many :unusual_states
   embeds_many :operation_logs
+  embeds_many :ref_batches
   embeds_many :manual_sms_or_emails
   embeds_many :trade_gifts
 
   has_many :deliver_bills
+
   has_one :stock_out_bill
 
   attr_accessor :matched_seller
@@ -964,6 +966,18 @@ class Trade
       self.has_onsite_service = true
     else
       self.has_onsite_service = false
+    end
+  end
+
+  def type_text
+    if self.custom_type.present?
+      if self.custom_type == 'gift_trade'
+        '赠品'
+      elsif self.custom_type == 'handmade_trade'
+        '人工'
+      end
+    else
+      '淘宝'
     end
   end
 

@@ -46,6 +46,13 @@ zh-CN:
   permissions_tag_operation_log: 日志
   permissions_tag_modify_payment: 金额调整
   permissions_tag_manual_sms_or_email: 发短信/邮件
+  permissions_tag_request_add_ref: 补充不足货品(申请补货)
+  permissions_tag_confirm_add_ref: 补充不足货品(确认补货)
+  permissions_tag_add_ref: 补充不足货品
+  permissions_tag_request_return_ref: 退除多余货品(申请退货)
+  permissions_tag_confirm_return_ref: 退除多余货品(确认退货，退款)
+  permissions_tag_cancel_return_ref: 退除多余货品(取消退货)
+  permissions_tag_return_ref: 退除多余货品
   permissions_tag_create_handmade_trade: 新增人工订单
   permissions_tag_edit_handmade_trade: 编辑人工订单
   permissions_tag_cs_memo: 客服备注
@@ -111,6 +118,7 @@ zh-CN:
   permissions_tag_new_storehouse: 新增出库单
   permissions_tag_increase_in_commodity: 增加商品
   permissions_tag_determine_the_library: 确定出库
+  permissions_tag_edit_depot: 编辑仓库
   permissions_tag_determine_the_storage: 确定入库
   permissions_tag_user_activities#detail: "人员查看"
   permissions_tag_user_activities#all: "查看所有人员"
@@ -125,6 +133,7 @@ zh-CN:
   permissions_tag_confirm_sync: 确认同步(淘宝商品)
   permissions_tag_remove_sku: 删除商品SKU
   permissions_tag_add_sku: 添加商品SKU
+  permissions_tag_split_invoice: 手动拆分物流单
   permissions_tag_account_setups#edit_auto_settings: "查看自动化设置"
   permissions_tag_users#update: "编辑用户"
   permissions_tag_users#delete: "删除用户"

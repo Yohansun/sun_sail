@@ -39,7 +39,7 @@
           <li class="<%= "active" if params[:controller] == "stocks" && params[:action] =~ /safe_stock|change_product_type/ %>">
             <a href="/stocks/safe_stock">安全库存管理</a>
           </li>
-          <li class=""><a href="#">仓库编辑</a></li>
+          <li class="<%= "active" if params[:controller] == "stocks" && params[:action] =~ /edit_depot|update_depot/ %>"><a href="/stocks/edit_depot">仓库编辑</a></li>
         </ul>
     </li>
 

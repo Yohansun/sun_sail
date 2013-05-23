@@ -292,7 +292,7 @@ class CustomTrade < Trade
       new_order.refund_status = "NO_REFUND"
       new_order.seller_type = "B"
       new_order.num_iid = order_array[0]
-      new_order.sku_id = order_array[1]
+      new_order.sku_id = (order_array[1] == "0" ? nil : order_array[1])
       new_order.num = order_array[2]
       new_order.payment = order_array[3]
       new_order.title = order_array[4]
@@ -311,5 +311,22 @@ class CustomTrade < Trade
     district_id = Area.where(parent_id: city_id).find_by_name(receiver_district).id rescue nil
     area_ids = [state_id, city_id, district_id]
     area_ids
+  end
+
+  # 模拟淘宝订单
+  def vip_discount
+    0
+  end
+
+  def shop_bonus
+    0
+  end
+
+  def shop_discount
+    0
+  end
+
+  def other_discount
+    0
   end
 end

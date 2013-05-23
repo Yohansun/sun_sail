@@ -6,8 +6,6 @@ class StockBillsController < ApplicationController
   def index
     params[:search] ||= {}
     params[:search][:_id_in] = params[:export_ids].split(',') if params[:export_ids].present?
-    sku_id = params["bill_products_sku_id_eq"]
-    params["search"]["bill_products_sku_id_eq"] = sku if sku_id.present?
     @search = @bills.search(params[:search])
     @bills = @search.page(params[:page]).per(20)
     @count = @search.count
