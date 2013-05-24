@@ -36,3 +36,4 @@ json.company_name @trade.fetch_account.settings.company_name
 json.company_phone @trade.fetch_account.settings.company_phone
 json.company_address @trade.fetch_account.settings.company_address
 json.print_date Time.now.strftime("%Y-%m-%d")
+json.bill_products_count @bill.bill_products.try(:count).to_i

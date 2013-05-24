@@ -102,6 +102,10 @@ class MagicOrders.Routers.DeliverBills extends Backbone.Router
     @model = new MagicOrders.Models.DeliverBill({id: id})
     @model.fetch success: (model,response) =>
       $.unblockUI()
+      if model.get("bill_products_count") < 2
+        alert("此物流单商品数量小于2,不能拆分!")
+        Backbone.history.navigate("deliver_bills")
+        return
       view = new MagicOrders.Views.DeliverBillsSplitInvoice({model: model})
       $('#split_invoice').html(view.render().el)
       $('#split_invoice').modal('show')
