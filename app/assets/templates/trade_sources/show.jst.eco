@@ -11,7 +11,7 @@
     <li class="active"><a data-toggle="tab" href="#order_source">订单来源</a></li>
     <!-- <li><a data-toggle="tab" href="#order_deal_rule">订单处理模式</a></li> -->
     <!-- <li><a data-toggle="tab" href="#order_split_rule">订单拆分规则</a></li> -->
-    <!-- <li><a data-toggle="tab" href="#order_branch_rule">订单分流规则</a></li> -->
+    <!-- <li><a data-toggle="tab" href="#order_branch_rule">订单分派规则</a></li> -->
     <!-- <li><a data-toggle="tab" href="#order_out_rule">订单发货规则</a></li> -->
     <!-- <li><a data-toggle="tab" href="#order_info">订单消息推送</a></li> -->
     <!-- <li><a data-toggle="tab" href="#exception_msg">异常提示</a></li> -->
@@ -102,7 +102,7 @@
         <ul class="nav nav-tabs reset_border span2" id="myTab_sub">
           <li class="active">
             <h5>说明：</h5>
-            <p>1 经销商配送模式，您需要先对经销商体系进行管理，以便全国相应地区都有可对应的经销商<br>2 非经销商配送模式下，所有订单默认由业务人员做后续业务操作，订单分流功能关闭</p>
+            <p>1 经销商配送模式，您需要先对经销商体系进行管理，以便全国相应地区都有可对应的经销商<br>2 非经销商配送模式下，所有订单默认由业务人员做后续业务操作，订单分派功能关闭</p>
           </li>
         </ul>
 
@@ -132,7 +132,7 @@
         <ul class="nav nav-tabs reset_border span2" id="myTab_sub">
           <li class="active">
             <h5>说明：</h5>
-               <p>1 经销商配送模式，您需要先对经销商体系进行管理，以便全国相应地区都有可对应的经销商<br>2 非经销商配送模式下，所有订单默认由业务人员做后续业务操作，订单分流功能关闭</p>
+               <p>1 经销商配送模式，您需要先对经销商体系进行管理，以便全国相应地区都有可对应的经销商<br>2 非经销商配送模式下，所有订单默认由业务人员做后续业务操作，订单分派功能关闭</p>
           </li>
         </ul>
 
@@ -205,7 +205,7 @@
             <form class="form-horizontal nomargin">
               <fieldset class="re_height237">
                 <div class="control-group form-inline">
-                  <label class="control-label" for="">自动分流：</label>
+                  <label class="control-label" for="">自动分派：</label>
                   <div class="controls">
                     <button class="btn">开启</button>
                     <button class="btn">关闭</button>
@@ -213,7 +213,7 @@
                 </div>
 
                 <div class="control-group form-inline">
-                  <label class="control-label" for="">手动分流：</label>
+                  <label class="control-label" for="">手动分派：</label>
                   <div class="controls clearfix">
                     <label class="control-label tl" for="">来源：</label>
                   </div>
@@ -238,7 +238,7 @@
                   </div>
                   <div class="controls">
                     <label class="checkbox inline">
-                      <input type="checkbox" value="option1" id=""> 超过两天未分流
+                      <input type="checkbox" value="option1" id=""> 超过两天未分派
                     </label>
                   </div>
                   <div class="controls">
@@ -330,7 +330,7 @@
                       <select id="" class="input-small">
                         <option>下单</option>
                         <option>付款</option>
-                        <option>分流</option>
+                        <option>分派</option>
                         <option>其他</option>
                       </select>
                     </div>
@@ -408,7 +408,7 @@
                       <select id="" class="input-small">
                         <option>下单</option>
                         <option>付款</option>
-                        <option>分流</option>
+                        <option>分派</option>
                         <option>其他</option>
                       </select>
                     </div>

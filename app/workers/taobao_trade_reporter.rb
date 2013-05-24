@@ -26,7 +26,7 @@ class TaobaoTradeReporter
               "当前状态",
               "下单时间",
               "付款时间",
-              "分流时间",
+              "分派时间",
               "发货时间",
               "支付宝到帐时间",           #读取交易关闭的时间
               "发货仓库",                #读取发货仓库名
@@ -151,7 +151,7 @@ class TaobaoTradeReporter
                 taobao_status_memo,        #读取订单当前状态
                 created,                   #读取订单下单时间
                 pay_time,                  #读取订单付款时间
-                dispatched_at,             #读取系统最后一次分流时间
+                dispatched_at,             #读取系统最后一次分派时间
                 delivered_at,              #读取系统进行发货的时间
                 end_time,                  #读取交易关闭的时间
                 stock_name,                #读取发货仓库名

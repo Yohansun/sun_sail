@@ -124,7 +124,7 @@ class CustomTrade < Trade
     TradeTaobaoDeliver.perform_async(self.id)
   end
 
-  #### CustomTrade 目前默认不能自动分流 ####
+  #### CustomTrade 目前默认不能自动分派 ####
   # def auto_dispatchable?
   #   dispatch_options = self.fetch_account.settings.auto_settings["dispatch_options"]
   #   if dispatch_options["void_buyer_message"] && dispatch_options["void_seller_memo"]
@@ -162,9 +162,9 @@ class CustomTrade < Trade
   #   dispatch!
 
   #   operation_desc =  if seller_id
-  #                       '自动分流'
+  #                       '自动分派'
   #                     else
-  #                       '自动分流,未匹配到经销商'
+  #                       '自动分派,未匹配到经销商'
   #                     end
 
   #   self.operation_logs.create(operated_at: Time.now, operation: operation_desc)
@@ -177,10 +177,10 @@ class CustomTrade < Trade
 
     return false if seller.blank?
 
-    # 更新订单状态为已分流
+    # 更新订单状态为已分派
     update_attributes(seller_id: seller.id, seller_name: seller.name, dispatched_at: Time.now)
 
-    # 如果满足自动化设置条件，分流后订单自动发货
+    # 如果满足自动化设置条件，分派后订单自动发货
     auto_settings = self.fetch_account.settings.auto_settings
     if auto_settings['auto_deliver'] && self.fetch_account.can_auto_deliver_right_now?
       if auto_settings["deliver_condition"] == "dispatched_trade" && deliverable?

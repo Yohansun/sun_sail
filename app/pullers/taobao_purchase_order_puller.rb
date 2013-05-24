@@ -177,7 +177,7 @@ class TaobaoPurchaseOrderPuller
                 local_sub_order.update_attributes sub_order
               end
 
-              # 分流
+              # 分派
               if account.settings.auto_settings["auto_dispatch"]
                 if account.can_auto_dispatch_right_now?
                   local_trade.auto_dispatch!

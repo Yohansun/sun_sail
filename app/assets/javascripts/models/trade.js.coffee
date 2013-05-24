@@ -18,7 +18,7 @@ class MagicOrders.Models.Trade extends Backbone.Model
     type = this.attributes.trade_type
     trades = MagicOrders.trade_pops['trades']
     if MagicOrders.role_key == "super_admin"
-      enabled_items.push('seller') #订单分流,分流重置
+      enabled_items.push('seller') #订单分派,分派重置
     switch state
       # when "TRADE_NO_CREATE_PAY" # "没有创建支付宝交易"
       when "WAIT_BUYER_PAY" # "等待付款"
@@ -32,7 +32,7 @@ class MagicOrders.Models.Trade extends Backbone.Model
           if MagicOrders.role_key == 'admin' || $.inArray('seller',trades) > -1
             enabled_items.push('seller')
         else
-          enabled_items.push('seller')  #订单分流,分流重置
+          enabled_items.push('seller')  #订单分派,分派重置
 
         if this.attributes.splitted_tid && $.inArray('recover',trades) > -1
           enabled_items.push('recover') #订单合并

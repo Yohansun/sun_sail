@@ -16,7 +16,7 @@ class Trade
   field :seller_name, type: String
   field :seller_email, type: String
 
-  field :dispatched_at, type: DateTime                    # 分流时间
+  field :dispatched_at, type: DateTime                    # 分派时间
   field :delivered_at, type: DateTime                     # 发货时间
 
   field :cs_memo, type: String                            # 客服备注
@@ -415,7 +415,7 @@ class Trade
   # SKU属性不全
   def generate_deliver_bill
     return if _type == 'JingdongTrade'
-    #分流时生成默认发货单, 不支持京东订单
+    #分派时生成默认发货单, 不支持京东订单
     deliver_bills.delete_all
     if can_deliver_in_logistic_group?
       logistic_groups.each do |logistic_group_id, divmod|
@@ -833,7 +833,7 @@ class Trade
           if current_user.seller.present?
             trades = trades.where(:dispatched_at.ne => nil, :status.in => paid_not_deliver_array)
           else
-          # 管理员，客服登录默认显示未分流淘宝订单
+          # 管理员，客服登录默认显示未分派淘宝订单
 #          if current_user.has_role?(:cs) || current_user.has_role?(:admin)
             trades = trades.where(:status.in => paid_not_deliver_array, seller_id: nil).where(_type: 'TaobaoTrade')
           end

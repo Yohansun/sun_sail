@@ -129,7 +129,7 @@
 #     end
 
 #     def split_orders(trade, auto=true, split_hash=[])
-#       # 拆单并分流
+#       # 拆单并分派
 #       trade_dec = TradeDecorator.decorate(trade)
 #       return false unless trade_dec.pay_time.present? && trade.seller_id.blank?
 
