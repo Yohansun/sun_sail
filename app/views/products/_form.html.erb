@@ -8,7 +8,7 @@
     <%= f.input :storage_num, label: '仓库编号：', :input_html =>{ :class => "input-xlarge" } %>
     <%= f.input :price, label: '价格：', as: :string, :input_html =>{ :class => "input-xlarge" } %>
     <%#= f.association :quantity, collection: current_account.quantities, label: '规格：', :input_html =>{ :class => "width_auto" } %>
-    <%= f.input :logistic_group_id, collection: current_account.logistic_groups, label: '物流分组编码' %>
+    <%= f.input :logistic_group_id, collection: current_account.logistic_groups, label: '发货拆分编码' %>
     <%#= f.association :features, collection: current_account.features, as: :check_boxes, label: '系列：'%>
     <%= f.association :category, collection: current_account.categories, label: '分类：', :input_html =>{ :class => "width_auto",:id => "category" } %>
     <% if current_account.settings.enable_module_colors == 1 %>

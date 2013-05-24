@@ -10,16 +10,16 @@ class LogisticGroupsController < ApplicationController
     @group = LogisticGroup.new(params[:logistic_group])
     @group.account = current_account
     if @group.save
-      flash[:notice] = '物流分组创建成功'
+      flash[:notice] = '发货拆分创建成功'
     else
-      flash[:alert] = '物流分组创建失败'
+      flash[:alert] = '发货拆分创建失败'
     end
     redirect_to logistic_groups_path
   end
 
   def destroy
     @group.destroy
-    flash[:notice] = '物流分组删除成功'
+    flash[:notice] = '发货拆分删除成功'
     redirect_to logistic_groups_path
   end
 
