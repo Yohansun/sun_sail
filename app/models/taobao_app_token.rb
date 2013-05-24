@@ -32,9 +32,9 @@ class TaobaoAppToken < ActiveRecord::Base
   def check_or_refresh!
     if last_refresh_at.nil? || r2_expires_in.nil? || (last_refresh_at.present? && r2_expires_in.present? && r2_expires_in < Time.now - last_refresh_at)
       base_url = "https://oauth.taobao.com/token?"
-      params = {
-                  client_id: account.settings.taobao_app_key,
-                  client_secret: account.settings.taobao_app_secret,
+      params = {  
+                  client_id: TradeSetting.taobao_app_key,
+                  client_secret: TradeSetting.taobao_app_secret,
                   grant_type: 'refresh_token',
                   refresh_token: refresh_token
                 }.to_params
