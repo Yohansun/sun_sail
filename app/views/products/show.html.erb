@@ -62,7 +62,7 @@
 
           <% if current_account.settings.enable_module_logistic_group == 1 %>
             <div class="control-group">
-              <label class="control-label" for="">物流分组：</label>
+              <label class="control-label" for="">发货拆分：</label>
               <div class="controls">
                 <p class="mar_t5"><%= @product.logistic_group.try(:name) %></p>
               </div>
