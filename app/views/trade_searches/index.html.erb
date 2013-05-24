@@ -7,7 +7,7 @@
     <tr>
       <th>ID</th>
       <th>名称</th>
-      <th>显示在标签页</th>
+      <th>显示方式</th>
       <th>状态</th>
       <th></th>
     </tr>
@@ -17,7 +17,7 @@
       <tr>
         <td><%=index+1%></td>
         <td><%=trade_search.name%></td>
-        <td><%=trade_search.show_in_tabs_name%></td>
+        <td><%=trade_search.show_in_tabs ? "标签页" : nil%> <%=trade_search.show_in_simple_model ? "快捷搜索" : nil%></td>
         <td><%=trade_search.enabled_name%></td>
         <td>
           <%= link_to '编辑', edit_trade_search_path(trade_search), :remote=>true, :class=>"btn btn-primary btn-small edit_link" %>
@@ -35,7 +35,7 @@
 <div id='form_container' class=' modal fade hide' style="display:">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal">&times;</button>
-    <h3>Edit</h3>
+    <h3>编辑订单搜索条件</h3>
   </div><!-- modal-header -->
   <div class="modal-body">
   </div>
