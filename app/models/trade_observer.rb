@@ -29,6 +29,15 @@ class TradeObserver < Mongoid::Observer
     end
 
   end
+  
+  def after_save(object)
+    transaction_histories = object.customer.try(:transaction_histories)
+    if transaction_histories.present?
+      update_fields = TransactionHistory.fields.except("_id","_type").keys
+      attrs = object.attributes.slice(*update_fields)
+      transaction_histories.update_all(attrs)
+    end
+  end
 
   protected
   def dispatch_notify(id, seller_id)

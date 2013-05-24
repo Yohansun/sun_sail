@@ -143,6 +143,8 @@ class Trade
   has_many :deliver_bills
 
   has_one :stock_out_bill
+  belongs_to :customer, :class_name => "Customer", :foreign_key => "buyer_nick",:primary_key => "name"
+  
   enum_attr :status, [["没有创建支付宝交易"                ,"TRADE_NO_CREATE_PAY"],
                       ["等待买家付款"                     ,"WAIT_BUYER_PAY"],
                       ["等待卖家发货,即:买家已付款"         ,"WAIT_SELLER_SEND_GOODS"],
