@@ -25,6 +25,9 @@
       <div class="pull-left">
         <button type="button pull-left" class="btn btn-info search" id="simple_search_button">筛选</button>
         <label class="help-inline js-open_advance label_advanced"><a class="advanced_btn advanced_in_the_air" href="#"><i class="icon-arrow-down"></i> 高级搜索</a></label>
+        <select  class="input-medium radius_no_rb" id='simple_load_search_criteria'>
+        <option>加载搜索条件</option>
+      </select>
       </div>
     </div>
   </fieldset>

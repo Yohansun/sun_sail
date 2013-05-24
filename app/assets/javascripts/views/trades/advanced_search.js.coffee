@@ -13,6 +13,7 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
     'click .advanced_btn': 'advancedSearch'
     'click .remove_search_tag': 'removeSearchTag'
     'change .search_option' : 'changeInputFrame'
+    'change #simple_load_search_criteria': 'simpleLoadSearchCriteria'
     'change #load_search_criteria': 'loadSearchCriteria'
     'click #save_search_criteria': 'saveSearchCriteria'
 
@@ -91,6 +92,7 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
     @catchSearchMotion()
     $('.advanced_in_the_air').toggleClass 'simple_search'
     $("#simple_search_button").toggleClass 'simple_search'
+    $("#simple_load_search_criteria").toggle()
 
   getText: (element,child_one,sibling='div',child_two='option:selected') ->
     $(element).siblings(sibling).children(child_one).children(child_two).text()
@@ -279,6 +281,12 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
 
 
 
+  simpleLoadSearchCriteria:(e)->
+    e.preventDefault()
+    $("#load_search_criteria").val($(e.target).val()).change()
+    if(!$("#search_toggle").is(":visible"))
+      $(".advanced_btn:first").click()
+    $(".search").click()  
 
   loadSearchCriteria:(e)->
     e.preventDefault()
@@ -298,11 +306,14 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
     @criteria_collection.fetch success: (collection)->
       self.search_criterias = collection.models
       $("#load_search_criteria").html('').append("<option value=''>加载搜索条件</option>")
+      $("#simple_load_search_criteria").html('').append("<option value=''>加载搜索条件</option>")
       $("#global-menus a[data-search-criteria]").parent("li").remove()
       $("#global-menus li.seprator").remove()
       $("#global-menus").append("<li class='seprator'><a>|</a></li>")
       $(self.search_criterias).each (index,criteria)->
         $("#load_search_criteria").append("<option value='"+criteria.get("_id")+"'>"+criteria.get("name")+"</option>")
+        if criteria.get("show_in_simple_model") == true
+          $("#simple_load_search_criteria").append("<option value='"+criteria.get("_id")+"'>"+criteria.get("name")+"</option>")
         if criteria.get("show_in_tabs")
           $("#global-menus").append("<li><a href='#' data-search-criteria='"+criteria.get("_id")+"'>"+criteria.get("name")+"</a></li>")
 
