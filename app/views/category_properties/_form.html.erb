@@ -3,7 +3,7 @@
   <%= f.input :value_type, :label=>"属性值类型", include_blank: false, :collection=>CategoryProperty::VALUE_TYPE %>
   <%#= f.input :taobao_id, :label=>"淘宝 prop ID" %>
   <%= f.input :status, :as=>:boolean, :label=>"启用",inline_label:"是"%>
-  <%= f.input :value_text,  :as=>:text, :label=>"属性值列表",input_html:{:cols=>20,:rows=>10}%>
+  <%= f.input :value_text,  :as=>:text, :label=>"属性值列表",:placeholder=>"每行一个属性值",input_html:{:cols=>20,:rows=>10}%>
   <div class="form-actions">
     <%= f.button :submit, @category_property.new_record? ? "新增" : "更新",:class => 'btn-primary' %>
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
