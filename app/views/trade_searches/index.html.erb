@@ -2,26 +2,41 @@
   breadcrumb << ["自定义查询设置", trade_searches_path]
 %>
 
+<div class="top_actions">
+  <div class="btn-group">
+    <a class="btn dropdown-toggle btn-warning" data-toggle="dropdown" href="#">
+      操作
+      <span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu">
+      <li><a tabindex="-1" href="#"  data-action='edit'>编辑</a></li>
+      <li><a tabindex="-1" href="#"  data-action='deletes' data-action-confirm='确定要删除吗?' data-action-url="/trade_searches/operations" data-muli-rows="true">删除</a></li>
+    </ul>
+  </div>
+</div>
+
 <table class="table table-striped table-bordered table-condensed vertical_mid">
   <thead>
     <tr>
+      <th></th>
       <th>ID</th>
       <th>名称</th>
       <th>显示方式</th>
       <th>状态</th>
-      <th></th>
+      <th class="hide"></th>
     </tr>
   </thead>
   <tbody>
     <% @trade_searches.each_with_index do |trade_search,index| %>
       <tr>
+        <td><label><%=check_box_tag :id, trade_search.id, false,  :class=>"row_selection"%> </label></td>
         <td><%=index+1%></td>
         <td><%=trade_search.name%></td>
         <td><%=trade_search.show_in_tabs ? "标签页" : nil%> <%=trade_search.show_in_simple_model ? "快捷搜索" : nil%></td>
         <td><%=trade_search.enabled_name%></td>
-        <td>
-          <%= link_to '编辑', edit_trade_search_path(trade_search), :remote=>true, :class=>"btn btn-primary btn-small edit_link" %>
-          <%= link_to '删除', trade_search,class: 'btn btn-error btn-danger btn-small', method: :delete, data: { confirm: '确定删除该项吗?' } %>
+        <td class="hide">
+          <%= link_to '编辑', edit_trade_search_path(trade_search), :"data-action"=>"edit", :remote=>true, :class=>"btn btn-primary btn-small edit_link" %>
+          <%= link_to '删除', trade_search,class: 'btn btn-error btn-danger btn-small', :"data-action"=>"delete", method: :delete, data: { confirm: '确定删除该项吗?' } %>
         </td>
       </tr>
     <% end %>
@@ -58,6 +73,45 @@
     $("#form_container").modal("hide");
     location.reload();
   })
+
+
+  $("table input:checkbox.row_selection").click(function(){
+    if(this.checked) $(this).closest("tr").addClass("selected")
+      else $(this).closest("tr").removeClass("selected")
+
+  })
+
+
+  // general top menu event deal process, could be reused
+  $(".top_actions a[data-action]").click(function(){
+    var self = this;
+    // check selected numbers
+    setTimeout(function(){
+
+      var selected = $("table input:checkbox.row_selection:checked").length;
+      if( selected == 0){
+        alert("请选择您要操作的行");
+        return;
+      }if(!$(self).data("muli-rows") && selected > 1){
+        alert("对不起, 此项操作只能选择一行");
+        return;
+      }
+
+      if($(self).data("muli-rows")==true){
+        var ids = $("table input:checkbox.row_selection:checked").
+                    map(function(){return this.value}).
+                    toArray().join(",") ;
+        var action = $(self).data("action");
+        var url = $(self).data("action-url");
+        var confirm_message = $(self).data("action-confirm");
+        if(confirm_message==null || confirm(confirm_message))window.location.href = (url+(url.indexOf("?")>=0 ? "&":"?")+$.param({ac:action,ids:ids}));
+      }else{
+        $("table input:checkbox.row_selection:checked").closest("tr").find("a[data-action]:first").click();
+      }
+
+    },100);
+  });
+
 
 </script>
 <%end%>
