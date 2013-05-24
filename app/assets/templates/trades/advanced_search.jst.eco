@@ -37,7 +37,7 @@
           <select class="input-medium pull-left radius_no_rb select2">
             <option value="created">下单时间</option>
             <option value="pay_time">付款时间</option>
-            <option value="dispatched_at">分流时间</option>
+            <option value="dispatched_at">分派时间</option>
             <option value="delivered_at">发货时间</option>
             <option value="rate_created">评价时间</option>
             <option value="deliver_bill_printed_at">打印发货单时间</option>

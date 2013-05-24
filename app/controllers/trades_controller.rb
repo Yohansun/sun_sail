@@ -376,7 +376,7 @@ class TradesController < ApplicationController
       dispatchable = true
       errors = can_lock_products?(trade, seller.id).join(',')
       if errors.present?
-        seller_name += "(无法分流：#{errors})"
+        seller_name += "(无法分派：#{errors})"
         dispatchable = false
       end
     end

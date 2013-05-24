@@ -160,7 +160,7 @@
                                   <% (1..7).each do |i| %>
                                   <option value= "<%= i %>" <%= 'selected' if @setting['unusual_conditions']["max_undispatch_days"] == i.to_s %>><%= i %></option>
                                   <% end %>
-                                </select>天未分流
+                                </select>天未分派
                                 <!-- <input type="text" class="input-mini" name="auto_settings[unusual_conditions][max_undispatch_days]" value="<%= @setting['unusual_conditions']['max_undispatch_days']%>"/> -->
                             </td>
                             <!-- <td></td> -->
@@ -168,7 +168,7 @@
                           </tr>
                           <tr>
                             <td>
-                              <input type="checkbox" class="pull-left" style="margin-top:4px;" name="auto_settings[unusual_conditions][unusual_deliver]" <%= 'checked' if @setting['unusual_conditions']['unusual_deliver'] == 1 %>>当订单已分流，超过
+                              <input type="checkbox" class="pull-left" style="margin-top:4px;" name="auto_settings[unusual_conditions][unusual_deliver]" <%= 'checked' if @setting['unusual_conditions']['unusual_deliver'] == 1 %>>当订单已分派，超过
                                 <select name="auto_settings[unusual_conditions][max_undeliver_days]" class="input-mini">
                                   <% (1..7).each do |i| %>
                                   <option value= "<%= i %>" <%= 'selected' if @setting['unusual_conditions']["max_undeliver_days"] == i.to_s %>><%= i %></option>
@@ -256,7 +256,7 @@
                     <!-- <label class="checkbox">
                       <input type="checkbox" name="">
                       <select class="input-medium">
-                        <option>已分流，未发货</option>
+                        <option>已分派，未发货</option>
                       </select>
                     </label> -->
                     <label class="checkbox">

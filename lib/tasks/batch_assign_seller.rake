@@ -15,7 +15,7 @@ task :batch_assign_seller => :environment do
           trade.seller_name = matched_seller.name
           trade.dispatched_at = Time.now
           trade.save
-          trade.operation_logs.create(operated_at: Time.now, operation: '技术人员手动分流')
+          trade.operation_logs.create(operated_at: Time.now, operation: '技术人员手动分派')
           p "#{tid} matched & re-dispatched"
         else
           p "trade not found"
@@ -30,7 +30,7 @@ task :batch_assign_seller => :environment do
           trade.seller_id = seller_id
           trade.dispatched_at = Time.now
           trade.save
-          trade.operation_logs.create(operated_at: Time.now, operation: '技术人员手动分流')
+          trade.operation_logs.create(operated_at: Time.now, operation: '技术人员手动分派')
           p "#{tid} assigned & re-dispatched"
         else
           p "trade not found"

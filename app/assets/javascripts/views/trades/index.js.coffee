@@ -73,7 +73,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     if @identity == 'logistic'
       $(@el).find(".trade_nav").text("物流单")
     if @identity == 'cs' or @identity == 'admin'
-      $(@el).find(".trade_nav").text("未分流")
+      $(@el).find(".trade_nav").text("未分派")
     $(@el).find(".get_offset").html(@offset)
 
     if parseInt($(@el).find(".complete_offset").html()) == @offset

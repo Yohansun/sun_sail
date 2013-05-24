@@ -1,6 +1,6 @@
 <div class="modal-header">
   <button type="button" class="close" data-dismiss="modal">×</button>
-  <h3>订单分流</h3>
+  <h3>订单分派</h3>
 </div><!-- modal-header -->
 <div class="modal-body">
   <fieldset>
@@ -27,7 +27,7 @@
       </tbody>
     </table>
 
-    <label class="control-label"><b>分流：</b></label>
+    <label class="control-label"><b>分派：</b></label>
       配送经销商：
       <% if MagicOrders.company == "vanward" : %><!--THIS IS TEMPORARY-->
         万和经销商
@@ -40,7 +40,7 @@
           <% if @trade.get('trade_source') != '京东': %>
             <div id="areas_inputs"></div>
           <% else: %>
-            点击"分流"按钮分流给: 网络经销商
+            点击"分派"按钮分派给: 网络经销商
             <input type="hidden" id="trade_seller_id" value="<%= @trade.get('default_seller_id') %>">
           <% end %>
         <% end %>
@@ -56,9 +56,9 @@
   <a href='javascript:void(0)' class="btn" data-dismiss="modal">取消</a>
   <% if @trade.get('seller_id') != null : %>
     <% unless @trade.get('logistic_waybill') && MagicOrders.role_key != "super_admin" : %>
-      <a class="btn btn-primary reset_seller">分流重置</a>
+      <a class="btn btn-primary reset_seller">分派重置</a>
     <% end %>
   <% else : %>
-    <a class="btn btn-primary set_seller">分流</a>
+    <a class="btn btn-primary set_seller">分派</a>
   <% end %>
 </div><!-- modal-footer -->

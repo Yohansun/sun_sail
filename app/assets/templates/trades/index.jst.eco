@@ -18,10 +18,10 @@
           <% if MagicOrders.role_key != 'seller' : %>
           <li><a href="#" data-trade-mode="trades" data-trade-status="unpaid">未付款</a></li>
           <li><a href="#" data-trade-mode="trades" data-trade-status="paid">已付款</a></li>
-          <li><a href="#" data-trade-mode="trades" data-trade-status="undispatched">未分流</a></li>
+          <li><a href="#" data-trade-mode="trades" data-trade-status="undispatched">未分派</a></li>
           <% end %>
-          <li><a href="#" data-trade-mode="trades" data-trade-status="dispatched">已分流</a></li>
-          <li><a href="#" data-trade-mode="trades" data-trade-status="undelivered">已分流，未发货</a></li>
+          <li><a href="#" data-trade-mode="trades" data-trade-status="dispatched">已分派</a></li>
+          <li><a href="#" data-trade-mode="trades" data-trade-status="undelivered">已分派，未发货</a></li>
           <li><a href="#" data-trade-mode="trades" data-trade-status="delivered">已发货</a></li>
           <li><a href="#" data-trade-mode="trades" data-trade-status="deliver_unconfirmed">已发货，未确认发货</a></li>
           <li><a href="#" data-trade-mode="trades" data-trade-status="refund">退款</a></li>
@@ -170,7 +170,7 @@
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu index_pops">
-          <li><a href="#" data-toggle="modal" data-type="seller">设置分流</a></li>
+          <li><a href="#" data-toggle="modal" data-type="seller">设置分派</a></li>
         </ul>
       </div>
 
