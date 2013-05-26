@@ -18,12 +18,20 @@
           <%= render :partial => "search",:locals => {:f => f} %>
         <% end %>
       </div>    
-      <div class="pull-left">
-        <span class="label label-info">共有<%= @count %>条数据</span>
-      </div>
-      <div class="pull-right">
-        <%= link_to "导出","#",:onclick => "processChecked('#{stocks_path(:search => params[:search],:format => :xls,:on => '?')}')",:class => "btn btn-small btn-info" %>
-      </div>
+      
+      <div class="btn-toolbar">
+        <div class="btn-group">
+          <button class="btn btn-warning">操作</button>
+          <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li>
+              <%= link_to "导出","#",:onclick => "processChecked('#{stocks_path(:search => params[:search],:format => :xls,:on => '?')}')"%>
+            </li>
+          </ul>
+        </div>
+      </div> 
 
         <%= form_tag "/",:method => "post",:id => "stocks_index_form", :remote => true do %>
           <table class="table table-hover table-bordered table-striped table-condensed js-table">

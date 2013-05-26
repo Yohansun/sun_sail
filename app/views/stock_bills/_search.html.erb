@@ -53,9 +53,21 @@ t_gte]","创建时间",:class => "control-label" %>
   </div>
 </div>
 
-
 <div class="control-group">
   <div class="controls">
     <button type="submit" class="btn">搜索</button>
   </div>
 </div>
+
+<div class="control-group">
+<div class="pull-left">
+  <span class="label label-info">共有<%= @count %>条数据</span>
+  <% params[:search] ||= {} %> 
+  <%  sku_id = params[:search][:bill_products_sku_id_eq] %>        
+  <% if sku_id.present? %>
+  <span class="label label-inverse">
+    <%= sku = Sku.find_by_sku_id(sku_id); "#{sku.try(:title)}(#{sku.try(:sku_id)})"%>
+  </span>
+  <% end %>
+</div>
+</div> 
