@@ -186,7 +186,7 @@
               <th nowrap>流水号</th>
               <th nowrap>姓名</th>
               <th style="min-width:135px">地址</th>
-              <th>设置物流单号</th>
+              <th>设置物流信息</th>
             </tr>
           </thead>
           <tbody id='set_logistics_tbody'></tbody>

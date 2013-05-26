@@ -231,9 +231,9 @@ class DeliverBillsController < ApplicationController
         trade.logistic_name = logistic.try(:name)
         trade.logistic_id = logistic.try(:id)
         trade.save
-        trade.operation_logs.create(operated_at: Time.now, operation: '设置物流单号', operator_id: current_user.id, operator: current_user.name)
+        trade.operation_logs.create(operated_at: Time.now, operation: '设置物流信息', operator_id: current_user.id, operator: current_user.name)
 
-        #如果满足自动化设置条件，设置物流单号后订单自动发货
+        #如果满足自动化设置条件，设置物流信息后订单自动发货
         auto_settings = current_account.settings.auto_settings
         if current_account.settings.auto_settings['auto_deliver'] && current_account.can_auto_deliver_right_now? && is_first_set
           if auto_settings["deliver_condition"] == "has_logistic_waybill_trade"
