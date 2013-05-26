@@ -364,6 +364,17 @@ class TradesController < ApplicationController
     render json: {isSuccess: true}
   end
 
+  def batch_export
+    @report = TradeReport.new
+    @report.account_id = current_account.id
+    @report.request_at = Time.now
+    @report.user_id = current_user.id
+    @report.batch_export_ids = params[:ids].join(',')
+    @report.save
+    @report.export_report
+    render json: {isSuccess: true}
+  end
+
   def seller_for_area
     trade = Trade.find params[:id]
     area = Area.find params[:area_id]

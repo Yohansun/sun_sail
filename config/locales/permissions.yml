@@ -37,6 +37,7 @@ zh-CN:
   permissions_tag_update: 编辑
   permissions_tag_destroy: 删除
   permissions_tag_export: 导出
+  permissions_tag_batch_export: 导出勾选订单
   permissions_tag_search: 搜索
   permissions_tag_area_search: 搜索
   permissions_tag_autocomplete: 自动补全

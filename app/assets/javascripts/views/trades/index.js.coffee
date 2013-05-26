@@ -7,6 +7,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     'click [data-trade-status]': 'selectSameStatusTrade'
     'click .batch_deliver': 'batchDeliver'
     'click .batch_check_goods': 'batchCheckGoods'
+    'click .batch_export': 'batchExport'
     'click .manual_sms_or_email': 'manualSmsOrEmail'
     'click .confirm_batch_deliver': 'confirmBatchDeliver'
     'click .index_pops li a[data-type]': 'show_type'
@@ -163,6 +164,14 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
       alert("请勾选要操作的订单。")
     else
       Backbone.history.navigate('trades/batch_check_goods', true)
+
+   batchExport: (e) ->
+    e.preventDefault()
+    length = $('.trade_check:checked').parents('tr').length
+    if length < 1
+      alert("请勾选要操作的订单。")
+    else
+      Backbone.history.navigate('trades/batch_export', true)    
 
   fetchMoreTrades: (event, direction) =>
     if direction == 'down'
