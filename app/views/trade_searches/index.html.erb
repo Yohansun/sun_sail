@@ -2,7 +2,7 @@
   breadcrumb << ["自定义查询设置", trade_searches_path]
 %>
 
-<div class="top_actions">
+<div class="nav top_actions">
   <div class="btn-group">
     <a class="btn dropdown-toggle btn-warning" data-toggle="dropdown" href="#">
       操作
@@ -10,7 +10,7 @@
     </a>
     <ul class="dropdown-menu">
       <li><a tabindex="-1" href="#"  data-action='edit'>编辑</a></li>
-      <li><a tabindex="-1" href="#"  data-action='deletes' data-action-confirm='确定要删除吗?' data-action-url="/trade_searches/operations" data-muli-rows="true">删除</a></li>
+      <li><a tabindex="-1" href="#" data-action-url="/trade_searches/operations"  data-action='deletes' data-action-confirm='确定要删除吗?' data-multi-rows="true">删除</a></li>
     </ul>
   </div>
 </div>
@@ -92,21 +92,26 @@
       if( selected == 0){
         alert("请选择您要操作的行");
         return;
-      }if(!$(self).data("muli-rows") && selected > 1){
+      }if(!$(self).data("multi-rows") && selected > 1){
         alert("对不起, 此项操作只能选择一行");
         return;
       }
 
-      if($(self).data("muli-rows")==true){
+      var action = $(self).data("action");
+      if($(self).data("multi-rows")==true){
         var ids = $("table input:checkbox.row_selection:checked").
                     map(function(){return this.value}).
                     toArray().join(",") ;
-        var action = $(self).data("action");
         var url = $(self).data("action-url");
         var confirm_message = $(self).data("action-confirm");
         if(confirm_message==null || confirm(confirm_message))window.location.href = (url+(url.indexOf("?")>=0 ? "&":"?")+$.param({ac:action,ids:ids}));
       }else{
-        $("table input:checkbox.row_selection:checked").closest("tr").find("a[data-action]:first").click();
+        var link = $("table input:checkbox.row_selection:checked").closest("tr").find("a[data-action='"+action+"']:first");
+        if(link.size() > 0)link.click();
+        else{
+          link = $("table input:checkbox.row_selection:checked").closest("tr").find("a[data-action-url='"+action+"']:first");
+          window.location.href=link.attr("href");
+        }
       }
 
     },100);
