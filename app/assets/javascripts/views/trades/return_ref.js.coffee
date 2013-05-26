@@ -34,6 +34,9 @@ class MagicOrders.Views.TradesReturnRef extends Backbone.View
       title = $(".skus_in_order option:selected").text()
       sku_id = $(".skus_in_order option:selected").val().split(";")[0]
       total_num = $(".skus_in_order option:selected").val().split(";")[1]
+      if parseInt(num) > parseInt(total_num)
+        alert('退货数量大于购买数量')
+        return
       tr = "<tr id='"+sku_id+"'><td>"+title+"</td>"
       tr += "<td>"+total_num+"</td>"
       tr += "<td>"+num+"</td>"
@@ -49,6 +52,8 @@ class MagicOrders.Views.TradesReturnRef extends Backbone.View
       alert("金额不能为空。")
     else if /^[0-9]+(\.[0-9]*)?$/.test(payment) != true
       alert("金额格式不正确。")
+    else if parseFloat(payment) > parseFloat(@model.get('total_fee'))
+      alert("退货金额大于购买金额。")
     else
       if $('.ref_table tr').length == 0
         alert("未添加退货商品")
@@ -73,6 +78,7 @@ class MagicOrders.Views.TradesReturnRef extends Backbone.View
         return_ref_hash['ref_order_array'] = ref_order_array
         return_ref_hash['ref_batch'] = ref_batch
 
+        @model.set "operation", "申请退货"
         @model.save {return_ref_hash: return_ref_hash},
           success: (model, response) =>
             $.unblockUI()
@@ -98,6 +104,7 @@ class MagicOrders.Views.TradesReturnRef extends Backbone.View
   confirmSave: (e) ->
     status = $(e.currentTarget).attr('class').split(" ")[2]
     memo = $('.ref_memo').val()
+    @model.set "operation", "确认退货"
     @model.save {return_ref_status: status, return_ref_memo: memo},
       success: (model, response) =>
         $.unblockUI()

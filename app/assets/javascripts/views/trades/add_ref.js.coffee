@@ -71,6 +71,8 @@ class MagicOrders.Views.TradesAddRef extends Backbone.View
 
         add_ref_hash['ref_order_array'] = ref_order_array
         add_ref_hash['ref_batch'] = ref_batch
+
+        @model.set "operation", "申请补货"
         @model.save {add_ref_hash: add_ref_hash},
           success: (model, response) =>
             $.unblockUI()
@@ -90,6 +92,7 @@ class MagicOrders.Views.TradesAddRef extends Backbone.View
             alert("存储失败")
 
   confirmAddRef: ->
+    @model.set "operation", "确认补货"
     @model.save {add_ref_status: 'confirm_add_ref'},
       success: (model, response) =>
         $.unblockUI()
