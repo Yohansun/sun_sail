@@ -2,7 +2,7 @@ class CategoriesController < ApplicationController
 
   layout "management"
 
-  before_filter :authorize,:except => [:autocomplete,:new,:show,:edit]
+  before_filter :authorize,:except => [:autocomplete,:new,:show,:edit,:deletes]
 
   def index
     @categories = current_account.categories
@@ -58,6 +58,20 @@ class CategoriesController < ApplicationController
     @category = current_account.categories.find params[:id]
     @category.destroy
     redirect_to categories_path
+  end
+
+
+  # BULK operation for multi-records
+  def operations
+    send(params[:ac])
+  end
+
+
+  def deletes
+    @ids = params[:ids].split(",")
+    parent_id = Category.find(@ids.first).parent_id
+    Category.destroy(@ids)
+    redirect_to categories_path(:parent_id=>parent_id)
   end
 
 end

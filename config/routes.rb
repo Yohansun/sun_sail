@@ -102,7 +102,11 @@ MagicOrders::Application.routes.draw do
     end
   end
 
-  resources :categories
+  resources :categories do
+    collection do
+      get :deletes
+    end
+  end
   resources :category_properties
 
 
