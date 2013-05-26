@@ -89,8 +89,8 @@ class MagicOrders.Models.Trade extends Backbone.Model
         if this.attributes.seller_confirm_deliver_at isnt undefined && $.inArray('confirm_receive',trades) > -1
           enabled_items.push('confirm_receive') #确认买家已收货
 
-        if $.inArray('logistic_waybill',trades) > -1
-          enabled_items.push('logistic_waybill') #物流单号设置
+        # if $.inArray('logistic_waybill',trades) > -1
+        #  enabled_items.push('logistic_waybill') #物流单号设置
 
       # when "TRADE_BUYER_SIGNED" # "买家已签收,货到付款专用"
       # when "TRADE_FINISHED" # "交易成功"

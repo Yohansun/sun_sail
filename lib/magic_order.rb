@@ -119,7 +119,7 @@ MagicOrder::AccessControl.map do |map|
 #  end
 #
 #  map.project_module :logistics do |map|
-#    map.permission :operations, ["detail", "setup_logistic","logistic_waybill", "confirm_receive", "logistic_memo", "print_logistic_bill"]
+#    map.permission :operations, ["detail", "setup_logistic", "confirm_receive", "logistic_memo", "print_logistic_bill"]
 #    map.permission :modes     , ['trade_source','tid','status','logistic_bill_status','status_history','receiver_id','receiver_name','receiver_mobile_phone','receiver_address','order_goods','color_info','seller','logistic','logistic_waybill']
 #  end
 #

@@ -65,10 +65,9 @@ zh-CN:
   permissions_tag_seller_confirm_deliver: 确认发货
   permissions_tag_logistic_split: 物流拆分
   permissions_tag_logistic_memo: 物流商备注
-  permissions_tag_logistic_waybill: 输入物流单号
+  # permissions_tag_logistic_waybill: 输入物流单号
   permissions_tag_confirm_check_goods: 确认验货
   permissions_tag_confirm_receive: 确认买家已收货
-  permissions_tag_setup_logistic: 返回物流单号
   permissions_tag_request_return: 申请退货
   permissions_tag_refund: 申请退款
   permissions_tag_confirm_return: 确认退货

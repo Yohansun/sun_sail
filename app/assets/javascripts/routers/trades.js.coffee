@@ -201,20 +201,12 @@ class MagicOrders.Routers.Trades extends Backbone.Router
                 process(data)
           })
         when 'deliver'
-          if MagicOrders.company == 'nippon' and !(model.get('seller_id') in MagicOrders.enable_trade_deliver_bill_spliting_sellers)
+          unless model.get('logistic_waybill')
+            $(modalDivID).find('.error').html('该订单没有设置物流商和物流单号，请去“物流单”下“未设置物流信息”中调整订单')
+            $('.deliver').hide()
+          else
             $(modalDivID).find('.error').html()
             $('.deliver').show()
-            if model.get('logistic_waybill')
-              $("#logistic_company").html(model.get('logistic_name'))
-            else
-              $("#logistic_company").html('其他')
-          else
-            unless model.get('logistic_waybill')
-              $(modalDivID).find('.error').html('该订单没有设置物流商和物流单号，请去“物流单”下“未设置物流信息”中调整订单')
-              $('.deliver').hide()
-            else
-              $(modalDivID).find('.error').html()
-              $('.deliver').show()
         when 'color'
           $('.color_typeahead').typeahead({
             source: (query, process)->
