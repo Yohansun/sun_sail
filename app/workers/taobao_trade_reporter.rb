@@ -9,7 +9,11 @@ class TaobaoTradeReporter
     report = TradeReport.find(id)
     return unless report
     account = report.fetch_account
-    trades = report.trades.order_by(:created.desc)
+    if report.batch_export_ids 
+      trades = Trade.where(:_id.in => report.batch_export_ids.split(',')).order_by(:created.desc)
+    else  
+      trades = report.trades.order_by(:created.desc)
+    end  
     book = Spreadsheet::Workbook.new
     sheet1 = book.create_worksheet
     sheet1[0, 0] = "订单列表"

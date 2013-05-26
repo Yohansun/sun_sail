@@ -8,6 +8,7 @@ class TradeReport
   field :account_id,     type: Integer
   field :conditions, type: Hash
   field :export_name, type: String
+  field :batch_export_ids, type: String
   field :user_id, type: Integer
   field :performed_at, type:DateTime
   field :request_at, type:DateTime

@@ -203,6 +203,7 @@
             </button>
             <ul class="dropdown-menu">
               <li><a href="#" data-toggle="modal" class="manual_sms_or_email">发短信/邮件</a></li>
+              <li><a href="#" data-toggle="modal" class="batch_export">导出勾选订单</a></li>
             <% if MagicOrders.trade_mode == 'trades' : %>
             <% if MagicOrders.trade_type == 'undelivered' : %>
               <li><a data-toggle="modal" class='batch_deliver' href='#'>批量发货</a></li>
