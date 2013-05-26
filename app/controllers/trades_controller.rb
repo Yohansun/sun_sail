@@ -344,7 +344,12 @@ class TradesController < ApplicationController
         TradeDispatchSms.perform_async(@trade.id, @trade.seller_id, 'second')
       end
       unless params[:operation].blank?
-        @trade.operation_logs.create(operated_at: Time.now, operator: current_user.name, operator_id: current_user.id, operation: params[:operation])
+        if params[:operation] == "确认退货"
+          operation = @trade.ref_batches.where(ref_type: "return_ref").first.operation_text
+          @trade.operation_logs.create(operated_at: Time.now, operator: current_user.name, operator_id: current_user.id, operation: operation)
+        else
+          @trade.operation_logs.create(operated_at: Time.now, operator: current_user.name, operator_id: current_user.id, operation: params[:operation])
+        end
       end
       respond_with(@trade) do |format|
         format.json { render :show, status: :ok }
