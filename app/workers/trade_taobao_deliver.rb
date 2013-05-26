@@ -34,6 +34,10 @@ class TradeTaobaoDeliver
       if content && mobile
         SmsNotifier.perform_async(content, mobile, tid ,notify_kind)
       end
+
+      unless account.settings.enable_module_third_party_stock == 1
+        trade.stock_out_bill.decrease_actual
+      end  
       
     else
       Notifier.deliver_errors(id, errors, trade.account_id).deliver
