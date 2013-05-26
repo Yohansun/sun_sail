@@ -16,4 +16,5 @@ class TradeSearch
   field :html, type: String
   field :enabled,  type: Boolean,   :default=>true
   field :show_in_tabs,  type: Boolean
+  field :show_in_simple_model,  type: Boolean
 end

@@ -90,4 +90,17 @@ class TradeSearchesController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+
+  # BULK operation for multi-records
+  def operations
+    send(params[:ac])
+  end
+
+
+  def deletes
+    @ids = params[:ids].split(",")
+    TradeSearch.destroy_all(:id.in=>@ids)
+    redirect_to :trade_searches
+  end
 end

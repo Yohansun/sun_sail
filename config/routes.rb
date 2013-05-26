@@ -36,7 +36,12 @@ MagicOrders::Application.routes.draw do
 
   wash_out :stock_api
 
-  resources :trade_searches
+  resources :trade_searches do
+    collection do
+      get :operations
+    end
+  end
+
   resources :logistic_groups
   resources :upload_files
   resources :bbs_categories
@@ -97,7 +102,11 @@ MagicOrders::Application.routes.draw do
     end
   end
 
-  resources :categories
+  resources :categories do
+    collection do
+      get :deletes
+    end
+  end
   resources :category_properties
 
 
