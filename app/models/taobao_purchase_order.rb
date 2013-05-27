@@ -85,12 +85,12 @@ class TaobaoPurchaseOrder < Trade
   end
 
   def auto_dispatchable?
-    dispatch_options = self.fetch_account.auto_settings["dispatch_options"]
-    if dispatch_options["void_buyer_message"] && dispatch_options["void_seller_memo"]
+    dispatch_conditions = self.fetch_account.auto_settings["dispatch_conditions"]
+    if dispatch_conditions["void_buyer_message"] && dispatch_conditions["void_seller_memo"]
       can_auto_dispatch = memo.blank? && supplier_memo.blank?
-    elsif dispatch_options["void_buyer_message"] == 1 && dispatch_options["void_seller_memo"] == nil
+    elsif dispatch_conditions["void_buyer_message"] == 1 && dispatch_conditions["void_seller_memo"] == nil
       can_auto_dispatch = memo.blank?
-    elsif dispatch_options["void_buyer_message"] == nil && dispatch_options["void_seller_memo"] == 1
+    elsif dispatch_conditions["void_buyer_message"] == nil && dispatch_conditions["void_seller_memo"] == 1
       can_auto_dispatch = supplier_memo.blank?
     else
       can_auto_dispatch = true

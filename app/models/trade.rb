@@ -79,6 +79,7 @@ class Trade
   field :has_cs_memo, type: Boolean, default: false
   field :has_unusual_state, type: Boolean, default: false
   field :has_onsite_service, type: Boolean, default: false
+  field :has_refund_orders, type: Boolean, default: false
 
   # ADD INDEXES TO SPEED UP
   # 简单搜索index
@@ -144,7 +145,7 @@ class Trade
 
   has_one :stock_out_bill
   belongs_to :customer, :class_name => "Customer", :foreign_key => "buyer_nick",:primary_key => "name"
-  
+
   enum_attr :status, [["没有创建支付宝交易"                ,"TRADE_NO_CREATE_PAY"],
                       ["等待买家付款"                     ,"WAIT_BUYER_PAY"],
                       ["等待卖家发货,即:买家已付款"         ,"WAIT_SELLER_SEND_GOODS"],
@@ -155,13 +156,14 @@ class Trade
                       ["付款以前，卖家或买家主动关闭交易"     ,"TRADE_CLOSED_BY_TAOBAO"]]
 
   attr_accessor :matched_seller
-  
+
 
   validate :color_num_do_not_exist, :on => :update, :if => :color_num_changed?
 
   before_update :set_has_color_info
   before_update :set_has_cs_memo
   before_update :set_has_unusual_state
+  before_update :set_has_refund_orders
   after_destroy :check_associate_deliver_bills
 
   def fetch_account
@@ -1038,6 +1040,16 @@ class Trade
         self.has_cs_memo = false
       end
       true
+    end
+
+    def set_has_refund_orders
+      self.orders.each do |order|
+        if order.refund_status != 'NO_REFUND'
+          self.has_refund_orders = true
+          return
+        end
+      end
+      self.has_refund_orders = false
     end
 
     def set_has_unusual_state
