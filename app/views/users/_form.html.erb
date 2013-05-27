@@ -30,10 +30,7 @@
   </div>
 
   <div class="control-group">
-    <label class="control-label" for="">状态：</label>
-    <div class="controls">
-      <%= f.select :active,[["生效",true],["禁用",false]],:clsas => "width_auto" %>
-    </div>
+      <%= f.input :active,:as => :select,:collection => User::ACTIVE,:label => "状态：",:input_html => {:class => "width_auto"},:include_blank => false %>
   </div>
 
 </fieldset>

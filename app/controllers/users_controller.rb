@@ -111,9 +111,9 @@ class UsersController < ApplicationController
     
     case params[:operation] 
     when 'lock'
-      @users.update_all(:active => true,:locked_at => Time.now)
+      @users.update_all(:active => false,:locked_at => Time.now)
     when 'unlock'
-      @users.update_all(:active => false,:locked_at => nil)
+      @users.update_all(:active => true,:locked_at => nil)
     else
       flash[:error] = "请正常操作"
     end
