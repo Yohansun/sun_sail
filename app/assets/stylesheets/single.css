@@ -186,4 +186,5 @@ code{color: #08C;}
 /*modal*/
 .modal_w7{width:760px;margin-left:-380px;}
 .modal_w7 textarea{width:98%;}
-.form-horizontal .add_seller_css label{width: 170px} 
+.form-horizontal .add_seller_css label{width: 170px}
+.third_menu{border:0!important;position:relative;top:5px;}

@@ -47,4 +47,13 @@ module ApplicationHelper
     @breadcrumb ||= [['Magic', root_path]]
     @breadcrumb
   end
+  
+  def display?(control_name,name,action_names=[])
+    matched = nil
+    matched = params[:controller] =~ /#{control_name.is_a?(Array) ? control_name.join('|') : control_name}/
+    if action_names.present?
+      matched = matched && params[:action] =~ /#{action_names.is_a?(Array) ? action_names.join('|') : action_names}/
+    end
+    matched ? name : ""
+  end
 end
