@@ -1,0 +1,91 @@
+<div class="container-fluid">
+  <div class="row-fluid">
+    <%= render partial: "layouts/setting_nav" %>
+    <div class="span10">
+      <ul class="nav nav-tabs">
+        <li><a href="/account_setups/edit_preprocess_settings">订单预处理</a></li>
+        <li class="active"><a href="/account_setups/edit_dispatch_settings">订单分派</a></li>
+        <li><a href="/account_setups/edit_deliver_settings">订单发货</a></li>
+        <!--<li><a href="#default_logistics" data-toggle="tab">选择默认物流商</a></li>
+        <li><a href="#autobusiness_set" data-toggle="tab">自动化业务设置</a></li>
+        <li><a href="#login_user_set" data-toggle="tab">设置系统登录用户</a></li> -->
+      </ul><!-- nav-tabs -->
+
+      <div class="tab-content">
+        <div class="tab-pane active" id="dispatch_settings">
+          <%= form_tag('/account_setups/update_dispatch_settings', class: 'form-horizontal', method: 'put') do -%>
+            <fieldset class="mar_l80"><!-- 订单自动分派 beginning -->
+                <h4>订单自动分派设置：</h4>
+                <div class="mar_l80">
+                  <div class="control-group">
+                    <label class="radio pull-left input-small">
+                      <input type="radio" name="auto_settings[auto_dispatch]" <%='checked' if @setting['auto_dispatch'] == 1 %>>开启
+                    </label>
+                    <label class="radio">
+                      <input type="radio" value="0" name="auto_settings[auto_dispatch]" <%='checked' if @setting['auto_dispatch'].present? == false %>>关闭
+                    </label>
+                    <p class="clear">
+                      <label class="input-large pull-left">请输入自动分派时间范围：</label>
+                      <input type="text" class="input-mini timepickers radius_no_rb" name="auto_settings[start_dispatch_at]" value="<%= @setting['start_dispatch_at']%>">
+                      <i class="icon-arrow-right"></i>
+                      <input type="text" class="input-mini timepickers radius_no_rb" name="auto_settings[end_dispatch_at]" value="<%= @setting['end_dispatch_at']%>">
+                      <span class="muted">(不选择默认为全天开启)</span>
+                    </p>
+                    <!-- <p class="clear">
+                      <label class="input-large pull-left">请输入每次分派数量：</label>
+                      <div class="mar_l80">
+                         <input type="text" class="input-small" name="auto_settings[one_dispatch_num]" value="<%= @setting['one_dispatch_num']%>">单
+                        <span class="muted">（数量不限制）</span>
+                      </div>
+                    </p>
+                    <p class="clear">
+                      <label class="input-large pull-left">请输入每次分派间隔时间：</label>
+                      <div class="mar_l80">
+                        <input type="text" class="input-small" name="auto_settings[dispatch_frequency]" value="<%= @setting['dispatch_frequency']%>">分钟
+                        <span class="muted">（时间是实时）</span>
+                      </div>
+                    </p> -->
+                  </div>
+                </div>
+                <div class="mar_l80">
+                  <label class="input-large pull-left">自动分派条件：</label>
+                  <div class="controls ml210">
+                    <div class="control-group">
+                      <!-- <label class="checkbox">
+                        <input type="checkbox" name="">
+                        <select class="input-medium">
+                          <option>已分派，未发货</option>
+                        </select>
+                      </label> -->
+                      <label class="checkbox">
+                        <input type="checkbox" name="auto_settings[dispatch_conditions][void_seller_memo]" <%= 'checked' if @setting['dispatch_conditions']['void_seller_memo'] == 1 %>>卖家无留言
+                      </label>
+                      <label class="checkbox">
+                        <input type="checkbox" name="auto_settings[dispatch_conditions][void_buyer_message]" <%= 'checked' if @setting['dispatch_conditions']['void_buyer_message'] == 1 %>>买家无留言
+                      </label>
+                      <label class="checkbox">
+                        <input type="checkbox" name="auto_settings[dispatch_conditions][void_cs_memo]" <%= 'checked' if @setting['dispatch_conditions']['void_cs_memo'] == 1 %>>客服无备注
+                      </label>
+                      <label class="checkbox">
+                        <input type="checkbox" name="auto_settings[dispatch_conditions][void_money]" <%= 'checked' if @setting['dispatch_conditions']['void_money'] == 1 %>>订单未退款
+                      </label>
+                      <!-- <label class="checkbox">
+                        <input type="checkbox" name="auto_settings[dispatch_conditions][is_inactive_trade]" <%= 'checked' if @setting['dispatch_conditions']['is_inactive_trade'] == 1 %>>订单为非活动订单
+                      </label>
+                      <label class="checkbox">
+                        <input type="checkbox" name="auto_settings[dispatch_conditions][audited_trade]" <%= 'checked' if @setting['dispatch_conditions']['audited_trade'] == 1 %>>订单为已审单过的订单
+                      </label> -->
+                    </div>
+                  </div>
+                </div>
+            </fieldset>
+            <div class="pagination-centered mar_t30">
+              <button id="auto_settings_button" class="btn btn-primary" type="submit">保存</button>
+            </div>
+          <% end %>
+        </div>
+
+      </div><!-- tab-content end -->
+    </div>
+  </div>
+</div>

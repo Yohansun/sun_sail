@@ -223,8 +223,12 @@ MagicOrders::Application.routes.draw do
 
   resources :account_setups do
     collection do
-      get  :edit_auto_settings
-      put  :update_auto_settings
+      get  :edit_preprocess_settings
+      get  :edit_dispatch_settings
+      get  :edit_deliver_settings
+      put  :update_preprocess_settings
+      put  :update_dispatch_settings
+      put  :update_deliver_settings
     end
     member do
       post :data_fetch_start

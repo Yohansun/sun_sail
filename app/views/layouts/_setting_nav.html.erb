@@ -7,16 +7,16 @@
       </a>
     </li> -->
 
-    <li class="<%= display?("account_setups","active") %>">
-      <a href="#" class="" data-toggle="collapse" data-target="#autoset_menu">
+    <li class="<%= "active" if params[:controller] == "account_setups" %>">
+      <a href="/account_setups/edit_preprocess_settings" class="" data-toggle="collapse" data-target="#autoset_menu">
         <i class="icon-chevron-right"></i> 自动化设置
       </a>
-        <ul id="autoset_menu" class="collapse <%= display?("account_setups","in") %>">
-          <li class="<%= "active" if params[:controller] == "account_setups" && params[:action] =~ /edit_auto_settings/ %>">
-            <a href="/account_setups/edit_auto_settings">订单预处理</a>
+        <ul id="autoset_menu" class="collapse in">
+          <li class="<%= "active" if params[:controller] == "account_setups" && params[:action] =~ /edit_preprocess_settings/ %>">
+            <a href="/account_setups/edit_preprocess_settings">订单预处理</a>
           </li>
-          <li class=""><a href="#">自动分派</a></li>
-          <li class=""><a href="#">自动发货</a></li>
+          <li class="<%= "active" if params[:controller] == "account_setups" && params[:action] =~ /edit_dispatch_settings/ %>"><a href="/account_setups/edit_dispatch_settings">自动分派</a></li>
+          <li class="<%= "active" if params[:controller] == "account_setups" && params[:action] =~ /edit_deliver_settings/ %>"><a href="/account_setups/edit_deliver_settings">自动发货</a></li>
         </ul>
     </li>
 
@@ -42,25 +42,25 @@
         <ul id="base_data" class="collapse <%= display?(["stocks","logistics","category_properties","categories", "logistic_groups", "trade_searches", "areas", "orders"],"in") %>">
           <li class="<%= display?("stocks","active")%>">
             <a href="#"  data-toggle="collapse" data-target="#stocks_menu">仓库设置</a>
-            <ul id="stocks_menu" class="collapse <%= display?("stocks","in",["safe_stock","change_product_type","edit_depot","update_depot"]) %> third_menu">  
+            <ul id="stocks_menu" class="collapse <%= display?("stocks","in",["safe_stock","change_product_type","edit_depot","update_depot"]) %> third_menu">
               <li class="<%= display?("stocks","active",["safe_stock","change_product_type"]) %>">
                 <a href="/stocks/safe_stock">安全库存管理</a>
               </li>
               <li class="<%= display?("stocks","active",["edit_depot","update_depot"]) %>">
                 <a href="/stocks/edit_depot">仓库编辑</a>
               </li>
-            </ul> 
+            </ul>
           </li>
           <li class="<%= display?("logistic_groups","active") %>"><a href="#"  data-toggle="collapse" data-target="#shipments_menu">发货管理</a>
-            <ul id="shipments_menu" class="collapse <%= display?("logistic_groups","in") %> third_menu">  
+            <ul id="shipments_menu" class="collapse <%= display?("logistic_groups","in") %> third_menu">
               <li class="<%= display?("logistic_groups","active") %>">
                 <a href="/logistic_groups">发货拆分管理</a>
               </li>
               <li class=""><a href="#">发货单管理</a></li>
-            </ul> 
+            </ul>
           </li>
           <li class="<%= display?(["categories","category_properties"],"in") %>" ><a href="#"  data-toggle="collapse" data-target="#products_menu">商品设置</a>
-            <ul id="products_menu" class="collapse <%= display?(["categories","category_properties"],"in") %> third_menu">  
+            <ul id="products_menu" class="collapse <%= display?(["categories","category_properties"],"in") %> third_menu">
               <li class="<%= display?("categories","active") %>">
                 <a href="/categories">分类管理</a>
               </li>
@@ -74,19 +74,18 @@
           </li>
           <li class="<%= display?("orders","active") %>">
             <a href="#"  data-toggle="collapse" data-target="#orders_menu">订单管理</a>
-            <ul id="orders_menu" class="collapse <%= display?("trade_searches","in") %> third_menu">  
+            <ul id="orders_menu" class="collapse <%= display?("trade_searches","in") %> third_menu">
               <li class="<%= display?("trade_searches","active") %>"><a href="/trade_searches">自定义查询</a>
               </li>
-            </ul> 
+            </ul>
           </li>
-          
+
           <li class="<%= "active" if params[:controller] == "areas" %>"><a href="/areas"  data-toggle="collapse" data-target="#areas_menu">地域管理</a></li>
             </a></li>
         </ul>
     </li>
-    
-    <!-- 
-    
+
+    <!--
     <li class="<%= "active" if params[:controller] == "accounts" %>">
       <a href="#" class="" data-toggle="collapse" data-target="#basic_settings">
         <i class="icon-chevron-right"></i> 基础设置
@@ -96,8 +95,6 @@
         </ul>
     </li>
 
-
-    
     <% if current_account.settings.enable_module_onsite_service == 1 %>
       <li class="<%= "active" if params[:controller] == "onsite_services" %>">
         <a href="/onsite_services">
@@ -105,6 +102,7 @@
         </a>
       </li>
     <%- end %>
+
     <% if current_account.settings.enable_module_logistic_group == 1 %>
       <li class="<%= "active" if params[:controller] == "logistic_groups" %>">
         <a href="/logistic_groups">

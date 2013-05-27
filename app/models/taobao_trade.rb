@@ -89,7 +89,7 @@ class TaobaoTrade < Trade
   field :promotion, type: String
   field :got_promotion, type: Boolean, default: false  # 优惠信息是否抓到。
   field :sku_properties_name, type: String
-  
+
   field :news, type: Integer , default: 0 #是否从淘宝更新数据
   #  淘宝抓取过来的数据,本地老的数据进行更新后标记为"已更新",
   #  待其他操作(更新本地顾客)处理完毕后标记为已处理
@@ -99,7 +99,7 @@ class TaobaoTrade < Trade
   embeds_many :promotion_details
 
   accepts_nested_attributes_for :taobao_orders
-  
+
   attr_accessor :search_fields
 
   def orders
@@ -124,19 +124,15 @@ class TaobaoTrade < Trade
   end
 
   def auto_dispatchable?
-    if !fetch_account || !fetch_account.settings.auto_settings || !self.fetch_account.settings.auto_settings["dispatch_options"]
+    if !fetch_account || !fetch_account.settings.auto_settings || !self.fetch_account.settings.auto_settings["dispatch_conditions"]
       can_auto_dispatch = false
     else
-      dispatch_options = self.fetch_account.settings.auto_settings["dispatch_options"]
-      if dispatch_options["void_buyer_message"] && dispatch_options["void_seller_memo"]
-        can_auto_dispatch = !has_buyer_message && self.seller_memo.blank?
-      elsif dispatch_options["void_buyer_message"] == 1 && dispatch_options["void_seller_memo"] == nil
-        can_auto_dispatch = !has_buyer_message
-      elsif dispatch_options["void_buyer_message"] == nil && dispatch_options["void_seller_memo"] == 1
-        can_auto_dispatch = self.seller_memo.blank?
-      else
-        can_auto_dispatch = true
-      end
+      dispatch_conditions = self.fetch_account.settings.auto_settings["dispatch_conditions"]
+      void_buyer_message = (dispatch_conditions["void_buyer_message"].present? ? false : true) || !has_buyer_message
+      void_seller_memo = (dispatch_conditions["void_seller_memo"].present? ? false : true) || seller_memo.blank?
+      void_cs_memo = (dispatch_conditions["void_cs_memo"].present? ? false : true) || !has_cs_memo
+      void_money = dispatch_conditions["void_money"].present? ? false : true || !has_refund_orders
+      can_auto_dispatch = void_buyer_message && void_seller_memo && void_cs_memo && void_money
     end
     can_auto_dispatch && dispatchable?
   end
