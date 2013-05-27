@@ -30,6 +30,7 @@
 
 class User < ActiveRecord::Base
   include RailsSettings
+  include MagicEnum
   rolify
   belongs_to :area
   belongs_to :seller
@@ -62,6 +63,8 @@ class User < ActiveRecord::Base
   validate :has_phone_or_email?
  
   before_save :set_pseudo_username
+  
+  enum_attr :active, [["生效",true],["禁用",false]]
 
   def set_pseudo_username
     unless username
