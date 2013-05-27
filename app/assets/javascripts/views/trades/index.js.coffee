@@ -95,6 +95,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
     $.unblockUI()
     @loadStatusCount()
+    $("#content").removeClass("search-expand")
     this
 
   optAll: (e) ->

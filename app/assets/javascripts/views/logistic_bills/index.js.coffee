@@ -29,6 +29,7 @@ class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
     $(@el).find(".get_offset").html(@offset)
     $(@el).find('a[data-trade-mode='+MagicOrders.trade_mode+'][data-trade-status="'+MagicOrders.trade_type+'"]').parents('li').addClass('active')
     @loadStatusCount()
+    $("#content").removeClass("search-expand")
     this
 
   selectSameStatusTrade: (e) =>

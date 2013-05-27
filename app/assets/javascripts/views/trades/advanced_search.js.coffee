@@ -93,6 +93,7 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
     $('.advanced_in_the_air').toggleClass 'simple_search'
     $("#simple_search_button").toggleClass 'simple_search'
     $("#simple_load_search_criteria").toggle()
+    $("#content").toggleClass("search-expand")
 
   getText: (element,child_one,sibling='div',child_two='option:selected') ->
     $(element).siblings(sibling).children(child_one).children(child_two).text()
