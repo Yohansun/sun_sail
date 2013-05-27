@@ -19,7 +19,7 @@ module MagicSearch
     # params[:search]  # => {:name_like => "ddl1st"}
     # result {"seller_name" => { "$regex"=> /ddl1st/ }}
     def parse_key(search_key,search_value)
-      fields = @relation_ship.all_fields_name | @klass.fields.keys
+      fields = @relation_ship.all_fields_name | @klass.fields.keys | ["_type"]
       parse_search = ParseSearch.new(search_key,search_value)
       relation_name,field_name = parse_search.parsed_keys(@relations.keys,fields)
       fielklass = field_klass(relation_name,field_name)
@@ -27,9 +27,10 @@ module MagicSearch
     end
     
     def field_klass(relation_name,field_name)
+      relation_klass = nil
       relation = relation_name && @relations[relation_name]
-      @realtion_klass = relation.class_name.constantize if relation.present?
-      field_klass = (@realtion_klass || @klass).fields[field_name]
+      realtion_klass = relation.class_name.constantize if relation.present?
+      field_klass = (realtion_klass || @klass).fields[field_name]
     end
   end
 end
