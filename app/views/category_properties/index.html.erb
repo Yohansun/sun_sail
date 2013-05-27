@@ -3,8 +3,21 @@
 %>
 
         <div class="nav">
-          <%=link_to "新建商品属性", new_category_property_path, :class=>"btn btn-primary"%>
         </div>
+<div class="btn-toolbar top_actions">
+  <%=link_to "新建商品属性", new_category_property_path, :class=>"btn btn-primary"%>
+  <div class="btn-group">
+    <a class="btn dropdown-toggle btn-warning" data-toggle="dropdown" href="#">
+      操作
+      <span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu">
+      <li><a tabindex="-1" href="#"  data-action='edit'>编辑</a></li>
+      <li><a tabindex="-1" href="#" data-action-url="/category_properties/deletes" data-action='deletes' data-action-confirm='确定要删除吗?' data-action-url="" data-multi-rows="true">删除</a></li>
+    </ul>
+  </div>
+</div>
+
 
         <table class="table table-striped table-bordered table-condensed vertical_mid">
           <thead>
@@ -13,19 +26,20 @@
               <th>值类型</th>
               <th>值</th>
               <th>状态</th>
-              <th>操作</th>
+              <th class="hide">操作</th>
             </tr>
           </thead>
           <tbody>
           	<%  @category_properties.each do |category_property|  %>
             <tr>
+              <td><label><%=check_box_tag :id, category_property.id, false,  :class=>"row_selection"%> </label></td>
               <td><%= category_property.name %></td>
               <td><%= category_property.value_type_name %></td>
               <td><%= category_property.values.map(&:value) *' | ' %></td>
               <td><%= category_property.status_name %></td>
-              <td>
+              <td class="hide">
 
-                <%= link_to '编辑', edit_category_property_path(category_property),:class=>"btn btn-primary" %>
+                <%= link_to '编辑', edit_category_property_path(category_property),:class=>"btn btn-primary", :"data-action-url"=>"edit"  %>
                 <%= link_to '删除', category_property_path(category_property), method: :delete, confirm: '确认删除?',:class=>"btn btn-danger" %>
               </td>
             </tr>
@@ -38,3 +52,51 @@
 
 
 
+<%content_for :tail do%>
+<script type="text/javascript">
+
+  $("table input:checkbox.row_selection").click(function(){
+    if(this.checked) $(this).closest("tr").addClass("selected")
+      else $(this).closest("tr").removeClass("selected")
+
+  })
+
+
+  // general top menu event deal process, could be reused
+  $(".top_actions a[data-action]").click(function(){
+    var self = this;
+    // check selected numbers
+    setTimeout(function(){
+
+      var selected = $("table input:checkbox.row_selection:checked").length;
+      if( selected == 0){
+        alert("请选择您要操作的行");
+        return;
+      }if(!$(self).data("multi-rows") && selected > 1){
+        alert("对不起, 此项操作只能选择一行");
+        return;
+      }
+
+      var action = $(self).data("action");
+      if($(self).data("multi-rows")==true){
+        var ids = $("table input:checkbox.row_selection:checked").
+                    map(function(){return this.value}).
+                    toArray().join(",") ;
+        var url = $(self).data("action-url");
+        var confirm_message = $(self).data("action-confirm");
+        if(confirm_message==null || confirm(confirm_message))window.location.href = (url+(url.indexOf("?")>=0 ? "&":"?")+$.param({ac:action,ids:ids}));
+      }else{
+        var link = $("table input:checkbox.row_selection:checked").closest("tr").find("a[data-action='"+action+"']:first");
+        if(link.size() > 0)link.click();
+        else{
+          link = $("table input:checkbox.row_selection:checked").closest("tr").find("a[data-action-url='"+action+"']:first");
+          window.location.href=link.attr("href");
+        }
+      }
+
+    },100);
+  });
+
+
+</script>
+<%end%>

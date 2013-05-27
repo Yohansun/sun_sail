@@ -42,4 +42,10 @@ class CategoryPropertiesController < ApplicationController
     redirect_to :category_properties
   end
 
+
+  def deletes
+    @ids = params[:ids].split(",")
+    CategoryProperty.destroy(@ids)
+    redirect_to category_properties_path
+  end
 end
