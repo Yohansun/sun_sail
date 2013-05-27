@@ -97,16 +97,14 @@
 
 <div class="row-fluid">
   <ul id='global-menus' class="nav nav-tabs affix">
-    <li><a href="#" data-trade-mode="trades" data-trade-status="all">所有订单</a></li>
-    <!-- <li><a href="#" data-trade-mode="trades" data-trade-status="default">待审核</a></li> -->
-    <li><a href="#" data-trade-mode="trades" data-trade-status="undispatched">待分派</a></li>
-    <li><a href="#" data-trade-mode='trades' data-trade-status='undelivered'>待发货</a></li>
-    <li><a href="#" data-trade-mode='trades' data-trade-status='delivered'>已发货</a></li>
-    <li><a href="#" data-trade-mode='trades' data-trade-status='unusual_all'>问题订单</a></li>
-    <li><a href="#" data-trade-mode="deliver_bills" data-trade-status="all">发货单</a></li>
-    <li><a href="#" data-trade-mode="logistic_bills" data-trade-status="all">物流单</a></li>
-    <li><a href="#" data-search-criteria="">test</a></li>
-    <li><a href="#"  data-search-criteria="">test2</a></li>
+    <li><a href="#" data-trade-mode="trades" data-trade-status="all">所有订单<em></em></a></li>
+    <!-- <li><a href="#" data-trade-mode="trades" data-trade-status="default">待审核<em></em></a></li> -->
+    <li><a href="#" data-trade-mode="trades" data-trade-status="undispatched">待分派<em></em></a></li>
+    <li><a href="#" data-trade-mode='trades' data-trade-status='undelivered'>待发货<em></em></a></li>
+    <li><a href="#" data-trade-mode='trades' data-trade-status='delivered'>已发货<em></em></a></li>
+    <li><a href="#" data-trade-mode='trades' data-trade-status='unusual_all'>问题订单<em></em></a></li>
+    <li><a href="#" data-trade-mode="deliver_bills" data-trade-status="all">发货单<em></em></a></li>
+    <li><a href="#" data-trade-mode="logistic_bills" data-trade-status="all">物流单<em></em></a></li>
     <!-- <li class=''><a href="#after_order" data-toggle="tab">售后订单</a></li> -->
   </ul>
 

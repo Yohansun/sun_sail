@@ -28,6 +28,7 @@ class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
     $("a[rel=popover]").popover({placement: 'left', html:true})
     $(@el).find(".get_offset").html(@offset)
     $(@el).find('a[data-trade-mode='+MagicOrders.trade_mode+'][data-trade-status="'+MagicOrders.trade_type+'"]').parents('li').addClass('active')
+    @loadStatusCount()
     this
 
   selectSameStatusTrade: (e) =>
@@ -385,3 +386,24 @@ class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
         $(@el).find(".get_offset").html(@offset)
         $(@el).find(".complete_offset").html("0")
         $.unblockUI()
+
+  loadStatusCount:()->
+    $("[data-trade-status]",@el).each ->
+      self = this
+      coll = null
+      trade_mode = $(this).data("trade-mode")
+      trade_type = $(this).data("trade-status")
+      switch trade_mode
+        when "trades"
+          coll = new MagicOrders.Collections.Trades()
+        when "deliver_bills"
+          coll = new MagicOrders.Collections.DeliverBills()
+        when "logistic_bills"
+          coll = new MagicOrders.Collections.DeliverBills()
+      
+      coll.fetch  data:{trade_type:trade_type,limit:1}, success: (collection, response)->
+        count = 0
+        if(collection.length > 0)
+          count = collection.models[0].get("trades_count")
+        $("em",self).text("("+count+")")
+
