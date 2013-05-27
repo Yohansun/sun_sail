@@ -1,5 +1,6 @@
 # -*- encoding : utf-8 -*-
 class LogisticsController < ApplicationController
+  layout "management"
   before_filter :authorize,:except => [:logistic_templates,:edit,:user_list,:logistic_user_list]
 
   def index
@@ -41,6 +42,12 @@ class LogisticsController < ApplicationController
 		Logistic.destroy(logistics)
 		redirect_to logistics_path
 	end
+
+  def deletes
+    @ids = params[:ids].split(",")
+    current_account.logistics.where(:id=>@ids).destroy_all
+    redirect_to logistics_path
+  end
 
 	def logistic_area
     @logistics = LogisticArea.where(logistic_id: params[:logistic_id]).all

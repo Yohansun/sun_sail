@@ -94,6 +94,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
           $(@el).find(".index_pops li [data-type=#{pop}]").parent().show()
 
     $.unblockUI()
+    @loadStatusCount()
     this
 
   optAll: (e) ->
@@ -449,3 +450,25 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     if(!$("#search_toggle").is(":visible"))
       $(".advanced_btn:first").click()
     $(".search").click()
+
+
+  loadStatusCount:()->
+    $("[data-trade-status]",@el).each ->
+      self = this
+      coll = null
+      trade_mode = $(this).data("trade-mode")
+      trade_type = $(this).data("trade-status")
+      switch trade_mode
+        when "trades"
+          coll = new MagicOrders.Collections.Trades()
+        when "deliver_bills"
+          coll = new MagicOrders.Collections.DeliverBills()
+        when "logistic_bills"
+          coll = new MagicOrders.Collections.DeliverBills()
+      
+      coll.fetch  data:{trade_type:trade_type,limit:1}, success: (collection, response)->
+        count = 0
+        if(collection.length > 0)
+          count = collection.models[0].get("trades_count")
+        $("em",self).text("("+count+")")
+

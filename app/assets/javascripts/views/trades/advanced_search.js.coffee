@@ -309,7 +309,7 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
       $("#simple_load_search_criteria").html('').append("<option value=''>加载搜索条件</option>")
       $("#global-menus a[data-search-criteria]").parent("li").remove()
       $("#global-menus li.seprator").remove()
-      $("#global-menus").append("<li class='seprator'><a>|</a></li>")
+      $("#global-menus").append("<li class='seprator'><span style='margin: 3px 15px;display: block;'>|</span></li>")
       $(self.search_criterias).each (index,criteria)->
         $("#load_search_criteria").append("<option value='"+criteria.get("_id")+"'>"+criteria.get("name")+"</option>")
         if criteria.get("show_in_simple_model") == true
