@@ -212,6 +212,15 @@
             <% end %>
             </ul>
           </div>
+          <div class="btns btn-group batch_ops">
+            <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-warning btn_left4">
+              分捡单操作
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+              <li><a data-toggle="modal" class='sort_product' href='#'>分捡单</a></li>
+            </ul>
+          </div>
     </div>
 
 
@@ -330,5 +339,32 @@
     <a href="javascript:void(0)" class="btn btn-primary confirm_batch_deliver">确认并发货</a>
   </div>
 </div>
+
+<div id="sort_product" class="trade modal fade hide" tabindex="-1" style="width: 890px;margin-left: -445px;">  
+  <div class="modal-header">  
+    <button type="button" class="close" data-dismiss="modal">&times;</button>  
+    <h3>分捡单</h3>  
+  </div><!-- modal-header -->  
+  <div class="modal-body">  
+    <fieldset>  
+      <table class="table table-bordered">  
+        <thead>  
+          <tr>  
+            <th>商品名称</th>  
+            <!-- <th>商品编码</th> -->  
+            <!-- <th>分类</th> -->  
+            <th>商品属性</th>  
+            <th>商品数量</th> 
+          </tr>  
+        </thead>  
+        <tbody>  
+        </tbody>  
+      </table>  
+    </fieldset>  
+  </div><!-- modal-body -->  
+  <div class="modal-footer">  
+    <a href="#" class="btn btn-primary confirm_sort_product" data-dismiss="modal">确认</a>  
+  </div>  
+</div> 
 
 <div id="trades_bottom"></div>
