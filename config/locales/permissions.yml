@@ -65,7 +65,7 @@ zh-CN:
   permissions_tag_deliver: 订单发货
   permissions_tag_seller_confirm_deliver: 确认发货
   permissions_tag_logistic_split: 物流拆分
-  permissions_tag_logistic_memo: 物流商备注
+  permissions_tag_logistic_memo: 物流公司备注
   # permissions_tag_logistic_waybill: 输入物流单号
   permissions_tag_confirm_check_goods: 确认验货
   permissions_tag_confirm_receive: 确认买家已收货
@@ -143,14 +143,14 @@ zh-CN:
   permissions_tag_users#create_role: "创建权限"
   permissions_tag_users#update_permissions: "编辑权限"
   permissions_tag_users#destroy_role: "删除角色"
-  permissions_tag_logistics#detail: "物流商管理"
-  permissions_tag_logistics#update: "编辑物流商"
-  permissions_tag_logistics#delete: "删除物流商"
-  permissions_tag_logistics#create_logistic_area: "物流商添加管辖地区"
-  permissions_tag_logistics#remove_logistic_area: "物流商删除管辖地区"
-  permissions_tag_logistics#logistic_user_list: "物流商添加登陆账号"
-  permissions_tag_logistics#remove_logistic_user: "物流商删除登陆账号"
-  permissions_tag_logistics#logistic_user: "查看物流商登陆账号"
+  permissions_tag_logistics#detail: "物流公司管理"
+  permissions_tag_logistics#update: "编辑物流公司"
+  permissions_tag_logistics#delete: "删除物流公司"
+  permissions_tag_logistics#create_logistic_area: "物流公司添加管辖地区"
+  permissions_tag_logistics#remove_logistic_area: "物流公司删除管辖地区"
+  permissions_tag_logistics#logistic_user_list: "物流公司添加登陆账号"
+  permissions_tag_logistics#remove_logistic_user: "物流公司删除登陆账号"
+  permissions_tag_logistics#logistic_user: "查看物流公司登陆账号"
   permissions_tag_account_setups#update_auto_settings: "更新自动化设置"
   permissions_tag_categories#detail: "查看分类"
   permissions_tag_categories#create: "创建分类"

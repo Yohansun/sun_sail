@@ -54,7 +54,7 @@ class Role < ActiveRecord::Base
     when 'stock_admin'
       '仓库管理员'
     when 'logistic'
-      '物流商'
+      '物流公司'
     end
   end
 end

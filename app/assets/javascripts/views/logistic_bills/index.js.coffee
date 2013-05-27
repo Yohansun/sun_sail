@@ -79,7 +79,7 @@ class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
       html = ''
       for trade in data
         lname = trade.logistic_name
-        lname = '无物流商' if lname == ''
+        lname = '无物流公司' if lname == ''
         logistics[lname] = logistics[lname] || 0
         logistics[lname] += 1
         html += '<tr>'
@@ -150,7 +150,7 @@ class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
         $('#set_logistics_tbody').html(html)
 
         lname = trade.logistic_name
-        lname = '无物流商' if lname == ''
+        lname = '无物流公司' if lname == ''
         logistics[lname] = logistics[lname] || 0
         logistics[lname] += 1
 

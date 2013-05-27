@@ -183,7 +183,7 @@
           <li><a href="#" data-toggle="modal" data-type="deliver">订单发货</a></li>
           <li><a href="#" data-toggle="modal" data-type="seller_confirm_deliver">确认发货</a></li>
           <li><a href="#" data-toggle="modal" data-type="logistic_split">物流拆分</a></li>
-          <li><a href="#" data-toggle="modal" data-type="logistic_memo">物流商备注</a></li>
+          <li><a href="#" data-toggle="modal" data-type="logistic_memo">物流公司备注</a></li>
           <li><a href="#" data-toggle="modal" data-type="confirm_check_goods">确认验货</a></li>
           <li><a href="#" data-toggle="modal" data-type="confirm_receive">确认买家已收货</a></li>
           <li><a href="#" data-toggle="modal" data-type="setup_logistic">设置物流信息</a></li>
@@ -315,7 +315,7 @@
             <th>编号</th>
             <th>姓名</th>
             <th>地址</th>
-            <th>物流商</th>
+            <th>物流公司</th>
             <th>物流单号</th>
           </tr>
         </thead>
