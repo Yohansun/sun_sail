@@ -5,7 +5,7 @@
 <div class="modal-body">
   <% if @trade.get('logistic_name') : %>
   <div>
-    <p>您当前所选订单，物流商为<%= @trade.get('logistic_name') %>，请确认是否更改并打印</p>
+    <p>您当前所选订单，物流公司为<%= @trade.get('logistic_name') %>，请确认是否更改并打印</p>
   </div>
   <% end %>
   <div id="logistic_print"></div>

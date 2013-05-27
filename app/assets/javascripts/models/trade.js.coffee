@@ -77,7 +77,7 @@ class MagicOrders.Models.Trade extends Backbone.Model
         if this.attributes.return_ref && this.attributes.return_ref['status'] == 'return_ref_money' && $.inArray('cancel_return_ref',trades) > -1
           enabled_items.push('return_ref') #取消退货
         if $.inArray('logistic_memo',trades) > -1
-          enabled_items.push('logistic_memo') #物流商备注
+          enabled_items.push('logistic_memo') #物流公司备注
 
         if this.attributes.seller_confirm_invoice_at is undefined && type != "CustomTrade" && $.inArray('invoice',trades) > -1
           enabled_items.push('invoice') #申请开票

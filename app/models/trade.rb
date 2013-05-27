@@ -20,7 +20,7 @@ class Trade
   field :delivered_at, type: DateTime                     # 发货时间
 
   field :cs_memo, type: String                            # 客服备注
-  field :logistic_memo, type: String                      # 物流商备注
+  field :logistic_memo, type: String                      # 物流公司备注
   field :gift_memo, type: String                          # 赠品备注
 
   # 发票信息

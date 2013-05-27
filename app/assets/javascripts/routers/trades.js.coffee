@@ -224,7 +224,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
           })
         when 'deliver'
           unless model.get('logistic_waybill')
-            $(modalDivID).find('.error').html('该订单没有设置物流商和物流单号，请去“物流单”下“未设置物流信息”中调整订单')
+            $(modalDivID).find('.error').html('该订单没有设置物流公司和物流单号，请去“物流单”下“未设置物流信息”中调整订单')
             $('.deliver').hide()
           else
             $(modalDivID).find('.error').html()

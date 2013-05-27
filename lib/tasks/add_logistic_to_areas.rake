@@ -1,7 +1,7 @@
 # -*- encoding:utf-8 -*-
 require "csv"
 
-desc "给地区匹配物流商"
+desc "给地区匹配物流公司"
 task :add_logistic_to_areas => :environment do
   CSV.foreach "#{Rails.root}/lib/data_source/logic_to_areas_20121022.csv" do |row|
     state = row[0]

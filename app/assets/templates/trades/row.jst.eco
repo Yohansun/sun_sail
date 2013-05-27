@@ -53,7 +53,7 @@
       <% if @trade.get('seller_confirm_deliver_at') != undefined : %>
       <li><a data-toggle="modal" href="#" data-type="confirm_receive">确认买家已收货</a></li>
       <% end %>
-      <li><a data-toggle="modal" href="#" data-type="logistic_memo">物流商备注</a></li>
+      <li><a data-toggle="modal" href="#" data-type="logistic_memo">物流公司备注</a></li>
       <% end %>
 -->
       <!-- <li><a data-toggle="modal" href="#" data-type="reassign">订单转交</a></li> -->

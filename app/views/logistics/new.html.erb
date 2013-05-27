@@ -5,12 +5,12 @@
      <div class="row-fluid">
         <ul class="breadcrumb" style="position:relative;">
           <li><a href="/">Magic</a><span class="divider">/</span></li>
-          <li class="active"><% if params[:action] == "new" || params[:action] == "create" %>新增物流商<% elsif params[:action] == "edit" || params[:action] == "update" %>编辑物流商<% end %></li>
+          <li class="active"><% if params[:action] == "new" || params[:action] == "create" %>新增物流公司<% elsif params[:action] == "edit" || params[:action] == "update" %>编辑物流公司<% end %></li>
         </ul><!-- breadcrumb -->
         <%= simple_form_for @logistic, html: {:class =>'well form-horizontal'} do |f| %>
           <fieldset class="add_unit">
-            <%= f.input :name, :label => "物流商名称：",class: 'input-xlarge' %>
-            <%= f.input :code, :label => "物流商Code：",class: 'input-xlarge' %>
+            <%= f.input :name, :label => "物流公司名称：",class: 'input-xlarge' %>
+            <%= f.input :code, :label => "物流公司Code：",class: 'input-xlarge' %>
             <%= f.input :xml, :label => "物流单模版图片：",class: 'input-xlarge' %>
           </fieldset>
 

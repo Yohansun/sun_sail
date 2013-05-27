@@ -175,7 +175,7 @@
     <fieldset>
       <div class="control-group">
         <div class="controls form-inline mar_t5">
-          <label class="input-small nomargin">物流商：</label>
+          <label class="input-small nomargin">物流公司：</label>
           <select class="input-medium logistic_select"></select>
         </div>
         <table class="table table-bordered">
