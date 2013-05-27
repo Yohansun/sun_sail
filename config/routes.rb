@@ -107,7 +107,11 @@ MagicOrders::Application.routes.draw do
       get :deletes
     end
   end
-  resources :category_properties
+  resources :category_properties do
+    collection do
+      get :deletes
+    end
+  end
 
 
   get 'callcenter/contrastive_performance'
@@ -176,6 +180,7 @@ MagicOrders::Application.routes.draw do
       get :remove_logistic_user
       get :logistic_user
       get :logistic_user_list
+      get :deletes
     end
     resources :print_flash_settings, only: [:show] do
       member do

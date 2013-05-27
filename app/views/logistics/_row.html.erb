@@ -9,6 +9,7 @@
 
 <% @logistics.each do |logistics| %>
   <tr id="seller_<%=logistics.id%>">
+    <td><label><%=check_box_tag :id, logistics.id, false,  :class=>"row_selection"%> </label></td>
     <td><%=logistics.id%></td>
     <td><%=logistics.name%></td>
     <td><%=logistics.code%></td>
@@ -20,13 +21,13 @@
         </button>
         <ul class="dropdown-menu" style="left:-115px;">
           <li>
-            <%= link_to "编辑", edit_logistic_path(:id => logistics.id), :class=>"edit_seller"%>
+            <%= link_to "编辑", edit_logistic_path(:id => logistics.id), :"data-action-url"=>"edit", :class=>"edit_seller"%>
           </li>
           <li>
             <%= link_to "删除", delete_logistic_path(:id => logistics.id), :class=>"close_seller" %>
           </li>
-          <li><a data-toggle="modal" href="#dealer_area" data-type="seller_area" data-id="<%=logistics.id%>" class="logistic_area">管辖地区</a></li>
-          <li><a data-toggle="modal" href="#dealer_login" data-id="<%= logistics.id%>" class="logistic_login_acount">登录账号</a></li>
+          <li><a data-action='manage-area' data-toggle="modal" href="#dealer_area" data-type="seller_area" data-id="<%=logistics.id%>" class="logistic_area">管辖地区</a></li>
+          <li><a data-action='manage-login' data-toggle="modal" href="#dealer_login" data-id="<%= logistics.id%>" class="logistic_login_acount">登录账号</a></li>
    
         </ul>
       </div>

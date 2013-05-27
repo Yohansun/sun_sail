@@ -4,7 +4,7 @@ module MagicOrder
     "detail" =>   ["index","home",'show','fetch_group'],
     "create" =>   ["new","create"],
     "update" =>   ["edit","update"],
-    "destroy" =>  ["destroy","delete"],
+    "destroy" =>  ["destroy","delete","deletes"],
     "edit_depot" => ["edit_depot","update_depot"],
     "customers_detail" => ["index","potential","paid"]
   }.freeze
@@ -94,7 +94,7 @@ MagicOrder::AccessControl.map do |map|
 
   map.project_module :system_settings do |map|
     map.permission :reads,      ["users#detail","users#roles","users#limits","areas#detail","logistics#detail","account_setups#edit_auto_settings","logistics#logistic_user","categories#detail"]
-    map.permission :operations, ["users#update","users#delete","users#batch_update","users#create","users#create_role","users#destroy_role","logistics#update","logistics#delete","logistics#create_logistic_area",
+    map.permission :operations, ["users#update","users#delete","users#batch_update","users#create","users#create_role","users#destroy_role","logistics#update","logistics#create","logistics#destroy","logistics#create_logistic_area",
       "logistics#remove_logistic_area","logistics#logistic_user_list","logistics#remove_logistic_user","logistics#logistic_user","account_setups#update_auto_settings","users#update_permissions",
       "categories#update","categories#create","categories#destroy"]
   end
