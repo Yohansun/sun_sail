@@ -131,6 +131,9 @@ class MagicOrders.Models.Trade extends Backbone.Model
     if $.inArray('manual_sms_or_email',trades) > -1
       enabled_items.push('manual_sms_or_email') #发短信/邮件
 
+    if $.inArray('batch_export',trades) > -1
+      enabled_items.push('batch_export') #发短信/邮件  
+
     if this.attributes.seller_confirm_deliver_at is undefined && this.attributes.consign_time && $.inArray('seller_confirm_deliver',trades) > -1
       enabled_items.push('seller_confirm_deliver') #确认发货
 
