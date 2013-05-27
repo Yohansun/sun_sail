@@ -7,11 +7,11 @@
       </a>
     </li> -->
 
-    <li class="<%= "active" if params[:controller] == "account_setups" %>">
-      <a href="/account_setups/edit_auto_settings" class="" data-toggle="collapse" data-target="#autoset_menu">
+    <li class="<%= display?("account_setups","active") %>">
+      <a href="#" class="" data-toggle="collapse" data-target="#autoset_menu">
         <i class="icon-chevron-right"></i> 自动化设置
       </a>
-        <ul id="autoset_menu" class="collapse in">
+        <ul id="autoset_menu" class="collapse <%= display?("account_setups","in") %>">
           <li class="<%= "active" if params[:controller] == "account_setups" && params[:action] =~ /edit_auto_settings/ %>">
             <a href="/account_setups/edit_auto_settings">订单预处理</a>
           </li>
@@ -20,65 +20,72 @@
         </ul>
     </li>
 
-    <li class="<%= "active" if params[:controller] == "users" %>">
-      <a href="/users" class="" data-toggle="collapse" data-target="#users_menu">
+    <li class="<%= display?("users","active") %>">
+      <a href="#" class="" data-toggle="collapse" data-target="#users_menu">
         <i class="icon-chevron-right"></i> 用户管理
       </a>
-        <ul id="users_menu" class="collapse in">
-          <li class="<%= "active" if params[:controller] == "users" %>"><a href="/users">用户</a></li>
-          <li class=""><a href="#">角色</a></li>
-          <li class=""><a href="#">权限</a></li>
-        </ul>
-    </li>
-
-    <li class="<%= "active" if params[:controller] == "stocks" %>">
-      <a href="/stocks/safe_stock" class="" data-toggle="collapse" data-target="#stocks_menu">
-        <i class="icon-chevron-right"></i> 仓库设置
-      </a>
-        <ul id="stocks_menu" class="collapse in">
-          <li class="<%= "active" if params[:controller] == "stocks" && params[:action] =~ /safe_stock|change_product_type/ %>">
-            <a href="/stocks/safe_stock">安全库存管理</a>
+        <ul id="users_menu" class="collapse <%= display?("users","in") %>">
+          <li class="<%= display?("users","active","index") %>">
+            <a href="/users"  data-toggle="collapse" data-target="#users">用户</a>
           </li>
-          <li class="<%= "active" if params[:controller] == "stocks" && params[:action] =~ /edit_depot|update_depot/ %>"><a href="/stocks/edit_depot">仓库编辑</a></li>
-        </ul>
-    </li>
-
-    <li class="<%= "active" if params[:controller] == "logistic_groups" %>">
-      <a href="/logistic_groups" class="" data-toggle="collapse" data-target="#shipments_menu">
-        <i class="icon-chevron-right"></i> 发货管理
-      </a>
-        <ul id="shipments_menu" class="collapse in">
-          <li class="<%= "active" if params[:controller] == "logistic_groups" && params[:action] =~ // %>">
-            <a href="/logistic_groups">发货拆分管理</a>
+          <li class="<%= display?("users","active","roles") %>"><a href="/users/roles"  data-toggle="collapse" data-target="#users_role">角色</a>
           </li>
-          <li class=""><a href="#">发货单管理</a></li>
+          <li class="<%= display?("users","active",["update_permissions","limits"]) %>">
+            <a href="/users/limits?role_id=<%=current_account.roles.first.id%>"  data-toggle="collapse" data-target="#limits">权限</a>
+          </li>
         </ul>
     </li>
-
-    <li class="<%= "active" if params[:controller] == "products" %>">
-      <a href="#" class="" data-toggle="collapse" data-target="#products_menu">
-        <i class="icon-chevron-right"></i> 商品设置
+    <li class="<%= display?(["stocks","logistics","category_properties","categories", "logistic_groups", "trade_searches", "areas", "orders"],"active") %>">
+      <a href="#" class="" data-toggle="collapse" data-target="#base_data">
+        <i class="icon-chevron-right"></i> 基础数据管理
       </a>
-        <ul id="products_menu" class="collapse in">
-          <li class="<%= "active" if params[:controller] == "categories" && params[:action] =~ // %>"><a href="/categories">分类管理</a></li>
-          <li class="<%= "active" if params[:controller] == "category_properties" && params[:action] =~ // %>"><a href="/category_properties">属性管理</a></li>
+        <ul id="base_data" class="collapse <%= display?(["stocks","logistics","category_properties","categories", "logistic_groups", "trade_searches", "areas", "orders"],"in") %>">
+          <li class="<%= display?("stocks","active")%>">
+            <a href="#"  data-toggle="collapse" data-target="#stocks_menu">仓库设置</a>
+            <ul id="stocks_menu" class="collapse <%= display?("stocks","in",["safe_stock","change_product_type","edit_depot","update_depot"]) %> third_menu">  
+              <li class="<%= display?("stocks","active",["safe_stock","change_product_type"]) %>">
+                <a href="/stocks/safe_stock">安全库存管理</a>
+              </li>
+              <li class="<%= display?("stocks","active",["edit_depot","update_depot"]) %>">
+                <a href="/stocks/edit_depot">仓库编辑</a>
+              </li>
+            </ul> 
+          </li>
+          <li class="<%= display?("logistic_groups","active") %>"><a href="#"  data-toggle="collapse" data-target="#shipments_menu">发货管理</a>
+            <ul id="shipments_menu" class="collapse <%= display?("logistic_groups","in") %> third_menu">  
+              <li class="<%= display?("logistic_groups","active") %>">
+                <a href="/logistic_groups">发货拆分管理</a>
+              </li>
+              <li class=""><a href="#">发货单管理</a></li>
+            </ul> 
+          </li>
+          <li class="<%= display?(["categories","category_properties"],"in") %>" ><a href="#"  data-toggle="collapse" data-target="#products_menu">商品设置</a>
+            <ul id="products_menu" class="collapse <%= display?(["categories","category_properties"],"in") %> third_menu">  
+              <li class="<%= display?("categories","active") %>">
+                <a href="/categories">分类管理</a>
+              </li>
+              <li class="<%= display?("category_properties","active") %>">
+                <a href="/category_properties">属性管理</a>
+              </li>
+            </ul>
+          </li>
+          <li class="<%= display?("logistics","active") %>"><a href="/logistics"  data-toggle="collapse" data-target="#logistics_menu">
+            <i class="<%= display?("logistics","active") %>"></i>物流公司管理</a>
+          </li>
+          <li class="<%= display?("orders","active") %>">
+            <a href="#"  data-toggle="collapse" data-target="#orders_menu">订单管理</a>
+            <ul id="orders_menu" class="collapse <%= display?("trade_searches","in") %> third_menu">  
+              <li class="<%= display?("trade_searches","active") %>"><a href="/trade_searches">自定义查询</a>
+              </li>
+            </ul> 
+          </li>
+          
+          <li class="<%= "active" if params[:controller] == "areas" %>"><a href="/areas"  data-toggle="collapse" data-target="#areas_menu">地域管理</a></li>
+            </a></li>
         </ul>
     </li>
-
-    <li class="<%= "active" if params[:controller] =~ /logistics/ %>">
-      <a href="/logistics">
-        <i class="<%= "active" if params[:controller] == "logistics" %>"></i>物流公司管理
-      </a>
-    </li>
-
-    <li class="<%= "active" if params[:controller] == "orders" %>">
-      <a href="#" class="" data-toggle="collapse" data-target="#orders_menu">
-        <i class="icon-chevron-right"></i> 订单管理
-      </a>
-        <ul id="orders_menu" class="collapse in">
-          <li class="<%= "active" if params[:controller] == "trade_searches" && params[:action] =~ // %>"><a href="/trade_searches">自定义查询</a></li>
-        </ul>
-    </li>
+    
+    <!-- 
     
     <li class="<%= "active" if params[:controller] == "accounts" %>">
       <a href="#" class="" data-toggle="collapse" data-target="#basic_settings">
@@ -87,12 +94,6 @@
         <ul id="basic_settings" class="collapse in">
           <li class="<%= "active" if params[:controller] == "accounts" && params[:action] =~ // %>"><a href="/accounts">店铺基础设置</a></li>
         </ul>
-    </li>
-
-    <li class="<%= "active" if params[:controller] == "areas" %>" >
-      <a href="/areas">
-        <i class="<%= "icon-chevron-right" if params[:controller] == "areas" %>"></i>地域管理
-      </a>
     </li>
 
 
@@ -111,5 +112,6 @@
         </a>
       </li>
     <%- end %>
+      -->
   </ul>
 </div>
