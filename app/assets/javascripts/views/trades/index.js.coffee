@@ -9,7 +9,9 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     'click .batch_check_goods': 'batchCheckGoods'
     'click .batch_export': 'batchExport'
     'click .manual_sms_or_email': 'manualSmsOrEmail'
+    'click .sort_product': 'sort_product'
     'click .confirm_batch_deliver': 'confirmBatchDeliver'
+    'click .confirm_sort_product': 'confirmSortProduct'
     'click .index_pops li a[data-type]': 'show_type'
     'click [data-search-criteria]': 'switchSearchCriteria'
 
@@ -126,6 +128,40 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
       alert("请勾选要操作的订单。")
     else
       Backbone.history.navigate('trades/manual_sms_or_email', true)
+
+  sort_product: ->  
+    
+      tmp = []  
+      length = $('.trade_check:checked').parents('tr').length  
+    
+      if length < 1  
+        alert('未选择订单！')  
+        return  
+    
+      if length > 300  
+        alert('请选择小于300个订单！')  
+        return  
+    
+      $('.trade_check:checked').parents('tr').each (index, el) ->  
+        input = $(el).find('.trade_check')  
+        a = input[0]  
+    
+        if a.checked  
+          trade_id = $(el).attr('id').replace('trade_', '')  
+          tmp.push trade_id  
+    
+      MagicOrders.idCarrier = tmp  
+      $.get '/home/index', {ids: tmp}, (data) ->  
+        html = ''  
+        for trade in data  
+          html += '<tr>'  
+          html += '<td>' + trade.title + '</td>'  
+          html += '<td>' + trade.category + '</td>'
+          html += '<td>' + trade.num + '</td>'  
+        $('#sort_product tbody').html(html)  
+        $('#sort_product .confirm_sort_product').show()  
+    
+        $('#sort_product').modal('show')  
 
   show_type: (e) ->
     type = $(e.target).data('type')
@@ -298,6 +334,9 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
         $('#batch_deliver').modal('hide')
       else
         alert('失败')
+
+  confirmSortProduct: ->
+      Backbone.history.navigate('trades/index', true)
 
   # gotoDeliverBills: ->
   #   Backbone.history.navigate('deliver_bills', true)
