@@ -1,149 +1,5 @@
 <td></td>
 <td><input class='trade_check' type="checkbox" value="option1"></td>
-<!--操作 start-->
-<!--
-<td nowrap>
-  <div class="btn-group">
-    <button data-toggle="dropdown" class="btn btn-info dropdown-toggle min_w">
-      <i class="icon-wrench"></i>
-      <span class="caret"></span>
-    </button>
--->
-<!--
-    <ul class="dropdown-menu trade_pops">
-      <li><a href="#" data-toggle="modal" data-type="export_orders" class="export_orders">导出数据</a></li>
-      <li><a data-toggle="modal" href="#" data-type="detail">订单详情</a></li>
-      <% if @trade.get('status_text') == '已付款，待发货' : %>
-        <% if @trade.get('seller_id') : %>
-          <% if MagicOrders.role_key == 'admin' || MagicOrders.role_key == 'cs' : %>
-            <li><a data-toggle="modal" href="#" data-type="seller">分派重置</a></li>
-          <% end %>
-        <% else : %>
-          <li><a data-toggle="modal" href="#" data-type="seller">订单分派</a></li>
-        <% end %>
-
-        <% if @trade.get('splitted_tid') : %>
-          <li><a data-toggle="modal" href="#" data-type="recover">订单合并</a></li>
-        <% else : %>
-          <% unless @trade.get('seller_id') : %>
-          <li><a data-toggle="modal" href="#" data-type="trade_split">订单拆分</a></li>
-          <% end %>
-        <% end %>
-
-        <% if MagicOrders.trade_type in ['logistic_waybill_exist', 'logistic_waybill_void'] : %>
-          <li><a data-toggle="modal" href="#" data-type="setup_logistic">物流单号设置</a></li>
-        <% end %>
-      <% end %>
-      <li class= "divider"></li>
-      <% if @trade.get('status_text') is "已付款，待发货" or @trade.get('status_text') is "已付款，已发货" : %>
-        <% if @trade.get('seller_confirm_invoice_at') == undefined : %>
-        <li><a data-toggle="modal" href="#" data-type="invoice">申请开票</a></li>
-        <% end %>
-        <% if MagicOrders.enable_module_colors == 1 : %>
-        <% if @trade.get('confirm_color_at') == undefined && MagicOrders.role_key != 'seller' : %>
-          <li><a data-toggle="modal" href="#" data-type="color">申请调色</a></li>
-        <% end %>
-        <% end %>
-      <% end %>
-      <% unless @trade.get('status_text') is "申请退款" : %>
-      <li><a data-toggle="modal" href="#" data-type="cs_memo">客服备注</a></li>
-      <% end %>
-      <li><a data-toggle="modal" href="#" data-type="gift_memo">赠品备注</a></li>
-      <% if @trade.get('status_text') is "已付款，已发货" : %>
-      <% if @trade.get('seller_confirm_deliver_at') != undefined : %>
-      <li><a data-toggle="modal" href="#" data-type="confirm_receive">确认买家已收货</a></li>
-      <% end %>
-      <li><a data-toggle="modal" href="#" data-type="logistic_memo">物流公司备注</a></li>
-      <% end %>
--->
-      <!-- <li><a data-toggle="modal" href="#" data-type="reassign">订单转交</a></li> -->
-      <!-- <li><a data-toggle="modal" href="#" data-type="logistic_company">物流公司</a></li> -->
-<!--
-      <li class= "divider"></li>
-
-      <% if @trade.get('status_text') == '已付款，待发货' : %>
-        <% if @trade.get('dispatched_at') != undefined : %>
-          <% if @trade.get('trade_source') != '京东' : %>
-            <% if MagicOrders.enable_trade_deliver_bill_spliting && !@trade.get('has_split_deliver_bill') : %>
-              <% if @trade.get('seller_id') in MagicOrders.enable_trade_deliver_bill_spliting_sellers : %>
-                <li><a data-toggle="modal" href="#" data-type="logistic_split">物流拆分</a></li>
-              <% end %>
-            <% end %>
-          <% end %>
-          <li><a data-toggle="modal" href="#" data-type="deliver">订单发货</a></li>
-          <% if MagicOrders.enable_module_colors == 1 : %>
-            <% if @trade.get('confirm_color_at') == undefined && @trade.get('has_color_info') == true : %>
-              <li><a data-toggle="modal" href="#" data-type="confirm_color">确认调色</a></li>
-            <% end %>
-          <% end %>
-          <% if MagicOrders.company != "dulux" : %>
-            <li><a data-toggle="modal" href="#" data-type="confirm_check_goods">确认验货</a></li>
-          <% end %>
-        <% end %>
-      <% end %>
-      <li><a data-toggle="modal" href="#" data-type="mark_unusual_state">标注异常</a></li>
-
-      <% if @trade.get('seller_confirm_deliver_at') == undefined && @trade.get('consign_time') : %>
-        <li><a data-toggle="modal" href="#" data-type="seller_confirm_deliver">确认发货</a></li>
-      <% end %>
-
-      <% if MagicOrders.role_key == 'logistic' && @trade.get('status_text') == '已付款，已发货' : %>
-        <li><a data-toggle="modal" href="#" data-type="logistic_waybill">输入物流单号</a></li>
-      <% end %>
-
-      <% if @trade.get('invoice_name') && @trade.get('seller_confirm_invoice_at') == undefined && @trade.get('status_text') isnt "申请退款" : %>
-        <li><a data-toggle="modal" href="#" data-type="seller_confirm_invoice">确认开票</a></li>
-      <% end %>
-
-      <% if @trade.get('pay_time') : %>
-        <% unless MagicOrders.role_key == 'seller' : %>
-          <li><a data-toggle="modal" href="#" data-type="barcode">输入唯一码</a></li>
-        <% end %>
-      <% end %>
-
-      <li class= "divider"></li>
-        <% if @trade.get('request_return_at') == undefined : %>
-          <li><a data-toggle="modal" href="#" data-type="request_return">申请退货</a></li>
-        <% end %>
-        <% if @trade.get('request_return_at') && @trade.get('confirm_return_at') == undefined : %>
-          <li><a data-toggle="modal" href="#" data-type="confirm_return">确认退货</a></li>
-        <% end %>
-        <% if @trade.get('confirm_return_at') && @trade.get('confirm_refund_at') == undefined : %>
-          <li><a data-toggle="modal" href="#" data-type="confirm_refund">确认退款</a></li>
-        <% end %>
-      <li><a data-toggle="modal" href="#" data-type="invoice_number">发票号设置</a></li>
- -->
-      <!-- <li><a data-toggle="modal" href="#" data-type="refund">申请退款</a></li> -->
-      <!-- <li><a data-toggle="modal" href="#" data-type="agree_refund">同意退款</a></li> -->
-      <!-- <li><a data-toggle="modal" href="#" data-type="agree_return_goods">同意退货</a></li> -->
-      <!-- <li><a data-toggle="modal" href="#" data-type="invoice_notice">开票通知</a></li> -->
-
-      <!-- <li class= "divider"></li> -->
-
-      <!-- <li><a data-toggle="modal" href="#" data-type="export_deliver_bill">导出发货单</a></li> -->
-      <!-- <li><a data-toggle="modal" href="#" data-type="export_logistic_bill">导出物流单</a></li> -->
-      <!-- <li><a data-toggle="modal" href="#" data-type="export_invoice">导出发票</a></li> -->
-<!--
-      <% unless MagicOrders.company == 'dulux' and MagicOrders.role_key == 'seller' : %>
-      <li><a data-toggle="modal" href="#" data-type="operation_log">订单日志</a></li>
-      <% end %>
-
-      <% if MagicOrders.role_key == 'admin' || MagicOrders.role_key == 'cs' : %>
-        <% if MagicOrders.company == 'nippon' : %>
-          <li><a data-toggle="modal" href="#" data-type="manual_sms_or_email">发短信/邮件</a></li>
-        <% end %>
-        <% if MagicOrders.company == 'dulux'  && @trade.get('status_text') != "等待付款" : %>
-          <li><a data-toggle="modal" href="#" data-type="modify_payment">金额调整</a></li>
-        <% end %>
-      <% end %>
- -->
-<!--
-      </ul>
-  </div>
-</td>
--->
-<!--操作 end-->
-
 <td data-col='trade_source'>
   <% if @trade.get('trade_source') == "赠品" || @trade.get('trade_source') == "人工" : %>
     <span class="label label-important"><%= @trade.get('trade_source') %></span>
@@ -171,6 +27,7 @@
 </td>
 <td data-col='status'>
   <span class="label label-success"><%= @trade.get('status_text') %></span>
+  <span class="label label-warn"><%= @trade.get('last_unusual_state') %></span>
 </td>
 <td data-col='status_history'>
   <span class="label">下单 <%= @trade.get('created') %></span>
@@ -224,15 +81,13 @@
   <%= @trade.get('receiver_address') %>
 </td>
 
-<% if MagicOrders.company == 'nippon' || (MagicOrders.company == 'dulux' and MagicOrders.role_key != 'seller') : %>
-<td data-col='buyer_message'>
-  <% if @trade.get('buyer_message'): %>
-  <a href="javascript:void(0)" rel="popover" data-content="<%= @trade.get 'buyer_message' %>" data-original-title="<b>买家留言</b>">
+<!--<td data-col='buyer_message'>
+  <%# if @trade.get('buyer_message'): %>
+  <a href="javascript:void(0)" rel="popover" data-content="<%#= @trade.get 'buyer_message' %>" data-original-title="<b>买家留言</b>">
     <i class="icon-msg"></i>
   </a>
-  <% end %>
-</td>
-<% end %>
+  <%# end %>
+</td>-->
 
 <td data-col='seller_memo'>
   <% if @trade.get 'seller_memo': %>
@@ -247,7 +102,6 @@
   <% end %>
 </td>
 
-<% if MagicOrders.company != 'dulux' or (MagicOrders.company == 'dulux' and (MagicOrders.role_key == 'admin' or MagicOrders.role_key == 'cs')) : %>
 <td data-col='gift_memo'>
   <% if @trade.get('gift_memo') || @trade.get('trade_gifts').length != 0 || @trade.get('tid').slice(-2,-1) == "G" : %>
     <% if @trade.get('tid').slice(-2,-1) == "G" : %>
@@ -257,7 +111,6 @@
     <% end %>
   <% end %>
 </td>
-<% end %>
 
 <td data-col='deliver_bill'>
   <span class="label label-warning"><%= @trade.get('deliver_bill_count') %></span>
@@ -289,11 +142,11 @@
 <td data-col='point_fee'>
   <%= @trade.get('point_fee') %>
 </td>
-<% if MagicOrders.company == 'nippon' || (MagicOrders.company == 'dulux' and MagicOrders.role_key != 'seller' and MagicOrders.role_key != 'logistic') : %>
-<td data-col='total_fee'>
-  ￥<%= @trade.get('total_fee') %>
-</td>
-<% end %>
+
+<!--<td data-col='total_fee'>
+  ￥<%#= @trade.get('total_fee') %>
+</td>-->
+
 <!-- <td data-col='deliver_bill' ><!--发货单--</td> -->
 <td data-col='deliver_bill_id' ><!--发货单编号--></td>
 <td data-col='deliver_bill_status' >

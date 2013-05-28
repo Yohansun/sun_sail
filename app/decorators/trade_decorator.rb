@@ -315,32 +315,37 @@ class TradeDecorator < Draper::Base
     end
   end
 
-
   def taobao_order_status_text
-    case trade.status
-    when "TRADE_NO_CREATE_PAY"
-      "没有创建支付宝交易"
-    when "WAIT_BUYER_PAY"
-      "等待付款"
-    when "WAIT_SELLER_SEND_GOODS"
-      "已付款，待发货"
-    when "WAIT_BUYER_CONFIRM_GOODS"
-      "已付款，已发货"
-    when "TRADE_BUYER_SIGNED"
-      "买家已签收,货到付款专用"
-    when "TRADE_FINISHED"
-      "交易成功"
-    when "TRADE_CLOSED"
-      "交易已关闭"
-    when "TRADE_CLOSED_BY_TAOBAO"
-      "交易被淘宝关闭"
-    when "ALL_WAIT_PAY"
-      "包含：等待买家付款、没有创建支付宝交易"
-    when "ALL_CLOSED"
-      "包含：交易关闭、交易被淘宝关闭"
-    else
-      trade.status
-    end
+    if trade.return_ref_status.present?
+      trade.return_ref_status
+    else  
+      case trade.status
+      when "TRADE_NO_CREATE_PAY", "WAIT_BUYER_PAY", "ALL_WAIT_PAY"
+        "等待付款"
+      when "WAIT_SELLER_SEND_GOODS"
+        if trade.seller_id
+          if trade.logistic_waybill
+            "已设置物流，待发货" 
+          else
+            "已分派，待设置物流" 
+          end  
+        else  
+          "已付款，待分派"  
+        end  
+      when "WAIT_BUYER_CONFIRM_GOODS", "TRADE_BUYER_SIGNED"
+        if trade.seller_confirm_deliver_at
+          "已付款，已发货"
+        else
+          "已发货，待确认发货"
+        end  
+      when "TRADE_FINISHED"
+        "交易成功"
+      when "TRADE_CLOSED","TRADE_CLOSED_BY_TAOBAO", "ALL_CLOSED"
+        "交易关闭"
+      else
+        trade.status
+      end
+    end  
   end
 
   def jingdong_order_status_text
