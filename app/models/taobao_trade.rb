@@ -123,36 +123,13 @@ class TaobaoTrade < Trade
     seller_id.blank? && status == 'WAIT_SELLER_SEND_GOODS'
   end
 
-  def auto_dispatchable?
-    settings = self.fetch_account.settings.auto_settings
-    if settings["auto_dispatch"]
-      dispatch_conditions = settings["dispatch_conditions"]
-      if dispatch_conditions["void_buyer_message"] && dispatch_conditions["void_seller_memo"]
-        can_auto_dispatch = !has_buyer_message && self.seller_memo.blank?
-      elsif dispatch_conditions["void_buyer_message"] == 1 && dispatch_conditions["void_seller_memo"] == nil
-        can_auto_dispatch = !has_buyer_message
-      elsif dispatch_conditions["void_buyer_message"] == nil && dispatch_conditions["void_seller_memo"] == 1
-        can_auto_dispatch = self.seller_memo.blank?
-      else
-        can_auto_dispatch = true
-      end
-    else
-      can_auto_dispatch = false
-    end
-    can_auto_dispatch && has_special_seller_memo? && dispatchable?
-  end
-
   def splitable?
     match_seller_with_conditions(self).size > 1
   end
 
   def matched_seller(area = nil)
     area ||= default_area
-    if self.fetch_account.key == 'dulux'
-      Dulux::SellerMatcher.match_trade_seller(self, area) unless splitable?
-    else
-      Dulux::SellerMatcher.match_trade_seller(self, area)
-    end
+    SellerMatcher.match_trade_seller(self, area)
   end
 
   def dispatch!(seller = nil)
@@ -191,7 +168,7 @@ class TaobaoTrade < Trade
   end
 
   def auto_dispatch!
-    return unless auto_dispatchable?
+    return false unless auto_dispatchable?
 
     dispatch!
 

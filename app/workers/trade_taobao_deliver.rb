@@ -4,7 +4,7 @@ class TradeTaobaoDeliver
   sidekiq_options :queue => :taobao
 
   def perform(id)
-    trade = TaobaoTrade.find(id)
+    trade = Trade.find(id)
     return unless trade
     account = trade.fetch_account
     tid = trade.tid

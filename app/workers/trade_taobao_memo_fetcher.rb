@@ -19,10 +19,10 @@ class TradeTaobaoMemoFetcher
     trade.save
     # AUTO SYNC BUYER_MESSAGE TO CS_MEMO
     account = trade.fetch_account
-    if account.settings.auto_settings['auto_sync_memo']
+    if account.settings.auto_settings['auto_sync_memo'] && trade.cs_memo.blank?
       result = account.can_auto_preprocess_right_now
       if result == true
-        TradeTaobaoSyncMemo.new.perform(trade.tid)
+        TradeTaobaoSyncMemo.perform_in(account.settings.auto_settings['preprocess_silent_gap'].to_i.hours, trade.tid)
       else
         TradeTaobaoSyncMemo.perform_in(result, trade.tid)
       end

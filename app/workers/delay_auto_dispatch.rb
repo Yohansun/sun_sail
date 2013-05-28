@@ -6,8 +6,8 @@ class DelayAutoDispatch
   def perform(id)
     trade = Trade.where(_id: id).first
     return unless trade
-    trade.auto_dispatch! unless TradeSplitter.new(trade).split!
 
+    #隐藏拆分逻辑
     # account = trade.fetch_account
     # if account.settings.auto_settings["auto_split"]
     #   if account.can_auto_preprocess_right_now?
@@ -16,5 +16,8 @@ class DelayAutoDispatch
     # else
     #   can_split = false
     # end
+
+    trade.auto_dispatch!
+
   end
 end

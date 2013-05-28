@@ -71,8 +71,10 @@ class TaobaoTradePuller
           $redis.sadd('TaobaoTradeTids',trade['tid'])
           TradeTaobaoMemoFetcher.perform_async(trade.tid)
           TradeTaobaoPromotionFetcher.perform_async(trade.tid)
-          result = account.can_auto_dispatch_right_now
-          DelayAutoDispatch.perform_in((result == true ? 0 : result), trade.id)
+          if account.settings.auto_settings['auto_dispatch']
+            result = account.can_auto_dispatch_right_now
+            DelayAutoDispatch.perform_in((result == true ? 0 : result), trade.id)
+          end
         end
 
         page_no += 1
@@ -156,10 +158,11 @@ class TaobaoTradePuller
               end
               local_trade.set_has_onsite_service
               local_trade.save
+              if account.settings.auto_settings['auto_dispatch']
+                result = account.can_auto_dispatch_right_now
+                DelayAutoDispatch.perform_in((result == true ? 0 : result), local_trade.id)
+              end
               TradeTaobaoMemoFetcher.perform_async(local_trade.tid)
-              TradeTaobaoPromotionFetcher.perform_async(trade.tid)
-              result = account.can_auto_dispatch_right_now
-              DelayAutoDispatch.perform_in((result == true ? 0 : result), trade.id)
               CustomerFetch.perform_async
               p "update trade #{trade['tid']}"
             end
@@ -176,6 +179,10 @@ class TaobaoTradePuller
       total_pages = nil
       page_no = 1
 
+      trade_source = TradeSource.find_by_id(trade_source_id)
+      account_id = trade_source.account_id
+      account = Account.find_by_id(trade_source.account_id)
+
       if start_time.blank?
         latest_created_order = TaobaoTrade.only(:created, :account_id).where(account_id: account_id).order_by(:created.desc).limit(1).first
         start_time = latest_created_order.created - 1.hour
@@ -184,9 +191,6 @@ class TaobaoTradePuller
       if end_time.blank?
         end_time = Time.now
       end
-
-      trade_source = TradeSource.find_by_id(trade_source_id)
-      account = Account.find_by_id(trade_source.account_id)
 
       begin
         response = TaobaoQuery.get({
@@ -225,10 +229,11 @@ class TaobaoTradePuller
             local_trade.operation_logs.build(operated_at: Time.now, operation: "订单状态核查,更新#{local_trade.changed.try(:join, ',')}") if local_trade.changed?
             local_trade.set_has_onsite_service
             local_trade.save
+            if account.settings.auto_settings['auto_dispatch']
+              result = account.can_auto_dispatch_right_now
+              DelayAutoDispatch.perform_in((result == true ? 0 : result), local_trade.id)
+            end
             TradeTaobaoMemoFetcher.perform_async(local_trade.tid)
-            TradeTaobaoPromotionFetcher.perform_async(trade.tid)
-            result = account.can_auto_dispatch_right_now
-            DelayAutoDispatch.perform_in((result == true ? 0 : result), trade.id)
             p "update trade #{trade['tid']}"
           end
         end
