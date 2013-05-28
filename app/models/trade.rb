@@ -321,7 +321,7 @@ class Trade
     area = default_area
     if area
       @logistic_ids = LogisticArea.where(area_id: area.id).map{|l| l.logistic_id }.join(",")
-      @matched_logistics = Logistic.where("id in (?) AND xml IS NOT NULL", @logistic_ids).map{|ml| [ml.id, ml.name, ml.xml]}
+      @matched_logistics = Logistic.where("id in (?)", @logistic_ids).map{|ml| [ml.id, ml.name, "/logistics/#{ml.id}/print_flash_settings/#{ml.print_flash_setting.id}/print_infos.xml"]}
       @matched_logistics == [] ? [[1,"其他", '']] : @matched_logistics
     else
       [[1,"其他", '']]     #无匹配地区或匹配经销商时默认是其他
@@ -1032,6 +1032,7 @@ class Trade
         end
       end
       self.has_refund_orders = false
+      true
     end
 
     def set_has_unusual_state

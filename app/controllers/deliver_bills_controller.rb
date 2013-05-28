@@ -131,15 +131,17 @@ class DeliverBillsController < ApplicationController
   end
 
   def update
-    @bill = DeliverBill.find params[:id]
-    trade = @bill.trade
-    is_first_set = !trade.logistic_waybill.present?
-    logistic = Logistic.find_by_id params['logistic_id']
-    trade.logistic_id = logistic.id
-    trade.logistic_name = logistic.name
-    trade.logistic_code = logistic.code
-    trade.logistic_waybill = params["logistic_waybill"]
-    trade.save
+    if params[:setup_logistic] == true
+      @bill = DeliverBill.find params[:id]
+      trade = @bill.trade
+      is_first_set = !trade.logistic_waybill.present?
+      logistic = current_account.logistics.find_by_id params[:logistic_id]
+      trade.logistic_id = logistic.try(:id)
+      trade.logistic_name = logistic.try(:name)
+      trade.logistic_code = logistic.try(:code)
+      trade.logistic_waybill = params[:logistic_waybill].present? ? params[:logistic_waybill] : @trade.tid
+    end
+    trade.save!
 
     # 如果满足自动化设置条件，设置物流单号后订单自动发货
     auto_settings = current_account.settings.auto_settings
