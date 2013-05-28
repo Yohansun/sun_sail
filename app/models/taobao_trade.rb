@@ -102,41 +102,7 @@ class TaobaoTrade < Trade
 
   attr_accessor :search_fields
 
-  def orders
-    self.taobao_orders
-  end
-
-  def orders=(new_orders)
-    self.taobao_orders = new_orders
-  end
-
-  def deliverable?
-    trades = TaobaoTrade.where(tid: tid).select do |trade|
-      trade.orders.where(:refund_status.in => ['NO_REFUND', 'CLOSED']).size != 0
-    end
-
-    (trades.map(&:status) - ["WAIT_BUYER_CONFIRM_GOODS"]).size == 0 && !trades.map(&:delivered_at).include?(nil)
-  end
-
-  def deliver!
-    return unless self.deliverable?
-    TradeTaobaoDeliver.perform_async(self.id)
-  end
-
-  def auto_dispatchable?
-    if !fetch_account || !fetch_account.settings.auto_settings || !self.fetch_account.settings.auto_settings["dispatch_conditions"]
-      can_auto_dispatch = false
-    else
-      dispatch_conditions = self.fetch_account.settings.auto_settings["dispatch_conditions"]
-      void_buyer_message = (dispatch_conditions["void_buyer_message"].present? ? false : true) || !has_buyer_message
-      void_seller_memo = (dispatch_conditions["void_seller_memo"].present? ? false : true) || seller_memo.blank?
-      void_cs_memo = (dispatch_conditions["void_cs_memo"].present? ? false : true) || !has_cs_memo
-      void_money = dispatch_conditions["void_money"].present? ? false : true || !has_refund_orders
-      can_auto_dispatch = void_buyer_message && void_seller_memo && void_cs_memo && void_money
-    end
-    can_auto_dispatch && dispatchable?
-  end
-
+  ## 分流相关 ##
   # def has_special_seller_memo?
   #   special_seller_memo.blank?
   # end
@@ -153,18 +119,21 @@ class TaobaoTrade < Trade
   #   end
   # end
 
-  def auto_dispatch!
-    return unless auto_dispatchable?
+  def dispatchable?
+    seller_id.blank? && status == 'WAIT_SELLER_SEND_GOODS'
+  end
 
-    dispatch!
+  def splitable?
+    match_seller_with_conditions(self).size > 1
+  end
 
-    operation_desc =  if seller_id
-                        '自动分派'
-                      else
-                        '自动分派,未匹配到经销商'
-                      end
-
-    self.operation_logs.create(operated_at: Time.now, operation: operation_desc)
+  def matched_seller(area = nil)
+    area ||= default_area
+    if self.fetch_account.key == 'dulux'
+      Dulux::SellerMatcher.match_trade_seller(self, area) unless splitable?
+    else
+      Dulux::SellerMatcher.match_trade_seller(self, area)
+    end
   end
 
   def dispatch!(seller = nil)
@@ -177,14 +146,10 @@ class TaobaoTrade < Trade
     # 更新订单状态为已分派
     update_attributes(seller_id: seller.id, seller_name: seller.name, dispatched_at: Time.now)
 
+    # 如果满足自动化设置条件，分流后订单自动发货
     auto_settings = self.fetch_account.settings.auto_settings
-
-    #如果满足自动化设置条件，分派后订单自动发货
-    if auto_settings['auto_deliver'] && self.fetch_account.can_auto_deliver_right_now?
-      if auto_settings["deliver_condition"] == "dispatched_trade"
-        deliver!
-        self.operation_logs.create(operated_at: Time.now, operation: "订单自动发货")
-      end
+    if auto_settings['auto_deliver'] && auto_settings["deliver_condition"] == "dispatched_trade"
+      auto_deliver!
     end
 
     # 生成默认发货单
@@ -192,17 +157,63 @@ class TaobaoTrade < Trade
     generate_stock_out_bill
   end
 
-  def matched_seller(area = nil)
-    area ||= default_area
-    SellerMatcher.match_trade_seller(self, area)
+  def auto_dispatchable?
+    if !fetch_account || !fetch_account.settings.auto_settings || !self.fetch_account.settings.auto_settings["dispatch_conditions"]
+      can_auto_dispatch = false
+    else
+      dispatch_conditions = self.fetch_account.settings.auto_settings["dispatch_conditions"]
+      void_buyer_message = (dispatch_conditions["void_buyer_message"].present? ? false : true) || !has_buyer_message
+      void_seller_memo = (dispatch_conditions["void_seller_memo"].present? ? false : true) || seller_memo.blank?
+      void_cs_memo = (dispatch_conditions["void_cs_memo"].present? ? false : true) || !has_cs_memo
+      void_money = dispatch_conditions["void_money"].present? ? false : true || !has_refund_orders
+      can_auto_dispatch = void_buyer_message && void_seller_memo && void_cs_memo && void_money
+    end
+    can_auto_dispatch && dispatchable?
   end
 
-  def splitable?
-    match_seller_with_conditions(self).size > 1
+  def auto_dispatch!
+    return unless auto_dispatchable?
+
+    dispatch!
+
+    operation_desc =  if seller_id
+                        '自动分流'
+                      else
+                        '自动分流,未匹配到经销商'
+                      end
+
+    self.operation_logs.create(operated_at: Time.now, operation: operation_desc)
   end
 
-  def dispatchable?
-    seller_id.blank? && status == 'WAIT_SELLER_SEND_GOODS'
+  ## 发货相关 ##
+
+  def deliverable?
+    trades = TaobaoTrade.where(tid: tid).select do |trade|
+      trade.orders.where(:refund_status.in => ['NO_REFUND', 'CLOSED']).size != 0
+    end
+    (trades.map(&:status) - ["WAIT_BUYER_CONFIRM_GOODS"]).size == 0 && !trades.map(&:delivered_at).include?(nil)
+  end
+
+  def deliver!
+    return unless self.deliverable?
+    TradeTaobaoDeliver.perform_async(self.id)
+  end
+
+  def auto_deliver!
+    return unless self.deliverable?
+    result = self.fetch_account.can_auto_deliver_right_now
+    TradeTaobaoDeliver.perform_in((result == true ? 0 : result), self.id)
+    trade.operation_logs.create(operated_at: Time.now, operation: "订单自动发货")
+  end
+
+  ## model属性方法 ##
+
+  def orders
+    self.taobao_orders
+  end
+
+  def orders=(new_orders)
+    self.taobao_orders = new_orders
   end
 
   def out_iids
@@ -224,7 +235,7 @@ class TaobaoTrade < Trade
 
   def self.rescue_buyer_message(args)
     args.each do |tid|
-      TradeTaobaoMemoFetcher.perform_async(tid, false)
+      TradeTaobaoMemoFetcher.perform_async(tid)
     end
   end
 

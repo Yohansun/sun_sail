@@ -4,8 +4,9 @@ class AccountSetupsController < ApplicationController
   before_filter :check_account_wizard_status, only:[:show]
 
   skip_before_filter :verify_authenticity_token, only: [:data_fetch_finish]
-
-  before_filter :authorize,:only => [:edit_auto_settings,:update_auto_settings]
+  before_filter :authorize,:only => [:edit_preprocess_settings, :update_preprocess_settings,
+                                                      :edit_dispatch_settings, :update_dispatch_settings,
+                                                      :edit_deliver_settings, :update_deliver_settings]
 
   steps :admin_init, :data_fetch, :options_setup, :user_init
 

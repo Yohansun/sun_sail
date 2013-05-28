@@ -100,7 +100,7 @@
                   </div>
                   <div class="control-group">
                     <label class="radio pull-left input-small">
-                      <input type="radio" value="0" value="0" name="auto_settings[auto_sync_memo]" <%='checked' if @setting['auto_sync_memo'].present? == false %>>关闭
+                      <input type="radio" value="0" name="auto_settings[auto_sync_memo]" <%='checked' if @setting['auto_sync_memo'].present? == false %>>关闭
                     </label>
                     <div class="mar_l80">
                       <p class="mt2 muted">系统不会将淘宝备注，同步到系统的客服备注中</p>
@@ -129,12 +129,12 @@
                           <tr>
                             <td>
                               <input type="checkbox" class="pull-left" style="margin-top:4px;" name="auto_settings[unusual_conditions][unusual_waitpay]" <%= 'checked' if @setting['unusual_conditions']['unusual_waitpay'] == 1 %>>当订单已下单，超过
-                                <select name="auto_settings[unusual_conditions][max_unpay_days]" class="input-mini">
+                                <select name="auto_settings[unusual_conditions][max_unpaid_days]" class="input-mini">
                                   <% (1..7).each do |i| %>
-                                  <option value= "<%= i %>" <%= 'selected' if @setting['unusual_conditions']["max_unpay_days"] == i.to_s %>><%= i %></option>
+                                  <option value= "<%= i %>" <%= 'selected' if @setting['unusual_conditions']["max_unpaid_days"] == i.to_s %>><%= i %></option>
                                   <% end %>
                                 </select>天未付款
-                                <!-- <input type="text" name="auto_settings[unusual_conditions][max_unpay_days]" class="input-mini" value="<%= @setting['unusual_conditions']['max_unpay_days']%>"/> -->
+                                <!-- <input type="text" name="auto_settings[unusual_conditions][max_unpaid_days]" class="input-mini" value="<%= @setting['unusual_conditions']['max_unpaid_days']%>"/> -->
                             </td>
                             <!-- <td>
                               <input type="checkbox" class="pull-left" style="margin-top:4px;" name="auto_settings[unusual_conditions][unusual_payment]" <%= 'checked' if @setting['unusual_conditions']['unusual_payment'] == 1 %>>当订单的实付金额小于订单总金额
@@ -148,12 +148,12 @@
                           <tr>
                             <td>
                               <input type="checkbox" class="pull-left" style="margin-top:4px;" name="auto_settings[unusual_conditions][unusual_dispatch]" <%= 'checked' if @setting['unusual_conditions']['unusual_dispatch'] == 1 %>>当订单已付款，超过
-                                <select name="auto_settings[unusual_conditions][max_undispatch_days]" class="input-mini">
+                                <select name="auto_settings[unusual_conditions][max_undispatched_days]" class="input-mini">
                                   <% (1..7).each do |i| %>
-                                  <option value= "<%= i %>" <%= 'selected' if @setting['unusual_conditions']["max_undispatch_days"] == i.to_s %>><%= i %></option>
+                                  <option value= "<%= i %>" <%= 'selected' if @setting['unusual_conditions']["max_undispatched_days"] == i.to_s %>><%= i %></option>
                                   <% end %>
                                 </select>天未分派
-                                <!-- <input type="text" class="input-mini" name="auto_settings[unusual_conditions][max_undispatch_days]" value="<%= @setting['unusual_conditions']['max_undispatch_days']%>"/> -->
+                                <!-- <input type="text" class="input-mini" name="auto_settings[unusual_conditions][max_undispatched_days]" value="<%= @setting['unusual_conditions']['max_undispatched_days']%>"/> -->
                             </td>
                             <!-- <td></td> -->
                             <!-- <td></td> -->
@@ -161,12 +161,12 @@
                           <tr>
                             <td>
                               <input type="checkbox" class="pull-left" style="margin-top:4px;" name="auto_settings[unusual_conditions][unusual_deliver]" <%= 'checked' if @setting['unusual_conditions']['unusual_deliver'] == 1 %>>当订单已分派，超过
-                                <select name="auto_settings[unusual_conditions][max_undeliver_days]" class="input-mini">
+                                <select name="auto_settings[unusual_conditions][max_undelivered_days]" class="input-mini">
                                   <% (1..7).each do |i| %>
-                                  <option value= "<%= i %>" <%= 'selected' if @setting['unusual_conditions']["max_undeliver_days"] == i.to_s %>><%= i %></option>
+                                  <option value= "<%= i %>" <%= 'selected' if @setting['unusual_conditions']["max_undelivered_days"] == i.to_s %>><%= i %></option>
                                   <% end %>
                                 </select>天未发货
-                                <!-- <input type="text" name="auto_settings[unusual_conditions][max_undeliver_days]" class="input-mini" value="<%= @setting['unusual_conditions']['max_undeliver_days']%>"/> -->
+                                <!-- <input type="text" name="auto_settings[unusual_conditions][max_undelivered_days]" class="input-mini" value="<%= @setting['unusual_conditions']['max_undelivered_days']%>"/> -->
                             </td>
                             <!-- <td>
                               <input type="checkbox" class="pull-left" style="margin-top:4px;" name="auto_settings[unusual_conditions][has_refund]" <%= 'checked' if @setting['unusual_conditions']['has_refund'] == 1 %>>当订单有退款或者部分退款
