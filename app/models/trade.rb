@@ -225,6 +225,10 @@ class Trade
     class_name
   end
 
+  def last_unusual_state
+    unusual_states.where(repaired_at: nil).last.try(:reason)
+  end
+
   def color_num_do_not_exist
     orders.map(&:color_num).flatten.each do |color|
       next if color.blank?
@@ -277,6 +281,16 @@ class Trade
     "#{cs_memo}  #{orders_cs_memo}"
   end
 
+  def return_ref
+    ref_batches.where(ref_type: "return_ref").last
+  end 
+
+  def return_ref_status
+    if return_ref.present?
+      return_ref.ref_logs.last.operation
+    end  
+  end  
+    
   def reset_seller
     return unless seller_id
     update_attributes(seller_id: nil, seller_name: nil, dispatched_at: nil)

@@ -3,94 +3,6 @@
   * html .timeEntry_control { margin-top: -2px; }
 </style>
 
-<!--
-<header class="jumbotron subhead" id="overview">
-  <div class="subnav">
-    <ul class="nav nav-pills">
-      <li class="dropdown" id="trade_selector">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">
-          订单
-          <b class="caret"></b>
-        </a>
-        <ul class="dropdown-menu">
-          <li><a href="#trades" data-trade-mode="trades" data-trade-status="all">所有</a></li>
-          <% if MagicOrders.role_key != 'seller' : %>
-          <li><a href="#" data-trade-mode="trades" data-trade-status="unpaid">未付款</a></li>
-          <li><a href="#" data-trade-mode="trades" data-trade-status="paid">已付款</a></li>
-          <li><a href="#" data-trade-mode="trades" data-trade-status="undispatched">未分派</a></li>
-          <% end %>
-          <li><a href="#" data-trade-mode="trades" data-trade-status="dispatched">已分派</a></li>
-          <li><a href="#" data-trade-mode="trades" data-trade-status="undelivered">已分派，未发货</a></li>
-          <li><a href="#" data-trade-mode="trades" data-trade-status="delivered">已发货</a></li>
-          <li><a href="#" data-trade-mode="trades" data-trade-status="deliver_unconfirmed">已发货，未确认发货</a></li>
-          <li><a href="#" data-trade-mode="trades" data-trade-status="refund">退款</a></li>
-          <% if MagicOrders.role_key != 'seller' : %>
-          <li><a href="#" data-trade-mode="trades" data-trade-status="closed">交易关闭</a></li>
-          <li><a href="#" data-trade-mode="trades" data-trade-status="unusual_trade">交易异常</a></li>
-          <% end %>
-        </ul>
-      </li>
-      <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">
-          发货单
-          <b class="caret"></b>
-        </a>
-        <ul class="dropdown-menu">
-          <li><a href="#" data-trade-mode="deliver_bills" data-trade-status="all">所有发货单</a></li>
-          <li><a href="#" data-trade-mode="deliver_bills" data-trade-status="unprinted">未打印</a></li>
-          <li><a href="#" data-trade-mode="deliver_bills" data-trade-status="printed">已打印</a></li>
-        </ul>
-      </li>
-      <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-          物流单<b class="caret"></b>
-        </a>
-        <ul class="dropdown-menu">
-          <li><a href="#" data-trade-mode="logistic_bills" data-trade-status="all">所有物流单</a></li>
-          <li><a href="#" data-trade-mode="logistic_bills" data-trade-status="unprinted">未打印物流单</a></li>
-          <li><a href="#" data-trade-mode="logistic_bills" data-trade-status="printed">已打印物流单</a></li>
-          <li><a href="#" data-trade-mode="logistic_bills" data-trade-status="waybill_void">未设置物流信息</a></li>
-          <li><a href="#" data-trade-mode="logistic_bills" data-trade-status="waybill_exist">已设置物流信息</a></li>
-        </ul>
-      </li>
-        <li class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-            发货
-            <b class="caret"></b>
-          </a>
-          <ul class="dropdown-menu">
-            <li><a href="#" data-trade-mode="send" data-trade-status="seller_undelivered">未发货</a></li>
-            <li><a href="#" data-trade-mode="send" data-trade-status="seller_delivered">已发货</a></li>
-          </ul>
-        </li>
-        <li class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-            退货
-            <b class="caret"></b>
-          </a>
-          <ul class="dropdown-menu">
-            <li><a href="#" data-trade-mode="return" data-trade-status="request_return">已申请退货</a></li>
-            <li><a href="#" data-trade-mode="return" data-trade-status="confirm_return">已确认退货</a></li>
-          </ul>
-        </li>
-      <% if MagicOrders.enable_module_colors == 1 : %>
-        <li class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-            调色
-            <b class="caret"></b>
-          </a>
-          <ul class="dropdown-menu">
-            <li><a href="#" data-trade-mode="color" data-trade-status="color_unmatched">未申请调色</a></li>
-            <li><a href="#" data-trade-mode="color" data-trade-status="color_matched">已申请,未确认调色</a></li>
-            <li><a href="#" data-trade-mode="color" data-trade-status="color_confirmed">已确认调色</a></li>
-          </ul>
-        </li>
-      <% end %>
-    </ul>
-  </div>
-</header>
--->
-
 <div class="row-fluid">
   <ul id='global-menus' class="nav nav-tabs affix">
     <li><a href="#" data-trade-mode="trades" data-trade-status="all">所有订单<em></em></a></li>
@@ -105,13 +17,6 @@
   </ul>
 
   <div class='tab-content' id='all_orders'>
-    <!--
-        <ul class="breadcrumb" style="position:relative;">
-          <li><a href="#">Magic</a><span class="divider">/</span></li>
-          <li><a href="#">订单管理</a><span class="divider">/</span></li>
-          <li class="active trade_nav">所有订单</li>
-        </ul>
-     -->
     <div id='search_form'></div>
 
     <div id='op-toolbar' class="btn-toolbar js-affix" data-spy="affix" data-offset-top="144">
@@ -222,16 +127,6 @@
       <a href="#" id="newTradesNotiferLink">有<span>0</span>条新订单, 点击加载新订单数据</a>
     </div>
 
-    <!--
-    <div class='trade_count_info'>
-      <% unless @trades.length == 0 : %>
-      <p class="controls mar_t5" >当前显示：全部订单 <span class="complete_offset"><%= @trades.at(0).get('trades_count') %></span> 项中的 <span class="get_offset"></span> 项</p>
-      <% else : %>
-      <p class="controls mar_t5" >当前显示：全部订单 <span class="complete_offset">0</span> 项中的 0 项</p>
-      <% end %>
-    </div>
-    -->
-
     <table class="table table-striped table-bordered table-condensed td_colors" id="trades_table" style="min-width:1530px">
       <thead>
         <tr>
@@ -246,7 +141,7 @@
           <th data-col='receiver_name' nowrap>客户姓名</th>
           <th data-col='receiver_mobile_phone'>联系电话</th>
           <th data-col='receiver_address' style="min-width:100px">联系地址</th>
-          <th data-col='buyer_message'>客户<br/>留言</th>
+          <!-- <th data-col='buyer_message'>客户<br/>留言</th> -->
           <th data-col='seller_memo'>卖家<br/>备注</th>
           <th data-col='cs_memo'>客服<br/>备注</th>
           <th data-col='gift_memo'>赠品<br/>备注</th>
@@ -259,7 +154,7 @@
           <% end %>
           <th data-col='invoice_info'>发票<br/>信息</th>
           <th data-col='point_fee'>使用<br/>积分</th>
-          <th data-col='total_fee' nowrap>实付金额</th>
+          <!-- <th data-col='total_fee' nowrap>实付金额</th> -->
           <th data-col='deliver_bill_id'>发货单编号</th>
           <th data-col='deliver_bill_status'>发货单状态</th>
           <th data-col='logistic_bill_status'>物流单状态</th>
