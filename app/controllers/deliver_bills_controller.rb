@@ -92,11 +92,8 @@ class DeliverBillsController < ApplicationController
 
         #如果满足自动化设置条件，打印发货单后订单自动发货
         auto_settings = current_account.settings.auto_settings
-        if auto_settings['auto_deliver'] && current_account.can_auto_deliver_right_now? && is_first_print
-          if auto_settings["deliver_condition"] == "deliver_bill_printed_trade"
-            trade.update_attributes(delivered_at: Time.now)
-            trade.operation_logs.create(operated_at: Time.now, operation: "订单自动发货")
-          end
+        if auto_settings['auto_deliver'] && auto_settings["deliver_condition"] == "deliver_bill_printed_trade" && is_first_print
+          trade.auto_deliver!
         end
       end
     end
@@ -195,11 +192,8 @@ class DeliverBillsController < ApplicationController
 
       #如果满足自动化设置条件，打印物流单后订单自动发货
       auto_settings = current_account.settings.auto_settings
-      if auto_settings['auto_deliver'] && current_account.can_auto_deliver_right_now? && is_first_print
-        if auto_settings["deliver_condition"] == "logistic_bill_printed_trade"
-          trade.update_attributes(delivered_at: Time.now)
-          trade.operation_logs.create(operated_at: Time.now, operation: "订单自动发货")
-        end
+      if auto_settings['auto_deliver'] && auto_settings["deliver_condition"] == "logistic_bill_printed_trade" && is_first_print
+        trade.auto_deliver!
       end
     end
 
@@ -235,11 +229,8 @@ class DeliverBillsController < ApplicationController
 
         #如果满足自动化设置条件，设置物流信息后订单自动发货
         auto_settings = current_account.settings.auto_settings
-        if current_account.settings.auto_settings['auto_deliver'] && current_account.can_auto_deliver_right_now? && is_first_set
-          if auto_settings["deliver_condition"] == "has_logistic_waybill_trade"
-            trade.update_attributes(delivered_at: Time.now)
-            trade.operation_logs.create(operated_at: Time.now, operation: "订单自动发货")
-          end
+        if current_account.settings.auto_settings['auto_deliver'] && auto_settings["deliver_condition"] == "has_logistic_waybill_trade" && is_first_set
+          trade.auto_deliver!
         end
       end
     else

@@ -64,16 +64,15 @@ class TaobaoTradePuller
           end
 
           trade.operation_logs.build(operated_at: Time.now, operation: '从淘宝抓取订单')
-
           trade.set_has_onsite_service
-
           trade.save
 
           p "create trade #{trade['tid']}"
-
           $redis.sadd('TaobaoTradeTids',trade['tid'])
-
-          TradeTaobaoMemoFetcher.perform_async(trade.tid, true)
+          TradeTaobaoMemoFetcher.perform_async(trade.tid)
+          TradeTaobaoPromotionFetcher.perform_async(trade.tid)
+          result = account.can_auto_dispatch_right_now
+          DelayAutoDispatch.perform_in((result == true ? 0 : result), trade.id)
         end
 
         page_no += 1
@@ -157,12 +156,10 @@ class TaobaoTradePuller
               end
               local_trade.set_has_onsite_service
               local_trade.save
-              if local_trade.dispatchable? && local_trade.auto_dispatchable?
-                  DelayAutoDispatch.perform_async(local_trade.id)
-              end
-              if account.settings.auto_settings["auto_sync_memo"] && account.can_auto_preprocess_right_now?
-                TradeTaobaoMemoFetcher.perform_async(local_trade.tid, false)
-              end
+              TradeTaobaoMemoFetcher.perform_async(local_trade.tid)
+              TradeTaobaoPromotionFetcher.perform_async(trade.tid)
+              result = account.can_auto_dispatch_right_now
+              DelayAutoDispatch.perform_in((result == true ? 0 : result), trade.id)
               CustomerFetch.perform_async
               p "update trade #{trade['tid']}"
             end
@@ -228,10 +225,10 @@ class TaobaoTradePuller
             local_trade.operation_logs.build(operated_at: Time.now, operation: "订单状态核查,更新#{local_trade.changed.try(:join, ',')}") if local_trade.changed?
             local_trade.set_has_onsite_service
             local_trade.save
-            if local_trade.dispatchable? && local_trade.auto_dispatchable?
-                 DelayAutoDispatch.perform_async(local_trade.id)
-            end
-             TradeTaobaoMemoFetcher.perform_async(local_trade.tid, false)
+            TradeTaobaoMemoFetcher.perform_async(local_trade.tid)
+            TradeTaobaoPromotionFetcher.perform_async(trade.tid)
+            result = account.can_auto_dispatch_right_now
+            DelayAutoDispatch.perform_in((result == true ? 0 : result), trade.id)
             p "update trade #{trade['tid']}"
           end
         end

@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: onsite_service_areas
+#
+#  id         :integer(4)      not null, primary key
+#  account_id :string(255)
+#  area_id    :integer(4)
+#  created_at :datetime        not null
+#  updated_at :datetime        not null
+#
+
 # -*- encoding : utf-8 -*-
 class OnsiteServiceArea < ActiveRecord::Base
   attr_accessible :account_id, :area_id
