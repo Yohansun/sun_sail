@@ -73,12 +73,18 @@
     <span class="label label-success">打印物流单 <%= @trade.get('logistic_printed_at') %></span>
   <% end %>
 </td>
-<td data-col='receiver_id'><%= @trade.get('buyer_nick') %></td>
-<td data-col='receiver_name'><%= @trade.get('receiver_name') %></td>
-<td data-col='receiver_mobile_phone'><%= @trade.get('receiver_mobile_phone') %></td>
+<td data-col='receiver_id'><%= @trade.get('buyer_nick') %>
+  <% if @trade.get('receiver_name') : %>
+(<%= @trade.get('receiver_name') %>)
+  <% end %>
+</td>
+
+
 <td data-col='receiver_address'>
-  <%= @trade.get('receiver_state') %> <%= @trade.get('receiver_city') %> <%= @trade.get('receiver_district') %> <br/>
-  <%= @trade.get('receiver_address') %>
+  <%= @trade.get('receiver_state') %> <%= @trade.get('receiver_city') %> <%= @trade.get('receiver_district') %> <%= @trade.get('receiver_address') %><br/>
+  <% if @trade.get('receiver_mobile_phone') : %>
+    (<%= @trade.get('receiver_mobile_phone') %>)
+  <% end %>
 </td>
 
 <!--<td data-col='buyer_message'>
@@ -179,17 +185,15 @@
 <!-- <td data-col='order_split' ><!--拆分--</td> -->
 <!-- <td data-col='operator' ><!--操作人--</td> -->
 <td data-col='seller' nowrap>
-  <% if @trade.get 'seller_id' : %>
     <%= @trade.get('seller_name') %>
-  <% end %>
-</td>
-<td data-col='interface' nowrap>
-  <%= @trade.get('interface_name') %><br/>
-  <%= @trade.get('interface_mobile') %>
+    <% if @trade.get('interface_name') || @trade.get('interface_mobile') : %>
+    (<%= @trade.get('interface_name') %><br/>
+    <%= @trade.get('interface_mobile') %>)
+    <% end %>
 </td>
 <td data-col='logistic' nowrap>
-  <% if @trade.get 'logistic_id' : %>
-    <%= @trade.get('logistic_name') %>
+<%= @trade.get('logistic_name') %>
+  <% if @trade.get('logistic_waybill') : %>
+  (<%= @trade.get('logistic_waybill')%>)
   <% end %>
 </td>
-<td data-col='logistic_waybill' ><%= @trade.get('logistic_waybill')%></td>

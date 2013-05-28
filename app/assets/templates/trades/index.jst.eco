@@ -178,7 +178,7 @@
           <!--<li><a href="#" data-toggle="modal" data-type="request_return">申请退货</a></li>
           <li><a href="#" data-toggle="modal" data-type="confirm_return">确认退货</a></li>
           <li><a href="#" data-toggle="modal" data-type="confirm_refund">确认退款</a></li>
-          <li><a data-toggle="modal" href="#" data-type="reassign">订单转交</a></li> 
+          <li><a data-toggle="modal" href="#" data-type="reassign">订单转交</a></li>
           <li><a href="#" data-toggle="modal" data-type="logistic_waybill">输入物流单号</a></li>
           <li><a data-toggle="modal" href="#" data-type="logistic_company">物流公司</a></li> -->
         </ul>
@@ -238,10 +238,8 @@
           <th data-col='tid'>订单编号</th>
           <th data-col='status'>当前状态</th>
           <th data-col='status_history' style="max-width:150px">历史状态</th>
-          <th data-col='receiver_id'>客户ID</th>                <!--Newly Add-->
-          <th data-col='receiver_name' nowrap>客户姓名</th>
-          <th data-col='receiver_mobile_phone'>联系电话</th>
-          <th data-col='receiver_address' style="min-width:100px">联系地址</th>
+          <th data-col='receiver_id'>客户ID/(客户姓名)</th>                <!--Newly Add-->
+          <th data-col='receiver_address' style="min-width:100px">联系地址/(联系电话)</th>
           <!-- <th data-col='buyer_message'>客户<br/>留言</th> -->
           <th data-col='seller_memo'>卖家<br/>备注</th>
           <th data-col='cs_memo'>客服<br/>备注</th>
@@ -268,10 +266,8 @@
           <th data-col='invoice_date'>完成日期</th>
           <!-- <th data-col='order_split'>拆分</th> -->
           <!-- <th data-col='operator'>操作人</th> -->
-          <th data-col='seller' nowrap>配送经销商</th>
-          <th data-col='interface' nowrap>上级经销商</th>
-          <th data-col='logistic' nowrap>物流配送商</th>
-          <th data-col='logistic_waybill'>物流单号</th>
+          <th data-col='seller' nowrap>配送经销商/(上级经销商)</th>
+          <th data-col='logistic' nowrap>物流配送商/(物流单号)</th>
         </tr>
       </thead>
       <tbody id="trade_rows">
@@ -324,31 +320,31 @@
   </div>
 </div>
 
-<div id="sort_product" class="trade modal fade hide" tabindex="-1" style="width: 890px;margin-left: -445px;">  
-  <div class="modal-header">  
-    <button type="button" class="close" data-dismiss="modal">&times;</button>  
-    <h3>分捡单</h3>  
-  </div><!-- modal-header -->  
-  <div class="modal-body">  
-    <fieldset>  
-      <table class="table table-bordered">  
-        <thead>  
-          <tr>  
-            <th>商品名称</th>  
-            <!-- <th>商品编码</th> -->  
-            <!-- <th>分类</th> -->  
-            <th>商品属性</th>  
-            <th>商品数量</th> 
-          </tr>  
-        </thead>  
-        <tbody>  
-        </tbody>  
-      </table>  
-    </fieldset>  
-  </div><!-- modal-body -->  
-  <div class="modal-footer">  
-    <a href="#" class="btn btn-primary confirm_sort_product" data-dismiss="modal">确认</a>  
-  </div>  
-</div> 
+<div id="sort_product" class="trade modal fade hide" tabindex="-1" style="width: 890px;margin-left: -445px;">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h3>分捡单</h3>
+  </div><!-- modal-header -->
+  <div class="modal-body">
+    <fieldset>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>商品名称</th>
+            <!-- <th>商品编码</th> -->
+            <!-- <th>分类</th> -->
+            <th>商品属性</th>
+            <th>商品数量</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </fieldset>
+  </div><!-- modal-body -->
+  <div class="modal-footer">
+    <a href="#" class="btn btn-primary confirm_sort_product" data-dismiss="modal">确认</a>
+  </div>
+</div>
 
 <div id="trades_bottom"></div>
