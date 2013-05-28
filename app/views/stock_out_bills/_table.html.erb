@@ -4,15 +4,11 @@
       <th><input type="checkbox"></th>
       <th>序号</th>
       <th>出库单编号</th>
-      <th>创建时间</th>
-      <th>出库时间</th>
       <th>当前状态</th>
       <th>历史状态</th>
       <th>出库类型</th>
       <th>商品数量</th>
       <th>商品总价</th>
-      <th>关联订单号</th>
-      <th>最后操作人</th>
     </tr>
   </thead>
   <tbody>
@@ -21,15 +17,11 @@
         <td><input type="checkbox" name="bill_ids[]" value="<%= bill.id%>" ></td>
         <td><%=  index + 1  %></td>
         <td><%= bill.tid %></td>
-        <td><%= bill.created_at.try(:to_s,:db) %></td>
-        <td><%= bill.stocked_at.try(:to_s,:db) %></td>
         <%= render "status", bill: bill%>
         <%= render "operation", bill: bill%>
         <td><%= bill.stock_type_name %></td>
         <td><%= bill.bill_products_mumber %></td>
         <td><%= bill.bill_products_price %></td>
-        <td>默认仓库</td>
-        <td><%= bill.last_record.operator rescue "" %></td>
       </tr>
     <%- end %>
   </tbody>

@@ -13,12 +13,7 @@
     <%= select_tag "search[checked_at_nu]",options_for_select([["已审核",true],["未审核",false]],params["search"]["checked_at_nu"]),:include_blank => true,:class => "input-medium select2" %>
   </div>
 </div>
-<div class="control-group">
-    <%= label_tag "order_id","关联订单",:class => "control-label" %>
-  <div class="controls">
-    <%= text_field_tag "order_id_eq",params[:order_id_eq] %>
-  </div>
-</div>
+
 <div class="control-group">
     <%= label_tag "search[stock_type_eq]","出库类型",:class => "control-label" %>
   <div class="controls">

@@ -15,13 +15,6 @@
 </div>
 
 <div class="control-group">
-  <%= label_tag "order_id","关联订单",:class => "control-label" %>
-  <div class="controls">
-  <%= text_field_tag "order_id_eq",params[:order_id_eq] %>
-  </div>
-</div>
-
-<div class="control-group">
   <%= label_tag "search[stock_type_eq]","入库类型",:class => "control-label" %>
   <div class="controls">
     <%= select_tag "search[stock_type_eq]",options_for_select((StockInBill::STOCK_TYPE),params[:search][:stock_type_eq]),:include_blank => true,:class => "input-medium select2"  %>

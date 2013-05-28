@@ -7,7 +7,6 @@
 <header class="jumbotron subhead" id="overview">
   <div class="subnav">
     <ul class="nav nav-pills">
-      <% unless MagicOrders.company == "dulux" and MagicOrders.role_key == 'logistic' : %>
       <li class="dropdown" id="trade_selector">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">
           订单
@@ -31,7 +30,6 @@
           <% end %>
         </ul>
       </li>
-      <% end %>
       <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">
           发货单
@@ -55,7 +53,6 @@
           <li><a href="#" data-trade-mode="logistic_bills" data-trade-status="waybill_exist">已设置物流信息</a></li>
         </ul>
       </li>
-      <% unless MagicOrders.company == "dulux" and MagicOrders.role_key == 'logistic' : %>
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">
             发货
@@ -88,7 +85,6 @@
             <li><a href="#" data-trade-mode="color" data-trade-status="color_confirmed">已确认调色</a></li>
           </ul>
         </li>
-      <% end %>
       <% end %>
     </ul>
   </div>
@@ -250,14 +246,10 @@
           <th data-col='receiver_name' nowrap>客户姓名</th>
           <th data-col='receiver_mobile_phone'>联系电话</th>
           <th data-col='receiver_address' style="min-width:100px">联系地址</th>
-          <% if MagicOrders.company == 'nippon' || (MagicOrders.company == 'dulux' and MagicOrders.role_key != 'seller') : %>
           <th data-col='buyer_message'>客户<br/>留言</th>
-          <% end %>
           <th data-col='seller_memo'>卖家<br/>备注</th>
           <th data-col='cs_memo'>客服<br/>备注</th>
-          <% if MagicOrders.company != 'dulux' or (MagicOrders.company == 'dulux' and (MagicOrders.role_key == 'admin' or MagicOrders.role_key == 'cs')) : %>
           <th data-col='gift_memo'>赠品<br/>备注</th>
-          <% end %>
           <th data-col='deliver_bill'>发货单</th>
           <% if MagicOrders.enable_module_colors == 1 : %>
             <th data-col='color_info'>调色<br/>信息</th>
@@ -267,9 +259,7 @@
           <% end %>
           <th data-col='invoice_info'>发票<br/>信息</th>
           <th data-col='point_fee'>使用<br/>积分</th>
-          <% if MagicOrders.company == 'nippon' || (MagicOrders.company == 'dulux' and MagicOrders.role_key != 'seller' and MagicOrders.role_key != 'logistic') : %>
           <th data-col='total_fee' nowrap>实付金额</th>
-          <% end %>
           <th data-col='deliver_bill_id'>发货单编号</th>
           <th data-col='deliver_bill_status'>发货单状态</th>
           <th data-col='logistic_bill_status'>物流单状态</th>
