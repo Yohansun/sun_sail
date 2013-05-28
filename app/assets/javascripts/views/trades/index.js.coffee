@@ -470,6 +470,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
       coll.fetch  data:{trade_type:trade_type,limit:1}, success: (collection, response)->
         count = 0
         if(collection.length > 0)
-          count = collection.models[0].get("trades_count")
+          count = collection.models[0].get("trades_count") || collection.models[0].get("bills_count")
         $("em",self).text("("+count+")")
 
