@@ -4,15 +4,7 @@ class StockOutBillsController < ApplicationController
   before_filter :authorize,:except => :fetch_bils
   
   def index
-    params[:search] ||= {}
-    params[:search][:_id_in] = params[:export_ids].split(',') if params[:export_ids].present?
-    
-    op_state,op_city,op_district = params["op_state"],params["op_city"], params["op_district"]
-    search  = params[:search]
-    search["op_state_eq"]     = Area.find_by_id(op_state).try(:name)    if op_state.present?
-    search["op_city_eq"]      = Area.find_by_id(op_city).try(:name)     if op_city.present?
-    search["op_district_eq"]  = Area.find_by_id(op_district).try(:name) if op_district.present?
-
+    parse_params
     @bills = StockOutBill.where(account_id: current_account.id).desc(:checked_at)
     @search = @bills.search(params[:search])
     unchecked, checked = @search.partition { |b| b.checked_at.nil? }
@@ -203,5 +195,26 @@ class StockOutBillsController < ApplicationController
       @new_products += [OpenStruct.new(product_statis)]
     end
     @new_products
+  end
+  
+  def parse_params
+    search = params[:search] ||= {}
+    
+    params[:search][:_id_in] = params[:export_ids].split(',') if params[:export_ids].present?
+    
+    op_state,op_city,op_district = params["op_state"],params["op_city"], params["op_district"]
+    search  = params[:search]
+    search["op_state_eq"]     = Area.find_by_id(op_state).try(:name)    if op_state.present?
+    search["op_city_eq"]      = Area.find_by_id(op_city).try(:name)     if op_city.present?
+    search["op_district_eq"]  = Area.find_by_id(op_district).try(:name) if op_district.present?
+    
+    if params[:bill_products_sku_id_eq].present?
+      search[:bill_products_sku_id_eq] = params[:bill_products_sku_id_eq]
+    end
+    if params[:checked_at] == "nil"
+      search[:checked_at_not_eq] = nil
+    elsif params[:checked_at] == "true"
+      search[:checked_at_eq] = nil
+    end
   end
 end

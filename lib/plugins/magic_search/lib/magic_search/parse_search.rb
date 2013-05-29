@@ -1,23 +1,23 @@
 module MagicSearch
   class ParseSearch
-    attr_reader :splited_fields,:search_key,:search_value
+    attr_reader :splited_fields,:search_key,:search_value,:mode
     def initialize(search_key,search_value)
-      @search_key = search_key.dup
+      @search_key = nil
       @search_value = search_value
       @mode = nil
-      @search_type = default_where
+      @search_type = default_where(search_key.dup)
       @searchs_attrs = {}
       @result = {}
     end
-  
-    def default_where
-      default_where = DEFALUT_WHERE.select {|k,v| /(#{k}|#{v[:alias]})$/.match(@search_key) && @search_key.gsub!(/(#{k}|#{v[:alias]})$/,'') && @mode = $& }
-      default_where[@mode]
+    
+    def default_where(key)
+      @where_mode = DEFALUT_WHERE.select {|k,v| /(#{k}|#{v[:alias]})$/.match(key) && (@search_key = key.gsub(/(#{k}|#{v[:alias]})$/,'')) && @mode = $& }
+      raise "Not found mod: #{@search_key} search_key:#{key}" if @where_mode.blank?
+      @where_mode[@mode]
     end
   
     def splited_key(keys,fields)
       @splited_fields = /(#{keys.join('|')})?_?(#{fields.join('|')})/.match(@search_key)
-      raise "not found method #{search_key}" if @splited_fields.blank?
       @splited_fields
     end
   
@@ -27,19 +27,21 @@ module MagicSearch
     end
   
     def parse_value(field_klass)
-      [DateTime,Date,Time,Integer,Float].any? {|obj| (field_klass.type == obj) && (@search_value = field_klass.mongoize(@search_value)) }
+      [DateTime,Date,Time,Integer,Float].any? {|obj| (field_klass.try(:type) == obj) && (@search_value = to_mongoize(field_klass,search_value)) }
       @search_value = @search_type[:convert].call(@search_value) if @search_type[:convert].present?
-      if @search_value.blank? || @search_value.is_a?(Array) && @search_value.join.blank?
-        @search_value = nil 
-        return
+      
+      if not_match?
+        @search_value = ""
+        return 
       end
+      
       @search_value = @search_type[:to].blank? ? @search_value : {"#{@search_type[:to]}" => @search_value}
     end
     
     def build_condition(field_klass,relation_name,field_name)
       parse_value(field_klass)
       
-      return {} if @search_value.blank?
+      return {} if not_match?
       if relation_name.blank?
         @result["#{field_name}"] = @search_value
       else
@@ -47,5 +49,18 @@ module MagicSearch
       end
       @result
     end
+    
+    private
+    def to_mongoize(field_klass,search_value)
+      return (search_value == "nil" ? nil : search_value) if mode =~ /_not_eq|eq/
+      val = field_klass.mongoize(search_value) rescue ""
+      val.nil? ? "" : val
+    end
+    
+    def not_match?
+      @search_value == "" ||
+      @search_value.is_a?(Array) && @search_value.join == ""
+    end
   end
 end
+

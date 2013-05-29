@@ -1,7 +1,7 @@
 
 <% params[:search] ||= {}%>
 <div class="control-group">
-  <%= label_tag "bill_products_sku_id_eq","商品SKU名称#{params[:search][:bill_products_sku_id_eq]}",:class => "control-label"%>
+  <%= label_tag "search[bill_products_sku_id_eq]","商品SKU名称#{params[:search][:bill_products_sku_id_eq]}",:class => "control-label"%>
     <div class="controls">
   <%= select_tag "search[bill_products_sku_id_eq]",options_for_select(current_account.skus.collect{ |sku|  [sku.title,sku.sku_id] },params[:search][:bill_products_sku_id_eq]),:include_blank => true %>
 </div>  
@@ -15,9 +15,9 @@
 </div>
 
 <div class="control-group">
-  <%= label_tag "search[checked_at_nu]","状态",:class => "control-label" %>
+  <%= label_tag "checked_at","状态",:class => "control-label" %>
     <div class="controls">
-  <%= select_tag "search[checked_at_nu]",options_for_select([["已审核",true],["未审核",false]],params["search"]["checked_at_nu"]),:include_blank => true,:class => "input-medium select2" %>
+  <%= select_tag "checked_at",options_for_select([["已审核","nil"],["未审核","true"]],params["checked_at"]),:include_blank => true,:class => "input-medium select2" %>
   </div>
 </div>
 
