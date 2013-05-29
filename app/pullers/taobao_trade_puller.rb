@@ -163,10 +163,11 @@ class TaobaoTradePuller
                 DelayAutoDispatch.perform_in((result == true ? 0 : result), local_trade.id)
               end
               TradeTaobaoMemoFetcher.perform_async(local_trade.tid)
-              CustomerFetch.perform_async
               p "update trade #{trade['tid']}"
             end
           end
+          #同步本地顾客管理下面的"副本订单"
+          CustomerFetch.perform_async
         end
       end
     end

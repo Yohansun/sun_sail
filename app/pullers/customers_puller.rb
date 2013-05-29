@@ -18,6 +18,8 @@ class CustomersPuller
     
     def sync
       customer = Customer.desc("transaction_histories.tid").first
+      #如果顾客数据为空,先进行初始化
+      initialize! && true if customer.blank?
       latest_transaction_history = customer.transaction_histories.first
       news_trades = TaobaoTrade.desc("tid").where(:tid => {"$gt" => (latest_transaction_history.tid || 0)})
       find_or_create(news_trades)
