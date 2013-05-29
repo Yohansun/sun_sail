@@ -64,16 +64,17 @@ class TaobaoTradePuller
           end
 
           trade.operation_logs.build(operated_at: Time.now, operation: '从淘宝抓取订单')
-
           trade.set_has_onsite_service
-
           trade.save
 
           p "create trade #{trade['tid']}"
-
           $redis.sadd('TaobaoTradeTids',trade['tid'])
-
-          TradeTaobaoMemoFetcher.perform_async(trade.tid, true)
+          TradeTaobaoMemoFetcher.perform_async(trade.tid)
+          TradeTaobaoPromotionFetcher.perform_async(trade.tid)
+          if account.settings.auto_settings['auto_dispatch']
+            result = account.can_auto_dispatch_right_now
+            DelayAutoDispatch.perform_in((result == true ? 0 : result), trade.id)
+          end
         end
 
         page_no += 1
@@ -81,13 +82,13 @@ class TaobaoTradePuller
     end
 
     def update_end_time
-        trades = Trade.where(end_time: nil).and(status: 'TRADE_FINISHED')   
-        trades.each do |trade| 
+        trades = Trade.where(end_time: nil).and(status: 'TRADE_FINISHED')
+        trades.each do |trade|
           response = TaobaoQuery.get({method: 'taobao.trade.get', fields: 'end_time', tid: trade.tid}, trade.trade_source_id)
           if response["trade_get_response"] && response["trade_get_response"]["trade"] && response["trade_get_response"]["trade"]["end_time"]
             trade.update_attributes(end_time: response["trade_get_response"]["trade"]["end_time"])
-          end  
-        end  
+          end
+        end
     end
 
     def update(start_time = nil, end_time = nil, trade_source_id)
@@ -108,8 +109,8 @@ class TaobaoTradePuller
       #start_modified-and-end_modified, 查询条件(修改时间)跨度不能超过一天
       time_range_digist = end_time - start_time
       days = 0
-      days = (time_range_digist/86400).floor 
-      
+      days = (time_range_digist/86400).floor
+
       (0..days).each do |num|
         range_begin  = start_time + num.days
         range_end = start_time + 1.day + num.days
@@ -135,7 +136,7 @@ class TaobaoTradePuller
             Notifier.puller_errors(response, account_id).deliver
             break
           end
-          
+
           has_next = response['trades_sold_increment_get_response']['has_next']
           next unless response['trades_sold_increment_get_response']['trades']
 
@@ -150,29 +151,25 @@ class TaobaoTradePuller
               next unless updatable?(local_trade, trade['status'])
               orders = trade.delete('orders')
               trade['trade_source_id'] = trade_source_id
-              local_trade.update_attributes(trade)      
+              local_trade.update_attributes(trade)
               if local_trade.changed?
                 local_trade.operation_logs.build(operated_at: Time.now, operation: "从淘宝更新订单,更新#{local_trade.changed.try(:join, ',')}")
                 local_trade.news = 1
               end
               local_trade.set_has_onsite_service
               local_trade.save
-              if local_trade.dispatchable? && local_trade.auto_dispatchable?
-                # if account.key == 'dulux'
-                  DelayAutoDispatch.perform_async(local_trade.id)
-                # else
-                #   local_trade.auto_dispatch!
-                # end
+              if account.settings.auto_settings['auto_dispatch']
+                result = account.can_auto_dispatch_right_now
+                DelayAutoDispatch.perform_in((result == true ? 0 : result), local_trade.id)
               end
-              if account.settings.auto_settings["auto_sync_memo"] && account.can_auto_preprocess_right_now?
-                TradeTaobaoMemoFetcher.perform_async(local_trade.tid, false)
-              end
-              CustomerFetch.perform_async
+              TradeTaobaoMemoFetcher.perform_async(local_trade.tid)
               p "update trade #{trade['tid']}"
             end
           end
+          #同步本地顾客管理下面的"副本订单"
+          CustomerFetch.perform_async
         end
-      end 
+      end
     end
 
     def updatable?(local_trade, remote_status)
@@ -183,6 +180,10 @@ class TaobaoTradePuller
       total_pages = nil
       page_no = 1
 
+      trade_source = TradeSource.find_by_id(trade_source_id)
+      account_id = trade_source.account_id
+      account = Account.find_by_id(trade_source.account_id)
+
       if start_time.blank?
         latest_created_order = TaobaoTrade.only(:created, :account_id).where(account_id: account_id).order_by(:created.desc).limit(1).first
         start_time = latest_created_order.created - 1.hour
@@ -191,9 +192,6 @@ class TaobaoTradePuller
       if end_time.blank?
         end_time = Time.now
       end
-
-      trade_source = TradeSource.find_by_id(trade_source_id)
-      account = Account.find_by_id(trade_source.account_id)
 
       begin
         response = TaobaoQuery.get({
@@ -232,14 +230,11 @@ class TaobaoTradePuller
             local_trade.operation_logs.build(operated_at: Time.now, operation: "订单状态核查,更新#{local_trade.changed.try(:join, ',')}") if local_trade.changed?
             local_trade.set_has_onsite_service
             local_trade.save
-            if local_trade.dispatchable? && local_trade.auto_dispatchable?
-              # if account.key == 'dulux'
-                 DelayAutoDispatch.perform_async(local_trade.id)
-              # else
-              #  local_trade.auto_dispatch!
-              # end
+            if account.settings.auto_settings['auto_dispatch']
+              result = account.can_auto_dispatch_right_now
+              DelayAutoDispatch.perform_in((result == true ? 0 : result), local_trade.id)
             end
-             TradeTaobaoMemoFetcher.perform_async(local_trade.tid, false)
+            TradeTaobaoMemoFetcher.perform_async(local_trade.tid)
             p "update trade #{trade['tid']}"
           end
         end

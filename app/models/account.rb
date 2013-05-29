@@ -47,26 +47,43 @@ class Account < ActiveRecord::Base
   validates :name, presence: true
   validates :key, presence: true, uniqueness: true
 
-  def in_time_gap?(start_at, end_at)
+  def in_time_gap(start_at, end_at)
     if start_at != nil && end_at != nil
-      start_time = (Time.now.to_date.to_s + " " + start_at).to_time(:local).to_i
-      end_time = (Time.now.to_date.to_s + " " + end_at).to_time(:local).to_i
-      time_now = Time.now.to_i
-      (time_now >= start_time && time_now <= end_time) ? true : false
+      if start_at < end_at
+        start_time = (Time.now.to_date.to_s + " " + start_at).to_time(:local).to_i
+        end_time = (Time.now.to_date.to_s + " " + end_at).to_time(:local).to_i
+        time_now = Time.now.to_i
+        if time_now >= start_time && time_now <= end_time
+          return true
+        elsif time_now < start_time
+          return (start_time - time_now)
+        elsif time_now > end_time
+          return (86400 + start_time - time_now)
+        end
+      elsif start_at > end_at
+        time_now = Time.now.strftime("%H:%M:%S")
+        if time_now >= end_at && time_now <= start_at
+          start_time = (Time.now.to_date.to_s + " " + start_at).to_time(:local).to_i
+          time_now = (Time.now.to_date.to_s + " " + time_now).to_time(:local).to_i
+          return (start_time - time_now)
+        else
+          return true
+        end
+      end
     else
       return true # default gap is all day
     end
   end
 
-  def can_auto_preprocess_right_now?
-    in_time_gap?(self.settings["start_preprocess_at"], self.settings["end_preprocess_at"]) ? true : false
+  def can_auto_preprocess_right_now
+    return in_time_gap(self.settings.auto_settings["start_preprocess_at"], self.settings.auto_settings["end_preprocess_at"])
   end
 
-  def can_auto_dispatch_right_now?
-    in_time_gap?(self.settings["start_dispatch_at"], self.settings["end_dispatch_at"]) ? true : false
+  def can_auto_dispatch_right_now
+    return in_time_gap(self.settings.auto_settings["start_dispatch_at"], self.settings.auto_settings["end_dispatch_at"])
   end
 
-  def can_auto_deliver_right_now?
-    in_time_gap?(self.settings["start_deliver_at"], self.settings["end_deliver_at"]) ? true : false
+  def can_auto_deliver_right_now
+    return in_time_gap(self.settings.auto_settings["start_deliver_at"], self.settings.auto_settings["end_deliver_at"])
   end
 end

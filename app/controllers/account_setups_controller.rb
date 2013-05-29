@@ -4,9 +4,10 @@ class AccountSetupsController < ApplicationController
   before_filter :check_account_wizard_status, only:[:show]
 
   skip_before_filter :verify_authenticity_token, only: [:data_fetch_finish]
-  
-  before_filter :authorize,:only => [:edit_auto_settings,:update_auto_settings]
-  
+  before_filter :authorize,:only => [:edit_preprocess_settings, :update_preprocess_settings,
+                                                      :edit_dispatch_settings, :update_dispatch_settings,
+                                                      :edit_deliver_settings, :update_deliver_settings]
+
   steps :admin_init, :data_fetch, :options_setup, :user_init
 
   def show
@@ -29,10 +30,10 @@ class AccountSetupsController < ApplicationController
       # CREATE SELLER IN ORDER TO SYNC STOCK FOR SOME REASON.
       current_account.settings[:wizard_step] = ""
     when :options_setup
-      # auto_settings should be init as a hash.
-      @account.settings.auto_settings["autodispatch"] = params[:autodispatch]
-      @account.settings.auto_settings["autocheck"] = params[:autocheck]
-      @account.settings.auto_settings["autodistribution"] = params[:autodistribution]
+      @account.settings.auto_settings = {'split_conditions' => {}, 'dispatch_conditions'=>{}, 'unusual_conditions'=>{}}
+      @account.settings.auto_settings["auto_deliver"] = (params[:auto_deliver] == "on" ? 1 : nil )
+      #@account.settings.auto_settings["autocheck"] = params[:autocheck]
+      @account.settings.auto_settings["auto_dispatch"] = (params[:auto_dispatch] == "on" ? 1 : nil )
     when :user_init
       create_users(params[:cs], :cs)
       create_users(params[:stock_admin], :stock_admin)
@@ -66,17 +67,56 @@ class AccountSetupsController < ApplicationController
     head :ok
   end
 
-  def edit_auto_settings
+  def edit_preprocess_settings
     @setting = @account.settings.auto_settings || {}
     @setting['split_conditions'] = {} if !@setting['split_conditions'].present?
-    @setting['dispatch_conditions'] = {} if !@setting['dispatch_conditions'].present?
     @setting['unusual_conditions'] = {} if !@setting['unusual_conditions'].present?
   end
 
-  def update_auto_settings
+  def edit_dispatch_settings
+    @setting = @account.settings.auto_settings || {}
+    @setting['dispatch_conditions'] = {} if !@setting['dispatch_conditions'].present?
+  end
+
+  def edit_deliver_settings
+    @setting = @account.settings.auto_settings || {}
+  end
+
+  def update_preprocess_settings
     @setting = decorate_auto_settings(params[:auto_settings])
-    @account.settings.auto_settings = @setting
-    render edit_auto_settings_account_setups_path
+    if @setting['preprocess_silent_gap'] != @account.settings.auto_settings['preprocess_silent_gap']
+      frequency_version = @account.settings.auto_settings['unusual_conditions']['frequency_version']
+      @setting['unusual_conditions']['frequency_version'] = (frequency_version == nil ? 1 : frequency_version + 1)
+      current_settings = @account.settings.auto_settings
+      current_settings.update(@setting)
+      @account.settings.auto_settings = current_settings
+      @setting = @account.settings.auto_settings || {}
+      UnusualStateMarker.new.perform(@account.id, @account.settings.auto_settings['unusual_conditions']['frequency_version'])
+    else
+      current_settings = @account.settings.auto_settings
+      current_settings.update(@setting)
+      @account.settings.auto_settings = current_settings
+      @setting = @account.settings.auto_settings || {}
+    end
+    render :edit_preprocess_settings
+  end
+
+  def update_dispatch_settings
+    @setting = decorate_auto_settings(params[:auto_settings])
+    current_settings = @account.settings.auto_settings
+    current_settings.update(@setting)
+    @account.settings.auto_settings = current_settings
+    @setting = @account.settings.auto_settings || {}
+    render :edit_dispatch_settings
+  end
+
+  def update_deliver_settings
+    @setting = decorate_auto_settings(params[:auto_settings])
+    current_settings = @account.settings.auto_settings
+    current_settings.update(@setting)
+    @account.settings.auto_settings = current_settings
+    @setting = @account.settings.auto_settings || {}
+    render :edit_deliver_settings
   end
 
   private
@@ -115,8 +155,6 @@ class AccountSetupsController < ApplicationController
         hash[key] = nil if value == "0"
       end
     end
-    hash['split_conditions'] = {} if !hash['split_conditions'].present?
-    hash['dispatch_conditions'] = {} if !hash['dispatch_conditions'].present?
 
     hash
   end

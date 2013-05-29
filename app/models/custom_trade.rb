@@ -131,14 +131,25 @@ class CustomTrade < Trade
     TradeTaobaoDeliver.perform_async(self.id)
   end
 
+  def auto_deliver!
+    main_trade = Trade.where(_id: main_trade_id).first
+    # 如果是赠品订单，更新主订单赠品发货时间
+    if main_trade
+      gift_tid = tid.dup
+      main_trade.trade_gifts.where(gift_tid: gift_tid).first.update_attributes(delivered_at: Time.now)
+    end
+    result = self.fetch_account.can_auto_deliver_right_now
+    TradeTaobaoAutoDeliver.perform_in((result == true ? 0 : result), self.id)
+  end
+
   #### CustomTrade 目前默认不能自动分派 ####
   # def auto_dispatchable?
-  #   dispatch_options = self.fetch_account.settings.auto_settings["dispatch_options"]
-  #   if dispatch_options["void_buyer_message"] && dispatch_options["void_seller_memo"]
+  #   dispatch_conditions = self.fetch_account.settings.auto_settings["dispatch_conditions"]
+  #   if dispatch_conditions["void_buyer_message"] && dispatch_conditions["void_seller_memo"]
   #     can_auto_dispatch = !has_buyer_message && self.seller_memo.blank?
-  #   elsif dispatch_options["void_buyer_message"] == 1 && dispatch_options["void_seller_memo"] == nil
+  #   elsif dispatch_conditions["void_buyer_message"] == 1 && dispatch_conditions["void_seller_memo"] == nil
   #     can_auto_dispatch = !has_buyer_message
-  #   elsif dispatch_options["void_buyer_message"] == nil && dispatch_options["void_seller_memo"] == 1
+  #   elsif dispatch_conditions["void_buyer_message"] == nil && dispatch_conditions["void_seller_memo"] == 1
   #     can_auto_dispatch = self.seller_memo.blank?
   #   else
   #     can_auto_dispatch = true
@@ -189,11 +200,8 @@ class CustomTrade < Trade
 
     # 如果满足自动化设置条件，分派后订单自动发货
     auto_settings = self.fetch_account.settings.auto_settings
-    if auto_settings['auto_deliver'] && self.fetch_account.can_auto_deliver_right_now?
-      if auto_settings["deliver_condition"] == "dispatched_trade" && deliverable?
-        deliver!
-        self.operation_logs.create(operated_at: Time.now, operation: "订单自动发货")
-      end
+    if auto_settings['auto_deliver'] && auto_settings["deliver_condition"] == "dispatched_trade"
+      auto_deliver!
     end
 
     # 生成默认发货单
@@ -230,12 +238,6 @@ class CustomTrade < Trade
 
   def bill_infos_count
     self.orders.inject(0) { |sum, order| sum + order.bill_info.count }
-  end
-
-  def self.rescue_buyer_message(args)
-    args.each do |tid|
-      TradeTaobaoMemoFetcher.perform_async(tid, false)
-    end
   end
 
   def taobao_status_memo

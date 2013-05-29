@@ -3,13 +3,16 @@
 :concurrency: 25
 
 # differs in every deploy stage.
-:namespace: magictest_pro 
+:namespace: magictest_pro
 
 :queues:
   - [reporter, 3]
   - [delay_auto_dispatch, 3]
   - [taobao_memo_fetcher, 3]
   - [taobao_promotion_fetcher, 3]
+  - [unusual_state_marker, 3]
+  - [taobao_memo_sync, 3]
+  - [trade_taobao_auto_deliver, 3]
   # - [sms, 3]
   # - [email, 3]
   # - [taobao, 3]
@@ -17,4 +20,3 @@
   # - [jingdong, 3]
   # - [trade_manual_notify, 3]
   # - [wangwang_data_reprocess, 3]
-                            

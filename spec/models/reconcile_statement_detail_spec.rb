@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe ReconcileStatementDetail do
-	it "use tids in alipay_orders to select trades " do
+  it "use tids in alipay_orders to select trades " do
     @current_account = create(:account)
     rs = create(:reconcile_statement, account_id: @current_account.id)
     rsd = create(:reconcile_statement_detail, reconcile_statement: rs)
