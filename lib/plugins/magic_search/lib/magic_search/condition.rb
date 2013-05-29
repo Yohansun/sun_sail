@@ -30,7 +30,7 @@ module MagicSearch
       relation_klass = nil
       relation = relation_name && @relations[relation_name]
       realtion_klass = relation.class_name.constantize if relation.present?
-      field_klass = (realtion_klass || @klass).fields[field_name]
+      (realtion_klass || @klass).fields[field_name]
     end
   end
 end
