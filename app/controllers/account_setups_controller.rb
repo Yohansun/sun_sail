@@ -148,11 +148,11 @@ class AccountSetupsController < ApplicationController
       if value.is_a?(Hash)
         value.each do |sub_key, sub_value|
           hash[key][sub_key] = 1 if sub_value == "on"
-          hash[key][sub_key] = nil if sub_value == "0"
+          hash[key][sub_key] = nil if sub_value == "off"
         end
       else
         hash[key] = 1 if value == "on"
-        hash[key] = nil if value == "0"
+        hash[key] = nil if value == "off"
       end
     end
 

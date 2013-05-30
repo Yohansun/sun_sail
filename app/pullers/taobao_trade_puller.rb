@@ -73,7 +73,7 @@ class TaobaoTradePuller
           TradeTaobaoPromotionFetcher.perform_async(trade.tid)
           if account.settings.auto_settings['auto_dispatch']
             result = account.can_auto_dispatch_right_now
-            DelayAutoDispatch.perform_in((result == true ? 0 : result), trade.id)
+            DelayAutoDispatch.perform_in((result == true ?  account.settings.auto_settings['dispatch_silent_gap'].to_i.hours : result), trade.id)
           end
         end
 
@@ -160,7 +160,7 @@ class TaobaoTradePuller
               local_trade.save
               if account.settings.auto_settings['auto_dispatch']
                 result = account.can_auto_dispatch_right_now
-                DelayAutoDispatch.perform_in((result == true ? 0 : result), local_trade.id)
+                DelayAutoDispatch.perform_in((result == true ? account.settings.auto_settings['dispatch_silent_gap'].to_i.hours : result), local_trade.id)
               end
               TradeTaobaoMemoFetcher.perform_async(local_trade.tid)
               p "update trade #{trade['tid']}"
@@ -232,7 +232,7 @@ class TaobaoTradePuller
             local_trade.save
             if account.settings.auto_settings['auto_dispatch']
               result = account.can_auto_dispatch_right_now
-              DelayAutoDispatch.perform_in((result == true ? 0 : result), local_trade.id)
+              DelayAutoDispatch.perform_in((result == true ? account.settings.auto_settings['dispatch_silent_gap'].to_i.hours : result), local_trade.id)
             end
             TradeTaobaoMemoFetcher.perform_async(local_trade.tid)
             p "update trade #{trade['tid']}"

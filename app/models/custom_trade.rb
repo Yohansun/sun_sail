@@ -139,7 +139,7 @@ class CustomTrade < Trade
       main_trade.trade_gifts.where(gift_tid: gift_tid).first.update_attributes(delivered_at: Time.now)
     end
     result = self.fetch_account.can_auto_deliver_right_now
-    TradeTaobaoAutoDeliver.perform_in((result == true ? 0 : result), self.id)
+    TradeTaobaoAutoDeliver.perform_in((result == true ? self.fetch_account.settings.auto_settings['deliver_silent_gap'].to_i.hours : result), self.id)
   end
 
   #### CustomTrade 目前默认不能自动分派 ####
