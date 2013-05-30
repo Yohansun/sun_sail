@@ -197,7 +197,7 @@ class TaobaoTrade < Trade
 
   def auto_deliver!
     result = self.fetch_account.can_auto_deliver_right_now
-    TradeTaobaoAutoDeliver.perform_in((result == true ? 0 : result), self.id)
+    TradeTaobaoAutoDeliver.perform_in((result == true ? self.fetch_account.settings.auto_settings['deliver_silent_gap'].to_i.hours : result), self.id)
   end
 
   ## model属性方法 ##

@@ -22,7 +22,7 @@
                       <input type="radio" name="auto_settings[auto_dispatch]" <%='checked' if @setting['auto_dispatch'] == 1 %>>开启
                     </label>
                     <label class="radio">
-                      <input type="radio" value="0" name="auto_settings[auto_dispatch]" <%='checked' if @setting['auto_dispatch'].present? == false %>>关闭
+                      <input type="radio" value="off" name="auto_settings[auto_dispatch]" <%='checked' if @setting['auto_dispatch'].present? == false %>>关闭
                     </label>
                     <p class="clear">
                       <label class="input-large pull-left">请输入自动分派时间范围：</label>
@@ -45,6 +45,16 @@
                         <span class="muted">（时间是实时）</span>
                       </div>
                     </p> -->
+                  </div>
+                  <div>
+                    <p class="clear">
+                      <label class="input-large pull-left">请选择自动分派静默时间：</label>
+                      <select name="auto_settings[dispatch_silent_gap]" class="input-mini">
+                        <% [0,1,2,6,12,24,48,72].each do |i| %>
+                        <option value= "<%= i %>" <%= 'selected' if @setting['dispatch_silent_gap'] == i.to_s %>><%= i %></option>
+                        <% end %>
+                      </select>小时
+                    </p>
                   </div>
                 </div>
                 <div class="mar_l80">
