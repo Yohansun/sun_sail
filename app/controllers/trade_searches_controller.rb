@@ -9,7 +9,7 @@ class TradeSearchesController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: @trade_searches }
+      format.json { render json: TradeSearch.all }
     end
   end
 

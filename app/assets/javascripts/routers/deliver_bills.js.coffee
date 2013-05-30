@@ -55,8 +55,8 @@ class MagicOrders.Routers.DeliverBills extends Backbone.Router
       $("a[rel=popover]").popover(placement: 'left')
       @nav = $('.subnav')
       @navTop = $('.subnav').length && $('.subnav').offset().top - 40
-      $(window).off 'scroll'
-      $(window).on 'scroll', @processScroll
+#      $(window).off 'scroll'
+#      $(window).on 'scroll', @processScroll
       @processScroll
       switch trade_type
         when 'unprinted' then $('.trade_nav').html('未打印')

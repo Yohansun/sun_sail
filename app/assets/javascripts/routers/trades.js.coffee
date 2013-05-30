@@ -98,8 +98,8 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $(".label_advanced").show()
     @nav = $('.subnav')
     @navTop = $('.subnav').length && $('.subnav').offset().top - 40
-    $(window).off 'scroll'
-    $(window).on 'scroll', @processScroll
+#    $(window).off 'scroll'
+#    $(window).on 'scroll', @processScroll
     @processScroll
     $('.js-affix').affix()
     $('.label_advanced').bind 'click', ->

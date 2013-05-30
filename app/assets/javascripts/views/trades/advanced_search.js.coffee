@@ -31,7 +31,25 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
       return true
       ), "名称已经存在"
 
-    $("#save_search_criteria_form",@el).validate
+
+    $("#save_search_criteria_form").submit (e)->
+      criteria = new MagicOrders.Models.TradeSearch
+      form = $(this)
+      if !form.valid()
+        return false
+      $("#save_search_criteria_modal").modal("hide")
+      name = $("input[name=name]",form).val()
+      if name == null || name.trim() == ''
+        return
+      criteria.save {
+       html:$(".search_tags_group").html(),
+       name:name
+      }, success: (model,response) ->
+        #@search_criterias.push(model)
+        self.updateSearchCriteriaSelection()
+      return false
+      
+    $("#save_search_criteria_form").validate
       rules:
         name: 
           required:true
@@ -93,6 +111,7 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
     $('.advanced_in_the_air').toggleClass 'simple_search'
     $("#simple_search_button").toggleClass 'simple_search'
     $("#simple_load_search_criteria").toggle()
+    $("#content").toggleClass("search-expand")
 
   getText: (element,child_one,sibling='div',child_two='option:selected') ->
     $(element).siblings(sibling).children(child_one).children(child_two).text()
@@ -260,26 +279,18 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
   saveSearchCriteria:(e)->
     self = this
     e.preventDefault()
-    criteria = new MagicOrders.Models.TradeSearch
     $("#save_search_criteria_modal").modal("show")
-    $("#save_search_criteria_form").submit ()->
-      form = $(this)
-      if !form.valid()
-        return false
-      $("#save_search_criteria_modal").modal("hide")
-      name = $("input[name=name]",form).val()
-      if name == null || name.trim() == ''
-        return
-      criteria.save {
-       html:$(".search_tags_group").html(),
-       name:name
-      }, success: (model,response) ->
-        #@search_criterias.push(model)
-        self.updateSearchCriteriaSelection()
-      return false
-      
+  
+  submitSearchCriteriaForm:(e)->
 
 
+
+  simpleLoadSearchCriteria:(e)->
+    e.preventDefault()
+    $("#load_search_criteria").val($(e.target).val()).change()
+    if(!$("#search_toggle").is(":visible"))
+      $(".advanced_btn:first").click()
+    $(".search").click()  
 
   simpleLoadSearchCriteria:(e)->
     e.preventDefault()

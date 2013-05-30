@@ -25,13 +25,15 @@ class MagicOrders.Views.DeliverBillsIndex extends Backbone.View
     $(@el).find(".get_offset").html(@offset)
     $(@el).find('a[data-trade-mode='+MagicOrders.trade_mode+'][data-trade-status="'+MagicOrders.trade_type+'"]').parents('li').addClass('active')
     @loadStatusCount()
+    $("#content").removeClass("search-expand")
     this
 
   selectSameStatusTrade: (e) =>
     e.preventDefault()
+    link = $(e.target).closest("a[data-trade-status]")
     $('.dropdown.open .dropdown-toggle').dropdown('toggle')
-    MagicOrders.trade_mode = $(e.target).data('trade-mode')
-    status = $(e.target).data('trade-status')
+    MagicOrders.trade_mode = $(link).data('trade-mode')
+    status = $(link).data('trade-status')
     Backbone.history.navigate("#{MagicOrders.trade_mode}/" + "#{MagicOrders.trade_mode}-#{status}", true)
     MagicOrders.original_path = window.location.hash
 
@@ -202,6 +204,6 @@ class MagicOrders.Views.DeliverBillsIndex extends Backbone.View
       coll.fetch  data:{trade_type:trade_type,limit:1}, success: (collection, response)->
         count = 0
         if(collection.length > 0)
-          count = collection.models[0].get("trades_count")
+          count = collection.models[0].get("trades_count") || collection.models[0].get("bills_count")
         $("em",self).text("("+count+")")
 
