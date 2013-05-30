@@ -40,9 +40,6 @@ class MagicOrders.Models.Trade extends Backbone.Model
           if not this.attributes.seller_id && $.inArray('trade_split',trades) > -1
             enabled_items.push('trade_split') #订单拆分
 
-        if $.inArray('setup_logistic',trades) > -1
-          enabled_items.push('setup_logistic') #物流单号设置
-
         if this.attributes.seller_confirm_invoice_at is undefined && type != "CustomTrade" && $.inArray('invoice',trades) > -1
           enabled_items.push('invoice') #申请开票
 
@@ -51,6 +48,8 @@ class MagicOrders.Models.Trade extends Backbone.Model
             enabled_items.push('color') #申请调色
 
         if this.attributes.dispatched_at isnt undefined
+          if $.inArray('setup_logistic',trades) > -1
+            enabled_items.push('setup_logistic') #物流单号设置
           if $.inArray('deliver',trades) > -1
             enabled_items.push('deliver') #订单发货
           if $.inArray('confirm_check_goods',trades) > -1
@@ -132,7 +131,7 @@ class MagicOrders.Models.Trade extends Backbone.Model
       enabled_items.push('manual_sms_or_email') #发短信/邮件
 
     if $.inArray('batch_export',trades) > -1
-      enabled_items.push('batch_export') #发短信/邮件  
+      enabled_items.push('batch_export') #发短信/邮件
 
     if this.attributes.seller_confirm_deliver_at is undefined && this.attributes.consign_time && $.inArray('seller_confirm_deliver',trades) > -1
       enabled_items.push('seller_confirm_deliver') #确认发货

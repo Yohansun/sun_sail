@@ -41,11 +41,15 @@
       </tr>
       <tr>
         <td>物流公司：</td>
+        <% if @trade.get('logistic_company') : %>
         <td id='logistic_company'><%= @trade.get('logistic_company') %></td>
+        <% else : %>
+        <td id='logistic_company'><select id="send_logistic_select" class="input-medium"></select></td>
+        <% end %>
       </tr>
       <tr>
         <td>物流单号：</td>
-        <td><%= @trade.get('logistic_waybill') %></td>
+        <td><input type="text" class="span3 send_waybill" placeholder="请输入物流单号" value="<%= @trade.get('logistic_waybill') %>" <% if @trade.get('logistic_waybill') : %>readonly<% end %>></td>
       </tr>
     </tbody>
   </table>

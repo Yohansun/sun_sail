@@ -175,7 +175,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
         view = new MagicOrders.Views.TradesBatchExport(collection: collection)
         $(modalDivID).html(view.render().el)
         $(modalDivID + ' .datepickers').datetimepicker(format: 'yyyy-mm-dd', autoclose: true, minView: 2)
-        $(modalDivID).modal('show')      
+        $(modalDivID).modal('show')
 
   manual_sms_or_email: ->
     modalDivID = "#trade_manual_sms_or_email"
@@ -224,11 +224,10 @@ class MagicOrders.Routers.Trades extends Backbone.Router
           })
         when 'deliver'
           unless model.get('logistic_waybill')
-            $(modalDivID).find('.error').html('该订单没有设置物流公司和物流单号，请去“物流单”下“未设置物流信息”中调整订单')
-            $('.deliver').hide()
+            $(modalDivID).find('.error').html('该订单没有设置物流公司和物流单号，请设置物流信息')
           else
             $(modalDivID).find('.error').html()
-            $('.deliver').show()
+          $('.deliver').show()
         when 'color'
           $('.color_typeahead').typeahead({
             source: (query, process)->

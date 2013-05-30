@@ -125,10 +125,12 @@ class TradesController < ApplicationController
 
     if params[:setup_logistic] == true
       logistic = current_account.logistics.find_by_id params[:logistic_id]
-      @trade.logistic_id = logistic.try(:id)
-      @trade.logistic_name = logistic.try(:name)
-      @trade.logistic_code = logistic.try(:code)
-      @trade.logistic_waybill = params[:logistic_waybill].present? ? params[:logistic_waybill] : @trade.tid
+      unless @trade.logistic_id.present? && params[:delivered_at] == true
+        @trade.logistic_id = logistic.try(:id)
+        @trade.logistic_name = logistic.try(:name)
+        @trade.logistic_code = logistic.try(:code)
+        @trade.logistic_waybill = params[:logistic_waybill].present? ? params[:logistic_waybill] : @trade.tid
+      end
     end
 
     if params[:cs_memo]
