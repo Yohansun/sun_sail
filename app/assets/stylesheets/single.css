@@ -40,7 +40,7 @@ code{color: #08C;}
 .form-horizontal .control-group{margin-bottom:5px;}
 .open_advance{position:absolute;right:20px;top:85px;}
 #all_orders .open_advance{top:133px;}
-#main-top .affix {background-color: white;}
+#main-top .affix {background-color: white;box-shadow: #666 0px 2px 10px;}
 .affix .open_advance{right:40px;}
 .icon-arrow-up{background-position: -289px -96px!important;}
 

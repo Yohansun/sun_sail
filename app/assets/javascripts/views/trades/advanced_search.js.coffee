@@ -31,7 +31,25 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
       return true
       ), "名称已经存在"
 
-    $("#save_search_criteria_form",@el).validate
+
+    $("#save_search_criteria_form").submit (e)->
+      criteria = new MagicOrders.Models.TradeSearch
+      form = $(this)
+      if !form.valid()
+        return false
+      $("#save_search_criteria_modal").modal("hide")
+      name = $("input[name=name]",form).val()
+      if name == null || name.trim() == ''
+        return
+      criteria.save {
+       html:$(".search_tags_group").html(),
+       name:name
+      }, success: (model,response) ->
+        #@search_criterias.push(model)
+        self.updateSearchCriteriaSelection()
+      return false
+      
+    $("#save_search_criteria_form").validate
       rules:
         name: 
           required:true
@@ -261,24 +279,10 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
   saveSearchCriteria:(e)->
     self = this
     e.preventDefault()
-    criteria = new MagicOrders.Models.TradeSearch
     $("#save_search_criteria_modal").modal("show")
-    $("#save_search_criteria_form").submit ()->
-      form = $(this)
-      if !form.valid()
-        return false
-      $("#save_search_criteria_modal").modal("hide")
-      name = $("input[name=name]",form).val()
-      if name == null || name.trim() == ''
-        return
-      criteria.save {
-       html:$(".search_tags_group").html(),
-       name:name
-      }, success: (model,response) ->
-        #@search_criterias.push(model)
-        self.updateSearchCriteriaSelection()
-      return false
-      
+  
+  submitSearchCriteriaForm:(e)->
+
 
 
 
