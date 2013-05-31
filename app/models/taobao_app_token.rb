@@ -25,7 +25,7 @@
 class TaobaoAppToken < ActiveRecord::Base
   belongs_to :account
   belongs_to :trade_source
-  attr_accessible :account_id, :access_token, :refresh_token, :last_refresh_at, :refresh_token_last_refresh_at, :re_expires_in, :r1_expires_in, :r2_expires_in, :w1_expires_in,  :w2_expires_in, :need_refresh
+  attr_accessible :trade_source_id, :taobao_user_id, :taobao_user_nick, :account_id, :access_token, :refresh_token, :last_refresh_at, :refresh_token_last_refresh_at, :re_expires_in, :r1_expires_in, :r2_expires_in, :w1_expires_in,  :w2_expires_in, :need_refresh
   
   validates :taobao_user_id, :taobao_user_nick, presence: true, uniqueness: true
   
