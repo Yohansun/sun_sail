@@ -118,12 +118,17 @@ class TaobaoProductsPuller
               end  
             end
           else
+            unless taobao_product
+              taobao_product = TaobaoProduct.create(account_id: account.id, category_id: local_product.category_id, num_iid: local_product.num_iid, price: local_product.price, outer_id: local_product.outer_id, product_id: local_product.product_id, cat_name: local_product.cat_name, pic_url: local_product.pic_url, cid: local_product.cid, name: local_product.name)
+            end
             quantity = sku_items['num']
             taobao_sku = taobao_product.taobao_skus.where(account_id: account.id, taobao_product_id: taobao_product.id, num_iid: num_iid).first_or_create
             sku = local_product.skus.where(account_id: account.id, product_id: local_product.id, num_iid: num_iid).first_or_create
             # NEED SELLER TO SYNC STOCK FOR SOME REASON.
           end
-          SkuBinding.where(sku_id: sku.id, taobao_sku_id: taobao_sku.id, number: 1).first_or_create
+          if sku && taobao_sku
+            SkuBinding.where(sku_id: sku.id, taobao_sku_id: taobao_sku.id, number: 1).first_or_create
+          end  
         end
       end
     end
@@ -196,12 +201,17 @@ class TaobaoProductsPuller
                 # NEED SELLER TO SYNC STOCK FOR SOME REASON.
               end
             else
+              unless taobao_product
+                taobao_product = TaobaoProduct.create(account_id: account.id, category_id: local_product.category_id, num_iid: local_product.num_iid, price: local_product.price, outer_id: local_product.outer_id, product_id: local_product.product_id, cat_name: local_product.cat_name, pic_url: local_product.pic_url, cid: local_product.cid, name: local_product.name)
+              end
               quantity = sku_items['num']
               taobao_sku = taobao_product.taobao_skus.where(account_id: account.id, taobao_product_id: taobao_product.id, num_iid: num_iid).first_or_create
               sku = local_product.skus.where(account_id: account.id, product_id: local_product.id, num_iid: num_iid).first_or_create
               # NEED SELLER TO SYNC STOCK FOR SOME REASON.
             end
-            SkuBinding.create(sku_id: sku.id, taobao_sku_id: taobao_sku.id, number: 1)
+            if sku && taobao_sku
+              SkuBinding.where(sku_id: sku.id, taobao_sku_id: taobao_sku.id, number: 1).first_or_create
+            end 
           end
         end
       end # num_iids each ends
@@ -254,12 +264,17 @@ class TaobaoProductsPuller
                 # NEED SELLER TO SYNC STOCK FOR SOME REASON.
               end
             else
+              unless taobao_product
+                taobao_product = TaobaoProduct.create(account_id: account.id, category_id: local_product.category_id, num_iid: local_product.num_iid, price: local_product.price, outer_id: local_product.outer_id, product_id: local_product.product_id, cat_name: local_product.cat_name, pic_url: local_product.pic_url, cid: local_product.cid, name: local_product.name)
+              end
               quantity = sku_items['num']
               taobao_sku = taobao_product.taobao_skus.where(account_id: account.id, taobao_product_id: taobao_product.id, num_iid: num_iid).first_or_create
               sku = local_product.skus.where(account_id: account.id, product_id: local_product.id, num_iid: num_iid).first_or_create
               # NEED SELLER TO SYNC STOCK FOR SOME REASON.
             end
-            SkuBinding.where(sku_id: sku.id, taobao_sku_id: taobao_sku.id, number: 1).first_or_create
+            if sku && taobao_sku
+              SkuBinding.where(sku_id: sku.id, taobao_sku_id: taobao_sku.id, number: 1).first_or_create
+            end 
           end
         end
       end # num_iids each ends
