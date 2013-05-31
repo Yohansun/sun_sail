@@ -10,8 +10,12 @@ class TaobaoTradePuller
       account = Account.find_by_id(account_id)
 
       if start_time.blank?
-        latest_created_order = TaobaoTrade.only(:created, :account_id).where(account_id: account_id).order_by(:created.desc).limit(1).first
-        start_time = latest_created_order.created - 1.hour
+        if TaobaoTrade.where(account_id: account_id).count > 1
+          latest_created_order = TaobaoTrade.only(:created, :account_id).where(account_id: account_id).order_by(:created.desc).limit(1).first
+          start_time = latest_created_order.created - 1.hour
+        else
+          start_time = Time.now - 1.month
+        end    
       end
 
       if end_time.blank?
@@ -98,8 +102,12 @@ class TaobaoTradePuller
       account = Account.find_by_id(account_id)
 
       if start_time.blank?
-        latest_created_order = TaobaoTrade.only(:modified, :account_id).where(account_id: account_id).order_by(:modified.desc).limit(1).first
-        start_time = latest_created_order.modified - 4.hour
+        if TaobaoTrade.where(account_id: account_id).count > 1
+          latest_created_order = TaobaoTrade.only(:modified, :account_id).where(account_id: account_id).order_by(:modified.desc).limit(1).first
+          start_time = latest_created_order.modified - 4.hour
+        else
+          start_time = Time.now - 1.month
+        end  
       end
 
       if end_time.blank?
