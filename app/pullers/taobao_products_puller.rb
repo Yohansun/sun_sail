@@ -110,11 +110,11 @@ class TaobaoProductsPuller
               properties = sku['properties']
               taobao_sku = taobao_product.taobao_skus.where(account_id: account.id, taobao_product_id: taobao_product.id, num_iid: num_iid, sku_id: sku_id).first
               unless taobao_sku
-                taobao_sku = taobao_product.taobao_skus.create(taobao_product_id: taobao_product.id, num_iid: num_iid, sku_id: sku_id, properties_name: properties_name, properties: properties)
+                taobao_sku = taobao_product.taobao_skus.create(account_id: account.id, taobao_product_id: taobao_product.id, num_iid: num_iid, sku_id: sku_id, properties_name: properties_name, properties: properties)
               end  
               sku = local_product.skus.where(account_id: account.id, product_id: local_product.id, num_iid: num_iid, sku_id: sku_id).first
               unless sku
-                sku = local_product.skus.create(product_id: local_product.id, num_iid: num_iid, sku_id: sku_id, properties_name: properties_name, properties: properties)
+                sku = local_product.skus.create(account_id: account.id, product_id: local_product.id, num_iid: num_iid, sku_id: sku_id, properties_name: properties_name, properties: properties)
               end  
             end
           else
@@ -187,11 +187,11 @@ class TaobaoProductsPuller
                 properties = sku['properties']
                 taobao_sku = taobao_product.taobao_skus.where(account_id: account.id, taobao_product_id: taobao_product.id, num_iid: num_iid, sku_id: sku_id).first
                 unless taobao_sku
-                  taobao_sku = taobao_product.taobao_skus.create(taobao_product_id: taobao_product.id, num_iid: num_iid, sku_id: sku_id, properties_name: properties_name, properties: properties)
+                  taobao_sku = taobao_product.taobao_skus.create(account_id: account.id, taobao_product_id: taobao_product.id, num_iid: num_iid, sku_id: sku_id, properties_name: properties_name, properties: properties)
                 end  
                 sku = local_product.skus.where(account_id: account.id, product_id: local_product.id, num_iid: num_iid, sku_id: sku_id).first
                 unless sku
-                  sku = local_product.skus.create(product_id: local_product.id, num_iid: num_iid, sku_id: sku_id, properties_name: properties_name, properties: properties)
+                  sku = local_product.skus.create(account_id: account.id, product_id: local_product.id, num_iid: num_iid, sku_id: sku_id, properties_name: properties_name, properties: properties)
                 end
                 # NEED SELLER TO SYNC STOCK FOR SOME REASON.
               end
@@ -245,11 +245,11 @@ class TaobaoProductsPuller
                 properties = sku['properties']
                 taobao_sku = taobao_product.taobao_skus.where(account_id: account.id, taobao_product_id: taobao_product.id, num_iid: num_iid, sku_id: sku_id).first
                 unless taobao_sku
-                  taobao_sku = taobao_product.taobao_skus.create(taobao_product_id: taobao_product.id, num_iid: num_iid, sku_id: sku_id, properties_name: properties_name, properties: properties)
+                  taobao_sku = taobao_product.taobao_skus.create(account_id: account.id, taobao_product_id: taobao_product.id, num_iid: num_iid, sku_id: sku_id, properties_name: properties_name, properties: properties)
                 end  
                 sku = local_product.skus.where(account_id: account.id, product_id: local_product.id, num_iid: num_iid, sku_id: sku_id).first
                 unless sku
-                  sku = local_product.skus.create(product_id: local_product.id, num_iid: num_iid, sku_id: sku_id, properties_name: properties_name, properties: properties)
+                  sku = local_product.skus.create(account_id: account.id, product_id: local_product.id, num_iid: num_iid, sku_id: sku_id, properties_name: properties_name, properties: properties)
                 end
                 # NEED SELLER TO SYNC STOCK FOR SOME REASON.
               end
