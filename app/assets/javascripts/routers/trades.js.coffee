@@ -237,6 +237,11 @@ class MagicOrders.Routers.Trades extends Backbone.Router
         when 'barcode'
           $(modalDivID).on 'shown', ->
             $("#input_barcode input:eq(0)").focus()
+        when 'gift_memo'
+          $.get '/categories/category_templates', {}, (c_data)->
+            $('#select_category').select2 data: c_data
+          $("#select_product").select2 data: []
+          $('#select_sku').select2 data: []
 
       $(modalDivID).modal('show')
 

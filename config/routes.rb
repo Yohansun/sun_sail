@@ -105,6 +105,9 @@ MagicOrders::Application.routes.draw do
   resources :categories do
     collection do
       get :deletes
+      get :category_templates
+      get :product_templates
+      get :sku_templates
     end
   end
   resources :category_properties do

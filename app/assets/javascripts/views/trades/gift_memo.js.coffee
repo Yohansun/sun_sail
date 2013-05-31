@@ -6,39 +6,96 @@ class MagicOrders.Views.TradesGiftMemo extends Backbone.View
     'click .save': 'save'
     'click #add_gift_to_list' : 'add_gift'
     'click .delete_a_gift' : 'delete_gift'
+    'change #select_category': 'change_product'
+    'change #select_product' : 'change_sku'
 
   initialize: ->
     @model.on("fetch", @render, this)
+    @has_sku = true
 
   render: ->
     $(@el).html(@template(trade: @model))
     this
+
+  # 赠品三级联动
+  change_product: ->
+    category_id = $('#select_category').val()
+    $.get '/categories/product_templates', {category_id: category_id}, (p_data)->
+      if p_data.length == 0
+        alert("此分类下目前无商品")
+        $("#select_product").select2 data: []
+        $('#select_sku').select2 data: []
+      else
+        $("#select_product").select2 data: p_data
+
+  change_sku: ->
+    num_iid = $('#select_product').val()
+    $.get '/categories/sku_templates', {num_iid: num_iid}, (s_data)=>
+      if s_data.length == 0 or (s_data.length == 1 and s_data[0].text == "")
+        $('#select_sku').select2 data: []
+        @has_sku = false
+      else
+        $('#select_sku').select2 data: s_data
 
   add_gift: ->
     if $('#gift_list').find('tr:last td:first').text() == ''
       gift_num = 0
     else
       gift_num = parseInt($('#gift_list').find('tr:last td:first').text().slice(-1))
-
-    product_id = $("#select_gift").val()
-    gift_title = $("#select_gift").children('option:selected').text()
     gift_tid = @model.get('tid')+"G"+(gift_num+1)
-    if product_id == "void"
-      alert("请选择赠品（如果没有可选赠品,请先进入商品管理模块添加赠品）")
+    category_id = $("#select_category").val()
+    num_iid = $("#select_product").val()
+    sku_id = $("#select_sku").val()
+    num = $('#gift_num').val()
+
+    if category_id == ""
+      alert("请选择分类")
+      return
+
+    if num_iid == ""
+      alert("请选择商品")
+      return
+
+    if (sku_id == "" and @has_sku == true)
+      alert("请选择SKU")
+      return
+
+    if num == ''
+      alert("数量不能为空。")
+      return
+
+    if /^[1-9]{1}[0-9]*$/.test(num) != true
+      alert("数量格式不正确。")
+      return
+
+    num_iids = $("#gift_list tr").map(->
+      $(this).attr "id"
+    ).get()
+    if $.inArray(num_iid, num_iids) != -1
+      alert("已添加过赠品")
+      return
+
+    product_name = $("#select_product").select2('data').text
+    if $("#select_sku").select2('data') != null
+      sku_name = $("#select_sku").select2('data').text
     else
-      if $('#add_gift_tid').is(':checked')
-        trade_tid = @model.get('tid')
-        split_text = "拆分"
-      else
-        trade_tid = ''
-        split_text = "不拆分"
-      $('#gift_list').append("<tr class='product_"+product_id+" new_add_gift'>"+
-                             "  <td>"+gift_tid+"</td>"+
-                             "  <td>"+gift_title+"</td>"+
-                             "  <td>"+trade_tid+"</td>"+
-                             "  <td>"+split_text+"</td>"+
-                             "  <td><button class='btn delete_a_gift'>删除</button></td>"+
-                             "</tr>")
+      sku_name = ""
+    gift_title = product_name + sku_name
+
+    if $('#add_gift_tid').is(':checked')
+      trade_tid = @model.get('tid')
+      split_text = "拆分"
+    else
+      trade_tid = ''
+      split_text = "不拆分"
+    $('#gift_list').append("<tr id='"+num_iid+"' class='product_"+sku_id+" new_add_gift'>"+
+                           "  <td>"+gift_tid+"</td>"+
+                           "  <td>"+gift_title+"</td>"+
+                           "  <td>"+trade_tid+"</td>"+
+                           "  <td>"+num+"</td>"+
+                           "  <td>"+split_text+"</td>"+
+                           "  <td><button class='btn delete_a_gift'>删除</button></td>"+
+                           "</tr>")
 
   delete_gift: (e) ->
     e.preventDefault()
@@ -50,20 +107,24 @@ class MagicOrders.Views.TradesGiftMemo extends Backbone.View
     @delete_gifts = []
     length = $('#gift_list').find('tr').length
     if length != 0
-      for num in [0..(length-1)]
-        if $('#gift_list').find("tr:eq("+num+")").attr('style') == "display: none;"
-          gift_tid = $('#gift_list').find("tr:eq("+num+")").children("td:eq(0)").text()
+      for i in [0..(length-1)]
+        $gift_info = $('#gift_list').find("tr:eq("+i+")")
+        if $gift_info.attr('style') == "display: none;"
+          gift_tid = $gift_info.children("td:eq(0)").text()
           @delete_gifts.push(gift_tid)
         else
-          if $('#gift_list').find("tr:eq("+num+")").attr('class').slice(-12) == "new_add_gift"
-            product_id = $('#gift_list').find("tr:eq("+num+")").attr('class').slice(8, -13)
-            gift_tid = $('#gift_list').find("tr:eq("+num+")").children("td:eq(0)").text()
-            gift_title = $('#gift_list').find("tr:eq("+num+")").children("td:eq(1)").text()
-            if $('#gift_list').find("tr:eq("+num+")").children("td:eq(2)").text() == ''
+          if $gift_info.attr('class').slice(-12) == "new_add_gift"
+
+            num_iid = $gift_info.attr('id')
+            sku_id = $gift_info.attr('class').slice(8, -13)
+            gift_tid = $gift_info.children("td:eq(0)").text()
+            gift_title = $gift_info.children("td:eq(1)").text()
+            if $gift_info.children("td:eq(2)").text() == ''
               trade_id = ''
             else
               trade_id = @model.get('id')
-            @add_gifts[num] = {"product_id": product_id, "gift_tid": gift_tid, "gift_title": gift_title, "trade_id": trade_id}
+            num = $gift_info.children("td:eq(3)").text()
+            @add_gifts[i] = {"sku_id": sku_id, "gift_tid": gift_tid, "gift_title": gift_title, "trade_id": trade_id, "num_iid": num_iid, "num": num}
 
     @model.set "operation", "赠品修改"
     @model.set "delete_gifts", @delete_gifts

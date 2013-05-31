@@ -193,10 +193,10 @@ class Trade
   end
 
   def add_gift_order(value)
-    gift_sku = Sku.where(product_id: value['product_id'].to_i).first
-    gift_product = Product.find(value['product_id'].to_i)
+    gift_sku_id = (value['sku_id'].to_i == 0 ? nil : value['sku_id'].to_i)
+    gift_product = Product.find_by_num_iid(value['num_iid'].to_i)
     self.taobao_orders.create!(_type: "TaobaoOrder",
-                               oid: self.tid.slice(/G[0-9]$/),
+                               oid: self.tid.slice(/G[0-9]*$/),
                                status: "WAIT_SELLER_SEND_GOODS",
                                title: value['gift_title'],
                                price: 0,
@@ -204,16 +204,13 @@ class Trade
                                payment: 0,
                                discount_fee: 0,
                                adjust_fee: 0,
-                               num_iid: gift_sku.num_iid,
-                               sku_id: gift_sku.sku_id,
-                               num: 1, # NEED ADAPTION?
+                               num_iid: gift_product.num_iid,
+                               sku_id:  gift_sku_id,
+                               num: value['num'].to_i,
                                pic_path: gift_product.pic_url,
                                refund_status: "NO_REFUND",
-                               sku_properties_name: "赠品", # NEED ADAPTION?
-                               buyer_rate: false,
-                               seller_rate: false,
-                               seller_type: "B",
-                               cid: gift_product.cid)
+                               cid: gift_product.cid,
+                               order_gift_tid: value['gift_tid'])
   end
 
   def unusual_color_class
@@ -285,14 +282,14 @@ class Trade
 
   def return_ref
     ref_batches.where(ref_type: "return_ref").last
-  end 
+  end
 
   def return_ref_status
     if return_ref.present?
       return_ref.ref_logs.last.operation
-    end  
-  end  
-    
+    end
+  end
+
   def reset_seller
     return unless seller_id
     update_attributes(seller_id: nil, seller_name: nil, dispatched_at: nil)

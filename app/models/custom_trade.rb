@@ -91,7 +91,7 @@ class CustomTrade < Trade
   field :sku_properties_name, type: String
   field :custom_type, type: String                     # 用于分类之后的本地化订单
 
-  # 赠品订单特有
+  # 赠品订单特有field
   field :main_trade_id, type: String
 
   embeds_many :taobao_orders

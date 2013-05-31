@@ -146,7 +146,11 @@ class TradesController < ApplicationController
       params[:delete_gifts].each do |gift_tid|
         trade_gift = @trade.trade_gifts.where(gift_tid: gift_tid).first
         if trade_gift
-          Trade.where(tid: gift_tid).first.delete if trade_gift.delivered_at == nil && trade_gift.trade_id.present?
+          if trade_gift.delivered_at == nil && trade_gift.trade_id.present?
+            Trade.where(tid: gift_tid).first.delete
+          else
+            @trade.taobao_orders.where(order_gift_tid: gift_tid).delete
+          end
           @trade.trade_gifts.where(gift_tid: gift_tid).first.delete
         end
       end

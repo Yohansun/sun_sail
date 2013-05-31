@@ -2,7 +2,9 @@ class CategoriesController < ApplicationController
 
   layout "management"
 
-  before_filter :authorize,:except => [:autocomplete,:new,:show,:edit,:deletes]
+  before_filter :authorize,:except => [:autocomplete,:new,:show,:edit,:deletes,
+                                       :category_templates,:product_templates,
+                                       :sku_templates]
 
   def index
     @categories = current_account.categories
@@ -72,6 +74,22 @@ class CategoriesController < ApplicationController
     parent_id = Category.find(@ids.first).parent_id
     Category.destroy(@ids)
     redirect_to categories_path(:parent_id=>parent_id)
+  end
+
+  # 选择本地商品三级联动
+  def category_templates
+    @categories = current_account.categories.collect {|c| { id: c.id, text: c.name}}
+    render json: @categories
+  end
+
+  def product_templates
+    @products = Category.find(params[:category_id]).products.collect {|p| { id: p.num_iid, text: p.name}}
+    render json: @products
+  end
+
+  def sku_templates
+    @skus = Product.find_by_num_iid(params[:num_iid]).skus.collect {|s| { id: s.id, text: s.name}}
+    render json: @skus
   end
 
 end

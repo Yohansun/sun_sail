@@ -72,6 +72,7 @@ json.array!(@trades) do |json, trade|
     json.id order._id
     json.title order.title
     json.num order.num
+    json.order_gift_tid order.order_gift_tid
     json.cs_memo order.cs_memo
     json.color_num order.color_num
     json.color_hexcode order.color_hexcode
@@ -83,7 +84,9 @@ json.array!(@trades) do |json, trade|
     json.gift_tid gift.gift_tid
     json.trade_id gift.trade_id
     json.gift_title gift.gift_title
-    json.product_id gift.product_id
+    json.num_iid gift.num_iid
+    json.sku_id gift.sku_id
+    json.num gift.num
     json.delivered_at gift.delivered_at
   end
 
