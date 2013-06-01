@@ -9,6 +9,7 @@ class Customer
   field :account_id, type: Integer
   
   embeds_many :transaction_histories
+  validates :name,:presence => true, :uniqueness => {:scope => :account_id}
   
   accepts_nested_attributes_for :transaction_histories, :allow_destroy => true, :reject_if => proc { |obj| obj.blank? }
   validates_associated :transaction_histories

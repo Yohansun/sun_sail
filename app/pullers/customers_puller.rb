@@ -1,45 +1,62 @@
 #encoding: utf-8
 class CustomersPuller
   class << self
-    def initialize!
-      raise "already initialized!" if Customer.count > 1
-      find_or_create(TaobaoTrade.desc(:tid))
+    def initialize!(account_id=nil)
+      conditions = default_condition(account_id)
+      customers,taobao_trades = Customer.where(conditions),TaobaoTrade.where(conditions)
+      raise "Already initialized!" if customers.count > 1
+      find_or_create(account_id,taobao_trades.desc(:tid))
     end
     
-    def update
-      news_taobao_trades = TaobaoTrade.where(:news => 1)
+    def update(account_id=nil)
+      conditions = default_condition(account_id).merge({:news => 1})
+      news_taobao_trades = TaobaoTrade.where(conditions)
       
-      find_or_create(news_taobao_trades) do |taobao_trade|
+      find_or_create(account_id,news_taobao_trades) do |taobao_trade|
         taobao_trade.news = 2
         taobao_trade.save(:validate => false)
       end
-      
     end
     
-    def sync
-      customer = Customer.desc("transaction_histories.tid").first
+    def sync(account_id=nil)
+      conditions = default_condition(account_id)
+      customer = latest_customer(conditions)
       #如果顾客数据为空,先进行初始化
-      initialize! && true if customer.blank?
+      customer = initialize!(account_id) && latest_customer(conditions) if customer.blank?
+      #如果本地订单为空结束同步
+      return if customer.blank?
       latest_transaction_history = customer.transaction_histories.first
-      news_trades = TaobaoTrade.desc("tid").where(:tid => {"$gt" => (latest_transaction_history.tid || 0)})
-      find_or_create(news_trades)
+      news_trades = TaobaoTrade.desc("tid").where(:tid => {"$gt" => (latest_transaction_history.tid || "0")})
+      find_or_create(account_id,news_trades)
     end
     
     private
+    def latest_customer(conditions={})
+      Customer.where(conditions).desc("transaction_histories.tid").first
+    end
+    
     def customer_keys
       Customer.fields.except("_id","_type").keys
+    end
+    
+    def default_condition(account_id=nil)
+      account_id.present? && {:account_id => account_id} || {}
     end
     
     def transaction_history_fields
       TransactionHistory.fields.except("_id","_type").keys
     end
     
-    def find_or_create(news_trades,&block)
+    def find_or_create(account_id=nil,news_trades,&block)
       news_trades.each do |taobao_trade|
-        customer = Customer.find_or_create_by(:name => taobao_trade.buyer_nick)
-        customer.transaction_histories.build do |transaction_history|
-          transaction_history.attributes = taobao_trade.attributes.slice(*transaction_history_fields)
-        end
+        conditions = {:name => taobao_trade.buyer_nick}
+        account_id.present? && conditions.merge!({:account_id => account_id})
+        customer = Customer.find_or_create_by(conditions)
+        transaction_histories = customer.transaction_histories
+        transaction_history = transaction_histories.find_by(:tid => taobao_trade.tid) rescue nil || customer.transaction_histories.build
+
+        transaction_history.attributes = taobao_trade.attributes.slice(*transaction_history_fields)
+
         customers_attributes = parse_attributes(taobao_trade.attributes)
 
         customer.update_attributes(customers_attributes)

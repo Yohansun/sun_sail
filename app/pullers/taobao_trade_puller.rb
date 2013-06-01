@@ -175,7 +175,7 @@ class TaobaoTradePuller
             end
           end
           #同步本地顾客管理下面的"副本订单"
-          CustomerFetch.perform_async
+          CustomerFetch.perform_async(account_id)
         end
       end
     end
