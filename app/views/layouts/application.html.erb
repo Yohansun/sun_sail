@@ -55,8 +55,10 @@
               <li class="trades" style="display:none"><a href="http://shop.nipponpaint.com.cn/admin/orders">官网订单</a></li>
             <% end %>
             <% if ['sales', 'user_activities', 'trade_reports','customers'].include?(controller_name)  %>
+                <%- if false %><!--注释人员-->
                 <li class="<%= 'active' if controller_name == 'user_activities'%>">
                   <%= link_to "人员",user_activities_path if authorize?("user_activities","index")  %>
+                <% end %>
                 <li class="<%= 'active' if controller_name == 'trade_reports'%>">
                   <%= link_to "报表下载",trade_reports_path if authorize?("trade_reports","index")%></li>
                 <li class="<%= 'active' if controller_name == 'sales'%>">
@@ -74,7 +76,7 @@
                 <li><a href="/app#trades" class="trades">订单管理</a></li>
                 <% end %>
                 <%- if  current_user.allowed_to?("sales","product_analysis")%>
-                  <li><a href="/sales">数据魔方</a></li>
+                  <li><a href="/sales/product_analysis">数据魔方</a></li>
                 <%- elsif  current_user.allow_read?(:datas,"trade_reports#index") %>
                   <li><a href="/trade_reports">数据魔方</a></li>
                 <%- end %>
@@ -93,7 +95,7 @@
                 <li><a href="/callcenter/contrastive_performance">客服管理</a></li>
                 <% end %>
                 <% if current_user.allowed_to?("users","index") %>
-                <li class= "divider"></li>       
+                <li class= "divider"></li>
                 <li><a href="/users" class="users">系统设置</a></li>
                 <% end %>
               </ul>

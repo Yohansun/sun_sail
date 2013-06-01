@@ -89,6 +89,7 @@ json.orders OrderDecorator.decorate(@trade.orders) do |json, order|
   json.color_name order.color_name
   json.barcode order.barcode
   json.refund_status_text order.refund_status_text
+  json.order_gift_tid order.order_gift_tid
 
   if @trade._type == 'TaobaoTrade'
     json.refund_status order.refund_status
@@ -131,7 +132,9 @@ json.trade_gifts @trade.trade_gifts do |json, gift|
   json.gift_tid gift.gift_tid
   json.trade_id gift.trade_id
   json.gift_title gift.gift_title
-  json.product_id gift.product_id
+  json.num_iid gift.num_iid
+  json.sku_id gift.sku_id
+  json.num gift.num
   json.delivered_at gift.delivered_at
 end
 

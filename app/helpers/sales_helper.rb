@@ -43,7 +43,7 @@ module SalesHelper
     old_sold_info = {}
     compare_rate = []
 
-    map_reduce_info.each do |info| 
+    map_reduce_info.each do |info|
 	    total_money = info["value"]["total_fee"]
 	    total_num = info["value"]["num"].to_i
 	    average_money = (total_money/total_num).round(2)
@@ -245,7 +245,7 @@ module SalesHelper
        frequency_info << [p , purchase_data]
      end
      frequency_info
-  end  
+  end
 
   def univalent_data(start_at, end_at)
     map = %Q{
@@ -277,7 +277,7 @@ module SalesHelper
      total_person_num = 0
      money_gap.each_with_index do |gap, i|
        univalent.each do |fre|
-         total_num = fre["value"]["num"].to_i  
+         total_num = fre["value"]["num"].to_i
          payment_money = fre["value"]["payment"].to_f
          average_money = payment_money/total_num
          if (gap).include?(average_money)
@@ -291,6 +291,6 @@ module SalesHelper
        univalent_info << [money_gap2[i], p , univalent_data]
      end
      univalent_info
-  end 
- 
+  end
+
 end

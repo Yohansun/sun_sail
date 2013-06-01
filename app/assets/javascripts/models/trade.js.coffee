@@ -15,7 +15,7 @@ class MagicOrders.Models.Trade extends Backbone.Model
   check_operations: ->
     enabled_items = []
     state = this.attributes.status
-    type = this.attributes.trade_type
+    type = this.attributes.trade_source
     trades = MagicOrders.trade_pops['trades']
     if MagicOrders.role_key == "super_admin"
       enabled_items.push('seller') #订单分派,分派重置
@@ -40,7 +40,7 @@ class MagicOrders.Models.Trade extends Backbone.Model
           if not this.attributes.seller_id && $.inArray('trade_split',trades) > -1
             enabled_items.push('trade_split') #订单拆分
 
-        if this.attributes.seller_confirm_invoice_at is undefined && type != "CustomTrade" && $.inArray('invoice',trades) > -1
+        if this.attributes.seller_confirm_invoice_at is undefined && type != '赠品' && $.inArray('invoice',trades) > -1
           enabled_items.push('invoice') #申请开票
 
         if MagicOrders.enable_module_colors is 1
@@ -78,7 +78,7 @@ class MagicOrders.Models.Trade extends Backbone.Model
         if $.inArray('logistic_memo',trades) > -1
           enabled_items.push('logistic_memo') #物流公司备注
 
-        if this.attributes.seller_confirm_invoice_at is undefined && type != "CustomTrade" && $.inArray('invoice',trades) > -1
+        if this.attributes.seller_confirm_invoice_at is undefined && type != '赠品' && $.inArray('invoice',trades) > -1
           enabled_items.push('invoice') #申请开票
 
         if MagicOrders.enable_module_colors is 1
@@ -137,7 +137,7 @@ class MagicOrders.Models.Trade extends Backbone.Model
       enabled_items.push('seller_confirm_deliver') #确认发货
 
 
-    if type != "CustomTrade"
+    if type != '赠品'
       enabled_items.push('gift_memo') #赠品备注
     if $.inArray('invoice_number',trades) > -1
       enabled_items.push('invoice_number') #发票号设置

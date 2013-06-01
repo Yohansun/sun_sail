@@ -2,9 +2,9 @@
   <div class="row-fluid">
     <ul class="breadcrumb" style="position:relative;">
       <li><a href="/">Magic</a><span class="divider">/</span></li>
-      <li><a href="/sales">数据魔方</a><span class="divider">/</span></li>
+      <li><a href="/sales/product_analysis">数据魔方</a><span class="divider">/</span></li>
       <li class="active">报表下载</li>
-    </ul><!-- breadcrumb -->  
+    </ul><!-- breadcrumb -->
 
     <form ation="/trades_reports" class="well form-horizontal">
       <div class="control-group nomargin">
@@ -49,14 +49,14 @@
               <td><%= report.status %></td>
               <td>
                 <div class="btn-group">
-                  <%- if report.status == "可用" %> 
+                  <%- if report.status == "可用" %>
                     <button data-toggle="dropdown" class="btn btn-info dropdown-toggle min_w"><i class="icon-wrench"></i> <span class="caret"></span></button>
                     <ul class="dropdown-menu" style=" min-width: 70px;left: -14px">
-                      <li><a class="download_tips" data-toggle="modal" href="/trade_reports/<%= report.id %>/download">下载</a></li> 
+                      <li><a class="download_tips" data-toggle="modal" href="/trade_reports/<%= report.id %>/download">下载</a></li>
                     </ul>
-                  <%- else %> 
+                  <%- else %>
                     <button data-toggle="dropdown" class="btn btn-info dropdown-toggle min_w disabled"><i class="icon-wrench"></i> <span class="caret"></span></button>
-                  <%-  end %> 
+                  <%-  end %>
                 </div>
               </td>
             </tr>

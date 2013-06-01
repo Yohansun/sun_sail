@@ -5,12 +5,10 @@
 <div class="modal-body">
   <fieldset class="form-inline mar_b15">
     <p>新增赠品：</p>
-    <select class="input-large" id="select_gift">
-      <option value="void">选择赠品</option>
-      <% for gift in MagicOrders.gifts.models: %>
-        <option value="<%= gift.get('id') %>" ><%= gift.get('name') %></option>
-      <% end %>
-    </select>
+    <input class="input-medium" id="select_category" placeholder="请选择商品分类"></input>
+    <input class="input-large" id="select_product" placeholder="请选择商品"></input>
+    <input class="input-medium" id="select_sku" placeholder="请选择商品SKU"></input>
+    <input type="text" class="input-mini" id="gift_num" placeholder="数量"></input>
     <label class="checkbox">
       <input type="checkbox" id="add_gift_tid">是否拆分
     </label>
@@ -26,8 +24,9 @@
         <tr>
           <th width="15%">赠品编号</th>
           <th width="40%">赠品名称</th>
-          <th width="20%">关联订单</th>
-          <th width="15%">是否拆分</th>
+          <th width="15%">关联订单</th>
+          <th width="10%">数量</th>
+          <th width="10%">是否拆分</th>
           <th width="10%">操作</th>
         </tr>
       </thead>
@@ -41,6 +40,7 @@
               <%= tg.gift_tid.slice(0,-3) %>
             <% end %>
           </td>
+          <td><%= tg.num %></td>
           <td>
             <% if tg.trade_id != '' : %>
             拆分

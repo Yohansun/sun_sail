@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 class UserActivitiesController < ApplicationController
-  before_filter :authorize,:only => [:index,:all]
+  before_filter :authorize  # ,:only => [:index,:all]
   def index
     @staffs = redis_operation_log(params[:key_value], -20,-1)
     @count = redis_operation_log_count(params[:key_value])
