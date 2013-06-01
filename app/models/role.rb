@@ -17,7 +17,7 @@ class Role < ActiveRecord::Base
   belongs_to :account
 #  validates :byname ,:presence => true  ,:uniqueness => {:if => proc {|attr| Role.exists?(:byname => attr['byname'] ,:account_id => attr[:account_id])} }
 #  validates :name   ,:presence => true  ,:uniqueness => {:if => proc {|attr| Role.exists?(:name   => attr['name']   ,:account_id => attr[:account_id])} }
-  validates :name   ,:presence => true ,:uniqueness => true
+  validates :name   ,:presence => true ,:uniqueness => {:scope => :account_id}
   validates :account_id,:presence => true
   attr_accessible :name
   serialize :permissions, Hash
