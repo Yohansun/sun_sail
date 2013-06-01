@@ -31,7 +31,7 @@
           <li class="<%= display?("users","active","roles") %>"><a href="/users/roles"  data-toggle="collapse" data-target="#users_role">角色</a>
           </li>
           <li class="<%= display?("users","active",["update_permissions","limits"]) %>">
-            <a href="/users/limits?role_id=<%=current_account.roles.first.id%>"  data-toggle="collapse" data-target="#limits">权限</a>
+            <a href="/users/limits?role_id=<%=current_account.roles.first.try(:id)%>"  data-toggle="collapse" data-target="#limits">权限</a>
           </li>
         </ul>
     </li>
