@@ -59,44 +59,173 @@ end
 #oerations 不同角色显示的“操作”弹出项
 MagicOrder::AccessControl.map do |map|
   map.project_module :trades do |map|
-    map.permission :reads,      ["detail", 'request_add_ref', 'confirm_add_ref', 'request_return_ref', 'confirm_return_ref', 'cancel_return_ref']
-#    map.permission :operations, ["logistic_waybill", "seller", "cs_memo", "color", "invoice", "trade_split", "recover", "mark_unusual_state", "reassign", "refund", "check_goods", "operation_log", "manual_sms_or_email", "print_deliver_bill", "deliver", "confirm_color", "seller_confirm_invoice", "confirm_receive", "logistic_memo", "barcode", "seller_confirm_deliver", "request_return", "confirm_return", "confirm_refund", "gift_memo", "modify_payment", "setup_logistic", "logistic_split", "print_logistic_bill", "confirm_check_goods"]
-    map.permission :operations, ["add_ref","return_ref","edit_handmade_trade","create_handmade_trade","export_orders", "batch_export",  "logistic_waybill", "seller", "cs_memo", "mark_unusual_state", "check_goods", "operation_log", "manual_sms_or_email", "print_deliver_bill", "deliver", "seller_confirm_invoice", "seller_confirm_deliver", "request_return", "confirm_refund", "gift_memo", "setup_logistic", "logistic_split", "print_logistic_bill","modify_receiver_information","split_invoice"]
+    map.permission :reads,      ["detail",
+                                 'request_add_ref',
+                                 'confirm_add_ref',
+                                 'request_return_ref',
+                                 'confirm_return_ref',
+                                 'cancel_return_ref']
+    # map.permission :operations, ["logistic_waybill",
+    #                              "seller",
+    #                              "cs_memo",
+    #                              "color",
+    #                              "invoice",
+    #                              "trade_split",
+    #                              "recover",
+    #                              "mark_unusual_state",
+    #                              "reassign",
+    #                              "refund",
+    #                              "check_goods",
+    #                              "operation_log",
+    #                              "manual_sms_or_email",
+    #                              "print_deliver_bill",
+    #                              "deliver",
+    #                              "confirm_color",
+    #                              "seller_confirm_invoice",
+    #                              "confirm_receive",
+    #                              "logistic_memo",
+    #                              "barcode",
+    #                              "seller_confirm_deliver",
+    #                              "request_return",
+    #                              "confirm_return",
+    #                              "confirm_refund",
+    #                              "gift_memo",
+    #                              "modify_payment",
+    #                              "setup_logistic",
+    #                              "logistic_split",
+    #                              "print_logistic_bill",
+    #                              "confirm_check_goods"]
+    map.permission :operations, ["add_ref",
+                                 "return_ref",
+                                 "edit_handmade_trade",
+                                 "create_handmade_trade",
+                                 "export_orders",
+                                 "batch_export",
+                                 "logistic_waybill",
+                                 "seller",
+                                 "cs_memo",
+                                 "mark_unusual_state",
+                                 "check_goods",
+                                 "operation_log",
+                                 "manual_sms_or_email",
+                                 "print_deliver_bill",
+                                 "deliver",
+                                 "seller_confirm_invoice",
+                                 "seller_confirm_deliver",
+                                 "request_return",
+                                 "confirm_refund",
+                                 "gift_memo",
+                                 "setup_logistic",
+                                 "logistic_split",
+                                 "print_logistic_bill",
+                                 "modify_receiver_information",
+                                 "split_invoice"]
   end
   map.project_module :products do |map|
-    map.permission :reads,      ["detail","taobao_products", "taobao_product"]
-    map.permission :operations, ["create","update", "taobao_skus", "export_products","update_on_sale","tie_to_native_skus","sync_taobao_products","confirm_sync","remove_sku","add_sku"]
+    map.permission :reads,      ["detail",
+                                 "taobao_products",
+                                 "taobao_product"]
+    map.permission :operations, ["create",
+                                 "update",
+                                 "taobao_skus",
+                                 "export_products",
+                                 "update_on_sale",
+                                 "tie_to_native_skus",
+                                 "sync_taobao_products",
+                                 "confirm_sync",
+                                 "remove_sku",
+                                 "add_sku"]
 
   end
 
   map.project_module :areas do |map|
-    map.permission :reads,      ["detail","autocomplete", "area_search", "export"]
-    map.permission :operations, ["create","update"]
+    map.permission :reads,      ["detail",
+                                 "autocomplete",
+                                 "area_search",
+                                 "export"]
+    map.permission :operations, ["create",
+                                 "update"]
   end
 
   map.project_module :logistic_groups do |map|
     map.permission :reads,      ["detail"]
-    map.permission :operations, ["create","destroy"]
+    map.permission :operations, ["create",
+                                 "destroy"]
   end
 
   map.project_module :stocks do |map|
-    map.permission :reads,      ["detail","stock_in_bills#detail","stock_out_bills#detail","stock_bills#detail"]
-#    map.permission :operations, ["create","update","destroy"]
-    map.permission :operations, ["edit_depot","audit","sync","new_single_storage","new_storehouse","increase_in_commodity","determine_the_library","determine_the_storage",
-      "stock_in_bills#create","stock_out_bills#create","stock_in_bills#sync","stock_out_bills#sync","stock_in_bills#check","stock_out_bills#check","stock_in_bills#rollback",
-      "stock_out_bills#rollback","stock_in_bills#add_product","stock_out_bills#add_product","stock_in_bills#remove_product","stock_out_bills#remove_product"]
+    map.permission :reads,      ["detail",
+                                 "stock_in_bills#detail",
+                                 "stock_out_bills#detail",
+                                 "stock_bills#detail"]
+    # map.permission :operations, ["create",
+    #                              "update",
+    #                              "destroy"]
+    map.permission :operations, ["edit_depot",
+                                 "audit",
+                                 "sync",
+                                 "new_single_storage",
+                                 "new_storehouse",
+                                 "increase_in_commodity",
+                                 "determine_the_library",
+                                 "determine_the_storage",
+                                 "stock_in_bills#create",
+                                 "stock_out_bills#create",
+                                 "stock_in_bills#sync",
+                                 "stock_out_bills#sync",
+                                 "stock_in_bills#check",
+                                 "stock_out_bills#check",
+                                 "stock_in_bills#rollback",
+                                 "stock_out_bills#rollback",
+                                 "stock_in_bills#add_product",
+                                 "stock_out_bills#add_product",
+                                 "stock_in_bills#remove_product",
+                                 "stock_out_bills#remove_product"]
   end
 
   map.project_module :datas do |map|
-    map.permission :reads,      ["user_activities#detail","user_activities#all","trade_reports#detail","sales#product_analysis"]
-    map.permission :operations, ["trade_reports#download","customers#customers_detail"]
+    map.permission :reads,      [#"user_activities#detail",
+                                 #"user_activities#all",
+                                 "trade_reports#detail",
+                                 "sales#product_analysis",
+                                 "sales#show",
+                                 "sales#area_analysis",
+                                 "sales#time_analysis",
+                                 "sales#price_analysis",
+                                 "sales#frequency_analysis",
+                                 "sales#univalent_analysis"]
+    map.permission :operations, ["trade_reports#download",
+                                 "customers#customers_detail"]
   end
 
   map.project_module :system_settings do |map|
-    map.permission :reads,      ["users#detail","users#roles","users#limits","areas#detail","logistics#detail","account_setups#edit_auto_settings","logistics#logistic_user","categories#detail"]
-    map.permission :operations, ["users#update","users#delete","users#batch_update","users#create","users#create_role","users#destroy_role","logistics#update","logistics#create","logistics#destroy","logistics#create_logistic_area",
-      "logistics#remove_logistic_area","logistics#logistic_user_list","logistics#remove_logistic_user","logistics#logistic_user","account_setups#update_auto_settings","users#update_permissions",
-      "categories#update","categories#create","categories#destroy"]
+    map.permission :reads,      ["users#detail",
+                                 "users#roles",
+                                 "users#limits",
+                                 "areas#detail",
+                                 "logistics#detail",
+                                 "account_setups#edit_auto_settings",
+                                 "logistics#logistic_user",
+                                 "categories#detail"]
+    map.permission :operations, ["users#update",
+                                 "users#delete",
+                                 "users#batch_update",
+                                 "users#create",
+                                 "users#create_role",
+                                 "users#destroy_role",
+                                 "logistics#update",
+                                 "logistics#create",
+                                 "logistics#destroy",
+                                 "logistics#create_logistic_area",
+                                 "logistics#remove_logistic_area",
+                                 "logistics#logistic_user_list",
+                                 "logistics#remove_logistic_user",
+                                 "logistics#logistic_user",
+                                 "account_setups#update_auto_settings",
+                                 "users#update_permissions",
+                                 "categories#update",
+                                 "categories#create",
+                                 "categories#destroy"]
   end
 
 #  map.project_module :logistics do |map|

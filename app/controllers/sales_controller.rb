@@ -1,11 +1,7 @@
 # -*- encoding : utf-8 -*-
 class SalesController < ApplicationController
-  before_filter :authorize
+  before_filter :authorize,:except => [:add_node, :edit, :update, :fetch_data]
   include SalesHelper
-
-  def index
-    redirect_to "/sales/product_analysis"
-  end
 
   def show
     ## 参数初始化

@@ -17,7 +17,7 @@
   <div class="row-fluid">
     <ul class="breadcrumb" style="position:relative;">
       <li><a href="/">Magic</a><span class="divider">/</span></li>
-      <li><a href="/sales">数据魔方</a><span class="divider">/</span></li>
+      <li><a href="/sales/product_analysis">数据魔方</a><span class="divider">/</span></li>
       <li><a href="/user_activities">人员</a><span class="divider">/</span></li>
       <li class="active">
         <% if params[:key] == "1"%>
@@ -30,7 +30,7 @@
           所有人
         <% end %>
       </li>
-    </ul><!-- breadcrumb -->  
+    </ul><!-- breadcrumb -->
 
     <div class="well magic_person">
       <div id="list_staff" class="msg_list">
@@ -53,13 +53,13 @@
               <li class="page active">
             <% else %>
               <li class="page">
-            <% end %> 
+            <% end %>
             <% page = count + 1%>
             <% next if (count + 1) < (@pages.to_i - 2) || (count + 1) > (@pages.to_i + 2) %>
               <a href="/user_activities/all?key=<%=params[:key]%>&page=<%= -20 * (count+1)%>&pages=<%=count+1%>"><%=count + 1%></a>
             </li>
           <% end %>
-          
+
           <% if params[:page].to_i > -@count %>
             <li class="next_page">
               <a href="/user_activities/all?key=<%=params[:key]%>&page=<% if params[:page] %><%= params[:page].to_i + -20 %><% else %><%= -20 + -20%><% end %>&pages=<% if params[:pages] %><%= params[:pages].to_i + 1 %><% else %><%= 2 %><% end %>" rel="next">下一页</a>
