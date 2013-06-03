@@ -12,3 +12,5 @@ vendor/
 data/*.xls
 spec/factories
 .ruby-gemset
+.ruby-version
+.rvmrc
