@@ -41,7 +41,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     @collection.on("fetch", @renderUpdate, this)
 
   render: =>
-
     if !@first_rendered
       $(@el).html(@template(trades: @collection))
       #initial mode=trades
@@ -69,8 +68,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     @first_rendered = true
     @collection.each(@appendTrade)
     $("a[rel=popover]").popover({placement: 'left', html:true})
-    if MagicOrders.trade_mode != 'deliver' && MagicOrders.trade_mode != 'logistics'
-      $(@el).find('#select_print_time').hide()
     if @identity == 'seller'
       $(@el).find(".trade_nav").text("未发货订单")
     if @identity == 'logistic'
@@ -130,39 +127,39 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     else
       Backbone.history.navigate('trades/manual_sms_or_email', true)
 
-  sort_product: ->  
-    
-      tmp = []  
-      length = $('.trade_check:checked').parents('tr').length  
-    
-      if length < 1  
-        alert('未选择订单！')  
-        return  
-    
-      if length > 300  
-        alert('请选择小于300个订单！')  
-        return  
-    
-      $('.trade_check:checked').parents('tr').each (index, el) ->  
-        input = $(el).find('.trade_check')  
-        a = input[0]  
-    
-        if a.checked  
-          trade_id = $(el).attr('id').replace('trade_', '')  
-          tmp.push trade_id  
-    
-      MagicOrders.idCarrier = tmp  
-      $.get '/home/index', {ids: tmp}, (data) ->  
-        html = ''  
-        for trade in data  
-          html += '<tr>'  
-          html += '<td>' + trade.title + '</td>'  
+  sort_product: ->
+
+      tmp = []
+      length = $('.trade_check:checked').parents('tr').length
+
+      if length < 1
+        alert('未选择订单！')
+        return
+
+      if length > 300
+        alert('请选择小于300个订单！')
+        return
+
+      $('.trade_check:checked').parents('tr').each (index, el) ->
+        input = $(el).find('.trade_check')
+        a = input[0]
+
+        if a.checked
+          trade_id = $(el).attr('id').replace('trade_', '')
+          tmp.push trade_id
+
+      MagicOrders.idCarrier = tmp
+      $.get '/home/index', {ids: tmp}, (data) ->
+        html = ''
+        for trade in data
+          html += '<tr>'
+          html += '<td>' + trade.title + '</td>'
           html += '<td>' + trade.category + '</td>'
-          html += '<td>' + trade.num + '</td>'  
-        $('#sort_product tbody').html(html)  
-        $('#sort_product .confirm_sort_product').show()  
-    
-        $('#sort_product').modal('show')  
+          html += '<td>' + trade.num + '</td>'
+        $('#sort_product tbody').html(html)
+        $('#sort_product .confirm_sort_product').show()
+
+        $('#sort_product').modal('show')
 
   show_type: (e) ->
     type = $(e.target).data('type')
@@ -209,7 +206,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     if length < 1
       alert("请勾选要操作的订单。")
     else
-      Backbone.history.navigate('trades/batch_export', true)    
+      Backbone.history.navigate('trades/batch_export', true)
 
   fetchMoreTrades: (event, direction) =>
     if direction == 'down'
@@ -264,20 +261,15 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
     MagicOrders.original_path = window.location.hash
 
-    # 发货单打印时间筛选框只在deliver模式下显示
-    if MagicOrders.trade_mode == 'deliver' || MagicOrders.trade_mode == 'logistics'
-      $(@el).find('#select_print_time').show()
-    else
-      $(@el).find('#select_print_time').hide()
-
-    # reset operation
-    $(@el).find(".trade_pops li").hide()
-    for pop in MagicOrders.trade_pops[MagicOrders.trade_mode]
-      unless MagicOrders.role_key == 'admin'
-        if pop in MagicOrders.trade_pops[MagicOrders.role_key]
+    if MagicOrders.trade_mode != 'deliver_bills' && MagicOrders.trade_mode != 'logistic_bills'
+      # reset operation
+      $(@el).find(".trade_pops li").hide()
+      for pop in MagicOrders.trade_pops[MagicOrders.trade_mode]
+        unless MagicOrders.role_key == 'admin'
+          if pop in MagicOrders.trade_pops[MagicOrders.role_key]
+            $(@el).find(".trade_pops li [data-type=#{pop}]").parent().show()
+        else
           $(@el).find(".trade_pops li [data-type=#{pop}]").parent().show()
-      else
-        $(@el).find(".trade_pops li [data-type=#{pop}]").parent().show()
 
   batchDeliver: ->
     tmp = []
@@ -467,7 +459,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
           coll = new MagicOrders.Collections.DeliverBills()
         when "logistic_bills"
           coll = new MagicOrders.Collections.DeliverBills()
-      
+
       coll.fetch  data:{trade_type:trade_type,limit:1}, success: (collection, response)->
         count = 0
         if(collection.length > 0)

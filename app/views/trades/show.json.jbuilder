@@ -20,6 +20,7 @@ json.receiver_zip @trade.receiver_zip
 json.trade_source @trade.trade_source
 json.trade_source_name @trade.trade_source_name
 json.buyer_message @trade.buyer_message
+json.buyer_nick @trade.buyer_nick
 json.seller_memo @trade.seller_memo
 json.post_fee @trade.post_fee
 json.modify_payment @trade.modify_payment

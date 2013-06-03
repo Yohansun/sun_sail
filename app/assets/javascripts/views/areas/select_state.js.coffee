@@ -42,6 +42,7 @@ class MagicOrders.Views.AreasSelectState extends Backbone.View
     else
       @state = $("#state_option option[value=#{newid}]",@el).data("id")
       @cities.fetch {data: {parent_id: @state}}
+      @districts.fetch data: {parent_id: ''}
     @state = $("#state_option",@el).val()
 
   refresh_districts: =>

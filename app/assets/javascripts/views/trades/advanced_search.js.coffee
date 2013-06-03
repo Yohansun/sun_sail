@@ -48,10 +48,10 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
         #@search_criterias.push(model)
         self.updateSearchCriteriaSelection()
       return false
-      
+
     $("#save_search_criteria_form").validate
       rules:
-        name: 
+        name:
           required:true
           maxlength:7
           search_criteria_uniq: true
@@ -71,7 +71,6 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
 
     $(@el).find('.order_search_form .datepickers').datetimepicker(weekStart:1,todayBtn:1,autoclose:1,todayHighlight:1,startView:2,forceParse:0,showMeridian:1)
     @render_select_state()
-    @render_select_print_time()
     $(@el).find(".select2").select2();
     $(@el).find(".search_logistic").hide()  #一定要放在select2()初始化之后！
     $(@el).find('.add_status_search_tag').parents('fieldset').hide()
@@ -85,11 +84,6 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
   catchSearchMotion: ->
     out_height = $('.js-affix').outerHeight();
     $('.btn-toolbar').css('top', out_height + 71 + 'px');
-
-
-  render_select_print_time: ->
-    view = new MagicOrders.Views.TradesSelectPrintTime()
-    $(@el).find('#select_print_time').html(view.render().el)
 
   # 加载地域搜索框
   render_select_state: ->
@@ -280,7 +274,7 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
     self = this
     e.preventDefault()
     $("#save_search_criteria_modal").modal("show")
-  
+
   submitSearchCriteriaForm:(e)->
 
 
@@ -290,14 +284,14 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
     $("#load_search_criteria").val($(e.target).val()).change()
     if(!$("#search_toggle").is(":visible"))
       $(".advanced_btn:first").click()
-    $(".search").click()  
+    $(".search").click()
 
   simpleLoadSearchCriteria:(e)->
     e.preventDefault()
     $("#load_search_criteria").val($(e.target).val()).change()
     if(!$("#search_toggle").is(":visible"))
       $(".advanced_btn:first").click()
-    $(".search").click()  
+    $(".search").click()
 
   loadSearchCriteria:(e)->
     e.preventDefault()
@@ -309,7 +303,7 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
     if criteria
       $('.search_tags_group').html(criteria.get("html"))
 
-    
+
 
   updateSearchCriteriaSelection: ->
     self = this
