@@ -758,7 +758,7 @@ class Trade
       when 'buyer_delay_deliver', 'seller_ignore_deliver', 'seller_lack_product', 'seller_lack_color', 'buyer_demand_refund', 'buyer_demand_return_product', 'other_unusual_state'
         trade_type_hash = {:unusual_states.elem_match => {:key => type, repaired_at: nil}}
       when 'unusual_all'
-        trade_type_hash = {:unusual_states.elem_match =>{:repaired_at => nil}, :unusual_states.nin => [[],nil]}
+        trade_type_hash = {:unusual_states.elem_match =>{:repaired_at => nil}}
       when 'all'
         trade_type_hash = nil
       when 'dispatched'

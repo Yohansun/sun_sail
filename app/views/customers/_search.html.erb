@@ -9,7 +9,6 @@
       <%= text_field_tag params[:exact_phrase].to_s,params["search_name"],:id => "search_name",:class => "search_value input-large radius_no_tl" %>
     </div>
 
-    <div class="pull-left mar_r10" id="select_print_time"></div>
     <div class="pull-left">
       <button type="button pull-left" class="btn btn-info search" id="simple_search_button">筛选</button>
     </div>
@@ -22,7 +21,7 @@
       <!-- <span class="toggle-multiselect">&nbsp;</span> -->
     </div>
   </div>
-  
+
   <div class="control-group">
     <label class="pull-left"><code>时间：</code></label>
     <div class="controls pull-left">
@@ -31,7 +30,7 @@
       <%= text_field_tag "search[transaction_histories_created_lte]",params[:search][:transaction_histories_created_lte],:class => "input-medium end_at datetimepicker_full",:placeholder => "年-月-日 时:分:秒",:readonly => true %>
     </div>
   </div>
-  
+
   <div class="control-group">
     <label class="control pull-left"><code>地域：</code></label>
     <div class="controls pull-left">
@@ -46,14 +45,14 @@
       </select>
     </div>
   </div>
-  
+
   <div class="control-group">
     <label class="pull-left"><code>价格区间：</code></label>
     <div class="controls pull-left">
       <%= text_field_tag "search[transaction_histories_payment_gte]",params[:search][:transaction_histories_payment_gte],:class => "input-medium" %>~
       <%= text_field_tag "search[transaction_histories_payment_lte]",params[:search][:transaction_histories_payment_lte],:class => "input-medium" %>
     </div>
-    
+
 </fieldset>
 <% end %>
 <%= content_for :tail do %>
@@ -63,7 +62,7 @@ $(function(){
   <% field_name = params[:exact_phrase].to_s.gsub(/(^.+\[)|(\]$)/,"") %>
   $("#serch_name").attr("name","<%= params[:exact_phrase] %>")
   $("input[name='" + text_field + "']").val("<%= params[:search][field_name] rescue "" %>");
-  
+
   $("select").change(function() {
     var input_name = $(this).val()
     $("#search_name").attr("name",input_name)
@@ -78,7 +77,7 @@ $(function() {
   sel.bind('.level_1','<%= params[:op_state] %>');
   sel.bind('.level_2','<%= params[:op_city] %>');
   sel.bind('.level_3','<%= params[:op_district] %>');
-  
+
   initFilters();
 });
 </script>
