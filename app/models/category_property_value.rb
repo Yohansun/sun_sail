@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: category_property_values
+#
+#  id                   :integer(4)      not null, primary key
+#  category_property_id :integer(4)
+#  value                :string(255)
+#  taobao_id            :integer(4)
+#  created_at           :datetime        not null
+#  updated_at           :datetime        not null
+#
+
 class CategoryPropertyValue < ActiveRecord::Base
   attr_accessible :category_property_id, :taobao_id, :value
   

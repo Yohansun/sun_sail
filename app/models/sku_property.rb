@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: sku_properties
+#
+#  id                         :integer(4)      not null, primary key
+#  sku_id                     :integer(4)
+#  category_property_value_id :integer(4)
+#  cached_property_name       :string(255)
+#  cached_property_value      :string(255)
+#  created_at                 :datetime        not null
+#  updated_at                 :datetime        not null
+#  category_property_id       :integer(4)
+#
+
 class SkuProperty < ActiveRecord::Base
 
   attr_accessible :cached_property_name, :cached_property_value,

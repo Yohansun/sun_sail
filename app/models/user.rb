@@ -26,6 +26,7 @@
 #  unlock_token           :string(255)
 #  locked_at              :datetime
 #  phone                  :string(255)
+#  superadmin             :boolean(1)      default(FALSE), not null
 #
 
 class User < ActiveRecord::Base
