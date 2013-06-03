@@ -11,7 +11,7 @@
       <a href="#" class="" data-toggle="collapse" data-target="#autoset_menu">
         <i class="icon-chevron-right"></i> 自动化设置
       </a>
-        <ul id="autoset_menu" class="collapse in">
+        <ul id="autoset_menu" class="collapse <%= display?("account_setups","in") %>">
           <li class="<%= "active" if params[:controller] == "account_setups" && params[:action] =~ /edit_preprocess_settings/ %>">
             <a href="/account_setups/edit_preprocess_settings">订单预处理</a>
           </li>
@@ -30,16 +30,19 @@
           </li>
           <li class="<%= display?("users","active","roles") %>"><a href="/users/roles"  data-toggle="collapse" data-target="#users_role">角色</a>
           </li>
+<!--
           <li class="<%= display?("users","active",["update_permissions","limits"]) %>">
             <a href="/users/limits?role_id=<%=current_account.roles.first.try(:id)%>"  data-toggle="collapse" data-target="#limits">权限</a>
           </li>
+-->
         </ul>
     </li>
-    <li class="<%= display?(["stocks","logistics","category_properties","categories", "logistic_groups", "trade_searches", "areas", "orders"],"active") %>">
+    <% @basedata = ["stocks","logistics","category_properties","categories", "logistic_groups", "trade_searches", "areas", "orders"] %>
+    <li class="<%= display?(@basedata,"active") %>">
       <a href="#" class="" data-toggle="collapse" data-target="#base_data">
         <i class="icon-chevron-right"></i> 基础数据管理
       </a>
-        <ul id="base_data" class="collapse <%= display?(["stocks","logistics","category_properties","categories", "logistic_groups", "trade_searches", "areas", "orders"],"in") %>">
+        <ul id="base_data" class="collapse <%= display?(@basedata,"in") %>">
           <li class="<%= display?("stocks","active")%>">
             <a href="#"  data-toggle="collapse" data-target="#stocks_menu">仓库设置</a>
             <ul id="stocks_menu" class="collapse <%= display?("stocks","in",["safe_stock","change_product_type","edit_depot","update_depot"]) %> third_menu">
