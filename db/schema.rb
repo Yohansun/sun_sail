@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130509035645) do
+ActiveRecord::Schema.define(:version => 20130524022929) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -179,6 +179,16 @@ ActiveRecord::Schema.define(:version => 20130509035645) do
   end
 
   add_index "colors_stock_products", ["stock_product_id"], :name => "index_colors_stock_products_on_stock_product_id"
+
+  create_table "default_logistics", :force => true do |t|
+    t.string   "name"
+    t.string   "code"
+    t.string   "bg_img"
+    t.text     "xml_hash"
+    t.string   "options"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "feature_product_relationships", :force => true do |t|
     t.integer  "product_id"
@@ -378,6 +388,8 @@ ActiveRecord::Schema.define(:version => 20130509035645) do
     t.boolean  "has_stock",         :default => false
     t.datetime "stock_opened_at"
     t.integer  "account_id"
+    t.string   "stock_name"
+    t.integer  "stock_user_id"
   end
 
   create_table "sellers_areas", :force => true do |t|
@@ -479,8 +491,8 @@ ActiveRecord::Schema.define(:version => 20130509035645) do
     t.string   "taobao_user_id"
     t.string   "taobao_user_nick"
     t.string   "refresh_token"
-    t.datetime "created_at",                                                    :null => false
-    t.datetime "updated_at",                                                    :null => false
+    t.datetime "created_at",                                                   :null => false
+    t.datetime "updated_at",                                                   :null => false
     t.datetime "last_refresh_at"
     t.integer  "trade_source_id"
     t.datetime "refresh_token_last_refresh_at"
@@ -489,7 +501,7 @@ ActiveRecord::Schema.define(:version => 20130509035645) do
     t.integer  "r2_expires_in",                 :limit => 8
     t.integer  "w1_expires_in",                 :limit => 8
     t.integer  "w2_expires_in",                 :limit => 8
-    t.boolean  "need_refresh",                               :default => false
+    t.boolean  "need_refresh",                               :default => true
   end
 
   create_table "taobao_products", :force => true do |t|

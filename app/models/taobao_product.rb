@@ -1,4 +1,23 @@
 # -*- encoding : utf-8 -*-
+# == Schema Information
+#
+# Table name: taobao_products
+#
+#  id          :integer(4)      not null, primary key
+#  category_id :integer(4)
+#  account_id  :integer(4)
+#  num_iid     :integer(8)
+#  price       :integer(10)
+#  outer_id    :string(255)
+#  product_id  :string(255)
+#  cat_name    :string(255)
+#  pic_url     :string(255)
+#  cid         :string(255)
+#  name        :string(255)
+#  created_at  :datetime        not null
+#  updated_at  :datetime        not null
+#
+
 class TaobaoProduct < ActiveRecord::Base
   belongs_to :account
   belongs_to :category

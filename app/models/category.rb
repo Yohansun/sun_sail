@@ -12,6 +12,7 @@
 #  rgt        :integer(4)
 #  depth      :integer(4)
 #  account_id :integer(4)
+#  status     :integer(4)      default(1)
 #
 
 class Category < ActiveRecord::Base

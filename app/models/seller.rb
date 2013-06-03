@@ -1,4 +1,5 @@
 #encoding: utf-8
+
 # == Schema Information
 #
 # Table name: sellers
@@ -26,7 +27,11 @@
 #  has_stock         :boolean(1)      default(FALSE)
 #  stock_opened_at   :datetime
 #  account_id        :integer(4)
+#  stock_name        :string(255)
+#  stock_user_id     :integer(4)
 #
+
+
 require 'hz2py'
 
 class Seller < ActiveRecord::Base

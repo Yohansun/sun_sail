@@ -1,4 +1,18 @@
 # -*- encoding:utf-8 -*-
+# == Schema Information
+#
+# Table name: category_properties
+#
+#  id         :integer(4)      not null, primary key
+#  name       :string(255)
+#  value_type :integer(4)
+#  taobao_id  :integer(4)
+#  status     :integer(4)
+#  created_at :datetime        not null
+#  updated_at :datetime        not null
+#
+
+
 class CategoryProperty < ActiveRecord::Base
 
   STATUS_ENABLED = 1
@@ -16,13 +30,13 @@ class CategoryProperty < ActiveRecord::Base
 
   attr_accessor :value_text
   attr_accessible :name, :status, :value_type, :value_text, :values_attributes
-  
+
   has_many    :values,    :class_name=>"CategoryPropertyValue", :dependent=>:destroy
   accepts_nested_attributes_for :values, :allow_destroy => true
-  
-  
+
+
   before_save :init_values
-  
+
   scope :name_eq, ->(name){ where(["category_properties.name = ?",name])}
 
 
@@ -31,17 +45,17 @@ class CategoryProperty < ActiveRecord::Base
   def value_text
     Array.wrap(values_name)*"\n"
   end
-  
+
   def values_name
     @value_text ||= values.map(&:value)
   end
 
-  
+
   def init_values
     old_values = []
     old_values_map = {}
     values.each{|v| old_values << v.value; old_values_map[v.value] = v.id;}
-    
+
     # build params hash
     lines = self.value_text.split("\n")
     values_attributes = []
@@ -64,5 +78,5 @@ class CategoryProperty < ActiveRecord::Base
     }
     self.attributes = {:values_attributes=>values_attributes}
   end
-  
+
 end

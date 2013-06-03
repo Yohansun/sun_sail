@@ -10,6 +10,7 @@
 #  properties_name :string(255)     default("")
 #  quantity        :integer(4)
 #  product_id      :integer(4)
+#  account_id      :integer(4)
 #
 
 class Sku < ActiveRecord::Base

@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: taobao_skus
+#
+#  id                :integer(4)      not null, primary key
+#  sku_id            :integer(8)
+#  taobao_product_id :integer(8)
+#  num_iid           :integer(8)
+#  properties        :string(255)
+#  properties_name   :string(255)
+#  quantity          :integer(4)
+#  account_id        :integer(4)
+#
+
 class TaobaoSku < ActiveRecord::Base
   attr_accessible :num_iid, :properties, :properties_name, :quantity, :taobao_product_id, :account_id, :sku_id
   has_many :sku_bindings, dependent: :destroy

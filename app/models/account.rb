@@ -1,3 +1,20 @@
+# == Schema Information
+#
+# Table name: accounts
+#
+#  id                :integer(4)      not null, primary key
+#  name              :string(255)
+#  key               :string(255)
+#  created_at        :datetime        not null
+#  updated_at        :datetime        not null
+#  seller_name       :string(255)
+#  address           :string(255)
+#  phone             :string(255)
+#  deliver_bill_info :string(255)
+#  point_out         :string(255)
+#  website           :string(255)
+#
+
 #encoding: utf-8
 
 # == Schema Information
