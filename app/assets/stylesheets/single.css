@@ -154,7 +154,8 @@ code{color: #08C;}
 /*autoset setting_auto.html*/
 .nav .collapse{border: 1px solid #E5E5E5;border-width:0 1px;margin-left: 0px;padding-left: 26px;list-style: none;}
 .nav .collapse li{line-height:14px;padding:5px 0;}
-.nav .collapse li.active{list-style:circle;margin-left:15px;}
+/*.nav .collapse li.active{list-style:circle;margin-left:15px;}*/
+.nav .collapse li.active{margin-left:15px;}
 .nav .collapse li a{text-decoration:none;}
 .timeEntry_control{border-radius:0 4px 4px 0;}
 .noborder td,.noborder th{border:0!important;}
