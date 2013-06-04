@@ -59,9 +59,9 @@
                   <td><%= bill.status %></td>
                   <td><%= product.try(:sku_id) %></td>
                   <td><%= product.try(:title) %></td>
-                  <td><%= bill._type.constantize.stock_type_name rescue ""  %></td>
+                  <td><%= bill.stock_type_name  %></td>
                   <td><%= bill.created_at.try(:to_s,:db) %></td>
-                  <td><%= bill.stocked_at.try(:strftime, "%Y-%m-%d %H:%M") %></td>                                    
+                  <td><%= bill.stocked_at.try(:strftime, "%Y-%m-%d %H:%M") %></td>
                 </tr>
                 <%- num += 1 %>
               <%- end %>
