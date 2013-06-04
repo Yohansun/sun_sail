@@ -12,8 +12,9 @@ class MagicOrders.Views.TradesRow extends Backbone.View
     'click .pop_detail' : 'show_type'
     'click .gift_trade_pop': 'showTrade'
     'click a[rel=popover]': "addHover"
+    'click input.trade_check': 'freezeCheck'
     'click': 'highlight'
-    'click input.trade_check': 'toggleOperationMenu'
+
 
   initialize: ->
     @model.on("reset",@render, this)
@@ -64,9 +65,21 @@ class MagicOrders.Views.TradesRow extends Backbone.View
     $('#simple_search_button').click()
 
 
-  highlight: (e) =>
+  highlight: (e) ->
+    $("#trades_table tr").removeClass 'info'
+    $(e.currentTarget).addClass 'info'
+    if $(e.currentTarget).find('input').attr("checked") == 'checked'
+      $(e.currentTarget).find('input').attr("checked", false)
+      @toggleOperationMenu()
+    else
+      $(e.currentTarget).find('input').attr("checked", true)
+      @toggleOperationMenu()
+
+  freezeCheck: (e) =>
+    e.stopPropagation()
     $("#trades_table tr").removeClass 'info'
     $(@el).addClass 'info'
+    @toggleOperationMenu()
 
   addHover: (e) ->
     $(e.target).parent().toggleClass('lovely_pop')
