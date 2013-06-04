@@ -106,6 +106,7 @@
             <% end %>
             <option value="has_invoice_info">发票信息</option>
             <option value="has_product_info">商品信息</option>
+            <option value="has_logistic_info">物流信息</option>
             <option value="has_cs_memo">客服备注</option>
             <option value="has_seller_memo">卖家备注</option>
             <option value="has_buyer_message">买家备注</option>

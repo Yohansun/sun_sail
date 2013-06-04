@@ -934,6 +934,9 @@ class Trade
             elsif key == "has_gift_memo"
               search_tags_hash.update({"$or" => [{"trade_gifts" => {"$elemMatch" => {"gift_title" => not_void}}},{"gift_memo" => not_void}]})
               search_tags_hash.update({"$or" => [{"trade_gifts" => {"$elemMatch" => {"gift_title" => words}}},{"gift_memo" => words}]}) if words
+            elsif key == "has_logistic_info"
+              search_tags_hash.update({"$and" => [{"logistic_id" => not_void},{"logistic_waybill" => not_void}]})
+              search_tags_hash.update({"$or" => [{"logistic_waybill" => words},{"logistic_name" => words},{"logistic_code" => words}]}) if words
             else
               search_tags_hash.update({value_array[0] => not_void})
               search_tags_hash.update({value_array[0] => words}) if words
@@ -951,6 +954,8 @@ class Trade
             elsif key == "has_gift_memo"
               search_tags_hash.update({"trade_gifts" => {"$elemMatch" => {"gift_title" => void}}})
               search_tags_hash.update({"gift_memo" => void})
+            elsif key == "has_logistic_info"
+              search_tags_hash.update({"$or" => [{"logistic_id" => void},{"logistic_waybill" => void}]})
             else
               search_tags_hash.update({value_array[0] => void})
             end
