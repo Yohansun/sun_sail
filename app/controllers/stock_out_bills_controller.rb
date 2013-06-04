@@ -31,7 +31,7 @@ class StockOutBillsController < ApplicationController
     if @bill.save
       update_areas!(@bill)
       current_user.settings.tmp_products = []
-      redirect_to stock_in_bills_path
+      redirect_to stock_out_bills_path
     else
       @products = (current_user.settings.tmp_products ||= [])
       render :new
