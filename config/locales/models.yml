@@ -1,0 +1,9 @@
+zh-CN:
+  activerecord:
+    models:
+      category: "商品分类"
+    
+    attributes:
+      category:
+        use_days: "商品生命周期(天)"
+      

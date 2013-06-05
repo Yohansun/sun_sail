@@ -31,7 +31,7 @@ class CategoriesController < ApplicationController
 
   def create
     @category = current_account.categories.create params[:category]
-    if @category.save!
+    if @category.save
       p @category.inspect
       if @category.parent_id.present?
         redirect_to categories_path(:parent_id => params[:parent_id])
