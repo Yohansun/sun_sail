@@ -1,3 +1,4 @@
+#encoding: utf-8
 # == Schema Information
 #
 # Table name: accounts
@@ -15,7 +16,6 @@
 #  website           :string(255)
 #
 
-#encoding: utf-8
 
 # == Schema Information
 #
