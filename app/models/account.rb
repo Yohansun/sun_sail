@@ -118,7 +118,7 @@ class Account < ActiveRecord::Base
   end
 
   def create_default_seller
-    self.sellers.create(name:self.name,fullname:self.name, areas:Area.leaves)
+    self.sellers.create(name:self.name,fullname:self.name, has_stock:true, areas:Area.leaves)
   end
 
   def create_default_roles
