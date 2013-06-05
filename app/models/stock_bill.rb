@@ -2,6 +2,7 @@
 class StockBill
   include Mongoid::Document
   include Mongoid::Timestamps
+  include MagicEnum
   embeds_many :bill_products
   embeds_many :operation_logs
 
@@ -44,10 +45,31 @@ class StockBill
   validate do
     errors.add(:base,"商品不能为空") if bill_products.blank?
   end
+  
+  if Rails.env.development?
+    require 'stock_in_bill'
+    require 'stock_out_bill'
+  end
+  
+  STOCK_TYPE = StockInBill::STOCK_TYPE + StockOutBill::STOCK_TYPE
+  enum_attr :stock_type, STOCK_TYPE
+  validates :stock_type, :presence => true,:inclusion => { :in => STOCK_TYPE_VALUES }
 
   embeds_many :bill_products
 
   after_save :generate_tid
+  
+  alias_method :stock_typs=, :stock_type=
+  
+  def stock_typs=(val)
+    return if stock_type == val
+    _strip = self.is_a?(StockInBill) ? "I" : self.is_a?(StockOutBill) ? "O" : ""
+    self.stock_type = _strip + val.to_s
+  end
+  
+  def stock_typs
+    stock_type.gsub(/^(I|O)/,'')
+  end
 
   def generate_tid
     if tid.blank?

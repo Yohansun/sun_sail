@@ -16,12 +16,32 @@ module MagicEnum
       if vals.uniq.length != vals.length
         raise ArgumentError, "The parameter(last parameter in array) must be unique"
       end
+      const_value = "#{const}_VALUES"
 
-      const_set(const,summary) if !const_defined?(const) || summary != const_get(const)
+      [[const,summary],[const_value,summary.map(&:last)]].each do |name,val|
+        silence_warnings {const_set(name,val)} if !const_defined?(name) || val != const_get(name)
+      end
+      
+      validates _attr.to_sym,:presence => true, :inclusion => { :in => const_get(const_value) } if respond_to?(:validates)
+
       define_method("#{_attr}_name") do
         raise NoMethodError,"Not defined #{_attr}" if !respond_to?("#{_attr}")
-        summary.rassoc(send(_attr)).try(:first) 
+        if ary = summary.rassoc(send(_attr))
+          ary.__send__(:first)
+        end
       end if !respond_to?("#{_attr}_name")
+    end
+    
+    private
+    def silence_warnings
+      with_warnings(nil) { yield }
+    end
+    
+    def with_warnings(flag)
+      old_verbose, $VERBOSE = $VERBOSE, flag
+      yield
+    ensure
+      $VERBOSE = old_verbose
     end
   end
 end
