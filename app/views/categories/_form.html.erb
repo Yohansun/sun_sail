@@ -4,6 +4,7 @@
     <%= f.input :parent_id, label: "上级分类"  do %>
     	<%= f.select :parent_id, [[]]+nested_set_options(current_account.categories, @category) {|i| "#{'-' * i.level} #{i.name}" } %>
     <% end %>
+    <%= f.input :use_days %>
     <%= f.input :status, :label=>"是否启用" do%>
       <%= f.label :status do %>
         <%= f.check_box  :status, {}, 1,0 %> 启用
