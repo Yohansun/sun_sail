@@ -1,4 +1,4 @@
-  # encoding : utf-8 -*-
+# encoding : utf-8 -*-
 class TaobaoTradePuller
   class << self
     def create(start_time = nil, end_time = nil, trade_source_id)
@@ -15,7 +15,7 @@ class TaobaoTradePuller
           start_time = latest_created_order.created - 1.hour
         else
           start_time = Time.now - 1.month
-        end    
+        end
       end
 
       if end_time.blank?
@@ -107,7 +107,7 @@ class TaobaoTradePuller
           start_time = latest_created_order.modified - 4.hour
         else
           start_time = Time.now - 1.month
-        end  
+        end
       end
 
       if end_time.blank?
