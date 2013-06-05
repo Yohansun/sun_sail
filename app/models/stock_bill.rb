@@ -62,7 +62,7 @@ class StockBill
   alias_method :stock_typs=, :stock_type=
   
   def stock_typs=(val)
-    return if stock_type == val
+    return if stock_type == val && STOCK_TYPE_VALUES.include?(val)
     _strip = self.is_a?(StockInBill) ? "I" : self.is_a?(StockOutBill) ? "O" : ""
     self.stock_type = _strip + val.to_s
   end
