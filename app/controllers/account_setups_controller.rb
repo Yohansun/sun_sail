@@ -4,10 +4,11 @@ class AccountSetupsController < ApplicationController
   before_filter :check_account_wizard_status, only:[:show]
 
   skip_before_filter :verify_authenticity_token, only: [:data_fetch_finish]
-  before_filter :authorize,:only => [:edit_preprocess_settings, :update_preprocess_settings,
-                                                      :edit_dispatch_settings, :update_dispatch_settings,
-                                                      :edit_deliver_settings, :update_deliver_settings]
+#  before_filter :authorize,:only => [:edit_preprocess_settings, :update_preprocess_settings,
+#                                                      :edit_dispatch_settings, :update_dispatch_settings,
+#                                                      :edit_deliver_settings, :update_deliver_settings]
 
+  skip_before_filter :authenticate_user!, if: proc{|c| c.current_account && c.current_user.nil?}
   steps :admin_init, :data_fetch, :options_setup, :user_init
 
   def show
@@ -19,16 +20,19 @@ class AccountSetupsController < ApplicationController
   def update
     case step
     when :admin_init
-      user = User.new(params[:user])
-      user.password = SecureRandom.hex(3)
-      user.save
-      user.add_role(:admin)
-      Notifier.init_user_notifications(user.email, user.password, @account.id).deliver if user.email.present?
-      if user.phone.present?
+      @user = User.new(params[:user])
+      @user.accounts << current_account
+      @user.password = SecureRandom.hex(3)
+      (render_wizard; return) if !@user.save
+
+      @user.add_role(:admin)
+      Notifier.init_user_notifications(@user.email, @user.password, @account.id).deliver if @user.email.present?
+      if @user.phone.present?
         # USE SYSTEM SMS INTERFACE.
       end
       # CREATE SELLER IN ORDER TO SYNC STOCK FOR SOME REASON.
       current_account.settings[:wizard_step] = ""
+      sign_in @user # auto login after create admin user
     when :options_setup
       @account.settings.auto_settings = {'split_conditions' => {}, 'dispatch_conditions'=>{}, 'unusual_conditions'=>{}}
       @account.settings.auto_settings["auto_deliver"] = (params[:auto_deliver] == "on" ? 1 : nil )
@@ -63,7 +67,7 @@ class AccountSetupsController < ApplicationController
   # eg: http://magicorder.networking.io/account_setups/:id/data_fetch_finish
   def data_fetch_finish
     account = Account.find_by_id(params[:id] )
-    account.settings.init_data_ready = true if account
+    # account.settings.init_data_ready = true if account
     head :ok
   end
 

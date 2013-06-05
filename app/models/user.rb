@@ -168,4 +168,21 @@ class User < ActiveRecord::Base
         errors.add(:phone, "至少输入手机号或者邮箱")
      end  
   end
+
+
+  # override rolify , because right now , roles depend on accounts, not a uniq name
+  def add_role(role_name, resource = nil)
+    added_roles = []
+    accounts.each{|account|
+      role = account.roles.find_by_name(:admin)
+      if !roles.include?(role)
+        self.class.define_dynamic_method(role_name, resource) if Rolify.dynamic_shortcuts
+        self.class.adapter.add(self, role)
+        added_roles << role
+      end
+    }
+
+    added_roles
+  end
+
 end

@@ -25,11 +25,12 @@
           <li><a href="javascript:void(0)">设置系统登录用户</a></li>
         </ul>
         <div class="tab-content">
-          <%= simple_form_for User.new, url: account_setup_path, method: :put,
+          <%= simple_form_for @user||User.new, url: account_setup_path, method: :put,
             html: { class: 'form-horizontal', style: 'margin-top: 20px;'}, validate: false do |f| %>
             <div class='offset1'>
               <p>请设置管理员账户信息</p>
-              <p>再次登录系统，请直接输入你的邮箱和密码即可</p>
+              <p>系统将为您自动生成密码， 并发送到您的邮箱中，请确保您的邮箱正确。<br/>
+登录系统后，您可以在 "修改信息" 页面修改密码。</p>
             </div>
             <div class="clearfix">
               <%= f.input :email, label: '登录邮箱', placeholder: 'example@doorder.com' %>

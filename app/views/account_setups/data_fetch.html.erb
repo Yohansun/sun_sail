@@ -26,8 +26,7 @@
         </ul>
         <div class="tab-content">
           <fieldset>
-            <div 
-              style='display: <%= current_account.settings.init_data_ready == true ? "none" : "block" %>'>
+            <div>
               <label class="input-large">正在配置商品分类：</label>
               <div class="progress progress-info progress-striped active">
                 <div class="bar" style="width: 20%;margin-left:-20%"></div>
@@ -54,33 +53,15 @@
               <p class="js-data-next-step" style="display:none">
 
                   <%= f.button :submit, '下一步', :"data-disable-with" => '提交中...' %>
+                  <!--
                   <button type="button" id="custom_setting_btn"custom_setting_btn>自定义设置</button>
+                -->
 
 
               </p>
               <%end%>
             </div>
-            <div class="js-data-other-settings"
-              style='display: <%= current_account.settings.init_data_ready == true ? "block" : "none" %>'>
-              <div class="control-group">
-                <%=link_to "设置",accounts_path, :class=>"btn"%>
-                <p class="span6 nomargin">若你需要对店铺进行其他设置，请进入店铺基础设置调整</p>
-              </div>
-              <div class="control-group">
-                <%=link_to "设置",categories_path, :class=>"btn"%>
-                <p class="span6 nomargin">若你需要对商品分类进行其他设置，请进入商品基础设置调整</p>
-              </div>
-              <div class="control-group">
-                <%=link_to "设置","/stocks/safe_stock", :class=>"btn"%>
-                <p class="span6 nomargin">若你需要对仓库信息进行其他设置，请进入仓库基础设置调整</p>
-              </div>
-              <div class="control-group">
-                <%=link_to "设置",logistics_path, :class=>"btn"%>
-                <p class="span6 nomargin">若你需要对物流信息进行其他设置，请进入物流基础设置调整</p>
-              </div>
-                <p>
-                </p>
-            </div>
+
           </fieldset><!-- end -->
         </div><!-- tab-content end -->
       </div>
