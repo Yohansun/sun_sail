@@ -85,7 +85,21 @@
           </li>
 
           <li class="<%= "active" if params[:controller] == "areas" %>"><a href="/areas"  data-toggle="collapse" data-target="#areas_menu">地域管理</a></li>
-            </a></li>
+
+          <li class="<%= display?("notify","active")%>">
+            <a href="#"  data-toggle="collapse" data-target="#sms_email_menu">短信&邮件统计</a>
+            <ul id="sms_email_menu" class="collapse <%= display?("notify","in",["sms","email"]) %> third_menu">
+              <li class="<%= display?("notify","active",["sms"]) %>">
+                <a href="/notify/sms">手机短信</a>
+              </li>
+              <li class="<%= display?("notify","active",["email"]) %>">
+                <a href="/notify/email">邮件</a>
+              </li>
+            </ul>
+          </li>
+
+            </a>
+          </li>
         </ul>
     </li>
 

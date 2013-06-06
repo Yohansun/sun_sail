@@ -1,0 +1,9 @@
+__filename = "sms.xls"
+
+sheet1 = xls.create_worksheet
+
+sheet1.row(0).concat ["发送人", "手机号码", "发送主题", "发送内容", "发送时间"]
+
+@notifies.each_with_index do |p, i|
+  sheet1.update_row i+1, p.notify_sender, p.notify_contact, p.notify_theme, p.notify_content, p.notify_time.strftime("%Y-%m-%d %H:%M:%S")
+end
