@@ -103,7 +103,7 @@ class CustomTrade < Trade
   validates_length_of :cs_memo, maximum: 400, message: "内容过长"
   CH_EN_NUM_FORMAT = /^(\w|[\u4E00-\u9FA5])+$/
   validates :receiver_name, format: { with: CH_EN_NUM_FORMAT, message: "姓名格式不正确"}
-  validates :receiver_address, format: { with: CH_EN_NUM_FORMAT, message: "地址格式不正确"}
+  # validates :receiver_address, format: { with: CH_EN_NUM_FORMAT, message: "地址格式不正确"}
   MOBILE_FORMAT = /^(13[0-9]|15[012356789]|18[0236789]|14[57])[0-9]{8}$/
   validates :receiver_mobile, format: { with: MOBILE_FORMAT, message: "手机号格式不正确"}
   validates_length_of :receiver_phone, maximum: 15, message: "内容过长", allow_blank: true

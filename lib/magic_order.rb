@@ -101,6 +101,7 @@ MagicOrder::AccessControl.map do |map|
                                  "create_handmade_trade",
                                  "export_orders",
                                  "batch_export",
+                                 "batch_add_gift",
                                  "logistic_waybill",
                                  "seller",
                                  "cs_memo",

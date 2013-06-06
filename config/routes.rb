@@ -271,6 +271,9 @@ MagicOrders::Application.routes.draw do
   get "/trades/batch_deliver", to: 'trades#batch_deliver'
   get "/trades/batch_check_goods", to: 'trades#batch_check_goods'
   get "/trades/batch_export", to: 'trades#batch_export'
+  get "/trades/batch_add_gift", to: "trades#batch_add_gift"
+  get "/trades/verify_add_gift", to: "trades#verify_add_gift"
+  get "/trades/deliver_list", to: "trades#deliver_list"
   get "/deliver_bills/print_deliver_bill.:format", to: "deliver_bills#print_deliver_bill"
   get "/deliver_bills/:id/logistic_info", to: "deliver_bills#logistic_info"
   put "/deliver_bills/:id/split_invoice", to: "deliver_bills#split_invoice"
@@ -282,7 +285,7 @@ MagicOrders::Application.routes.draw do
   get "/deliver_bills/batch-print-logistic", to: 'deliver_bills#batch_print_logistic'
   get "/deliver_bills/setup_logistics", to: 'deliver_bills#setup_logistics'
 
-  # get "/trades/deliver_list", to: "trades#deliver_list"
+
   # get "/deliver_bills/setup_logistics", to: 'deliver_bills#setup_logistics'
 
   get "/logistic_rates", to: 'logistic_rates#index'

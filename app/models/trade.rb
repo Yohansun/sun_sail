@@ -159,6 +159,7 @@ class Trade
 
 
   validate :color_num_do_not_exist, :on => :update, :if => :color_num_changed?
+  validates_uniqueness_of :tid, message: "操作频率过大，请重试"
 
   before_update :set_has_color_info
   before_update :set_has_cs_memo

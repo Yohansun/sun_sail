@@ -381,6 +381,45 @@ class TradesController < ApplicationController
     render json: {isSuccess: true}
   end
 
+  def verify_add_gift
+    trades = Trade.where(:_id.in => params[:ids])
+    trades_added_gift = trades.where(:trade_gifts.elem_match => {num_iid: params[:num_iid].to_i, sku_id: (params[:sku_id] == "" ? nil : params[:sku_id].to_i)})
+    tids = trades_added_gift.all.map(&:tid).join(",") rescue nil
+    render json: {tids: tids}
+  end
+
+  def batch_add_gift
+    trades = Trade.where(:_id.in => params[:ids])
+    if params[:add_gifts]
+      params[:add_gifts].each do |key, value|
+        trades.each do |trade|
+          gift_tid_num = trade.trade_gifts.last.gift_tid.scan(/G[0-9]*/).first.delete("G").to_i rescue nil
+          if gift_tid_num.present?
+            value['gift_tid'] = trade.tid+"G"+(gift_tid_num + 1).to_s
+          else
+            value['gift_tid'] = trade.tid+"G1"
+          end
+          if value['has_main_trade'] == "true"
+            value['trade_id'] = trade._id
+            trade.gift_memo = params[:gift_memo]
+            fields = trade.fields_for_gift_trade
+            fields["tid"] = value['gift_tid']
+            fields["main_trade_id"] = value['trade_id']
+            gift_trade = CustomTrade.create(fields)
+            gift_trade.add_gift_order(value)
+          else
+            value['trade_id'] = ""
+            trade.add_gift_order(value)
+          end
+          trade.trade_gifts.create!(value)
+          trade.operation_logs.create(operated_at: Time.now, operation: params[:operation], operator_id: current_user.id, operator: current_user.name)
+        end
+      end
+    end
+
+    render json: {isSuccess: true}
+  end
+
   def seller_for_area
     trade = Trade.find params[:id]
     area = Area.find params[:area_id]
@@ -437,6 +476,12 @@ class TradesController < ApplicationController
       trade.save # this will trigger observer.
     end
     render json: {isSuccess: true}
+  end
+
+  def deliver_list
+    respond_to do |format|
+      format.json { render json: Trade.find(params[:ids]).to_json }
+    end
   end
 
   def recover
