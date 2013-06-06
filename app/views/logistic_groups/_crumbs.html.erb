@@ -1,0 +1,9 @@
+<ul class="breadcrumb" style="position:relative;">
+	<li><a href="/">Magic</a><span class="divider">/</span></li>
+	<li><a href="/users">系统设置</a><span class="divider">/</span></li>
+	<li><a href="/stocks/safe_stock">基础数据管理</a><span class="divider">/</span></li>
+	<li><a href="/logistic_groups">发货管理</a><span class="divider">/</span></li>
+	<% if params[:controller] == "logistic_groups" %>
+	  <li class='active'>发货拆分管理</li>
+	<% end %>
+</ul><!-- breadcrumb -->
