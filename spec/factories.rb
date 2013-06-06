@@ -66,6 +66,9 @@ FactoryGirl.define do
   factory :taobao_purchase_order do
   end
 
+  factory :message do
+  end
+
   factory :product do
     outer_id 'test'
     name 'test'

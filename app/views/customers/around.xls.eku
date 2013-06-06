@@ -1,0 +1,23 @@
+__filename = "回头顾客查询数据#{Time.now.strftime("%Y/%m/%d-%H:%M:%S")}.xls"
+sheet1 = xls.create_worksheet
+sheet1[0, 0] = "回头顾客查询数据"
+
+sheet1.row(1).concat ["顾客ID", "顾客姓名", "顾客手机", "顾客邮箱","购买商品/商品生命周期", "顾客地址-省", "顾客地址-市", "顾客地址-区", "顾客地址-地址"]
+
+@search.each_with_index  do |customer,index|
+sheet1.update_row index+2, 
+customer.name,
+customer.receiver_name,
+customer.receiver_mobile,
+customer.email,
+product_with_use_days(customer,@products).join(','),
+customer.receiver_state,
+customer.receiver_city,
+customer.receiver_district,
+customer.receiver_address
+end
+
+title_format = Spreadsheet::Format.new(:color => :blue, :weight => :bold, :size => 14)
+sheet1.row(0).set_format(0, title_format)
+bold = Spreadsheet::Format.new(:pattern_fg_color => :yellow, :weight => :bold)
+sheet1.row(1).default_format = bold

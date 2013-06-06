@@ -1,0 +1,8 @@
+<ul class="nav nav-tabs">
+  <% @nav = CustomersController::ACTIONS.dup.merge({:around => "回头顾客"}) %>
+  <% @nav.each do |action,name| %>
+  <li class="<%= params[:action].eql?(action.to_s) ? "active" : "" %>">
+    <a href="/customers/<%= action.to_s.gsub(/index/,'') %>"><%= name %></a>
+  </li>
+  <% end %>
+</ul>

@@ -30,7 +30,7 @@ zh-CN:
     errors:
       messages:
         blank:
-          "can't be blank"
+          "不能为空"
         blank_in_locale:
           "can't be blank in %{location}"
         ambiguous_relationship:
