@@ -84,6 +84,9 @@
                 <% if current_user.allow_read?(:products) %>
                 <li><%= link_to '商品管理', products_path, class: "products" %></li>
                 <% end %>
+                <%  if current_user.allow_read?(:customers) %>
+                <li><%= link_to '顾客管理', customers_path, class: "customers" %></li>
+                <% end %>
                 <!--
                 <% if current_user.allow_read?(:trades,:seller) %>
                 <li><#%= link_to '经销商管理', sellers_path %>
