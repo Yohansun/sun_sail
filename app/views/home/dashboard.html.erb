@@ -41,11 +41,16 @@
           </div>
         <#% end %>
       -->
-          <% if current_user.allow_read?(:products) %>
-            <div>
-              <a class="indexStart8" href="/products"><span>商品管理</span></a>
-            </div>
-          <% end %>
+        <% if current_user.allow_read?(:products) %>
+          <div>
+            <a class="indexStart8" href="/products"><span>商品管理</span></a>
+          </div>
+        <% end %>
+        <% if current_user.allow_read?(:customers) %>
+          <div>
+            <a class="indexStart6" href="/customers"><span>顾客管理</span></a>
+          </div>
+        <% end %>
           <!--
         <#% if current_user.allowed_to?("reconcile_statements","index") -%>
           <#% if current_account.settings.enable_module_reconcile_statements == true %>
