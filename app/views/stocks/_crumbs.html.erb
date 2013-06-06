@@ -1,0 +1,11 @@
+<ul class="breadcrumb" style="position:relative;">
+	<li><a href="/">Magic</a><span class="divider">/</span></li>
+	<li><a href="/users">系统设置</a><span class="divider">/</span></li>
+	<li><a href="/stocks/safe_stock">基础数据管理</a><span class="divider">/</span></li>
+	<li><a href="/stocks/safe_stock">仓库设置</a><span class="divider">/</span></li>
+	<% if params[:controller] == "stocks" && params[:action] =~ /safe_stock/ %>
+	  <li class='active'>安全库存管理</li>
+	<% elsif params[:controller] == "stocks" && params[:action] =~ /edit_depot/ %>
+	  <li class='active'>仓库编辑</li>
+	<% end %>
+</ul><!-- breadcrumb -->
