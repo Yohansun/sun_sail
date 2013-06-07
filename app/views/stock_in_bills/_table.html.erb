@@ -8,6 +8,7 @@
       <th>历史状态</th>
       <th>入库类型</th>
       <th>商品数量</th>
+      <th>实际入库</th>
       <th>商品总价</th>
     </tr>
   </thead>
@@ -21,6 +22,7 @@
         <%= render "operation", bill: bill%>
         <td><%= bill.stock_type_name %></td>
         <td><%= bill.bill_products_mumber %></td>
+        <td><%= bill.bill_products_real_mumber %></td>
         <td><%= bill.bill_products_price %></td>
       </tr>
     <%- end %>

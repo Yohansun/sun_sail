@@ -35,6 +35,7 @@ class StockBill
   field :logistic_id, type: Integer
 
   field :bill_products_mumber, type: Integer
+  field :bill_products_real_mumber, type: Integer
   field :bill_products_price, type: Float
 
   validates :op_name,:length => { :maximum => 50 }, :allow_blank => true
@@ -99,6 +100,7 @@ class StockBill
       bp.stock_product_id = stock_product.try(:id)
     end
     self.bill_products_mumber = bill_products.sum(:number)
+    self.bill_products_real_mumber = bill_products.sum(:real_number)
     self.bill_products_price = bill_products.sum(:total_price)
   end
 

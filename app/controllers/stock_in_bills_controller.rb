@@ -104,6 +104,7 @@ class StockInBillsController < ApplicationController
   def add_product
     @bill = StockInBill.find_by(account_id: current_account.id, id: params[:id]) rescue false
 
+    params[:product][:real_number] = params[:product][:number] if params[:product][:real_number].blank?
     if @bill.present?
       @tmp_products = @bill.bill_products
       @bill.bill_products.build(params[:product])

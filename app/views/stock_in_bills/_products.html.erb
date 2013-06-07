@@ -13,6 +13,7 @@
           <th width="">商品名称</th>
           <th width="">商品单价</th>
           <th width="">商品数量</th>
+          <th width="">实际入库</th>
           <th width="">商品总价</th>
         </tr>
       </thead>
@@ -25,6 +26,7 @@
           <td><%= product.title %></td>
           <td><%= product.price %></td>
           <td><%= product.number %></td>
+          <td><%= product.real_number %></td>
           <td><%= product.total_price %></td>
         </tr>
         <%- end %>

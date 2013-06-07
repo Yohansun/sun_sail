@@ -22,8 +22,6 @@ class TaobaoAppTokensController < ApplicationController
         source["name"] = source.delete("nick")
         trade_source.update_attributes(source)
       end  
-      account.settings.enable_token_error_notify = true
-      account.settings.auto_settings = {'split_conditions' => {}, 'dispatch_conditions'=>{}, 'unusual_conditions'=>{}}
       MagicOneHitFetcher.perform_async(account.id)
       redirect_to account_setups_path
     else

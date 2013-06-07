@@ -9,6 +9,7 @@ class BillProduct
   field :sku_id, type: Integer
   field :colors, type: Array
   field :number, type: Integer
+  field :real_number, type: Integer
   field :memo, type: String
   field :price, type: Float
   field :total_price, type: Float
