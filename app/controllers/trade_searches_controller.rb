@@ -5,18 +5,18 @@ class TradeSearchesController < ApplicationController
   # GET /trade_searches
   # GET /trade_searches.json
   def index
-    @trade_searches = TradeSearch.page(params[:page])
+    @trade_searches = TradeSearch.where(account_id:current_account.id).page(params[:page])
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: TradeSearch.all }
+      format.json { render json: TradeSearch.where(account_id:current_account.id).all }
     end
   end
 
   # GET /trade_searches/1
   # GET /trade_searches/1.json
   def show
-    @trade_search = TradeSearch.find(params[:id])
+    @trade_search = TradeSearch.where(account_id:current_account.id).find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -37,7 +37,7 @@ class TradeSearchesController < ApplicationController
 
   # GET /trade_searches/1/edit
   def edit
-    @trade_search = TradeSearch.find(params[:id])
+    @trade_search = TradeSearch.where(account_id:current_account.id).find(params[:id])
     render :partial=>"form" if request.xhr?
 
   end
@@ -46,7 +46,9 @@ class TradeSearchesController < ApplicationController
   # POST /trade_searches.json
   def create
     @trade_search = TradeSearch.new(params[:trade_search])
-
+    @trade_search.account_id = current_account.id
+    @trade_search.show_in_tabs = false
+    @trade_search.enabled = true
     respond_to do |format|
       if @trade_search.save
         format.html { redirect_to @trade_search, notice: 'Trade search was successfully created.' }
@@ -64,7 +66,7 @@ class TradeSearchesController < ApplicationController
   # PUT /trade_searches/1
   # PUT /trade_searches/1.json
   def update
-    @trade_search = TradeSearch.find(params[:id])
+    @trade_search = TradeSearch.where(account_id:current_account.id).find(params[:id])
 
     respond_to do |format|
       if @trade_search.update_attributes(params[:trade_search])
@@ -82,7 +84,7 @@ class TradeSearchesController < ApplicationController
   # DELETE /trade_searches/1
   # DELETE /trade_searches/1.json
   def destroy
-    @trade_search = TradeSearch.find(params[:id])
+    @trade_search = TradeSearch.where(account_id:current_account.id).find(params[:id])
     @trade_search.destroy
 
     respond_to do |format|
@@ -100,7 +102,7 @@ class TradeSearchesController < ApplicationController
 
   def deletes
     @ids = params[:ids].split(",")
-    TradeSearch.destroy_all(:id.in=>@ids)
+    TradeSearch.destroy_all(account_id:current_account.id,:id.in=>@ids)
     redirect_to :trade_searches
   end
 end
