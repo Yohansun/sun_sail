@@ -50,7 +50,7 @@
       <td><%= notif.notify_contact %></td>
       <td><%= notif.notify_theme %></td>
       <td>
-        <a href="javascript:void(0)" class="btn" data-toggle="popover" data-content="<%= notif.notify_content %>" title=''><%= "#{notif.notify_content[0, 30]}......" %></a>
+        <a href="javascript:void(0)" class="btn" data-toggle="popover" data-content="<%= notif.notify_content %>" style="width:300px;height:20px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;" title=''><%= "#{notif.notify_content}" %></a>
       </td>
       <td><%= notif.notify_time.strftime("%Y-%m-%d %H:%M:%S") %></td>
     </tr>
