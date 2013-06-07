@@ -21,10 +21,11 @@ class NotifyController < ApplicationController
 		hash_condition.update({:created_at.gt => @start_at}) if @start_at.present?
 		hash_condition.update({:created_at.lt => @end_at}) if @end_at.present?
 
-		@notifies = Notify.sms(current_account.id).any_of(key_word_condition).where(hash_condition).order_desc.page(params[:page])
-		@count = Notify.sms(current_account.id).any_of(key_word_condition).where(hash_condition).count
+		@notifys = Notify.sms(current_account.id).any_of(key_word_condition).where(hash_condition).order_desc
+		@notifies = @notifys.page(params[:page]).per(50)
+		@count = @notifys.count
 
-		respond_with @notifies
+		respond_with @notifys
   end
 
   def email
@@ -45,9 +46,10 @@ class NotifyController < ApplicationController
 		hash_condition.update({:created_at.gt => @start_at}) if @start_at.present?
 		hash_condition.update({:created_at.lt => @end_at}) if @end_at.present?
 
-		@notifies = Notify.email(current_account.id).any_of(key_word_condition).where(hash_condition).order_desc.page(params[:page])
-		@count = Notify.email(current_account.id).any_of(key_word_condition).where(hash_condition).count
+		@notifys = Notify.email(current_account.id).any_of(key_word_condition).where(hash_condition).order_desc
+		@notifies = @notifys.page(params[:page]).per(50)
+		@count = @notifys.count
 
-		respond_with @notifies
+		respond_with @notifys
   end
 end

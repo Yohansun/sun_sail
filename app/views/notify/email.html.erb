@@ -26,14 +26,14 @@
 		  </div>
 		</div>
 		<div class="span4">
-			<%= link_to '导出报表', notify_email_path(:format => :xls), :class => 'btn btn-success btn-small pull-right' %>
+			<%= link_to "导出报表","#",:onclick => "processChecked('#{notify_email_path(:search => params[:search],:format => :xls,:on => '?')}')", :class => 'btn btn-success btn-small pull-right'%>
 		</div>
 	</div>
 </div>
 
 <%= form_tag edit_with_role_users_path,:method => :post,:id => "edit_user" do %>
 
-<table class="table table-hover table-bordered table-striped table-condensed js-table">
+<table id="tb" class="table table-hover table-bordered table-striped table-condensed js-table">
   <thead>
     <tr>
       <th width="5%">发送人</th>
@@ -49,7 +49,9 @@
       <td><%= notif.notify_sender %></td>
       <td><%= notif.notify_contact %></td>
       <td><%= notif.notify_theme %></td>
-      <td><%= notif.notify_content %></td>
+      <td>
+        <a href="javascript:void(0)" class="btn" data-toggle="popover" data-content="<%= notif.notify_content %>" title=''><%= "#{notif.notify_content[0, 30]}......" %></a>
+      </td>
       <td><%= notif.notify_time.strftime("%Y-%m-%d %H:%M:%S") %></td>
     </tr>
     <% end %>
@@ -58,3 +60,21 @@
 <% end %>
 </div></div>
 <%= paginate @notifies %>
+
+<%= content_for :tail do %>
+  <script type="text/javascript">
+    function processChecked(full_url){
+      $(location).attr('href', full_url);
+    }
+
+    $(function() {
+        $('#tb tbody tr').each(function() {
+          var aobj = $(this).find("td").eq(3).find("a");
+          aobj.popover({
+              placement : 'left',
+              trigger : 'hover'
+          });
+        });
+    });
+  </script>
+<% end %>
