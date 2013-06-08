@@ -1,7 +1,4 @@
 <div class="container-fluid">
-
-  <%= render 'header' %>
-
   <div class="row-fluid">
     <ul class="breadcrumb" style="position:relative;">
       <li><a href="/">Magic</a><span class="divider">/</span></li>
@@ -10,7 +7,7 @@
       <li class="active">实时销售[<%= @sale.name %>]</li>
       <li style="position:absolute;right:15px;top:6px;"><%= link_to '设定', edit_sale_path %></li>
     </ul><!-- breadcrumb -->
-
+    <%= render 'header' %>
     <div class="progress progress-info progress-striped mar_t10">
       <div class="bar" id="progress_bar" style="width: <%= @progress_bar %>%"></div>
     </div>

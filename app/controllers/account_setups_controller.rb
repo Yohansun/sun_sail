@@ -102,7 +102,7 @@ class AccountSetupsController < ApplicationController
       @account.settings.auto_settings = current_settings
       @setting = @account.settings.auto_settings || {}
     end
-    render :edit_preprocess_settings
+    redirect_to :back
   end
 
   def update_dispatch_settings
@@ -111,7 +111,7 @@ class AccountSetupsController < ApplicationController
     current_settings.update(@setting)
     @account.settings.auto_settings = current_settings
     @setting = @account.settings.auto_settings || {}
-    render :edit_dispatch_settings
+    redirect_to :back
   end
 
   def update_deliver_settings
@@ -120,7 +120,7 @@ class AccountSetupsController < ApplicationController
     current_settings.update(@setting)
     @account.settings.auto_settings = current_settings
     @setting = @account.settings.auto_settings || {}
-    render :edit_deliver_settings
+    redirect_to :back
   end
 
   private

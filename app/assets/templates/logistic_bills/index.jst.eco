@@ -85,11 +85,11 @@
 
 <div class="row-fluid" id="main-top">
   <div class="affix">
-    <!-- <ul class="breadcrumb" style="position:relative;">
-      <li><a href="#">Magic</a><span class="divider">/</span></li>
-      <li><a href="#logistic_bills">物流单管理</a><span class="divider">/</span></li>
-      <li class="active trade_nav">全部物流单</li>
-    </ul> --><!-- breadcrumb -->
+    <ul class="breadcrumb" style="position:relative;">
+      <li><a href="/">Magic</a><span class="divider">/</span></li>
+      <li><a href="/app#trades">订单管理</a><span class="divider">/</span></li>
+      <li id='current_name'>物流单</li>
+    </ul><!-- breadcrumb -->
     <ul id='global-menus' class="nav nav-tabs">
       <li><a href="#" data-trade-mode="trades" data-trade-status="all">所有订单<em></em></a></li>
       <!-- <li><a href="#" data-trade-mode="trades" data-trade-status="default">待审核<em></em></a></li> -->
