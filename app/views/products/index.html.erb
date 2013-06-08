@@ -1,13 +1,13 @@
 <div class="container-fluid">
-
-  <ul class="nav nav-tabs affix">
+  <%= render partial: "layouts/all_crumbs" %>
+  <ul class="nav nav-tabs">
     <li class="active"><a href="/products">本地商品</a></li>
     <li><a href="/products/taobao_products">淘宝商品</a></li>
     <!-- <li><a href="#set_good" data-toggle="tab">套装</a></li>
     <li><a href="#active_goods" data-toggle="tab">活动商品</a></li> -->
   </ul><!-- nav-tabs -->
 
-  <%= simple_form_for "product", url: products_path, html: { method: "get", class: "well form-search form-horizontal font12", style: "margin-top:50px;"}, :wrapper => :search do |f| %>
+  <%= simple_form_for "product", url: products_path, html: { method: "get", class: "well form-search form-horizontal font12", style: "margin-top:-19px;"}, :wrapper => :search do |f| %>
     <fieldset class="form-inline mar_t5">
       <div class="pull-left mar_r10">
         <label class="pull-left"><code>精准：</code></label>

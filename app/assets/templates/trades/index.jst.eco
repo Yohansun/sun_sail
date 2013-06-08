@@ -2,9 +2,13 @@
   .timeEntry_control { vertical-align: middle; margin-left: -1px; margin-top: 0px; cursor: pointer; }
   * html .timeEntry_control { margin-top: -2px; }
 </style>
-
 <div class="row-fluid" id="main-top">
   <div class="affix">
+    <ul class="breadcrumb" style="position:relative;">
+      <li><a href="/">Magic</a><span class="divider">/</span></li>
+      <li><a href="/app#trades">订单管理</a><span class="divider">/</span></li>
+      <li id='current_name'>所有订单</li>
+    </ul><!-- breadcrumb -->
     <ul id='global-menus' class="nav nav-tabs">
       <li><a href="#" data-trade-mode="trades" data-trade-status="all">所有订单<em></em></a></li>
       <!-- <li><a href="#" data-trade-mode="trades" data-trade-status="default">待审核<em></em></a></li> -->

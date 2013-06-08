@@ -29,7 +29,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     'change #cols_filter input[type=checkbox]': 'filterTradeColumns'
 
     # 'click .deliver_bills li' : 'gotoDeliverBills'
-
+    
   initialize: ->
     @trade_type = MagicOrders.trade_type
     @identity = MagicOrders.role_key
@@ -82,6 +82,8 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
       else
         $(@el).find(".trade_count_info").append("<span id='bottom_line'><b>当前为最后一条订单</b></span>")
     $(@el).find('a[data-trade-mode='+MagicOrders.trade_mode+'][data-trade-status="'+MagicOrders.trade_type+'"]').parents('li').addClass('active')
+    name = $(@el).find('a[data-trade-mode='+MagicOrders.trade_mode+'][data-trade-status="'+MagicOrders.trade_type+'"]').text()
+    $(@el).find('#current_name').text(name)
     $(@el).find(".index_pops li").hide()
     for pop in MagicOrders.trade_pops[MagicOrders.trade_mode]
       if MagicOrders.role_key == 'admin'

@@ -1,0 +1,32 @@
+<ul class="breadcrumb" style="position:relative;">
+  <li><a href="/">Magic</a><span class="divider">/</span></li>
+  <% if params[:controller] == "stocks" %>
+    <li><a href="/stocks">仓库管理</a><span class="divider">/</span></li>
+    <li class='active'>库存查询</li>
+  <% elsif params[:controller] == "stock_in_bills" %>
+    <li><a href="/stocks">仓库管理</a><span class="divider">/</span></li>
+    <li class='active'>入库单</li>
+  <% elsif params[:controller] == "stock_out_bills" %>
+    <li><a href="/stocks">仓库管理</a><span class="divider">/</span></li>
+    <li class='active'>出库单</li>
+  <% elsif params[:controller] == "stock_bills" %>
+    <li><a href="/stocks">仓库管理</a><span class="divider">/</span></li>
+    <li class='active'>所有进销</li>
+  <% elsif params[:controller] == "products" %>
+    <li><a href="/products">商品管理</a><span class="divider">/</span></li>
+    <% if params[:action] =~ /taobao_products/  %>
+      <li class='active'>淘宝商品</li>
+    <% else %>
+      <li class='active'>本地商品</li>
+    <% end %>
+  <% elsif params[:controller] == "customers" %>
+    <li><a href="/customers">顾客管理</a><span class="divider">/</span></li>
+    <% if params[:action] =~ /paid/ %>
+      <li class='active'>购买顾客</li>
+    <% elsif params[:action] =~ /potential/ %>
+      <li class='active'>潜在顾客</li>
+    <% else %>
+      <li class='active'>所有顾客</li>
+    <% end %>
+  <% end %>
+</ul><!-- breadcrumb -->
