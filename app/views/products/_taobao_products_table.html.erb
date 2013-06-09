@@ -2,7 +2,7 @@
   <thead>
     <tr>
       <th width="5%"><!-- <input type="radio"> --></th>
-      <th width="10%">淘宝ID</th>
+      <th width="10%">淘宝数字ID</th>
       <th width="45%">淘宝商品名</th>
       <th width="15%">商品类目名称</th>
       <th width="15%">商品外部编码</th>
@@ -29,7 +29,7 @@
     <%- @products.each do |product| %>
     <tr id='product_<%= product.id %>'>
       <td><input class='taobao_product_check' name="taobao_product_radio" type="radio"></td>
-      <td><%= product.product_id %></td>
+      <td><%= product.num_iid %></td>
       <td><%= product.name %></td>
       <td><%= product.cat_name %></td>
       <td><%= product.outer_id %></td>

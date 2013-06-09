@@ -40,7 +40,7 @@ class Seller < ActiveRecord::Base
   enum_attr :has_stock, [["启用",true],["禁用",false]]
 
   attr_accessible :has_stock, :stock_opened_at,:mobile, :telephone, :cc_emails, :email, :pinyin, :interface, :fullname, :name,
-                  :parent_id, :address, :performance_score, :user_id,:stock_name,:stock_user_id
+                  :parent_id, :address, :performance_score, :user_id,:stock_name,:stock_user_id,:areas
 
   has_many :users
   has_many :sellers_areas

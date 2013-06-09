@@ -30,18 +30,12 @@ module MagicSearch
       [DateTime,Date,Time,Integer,Float].any? {|obj| (field_klass.try(:type) == obj) && (@search_value = to_mongoize(field_klass,search_value)) }
       @search_value = @search_type[:convert].call(@search_value) if @search_type[:convert].present?
       
-      if not_match?
-        @search_value = ""
-        return 
-      end
-      
       @search_value = @search_type[:to].blank? ? @search_value : {"#{@search_type[:to]}" => @search_value}
     end
     
     def build_condition(field_klass,relation_name,field_name)
       parse_value(field_klass)
       
-      return {} if not_match?
       if relation_name.blank?
         @result["#{field_name}"] = @search_value
       else
@@ -55,11 +49,6 @@ module MagicSearch
       return (search_value == "nil" ? nil : search_value) if mode =~ /_not_eq|eq/
       val = field_klass.mongoize(search_value) rescue ""
       val.nil? ? "" : val
-    end
-    
-    def not_match?
-      @search_value == "" ||
-      @search_value.is_a?(Array) && @search_value.join == ""
     end
   end
 end

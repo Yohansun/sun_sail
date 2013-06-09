@@ -13,14 +13,18 @@ class Customer
   
   accepts_nested_attributes_for :transaction_histories, :allow_destroy => true, :reject_if => proc { |obj| obj.blank? }
   validates_associated :transaction_histories
+
+  USE_DAYS = [
+    ["1-7天","1-7"],
+    ["7-15天","7-15"],
+    ["15-30天","15-30"]
+  ]
   
-  
-  include MagicEnum
-  enum_attr :exact_phrase, [
+  EXACT_PHRASE = [
     ["顾客ID","search[name_eq]"],
     ["联系电话","search[transaction_histories_receiver_mobile_eq]"],
     ["顾客邮箱","search[email_eq]"],
-    ["顾客地址","search[transaction_histories_receiver_address_eq]"]
+    ["顾客地址","search[transaction_histories_receiver_address_like]"]
   ]
   
   #潜在顾客->筛选所有未付款的订单

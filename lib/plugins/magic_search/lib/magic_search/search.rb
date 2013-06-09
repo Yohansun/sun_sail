@@ -5,6 +5,8 @@ module MagicSearch
     module ClassMethods
       include Group
       def search(searchs)
+        searchs ||= {}
+        searchs = searchs.reject{|x,y| y == ""}
         condition = Condition.new(self,searchs)
         where(condition.to_condition)
       end

@@ -1,13 +1,6 @@
 <div class="container-fluid">
   <div class="row-fluid">
-    <%= render partial: "layouts/all_crumbs" %>
-    <ul class="nav nav-tabs">
-      <% CustomersController::ACTIONS.each do |action,name| %>
-      <li class="<%= params[:action].eql?(action.to_s) ? "active" : "" %>">
-        <a href="/customers/<%= action.to_s.gsub(/index/,'') %>"><%= name %></a>
-      </li>
-      <% end %>
-    </ul>
+    <%= render "nav" %>
     <form ation="/trades_reports" class="well form-horizontal">
       <div class="control-group nomargin">
         <%= render :partial => "search",:locals => {:path => customers_path} %>

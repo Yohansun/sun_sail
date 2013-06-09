@@ -50,4 +50,10 @@ class TestMagicEnum < Minitest::Test
     assert_equal true, @bar.valid?
     assert_equal [], @bar.errors.full_messages
   end
+
+  def test_enum_element
+    @foo.status = 2
+    assert_equal false, @foo.status_1?
+    assert_equal true, @foo.status_2?
+  end
 end
