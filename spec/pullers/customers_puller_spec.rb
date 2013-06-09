@@ -16,7 +16,7 @@ describe CustomersPuller do
   def news_trades
     (9..21).each do |tid|
       name = tid < 11 ? "foo" : tid < 21 ? "bar" : tid < 31 ? "zes" : " "
-      FactoryGirl.create(:taobao_trade,account_id: vanward.id ,buyer_nick: name, tid: tid)
+      FactoryGirl.create(:taobao_trade,account_id: vanward.id ,buyer_nick: name, tid: tid,:status => "TRADE_NO_CREATE_PAY")
     end
   end
 
@@ -50,7 +50,7 @@ describe CustomersPuller do
 
     it "sync (指定account_id)" do
       news_trades
-      FactoryGirl.create(:taobao_trade,account_id: vanward.id ,buyer_nick: "zes", tid: "30")
+      FactoryGirl.create(:taobao_trade,account_id: vanward.id ,buyer_nick: "zes", tid: "30",:status => "TRADE_NO_CREATE_PAY")
       CustomersPuller.sync(vanward.id)
       Customer.count.should == 6
       customer = Customer.find_by(:account_id => vanward.id,:name => "zes")

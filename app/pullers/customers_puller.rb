@@ -47,6 +47,14 @@ class CustomersPuller
       TransactionHistory.fields.except("_id","_type").keys
     end
     
+    def transaction_history_attributes(taobao_trade)
+      attrs = taobao_trade.attributes.slice(*transaction_history_fields)
+      orders = taobao_trade.orders
+      products = orders.collect {|x| x.products}.flatten.compact
+      product_ids = products.collect {|x| x.id rescue nil}.compact
+      attrs.merge({"product_ids" => product_ids})
+    end
+
     def find_or_create(account_id=nil,news_trades,&block)
       news_trades.each do |taobao_trade|
         conditions = {:name => taobao_trade.buyer_nick}
@@ -54,10 +62,9 @@ class CustomersPuller
         customer = Customer.find_or_create_by(conditions)
         transaction_histories = customer.transaction_histories
         transaction_history = transaction_histories.find_by(:tid => taobao_trade.tid) rescue nil || customer.transaction_histories.build
+        transaction_history.attributes = transaction_history_attributes(taobao_trade)
 
-        transaction_history.attributes = taobao_trade.attributes.slice(*transaction_history_fields)
-
-        customers_attributes = parse_attributes(taobao_trade.attributes)
+        customers_attributes = parse_attributes(taobao_trade)
 
         customer.update_attributes(customers_attributes)
         
@@ -66,7 +73,8 @@ class CustomersPuller
       
     end
     
-    def parse_attributes(attrs)
+    def parse_attributes(taobao_trade)
+      attrs = taobao_trade.attributes
       {"buyer_nick" => "name","buyer_email" => "email"}.each_pair do |k,v|
         attrs[v] = attrs.delete(k)
       end

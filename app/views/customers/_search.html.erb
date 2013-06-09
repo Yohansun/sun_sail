@@ -13,6 +13,17 @@
       <button type="button pull-left" class="btn btn-info search" id="simple_search_button">筛选</button>
     </div>
   </div>
+
+  <% if params[:action] == "around" %>
+  <div class="control-group">
+    <label class="pull-left" for=""><code>生命周期：</code></label>
+    <div class="controls pull-left" style="height: auto">
+      <%= select_tag "use_days",options_for_select(Customer::USE_DAYS,params[:use_days]),:class => "input-medium pull-left",:id => "use_days",:include_blank => true %>
+      <!-- mutiple select -->
+      <!-- <span class="toggle-multiselect">&nbsp;</span> -->
+    </div>
+  </div>
+  <% else %>
   <div class="control-group">
     <label class="pull-left" for=""><code>状态：</code></label>
     <div class="controls pull-left" style="height: auto">
@@ -21,6 +32,7 @@
       <!-- <span class="toggle-multiselect">&nbsp;</span> -->
     </div>
   </div>
+  <% end %>
 
   <div class="control-group">
     <label class="pull-left"><code>时间：</code></label>

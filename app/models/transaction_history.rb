@@ -16,8 +16,11 @@ class TransactionHistory
   field :receiver_mobile   , type: String
   field :receiver_phone    , type: String
   field :account_id        , type: Integer
+  field :product_ids       , type: Array, default: []
+
   
   embedded_in :customer
   
   validates :tid, :presence => true,:uniqueness => true
+
 end

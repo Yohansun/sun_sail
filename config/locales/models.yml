@@ -2,8 +2,20 @@ zh-CN:
   activerecord:
     models:
       category: "商品分类"
+      message: "消息"
     
     attributes:
       category:
         use_days: "商品生命周期(天)"
-      
+
+
+  mongoid:
+    models:
+      message: "消息"
+
+    attributes:
+      message:
+        recipients: "收件人"
+        send_type: "发送方式"
+        title: "标题"
+        content: "发送内容"

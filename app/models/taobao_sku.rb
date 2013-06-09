@@ -14,8 +14,8 @@
 
 class TaobaoSku < ActiveRecord::Base
   attr_accessible :num_iid, :properties, :properties_name, :quantity, :taobao_product_id, :account_id, :sku_id
-  has_many :sku_bindings, dependent: :destroy
-  has_many :skus, through: :sku_bindings
+  has_many :sku_bindings,:include => :sku, dependent: :destroy
+  has_many :skus,:include => :product, through: :sku_bindings
   belongs_to :taobao_product
   belongs_to :account
 

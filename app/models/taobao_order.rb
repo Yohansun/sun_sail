@@ -62,6 +62,18 @@ class TaobaoOrder < Order
     taobao_sku.sku_bindings rescue []
   end
 
+  def skus
+    taobao_sku && taobao_sku.skus || []
+  end
+
+  def products
+    skus.map(&:product)
+  end
+
+  def categories
+    products.map(&:category)
+  end
+
   def package_info
     info = []
     sku_bindings.each do |binding|

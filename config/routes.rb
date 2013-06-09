@@ -6,6 +6,10 @@ MagicOrders::Application.routes.draw do
     collection do
       get :potential
       get :paid
+      get :around
+      get :send_messages
+      get :get_recipients
+      post :invoice_messages
     end
   end
 
