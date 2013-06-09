@@ -119,18 +119,21 @@ class ProductsController < ApplicationController
   def add_sku
     sku = OpenStruct.new({:id =>Time.now.strftime("%Y%m%d%k%M%S%L") }.merge!(params[:tmp_sku] || {}))
 
+    values = []
     params[:sku_property].each do |k,v|
       sku.sku_properties ||= []
       sku.sku_properties << OpenStruct.new(v.merge(:id => k))
+      values << CategoryPropertyValue.find(v["category_property_value_id"]).value
     end
-    sku.attributes = {"sku_properties_attributes" => params[:sku_property]}
+    sku.value = values * " | "
+    sku.attributes = {"sku_properties_attributes" => params[:sku_property]}.merge!(params[:tmp_sku] || {})
 
     @product = current_account.products.find_by_id params[:id]
 
     if @product.blank?
       @skus = current_user.settings.tmp_skus += Array.wrap(sku)
     else
-      Sku.create(:account_id => current_account.id,:product_id => params[:id],:sku_properties_attributes => params[:sku_property])
+      Sku.create(:code=>params[:tmp_sku][:code],:account_id => current_account.id,:product_id => params[:id],:sku_properties_attributes => params[:sku_property])
       @skus = @product.skus
     end
 

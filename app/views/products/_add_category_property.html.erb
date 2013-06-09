@@ -1,7 +1,15 @@
+<fieldset>
+<%if !category_properties.blank?%>
+  <div class="control-group">
+    <%= label_tag "sku_iid","SKU编码",:class => "control-label" %>
+    <label class="checkbox inline">
+        <%=text_field_tag "tmp_sku[code]"%>
+    </label>
+  </div>
+<%end%>
 <% category_properties.each do |category_property| %>
 <% value_type = category_property.value_type %>
 
-<fieldset>
   <div class="control-group">
     <%= label_tag "sku_property_name",category_property.name,:class => "control-label" %>
     <% category_property.values.each do |value| %>
@@ -10,6 +18,6 @@
     </label>
     <% end %>
   </div>
-  <fieldset>
 
 <% end if category_properties.present? %>
+  <fieldset>

@@ -9,7 +9,7 @@
       <% skus.each do |sku| %>
       <tr>
         <td><input type="checkbox" name="sku_ids[]" value="<%= sku.id %>"></td>
-        <td><%= sku.id %></td>
+        <td><%= sku.code %></td>
         <th><%= sku.value  %></th>
       </tr>
       <% end %>

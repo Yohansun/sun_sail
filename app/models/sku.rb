@@ -16,7 +16,7 @@
 class Sku < ActiveRecord::Base
   belongs_to :account
   attr_accessible :num_iid, :properties, :properties_name, :quantity, :sku_id,
-       :taobao_product_id, :account_id,:product_id, :sku_properties_attributes
+       :taobao_product_id, :account_id,:product_id, :sku_properties_attributes,:code
   belongs_to :product,:inverse_of => :skus
   has_many :sku_bindings, dependent: :destroy
   has_many :stock_products
