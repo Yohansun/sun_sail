@@ -8,14 +8,14 @@ class TestMagicEnum < Minitest::Test
   class Foo
     include MagicEnum
     attr_accessor :status
-    enum_attr :status, [["Open",1],["Close",2],["Reopen",3]]
+    enum_attr :status, [["Open",1],["Close",2],["Reopen",3],["Done","D"]]
   end
   
   class Bar
     include ActiveModel::Validations
     include MagicEnum
     attr_accessor :status
-    enum_attr :status, [["Open",1],["Close",2],["Reopen",3]]
+    enum_attr :status, [["Open",1],["Close",2],["Reopen",3],["Done","D"]]
   end
   
   def setup
@@ -24,11 +24,16 @@ class TestMagicEnum < Minitest::Test
   end
   
   def test_enum_attr
-    assert_equal [["Open",1],["Close",2],["Reopen",3]],Foo::STATUS
+    assert_equal [["Open",1],["Close",2],["Reopen",3],["Done","D"]],Foo::STATUS
   end
   
   def test_enum_values
-    assert_equal [1,2,3],Foo::STATUS_VALUES
+    assert_equal [1,2,3,"D"],Foo::STATUS_VALUES
+    @foo.status = 1
+    assert_equal true, @foo.status_1?
+    assert_equal false, @foo.status_2?
+    @foo.status = "D"
+    assert_equal true, @foo.status_d?
   end
   
   def test_enum_name
@@ -40,7 +45,7 @@ class TestMagicEnum < Minitest::Test
   def test_validate
     assert_equal false, @bar.valid?
     
-    assert_equal ["Status can't be blank", "Status is not included in the list"], @bar.errors.full_messages
+    assert_equal ["Status is not included in the list"], @bar.errors.full_messages
     
     @bar.status = 0
     assert_equal false, @bar.valid?
@@ -49,11 +54,5 @@ class TestMagicEnum < Minitest::Test
     @bar.status = 1
     assert_equal true, @bar.valid?
     assert_equal [], @bar.errors.full_messages
-  end
-
-  def test_enum_element
-    @foo.status = 2
-    assert_equal false, @foo.status_1?
-    assert_equal true, @foo.status_2?
   end
 end
