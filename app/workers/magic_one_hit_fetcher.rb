@@ -17,6 +17,7 @@ class MagicOneHitFetcher
       base_url = TradeSetting.base_url
       HTTParty.put("#{base_url}/account_setups/#{account_id}/data_fetch_finish")
     end  
+    CustomerFetch.perform_async
     account.settings.init_data_ready = true
   end  
 end
