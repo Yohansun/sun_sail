@@ -34,7 +34,7 @@ class TaobaoAppTokensController < ApplicationController
   protected
   def auth_hash
     # for development testing , you can access website entry by : http://127.0.0.1:3000/test_init
-    if Rails.env == 'development'
+    if params[:test_token] == "true" || Rails.env == 'development'
       ({
         "bianbian415"=>{
           'info'=>{
