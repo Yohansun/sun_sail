@@ -1,3 +1,4 @@
+#encoding: utf-8
 require 'minitest'
 require 'minitest/autorun'
 require 'magic_enum'
@@ -14,8 +15,9 @@ class TestMagicEnum < Minitest::Test
   class Bar
     include ActiveModel::Validations
     include MagicEnum
-    attr_accessor :status
+    attr_accessor :status,:published
     enum_attr :status, [["Open",1],["Close",2],["Reopen",3],["Done","D"]]
+    enum_attr :published,[["公开",1],["私人",2]],:not_valid => true
   end
   
   def setup
@@ -54,5 +56,11 @@ class TestMagicEnum < Minitest::Test
     @bar.status = 1
     assert_equal true, @bar.valid?
     assert_equal [], @bar.errors.full_messages
+  end
+
+  def test_not_validate
+    @bar.status = 1
+    assert_equal true,@bar.valid?
+    assert_equal nil,@bar.published_name
   end
 end
