@@ -7,7 +7,7 @@ class WangwangDataReprocess
     start_date ||= (Time.now - 1.day).to_date
     end_date ||= (Time.now - 1.day).to_date
     if WangwangReplyState.all.map(&:reply_date).include?(start_date.to_s.to_time.to_i)
-      p "delete_all"
+#      p "delete_all"
       WangwangMemberContrast.delete_all
     end
     (start_date..end_date).each do |day|
@@ -16,7 +16,7 @@ class WangwangDataReprocess
       WangwangPuller.new.get_wangwang_data(start_time, end_time)
       start_time = day.to_time.beginning_of_day.strftime("%Y-%m-%d %H:%M:%S")
       end_time = day.to_time.end_of_day.strftime("%Y-%m-%d %H:%M:%S")
-      p "start member_brief_info"
+#      p "start member_brief_info"
       WangwangPuller.new.get_wangwang_data(start_time, end_time)
       member_brief_info(start_time.to_time, end_time.to_time)
     end
@@ -25,7 +25,7 @@ class WangwangDataReprocess
   def member_brief_info(start_date, end_date)
     start_time = start_date - 8.hours
     end_time = end_date - 8.hours
-    p "chatlog_filter"
+#    p "chatlog_filter"
     WangwangChatlog.where(special_log: true).each do |log|
       log.chatlog_filter
     end
@@ -35,7 +35,7 @@ class WangwangDataReprocess
     inquired_today = WangwangChatpeer.where(date: today).map(&:buyer_nick).uniq
     inquired_today_yesterday = WangwangChatpeer.where(:date.in => [today, yesterday]).map(&:buyer_nick).uniq
 
-    p "start_reprocessing"
+#    p "start_reprocessing"
     yesterday_created_trades = TaobaoTrade.where(:buyer_nick.in => inquired_today_yesterday).where(:created.gte => start_time, :created.lt => end_time)
     daily_created_trades = TaobaoTrade.where(:buyer_nick.in => inquired_today).where(:created.gte => start_time, :created.lt => end_time)
     tomorrow_created_trades = TaobaoTrade.where(:buyer_nick.in => inquired_today).where(:created.gte => start_time, :created.lt => (end_date + 1.day))
@@ -45,8 +45,8 @@ class WangwangDataReprocess
     daily_paid_trades = TaobaoTrade.where(:pay_time.gte => start_time, :pay_time.lt => end_time)
 
     WangwangMember.all.each_with_index do |m, i|
-      p i
-      p m.user_id
+#      p i
+#      p m.user_id
       # next if m.user_id != "立邦漆官方旗舰店:千色"
       #当日接待
       daily_reply_count = WangwangReplyState.where(user_id: m.service_staff_id).where(reply_date: today).sum(:reply_num) || 0
@@ -147,7 +147,7 @@ class WangwangDataReprocess
         daily_others_paid_count:       daily_others_paid_count,
         daily_others_paid_payment:     daily_others_paid_payment)
     end
-    p "process_end"
+#    p "process_end"
   end
 
   def chatlog_query(trades, user_id, time_status)
@@ -158,10 +158,10 @@ class WangwangDataReprocess
       #在谈话中动作
       clert_chatlog = chatlogs.where(buyer_nick: trade.buyer_nick).where(:start_time.lte => trade[time_status], :end_time.gt => trade[time_status])
       if clert_chatlog.count == 1 && user_id == clert_chatlog.first.user_id
-        p trade[time_status]
+#        p trade[time_status]
         tids << trade.tid
-        p "^^^^^^^^^^^^^^^^^^^"
-        p trade.tid
+#        p "^^^^^^^^^^^^^^^^^^^"
+#        p trade.tid
       elsif clert_chatlog.count > 1
         max_time = 0
         id = ''
@@ -172,10 +172,10 @@ class WangwangDataReprocess
           end
         end
         if user_id == id
-          p trade[time_status]
+#          p trade[time_status]
           tids << trade.tid
-          p "%%%%%%%%%%%%%%%%%%%%%"
-          p trade.tid
+#          p "%%%%%%%%%%%%%%%%%%%%%"
+#          p trade.tid
         end
       end
 
@@ -189,11 +189,11 @@ class WangwangDataReprocess
         clert_chatlog = chatlogs.where(buyer_nick: trade.buyer_nick).where(:end_time.gte => (trade[time_status] - 2.days), :end_time.lt => trade[time_status])
         if clert_chatlog.count == 1 && user_id == clert_chatlog.first.user_id
           tids << trade.tid
-          p clert_chatlog.first.start_time
-          p clert_chatlog.first.end_time
-          p trade[time_status]
-          p "~~~~~~~~~~~~~~~~~~~~~~~"
-          p trade.tid
+#          p clert_chatlog.first.start_time
+#          p clert_chatlog.first.end_time
+#          p trade[time_status]
+#          p "~~~~~~~~~~~~~~~~~~~~~~~"
+#          p trade.tid
         elsif clert_chatlog.count > 1
           min_gap = 172800  #two days
           id = ''
@@ -205,8 +205,8 @@ class WangwangDataReprocess
           end
           if user_id == id
             tids << trade.tid
-            p "!!!!!!!!!!!!!!!!!!!!!!"
-            p trade.tid
+#            p "!!!!!!!!!!!!!!!!!!!!!!"
+#            p trade.tid
           end
         end
       end

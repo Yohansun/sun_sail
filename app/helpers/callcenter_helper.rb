@@ -36,7 +36,7 @@ module CallcenterHelper
 
     contrast_info = WangwangMemberContrast.between(created_at: start_at..end_at).map_reduce(map, reduce).out(inline: true)
     #contrast_info = WangwangMemberContrast.between(created_at: ("2012-11-22").to_time(:local)..("2012-11-23").to_time(:local)).map_reduce(map, reduce).out(inline: true)
-    p contrast_info
+#    p contrast_info
   end
 
   def inquired_and_created_contrast(start_at, end_at)
@@ -75,7 +75,7 @@ module CallcenterHelper
     }
 
     contrast_info = WangwangMemberContrast.between(created_at: start_at..end_at).map_reduce(map, reduce).out(inline: true)
-    p contrast_info
+#    p contrast_info
   end
 
   def created_and_paid_contrast(start_at, end_at)
@@ -120,7 +120,7 @@ module CallcenterHelper
     }
 
     contrast_info = WangwangMemberContrast.between(created_at: start_at..end_at).map_reduce(map, reduce).out(inline: true)
-    p contrast_info
+#    p contrast_info
   end
 
   def followed_paid_contrast(start_at, end_at)
@@ -165,6 +165,6 @@ module CallcenterHelper
     }
 
     contrast_info = WangwangMemberContrast.between(created_at: start_at..end_at).map_reduce(map, reduce).out(inline: true)
-    p contrast_info
+#    p contrast_info
   end
 end

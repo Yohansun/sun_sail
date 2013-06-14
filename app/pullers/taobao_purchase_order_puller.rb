@@ -38,7 +38,7 @@ class TaobaoPurchaseOrderPuller
           break
         end
 
-        p "starting create_orders: since #{range_begin}"
+#        p "starting create_orders: since #{range_begin}"
 
         break unless response['fenxiao_orders_get_response']
         total_results = response['fenxiao_orders_get_response']['total_results']
@@ -74,7 +74,7 @@ class TaobaoPurchaseOrderPuller
           end
           trade.set_has_onsite_service
           purchase_order.save
-          p "create TaobaoPurchaseOrder  #{trade['fenxiao_id']}"
+#          p "create TaobaoPurchaseOrder  #{trade['fenxiao_id']}"
           $redis.sadd('TaobaoPurchaseOrderTids', trade['fenxiao_id'])
 
           # if account.settings.auto_settings["auto_split"]
@@ -133,7 +133,7 @@ class TaobaoPurchaseOrderPuller
             page_no: page_no, page_size: 50}, trade_source_id
           )
 
-          p "starting update_orders: since #{range_begin}"
+#          p "starting update_orders: since #{range_begin}"
 
           if response['error_response']
             Notifier.puller_errors(response['error_response'], account_id).deliver
@@ -185,7 +185,7 @@ class TaobaoPurchaseOrderPuller
 
               # 拆分订单
               # TradeSplitter.new(local_trade).split!
-              p "update TaobaoPurchaseOrder  #{trade['fenxiao_id']}"
+#              p "update TaobaoPurchaseOrder  #{trade['fenxiao_id']}"
             end
           end
 

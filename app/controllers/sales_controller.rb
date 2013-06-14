@@ -125,8 +125,8 @@ class SalesController < ApplicationController
     begin
       current_paid = enum_paid.next
       current_created = enum_created.next
-      p current_paid
-      p current_created
+#      p current_paid
+#      p current_created
       while(1)
         if current_created["_id"] == current_paid["_id"]
           @final_hash[current_created["_id"].to_time] = current_created["value"].merge(current_paid["value"])
@@ -161,7 +161,7 @@ class SalesController < ApplicationController
       rescue StopIteration
     end
 
-    p created_map_reduce.count
+#    p created_map_reduce.count
 
     @progress_bar = (@amount_paid/@sale.earn_guess*100).to_i
     Rails.cache.write 'amount_all', @amount_all

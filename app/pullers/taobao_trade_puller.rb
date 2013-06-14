@@ -30,10 +30,10 @@ class TaobaoTradePuller
           page_no: page_no, page_size: 40}, trade_source_id
           )
 
-        p "starting create_orders: since #{start_time}"
+#        p "starting create_orders: since #{start_time}"
 
         unless response['trades_sold_get_response']
-          p response
+#          p response
           Notifier.puller_errors(response, account_id).deliver
           break
         end
@@ -71,7 +71,7 @@ class TaobaoTradePuller
           trade.set_has_onsite_service
           trade.save
 
-          p "create trade #{trade['tid']}"
+#          p "create trade #{trade['tid']}"
           $redis.sadd('TaobaoTradeTids',trade['tid'])
           TradeTaobaoMemoFetcher.perform_async(trade.tid)
           TradeTaobaoPromotionFetcher.perform_async(trade.tid)
@@ -127,7 +127,7 @@ class TaobaoTradePuller
         has_next = true
         while has_next
           has_next = false
-           p "starting update_orders: since #{range_begin}"
+#           p "starting update_orders: since #{range_begin}"
           response = TaobaoQuery.get({:method => 'taobao.trades.sold.increment.get',
             :fields => 'total_fee, tid, status, adjust_fee, post_fee, receiver_name, pay_time, end_time, receiver_state, receiver_city, receiver_district, receiver_address, receiver_zip, receiver_mobile, receiver_phone, buyer_nick, title, type, point_fee, modified, alipay_id, alipay_no, alipay_url, shipping_type, buyer_obtain_point_fee, cod_fee, cod_status, commission_fee, consign_time, received_payment, payment, timeout_action_time, has_buyer_message, real_point_fee, orders',
             :start_modified => range_begin.strftime("%Y-%m-%d %H:%M:%S"),
@@ -140,7 +140,7 @@ class TaobaoTradePuller
           page_no += 1
 
           unless response['trades_sold_increment_get_response']
-            p response
+#            p response
             Notifier.puller_errors(response, account_id).deliver
             break
           end
@@ -171,7 +171,7 @@ class TaobaoTradePuller
                 DelayAutoDispatch.perform_in((result == true ? account.settings.auto_settings['dispatch_silent_gap'].to_i.hours : result), local_trade.id)
               end
               TradeTaobaoMemoFetcher.perform_async(local_trade.tid)
-              p "update trade #{trade['tid']}"
+#              p "update trade #{trade['tid']}"
             end
           end
           #同步本地顾客管理下面的"副本订单"
@@ -209,10 +209,10 @@ class TaobaoTradePuller
           page_no: page_no, page_size: 40}, trade_source_id
           )
 
-        p "starting update_orders: since #{start_time}"
+#        p "starting update_orders: since #{start_time}"
 
         unless response['trades_sold_get_response']
-          p response
+#          p response
           break
         end
 
@@ -243,7 +243,7 @@ class TaobaoTradePuller
               DelayAutoDispatch.perform_in((result == true ? account.settings.auto_settings['dispatch_silent_gap'].to_i.hours : result), local_trade.id)
             end
             TradeTaobaoMemoFetcher.perform_async(local_trade.tid)
-            p "update trade #{trade['tid']}"
+#            p "update trade #{trade['tid']}"
           end
         end
 

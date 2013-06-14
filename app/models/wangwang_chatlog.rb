@@ -19,10 +19,10 @@ class WangwangChatlog
 
   def adjust_self_buyer
   	if WangwangMember.all.map(&:user_id).include?(self.buyer_nick)
-      p self._id
-      p "adjust_self_buyer"
-      p self.special_log = true
-      p WangwangChatlogSetting.first.self_buyer_filter ? self.usable = false : self.usable = true
+#      p self._id
+#      p "adjust_self_buyer"
+#      p self.special_log = true
+#      p WangwangChatlogSetting.first.self_buyer_filter ? self.usable = false : self.usable = true
       self.save
     end
   end
@@ -30,9 +30,9 @@ class WangwangChatlog
   def adjust_wangwang_account
     WangwangChatlogSetting.first.wangwang_list.keys.each do |key|
       if WangwangMember.where(_id: key).first.user_id == self.buyer_nick
-        p self._id
-        p "adjust_wangwang_account"
-        p WangwangChatlogSetting.first.wangwang_account_filter ? self.usable = false : self.usable = true
+#        p self._id
+#        p "adjust_wangwang_account"
+#        p WangwangChatlogSetting.first.wangwang_account_filter ? self.usable = false : self.usable = true
         self.save
         break
       end
@@ -42,10 +42,10 @@ class WangwangChatlog
   def adjust_ad
     self.wangwang_chatmsgs.each do |msg|
       if WangwangChatlogSetting.first.ad_msg == msg.content && self.wangwang_chatmsgs.count < WangwangChatlogSetting.first.ad_chat_length
-        p self._id
-        p "adjust_ad"
-        p self.special_log = true
-        p WangwangChatlogSetting.first.ad_filter ? self.usable = false : self.usable = true
+#        p self._id
+#        p "adjust_ad"
+#        p self.special_log = true
+#        p WangwangChatlogSetting.first.ad_filter ? self.usable = false : self.usable = true
         self.save
         break
       end
@@ -55,10 +55,10 @@ class WangwangChatlog
   def adjust_main_account
     self.wangwang_chatmsgs.each do |msg|
       if WangwangChatlogSetting.first.main_account_msg == msg.content
-        p self._id
-        p "adjust_main_account"
-        p self.special_log = true
-        p WangwangChatlogSetting.first.main_account_filter ? self.usable = false : self.usable = true
+#        p self._id
+#        p "adjust_main_account"
+#        p self.special_log = true
+#        p WangwangChatlogSetting.first.main_account_filter ? self.usable = false : self.usable = true
         self.save
         break
       end
@@ -67,10 +67,10 @@ class WangwangChatlog
 
   def adjust_one_word
     if self.wangwang_chatmsgs.where(direction: 1).count == 1 && self.wangwang_chatmsgs.count < WangwangChatlogSetting.first.one_word_chat_length
-      p self._id
-      p "adjust_one_word"
-      p self.special_log = true
-      p WangwangChatlogSetting.first.one_word_filter ? self.usable = false : self.usable = true
+#      p self._id
+#      p "adjust_one_word"
+#      p self.special_log = true
+#      p WangwangChatlogSetting.first.one_word_filter ? self.usable = false : self.usable = true
       self.save
     end
   end
@@ -78,10 +78,10 @@ class WangwangChatlog
   def adjust_mass_msg
   	self.wangwang_chatmsgs.each do |msg|
   	  if (/^@/ =~ msg.content) == 0
-        p self._id
-        p "adjust_mass_msg"
+#        p self._id
+#        p "adjust_mass_msg"
       	p self.special_log = true
-        p WangwangChatlogSetting.first.mass_msg_filter ? self.usable = false : self.usable = true
+#        p WangwangChatlogSetting.first.mass_msg_filter ? self.usable = false : self.usable = true
         self.save
         break
       end
@@ -90,10 +90,10 @@ class WangwangChatlog
 
   def adjust_wangwang_solo
     if self.wangwang_chatmsgs.where(direction: 0).count == self.wangwang_chatmsgs.count
-      p self._id
-      p "adjust_wangwang_solo"
-      p self.special_log = true
-      p WangwangChatlogSetting.first.wangwang_solo_filter ? self.usable = false : self.usable = true
+#      p self._id
+#      p "adjust_wangwang_solo"
+      self.special_log = true
+      WangwangChatlogSetting.first.wangwang_solo_filter ? self.usable = false : self.usable = true
       self.save
     end
   end

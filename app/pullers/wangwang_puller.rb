@@ -13,7 +13,7 @@ class WangwangPuller
   private
 
   def chatpeers_get(start_date = nil, end_date = nil, service_staff_ids = nil)
-    p "start chatpeers_get"
+#    p "start chatpeers_get"
     start_date ||= START_DATE
     end_date ||= END_DATE
 
@@ -26,8 +26,8 @@ class WangwangPuller
         start_date: start_date,
         end_date: end_date
       )
-      p response
-      p i
+#      p response
+#      p i
 
       if response['chatpeers_get_response'].present? && response['chatpeers_get_response']['ret'] = "10000"
         count = response['chatpeers_get_response']['count']
@@ -47,7 +47,7 @@ class WangwangPuller
   end 
 
   def chatlog_get(start_date = nil, end_date = nil,  service_staff_ids = nil)
-    p "start chatlog_get"
+#    p "start chatlog_get"
     start_date ||= START_DATE
     end_date ||= END_DATE
     from_ids ||= WangwangMember.all.map &:service_staff_id
@@ -64,8 +64,8 @@ class WangwangPuller
             start_date: start_date,
             end_date: end_date
           )
-          p response
-          p i
+#          p response
+#          p i
           if response['chatlog_get_response'].present? && response['chatlog_get_response']['ret'] = "10000"
             count = response['chatlog_get_response']['count']
             if response['chatlog_get_response']['msgs'].present? && response['chatlog_get_response']['msgs']['msg'].present?
@@ -104,7 +104,7 @@ class WangwangPuller
     
   # 服务提供时间（7:00:00-24:00:00）
   def receivenum_get(start_date = nil, end_date = nil, service_staff_ids = nil)
-    p "start receivenum_get"
+#    p "start receivenum_get"
     start_date ||= START_DATE
     end_date ||= END_DATE 
 
@@ -118,7 +118,7 @@ class WangwangPuller
         start_date: start_date,
         end_date: end_date
       )
-      p response
+#      p response
       response = response['wangwang_eservice_receivenum_get_response']
       next unless response
       response = response['reply_stat_list_on_days']

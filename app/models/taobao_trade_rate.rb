@@ -71,7 +71,7 @@ class TaobaoTradeRate < ActiveRecord::Base
             csv << [tid, order_created, seller_name, state, city, title, result, content, rate_created, buyer_nick]
           end
         else
-          p "#{tid} not found!"
+#          p "#{tid} not found!"
         end
       end
     end

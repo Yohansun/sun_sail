@@ -17,7 +17,7 @@ class JingdongTradePuller
         end_time = Time.now
       end
   
-      p "starting create_orders: since #{start_time}" 
+#      p "starting create_orders: since #{start_time}" 
         
       order_states = 'WAIT_SELLER_DELIVERY,WAIT_SELLER_STOCK_OUT,WAIT_GOODS_RECEIVE_CONFIRM,FINISHED_L,TRADE_CANCELED'
       begin 
@@ -53,12 +53,12 @@ class JingdongTradePuller
             if trade.order_remark.blank? && (trade.order_state == "WAIT_SELLER_DELIVERY" || trade.order_state == "WAIT_SELLER_STOCK_OUT")
               trade.update_attributes(seller_id: default_seller_id, dispatched_at: Time.now)
             end
-            p "created new order #{t['order_id']}"
+#            p "created new order #{t['order_id']}"
           else
             trade = JingdongTrade.where(tid: t['order_id']).first
             return unless trade
             trade.update_attributes(order_state: t['order_state'], order_state_remark: t['order_state_remark'], order_end_time: t['order_end_time'])
-            p "exist order #{t['order_id']}"          
+#            p "exist order #{t['order_id']}"          
           end
         end
         page_no += 1

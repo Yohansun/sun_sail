@@ -53,7 +53,7 @@ class Area < ActiveRecord::Base
       method: "taobao.logistics.address.search",
       fields: 'addresses'},nil
     )
-    p response
+#    p response
   end  
 
   def self.sync_from_taobao
@@ -88,9 +88,9 @@ class Area < ActiveRecord::Base
     lines = open(File.join(Rails.root, 'tmp', 'areas.csv')).readlines.map { |e| e.strip.split(",") }
     lines.each do |row|
       city = row[1]
-      p city
-      p city.size
-      p city[1]
+#      p city
+#      p city.size
+#      p city[1]
       if city.size < 3 && city[1] != '市'
         city = city + '市'
       end

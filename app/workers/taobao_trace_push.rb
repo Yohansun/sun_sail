@@ -25,7 +25,7 @@ class TaobaoLogisticsTracePush
       }, trade.try(:trade_source_id)
     )
     
-    p response
+#    p response
 
     if response['logistics_ordertrace_push_response']
       code = response['logistics_ordertrace_push_response']['shipping']['is_success']
