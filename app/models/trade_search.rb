@@ -6,8 +6,8 @@ class TradeSearch
   ENABLED_TRUE = true
   ENABLED_FALSE = false
 
-  enum_attr :enabled,[["启用",ENABLED_TRUE],["禁用",ENABLED_FALSE]]
-  enum_attr :show_in_tabs,[["是",true],["否",false]]
+  enum_attr :enabled,[["启用",ENABLED_TRUE],["禁用",ENABLED_FALSE]],:not_valid => true
+  enum_attr :show_in_tabs,[["是",true],["否",false]],:not_valid => true
 
 
 
