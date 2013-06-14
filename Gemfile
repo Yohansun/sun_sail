@@ -31,7 +31,7 @@ group :test, :development do
   gem "rspec-rails"
   gem 'rb-fsevent', '~> 0.9.1'
   gem 'database_cleaner'
-  gem 'factory_girl_rails'
+  gem 'factory_girl_rails',:require => false
   gem 'faker'
   gem "shoulda-matchers"
   gem 'webrat'

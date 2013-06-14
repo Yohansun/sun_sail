@@ -1,5 +1,5 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
-ENV["RAILS_ENV"] ||= 'test'
+ENV["RAILS_ENV"] = 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 require 'rspec/autorun'
@@ -18,6 +18,7 @@ Spork.prefork do
   Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 
   RSpec.configure do |config|
+    require 'factory_girl_rails'
     config.mock_with :rspec
     # ## Mock Framework
     #
@@ -48,13 +49,14 @@ Spork.prefork do
 end
 
 Spork.each_run do
+  require 'factory_girl_rails'
+
   if ENV['DRB']
     require 'simplecov'
     SimpleCov.start 'rails'
   end
-#  # reload factories
-#    Factory.definition_file_paths = [
-#      File.join(Rails.root, 'spec', 'factories')
-#    ]
-#    Factory.find_definitions
+# reload factories
+# FactoryGirl.definition_file_paths = [File.join(Rails.root, 'spec', 'factories')]
+  FactoryGirl.factories.clear
+  FactoryGirl.reload
 end
