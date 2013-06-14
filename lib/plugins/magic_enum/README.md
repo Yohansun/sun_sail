@@ -10,6 +10,7 @@ Learn to use a quick way to look at the following:
           # If not have include ActiveModel::Validations
           include ActiveModel::Validations  # will be automatic verification.
           enum_attr :status,[["Open",1],["Close",2],["ReOpen",3],["Done","D"]]
+          enum_attr :published,[["公开",1],["私人",2],:not_valid => true
         end
         
         @foo = Foo.new
@@ -21,3 +22,5 @@ Learn to use a quick way to look at the following:
         @foo.status = "D"
         @foo.status_d?        # => true
         Foo::STATUS           # => [["Open",1],["Close",2],["ReOpen",3],["Done","D"]]
+        @bar = Foo.new
+        @bar.valid?           # => true

@@ -5,7 +5,11 @@ module MagicEnum
   end
 
   module ClassMethods
+    ## enum_attr :status , [["Open",0],[,"Close",1],["ReOpen",2]],:not_valid => true
+    ## :not_valid  true 不使用验证  默认false
     def enum_attr(*args)
+      options = {:not_valid => false}
+      options.merge!(args.pop) if args.last.is_a?(Hash)
       raise ArgumentError, "You have to supply at least two format like :attr_name,[['China',1],.....]" if args.empty?
 
       _attr = args.shift
@@ -23,7 +27,7 @@ module MagicEnum
         silence_warnings {const_set(name,val)} if !const_defined?(name) || val != const_get(name)
       end
 
-      if respond_to?(:validates)
+      if respond_to?(:validates) && !options[:not_valid]
         validates_presence_of   _attr.to_sym  , :if => proc { respond_to?(:columns_hash) && self.columns_hash[_attr.to_s].type == :boolean }
         validates_inclusion_of  _attr.to_sym  , :in => const_get(const_value)
       end
