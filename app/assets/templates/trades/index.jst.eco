@@ -10,6 +10,7 @@
       <li id='current_name'>所有订单</li>
     </ul><!-- breadcrumb -->
     <ul id='global-menus' class="nav nav-tabs">
+      <li><a href="#" data-trade-mode="trades" data-trade-status="my_trade">我的订单<em></em></a></li>
       <li><a href="#" data-trade-mode="trades" data-trade-status="all">所有订单<em></em></a></li>
       <!-- <li><a href="#" data-trade-mode="trades" data-trade-status="default">待审核<em></em></a></li> -->
       <li><a href="#" data-trade-mode="trades" data-trade-status="undispatched">待分派<em></em></a></li>
@@ -176,7 +177,7 @@
           <th data-col='invoice_value'>开票金额</th>
           <th data-col='invoice_date'>完成日期</th>
           <!-- <th data-col='order_split'>拆分</th> -->
-          <!-- <th data-col='operator'>操作人</th> -->
+          <th data-col='operator'>操作人</th>
           <th data-col='seller' style="min-width:90px">配送经销商/(上级经销商)</th>
           <th data-col='logistic' style="min-width:90px">物流配送商/(物流单号)</th>
         </tr>

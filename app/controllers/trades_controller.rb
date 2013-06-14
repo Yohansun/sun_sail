@@ -3,6 +3,7 @@ require 'rchardet19'
 
 class TradesController < ApplicationController
   layout false, :only => :print_deliver_bill
+  layout 'management', only: :show_percent
   respond_to :json, :xls
   before_filter :authorize,:only => [:index,:print_deliver_bill]
 
@@ -498,5 +499,16 @@ class TradesController < ApplicationController
     respond_to do |format|
       format.json { render json: {is_success: success.present? } }
     end
+  end
+
+  def show_percent
+    @users = current_account.users.where(can_assign_trade: true).where(active: true).order(:created_at)
+  end
+
+  def assign_percent
+    users = User.where("id in (?)", params[:user_ids]).order(:created_at)
+    percent = params[:percent].each
+    users.each {|u| p u.trade_percent = (percent.next.to_i rescue nil);u.save}
+    redirect_to trades_show_percent_path
   end
 end

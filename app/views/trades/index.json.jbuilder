@@ -44,6 +44,8 @@ json.array!(@trades) do |json, trade|
   json.point_fee trade.point_fee
   json.total_fee trade.total_fee
 
+  json.operator trade.operator_name
+
   json.logistic_id trade.logistic_id
   json.logistic_name trade.logistic_name
   json.logistic_waybill trade.logistic_waybill

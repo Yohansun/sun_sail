@@ -48,7 +48,7 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :username, :active
+  attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :username, :active, :can_assign_trade, :percent
   attr_protected :cs, :cs_read, :seller, :interface, :stock_admin, :admin
   attr_accessor :current_account_id
   # attr_accessible :title, :body
@@ -62,18 +62,18 @@ class User < ActiveRecord::Base
   validates :username , uniqueness: true, presence: true
 
   validate :has_phone_or_email?
- 
+
   before_save :set_pseudo_username
-  
+
   enum_attr :active, [["生效",true],["禁用",false]]
 
   def set_pseudo_username
     unless username
       sudo_username = email || phone
-      self.username = sudo_username 
+      self.username = sudo_username
     end
-  end 
-  
+  end
+
   def permissions
     @trade_pops = {}
     raise "用户所属店铺为空" if self.account_ids.blank?
@@ -81,7 +81,7 @@ class User < ActiveRecord::Base
     roles.where(:account_id => condis).each {|x | @trade_pops.merge!(x.permissions) {|key,firth,lath| firth | lath} }
     @trade_pops
   end
-  
+
   def allow_read?(control,action="index")
     return true if self.superadmin?
     arys = parsed_permission[control.to_s] & MagicOrder::ActionDelega.keys
@@ -91,45 +91,45 @@ class User < ActiveRecord::Base
   def display_name
     name || email
   end
-  
+
   def allowed_to?(control,action)
-    allow_read?(control,action) || parsed_permission[control.to_s].include?(action.to_s) 
+    allow_read?(control,action) || parsed_permission[control.to_s].include?(action.to_s)
   end
-  
+
   def superadmin!
     self.superadmin = true
     self.save!
   end
-  
+
   def remove_superadmin!
     self.superadmin = false
     self.save!
   end
-  
+
   #parse {:stocks => ["stock_in_bills#detail"],"detail"} to {:stocks => ["detail"],:stock_in_bills => ["detail"]}
   def parsed_permission
     @strip_permissions = []
     @parse_permission = Hash.new {|k,v| k[v] = [] }
     @format_permissions = @parse_permission.dup
-    permissions.tap do |h| 
-      h.each do |x , y | 
+    permissions.tap do |h|
+      h.each do |x , y |
         t , h[x] =  y.partition {|v| /#/.match(v)}
        @strip_permissions += t
       end
       @format_permissions.merge!(h)
     end
-    @strip_permissions.each do |x| 
+    @strip_permissions.each do |x|
       x = x.split(/#/)
       x.replace [x.first,[x.last]]
       @format_permissions.merge!(Hash[*(x)]) {|old,x,y| x | y}
     end
-    
+
     @format_permissions
   end
 
   def status
     access_locked? ? '禁止' : '生效'
-  end  
+  end
 
   class << self
     def find_for_database_authentication(conditions)
@@ -163,10 +163,10 @@ class User < ActiveRecord::Base
   end
 
   def has_phone_or_email?
-     if email.blank? && phone.blank?
-        errors.add(:email, "至少输入手机号或者邮箱")
-        errors.add(:phone, "至少输入手机号或者邮箱")
-     end  
+    if email.blank? && phone.blank?
+      errors.add(:email, "至少输入手机号或者邮箱")
+      errors.add(:phone, "至少输入手机号或者邮箱")
+    end
   end
 
 

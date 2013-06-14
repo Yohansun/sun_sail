@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130524022929) do
+ActiveRecord::Schema.define(:version => 20130615090309) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -117,6 +117,7 @@ ActiveRecord::Schema.define(:version => 20130524022929) do
     t.integer  "depth"
     t.integer  "account_id"
     t.integer  "status",     :default => 1
+    t.integer  "use_days",   :default => 0, :null => false
   end
 
   add_index "categories", ["status"], :name => "index_categories_on_status"
@@ -276,9 +277,9 @@ ActiveRecord::Schema.define(:version => 20130524022929) do
 
   create_table "products", :force => true do |t|
     t.string   "name",              :limit => 100,                               :default => "",   :null => false
-    t.string   "outer_id",          :limit => 20,                                :default => ""
-    t.string   "product_id",        :limit => 20,                                :default => ""
-    t.string   "storage_num",       :limit => 20,                                :default => ""
+    t.string   "outer_id",          :limit => 20,                                :default => "",   :null => false
+    t.string   "product_id",        :limit => 20,                                :default => "",   :null => false
+    t.string   "storage_num",       :limit => 20,                                :default => "",   :null => false
     t.decimal  "price",                            :precision => 8, :scale => 2, :default => 0.0,  :null => false
     t.integer  "quantity_id"
     t.integer  "category_id"
@@ -346,10 +347,11 @@ ActiveRecord::Schema.define(:version => 20130524022929) do
     t.string   "name"
     t.integer  "resource_id"
     t.string   "resource_type"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
     t.text     "permissions"
-    t.integer  "account_id",    :null => false
+    t.integer  "account_id",       :null => false
+    t.boolean  "can_assign_trade"
   end
 
   add_index "roles", ["name", "resource_type", "resource_id"], :name => "index_roles_on_name_and_resource_type_and_resource_id"
@@ -441,6 +443,7 @@ ActiveRecord::Schema.define(:version => 20130524022929) do
     t.integer "quantity"
     t.integer "product_id"
     t.integer "account_id"
+    t.string  "code"
   end
 
   create_table "stock_histories", :force => true do |t|
@@ -519,12 +522,18 @@ ActiveRecord::Schema.define(:version => 20130524022929) do
     t.datetime "updated_at",                                              :null => false
   end
 
+  create_table "taobao_products_products", :force => true do |t|
+    t.integer "product_id"
+    t.integer "taobao_product_id"
+    t.integer "number"
+  end
+
   create_table "taobao_skus", :force => true do |t|
     t.integer "sku_id",            :limit => 8
     t.integer "taobao_product_id", :limit => 8
     t.integer "num_iid",           :limit => 8
-    t.string  "properties"
-    t.string  "properties_name"
+    t.string  "properties",                     :default => ""
+    t.string  "properties_name",                :default => ""
     t.integer "quantity"
     t.integer "account_id"
   end
@@ -602,6 +611,8 @@ ActiveRecord::Schema.define(:version => 20130524022929) do
     t.datetime "locked_at"
     t.string   "phone"
     t.boolean  "superadmin",             :default => false, :null => false
+    t.boolean  "can_assign_trade"
+    t.integer  "trade_percent"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

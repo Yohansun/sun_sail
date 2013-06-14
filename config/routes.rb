@@ -264,7 +264,9 @@ MagicOrders::Application.routes.draw do
   match '/alerts', to: 'trades#alerts'
   match '/my_alerts', to: 'trades#my_alerts'
   get "trades/new", to: "trades#new"
-  get "trades/create", to: "trades#create"
+  get "/trades/create", to: "trades#create"
+  get "/trades/show_percent", to: "trades#show_percent"
+  get "/trades/assign_percent", to: "trades#assign_percent"
   get "/trades/:id/sellers_info", to: "trades#sellers_info"
   get "/trades/:id/split_trade", to: "trades#split_trade"
   get "/trades/:id/print_deliver_bill", to: "trades#print_deliver_bill"

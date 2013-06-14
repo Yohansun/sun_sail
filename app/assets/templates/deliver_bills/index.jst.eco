@@ -86,6 +86,7 @@
       <li id='current_name'>发货单</li>
     </ul><!-- breadcrumb -->
     <ul id='global-menus' class="nav nav-tabs">
+      <li><a href="#" data-trade-mode="trades" data-trade-status="my_trade">我的订单<em></em></a></li>
       <li><a href="#" data-trade-mode="trades" data-trade-status="all">所有订单<em></em></a></li>
       <!-- <li><a href="#" data-trade-mode="trades" data-trade-status="default">待审核<em></em></a></li> -->
       <li><a href="#" data-trade-mode="trades" data-trade-status="undispatched">待分派<em></em></a></li>

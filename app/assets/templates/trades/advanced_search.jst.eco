@@ -12,6 +12,7 @@
           <option value="logistic_name">物流配送商</option>
           <option value="logistic_waybill">物流单号</option>
           <option value="repair_man">异常指派人</option>
+          <option value="operator_name">操作人</option>
         </select>
         <input type="text" class="search_value input-large radius_no_tl" id＝"simple_search_text" value="<%= @search_value %>">
         <select class="input-large radius_no_tl search_logistic">
