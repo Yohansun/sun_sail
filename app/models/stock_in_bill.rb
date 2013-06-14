@@ -4,7 +4,7 @@ class StockInBill < StockBill
   include MagicEnum
 	embeds_many :bml_input_backs
 
-  enum_attr :stock_type,[["调拨入库", "IIR"], ["正常入库", "IFG"], ["拆分入库", "ICF"], ["加工入库", "IOT"], ["退货入库", "IRR"], ["特殊入库(免费)", "IMF"]]
+  enum_attr :stock_type,StockBill::IN_STOCK_TYPE
   validates_inclusion_of :stock_type, :in => STOCK_TYPE_VALUES
 
 	def xml

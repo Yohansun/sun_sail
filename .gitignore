@@ -14,3 +14,4 @@ spec/factories
 .ruby-gemset
 .ruby-version
 .rvmrc
+coverage

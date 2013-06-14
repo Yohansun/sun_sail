@@ -24,6 +24,7 @@ group :test, :development do
   gem "guard"
   gem "guard-bundler"
   gem "guard-rspec"
+  gem 'guard-spork'
   gem "annotate", '~> 2.4.1.beta1'
   gem 'guard-annotate'
   gem "rspec-instafail"
@@ -36,7 +37,7 @@ group :test, :development do
   gem 'webrat'
   gem "capybara"
   gem 'capybara-webkit'
-
+  gem "cucumber"
   gem 'capistrano'
   gem "capistrano-ext"
   gem 'quiet_assets'
@@ -51,6 +52,7 @@ group :test, :development do
   gem 'certified'
   gem "thin"
   gem "letter_opener"
+  gem "simplecov", :require => false
 end
 
 gem 'strong_parameters'
