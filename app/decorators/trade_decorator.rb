@@ -318,26 +318,30 @@ class TradeDecorator < Draper::Base
   def taobao_order_status_text
     if trade.return_ref_status.present?
       trade.return_ref_status
-    else  
+    else
       case trade.status
       when "TRADE_NO_CREATE_PAY", "WAIT_BUYER_PAY", "ALL_WAIT_PAY"
         "等待付款"
       when "WAIT_SELLER_SEND_GOODS"
         if trade.seller_id
           if trade.logistic_waybill
-            "已设置物流，待发货" 
+            "已设置物流，待发货"
           else
-            "已分派，待设置物流" 
-          end  
-        else  
-          "已付款，待分派"  
-        end  
+            if trade.fetch_account.settings.enable_module_third_party_stock == 1
+              "已分派，#{trade.stock_out_bill.status_text}"
+            else
+              "已分派，待设置物流"
+            end
+          end
+        else
+          "已付款，待分派"
+        end
       when "WAIT_BUYER_CONFIRM_GOODS", "TRADE_BUYER_SIGNED"
         if trade.seller_confirm_deliver_at
           "已付款，已发货"
         else
           "已发货，待确认发货"
-        end  
+        end
       when "TRADE_FINISHED"
         "交易成功"
       when "TRADE_CLOSED","TRADE_CLOSED_BY_TAOBAO", "ALL_CLOSED"
@@ -345,7 +349,7 @@ class TradeDecorator < Draper::Base
       else
         trade.status
       end
-    end  
+    end
   end
 
   def jingdong_order_status_text

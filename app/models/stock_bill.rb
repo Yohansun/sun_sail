@@ -46,12 +46,12 @@ class StockBill
   validate do
     errors.add(:base,"商品不能为空") if bill_products.blank?
   end
-  
+
   if Rails.env.development?
     require 'stock_in_bill'
     require 'stock_out_bill'
   end
-  
+
   STOCK_TYPE = StockInBill::STOCK_TYPE + StockOutBill::STOCK_TYPE
   enum_attr :stock_type, STOCK_TYPE
   validates :stock_type, :presence => true,:inclusion => { :in => STOCK_TYPE_VALUES }
@@ -59,15 +59,15 @@ class StockBill
   embeds_many :bill_products
 
   after_save :generate_tid
-  
+
   alias_method :stock_typs=, :stock_type=
-  
+
   def stock_typs=(val)
     return if stock_type == val && STOCK_TYPE_VALUES.include?(val)
     _strip = self.is_a?(StockInBill) ? "I" : self.is_a?(StockOutBill) ? "O" : ""
     self.stock_type = _strip + val.to_s
   end
-  
+
   def stock_typs
     stock_type.gsub(/^(I|O)/,'')
   end
@@ -111,7 +111,7 @@ class StockBill
   def logistic_name
     Logistic.find_by_id(logistic_id).try(:name)
   end
-  
+
   def last_record
     operation_logs.desc("id").first
   end
@@ -121,6 +121,14 @@ class StockBill
       "已审核"
     else
       "未审核"
+    end
+  end
+
+  def status_text
+    if sync_at
+      "待标杆仓库确认出库"
+    else
+      "待同步标杆仓库"
     end
   end
 end
