@@ -328,7 +328,7 @@ class TradeDecorator < Draper::Base
             "已设置物流，待发货"
           else
             if trade.fetch_account.settings.enable_module_third_party_stock == 1
-              "已分派，#{trade.stock_out_bill.status_text}"
+              "已分派，#{trade.stock_out_bill.try(:status_text) || '待标杆仓库确认出库' }"
             else
               "已分派，待设置物流"
             end
