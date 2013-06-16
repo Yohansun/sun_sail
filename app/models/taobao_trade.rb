@@ -98,6 +98,8 @@ class TaobaoTrade < Trade
   embeds_many :taobao_orders
   embeds_many :promotion_details
 
+  validates_uniqueness_of :tid, message: "操作频率过大，请重试"
+
   accepts_nested_attributes_for :taobao_orders
 
   attr_accessor :search_fields

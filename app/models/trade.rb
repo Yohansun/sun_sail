@@ -81,6 +81,10 @@ class Trade
   field :has_onsite_service, type: Boolean, default: false
   field :has_refund_orders, type: Boolean, default: false
 
+  #订单操作人
+  field :operator_id
+  field :operator_name
+
   # ADD INDEXES TO SPEED UP
   # 简单搜索index
   index tid: -1
@@ -159,6 +163,7 @@ class Trade
 
 
   validate :color_num_do_not_exist, :on => :update, :if => :color_num_changed?
+  validates_uniqueness_of :tid, message: "操作频率过大，请重试"
 
   before_update :set_has_color_info
   before_update :set_has_cs_memo
@@ -759,6 +764,8 @@ class Trade
         trade_type_hash = {:unusual_states.elem_match => {:key => type, repaired_at: nil}}
       when 'unusual_all'
         trade_type_hash = {:unusual_states.elem_match =>{:repaired_at => nil}}
+      when 'my_trade'
+        trade_type_hash = {:operator_id => current_user.id}
       when 'all'
         trade_type_hash = nil
       when 'dispatched'
@@ -890,23 +897,23 @@ class Trade
 
         # 地域筛选
         when 3
-            # 按省筛选
-            if value_array[2].present?
-              state = /#{value_array[2].delete("省")}/
-              state_search_hash = {"$or" => [{receiver_state: state}, {"consignee_info.province" => state}, {"receiver.state" => state}]}
-            end
-            # 按市筛选
-            if value_array[1].present?
-              city = /#{value_array[1].delete("市")}/
-              city_search_hash = {"$or" => [{receiver_city: city}, {"consignee_info.city" => city}, {"receiver.city" => city}]}
-            end
-            # 按区筛选
-            if value_array[0].present?
-              district = /#{value_array[0].delete("区")}/
-              district_hash = {"$or" => [{receiver_district: district}, {"consignee_info.county" => district}, {"receiver.district" => district}]}
-            end
-            area_search_hash = {"$and" => [state_search_hash,city_search_hash,district_hash].compact}
-            area_search_hash == {"$and"=>[]} ? area_search_hash = nil : area_search_hash
+          # 按省筛选
+          if value_array[2].present?
+            state = /#{value_array[2].delete("省")}/
+            state_search_hash = {"$or" => [{receiver_state: state}, {"consignee_info.province" => state}, {"receiver.state" => state}]}
+          end
+          # 按市筛选
+          if value_array[1].present?
+            city = /#{value_array[1].delete("市")}/
+            city_search_hash = {"$or" => [{receiver_city: city}, {"consignee_info.city" => city}, {"receiver.city" => city}]}
+          end
+          # 按区筛选
+          if value_array[0].present?
+            district = /#{value_array[0].delete("区")}/
+            district_hash = {"$or" => [{receiver_district: district}, {"consignee_info.county" => district}, {"receiver.district" => district}]}
+          end
+          area_search_hash = {"$and" => [state_search_hash,city_search_hash,district_hash].compact}
+          area_search_hash == {"$and"=>[]} ? area_search_hash = nil : area_search_hash
 
         # 信息筛选
         when 4
@@ -978,6 +985,20 @@ class Trade
       self.has_onsite_service = true
     else
       self.has_onsite_service = false
+    end
+  end
+
+  def set_operator(users,total_percent)
+    rand_number = rand(1..total_percent)
+    count = 0
+    users.each do |u|
+      percent = u.trade_percent || 0
+      if rand_number <= percent + count
+        update_attributes(operator_id: u.id, operator_name: u.username)
+        return
+      else
+        count += u.trade_percent
+      end
     end
   end
 

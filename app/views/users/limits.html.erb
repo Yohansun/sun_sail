@@ -8,7 +8,7 @@
   .checkbox.inline + .checkbox.inline {
     margin-left: 0px;
   }
-  
+
 </style>
       <ul class="nav nav-tabs ">
         <li><a href="/users">用户</a></li>
@@ -22,6 +22,11 @@
             <strong><%= f.label :name,"角色名称:" %></strong>
             <%= @role.name %>
           </fieldset>
+          <fieldset class="form-inline mar_b15">
+            <label class="checkbox inline">
+              <input type="checkbox" name="can_assign_trade" <%='checked' if @role.can_assign_trade == true %>>开启分配订单
+            </label>
+          </fieldset>
               <p>请选择该角色需要的模块和功能</p>
               <% MagicOrder::AccessControl.permissions.group_by{|x| x.project_module}.each do |project_name,permissions| %>
 
@@ -29,7 +34,7 @@
                 <h5 class="checkbox">
                   <%= l_or_humanize(project_name,:prefix => "permissions_") %>
                 </h5>
-                <% permissions.each do |permission| %>                
+                <% permissions.each do |permission| %>
                 <div class="controls">
                   <p class="nomargin"><strong><%= l_or_humanize(permission.name,:prefix => "permissions_") %></strong></p>
                   <% permission.actions.each do |action| %>

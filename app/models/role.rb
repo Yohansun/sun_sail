@@ -21,13 +21,19 @@ class Role < ActiveRecord::Base
 #  validates :name   ,:presence => true  ,:uniqueness => {:if => proc {|attr| Role.exists?(:name   => attr['name']   ,:account_id => attr[:account_id])} }
   validates :name   ,:presence => true ,:uniqueness => {:scope => :account_id}
   validates :account_id,:presence => true
-  attr_accessible :name
+  attr_accessible :name, :can_assign_trade
   serialize :permissions, Hash
-  
-  
+
+  def reset_assign_trade
+    users.each do |u|
+      u.can_assign_trade = u.roles.inject(false) { |status, el| p status;p el.can_assign_trade ;status || el.can_assign_trade }
+      u.save
+    end
+  end
+
   def add_all_permissions
     per =  Hash.new {|k,v| k[v] = []}
-    MagicOrder::AccessControl.permissions.group_by{|x| x.project_module}.each do |project_name,permissions| 
+    MagicOrder::AccessControl.permissions.group_by{|x| x.project_module}.each do |project_name,permissions|
       permissions.each do |permission|
         permission.actions.each do |action|
           per[project_name.to_s] << action

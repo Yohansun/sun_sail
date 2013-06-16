@@ -8,6 +8,9 @@ class TaobaoTradePuller
       trade_source = TradeSource.find_by_id(trade_source_id)
       account_id = trade_source.account_id
       account = Account.find_by_id(account_id)
+      # 给客服分配定单需要的查询
+      users = account.users.where(can_assign_trade: true).where(active: true).order(:created_at)
+      total_percent = users.inject(0) { |sum, el| sum += el.trade_percent }
 
       if start_time.blank?
         if TaobaoTrade.where(account_id: account_id).count > 1
@@ -69,6 +72,7 @@ class TaobaoTradePuller
 
           trade.operation_logs.build(operated_at: Time.now, operation: '从淘宝抓取订单')
           trade.set_has_onsite_service
+          trade.set_operator(users,total_percent)
           trade.save
 
 #          p "create trade #{trade['tid']}"

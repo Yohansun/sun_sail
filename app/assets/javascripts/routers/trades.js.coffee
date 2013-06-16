@@ -9,9 +9,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     'trades/:id/splited': 'splited'
     'trades/print_deliver_bills': 'printDeliverBills'
     'trades/:id/recover': 'recover'
-    'trades/batch_check_goods': 'batch_check_goods'
-    'trades/batch_export': 'batch_export'
-    'trades/manual_sms_or_email': 'manual_sms_or_email'
+    'trades/batch/:batch_operation' : 'batch_operation'
     'trades/:id/:operation': 'operation'
 
   initialize: ->
@@ -54,7 +52,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
   main: () ->
     Backbone.history.navigate('trades', true)
 
-  index: (trade_mode = "trades", trade_type = 'all') ->
+  index: (trade_mode = "trades", trade_type = 'my_trade') ->
     # reset the index stage, hide all popups
     $('.modal').modal('hide')
 
@@ -134,51 +132,9 @@ class MagicOrders.Routers.Trades extends Backbone.Router
           $("#newTradesNotiferLink").off 'click'
           @mainView.fetch_new_trades()
 
-  batch_check_goods: ->
-    tmp = []
-    length = $('.trade_check:checked').parents('tr').length
-    if length > 300
-      alert('请选择小于300个订单！')
-      return
-
-    $('.trade_check:checked').parents('tr').each (index, el) ->
-      input = $(el).find('.trade_check')
-      a = input[0]
-      if a.checked
-        trade_id = $(el).attr('id').replace('trade_', '')
-        tmp.push trade_id
-
-    MagicOrders.idCarrier = tmp
-    flag = true
-    if tmp.length != 0
-      @collection.fetch data: {ids: tmp, batch_option: true}, success: (collection, response) =>
-        view = new MagicOrders.Views.TradesBatchCheckGoods(collection: collection)
-        $('#trade_batch_check_goods').html(view.render().el)
-        $('#trade_batch_check_goods').modal('show')
-
-  batch_export: ->
-    modalDivID = "#trade_batch_export"
-
-    tmp = []
-    length = $('.trade_check:checked').parents('tr').length
-    $('.trade_check:checked').parents('tr').each (index, el) ->
-      input = $(el).find('.trade_check')
-      a = input[0]
-      if a.checked
-        trade_id = $(el).attr('id').replace('trade_', '')
-        tmp.push trade_id
-
-    MagicOrders.idCarrier = tmp
-    flag = true
-    if tmp.length != 0
-      @collection.fetch data: {ids: tmp, batch_option: true}, success: (collection, response) =>
-        view = new MagicOrders.Views.TradesBatchExport(collection: collection)
-        $(modalDivID).html(view.render().el)
-        $(modalDivID + ' .datepickers').datetimepicker(format: 'yyyy-mm-dd', autoclose: true, minView: 2)
-        $(modalDivID).modal('show')
-
-  manual_sms_or_email: ->
-    modalDivID = "#trade_manual_sms_or_email"
+  batch_operation: (operation_key)->
+    viewClassName = "Trades" + _.classify(operation_key)
+    modalDivID = "#trade_" + operation_key
 
     tmp = []
     length = $('.trade_check:checked').parents('tr').length
@@ -193,15 +149,18 @@ class MagicOrders.Routers.Trades extends Backbone.Router
         trade_id = $(el).attr('id').replace('trade_', '')
         tmp.push trade_id
 
-    MagicOrders.idCarrier = tmp
-    flag = true
     if tmp.length != 0
       @collection.fetch data: {ids: tmp, batch_option: true}, success: (collection, response) =>
-        view = new MagicOrders.Views.TradesManualSmsOrEmail(collection: collection)
+        view = new MagicOrders.Views[viewClassName](collection: collection)
         $(modalDivID).html(view.render().el)
-        $(modalDivID + ' .datepickers').datetimepicker(format: 'yyyy-mm-dd', autoclose: true, minView: 2)
         $(modalDivID).modal('show')
 
+        switch operation_key
+          when 'batch_add_gift'
+            $.get '/categories/category_templates', {}, (c_data)->
+              $('#select_category').select2 data: c_data
+            $("#select_product").select2 data: []
+            $('#select_sku').select2 data: []
 
   operation: (id, operation_key) ->
     viewClassName = "Trades" + _.classify(operation_key)

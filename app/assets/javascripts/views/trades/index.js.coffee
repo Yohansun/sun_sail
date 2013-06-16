@@ -6,12 +6,10 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     'click .export_orders': 'exportOrders'
     'click [data-trade-status]': 'selectSameStatusTrade'
     'click .batch_deliver': 'batchDeliver'
-    'click .batch_check_goods': 'batchCheckGoods'
-    'click .batch_export': 'batchExport'
-    'click .manual_sms_or_email': 'manualSmsOrEmail'
     'click .sort_product': 'sort_product'
     'click .confirm_batch_deliver': 'confirmBatchDeliver'
     'click .confirm_sort_product': 'confirmSortProduct'
+    'click .index_batch_pops li a[data-batch_type]': 'show_batch_type'
     'click .index_pops li a[data-type]': 'show_type'
     'click [data-search-criteria]': 'switchSearchCriteria'
 
@@ -121,16 +119,21 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     MagicOrders.trade_cols_hidden[MagicOrders.trade_mode] = _.uniq(MagicOrders.trade_cols_hidden[MagicOrders.trade_mode])
     $.cookie("trade_cols_hidden_#{MagicOrders.trade_mode}", MagicOrders.trade_cols_hidden[MagicOrders.trade_mode].join(","))
 
-  manualSmsOrEmail: (e) ->
+  show_batch_type: (e) ->
     e.preventDefault()
+
     length = $('.trade_check:checked').parents('tr').length
     if length < 1
-      alert("请勾选要操作的订单。")
-    else
-      Backbone.history.navigate('trades/manual_sms_or_email', true)
+      alert('未选择订单！')
+      return
+    if length > 300
+      alert('请选择小于300个订单！')
+      return
+
+    batch_type = $(e.target).data('batch_type')
+    Backbone.history.navigate('trades/batch/'+batch_type, true)
 
   sort_product: ->
-
       tmp = []
       length = $('.trade_check:checked').parents('tr').length
 
@@ -163,6 +166,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
         $('#sort_product').modal('show')
 
+
   show_type: (e) ->
     type = $(e.target).data('type')
     if type != 'export_orders' && type != 'create_handmade_trade'
@@ -177,7 +181,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
           else if $(e.target).data('modal-action')==true
             @do_modal_action e
           else
-            Backbone.history.navigate('trades/' + trade_id + "/#{type}", true)
+            Backbone.history.navigate('trades/'+trade_id+"/"+type, true)
         else
           alert("请勾选要操作的订单。")
     else if type == 'create_handmade_trade'
@@ -191,24 +195,8 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     trade_id = $('.trade_check:checked').parents('tr').attr('id').slice(6)
     model = @collection.get trade_id
     model.fetch success: (model, response) =>
-      view = new MagicOrders.Views.TradesModifyReveiverInformation(model:model)
+      view = new MagicOrders.Views.TradesModifyReceiverInformation(model:model)
       $("#trade_modify_receiver_information").html(view.render().el).modal("show")
-
-  batchCheckGoods: (e) ->
-    e.preventDefault()
-    length = $('.trade_check:checked').parents('tr').length
-    if length < 1
-      alert("请勾选要操作的订单。")
-    else
-      Backbone.history.navigate('trades/batch_check_goods', true)
-
-   batchExport: (e) ->
-    e.preventDefault()
-    length = $('.trade_check:checked').parents('tr').length
-    if length < 1
-      alert("请勾选要操作的订单。")
-    else
-      Backbone.history.navigate('trades/batch_export', true)
 
   fetchMoreTrades: (event, direction) =>
     if direction == 'down'
@@ -446,7 +434,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     if(!$("#search_toggle").is(":visible"))
       $(".advanced_btn:first").click()
     $(".search").click()
-
 
   loadStatusCount:()->
     $("[data-trade-status]",@el).each ->

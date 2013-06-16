@@ -1,7 +1,7 @@
-class MagicOrders.Views.TradesModifyReveiverInformation extends Backbone.View
+class MagicOrders.Views.TradesModifyReceiverInformation extends Backbone.View
 
   template: JST['trades/modify_receiver_information']
- 
+
   events:
     'click .save': 'save'
 

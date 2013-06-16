@@ -62,7 +62,7 @@
               <li class=""><a href="#">发货单管理</a></li>
             </ul>
           </li>
-          <li class="<%= display?(["categories","category_properties"],"in") %>" ><a href="#"  data-toggle="collapse" data-target="#products_menu">商品设置</a>
+          <li class="<%= display?(["categories","category_properties"],"active") %>" ><a href="#"  data-toggle="collapse" data-target="#products_menu">商品设置</a>
             <ul id="products_menu" class="collapse <%= display?(["categories","category_properties"],"in") %> third_menu">
               <li class="<%= display?("categories","active") %>">
                 <a href="/categories">分类管理</a>
@@ -75,11 +75,12 @@
           <li class="<%= display?("logistics","active") %>"><a href="/logistics"  data-toggle="collapse" data-target="#logistics_menu">
             <i class="<%= display?("logistics","active") %>"></i>物流公司管理</a>
           </li>
-          <li class="<%= display?("orders","active") %>">
+          <li class="<%= display?("trade_searches","active") %>">
             <a href="#"  data-toggle="collapse" data-target="#orders_menu">订单管理</a>
             <ul id="orders_menu" class="collapse <%= display?("trade_searches","in") %> third_menu">
-              <li class="<%= display?("trade_searches","active") %>"><a href="/trade_searches">自定义查询</a>
+              <li class="<%= display?(["trade_searches","trades"],"active") %>"><a href="/trade_searches">自定义查询</a>
               </li>
+              <li class="<%= display?("trades","active","show_percent") %>"><a href="/trades/show_percent">分配比设置</a></li>
             </ul>
           </li>
 

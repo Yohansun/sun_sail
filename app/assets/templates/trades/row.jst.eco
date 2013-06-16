@@ -149,6 +149,10 @@
   <%= @trade.get('point_fee') %>
 </td>
 
+<td data-col='operator'>
+  <%= @trade.get('operator') %>
+</td>
+
 <!--<td data-col='total_fee'>
   ￥<%#= @trade.get('total_fee') %>
 </td>-->

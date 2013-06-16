@@ -44,7 +44,7 @@ class UsersController < ApplicationController
 
   def roles
     @roles = current_account.roles
-  end  
+  end
 
   def show
     @user = current_account.users.find params[:id]
@@ -58,6 +58,8 @@ class UsersController < ApplicationController
   def create
     @roles = current_account.roles
     @user = User.new(params[:user])
+    user_roles = current_account.roles.where("id in (?)", params[:user][:role_ids])
+    @user.can_assign_trade = user_roles.inject(false){|status, el| status || el.can_assign_trade}
     @user.accounts << current_account
     if @user.save
       redirect_to users_path
@@ -69,6 +71,8 @@ class UsersController < ApplicationController
   def update
     @user = current_account.users.find params[:id]
     @roles = current_account.roles
+    user_roles = current_account.roles.where("id in (?)", params[:user][:role_ids])
+    @user.can_assign_trade = user_roles.inject(false){|status, el| status || el.can_assign_trade}
     params[:user].except!(:password,:password_confirmation) if params[:user][:password].blank?
     params[:user].except!(:active)                          if current_user == @user
 
@@ -84,7 +88,7 @@ class UsersController < ApplicationController
   def edit
     @user = current_account.users.find current_user.id
   end
-  
+
   def edit_with_role
     @user = current_account.users.find params[:user_ids].first
     @roles = current_account.roles
@@ -99,17 +103,17 @@ class UsersController < ApplicationController
     end
     redirect_to '/'
   end
-  
+
   def batch_update
     @users = User.where(:id => params[:user_ids])
-    
+
     if @users.count > 10 || @users.exists?(:name => "admin") || @users.exists?(:name => current_user.name)
       flash[:error] = "不能操作自己"
       redirect_to(users_path)
       return true
     end
-    
-    case params[:operation] 
+
+    case params[:operation]
     when 'lock'
       @users.update_all(:active => false,:locked_at => Time.now)
     when 'unlock'
@@ -119,26 +123,26 @@ class UsersController < ApplicationController
     end
     redirect_to users_path
   end
-  
+
   def limits
     begin
-      @role = current_account.roles.find(params[:role_id]) 
+      @role = current_account.roles.find(params[:role_id])
     rescue Exception
       @role = current_account.roles.build
     end
   end
-  
+
   def create_role
     @role = current_account.roles.build(params[:role])
 
     if @role.save
       redirect_to :action => :roles
     else
-      
+
       render :text => ((view_context.link_to "返回", roles_users_path) + view_context.tag("br") + @role.errors.full_messages.join('</br>') )
     end
   end
-  
+
   def update_permissions
     prefixs = MagicOrder::AccessControl.permissions.map(&:project_module).uniq
     @role = current_account.roles.find(params[:role_id])
@@ -152,26 +156,28 @@ class UsersController < ApplicationController
     #    @permission.merge!({formats[1] => [formats[3]]}) { |x,y,z| y | z} rescue ""
     #  end
     #end
-    
-    @role.permissions =  params[:permissions]
-    if @role.update_attributes(params[:role])
 
+    @role.permissions =  params[:permissions]
+    @role.can_assign_trade = (params[:can_assign_trade] == "on" ? true : false)
+    @role.save
+    @role.reset_assign_trade
+    if @role.update_attributes(params[:role])
       flash[:notice] = "更新成功"
       redirect_to roles_users_path
     else
       render :action => :limits
     end
   end
-  
+
   def destroy_role
     @role = current_account.roles.find(params[:role_id])
     @role.destroy
     redirect_to :action => :roles
   end
-  
+
   def delete
     @users = current_account.users.where(:id => params[:user_ids])
-    
+
     if @users.exists?(:name => "admin") || params[:user_ids].include?(current_user.id.to_s) || @users.count > 10
       flash[:error] = (@users.count > 10 ? "预防恶意操作,请选择10条或以下的用户进行删除." : "不能删除自己")
       redirect_to users_path

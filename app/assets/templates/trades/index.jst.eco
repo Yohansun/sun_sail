@@ -10,6 +10,7 @@
       <li id='current_name'>所有订单</li>
     </ul><!-- breadcrumb -->
     <ul id='global-menus' class="nav nav-tabs">
+      <li><a href="#" data-trade-mode="trades" data-trade-status="my_trade">我的订单<em></em></a></li>
       <li><a href="#" data-trade-mode="trades" data-trade-status="all">所有订单<em></em></a></li>
       <!-- <li><a href="#" data-trade-mode="trades" data-trade-status="default">待审核<em></em></a></li> -->
       <li><a href="#" data-trade-mode="trades" data-trade-status="undispatched">待分派<em></em></a></li>
@@ -52,7 +53,7 @@
           </button>
           <ul class="dropdown-menu index_pops">
             <li><a href="#" data-toggle="modal" data-type="cs_memo">客服备注</a></li>
-            <li><a href="#" data-toggle="modal" data-type="gift_memo">赠品备注</a></li>
+            <li><a href="#" data-toggle="modal" data-type="gift_memo">赠品管理</a></li>
             <li><a href="#" data-toggle="modal" data-type="invoice">发票内容</a></li>
             <li><a href="#" data-toggle="modal" data-type="color">订单调色</a></li>
             <li><a href="#" data-toggle="modal" data-type="confirm_color">确认调色</a></li>
@@ -101,15 +102,14 @@
                 批量操作
                 <span class="caret"></span>
               </button>
-              <ul class="dropdown-menu">
-                <li><a href="#" data-toggle="modal" class="manual_sms_or_email">发短信/邮件</a></li>
-                <li><a href="#" data-toggle="modal" class="batch_export">导出勾选订单</a></li>
-              <% if MagicOrders.trade_mode == 'trades' : %>
-              <% if MagicOrders.trade_type == 'undelivered' : %>
-                <li><a data-toggle="modal" class='batch_deliver' href='#'>批量发货</a></li>
-                <li><a data-toggle="modal" class='batch_check_goods' href='#'>批量验货</a></li>
-              <% end %>
-              <% end %>
+              <ul class="dropdown-menu index_batch_pops">
+                <li><a href="#" data-toggle="modal" data-batch_type="manual_sms_or_email">发短信/邮件</a></li>
+                <li><a href="#" data-toggle="modal" data-batch_type="batch_export">导出勾选订单</a></li>
+                <li><a href="#" data-toggle="modal" data-batch_type="batch_add_gift">批量添加赠品</a></li>
+                <% if MagicOrders.trade_mode == "trades" and MagicOrders.trade_type == "undelivered" : %>
+                <li><a href='#' data-toggle="modal" class="batch_deliver">批量发货</a></li>
+                <li><a href='#' data-toggle="modal" data-batch_type='batch_check_goods'>批量验货</a></li>
+                <% end %>
               </ul>
             </div>
             <div class="btns btn-group batch_ops">
@@ -177,7 +177,7 @@
           <th data-col='invoice_value'>开票金额</th>
           <th data-col='invoice_date'>完成日期</th>
           <!-- <th data-col='order_split'>拆分</th> -->
-          <!-- <th data-col='operator'>操作人</th> -->
+          <th data-col='operator'>操作人</th>
           <th data-col='seller' style="min-width:90px">配送经销商/(上级经销商)</th>
           <th data-col='logistic' style="min-width:90px">物流配送商/(物流单号)</th>
         </tr>
