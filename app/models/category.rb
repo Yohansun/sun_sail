@@ -13,6 +13,7 @@
 #  depth      :integer(4)
 #  account_id :integer(4)
 #  status     :integer(4)      default(1)
+#  use_days   :integer(4)      default(0), not null
 #
 
 class Category < ActiveRecord::Base
