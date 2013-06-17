@@ -98,7 +98,6 @@ MagicOrders::Application.routes.draw do
   devise_for :users, :path => '', :path_names => {:sign_in => 'login'},
     controllers: { sessions: "sessions" , registrations: "registrations"}
 
-  get "/sales/add_node", to: 'sales#add_node'
   get "/api/logistics", to: 'logistics#logistic_templates'
   get 'callcenter/wangwang_list', to: 'callcenter#wangwang_list'
   get 'callcenter/remove_wangwang', to: 'callcenter#remove_wangwang'
@@ -249,14 +248,18 @@ MagicOrders::Application.routes.draw do
   end
   resources :taobao_app_tokens, only: [:create]
 
-  get "/sales/area_analysis", to: 'sales#area_analysis'
-  get "/sales/time_analysis", to: 'sales#time_analysis'
-  get "/sales/product_analysis", to: 'sales#product_analysis'
-  get "/sales/price_analysis", to: 'sales#price_analysis'
-  get "/sales/frequency_analysis", to: 'sales#frequency_analysis'
-  get "/sales/univalent_analysis", to: 'sales#univalent_analysis'
-  #get "/sales/customer_analysis", to: 'sales#customer_analysis'
-  resources :sales
+  resources :sales do
+    collection do
+      get :add_node
+      get :summary
+      get :area_analysis
+      get :time_analysis
+      get :product_analysis
+      get :price_analysis
+      get :frequency_analysis
+      get :univalent_analysis
+    end
+  end
 
   resources :custom_trades do
     collection do
