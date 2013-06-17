@@ -47,7 +47,6 @@ module MagicSearch
     private
     def to_mongoize(field_klass,search_value)
       return (search_value == "nil" ? nil : search_value) if mode =~ /_not_eq|eq/
-      search_value = search_value.to_time if field_klass.options[:type].eql?(DateTime)
       val = field_klass.mongoize(search_value) rescue ""
       val.nil? ? "" : val
     end
