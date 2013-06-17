@@ -1,0 +1,19 @@
+<fieldset class="pull-left">
+  <div>
+    开始时间: <%= f.text_field :start_at, 
+                :class => "input-medium start_at datetimepicker_full", 
+                :placeholder => "年-月-日 时:分:秒",
+                :value => @start_at,
+                :readonly => true %>
+
+    <i class="icon-arrow-right" style="margin-top:0px;"></i>
+
+    结束时间: <%= f.text_field :end_at, 
+              :class => "input-medium end_at datetimepicker_full", 
+              :placeholder => "年-月-日 时:分:秒",
+              :value => @end_at,
+              :readonly => true %>
+
+    <%= button_tag "筛选", :class => "btn btn-small btn-info" %>
+  </div>
+</fieldset>
