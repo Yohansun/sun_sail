@@ -10,6 +10,7 @@ gem 'rabl'
 gem 'jbuilder'
 
 gem "meta_search"
+gem 'hipchat'
 
 group :assets do
   gem 'sass-rails', '~> 3.2.3'
