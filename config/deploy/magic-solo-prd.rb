@@ -1,13 +1,14 @@
 # -*- encoding : utf-8 -*-
-set :rvm_ruby_string, '1.9.3'
-set :rvm_type, :system
+set :rvm_ruby_string, '1.9.3@magic-orders'
+#set :rvm_type, :system
 
 set :repository, "git@git.networking.io:nioteam/magic_orders.git"
 set :branch, "solo_dev"
 
-server "magic-solo.networking.io", :web, :app, :db, primary: true
-set :user, "root"
-set :deploy_to, "/var/rails/magic-solo"
+#server "magic-solo.networking.io", :web, :app, :db, primary: true
+server "121.196.130.171", :web, :app, :db, primary: true
+set :user, "rails"
+set :deploy_to, "/home/rails/server/magic-solo"
 
 set :assets_dependencies, %w(app/assets lib/assets vendor/assets Gemfile.lock config/routes.rb)
 
