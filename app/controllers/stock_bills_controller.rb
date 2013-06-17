@@ -5,6 +5,9 @@ class StockBillsController < ApplicationController
   
   def index
     parse_params
+    if /(?<sku_type>bill_products_sku_id_eq|bill_products_num_iid_eq)/ =~ params[:sku]
+      params[:search]["#{sku_type}"] = params[:sku].gsub("#{sku_type}",'')
+    end
     @search = @bills.search(params[:search])
     @bills = @search.page(params[:page]).per(20)
     @count = @search.count
