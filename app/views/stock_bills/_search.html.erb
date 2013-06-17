@@ -1,9 +1,9 @@
 
 <% params[:search] ||= {}%>
 <div class="control-group">
-  <%= label_tag "search[bill_products_sku_id_eq]","商品SKU名称#{params[:search][:bill_products_sku_id_eq]}",:class => "control-label"%>
+  <%= label_tag "sku","商品SKU名称",:class => "control-label"%>
     <div class="controls">
-  <%= select_tag "search[bill_products_sku_id_eq]",options_for_select(current_account.skus.collect{ |sku|  [sku.title,sku.sku_id] },params[:search][:bill_products_sku_id_eq]),:include_blank => true %>
+  <%= select_tag "sku",options_for_select(current_account.skus.collect{ |sku|  [sku.title,sku_id_or_num_iid(sku)] },params["sku"]),:include_blank => true %>
 </div>  
 </div>
 

@@ -1,0 +1,9 @@
+__filename = "email.xls"
+
+sheet1 = xls.create_worksheet
+
+sheet1.row(0).concat ["发送人", "邮件地址", "发送主题", "发送内容", "发送时间"]
+
+@notifys.each_with_index do |p, i|
+  sheet1.update_row i+1, p.notify_sender, p.notify_contact, p.notify_theme, p.notify_content, p.notify_time.strftime("%Y-%m-%d %H:%M:%S")
+end

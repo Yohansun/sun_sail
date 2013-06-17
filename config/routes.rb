@@ -1,6 +1,7 @@
 require 'sidekiq/web'
 
 MagicOrders::Application.routes.draw do
+
   resources :customers ,:only => [:index] do
 
     collection do
@@ -35,6 +36,8 @@ MagicOrders::Application.routes.draw do
   match "/stocks/safe_stock", to: 'stocks#safe_stock'
   post "/stocks/edit_safe_stock", to: 'stocks#edit_safe_stock'
   match "/stocks/change_product_type", to: 'stocks#change_product_type'
+  get "notify/sms"
+  get "notify/email"
 
   resources :stock_bills
 
