@@ -34,10 +34,10 @@
         <%= link_to "编辑", "#",:onclick => "validateValues(this)",:goto => edit_with_role_users_path,:request => "get" %>
       </li>
       <li>
-        <%= link_to "删除","#",:onclick => "validateValues(this)",:id => "delete_users", :goto => "/users/delete",:request => "post",:confirm => "确认删除?"%>
-      <li><%=link_to "开启", "#", :onclick => "validateValues(this)",:goto => "/users/batch_update?operation=unlock",:request => "post",:confirm => "确认开启吗?" %></li>
+        <%= link_to "删除","#",:onclick => "validateValues(this)",:id => "delete_users", :goto => "/users/delete",:request => "post",:message => "确认删除?"%>
+      <li><%=link_to "开启", "#", :onclick => "validateValues(this)",:goto => "/users/batch_update?operation=unlock",:request => "post",:message => "确认开启吗?" %></li>
       <li>
-        <%=link_to "禁用", "#",:onclick => "validateValues(this)",:goto => "/users/batch_update?operation=lock",:request => "post",:confirm => "确认禁用?"%>
+        <%=link_to "禁用", "#",:onclick => "validateValues(this)",:goto => "/users/batch_update?operation=lock",:request => "post",:message => "确认禁用?"%>
     </ul>
   </div><!-- btn-group -->
   <div class="btn-group">
@@ -82,8 +82,10 @@ function validateValues(item){
   } else if($.inArray('<%= current_user.id %>',check_values) >= 0 && $(item).attr("goto") != "/users/edit_with_role"){  
     alert('不能操作自己哦 ╮(╯_╰)╭');
   } else {
-    $('#edit_user').attr({action: $(item).attr("goto") ,method: $(item).attr("request") });  
-    $('#edit_user').submit();  
+    if (!$(item).attr("message") || confirm($(item).attr("message"))) {
+      $('#edit_user').attr({action: $(item).attr("goto") ,method: $(item).attr("request") });  
+      $('#edit_user').submit();
+    }
   }  
 }
 </script>
