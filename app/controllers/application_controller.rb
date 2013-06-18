@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
   helper_method :current_account
-  before_filter :authenticate_user!
+  before_filter :authenticate_user! unless Rails.env.test?
 
   
   def authorize(ctrl = params[:controller], action = params[:action])
