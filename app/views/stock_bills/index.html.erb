@@ -50,12 +50,13 @@
             </tr>
           </thead>
           <tbody>
+            <% @num = 0 %>
             <%- @bills.each_with_index do |bill,index| %>
-              <%- bill.bill_products.each do |product|%>
+              <%- bill.bill_products.each_with_index do |product,product_index|%>
                 <tr>
                   <td><input type="checkbox" name="stock_bill_ids[]" value="<%= bill.id %>"></td>
-                  <td><%= index + 1 %></td>
-                  <td><%= bill.tid %></td>                  
+                  <td><%= @num += 1 %></td>
+                  <td><%= bill.tid %></td>
                   <td><%= bill.status %></td>
                   <td><%= product.try(:sku_id) %></td>
                   <td><%= product.try(:title) %></td>
