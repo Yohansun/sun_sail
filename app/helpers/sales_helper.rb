@@ -1,5 +1,154 @@
 # -*- encoding : utf-8 -*-
 module SalesHelper
+  def generate_sale_chart_data(start_at, end_at)
+    c_map = %Q{
+      function() {
+        emit(this.created.toString().slice(4,20).concat("0:00"), {created_fee: this.payment});
+      }
+    }
+
+    p_map = %Q{
+      function() {
+        if(this.pay_time != null){
+          emit(this.pay_time.toString().slice(4,20).concat("0:00"), {paid_fee: this.payment});
+        }
+      }
+    }
+
+    week_c_map = %Q{
+      function() {
+        emit(this.created.toString().slice(4,17).concat("0:00:00"), {created_fee: this.payment});
+      }
+    }
+
+    week_p_map = %Q{
+      function() {
+        if(this.pay_time != null){
+          emit(this.pay_time.toString().slice(4,17).concat("0:00:00"), {paid_fee: this.payment});
+        }
+      }
+    }
+
+    month_c_map = %Q{
+      function() {
+        emit(this.created.toString().slice(4,16).concat("00:00:00"), {created_fee: this.payment});
+      }
+    }
+
+    month_p_map = %Q{
+      function() {
+        if(this.pay_time != null){
+          emit(this.pay_time.toString().slice(4,16).concat("00:00:00"), {paid_fee: this.payment});
+        }
+      }
+    }
+
+    year_c_map = %Q{
+      function() {
+        if(this.created.toString().slice(8,9) == 3){
+          emit(this.created.toString().slice(4,8).concat("01").concat(Date().toString().slice(10,16)), {created_fee: this.payment});
+        } else {
+          emit(this.created.toString().slice(4,9).concat("1").concat(Date().toString().slice(10,16)), {created_fee: this.payment});
+        }
+      }
+    }
+
+    year_p_map = %Q{
+      function() {
+        if(this.pay_time != null){
+          if(this.created.toString().slice(8,9) == 3){
+            emit(this.pay_time.toString().slice(4,8).concat("01").concat(Date().toString().slice(10,16)), {paid_fee: this.payment});
+          } else{
+            emit(this.pay_time.toString().slice(4,9).concat("1").concat(Date().toString().slice(10,16)), {paid_fee: this.payment});
+          }
+        }
+      }
+    }
+
+    c_reduce = %Q{
+      function(key, values) {
+        var result = {created_fee: 0};
+        values.forEach(function(value) {
+          result.created_fee += value.created_fee;
+        });
+        return result;
+      }
+    }
+
+    p_reduce = %Q{
+      function(key, values) {
+        var result = {paid_fee: 0};
+        values.forEach(function(value) {
+          result.paid_fee += value.paid_fee;
+        });
+        return result;
+      }
+    }
+
+    created_trades = TaobaoTrade.where(account_id: current_account.id).between(created: (start_at.to_time - 8.hours)..(end_at.to_time - 8.hours))
+    paid_trades = TaobaoTrade.where(account_id: current_account.id).between(pay_time: (start_at.to_time - 8.hours)..(end_at.to_time - 8.hours))
+
+    #计算总金额
+    amount_all = created_trades.try(:sum, :payment) || 0
+    amount_paid = paid_trades.try(:sum, :payment) || 0
+
+    if end_at.to_i - start_at.to_i < 3.days.to_i
+      created_map_reduce = created_trades.map_reduce(c_map, c_reduce).out(inline: true)
+      paid_map_reduce = paid_trades.map_reduce(p_map, p_reduce).out(inline: true)
+    elsif end_at.to_i - start_at.to_i >= 3.days.to_i && end_at.to_i - start_at.to_i < 1.month.to_i
+      created_map_reduce = created_trades.map_reduce(week_c_map, c_reduce).out(inline: true)
+      paid_map_reduce = paid_trades.map_reduce(week_p_map, p_reduce).out(inline: true)
+    elsif end_at.to_i - start_at.to_i >= 1.month.to_i && end_at.to_i - start_at.to_i < 3.months.to_i
+      created_map_reduce = created_trades.map_reduce(month_c_map, c_reduce).out(inline: true)
+      paid_map_reduce = paid_trades.map_reduce(month_p_map, p_reduce).out(inline: true)
+    elsif end_at.to_i - start_at.to_i >= 3.months.to_i
+      created_map_reduce = created_trades.map_reduce(year_c_map, c_reduce).out(inline: true)
+      paid_map_reduce = paid_trades.map_reduce(year_p_map, p_reduce).out(inline: true)
+    end
+
+    #生成图表节点
+    enum_paid = paid_map_reduce.sort{|x,y| x["_id"].to_time.to_i <=> y["_id"].to_time.to_i}.to_enum
+    enum_created = created_map_reduce.sort{|x,y| x["_id"].to_time.to_i <=> y["_id"].to_time.to_i}.to_enum
+    final_hash = {}
+    begin
+      current_paid = enum_paid.next
+      current_created = enum_created.next
+      while(1)
+        if current_created["_id"] == current_paid["_id"]
+          final_hash[current_created["_id"].to_time] = current_created["value"].merge(current_paid["value"])
+          current_paid = enum_paid.next
+          current_created = enum_created.next
+        elsif current_created["_id"].to_time.to_i > current_paid["_id"].to_time.to_i
+          while(current_created["_id"].to_time.to_i > current_paid["_id"].to_time.to_i)
+            final_hash[current_paid["_id"].to_time] = current_paid["value"].merge("created_fee" => 0.0)
+            current_paid = enum_paid.next
+          end
+        else
+          while(current_created["_id"].to_time.to_i < current_paid["_id"].to_time.to_i)
+            final_hash[current_created["_id"].to_time] = current_created["value"].merge("paid_fee" => 0.0)
+            current_created = enum_created.next
+          end
+        end
+      end
+      rescue StopIteration
+    end
+    begin
+      while(1)
+        current_created = enum_created.next
+        final_hash[current_created["_id"].to_time] = current_created["value"].merge("paid_fee" => "0")
+      end
+      rescue StopIteration
+    end
+    begin
+      while(1)
+        current_paid = enum_paid.next
+        final_hash[current_paid["_id"].to_time] = current_paid["value"].merge("created_fee" => "0")
+      end
+      rescue StopIteration
+    end
+    [amount_all,amount_paid,final_hash]
+  end
+
   def product_data(trades, old_trades)
 
     ##对数据map_reduce
@@ -12,16 +161,6 @@ module SalesHelper
       }
       }
     }
-    # deprecated
-    # map = %Q{
-    #   function() {
-    #   for(var i in this.taobao_orders) {
-    #     if(this.taobao_orders[i].outer_iid != null){
-    #       emit(this.taobao_orders[i].outer_iid, {total_fee: this.taobao_orders[i].total_fee, num: this.taobao_orders[i].num });
-    #     }
-    #   }
-    #   }
-    # }
 
     reduce = %Q{
       function(key, values) {

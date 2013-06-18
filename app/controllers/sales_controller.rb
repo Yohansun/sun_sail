@@ -3,6 +3,12 @@ class SalesController < ApplicationController
   before_filter :authorize,:except => [:add_node, :edit, :update, :fetch_data]
   include SalesHelper
 
+  def summary
+    @start_time = (params[:start_time].to_time(:local) rescue nil) || 1.month.ago
+    @end_time = (params[:end_time].to_time(:local) rescue nil) || Time.now
+    @final_hash = generate_sale_chart_data(@start_time, @end_time)[2]
+  end
+
   def show
     ## 参数初始化
     @sale = current_account.sales.last
@@ -16,152 +22,7 @@ class SalesController < ApplicationController
     @start_at = @sale.start_at
     @end_at = @sale.end_at
 
-    c_map = %Q{
-      function() {
-        emit(this.created.toString().slice(4,20).concat("0:00"), {created_fee: this.payment});
-      }
-    }
-
-    p_map = %Q{
-      function() {
-        if(this.pay_time != null){
-          emit(this.pay_time.toString().slice(4,20).concat("0:00"), {paid_fee: this.payment});
-        }
-      }
-    }
-
-    week_c_map = %Q{
-      function() {
-        emit(this.created.toString().slice(4,17).concat("0:00:00"), {created_fee: this.payment});
-      }
-    }
-
-    week_p_map = %Q{
-      function() {
-        if(this.pay_time != null){
-          emit(this.pay_time.toString().slice(4,17).concat("0:00:00"), {paid_fee: this.payment});
-        }
-      }
-    }
-
-    month_c_map = %Q{
-      function() {
-        emit(this.created.toString().slice(4,16).concat("00:00:00"), {created_fee: this.payment});
-      }
-    }
-
-    month_p_map = %Q{
-      function() {
-        if(this.pay_time != null){
-          emit(this.pay_time.toString().slice(4,16).concat("00:00:00"), {paid_fee: this.payment});
-        }
-      }
-    }
-
-    year_c_map = %Q{
-      function() {
-        if(this.created.toString().slice(8,9) == 3){
-          emit(this.created.toString().slice(4,8).concat("01").concat(Date().toString().slice(10,16)), {created_fee: this.payment});
-        } else {
-          emit(this.created.toString().slice(4,9).concat("1").concat(Date().toString().slice(10,16)), {created_fee: this.payment});
-        }
-      }
-    }
-
-    year_p_map = %Q{
-      function() {
-        if(this.pay_time != null){
-          if(this.created.toString().slice(8,9) == 3){
-            emit(this.pay_time.toString().slice(4,8).concat("01").concat(Date().toString().slice(10,16)), {paid_fee: this.payment});
-          } else{
-            emit(this.pay_time.toString().slice(4,9).concat("1").concat(Date().toString().slice(10,16)), {paid_fee: this.payment});
-          }
-        }
-      }
-    }
-
-    c_reduce = %Q{
-      function(key, values) {
-        var result = {created_fee: 0};
-        values.forEach(function(value) {
-          result.created_fee += value.created_fee;
-        });
-        return result;
-      }
-    }
-
-    p_reduce = %Q{
-      function(key, values) {
-        var result = {paid_fee: 0};
-        values.forEach(function(value) {
-          result.paid_fee += value.paid_fee;
-        });
-        return result;
-      }
-    }
-
-    created_trades = TaobaoTrade.where(account_id: current_account.id).between(created: (@start_at.to_time - 8.hours)..(@end_at.to_time - 8.hours))
-    paid_trades = TaobaoTrade.where(account_id: current_account.id).between(pay_time: (@start_at.to_time - 8.hours)..(@end_at.to_time - 8.hours))
-    @amount_all = created_trades.try(:sum, :payment) || 0
-    @amount_paid = paid_trades.try(:sum, :payment) || 0
-    if @end_at.to_i - @start_at.to_i < 3.days.to_i
-      created_map_reduce = created_trades.map_reduce(c_map, c_reduce).out(inline: true)
-      paid_map_reduce = paid_trades.map_reduce(p_map, p_reduce).out(inline: true)
-    elsif @end_at.to_i - @start_at.to_i >= 3.days.to_i && @end_at.to_i - @start_at.to_i < 1.month.to_i
-      created_map_reduce = created_trades.map_reduce(week_c_map, c_reduce).out(inline: true)
-      paid_map_reduce = paid_trades.map_reduce(week_p_map, p_reduce).out(inline: true)
-    elsif @end_at.to_i - @start_at.to_i >= 1.month.to_i && @end_at.to_i - @start_at.to_i < 3.months.to_i
-      created_map_reduce = created_trades.map_reduce(month_c_map, c_reduce).out(inline: true)
-      paid_map_reduce = paid_trades.map_reduce(month_p_map, p_reduce).out(inline: true)
-    elsif @end_at.to_i - @start_at.to_i >= 3.months.to_i
-      created_map_reduce = created_trades.map_reduce(year_c_map, c_reduce).out(inline: true)
-      paid_map_reduce = paid_trades.map_reduce(year_p_map, p_reduce).out(inline: true)
-    end
-
-    # 非典型性循环
-    enum_paid = paid_map_reduce.sort{|x,y| x["_id"].to_time.to_i <=> y["_id"].to_time.to_i}.to_enum
-    enum_created = created_map_reduce.sort{|x,y| x["_id"].to_time.to_i <=> y["_id"].to_time.to_i}.to_enum
-    @final_hash = {}
-    begin
-      current_paid = enum_paid.next
-      current_created = enum_created.next
-#      p current_paid
-#      p current_created
-      while(1)
-        if current_created["_id"] == current_paid["_id"]
-          @final_hash[current_created["_id"].to_time] = current_created["value"].merge(current_paid["value"])
-          current_paid = enum_paid.next
-          current_created = enum_created.next
-        elsif current_created["_id"].to_time.to_i > current_paid["_id"].to_time.to_i
-          while(current_created["_id"].to_time.to_i > current_paid["_id"].to_time.to_i)
-            @final_hash[current_paid["_id"].to_time] = current_paid["value"].merge("created_fee" => 0.0)
-            current_paid = enum_paid.next
-          end
-        else
-          while(current_created["_id"].to_time.to_i < current_paid["_id"].to_time.to_i)
-            @final_hash[current_created["_id"].to_time] = current_created["value"].merge("paid_fee" => 0.0)
-            current_created = enum_created.next
-          end
-        end
-      end
-      rescue StopIteration
-    end
-    begin
-      while(1)
-        current_created = enum_created.next
-        @final_hash[current_created["_id"].to_time] = current_created["value"].merge("paid_fee" => "0")
-      end
-      rescue StopIteration
-    end
-    begin
-      while(1)
-        current_paid = enum_paid.next
-        @final_hash[current_paid["_id"].to_time] = current_paid["value"].merge("created_fee" => "0")
-      end
-      rescue StopIteration
-    end
-
-#    p created_map_reduce.count
+    @amount_all,@amount_paid,@final_hash = generate_sale_chart_data(@start_at, @end_at)
 
     @progress_bar = (@amount_paid/@sale.earn_guess*100).to_i
     Rails.cache.write 'amount_all', @amount_all
@@ -214,21 +75,11 @@ class SalesController < ApplicationController
   end
 
   def product_analysis
-    @start_date = params[:start_date] if params[:start_date].present?
-    @end_date = params[:end_date] if params[:end_date].present?
-    @start_time = params[:start_time] if params[:start_time].present?
-    @end_time = params[:end_time] if params[:end_time].present?
-
-    if @start_date && @end_date
-      start_at = "#{@start_date} #{@start_time}".to_time(:local)
-      end_at = "#{@end_date} #{@end_time}".to_time(:local)
-      @trades = TaobaoTrade.where(account_id: current_account.id).between(created: start_at..end_at).in(status: ["TRADE_FINISHED","FINISHED_L"])
-      time_gap = (end_at - start_at).to_i
-      @old_trades = TaobaoTrade.where(account_id: current_account.id).between(created: (start_at - time_gap.seconds)..start_at).in(status: ["TRADE_FINISHED","FINISHED_L"])
-    else
-      @trades = TaobaoTrade.where(account_id: current_account.id).between(created: 1.month.ago..Time.now).in(status: ["TRADE_FINISHED","FINISHED_L"])
-      @old_trades = TaobaoTrade.where(account_id: current_account.id).between(created: 2.month.ago..1.month.ago).in(status: ["TRADE_FINISHED","FINISHED_L"])
-    end
+    @start_time = (params[:start_time].to_time(:local) rescue nil) || 1.month.ago
+    @end_time = (params[:end_time].to_time(:local) rescue nil) || Time.now
+    @trades = TaobaoTrade.where(account_id: current_account.id).between(created: @start_time..@end_time).in(status: ["TRADE_FINISHED","FINISHED_L"])
+    time_gap = (@end_time - @start_time).to_i
+    @old_trades = TaobaoTrade.where(account_id: current_account.id).between(created: (@start_time - time_gap.seconds)..@start_time).in(status: ["TRADE_FINISHED","FINISHED_L"])
 
     if @trades && @old_trades
       @product_data = product_data(@trades, @old_trades)
@@ -236,82 +87,33 @@ class SalesController < ApplicationController
   end
 
   def area_analysis
-    @start_date = params[:start_date] if params[:start_date].present?
-    @end_date = params[:end_date] if params[:end_date].present?
-    @start_time = params[:start_time] if params[:start_time].present?
-    @end_time = params[:end_time] if params[:end_time].present?
-
-    if @start_date && @end_date
-      start_at = "#{@start_date} #{@start_time}".to_time(:local)
-      end_at = "#{@end_date} #{@end_time}".to_time(:local)
-    else
-      start_at = 1.month.ago
-      end_at = Time.now
-    end
-    @area_data = area_data(start_at, end_at)
+    @start_time = (params[:start_time].to_time(:local) rescue nil) || 1.month.ago
+    @end_time = (params[:end_time].to_time(:local) rescue nil) || Time.now
+    @area_data = area_data(@start_time, @end_time)
   end
 
   def price_analysis
-    @start_date = params[:start_date] if params[:start_date].present?
-    @end_date = params[:end_date] if params[:end_date].present?
-    @start_time = params[:start_time] if params[:start_time].present?
-    @end_time = params[:end_time] if params[:end_time].present?
-    if@start_date && @end_date
-      start_at = "#{@start_date} #{@start_time}".to_time(:local)
-      end_at = "#{@end_date} #{@end_time}".to_time(:local)
-    else
-      start_at = 1.month.ago
-      end_at = Time.now
-    end
-    @price_data = price_data(start_at, end_at)
+    @start_time = (params[:start_time].to_time(:local) rescue nil) || 1.month.ago
+    @end_time = (params[:end_time].to_time(:local) rescue nil) || Time.now
+    @price_data = price_data(@start_time, @end_time)
   end
 
   def time_analysis
-    @start_date = params[:start_date] if params[:start_date].present?
-    @end_date = params[:end_date] if params[:end_date].present?
-    @start_time = params[:start_time] if params[:start_time].present?
-    @end_time = params[:end_time] if params[:end_time].present?
-    if @start_date && @end_date
-      start_at = "#{@start_date} #{@start_time}".to_time(:local)
-      end_at = "#{@end_date} #{@end_time}".to_time(:local)
-    else
-      start_at = 1.month.ago
-      end_at = Time.now
-    end
-    @time_data = time_data(start_at, end_at)
-  end
-
-  def customer_analysis
+    @start_time = (params[:start_time].to_time(:local) rescue nil) || 1.month.ago
+    @end_time = (params[:end_time].to_time(:local) rescue nil) || Time.now
+    @time_data = time_data(@start_time, @end_time)
   end
 
   def frequency_analysis
-    @start_date = params[:start_date] if params[:start_date].present?
-    @end_date = params[:end_date] if params[:end_date].present?
-    @start_time = params[:start_time] if params[:start_time].present?
-    @end_time = params[:end_time] if params[:end_time].present?
-    if @start_date && @end_date
-      start_at = "#{@start_date} #{@start_time}".to_time(:local)
-      end_at = "#{@end_date} #{@end_time}".to_time(:local)
-    else
-      start_at = 1.month.ago
-      end_at = Time.now
-    end
-    @frequency_data = frequency_data(start_at, end_at)
+    @start_time = (params[:start_time].to_time(:local) rescue nil) || 1.month.ago
+    @end_time = (params[:end_time].to_time(:local) rescue nil) || Time.now
+    @frequency_data = frequency_data(@start_time, @end_time)
   end
 
   def univalent_analysis
-    @start_date = params[:start_date] if params[:start_date].present?
-    @end_date = params[:end_date] if params[:end_date].present?
-    @start_time = params[:start_time] if params[:start_time].present?
-    @end_time = params[:end_time] if params[:end_time].present?
-    if @start_date && @end_date
-      start_at = "#{@start_date} #{@start_time}".to_time(:local)
-      end_at = "#{@end_date} #{@end_time}".to_time(:local)
-    else
-      start_at = 1.month.ago
-      end_at = Time.now
-    end
-    @univalent_data = univalent_data(start_at, end_at)
+    @start_time = (params[:start_time].to_time(:local) rescue nil) || 1.month.ago
+    @end_time = (params[:end_time].to_time(:local) rescue nil) || Time.now
+    @univalent_data = univalent_data(@start_time, @end_time)
   end
 
 end

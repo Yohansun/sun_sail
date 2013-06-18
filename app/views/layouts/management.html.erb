@@ -73,8 +73,8 @@
                 <% if current_user.allow_read?(:trades) %>
                 <li><a href="/app#trades" class="trades">订单管理</a></li>
                 <% end %>
-                <%- if  current_user.allowed_to?("sales","product_analysis")%>
-                  <li><a href="/sales/product_analysis">数据魔方</a></li>
+                <%- if  current_user.allowed_to?("sales","summary")%>
+                  <li><a href="/sales/summary">数据魔方</a></li>
                 <%- elsif  current_user.allow_read?(:datas,"trade_reports#index") %>
                   <li><a href="/trade_reports">数据魔方</a></li>
                 <%- end %>

@@ -62,7 +62,7 @@
                 <li class="<%= 'active' if controller_name == 'trade_reports'%>">
                   <%= link_to "报表下载",trade_reports_path if authorize?("trade_reports","index")%></li>
                 <li class="<%= 'active' if controller_name == 'sales'%>">
-                  <%= link_to "销售", sales_product_analysis_path if authorize?("sales","product_analysis")  %></li>
+                  <%= link_to "销售",  summary_sales_path if authorize?("sales","summary")  %></li>
                   <!-- <li class="<%#= 'active' if controller_name == 'customers'%> ">
                     <%#= link_to "顾客管理",customers_path if authorize?("customers","index")%></li> -->
             <% end %>
@@ -75,8 +75,8 @@
                 <% if current_user.allow_read?(:trades) %>
                 <li><a href="/app#trades" class="trades">订单管理</a></li>
                 <% end %>
-                <%- if  current_user.allowed_to?("sales","product_analysis")%>
-                  <li><a href="/sales/product_analysis">数据魔方</a></li>
+                <%- if  current_user.allowed_to?("sales","summary")%>
+                  <li><a href="/sales/summary">数据魔方</a></li>
                 <%- elsif  current_user.allow_read?(:datas,"trade_reports#index") %>
                   <li><a href="/trade_reports">数据魔方</a></li>
                 <%- end %>

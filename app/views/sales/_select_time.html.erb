@@ -12,20 +12,18 @@
                       "/sales/frequency_analysis"
                     when 'univalent_analysis'
                       "/sales/univalent_analysis"
-                    else
-                      "/trades_reports"
+                    when 'summary'
+                      "/sales/summary"
                     end
   -%>
   <form  ation="<%= action_url %>" class="well form-horizontal">
     <div class="control-group nomargin">
-      <label class="control-label" for="">生成时间(默认一个月)：</label>
+      <label class="control-label" for="">生成时间：</label>
       <div class="controls clearfix">
         <fieldset class="pull-left form-inline mar_r10">
-            <input type="text" class="input-small datepickers" name="start_date" value="<%= @start_date %>">
-            <input type="text" class="input-mini timepickers" name="start_time" value="<%= @start_time %> ">
+            <input type="text" class="input-medium datetimepicker_full" name="start_time" value="<%= @start_time.strftime("%Y-%m-%d %H:%M:%S") %>">
             <i class="icon-arrow-right"></i>
-            <input type="text" class="input-small datepickers"  name="end_date" value="<%= @end_date %>">
-            <input type="text" class="input-mini timepickers" name="end_time" value="<%= @end_time %>">
+            <input type="text" class="input-medium datetimepicker_full"  name="end_time" value="<%= @end_time.strftime("%Y-%m-%d %H:%M:%S") %>">
         </fieldset>
           <button type="submit" class="btn btn-info">过滤</button>
       </div>

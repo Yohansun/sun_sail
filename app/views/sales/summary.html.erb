@@ -4,29 +4,72 @@
       <li><a href="/">Magic</a><span class="divider">/</span></li>
       <li><a href="/sales/summary">数据魔方</a><span class="divider">/</span></li>
       <li><a href="#">销售分析</a><span class="divider">/</span></li>
-      <li class="active">实时销售[<%= @sale.name %>]</li>
-      <li style="position:absolute;right:15px;top:6px;"><%= link_to '设定', edit_sale_path %></li>
+      <li class="active">概要</li>
     </ul><!-- breadcrumb -->
     <%= render 'header' %>
-    <div class="progress progress-info progress-striped mar_t10">
-      <div class="bar" id="progress_bar" style="width: <%= @progress_bar %>%"></div>
-    </div>
-
-    <div class="clearfix info_show">
-      <h4 id="timer_count" class="add_unit tc span3">0000-00-00<strong>00:00:00</strong></h4>
-      <%- if Time.now > @end_at %>
-      <h4 class="add_unit tc span3">倒计时<strong><span id="day_text"><span id="day">0</span>天</span><span id="timer">00:00:00</span></strong></h4>
-      <%- else %>
-      <h4 class="add_unit tc span3">倒计时<strong><span id="day_text"><span id="day"><%= @sale.time_gap[0] %></span>天</span><span id="timer"><%= @sale.time_gap[1] %></span></strong></h4>
-      <%- end %>
-      <h4 class="add_unit tc span3" id="deal_money">下单金额<strong><%= @amount_all.round(2) %></strong></h4>
-      <h4 class="add_unit tc span3" id="paid_money">实际成交金额<strong><%= @amount_paid.round(2) %></strong></h4>
-    </div>
-
-
+    <%= render 'select_time' %>
+    <% info = summary_analysis %>
     <div class="well">
       <div id="chartdiv" style="width: 100%; height: 400px;"><h4>正在处理数据，请稍等...</h4></div>
     </div>
+    <div class="well" style="height:150px">
+      <h4 style="text-align:center;">订单统计</h4>
+      <fieldset class="span3"></fieldset>
+      <fieldset class="span4">
+        <div class="control-group">
+          <label>本日的订单总数：<%= info[0][0] %></label>
+          <label>本日未付款订单数：<%= info[0][1] %></label>
+          <label>本日已付款订单数：<%= info[0][2] %></label>
+          <label>本日部分退款订单数：<%= info[0][3] %></label>
+          <label>本日全额退款订单数：<%= info[0][4] %></label>
+        </div>
+      </fieldset>
+      <fieldset class="span3">
+        <div class="control-group">
+          <label>本月的订单总数：<%= info[1][0] %></label>
+          <label>本月未付款订单数：<%= info[1][1] %></label>
+          <label>本月已付款订单数：<%= info[1][2] %></label>
+          <label>本月部分退款订单数：<%= info[1][3] %></label>
+          <label>本月全额退款订单数：<%= info[1][4] %></label>
+        </div>
+      </fieldset>
+    </div>
+    <div class="well" style="height:150px">
+      <h4 style="text-align:center;">金额统计</h4>
+      <fieldset class="span3"></fieldset>
+      <fieldset class="span4">
+        <div class="control-group">
+          <label>本日完成订单总额：<%= info[0][5] %></label>
+          <label>本日下单订单总额：<%= info[0][6] %></label>
+          <label>本日付款订单总额：<%= info[0][7] %></label>
+          <label>本日退货订单总额：<%= info[0][8] %></label>
+          <label>本日取消订单总额：<%= info[0][9] %></label>
+        </div>
+      </fieldset>
+      <fieldset class="span3">
+        <div class="control-group">
+          <label>本月完成订单总额：<%= info[1][5] %></label>
+          <label>本月下单订单总额：<%= info[1][6] %></label>
+          <label>本月付款订单总额：<%= info[1][7] %></label>
+          <label>本月退货订单总额：<%= info[1][8] %></label>
+          <label>本月取消订单总额：<%= info[1][9] %></label>
+        </div>
+      </fieldset>
+    </div>
+    <!-- <div class="well" style="height:50px">
+      <h4 style="text-align:center;">净收入统计</h4>
+      <fieldset class="span3"></fieldset>
+      <fieldset class="span4">
+        <div class="control-group">
+          <label>本日净收入总额：</label>
+        </div>
+      </fieldset>
+      <fieldset class="span3">
+        <div class="control-group">
+          <label>本月净收入总额：</label>
+        </div>
+      </fieldset>
+    </div> -->
   </div>
 </div>
 
@@ -35,8 +78,6 @@
     var chart;
 
     var chartData = [];
-
-    var time_now = new Date(<%= Time.now.year %>, <%= Time.now.month - 1 %>, <%= Time.now.day %>, <%= Time.now.hour %>, <%= Time.now.min %>)
 
     <% @final_hash.each do |time, value| -%>
       chartData.push({date: new Date(<%= time.year %>, <%= time.month - 1 %>, <%= time.day %>, <%= time.hour %>, <%= time.min %>, <%= time.sec %>), amount: <%= value["created_fee"] %>, amountall: <%= value["paid_fee"] %>})
@@ -185,80 +226,5 @@
       chart.zoomOut();
     }
 
-    //添加坐标点
-    var clear_loop;
-
-    function add_node(){
-      clear_loop = setInterval(function(){
-          $.get("/sales/add_node", {}, function(data){
-            chartData.push({
-              date: new Date(data.year, data.month - 1, data.day, data.hour, data.min), amount: data.amount, amountall: data.amountall
-              });
-            chart.validateData();
-            var width = "width:" + data.progress_bar + "%"
-            var deal_money = "下单金额<strong>" + data.bill_money + "</strong>"
-            var paid_money = "实际成交金额<strong>" + data.paid_money + "</strong>"
-            $("#progress_bar").attr("style",width)
-            $('#deal_money').html(deal_money)
-            $('#paid_money').html(paid_money)
-          });
-      }, <%= current_account.settings.frequency*1000 %>);
-    };
-
-    if (time_now > end_date){
-      clearInterval(clear_loop)
-    }
-
-    //实时销售时间设定
-    function setTime(id){
-      var timer = new Date(<%= Time.now.year %>, <%= Time.now.month - 1 %>, <%= Time.now.day %>, <%= Time.now.hour %>, <%= Time.now.min %>,<%= Time.now.sec %> + count),
-      obj = {
-        year : timer.getFullYear(),
-        month : timer.getMonth() + 1,
-        date : timer.getDate(),
-        hour : timer.getHours(),
-        minute : timer.getMinutes(),
-        second : timer.getSeconds()
-      };
-      for(var i in obj){
-        obj[i] = (obj[i] < 10 ? '0' : '') + obj[i];
-      }
-      document.getElementById(id).innerHTML = obj.year + '-' + obj.month + '-' + obj.date + '<strong>' + obj.hour + ':' + obj.minute + ':' + obj.second + '</strong>';
-    }
-    var count = 0
-    $(function(){
-      setInterval(function(){
-        setTime('timer_count');
-        count ++
-      }, 1000);
-    });
-
-    //判断是否设置定时实时销售开始
-    var start_date = new Date(<%= @start_at.year %>, <%= @start_at.month - 1 %>, <%= @start_at.day %>, <%= @start_at.hour %>, <%= @start_at.min %>)
-
-    var end_date = new Date(<%= @end_at.year %>, <%= @end_at.month - 1 %>, <%= @end_at.day %>, <%= @end_at.hour %>, <%= @end_at.min %>)
-
-    if (time_now < start_date){
-      $(function(){
-        setTimeout(function(){
-          add_node();
-          count_down();
-        }, start_date - new Date(<%= Time.now.year %>, <%= Time.now.month - 1 %>, <%= Time.now.day %>, <%= Time.now.hour %>, <%= Time.now.min %>,<%= Time.now.sec %>));
-      });
-    } else if (time_now > end_date){
-    } else {
-      add_node();
-      count_down();
-    }
-
-    //设置倒计时
-    function count_down(){
-      $(document).counter({
-        day : $('#day'),
-        timer : $('#timer'),
-        starts : new Date(<%= @start_at.year %>, <%= @start_at.month - 1 %>, <%= @start_at.day %>, <%= @start_at.hour %>, <%= @start_at.min %>,<%= @start_at.sec %>),
-        deadline : new Date(<%= @end_at.year %>, <%= @end_at.month - 1 %>, <%= @end_at.day %>, <%= @end_at.hour %>, <%= @end_at.min %>,<%= @end_at.sec %>)
-      });
-    }
   </script>
 <% end %>
