@@ -183,6 +183,8 @@ GEM
     hashie (1.2.0)
     highline (1.6.15)
     hike (1.2.1)
+    hipchat (0.10.0)
+      httparty
     hirb (0.7.0)
     http_parser.rb (0.5.3)
     httparty (0.10.0)
@@ -505,6 +507,7 @@ DEPENDENCIES
   guard-bundler
   guard-rspec
   guard-spork
+  hipchat
   hirb
   httparty
   hz2py
