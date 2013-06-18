@@ -1,4 +1,6 @@
 # -*- encoding : utf-8 -*-
+require 'hipchat/capistrano'
+
 set :rvm_ruby_string, '1.9.3'
 set :rvm_type, :system
 
@@ -11,6 +13,9 @@ set :deploy_to, "/var/rails/magic-solo"
 
 set :assets_dependencies, %w(app/assets lib/assets vendor/assets Gemfile.lock config/routes.rb)
 
+set :hipchat_token, "4cbf6fde19410295cad3d202a87ade"
+set :hipchat_room_name, "Release House"
+set :hipchat_announce, false
 # tasks
 namespace :deploy do
 
