@@ -157,7 +157,7 @@ class Trade
                       ["买家已签收,货到付款专用"            ,"TRADE_BUYER_SIGNED"],
                       ["交易成功"                         ,"TRADE_FINISHED"],
                       ["付款以后用户退款成功，交易自动关闭"   ,"TRADE_CLOSED"],
-                      ["付款以前，卖家或买家主动关闭交易"     ,"TRADE_CLOSED_BY_TAOBAO"]]
+                      ["付款以前，卖家或买家主动关闭交易"     ,"TRADE_CLOSED_BY_TAOBAO"]],:not_valid => true
 
   attr_accessor :matched_seller
 
