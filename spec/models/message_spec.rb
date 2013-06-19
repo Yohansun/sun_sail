@@ -10,7 +10,7 @@ describe Message do
   end
   
   it "Test validations" do
-    @message.errors.messages.should == {:send_type=>["不能为空", "不包含于列表中"], :recipients=>["不能为空"], :account_id=>["不能为空"], :title=>["不能为空"], :content=>["不能为空"]}
+    @message.errors.messages.should == {:send_type=>["不包含于列表中"], :recipients=>["不能为空"], :account_id=>["不能为空"], :title=>["不能为空"], :content=>["不能为空"]}
     
     @message.update_attributes(:send_type => "sms",:recipients => "abc,123",:account_id => 1, :title => "test", :content => "...")
     @message.errors.messages.should == {:recipients=>["电话号码只能是数字"]}

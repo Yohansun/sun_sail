@@ -19,6 +19,10 @@ require 'spec_helper'
 # that an instance is receiving a specific message.
 
 describe SkusController do
+  login_admin
+  
+  let(:sku) {FactoryGirl.create(:sku)}
+  let(:product) { FactoryGirl.create(:product,:skus => [sku]) }
 
   # This should return the minimal set of attributes required to create a valid
   # Sku. As you add validations to Sku, be sure to
@@ -36,67 +40,69 @@ describe SkusController do
 
   describe "GET index" do
     it "assigns all skus as @skus" do
-      sku = Sku.create! valid_attributes
-      get :index, {}, valid_session
+      get :index,{:product_id => product}, valid_session
       assigns(:skus).should eq([sku])
     end
   end
 
   describe "GET show" do
     it "assigns the requested sku as @sku" do
-      sku = Sku.create! valid_attributes
-      get :show, {:id => sku.to_param}, valid_session
+      get :show, {:product_id => product,:id => sku.to_param}, valid_session
       assigns(:sku).should eq(sku)
     end
   end
 
   describe "GET new" do
     it "assigns a new sku as @sku" do
-      get :new, {}, valid_session
+      category = product.category = FactoryGirl.create(:category,:use_days => 1,:name => "dmow")
+      product.save
+      get :new, {:product_id => product}, valid_session
       assigns(:sku).should be_a_new(Sku)
     end
   end
 
   describe "GET edit" do
     it "assigns the requested sku as @sku" do
-      sku = Sku.create! valid_attributes
-      get :edit, {:id => sku.to_param}, valid_session
+      get :edit, {:product_id => product,:id => sku.to_param}, valid_session
       assigns(:sku).should eq(sku)
     end
   end
 
   describe "POST create" do
     describe "with valid params" do
+      let(:product) { FactoryGirl.create(:product) }
       it "creates a new Sku" do
         expect {
-          post :create, {:sku => valid_attributes}, valid_session
+          post :create, {:product_id => product,:sku => valid_attributes}, valid_session
         }.to change(Sku, :count).by(1)
       end
 
       it "assigns a newly created sku as @sku" do
-        post :create, {:sku => valid_attributes}, valid_session
+        post :create, {:product_id => product,:sku => valid_attributes}, valid_session
         assigns(:sku).should be_a(Sku)
         assigns(:sku).should be_persisted
       end
 
       it "redirects to the created sku" do
-        post :create, {:sku => valid_attributes}, valid_session
-        response.should redirect_to(Sku.last)
+        post :create, {:product_id => product,:sku => valid_attributes}, valid_session
+        response.should redirect_to(product_sku_path(product,Sku.last))
       end
     end
 
     describe "with invalid params" do
+      let(:product) { FactoryGirl.create(:product) }
       it "assigns a newly created but unsaved sku as @sku" do
         # Trigger the behavior that occurs when invalid params are submitted
         Sku.any_instance.stub(:save).and_return(false)
-        post :create, {:sku => {  }}, valid_session
+
+        post :create, {:product_id => product,:sku => {  }}, valid_session
         assigns(:sku).should be_a_new(Sku)
       end
 
       it "re-renders the 'new' template" do
         # Trigger the behavior that occurs when invalid params are submitted
         Sku.any_instance.stub(:save).and_return(false)
-        post :create, {:sku => {  }}, valid_session
+        post :create, {:product_id => product,:sku => {  }}, valid_session
         response.should render_template("new")
       end
     end
@@ -104,6 +110,7 @@ describe SkusController do
 
   describe "PUT update" do
     describe "with valid params" do
+      let(:product) { FactoryGirl.create(:product) }
       it "updates the requested sku" do
         sku = Sku.create! valid_attributes
         # Assuming there are no other skus in the database, this
@@ -111,28 +118,29 @@ describe SkusController do
         # receives the :update_attributes message with whatever params are
         # submitted in the request.
         Sku.any_instance.should_receive(:update_attributes).with({ "these" => "params" })
-        put :update, {:id => sku.to_param, :sku => { "these" => "params" }}, valid_session
+        put :update, {:product_id => product,:id => sku.to_param, :sku => { "these" => "params" }}, valid_session
       end
 
       it "assigns the requested sku as @sku" do
         sku = Sku.create! valid_attributes
-        put :update, {:id => sku.to_param, :sku => valid_attributes}, valid_session
+        put :update, {:product_id => product,:id => sku.to_param, :sku => valid_attributes}, valid_session
         assigns(:sku).should eq(sku)
       end
 
       it "redirects to the sku" do
         sku = Sku.create! valid_attributes
-        put :update, {:id => sku.to_param, :sku => valid_attributes}, valid_session
-        response.should redirect_to(sku)
+        put :update, {:product_id => product,:id => sku.to_param, :sku => valid_attributes}, valid_session
+        response.should redirect_to(product_sku_path(product,sku))
       end
     end
 
     describe "with invalid params" do
+      let(:product) { FactoryGirl.create(:product) }
       it "assigns the sku as @sku" do
         sku = Sku.create! valid_attributes
         # Trigger the behavior that occurs when invalid params are submitted
         Sku.any_instance.stub(:save).and_return(false)
-        put :update, {:id => sku.to_param, :sku => {  }}, valid_session
+        put :update, {:product_id => product,:id => sku.to_param, :sku => {  }}, valid_session
         assigns(:sku).should eq(sku)
       end
 
@@ -140,24 +148,25 @@ describe SkusController do
         sku = Sku.create! valid_attributes
         # Trigger the behavior that occurs when invalid params are submitted
         Sku.any_instance.stub(:save).and_return(false)
-        put :update, {:id => sku.to_param, :sku => {  }}, valid_session
+        put :update, {:product_id => product,:id => sku.to_param, :sku => {  }}, valid_session
         response.should render_template("edit")
       end
     end
   end
 
   describe "DELETE destroy" do
+    let(:sku) { FactoryGirl.create(:sku) }
+    let(:product) { FactoryGirl.create(:product,:skus => [sku]) }
     it "destroys the requested sku" do
-      sku = Sku.create! valid_attributes
+      product
       expect {
-        delete :destroy, {:id => sku.to_param}, valid_session
+        delete :destroy, {:product_id => product,:id => sku.to_param }, valid_session
       }.to change(Sku, :count).by(-1)
     end
 
     it "redirects to the skus list" do
-      sku = Sku.create! valid_attributes
-      delete :destroy, {:id => sku.to_param}, valid_session
-      response.should redirect_to(skus_url)
+      delete :destroy, {:product_id => product,:id => sku.to_param}, valid_session
+      response.should redirect_to(product_skus_path(product))
     end
   end
 

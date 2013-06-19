@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe NotifyController do
+  login_admin
 
   describe "GET 'sms'" do
     it "returns http success" do

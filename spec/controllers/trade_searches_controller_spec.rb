@@ -19,6 +19,12 @@ require 'spec_helper'
 # that an instance is receiving a specific message.
 
 describe TradeSearchesController do
+  login_admin
+  
+  let(:trade_search) { FactoryGirl.create(:trade_search,:account_id => current_account.id,:show_in_tabs => true) }
+  before(:each) do
+    controller.stub!(:current_account).and_return(current_account)
+  end
 
   # This should return the minimal set of attributes required to create a valid
   # TradeSearch. As you add validations to TradeSearch, be sure to
@@ -36,15 +42,15 @@ describe TradeSearchesController do
 
   describe "GET index" do
     it "assigns all trade_searches as @trade_searches" do
-      trade_search = TradeSearch.create! valid_attributes
       get :index, {}, valid_session
-      assigns(:trade_searches).should eq([trade_search])
+      assigns(:trade_searches).each do |trade_search|
+        trade_search.should == trade_search
+      end
     end
   end
 
   describe "GET show" do
     it "assigns the requested trade_search as @trade_search" do
-      trade_search = TradeSearch.create! valid_attributes
       get :show, {:id => trade_search.to_param}, valid_session
       assigns(:trade_search).should eq(trade_search)
     end
@@ -59,7 +65,6 @@ describe TradeSearchesController do
 
   describe "GET edit" do
     it "assigns the requested trade_search as @trade_search" do
-      trade_search = TradeSearch.create! valid_attributes
       get :edit, {:id => trade_search.to_param}, valid_session
       assigns(:trade_search).should eq(trade_search)
     end
@@ -105,7 +110,6 @@ describe TradeSearchesController do
   describe "PUT update" do
     describe "with valid params" do
       it "updates the requested trade_search" do
-        trade_search = TradeSearch.create! valid_attributes
         # Assuming there are no other trade_searches in the database, this
         # specifies that the TradeSearch created on the previous line
         # receives the :update_attributes message with whatever params are
@@ -115,13 +119,11 @@ describe TradeSearchesController do
       end
 
       it "assigns the requested trade_search as @trade_search" do
-        trade_search = TradeSearch.create! valid_attributes
         put :update, {:id => trade_search.to_param, :trade_search => valid_attributes}, valid_session
         assigns(:trade_search).should eq(trade_search)
       end
 
       it "redirects to the trade_search" do
-        trade_search = TradeSearch.create! valid_attributes
         put :update, {:id => trade_search.to_param, :trade_search => valid_attributes}, valid_session
         response.should redirect_to(trade_search)
       end
@@ -129,18 +131,18 @@ describe TradeSearchesController do
 
     describe "with invalid params" do
       it "assigns the trade_search as @trade_search" do
-        trade_search = TradeSearch.create! valid_attributes
+        trade_search
         # Trigger the behavior that occurs when invalid params are submitted
-        TradeSearch.any_instance.stub(:save).and_return(false)
-        put :update, {:id => trade_search.to_param, :trade_search => {  }}, valid_session
+        TradeSearch.any_instance.stub(:save).and_return(true)
+        put :update, {:id => trade_search.to_param, :trade_search => { }}, valid_session
         assigns(:trade_search).should eq(trade_search)
       end
 
       it "re-renders the 'edit' template" do
-        trade_search = TradeSearch.create! valid_attributes
+        trade_search
         # Trigger the behavior that occurs when invalid params are submitted
         TradeSearch.any_instance.stub(:save).and_return(false)
-        put :update, {:id => trade_search.to_param, :trade_search => {  }}, valid_session
+        put :update, {:id => trade_search.to_param, :trade_search => {}}, valid_session
         response.should render_template("edit")
       end
     end
@@ -148,14 +150,13 @@ describe TradeSearchesController do
 
   describe "DELETE destroy" do
     it "destroys the requested trade_search" do
-      trade_search = TradeSearch.create! valid_attributes
+      trade_search
       expect {
         delete :destroy, {:id => trade_search.to_param}, valid_session
       }.to change(TradeSearch, :count).by(-1)
     end
 
     it "redirects to the trade_searches list" do
-      trade_search = TradeSearch.create! valid_attributes
       delete :destroy, {:id => trade_search.to_param}, valid_session
       response.should redirect_to(trade_searches_url)
     end

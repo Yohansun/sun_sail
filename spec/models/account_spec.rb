@@ -10,10 +10,11 @@
 #
 
 require 'spec_helper'
+include Devise::TestHelpers
 
 describe Account do
   before do
-    @current_account = create(:account)
+    @current_account = FactoryGirl.create(:account)
   end
   context "judges if trade should auto preprocess right now" do
     it "should auto preprocess right now" do

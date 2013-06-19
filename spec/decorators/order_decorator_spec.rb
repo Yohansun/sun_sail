@@ -1,4 +1,5 @@
 require 'spec_helper'
+include Devise::TestHelpers
 
 describe OrderDecorator do
 
@@ -9,7 +10,7 @@ describe OrderDecorator do
         order.stub(:promotion_discount_fee).and_return(150)
         @decorator = TradeDecorator.new(order)
       end
-      it { @decorator.price.should == 2000 }
+      it { @decorator.price.should == 2050 }
       it { @decorator.num.should == 3 }
     end
   end

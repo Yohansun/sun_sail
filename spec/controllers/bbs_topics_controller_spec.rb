@@ -1,14 +1,11 @@
 require 'spec_helper'
 
 describe BbsTopicsController do
+  login_admin
 
   before do
-    @current_account = create(:account)
-    @current_user = create(:user, account_ids: [@current_account.id])
-
-    3.times { create(:bbs_category, account_id: @current_account.id) }
-    sign_in(@current_user)
-    @topic = create(:bbs_topic, user: @current_user, account_id: @current_account.id)
+    3.times { create(:bbs_category, account_id: current_account.id) }
+    @topic = create(:bbs_topic, user: current_user, account_id: current_account.id)
   end
 
   describe "GET index" do

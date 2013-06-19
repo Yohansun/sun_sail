@@ -2,15 +2,12 @@
 require 'spec_helper'
 
 describe ReconcileStatementDetailsController do
+  login_admin
 
-	before do
-      @current_user = create(:user)
-      @current_user.add_role :admin
-      sign_in(@current_user)
-      controller.stub(:check_module).and_return(true)
-      request.env["HTTP_REFERER"] = "http://test.host/"
-    end
-
+  before do
+    controller.stub(:check_module).and_return(true)
+    request.env["HTTP_REFERER"] = "http://test.host/"
+  end
 
     describe "GET #show" do
       before do

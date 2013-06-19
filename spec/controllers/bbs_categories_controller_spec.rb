@@ -1,15 +1,12 @@
 require 'spec_helper'
 
 describe BbsCategoriesController do
-	before do
-    @current_account = create(:account)
-    @current_user = create(:user, account_ids: [@current_account.id])
-    # 3.times { create(:bbs_category) }
-    sign_in(@current_user)
-    @category = create(:bbs_category, account_id: @current_account.id)
-  end
+  login_admin
 
  	describe "GET show" do
+  	before do
+      @category = FactoryGirl.create(:bbs_category, account_id: current_account.id)
+    end
 
     it 'should success' do
       get :show, id: @category.id
