@@ -2,7 +2,7 @@ require 'sidekiq/web'
 
 MagicOrders::Application.routes.draw do
 
-  resources :customers ,:only => [:index] do
+  resources :customers ,:only => [:index,:show] do
 
     collection do
       get :potential

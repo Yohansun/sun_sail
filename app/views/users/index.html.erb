@@ -35,9 +35,13 @@
       </li>
       <li>
         <%= link_to "删除","#",:onclick => "validateValues(this)",:id => "delete_users", :goto => "/users/delete",:request => "post",:message => "确认删除?"%>
-      <li><%=link_to "开启", "#", :onclick => "validateValues(this)",:goto => "/users/batch_update?operation=unlock",:request => "post",:message => "确认开启吗?" %></li>
+      </li>
+      <li>
+        <%=link_to "开启", "#", :onclick => "validateValues(this)",:goto => "/users/batch_update?operation=unlock",:request => "post",:message => "确认开启吗?" %>
+      </li>
       <li>
         <%=link_to "禁用", "#",:onclick => "validateValues(this)",:goto => "/users/batch_update?operation=lock",:request => "post",:message => "确认禁用?"%>
+      </li>
     </ul>
   </div><!-- btn-group -->
   <div class="btn-group">

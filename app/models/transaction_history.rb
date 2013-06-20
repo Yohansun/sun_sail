@@ -1,6 +1,9 @@
 #encoding: utf-8
 class TransactionHistory
   include Mongoid::Document
+  include Mongoid::Timestamps
+  include MagicEnum
+
   field :tid               , type: String
   field :num_iid           , type: String
   field :status            , type: String
@@ -18,7 +21,8 @@ class TransactionHistory
   field :account_id        , type: Integer
   field :product_ids       , type: Array, default: []
 
-  
+  enum_attr :status, Trade::STATUS,:not_valid => true
+
   embedded_in :customer
   
   validates :tid, :presence => true,:uniqueness => true

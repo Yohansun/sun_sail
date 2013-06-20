@@ -3,6 +3,7 @@ class CustomersController < ApplicationController
   before_filter :authorize
   before_filter :init_search
   ACTIONS = {:index => "所有顾客",:potential => "潜在顾客",:paid => "购买顾客"}
+  ALL_ACTIONS = ACTIONS.dup.merge({:around => "回头顾客"})
   
   ACTIONS.each_pair do |_action,name|
     define_method(_action) do
@@ -18,6 +19,13 @@ class CustomersController < ApplicationController
         format.xls  {render "index"}
       end
     end
+  end
+
+  #GET /customers/1
+  def show
+    id = params[:search][:_id_in].first rescue params[:id]
+    @customer = Customer.where(account_id: current_account.id).find(id)
+    fresh_when :last_modified => @customer.updated_at.utc,:etag => @customer
   end
 
   #GET /customers/around
@@ -40,7 +48,7 @@ class CustomersController < ApplicationController
     @message = Message.new(:send_type => "sms",:recipients => @transaction_histories.map(&:receiver_mobile).join(','))
   end
 
-  #PUT /customers/invoice_messages
+  #POST /customers/invoice_messages
   def invoice_messages
     @message = Message.new(params[:message])
     @customers = Customer.search(params[:search])

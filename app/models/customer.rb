@@ -8,7 +8,7 @@ class Customer
   field :buyer_area, type: String #顾客下单的地区
   field :account_id, type: Integer
   
-  embeds_many :transaction_histories
+  embeds_many :transaction_histories, :order => :created.desc
   validates :name,:presence => true, :uniqueness => {:scope => :account_id}
   
   accepts_nested_attributes_for :transaction_histories, :allow_destroy => true, :reject_if => proc { |obj| obj.blank? }
@@ -35,6 +35,14 @@ class Customer
   delegate :receiver_name,:receiver_mobile ,:receiver_state ,:receiver_city ,:receiver_district ,:receiver_address ,:to => :the_first,:allow_nil => true
   
   def the_first
-    transaction_histories.first
+    transaction_histories.desc(:created).first
+  end
+
+  def orders_price
+    transaction_histories.sum(:payment)
+  end
+
+  def turnover
+    transaction_histories.where(:status => "TRADE_FINISHED").sum(:payment)
   end
 end
