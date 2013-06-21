@@ -18,14 +18,14 @@
 <div class="control-group">
     <%= label_tag "checked_at",raw("<code>状态</code>"),:class => "pull-left width" %>
   <div class="controls pull-left">
-  <%= select_tag "checked_at",options_for_select([["已审核","nil"],["未审核","true"]],params["checked_at"]),:include_blank => true,:class => "input-medium select2" %>
+  <%= select_tag "checked_at",options_for_select([["已审核","nil"],["未审核","true"]],params["checked_at"]),:include_blank => true,:class => "input-medium select2 all" %>
   </div>
 </div>
 
 <div class="control-group">
     <%= label_tag "search[stock_type_eq]",raw("<code>出库类型</code>"),:class => "pull-left width" %>
   <div class="controls pull-left">
-    <%= select_tag "search[stock_type_eq]",options_for_select((StockOutBill::STOCK_TYPE),params[:search][:stock_type_eq]),:include_blank => true,:class => "input-medium select2" %>
+    <%= select_tag "search[stock_type_eq]",options_for_select((StockOutBill::STOCK_TYPE),params[:search][:stock_type_eq]),:include_blank => true,:class => "input-medium select2 all" %>
   </div>
 </div>
 <div class="control-group">
@@ -80,6 +80,13 @@
       sel.bind('.level_1','<%= params[:op_state] %>');
       sel.bind('.level_2','<%= params[:op_city] %>');
       sel.bind('.level_3','<%= params[:op_district] %>');
+
+      $.each($('form').find("select.all"),function(){
+        $(this).select2({
+          placeholder: "全部",
+          allowClear: true
+        });
+      })
     });
 </script>
 <% end -%>

@@ -8,7 +8,7 @@
   <%= f.label :category_id_eq,raw("<code>商品分类</code>"),:class => "pull-left" %>
   <div class="controls pull-left">
     <%= f.select :category_id_eq,current_account.categories.collect {|x| [x.name,x.id]},
-    {:include_blank => true},{:class => "input-small pull-left select2"}  %>
+    {:include_blank => true},{:class => "input-small pull-left select2 all"}  %>
   </div>
   <div class="pull-left">
     <button type="button pull-left" class="btn btn-info search" id="simple_search_button">筛选</button>
@@ -20,7 +20,7 @@
   <%= f.label :product_id_eq,raw("<code>商品名称</code>"),:class => "pull-left"  %>
   <div class="controls pull-left">
     <%= f.select :product_id_eq,current_account.skus.collect {|x| [x.title,x.product_id]},
-    {:include_blank => true},{:class => "input-small pull-left select2 product"}  %>
+    {:include_blank => true},{:class => "input-small pull-left select2 product all"}  %>
   </div>
 </div>
 
@@ -34,7 +34,7 @@
 <div class="control-group">
   <%= label_tag "storage_status",raw("<code>库存状态</code>"),:class => "pull-left"  %>
   <div class="controls pull-left">
-    <%= select_tag "storage_status",options_for_select(StockProduct::STORAGE_STATUS.keys,params["storage_status"]),{:include_blank => true,:class => "input-small pull-left select2"} %>
+    <%= select_tag "storage_status",options_for_select(StockProduct::STORAGE_STATUS.keys,params["storage_status"]),{:include_blank => true,:class => "input-small pull-left select2 all"} %>
   </div>
 </div>
 
@@ -42,4 +42,16 @@
   <div class="pull-left">
     <span class="label label-info">共有<%= @count %>条数据</span>
   </div>
-</div>  
+</div>
+<% content_for :tail do %>
+<script type="text/javascript" charset="utf-8">
+$(function() {
+  $.each($('form').find("select.all"),function(){
+    $(this).select2({
+      placeholder: "全部",
+      allowClear: true
+    });
+  })
+})
+</script>
+<% end %>
