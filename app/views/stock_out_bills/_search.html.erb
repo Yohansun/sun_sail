@@ -1,29 +1,37 @@
+<style>
+.pull-left.width {
+  width: 80px;;
+}
+</style>
 <% params[:search] ||= {} %>
 
 
 <div class="control-group">
-    <%= label_tag "search[tid_eq]","编号",:class => "control-label" %>
-  <div class="controls">
+    <%= label_tag "search[tid_eq]",raw("<code>编号</code>"),:class => "pull-left width" %>
+  <div class="controls pull-left">
     <%= text_field_tag "search[tid_eq]",params[:search][:tid_eq] %>
+  </div>
+  <div class="pull-left">
+    <button type="button pull-left" class="btn btn-info search" id="simple_search_button">筛选</button>
   </div>
 </div>
 <div class="control-group">
-    <%= label_tag "checked_at","状态",:class => "control-label" %>
-  <div class="controls">
+    <%= label_tag "checked_at",raw("<code>状态</code>"),:class => "pull-left width" %>
+  <div class="controls pull-left">
   <%= select_tag "checked_at",options_for_select([["已审核","nil"],["未审核","true"]],params["checked_at"]),:include_blank => true,:class => "input-medium select2" %>
   </div>
 </div>
 
 <div class="control-group">
-    <%= label_tag "search[stock_type_eq]","出库类型",:class => "control-label" %>
-  <div class="controls">
+    <%= label_tag "search[stock_type_eq]",raw("<code>出库类型</code>"),:class => "pull-left width" %>
+  <div class="controls pull-left">
     <%= select_tag "search[stock_type_eq]",options_for_select((StockOutBill::STOCK_TYPE),params[:search][:stock_type_eq]),:include_blank => true,:class => "input-medium select2" %>
   </div>
 </div>
 <div class="control-group">
   <%= label_tag "search[created_a
-  t_gte]","创建时间",:class => "control-label" %>
-  <div class="controls">
+  t_gte]",raw("<code>创建时间</code>"),:class => "pull-left width" %>
+  <div class="controls pull-left">
 
     <%= text_field_tag "search[created_at_gte]",params["search"]["created_at_gte"],:class => "input-medium datetimepicker_full" %>~
 
@@ -31,8 +39,8 @@
   </div>
 </div>
 <div class="control-group">
-    <%= label_tag "search[stocked_at_gte]", "出库时间",:class => "control-label" %>
-  <div class="controls">
+    <%= label_tag "search[stocked_at_gte]", raw("<code>出库时间</code>"),:class => "pull-left width" %>
+  <div class="controls pull-left">
 
     <%= text_field_tag "search[stocked_at_gte]",params["search"]["stocked_at_gte"],:class => "input-medium datetimepicker_full" %>~
 
@@ -40,8 +48,8 @@
   </div>
 </div>
 <div class="control-group">
-  <label class="control-label">地域：</label>
-  <div class="controls">
+  <label class="pull-left width"><code>地域：</code></label>
+  <div class="controls pull-left">
     <select id="" class="level_1 input-medium input-small pull-left radius_no_rb select2" name="op_state">
       <option>省</option>
     </select>
@@ -51,12 +59,6 @@
     <select id="" class="level_3 input-medium input-small pull-left radius_no_tl select2" name="op_district">
       <option>区</option>
     </select>
-  </div>
-</div>
-
-<div class="control-group">
-  <div class="controls">
-    <button type="submit" class="btn">搜索</button>
   </div>
 </div>
 
