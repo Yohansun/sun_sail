@@ -6,7 +6,8 @@ module MagicOrder
     "update" =>   ["edit","update"],
     "destroy" =>  ["destroy","delete","deletes"],
     "edit_depot" => ["edit_depot","update_depot"],
-    "customers_detail" => ["index","potential","paid"]
+    "customers_detail" => ["index","potential","paid","around","show"],
+    "send_customers_messages" => ["send_messages","invoice_messages","get_recipients"]
   }.freeze
 
   class AccessControl
@@ -196,7 +197,9 @@ MagicOrder::AccessControl.map do |map|
                                  "sales#frequency_analysis",
                                  "sales#univalent_analysis"]
     map.permission :operations, ["trade_reports#download",
-                                 "customers#customers_detail"]
+                                 "customers#customers_detail",
+                                 "customers#send_customers_messages"
+                               ]
   end
 
   map.project_module :system_settings do |map|
