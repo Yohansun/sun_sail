@@ -3,37 +3,38 @@
   width: 504px!important;
   }
 </style>
+
 <div class="control-group">
-  <%= f.label :category_id_eq,"商品分类",:class => "control-label" %>
-  <div class="controls">
+  <%= f.label :category_id_eq,raw("<code>商品分类</code>"),:class => "pull-left" %>
+  <div class="controls pull-left">
     <%= f.select :category_id_eq,current_account.categories.collect {|x| [x.name,x.id]},
     {:include_blank => true},{:class => "input-small pull-left select2"}  %>
   </div>
+  <div class="pull-left">
+    <button type="button pull-left" class="btn btn-info search" id="simple_search_button">筛选</button>
+  </div>
 </div>
+
+
 <div class="control-group">
-  <%= f.label :product_id_eq,"商品名称",:class => "control-label" %>
-  <div class="controls">
+  <%= f.label :product_id_eq,raw("<code>商品名称</code>"),:class => "pull-left"  %>
+  <div class="controls pull-left">
     <%= f.select :product_id_eq,current_account.skus.collect {|x| [x.title,x.product_id]},
     {:include_blank => true},{:class => "input-small pull-left select2 product"}  %>
   </div>
 </div>
+
 <div class="control-group">
-    <%= f.label :sku_sku_id_eq,"SKU编码",:class => "control-label" %>  
-  <div class="controls">
+    <%= f.label :sku_sku_id_eq,raw("<code>SKU编码</code>"),:class => "pull-left" %>
+  <div class="controls pull-left">
     <%= f.text_field :sku_sku_id_eq%>
   </div>
 </div>
 
 <div class="control-group">
-  <%= label_tag "storage_status","库存状态",:class => "control-label" %>  
-  <div class="controls">
+  <%= label_tag "storage_status",raw("<code>库存状态</code>"),:class => "pull-left"  %>
+  <div class="controls pull-left">
     <%= select_tag "storage_status",options_for_select(StockProduct::STORAGE_STATUS.keys,params["storage_status"]),{:include_blank => true,:class => "input-small pull-left select2"} %>
-  </div>
-</div>
-
-<div class="control-group">
-  <div class="controls">
-    <button type="submit" class="btn">搜索</button>
   </div>
 </div>
 

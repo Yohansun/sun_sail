@@ -1,61 +1,66 @@
 
+<style>
+.pull-left.width {
+  width: 80px;;
+}
+.input-small.select2.product {
+  width: 504px!important;
+}
+</style>
 <% params[:search] ||= {}%>
 <div class="control-group">
-  <%= label_tag "sku","商品SKU名称",:class => "control-label"%>
-    <div class="controls">
-  <%= select_tag "sku",options_for_select(current_account.skus.collect{ |sku|  [sku.title,sku_id_or_num_iid(sku)] },params["sku"]),:include_blank => true %>
-</div>  
+  <%= label_tag "sku",raw("<code>商品SKU名称</code>"),:class => "pull-left width"%>
+    <div class="controls pull-left">
+  <%= select_tag "sku",options_for_select(current_account.skus.collect{ |sku|  [sku.title,sku_id_or_num_iid(sku)] },params["sku"]),:include_blank => true,:class => "input-small select2 product" %>
+</div>
+<div class="pull-left">
+  <button type="button pull-left" class="btn btn-info search" id="simple_search_button">筛选</button>
+</div>
 </div>
 
 <div class="control-group">
-  <%= label_tag "bill_products_sku_id_eq","商品编码",:class => "control-label" %>
-    <div class="controls">
+  <%= label_tag "bill_products_sku_id_eq",raw("<code>商品编码</code>"),:class => "pull-left width" %>
+    <div class="controls pull-left">
   <%= text_field_tag "bill_products_sku_id_eq", params["bill_products_sku_id_eq"] %>
 </div>
 </div>
 
 <div class="control-group">
-  <%= label_tag "checked_at","状态",:class => "control-label" %>
-    <div class="controls">
+  <%= label_tag "checked_at",raw("<code>状态</code>"),:class => "pull-left width" %>
+    <div class="controls pull-left">
   <%= select_tag "checked_at",options_for_select([["已审核","nil"],["未审核","true"]],params["checked_at"]),:include_blank => true,:class => "input-medium select2" %>
   </div>
 </div>
 
 <div class="control-group">
-  <%= label_tag "search[_type_eq]","出/入库",:class => "control-label" %>
-    <div class="controls">
+  <%= label_tag "search[_type_eq]",raw("<code>出/入库</code>"),:class => "pull-left width" %>
+    <div class="controls pull-left">
   <%= select_tag "search[_type_eq]",options_for_select([["入库单","StockInBill"],["出库单","StockOutBill"]],params["search"]["_type_eq"]),:include_blank => true,:class => "input-medium select2" %>
   </div>
 </div>
 
 <div class="control-group">
-<%= label_tag "search[stock_type_eq]","出/入库类型",:class => "control-label" %>
-  <div class="controls">
+<%= label_tag "search[stock_type_eq]",raw("<code>出/入库类型</code>"),:class => "pull-left width" %>
+  <div class="controls pull-left">
   <%= select_tag "search[stock_type_eq]",options_for_select(StockBill::STOCK_TYPE,params[:search][:stock_type_eq]),:include_blank => true,:class => "input-medium select2" %>
   </div>
 </div>
 
 <div class="control-group">
   <%= label_tag "search[created_a
-t_gte]","创建时间",:class => "control-label" %>
-  <div class="controls">
+t_gte]",raw("<code>创建时间</code>"),:class => "pull-left width" %>
+  <div class="controls pull-left">
   <%= text_field_tag "search[created_at_gte]",params["search"]["created_at_gte"],:class => "input-medium datetimepicker_full" %>~
 
   <%= text_field_tag "search[created_at_lte]",params["search"]["created_at_lte"],:class => "input-medium datetimepicker_full" %>
   </div>
 </div>
 <div class="control-group">
-  <%= label_tag "search[stocked_at_gte]", "出/入库时间",:class => "control-label" %>
-    <div class="controls">
+  <%= label_tag "search[stocked_at_gte]", raw("<code>出/入库时间</code>"),:class => "pull-left width" %>
+    <div class="controls pull-left">
   <%= text_field_tag "search[stocked_at_gte]",params["search"]["stocked_at_lte"],:class => "input-medium datetimepicker_full" %>~
 
   <%= text_field_tag "search[stocked_at_lte]",params["search"]["stocked_at_lte"],:class => "input-medium datetimepicker_full" %>  
-  </div>
-</div>
-
-<div class="control-group">
-  <div class="controls">
-    <button type="submit" class="btn">搜索</button>
   </div>
 </div>
 
