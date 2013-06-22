@@ -25,6 +25,8 @@ class TransactionHistory
 
   embedded_in :customer
   
+  after_save { customer.touch }
+
   validates :tid, :presence => true,:uniqueness => true
 
 end
