@@ -16,7 +16,7 @@ class TradesController < ApplicationController
     else
       offset = params[:offset] || 0
       limit = params[:limit] || 20
-      @trades = Trade.filter(current_account, current_user, params)
+      @trades = Trade.filter(current_account, current_user, params).unmerged
     end
     @trades_count = @trades.count
     @trades = TradeDecorator.decorate(@trades.limit(limit).skip(offset).order_by(:created.desc))
@@ -510,5 +510,20 @@ class TradesController < ApplicationController
     percent = params[:percent].each
     users.each {|u| p u.trade_percent = (percent.next.to_i rescue nil);u.save}
     redirect_to trades_show_percent_path
+  end
+
+  def merge
+    ids = params[:ids]
+    trades = Trade.find ids
+
+    merged_trade = Trade.merge_trades trades
+    render :json=>merged_trade
+  end
+
+  def split
+    trade = Trade.find params[:id]
+    trade.split
+
+    render :text=>"ok"
   end
 end

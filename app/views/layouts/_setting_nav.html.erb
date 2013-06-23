@@ -17,6 +17,7 @@
           </li>
           <li class="<%= "active" if params[:controller] == "account_setups" && params[:action] =~ /edit_dispatch_settings/ %>"><a href="/account_setups/edit_dispatch_settings">自动分派</a></li>
           <li class="<%= "active" if params[:controller] == "account_setups" && params[:action] =~ /edit_deliver_settings/ %>"><a href="/account_setups/edit_deliver_settings">自动发货</a></li>
+          <li class="<%= "active" if params[:controller] == "account_setups" && params[:action] =~ /edit_automerge_settings/ %>"><a href="/account_setups/edit_automerge_settings">自动合并订单</a></li>
         </ul>
     </li>
 

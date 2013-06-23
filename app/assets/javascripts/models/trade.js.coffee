@@ -26,6 +26,10 @@ class MagicOrders.Models.Trade extends Backbone.Model
           enabled_items.push('modify_payment') #金额调整
       when "WAIT_SELLER_SEND_GOODS" # "已付款，待发货"
         enabled_items.push('modify_receiver_information')
+        enabled_items.push('merge_trades_manually')
+        if this.attributes.merged_trade_ids && this.attributes.merged_trade_ids.length > 0
+          enabled_items.push('split_merged_trades')
+
         if this.attributes.trade_source == "人工" && not this.attributes.seller_id
           enabled_items.push('edit_handmade_trade') #编辑人工订单
         if this.attributes.seller_id

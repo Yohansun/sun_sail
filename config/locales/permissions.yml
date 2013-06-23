@@ -81,6 +81,8 @@ zh-CN:
   permissions_tag_trade_split: 订单拆分
   permissions_tag_recover: 订单合并
   permissions_tag_modify_receiver_information: 订单用户信息修改
+  permissions_tag_merge_trades_manually: 手动合并订单
+  permissions_tag_modify_split_merged_trades: 取消订单合并
   permissions_tag_reassign: 订单转交
   permissions_tag_check_goods: 验货
   permissions_tag_confirm_check_goods: 确认验货

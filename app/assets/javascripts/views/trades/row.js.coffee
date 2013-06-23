@@ -98,8 +98,16 @@ class MagicOrders.Views.TradesRow extends Backbone.View
     if $('#all_orders input.trade_check:checked').length > 1
       $('#op-toolbar .dropdown-menu').parents('div.btn-group').css('display', 'none')
       $('#op-toolbar .batch_ops').show()
+      $('#op-toolbar .batch_ops .dropdown-menu a').css('display', 'none')
+      $('#op-toolbar .batch_ops .dropdown-menu  a[data-batch-operation]').css('display', '')
+      $('#op-toolbar .batch_ops .dropdown-menu  a[data-batch-operation]').css('display', '')
+      $('#op-toolbar .batch_ops .dropdown-menu  a[data-batch_type]').css('display', '')
+
     else if $('#all_orders input.trade_check:checked').length == 1
-      #$('#op-toolbar .batch_ops').css('display', 'none')
+      # initial display all btns
+      $('#op-toolbar .dropdown-menu').parents('div.btn-group').css('display', '')
+      $('#op-toolbar .batch_ops .dropdown-menu a').css('display', '')
+
       trade = $('#all_orders input.trade_check:checked')[0]
       $('#op-toolbar .dropdown-menu').removeAttr('style')
       $('#op-toolbar').find('[data-type]').each ->

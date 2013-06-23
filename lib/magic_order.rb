@@ -121,6 +121,8 @@ MagicOrder::AccessControl.map do |map|
                                  "logistic_split",
                                  "print_logistic_bill",
                                  "modify_receiver_information",
+                                 "merge_trades_manually",
+                                 "split_merged_trades",
                                  "split_invoice"]
   end
   map.project_module :products do |map|

@@ -70,9 +70,6 @@ class Trade
   field :tid, type:String
   field :area_id, type: Integer
   field :status, type:String
-  field :receiver_name, type:String
-  field :receiver_mobile, type:String
-  field :receiver_address, type:String
   field :seller_memo, type:String
 
   field :has_color_info, type: Boolean, default: false
@@ -81,9 +78,110 @@ class Trade
   field :has_onsite_service, type: Boolean, default: false
   field :has_refund_orders, type: Boolean, default: false
 
+
+
+
+
+
+
+
+
+  field :num, type: Integer
+  field :num_iid, type: String
+  field :title, type: String
+  field :type, type: String
+
+  field :buyer_message, type: String
+
+  field :price, type: Float, default: 0.0
+  field :seller_cod_fee, type: Float, default: 0.0
+  field :discount_fee, type: Float, default: 0.0
+  field :point_fee, type: Float, default: 0.0
+  field :has_post_fee, type: Float, default: 0.0
+  field :total_fee, type: Float, default: 0.0
+  field :promotion_fee, type: Float, default: 0.0
+  field :modify_payment, type: Float, default: 0.0
+
+  field :is_lgtype, type: Boolean
+  field :is_brand_sale, type: Boolean
+  field :is_force_wlb, type: Boolean
+
+  field :created, type: DateTime
+  field :pay_time, type: DateTime
+  field :modified, type: DateTime
+  field :end_time, type: DateTime
+
+  field :alipay_id, type: String
+  field :alipay_no, type: String
+  field :alipay_url, type: String
+  field :buyer_memo, type: String
+  field :buyer_flag, type: Integer
+
+  field :seller_flag, type: Integer
+  field :invoice_name, type: String
+  field :buyer_nick, type: String
+  field :buyer_area, type: String
+  field :buyer_email, type: String
+
+  field :has_yfx, type: Boolean
+  field :yfx_fee, type: Float, default: 0.0
+  field :yfx_id, type: String
+  field :has_buyer_message, type: Boolean
+  field :area_id, type: Integer
+  field :credit_card_fee, type: Float, default: 0.0
+  field :nut_feature, type: String
+  field :shipping_type, type: String
+  field :buyer_cod_fee, type: Float, default: 0.0
+  field :express_agency_fee, type: Float, default: 0.0
+  field :adjust_fee, type: Float
+  field :buyer_obtain_point_fee, type: Float, default: 0.0
+  field :cod_fee, type: Float, default: 0.0
+  field :trade_from, type: String
+  field :alipay_warn_msg, type: String
+  field :cod_status, type: String
+  field :can_rate, type: Boolean
+  field :has_sent_send_logistic_rate_sms, type: Boolean
+  field :commission_fee, type: Float, default: 0.0
+  field :trade_memo, type: String
+  field :seller_nick, type: String
+  field :pic_path, type: String
+  field :payment, type: Float, default: 0.0
+  field :snapshot_url, type: String
+  field :snapshot, type: String
+  field :seller_rate, type: Boolean
+  field :buyer_rate, type: Boolean
+  field :real_point_fee, type: Integer
+  field :post_fee, type: Float, default: 0.0
+  field :buyer_alipay_no, type: String
+  field :receiver_name, type: String
+  field :receiver_state, type: String
+  field :receiver_city, type: String
+  field :receiver_district, type: String
+  field :receiver_address, type: String
+  field :receiver_zip, type: String
+  field :receiver_mobile, type: String
+  field :receiver_phone, type: String
+  field :consign_time, type: DateTime
+  field :available_confirm_fee, type: Float, default: 0.0
+  field :received_payment, type: Float, default: 0.0
+  field :timeout_action_time, type: DateTime
+  field :is_3D, type: Boolean
+  field :promotion, type: String
+  field :got_promotion, type: Boolean, default: false  # 优惠信息是否抓到。
+  field :sku_properties_name, type: String
+
+
+
   #订单操作人
   field :operator_id
   field :operator_name
+
+
+  #订单合并
+  field :merged_trade_ids, type:Array
+  field :merged_by_trade_id, type:String
+  field :mergeable_id, type:String
+
 
   # ADD INDEXES TO SPEED UP
   # 简单搜索index
@@ -139,11 +237,13 @@ class Trade
   index receiver_district: 1
   index receiver_city: 1
 
+  embeds_many :taobao_orders
   embeds_many :unusual_states
   embeds_many :operation_logs
   embeds_many :ref_batches
   embeds_many :manual_sms_or_emails
   embeds_many :trade_gifts
+  embeds_many :promotion_details
 
   has_many :deliver_bills
 
@@ -170,6 +270,13 @@ class Trade
   before_update :set_has_unusual_state
   before_update :set_has_refund_orders
   after_destroy :check_associate_deliver_bills
+
+
+  scope  :paied_undispatched, ->{where({status:"WAIT_SELLER_SEND_GOODS", dispatched_at:nil})}
+  scope  :unmerged, ->{where(merged_by_trade_id:nil)}
+  scope  :be_merged, ->{where({merged_by_trade_id:{"$ne"=>nil}})}
+  scope  :is_merger, ->{where({merged_trade_ids:{"$ne"=>nil}})}
+
 
   def fetch_account
     Account.find_by_id(self.account_id)
@@ -1013,6 +1120,17 @@ class Trade
       '淘宝'
     end
   end
+
+  def orders
+    self.taobao_orders
+  end
+
+  def orders=(new_orders)
+    self.taobao_orders = new_orders
+  end
+
+
+  include TradeMerge
 
   private
     def check_associate_deliver_bills

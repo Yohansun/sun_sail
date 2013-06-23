@@ -1,3 +1,4 @@
+# -*- encoding:utf-8 -*-
 class AccountSetupsController < ApplicationController
   include Wicked::Wizard
   before_filter :fetch_account, except: [:data_fetch_finish]
@@ -86,6 +87,10 @@ class AccountSetupsController < ApplicationController
     @setting = @account.settings.auto_settings || {}
   end
 
+
+  def edit_automerge_settings
+    @setting = @account.settings.auto_settings || {}
+  end
   def update_preprocess_settings
     @setting = decorate_auto_settings(params[:auto_settings])
     if @setting['preprocess_silent_gap'] != @account.settings.auto_settings['preprocess_silent_gap']
@@ -121,6 +126,15 @@ class AccountSetupsController < ApplicationController
     @account.settings.auto_settings = current_settings
     @setting = @account.settings.auto_settings || {}
     redirect_to :back
+  end
+
+  def update_automerge_settings
+    @setting = decorate_auto_settings(params[:auto_settings])
+    current_settings = @account.settings.auto_settings
+    current_settings.update(@setting)
+    @account.settings.auto_settings = current_settings
+    @setting = @account.settings.auto_settings || {}
+    redirect_to :back, :notice=>"保存成功"
   end
 
   private

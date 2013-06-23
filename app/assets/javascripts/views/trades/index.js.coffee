@@ -184,6 +184,9 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
             Backbone.history.navigate('trades/'+trade_id+"/"+type, true)
         else
           alert("请勾选要操作的订单。")
+      else
+        # multi selects
+        @do_modal_action e
     else if type == 'create_handmade_trade'
       $(location).attr('href', '/custom_trades/new')
 
@@ -197,6 +200,64 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     model.fetch success: (model, response) =>
       view = new MagicOrders.Views.TradesModifyReceiverInformation(model:model)
       $("#trade_modify_receiver_information").html(view.render().el).modal("show")
+
+
+  merge_trades_manually:(e)->
+    self = this
+    trades = $('.trade_check:checked').map ->
+      self.collection.get($(this).parents("tr:first").attr("id").replace("trade_",""))
+    trade_ids = trades.map ->
+      this.id
+    trade_ids = trade_ids.toArray()
+    console.debug(trades)
+    mergeable_ids = trades.map ->
+      this.attributes.mergeable_id
+    uniq_ids = $.unique(mergeable_ids).toArray()
+    if uniq_ids.length != 1
+      alert("您选择的订单无法合并, 请检查客户ID, 以及收件人及订单状态等信息")
+      return false
+    merged_by_status = trades.map ->
+      this.attributes["merged_by_trade_id"]
+    if merged_by_status.length > 1
+      alert("您选择的订单已经被合并了, 请刷新页面后重新选择")
+      return false
+
+    if confirm "您确定要合并这些订单吗?"
+      $.post "/trades/merge",
+        ids:trade_ids
+        success:(status,data,xhr) =>
+          console.debug(status,data,xhr)
+          setTimeout ->
+            $(".search:visible").click() # query again
+          ,300
+        , "html"
+    null
+
+
+
+
+
+  split_merged_trades:(e)->
+    self = this
+    trades = $('.trade_check:checked').map ->
+      self.collection.get($(this).parents("tr:first").attr("id").replace("trade_",""))
+    if trades.length == 1
+      trade = trades[0]
+      merged_trade_ids = trade.attributes['merged_trade_ids']
+      if merged_trade_ids.length > 0
+        if confirm "拆分此订单, 会回到合并前的状态, 合并后新增的赠品, 备注信息等会丢失. 您确定要拆分此订单吗?"
+          $.get "/trades/split/"+trade.id, success:(status,data,xhr) =>
+            console.debug(status,data,xhr)
+            setTimeout ->
+              $(".search:visible").click() # query again
+            ,300
+    else
+      alert "请选择一个订单进行拆分操作"
+
+
+
+
+
 
   fetchMoreTrades: (event, direction) =>
     if direction == 'down'

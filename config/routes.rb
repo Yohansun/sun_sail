@@ -239,6 +239,8 @@ MagicOrders::Application.routes.draw do
       put  :update_preprocess_settings
       put  :update_dispatch_settings
       put  :update_deliver_settings
+      get  :edit_automerge_settings
+      put  :update_automerge_settings
     end
     member do
       post :data_fetch_start
@@ -282,6 +284,8 @@ MagicOrders::Application.routes.draw do
   get "/trades/batch_add_gift", to: "trades#batch_add_gift"
   get "/trades/verify_add_gift", to: "trades#verify_add_gift"
   get "/trades/deliver_list", to: "trades#deliver_list"
+  post "/trades/merge", to: "trades#merge"
+  get "/trades/split/:id", to: "trades#split"
   get "/deliver_bills/print_deliver_bill.:format", to: "deliver_bills#print_deliver_bill"
   get "/deliver_bills/:id/logistic_info", to: "deliver_bills#logistic_info"
   put "/deliver_bills/:id/split_invoice", to: "deliver_bills#split_invoice"
