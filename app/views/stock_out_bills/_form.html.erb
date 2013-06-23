@@ -14,13 +14,8 @@
 </style>
 
 <div class="row-fluid">
-  <div class="span2 bs-docs-sidebar">
-    <ul class="nav nav-list bs-docs-sidenav affix span2">
-      <li class="active"><a href="#"><i class="icon-chevron-right"></i>默认仓库</a></li>
-    </ul>
-  </div>
 
-  <div class="span10">
+  <div class="span12">
     <ul class="nav nav-tabs">
       <li class="active"><%= link_to "新建出库单", new_stock_out_bill_path %></li>
       <li><%= link_to "库存查询", stocks_path %></li>
@@ -41,7 +36,7 @@
         <%= f.input :op_zip, label: "邮编",:input_html  => {:class => "input-medium"} %>
         
         <div class="control-group">
-          <label class="control-label">收货仓库：</label>
+          <label class="control pull-left">收货仓库：</label>
           <select class="input-medium select2">
             <option value="默认仓库">默认仓库</option>
           </select>
@@ -72,8 +67,8 @@
       </fieldset><!-- form right area -->
       <fieldset>
         <div class="control-group">
-          <%= f.label :remark,"备注",:class => "control-label",:style => "width:70px" %>
-          <%= f.text_area :remark,:class => "span9",:rows => "3" %>
+          <%= f.label :remark,"备注",:class => "control pull-left",:style => "width:70px" %>
+          <%= f.text_area :remark,:class => "span9",:rows => "5" %>
         </div>
       </fieldset>
     </div>

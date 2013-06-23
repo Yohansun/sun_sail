@@ -14,13 +14,8 @@
 </style>
 
 <div class="row-fluid">
-  <div class="span2 bs-docs-sidebar">
-    <ul class="nav nav-list bs-docs-sidenav affix span2">
-      <li class="active"><a href="#"><i class="icon-chevron-right"></i>默认仓库</a></li>
-    </ul>
-  </div>
 
-  <div class="span10">
+  <div class="span12">
     <ul class="nav nav-tabs">
       <li class="active"><%= link_to "新建入库单", new_stock_in_bill_path %></li>
       <li><%= link_to "库存查询", stocks_path %></li>
@@ -41,7 +36,7 @@
           <%= f.input :op_zip, label: "邮编",:input_html  => {:class => "input-medium"} %>
           
           <div class="control-group">
-            <label class="control-label">收货仓库：</label>
+            <label class="control pull-left">收货仓库：</label>
             <select class="input-medium select2">
               <option value="默认仓库">默认仓库</option>
             </select>
@@ -72,8 +67,8 @@
         </fieldset><!-- form right area -->
         <fieldset>
           <div class="control-group">
-            <%= f.label :remark,"备注",:class => "control-label",:style => "width:70px" %>
-            <%= f.text_area :remark,:class => "span9",:rows => "3" %>
+            <%= f.label :remark,"备注",:class => "control pull-left",:style => "width:70px" %>
+            <%= f.text_area :remark,:class => "span9",:rows => "5" %>
           </div>
         </fieldset>
       </div>
@@ -90,7 +85,8 @@
       <fieldset>
         <div class="control-group">
           <%= label_tag "product[sku_id]", "商品名称",:class => "control-label",:style => "width:70px;text-align:left;" %>
-          <%= select_tag "product[sku_id]",options_for_select(current_account.skus.collect {|x| [x.title,x.id]}),:include_blank => true,:class => "input-small pull-left radius_no select2 product" ,:id => "product_title"%>
+          <% @current_user_skus = current_account.skus %>
+          <%= select_tag "product[sku_id]",options_for_select(@current_user_skus.collect {|x| [x.title,x.id]}),:include_blank => true,:class => "input-small pull-left radius_no select2 product" ,:id => "product_title"%>
         </div>
       </fieldset>
       <div>
@@ -103,17 +99,25 @@
             <label class="control-label">进货价：</label>
             <input type="text" class="input-medium" placeholder="100" name="product[price]" id="product_price">
           </div>
+          <div class="control-group">
+            <label class="control pull-left">SKU编码：</label>
+            <input class="input-medium" id="disabledSku" type="text" placeholder="" disabled>
+          </div>
         </fieldset><!-- form left area -->
         <fieldset class="span6">
           <div class="control-group">
-            <label class="control-label">实际入库：</label>
+            <label class="control pull-left">实际入库：</label>
             <input type="text" class="input-medium" name="product[real_number]" placeholder="0" id="product_real_number">
           </div>
           <div class="control-group">
-            <label class="control-label">实际总价：</label>
+            <label class="control pull-left">实际总价：</label>
             <input type="text" class="input-medium" placeholder="500" name="product[total_price]" id="product_total_price">
           </div>
       </fieldset><!-- form right area -->
+      <p>&nbsp;</p>      <p>&nbsp;</p>
+      <div class="btn-toolbar">
+        <%= button_tag "删除",:onclick => "if($('input[name=\"bill_product_ids[]\"]:checked').length < 1){alert('请选择商品');return false}else{$('#form_products').submit()}" ,:class => "btn btn-warning btn-small" %>
+      </div>
     </div> 
     <% end %>
     <div id="products">
@@ -121,3 +125,15 @@
     </div>
   </div><!--span10 -->
 </div><!--row-fluid -->
+<% content_for :tail do %>
+<script type="text/javascript" charset="utf-8">
+$(function(){
+  var parseSkus = <%= raw Hash[@current_user_skus.collect {|x| [x.id.to_s,x.sku_id.to_s]}].to_json %>;
+  console.log(parseSkus);
+  $("#product_title").change(function(){
+    var sku_id = parseSkus[$(this).val()];
+    $("#disabledSku").val(sku_id)
+  })
+})
+</script>
+<% end %>
