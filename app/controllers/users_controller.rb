@@ -100,7 +100,7 @@ class UsersController < ApplicationController
   end
 
   def edit_with_role
-    @user = current_account.users.find params[:user_ids].first
+    @user = current_account.users.find params[:id]
     @roles = current_account.roles
   rescue Exception
     redirect_to :action => :index

@@ -173,7 +173,7 @@ zh-CN:
   permissions_tag_update_on_sale: "商品上/下架"
   permissions_tag_taobao_skus: "查看绑定的本地SKU"
   permissions_tag_tie_to_native_skus: "绑定本地SKU"
-
+  permissions_tag_warehouses#index: "查看所有仓库"
   permissions_tag_stock_in_bills#detail: "查看入库单"
   permissions_tag_stock_out_bills#detail: "查看出库单"
   permissions_tag_stock_bills#detail: "查看所有进销"

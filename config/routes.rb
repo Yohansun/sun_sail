@@ -2,6 +2,8 @@ require 'sidekiq/web'
 
 MagicOrders::Application.routes.draw do
 
+  
+
   resources :customers ,:only => [:index,:show] do
 
     collection do
@@ -14,24 +16,27 @@ MagicOrders::Application.routes.draw do
     end
   end
 
-  resources :stock_in_bills do
-    post :add_product   , :on => :collection
-    post :remove_product, :on => :collection
-    post :sync, :on => :collection
-    post :check, :on => :collection
-    post :rollback, :on => :collection
+  resources :stocks     , only: [:index] do
+    get :edit_depot     ,:on => :collection
+    put :update_depot   ,:on => :member
   end
-  resources :stock_out_bills do
-    post :add_product   , :on => :collection
-    post :remove_product, :on => :collection
-    post :sync, :on => :collection
-    post :check, :on => :collection
-    post :rollback, :on => :collection
-  end
-
-  resources :stocks, only: [:index] do
-    get :edit_depot,:on => :collection
-    put :update_depot,:on => :member
+  
+  resources :warehouses   ,:only => [:index] do
+    resources :stock_bills
+    resources :stock_in_bills do
+      post :add_product   , :on => :collection
+      post :remove_product, :on => :collection
+      post :sync          , :on => :collection
+      post :check         , :on => :collection
+      post :rollback      , :on => :collection
+    end
+    resources :stock_out_bills do
+      post :add_product   , :on => :collection
+      post :remove_product, :on => :collection
+      post :sync          , :on => :collection
+      post :check         , :on => :collection
+      post :rollback      , :on => :collection
+    end
   end
   match "/stocks/safe_stock", to: 'stocks#safe_stock'
   post "/stocks/edit_safe_stock", to: 'stocks#edit_safe_stock'
@@ -39,7 +44,7 @@ MagicOrders::Application.routes.draw do
   get "notify/sms"
   get "notify/email"
 
-  resources :stock_bills
+  
 
   wash_out :stock_api
 
@@ -215,7 +220,6 @@ MagicOrders::Application.routes.draw do
       get :roles
       put :create_role
       get :limits
-      get :edit_with_role
       post :batch_update
       put :update_permissions
       post :destroy_role
@@ -225,6 +229,7 @@ MagicOrders::Application.routes.draw do
       post :users_muti
       post :delete
     end
+    get :edit_with_role , :on => :member
   end
 
   resources :areas

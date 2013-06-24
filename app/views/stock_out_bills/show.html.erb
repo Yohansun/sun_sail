@@ -1,17 +1,10 @@
 <div class="row-fluid">
-	<div class="span2 bs-docs-sidebar">
-		<ul class="nav nav-list bs-docs-sidenav affix span2">
-			<li class="active"><a href="#"><i class="icon-chevron-right"></i>默认仓库</a></li>
-		</ul>
-	</div>
-
-	<div class="span10">
+  <div class="span10">
 		<ul class="nav nav-tabs">
-			<li class="active"><%= link_to "#{@bill.tid}出库单", stock_out_bills_path %></li>
-			<li><%= link_to "库存查询", stocks_path %></li>
-			<li><%= link_to "入库单", stock_out_bills_path %></li>
-			<li><%= link_to "出库单", stock_out_bills_path %></li>
-			<li><%= link_to "所有进销", stock_bills_path %></li>
+			<li class="active"><%= link_to "#{@bill.tid}出库单", warehouse_stock_out_bills_path(@warehouse) %></li>
+			<li><%= link_to "入库单", warehouse_stock_in_bills_path(@warehouse) %></li>
+			<li><%= link_to "出库单", warehouse_stock_out_bills_path(@warehouse) %></li>
+			<li><%= link_to "所有进销", warehouse_stock_bills_path(@warehouse) %></li>
 		</ul><!-- nav-tabs -->
 		<form class="form-horizontal mar_t30">
 			<div class="well clearfix">

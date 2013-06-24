@@ -20,7 +20,7 @@
             <%= link_to "发送短信","#",:class => "validateValues",:goto => "/customers/send_messages",:request => "get"%>
           </li>
           <li>
-            <%= link_to "详细", "#",:class => "validateValues",:goto => customer_path(1),:request => "get" %>
+            <%= link_to "详细", "#",:target_url => "/customers/:id",:class => "magic_detail"%>
           </li>
         </ul>
       </div>

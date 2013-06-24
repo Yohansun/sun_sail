@@ -181,16 +181,6 @@ ActiveRecord::Schema.define(:version => 20130615090309) do
 
   add_index "colors_stock_products", ["stock_product_id"], :name => "index_colors_stock_products_on_stock_product_id"
 
-  create_table "default_logistics", :force => true do |t|
-    t.string   "name"
-    t.string   "code"
-    t.string   "bg_img"
-    t.text     "xml_hash"
-    t.string   "options"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
   create_table "feature_product_relationships", :force => true do |t|
     t.integer  "product_id"
     t.integer  "feature_id"
@@ -349,6 +339,7 @@ ActiveRecord::Schema.define(:version => 20130615090309) do
     t.string   "resource_type"
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
+    t.string   "byname"
     t.text     "permissions"
     t.integer  "account_id",       :null => false
     t.boolean  "can_assign_trade"
@@ -518,14 +509,7 @@ ActiveRecord::Schema.define(:version => 20130615090309) do
     t.string   "pic_url"
     t.string   "cid"
     t.string   "name"
-    t.datetime "created_at",                                              :null => false
-    t.datetime "updated_at",                                              :null => false
-  end
-
-  create_table "taobao_products_products", :force => true do |t|
-    t.integer "product_id"
-    t.integer "taobao_product_id"
-    t.integer "number"
+    t.datetime "updated_at"
   end
 
   create_table "taobao_skus", :force => true do |t|

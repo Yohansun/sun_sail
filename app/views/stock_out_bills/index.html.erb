@@ -2,20 +2,19 @@
   <div class="span10 w100">
     <%= render partial: "layouts/all_crumbs" %>
     <ul class="nav nav-tabs">
-      <li><%= link_to "库存查询", stocks_path %></li>
-      <li><%= link_to "入库单", stock_in_bills_path %></li>
-      <li class="active"><%= link_to "出库单", stock_out_bills_path %></li>
-      <li><%= link_to "所有进销", stock_bills_path %></li>
+      <li><%= link_to "入库单", warehouse_stock_in_bills_path(@warehouse) %></li>
+      <li class="active"><%= link_to "出库单", warehouse_stock_out_bills_path(@warehouse) %></li>
+      <li><%= link_to "所有进销", warehouse_stock_bills_path(@warehouse) %></li>
     </ul><!-- nav-tabs -->
 
     <div class="tab-content">
       <div class="tab-pane active" id="stock_check">
-        <%= form_tag stock_out_bills_path,:method => "get",:class => "well well-small form-horizontal font12"  do %>
+        <%= form_tag warehouse_stock_out_bills_path(@warehouse),:method => "get",:class => "well well-small form-horizontal font12"  do %>
         <%= render :partial => "search" %>
         <% end %>
       </div>
 
-      <%= form_tag "/",:method => "post",:id => "stock_out_bills_form", :remote => true do %>
+      <%= form_tag "/",:method => "post",:class => "simple-operation",:id => "stock_out_bills_form", :remote => true do %>
       <div class="btn-toolbar">
         <div class="btn-group">
           <button class="btn btn-warning">操作</button>
@@ -24,28 +23,21 @@
           </button>
           <ul class="dropdown-menu">
             <li>
-             <%= link_to "导出","#",:onclick => "processChecked('#{stock_out_bills_path(:search => params[:search],:format => :xls,:on => '?')}')"%>
+             <%= link_to "导出","#",:onclick => "processChecked('#{warehouse_stock_out_bills_path(@warehouse,:search => params[:search],:format => :xls,:on => '?')}')"%>
             </li>
             <li>
-              <%= link_to "新建", new_stock_out_bill_path %>
+              <%= link_to "新建", new_warehouse_stock_out_bill_path(@warehouse) %>
             </li>
-            <li>
-              <%= link_to "查看","javascript:if($('input:checked').length < 1){
-              alert('请选择一个出库单');
-            }else{
-              var bill_id = $(\"input[name='bill_ids[]']:checked:first\").val();
-              $(location).attr('href','/stock_out_bills/'+bill_id);
-            }"  %>
-          </li>
+            <li><%= link_to "查看","#",:class => "magic_detail",:target_url => "/warehouses/#{@warehouse.id}/stock_out_bills/:id" %></li>
           <li>
-            <%= link_to "审核", "#",:onclick => "processRequest(this)",:goto => "/stock_out_bills/check",:request_method => "post",:mesg => "确认审核吗?"  %>
+            <%= link_to "审核", "#",:onclick => "processRequest(this)",:target_url => "/warehouses/#{@warehouse.id}/stock_out_bills/check",:request => "post",:message => "确认审核吗?",:class => "magic_operation"  %>
           </li>
           <%- if current_account.settings.enable_module_third_party_stock == 1 %>
           <li>
-            <%= link_to "同步", "#",:onclick => "processRequest(this)",:goto => "/stock_out_bills/sync",:request_method => "post",:mesg => "确认同步吗?"  %>
+            <%= link_to "同步", "#",:onclick => "processRequest(this)",:target_url => "/warehouses/#{@warehouse.id}/stock_out_bills/sync",:request => "post",:message => "确认同步吗?" ,:class => "magic_operation"  %>
           </li>
           <li>
-            <%= link_to "撤销", "#",:onclick => "processRequest(this)",:goto => "/stock_out_bills/rollback",:request_method => "post",:mesg => "确认撤销吗?"  %>
+            <%= link_to "撤销", "#",:onclick => "processRequest(this)",:target_url => "/warehouses/#{@warehouse.id}/stock_out_bills/rollback",:request => "post",:message => "确认撤销吗?"  ,:class => "magic_operation"  %>
           </li>
           <%- end %>
         </ul>
@@ -58,7 +50,7 @@
         <%= paginate @bills %>
       </div>
       <!-- <p></p> -->
-      <%= form_tag("/stock_out_bills", :method => "get", :class => 'pagination trade_count_info form-inline pull-right') do %>
+      <%= form_tag("/warehouses/#{@warehouse.id}/stock_out_bills", :method => "get", :class => 'pagination trade_count_info form-inline pull-right') do %>
       <input style="visibility:hidden;" name="page" value="<%= params[:page]%>"/>
       <label style="color:#005580;">当前每页显示：</label>
       <%=select_tag :number, options_for_select([["加载20项","20"],

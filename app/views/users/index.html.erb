@@ -23,33 +23,32 @@
         </div>
       </fieldset>
     <% end %>
-
-    <%= form_tag edit_with_role_users_path,:method => :post,:id => "edit_user" do %>
+    <%= form_tag "",:method => :post,:id => "edit_user",:class => "simple-operation" do %>
     <div class="btn-toolbar">
-      <div class="btn-group">
-        <b class="btn btn-warning">操作</b>
-        <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown" onclick="return false">
-          <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu">
-          <li>
-            <%= link_to "编辑", "#",:onclick => "validateValues(this)",:goto => edit_with_role_users_path,:request => "get" %>
-          </li>
-          <li>
-            <%= link_to "删除","#",:onclick => "validateValues(this)",:id => "delete_users", :goto => "/users/delete",:request => "post",:message => "确认删除?"%>
-          </li>
-          <li>
-            <%=link_to "开启", "#", :onclick => "validateValues(this)",:goto => "/users/batch_update?operation=unlock",:request => "post",:message => "确认开启吗?" %>
-          </li>
-          <li>
-            <%=link_to "禁用", "#",:onclick => "validateValues(this)",:goto => "/users/batch_update?operation=lock",:request => "post",:message => "确认禁用?"%>
-          </li>
-        </ul>
-      </div><!-- btn-group -->
-      <div class="btn-group">
-        <a href="/users/new" data-toggle="modal" class="btn btn-warning">新增用户</a>
-      </div><!-- btn-group -->
-    </div><!-- btn-groups end -->
+  <div class="btn-group">
+    <b class="btn btn-warning">操作</b>
+    <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown" onclick="return false">
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+      <li>
+        <%= link_to "编辑", "#",:target_url => "/users/:id/edit_with_role",:class => "magic_detail" %>
+      </li>
+      <li>
+        <%= link_to "删除","#",:id => "delete_users", :target_url => "/users/delete",:request => "post",:message => "确认删除吗?" , :class => "magic_operation" %>
+      </li>
+      <li>
+        <%=link_to "开启", "#",:target_url => "/users/batch_update?operation=unlock",:request => "post",:message => "确认开启吗?" , :class => "magic_operation" %>
+      </li>
+      <li>
+        <%=link_to "禁用", "#",:target_url => "/users/batch_update?operation=lock",:request => "post",:message => "确认禁用?",:class => "magic_operation"%>
+      </li>
+    </ul>
+  </div><!-- btn-group -->
+  <div class="btn-group">
+    <a href="/users/new" data-toggle="modal" class="btn btn-warning">新增用户</a>
+  </div><!-- btn-group -->
+</div><!-- btn-groups end -->
 
     <table class="table table-hover table-bordered table-striped table-condensed js-table">
       <thead>
@@ -77,23 +76,8 @@
         <% end %>
       </tbody>
     </table>
+    </div>
     <% end %>
-    </div></div>
     <%= paginate @users %>
   </div>
 </div>
-<script>
-function validateValues(item){
-  var check_values = $('input:checked').map(function(){if($(this).val() != 'on'){return ($(this).val())}});
-  if($('input:checked').length < 1) {  
-    alert('请选择');  
-  } else if($.inArray('<%= current_user.id %>',check_values) >= 0 && $(item).attr("goto") != "/users/edit_with_role"){  
-    alert('不能操作自己哦 ╮(╯_╰)╭');
-  } else {
-    if (!$(item).attr("message") || confirm($(item).attr("message"))) {
-      $('#edit_user').attr({action: $(item).attr("goto") ,method: $(item).attr("request") });  
-      $('#edit_user').submit();
-    }
-  }  
-}
-</script>

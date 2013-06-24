@@ -59,6 +59,7 @@ end
 #modes 不同模式下可见订单列
 #oerations 不同角色显示的“操作”弹出项
 MagicOrder::AccessControl.map do |map|
+  #订单管理
   map.project_module :trades do |map|
     map.permission :reads,      ["detail",
                                  'request_add_ref',
@@ -125,6 +126,7 @@ MagicOrder::AccessControl.map do |map|
                                  "split_merged_trades",
                                  "split_invoice"]
   end
+  #商品管理
   map.project_module :products do |map|
     map.permission :reads,      ["detail",
                                  "taobao_products",
@@ -141,7 +143,7 @@ MagicOrder::AccessControl.map do |map|
                                  "add_sku"]
 
   end
-
+  #地区管理
   map.project_module :areas do |map|
     map.permission :reads,      ["detail",
                                  "autocomplete",
@@ -150,15 +152,16 @@ MagicOrder::AccessControl.map do |map|
     map.permission :operations, ["create",
                                  "update"]
   end
-
+  #发货拆分管理
   map.project_module :logistic_groups do |map|
     map.permission :reads,      ["detail"]
     map.permission :operations, ["create",
                                  "destroy"]
   end
-
+  #仓库模块
   map.project_module :stocks do |map|
-    map.permission :reads,      ["detail",
+    map.permission :reads,      ["warehouses#index",
+                                 "detail",
                                  "stock_in_bills#detail",
                                  "stock_out_bills#detail",
                                  "stock_bills#detail"]
@@ -186,7 +189,7 @@ MagicOrder::AccessControl.map do |map|
                                  "stock_in_bills#remove_product",
                                  "stock_out_bills#remove_product"]
   end
-
+  #数据模块
   map.project_module :datas do |map|
     map.permission :reads,      [#"user_activities#detail",
                                  #"user_activities#all",
@@ -203,7 +206,7 @@ MagicOrder::AccessControl.map do |map|
                                  "customers#send_customers_messages"
                                ]
   end
-
+  #系统设置
   map.project_module :system_settings do |map|
     map.permission :reads,      ["users#detail",
                                  "users#roles",

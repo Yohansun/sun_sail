@@ -17,17 +17,16 @@
 
   <div class="span12">
     <ul class="nav nav-tabs">
-      <li class="active"><%= link_to "新建入库单", new_stock_in_bill_path %></li>
-      <li><%= link_to "库存查询", stocks_path %></li>
-      <li><%= link_to "入库单", stock_in_bills_path %></li>
-      <li><%= link_to "出库单", stock_out_bills_path %></li>
-      <li><%= link_to "所有进销", stock_bills_path %></li>
-    </ul><!-- nav-tabs -->
-    <%= simple_form_for @bill,:html => {:class => "form-horizontal"} do |f| %>
+      <li class="active"><%= link_to "新建入库单", new_warehouse_stock_in_bill_path(@warehouse) %></li>
+      <li><%= link_to "入库单", warehouse_stock_in_bills_path(@warehouse) %></li>
+      <li><%= link_to "出库单", warehouse_stock_out_bills_path(@warehouse) %></li>
+      <li><%= link_to "所有进销", warehouse_stock_bills_path(@warehouse) %></li>
+    </ul><!-- nav-tabs -->  
+    <%= simple_form_for @bill, :url => warehouse_stock_in_bills_path(@warehouse,@bill),:html => {:class => "form-horizontal"} do |f| %>
     <%= hidden_field_tag "bill_product_ids" %>
     <div class="btn-toolbar">
       <%= f.submit "保存",:onclick => "validateStockBill()",:class => "btn btn-warning btn-small" %>
-        <%= link_to "取消","/stock_in_bills" ,:class => "btn btn-warning btn-small" %>
+        <%= link_to "取消",warehouse_stock_in_bills_path(@warehouse) ,:class => "btn btn-warning btn-small" %>
       </div>
       <div class="well clearfix">
         <fieldset class="span6">
@@ -77,7 +76,7 @@
       <ul class="nav nav-tabs js-nav_tabs">
         <li class="active"><a href="#good_info" data-toggle="tab">商品信息</a></li>
       </ul>
-      <%= form_tag add_product_stock_in_bills_path,:class => "form-horizontal",:remote => true do  %>
+      <%= form_tag add_product_warehouse_stock_out_bills_path(@warehouse),:class => "form-horizontal",:remote => true do  %>
       <%= hidden_field_tag "id",params[:id] %>
       <div class="btn-toolbar">
         <%= button_tag "添加",:class => "btn btn-warning btn-small" ,:onclick => "validateProductValues()" %>
