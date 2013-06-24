@@ -1096,15 +1096,17 @@ class Trade
   end
 
   def set_operator(users,total_percent)
-    rand_number = rand(1..total_percent)
-    count = 0
-    users.each do |u|
-      percent = u.trade_percent || 0
-      if rand_number <= percent + count
-        update_attributes(operator_id: u.id, operator_name: u.username)
-        return
-      else
-        count += u.trade_percent
+    if total_percent >= 1
+      rand_number = rand(1..total_percent)
+      count = 0
+      users.each do |u|
+        percent = u.trade_percent || 0
+        if rand_number <= percent + count
+          update_attributes(operator_id: u.id, operator_name: u.username)
+          return
+        else
+          count += u.trade_percent
+        end
       end
     end
   end
