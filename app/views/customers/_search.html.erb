@@ -27,6 +27,9 @@
   <div class="control-group">
     <label class="pull-left" for=""><code>状态：</code></label>
     <div class="controls pull-left" style="height: auto">
+      <!--
+        transaction_histories_status_in 可多选 (multiple)
+      -->
       <%= select_tag "search[transaction_histories_status_in][]",options_for_select(Trade::STATUS,params[:search][:transaction_histories_status_in]),:class => "input-medium pull-left",:id => "exact_phrase",:include_blank => true %>
       <!-- mutiple select -->
       <!-- <span class="toggle-multiselect">&nbsp;</span> -->
@@ -75,7 +78,7 @@ $(function(){
   $("#serch_name").attr("name","<%= params[:exact_phrase] %>")
   $("input[name='" + text_field + "']").val("<%= params[:search][field_name] rescue "" %>");
 
-  $("select").change(function() {
+  $("#exact_phrase").change(function() {
     var input_name = $(this).val()
     $("#search_name").attr("name",input_name)
   });

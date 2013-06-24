@@ -90,6 +90,8 @@ class CustomersController < ApplicationController
     op_state,op_city,op_district = params["op_state"],params["op_city"], params["op_district"]
     search  = params[:search]
     search["transaction_histories_status_eq"] = "TRADE_FINISHED" if params[:action] == "around"
+    #可用于多选
+    search.delete("transaction_histories_status_in")             if search["transaction_histories_status_in"] == [""]
 
     search["transaction_histories_receiver_state_eq"]     = Area.find_by_id(op_state).try(:name)    if op_state.present?
     search["transaction_histories_receiver_city_eq"]      = Area.find_by_id(op_city).try(:name)     if op_city.present?
