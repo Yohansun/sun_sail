@@ -22,7 +22,7 @@
       <li><%= link_to "入库单", stock_in_bills_path %></li>
       <li><%= link_to "出库单", stock_out_bills_path %></li>
       <li><%= link_to "所有进销", stock_bills_path %></li>
-    </ul><!-- nav-tabs -->  
+    </ul><!-- nav-tabs -->
     <%= simple_form_for @bill,:html => {:class => "form-horizontal"} do |f| %>
     <%= hidden_field_tag "bill_product_ids" %>
     <div class="btn-toolbar">
@@ -34,7 +34,7 @@
           <%= f.input :op_name, label: "发货人",:input_html  => {:class => "input-medium"} %>
           <%= f.input :op_mobile, label: "手机",:input_html  => {:class => "input-medium"} %>
           <%= f.input :op_zip, label: "邮编",:input_html  => {:class => "input-medium"} %>
-          
+
           <div class="control-group">
             <label class="control pull-left">收货仓库：</label>
             <select class="input-medium select2">
@@ -48,7 +48,7 @@
         <fieldset class="span6">
           <%= f.input :op_phone, label: "固定电话",:input_html  => {:class => "input-medium"},:placeholder => "010-10101010" %>
           <%= f.input :op_address, label: "收货地址",:input_html  => {:class => "input-medium"} %>
-          
+
           <div class="control-group">
             <label class="control-label">地域：</label>
             <select id="" class="level_1 input-medium input-small pull-left radius_no_rb select2" name="stock_in_bill[op_state]">
@@ -62,7 +62,7 @@
             </select>
           </div>
           <%= f.input :logistic_id,label: "物流公司", collection: Logistic.all.collect {|x| [x.name,x.id]},as: :select, input_html: {class: "input-small select2 logictic"} %>
-          
+
           <%= f.input :stocked_at, label: "入库时间",input_html: {class: "input-medium js-datetimepicker"} %>
         </fieldset><!-- form right area -->
         <fieldset>
@@ -118,7 +118,7 @@
       <div class="btn-toolbar">
         <%= button_tag "删除",:onclick => "if($('input[name=\"bill_product_ids[]\"]:checked').length < 1){alert('请选择商品');return false}else{$('#form_products').submit()}" ,:class => "btn btn-warning btn-small" %>
       </div>
-    </div> 
+    </div>
     <% end %>
     <div id="products">
       <%= render :partial => "products",:locals => {:products => @products} %>
@@ -129,7 +129,6 @@
 <script type="text/javascript" charset="utf-8">
 $(function(){
   var parseSkus = <%= raw Hash[@current_user_skus.collect {|x| [x.id.to_s,x.sku_id.to_s]}].to_json %>;
-  console.log(parseSkus);
   $("#product_title").change(function(){
     var sku_id = parseSkus[$(this).val()];
     $("#disabledSku").val(sku_id)

@@ -8,6 +8,7 @@ json.array!(@bills) do |json, bill|
   json.is_printed bill.deliver_printed_at.present?
   json.is_logistic_printed bill.logistic_printed_at.present?
   json.receiver_name trade.receiver_name
+  json.buyer_nick trade.buyer_nick
   json.receiver_mobile trade.receiver_mobile
   json.receiver_address trade.receiver_address
   json.trade_source trade.trade_source

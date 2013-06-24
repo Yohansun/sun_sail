@@ -99,32 +99,51 @@
           </ul>
         </div>
 
-            <div class="btns btn-group batch_ops">
-              <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-warning btn_left4">
-                批量操作
-                <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu index_batch_pops">
-                <li><a href="#" data-toggle="modal" data-batch_type="manual_sms_or_email">发短信/邮件</a></li>
-                <li><a href="#" data-toggle="modal" data-batch_type="batch_export">导出勾选订单</a></li>
-                <li><a href="#" data-toggle="modal" data-batch_type="batch_add_gift">批量添加赠品</a></li>
-                <% if MagicOrders.trade_mode == "trades" and MagicOrders.trade_type == "undelivered" : %>
-                <li><a href='#' data-toggle="modal" class="batch_deliver">批量发货</a></li>
-                <li><a href='#' data-toggle="modal" data-batch_type='batch_check_goods'>批量验货</a></li>
-                <% end %>
-              </ul>
-            </div>
-            <div class="btns btn-group batch_ops">
-              <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-warning btn_left4">
-                分捡单操作
-                <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu">
-                <li><a data-toggle="modal" class='sort_product' href='#'>分捡单</a></li>
-              </ul>
-            </div>
+        <div class="btns btn-group batch_ops">
+          <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-warning btn_left4">
+            批量操作
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu index_batch_pops">
+            <li><a href="#" data-toggle="modal" data-batch_type="manual_sms_or_email">发短信/邮件</a></li>
+            <li><a href="#" data-toggle="modal" data-batch_type="batch_export">导出勾选订单</a></li>
+            <li><a href="#" data-toggle="modal" data-batch_type="batch_add_gift">批量添加赠品</a></li>
+            <% if MagicOrders.trade_mode == "trades" and MagicOrders.trade_type == "undelivered" : %>
+            <li><a href='#' data-toggle="modal" class="batch_deliver">批量发货</a></li>
+            <li><a href='#' data-toggle="modal" data-batch_type='batch_check_goods'>批量验货</a></li>
+            <% end %>
+          </ul>
+        </div>
+
+        <div class="btns btn-group batch_ops">
+          <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-warning btn_left4">
+            分捡单操作
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li><a data-toggle="modal" class='sort_product' href='#'>分捡单</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="btn-toolbar js-affix" data-spy="affix" data-offset-top="144">
+        <div class="btns btn-group pull-right" style="margin-right: 30px;margin-top: -40px">
+          <a href="#" class="btn btn-success btn_mar4">显示设置</a>
+          <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-success dropdown_check_btn"><span class="caret"></span></button>
+          <ul class="dropdown-menu dropdown_check" id="cols_filter">
+            <% for key in _.keys(window.MagicOrders.trade_cols): %>
+            <li data-col="<%= key %>">
+              <label class="checkbox" style="padding-left:35px;">
+                <input type="checkbox" value="<%= key %>">
+                <%= window.MagicOrders.trade_cols[key] %>
+              </label>
+            </li>
+            <% end %>
+          </ul>
+        </div>
       </div>
     </div>
+
   </div>
 
 
@@ -152,8 +171,8 @@
           <th data-col='tid'>订单编号</th>
           <th data-col='status'>当前状态</th>
           <th data-col='status_history' style="max-width:130px">历史状态</th>
-          <th data-col='receiver_id'>客户ID/(客户姓名)</th>                <!--Newly Add-->
-          <th data-col='receiver_address' style="min-width:100px">联系地址/(联系电话)</th>
+          <th data-col='receiver_id'>客户ID(客户姓名)</th>                <!--Newly Add-->
+          <th data-col='receiver_address' style="min-width:100px">联系地址(联系电话)</th>
           <!-- <th data-col='buyer_message'>客户<br/>留言</th> -->
           <th data-col='seller_memo'>卖家<br/>备注</th>
           <th data-col='cs_memo'>客服<br/>备注</th>
@@ -173,15 +192,14 @@
           <th data-col='logistic_bill_status'>物流单状态</th>
           <th data-col='order_goods'>商品详细</th>
           <!-- <th data-col='logistic_bill'>物流单</th> -->
-          <th data-col='logistic_company'>物流公司</th>
           <th data-col='invoice_type'>发票类型</th>
           <th data-col='invoice_name'>发票抬头</th>
           <th data-col='invoice_value'>开票金额</th>
           <th data-col='invoice_date'>完成日期</th>
           <!-- <th data-col='order_split'>拆分</th> -->
           <th data-col='operator'>操作人</th>
-          <th data-col='seller' style="min-width:90px">配送经销商/(上级经销商)</th>
-          <th data-col='logistic' style="min-width:90px">物流配送商/(物流单号)</th>
+          <th data-col='seller' style="min-width:90px">配送经销商(上级经销商)</th>
+          <th data-col='logistic' style="min-width:90px">物流配送商(物流单号)</th>
         </tr>
       </thead>
       <tbody id="trade_rows">
