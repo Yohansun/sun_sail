@@ -27,19 +27,19 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     'change #cols_filter input[type=checkbox]': 'filterTradeColumns'
 
     # 'click .deliver_bills li' : 'gotoDeliverBills'
-    
+
   initialize: ->
     @trade_type = MagicOrders.trade_type
     @identity = MagicOrders.role_key
     @offset = @collection.length
-    @first_rendered = false
+    @first_rendered = true
     @trade_number = 0
 
     # @collection.on("reset", @render, this)
     @collection.on("fetch", @renderUpdate, this)
 
   render: =>
-    if !@first_rendered
+    if @first_rendered
       $(@el).html(@template(trades: @collection))
       #initial mode=trades
       visible_cols = MagicOrders.trade_cols_visible_modes[MagicOrders.trade_mode]
@@ -63,7 +63,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
         $(@el).find("#trades_table th[data-col=#{col}]").hide()
         $(@el).find("#trades_table td[data-col=#{col}]").hide()
 
-    @first_rendered = true
+    @first_rendered = false
     @collection.each(@appendTrade)
     $("a[rel=popover]").popover({placement: 'left', html:true})
     if @identity == 'seller'
@@ -82,13 +82,13 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     $(@el).find('a[data-trade-mode='+MagicOrders.trade_mode+'][data-trade-status="'+MagicOrders.trade_type+'"]').parents('li').addClass('active')
     name = $(@el).find('a[data-trade-mode='+MagicOrders.trade_mode+'][data-trade-status="'+MagicOrders.trade_type+'"]').text()
     $(@el).find('#current_name').text(name)
-    $(@el).find(".index_pops li").hide()
-    for pop in MagicOrders.trade_pops[MagicOrders.trade_mode]
-      if MagicOrders.role_key == 'admin'
-        $(@el).find(".index_pops li [data-type=#{pop}]").parent().show()
-      else
-        if pop in MagicOrders.trade_pops[MagicOrders.role_key]
-          $(@el).find(".index_pops li [data-type=#{pop}]").parent().show()
+    # $(@el).find(".index_pops li").hide()
+    # for pop in MagicOrders.trade_pops[MagicOrders.trade_mode]
+    #   if MagicOrders.role_key == 'admin'
+    #     $(@el).find(".index_pops li [data-type=#{pop}]").parent().show()
+    #   else
+    #     if pop in MagicOrders.trade_pops[MagicOrders.role_key]
+    #       $(@el).find(".index_pops li [data-type=#{pop}]").parent().show()
 
     $.unblockUI()
     @loadStatusCount()
@@ -134,37 +134,37 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     Backbone.history.navigate('trades/batch/'+batch_type, true)
 
   sort_product: ->
-      tmp = []
-      length = $('.trade_check:checked').parents('tr').length
+    tmp = []
+    length = $('.trade_check:checked').parents('tr').length
 
-      if length < 1
-        alert('未选择订单！')
-        return
+    if length < 1
+      alert('未选择订单！')
+      return
 
-      if length > 300
-        alert('请选择小于300个订单！')
-        return
+    if length > 300
+      alert('请选择小于300个订单！')
+      return
 
-      $('.trade_check:checked').parents('tr').each (index, el) ->
-        input = $(el).find('.trade_check')
-        a = input[0]
+    $('.trade_check:checked').parents('tr').each (index, el) ->
+      input = $(el).find('.trade_check')
+      a = input[0]
 
-        if a.checked
-          trade_id = $(el).attr('id').replace('trade_', '')
-          tmp.push trade_id
+      if a.checked
+        trade_id = $(el).attr('id').replace('trade_', '')
+        tmp.push trade_id
 
-      MagicOrders.idCarrier = tmp
-      $.get '/home/index', {ids: tmp}, (data) ->
-        html = ''
-        for trade in data
-          html += '<tr>'
-          html += '<td>' + trade.title + '</td>'
-          html += '<td>' + trade.category + '</td>'
-          html += '<td>' + trade.num + '</td>'
-        $('#sort_product tbody').html(html)
-        $('#sort_product .confirm_sort_product').show()
+    MagicOrders.idCarrier = tmp
+    $.get '/home/index', {ids: tmp}, (data) ->
+      html = ''
+      for trade in data
+        html += '<tr>'
+        html += '<td>' + trade.title + '</td>'
+        html += '<td>' + trade.category + '</td>'
+        html += '<td>' + trade.num + '</td>'
+      $('#sort_product tbody').html(html)
+      $('#sort_product .confirm_sort_product').show()
 
-        $('#sort_product').modal('show')
+      $('#sort_product').modal('show')
 
 
   show_type: (e) ->
@@ -311,16 +311,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     Backbone.history.navigate("#{MagicOrders.trade_mode}/" + "#{MagicOrders.trade_mode}-#{status}", true)
 
     MagicOrders.original_path = window.location.hash
-
-    if MagicOrders.trade_mode != 'deliver_bills' && MagicOrders.trade_mode != 'logistic_bills'
-      # reset operation
-      $(@el).find(".trade_pops li").hide()
-      for pop in MagicOrders.trade_pops[MagicOrders.trade_mode]
-        unless MagicOrders.role_key == 'admin'
-          if pop in MagicOrders.trade_pops[MagicOrders.role_key]
-            $(@el).find(".trade_pops li [data-type=#{pop}]").parent().show()
-        else
-          $(@el).find(".trade_pops li [data-type=#{pop}]").parent().show()
 
   batchDeliver: ->
     tmp = []

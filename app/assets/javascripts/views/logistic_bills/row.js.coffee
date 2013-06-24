@@ -19,6 +19,16 @@ class MagicOrders.Views.LogisticBillsRow extends Backbone.View
     if @model.get("has_unusual_state") is true
       $(@el).attr("class", "error")
 
+    #reset cols
+    visible_cols = MagicOrders.trade_cols_visible_modes[MagicOrders.trade_mode]
+    for col in MagicOrders.trade_cols_keys
+      if col in visible_cols
+        $(@el).find("td[data-col=#{col}]").show()
+      else
+        $(@el).find("td[data-col=#{col}]").hide()
+    for col in MagicOrders.trade_cols_hidden[MagicOrders.trade_mode]
+      $(@el).find("td[data-col=#{col}]").hide()
+
     this
 
   show_type: (e) ->
