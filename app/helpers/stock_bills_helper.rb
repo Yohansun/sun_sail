@@ -17,7 +17,8 @@ module StockBillsHelper
 
   def add_tmp_product(product)
     validate_parameter(product)
-    sku = Sku.find_by_sku_id(product["sku_id"])
+    #命名可能会有歧义 sku_id 其实是 product的id
+    sku = Sku.find_by_id(product["sku_id"])
     pro = sku.product
     product.merge!({:title => sku.title,:outer_id => pro.outer_id,:type => params[:controller]})
     sku_id      = product.fetch("sku_id")

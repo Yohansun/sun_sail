@@ -43,6 +43,7 @@
             <option value="dispatched_at">分派时间</option>
             <option value="delivered_at">发货时间</option>
             <option value="rate_created">评价时间</option>
+            <option value="end_time">完成时间</option>
             <option value="deliver_bill_printed_at">打印发货单时间</option>
             <option value="logistic_printed_at">打印物流单时间</option>
           </select>

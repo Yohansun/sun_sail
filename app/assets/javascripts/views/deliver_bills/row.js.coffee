@@ -18,23 +18,16 @@ class MagicOrders.Views.DeliverBillsRow extends Backbone.View
 
     if @model.get("has_unusual_state") is true
       $(@el).attr("class", "error")
-    $(@el).find(".trade_pops li").hide()
-    # for pop in MagicOrders.trade_pops[MagicOrders.trade_mode]
-    #   unless MagicOrders.role_key == 'admin'
-    #     if pop in MagicOrders.trade_pops[MagicOrders.role_key]
-    #       $(@el).find(".trade_pops li [data-type=#{pop}]").parent().show()
-    #   else
-    #     $(@el).find(".trade_pops li [data-type=#{pop}]").parent().show()
 
-    # reset cols
-    # visible_cols = MagicOrders.trade_cols_visible_modes[MagicOrders.trade_mode]
-    # for col in MagicOrders.trade_cols_keys
-    #   if col in visible_cols
-    #     $(@el).find("td[data-col=#{col}]").show()
-    #   else
-    #     $(@el).find("td[data-col=#{col}]").hide()
-    # for col in MagicOrders.trade_cols_hidden[MagicOrders.trade_mode]
-    #   $(@el).find("td[data-col=#{col}]").hide()
+    #reset cols
+    visible_cols = MagicOrders.trade_cols_visible_modes[MagicOrders.trade_mode]
+    for col in MagicOrders.trade_cols_keys
+      if col in visible_cols
+        $(@el).find("td[data-col=#{col}]").show()
+      else
+        $(@el).find("td[data-col=#{col}]").hide()
+    for col in MagicOrders.trade_cols_hidden[MagicOrders.trade_mode]
+      $(@el).find("td[data-col=#{col}]").hide()
 
     # $("a[rel=popover]").popover(placement: 'left')
 

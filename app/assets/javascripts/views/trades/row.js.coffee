@@ -8,7 +8,6 @@ class MagicOrders.Views.TradesRow extends Backbone.View
   template: JST['trades/row']
 
   events:
-    'click .trade_pops li a[data-type]': 'show_type'
     'click .pop_detail' : 'show_type'
     'click .gift_trade_pop': 'showTrade'
     'click a[rel=popover]': "addHover"
@@ -25,14 +24,6 @@ class MagicOrders.Views.TradesRow extends Backbone.View
 
     $(@el).attr("id", "trade_#{@model.get('id')}")
     $(@el).html(@template(trade: @model))
-
-    $(@el).find(".trade_pops li").hide()
-    for pop in MagicOrders.trade_pops[MagicOrders.trade_mode]
-      unless MagicOrders.role_key == 'admin'
-        if pop in MagicOrders.trade_pops[MagicOrders.role_key]
-          $(@el).find(".trade_pops li [data-type=#{pop}]").parent().show()
-      else
-        $(@el).find(".trade_pops li [data-type=#{pop}]").parent().show()
 
     # reset cols
     visible_cols = MagicOrders.trade_cols_visible_modes[MagicOrders.trade_mode]

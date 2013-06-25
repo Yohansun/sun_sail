@@ -11,15 +11,44 @@ class MagicOrders.Views.DeliverBillsIndex extends Backbone.View
     # 加载更多订单相关
     'click [data-type=loadMoreTrades]': 'forceLoadMoreTrades'
 
+    # index显示相关
+    'change #cols_filter input[type=checkbox]': 'filterTradeColumns'
+    'click #cols_filter input,label': 'keepColsFilterDropdownOpen'
+
     # 搜索相关
     'click .search': 'search'
 
   initialize: ->
     @offset = @collection.length
+    @first_rendered = true
     @collection.on("fetch", @renderUpdate, this)
 
   render: =>
-    $(@el).html(@template(bills: @collection))
+    if @first_rendered
+      $(@el).html(@template(bills: @collection))
+      #initial mode=trades
+      visible_cols = MagicOrders.trade_cols_visible_modes[MagicOrders.trade_mode]
+      MagicOrders.trade_cols_hidden[MagicOrders.trade_mode] = []
+      if $.cookie("trade_cols_hidden_#{MagicOrders.trade_mode}")
+        MagicOrders.trade_cols_hidden[MagicOrders.trade_mode] = $.cookie("trade_cols_hidden_#{MagicOrders.trade_mode}").split(',')
+      for col in MagicOrders.trade_cols_keys
+        if col in visible_cols
+          $(@el).find("#cols_filter li[data-col=#{col}]").show()
+          $(@el).find("#trades_table th[data-col=#{col}]").show()
+          $(@el).find("#trades_table td[data-col=#{col}]").show()
+        else
+          $(@el).find("#cols_filter li[data-col=#{col}]").hide()
+          $(@el).find("#trades_table th[data-col=#{col}]").hide()
+          $(@el).find("#trades_table td[data-col=#{col}]").hide()
+
+      # check column & trades_table filters
+      $(@el).find("#cols_filter input[type=checkbox]").attr("checked", "checked")
+      for col in MagicOrders.trade_cols_hidden[MagicOrders.trade_mode]
+        $(@el).find("#cols_filter input[value=#{col}]").attr("checked", false)
+        $(@el).find("#trades_table th[data-col=#{col}]").hide()
+        $(@el).find("#trades_table td[data-col=#{col}]").hide()
+
+    @first_rendered = false
     @collection.each(@appendTrade)
     $("a[rel=popover]").popover({placement: 'left', html:true})
     $(@el).find(".get_offset").html(@offset)
@@ -27,6 +56,21 @@ class MagicOrders.Views.DeliverBillsIndex extends Backbone.View
     @loadStatusCount()
     $("#content").removeClass("search-expand")
     this
+
+  filterTradeColumns: (event) ->
+    col = event.target
+    if $(col).attr("checked") == 'checked'
+      $("#trades_table th[data-col=#{$(col).val()}],td[data-col=#{$(col).val()}]").show()
+      MagicOrders.trade_cols_hidden[MagicOrders.trade_mode] = _.without(MagicOrders.trade_cols_hidden[MagicOrders.trade_mode], $(col).val())
+    else
+      $("#trades_table th[data-col=#{$(col).val()}],td[data-col=#{$(col).val()}]").hide()
+      MagicOrders.trade_cols_hidden[MagicOrders.trade_mode].push($(col).val())
+
+    MagicOrders.trade_cols_hidden[MagicOrders.trade_mode] = _.uniq(MagicOrders.trade_cols_hidden[MagicOrders.trade_mode])
+    $.cookie("trade_cols_hidden_#{MagicOrders.trade_mode}", MagicOrders.trade_cols_hidden[MagicOrders.trade_mode].join(","))
+
+  keepColsFilterDropdownOpen: (event) ->
+    event.stopPropagation()
 
   selectSameStatusTrade: (e) =>
     e.preventDefault()
@@ -200,7 +244,7 @@ class MagicOrders.Views.DeliverBillsIndex extends Backbone.View
           coll = new MagicOrders.Collections.DeliverBills()
         when "logistic_bills"
           coll = new MagicOrders.Collections.DeliverBills()
-      
+
       coll.fetch  data:{trade_type:trade_type,limit:1}, success: (collection, response)->
         count = 0
         if(collection.length > 0)

@@ -129,6 +129,23 @@
           </ul>
         </div>
       </div>
+
+      <div class="btn-toolbar js-affix" data-spy="affix" data-offset-top="144">
+        <div class="btns btn-group pull-right" style="margin-right: 30px;margin-top: -40px">
+          <a href="javascript:void(0)" class="btn btn-success btn_mar4">显示设置</a>
+          <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-success dropdown_check_btn"><span class="caret"></span></button>
+          <ul class="dropdown-menu dropdown_check" id="cols_filter">
+            <% for key in _.keys(window.MagicOrders.trade_cols): %>
+            <li data-col="<%= key %>">
+              <label class="checkbox" style="padding-left:35px;">
+                <input type="checkbox" value="<%= key %>">
+                <%= window.MagicOrders.trade_cols[key] %>
+              </label>
+            </li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -139,16 +156,13 @@
       <thead>
         <tr>
           <th><input id="checkbox_all" type="checkbox" value="option1">全选</th>
-          <th data-col='tid'>订单编号</th>
-          <th data-col='tid'>发货单编号</th>
-          <th data-col='tid'>打印状态</th>
-          <th data-col='tid'>物流单号</th>
-          <th data-col='tid'>物流公司</th>
           <th data-col='trade_source'>订单来源</th>
-          <th data-col='trade_source' style="min-width:90px">商品详细</th>
-          <th data-col='receiver_name' style="min-width:90px">客户姓名</th>
-          <th data-col='receiver_mobile_phone'>联系电话</th>
-          <th data-col='receiver_address' style="min-width:100px">联系地址</th>
+          <th data-col='tid'>订单编号</th>
+          <th data-col='order_goods' style="min-width:90px">商品详细</th>
+          <th data-col='receiver_name' style="min-width:90px">客户ID(客户姓名)</th>
+          <th data-col='receiver_address' style="min-width:100px">联系地址(联系电话)</th>
+          <th data-col='logistic_company'>物流配送商(物流单号)</th>
+          <th data-col='logistic_bill_status'>物流单状态</th>
           <!-- <th>操作</th> -->
         </tr>
       </thead>
