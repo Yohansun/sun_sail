@@ -27,6 +27,8 @@
 #  locked_at              :datetime
 #  phone                  :string(255)
 #  superadmin             :boolean(1)      default(FALSE), not null
+#  can_assign_trade       :boolean(1)
+#  trade_percent          :integer(4)
 #
 
 class User < ActiveRecord::Base

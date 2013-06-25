@@ -5,6 +5,7 @@ class Trade
   include Mongoid::Paranoia
   include Mongoid::Timestamps
   include MagicEnum
+  include TradeMerge
 
   field :trade_source_id, type: Integer
 
@@ -272,7 +273,7 @@ class Trade
   after_destroy :check_associate_deliver_bills
 
 
-  scope  :paied_undispatched, ->{where({status:"WAIT_SELLER_SEND_GOODS", dispatched_at:nil})}
+  scope  :paid_undispatched, ->{where({status:"WAIT_SELLER_SEND_GOODS", dispatched_at:nil})}
   scope  :unmerged, ->{where(merged_by_trade_id:nil)}
   scope  :be_merged, ->{where({merged_by_trade_id:{"$ne"=>nil}})}
   scope  :is_merger, ->{where({merged_trade_ids:{"$ne"=>nil}})}
@@ -1130,9 +1131,6 @@ class Trade
   def orders=(new_orders)
     self.taobao_orders = new_orders
   end
-
-
-  include TradeMerge
 
   private
     def check_associate_deliver_bills

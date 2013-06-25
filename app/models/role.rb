@@ -3,14 +3,15 @@
 #
 # Table name: roles
 #
-#  id            :integer(4)      not null, primary key
-#  name          :string(255)
-#  resource_id   :integer(4)
-#  resource_type :string(255)
-#  created_at    :datetime        not null
-#  updated_at    :datetime        not null
-#  permissions   :text
-#  account_id    :integer(4)      not null
+#  id               :integer(4)      not null, primary key
+#  name             :string(255)
+#  resource_id      :integer(4)
+#  resource_type    :string(255)
+#  created_at       :datetime        not null
+#  updated_at       :datetime        not null
+#  permissions      :text
+#  account_id       :integer(4)      not null
+#  can_assign_trade :boolean(1)
 #
 
 class Role < ActiveRecord::Base
