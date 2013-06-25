@@ -40,9 +40,9 @@ module TradesHelper
     #本日下单订单总额
     trades_money = trades.sum(:payment) || 0
     #本日未付款订单总数
-    unpaid_trades_count = trades.where(pay_time: nil).count
+    unpaid_trades_count = trades.where(status: "WAIT_BUYER_PAY").count
     #本日已付款订单数
-    paid_trades_count = trades_count - unpaid_trades_count
+    paid_trades_count = trades.where(:pay_time.ne => nil).count
 
     unpaid_trades_money = trades.where(pay_time: nil).sum(:payment) || 0
     #本日付款订单总额
@@ -64,11 +64,13 @@ module TradesHelper
     partially_refund_count = 0
     total_refund_count = 0
     refund_trades.each do |trade|
-      is_fully_refund = trade.taobao_orders.inject(false){|status,el| status || (el.refund_status == "NO_REFUND" ? false : true) }
-      if is_fully_refund
-        total_refund_count += 1
-      else
-        partially_refund_count += 1
+      is_refund = trade.taobao_orders.inject(false){|status,el| status || (el.refund_status == "NO_REFUND" ? false : true) }
+      if is_refund
+        if trade.taobao_orders.map(&:refund_status).include?("NO_REFUND")
+          partially_refund_count += 1
+        else
+          total_refund_count += 1
+        end
       end
     end
 

@@ -2,10 +2,10 @@ $(function(){
 	//tab.js
 	$('.js-nav_tabs a:first').tab('show');
 	/*$('a[data-toggle="tab"]').on('shown', function (e) {
-		
+
 	})*/
-	$('.subnav').affix();
-	
+	// $('.subnav').affix();
+
 	if($('.js-datetimepicker').length > 0){
 		$('.js-datetimepicker').datetimepicker({
 			language:  'zh-CN',
@@ -27,7 +27,7 @@ $(function(){
 	// var linkage_options	= {
 	// 	data	: data
 	// }
-	
+
 	// var sel = new LinkageSelect(linkage_options);
 	// sel.bind('.linkage_select .js-linkage_1','1');
 	// sel.bind('.linkage_select .js-linkage_1');
