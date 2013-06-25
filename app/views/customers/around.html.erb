@@ -1,82 +1,86 @@
-<div class="container-fluid">
-  <div class="row-fluid">
+<div class="row-fluid">
+  <div class="span10 w100">
     <%= render "nav" %>
-    <form ation="/trades_reports" class="well form-horizontal">
-      <div class="control-group nomargin">
-        <%= render :partial => "search",:locals => {:path => customers_path} %>
+    <div class="tab-content">
+      <div class="tab-pane active" id="stock_check">
+        <form ation="/trades_reports" class="well form-horizontal">
+          <div class="control-group nomargin">
+            <%= render :partial => "search",:locals => {:path => customers_path} %>
+          </div>
+        </form>
       </div>
-    </form>
-    <div class="btn-toolbar">
-      <div class="btn-group">
-        <button class="btn btn-warning">操作</button>
-        <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
-          <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu">
-          <li>
-            <%= link_to "导出","#",:onclick => "exportChecked('#{format_url(:xls)}')" %>
-          </li>
-          <li>
-            <%= link_to "发送短信","#",:class => "validateValues",:goto => "/customers/send_messages",:request => "get"%>
-          </li>
-          <li>
-            <%= link_to "详细", "#",:class => "validateValues",:goto => customer_path(1),:request => "get" %>
-          </li>
-        </ul>
+      <div class="btn-toolbar">
+        <div class="btn-group">
+          <button class="btn btn-warning">操作</button>
+          <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li>
+              <%= link_to "导出","#",:onclick => "exportChecked('#{format_url(:xls)}')" %>
+            </li>
+            <li>
+              <%= link_to "发送短信","#",:class => "validateValues",:goto => "/customers/send_messages",:request => "get"%>
+            </li>
+            <li>
+              <%= link_to "详细", "#",:class => "validateValues",:goto => customer_path(1),:request => "get" %>
+            </li>
+          </ul>
+        </div>
       </div>
-    </div>
-    <%= form_tag "",:id => "customers" do %>
-    <%= hidden_field_tag "product_ids",@product_ids.join(',') rescue "" %>
-      <table class="table table-striped table-bordered mar_t10">
-        <thead>
-          <th><input id="checkbox_all" type="checkbox" value="option1"></th>
-          <th>顾客ID</th>
-          <th>顾客联系电话</th>
-          <th>顾客邮箱</th>
-          <th>-</th>
-          <th>省</th>
-          <th>市</th>
-          <th>区</th>
-          <th>地址</th>
-        </thead>
-        <tbody>
-          <% @customers.each_with_index do |customer,index| %>
-          <tr class="export_excel">
-            <td><%= check_box_tag "search[_id_in][]",customer.id %></td>
-            <td><%= customer.name %></td>                <!--Newly Add-->
-            <td><%= customer.receiver_mobile %></td>
-            <td><%= customer.email %></td>
-            <td>
-              <table border="0" cellspacing="5" cellpadding="5">
-                <thead>
-                  <tr>
-                    <th>订单编号</th>
-                    <th>购买商品</th>
-                    <th>商品生命周期</th>
-                  </tr>
-                </thead>
-                <% customer.transaction_histories.each do |trade| %>
-                <tbody>
-                  <% (trade.product_ids & @product_ids rescue trade.product_ids).each do |product_id| %>
-                  <tr>
-                    <td rowspan="<%= trade.product_ids.length %>"><%= trade.tid %></td>
-                    <td><%= product(@products,product_id).name rescue "" %></td>
-                    <td><%= product(@products,product_id).category.use_days rescue "" %>天</td>
-                  </tr>
+      <%= form_tag "",:id => "customers" do %>
+      <%= hidden_field_tag "product_ids",@product_ids.join(',') rescue "" %>
+        <table class="table table-striped table-bordered mar_t10">
+          <thead>
+            <th><input id="checkbox_all" type="checkbox" value="option1"></th>
+            <th>顾客ID</th>
+            <th>顾客联系电话</th>
+            <th>顾客邮箱</th>
+            <th>-</th>
+            <th>省</th>
+            <th>市</th>
+            <th>区</th>
+            <th>地址</th>
+          </thead>
+          <tbody>
+            <% @customers.each_with_index do |customer,index| %>
+            <tr class="export_excel">
+              <td><%= check_box_tag "search[_id_in][]",customer.id %></td>
+              <td><%= customer.name %></td>                <!--Newly Add-->
+              <td><%= customer.receiver_mobile %></td>
+              <td><%= customer.email %></td>
+              <td>
+                <table border="0" cellspacing="5" cellpadding="5">
+                  <thead>
+                    <tr>
+                      <th>订单编号</th>
+                      <th>购买商品</th>
+                      <th>商品生命周期</th>
+                    </tr>
+                  </thead>
+                  <% customer.transaction_histories.each do |trade| %>
+                  <tbody>
+                    <% (trade.product_ids & @product_ids rescue trade.product_ids).each do |product_id| %>
+                    <tr>
+                      <td rowspan="<%= trade.product_ids.length %>"><%= trade.tid %></td>
+                      <td><%= product(@products,product_id).name rescue "" %></td>
+                      <td><%= product(@products,product_id).category.use_days rescue "" %>天</td>
+                    </tr>
+                    <% end %>
+                  </tbody>
                   <% end %>
-                </tbody>
-                <% end %>
-              </table>
-            </td>
-            <td><%= customer.receiver_state %></td>
-            <td><%= customer.receiver_city %></td>
-            <td><%= customer.receiver_district %></td>
-            <td><%= customer.receiver_address %></td>
-          </tr>
-          <% end %>
-        </tbody>
-      </table>
-    <% end %>
+                </table>
+              </td>
+              <td><%= customer.receiver_state %></td>
+              <td><%= customer.receiver_city %></td>
+              <td><%= customer.receiver_district %></td>
+              <td><%= customer.receiver_address %></td>
+            </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% end %>
+    </div>
   </div>
   <%= paginate @customers %>
 </div>

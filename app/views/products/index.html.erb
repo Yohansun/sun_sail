@@ -1,73 +1,78 @@
-<div class="container-fluid">
-  <%= render partial: "layouts/all_crumbs" %>
-  <ul class="nav nav-tabs">
-    <li class="active"><a href="/products">本地商品</a></li>
-    <li><a href="/products/taobao_products">淘宝商品</a></li>
-    <!-- <li><a href="#set_good" data-toggle="tab">套装</a></li>
-    <li><a href="#active_goods" data-toggle="tab">活动商品</a></li> -->
-  </ul><!-- nav-tabs -->
-
-  <%= simple_form_for "product", url: products_path, html: { method: "get", class: "well form-search form-horizontal font12", style: "margin-top:-19px;"}, :wrapper => :search do |f| %>
-    <fieldset class="form-inline mar_t5">
-      <div class="pull-left mar_r10">
-        <label class="pull-left"><code>精准：</code></label>
-        <div class="controls pull-left">
-          <select name="info_type" class="input-small pull-left select2 radius_no_rb">
-            <option value="name" <%= 'selected' if params[:info_type] == 'name' %>>名称</option>
-            <option value="outer_id" <%= 'selected' if params[:info_type] == 'outer_id' %>>商品编码</option>
-          </select>
-          <input type="text" class="input-medium radius_no_tl" name="info" value='<%= params[:info] %>' placeholder="输入关键字...">
-        </div>
+<div class="row-fluid">
+  <div class="span10 w100">
+    <%= render partial: "layouts/all_crumbs" %>
+    <ul class="nav nav-tabs">
+      <li class="active"><a href="/products">本地商品</a></li>
+      <li><a href="/products/taobao_products">淘宝商品</a></li>
+      <!-- <li><a href="#set_good" data-toggle="tab">套装</a></li>
+      <li><a href="#active_goods" data-toggle="tab">活动商品</a></li> -->
+    </ul><!-- nav-tabs -->
+    <div class="tab-content">
+      <div class="tab-pane active" id="stock_check">
+        <%= simple_form_for "product", url: products_path, html: { method: "get", class: "well form-search form-horizontal font12", style: "margin-top:-19px;"}, :wrapper => :search do |f| %>
+          <fieldset class="form-inline mar_t5">
+            <div class="pull-left mar_r10">
+              <label class="pull-left"><code>精准：</code></label>
+              <div class="controls pull-left">
+                <select name="info_type" class="input-small pull-left select2 radius_no_rb">
+                  <option value="name" <%= 'selected' if params[:info_type] == 'name' %>>名称</option>
+                  <option value="outer_id" <%= 'selected' if params[:info_type] == 'outer_id' %>>商品编码</option>
+                </select>
+                <input type="text" class="input-medium radius_no_tl" name="info" value='<%= params[:info] %>' placeholder="输入关键字...">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="pull-left"><code>分类：</code></label>
+              <div class="controls pull-left">
+                <select name="category_id" class="input-small pull-left select2">
+                  <option value="0" <%= 'selected' if params[:category_id] == '0' %>>全部</option>
+                  <% current_account.categories.each do |category| %>
+                  <option value="<%= category.id %>" <%= 'selected' if params[:category_id] == "#{category.id}" %>><%= category.name %></option>
+                  <% end %>
+                </select>
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="pull-left"><code>状态：</code></label>
+              <div class="controls pull-left">
+                <select name="on_sale" class="input-small pull-left select2">
+                  <option value="on" <%= 'selected' if params[:on_sale] == "on" %>>上架</option>
+                  <option value="off" <%= 'selected' if params[:on_sale] == "off" %>>下架</option>
+                </select>
+              </div>
+              <div class="pull-left">
+                <%= f.button :submit, "过滤", class: "btn btn-primary pull-right" %>
+              </div>
+            </div>
+          </fieldset>
+        <% end %>
       </div>
-      <div class="control-group">
-        <label class="pull-left"><code>分类：</code></label>
-        <div class="controls pull-left">
-          <select name="category_id" class="input-small pull-left select2">
-            <option value="0" <%= 'selected' if params[:category_id] == '0' %>>全部</option>
-            <% current_account.categories.each do |category| %>
-            <option value="<%= category.id %>" <%= 'selected' if params[:category_id] == "#{category.id}" %>><%= category.name %></option>
-            <% end %>
-          </select>
-        </div>
+
+      <div class="btn-toolbar">
+        <div class="btn-group">
+          <button class="btn btn-warning" id="product_operations">操作</button>
+          <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li><a href="#" id="show_product">查看</a></li>
+            <li><a href="#" id="edit_product">编辑</a></li>
+            <li><a href="#" id="product_on_sale">上/下架</a></li>
+            <li><a href="#" id="export_products">导出</a><%#= link_to "导出", products_path(:format => "xls"), id: "export_products" %></li>
+          </ul>
+        </div><!-- btn-group -->
+        <a class="btn btn-warning" id="new_product" href="/products/new">新增商品</a>
+      </div><!-- btn-groups end -->
+
+      <div class="tab-content">
+        <div class="tab-pane active" id="native_goods">
+          <%= render 'products_table' %>
+        </div><!-- single_good end -->
+
+        <div class="tab-pane" id="taobao_goods">
+        </div><!-- all_goods end -->
       </div>
-      <div class="control-group">
-        <label class="pull-left"><code>状态：</code></label>
-        <div class="controls pull-left">
-          <select name="on_sale" class="input-small pull-left select2">
-            <option value="on" <%= 'selected' if params[:on_sale] == "on" %>>上架</option>
-            <option value="off" <%= 'selected' if params[:on_sale] == "off" %>>下架</option>
-          </select>
-        </div>
-        <div class="pull-left">
-          <%= f.button :submit, "过滤", class: "btn btn-primary pull-right" %>
-        </div>
-      </div>
-    </fieldset>
-  <% end %>
-
-  <div class="btn-toolbar">
-    <div class="btn-group">
-      <button class="btn btn-warning" id="product_operations">操作</button>
-      <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
-        <span class="caret"></span>
-      </button>
-      <ul class="dropdown-menu">
-        <li><a href="#" id="show_product">查看</a></li>
-        <li><a href="#" id="edit_product">编辑</a></li>
-        <li><a href="#" id="product_on_sale">上/下架</a></li>
-        <li><a href="#" id="export_products">导出</a><%#= link_to "导出", products_path(:format => "xls"), id: "export_products" %></li>
-      </ul>
-    </div><!-- btn-group -->
-    <a class="btn btn-warning" id="new_product" href="/products/new">新增商品</a>
-  </div><!-- btn-groups end -->
-
-  <div class="tab-content">
-    <div class="tab-pane active" id="native_goods">
-      <%= render 'products_table' %>
-    </div><!-- single_good end -->
-
-    <div class="tab-pane" id="taobao_goods">
-    </div><!-- all_goods end -->
+    </div>
   </div>
 
 </div>
