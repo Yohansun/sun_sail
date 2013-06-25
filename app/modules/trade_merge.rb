@@ -209,7 +209,6 @@
     def trig_auto_merge
       if !self.is_merged? && self.dispatched_at.blank? && self.status == "WAIT_SELLER_SEND_GOODS" &&
           (new_record? || status_changed?)
-          debugger
         self.auto_merge_trades
       end
     end
