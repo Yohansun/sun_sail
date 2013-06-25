@@ -23,7 +23,6 @@
         <div class="tab-pane active chart_opts" id="tab1">
           <ul class="clearfix aug_data_tops nomargin">
             <li class="span2 noborder">
-              <%- p @time_data %>
               <%- @time_data.sort{|a, b| b[2] <=> a [2]}.each_with_index do |value, i| %>
               <div>
                 <a href="#" class="pull-right"><!--<img src="/assets/aug_details.jpg">--></a>高峰成交时段TOP<%= i + 1 %>
@@ -86,6 +85,7 @@
 
 <% content_for :tail do -%>
 <script type="text/javascript">
+
 var chart;
 
 var chartData = [];

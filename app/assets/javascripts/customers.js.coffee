@@ -1,4 +1,4 @@
-AmCharts.ready = (chartData) ->
+AmCharts.build = (chartData) ->
 #  // SERIAL CHART
   chart = new AmCharts.AmSerialChart()
   chart.dataProvider = chartData

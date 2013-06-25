@@ -39,7 +39,7 @@
         </form>
       </div>
 
-      <div class="mar_t10">        
+      <div class="mar_t10">
         <form  class="well well-small">
           <div class="page-header">
             <h4>数据图</h4>
@@ -55,6 +55,7 @@
 
 <% content_for :tail do %>
 <script type="text/javascript" charset="utf-8">
+
   $(function() {
 
     var chartDataYears = <%= raw reports(@customer)["years"] %>;
@@ -66,19 +67,19 @@
     var chartDataMonths = chartDataMonths.map(function(e){return JSON.parse(e)})
     var chartDataDays = chartDataDays.map(function(e){return JSON.parse(e)})
     var chartDataWeeks = chartDataWeeks.map(function(e){return JSON.parse(e)})
-    AmCharts.ready(chartDataMonths);
+    AmCharts.build(chartDataMonths);
     $("#reports").change(function(){
       if($(this).val() == "years"){
-        AmCharts.ready(chartDataYears);
+        AmCharts.build(chartDataYears);
       }else if($(this).val() == "months"){
-        AmCharts.ready(chartDataMonths);
+        AmCharts.build(chartDataMonths);
       }else if($(this).val() == "days"){
-        AmCharts.ready(chartDataDays);
+        AmCharts.build(chartDataDays);
       }else if($(this).val() == "weeks"){
-        AmCharts.ready(chartDataWeeks);
+        AmCharts.build(chartDataWeeks);
       }
     })
-    
+
   });
 </script>
 <% end %>
