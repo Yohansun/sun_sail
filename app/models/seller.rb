@@ -33,6 +33,7 @@
 
 
 require 'hz2py'
+require 'csv'
 
 class Seller < ActiveRecord::Base
   include MagicEnum
@@ -40,7 +41,7 @@ class Seller < ActiveRecord::Base
   enum_attr :has_stock, [["启用",true],["禁用",false]]
 
   attr_accessible :has_stock, :stock_opened_at,:mobile, :telephone, :cc_emails, :email, :pinyin, :interface, :fullname, :name,
-                  :parent_id, :address, :performance_score, :user_id,:stock_name,:stock_user_id,:areas
+                  :parent_id, :address, :performance_score, :user_id,:stock_name,:stock_user_id,:areas, :active
 
   has_many :users
   has_many :sellers_areas, dependent: :destroy
@@ -51,10 +52,9 @@ class Seller < ActiveRecord::Base
   belongs_to :account
 
   scope :with_account, lambda {|account_id| where(account_id: account_id)}
+  scope :order_with_parent_id, order(:parent_id)
 
-  validates :name, presence: true
-  validates :fullname, presence: true, uniqueness: { scope: :account_id }
-
+  validates :name, presence: true, uniqueness: { scope: :account_id }
 
   before_save :set_pinyin
 
@@ -97,4 +97,122 @@ class Seller < ActiveRecord::Base
     area.self_and_ancestors.map(&:name).join('-') if area
   end
 
+  def self.confirm_import_from_csv(account, file_name, set_interface_only)
+    skip_lines_count = 3
+    CSV.foreach(file_name) do |csv|
+      skip_lines_count -= 1
+      next if skip_lines_count > 0
+      next if csv.size == 0
+      name = csv[0].try(:strip)
+      fullname = csv[1].try(:strip)
+      usernames = csv[2].try(:strip).try(:split, ';') || []
+      interface_name = csv[3].try(:strip)
+      mobile = csv[4].try(:strip).try(:gsub, ';', ',')
+      email = csv[5].try(:strip).try(:gsub, ';', ',')
+      cc_emails = csv[6].try(:strip).try(:gsub, ';', ',')
+      seller_closed = csv[7].try(:strip)
+
+      if set_interface_only
+        seller = account.sellers.find_by_name(name)
+        interface = account.sellers.find_by_name(interface_name)
+        if interface_name && (interface_name != '' || interface_name != '未设定' || interface_name != nil) && !interface
+          interface = account.sellers.create!(name: interface_name, fullname: interface_name)
+        end
+        seller.update_attributes!(parent_id: interface.try(:id))
+      else
+        if seller_closed == "是"
+          seller_active_bool = false
+        elsif seller_closed == "否"
+          seller_active_bool = true
+        end
+
+        seller = account.sellers.find_by_name(name)
+        if seller
+          seller.update_attributes!(fullname: fullname, email: email, mobile: mobile, cc_emails: cc_emails, active: seller_active_bool)
+        else
+          seller = account.sellers.create!(name: name, fullname: fullname, email: email, mobile: mobile, cc_emails: cc_emails, active: seller_active_bool)
+        end
+
+        if User.where(email: email).exists?
+          user_email = "seller_#{account.id}_#{seller.id}_#{Time.now.to_i}@doorder.com"
+        else
+          user_email = email
+        end
+
+        users = []
+        if usernames.present?
+          usernames.each do |username|
+            user = account.users.find_by_username(username)
+            if username && (username != '' || username != '未设定' || username != nil) && !user
+              user = account.users.create!(name: name, username: username, email: user_email, password: '123456')
+            end
+            users << user
+          end
+        end
+        seller.users = users
+        seller.save!
+      end
+    end
+  end
+
+  def self.import_from_csv(account, file_name)
+    status_list = {}
+    skip_lines_count = 3
+    CSV.foreach(file_name) do |csv|
+      skip_lines_count -= 1
+      next if skip_lines_count > 0
+      next if csv.size == 0
+      name = csv[0].try(:strip)
+      fullname = csv[1].try(:strip)
+      usernames = csv[2].try(:strip).try(:split, ';') || []
+      interface_name = csv[3].try(:strip)
+      mobile = csv[4].try(:strip).try(:gsub, ';', ',')
+      email = csv[5].try(:strip).try(:gsub, ';', ',')
+      cc_emails = csv[6].try(:strip).try(:gsub, ';', ',')
+      seller_closed = csv[7].try(:strip)
+      seller = account.sellers.find_by_name(name)
+      status_list[name] = []
+      if seller
+        if fullname != seller.fullname
+          status_list[name] << "全称: 修改前#{seller.fullname || '不存在'},修改后#{fullname || '不存在'}"
+        end
+        if mobile != seller.mobile
+          status_list[name] << "手机号: 修改前#{seller.mobile || '不存在'},修改后#{mobile || '不存在'}"
+        end
+        if email != seller.email
+          status_list[name] << "邮箱: 修改前#{seller.email || '不存在'},修改后#{email || '不存在'}"
+        end
+        if cc_emails != seller.cc_emails
+          status_list[name] << "抄送邮箱: 修改前#{seller.cc_emails || '不存在'},修改后#{cc_emails || '不存在'}"
+        end
+        interface = account.sellers.find_by_name(interface_name)
+        if interface
+          if interface != seller.parent
+            status_list[name] << "上级经销商: 修改前#{seller.parent.try(:name) || '不存在'},修改后#{interface_name || '不存在'}"
+          end
+        else
+          unless interface_name.nil?
+            status_list[name] << "新建上级经销商: #{interface_name}"
+          end
+        end
+        original_usernames = seller.users.map(&:username)
+        disctinct_usernames = original_usernames & usernames
+        if (disctinct_usernames - original_usernames) != (original_usernames - disctinct_usernames)
+          status_list[name] << "登陆账号: 修改前#{original_usernames || '不存在'},修改后#{(usernames == ['未设定'] || usernames == []) ? '不存在' : usernames}"
+        end
+        usernames.each do |username|
+          user = account.users.find_by_username(username)
+          if !user && username
+            status_list[name] << "新建登陆账号: #{username}"
+          end
+        end
+        if (seller_closed == "是" && seller.active) || (seller_closed == "否" && !seller.active)
+          status_list[name] << "经销商是否已关闭: 修改前#{seller.active ? '否' : '是'},修改后#{seller_closed}"
+        end
+      else
+        status_list[name] << "新建经销商: #{name}"
+      end
+    end
+    status_list
+  end
 end

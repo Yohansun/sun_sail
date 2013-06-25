@@ -12,5 +12,4 @@ json.array!(@sellers) do |json, seller|
   json.children_count   seller.children_count
   json.email            seller.email
   json.active           seller.active
-  json.has_stock        seller.has_stock
 end

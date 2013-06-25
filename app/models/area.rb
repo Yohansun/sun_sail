@@ -57,7 +57,7 @@ class Area < ActiveRecord::Base
       fields: 'addresses'},nil
     )
 #    p response
-  end  
+  end
 
   def self.sync_from_taobao
     Area.skip_callback :save
@@ -91,9 +91,6 @@ class Area < ActiveRecord::Base
     lines = open(File.join(Rails.root, 'tmp', 'areas.csv')).readlines.map { |e| e.strip.split(",") }
     lines.each do |row|
       city = row[1]
-#      p city
-#      p city.size
-#      p city[1]
       if city.size < 3 && city[1] != '市'
         city = city + '市'
       end
@@ -102,5 +99,88 @@ class Area < ActiveRecord::Base
       area.seller_id = row[2]
       area.save
     end
+  end
+
+  def fullname
+    "#{parent.try(:parent).try(:name)} #{parent.try(:name)} #{name}"
+  end
+
+  def self.confirm_import_from_csv(account, file_name, set_interface_only)
+    skip_lines_count = 3
+    CSV.foreach(file_name) do |csv|
+      skip_lines_count -= 1
+      next if skip_lines_count > 0
+      next if csv.size == 0
+
+      state_name = csv[0].try(:strip)
+      city_name = csv[1].try(:strip)
+      district_name = csv[2].try(:strip)
+      seller_name = csv[3].try(:strip).try(:split, ';') || []
+
+      state = Area.roots.find_by_name(state_name) if state_name.present?
+      city = state.children.find_by_name(city_name) if city_name.present?
+      district = city.children.find_by_name(district_name) if district_name.present?
+
+      area = district || city || state
+
+      seller = account.sellers.where(name: seller_name).first
+
+      if area && seller && !areas.sellers.inlcude?(seller)
+        area.sellers += [seller]
+      end
+    end
+  end
+
+  def self.import_from_csv(account, file_name)
+    status_list = {}
+    skip_lines_count = 3
+    CSV.foreach(file_name) do |csv|
+      skip_lines_count -= 1
+      next if skip_lines_count > 0
+      next if csv.size == 0
+
+      state_name = csv[0].try(:strip)
+      city_name = csv[1].try(:strip)
+      district_name = csv[2].try(:strip)
+      seller_name_array = csv[3].try(:strip).try(:split, ';') || []
+
+      state = Area.roots.find_by_name(state_name) if state_name.present?
+      city = state.children.find_by_name(city_name) if state.present?
+      district = city.children.find_by_name(district_name) if city.present?
+
+      area = district || city || state
+      area_name = "#{state_name}#{city_name}#{district_name}"
+      status_list[area_name] = []
+
+      if area
+        original_seller_names = area.sellers.where(account_id: account.id).map(&:name)
+      else
+        original_seller_names = []
+      end
+
+      if (original_seller_names - seller_name_array) != (seller_name_array - original_seller_names)
+        status_list[area_name] << "经销商: 修改前#{original_seller_names || '不存在'},修改后#{(seller_name_array == ['未设定'] || seller_name_array == []) ? '不存在' : seller_name_array}"
+      end
+
+      seller_name_array.each do |seller_name|
+        seller = account.sellers.where(name: seller_name)
+        unless seller
+          status_list[area_name] << "经销商不存在: #{seller_name}"
+        end
+      end
+
+      if state
+        if city
+          unless district
+            status_list[area_name] << "地区不存在: #{area_name}"
+          end
+        else
+          status_list[area_name] << "地区不存在: #{state_name}#{city_name}"
+        end
+      else
+        status_list[area_name] << "地区不存在: #{state_name}"
+      end
+    end
+    status_list
   end
 end

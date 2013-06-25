@@ -1,0 +1,21 @@
+<div class="container-fluid">
+  <%= render partial: "layouts/all_crumbs" %>
+  <ul class="nav nav-tabs">
+    <li><a href="/sellers">经销商</a></li>
+    <li><a href="/areas/sellers">地区经销商</a></li>
+    <li class="active"><a href="/selles/import">导入经销商地区对应关系</a></li>
+  </ul><!-- nav-tabs -->
+</ul><!-- nav-tabs -->
+<ul class="breadcrumb">
+  <li>导入经销商地区对应关系: 只接受CSV文件,可以先导出地区经销商对应关系报表,按照格式修改后导入</li>
+</ul>
+<%= form_tag "/areas/import_csv", :multipart => true, :method => :post do %>
+<div class="btn-toolbar">
+  <div class="btn-group">
+    <b class="btn btn-warning">选择文件</b>
+    <%= file_field_tag "file" %>
+    <%= submit_tag "提交", :class => 'btn' %>
+  </div>
+</div>
+<% end %>
+</div>

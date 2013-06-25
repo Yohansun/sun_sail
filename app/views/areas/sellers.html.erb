@@ -1,0 +1,87 @@
+<div class="container-fluid">
+  <%= render partial: "layouts/all_crumbs" %>
+  <ul class="nav nav-tabs">
+    <li><a href="/sellers">经销商</a></li>
+    <li class="active"><a href="/areas/sellers">地区经销商</a></li>
+  </ul><!-- nav-tabs -->
+
+    <%= simple_form_for "area", url: '/areas/sellers', html: { method: "get", class: "well form-search form-horizontal font12", style: "margin-top:-19px;"}, :wrapper => :search do |f| %>
+    <fieldset class="form-inline mar_t5">
+      <div class="control-group">
+        <label class="pull-left"><code>地域：</code></label>
+        <div class="controls pull-left">
+          <select name="area_id" class="input-large pull-left select2">
+            <option value="0" <%= 'selected' if params[:area_id] == '0' %>>全部</option>
+            <option value="110000" <%= 'selected' if params[:area_id].blank? %>>北京</option>
+            <% Area.roots.each do |area| %>
+              <%- next if area.id == 110000 %>
+              <option value="<%= area.id %>" <%= 'selected' if params[:area_id] == "#{area.id}" %>><%= area.name %></option>
+            <% end %>
+          </select>
+        </div>
+        <div class="pull-left">
+          <%= f.button :submit, "过滤", class: "btn btn-primary pull-right" %>
+        </div>
+      </div>
+    </fieldset>
+  <% end %>
+
+  <div class="btn-toolbar">
+    <div class="btn-group">
+      <button class="btn btn-warning" id="seller_operations">操作</button>
+      <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li><a href="#" id="export_areas">导出地区经销商对应关系</a></li>
+        <li><a href="/areas/import" id="import_areas">导入地区经销商对应关系</a></li>
+      </ul>
+    </div><!-- btn-group -->
+  </div><!-- btn-groups end -->
+
+    <table class="table table-striped table-bordered table-condensed td_colors mar_t" id="area_table">
+      <thead>
+        <tr>
+          <th><input type="checkbox" id="check_all_areas"></input>&nbsp;全选</th>
+          <th>省</th>
+          <th>市</th>
+          <th>区</th>
+          <th>经销商</th>
+        </tr>
+      </thead>
+
+      <tbody id="seller_rows">
+        <% @leaves.each do |leave| %>
+          <tr id="area_<%= leave.id %>">
+            <td><input id='check_<%= leave.id %>' class='area_check' type="checkbox"></input></td>
+            <%- if leave.level == 2 %>
+              <td><%= leave.parent.parent.name  %></td>
+              <td><%= leave.parent.name  %></td>
+              <td><%= leave.name %></td>
+            <%- else %>
+              <td><%= leave.parent.name  %></td>
+              <td><%= leave.name %></td>
+              <td></td>
+            <%- end %>
+            <td><%= leave.sellers.where(account_id: current_account.id, active: true).map(&:name).try(:join, ';')%></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% content_for :tail do %>
+<script type="text/javascript">
+  $('#export_areas').on('click', function(event){
+    event.preventDefault()
+    var area_ids = $('#area_table input:checked').map(function(){return _.trim($(this).attr('id'), "check_")}).get();
+    window.location.href = "/areas/export.xls?area_ids="+area_ids
+  })
+  $('#check_all_areas').on('click', function(){
+    if($('#check_all_areas').attr('checked') == 'checked'){
+      $('.area_check').attr('checked', 'checked');
+    } else {
+      $('.area_check').removeAttr('checked')
+    }
+  })
+</script>
+<% end %>

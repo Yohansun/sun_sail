@@ -1,0 +1,46 @@
+<div class="container-fluid">
+  <%= render partial: "layouts/all_crumbs" %>
+  <ul class="nav nav-tabs">
+    <li><a href="/sellers">经销商</a></li>
+    <li><a href="/areas/sellers">地区经销商</a></li>
+    <li  class="active"><a href="/sellers/import">经销商导入</a></li>
+  </ul><!-- nav-tabs -->
+</ul><!-- nav-tabs -->
+<ul class="breadcrumb">
+  <li>经销商导入确认,共<%= @status_list.count %>行, 需修改<%= @changed_list.count %>行, <%= @status_list.count - @changed_list.count %>行保持不变</li>
+</ul>
+<%- if @changed_list.count > 0 %>
+  <table class="table table-bordered table-condensed td_colors mar_t">
+    <thead>
+      <th>经销商简称</th>
+      <th>修改明细</th>
+    </thead>
+    <% @changed_list.each do |key, value| %>
+      <%- if value.present? %>
+        <tr style="background-color:#BDB76B">
+      <%- else %>
+        <tr>
+      <%- end %>
+        <td><%= key %></td>
+        <td>
+          <%- value.each do |change| %>
+            <%= change %><br>
+          <%- end %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+  <a class="btn btn-warning" id="confirm_import_csv">确认导入</a>
+  <a class="btn"  href="/sellers">取消导入</a>
+<%- else %>
+  <a class="btn"  href="/sellers">取消导入</a>
+<%- end %>
+</div>
+<% content_for :tail do %>
+<script type="text/javascript">
+  $('#confirm_import_csv').on('click', function(){
+    $.post("/sellers/confirm_import_csv", {csv: "<%= @csv %>"}, function(result){});
+    window.location.href = "/sellers"
+  })
+</script>
+<% end %>

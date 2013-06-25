@@ -7,18 +7,17 @@ zh-CN:
   permissions_trades: "订单管理"
   permissions_products: "商品管理"
   permissions_areas: "地区管理"
+  permissions_sellers: "经销商管理"
   permissions_system_settings: "系统设置"
   permissions_stocks: 仓库模块
   permissions_datas: 数据模块
-  permissions_refund: "refund"
-  permissions_seller_confirm_invoice: "seller_confirm_invoice"
-  permissions_request_return: "request_return"
-  permissions_print_deliver_bill: "print_deliver_bill"
-  permissions_logistic_memo: "logistic_memo"
+  permissions_request_return: "申请退货"
+  permissions_print_deliver_bill: "打印物流单"
+  permissions_logistic_memo: "物流商备注"
   permissions_interface: "销售部联络人"
-  permissions_recover: "recover"
-  permissions_seller_confirm_invoice: "seller_confirm_invoice"
-  permissions_operation_log: "operation_log"
+  permissions_recover: "恢复"
+  permissions_seller_confirm_invoice: "确认开票"
+  permissions_operation_log: "操作日志"
   permissions_deliver: 发货单模式
   permissions_logistics: "物流管理"
   permissions_logistic_groups: "发货拆分管理"
@@ -33,11 +32,17 @@ zh-CN:
   permissions_tag_stock_products: 库存查询
   permissions_tag_stock_history: 进销记录
 
+  permissions_tag_user_manage: 登陆绑定
+  permissions_tag_area_manage: 地区绑定
+
   permissions_tag_create: 创建
   permissions_tag_update: 编辑
+  permissions_tag_active: 开启
+  permissions_tag_shutdown: 关闭
   permissions_tag_destroy: 删除
   permissions_tag_export: 导出
-  permissions_tag_batch_export: 导出勾选订单
+  permissions_tag_import: 导入
+  permissions_tag_batch_export: 勾选导出
   permissions_tag_batch_add_gift: 批量添加赠品
   permissions_tag_search: 搜索
   permissions_tag_area_search: 搜索
@@ -109,6 +114,7 @@ zh-CN:
   permissions_tag_color_info: 调色信息
   permissions_tag_invoice_info: 发票信息
   permissions_tag_point_fee: 积分
+  permissions_tag_sellers: 经销商
   permissions_tag_buyer_message: 客户留言
   permissions_tag_seller_memo: 卖家备注
   permissions_tag_total_fee: 实付金额

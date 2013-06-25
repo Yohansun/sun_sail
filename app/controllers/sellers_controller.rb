@@ -1,6 +1,7 @@
 # -*- encoding : utf-8 -*-
 class SellersController < ApplicationController
   before_filter :authorize
+  before_filter :check_module
 
   def index
     @sellers = current_account.sellers
@@ -9,20 +10,50 @@ class SellersController < ApplicationController
     else
       @sellers = @sellers.roots
     end
+    if params[:info_type].present? || params[:info].present?
+      @sellers = @sellers.where("BINARY #{params[:info_type]} like ? or #{params[:info_type]} = ?", "%#{params[:info].strip}%", params[:info].strip)
+    end
     @sellers = @sellers.page(params[:page])
+  end
+
+  def export
+    @sellers = current_account.sellers
+    if params[:seller_ids].present?
+      params[:seller_ids] = params[:seller_ids].split(',')
+      params[:seller_ids] -= ['all_sellers']
+      @sellers = @sellers.where(id: params[:seller_ids])
+    end
+    respond_to do |format|
+      format.xls
+    end
+  end
+
+  def import
 
   end
 
-  def search
-    if  params[:where_name] && params[:keyword].present?
-      @sellers  = current_account.sellers.where(["#{params[:where_name]} like ?", "%#{params[:keyword].strip}%"])
-      @sellers  = @sellers.page(params[:page])
+  def confirm_import_csv
+    if params[:csv] && File.exists?(params[:csv])
+      Seller.confirm_import_from_csv(current_account, params[:csv], false)
+      Seller.confirm_import_from_csv(current_account, params[:csv], true)
     end
-    if @sellers 
-      render :index
-    else
-      redirect_to sellers_path
-    end   
+    redirect_to sellers_path
+  end
+
+  def import_csv
+    if params[:file] && params[:file].tempfile
+      @csv = "#{Rails.root}/public/#{Time.now.to_i}.csv"
+      FileUtils.mv params[:file].tempfile, @csv
+      begin
+        @status_list = Seller.import_from_csv(current_account, @csv)
+      rescue Exception => e
+        Rails.logger.info e.inspect
+        flash[:notice] = "上传文件有误请重新上传,只接受csv文件,可以先导出经销商报表,按照格式修改后导入"
+        redirect_to :back
+      end
+    end
+    @status_list ||= {}
+    @changed_list  = @status_list.select {|k,v| v.present? }
   end
 
   def latest
@@ -88,6 +119,7 @@ class SellersController < ApplicationController
     end
   end
 
+  # TO BE REMOVED
   def status_update
     @seller = current_account.sellers.find params[:id]
     users = User.where(seller_id: params[:id])
@@ -102,6 +134,22 @@ class SellersController < ApplicationController
     redirect_to sellers_path(:parent_id => @seller.parent_id)
   end
 
+  def shutdown_seller
+    @sellers = current_account.sellers.where(id: params[:seller_ids])
+    @sellers.update_all(active: false)
+    respond_to do |f|
+      f.js
+    end
+  end
+
+  def active_seller
+    @sellers = current_account.sellers.where(id: params[:seller_ids])
+    @sellers.update_all(active: true)
+    respond_to do |f|
+      f.js
+    end
+  end
+
   def seller_user
     @seller_user = User.where(seller_id: params[:seller_id])
     respond_to do |f|
@@ -110,10 +158,15 @@ class SellersController < ApplicationController
   end
 
   def user_list
+    users = current_account.users
+    seller_role = Role.find_by_name "seller"
+    interface_role = Role.find_by_name "interface"
+    users = users.includes(:roles).where("roles.id = ? or roles.id = ?", seller_role.try(:id), interface_role.try(:id))
+
     if params[:user_name].present?
-      @user = User.where(["seller_id is null and name like ?", "%#{params[:user_name].strip}%"])
+      @user = users.where(["users.name like ?", "%#{params[:user_name].strip}%"])
     else
-      @user = User.where(:seller_id => nil)
+      @user = users.where(:seller_id => nil)
     end
     respond_to do |f|
       f.js
@@ -135,6 +188,7 @@ class SellersController < ApplicationController
     end
   end
 
+  # TO BE REMOVED
   def change_stock_type
     @seller = current_account.sellers.find params[:id]
     @seller.update_attribute(:has_stock, !@seller.has_stock)
@@ -192,6 +246,11 @@ class SellersController < ApplicationController
 
   def info
     @seller = current_account.sellers.find params[:id]
+  end
+
+  def check_module
+    redirect_to "/" and return if current_account.settings.enable_module_muti_sellers != 1
+    redirect_to "/" and return if !current_user.has_role?(:admin)
   end
 
 end

@@ -14,7 +14,6 @@
 
     <%= f.input :email, :label => "Email：", :placeholder => "输入文字...", :input_html => {:class => 'input-xlarge'} %>
     <%= f.input :cc_emails, :label => "抄送Email：", :placeholder => "输入文字...", :input_html => {:class => 'input-xlarge'} %>
-    <%= f.input :has_stock, :label => "是否开通仓库功能：", :input_html => {:class => 'input-xlarge'} %>
 
     <div class="form-actions">
       <a class="btn" href='/sellers?parent_id=<%= params[:p_id] || @seller.parent_id %>'>取消</a>

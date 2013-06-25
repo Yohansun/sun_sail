@@ -90,11 +90,9 @@
                 <%  if current_user.allow_read?(:customers) %>
                 <li><%= link_to raw("<i class='icon-user'> </i>顾客管理"), customers_path, class: "customers" %></li>
                 <% end %>
-                <!--
-                <% if current_user.allow_read?(:trades,:seller) %>
-                <li><#%= link_to '经销商管理', sellers_path %>
+                <% if current_user.allow_read?(:sellers) && current_account.settings.enable_module_muti_sellers == 1 %>
+                <li><%= link_to raw("<i class='icon-briefcase'> </i>经销商管理"), sellers_path %>
                   <% end %>
-                -->
                 <% if current_account.settings.enable_module_wangwang == true %>
                 <li><a href="/callcenter/contrastive_performance"><i class='icon-plane'> </i>客服管理</a></li>
                 <% end %>

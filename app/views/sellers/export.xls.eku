@@ -1,0 +1,46 @@
+# encoding: utf-8
+
+__filename = "经销商账户.xls"
+sheet1 = xls.create_worksheet
+sheet1.name = "经销商账户"
+sheet1[0, 0] = "经销商账户"
+title_format = Spreadsheet::Format.new(:color => :blue, :weight => :bold, :size => 14)
+sheet1.row(0).set_format(0, title_format)
+bold = Spreadsheet::Format.new(:pattern_fg_color => :yellow, :weight => :bold)
+sheet1.row(1).default_format = bold
+
+yellow_format = Spreadsheet::Format.new :pattern_bg_color => "yellow", :color => "black", :pattern_fg_color => "yellow", :pattern => 1
+green_format = Spreadsheet::Format.new :pattern_bg_color => "green", :color => "black", :pattern_fg_color => "green", :pattern => 1
+
+header = ['经销商简称','经销商全称','经销商登录名','上级经销商简称','手机','邮箱','抄送邮箱', '经销商是否已关闭']
+sheet1.row(1).concat(header)
+row_number = 1
+
+@sellers.order_with_parent_id.each do |seller|
+  id = seller.id
+  fullname = seller.fullname
+  name = seller.name
+  interface_name = seller.parent.try(:name)
+  mobile = seller.mobile
+  email = seller.email
+  cc_emails = seller.cc_emails
+  closed = seller.active ? '否' : '是'
+  users = seller.users
+  if users.present?
+    users.each do |user|
+      row_number += 1
+      username = user.username
+      body = [name, fullname, username, interface_name, mobile, email, cc_emails, closed]
+      sheet1.row(row_number).concat(body)
+    end
+    if users.count > 1
+      sheet1.row(row_number).default_format = green_format
+    end
+  else
+    row_number += 1
+    username = nil
+    body = [name, fullname, username, interface_name, mobile, email, cc_emails, closed]
+    sheet1.row(row_number).default_format = yellow_format
+    sheet1.row(row_number).concat(body)
+  end
+end

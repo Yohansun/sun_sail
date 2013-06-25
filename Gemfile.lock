@@ -50,6 +50,9 @@ GEM
       jquery-rails
       rails (>= 3.1)
     bcrypt-ruby (3.0.1)
+    better_errors (0.8.0)
+      coderay (>= 1.0.0)
+      erubis (>= 2.6.6)
     bond (0.4.3)
     bourne (1.1.2)
       mocha (= 0.10.5)
@@ -483,6 +486,7 @@ DEPENDENCIES
   awesome_nested_set
   awesome_print
   backbone-on-rails
+  better_errors
   bond
   capistrano (~> 2.15.4)
   capistrano-ext

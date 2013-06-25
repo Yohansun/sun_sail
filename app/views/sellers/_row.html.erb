@@ -23,55 +23,5 @@
 </script>
 
 <% @sellers.each do |seller| %>
-  <tr id="seller_<%=seller.id%>">
-    <td><%= seller.id %><input type='hidden' class='parent_id' value="<%= seller.parent_id %>"></td>
-    <td><%= seller.fullname %></td>
-    <td><%= seller.name %></td>
-    <td><p style="width:200px;word-wrap:break-word"><%= seller.mobile %></p></td>
-    <td><%= seller.interface %></td>
-    <td><%= seller.address %></td>
-    <td>
-      <div class="btn-group">
-        <%= link_to raw("<i class='icon-next_dealer'></i>"), '', "data-toggle" =>"dropdown",  :remote => true, :class => 'dropdown-toggle noshadow min_w preview_children', :onclick=>"tog(#{seller.id})", :id => seller.id%>
-        
-        <ul class="dropdown-menu" style="left:-115px;" id='children_<%= seller.id %>'>
-        </ul>
-      </div>
-    </td>
-    <td>
-      <% if seller.active == true %>
-        启用
-      <% elsif seller.active == false %>
-        关闭
-      <% end %>
-    </td>
-    <td>
-      <div class="btn-group">
-        <button data-toggle="dropdown" class="btn btn-info dropdown-toggle min_w">
-          <i class="icon-wrench"></i>
-          <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu" style="left:-115px;">
-          <li><%= link_to "查看详情", info_seller_path(seller) %></li>
-          <li><%= link_to "编辑", edit_seller_path(:id => seller.id), :class=>"edit_seller"%></li>
-          <li>
-            <%= link_to (seller.active == true ? "关闭" : "启用"), status_update_seller_path(:id => seller.id), :class=>"close_seller" %>
-          </li>
-          <% if seller.has_stock != true %>
-          <li><a data-toggle="modal" href="#storage_pop" data-id="<%= seller.id%>" class='goto_stock'>仓库管理</a></li>
-          <% else %>
-          <!-- <li><%#= link_to '仓库管理', seller_stocks_path(seller) %></li> -->
-          <% end %>
-          <li><a data-toggle="modal" href="#dealer_area" data-type="seller_area" data-id="<%= seller.id%>" class="area_management">管辖地区</a></li>
-          <li><a data-toggle="modal" href="#dealer_login" data-id="<%= seller.id%>" class="login_acount">登录账号</a></li>
-          <% if seller.children.count > 0 %>
-            <li class="divider"></li>
-            <li>
-              <%= link_to "管理下级", sellers_path(:parent_id => seller.id), :class=>"browse_children"%>
-            </li>
-          <%- end %>  
-        </ul>
-      </div>
-    </td>
-  </tr>
+  <%= render "seller", seller: seller %>
 <% end %>
