@@ -11,6 +11,7 @@
 #  quantity        :integer(4)
 #  product_id      :integer(4)
 #  account_id      :integer(4)
+#  code            :string(255)
 #
 
 class Sku < ActiveRecord::Base

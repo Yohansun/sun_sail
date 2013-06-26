@@ -1,9 +1,6 @@
   # 合并订单
   module TradeMerge
 
-
-
-
     def self.included(base)
       base.extend(ClassMethods)
       base.class_eval do
@@ -79,8 +76,8 @@
         # merge other attributes like products, price
         trades.each{|trade|
           # merge array attributes
-          trade.taobao_orders.each{|order| 
-            same_order = new_trade.taobao_orders.to_a.find{|o| 
+          trade.taobao_orders.each{|order|
+            same_order = new_trade.taobao_orders.to_a.find{|o|
               o.sku_id == order.sku_id && o.outer_iid == order.outer_iid && o.num_iid == order.num_iid
             }
             if same_order
@@ -174,7 +171,7 @@
         trades[1..-1].each{|t|
           check_attributes.each{|attr|
             if t[attr] != first[attr]
-              can = false 
+              can = false
               break
             end
           }
@@ -189,16 +186,16 @@
 
 
         # if trades pay time in a setted time(like 15.min)
-        if  enabled && 
-            first_time+interval.minutes > latest_time &&
+        if  first_time+interval.minutes > latest_time &&
             (start_at.blank? || Time.now > Time.parse(start_at)) &&
-            (end_at.blank? || Time.now < Time.parse(end_at))
+            (end_at.blank? || Time.now < Time.parse(end_at)) &&
+            enabled
 
           return can_auto_merge
         else
           return can_manually_merge
         end
-        
+
       end
 
 
@@ -224,7 +221,7 @@
     end
 
     def mergeable_trades
-      Trade.paied_undispatched.where({
+      Trade.paid_undispatched.where({
           id:{"$ne"=>self.id},account_id:self.account_id,:merged_by_trade_id=>nil,
           :buyer_nick=>self.buyer_nick,
           :receiver_name=>self.receiver_name,
@@ -274,7 +271,7 @@
       }
       self.destroy
 
-      # reset all 
+      # reset all
       ts.first.mark_mergable_trades
 
       ts

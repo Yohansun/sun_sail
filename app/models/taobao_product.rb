@@ -14,7 +14,8 @@
 #  pic_url     :string(255)
 #  cid         :string(255)
 #  name        :string(255)
-#  updated_at  :datetime
+#  created_at  :datetime        not null
+#  updated_at  :datetime        not null
 #
 
 class TaobaoProduct < ActiveRecord::Base
