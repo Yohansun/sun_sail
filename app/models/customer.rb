@@ -45,4 +45,8 @@ class Customer
   def turnover
     transaction_histories.where(:status => "TRADE_FINISHED").sum(:payment)
   end
+
+  def product_trades
+    transaction_histories.where(:product_ids => {"$ne" => []})
+  end
 end
