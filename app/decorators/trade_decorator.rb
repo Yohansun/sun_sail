@@ -266,6 +266,8 @@ class TradeDecorator < Draper::Base
       end
     when 'JingdongTrade'
       '京东'
+    else
+      "合并" if trade.merged_trade_ids.present?
     end
   end
 
