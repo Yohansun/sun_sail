@@ -205,7 +205,7 @@
       <tbody id="trade_rows">
       </tbody>
     </table>
-    <div class='trade_count_info'>
+    <div class='trade_count_info' style="text-align:center;;margin:0 auto;">
       <select id='load_count' class='nomargin input-medium'>
         <option value='20'>加载20项</option>
         <option value='50'>加载50项</option>
