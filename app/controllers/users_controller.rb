@@ -36,8 +36,13 @@ class UsersController < ApplicationController
   end
 
   def search
+    users = current_account.users
+    users = users.where(superadmin:false) if !current_user.superadmin?
+    admin_role = Role.find_by_name "admin"
+    users = users.includes(:roles).where("roles.id != ?", admin_role.id) if !current_user.roles.include? admin_role
+
     if  params[:where_name] && params[:keyword].present?
-      @users = User.where(["#{params[:where_name]} like ?", "%#{params[:keyword].strip}%"])
+      @users = users.where(["#{params[:where_name]} like ?", "%#{params[:keyword].strip}%"])
       @users = @users.page(params[:page])
     end
     if @users
