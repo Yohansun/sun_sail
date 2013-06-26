@@ -953,141 +953,212 @@ class Trade
     end
 
 
+    conditions = {}
     ## 筛选
     if params[:search]
 
       search_tags_hash = {}
       area_search_hash = {}
-      params[:search].each do |key,value|
-        value_array = value.split(";")
-        length = value_array.length
-        case length
-        # 简单搜索＋来源搜索
-        when 1
-          if value.present?
-            regexp_value = /#{value.strip}/
-            if key == 'seller_id'
-              seller_ids = Seller.select(:id).where("name like ?", "%#{value.strip}%").map(&:id)
-              search_tags_hash.update({"seller_id" => {"$in" => seller_ids}})
-            elsif key == 'receiver_name'
-              search_tags_hash.update({"$or" => [{receiver_name: regexp_value}, {"consignee_info.fullname" => regexp_value}, {"receiver.name" => regexp_value}]})
-            elsif key == 'receiver_mobile'
-              search_tags_hash.update({"$or" => [{receiver_mobile: regexp_value}, {"consignee_info.mobile" => regexp_value}, {"receiver.mobile_phone" => regexp_value}]})
-            elsif key == 'repair_man'
-              search_tags_hash.update({"unusual_states" =>{"$elemMatch" => {"repair_man" => regexp_value}}})
-            elsif key == '_type'
-              values = value.split("-")
-              search_tags_hash.update({"_type" => values[0], "custom_type" => values[1]})
-            elsif key == 'merge_type'
-              if value == 'merged'
-                search_tags_hash.update({:merged_trade_ids=> {"$ne"=>nil}})
-              elsif value == 'mergeable'
-                search_tags_hash.update({:mergeable_id=> {"$ne"=>nil}})
-              end
-            else
-              search_tags_hash.update(Hash[key.to_sym, value])
-            end
-          end
+      params[:search].each do |key,values|
 
-        # 状态筛选＋时间筛选＋金额筛选
-        when 2
-          if value_array[1] == "true" || value_array[1] == "false"
-            if value_array[0].present?
-              status_array = value_array[0].split(",")
-              search_tags_hash.update({key =>{"$in" => status_array}})
-            end
-          else
-            if value_array[0].present? && value_array[1].present?
-              if value_array[0].include?('-')
-                start_time = value_array[0].to_time(:local)
-                end_time = value_array[1].to_time(:local)
-                search_tags_hash.update({key => {"$gte" => start_time, "$lt" => end_time}})
+        conditions[key] ||= []
+
+
+        values = [values] if !values.is_a? Array
+
+        values.each{|value|
+
+          value_array = value.split(";")
+          length = value_array.length
+          case length
+          # 简单搜索＋来源搜索
+          when 1
+            if value.present?
+              regexp_value = /#{value.strip}/
+              if key == 'seller_id'
+                seller_ids = Seller.select(:id).where("name like ?", "%#{value.strip}%").map(&:id)
+                search_tags_hash.update({"seller_id" => {"$in" => seller_ids}})
+                conditions[key] << {"seller_id" => {"$in" => seller_ids}}
+              elsif key == 'receiver_name'
+                search_tags_hash.update({"$or" => [{receiver_name: regexp_value}, {"consignee_info.fullname" => regexp_value}, {"receiver.name" => regexp_value}]})
+                conditions[key] << {"$or" => [{receiver_name: regexp_value}, {"consignee_info.fullname" => regexp_value}, {"receiver.name" => regexp_value}]}
+              elsif key == 'receiver_mobile'
+                search_tags_hash.update({"$or" => [{receiver_mobile: regexp_value}, {"consignee_info.mobile" => regexp_value}, {"receiver.mobile_phone" => regexp_value}]})
+                conditions[key] << {"$or" => [{receiver_mobile: regexp_value}, {"consignee_info.mobile" => regexp_value}, {"receiver.mobile_phone" => regexp_value}]}
+              elsif key == 'repair_man'
+                search_tags_hash.update({"unusual_states" =>{"$elemMatch" => {"repair_man" => regexp_value}}})
+                conditions[key] << {"unusual_states" =>{"$elemMatch" => {"repair_man" => regexp_value}}}
+              elsif key == '_type'
+                values = value.split("-")
+                search_tags_hash.update({"_type" => values[0], "custom_type" => values[1]})
+                conditions[key] << {"_type" => values[0], "custom_type" => values[1]}
+              elsif key == 'merge_type'
+                if value == 'merged'
+                  search_tags_hash.update({:merged_trade_ids=> {"$ne"=>nil}})
+                  conditions[key] << {:merged_trade_ids=> {"$ne"=>nil}}
+                elsif value == 'mergeable'
+                  search_tags_hash.update({:mergeable_id=> {"$ne"=>nil}})
+                  conditions[key] << {:mergeable_id=> {"$ne"=>nil}}
+                end
               else
-                min_money = value_array[0].to_f
-                max_money = value_array[1].to_f
-                search_tags_hash.update({key => {"$gte" => min_money, "$lt" => max_money}})
+                search_tags_hash.update(Hash[key.to_sym, value])
+                conditions[key] << Hash[key.to_sym, value]
+              end
+            end
+
+          # 状态筛选＋时间筛选＋金额筛选
+          when 2
+            if value_array[1] == "true" || value_array[1] == "false"
+              if value_array[0].present?
+                status_array = value_array[0].split(",")
+                search_tags_hash.update({key =>{"$in" => status_array}})
+                conditions[key] << {key =>{"$in" => status_array}}
+              end
+            else
+              if value_array[0].present? && value_array[1].present?
+                if value_array[0].include?('-')
+                  start_time = value_array[0].to_time(:local)
+                  end_time = value_array[1].to_time(:local)
+                  search_tags_hash.update({key => {"$gte" => start_time, "$lt" => end_time}})
+                  conditions[key] << {key => {"$gte" => start_time, "$lt" => end_time}}
+                else
+                  min_money = value_array[0].to_f
+                  max_money = value_array[1].to_f
+                  search_tags_hash.update({key => {"$gte" => min_money, "$lt" => max_money}})
+                  conditions[key] << {key => {"$gte" => min_money, "$lt" => max_money}}
+                end
+              end
+            end
+
+          # 地域筛选
+          when 3
+            # 按省筛选
+            if value_array[2].present?
+              state = /#{value_array[2].delete("省")}/
+              state_search_hash = {"$or" => [{receiver_state: state}, {"consignee_info.province" => state}, {"receiver.state" => state}]}
+            end
+            # 按市筛选
+            if value_array[1].present?
+              city = /#{value_array[1].delete("市")}/
+              city_search_hash = {"$or" => [{receiver_city: city}, {"consignee_info.city" => city}, {"receiver.city" => city}]}
+            end
+            # 按区筛选
+            if value_array[0].present?
+              district = /#{value_array[0].delete("区")}/
+              district_hash = {"$or" => [{receiver_district: district}, {"consignee_info.county" => district}, {"receiver.district" => district}]}
+            end
+            area_search_hash = {"$and" => [state_search_hash,city_search_hash,district_hash].compact}
+            area_search_hash == {"$and"=>[]} ? area_search_hash = nil : area_search_hash
+            conditions[key] << area_search_hash
+
+          # 信息筛选
+          when 4
+            words = (value_array[3] == "true" ? /#{value_array[2]}/ : /^[^#{value_array[2]}]+$/) if value_array[2].present?
+            if value_array[1] == "true"
+              not_void = {"$nin" => ['', nil]}
+              if key == "has_color_info"
+                search_tags_hash.update(Hash[key.to_sym, true])
+                search_tags_hash.update({"taobao_orders" => {"$elemMatch" => {"$and" => [{"color_num" => words},{"color_hexcode" => words},{"color_name" => words}]}}}) if words
+                and_cond = [Hash[key.to_sym, true]]
+                and_cond << {"taobao_orders" => {"$elemMatch" => {"$and" => [{"color_num" => words},{"color_hexcode" => words},{"color_name" => words}]}}} if words
+                conditions[key] << {"$and"=>and_cond}
+
+              elsif key == "has_cs_memo"
+                search_tags_hash.update(Hash[key.to_sym, true])
+                search_tags_hash.update({"$or" => [{"cs_memo" => words},{"taobao_orders" => {"$elemMatch" => {"cs_memo" => words}}}]}) if words
+
+                and_cond = [Hash[key.to_sym, true]]
+                and_cond << {"$or" => [{"cs_memo" => words},{"taobao_orders" => {"$elemMatch" => {"cs_memo" => words}}}]} if words
+                conditions[key] << {"$and"=>and_cond}
+
+              elsif key == "has_unusual_state"
+                search_tags_hash.update(Hash[key.to_sym, true])
+                search_tags_hash.update({"$or" => [{"unusual_states" => {"$elemMatch" => {"reason" => words}}},{"note" => words}]}) if words
+                and_cond = [Hash[key.to_sym, true]]
+                and_cond << {"$or" => [{"unusual_states" => {"$elemMatch" => {"reason" => words}}},{"note" => words}]} if words
+                conditions[key] << {"$and"=>and_cond}
+              elsif key == "has_seller_memo"
+                search_tags_hash.update({"seller_memo" => not_void})
+                search_tags_hash.update({"seller_memo" => words}) if words
+
+                conditions[key] <<  words ? {"seller_memo" => words} : {"seller_memo" => not_void}
+
+              elsif key == "has_invoice_info"
+                search_tags_hash.update({"$or" => [{"invoice_name" => not_void},{"invoice_type" => not_void},{"invoice_content" => not_void}]})
+                search_tags_hash.update({"$or" => [{"invoice_name" => words}, {"invoice_type" => words}, {"invoice_content" => words}]}) if words
+
+                conditions[key] << words ?
+                            {"$or" => [{"invoice_name" => words}, {"invoice_type" => words}, {"invoice_content" => words}]} :
+                            {"$or" => [{"invoice_name" => not_void},{"invoice_type" => not_void},{"invoice_content" => not_void}]}
+
+              elsif key == "has_product_info"
+                search_tags_hash.update({"taobao_orders" => {"$elemMatch" => {"title" => not_void}}})
+                search_tags_hash.update({"taobao_orders" => {"$elemMatch" => {"title" => words}}}) if words
+
+                conditions[key] << words ?
+                                    {"taobao_orders" => {"$elemMatch" => {"title" => words}}} :
+                                    {"taobao_orders" => {"$elemMatch" => {"title" => not_void}}}
+
+              elsif key == "has_gift_memo"
+                search_tags_hash.update({"$or" => [{"trade_gifts" => {"$elemMatch" => {"gift_title" => not_void}}},{"gift_memo" => not_void}]})
+                search_tags_hash.update({"$or" => [{"trade_gifts" => {"$elemMatch" => {"gift_title" => words}}},{"gift_memo" => words}]}) if words
+
+                conditions[key] << words ?
+                      {"$or" => [{"trade_gifts" => {"$elemMatch" => {"gift_title" => words}}},{"gift_memo" => words}]} :
+                      {"$or" => [{"trade_gifts" => {"$elemMatch" => {"gift_title" => not_void}}},{"gift_memo" => not_void}]}
+
+
+              elsif key == "has_logistic_info"
+                search_tags_hash.update({"$and" => [{"logistic_id" => not_void},{"logistic_waybill" => not_void}]})
+                search_tags_hash.update({"$or" => [{"logistic_waybill" => words},{"logistic_name" => words},{"logistic_code" => words}]}) if words
+
+                and_cond = [{"$and" => [{"logistic_id" => not_void},{"logistic_waybill" => not_void}]}]
+                and_cond << {"$or" => [{"logistic_waybill" => words},{"logistic_name" => words},{"logistic_code" => words}]} if words
+                conditions[key] << {"$and"=>and_cond}
+
+              else
+                search_tags_hash.update({value_array[0] => not_void})
+                search_tags_hash.update({value_array[0] => words}) if words
+
+                conditions[key] << words ? {value_array[0] => words} : {value_array[0] => not_void}
+
+              end
+            elsif value_array[1] == "false"
+              void = {"$in" => ['', nil]}
+              if key == "has_cs_memo" || key == "has_color_info" || key == "has_unusual_state"
+                search_tags_hash.update(Hash[key.to_sym, false])
+                conditions[key] << Hash[key.to_sym, false]
+              elsif key == "has_seller_memo"
+                search_tags_hash.update({"$and" => [{value_array[0] => void}, {"supplier_memo" => void}]})
+                conditions[key] << {"$and" => [{value_array[0] => void}, {"supplier_memo" => void}]}
+              elsif key == "has_invoice_info"
+                search_tags_hash.update({"$and" => [{"invoice_name" => void},{"invoice_type" => void},{"invoice_content" => void}]})
+                conditions[key] << {"$and" => [{"invoice_name" => void},{"invoice_type" => void},{"invoice_content" => void}]}
+              elsif key == "has_product_info"
+                search_tags_hash.update({"taobao_orders" => {"$elemMatch" => {"title" => void}}})
+                conditions[key] << {"taobao_orders" => {"$elemMatch" => {"title" => void}}}
+              elsif key == "has_gift_memo"
+                search_tags_hash.update({"trade_gifts" => {"$elemMatch" => {"gift_title" => void}}})
+                search_tags_hash.update({"gift_memo" => void})
+                conditions[key] << {"trade_gifts" => {"$elemMatch" => {"gift_title" => void}}}
+              elsif key == "has_logistic_info"
+                search_tags_hash.update({"$or" => [{"logistic_id" => void},{"logistic_waybill" => void}]})
+                conditions[key] << {"$or" => [{"logistic_id" => void},{"logistic_waybill" => void}]}
+              else
+                search_tags_hash.update({value_array[0] => void})
+                conditions[key] << {value_array[0] => void}
               end
             end
           end
 
-        # 地域筛选
-        when 3
-          # 按省筛选
-          if value_array[2].present?
-            state = /#{value_array[2].delete("省")}/
-            state_search_hash = {"$or" => [{receiver_state: state}, {"consignee_info.province" => state}, {"receiver.state" => state}]}
-          end
-          # 按市筛选
-          if value_array[1].present?
-            city = /#{value_array[1].delete("市")}/
-            city_search_hash = {"$or" => [{receiver_city: city}, {"consignee_info.city" => city}, {"receiver.city" => city}]}
-          end
-          # 按区筛选
-          if value_array[0].present?
-            district = /#{value_array[0].delete("区")}/
-            district_hash = {"$or" => [{receiver_district: district}, {"consignee_info.county" => district}, {"receiver.district" => district}]}
-          end
-          area_search_hash = {"$and" => [state_search_hash,city_search_hash,district_hash].compact}
-          area_search_hash == {"$and"=>[]} ? area_search_hash = nil : area_search_hash
-
-        # 信息筛选
-        when 4
-          words = (value_array[3] == "true" ? /#{value_array[2]}/ : /^[^#{value_array[2]}]+$/) if value_array[2].present?
-          if value_array[1] == "true"
-            not_void = {"$nin" => ['', nil]}
-            if key == "has_color_info"
-              search_tags_hash.update(Hash[key.to_sym, true])
-              search_tags_hash.update({"taobao_orders" => {"$elemMatch" => {"$and" => [{"color_num" => words},{"color_hexcode" => words},{"color_name" => words}]}}}) if words
-            elsif key == "has_cs_memo"
-              search_tags_hash.update(Hash[key.to_sym, true])
-              search_tags_hash.update({"$or" => [{"cs_memo" => words},{"taobao_orders" => {"$elemMatch" => {"cs_memo" => words}}}]}) if words
-            elsif key == "has_unusual_state"
-              search_tags_hash.update(Hash[key.to_sym, true])
-              search_tags_hash.update({"$or" => [{"unusual_states" => {"$elemMatch" => {"reason" => words}}},{"note" => words}]}) if words
-            elsif key == "has_seller_memo"
-              search_tags_hash.update({"seller_memo" => not_void})
-              search_tags_hash.update({"seller_memo" => words}) if words
-            elsif key == "has_invoice_info"
-              search_tags_hash.update({"$or" => [{"invoice_name" => not_void},{"invoice_type" => not_void},{"invoice_content" => not_void}]})
-              search_tags_hash.update({"$or" => [{"invoice_name" => words}, {"invoice_type" => words}, {"invoice_content" => words}]}) if words
-            elsif key == "has_product_info"
-              search_tags_hash.update({"taobao_orders" => {"$elemMatch" => {"title" => not_void}}})
-              search_tags_hash.update({"taobao_orders" => {"$elemMatch" => {"title" => words}}}) if words
-            elsif key == "has_gift_memo"
-              search_tags_hash.update({"$or" => [{"trade_gifts" => {"$elemMatch" => {"gift_title" => not_void}}},{"gift_memo" => not_void}]})
-              search_tags_hash.update({"$or" => [{"trade_gifts" => {"$elemMatch" => {"gift_title" => words}}},{"gift_memo" => words}]}) if words
-            elsif key == "has_logistic_info"
-              search_tags_hash.update({"$and" => [{"logistic_id" => not_void},{"logistic_waybill" => not_void}]})
-              search_tags_hash.update({"$or" => [{"logistic_waybill" => words},{"logistic_name" => words},{"logistic_code" => words}]}) if words
-            else
-              search_tags_hash.update({value_array[0] => not_void})
-              search_tags_hash.update({value_array[0] => words}) if words
-            end
-          elsif value_array[1] == "false"
-            void = {"$in" => ['', nil]}
-            if key == "has_cs_memo" || key == "has_color_info" || key == "has_unusual_state"
-              search_tags_hash.update(Hash[key.to_sym, false])
-            elsif key == "has_seller_memo"
-              search_tags_hash.update({"$and" => [{value_array[0] => void}, {"supplier_memo" => void}]})
-            elsif key == "has_invoice_info"
-              search_tags_hash.update({"$and" => [{"invoice_name" => void},{"invoice_type" => void},{"invoice_content" => void}]})
-            elsif key == "has_product_info"
-              search_tags_hash.update({"taobao_orders" => {"$elemMatch" => {"title" => void}}})
-            elsif key == "has_gift_memo"
-              search_tags_hash.update({"trade_gifts" => {"$elemMatch" => {"gift_title" => void}}})
-              search_tags_hash.update({"gift_memo" => void})
-            elsif key == "has_logistic_info"
-              search_tags_hash.update({"$or" => [{"logistic_id" => void},{"logistic_waybill" => void}]})
-            else
-              search_tags_hash.update({value_array[0] => void})
-            end
-          end
-        end
+        }
+        
       end
     end
 
     # 集中筛选
-    search_hash = {"$and" => [search_tags_hash,area_search_hash].compact}
+    #search_hash = {"$and" => [search_tags_hash,area_search_hash].compact}
+    search_hash = {"$and"=> conditions.values.map{|value| {"$or"=>value}}}
     search_hash == {"$and"=>[]} ? search_hash = nil : search_hash
     ## 过滤有留言但还在抓取 + 总筛选
     trades.where(search_hash).and(trade_type_hash, {"$or" => [{"has_buyer_message" => {"$ne" => true}},{"buyer_message" => {"$ne" => nil}}]})
