@@ -10,7 +10,9 @@ class StocksController < ApplicationController
     params[:search][:id_in] = params[:export_ids].split(',') if params[:export_ids].present?
     
     @search = condition_relation.search(params[:search])
-    @stock_products = @search.page params[:page]
+    @number = 20
+    @number = params[:number] if params[:number].present?
+    @stock_products = @search.page(params[:page]).per(@number)
     @count = @search.count
     respond_to do |format|
       format.html

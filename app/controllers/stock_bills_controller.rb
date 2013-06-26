@@ -9,7 +9,9 @@ class StockBillsController < ApplicationController
       params[:search]["#{sku_type}"] = params[:sku].gsub("#{sku_type}",'')
     end
     @search = @bills.search(params[:search])
-    @bills = @search.page(params[:page]).per(20)
+    @number = 20
+    @number = params[:number] if params[:number].present?
+    @bills = @search.page(params[:page]).per(@number)
     @count = @search.count
   end
 

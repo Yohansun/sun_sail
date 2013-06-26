@@ -13,7 +13,9 @@ class CustomersController < ApplicationController
       else
         Customer.send(_action).search(params[:search])
       end
-      @customers = @search.page(params[:page]).per(20)
+      @number = 20
+      @number = params[:number] if params[:number].present?
+      @customers = @search.page(params[:page]).per(@number)
       respond_to do |format|
         format.html {render "index" if _action != :index}
         format.xls  {render "index"}
