@@ -952,6 +952,7 @@ class Trade
       end
     end
 
+
     ## 筛选
     if params[:search]
 
@@ -977,6 +978,12 @@ class Trade
             elsif key == '_type'
               values = value.split("-")
               search_tags_hash.update({"_type" => values[0], "custom_type" => values[1]})
+            elsif key == 'merge_type'
+              if value == 'merged'
+                search_tags_hash.update({:merged_trade_ids=> {"$ne"=>nil}})
+              elsif value == 'mergeable'
+                search_tags_hash.update({:mergeable_id=> {"$ne"=>nil}})
+              end
             else
               search_tags_hash.update(Hash[key.to_sym, value])
             end

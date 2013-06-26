@@ -9,6 +9,7 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
     'click .add_memo_search_tag' : 'addMemoSearchTag'
     'click .add_source_search_tag': 'addSourceSearchTag'
     'click .add_area_search_tag': 'addAreaSearchTag'
+    'click .add_merge_type_search_tag': 'addMergeTypeSearchTag'
     'click .add_batch_search_tag': 'addBatchSearchTag'
     'click .advanced_btn': 'advancedSearch'
     'click .remove_search_tag': 'removeSearchTag'
@@ -204,6 +205,23 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
     else
       tag_name = $(".search_tags_group input[name=_type]").siblings('label').text()
       alert("已经添加过 "+tag_name+" 来源, 来源只能添加一种")
+
+  addMergeTypeSearchTag:(e)->
+    e.preventDefault()
+    type = @getSearchValue('.add_merge_type_search_tag','select')
+    type_text = @getText('.add_merge_type_search_tag','select')
+
+    tag = $(".search_tags_group input[name=_type]").attr('name')
+    if tag == undefined
+      $('.search_tags_group').append("<span class='search_tag pull-left'>"+
+                                       "<label class='help-inline'>"+type_text+"</label>"+
+                                       "<input type='hidden' name='merge_type' value='"+type+"'>"+
+                                       "<button class='remove_search_tag' value=''> x </button></span>")
+      @catchSearchMotion()
+    else
+      tag_name = $(".search_tags_group input[name=_type]").siblings('label').text()
+      alert("已经添加过 "+tag_name+" 来源, 来源只能添加一种")
+
 
   addAreaSearchTag: (e) ->
     e.preventDefault()
