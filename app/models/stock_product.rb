@@ -18,7 +18,7 @@
 #
 
 class StockProduct < ActiveRecord::Base
-  paginates_per 20
+  # paginates_per 20
 
   belongs_to :account
 

@@ -27,8 +27,9 @@ class ProductsController < ApplicationController
     end
 
     @searched_products = @products
-
-    @products = @products.order("updated_at DESC").page(params[:page]).per(20)
+    @number = 20
+    @number = params[:number] if params[:number].present?
+    @products = @products.order("updated_at DESC").page(params[:page]).per(@number)
 
     respond_to do |format|
       format.xls
@@ -219,7 +220,9 @@ class ProductsController < ApplicationController
     if params[:key] && params[:value] && params[:value] != ''
       @products = @products.where("BINARY #{params[:key]} like ? ", "%#{params[:value].strip}%")
     end
-    @products = @products.order("updated_at DESC").page(params[:page]).per(40)
+    @number = 20
+    @number = params[:number] if params[:number].present?
+    @products = @products.order("updated_at DESC").page(params[:page]).per(@number)
 
     respond_to do |format|
       format.xls

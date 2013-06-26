@@ -16,7 +16,9 @@ class TradeReportsController < ApplicationController
       @start_date = @end_date = @start_time = @end_time = ''
     end 
     reports = reports.order_by(:request_at.desc)
-    @reports = reports.page params[:page]
+    @number = 20
+    @number = params[:number] if params[:number].present?
+    @reports = reports.page(params[:page]).per(@number)
   end 
 
   def download

@@ -10,7 +10,9 @@ class StockInBillsController < ApplicationController
     @search = @bills.search(params[:search])    
     unchecked, checked = @search.partition { |b| b.checked_at.nil? }
     @bills = unchecked + checked
-    @bills = Kaminari.paginate_array(@bills).page(params[:page]).per(20)
+    @number = 20
+    @number = params[:number] if params[:number].present?
+    @bills = Kaminari.paginate_array(@bills).page(params[:page]).per(@number)
     @count = @search.count
 
     respond_to do |format|
