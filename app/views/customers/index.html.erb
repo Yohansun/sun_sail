@@ -20,7 +20,7 @@
               <%= link_to "导出","#",:onclick => "exportChecked('#{format_url(:xls)}')" %>
             </li>
             <li>
-              <%= link_to "详细", "#",:class => "validateValues",:goto => customer_path(1),:request => "get" %>
+              <%= link_to "详细", "#",:target_url => "/customers/:id",:class => "magic_detail"%>
             </li>
           </ul>
         </div>

@@ -2,15 +2,14 @@
   <div class="span10 w100">
     <%= render partial: "layouts/all_crumbs" %>
     <ul class="nav nav-tabs">
-      <li><%= link_to "库存查询", stocks_path %></li>
-      <li><%= link_to "入库单", stock_in_bills_path %></li>
-      <li><%= link_to "出库单", stock_out_bills_path %></li>
-      <li class="active"><%= link_to "所有进销", stock_bills_path %></li>
+      <li><%= link_to "入库单", warehouse_stock_in_bills_path(@warehouse) %></li>
+      <li><%= link_to "出库单", warehouse_stock_out_bills_path(@warehouse) %></li>
+      <li class="active"><%= link_to "所有进销", warehouse_stock_bills_path(@warehouse) %></li>
     </ul><!-- nav-tabs -->
 
     <div class="tab-content">
       <div class="tab-pane active" id="stock_check">
-        <%= form_tag stock_bills_path,:method => "get",:class => "well well-small form-horizontal font12"  do %>
+        <%= form_tag warehouse_stock_bills_path(@warehouse),:method => "get",:class => "well well-small form-horizontal font12"  do %>
         <%= render :partial => "search" %>
         <% end %>
       </div>
@@ -23,7 +22,7 @@
           </button>
           <ul class="dropdown-menu">
             <li>
-              <%= link_to "导出","#",:onclick => "processChecked('#{stock_bills_path(:search => params[:search],:format => :xls,:on => '?')}')"%>
+              <%= link_to "导出","#",:onclick => "processChecked('#{warehouse_stock_bills_path(@warehouse,:search => params[:search],:format => :xls,:on => '?')}')"%>
             </li>
           </ul>
          </div>
@@ -67,7 +66,7 @@
         <%= paginate @bills %>
       </div>
       <!-- <p></p> -->
-      <%= form_tag("/stock_bills", :method => "get", :class => 'pagination trade_count_info form-inline pull-right') do %>
+      <%= form_tag("/warehouses/#{@warehouse.id}/stock_bills", :method => "get", :class => 'pagination trade_count_info form-inline pull-right') do %>
       <input style="visibility:hidden;" name="page" value="<%= params[:page]%>"/>
       <label style="color:#005580;">当前每页显示：</label>
       <%=select_tag :number, options_for_select([["加载20项","20"],

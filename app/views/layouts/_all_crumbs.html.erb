@@ -6,6 +6,9 @@
   <% elsif params[:controller] == "stock_in_bills" %>
     <li><a href="/stocks">仓库管理</a><span class="divider">/</span></li>
     <li class='active'>入库单</li>
+    <% elsif params[:controller] == "warehouses" %>
+    <li><a href="/stocks">仓库管理</a><span class="divider">/</span></li>
+      <li class='active'>所有仓库</li>
   <% elsif params[:controller] == "stock_out_bills" %>
     <li><a href="/stocks">仓库管理</a><span class="divider">/</span></li>
     <li class='active'>出库单</li>

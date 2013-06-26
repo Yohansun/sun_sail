@@ -40,7 +40,7 @@ describe StockBillsHelper do
        view.stub(:params) { {:controller => "stock_in_bill"} }
        product = {"sku_id" => sku.id, "number" => 1, "total_price" => 1}
        tmp_marshal_dump = product.merge({
-         "id" => 20,
+         "id" => sku.id,
          "price" => nil,
          "account_id" => current_account.id,
          "title" => sku.title,

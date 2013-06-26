@@ -1,12 +1,14 @@
 # -*- encoding : utf-8 -*-
 class StockOutBillsController < ApplicationController
   include StockBillsHelper
+  before_filter :set_warehouse
+  before_filter :default_conditions,:on => [:edit,:show,:update,:add_product,:remove_product,:fetch_bills]
   before_filter :fetch_bills,:except => :index
   before_filter :authorize,:except => :fetch_bils
 
   def index
     parse_params
-    @bills = StockOutBill.where(account_id: current_account.id).desc(:checked_at)
+    @bills = StockOutBill.where(default_search).desc(:checked_at)
     @search = @bills.search(params[:search])
     unchecked, checked = @search.partition { |b| b.checked_at.nil? }
     @bills = unchecked + checked
@@ -24,11 +26,12 @@ class StockOutBillsController < ApplicationController
 	def new
     @products = (current_user.settings.tmp_products ||= [])
     @products = specified_tmp_products(@products)
-    @bill = StockOutBill.new(account_id: current_account.id)
+    @bill = StockOutBill.new(default_search)
   end
 
   def create
-    @bill = StockOutBill.new(params[:stock_out_bill].merge!({account_id: current_account.id}))
+    params[:stock_out_bill].merge!(default_search)
+    @bill = StockOutBill.new(params[:stock_out_bill])
     bill_product_ids = params[:bill_product_ids].split(',')
     build_product(@bill,bill_product_ids)
     @bill.update_bill_products
@@ -37,7 +40,7 @@ class StockOutBillsController < ApplicationController
       tmp_products = current_user.settings.tmp_products
       tmp_products = tmp_products.reject { |x| bill_product_ids.include?(x.id.to_s) }
       current_user.settings.tmp_products = tmp_products
-      redirect_to stock_out_bills_path
+      redirect_to warehouse_stock_out_bills_path(@warehouse)
     else
       @products = (current_user.settings.tmp_products ||= [])
       render :new
@@ -45,18 +48,19 @@ class StockOutBillsController < ApplicationController
   end
 
   def edit
-    @bill = StockOutBill.find_by(account_id: current_account.id,:id => params[:id])
+    @bill = StockOutBill.find_by(@conditions)
     @products = @bill.bill_products
     parse_area(@bill)
   end
 
   def show
-    @bill = StockOutBill.find_by(account_id: current_account.id,:id => params[:id])
+    @bill = StockOutBill.find_by(@conditions)
     @products = @bill.bill_products
   end
 
   def update
-    @bill = StockOutBill.find_by(account_id: current_account.id,:id => params[:id])
+    conditions = default_search.merge({:id => params[:id]})
+    @bill = StockOutBill.find_by(conditions)
     parse_area(@bill)
     product_ids = params[:product_ids].split(',')
     @bill.update_bill_products
@@ -70,7 +74,7 @@ class StockOutBillsController < ApplicationController
   end
 
   def fetch_bills
-    bills = StockOutBill.where(account_id: current_account.id).desc(:checked_at)
+    bills = StockOutBill.where(@conditions).desc(:checked_at)
     unchecked, checked = bills.partition { |b| b.checked_at.nil? }
     @bills = unchecked + checked
     @bills = Kaminari.paginate_array(@bills).page(params[:page]).per(20)
@@ -113,7 +117,7 @@ class StockOutBillsController < ApplicationController
   end
 
   def add_product
-    @bill = StockInBill.find_by(account_id: current_account.id, id: params[:id]) rescue false
+    @bill = StockInBill.find_by(@conditions) rescue false
 
     if @bill.present?
       @tmp_products = @bill.bill_products
@@ -129,7 +133,7 @@ class StockOutBillsController < ApplicationController
   end
 
   def remove_product
-    @bill = StockInBill.find_by(account_id: current_account.id, id: params[:id]) rescue false
+    @bill = StockInBill.find_by(@conditions) rescue false
     if @bill.present?
       @tmp_products = @bill.bill_products
       @bill.bill_products.in(:id => params[:bill_product_ids]).delete
@@ -147,6 +151,10 @@ class StockOutBillsController < ApplicationController
   end
 
   private
+  
+  def set_warehouse
+    @warehouse = Seller.find(params[:warehouse_id])
+  end
 
   def update_areas!(bill)
     op_state ,op_city,op_district = bill.op_state, bill.op_city, bill.op_district
@@ -181,5 +189,13 @@ class StockOutBillsController < ApplicationController
     elsif params[:checked_at] == "true"
       search[:checked_at_eq] = nil
     end
+  end
+
+  def default_search
+    {account_id: current_account.id,:seller_id => @warehouse.id}
+  end
+
+  def default_conditions
+    @conditions = default_search.merge({:id => params[:id]})
   end
 end

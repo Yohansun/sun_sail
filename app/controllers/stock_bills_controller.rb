@@ -1,5 +1,5 @@
 class StockBillsController < ApplicationController
-
+  before_filter :set_warehouse
   before_filter :authorize,:except => :fetch_bils
   before_filter :fetch_bills
   
@@ -17,9 +17,9 @@ class StockBillsController < ApplicationController
 
   def fetch_bills
     if current_account.settings.enable_module_third_party_stock == 1
-      @bills = StockBill.where(account_id: current_account.id, :confirm_stocked_at.ne => nil)
+      @bills = StockBill.where(account_id: current_account.id,:seller_id => @warehouse.id, :confirm_stocked_at.ne => nil)
     else
-      @bills = StockBill.where(account_id: current_account.id, :stocked_at.ne => nil)
+      @bills = StockBill.where(account_id: current_account.id,:seller_id => @warehouse.id, :stocked_at.ne => nil)
     end
   end
   
@@ -34,5 +34,10 @@ class StockBillsController < ApplicationController
     elsif params[:checked_at] == "true"
       search[:checked_at_eq] = nil
     end
+  end
+  
+  private
+  def set_warehouse
+    @warehouse = Seller.find(params[:warehouse_id])
   end
 end
