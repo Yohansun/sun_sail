@@ -83,7 +83,7 @@
             <span class="caret"></span>
           </button>
           <ul class="dropdown-menu index_pops">
-            <li><a data-toggle="modal" class='sort_product' href='#'>分捡单</a></li>
+            <li><a data-toggle="modal" class='sort_product' href='#'>分拣单</a></li>
             <li><a href="#" data-toggle="modal" data-type="deliver">订单发货</a></li>
             <li><a href="#" data-toggle="modal" data-type="seller_confirm_deliver">确认发货</a></li>
             <li><a href="#" data-toggle="modal" data-type="logistic_split">物流拆分</a></li>
@@ -106,7 +106,7 @@
             <span class="caret"></span>
           </button>
           <ul class="dropdown-menu index_batch_pops">
-            <li><a data-toggle="modal" class='sort_product' href='#' data-batch_type="sort_product">分捡单</a></li>
+            <li><a data-toggle="modal" class='sort_product' href='#' data-batch_type="sort_product">分拣单</a></li>
             <li><a href="#" data-toggle="modal" data-batch_type="manual_sms_or_email">发短信/邮件</a></li>
             <li><a href="#" data-toggle="modal" data-batch_type="batch_export">导出勾选订单</a></li>
             <li><a href="#" data-toggle="modal" data-batch_type="batch_add_gift">批量添加赠品</a></li>
