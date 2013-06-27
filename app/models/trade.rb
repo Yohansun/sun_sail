@@ -170,6 +170,9 @@ class Trade
   field :promotion, type: String
   field :got_promotion, type: Boolean, default: false  # 优惠信息是否抓到。
   field :sku_properties_name, type: String
+  field :is_auto_dispatch, type: Boolean, default: false
+  field :is_auto_deliver, type: Boolean, default: false
+  
 
 
 

@@ -327,12 +327,24 @@ class TradeDecorator < Draper::Base
       when "WAIT_SELLER_SEND_GOODS"
         if trade.seller_id
           if trade.logistic_waybill
-            "已设置物流，待发货"
+            if trade.is_auto_dispatch == true
+              "已设置物流，待发货,自动分派"
+            elsif trade.is_auto_dispatch == false
+              "已设置物流，待发货,手动分派"
+            end
           else
-            if trade.fetch_account.settings.enable_module_third_party_stock == 1
-              "已分派，#{trade.stock_out_bill.try(:status_text) || '待同步标杆仓库' }"
-            else
-              "已分派，待设置物流"
+            if trade.is_auto_dispatch == true
+              if trade.fetch_account.settings.enable_module_third_party_stock == 1
+                "已分派，#{trade.stock_out_bill.try(:status_text) || '待同步标杆仓库' },自动分派"
+              else
+                "已分派，待设置物流,自动分派"
+              end
+            elsif trade.is_auto_dispatch == false
+              if trade.fetch_account.settings.enable_module_third_party_stock == 1
+                "已分派，#{trade.stock_out_bill.try(:status_text) || '待同步标杆仓库' },手动分派"
+              else
+                "已分派，待设置物流,手动分派"
+              end
             end
           end
         else
@@ -340,9 +352,25 @@ class TradeDecorator < Draper::Base
         end
       when "WAIT_BUYER_CONFIRM_GOODS", "TRADE_BUYER_SIGNED"
         if trade.seller_confirm_deliver_at
-          "已付款，已发货"
+          if trade.is_auto_deliver == true && trade.is_auto_dispatch == true
+            "已付款，已发货, 自动发货, 自动分派"
+          elsif trade.is_auto_deliver == true && trade.is_auto_dispatch == false
+            "已付款，已发货, 手动发货, 自动分派"
+          elsif trade.is_auto_deliver == false && trade.is_auto_dispatch == true
+            "已付款，已发货, 自动发货, 手动分派"
+          else
+            "已付款，已发货, 手动发货, 手动分派"
+          end
         else
-          "已发货，待确认发货"
+          if trade.is_auto_deliver == true && trade.is_auto_dispatch == true
+            "已发货，待确认发货,自动发货, 自动分派"
+          elsif trade.is_auto_deliver == true && trade.is_auto_dispatch == false
+            "已发货，待确认发货,手动发货, 自动分派"
+          elsif trade.is_auto_deliver == false && trade.is_auto_dispatch == true
+            "已发货，待确认发货,自动发货, 手动分派"
+          else
+            "已发货，待确认发货,手动发货, 手动分派"
+          end
         end
       when "TRADE_FINISHED"
         "交易成功"
