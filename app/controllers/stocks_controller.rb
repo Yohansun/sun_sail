@@ -116,4 +116,12 @@ class StocksController < ApplicationController
     render :text => result
   end
 
+  #POST /warehouses/barch_update_safety_stock
+  def batch_update_safety_stock
+    @stock_products = StockProduct.where(:account_id => current_account.id,:id => params[:stock_product_ids])
+    safe_value = params[:safe_value].to_i
+    @stock_products.update_all(:safe_value => safe_value)
+    redirect_to :action => :index
+  end
+
 end

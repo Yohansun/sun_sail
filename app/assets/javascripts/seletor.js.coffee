@@ -24,15 +24,18 @@ $ ->
         link = action + val
       window.location= link
       
-  $(".magic_operation").click ->
+  $(".magic_operation").click (e) ->
     if checked_inputs().length < 1
+      e.stopImmediatePropagation()
       alert("请选择")
+      return false
     else
+      form = $("form.simple-operation")
+      action = $(this).attr("target_url")
+      if action.match(/\?/) == null
+        action = action.replace(/(\/*)$/,'/')
+      method = $(this).attr("request")
+      form.attr({action: action ,method: method })
+      form.removeAttr("data-remote") if $(this).attr("remote") != "true"
       if $(this).attr("message") && confirm($(this).attr("message"))
-        form = $("form.simple-operation")
-        action = $(this).attr("target_url")
-        if action.match(/\?/) == null
-          action = action.replace(/(\/*)$/,'/')
-        method = $(this).attr("request")
-        form.attr({action: action ,method: method })
         form.submit()

@@ -22,11 +22,17 @@
             <li>
               <%= link_to "导出","#",:onclick => "processChecked('#{stocks_path(:search => params[:search],:format => :xls,:on => '?')}')"%>
             </li>
+            <li>
+              <%= link_to "批量设置安全库存","#batch_update_safety_stock",:target_url => "/stocks/batch_update_safety_stock",:class => "magic_operation", "data-toggle" => "modal",:request => :post,:id => "set_safety_stock" %>
+            </li>
           </ul>
         </div>
       </div> 
 
-        <%= form_tag "/",:method => "post",:id => "stocks_index_form", :remote => true do %>
+        <%= form_tag "/",:method => "post",:id => "stocks_index_form", :remote => true,:class => "simple-operation cmxform" do %>
+        <fieldset class="js-modal modal hide fade" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true" id="batch_update_safety_stock">
+          <%= render "batch_update_safety_stock" %>
+        </fieldset>
           <table class="table table-hover table-bordered table-striped table-condensed js-table">
             <thead>
               <tr>
@@ -78,9 +84,32 @@
   </div><!-- span10 -->
 </div><!--row-fluid-->
 
+<% content_for :tail do %>
 <script>
 function processChecked(full_url){
   var stock_product_ids = $('input[name=\"stock_product_ids[]\"]:checked').map(function(){ return $(this).val()}).get().join(',');
   $(location).attr('href', full_url + '&export_ids=' + stock_product_ids);
 }
+
+$(function() {
+  $("#set_safety_stock").click(function(){
+    if ($("#batch_update_safety_stock").attr("aria-hidden") == "true") {
+      $( "#stocks_index_form" ).validate({
+        rules: {
+          safe_value: {
+            required: true,
+            number: true
+          }
+        },
+        messages: {
+          safe_value: {
+            required: "安全库存数量不能为空!",
+            number: "必须是数字"
+          }
+        }
+      });
+    }
+  })
+})
 </script>
+<% end %>

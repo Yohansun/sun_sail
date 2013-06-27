@@ -19,9 +19,11 @@ MagicOrders::Application.routes.draw do
   resources :stocks     , only: [:index] do
     get :edit_depot     ,:on => :collection
     put :update_depot   ,:on => :member
+    post :batch_update_safety_stock, :on => :collection
   end
   
   resources :warehouses   ,:only => [:index] do
+    post :batch_update_safety_stock,:on => :collection
     resources :stock_bills
     resources :stock_in_bills do
       post :add_product   , :on => :collection
