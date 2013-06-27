@@ -79,14 +79,6 @@ class Trade
   field :has_onsite_service, type: Boolean, default: false
   field :has_refund_orders, type: Boolean, default: false
 
-
-
-
-
-
-
-
-
   field :num, type: Integer
   field :num_iid, type: String
   field :title, type: String
@@ -174,18 +166,14 @@ class Trade
   field :is_auto_deliver, type: Boolean, default: false
   
 
-
-
   #订单操作人
   field :operator_id
   field :operator_name
-
 
   #订单合并
   field :merged_trade_ids, type:Array
   field :merged_by_trade_id, type:String
   field :mergeable_id, type:String
-
 
   # ADD INDEXES TO SPEED UP
   # 简单搜索index
@@ -215,7 +203,6 @@ class Trade
   # index request_return_at: -1
   # index confirm_return_at: -1
   # index confirm_refund_at: -1
-
 
   # 金额搜索index
   index payment: 1
@@ -264,7 +251,6 @@ class Trade
                       ["付款以前，卖家或买家主动关闭交易"     ,"TRADE_CLOSED_BY_TAOBAO"]],:not_valid => true
 
   attr_accessor :matched_seller
-
 
   validate :color_num_do_not_exist, :on => :update, :if => :color_num_changed?
   validates_uniqueness_of :tid, message: "操作频率过大，请重试"
@@ -1155,7 +1141,7 @@ class Trade
           end
 
         }
-        
+
       end
     end
 
