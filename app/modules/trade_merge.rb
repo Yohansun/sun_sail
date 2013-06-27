@@ -105,6 +105,18 @@
           new_trade.merged_trade_ids << trade.id
         }
 
+
+        # set blank value like "", [] to nil
+        %w{seller_memo cs_memo gift_memo buyer_message total_fee payment promotion_fee taobao_orders promotion_details
+          unusual_states ref_batches trade_gifts merged_trade_ids
+        }.each{|f|
+          new_trade[f] = nil if new_trade[f].blank?
+        }
+
+
+
+
+
         # create tid
         new_trade.tid = ("HB"+Time.now.to_i.to_s + new_trade.account_id.to_s + rand(10..99).to_s)
 
@@ -125,8 +137,7 @@
         merge_id = trades.last.id
         trades.each{|trade|
           #TODO: mark trades as mergable manually
-          trade.mergeable_id = merge_id
-          trade.save!
+          trade.update_attribute(:mergeable_id,merge_id)
         }
         nil
       end

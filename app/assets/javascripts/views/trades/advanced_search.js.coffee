@@ -9,6 +9,7 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
     'click .add_memo_search_tag' : 'addMemoSearchTag'
     'click .add_source_search_tag': 'addSourceSearchTag'
     'click .add_area_search_tag': 'addAreaSearchTag'
+    'click .add_merge_type_search_tag': 'addMergeTypeSearchTag'
     'click .add_batch_search_tag': 'addBatchSearchTag'
     'click .advanced_btn': 'advancedSearch'
     'click .remove_search_tag': 'removeSearchTag'
@@ -113,6 +114,14 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
   getSearchValue: (element,child,sibling='div') ->
     $(element).siblings(sibling).children(child).val()
 
+  check_tag_exist:(tag,value)->
+    if tag.length > 0 && tag.map ->
+      $(this).val()
+    .toArray().indexOf(value)>=0
+      return true
+    return false
+
+
   addTimeSearchTag: (e) ->
     e.preventDefault()
     time_type = @getSearchValue('.add_time_search_tag','select')
@@ -120,18 +129,19 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
     start_at = @getSearchValue('.add_time_search_tag','input:first')
     end_at = @getSearchValue('.add_time_search_tag','input:last')
 
-    tag = $(".search_tags_group input[name="+time_type+"]").attr('name')
-    if tag == undefined
-      if start_at != '' and end_at != ''
-        $('.search_tags_group').append("<span class='search_tag pull-left time_search'>"+
-                                       "<label class='help-inline'>"+time_type_text+" "+start_at+" 至 "+end_at+"</label>"+
-                                       "<input type='hidden' name='"+time_type+"' value='"+start_at+";"+end_at+"'>"+
-                                       "<button class='remove_search_tag' value=''> x </button></span>")
-        @catchSearchMotion()
-      else
-        alert("请输入完整的起始时间。")
+    tag = $(".search_tags_group input[name="+time_type+"]")
+    if start_at != '' and end_at != ''
+      value = start_at+";"+end_at
+      if @check_tag_exist tag,value
+        alert("该搜索条件已经添加过")
+        return false
+      $('.search_tags_group').append("<span class='search_tag pull-left time_search'>"+
+                                     "<label class='help-inline'>"+time_type_text+" "+start_at+" 至 "+end_at+"</label>"+
+                                     "<input type='hidden' name='"+time_type+"' value='"+value+"'>"+
+                                     "<button class='remove_search_tag' value=''> x </button></span>")
+      @catchSearchMotion()
     else
-      alert("已经添加过 "+time_type_text+" 搜索条件，一个时间条件只能添加一次")
+      alert("请输入完整的起始时间。")
 
   addStatusSearchTag: (e) ->
     e.preventDefault()
@@ -141,29 +151,31 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
     status_text = @getText('.add_status_search_tag','select:last')
 
     if status.slice(0,6) == 'status'
-      tag = $(".search_tags_group input[name=status]").attr('name')
+      tag = $(".search_tags_group input[name=status]")
     else
-      tag = $(".search_tags_group input[name="+status+"]").attr('name')
+      tag = $(".search_tags_group input[name="+status+"]")
 
-    if tag == undefined
-      if status.slice(0,6) == 'status'
-        $('.search_tags_group').append("<span class='search_tag pull-left'>"+
-                                       "<label class='help-inline'>"+status_boolean_text+" "+status_text+"</label>"+
-                                       "<input type='hidden' name='status' value='"+status+";"+status_boolean+"'>"+
-                                       "<button class='remove_search_tag' value=''> x </button></span>")
-      else
-        $('.search_tags_group').append("<span class='search_tag pull-left'>"+
-                                       "<label class='help-inline'>"+status_boolean_text+" "+status_text+"</label>"+
-                                       "<input type='hidden' name='"+status+"' value='"+status_boolean+"'>"+
-                                       "<button class='remove_search_tag' value=''> x </button></span>")
-      @catchSearchMotion()
+
+
+    if status.slice(0,6) == 'status'
+      value = status+";"+status_boolean
+      if @check_tag_exist tag,value
+        alert("该搜索条件已经添加过")
+        return false
+      $('.search_tags_group').append("<span class='search_tag pull-left'>"+
+                                     "<label class='help-inline'>"+status_boolean_text+" "+status_text+"</label>"+
+                                     "<input type='hidden' name='status' value='"+value+"'>"+
+                                     "<button class='remove_search_tag' value=''> x </button></span>")
     else
-      if status.slice(0,6) == 'status'
-        tag_name = $(".search_tags_group input[name=status]").siblings('label').text()
-        alert("已经添加过 "+tag_name+", 当前状态只能添加一次")
-      else
-        tag_name = $(".search_tags_group input[name="+status+"]").siblings('label').text()
-        alert("已经添加过 "+tag_name)
+      value = status_boolean
+      if @check_tag_exist tag,value
+        alert("该搜索条件已经添加过")
+        return false
+      $('.search_tags_group').append("<span class='search_tag pull-left'>"+
+                                     "<label class='help-inline'>"+status_boolean_text+" "+status_text+"</label>"+
+                                     "<input type='hidden' name='"+status+"' value='"+value+"'>"+
+                                     "<button class='remove_search_tag' value=''> x </button></span>")
+    @catchSearchMotion()
 
 
   addMemoSearchTag: (e) ->
@@ -178,32 +190,50 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
     include_text = @getSearchValue('.add_memo_search_tag','input')
     include_boolean_text = @getText('.add_memo_search_tag','select:eq(2)')
 
-    tag = $(".search_tags_group input[name="+has_memo+"]").attr('name')
-    if tag == undefined
-      $('.search_tags_group').append("<span class='search_tag pull-left memo_search'>"+
-                                     "<label class='help-inline'>"+memo_boolean_text+" "+memo_type_text+
-                                     " "+include_boolean_text+" "+include_text+"</label>"+
-                                     "<input type='hidden' name="+has_memo+" value='"+memo_type+";"+memo_boolean+";"+include_text+";"+include_boolean+"'>"+
-                                     "<button class='remove_search_tag' value=''> x </button></span>")
-      @catchSearchMotion()
-    else
-      alert("已经添加过 "+memo_type_text+" 搜索条件，一个备注条件只能添加一次")
+    tag = $(".search_tags_group input[name="+has_memo+"]")
+    value = memo_type+";"+memo_boolean+";"+include_text+";"+include_boolean
+    if @check_tag_exist tag,value
+      alert("该搜索条件已经添加过")
+      return false
+    $('.search_tags_group').append("<span class='search_tag pull-left memo_search'>"+
+                                   "<label class='help-inline'>"+memo_boolean_text+" "+memo_type_text+
+                                   " "+include_boolean_text+" "+include_text+"</label>"+
+                                   "<input type='hidden' name="+has_memo+" value='"+value+"'>"+
+                                   "<button class='remove_search_tag' value=''> x </button></span>")
+    @catchSearchMotion()
 
   addSourceSearchTag: (e) ->
     e.preventDefault()
     type = @getSearchValue('.add_source_search_tag','select')
     type_text = @getText('.add_source_search_tag','select')
 
-    tag = $(".search_tags_group input[name=_type]").attr('name')
-    if tag == undefined
-      $('.search_tags_group').append("<span class='search_tag pull-left'>"+
-                                       "<label class='help-inline'>"+type_text+"</label>"+
-                                       "<input type='hidden' name='_type' value='"+type+"'>"+
-                                       "<button class='remove_search_tag' value=''> x </button></span>")
-      @catchSearchMotion()
-    else
-      tag_name = $(".search_tags_group input[name=_type]").siblings('label').text()
-      alert("已经添加过 "+tag_name+" 来源, 来源只能添加一种")
+    tag = $(".search_tags_group input[name=_type]")
+    value = type
+    if @check_tag_exist tag,value
+      alert("该搜索条件已经添加过")
+      return false
+
+    $('.search_tags_group').append("<span class='search_tag pull-left'>"+
+                                     "<label class='help-inline'>"+type_text+"</label>"+
+                                     "<input type='hidden' name='_type' value='"+type+"'>"+
+                                     "<button class='remove_search_tag' value=''> x </button></span>")
+    @catchSearchMotion()
+
+  addMergeTypeSearchTag:(e)->
+    e.preventDefault()
+    type = @getSearchValue('.add_merge_type_search_tag','select')
+    type_text = @getText('.add_merge_type_search_tag','select')
+
+    tag = $(".search_tags_group input[name=merge_type]")
+    value = type
+    if @check_tag_exist tag,value
+      alert("该搜索条件已经添加过")
+      return false
+    $('.search_tags_group').append("<span class='search_tag pull-left'>"+
+                                     "<label class='help-inline'>"+type_text+"</label>"+
+                                     "<input type='hidden' name='merge_type' value='"+type+"'>"+
+                                     "<button class='remove_search_tag' value=''> x </button></span>")
+    @catchSearchMotion()
 
   addAreaSearchTag: (e) ->
     e.preventDefault()
@@ -211,19 +241,19 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
     city = $('#city_option').val()
     district = $('#district_option').val()
 
-    tag = $(".search_tags_group input[name=area]").attr('name')
-    if tag == undefined
-      if state != '' || city != '' || district != ''
-        $('.search_tags_group').append("<span class='search_tag pull-left'>"+
-                                         "<label class='help-inline'>"+state+" "+city+" "+district+"</label>"+
-                                         "<input type='hidden' name='area' value='"+district+";"+city+";"+state+"'>"+
-                                         "<button class='remove_search_tag' value=''> x </button></span>")
-        @catchSearchMotion()
-      else
-        alert("请至少选择一级地区。")
+    tag = $(".search_tags_group input[name=area]")
+    if state != '' || city != '' || district != ''
+      value = district+";"+city+";"+state
+      if @check_tag_exist tag,value
+        alert("该搜索条件已经添加过")
+        return false
+      $('.search_tags_group').append("<span class='search_tag pull-left'>"+
+                                       "<label class='help-inline'>"+state+" "+city+" "+district+"</label>"+
+                                       "<input type='hidden' name='area' value='"+value+"'>"+
+                                       "<button class='remove_search_tag' value=''> x </button></span>")
+      @catchSearchMotion()
     else
-      tag_name = $(".search_tags_group input[name=area]").siblings('label').text()
-      alert("已经添加过 "+tag_name+" 地区, 地区只能添加一个")
+      alert("请至少选择一级地区。")
 
   addMoneySearchTag: (e) ->
     e.preventDefault()
@@ -232,32 +262,37 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
     min_money = @getSearchValue('.add_money_search_tag','input:first')
     max_money = @getSearchValue('.add_money_search_tag','input:last')
 
-    tag = $(".search_tags_group input[name="+money_type+"]").attr('name')
-    if tag == undefined
-      if min_money != '' and max_money != ''
-        if /^[0-9.]*$/.test(min_money) and /^[0-9.]*$/.test(min_money)
-          $('.search_tags_group').append("<span class='search_tag pull-left money_search'>"+
-                                         "<label class='help-inline'>"+money_type_text+" "+min_money+" 至 "+max_money+"</label>"+
-                                         "<input type='hidden' name='"+money_type+"' value='"+min_money+";"+max_money+"'>"+
-                                         "<button class='remove_search_tag' value=''> x </button></span>")
-        else
-          alert("金额格式不正确。")
-        @catchSearchMotion()
+    tag = $(".search_tags_group input[name="+money_type+"]")
+    if min_money != '' and max_money != ''
+      if /^[0-9.]*$/.test(min_money) and /^[0-9.]*$/.test(min_money)
+        value = min_money+";"+max_money
+        if @check_tag_exist tag,value
+          alert("该搜索条件已经添加过")
+          return false
+        $('.search_tags_group').append("<span class='search_tag pull-left money_search'>"+
+                                       "<label class='help-inline'>"+money_type_text+" "+min_money+" 至 "+max_money+"</label>"+
+                                       "<input type='hidden' name='"+money_type+"' value='"+value+"'>"+
+                                       "<button class='remove_search_tag' value=''> x </button></span>")
       else
-        alert("请输入完整的区间。")
+        alert("金额格式不正确。")
+      @catchSearchMotion()
     else
-      alert("已经添加过 "+money_type_text+" 搜索条件，一个金额条件只能添加一次")
+      alert("请输入完整的区间。")
 
   addBatchSearchTag: (e) ->
     e.preventDefault()
     from = $('#from_batch_num').val()
     to = $('#to_batch_num').val()
-    tag = $(".search_tags_group input[name=batch]").attr('name')
+    tag = $(".search_tags_group input[name=batch]")
     if tag == undefined
       if from != '' && to != ''
+        value = from+";"+to
+        if @check_tag_exist tag,value
+          alert("该搜索条件已经添加过")
+          return false
         $('.search_tags_group').append("<span class='search_tag pull-left' id='batch_search_tag'>"+
                                        "<label class='help-inline'>批次号："+from+" 至 "+to+"</label>"+
-                                       "<input type='hidden' name='batch' value='"+from+";"+to+"'>"+
+                                       "<input type='hidden' name='batch' value='"+value+"'>"+
                                        "<button class='remove_search_tag' value=''> x </button></span>")
         @catchSearchMotion()
       else

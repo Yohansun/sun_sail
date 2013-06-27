@@ -150,6 +150,21 @@
       </div>
     </fieldset>
 
+
+    <fieldset>
+      <div class="control-group">
+        <label class="pull-left" ><code>订单合并：</code></label>
+        <div class="controls pull-left">
+          <select class="input-small pull-left select2" id="trade_merge_type">
+            <option value="merged">已经合并订单</option>
+            <option value="mergeable">可以合并订单</option>
+          </select>
+        </div>
+        <a class="add_merge_type_search_tag" href="#" title="添加搜索"><i class="icon-plus"></i>添加搜索</a>
+      </div>
+    </fieldset>
+
+
     <fieldset>
       <div class="control-group">
         <label class="pull-left"><code>打印批次：</code></label>

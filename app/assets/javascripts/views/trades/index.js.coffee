@@ -455,8 +455,9 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     if length != 0
       for num in [0..(length-1)]
         name = $('.search_tags_group').find("input:eq("+num+")").attr('name')
+        @search_hash[name] ||= []
         value = $('.search_tags_group').find("input:eq("+num+")").val()
-        @search_hash[name] = value
+        @search_hash[name].push(value)
 
     @offset = 0
     blocktheui()
