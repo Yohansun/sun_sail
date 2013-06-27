@@ -35,11 +35,11 @@ class Product < ActiveRecord::Base
   belongs_to :category
   has_many :skus, dependent: :destroy,:inverse_of => :product
   belongs_to :logistic_group
-  has_many :feature_product_relationships
+  has_many :feature_product_relationships, dependent: :destroy
   has_many :features, through: :feature_product_relationships
-  has_many :colors_products
+  has_many :colors_products, dependent: :destroy
   has_many :colors, through: :colors_products
-  has_many :stock_products
+  has_many :stock_products, dependent: :destroy
   accepts_nested_attributes_for :skus, :allow_destroy => true
 
   attr_accessible :name, :product_id, :outer_id, :storage_num, :price, :color_ids, :pic_url, :category_id, :features, :feature_ids, :cat_name, :detail_url, :num_iid, :cid, :account_id, :logistic_group_id, :on_sale,:skus_attributes
