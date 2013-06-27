@@ -270,6 +270,11 @@
       ts.each{|t|
         t.update_attributes(merged_by_trade_id:nil)
       }
+      self.trade_gifts.each{|gift|
+        if gift.trade_id.present?
+          Trade.where(tid: gift.gift_tid).destroy
+        end
+      }
       self.destroy
 
       # reset all
