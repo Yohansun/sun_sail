@@ -116,4 +116,25 @@ class StocksController < ApplicationController
     render :text => result
   end
 
+  #POST /warehouses/batch_update_safety_stock
+  def batch_update_safety_stock
+    @stock_products = StockProduct.with_account(current_account.id).where(:id => params[:stock_product_ids])
+    safe_value = params[:safe_value].to_i
+    @stock_products.update_all(:safe_value => safe_value)
+    redirect_to :action => :index
+  end
+
+  #POST /warehouses/batch_update_activity_stock
+  def batch_update_activity_stock
+    @stock_product = StockProduct.with_account(current_account.id).find(params[:stock_product_ids].first)
+    @stock_products = StockProduct.with_account(current_account.id).where(:product_id => @stock_product.product_id)
+    activity = params[:activity].to_i
+    if activity == 0
+      flash[:error] =  "可用库存不能为0"
+    else
+      flash[:notice] = "更新成功"
+      @stock_products.update_all(:activity => activity)
+    end
+    redirect_to :action => :index
+  end
 end
