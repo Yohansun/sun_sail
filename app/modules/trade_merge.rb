@@ -9,9 +9,7 @@
       end
     end
 
-
     module ClassMethods
-
 
       def merge_trades trades
 
@@ -37,7 +35,6 @@
         }
 
         trades = t_trades
-
 
         # clone a new trade, for common informations
         first_trade = trades.last
@@ -105,17 +102,12 @@
           new_trade.merged_trade_ids << trade.id
         }
 
-
         # set blank value like "", [] to nil
         %w{seller_memo cs_memo gift_memo buyer_message total_fee payment promotion_fee taobao_orders promotion_details
           unusual_states ref_batches trade_gifts merged_trade_ids
         }.each{|f|
           new_trade[f] = nil if new_trade[f].blank?
         }
-
-
-
-
 
         # create tid
         new_trade.tid = ("HB"+Time.now.to_i.to_s + new_trade.account_id.to_s + rand(10..99).to_s)
@@ -127,7 +119,6 @@
         trades.each{|trade| trade.update_attributes(merged_by_trade_id: new_trade.id)}
 
         merged_trades.each{|trade| trade.destroy}
-
 
         new_trade
 
@@ -143,7 +134,7 @@
       end
 
       # check if a list of trades can merge to 1 trade
-      #   RETURN : 0  can not merge,  1 can auto merge, 2 can merge manually
+      # RETURN : 0  can not merge,  1 can auto merge, 2 can merge manually
       def check_can_merge trades
 
         can_not_merge = 0
@@ -215,13 +206,12 @@
 
     # check status change when create or update a trade
     def trig_auto_merge
+      return if self._type == "CustomTrade"
       if !self.is_merged? && self.dispatched_at.blank? && self.status == "WAIT_SELLER_SEND_GOODS" &&
           (new_record? || status_changed?)
         self.auto_merge_trades
       end
     end
-
-
 
     def is_merged?
       !self.merged_trade_ids.blank?
@@ -279,6 +269,11 @@
       ts = Trade.find self.merged_trade_ids
       ts.each{|t|
         t.update_attributes(merged_by_trade_id:nil)
+      }
+      self.trade_gifts.each{|gift|
+        if gift.trade_id.present?
+          Trade.where(tid: gift.gift_tid).destroy
+        end
       }
       self.destroy
 
