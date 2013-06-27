@@ -94,7 +94,7 @@ class TaobaoTrade < Trade
 
     self.operation_logs.create(operated_at: Time.now, operation: operation_desc)
     self.is_auto_dispatch = true
-    self.operation_logs.create(operated_at: Time.now, operator: current_user.name, operator_id: current_user.id, operation: "自动分派")
+    self.operation_logs.create(operated_at: Time.now, operation: "自动分派")
     self.save
   end
 
@@ -116,7 +116,7 @@ class TaobaoTrade < Trade
     result = self.fetch_account.can_auto_deliver_right_now
     TradeTaobaoAutoDeliver.perform_in((result == true ? self.fetch_account.settings.auto_settings['deliver_silent_gap'].to_i.hours : result), self.id)
     self.is_auto_deliver = true
-    self.operation_logs.create(operated_at: Time.now, operator: current_user.name, operator_id: current_user.id, operation: "自动发货")
+    self.operation_logs.create(operated_at: Time.now, operation: "自动发货")
     self.save
   end
 
