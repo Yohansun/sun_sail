@@ -35,28 +35,47 @@ module TradesHelper
   def calculate_infos(start_at, end_at)
 
     trades = Trade.where(account_id: current_account.id).between(created: start_at..end_at)
-    #本日订单总数
+
+    #订单总数
     trades_count = trades.count
-    #本日下单订单总额
+
+    #下单订单总额
     trades_money = trades.sum(:payment) || 0
-    #本日未付款订单总数
+
+    #未付款订单总数
     unpaid_trades_count = trades.where(status: "WAIT_BUYER_PAY").count
-    #本日已付款订单数
+
+    #已付款订单数
     paid_trades_count = trades.where(:pay_time.ne => nil).count
 
+
+    #付款订单总额
     unpaid_trades_money = trades.where(pay_time: nil).sum(:payment) || 0
-    #本日付款订单总额
     paid_trades_money = trades_money - unpaid_trades_money
 
-    no_refund_trades = trades.where(:taobao_orders.elem_match => {:refund_status.ne => "NO_REFUND"})
-    finished_refund_trades = trades.where(:unusual_states.elem_match => {ref_type: "return_ref"})
-    #本日退货订单总额
-    refund_trades_money = trades_money - (no_refund_trades.sum(:payment) || 0) + (finished_refund_trades.sum(:payment) || 0)
+    #退货订单总额
+    refund_trades = trades.where(:taobao_orders.elem_match => {:refund_status.ne => "NO_REFUND"})
+    finished_refund_trades = trades.where(:ref_batches.elem_match => {ref_type: "return_ref"})
+    taobao_refund_money = 0
+    ref_return_money = 0
+    refund_trades.each do |trade|
+      trade.taobao_orders.each do |order|
+        if order.refund_status != "NO_REFUND"
+          taobao_refund_money += order.payment
+        end
+      end
+    end
+    finished_refund_trades.each do |trade|
+      trade.ref_batches.where(ref_type: "return_ref").each do |ref|
+        ref_return_money += ref.ref_payment
+      end
+    end
+    refund_trades_money = taobao_refund_money + ref_return_money
 
-    #本日完成订单总额
+    #完成订单总额
     finished_trades_money = trades.where(:end_time.ne => nil).sum(:payment) || 0
 
-    #本日取消订单总额
+    #取消订单总额
     canceled_trades_money = trades.where(:status.in => ["TRADE_CLOSED","TRADE_CLOSED_BY_TAOBAO", "ALL_CLOSED"]).sum(:payment) || 0
 
     #计算部分退款订单数，全额退款订单数
@@ -73,7 +92,6 @@ module TradesHelper
         end
       end
     end
-
     #部分退款订单包括交易完成的多退少补订单，部分退款的交易未完成订单
     partially_refund_count += finished_refund_trades.count
 
