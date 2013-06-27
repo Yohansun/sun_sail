@@ -1,24 +1,24 @@
 <div class="modal-header">
   <button type="button" class="close" data-dismiss="modal">×</button>
   <h3 class="pr" style="margin-right:15px;">
-    <span big-toggle="bigtoggle"></span>订单操作
+    <span big-toggle="bigtoggle"></span>订单详情<!--订单操作-->
     <small class="help-inline">订单编号 <strong><%= @trade.get("tid") %></strong></small>
     <small class="help-inline">订单状态 <strong><%= @trade.get("status_text") %></strong></small>
   </h3>
 </div><!-- modal-header -->
 <div class="modal-body">
   <!-- tab menus -->
-  <ul class="nav nav-tabs" id="myTab">
+  <!-- <ul class="nav nav-tabs" id="myTab">
     <li class="active"><a href="#tab1" data-toggle="tab" class="active">详情</a></li>
-    <% if MagicOrders.role_key == 'admin' or MagicOrders.role_key == 'cs' : %>
+    <%# if MagicOrders.role_key == 'admin' or MagicOrders.role_key == 'cs' : %>
       <li class=""><a href="#tab2" data-toggle="tab">预处理</a></li>
       <li class=""><a href="#tab3" data-toggle="tab">日志</a></li>
-    <% end %>
-  </ul>
+    <%# end %>
+  </ul> -->
   <!-- tab container -->
   <div class="tab-content">
     <!-- tab1 -->
-    <div class="tab-pane active" id="tab1">
+    <!-- <div class="tab-pane active" id="tab1"> -->
       <table class="table table-bordered table-condensed">
         <thead>
           <tr>
@@ -66,7 +66,14 @@
             <% end %>
           <% end %>
           <tr>
-            <td colspan="2">
+            <% if MagicOrders.enable_module_colors == 1 || MagicOrders.enable_module_sku_properties == 1 : %>
+              <% if MagicOrders.enable_module_colors == 1 && MagicOrders.enable_module_sku_properties == 1 : %>
+            <td colspan="7">
+              <% else : %>
+            <td colspan="6">
+              <% end %>
+            <% else : %>
+            <td colspan="5">
               <b class="mar_r10">订单金额：￥<%= @trade.get('sum_fee') %></b>
 
               <% unless @trade.get('trade_type') == 'TaobaoPurchaseOrder' : %>
@@ -75,16 +82,8 @@
               <% end %>
 
               <b class="mar_r10">物流费：￥<%= @trade.get('post_fee') %> </b>
+              <b class="mar_r10">订单实付金额：￥<%= @trade.get('total_fee')%></b>
             </td>
-            <% if MagicOrders.enable_module_colors == 1 || MagicOrders.enable_module_sku_properties == 1 : %>
-              <% if MagicOrders.enable_module_colors == 1 && MagicOrders.enable_module_sku_properties == 1 : %>
-                <td colspan="5" class="tr"><b>订单实付金额：￥<%= @trade.get('total_fee')%></b></td>
-              <% else : %>
-                <td colspan="4" class="tr"><b>订单实付金额：￥<%= @trade.get('total_fee')%></b></td>
-              <% end %>
-            <% else : %>
-            <td colspan="3" class="tr"><b>订单实付金额：￥<%= @trade.get('total_fee')%></b></td>
-            <% end %>
           </tr>
 <!--           <% if (MagicOrders.role_key == 'admin' or MagicOrders.role_key == 'cs') and @trade.get('trade_type') == 'TaobaoPurchaseOrder' : %>
             <tr>
@@ -167,7 +166,7 @@
       <div class="modal-footer">
         <a href="#" class="btn btn-primary button_print">打印</a>
       </div>
-    </div>
+    <!-- </div> -->
     <!-- tab2 -->
     <div class="tab-pane" id="tab2">
       <form class="">
