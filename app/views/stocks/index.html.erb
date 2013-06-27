@@ -23,15 +23,21 @@
               <%= link_to "导出","#",:onclick => "processChecked('#{stocks_path(:search => params[:search],:format => :xls,:on => '?')}')"%>
             </li>
             <li>
-              <%= link_to "批量设置安全库存","#batch_update_safety_stock",:target_url => "/stocks/batch_update_safety_stock",:class => "magic_operation", "data-toggle" => "modal",:request => :post,:id => "set_safety_stock" %>
+              <%= link_to "批量设置安全库存","#batch_update_safety_stock",:target_url => "/stocks/batch_update_safety_stock",:class => "magic_operation set_stock", "data-toggle" => "modal",:request => :post,:id => "set_safety_stock" %>
+            </li>
+            <li>
+              <%= link_to "批量设置可用库存","#batch_update_activity_stock",:target_url => "/stocks/batch_update_activity_stock",:class => "magic_operation set_stock", "data-toggle" => "modal",:request => :post,:id => "set_actual_stock" %>
             </li>
           </ul>
         </div>
-      </div> 
+      </div>
 
         <%= form_tag "/",:method => "post",:id => "stocks_index_form", :remote => true,:class => "simple-operation cmxform" do %>
         <fieldset class="js-modal modal hide fade" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true" id="batch_update_safety_stock">
           <%= render "batch_update_safety_stock" %>
+        </fieldset>
+        <fieldset class="js-modal modal hide fade" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true" id="batch_update_activity_stock">
+          <%= render "batch_update_activity_stock" %>
         </fieldset>
           <table class="table table-hover table-bordered table-striped table-condensed js-table">
             <thead>
@@ -50,11 +56,11 @@
             </thead>
             <tbody>
               <% @stock_products.each_with_index do |stock_product, index| %>
-              <tr>
+              <tr id="<%=dom_id(stock_product)%>">
                 <td><input type="checkbox" name="stock_product_ids[]" value="<%= stock_product.id %>"></td>
                 <td><%=  index + 1  %></td>
                 <td><%= stock_product.sku.try(:sku_id) %></td>
-                <td><%= stock_product.sku.try(:title) %></td>
+                <td class="sku_title"><%= stock_product.sku.try(:title) %></td>
                 <td><%= stock_product.product.try(:outer_id) %></td>
                 <td><%= stock_product.category.try(:name) %></td>
                 <td><%= stock_product.activity %></td>
@@ -92,11 +98,16 @@ function processChecked(full_url){
 }
 
 $(function() {
-  $("#set_safety_stock").click(function(){
-    if ($("#batch_update_safety_stock").attr("aria-hidden") == "true") {
+  $(".set_stock").click(function(){
+    var tag_name = $(this).attr("href")
+    if ($(tag_name).attr("aria-hidden") == "true") {
       $( "#stocks_index_form" ).validate({
         rules: {
           safe_value: {
+            required: true,
+            number: true
+          },
+          activity: {
             required: true,
             number: true
           }
@@ -105,10 +116,21 @@ $(function() {
           safe_value: {
             required: "安全库存数量不能为空!",
             number: "必须是数字"
+          },
+          activity: {
+            required: "可用库存数量不能为空!",
+            number: "必须是数字"
           }
         }
       });
+    };
+    if ($(this).attr("id") == "set_actual_stock" &&  $("td>input:checked").length > 1 ) {
+      alert("请选择一个进行操作")
+      return false
     }
+    var tr_name = "#stock_product_" + $("td>input:checked:first").val() + ">td.sku_title";
+    var sku_title = $(tr_name).text();
+    $("#product_name").text(sku_title);
   })
 })
 </script>

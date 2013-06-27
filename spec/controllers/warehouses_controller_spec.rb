@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe WarehousesController do
-
+  login_admin
   describe "GET 'index'" do
     it "returns http success" do
       get 'index'

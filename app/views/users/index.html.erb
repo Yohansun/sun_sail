@@ -64,9 +64,9 @@
       </thead>
       <tbody>
         <% @users.each do |user| %>
-        <tr>
+        <tr id="tr_<%= dom_id(user)%>">
           <td><input type="checkbox" value="<%= user.id %>" name="user_ids[]"></td>  
-          <td><%= user.username %></td>
+          <td class="username"><%= user.username %></td>
           <td><%= user.roles.map(&:name).try(:join,',') %></td>
           <td><%= user.phone %></td>
           <td><%= user.email %></td>

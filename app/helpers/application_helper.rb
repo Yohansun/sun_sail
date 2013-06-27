@@ -56,4 +56,12 @@ module ApplicationHelper
     end
     matched ? name : ""
   end
+
+  def flash_message
+    if flash[:error].present?
+      content_tag :div,flash[:error],:class => "alert alert-error"
+    elsif flash[:notice].present?
+      content_tag :div,flash[:notice],:class => "alert alert-success"
+    end
+  end
 end

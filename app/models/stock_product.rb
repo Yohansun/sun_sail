@@ -33,6 +33,7 @@ class StockProduct < ActiveRecord::Base
   belongs_to :seller
   has_one :category , :through => :product,:source => :category
   has_and_belongs_to_many :colors
+  scope :with_account, ->(account_id) { where(:account_id => account_id) }
   
   STORAGE_STATUS = {
     "预警" => "stock_products.activity < stock_products.safe_value",
