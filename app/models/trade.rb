@@ -715,9 +715,17 @@ class Trade
     area || city || state
   end
 
+  def deliverable?
+    trades = TaobaoTrade.where(tid: tid).select do |trade|
+      trade.orders.where(:refund_status.in => ['NO_REFUND', 'CLOSED']).size != 0
+    end
+    (trades.map(&:status) - ["WAIT_BUYER_CONFIRM_GOODS"]).size == 0 && !trades.map(&:delivered_at).include?(nil)
+  end
+
   # 操作方法
   def deliver!
-    raise "EMPTY METHOD!"
+    return unless self.deliverable?
+    TradeTaobaoDeliver.perform_async(self.id)
   end
 
   def receiver_address_array

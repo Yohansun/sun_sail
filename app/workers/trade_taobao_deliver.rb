@@ -10,13 +10,52 @@ class TradeTaobaoDeliver
     tid = trade.tid
     source_id = trade.trade_source_id
     if trade._type != "CustomTrade"
-      response = TaobaoQuery.get({
-        method: 'taobao.logistics.offline.send',
-        tid: trade.tid,
-        out_sid: trade.logistic_waybill,
-        company_code: trade.logistic_code}, source_id
-      )
-      errors = response['error_response']
+
+      if trade.is_merged?
+        # STORY #982 订单管理-订单发货 合并订单发货物流信息返回到淘宝订单
+        # A B订单被合并成C订单了，现在C订单只会返回一个物流单号，但淘宝那边还是两个订单，而且不同订单需要填写不同的物流单号
+        # 解决方案：A订单回馈C订单的物流单号，而B订单的物流单号就写其他
+        trades = Trade.find trade.merged_trade_ids
+        errors = []
+        trades.each_with_index{|merged_trade,index|
+
+          if index == 0
+            logistic_waybill = trade.logistic_waybill
+            logistic_code = trade.logistic_code
+          else
+            logistic_waybill = "其它"
+            logistic_code = "其它"
+          end
+
+          if merged_trade.is_a? TaobaoTrade
+            response = TaobaoQuery.get({
+              method: 'taobao.logistics.offline.send',
+              tid: merged_trade.tid,
+              out_sid: logistic_waybill,
+              company_code: logistic_code}, merged_trade.trade_source_id
+            )
+            errors << response['error_response']
+          end
+        }
+
+
+
+      else
+        response = TaobaoQuery.get({
+          method: 'taobao.logistics.offline.send',
+          tid: trade.tid,
+          out_sid: trade.logistic_waybill,
+          company_code: trade.logistic_code}, source_id
+        )
+        errors = response['error_response']
+      end
+
+
+
+
+
+
+
       if errors.blank?
         trade = TradeDecorator.decorate(trade)
         mobile = trade.receiver_mobile_phone
