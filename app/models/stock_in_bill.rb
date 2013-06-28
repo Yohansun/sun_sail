@@ -13,7 +13,7 @@ class StockInBill < StockBill
 			stock.warehouseid "BML_KSWH"
 			stock.type stock_typs
 			stock.orderCode tid
-			stock.customerId "ALLYES"
+			stock.customerId $biaogan_customer_id
 			stock.ZDRQ created_at.try(:strftime, "%Y-%m-%d %H:%M")
 			stock.DHRQ stocked_at.try(:strftime, "%Y-%m-%d %H:%M")
 			stock.ZDR op_name
@@ -56,43 +56,35 @@ class StockInBill < StockBill
 
 	#推送入库通知单至仓库
   def ans_to_wms
-    client = Savon.client(wsdl: "http://58.210.118.230:9021/order/BMLservices/BMLQuery?wsdl")
-    # if Rails.env.production?
-      response = client.call(:ans_to_wms, message:{CustomerId:"ALLYES", PWD:"BML33570", xml: xml})
-      result_xml = response.body[:ans_to_wms_response][:out]
-      result = Hash.from_xml(result_xml).as_json
-      if result['Response']['success'] == 'true'
-        update_attributes(sync_succeded_at: Time.now)
-        operation_logs.create(operated_at: Time.now, operation: '同步成功')
-      else
-        update_attributes(sync_failed_at: Time.now, failed_desc: result['Response']['desc'])
-        operation_logs.create(operated_at: Time.now, operation: "同步失败,#{result['Response']['desc']}")
-      end
-    # else
-    #   p "stock operation not allowed out of production stage"
-    # end
+    client = Savon.client(wsdl: $biaogan_client)
+    response = client.call(:ans_to_wms, message:{CustomerId: $biaogan_customer_id, PWD: $biaogan_customer_password, xml: xml})
+    result_xml = response.body[:ans_to_wms_response][:out]
+    result = Hash.from_xml(result_xml).as_json
+    if result['Response']['success'] == 'true'
+      update_attributes(sync_succeded_at: Time.now)
+      operation_logs.create(operated_at: Time.now, operation: '同步成功')
+    else
+      update_attributes(sync_failed_at: Time.now, failed_desc: result['Response']['desc'])
+      operation_logs.create(operated_at: Time.now, operation: "同步失败,#{result['Response']['desc']}")
+    end
   end
 
   #发送入库单取消信息至仓库
   def cancel_asn_rx
-    client = Savon.client(wsdl:"http://58.210.118.230:9021/order/BMLservices/BMLQuery?wsdl")
-    # if Rails.env.production?
-      response = client.call(:cancel_asn_rx) do
-        message CustomerId:"ALLYES", PWD:"BML33570", AsnNo: tid
-      end
-      result_xml = response.body[:cancel_asn_rx_response][:out]
-      result = Hash.from_xml(result_xml).as_json
-      if result['Response']['success'] == 'true'
-        update_attributes(cancel_succeded_at: Time.now)
-        operation_logs.create(operated_at: Time.now, operation: '取消成功')
-        restore_stock
-      else
-        update_attributes(cancel_failed_at: Time.now, failed_desc: result['Response']['desc'])
-        operation_logs.create(operated_at: Time.now, operation: "取消失败,#{result['Response']['desc']}")
-      end
-    # else
-    #   p "stock operation not allowed out of production stage"
-    # end
+    client = Savon.client(wsdl: $biaogan_client)
+    response = client.call(:cancel_asn_rx) do
+      message CustomerId: $biaogan_customer_id, PWD: $biaogan_customer_password, AsnNo: tid
+    end
+    result_xml = response.body[:cancel_asn_rx_response][:out]
+    result = Hash.from_xml(result_xml).as_json
+    if result['Response']['success'] == 'true'
+      update_attributes(cancel_succeded_at: Time.now)
+      operation_logs.create(operated_at: Time.now, operation: '取消成功')
+      restore_stock
+    else
+      update_attributes(cancel_failed_at: Time.now, failed_desc: result['Response']['desc'])
+      operation_logs.create(operated_at: Time.now, operation: "取消失败,#{result['Response']['desc']}")
+    end
   end
 
   def sync_stock #确认入库
