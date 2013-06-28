@@ -76,7 +76,7 @@
       <ul class="nav nav-tabs js-nav_tabs">
         <li class="active"><a href="#good_info" data-toggle="tab">商品信息</a></li>
       </ul>
-      <%= form_tag add_product_warehouse_stock_out_bills_path(@warehouse),:class => "form-horizontal",:remote => true do  %>
+      <%= form_tag add_product_warehouse_stock_in_bills_path(@warehouse),:class => "form-horizontal",:remote => true do  %>
       <%= hidden_field_tag "id",params[:id] %>
       <div class="btn-toolbar">
         <%= button_tag "添加",:class => "btn btn-warning btn-small" ,:onclick => "validateProductValues()" %>
