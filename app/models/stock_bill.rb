@@ -33,6 +33,7 @@ class StockBill
   field :remark, type: String
   field :account_id, type: Integer
   field :logistic_id, type: Integer
+  field :seller_id, type: Integer
 
   field :bill_products_mumber, type: Integer
   field :bill_products_real_mumber, type: Integer
