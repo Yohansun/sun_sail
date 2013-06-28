@@ -78,6 +78,7 @@ class ProductsController < ApplicationController
     if @product.update_attributes(params[:product])
       redirect_to products_path
     else
+      @skus = @product.skus
       render action: :edit
     end
   end
