@@ -128,12 +128,12 @@ class StocksController < ApplicationController
   def batch_update_activity_stock
     @stock_product = StockProduct.with_account(current_account.id).find(params[:stock_product_ids].first)
     @stock_products = StockProduct.with_account(current_account.id).where(:product_id => @stock_product.product_id)
-    activity = params[:activity].to_i
-    if activity == 0
-      flash[:error] =  "可用库存不能为0"
-    else
+    activity = Integer(params[:activity]) rescue false
+    if activity
       flash[:notice] = "更新成功"
       @stock_products.update_all(:activity => activity)
+    else
+      flash[:error] =  "请输入整数"
     end
     redirect_to :action => :index
   end
