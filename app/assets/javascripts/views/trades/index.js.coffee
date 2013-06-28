@@ -82,13 +82,13 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     $(@el).find('a[data-trade-mode='+MagicOrders.trade_mode+'][data-trade-status="'+MagicOrders.trade_type+'"]').parents('li').addClass('active')
     name = $(@el).find('a[data-trade-mode='+MagicOrders.trade_mode+'][data-trade-status="'+MagicOrders.trade_type+'"]').text()
     $(@el).find('#current_name').text(name)
-    # $(@el).find(".index_pops li").hide()
-    # for pop in MagicOrders.trade_pops[MagicOrders.trade_mode]
-    #   if MagicOrders.role_key == 'admin'
-    #     $(@el).find(".index_pops li [data-type=#{pop}]").parent().show()
-    #   else
-    #     if pop in MagicOrders.trade_pops[MagicOrders.role_key]
-    #       $(@el).find(".index_pops li [data-type=#{pop}]").parent().show()
+    $(@el).find(".index_pops li").hide()
+    for pop in MagicOrders.trade_pops[MagicOrders.trade_mode]
+      if MagicOrders.role_key == 'admin'
+        $(@el).find(".index_pops li [data-type=#{pop}]").parent().show()
+      else
+        if pop in MagicOrders.trade_pops[MagicOrders.role_key]
+          $(@el).find(".index_pops li [data-type=#{pop}]").parent().show()
 
     $.unblockUI()
     @loadStatusCount()
