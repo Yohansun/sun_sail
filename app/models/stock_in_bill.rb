@@ -54,8 +54,16 @@ class StockInBill < StockBill
     end
   end
 
-	#推送入库通知单至仓库
   def ans_to_wms
+    BiaoganPusher.perform_async(self._id, "ans_to_wms_worker")
+  end
+
+  def cancel_asn_rx
+    BiaoganPusher.perform_async(self._id, "cancel_asn_rx_worker")
+  end
+
+	#推送入库通知单至仓库
+  def ans_to_wms_worker
     client = Savon.client(wsdl: $biaogan_client)
     response = client.call(:ans_to_wms, message:{CustomerId: $biaogan_customer_id, PWD: $biaogan_customer_password, xml: xml})
     result_xml = response.body[:ans_to_wms_response][:out]
@@ -70,7 +78,7 @@ class StockInBill < StockBill
   end
 
   #发送入库单取消信息至仓库
-  def cancel_asn_rx
+  def cancel_asn_rx_worker
     client = Savon.client(wsdl: $biaogan_client)
     response = client.call(:cancel_asn_rx) do
       message CustomerId: $biaogan_customer_id, PWD: $biaogan_customer_password, AsnNo: tid
