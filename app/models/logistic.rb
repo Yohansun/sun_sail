@@ -27,6 +27,8 @@ class Logistic < ActiveRecord::Base
 
   validates_presence_of :code
 
+  scope :with_account, ->(account_id) { where(:account_id => account_id)}
+
   def self.three_mostly_used
 
     map = %Q{

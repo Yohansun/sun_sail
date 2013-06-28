@@ -60,7 +60,7 @@
             <option>区</option>
           </select>
         </div>
-        <%= f.input :logistic_id,label: "物流公司", collection: Logistic.all.collect {|x| [x.name,x.id]},as: :select, input_html: {class: "input-small select2 logictic"} %>
+        <%= f.input :logistic_id,label: "物流公司", collection: Logistic.with_account(current_account.id).collect {|x| [x.name,x.id]},as: :select, input_html: {class: "input-small select2 logictic"} %>
         
         <%= f.input :stocked_at, label: "出库时间",input_html: {class: "input-medium js-datetimepicker"} %>
       </fieldset><!-- form right area -->
