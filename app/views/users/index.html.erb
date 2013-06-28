@@ -14,7 +14,7 @@
     <%= form_tag search_users_path, :class=>"well well-small form-horizontal font12" do %>
       <fieldset>
         <div class="controls pull-left">
-          <%=select_tag "where_name", options_for_select([["用户名","username"],["姓名","name"],["邮箱","email"]]), :value => "#{params[:where_name]}" %>
+          <%=select_tag "where_name", options_for_select([["用户名","users.username"],["姓名","users.name"],["邮箱","users.email"]],params[:where_name])%>
 
           <div class="input-append">
             <%= text_field_tag "keyword", '',:value => "#{params[:keyword] if params[:keyword]}", :class => "input-medium radius_no_tl", :placeholder => "输入关键字..."%>
