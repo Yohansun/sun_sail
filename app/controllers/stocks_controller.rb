@@ -1,6 +1,12 @@
 # -*- encoding : utf-8 -*-
 class StocksController < ApplicationController
   before_filter :authorize
+  before_filter :set_warehouse
+  before_filter :default_conditions,:on => [:edit,:show,:update,:add_product,:remove_product]
+
+  rescue_from 'ActiveRecord::RecordNotFound' do |exception|
+    redirect_to warehouse_stocks_path(current_account.sellers.first)
+  end
 
   def index
     condition_relation = current_account.stock_products
@@ -136,5 +142,18 @@ class StocksController < ApplicationController
       flash[:error] =  "请输入整数"
     end
     redirect_to :action => :index
+  end
+
+  private
+  def set_warehouse
+    @warehouse = Seller.find(params[:warehouse_id])
+  end
+
+  def default_search
+    {account_id: current_account.id,:seller_id => @warehouse.id}
+  end
+
+  def default_conditions
+    @conditions = default_search.merge({:id => params[:id]})
   end
 end

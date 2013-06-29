@@ -1,11 +1,7 @@
 <div class="row-fluid">
   <div class="span10 w100">
     <%= render partial: "layouts/all_crumbs" %>
-    <ul class="nav nav-tabs">
-      <li><%= link_to "入库单", warehouse_stock_in_bills_path(@warehouse) %></li>
-      <li><%= link_to "出库单", warehouse_stock_out_bills_path(@warehouse) %></li>
-      <li class="active"><%= link_to "所有进销", warehouse_stock_bills_path(@warehouse) %></li>
-    </ul><!-- nav-tabs -->
+    <%= render partial: "layouts/warehouse_menu" %>
 
     <div class="tab-content">
       <div class="tab-pane active" id="stock_check">

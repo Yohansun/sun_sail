@@ -1,16 +1,14 @@
 <div class="row-fluid">
   <div class="span10 w100">
     <%= render partial: "layouts/all_crumbs" %>
-    <ul class="nav nav-tabs">
-      <li><%= link_to "所有仓库", warehouses_path %></li>
-      <li class="active"><%= link_to "库存查询", stocks_path %></li>
-    </ul><!-- nav-tabs -->
+    <%= render partial: "layouts/warehouse_menu" %>
+
     <div class="tab-content">
       <div class="tab-pane active" id="stock_check">
         <%= form_for @search ,:url => stocks_path , :html => {:class => "well well-small form-horizontal font12",:id => "search"},:method => :get do |f| %>
           <%= render :partial => "search",:locals => {:f => f} %>
         <% end %>
-      </div>    
+      </div>
       
       <div class="btn-toolbar">
         <div class="btn-group">

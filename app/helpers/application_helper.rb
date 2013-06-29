@@ -22,6 +22,26 @@ module ApplicationHelper
     k = "#{options[:prefix]}#{s}".to_sym
     ::I18n.t(k, :default => s.to_s.humanize)
   end
+
+  ##Navigation Helper
+  # {:用户管理 => users_path,:订单管理 => trades_path}.each do |name, url|
+  # <li class="<%= current_controller?(url,:assert_true => 'active') %>"> <%= name %> </li>
+  # end
+  #
+  # request.fullpath  => /users/1
+  #
+  # current_controller?("/users/1/edit")                        => true
+  # current_controller?("/users/1/edit",:assert_true => "yes")  => "yes"
+  # current_controller?("/trades")                              => false
+  # current_controller?("/trades",:assert_false => "no")        => "no"
+  def current_controller?(*args)
+    options = args.extract_options!
+    url = args.shift
+    options[:assert_true] ||= true
+    options[:assert_false] ||= false
+    url_parameters = Rails.application.routes.recognize_path url
+    request[:controller] == url_parameters[:controller] ? options[:assert_true] : options[:assert_false]
+  end
   
   def format_url(var)
     url = request.fullpath
