@@ -33,6 +33,7 @@ class ApplicationController < ActionController::Base
 
   def alert_count
     @count = 0
+    return false if current_user.nil?
     if current_user.allow_read?(:trades,:seller) && current_user.seller
       trades = Trade.where(account_id: current_account.id, seller_id: current_user.seller.id)
     else

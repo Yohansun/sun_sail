@@ -171,6 +171,8 @@ MagicOrder::AccessControl.map do |map|
     map.permission :operations, ["edit_depot",
                                  "audit",
                                  "sync",
+                                 "batch_update_safety_stock",
+                                 "batch_update_activity_stock",
                                  "new_single_storage",
                                  "new_storehouse",
                                  "increase_in_commodity",
