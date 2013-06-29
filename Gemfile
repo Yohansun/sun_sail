@@ -39,7 +39,7 @@ group :test, :development do
   gem "capybara"
   gem 'capybara-webkit'
   gem "cucumber"
-  gem 'capistrano'
+  gem 'capistrano', '~> 2.15.4'
   gem "capistrano-ext"
   gem 'quiet_assets'
   gem 'bond'
