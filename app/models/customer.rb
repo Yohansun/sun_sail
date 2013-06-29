@@ -30,7 +30,7 @@ class Customer
   #潜在顾客->筛选所有未付款的订单
   scope :potential, where("transaction_histories.status" => {"$in" => ["TRADE_NO_CREATE_PAY","WAIT_BUYER_PAY","TRADE_CLOSED","TRADE_CLOSED_BY_TAOBAO"]})
   #购买顾客->筛选所有已付款的订单
-  scope :paid     , where("transaction_histories.status" => {"$in" => ["WAIT_SELLER_SEND_GOODS","WAIT_BUYER_CONFIRM_GOODS","TRADE_BUYER_SIGNED","TRADE_FINISHED"]})
+  scope :paid     , where("transaction_histories.status" => {"$in" => ["TRADE_FINISHED"]})
   
   delegate :receiver_name,:receiver_mobile ,:receiver_state ,:receiver_city ,:receiver_district ,:receiver_address ,:to => :the_first,:allow_nil => true
   
