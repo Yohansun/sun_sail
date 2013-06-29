@@ -81,12 +81,7 @@
             <tbody>
               <%- j = 0 %>
               <% @product_data[1].each do |value| %>
-                <%- if current_account.key == "vanward" %>
                   <%- lp = Product.find_by_num_iid(value[4]) %>
-                <%- else %>
-                  <%- lp = Product.find_by_outer_id(value[4]) %>
-                <% end %>
-
                 <%- if lp %>
                 <tr>
                   <td><%= j += 1 %></td>
