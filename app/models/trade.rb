@@ -1055,60 +1055,62 @@ class Trade
 
           # 信息筛选
           when 4
+            and_cond = []
             words = (value_array[3] == "true" ? /#{value_array[2]}/ : /^[^#{value_array[2]}]+$/) if value_array[2].present?
             if value_array[1] == "true"
               not_void = {"$nin" => ['', nil]}
               if key == "has_color_info"
-                search_tags_hash.update(Hash[key.to_sym, true])
+                search_tags_hash.update({"has_color_info" => true})
                 search_tags_hash.update({"taobao_orders" => {"$elemMatch" => {"$and" => [{"color_num" => words},{"color_hexcode" => words},{"color_name" => words}]}}}) if words
-                and_cond = [Hash[key.to_sym, true]]
+                and_cond << {"has_color_info" => true}
+                #and_cond = [Hash[key.to_sym, true]]
                 and_cond << {"taobao_orders" => {"$elemMatch" => {"$and" => [{"color_num" => words},{"color_hexcode" => words},{"color_name" => words}]}}} if words
                 conditions[key] << {"$and"=>and_cond}
 
               elsif key == "has_cs_memo"
-                search_tags_hash.update(Hash[key.to_sym, true])
+                search_tags_hash.update({"has_cs_memo" => true})
                 search_tags_hash.update({"$or" => [{"cs_memo" => words},{"taobao_orders" => {"$elemMatch" => {"cs_memo" => words}}}]}) if words
 
-                and_cond = [Hash[key.to_sym, true]]
+                and_cond << {"has_cs_memo" => true}
                 and_cond << {"$or" => [{"cs_memo" => words},{"taobao_orders" => {"$elemMatch" => {"cs_memo" => words}}}]} if words
                 conditions[key] << {"$and"=>and_cond}
 
               elsif key == "has_unusual_state"
-                search_tags_hash.update(Hash[key.to_sym, true])
+                search_tags_hash.update({"has_unusual_state" => true})
                 search_tags_hash.update({"$or" => [{"unusual_states" => {"$elemMatch" => {"reason" => words}}},{"note" => words}]}) if words
-                and_cond = [Hash[key.to_sym, true]]
+                and_cond << {"has_unusual_state" => true}
                 and_cond << {"$or" => [{"unusual_states" => {"$elemMatch" => {"reason" => words}}},{"note" => words}]} if words
                 conditions[key] << {"$and"=>and_cond}
               elsif key == "has_seller_memo"
                 search_tags_hash.update({"seller_memo" => not_void})
                 search_tags_hash.update({"seller_memo" => words}) if words
+                and_cond << {"seller_memo" => not_void}
+                and_cond << {"seller_memo" => words} if words
 
-                conditions[key] <<  words ? {"seller_memo" => words} : {"seller_memo" => not_void}
+                conditions[key] << {"$and"=>and_cond}
 
               elsif key == "has_invoice_info"
                 search_tags_hash.update({"$or" => [{"invoice_name" => not_void},{"invoice_type" => not_void},{"invoice_content" => not_void}]})
                 search_tags_hash.update({"$or" => [{"invoice_name" => words}, {"invoice_type" => words}, {"invoice_content" => words}]}) if words
-
-                conditions[key] << words ?
-                            {"$or" => [{"invoice_name" => words}, {"invoice_type" => words}, {"invoice_content" => words}]} :
-                            {"$or" => [{"invoice_name" => not_void},{"invoice_type" => not_void},{"invoice_content" => not_void}]}
+                and_cond << {"$or" => [{"invoice_name" => not_void},{"invoice_type" => not_void},{"invoice_content" => not_void}]}
+                and_cond << {"$or" => [{"invoice_name" => words}, {"invoice_type" => words}, {"invoice_content" => words}]} if words
+                conditions[key] << {"$and"=>and_cond}
 
               elsif key == "has_product_info"
                 search_tags_hash.update({"taobao_orders" => {"$elemMatch" => {"title" => not_void}}})
                 search_tags_hash.update({"taobao_orders" => {"$elemMatch" => {"title" => words}}}) if words
+                and_cond << {"taobao_orders" => {"$elemMatch" => {"title" => not_void}}}
+                and_cond << {"taobao_orders" => {"$elemMatch" => {"title" => words}}} if words
+                conditions[key] << {"$and"=>and_cond}
 
-                conditions[key] << words ?
-                                    {"taobao_orders" => {"$elemMatch" => {"title" => words}}} :
-                                    {"taobao_orders" => {"$elemMatch" => {"title" => not_void}}}
 
               elsif key == "has_gift_memo"
                 search_tags_hash.update({"$or" => [{"trade_gifts" => {"$elemMatch" => {"gift_title" => not_void}}},{"gift_memo" => not_void}]})
                 search_tags_hash.update({"$or" => [{"trade_gifts" => {"$elemMatch" => {"gift_title" => words}}},{"gift_memo" => words}]}) if words
+                and_cond << {"$or" => [{"trade_gifts" => {"$elemMatch" => {"gift_title" => not_void}}},{"gift_memo" => not_void}]}
+                and_cond << {"$or" => [{"trade_gifts" => {"$elemMatch" => {"gift_title" => words}}},{"gift_memo" => words}]} if words
 
-                conditions[key] << words ?
-                      {"$or" => [{"trade_gifts" => {"$elemMatch" => {"gift_title" => words}}},{"gift_memo" => words}]} :
-                      {"$or" => [{"trade_gifts" => {"$elemMatch" => {"gift_title" => not_void}}},{"gift_memo" => not_void}]}
-
+                conditions[key] << {"$and"=>and_cond}
 
               elsif key == "has_logistic_info"
                 search_tags_hash.update({"$and" => [{"logistic_id" => not_void},{"logistic_waybill" => not_void}]})
@@ -1121,8 +1123,9 @@ class Trade
               else
                 search_tags_hash.update({value_array[0] => not_void})
                 search_tags_hash.update({value_array[0] => words}) if words
-
-                conditions[key] << words ? {value_array[0] => words} : {value_array[0] => not_void}
+                and_cond = {value_array[0] => not_void}
+                and_cond = {value_array[0] => words} if words
+                conditions[key] << {"$and"=>and_cond}
 
               end
             elsif value_array[1] == "false"
@@ -1160,7 +1163,7 @@ class Trade
 
     # 集中筛选
     #search_hash = {"$and" => [search_tags_hash,area_search_hash].compact}
-    search_hash = {"$and"=> conditions.values.map{|value| {"$or"=>value}}}
+    search_hash = {"$and"=> conditions.values.map{|value| {"$or"=>value.flatten}}}
     search_hash == {"$and"=>[]} ? search_hash = nil : search_hash
     ## 过滤有留言但还在抓取 + 总筛选
     trades.where(search_hash).and(trade_type_hash, {"$or" => [{"has_buyer_message" => {"$ne" => true}},{"buyer_message" => {"$ne" => nil}}]})
