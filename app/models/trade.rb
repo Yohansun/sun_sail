@@ -228,13 +228,11 @@ class Trade
   index receiver_district: 1
   index receiver_city: 1
 
-  embeds_many :taobao_orders
   embeds_many :unusual_states
   embeds_many :operation_logs
   embeds_many :ref_batches
   embeds_many :manual_sms_or_emails
   embeds_many :trade_gifts
-  embeds_many :promotion_details
 
   has_many :deliver_bills
 

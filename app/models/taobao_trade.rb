@@ -9,6 +9,8 @@ class TaobaoTrade < Trade
   #  待其他操作(更新本地顾客)处理完毕后标记为已处理
   enum_attr :news, [["无更新",0],["已更新",1],["已处理",2]]
 
+  embeds_many :promotion_details
+  embeds_many :taobao_orders
 
   validates_uniqueness_of :tid, message: "操作频率过大，请重试"
 
