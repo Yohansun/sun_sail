@@ -83,7 +83,7 @@
             <span class="caret"></span>
           </button>
           <ul class="dropdown-menu index_pops">
-            <li><a data-toggle="modal" class='sort_product' href='#'>分拣单</a></li>
+            <!-- <li><a data-toggle="modal" class='sort_product' href='#'>分拣单</a></li> -->
             <li><a href="#" data-toggle="modal" data-type="deliver">订单发货</a></li>
             <li><a href="#" data-toggle="modal" data-type="seller_confirm_deliver">确认发货</a></li>
             <li><a href="#" data-toggle="modal" data-type="logistic_split">物流拆分</a></li>
