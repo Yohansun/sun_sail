@@ -5,15 +5,15 @@ sheet1[0, 0] = "库存查询数据"
 sheet1.row(1).concat ["出库单编号","创建时间", "出库时间", "当前状态", "出库类型", "商品数量", "商品总价",  "最后操作人"]
 
 @search.each_with_index  do |bill,index|
-sheet1.update_row index+2, 
+sheet1.update_row index+2,
 bill.tid,
 bill.created_at.try(:to_s,:db),
 bill.stocked_at.try(:to_s,:db),
-bill.status,
+bill.status_text,
 bill.stock_type_name,
 bill.bill_products_mumber,
 bill.bill_products_price,
-(bill.last_record.operator rescue "") 
+(bill.last_record.operator rescue "")
 end
 
 title_format = Spreadsheet::Format.new(:color => :blue, :weight => :bold, :size => 14)

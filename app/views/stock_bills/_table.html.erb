@@ -17,7 +17,7 @@
     <tr>
       <td><input type="checkbox" name="bill_ids[]" value="<%= bill.id%>" ></td>
       <td><%=  index + 1  %></td>
-      <td><%= bill.status %></td>
+      <td><%= bill.status_text %></td>
       <td>
         <%- if bill.checked_at.present? -%>
         <span class='label '>

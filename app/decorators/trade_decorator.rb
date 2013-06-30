@@ -297,17 +297,17 @@ class TradeDecorator < Draper::Base
     when 'WAIT_BUYER_PAY'
       '等待付款'
     when 'WAIT_SELLER_SEND_GOODS'
-      '已付款，待发货'
+      '已付款,待发货'
     when 'WAIT_BUYER_CONFIRM_GOODS'
-      '已付款，已发货'
+      '已付款,已发货'
     when 'TRADE_FINISHED'
       '交易成功'
     when 'TRADE_CLOSED'
       '交易已关闭'
     when 'WAIT_BUYER_CONFIRM_GOODS_ACOUNTED'
-      '已付款（已分账），已发货'
+      '已付款（已分账）,已发货'
     when 'WAIT_SELLER_SEND_GOODS_ACOUNTED'
-      '已付款（已分账），待发货'
+      '已付款（已分账）,待发货'
     when 'TRADE_REFUNDED'
       '已退款'
     when 'TRADE_REFUNDING'
@@ -328,48 +328,48 @@ class TradeDecorator < Draper::Base
         if trade.seller_id
           if trade.logistic_waybill
             if trade.is_auto_dispatch == true
-              "已设置物流，待发货,自动分派"
+              "已设置物流,待发货,自动分派"
             elsif trade.is_auto_dispatch == false
-              "已设置物流，待发货,手动分派"
+              "已设置物流,待发货,手动分派"
             end
           else
             if trade.is_auto_dispatch == true
               if trade.fetch_account.settings.enable_module_third_party_stock == 1
-                "已分派，#{trade.stock_out_bill.try(:status_text) || '待同步标杆仓库' },自动分派"
+                "已分派,#{trade.stock_out_bill.try(:status_text)},自动分派"
               else
-                "已分派，待设置物流,自动分派"
+                "已分派,待设置物流,自动分派"
               end
             elsif trade.is_auto_dispatch == false
               if trade.fetch_account.settings.enable_module_third_party_stock == 1
-                "已分派，#{trade.stock_out_bill.try(:status_text) || '待同步标杆仓库' },手动分派"
+                "已分派,#{trade.stock_out_bill.try(:status_text)},手动分派"
               else
-                "已分派，待设置物流,手动分派"
+                "已分派,待设置物流,手动分派"
               end
             end
           end
         else
-          "已付款，待分派"
+          "已付款,待分派"
         end
       when "WAIT_BUYER_CONFIRM_GOODS", "TRADE_BUYER_SIGNED"
         if trade.seller_confirm_deliver_at
           if trade.is_auto_deliver == true && trade.is_auto_dispatch == true
-            "已付款，已发货, 自动发货, 自动分派"
+            "已付款,已发货, 自动发货, 自动分派"
           elsif trade.is_auto_deliver == true && trade.is_auto_dispatch == false
-            "已付款，已发货, 手动发货, 自动分派"
+            "已付款,已发货, 手动发货, 自动分派"
           elsif trade.is_auto_deliver == false && trade.is_auto_dispatch == true
-            "已付款，已发货, 自动发货, 手动分派"
+            "已付款,已发货, 自动发货, 手动分派"
           else
-            "已付款，已发货, 手动发货, 手动分派"
+            "已付款,已发货, 手动发货, 手动分派"
           end
         else
           if trade.is_auto_deliver == true && trade.is_auto_dispatch == true
-            "已发货，待确认发货,自动发货, 自动分派"
+            "已发货,待确认发货,自动发货, 自动分派"
           elsif trade.is_auto_deliver == true && trade.is_auto_dispatch == false
-            "已发货，待确认发货,手动发货, 自动分派"
+            "已发货,待确认发货,手动发货, 自动分派"
           elsif trade.is_auto_deliver == false && trade.is_auto_dispatch == true
-            "已发货，待确认发货,自动发货, 手动分派"
+            "已发货,待确认发货,自动发货, 手动分派"
           else
-            "已发货，待确认发货,手动发货, 手动分派"
+            "已发货,待确认发货,手动发货, 手动分派"
           end
         end
       when "TRADE_FINISHED"
@@ -385,11 +385,11 @@ class TradeDecorator < Draper::Base
   def jingdong_order_status_text
     case trade.order_state
     when 'WAIT_SELLER_DELIVERY'
-      '已付款，待发货'
+      '已付款,待发货'
     when 'WAIT_SELLER_STOCK_OUT'
-      '已付款，待发货'
+      '已付款,待发货'
     when 'WAIT_GOODS_RECEIVE_CONFIRM'
-      '已付款，已发货'
+      '已付款,已发货'
     when 'FINISHED_L'
       '交易成功'
     when 'TRADE_CANCELED'

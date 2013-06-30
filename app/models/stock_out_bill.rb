@@ -58,7 +58,7 @@ class StockOutBill < StockBill
 
   def check
     return if checked_at.present?
-    update_attributes(checked_at: Time.now)
+    update_attributes(checked_at: Time.now, status: "CHECKED")
     if account && account.settings.enable_module_third_party_stock != 1
       sync_stock
     end
@@ -66,12 +66,13 @@ class StockOutBill < StockBill
 
   def sync
     return if (checked_at.blank?  || sync_succeded_at.present? || (sync_at.present? && sync_failed_at.blank?) )
-    update_attributes(sync_at: Time.now)
+    update_attributes(sync_at: Time.now, status: "SYNCKED")
     so_to_wms
   end
 
   def rollback
     if sync_succeded_at.present?
+      update_attributes(status: "CANCELING")
       cancel_order_rx
     end
   end
@@ -95,7 +96,7 @@ class StockOutBill < StockBill
       update_attributes(sync_succeded_at: Time.now)
       operation_logs.create(operated_at: Time.now, operation: '同步成功')
     else
-      update_attributes(sync_failed_at: Time.now, failed_desc: result['Response']['desc'])
+      update_attributes(sync_failed_at: Time.now, failed_desc: result['Response']['desc'], status: "SYNCK_FAILED")
       operation_logs.create(operated_at: Time.now, operation: "同步失败,#{result['Response']['desc']}")
     end
   end
@@ -109,11 +110,11 @@ class StockOutBill < StockBill
     result_xml = response.body[:cancel_order_rx_response][:out]
     result = Hash.from_xml(result_xml).as_json
     if result['Response']['success'] == 'true'
-      update_attributes(cancel_succeded_at: Time.now)
+      update_attributes(cancel_succeded_at: Time.now, status: "CANCELD_OK")
       operation_logs.create(operated_at: Time.now, operation: '取消成功')
       restore_stock
     else
-      update_attributes(cancel_failed_at: Time.now, failed_desc: result['Response']['desc'])
+      update_attributes(cancel_failed_at: Time.now, failed_desc: result['Response']['desc'], status: "CANCELD_FAILED")
       operation_logs.create(operated_at: Time.now, operation: "取消失败,#{result['Response']['desc']}")
     end
   end

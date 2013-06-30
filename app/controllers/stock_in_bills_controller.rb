@@ -35,6 +35,7 @@ class StockInBillsController < ApplicationController
     bill_product_ids = params[:bill_product_ids].split(',')
     build_product(@bill,bill_product_ids)
     @bill.update_bill_products
+    @bill.status = "CREATED"
     if @bill.save
       update_areas!(@bill)
       tmp_products = current_user.settings.tmp_products
@@ -147,7 +148,7 @@ class StockInBillsController < ApplicationController
   end
 
   private
-  
+
   def set_warehouse
     @warehouse = Seller.find(params[:warehouse_id])
   end
@@ -165,7 +166,7 @@ class StockInBillsController < ApplicationController
     bill.op_city      = Area.find_by_name(bill.op_city).try(:id)
     bill.op_district  = Area.find_by_name(bill.op_district).try(:id)
   end
-  
+
   def parse_params
     search = params[:search] ||= {}
     params[:search][:_id_in] = params[:export_ids].split(',') if params[:export_ids].present?
@@ -173,17 +174,13 @@ class StockInBillsController < ApplicationController
     search["op_state_eq"]     = Area.find_by_id(op_state).try(:name)    if op_state.present?
     search["op_city_eq"]      = Area.find_by_id(op_city).try(:name)     if op_city.present?
     search["op_district_eq"]  = Area.find_by_id(op_district).try(:name) if op_district.present?
-    
+
     if params[:bill_products_sku_id_eq].present?
       search[:bill_products_sku_id_eq] = params[:bill_products_sku_id_eq]
     end
-    if params[:checked_at] == "nil"
-      search[:checked_at_not_eq] = nil
-    elsif params[:checked_at] == "true"
-      search[:checked_at_eq] = nil
-    end
+    search[:status_eq] = params[:status] if params[:status].present?
   end
-  
+
   def default_search
     {account_id: current_account.id,:seller_id => @warehouse.id}
   end

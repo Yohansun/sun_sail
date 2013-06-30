@@ -7,9 +7,9 @@ sheet1.row(1).concat ["出/入库单编", "状态", "商品编码", "商品名�
 @num = 0
 @search.each_with_index do |bill|
   bill.bill_products.each do |product|
-   sheet1.update_row @num+=2, 
+   sheet1.update_row @num+=2,
    bill.tid,
-   bill.status,
+   bill.status_text,
    product.try(:sku_id),
    product.try(:title),
    bill.stock_type_name,

@@ -16,9 +16,9 @@
   </div>
 </div>
 <div class="control-group">
-    <%= label_tag "checked_at",raw("<code>状态</code>"),:class => "pull-left width" %>
+    <%= label_tag "status",raw("<code>状态</code>"),:class => "pull-left width" %>
   <div class="controls pull-left">
-  <%= select_tag "checked_at",options_for_select([["已审核","nil"],["未审核","true"]],params["checked_at"]),:include_blank => true,:class => "input-medium select2 all" %>
+  <%= select_tag "status",options_for_select([["待审核", "CREATED"],["已审核待同步","CHECKED"],["已同步待出库", "SYNCKED"],["同步失败待同步", "SYNCK_FAILED"], ["已关闭", "CLOSED"],["已出库", "STOCKED"],["撤销同步成功", "CANCELD_OK"],["撤销同步待反馈", "CANCELING"],["撤销同步失败","CANCELD_FAILED"]],params["status"]),:include_blank => true,:class => "input-medium select2 all" %>
   </div>
 </div>
 
@@ -44,7 +44,7 @@
 
     <%= text_field_tag "search[stocked_at_gte]",params["search"]["stocked_at_gte"],:class => "input-medium datetimepicker_full" %>~
 
-    <%= text_field_tag "search[stocked_at_lte]",params["search"]["stocked_at_lte"],:class => "input-medium datetimepicker_full" %>  
+    <%= text_field_tag "search[stocked_at_lte]",params["search"]["stocked_at_lte"],:class => "input-medium datetimepicker_full" %>
   </div>
 </div>
 <div class="control-group">

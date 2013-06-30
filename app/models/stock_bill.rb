@@ -36,6 +36,8 @@ class StockBill
   field :logistic_id, type: Integer
   field :seller_id, type: Integer
 
+  field :status, type: String
+
   field :bill_products_mumber, type: Integer
   field :bill_products_real_mumber, type: Integer
   field :bill_products_price, type: Float
@@ -119,19 +121,29 @@ class StockBill
     operation_logs.desc("id").first
   end
 
-  def status
-    if checked_at
-      "已审核"
-    else
-      "未审核"
-    end
-  end
-
   def status_text
-    if sync_at
-      "待标杆仓库确认出库"
+    case status
+    when "CREATED" then "待审核"
+    when "CHECKED" then "已审核待同步"
+    when "SYNCKED"
+      if _type == "StockOutBill"
+        "已审核待出库"
+      else
+        "已审核待入库"
+      end
+    when "SYNCK_FAILED" then "同步失败待同步"
+    when "CLOSED" then "已关闭"
+    when "STOCKED"
+      if _type == "StockOutBill"
+        "已出库"
+      else
+       "已入库"
+      end
+    when "CANCELD_OK" then "撤销同步成功"
+    when "CANCELD_FAILED" then "撤销同步失败"
+    when "CANCELING" then "撤销同步,待仓库反馈"
     else
-      "待同步标杆仓库"
+      status
     end
   end
 end
