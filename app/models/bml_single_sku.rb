@@ -17,7 +17,7 @@ class BmlSingleSku
   #推送 SKU 同步信息至仓库
   def self.single_sku_to_wms(product)
     xml = BmlSingleSku.xml(product)
-    client = Savon.client(wsdl: "http://58.210.118.230:9021/order/BMLservices/BMLQuery?wsdl")
+    client = Savon.client(wsdl: $biaogan_client)
     response = client.call(:single_sku_to_wms, message:{CustomerId: $biaogan_customer_id, PWD: $biaogan_customer_password,xml:xml})
     response.body[:single_sku_to_wms_response][:out]
   end

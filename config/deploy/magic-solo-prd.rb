@@ -36,9 +36,9 @@ namespace :deploy do
   end
 
 
-  desc "force reload monit config"
-  task :monit_force_reload do
-    run "service monit force-reload"
+  desc "restart all monit tasks"
+  task :monit_restart_all do
+    run "monit restart all"
   end
 
   desc "Symlink shared resources on each release"
@@ -58,7 +58,7 @@ namespace :deploy do
 end
 
 after 'deploy:finalize_update', 'deploy:symlink_shared'
-before "deploy:restart", "deploy:monit_force_reload"
+before "deploy:restart", "deploy:monit_restart_all"
 
 namespace :db do
   desc "migrate db"

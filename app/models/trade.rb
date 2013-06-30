@@ -164,7 +164,7 @@ class Trade
   field :sku_properties_name, type: String
   field :is_auto_dispatch, type: Boolean, default: false
   field :is_auto_deliver, type: Boolean, default: false
-  
+
 
   #订单操作人
   field :operator_id
@@ -481,8 +481,15 @@ class Trade
 
   def generate_stock_out_bill
     return if stock_out_bill.present?
+
+    if _type == "TaobaoTrade"
+      remark = "客服备注: #{cs_memo} 卖家备注: #{seller_memo} 客户留言:#{buyer_message}"
+    else
+      remark = cs_memo
+    end
+
     bill = StockOutBill.create(trade_id: _id, op_state:receiver_state, op_city: receiver_city, op_district: receiver_district, op_address: receiver_address,
-      op_name: receiver_name, op_mobile: receiver_mobile, op_zip: receiver_zip, op_phone: receiver_phone, logistic_id: logistic_id, remark: cs_memo,
+      op_name: receiver_name, op_mobile: receiver_mobile, op_zip: receiver_zip, op_phone: receiver_phone, logistic_id: logistic_id, remark: remark, website: invoice_name,
       stock_typs: "CM", account_id: account_id, checked_at: Time.now, created_at: Time.now, seller_id: seller_id
     )
 

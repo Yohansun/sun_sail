@@ -13,6 +13,7 @@ class StockBill
   field :op_district, type: String
   field :op_address, type: String
   field :op_name, type: String
+  field :website, type: String
   field :op_mobile, type: String
   field :op_zip, type: String
   field :op_phone, type: String
@@ -47,14 +48,14 @@ class StockBill
   validate do
     errors.add(:base,"商品不能为空") if bill_products.blank?
   end
-  
+
   belongs_to :trade, :class_name => "Trade", :foreign_key => "tid",:primary_key => "tid"
-  
+
   IN_STOCK_TYPE   = [["调拨入库", "IIR"], ["正常入库", "IFG"], ["拆分入库", "ICF"], ["加工入库", "IOT"], ["退货入库", "IRR"], ["特殊入库(免费)", "IMF"]]
   OUT_STOCK_TYPE  = [["拆分出库", "ORS"], ["调拨出库", "ODB"], ["加工出库", "OKT"], ["退货出库", "OTT"], ["销售出库", "OCM"], ["报废出库", "OOT"], ["补货出库", "OWR"], ["特殊出库(免费)", "OMF"], ["退大货出库", "OTD"]]
-  
+
   STOCK_TYPE = IN_STOCK_TYPE + OUT_STOCK_TYPE
-  
+
   enum_attr :stock_type, STOCK_TYPE
   validates :stock_type, :presence => true,:inclusion => { :in => STOCK_TYPE_VALUES }
 

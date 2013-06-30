@@ -23,11 +23,11 @@ class StockOutBill < StockBill
         stock.customerName op_name
         stock.payment ""
         stock.orderTime ""
-        stock.website ""
+        stock.website website || "个人"
         stock.freight trade.try(:post_fee)
         stock.serviceCharge 0.00
         stock.payTime ""
-        stock.isCashsale ""
+        stock.isCashsale "需要开票"
         stock.priority ""
         stock.expectedTime ""
         stock.requiredTime ""
