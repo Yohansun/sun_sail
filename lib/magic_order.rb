@@ -195,6 +195,7 @@ MagicOrder::AccessControl.map do |map|
   map.project_module :datas do |map|
     map.permission :reads,      [#"user_activities#detail",
                                  #"user_activities#all",
+                                 "sales#summary",
                                  "trade_reports#detail",
                                  "sales#product_analysis",
                                  "sales#show",
