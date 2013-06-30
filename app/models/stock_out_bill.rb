@@ -86,6 +86,7 @@ class StockOutBill < StockBill
   end
 
   def so_to_wms_worker
+    return unless trade.status == "WAIT_SELLER_SEND_GOODS"
     client = Savon.client(wsdl: $biaogan_client)
     response = client.call(:so_to_wms, message:{CustomerId: $biaogan_customer_id, PWD: $biaogan_customer_password,xml: xml})
     result_xml = response.body[:so_to_wms_response][:out]
