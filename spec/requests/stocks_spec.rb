@@ -49,8 +49,8 @@ describe "Stocks" do
   describe "POST /stocks/batch_update_activity_stock" do
     
     it "works! (now write some real specs)" do
-      post batch_update_activity_stock_stocks_path(:stock_product_ids => [stock.id],:activity => 0)
-      flash[:error].should eq("可用库存不能为0")
+      post batch_update_activity_stock_stocks_path(:stock_product_ids => [stock.id],:activity => "a")
+      flash[:error].should eq("请输入整数")
       expect(response).to redirect_to(stocks_path)
       response.status.should be(302)
     end

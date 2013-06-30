@@ -48,6 +48,7 @@ class Seller < ActiveRecord::Base
   has_many :stock_products, dependent: :destroy
   has_one :stock
   belongs_to :user
+  belongs_to :account
 
   scope :with_account, lambda {|account_id| where(account_id: account_id)}
 

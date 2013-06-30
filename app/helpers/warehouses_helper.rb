@@ -10,19 +10,20 @@ module WarehousesHelper
             }
           }
 
-  DYNAMIC_TABS = Hash.new {|x,warehouse| {"库存查询"  => "/warehouses/#{warehouse}/stocks"} }
+  DYNAMIC_TABS = {"库存查询"  => "/stocks"}
   
-  def one_tabs(warehouse)
-    {"所有仓库"  => warehouses_path}.merge(DYNAMIC_TABS[warehouse])
+  def one_tabs
+    {"所有仓库"  => warehouses_path}.merge(DYNAMIC_TABS)
   end
 
   def warehouse_tabs(warehouse)
     warehouse_count = current_account.sellers.count
     two_tabs_controllers = params[:controller] =~ /stock_in_bills|stock_out_bills|stock_bills/
     if warehouse_count > 1
-      !two_tabs_controllers ? one_tabs(warehouse.id) : TWO_TABS[warehouse.id]
+      !two_tabs_controllers ? one_tabs : TWO_TABS[warehouse.id]
     elsif warehouse_count == 1
-      TWO_TABS[warehouse.id].merge(DYNAMIC_TABS[warehouse.id])
+      warehouse ||= current_account.sellers.first
+      TWO_TABS[warehouse.id].merge(DYNAMIC_TABS)
     else
       {}
     end
