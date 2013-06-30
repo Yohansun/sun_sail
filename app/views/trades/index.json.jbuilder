@@ -16,7 +16,7 @@ json.array!(@trades) do |json, trade|
   json.buyer_message trade.buyer_message
   json.interface_name trade.interface_name
   json.interface_mobile trade.interface_mobile
-  json.deliver_bill_count trade.deliver_bills_count
+  json.deliver_bill_count trade.deliver_bills.count
   json.buyer_nick trade.buyer_nick
   json.seller_memo trade.seller_memo
   json.has_split_deliver_bill trade.has_split_deliver_bill
