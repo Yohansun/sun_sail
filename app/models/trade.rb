@@ -480,7 +480,7 @@ class Trade
   end
 
   def generate_stock_out_bill
-    return if stock_out_bill.present?
+    StockOutBill.where(trade_id: _id).destroy_all
 
     if _type == "TaobaoTrade"
       remark = "客服备注: #{cs_memo} 卖家备注: #{seller_memo} 客户留言:#{buyer_message}"
