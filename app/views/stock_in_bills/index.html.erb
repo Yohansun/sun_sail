@@ -27,14 +27,14 @@
               <%= link_to "查看","#",:target_url => "/warehouses/#{@warehouse.id}/stock_in_bills/",:class => "magic_detail" %>
           </li>
           <li>
-            <%= link_to "审核", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_in_bills/check",:request => "post",:message => "确认审核吗?",:class => "magic_operation"  %>
+            <%= link_to "审核", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_in_bills/check","data-remote" => true,:request => "post",:message => "确认审核吗?",:class => "magic_operation"  %>
           </li>
           <%- if current_account.settings.enable_module_third_party_stock == 1 %>
           <li>
-            <%= link_to "同步", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_in_bills/sync",:request => "post",:message => "确认同步吗?",:class => "magic_operation"  %>
+            <%= link_to "同步", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_in_bills/sync","data-remote" => true,:request => "post",:message => "确认同步吗?",:class => "magic_operation"  %>
           </li>
           <li>
-            <%= link_to "撤销", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_in_bills/rollback",:request => "post",:message => "确认撤销吗?",:class => "magic_operation"  %>
+            <%= link_to "撤销", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_in_bills/rollback","data-remote" => true,:request => "post",:message => "确认撤销吗?",:class => "magic_operation"  %>
           </li>
           <%- end %>
         </ul>

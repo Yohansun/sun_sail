@@ -36,6 +36,6 @@ $ ->
         action = action.replace(/(\/*)$/,'/')
       method = $(this).attr("request")
       form.attr({action: action ,method: method })
-      form.removeAttr("data-remote") if $(this).attr("remote") != "true"
+      form.removeAttr("data-remote") if $(this).attr("data-remote") != "true"
       if $(this).attr("message") && confirm($(this).attr("message"))
         form.submit()
