@@ -38,14 +38,3 @@ AmCharts.build = (chartData) ->
 
 #  // WRITE
   chart.write("chartdiv")
-
-$(".validateValues").click ->
-  checked_box = $('input:checked')
-  check_values = checked_box.map ->
-    if $(this).val() != 'on'
-      $(this).val()
-  if checked_box.length < 1
-    alert('请选择');
-  else
-    $('#customers').attr({action: $(this).attr("goto") ,method: $(this).attr("request") });
-    $('#customers').submit();

@@ -10,7 +10,7 @@
           <li class='active'>地域管理</a></li>
         </ul><!-- breadcrumb -->
 
-        <%= form_tag areas_path, :method => :post, :id => "parent_area" do %>
+        <%= form_tag areas_path, :method => :post, :id => "parent_area",:class => "simple-operation" do %>
             <div class="btn-toolbar">
               <div class="btn-group">
                 <b class="btn btn-warning">操作</b>
@@ -19,7 +19,7 @@
                 </button>
                 <ul class="dropdown-menu">
                   <li>
-                    <%= link_to "查看下级", "#",:onclick => "validateValues(this)",:goto => "/areas",:request => "get" %>
+                    <%= link_to_authorize "查看下级", "#",:target_url => "/areas?parent_id=",:request => "get",:class => "magic_detail" %>
                   </li>
               </div>
             </div>
@@ -53,17 +53,3 @@
     </div>
   </div>
 </div>
-
-<script>
-  function validateValues(item){
-    var check_values = $('input:checked').map(function(){if($(this).val() != 'on'){return ($(this).val())}});
-    if($('input:checked').length < 1) {  
-      alert('请选择');  
-    } else if($.inArray('<%= current_user.id %>',check_values) >= 0 && $(item).attr("goto") != "/areas"){  
-      alert('不能操作自己哦 ╮(╯_╰)╭');
-    } else {
-      $('#parent_area').attr({action: $(item).attr("goto") ,method: $(item).attr("request") });  
-      $('#parent_area').submit();  
-    }
-  }
-</script>

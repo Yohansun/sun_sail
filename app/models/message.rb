@@ -21,6 +21,8 @@ class Message
     CustomerMessage.perform_async(self)
   end
   
+  before_save { self.recipients = recipients.split(/,|;/).uniq.join(',') }
+
   validate do
     errors.add(:recipients,"邮件格式不正确") if self.send_type_mail? && !self.recipients.split(/,|;/).all? {|x| /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i.match(x)}
     errors.add(:recipients,"电话号码只能是数字")  if self.send_type_sms? && !self.recipients.split(/,|;/).all? {|x| /^\d+$/.match(x)}

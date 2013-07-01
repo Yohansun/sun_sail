@@ -37,5 +37,5 @@ $ ->
       method = $(this).attr("request")
       form.attr({action: action ,method: method })
       form.removeAttr("data-remote") if $(this).attr("data-remote") != "true"
-      if $(this).attr("message") && confirm($(this).attr("message"))
+      if ($(this).attr("message") && confirm($(this).attr("message")) || !$(this).attr("message"))
         form.submit()

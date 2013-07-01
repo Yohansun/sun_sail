@@ -31,10 +31,10 @@
           </li>
           <%- if current_account.settings.enable_module_third_party_stock == 1 %>
           <li>
-            <%= link_to "同步", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_in_bills/sync","data-remote" => true,:request => "post",:message => "确认同步吗?",:class => "magic_operation"  %>
+            <%= link_to_authorize "同步", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_in_bills/sync","data-remote" => true,:request => "post",:message => "确认同步吗?",:class => "magic_operation"  %>
           </li>
           <li>
-            <%= link_to "撤销", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_in_bills/rollback","data-remote" => true,:request => "post",:message => "确认撤销吗?",:class => "magic_operation"  %>
+            <%= link_to_authorize "撤销", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_in_bills/rollback","data-remote" => true,:request => "post",:message => "确认撤销吗?",:class => "magic_operation"  %>
           </li>
           <%- end %>
         </ul>

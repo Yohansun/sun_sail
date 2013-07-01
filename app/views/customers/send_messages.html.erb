@@ -17,7 +17,7 @@
   <div class="span10">
     <div class="form-actions">
     <%= simple_form_for @message,:url => invoice_messages_customers_path(:product_ids => params[:product_ids]),:html => {:class => "well form-horizontal"} do |f| %>
-        <%= f.input :recipients,:input_html  => {:class => "input-xxlarge",:id => "recipients"} %>
+        <%= f.input :recipients,hint: '请使用英文 ","或 ";" 进行分隔',:input_html  => {:class => "input-xxlarge",:id => "recipients"} %>
         <div class="control-group">
           <%= f.input :send_type, collection: [["短信","sms"],["邮件","mail"]], as: :select,:input_html => {class: "input-medium select2",:id => "send_type"} %>
         </div>

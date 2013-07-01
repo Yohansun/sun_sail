@@ -17,15 +17,15 @@
             <%= link_to "导出","#",:onclick => "exportChecked('#{format_url(:xls)}')" %>
           </li>
           <li>
-            <%= link_to "发送短信","#",:class => "validateValues",:goto => "/customers/send_messages",:request => "get"%>
+            <%= link_to_authorize "发送短信","#",:target_url => "/customers/send_messages",:request => "get",:class => "magic_operation"%>
           </li>
           <li>
-            <%= link_to "详细", "#",:target_url => "/customers/:id",:class => "magic_detail"%>
+            <%= link_to_authorize "详细", "#",:target_url => "/customers",:class => "magic_detail"%>
           </li>
         </ul>
       </div>
     </div>
-    <%= form_tag "",:id => "customers" do %>
+    <%= form_tag "",:id => "customers",:class => "simple-operation" do %>
     <%= hidden_field_tag "product_ids",@product_ids.join(',') rescue "" %>
       <table class="table table-striped table-bordered mar_t10">
         <thead>

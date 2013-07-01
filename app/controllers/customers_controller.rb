@@ -47,7 +47,7 @@ class CustomersController < ApplicationController
     @customers = Customer.search(params[:search])
     @transaction_histories = @customers.map(&:transaction_histories).flatten
     @transaction_histories = @transaction_histories.reject {|x| (x.product_ids & @product_ids).blank?}
-    @message = Message.new(:send_type => "sms",:recipients => @transaction_histories.map(&:receiver_mobile).join(','))
+    @message = Message.new(:send_type => "sms",:recipients => @transaction_histories.map(&:receiver_mobile).uniq.join(','))
   end
 
   #POST /customers/invoice_messages
@@ -75,9 +75,9 @@ class CustomersController < ApplicationController
     @transaction_histories = @transaction_histories.reject {|x| (x.product_ids & @product_ids).blank?}
     case params[:send_type]
     when "mail"
-      @text = @customers.map(&:email).join(",")
+      @text = @customers.map(&:email).uniq.join(",")
     when "sms"
-      @text = @transaction_histories.collect {|x| x.receiver_mobile}.join(',')
+      @text = @transaction_histories.collect {|x| x.receiver_mobile}.uniq.join(',')
     end
 
     respond_to do |format|
