@@ -77,6 +77,25 @@ module ApplicationHelper
     matched ? name : ""
   end
 
+  # Support seletor.js.coffee :target_url
+  # Same as link_to syntax
+  def link_to_authorize(*args,&block)
+    html_options = args.second
+    options = args.dup.extract_options!
+    options.stringify_keys!
+
+    if /^#/.match(html_options) && options.key?("target_url")
+      html_options = options["target_url"]
+    end
+
+    if html_options.is_a?(String)
+      method_id = options["request"] || :get
+      html_options = Rails.application.routes.recognize_path(html_options,:method => method_id)
+    end
+
+    link_to(*args,&block) if current_user.allowed_to?(html_options[:controller],html_options[:action])
+  end
+
   def flash_message
     if flash[:error].present?
       content_tag :div,flash[:error],:class => "alert alert-error"

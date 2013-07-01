@@ -87,7 +87,7 @@ class User < ActiveRecord::Base
   def allow_read?(control,action="index")
     return true if self.superadmin?
     arys = parsed_permission[control.to_s] & MagicOrder::ActionDelega.keys
-    MagicOrder::ActionDelega.slice(*arys).any?{|x,y| y.include?(action)}
+    MagicOrder::ActionDelega.slice(*arys).any?{|x,y| y.include?(action.to_s)}
   end
 
   def display_name

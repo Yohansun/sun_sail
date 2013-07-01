@@ -20,16 +20,12 @@
             <li>
               <%= link_to "导出","#",:onclick => "processChecked('#{stocks_path(:search => params[:search],:format => :xls,:on => '?')}')"%>
             </li>
-            <% if authorize?(:stocks,:batch_update_safety_stock) %>
             <li>
-              <%= link_to "批量设置安全库存","#batch_update_safety_stock",:target_url => "/stocks/batch_update_safety_stock",:class => "magic_operation set_stock", "data-toggle" => "modal",:request => :post,:id => "set_safety_stock" %>
+              <%= link_to_authorize "批量设置安全库存","#batch_update_safety_stock",:target_url => "/stocks/batch_update_safety_stock",:class => "magic_operation set_stock", "data-toggle" => "modal",:request => :post,:id => "set_safety_stock" %>
             </li>
-            <% end %>
-            <% if authorize?(:stocks,:batch_update_activity_stock) %>
             <li>
-              <%= link_to "批量设置可用库存","#batch_update_activity_stock",:target_url => "/stocks/batch_update_activity_stock",:class => "magic_operation set_stock", "data-toggle" => "modal",:request => :post,:id => "set_actual_stock" %>
+              <%= link_to_authorize "批量设置可用库存","#batch_update_activity_stock",:target_url => "/stocks/batch_update_activity_stock",:class => "magic_operation set_stock", "data-toggle" => "modal",:request => :post,:id => "set_actual_stock" %>
             </li>
-            <% end %>
           </ul>
         </div>
       </div>

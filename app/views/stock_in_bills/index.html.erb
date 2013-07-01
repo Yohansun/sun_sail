@@ -21,13 +21,13 @@
               <%= link_to "导出","#",:onclick => "processChecked('#{warehouse_stock_in_bills_path(@warehouse,:search => params[:search],:format => :xls,:on => '?')}')"%>
             </li>
             <li>
-              <%= link_to "新建", new_warehouse_stock_in_bill_path(@warehouse) %>
+              <%= link_to_authorize "新建", new_warehouse_stock_in_bill_path(@warehouse) %>
             </li>
             <li>
-              <%= link_to "查看","#",:target_url => "/warehouses/#{@warehouse.id}/stock_in_bills/",:class => "magic_detail" %>
+              <%= link_to_authorize "查看","#",:target_url => "/warehouses/#{@warehouse.id}/stock_in_bills/",:class => "magic_detail" %>
           </li>
           <li>
-            <%= link_to "审核", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_in_bills/check","data-remote" => true,:request => "post",:message => "确认审核吗?",:class => "magic_operation"  %>
+            <%= link_to_authorize "审核", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_in_bills/check","data-remote" => true,:request => "post",:message => "确认审核吗?",:class => "magic_operation"  %>
           </li>
           <%- if current_account.settings.enable_module_third_party_stock == 1 %>
           <li>

@@ -1,5 +1,5 @@
 <ul class="nav nav-tabs">
   <% warehouse_tabs(@warehouse).each do |name,url|  %>
-  <li class="<%= current_controller?(url,:assert_true => 'active')  %>"><%= link_to name, url %></li>
+  <li class="<%= current_controller?(url,:assert_true => 'active')  %>"><%= link_to_authorize name, url %></li>
   <% end %>
 </ul><!-- nav-tabs -->

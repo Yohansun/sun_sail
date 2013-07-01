@@ -1,10 +1,7 @@
 <div class="row-fluid">
   <div class="span12">
     <%= render partial: "layouts/all_crumbs" %>
-    <ul class="nav nav-tabs">
-      <li class="active"><%= link_to "所有仓库", warehouses_path %></li>
-      <li><%= link_to "库存查询", stocks_path %></li>
-    </ul><!-- nav-tabs -->
+    <%= render partial: "layouts/warehouse_menu" %>
     <div class="tab-content">
       <%= form_tag warehouses_path,:method => :get, :class=>"well well-small form-horizontal font12" do %>
       <div class="control-group">
@@ -25,7 +22,7 @@
           </button>
           <ul class="dropdown-menu">
             <li>
-              <%= link_to "详细", "#",:target_url => "/warehouses/:id/stock_in_bills",:class => "magic_detail" %>
+              <%= link_to_authorize "详细", "#",:target_url => "/warehouses/:id/stock_in_bills",:class => "magic_detail" %>
             </li>
           </ul>
         </div>
