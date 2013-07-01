@@ -82,9 +82,10 @@
       <%= button_tag "添加",:class => "btn btn-warning btn-small" ,:onclick => "validateProductValues()" %>
     </div>
     <fieldset>
+      <% @current_user_skus = current_account.skus %>
       <div class="control-group">
         <%= label_tag "product[sku_id]", "商品名称",:class => "control-label",:style => "width:70px;text-align:left;" %>
-        <%= select_tag "product[sku_id]",options_for_select(current_account.skus.collect {|x| [x.title,x.id]}),:include_blank => true,:class => "input-small pull-left radius_no select2 product" ,:id => "product_title"%>
+        <%= select_tag "product[sku_id]",options_for_select(@current_user_skus.collect {|x| [x.title,x.id]}),:include_blank => true,:class => "input-small pull-left radius_no select2 product" ,:id => "product_title"%>
       </div>
     </fieldset>
     <div>
@@ -100,10 +101,8 @@
       </fieldset><!-- form left area -->
       <fieldset class="span6">
         <div class="control-group">
-            <label class="control-label">&nbsp;</label>
-          <!-- <select class="input-small select2">
-            <option value="红">红</option>
-          </select> -->
+          <label class="control pull-left">SKU编码：</label>
+          <input class="input-medium" id="disabledSku" type="text" placeholder="" disabled>
         </div>
         <div class="control-group">
           <label class="control-label">实际总价：</label>
@@ -117,3 +116,14 @@
     </div>
   </div><!--span10 -->
 </div><!--row-fluid -->
+<% content_for :tail do %>
+<script type="text/javascript" charset="utf-8">
+$(function(){
+  var parseSkus = <%= raw Hash[@current_user_skus.collect {|x| [x.id.to_s,x.sku_id.to_s]}].to_json %>;
+  $("#product_title").change(function(){
+    var sku_id = parseSkus[$(this).val()];
+    $("#disabledSku").val(sku_id)
+  })
+})
+</script>
+<% end %>
