@@ -34,6 +34,10 @@ class Sku < ActiveRecord::Base
     "#{product.try(:name)}#{name}"
   end
 
+  def title_with_sku_id
+    title << (sku_id.blank? ? "" : " [#{sku_id}] ")
+  end
+
   def name
     sku_properties.map(&:text) * "|"
   end
