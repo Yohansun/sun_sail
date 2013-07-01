@@ -27,7 +27,7 @@ function validateProductValues(){
     alert("请输入商品数量");
     event.preventDefault();
   }else if($("#product_price").val() == ""){
-    alert("请输入商品单价");
+    alert("请输入商品进货价");
     event.preventDefault();
   }else if($("#product_total_price").val() == ""){
     alert("请输入实际总价");
