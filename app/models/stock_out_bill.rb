@@ -57,7 +57,7 @@ class StockOutBill < StockBill
   end
 
   def check
-    return if checked_at.present?
+    return unless status == "CREATED"
     update_attributes(checked_at: Time.now, status: "CHECKED")
     if account && account.settings.enable_module_third_party_stock != 1
       sync_stock
@@ -65,16 +65,15 @@ class StockOutBill < StockBill
   end
 
   def sync
-    return if (checked_at.blank?  || sync_succeded_at.present? || (sync_at.present? && sync_failed_at.blank?) )
+    return unless ['SYNCK_FAILED','CHECKED','CANCELD_OK'].include?(status)
     update_attributes(sync_at: Time.now, status: "SYNCKED")
     so_to_wms
   end
 
   def rollback
-    if sync_succeded_at.present?
-      update_attributes(status: "CANCELING")
-      cancel_order_rx
-    end
+    return unless status == "SYNCKED"
+    update_attributes(status: "CANCELING")
+    cancel_order_rx
   end
 
   #推送出库单至仓库
@@ -87,17 +86,18 @@ class StockOutBill < StockBill
   end
 
   def so_to_wms_worker
-    return unless trade.status == "WAIT_SELLER_SEND_GOODS"
-    client = Savon.client(wsdl: $biaogan_client)
-    response = client.call(:so_to_wms, message:{CustomerId: $biaogan_customer_id, PWD: $biaogan_customer_password,xml: xml})
-    result_xml = response.body[:so_to_wms_response][:out]
-    result = Hash.from_xml(result_xml).as_json
-    if result['Response']['success'] == 'true'
-      update_attributes(sync_succeded_at: Time.now)
-      operation_logs.create(operated_at: Time.now, operation: '同步成功')
-    else
-      update_attributes(sync_failed_at: Time.now, failed_desc: result['Response']['desc'], status: "SYNCK_FAILED")
-      operation_logs.create(operated_at: Time.now, operation: "同步失败,#{result['Response']['desc']}")
+    if ((trade && trade.status == "WAIT_SELLER_SEND_GOODS") || (!trade))
+      client = Savon.client(wsdl: $biaogan_client)
+      response = client.call(:so_to_wms, message:{CustomerId: $biaogan_customer_id, PWD: $biaogan_customer_password,xml: xml})
+      result_xml = response.body[:so_to_wms_response][:out]
+      result = Hash.from_xml(result_xml).as_json
+      if result['Response']['success'] == 'true'
+        update_attributes(sync_succeded_at: Time.now)
+        operation_logs.create(operated_at: Time.now, operation: '同步成功')
+      else
+        update_attributes(sync_failed_at: Time.now, failed_desc: result['Response']['desc'], status: "SYNCK_FAILED")
+        operation_logs.create(operated_at: Time.now, operation: "同步失败,#{result['Response']['desc']}")
+      end
     end
   end
 

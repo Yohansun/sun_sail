@@ -35,7 +35,7 @@ class StockInBill < StockBill
 
 
   def check
-    return if checked_at.present?
+    return unless status == "CREATED"
     update_attributes(checked_at: Time.now, status: "CHECKED")
     if account && account.settings.enable_module_third_party_stock != 1
       sync_stock
@@ -43,16 +43,15 @@ class StockInBill < StockBill
   end
 
   def sync
-    return if (checked_at.blank?  || sync_succeded_at.present? || (sync_at.present? && sync_failed_at.blank?) )
+    return unless ['SYNCK_FAILED','CHECKED','CANCELD_OK'].include?(status)
     update_attributes(sync_at: Time.now, status: "SYNCKED")
     ans_to_wms
   end
 
   def rollback
-    if sync_succeded_at.present?
-      update_attributes(status: "CANCELING")
-      cancel_asn_rx
-    end
+    return unless status == "SYNCKED"
+    update_attributes(status: "CANCELING")
+    cancel_asn_rx
   end
 
   def ans_to_wms
