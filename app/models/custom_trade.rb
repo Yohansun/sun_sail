@@ -24,6 +24,8 @@ class CustomTrade < Trade
   validates :receiver_zip, format: { with: /^[0-9]{6}$/, message: "邮编格式不正确"}, allow_blank: true
   validate :created_larger_than_pay_time, :message => "下单时间不能晚于付款时间"
 
+  embeds_many :taobao_orders
+
   def created_larger_than_pay_time
     if (pay_time.to_i - created.to_i) < 0
       errors.add(:created, "下单时间不能晚于付款时间")
