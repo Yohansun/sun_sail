@@ -134,7 +134,7 @@
       </div>
     </div>
 
-    <div class="container-fluid">
+    <div class="container-fluid" style="<%= request.path == root_path ? '' : 'min-height:800px;' %>">
       <div class="row-fluid">
 
         <%= render partial: "layouts/setting_nav" %>
@@ -179,7 +179,7 @@
         </div>
       </div>
     </div> <!-- /container -->
-    <footer style="bottom: 0;position: fixed;text-align: center;width: 100%;"><p>&copy; Doorder/NIO team 2012</p></footer>
+    <footer style="bottom: 0;<%= request.path == root_path ? 'position: fixed;' : '' %>text-align: center;width: 100%;"><p>&copy; Doorder/NIO team 2012</p></footer>
     <%= javascript_include_tag "application" %>
     <%= javascript_include_tag "/areas.js" %>
     <%= yield :tail -%>
