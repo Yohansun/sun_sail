@@ -53,7 +53,7 @@ class StockApiController < ApplicationController
           )
         end
         if stock_in_bill.sync_stock
-          stock_in_bill.update_attributes(confirm_stocked_at: Time.now)
+          stock_in_bill.update_attributes(confirm_stocked_at: Time.now, status: 'STOCKED')
           stock_in_bill.operation_logs.create(operated_at: Time.now, operation: '确认入库成功')
           render soap: "SUCCESS"
         else
@@ -61,8 +61,6 @@ class StockApiController < ApplicationController
           stock_in_bill.operation_logs.create(operated_at: Time.now, operation: '确认入库失败')
           render soap: "FAILED"
         end
-        trade = stock_out_bill.trade
-        trade.update_attributes(status: 'STOCKED')
       else
         render soap: "EMPTY_ASNDETAILS"
       end
@@ -118,7 +116,7 @@ class StockApiController < ApplicationController
           record.bml_sku_with_nums.create(sku: sku, num: num)
         end
         if stock_out_bill.decrease_actual
-          stock_out_bill.update_attributes(confirm_stocked_at: Time.now)
+          stock_out_bill.update_attributes(confirm_stocked_at: Time.now, status: 'STOCKED')
           stock_out_bill.operation_logs.create(operated_at: Time.now, operation: '确认出库成功')
           render soap: "SUCCESS"
         else
