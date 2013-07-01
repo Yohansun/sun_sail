@@ -498,13 +498,14 @@ class Trade
     end
 
     orders.each do |order|
+      order_num = order.num
       if order.sku_bindings.present?
         order.sku_bindings.each do |binding|
           sku_id = binding.sku_id
           sku = Sku.find_by_id(binding.sku_id)
           product = sku.try(:product)
           if product
-            binding_number = binding.number
+            binding_number = binding.number * order_num
             stock_product = fetch_account.stock_products.where(product_id: product.id, sku_id: sku_id).first
             if stock_product
               bill.bill_products.build(
