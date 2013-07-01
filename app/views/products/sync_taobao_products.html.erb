@@ -1,7 +1,7 @@
 <div class="container-fluid">
 
   <div class="page-header">
-    <h1><small>Subtext for header</small></h1>
+    <h1><small>同步淘宝商品</small></h1>
   </div>
   <ul class="nav nav-tabs affix">
     <li><a href="/products">本地商品</a></li>
@@ -73,10 +73,9 @@
           <% end %>
         </tbody>
       </table>
-    </div>
-    <div>
-      <td><button type="button" class="btn btn-success"><%= link_to "确认同步", confirm_sync_products_path,:method => :put %></button></td>
-      <td><button type="button" class="btn btn-info">取消</button></td>
+      <button type="button" class="btn btn-success"><%= link_to "确认同步", confirm_sync_products_path,:method => :put %></button>
+      <%= link_to "取消",taobao_products_products_path,:class => "btn btn-info" %>
+      <p>&nbsp;</p>
     </div>
   </div>
 </div>
