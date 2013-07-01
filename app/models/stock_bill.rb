@@ -127,9 +127,9 @@ class StockBill
     when "CHECKED" then "已审核待同步"
     when "SYNCKED"
       if _type == "StockOutBill"
-        "已审核待出库"
+        "已同步待出库"
       else
-        "已审核待入库"
+        "已同步待入库"
       end
     when "SYNCK_FAILED" then "同步失败待同步"
     when "CLOSED" then "已关闭"

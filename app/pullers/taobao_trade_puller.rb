@@ -38,9 +38,8 @@ class TaobaoTradePuller
 #        p "starting create_orders: since #{start_time}"
 
         unless response['trades_sold_get_response']
-#          p response
           Notifier.puller_errors(response, account_id).deliver
-          break
+          return
         end
 
         total_results = response['trades_sold_get_response']['total_results']
@@ -91,6 +90,65 @@ class TaobaoTradePuller
 
         page_no += 1
       end until(page_no > total_pages || total_pages == 0)
+    end
+
+    def create_by_tid(tid, trade_source_id)
+
+      trade_source = TradeSource.find_by_id(trade_source_id)
+      account_id = trade_source.account_id
+      account = Account.find_by_id(account_id)
+
+      # 给客服分配定单需要的查询
+      users = account.users.where(can_assign_trade: true).where(active: true).order(:created_at) rescue nil
+      if users
+        total_percent = users.inject(0) { |sum, el| sum += el.trade_percent.to_i }
+      end
+
+      response = TaobaoQuery.get({
+        method: 'taobao.trade.fullinfo.get', tid: tid,
+        fields: 'total_fee, created, tid, status, post_fee, receiver_name, pay_time, receiver_state, receiver_city, receiver_district, receiver_address, receiver_zip, receiver_mobile, receiver_phone, buyer_nick, tile, type, point_fee, is_lgtype, is_brand_sale, is_force_wlb, modified, alipay_id, alipay_no, alipay_url, shipping_type, buyer_obtain_point_fee, cod_fee, cod_status, commission_fee, seller_nick, consign_time, received_payment, payment, timeout_action_time, has_buyer_message, real_point_fee, orders',
+        }, trade_source_id
+      )
+
+      unless response['trade_fullinfo_get_response']
+        Notifier.puller_errors(response, account_id).deliver
+        break
+      end
+
+      trade = response['trade_fullinfo_get_response']['trade']
+
+      return if trade.blank?
+
+      orders = trade.delete('orders')
+
+      trade = TaobaoTrade.new(trade)
+
+      trade.trade_source_id = trade_source_id
+
+      trade.account_id = account_id
+
+      order = orders['order']
+
+      unless order.is_a?(Array)
+        order = [] << order
+      end
+      order.each do |o|
+        taobao_order = trade.taobao_orders.build(o)
+      end
+
+      trade.operation_logs.build(operated_at: Time.now, operation: '从淘宝抓取订单')
+      trade.set_has_onsite_service
+      if users
+        trade.set_operator(users,total_percent)
+      end
+      trade.save
+
+      TradeTaobaoMemoFetcher.perform_async(trade.tid)
+      TradeTaobaoPromotionFetcher.perform_async(trade.tid)
+      if account.settings.auto_settings['auto_dispatch']
+        result = account.can_auto_dispatch_right_now
+        DelayAutoDispatch.perform_in((result == true ?  account.settings.auto_settings['dispatch_silent_gap'].to_i.hours : result), trade.id)
+      end
     end
 
     def update_end_time
