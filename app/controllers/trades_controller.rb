@@ -193,9 +193,8 @@ class TradesController < ApplicationController
     end
 
     unless params[:state_id].blank?
-      state = @trade.unusual_states.find params[:state_id]
-      state.repair_man = current_user.name
-      state.repaired_at = Time.now
+      states = @trade.unusual_states.where(_id: params[:state_id], repaired_at: nil).all
+      states.update_all(repair_man: current_user.name, repaired_at: Time.now)
     end
 
     if params[:logistic_ids].present?

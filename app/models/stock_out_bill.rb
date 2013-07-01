@@ -72,7 +72,7 @@ class StockOutBill < StockBill
 
   def rollback
     return unless status == "SYNCKED"
-    update_attributes(status: "CANCELING")
+    update_attributes(canceled_at: Time.now, status: "CANCELING")
     cancel_order_rx
   end
 
@@ -92,7 +92,7 @@ class StockOutBill < StockBill
       result_xml = response.body[:so_to_wms_response][:out]
       result = Hash.from_xml(result_xml).as_json
       if result['Response']['success'] == 'true'
-        update_attributes(sync_succeded_at: Time.now)
+        update_attributes(sync_succeded_at: Time.now, status: "SYNCKED")
         operation_logs.create(operated_at: Time.now, operation: '同步成功')
       else
         update_attributes(sync_failed_at: Time.now, failed_desc: result['Response']['desc'], status: "SYNCK_FAILED")
