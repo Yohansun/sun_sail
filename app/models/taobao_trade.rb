@@ -77,7 +77,7 @@ class TaobaoTrade < Trade
       void_buyer_message = (dispatch_conditions["void_buyer_message"].present? ? false : true) || !has_buyer_message
       void_seller_memo = (dispatch_conditions["void_seller_memo"].present? ? false : true) || seller_memo.blank?
       void_cs_memo = (dispatch_conditions["void_cs_memo"].present? ? false : true) || !has_cs_memo
-      void_money = dispatch_conditions["void_money"].present? ? false : true || !has_refund_orders
+      void_money = (dispatch_conditions["void_money"].present? ? false : true) || !has_refund_orders
       can_auto_dispatch = void_buyer_message && void_seller_memo && void_cs_memo && void_money
     end
     can_auto_dispatch && dispatchable?
