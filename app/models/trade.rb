@@ -3,6 +3,7 @@
 class Trade
   include Mongoid::Document
   include Mongoid::Paranoia
+  include Mongoid::Versioning
   include Mongoid::Timestamps
   include MagicEnum
   include TradeMerge
@@ -478,7 +479,7 @@ class Trade
   end
 
   def generate_stock_out_bill
-    StockOutBill.where(trade_id: _id).destroy_all
+    return if stock_out_bill.present?
 
     if _type == "TaobaoTrade"
       remark = "客服备注: #{cs_memo} 卖家备注: #{seller_memo} 客户留言:#{buyer_message}"

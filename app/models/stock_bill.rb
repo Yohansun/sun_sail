@@ -42,6 +42,10 @@ class StockBill
   field :bill_products_real_mumber, type: Integer
   field :bill_products_price, type: Float
 
+  validates_presence_of :tid
+
+  validates_uniqueness_of :tid, message: "操作频率过大，请重试"
+
   validates :op_name,:length => { :maximum => 50 }, :allow_blank => true
   validates :op_phone, format: { with: /\d+-\d+/ }, :allow_blank => true
   validates :op_mobile, length: {is: 11}, :allow_blank => true

@@ -105,8 +105,7 @@ class StockApiController < ApplicationController
           logistic_waybill: output_back['shipNo'],
           logistic_name: output_back['carrierName'],
           logistic_code: output_back['carrierID'],
-          logistic_id: logistic.try(:id),
-          status: 'STOCKED'
+          logistic_id: logistic.try(:id)
         )
         skus = output_back['send']['sku']
         skus = [] << skus unless skus.is_a?(Array)
