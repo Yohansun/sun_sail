@@ -31,11 +31,14 @@ $ ->
       return false
     else
       form = $("form.simple-operation")
+      href = $(this).attr("href")
       action = $(this).attr("target_url")
       if action.match(/\?/) == null
         action = action.replace(/(\/*)$/,'/')
       method = $(this).attr("request")
       form.attr({action: action ,method: method })
       form.removeAttr("data-remote") if $(this).attr("data-remote") != "true"
-      if ($(this).attr("message") && confirm($(this).attr("message")) || !$(this).attr("message"))
-        form.submit()
+      # Skip href #id
+      if !href.match(/^#.+/)
+        if ($(this).attr("message") && confirm($(this).attr("message")) || !$(this).attr("message"))
+          form.submit()
