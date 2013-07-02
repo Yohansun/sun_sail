@@ -29,7 +29,12 @@ guard 'spork', :cucumber_env => { 'RAILS_ENV' => 'test' }, :rspec_env => { 'RAIL
 end
 
 # Why use "--drb spec" please see [https://github.com/colszowka/simplecov/issues/42]
-guard 'rspec', :cli => "--drb spec" do
+# From guard-rspec wiki say:
+#   :all_after_pass     # run all specs after changed specs pass, default: false
+#   :all_on_start       # run all the specs at startup, default: false
+# In actual fact is default true.
+
+guard 'rspec', :all_on_start => false, :all_after_pass => false do
   watch(%r{^spec/.+_spec\.rb$})
   watch(%r{^lib/(.+)\.rb$})     { |m| "spec/lib/#{m[1]}_spec.rb" }
   watch('spec/spec_helper.rb')  { "spec" }

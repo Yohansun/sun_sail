@@ -39,6 +39,7 @@ describe StockBillsHelper do
      it "should add tmp product" do
        view.stub(:params) { {:controller => "stock_in_bill"} }
        product = {"sku_id" => sku.id, "number" => 1, "total_price" => 1}
+       current_user.settings.tmp_products = nil 
        tmp_marshal_dump = product.merge({
          "id" => sku.id,
          "price" => nil,
