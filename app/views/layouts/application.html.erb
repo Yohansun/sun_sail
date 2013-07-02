@@ -126,7 +126,7 @@
           <% if current_user.allow_read?(:alerts) %>
             <ul class="nav pull-right">
               <li id="fat-menu" class="dropdown">
-                <a href="/alerts"><span class="badge badge-important" style="background:red;">New</span>异常中心(<%= @count %>)</a>
+                <a href="/alerts"><span class="badge badge-important" style="background:red;">New</span>异常中心(<%= @alert_counts %>)</a>
               </li>
               <li class="divider-vertical"></li>
             </ul>
