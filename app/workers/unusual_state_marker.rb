@@ -31,7 +31,7 @@ class UnusualStateMarker
         end
       end
 
-      # 超过n天未分流
+      # 超过n天未分派
       if conditions['unusual_dispatch']
         check_time = conditions['max_undispatched_days'].to_i.days.ago
         trades = Trade.between(created: (check_time - time_gap.hours)..check_time)
@@ -40,7 +40,7 @@ class UnusualStateMarker
                              seller_id: nil,
                              status: "WAIT_SELLER_SEND_GOODS",
                              account_id: account.id)
-        reason = "超过#{conditions['max_undispatched_days']}天未分流"
+        reason = "超过#{conditions['max_undispatched_days']}天未分派"
         key = "undispatched_in_#{conditions['max_undispatched_days']}_days"
         trades.each do |trade|
           if trade.unusual_states.where(key: key).count == 0

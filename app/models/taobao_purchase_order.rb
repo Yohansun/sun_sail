@@ -130,7 +130,7 @@ class TaobaoPurchaseOrder < Trade
 
     self.update_attributes(seller_id: seller.id, dispatched_at: Time.now) if seller
 
-    #如果满足自动化设置条件，分流后订单自动发货
+    #如果满足自动化设置条件，分派后订单自动发货
     # if auto_settings['auto_deliver'] && self.fetch_account.can_auto_deliver_right_now? && self.dispatched_at
     #   if auto_settings["deliver_condition"] == "dispatched_trade"
     #     update_attributes(delivered_at: Time.now)
