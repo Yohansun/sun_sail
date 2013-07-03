@@ -3,8 +3,10 @@
 <td data-col='trade_source'>
   <% if @trade.get('trade_source') == "赠品" || @trade.get('trade_source') == "人工" : %>
     <span class="label label-important"><%= @trade.get('trade_source') %></span>
-  <% else : %>
+  <% else if @trade.get('trade_source') == "淘宝" : %>
     <span class="label label-warning"><%= @trade.get('trade_source') %></span>
+  <% else : %>
+    <span class="label label-darkorchid"><%= @trade.get('trade_source') %></span>
   <% end %>
   <% if @trade.get('trade_source') == "分销平台" : %>
     <br><span class="label label-info">店铺代码:<%= @trade.get('distributor_usercode') %></span>

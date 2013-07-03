@@ -267,7 +267,18 @@ class TradeDecorator < Draper::Base
     when 'JingdongTrade'
       '京东'
     else
-      "合并" if trade.merged_trade_ids.present?
+      if trade.merged_trade_ids.present?
+        type_array = Trade.where(:_id.in => trade.merged_trade_ids).only(:_type).map(&:_type).unique
+        if type_array.count > 1
+          '合并(淘宝＋人工)'
+        else
+          if type_array[0] == "TaobaoTrade"
+            '合并(淘宝)'
+          else
+            '合并(人工)'
+          end
+        end
+      end
     end
   end
 
