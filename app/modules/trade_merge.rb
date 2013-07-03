@@ -3,10 +3,11 @@
 
     def self.included(base)
       base.extend(ClassMethods)
-      base.class_eval do
-        after_create :trig_auto_merge
-        after_update :trig_auto_merge
-      end
+      # BUG IS EVERYWHERE! NEED ADAPTION
+      # base.class_eval do
+      #   after_create :trig_auto_merge
+      #   after_update :trig_auto_merge
+      # end
     end
 
     module ClassMethods
