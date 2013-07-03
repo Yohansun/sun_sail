@@ -87,7 +87,8 @@
             <option value="status,WAIT_BUYER_CONFIRM_GOODS_ACOUNTED">已付款（已分账），已发货订单</option>
             <option value="status,WAIT_SELLER_SEND_GOODS_ACOUNTED">已付款（已分账），待发货订单</option>
             <option value="status,TRADE_CLOSED_BY_TAOBAO">交易被淘宝关闭订单</option>
-            <option value="has_onsite_service">上门服务</option>
+            <option value="has_onsite_service">上门服务订单</option>
+            <option value="has_refund_orders">部分退款订单</option>
           </select>
         </div>
         <a class="add_status_search_tag" href="#" title="添加搜索"><i class="icon-plus"></i>添加搜索</a>
