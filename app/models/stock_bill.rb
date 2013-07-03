@@ -14,6 +14,7 @@ class StockBill
   field :op_address, type: String
   field :op_name, type: String
   field :website, type: String
+  field :is_cash_sale, type: String #无需开票/需要开票/需开专票
   field :op_mobile, type: String
   field :op_zip, type: String
   field :op_phone, type: String

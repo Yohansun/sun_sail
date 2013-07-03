@@ -27,7 +27,7 @@ class StockOutBill < StockBill
         stock.freight trade.try(:post_fee)
         stock.serviceCharge 0.00
         stock.payTime ""
-        stock.isCashsale "需要开票"
+        stock.isCashsale is_cash_sale || "需要开票"
         stock.priority ""
         stock.expectedTime ""
         stock.requiredTime ""
