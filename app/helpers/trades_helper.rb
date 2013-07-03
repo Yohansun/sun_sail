@@ -2,18 +2,32 @@
 module TradesHelper
   def get_package(order, time)
     tmp = []
-    order.sku_bindings.each do |binding|
-      sku = Sku.find_by_id(binding.sku_id)
-      next unless sku
-      product = sku.product
-      next unless product
-      number = binding.number
-      tmp << {
-        name: product.name,
-        number: number,
-        sku_id: binding.sku_id,
-        sku_title: sku.title
-      }
+    if order.sku_bindings.present?
+      order.sku_bindings.each do |binding|
+        sku = Sku.find_by_id(binding.sku_id)
+        next unless sku
+        product = sku.product
+        next unless product
+        number = binding.number
+        tmp << {
+          name: product.name,
+          number: number,
+          sku_id: binding.sku_id,
+          sku_title: sku.title
+        }
+      end
+    elsif order.local_skus.present?
+      order.local_skus.each do |sku|
+        next unless sku
+        product = sku.product
+        next unless product
+        tmp << {
+          name: product.name,
+          number: 1,
+          sku_id: sku.id,
+          sku_title: sku.title
+        }
+      end
     end
     tmp
   end
