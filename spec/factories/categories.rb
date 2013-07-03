@@ -2,5 +2,7 @@
 
 FactoryGirl.define do
   factory :category do
+    sequence(:name) {|n| Faker::Lorem.characters(20) + "#{n}" }
+    use_days 10
   end
 end

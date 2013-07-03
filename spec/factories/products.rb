@@ -2,8 +2,10 @@
 
 FactoryGirl.define do
   factory :product do
-    outer_id 'test'
-    name 'test'
-    storage_num '12345678a'
+    sequence(:outer_id)  {|n| "T000000#{n}" }
+    sequence(:storage_num) {|n| "12345678#{n}a" }
+    name Faker::Name.last_name
+    price 1
+    after(:create) {|obj| create(:category)}
   end
 end

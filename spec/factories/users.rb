@@ -4,10 +4,9 @@ FactoryGirl.define do
   factory :user do
     # name "foofoo"
     sequence(:name) { |n| "foo-name-#{n}" }
-    username Faker::Name.name
+    sequence(:username) { |n| "#{Faker::Name.name}-#{n}" }
     password "foobar"
     password_confirmation { |u| u.password }
-    email Faker::Internet.email
-    phone "13153183333"
+    sequence(:email) { |n| "sequence_#{n}@networking.io" }
   end
 end
