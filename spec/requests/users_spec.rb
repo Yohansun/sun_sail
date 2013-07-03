@@ -3,8 +3,8 @@ require 'spec_helper'
 
 describe "Users" do
   login_admin
-  let(:user_1) { create(:user,:account_id => current_account.id) }
-  let(:user_2) { create(:user,:account_id => current_account.id) }
+  let(:user_1) { create(:user,:account_ids => [current_account.id]) }
+  let(:user_2) { create(:user,:account_ids => [current_account.id]) }
   before(:each) do
     @user = current_user
   end
