@@ -28,7 +28,7 @@ class Role < ActiveRecord::Base
 
   def reset_assign_trade
     users.each do |u|
-      u.can_assign_trade = u.roles.inject(false) { |status, el| p status;p el.can_assign_trade ;status || el.can_assign_trade }
+      u.can_assign_trade = u.roles.inject(false) { |status, el| status;el.can_assign_trade ;status || el.can_assign_trade }
       u.save
     end
   end

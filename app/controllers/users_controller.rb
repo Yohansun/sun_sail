@@ -114,6 +114,7 @@ class UsersController < ApplicationController
     redirect_to '/'
   end
 
+  #POST /users/batch_update
   def batch_update
     @users = User.where(:id => params[:user_ids])
 
@@ -125,8 +126,10 @@ class UsersController < ApplicationController
 
     case params[:operation]
     when 'lock'
+      flash[:notice] = "锁定成功!"
       @users.update_all(:active => false,:locked_at => Time.now)
     when 'unlock'
+      flash[:notice] = "解锁成功!"
       @users.update_all(:active => true,:locked_at => nil)
     else
       flash[:error] = "请正常操作"
@@ -134,6 +137,7 @@ class UsersController < ApplicationController
     redirect_to users_path
   end
 
+  # GET /users/limits
   def limits
     begin
       @role = current_account.roles.find(params[:role_id])
@@ -142,13 +146,13 @@ class UsersController < ApplicationController
     end
   end
 
+  # PUT /users/create_role
   def create_role
     @role = current_account.roles.build(params[:role])
-
     if @role.save
+      flash[:notice] = "创建成功"
       redirect_to :action => :roles
     else
-
       render :text => ((view_context.link_to "返回", roles_users_path) + view_context.tag("br") + @role.errors.full_messages.join('</br>') )
     end
   end
@@ -167,14 +171,14 @@ class UsersController < ApplicationController
     #  end
     #end
 
-    @role.permissions =  params[:permissions]
+    @role.permissions =  params[:permissions] if params.key?(:permissions)
     @role.can_assign_trade = (params[:can_assign_trade] == "on" ? true : false)
-    @role.save
     @role.reset_assign_trade
     if @role.update_attributes(params[:role])
       flash[:notice] = "更新成功"
       redirect_to roles_users_path
     else
+      flash[:error] = @role.errors.full_messages.uniq.join(',')
       render :action => :limits
     end
   end

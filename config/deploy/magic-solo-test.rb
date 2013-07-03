@@ -3,12 +3,11 @@ require 'hipchat/capistrano'
 
 set :rvm_ruby_string, '1.9.3'
 set :rvm_type, :system
-set :deploy_via, :copy
 set :repository, "git@git.networking.io:nioteam/magic_orders.git"
 set :branch, "solo_dev"
 
 server "magic-solo-test.networking.io", :web, :app, :db, primary: true
-set :user, "rails"
+set :user, "root"
 set :deploy_to, "/bigdata/var/rails/magic-solo-test"
 
 set :assets_dependencies, %w(app/assets lib/assets vendor/assets Gemfile.lock config/routes.rb)

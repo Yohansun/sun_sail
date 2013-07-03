@@ -61,6 +61,7 @@ class StockInBillsController < ApplicationController
 
   def update
     @bill = StockInBill.find_by(@conditions)
+    @products = @bill.bill_products
     parse_area(@bill)
     bill_product_ids = params[:bill_product_ids].split(',')
     if @bill.update_attributes(params[:stock_in_bill])
