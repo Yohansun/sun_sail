@@ -100,13 +100,18 @@ class StockApiController < ApplicationController
           weight: output_back['weight']
         )
         trade = stock_out_bill.trade
-        logistic = Logistic.find_by_code(output_back['carrierID'])
-        trade.update_attributes(
-          logistic_waybill: output_back['shipNo'],
-          logistic_name: output_back['carrierName'],
-          logistic_code: output_back['carrierID'],
-          logistic_id: logistic.try(:id)
-        )
+
+        # In case of handmade stock_out_bill
+        if trade
+          logistic = Logistic.find_by_code(output_back['carrierID'])
+          trade.update_attributes(
+            logistic_waybill: output_back['shipNo'],
+            logistic_name: output_back['carrierName'],
+            logistic_code: output_back['carrierID'],
+            logistic_id: logistic.try(:id)
+          )
+        end
+
         skus = output_back['send']['sku']
         skus = [] << skus unless skus.is_a?(Array)
         skus.each do |sku|
