@@ -32,7 +32,7 @@ describe CustomersPuller do
       Customer.where(:account_id => vanward.id).count.should == 3
     end
 
-    it "update " do
+    it "update" do
       taobao_trades = TaobaoTrade.where(:account_id => dulux.id,:buyer_nick => "foo")
       taobao_trades.limit(2).each {|taobao_trade| taobao_trade.update_attributes!(:status => "WAIT_SELLER_SEND_GOODS",:news => 1)}
       CustomersPuller.update
