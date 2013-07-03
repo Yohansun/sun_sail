@@ -21,7 +21,7 @@
       <li><%= link_to "入库单", warehouse_stock_in_bills_path(@warehouse) %></li>
       <li><%= link_to "出库单", warehouse_stock_out_bills_path(@warehouse) %></li>
       <li><%= link_to "所有进销", warehouse_stock_bills_path(@warehouse) %></li>
-    </ul><!-- nav-tabs -->  
+    </ul><!-- nav-tabs -->
     <%= simple_form_for @bill,:url => warehouse_stock_out_bills_path(@warehouse,@bill),:html => {:class => "form-horizontal"} do |f| %>
     <%= hidden_field_tag "bill_product_ids" %>
     <div class="btn-toolbar">
@@ -33,23 +33,24 @@
         <%= f.input :op_name, label: "收货人",:input_html  => {:class => "input-medium"} %>
         <%= f.input :op_mobile, label: "手机",:input_html  => {:class => "input-medium"} %>
         <%= f.input :op_zip, label: "邮编",:input_html  => {:class => "input-medium"} %>
-        
-        <div class="control-group">
+
+        <!-- <div class="control-group">
           <label class="control pull-left">收货仓库：</label>
           <select class="input-medium select2">
             <option value="默认仓库">默认仓库</option>
           </select>
-        </div>
+        </div> -->
         <div class="control-group">
           <%= f.input :stock_type,label: "出库类型", collection: StockOutBill::STOCK_TYPE, as: :select,:input_html => {class: "input-medium select2"} %>
         </div>
+        <%= f.input :stocked_at, label: "出库时间",input_html: {class: "input-medium js-datetimepicker"} %>
       </fieldset><!-- form left area -->
       <fieldset class="span6">
         <%= f.input :op_phone, label: "固定电话",:class => "input-medium" %>
         <%= f.input :op_address, label: "收货地址",:class => "input-medium" %>
-        
+
         <div class="control-group">
-          <label class="control-label">地域：</label>
+          <label class="control-label">地域</label>
           <select id="" class="level_1 input-medium input-small pull-left radius_no_rb select2" name="stock_out_bill[op_state]">
             <option>省</option>
           </select>
@@ -61,15 +62,11 @@
           </select>
         </div>
         <%= f.input :logistic_id,label: "物流公司", collection: Logistic.with_account(current_account.id).collect {|x| [x.name,x.id]},as: :select, input_html: {class: "input-small select2 logictic"} %>
-        
-        <%= f.input :stocked_at, label: "出库时间",input_html: {class: "input-medium js-datetimepicker"} %>
-      </fieldset><!-- form right area -->
-      <fieldset>
         <div class="control-group">
           <%= f.label :remark,"备注",:class => "control pull-left",:style => "width:70px" %>
           <%= f.text_area :remark,:class => "span9",:rows => "5" %>
         </div>
-      </fieldset>
+      </fieldset><!-- form right area -->
     </div>
     <% end %>
 
@@ -109,7 +106,7 @@
           <input type="text" class="input-medium" placeholder="500" name="product[total_price]" id="product_total_price">
         </div>
       </fieldset><!-- form right area -->
-    </div> 
+    </div>
     <% end %>
     <div id="products">
       <%= render :partial => "products",:locals => {:products => @products} %>
