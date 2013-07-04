@@ -17,13 +17,13 @@ class CustomTrade < Trade
   CH_EN_NUM_FORMAT = /^(\w|[\u4E00-\u9FA5])+$/
   validates :receiver_name, format: { with: CH_EN_NUM_FORMAT, message: "姓名格式不正确"}
   # validates :receiver_address, format: { with: CH_EN_NUM_FORMAT, message: "地址格式不正确"}
-  MOBILE_FORMAT = %r/
+  MOBILE_FORMAT = %r{
                   ^(
                   1[38]\d{9}|  # 13 18 号段
                   15[^4]\d{8}|  # 15 号段
                   14[57]\d{8}  # 14 号段
                   )$
-                  /x
+                  }x
   validates :receiver_mobile, format: { with: MOBILE_FORMAT, message: "手机号格式不正确"}
   validates_length_of :receiver_phone, maximum: 15, message: "内容过长", allow_blank: true
   validates :receiver_phone, format: { with: /^[0-9-]+$/, message: "座机号格式不正确"}, allow_blank: true
