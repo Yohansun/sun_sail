@@ -2,6 +2,8 @@
 
 class Trade
   include Mongoid::Document
+  # Mongoid 4.0.0版本中移除了Paranoia，Versioning
+  # 现在这是两个独立的gem包，升级Mongoid的时候请注意添加
   include Mongoid::Paranoia
   include Mongoid::Versioning
   include Mongoid::Timestamps
@@ -267,7 +269,7 @@ class Trade
 
 
   scope  :paid_undispatched, ->{where({status:"WAIT_SELLER_SEND_GOODS", dispatched_at:nil})}
-  scope  :unmerged, ->{where(merged_by_trade_id:nil)}
+  # scope  :unmerged, ->{where(merged_by_trade_id:nil)}
   scope  :be_merged, ->{where({merged_by_trade_id:{"$ne"=>nil}})}
   scope  :is_merger, ->{where({merged_trade_ids:{"$ne"=>nil}})}
 

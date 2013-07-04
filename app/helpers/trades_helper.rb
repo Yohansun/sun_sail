@@ -48,7 +48,7 @@ module TradesHelper
 
   def calculate_infos(start_at, end_at)
 
-    trades = Trade.where(account_id: current_account.id).between(created: start_at..end_at).unmerged
+    trades = Trade.where(account_id: current_account.id).between(created: start_at..end_at)
 
     #订单总数
     trades_count = trades.count

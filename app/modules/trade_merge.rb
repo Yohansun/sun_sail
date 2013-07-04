@@ -117,7 +117,10 @@
         new_trade.save!
 
         # update merged trades with new trade id
-        trades.each{|trade| trade.update_attributes(merged_by_trade_id: new_trade.id)}
+        trades.each{|trade|
+          trade.update_attributes(merged_by_trade_id: new_trade.id)
+          trade.delete # soft-delete,no callbacks
+        }
 
         merged_trades.each{|trade| trade.destroy}
 
@@ -267,9 +270,10 @@
     #  NOTICE: split will DESTROY the merged trade
     def split
       return false if !self.is_merged? || self.status != "WAIT_SELLER_SEND_GOODS" || self.dispatched_at.present?
-      ts = Trade.find self.merged_trade_ids
+      ts = Trade.deleted.where(:_id.in => self.merged_trade_ids)
       ts.each{|t|
         t.update_attributes(merged_by_trade_id:nil)
+        t.restore
       }
       self.trade_gifts.each{|gift|
         if gift.trade_id.present?
