@@ -83,12 +83,13 @@
       </fieldset>
       <fieldset class="control-group form-inline">
         <label class="width_100 pagination-right">选择SKU：</label>
-        <select class="input-xlarge select2 native_skus_list">
-          <% @native_skus.each do |sku| %>
-          <option value="<%= sku.id %>"><%= sku.title %></option>
-          <% end %>
-        </select>
-        <input class="input-small" type="text" id="native_sku_num" placeholder="数量">
+        <!-- <select class="input-xlarge select2 native_skus_list">
+          <%# @native_skus.each do |sku| %>
+          <option value="<%#= sku.id %>"><%#= sku.title %></option>
+          <%# end %>
+        </select> -->
+        <input type="hidden" class="input-xlarge native_skus_list" />
+        <input class="input-small" type="text" id="native_sku_num" placeholder="数量" />
         <a class="btn btn-small btn-info" type="button" id="add_sku_binding">添加</a>
       </fieldset>
     </span>
@@ -187,10 +188,28 @@
     })
   })
 
+  $(document).ready(function() {
+    $('input.native_skus_list').select2({
+      placeholder: "请输入商品编码",
+      ajax: {
+        url: "/products/search_native_skus",
+        dataType: 'json',
+        data: function (term) {
+                return {
+                  q: term, //search term
+                };
+              },
+        results: function (data) {
+                  return {results: data.sku_info};
+                }
+      }
+    });
+  });
+
   $('#add_sku_binding').on('click', function(event){
     event.preventDefault()
-    var sku_id = $('.native_skus_list option:selected').val()
-    var name = $('.native_skus_list option:selected').text()
+    var sku_id = $('input.native_skus_list').select2('data').id
+    var name = $('input.native_skus_list').select2('data').text
     var num = $('#native_sku_num').val()
     if(num == ''){
       alert("数量不能为空。")

@@ -270,6 +270,15 @@ class ProductsController < ApplicationController
     render json: {sku_bindings: sku_bindings}
   end
 
+  def search_native_skus
+    skus = current_account.products.where(outer_id: params[:q]).first.skus rescue []
+    sku_info = []
+    skus.each do |sku|
+      sku_info << {id: sku.id, text: sku.title}
+    end
+    render json: {sku_info: sku_info}
+  end
+
   def tie_to_native_skus
     bindings = TaobaoSku.find(params[:taobao_sku_id]).sku_bindings
     if params[:infos]

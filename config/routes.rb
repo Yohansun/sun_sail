@@ -2,7 +2,7 @@ require 'sidekiq/web'
 
 MagicOrders::Application.routes.draw do
 
-  
+
 
   resources :customers ,:only => [:index,:show] do
 
@@ -22,7 +22,7 @@ MagicOrders::Application.routes.draw do
     post :batch_update_safety_stock, :on => :collection
     post :batch_update_activity_stock, :on => :collection
   end
-  
+
   resources :warehouses   ,:only => [:index] do
     post :batch_update_safety_stock,:on => :collection
     resources :stock_bills
@@ -47,7 +47,7 @@ MagicOrders::Application.routes.draw do
   get "notify/sms"
   get "notify/email"
 
-  
+
 
   wash_out :stock_api
 
@@ -175,6 +175,7 @@ MagicOrders::Application.routes.draw do
       post :update_on_sale
       get :taobao_skus
       get :change_taobao_skus
+      get :search_native_skus
       post :tie_to_native_skus
       get :sync_taobao_products
       put :confirm_sync
