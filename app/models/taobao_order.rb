@@ -65,7 +65,8 @@ class TaobaoOrder < Order
   end
 
   def local_skus
-    [Sku.find_by_id(local_sku_id)]
+    sku = Sku.find_by_id(local_sku_id)
+    sku == nil ? [] : [sku]
   end
 
   def skus
