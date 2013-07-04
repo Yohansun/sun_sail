@@ -294,19 +294,21 @@ class Trade
   end
 
   def add_gift_order(value)
-    gift_sku_id = (value['sku_id'].to_i == 0 ? nil : value['sku_id'].to_i)
-    gift_product = Product.find_by_num_iid(value['num_iid'].to_i)
+    local_sku_id = (value['sku_id'].to_i == 0 ? nil : value['sku_id'].to_i)
+    sku = Sku.find_by_id(local_sku_id)
+    gift_product = Product.find_by_id(value['product_id'].to_i)
     self.taobao_orders.create!(_type: "TaobaoOrder",
                                oid: self.tid.slice(/G[0-9]*$/),
                                status: "WAIT_SELLER_SEND_GOODS",
-                               title: value['gift_title'],
+                               title: value['gift_title'].try(:gsub, '标准款', ''),
                                price: 0,
                                total_fee: 0,
                                payment: 0,
                                discount_fee: 0,
                                adjust_fee: 0,
                                num_iid: gift_product.num_iid,
-                               sku_id:  gift_sku_id,
+                               sku_id:  sku.try(:sku_id),  # this should be skus.sku_id not skus.id, and its' type is string not integer.
+                               local_sku_id:  local_sku_id, # this should be skus.id, and its' type is integer.
                                num: value['num'].to_i,
                                pic_path: gift_product.pic_url,
                                refund_status: "NO_REFUND",
@@ -523,7 +525,32 @@ class Trade
               # DO SOME RESCUE
             end
           else
+            # DO SOME RESCUE
+          end
+        end
+      elsif order.local_skus.present?
+         order.local_skus.each do |sku|
+          sku_id = sku.id
+          sku = Sku.find_by_id(sku_id)
+          product = sku.try(:product)
+          if product
+            stock_product = fetch_account.stock_products.where(product_id: product.id, sku_id: sku_id).first
+            if stock_product
+              bill.bill_products.build(
+                stock_product_id: stock_product.id,
+                title: sku.title,
+                outer_id: product.outer_id,
+                sku_id: sku_id,
+                price: product.price,
+                total_price: product.price * order_num,
+                number: order_num,
+                remark: order.cs_memo
+              )
+            else
               # DO SOME RESCUE
+            end
+          else
+            # DO SOME RESCUE
           end
         end
       else

@@ -10,6 +10,8 @@ class TaobaoOrder < Order
   field :item_meal_id, type: String
   field :item_meal_name, type: String
   field :sku_id, type: String
+  field :local_product_id, type: Integer
+  field :local_sku_id, type: Integer
   field :num, type: Integer
   field :outer_sku_id, type: String
   field :total_fee, type: Float, default: 0.0
@@ -62,8 +64,12 @@ class TaobaoOrder < Order
     taobao_sku.sku_bindings rescue []
   end
 
+  def local_skus
+    [Sku.find_by_id(local_sku_id)]
+  end
+
   def skus
-    taobao_sku && taobao_sku.skus || []
+    (taobao_sku && taobao_sku.skus) || local_skus || []
   end
 
   def products
@@ -76,47 +82,82 @@ class TaobaoOrder < Order
 
   def package_info
     info = []
-    sku_bindings.each do |binding|
-      sku = binding.sku
-      next unless sku
-      product = sku.product
-      next unless product
-      stock_product_ids = StockProduct.where(product_id: product.id, sku_id: sku.id).map(&:id)
-      info << {
-        sku_id: binding.sku_id,
-        outer_id: product.outer_id,
-        stock_product_ids: stock_product_ids,
-        number: binding.number,
-        title: sku.title
-      }
+    if sku_bindings.present?
+      sku_bindings.each do |binding|
+        sku = binding.sku
+        next unless sku
+        product = sku.product
+        next unless product
+        stock_product_ids = StockProduct.where(product_id: product.id, sku_id: sku.id).map(&:id)
+        info << {
+          sku_id: binding.sku_id,
+          outer_id: product.outer_id,
+          stock_product_ids: stock_product_ids,
+          number: binding.number,
+          title: sku.title
+        }
+      end
+    elsif local_skus.present?
+      local_skus.each do |sku|
+        product = sku.product
+        next unless product
+        stock_product_ids = StockProduct.where(product_id: product.id, sku_id: sku.id).map(&:id)
+        info << {
+          sku_id: sku.id,
+          outer_id: product.outer_id,
+          stock_product_ids: stock_product_ids,
+          number: 1,
+          title: sku.title
+        }
+      end
     end
     info
   end
 
   def package_products
     info = []
-    sku_bindings.each do |binding|
-      product = binding.sku.try(:product)
-      number = binding.number
-      info << Array.new(number,product)
+    if sku_bindings.present?
+      sku_bindings.each do |binding|
+        product = binding.sku.try(:product)
+        number = binding.number
+        info << Array.new(number,product)
+      end
+    elsif local_skus.present?
+      local_skus.each do |sku|
+        product = sku.product
+        info << Array.new(1,product)
+      end
     end
     info = info.flatten
   end
 
   def child_outer_id
     info = []
-    sku_bindings.each do |binding|
-      product = binding.sku.try(:product)
-      number = binding.number
-      info << [product, number]
+    if sku_bindings.present?
+      sku_bindings.each do |binding|
+        product = binding.sku.try(:product)
+        number = binding.number
+        info << [product, number]
+      end
+    elsif local_skus.present?
+      local_skus.each do |sku|
+        product = sku.product
+        info << [product, 1]
+      end
     end
     info
   end
 
   def avalibale_sku_names
     sku_names = []
-    taobao_skus.map(&:name).each do |name|
-      sku_names << name.split(':').last
+    if taobao_skus.present?
+      taobao_skus.map(&:name).each do |name|
+        sku_names << name.split(':').last
+      end
+    elsif local_skus.present?
+      local_skus.map(&:name).each do |name|
+        sku_names << name.split(':').last
+      end
     end
     sku_names.join(',')
   end

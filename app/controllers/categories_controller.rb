@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class CategoriesController < ApplicationController
 
   layout "management"
@@ -32,7 +33,6 @@ class CategoriesController < ApplicationController
   def create
     @category = current_account.categories.create params[:category]
     if @category.save
-#      p @category.inspect
       if @category.parent_id.present?
         redirect_to categories_path(:parent_id => params[:parent_id])
       else
@@ -83,13 +83,18 @@ class CategoriesController < ApplicationController
   end
 
   def product_templates
-    @products = Category.find(params[:category_id]).products.collect {|p| { id: p.num_iid, text: p.name}}
+    @products = Category.find(params[:category_id]).products.collect {|p| { id: p.id, text: p.name}}
     render json: @products
   end
 
   def sku_templates
-    @skus = Product.find_by_num_iid(params[:num_iid]).skus.collect {|s| { id: s.id, text: s.name}}
-    render json: @skus
+    product = Product.find_by_id(params[:product_id])
+    if product && product.skus
+      @skus = product.skus.collect {|s| { id: s.id, text: (s.name.present? ? s.name : "标准款")}}
+      render json: @skus
+    else
+      render json: []
+    end
   end
 
 end

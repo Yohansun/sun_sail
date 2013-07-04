@@ -29,8 +29,8 @@ class MagicOrders.Views.TradesGiftMemo extends Backbone.View
         $("#select_product").select2 data: p_data
 
   change_sku: ->
-    num_iid = $('#select_product').val()
-    $.get '/categories/sku_templates', {num_iid: num_iid}, (s_data)=>
+    product_id = $('#select_product').val()
+    $.get '/categories/sku_templates', {product_id: product_id}, (s_data)=>
       if s_data.length == 0 or (s_data.length == 1 and s_data[0].text == "")
         $('#select_sku').select2 data: []
         @has_sku = false
@@ -44,7 +44,7 @@ class MagicOrders.Views.TradesGiftMemo extends Backbone.View
       gift_num = parseInt($('#gift_list').find('tr:last td:first').text().slice(-1))
     gift_tid = @model.get('tid')+"G"+(gift_num+1)
     category_id = $("#select_category").val()
-    num_iid = $("#select_product").val()
+    product_id = $("#select_product").val()
     sku_id = $("#select_sku").val()
     num = $('#gift_num').val()
 
@@ -52,7 +52,7 @@ class MagicOrders.Views.TradesGiftMemo extends Backbone.View
       alert("请选择分类")
       return
 
-    if num_iid == ""
+    if product_id == ""
       alert("请选择商品")
       return
 
@@ -68,10 +68,10 @@ class MagicOrders.Views.TradesGiftMemo extends Backbone.View
       alert("数量格式不正确。")
       return
 
-    num_iids = $("#gift_list tr").map(->
+    product_ids = $("#gift_list tr").map(->
       $(this).attr "id"
     ).get()
-    if $.inArray(num_iid, num_iids) != -1
+    if $.inArray(product_id, product_ids) != -1
       alert("已添加过赠品")
       return
 
@@ -88,7 +88,7 @@ class MagicOrders.Views.TradesGiftMemo extends Backbone.View
     else
       trade_tid = ''
       split_text = "不拆分"
-    $('#gift_list').append("<tr id='"+num_iid+"' class='product_"+sku_id+" new_add_gift'>"+
+    $('#gift_list').append("<tr id='"+product_id+"' class='product_"+sku_id+" new_add_gift'>"+
                            "  <td>"+gift_tid+"</td>"+
                            "  <td>"+gift_title+"</td>"+
                            "  <td>"+trade_tid+"</td>"+
@@ -115,7 +115,7 @@ class MagicOrders.Views.TradesGiftMemo extends Backbone.View
         else
           if $gift_info.attr('class').slice(-12) == "new_add_gift"
 
-            num_iid = $gift_info.attr('id')
+            product_id = $gift_info.attr('id')
             sku_id = $gift_info.attr('class').slice(8, -13)
             gift_tid = $gift_info.children("td:eq(0)").text()
             gift_title = $gift_info.children("td:eq(1)").text()
@@ -124,7 +124,7 @@ class MagicOrders.Views.TradesGiftMemo extends Backbone.View
             else
               trade_id = @model.get('id')
             num = $gift_info.children("td:eq(3)").text()
-            @add_gifts[i] = {"sku_id": sku_id, "gift_tid": gift_tid, "gift_title": gift_title, "trade_id": trade_id, "num_iid": num_iid, "num": num}
+            @add_gifts[i] = {"sku_id": sku_id, "gift_tid": gift_tid, "gift_title": gift_title, "trade_id": trade_id, "product_id": product_id, "num": num}
 
     @model.set "operation", "赠品修改"
     @model.set "delete_gifts", @delete_gifts

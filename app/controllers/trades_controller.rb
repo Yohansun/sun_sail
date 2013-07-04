@@ -383,7 +383,7 @@ class TradesController < ApplicationController
 
   def verify_add_gift
     trades = Trade.where(:_id.in => params[:ids])
-    trades_added_gift = trades.where(:trade_gifts.elem_match => {num_iid: params[:num_iid].to_i, sku_id: (params[:sku_id] == "" ? nil : params[:sku_id].to_i)})
+    trades_added_gift = trades.where(:trade_gifts.elem_match => {product_id: params[:product_id].to_i, sku_id: (params[:sku_id] == "" ? nil : params[:sku_id].to_i)})
     tids = trades_added_gift.all.map(&:tid).join(",") rescue nil
     render json: {tids: tids}
   end
