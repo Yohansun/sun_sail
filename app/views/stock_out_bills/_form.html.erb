@@ -26,7 +26,7 @@
     <%= hidden_field_tag "bill_product_ids" %>
     <div class="btn-toolbar">
       <%= f.submit "保存",:onclick => "validateStockBill()",:class => "btn btn-warning btn-small" %>
-      <%= link_to "取消","/stock_out_bills" ,:class => "btn btn-warning btn-small" %>
+      <%= link_to "取消",warehouse_stock_out_bills_path(@warehouse) ,:class => "btn btn-warning btn-small" %>
     </div>
     <div class="well clearfix">
       <fieldset class="span6">
