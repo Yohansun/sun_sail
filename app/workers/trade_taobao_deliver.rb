@@ -52,7 +52,12 @@ class TradeTaobaoDeliver
         if trade.splitted?
           content = "亲您好，您的订单#{tid}已经发货，该订单将由地区发送，请注意查收。【#{shopname}】"
         else
-          content = "亲您好，您的订单#{tid}已经发货，我们将尽快为您送达，请注意查收。【#{shopname}】"
+          if trade.is_merged?
+            trade_tids = Trade.deleted.where(:_id.in => trade.merged_trade_ids).where(_type: "TaobaoTrade").map(&:tid).join(",")
+            content = "亲您好，您的订单#{trade_tids}已经发货，我们将尽快为您送达，请注意查收。【#{shopname}】"
+          else
+            content = "亲您好，您的订单#{tid}已经发货，我们将尽快为您送达，请注意查收。【#{shopname}】"
+          end
         end
 
         notify_kind = "after_send_goods"
