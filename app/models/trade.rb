@@ -176,9 +176,9 @@ class Trade
   field :operator_name
 
   #订单合并
-  field :merged_trade_ids, type:Array
-  field :merged_by_trade_id, type:String
-  field :mergeable_id, type:String
+  field :merged_trade_ids, type: Array
+  field :merged_by_trade_id, type: String
+  field :mergeable_id, type: String
 
   #人工订单锁定
   field :is_locked, type: Boolean, default: false
@@ -241,10 +241,13 @@ class Trade
   embeds_many :ref_batches
   embeds_many :manual_sms_or_emails
   embeds_many :trade_gifts
+  embeds_many :taobao_orders
+  embeds_many :promotion_details
 
   has_many :deliver_bills
 
   has_many :stock_out_bills
+
   belongs_to :customer, :class_name => "Customer", :foreign_key => "buyer_nick",:primary_key => "name"
 
   enum_attr :status, [["没有创建支付宝交易"                ,"TRADE_NO_CREATE_PAY"],

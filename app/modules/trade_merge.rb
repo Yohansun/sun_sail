@@ -4,10 +4,10 @@
     def self.included(base)
       base.extend(ClassMethods)
       # BUG IS EVERYWHERE! NEED ADAPTION
-      # base.class_eval do
-      #   after_create :trig_auto_merge
-      #   after_update :trig_auto_merge
-      # end
+      base.class_eval do
+        after_create :trig_auto_merge
+        #after_update :trig_auto_merge
+      end
     end
 
     module ClassMethods
@@ -117,10 +117,10 @@
         new_trade.save!
 
         # update merged trades with new trade id
-        trades.each{|trade|
+        trades.each do |trade|
           trade.update_attributes(merged_by_trade_id: new_trade.id)
           trade.delete # soft-delete,no callbacks
-        }
+        end
 
         merged_trades.each{|trade| trade.destroy}
 
@@ -146,13 +146,14 @@
         can_manually_merge = 2
 
         return can_not_merge if trades.size < 2
-        return can_not_merge if ! trades.map(&:merged_by_trade_id).compact.blank?
+        return can_not_merge if trades.map(&:merged_by_trade_id).compact.present?
 
         account = Account.find trades.first.account_id
         enabled, interval, start_at, end_at = account.settings.auto_settings.values_at "auto_merge",
           "auto_merge_pay_time_interval","auto_merge_start_at","auto_merge_end_at"
         interval = interval.to_i
-
+        #关闭自动合并功能
+        enabled = false
 
         can = true
         first = trades.first
@@ -210,7 +211,6 @@
 
     # check status change when create or update a trade
     def trig_auto_merge
-      return if self._type == "CustomTrade"
       if !self.is_merged? && self.dispatched_at.blank? && self.status == "WAIT_SELLER_SEND_GOODS" &&
           (new_record? || status_changed?)
         self.auto_merge_trades
@@ -259,32 +259,31 @@
       return merge_status
     end
 
-
     def mark_mergable_trades
       trades = mergeable_trades + [self]
       Trade.mark_mergable_trades trades
     end
 
-
     # split a merged trade
     #  NOTICE: split will DESTROY the merged trade
     def split
       return false if !self.is_merged? || self.status != "WAIT_SELLER_SEND_GOODS" || self.dispatched_at.present?
-      ts = Trade.deleted.where(:_id.in => self.merged_trade_ids)
+      ts = Trade.deleted.where(:id.in => self.merged_trade_ids)
       ts.each{|t|
-        t.update_attributes(merged_by_trade_id:nil)
         t.restore
+        t.update_attributes(merged_by_trade_id: nil)
       }
       self.trade_gifts.each{|gift|
-        if gift.trade_id.present?
-          Trade.where(tid: gift.gift_tid).destroy
+        if gift.trade_id.present? && gift.trade_id == self.id
+          Trade.where(tid: gift.gift_tid).each{|t| t.delete!}
         end
       }
-      self.destroy
 
       # reset all
-      ts.first.mark_mergable_trades
+      first_trade = Trade.where(id: self.merged_trade_ids[0]).first
+      self.delete!
+      first_trade.mark_mergable_trades
 
-      ts
+      true
     end
   end
