@@ -3,11 +3,6 @@
 
     def self.included(base)
       base.extend(ClassMethods)
-      # BUG IS EVERYWHERE! NEED ADAPTION
-      base.class_eval do
-        after_create :trig_auto_merge
-        #after_update :trig_auto_merge
-      end
     end
 
     module ClassMethods
@@ -104,8 +99,19 @@
         }
 
         # set blank value like "", [] to nil
-        %w{seller_memo cs_memo gift_memo buyer_message total_fee payment promotion_fee taobao_orders promotion_details
-          unusual_states ref_batches trade_gifts merged_trade_ids
+        %w{seller_memo
+           cs_memo
+           gift_memo
+           buyer_message
+           total_fee
+           payment
+           promotion_fee
+           taobao_orders
+           promotion_details
+           unusual_states
+           ref_batches
+           trade_gifts
+           merged_trade_ids
         }.each{|f|
           new_trade[f] = nil if new_trade[f].blank?
         }
@@ -124,17 +130,21 @@
 
         merged_trades.each{|trade| trade.destroy}
 
-        new_trade
-
+        new_trade.merged_trade_ids
       end
 
       def mark_mergable_trades trades
-        merge_id = trades.last.id
-        trades.each{|trade|
-          #TODO: mark trades as mergable manually
-          trade.update_attribute(:mergeable_id,merge_id)
-        }
-        nil
+        if trades.count > 1
+          merge_id = trades.last.id
+          trades.each{|trade|
+            #TODO: mark trades as mergable manually
+            trade.update_attribute(:mergeable_id,merge_id)
+          }
+        else
+          trades.first.update_attribute(:mergeable_id,nil)
+        end
+        ids = trades.map(&:id)
+        ids
       end
 
       # check if a list of trades can merge to 1 trade
@@ -152,8 +162,6 @@
         enabled, interval, start_at, end_at = account.settings.auto_settings.values_at "auto_merge",
           "auto_merge_pay_time_interval","auto_merge_start_at","auto_merge_end_at"
         interval = interval.to_i
-        #关闭自动合并功能
-        enabled = false
 
         can = true
         first = trades.first
@@ -202,27 +210,27 @@
         else
           return can_manually_merge
         end
-
       end
-
 
     end # end ClassMethods
 
 
     # check status change when create or update a trade
     def trig_auto_merge
-      if !self.is_merged? && self.dispatched_at.blank? && self.status == "WAIT_SELLER_SEND_GOODS" &&
-          (new_record? || status_changed?)
+      if !self.is_merged? &&
+         self.dispatched_at.blank? &&
+         self.status == "WAIT_SELLER_SEND_GOODS" #&&
+         #(new_record? || status_changed?)
         self.auto_merge_trades
       end
     end
 
     def is_merged?
-      !self.merged_trade_ids.blank?
+      self.merged_trade_ids.present?
     end
 
     def is_be_merged?
-      !self.merged_by_trade_id.blank?
+      self.merged_by_trade_id.present?
     end
 
     def mergeable_trades
@@ -237,6 +245,8 @@
           :receiver_district=>self.receiver_district,
           :receiver_zip=>self.receiver_zip,
           :receiver_address=>self.receiver_address,
+          #赠品订单不能合并
+          :main_trade_id=>nil
         })
     end
 
@@ -246,6 +256,7 @@
       merge_status = Trade.check_can_merge trades
       case merge_status
       when 0
+        return trades.map(&:id)
       when 1
         return Trade.merge_trades trades
       when 2
