@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 class TradeTaobaoAutoDeliver
   include Sidekiq::Worker
-  sidekiq_options :queue => :trade_taobao_auto_deliver
+  sidekiq_options :queue => :auto_process #自动发货队列
 
   def perform(id)
     trade = Trade.find(id)

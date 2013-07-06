@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 class DelayAutoDispatch
   include Sidekiq::Worker
-  sidekiq_options :queue => :delay_auto_dispatch
+  sidekiq_options :queue => :auto_process #自动分派队列
 
   def perform(id)
     trade = Trade.where(_id: id).first
