@@ -196,6 +196,11 @@ class CustomTrade < Trade
     custom_trade.account_id = current_account.id
     custom_trade.tid = (Time.now.to_i.to_s + current_user.id.to_s + rand(10..99).to_s + "H" )
     custom_trade.custom_type = "handmade_trade"
+    if trade[:has_invoice_info] == "true"
+      custom_trade.invoice_type = "普通发票"
+      custom_trade.invoice_name = "个人"
+      custom_trade.invoice_date = Time.now
+    end
     custom_trade
   end
 

@@ -79,6 +79,8 @@ class Trade
   field :has_unusual_state, type: Boolean, default: false
   field :has_onsite_service, type: Boolean, default: false
   field :has_refund_orders, type: Boolean, default: false
+  field :has_invoice_info, type: Boolean, default: false
+
 
   field :num, type: Integer
   field :num_iid, type: String
