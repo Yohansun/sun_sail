@@ -27,6 +27,9 @@
               <%= link_to_authorize "查看","#",:target_url => "/warehouses/#{@warehouse.id}/stock_in_bills/",:class => "magic_detail" %>
           </li>
           <li>
+            <%= link_to_authorize "编辑","#",:target_url => "/warehouses/#{@warehouse.id}/stock_in_bills/:id/edit",:class => "magic_detail" %>
+        </li>
+          <li>
             <%= link_to_authorize "审核", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_in_bills/check","data-remote" => true,:request => "post",:message => "确认审核吗?",:class => "magic_operation"  %>
           </li>
           <%- if current_account.settings.enable_module_third_party_stock == 1 %>

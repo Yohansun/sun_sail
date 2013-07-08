@@ -1,6 +1,5 @@
 # -*- encoding : utf-8 -*-
 class StockInBillsController < ApplicationController
-  include StockBillsHelper
   before_filter :set_warehouse
   before_filter :default_conditions,:on => [:edit,:show,:update,:add_product,:remove_product]
   before_filter :fetch_bills,:except => :index
@@ -24,26 +23,22 @@ class StockInBillsController < ApplicationController
   end
 
 	def new
-    @products = (current_user.settings.tmp_products ||= [])
-    @products = specified_tmp_products(@products)
     @bill = StockInBill.new(default_search)
+    @bill.bill_products.build
   end
 
   def create
     stock_in_bills = params[:stock_in_bill].merge!(default_search)
     @bill = StockInBill.new(stock_in_bills)
-    bill_product_ids = params[:bill_product_ids].split(',')
-    build_product(@bill,bill_product_ids)
-    @bill.update_bill_products
     @bill.status = "CREATED"
+    @bill.update_bill_products
+    update_areas!(@bill)
     if @bill.save
-      update_areas!(@bill)
-      tmp_products = current_user.settings.tmp_products
-      tmp_products = tmp_products.reject { |x| bill_product_ids.include?(x.id.to_s) }
-      current_user.settings.tmp_products = tmp_products
-      redirect_to  warehouse_stock_in_bills_path(@warehouse)
+      flash[:notice] = "入库单#{@bill.tid}创建成功"
+      redirect_to  warehouse_stock_in_bill_path(@warehouse,@bill)
     else
-      @products = (current_user.settings.tmp_products ||= [])
+      #TODO 错误提示重复
+      flash[:error] = (@bill.errors.full_messages.uniq + @bill.bill_products_errors).to_sentence
       render :new
     end
   end
@@ -61,14 +56,14 @@ class StockInBillsController < ApplicationController
 
   def update
     @bill = StockInBill.find_by(@conditions)
-    @products = @bill.bill_products
-    parse_area(@bill)
-    bill_product_ids = params[:bill_product_ids].split(',')
+    @bill.update_bill_products
+    update_areas!(@bill)
     if @bill.update_attributes(params[:stock_in_bill])
-      update_areas!(@bill)
-      @bill.bill_products.not_in(:id => bill_product_ids).delete
-      redirect_to :action => :index
+      flash[:notice] = "入库单#{@bill.tid}更新成功!"
+      redirect_to warehouse_stock_in_bill_path(@warehouse,@bill)
     else
+      #TODO 错误提示重复
+      flash[:error] = (@bill.errors.full_messages.uniq + @bill.bill_products_errors).to_sentence
       render :edit
     end
   end
@@ -110,41 +105,6 @@ class StockInBillsController < ApplicationController
     end
     respond_to do |f|
       f.js
-    end
-  end
-
-  def add_product
-    @bill = StockInBill.find_by(@conditions) rescue false
-
-    params[:product][:real_number] = params[:product][:number] if params[:product][:real_number].blank?
-    if @bill.present?
-      @tmp_products = @bill.bill_products
-      @bill.bill_products.build(params[:product])
-      @bill.update_bill_products
-      @bill.save
-    else
-      add_tmp_product(params[:product])
-    end
-    respond_to do |format|
-      format.js
-    end
-  end
-
-  def remove_product
-    @bill = StockInBill.find_by(@conditions) rescue false
-    if @bill.present?
-      @tmp_products = @bill.bill_products
-      @bill.bill_products.in(:id => params[:bill_product_ids]).delete
-    else
-      @tmp_products = current_user.settings.tmp_products
-      if params[:bill_product_ids].present?
-        @tmp_products = @tmp_products.reject { |x| params[:bill_product_ids].include?(x.id.to_s) }
-        current_user.settings.tmp_products = @tmp_products
-      end
-      @tmp_products = specified_tmp_products(@tmp_products)
-    end
-    respond_to do |format|
-      format.js
     end
   end
 

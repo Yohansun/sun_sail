@@ -67,8 +67,10 @@ class StockBill
   validates :stock_type, :presence => true,:inclusion => { :in => STOCK_TYPE_VALUES }
 
   embeds_many :bill_products
+  accepts_nested_attributes_for :bill_products, :allow_destroy => true, :reject_if => proc { |obj| obj.blank? }
+  validates_associated :bill_products
 
-  after_save :generate_tid
+  before_save :generate_tid
 
   alias_method :stock_typs=, :stock_type=
 
@@ -94,7 +96,7 @@ class StockBill
       if StockBill.where(tid: serial_num).exists?
         generate_tid
       else
-        update_attributes!(tid: serial_num)
+        self.tid = serial_num
       end
     end
   end
@@ -105,8 +107,8 @@ class StockBill
 
   def update_bill_products
     bill_products.each do |bp|
-      sku = Sku.find_by_id(bp.sku_id)
-      product = sku.product
+      sku = Sku.where(:id => bp.sku_id).first_or_initialize
+      product = sku.product || sku.build_product
       bp.title = sku.title
       bp.outer_id = product.outer_id
       bp.num_iid = product.num_iid
@@ -155,5 +157,9 @@ class StockBill
     else
       status
     end
+  end
+
+  def bill_products_errors
+    bill_products.select {|product| !product.valid?}.collect {|x| x.errors.full_messages}.flatten.uniq
   end
 end

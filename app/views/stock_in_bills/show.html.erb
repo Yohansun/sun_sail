@@ -81,7 +81,7 @@
             <thead>
               <tr>
                 <th>商品编码</th>
-                <th>商品SKU</th>
+                <th>商品SKU编码</th>
                 <th>商品名称</th>
                 <th>商品单价</th>
                 <th>商品数量</th>
@@ -92,7 +92,7 @@
               <%- @bill.bill_products.each do |product| %>
               <tr>
                 <td><%= product.outer_id %></td>
-                <td><%= product.sku_id %></td>
+                <td><%= product.sku.try(:sku_id) %></td>
                 <td><%= product.title %></td>
                 <td><%= product.price %></td>
                 <td><%= product.number %></td>

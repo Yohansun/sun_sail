@@ -15,6 +15,7 @@ zh-CN:
   mongoid:
     models:
       message: "消息"
+      bill_product: "商品"
 
     attributes:
       message:
@@ -22,3 +23,18 @@ zh-CN:
         send_type: "发送方式"
         title: "标题"
         content: "发送内容"
+
+      bill_product:
+        outer_id: 商品编码
+
+      stock_in_bill:
+        tid: "入库单编号"
+        bill_products: "商品"
+        stock_type: 入库类型
+        sku_id: 商品名称
+      stock_out_bill:
+        tid: "出库单编号"
+        bill_products: 商品
+        stock_type: 出库类型
+      bill_product:
+        sku_id: SKU

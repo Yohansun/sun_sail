@@ -1,134 +1,121 @@
-<style>
-.form-horizontal .controls {
-  margin-left: 0px;
-}
-.input-small.select2.product {
-  width: 800px!important;
-}
-.row-fluid.product {
-  min-height: 0px;
-}
-.input-small.select2.logictic {
-  width: 150px!important;
-}
-</style>
+<%= simple_form_for @bill, :url => path,:html => {:class => "form-horizontal",:id => "stock_in_bill"} do |f| %>
+<div class="btn-toolbar">
+  <%= f.submit "保存",:class => "btn btn-warning btn-small save" %>
+  <%= link_to "取消",warehouse_stock_in_bills_path(@warehouse) ,:class => "btn btn-warning btn-small" %>
+</div>
+<div class="well clearfix">
+  <fieldset class="span6">
+    <%= f.input :op_name, label: "发货人",:input_html  => {:class => "input-medium",:id => "op_name"} %>
+    <%= f.input :op_mobile, label: "手机",:input_html  => {:class => "input-medium",:id => "op_mobile"} %>
+    <%= f.input :op_zip, label: "邮编",:input_html  => {:class => "input-medium"   ,:id => "op_zip"} %>
 
-<div class="row-fluid">
-
-  <div class="span12">
-    <ul class="nav nav-tabs">
-      <li class="active"><%= link_to "新建入库单", new_warehouse_stock_in_bill_path(@warehouse) %></li>
-      <li><%= link_to "入库单", warehouse_stock_in_bills_path(@warehouse) %></li>
-      <li><%= link_to "出库单", warehouse_stock_out_bills_path(@warehouse) %></li>
-      <li><%= link_to "所有进销", warehouse_stock_bills_path(@warehouse) %></li>
-    </ul><!-- nav-tabs -->
-    <%= simple_form_for @bill, :url => warehouse_stock_in_bills_path(@warehouse,@bill),:html => {:class => "form-horizontal"} do |f| %>
-    <%= hidden_field_tag "bill_product_ids" %>
-    <div class="btn-toolbar">
-      <%= f.submit "保存",:onclick => "validateStockBill()",:class => "btn btn-warning btn-small" %>
-        <%= link_to "取消",warehouse_stock_in_bills_path(@warehouse) ,:class => "btn btn-warning btn-small" %>
+    <!-- <div class="control-group">
+      <label class="control pull-left">收货仓库：</label>
+      <select class="input-medium select2">
+      <option value="默认仓库">默认仓库</option>
+      </select>
+      </div> -->
+      <div class="control-group">
+        <%= f.input :stock_type,label: "入库类型", collection: StockInBill::STOCK_TYPE, as: :select,:input_html => {class: "input-medium select2"} %>
       </div>
-      <div class="well clearfix">
-        <fieldset class="span6">
-          <%= f.input :op_name, label: "发货人",:input_html  => {:class => "input-medium"} %>
-          <%= f.input :op_mobile, label: "手机",:input_html  => {:class => "input-medium"} %>
-          <%= f.input :op_zip, label: "邮编",:input_html  => {:class => "input-medium"} %>
+      <%= f.input :stocked_at, label: "入库时间",input_html: {class: "input-medium js-datetimepicker"} %>
+    </fieldset><!-- form left area -->
+    <fieldset class="span6">
+      <%= f.input :op_phone, label: "固定电话",:input_html  => {:class => "input-medium"},:placeholder => "010-10101010" %>
+      <%= f.input :op_address, label: "收货地址",:input_html  => {:class => "input-medium"} %>
 
-          <!-- <div class="control-group">
-            <label class="control pull-left">收货仓库：</label>
-            <select class="input-medium select2">
-              <option value="默认仓库">默认仓库</option>
-            </select>
-          </div> -->
-          <div class="control-group">
-            <%= f.input :stock_type,label: "入库类型", collection: StockInBill::STOCK_TYPE, as: :select,:input_html => {class: "input-medium select2"} %>
-          </div>
-          <%= f.input :stocked_at, label: "入库时间",input_html: {class: "input-medium js-datetimepicker"} %>
-        </fieldset><!-- form left area -->
-        <fieldset class="span6">
-          <%= f.input :op_phone, label: "固定电话",:input_html  => {:class => "input-medium"},:placeholder => "010-10101010" %>
-          <%= f.input :op_address, label: "收货地址",:input_html  => {:class => "input-medium"} %>
+      <div class="control-group">
+        <label class="control-label">地域</label>
+        <select id="state" class="level_1 input-medium input-small pull-left radius_no_rb select2" name="stock_in_bill[op_state]">
+          <option>省</option>
+        </select>
+        <select id="city" class="level_2 input-medium input-small pull-left radius_no select2" name="stock_in_bill[op_city]">
+          <option>市</option>
+        </select>
+        <select id="district" class="level_3 input-medium input-small pull-left radius_no_tl select2" name="stock_in_bill[op_district]">
+          <option>区</option>
+        </select>
+      </div>
+      <%= f.input :logistic_id,label: "物流公司", collection: Logistic.with_account(current_account.id).collect {|x| [x.name,x.id]},as: :select, input_html: {class: "input-small select2 logictic"} %>
+      <div class="control-group">
+        <%= f.label :remark,"备注",:class => "control pull-left",:style => "width:70px" %>
+        <%= f.text_area :remark,:class => "span9",:rows => "5" %>
+      </div>
+    </fieldset><!-- form right area -->
+  </div>
+  <ul class="nav nav-tabs js-nav_tabs">
+    <li class="active"><a href="#good_info" data-toggle="tab">商品信息</a></li>
+  </ul>
+  <%= f.add_nested_fields_link :bill_products,'添加',:class => "btn btn-warning btn-small"%>
 
-          <div class="control-group">
-            <label class="control-label">地域</label>
-            <select id="" class="level_1 input-medium input-small pull-left radius_no_rb select2" name="stock_in_bill[op_state]">
-              <option>省</option>
-            </select>
-            <select id="" class="level_2 input-medium input-small pull-left radius_no select2" name="stock_in_bill[op_city]">
-              <option>市</option>
-            </select>
-            <select id="" class="level_3 input-medium input-small pull-left radius_no_tl select2" name="stock_in_bill[op_district]">
-              <option>区</option>
-            </select>
-          </div>
-          <%= f.input :logistic_id,label: "物流公司", collection: Logistic.with_account(current_account.id).collect {|x| [x.name,x.id]},as: :select, input_html: {class: "input-small select2 logictic"} %>
-          <div class="control-group">
-            <%= f.label :remark,"备注",:class => "control pull-left",:style => "width:70px" %>
-            <%= f.text_area :remark,:class => "span9",:rows => "5" %>
-          </div>
-        </fieldset><!-- form right area -->
-      </div>
-      <% end %>
-
-      <ul class="nav nav-tabs js-nav_tabs">
-        <li class="active"><a href="#good_info" data-toggle="tab">商品信息</a></li>
-      </ul>
-      <%= form_tag add_product_warehouse_stock_in_bills_path(@warehouse),:class => "form-horizontal",:remote => true do  %>
-      <%= hidden_field_tag "id",params[:id] %>
-      <div class="btn-toolbar">
-        <%= button_tag "添加",:class => "btn btn-warning btn-small" ,:onclick => "validateProductValues()" %>
-      </div>
-      <fieldset>
-        <div class="control-group">
-          <%= label_tag "product[sku_id]", "商品名称",:class => "control-label",:style => "width:70px;text-align:left;" %>
-          <% @current_user_skus = current_account.skus %>
-          <%= select_tag "product[sku_id]",options_for_select(@current_user_skus.collect {|x| [x.title_with_product_id,x.id]}),:include_blank => true,:class => "input-small pull-left radius_no select2 product" ,:id => "product_title"%>
-        </div>
-      </fieldset>
-      <div>
-        <fieldset class="span6">
-          <div class="control-group">
-            <label class="control-label">数量：</label>
-            <input type="text" class="input-medium" name="product[number]" placeholder="10" id="product_number">
-          </div>
-          <div class="control-group">
-            <label class="control-label">进货价：</label>
-            <input type="text" class="input-medium" placeholder="100" name="product[price]" id="product_price">
-          </div>
-          <div class="control-group">
-            <label class="control pull-left">SKU编码：</label>
-            <input class="input-medium" id="disabledSku" type="text" placeholder="" disabled>
-          </div>
-        </fieldset><!-- form left area -->
-        <fieldset class="span6">
-          <div class="control-group">
-            <label class="control pull-left">实际入库：</label>
-            <input type="text" class="input-medium" name="product[real_number]" placeholder="0" id="product_real_number">
-          </div>
-          <div class="control-group">
-            <label class="control pull-left">实际总价：</label>
-            <input type="text" class="input-medium" placeholder="500" name="product[total_price]" id="product_total_price">
-          </div>
-      </fieldset><!-- form right area -->
-      <p>&nbsp;</p>      <p>&nbsp;</p>
-      <div class="btn-toolbar">
-        <%= button_tag "删除",:onclick => "if($('input[name=\"bill_product_ids[]\"]:checked').length < 1){alert('请选择商品');return false}else{$('#form_products').submit()}" ,:class => "btn btn-warning btn-small" %>
-      </div>
+  <%= f.nested_fields_for :bill_products do |product|  %>
+  <fieldset class="span12">
+    <div class="control-group">
+      <% @current_user_skus = current_account.skus %>
+      <%= product.label :sku_id,"商品名称",:class => "control-label" %>
+      <%= product.select :sku_id,@current_user_skus.collect {|x| [x.title_with_sku_id,x.id]},{:include_blank => true},{:class => "select2 span10 product checkdata"} %>
     </div>
-    <% end %>
-    <div id="products">
-      <%= render :partial => "products",:locals => {:products => @products} %>
-    </div>
-  </div><!--span10 -->
-</div><!--row-fluid -->
-<% content_for :tail do %>
-<script type="text/javascript" charset="utf-8">
-$(function(){
-  var parseSkus = <%= raw Hash[@current_user_skus.collect {|x| [x.id.to_s,x.sku_id.to_s]}].to_json %>;
-  $("#product_title").change(function(){
-    var sku_id = parseSkus[$(this).val()];
-    $("#disabledSku").val(sku_id)
+  </fieldset>
+  <div class="well clearfix">
+    <fieldset class="span2">
+      <div class="control-group">
+        <%= product.label :number,"数量：",:class => "control pull-left" %>
+        <%= product.text_field :number,:class => "input-small checkdata" %>
+      </div>
+    </fieldset>
+    <fieldset class="span2">
+      <div class="control-group">
+        <%= product.label :price,"进货价：",:class => "control pull-left" %>
+        <%= product.text_field :price,:class => "input-small checkdata" %>
+      </div>
+    </fieldset><!-- form left area -->
+    <fieldset class="span2">
+      <div class="control-group">
+        <label class="control pull-left">SKU编码：</label>
+        <input class="input-small sku" id="disabledSku" type="text" placeholder="" disabled>
+      </div>
+    </fieldset><!-- form left area -->
+    <fieldset class="span2">
+      <div class="control-group">
+        <%= product.label :real_number,"实际入库：",:class => "control pull-left" %>
+        <%= product.text_field :real_number,:class => "input-small checkdata" %>
+      </div>
+    </fieldset>
+    <fieldset class="span2">
+      <div class="control-group">
+        <%= product.label :total_price,"实际总价：",:class => "control pull-left" %>
+        <%= product.text_field :total_price,:class => "input-small checkdata" %>
+        <%= product.remove_nested_fields_link "删除" %>
+      </div>
+    </fieldset><!-- form right area -->
+  </div>
+  <% end %>
+  <% end %>
+  <% content_for :tail do %>
+  <script type="text/javascript" charset="utf-8">
+  $(function(){
+    var options = {
+      data  : linkage_data
+    }
+    var sel = new LinkageSelect(options);
+    sel.bind('.level_1','<%= @bill.op_state %>');
+    sel.bind('.level_2','<%= @bill.op_city %>');
+    sel.bind('.level_3','<%= @bill.op_district %>');
+
+    var parseSkus = <%= raw Hash[@current_user_skus.collect {|x| [x.id.to_s,x.sku_id.to_s]}].to_json %>;
+    $(".product").change(function(){
+      var sku_id = parseSkus[$(this).val()];
+      $(this).parent().parent().parent().find(":input[disabled]:first").val(sku_id)
+    });
+    $("#stock_in_bill").validate({
+      rules: {
+        "stock_in_bill[op_name]": { required: true},
+      },
+      messages: {
+        "stock_in_bill[op_name]": { required: "不能为空" }
+      }
+    });
+    $(":input.checkdata").each(function(){ $(this).rules("add",{required: true,number: true,messages: {required: "不能为空",number: "必须是数字"}}) })
   })
-})
-</script>
-<% end %>
+  </script>
+  <% end %>

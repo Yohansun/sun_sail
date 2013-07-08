@@ -1,6 +1,5 @@
 # -*- encoding : utf-8 -*-
 class StockOutBillsController < ApplicationController
-  include StockBillsHelper
   before_filter :set_warehouse
   before_filter :default_conditions,:on => [:edit,:show,:update,:add_product,:remove_product,:fetch_bills]
   before_filter :fetch_bills,:except => :index
@@ -24,28 +23,24 @@ class StockOutBillsController < ApplicationController
   end
 
 	def new
-    @products = (current_user.settings.tmp_products ||= [])
-    @products = specified_tmp_products(@products)
     @bill = StockOutBill.new(default_search)
+    @bill.bill_products.build
   end
 
   def create
     params[:stock_out_bill].merge!(default_search)
     @bill = StockOutBill.new(params[:stock_out_bill])
-    bill_product_ids = params[:bill_product_ids].split(',')
-    build_product(@bill,bill_product_ids)
-    @bill.update_bill_products
     @bill.status = "CREATED"
     @bill.is_cash_sale = params[:is_cash_sale] if params[:is_cash_sale].present?
     @bill.website = params[:website] if params[:website].present?
+    @bill.update_bill_products
+    update_areas!(@bill)
     if @bill.save
-      update_areas!(@bill)
-      tmp_products = current_user.settings.tmp_products
-      tmp_products = tmp_products.reject { |x| bill_product_ids.include?(x.id.to_s) }
-      current_user.settings.tmp_products = tmp_products
-      redirect_to warehouse_stock_out_bills_path(@warehouse)
+      flash[:notice] = "出库单#{@bill.tid}创建成功"
+      redirect_to warehouse_stock_out_bill_path(@warehouse,@bill)
     else
-      @products = (current_user.settings.tmp_products ||= [])
+      #TODO 错误提示重复
+      flash[:error] = (@bill.errors.full_messages.uniq + @bill.bill_products_errors).to_sentence
       render :new
     end
   end
@@ -62,16 +57,15 @@ class StockOutBillsController < ApplicationController
   end
 
   def update
-    conditions = default_search.merge({:id => params[:id]})
-    @bill = StockOutBill.find_by(conditions)
-    parse_area(@bill)
-    product_ids = params[:product_ids].split(',')
+    @bill = StockOutBill.find_by(@conditions)
     @bill.update_bill_products
+    update_areas!(@bill)
     if @bill.update_attributes(params[:stock_out_bill])
-      update_areas!(@bill)
-      @bill.bill_products.not_in(:id => product_ids).delete
+      flash[:notice] = "出库单#{@bill.tid}更新成功!"
       redirect_to :action => :index
     else
+      #TODO 错误提示重复
+      flash[:error] = (@bill.errors.full_messages.uniq + @bill.bill_products_errors).to_sentence
       render :edit
     end
   end

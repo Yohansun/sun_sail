@@ -24,7 +24,9 @@
             <li>
               <%= link_to_authorize "新建", new_warehouse_stock_out_bill_path(@warehouse) %>
             </li>
-            <li><%= link_to_authorize "查看","#",:class => "magic_detail",:target_url => "/warehouses/#{@warehouse.id}/stock_out_bills/:id" %></li>
+            <li><%= link_to_authorize "查看","#",:class => "magic_detail",:target_url => "/warehouses/#{@warehouse.id}/stock_out_bills" %></li>
+          <li>
+            <li><%= link_to_authorize "编辑","#",:class => "magic_detail",:target_url => "/warehouses/#{@warehouse.id}/stock_out_bills/:id/edit" %></li>
           <li>
             <%= link_to_authorize "审核", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_out_bills/check","data-remote" => true,:request => "post",:message => "确认审核吗?",:class => "magic_operation"  %>
           </li>

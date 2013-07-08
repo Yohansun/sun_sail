@@ -27,15 +27,11 @@ MagicOrders::Application.routes.draw do
     post :batch_update_safety_stock,:on => :collection
     resources :stock_bills
     resources :stock_in_bills do
-      post :add_product   , :on => :collection
-      post :remove_product, :on => :collection
       post :sync          , :on => :collection
       post :check         , :on => :collection
       post :rollback      , :on => :collection
     end
     resources :stock_out_bills do
-      post :add_product   , :on => :collection
-      post :remove_product, :on => :collection
       post :sync          , :on => :collection
       post :check         , :on => :collection
       post :rollback      , :on => :collection
