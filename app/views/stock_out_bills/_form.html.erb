@@ -89,7 +89,7 @@
       <% @current_user_skus = current_account.skus %>
       <div class="control-group">
         <%= label_tag "product[sku_id]", "商品名称",:class => "control-label",:style => "width:70px;text-align:left;" %>
-        <%= select_tag "product[sku_id]",options_for_select(@current_user_skus.collect {|x| [x.title_with_sku_id,x.id]}),:include_blank => true,:class => "input-small pull-left radius_no select2 product" ,:id => "product_title"%>
+        <%= select_tag "product[sku_id]",options_for_select(@current_user_skus.collect {|x| [x.title_with_product_id,x.id]}),:include_blank => true,:class => "input-small pull-left radius_no select2 product" ,:id => "product_title"%>
       </div>
     </fieldset>
     <div>
