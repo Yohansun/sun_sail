@@ -45,7 +45,7 @@ class StockBill
 
   validates_presence_of :tid
 
-  validates_uniqueness_of :tid, message: "操作频率过大，请重试"
+  validates_presence_of :tid, :if => :active_tid_exists?
 
   validates :op_name,:length => { :maximum => 50 }, :allow_blank => true
   validates :op_phone, format: { with: /\d+-\d+/ }, :allow_blank => true
@@ -71,6 +71,10 @@ class StockBill
   after_save :generate_tid
 
   alias_method :stock_typs=, :stock_type=
+
+  def active_tid_exists?
+    StockBill.any_in(:status => 'CLOSED').where(tid: tid).exists?
+  end
 
   def stock_typs=(val)
     return if stock_type == val && STOCK_TYPE_VALUES.include?(val)
