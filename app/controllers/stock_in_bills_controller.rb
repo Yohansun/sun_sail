@@ -2,7 +2,6 @@
 class StockInBillsController < ApplicationController
   before_filter :set_warehouse
   before_filter :default_conditions,:on => [:edit,:show,:update,:add_product,:remove_product]
-  before_filter :fetch_bills,:except => :index
   before_filter :authorize,:except => :fetch_bils
 
   def index
@@ -31,8 +30,8 @@ class StockInBillsController < ApplicationController
     stock_in_bills = params[:stock_in_bill].merge!(default_search)
     @bill = StockInBill.new(stock_in_bills)
     @bill.status = "CREATED"
-    @bill.update_bill_products
     update_areas!(@bill)
+    @bill.update_bill_products
     if @bill.save
       flash[:notice] = "入库单#{@bill.tid}创建成功"
       redirect_to  warehouse_stock_in_bill_path(@warehouse,@bill)
@@ -56,9 +55,10 @@ class StockInBillsController < ApplicationController
 
   def update
     @bill = StockInBill.find_by(@conditions)
-    @bill.update_bill_products
     update_areas!(@bill)
-    if @bill.update_attributes(params[:stock_in_bill])
+    @bill.attributes = params[:stock_in_bill]
+    @bill.update_bill_products
+    if @bill.save
       flash[:notice] = "入库单#{@bill.tid}更新成功!"
       redirect_to warehouse_stock_in_bill_path(@warehouse,@bill)
     else
@@ -68,18 +68,11 @@ class StockInBillsController < ApplicationController
     end
   end
 
-  def fetch_bills
-    bills = StockInBill.where(default_search).desc(:checked_at)
-    unchecked, checked = bills.partition { |b| b.checked_at.nil? }
-    @bills = unchecked + checked
-    @bills = Kaminari.paginate_array(@bills).page(params[:page]).per(20)
-  end
-
   def sync
     @operated_bills = StockInBill.any_in(_id: params[:bill_ids])
     @operated_bills.each do |bill|
+      bill.build_log(current_user,'同步')
       bill.sync
-      bill.operation_logs.create(operated_at: Time.now, operator: current_user.name, operator_id: current_user.id, operation: '同步')
     end
     respond_to do |f|
       f.js
@@ -89,8 +82,8 @@ class StockInBillsController < ApplicationController
   def check
     @operated_bills = StockInBill.any_in(_id: params[:bill_ids])
     @operated_bills.each do |bill|
+      bill.build_log(current_user,'审核')
       bill.check
-      bill.operation_logs.create(operated_at: Time.now, operator: current_user.name, operator_id: current_user.id, operation: '审核')
     end
     respond_to do |f|
       f.js
@@ -100,11 +93,31 @@ class StockInBillsController < ApplicationController
   def rollback
     @operated_bills = StockInBill.any_in(_id: params[:bill_ids])
     @operated_bills.each do |bill|
+      bill.build_log(current_user,'取消')
       bill.rollback
-      bill.operation_logs.create(operated_at: Time.now, operator: current_user.name, operator_id: current_user.id, operation: '取消')
     end
     respond_to do |f|
       f.js
+    end
+  end
+
+  def lock
+    @bills = StockInBill.where(default_search).any_in(_id: params[:bill_ids])
+    failed = @bills.collect {|bill| bill.build_log(current_user,'锁定') &&  [bill.tid,bill.lock!]}.reject {|t,m| m == true}
+    error_message = failed.collect {|a| a.join(":")}.join(";")
+    @message = failed.blank? ? "入库单#{@bills.map(&:tid).join(',')}锁定成功." : "入库单#{error_message}."
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  def unlock
+    @bills = StockInBill.where(default_search).any_in(_id: params[:bill_ids])
+    failed = @bills.collect {|bill| bill.build_log(current_user,'激活') && [bill.tid,bill.unlock!]}.reject {|t,m| m == true}
+    error_message = failed.collect {|a| a.join(":")}.join(';')
+    @message = failed.blank? ? "入库单#{@bills.map(&:tid).join(',')}激活成功." : "入库单#{error_message}."
+    respond_to do |format|
+      format.js
     end
   end
 

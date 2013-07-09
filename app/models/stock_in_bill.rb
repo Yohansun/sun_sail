@@ -35,7 +35,7 @@ class StockInBill < StockBill
 
 
   def check
-    return unless status == "CREATED"
+    return if status != "CREATED" || self.operation_locked?
     update_attributes(checked_at: Time.now, status: "CHECKED")
     if account && account.settings.enable_module_third_party_stock != 1
       sync_stock
@@ -49,7 +49,7 @@ class StockInBill < StockBill
   end
 
   def rollback
-    return unless status == "SYNCKED"
+    return if status != "SYNCKED" || self.operation_locked?
     update_attributes(canceled_at: Time.now, status: "CANCELING")
     cancel_asn_rx
   end

@@ -56,10 +56,12 @@
   <%= f.add_nested_fields_link :bill_products,'添加',:class => "btn btn-warning btn-small"%>
 
   <%= f.nested_fields_for :bill_products do |product|  %>
-  <fieldset>
-    <% @current_user_skus = current_account.skus %>
-    <%= product.label :sku_id,"商品名称",:class => "control-label" %>
-    <%= product.select :sku_id,@current_user_skus.collect {|x| [x.title_with_product_id,x.id]},{:include_blank => true},{:class => "select2 span10 product checkdata"} %>
+  <fieldset class="span12">
+    <div class="control-group">
+      <% @current_user_skus = current_account.skus %>
+      <%= product.label :sku_id,"商品名称",:class => "control-label" %>
+      <%= product.select :sku_id,@current_user_skus.collect {|x| [x.title_with_product_id,x.id]},{:include_blank => true},{:class => "select2 span10 product checkdata"} %>
+    </div>
   </fieldset>
   <div class="well clearfix">
     <fieldset class="span2">
@@ -111,10 +113,15 @@
     })
 
     var parseSkus = <%= raw Hash[@current_user_skus.collect {|x| [x.id.to_s,x.sku_id.to_s]}].to_json %>;
-    $(".product").change(function(){
+    $(".product").each(function(){
       var sku_id = parseSkus[$(this).val()];
       $(this).parent().parent().parent().find(":input[disabled]:first").val(sku_id)
     });
+    $(".product").live("change",function(){
+      var sku_id = parseSkus[$(this).val()];
+      $(this).parent().parent().parent().find(":input[disabled]:first").val(sku_id)
+    });
+
     $("#stock_out_bill").validate({
       rules: {
         "stock_out_bill[op_name]": { required: true},

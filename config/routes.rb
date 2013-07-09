@@ -30,11 +30,15 @@ MagicOrders::Application.routes.draw do
       post :sync          , :on => :collection
       post :check         , :on => :collection
       post :rollback      , :on => :collection
+      post :lock          ,:on => :collection
+      post :unlock        ,:on => :collection
     end
     resources :stock_out_bills do
       post :sync          , :on => :collection
       post :check         , :on => :collection
       post :rollback      , :on => :collection
+      post :lock          ,:on => :collection
+      post :unlock        ,:on => :collection
     end
   end
   match "/stocks/safe_stock", to: 'stocks#safe_stock'

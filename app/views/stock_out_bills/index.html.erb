@@ -26,16 +26,23 @@
             </li>
             <li><%= link_to_authorize "查看","#",:class => "magic_detail",:target_url => "/warehouses/#{@warehouse.id}/stock_out_bills" %></li>
           <li>
-            <li><%= link_to_authorize "编辑","#",:class => "magic_detail",:target_url => "/warehouses/#{@warehouse.id}/stock_out_bills/:id/edit" %></li>
+            <li><%= link_to_authorize "编辑","#",:class => "magic_detail",:target_url => "/warehouses/#{@warehouse.id}/stock_out_bills/:id/edit" %>
+            </li>
+            <li>
+              <%= link_to_authorize "锁定", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_out_bills/lock",:request => "post",:remote => true,:message => "确认锁定吗?",:class => "magic_operation"  %>
+            </li>
+            <li>
+              <%= link_to_authorize "激活", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_out_bills/unlock",:request => "post",:remote => true,:message => "确认激活吗?",:class => "magic_operation"  %>
+            </li>
           <li>
-            <%= link_to_authorize "审核", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_out_bills/check","data-remote" => true,:request => "post",:message => "确认审核吗?",:class => "magic_operation"  %>
+            <%= link_to_authorize "审核", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_out_bills/check",:remote => true,:request => "post",:message => "确认审核吗?",:class => "magic_operation"  %>
           </li>
           <%- if current_account.settings.enable_module_third_party_stock == 1 %>
           <li>
-            <%= link_to_authorize "同步", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_out_bills/sync","data-remote" => true,:remote => true,:request => "post",:message => "确认同步吗?" ,:class => "magic_operation"  %>
+            <%= link_to_authorize "同步", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_out_bills/sync",:remote => true,:remote => true,:request => "post",:message => "确认同步吗?" ,:class => "magic_operation"  %>
           </li>
           <li>
-            <%= link_to_authorize "撤销", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_out_bills/rollback","data-remote" => true,:remote => true,:request => "post",:message => "确认撤销吗?"  ,:class => "magic_operation"  %>
+            <%= link_to_authorize "撤销", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_out_bills/rollback",:remote => true,:remote => true,:request => "post",:message => "确认撤销吗?"  ,:class => "magic_operation"  %>
           </li>
           <%- end %>
         </ul>

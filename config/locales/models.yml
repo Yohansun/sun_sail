@@ -38,3 +38,7 @@ zh-CN:
         stock_type: 出库类型
       bill_product:
         sku_id: SKU
+        number: 数量
+        real_number: 实际入库
+        price: 进货价
+        total_price: 实际总价

@@ -36,14 +36,14 @@ class StockBill
   field :account_id, type: Integer
   field :logistic_id, type: Integer
   field :seller_id, type: Integer
+  field :operation, type: String, default: "none"
+  field :operation_time, type: DateTime
 
   field :status, type: String
 
   field :bill_products_mumber, type: Integer
   field :bill_products_real_mumber, type: Integer
   field :bill_products_price, type: Float
-
-  validates_presence_of :tid
 
   validates_uniqueness_of :tid, :if => :active_tid_exists?
 
@@ -64,7 +64,7 @@ class StockBill
   STOCK_TYPE = IN_STOCK_TYPE + OUT_STOCK_TYPE
 
   enum_attr :stock_type, STOCK_TYPE
-  validates :stock_type, :presence => true,:inclusion => { :in => STOCK_TYPE_VALUES }
+  enum_attr :operation, [['初始化',"none"],['已锁定',"locked"],['已激活','activated']]
 
   embeds_many :bill_products
   accepts_nested_attributes_for :bill_products, :allow_destroy => true, :reject_if => proc { |obj| obj.blank? }
@@ -103,6 +103,25 @@ class StockBill
 
   def account
     Account.find_by_id(account_id)
+  end
+
+  def lock!
+    return "不能再次锁定!" if self.operation_locked?
+    notice = "同步至仓库出库单需要先撤销同步后才能锁定"
+    return notice if self.status == "SYNCKED"
+    return "只能操作状态为: 1.已审核，待同步. 2.待审核. 3.撤销同步成功" if !["CHECKED","CREATED","CANCELD_OK"].include?(self.status)
+    self.operation = "locked"
+    self.operation_time = Time.now
+    self.decrease_activity if self._type == 'StockOutBill' #出库单才更新库存
+    self.save(validate: false)
+  end
+
+  def unlock!
+    return "只能操作的状态为: 已锁定." if !self.operation_locked?
+    self.operation = "activated"
+    self.operation_time = Time.now
+    self.increase_activity if self._type == 'StockOutBill' #出库单才更新库存
+    self.save(validate: false)
   end
 
   def update_bill_products
@@ -157,6 +176,10 @@ class StockBill
     else
       status
     end
+  end
+
+  def build_log(user,identity)
+    self.operation_logs.build(operated_at: Time.now, operator: user.name, operator_id: user.id, operation: identity)
   end
 
   def bill_products_errors

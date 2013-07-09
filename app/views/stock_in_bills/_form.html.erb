@@ -103,7 +103,11 @@
     sel.bind('.level_3','<%= @bill.op_district %>');
 
     var parseSkus = <%= raw Hash[@current_user_skus.collect {|x| [x.id.to_s,x.sku_id.to_s]}].to_json %>;
-    $(".product").change(function(){
+    $(".product").each(function(){
+      var sku_id = parseSkus[$(this).val()];
+      $(this).parent().parent().parent().find(":input[disabled]:first").val(sku_id)
+    });
+    $(".product").live("change",function(){
       var sku_id = parseSkus[$(this).val()];
       $(this).parent().parent().parent().find(":input[disabled]:first").val(sku_id)
     });

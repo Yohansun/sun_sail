@@ -195,7 +195,12 @@ MagicOrder::AccessControl.map do |map|
                                  "stock_in_bills#check",
                                  "stock_out_bills#check",
                                  "stock_in_bills#rollback",
-                                 "stock_out_bills#rollback"]
+                                 "stock_out_bills#rollback",
+                                 "stock_in_bills#lock",
+                                 "stock_out_bills#lock",
+                                 "stock_in_bills#unlock",
+                                 "stock_out_bills#unlock"
+                               ]
   end
   #数据模块
   map.project_module :datas do |map|

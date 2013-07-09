@@ -192,3 +192,7 @@ zh-CN:
   permissions_tag_stock_out_bills#check: "出库单审核"
   permissions_tag_stock_in_bills#rollback: "入库单撤销"
   permissions_tag_stock_out_bills#rollback: "出库单撤销"
+  permissions_tag_stock_in_bills#lock: "入库单锁定"
+  permissions_tag_stock_out_bills#lock: "出库单锁定"
+  permissions_tag_stock_in_bills#unlock: "出库单激活"
+  permissions_tag_stock_out_bills#unlock: "出库单激活"
