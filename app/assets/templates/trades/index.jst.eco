@@ -101,7 +101,7 @@
         </div>
 
         <div class="btns btn-group batch_ops">
-          <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-warning btn_left4">
+          <button data-toggle="dropdown" class="btn dropdown-toggle btn-warning btn_left4">
             批量操作
             <span class="caret"></span>
           </button>
@@ -111,21 +111,11 @@
             <li><a href="#" data-toggle="modal" data-batch_type="batch_export">导出勾选订单</a></li>
             <li><a href="#" data-toggle="modal" data-batch_type="batch_add_gift">批量添加赠品</a></li>
             <% if MagicOrders.trade_mode == "trades" and MagicOrders.trade_type == "undelivered" : %>
-            <li><a href='#' data-toggle="modal" class="batch_deliver">批量发货</a></li>
+            <li><a href='#' data-toggle="modal" class="batch_deliver" data-batch_type='batch_deliver' >批量发货</a></li>
             <li><a href='#' data-toggle="modal" data-batch_type='batch_check_goods'>批量验货</a></li>
             <% end %>
           </ul>
         </div>
-
-        <!-- <div class="btns btn-group batch_ops">
-          <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-warning btn_left4">
-            分捡单操作
-            <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu">
-            <li><a data-toggle="modal" class='sort_product' href='#'>分捡单</a></li>
-          </ul>
-        </div> -->
       </div>
 
       <div class="btn-toolbar js-affix" data-spy="affix" data-offset-top="144">
