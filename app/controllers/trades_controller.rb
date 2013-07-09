@@ -124,6 +124,15 @@ class TradesController < ApplicationController
       end
     end
 
+    if params[:logistic_id]
+      logistic = Logistic.find_by_id params[:logistic_id]
+      if logistic
+        @trade.logistic_name = logistic.name
+        @trade.logistic_code = logistic.code
+        @trade.logistic_id = logistic.id
+      end
+    end
+
     if params[:setup_logistic] == true
       logistic = current_account.logistics.find_by_id params[:logistic_id]
       unless @trade.logistic_id.present? && params[:delivered_at] == true

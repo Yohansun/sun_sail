@@ -44,7 +44,7 @@ class StockInBill < StockBill
 
   def sync
     return unless ['SYNCK_FAILED','CHECKED','CANCELD_OK'].include?(status)
-    update_attributes(sync_at: Time.now, status: "SYNCKED")
+    update_attributes(sync_at: Time.now, status: "SYNCKING")
     ans_to_wms
   end
 

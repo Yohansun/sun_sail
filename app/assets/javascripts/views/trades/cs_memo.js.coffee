@@ -12,6 +12,11 @@ class MagicOrders.Views.TradesCsMemo extends Backbone.View
 
   render: ->
     $(@el).html(@template(trade: @model))
+    $.get '/logistics/all_logistics', {type: 'all'}, (t_data)->
+      html_options = ''
+      for item in t_data
+        html_options += '<option lid="' + item.id + '" value="' + item.xml + '">' + item.name + '</option>'
+      $('.set_logistic_waybill #logistic_select').html(html_options)
     this
 
   check_chars_num: (e) ->
@@ -21,6 +26,11 @@ class MagicOrders.Views.TradesCsMemo extends Backbone.View
 
   save: ->
     blocktheui()
+
+    lid = $('#logistic_select').find("option:selected").attr('lid')
+
+    @model.set('logistic_id', lid)
+
     order_cs_memos = {}
     for item in $(".order_cs_memo")
       order_id = $(item).data("order-id")

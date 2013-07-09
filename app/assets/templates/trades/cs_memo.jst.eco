@@ -13,7 +13,7 @@
         <% end %>
       </div>
     </label>
-    
+
     <table class="table table-bordered">
       <tbody>
         <tr>
@@ -36,6 +36,12 @@
         <% end %>
       </tbody>
     </table>
+  </fieldset>
+  <fieldset class='reset_width80'>
+    <div class="control-group form-inline set_logistic_waybill">
+      <label for="" class="control-label">物流公司：</label>
+      <select id="logistic_select" class="input-medium"></select>
+    </div>
   </fieldset>
 </div>
 

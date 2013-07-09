@@ -406,7 +406,7 @@ class Trade
         bill.update_attributes(status: 'CLOSED') #关闭之前的出库单
         bill.increase_activity #恢复仓库的可用库存
       else
-        return
+        return #已出库或者已同步 不允许分流重置
       end
     end
     update_attributes(seller_id: nil, seller_name: nil, dispatched_at: nil)
@@ -500,7 +500,7 @@ class Trade
         bill.update_attributes(status: 'CLOSED') #关闭之前的出库单
         bill.increase_activity #恢复仓库的可用库存
       else
-        return
+        return #已出库或者已同步 不允许生成新的出库单
       end
     end
 

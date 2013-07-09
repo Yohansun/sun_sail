@@ -66,7 +66,7 @@ class StockOutBill < StockBill
 
   def sync
     return unless ['SYNCK_FAILED','CHECKED','CANCELD_OK'].include?(status)
-    update_attributes(sync_at: Time.now, status: "SYNCKED")
+    update_attributes(sync_at: Time.now, status: "SYNCKING")
     so_to_wms
   end
 
@@ -150,7 +150,7 @@ class StockOutBill < StockBill
     bill_products.each do |stock_out|
       stock_product = StockProduct.find_by_id(stock_out.stock_product_id)
       if stock_product
-        stock_product.update_attributes(activity: stock_product.activity - stock_out.number)
+        stock_product.update_attributes(activity: stock_product.activity + stock_out.number)
         true
       else
         # DO SOME ERROR NOTIFICATION
