@@ -25,7 +25,7 @@
     <%= simple_form_for @bill,:url => warehouse_stock_out_bills_path(@warehouse,@bill),:html => {:class => "form-horizontal"} do |f| %>
     <%= hidden_field_tag "bill_product_ids" %>
     <div class="btn-toolbar">
-      <%= f.submit "保存",:onclick => "validateStockBill()",:class => "btn btn-warning btn-small" %>
+      <%= f.submit "保存",:onclick => "validateStockBill()",:class => "btn btn-warning btn-small save_stock_out_bill" %>
       <%= link_to "取消",warehouse_stock_out_bills_path(@warehouse) ,:class => "btn btn-warning btn-small" %>
     </div>
     <div class="well clearfix">
@@ -44,6 +44,13 @@
           <%= f.input :stock_type,label: "出库类型", collection: StockOutBill::STOCK_TYPE, as: :select,:input_html => {class: "input-medium select2"} %>
         </div>
         <%= f.input :stocked_at, label: "出库时间",input_html: {class: "input-medium js-datetimepicker"} %>
+        <div class="control-group">
+          <label class="select required control-label" for="stock_out_bill_stock_type"><abbr title="必填的">*</abbr> 是否开票</label>
+          <%=select_tag :is_cash_sale, options_for_select(["需要开票",
+          "需开专票",
+          "无需开票"], params[:is_cash_sale]), :class=>"select2 is_cash_sale"%>
+          <%=f.text_field :website, :input_html => {:class => 'input-xxlarge'}, :placeholder=>"请输入发票内容...", :required=>"required", :style=>"display:none;", :id=>"cash_sale_name" %>
+        </div>
       </fieldset><!-- form left area -->
       <fieldset class="span6">
         <%= f.input :op_phone, label: "固定电话",:class => "input-medium" %>
@@ -116,10 +123,22 @@
 <% content_for :tail do %>
 <script type="text/javascript" charset="utf-8">
 $(function(){
+  $(".is_cash_sale").change(function(){
+    if($(".is_cash_sale").find("option:selected").text()=="无需开票"){
+    $("#cash_sale_name").hide()
+    }else{
+    $("#cash_sale_name").show()
+    }
+  })
   var parseSkus = <%= raw Hash[@current_user_skus.collect {|x| [x.id.to_s,x.sku_id.to_s]}].to_json %>;
   $("#product_title").change(function(){
     var sku_id = parseSkus[$(this).val()];
     $("#disabledSku").val(sku_id)
+  })
+  $(".save_stock_out_bill").click(function(){
+    if($(".is_cash_sale").find("option:selected").text()=="需开专票" && $("#cash_sale_name").val()==""){
+        alert('请输入发票抬头');
+    }
   })
 })
 </script>

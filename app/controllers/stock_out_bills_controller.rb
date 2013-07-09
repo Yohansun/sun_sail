@@ -36,6 +36,8 @@ class StockOutBillsController < ApplicationController
     build_product(@bill,bill_product_ids)
     @bill.update_bill_products
     @bill.status = "CREATED"
+    @bill.is_cash_sale = params[:is_cash_sale] if params[:is_cash_sale].present?
+    @bill.website = params[:website] if params[:website].present?
     if @bill.save
       update_areas!(@bill)
       tmp_products = current_user.settings.tmp_products
