@@ -45,7 +45,7 @@ class StockBill
 
   validates_presence_of :tid
 
-  validates_uniqueness_of :tid, message: "操作频率过大，请重试"
+  validates_uniqueness_of :tid, :if => :active_tid_exists?
 
   validates :op_name,:length => { :maximum => 50 }, :allow_blank => true
   validates :op_phone, format: { with: /\d+-\d+/ }, :allow_blank => true
@@ -71,6 +71,10 @@ class StockBill
   after_save :generate_tid
 
   alias_method :stock_typs=, :stock_type=
+
+  def active_tid_exists?
+    StockBill.any_in(:status.ne => 'CLOSED').where(tid: tid).exists?
+  end
 
   def stock_typs=(val)
     return if stock_type == val && STOCK_TYPE_VALUES.include?(val)
@@ -130,6 +134,7 @@ class StockBill
     case status
     when "CREATED" then "待审核"
     when "CHECKED" then "已审核待同步"
+    when "SYNCKING" then "同步中"
     when "SYNCKED"
       if _type == "StockOutBill"
         "已同步待出库"
@@ -146,7 +151,7 @@ class StockBill
       end
     when "CANCELD_OK" then "撤销同步成功"
     when "CANCELD_FAILED" then "撤销同步失败"
-    when "CANCELING" then "撤销同步,待仓库反馈"
+    when "CANCELING" then "撤销同步中"
     else
       status
     end

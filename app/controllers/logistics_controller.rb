@@ -147,4 +147,19 @@ class LogisticsController < ApplicationController
 
     render json: tmp
   end
+
+  def all_logistics
+    tmp = []
+    @logistics = Logistic.all
+    @logistics.each do |l|
+      tmp << {
+        id: l.id,
+        xml: l.xml.inspect,
+        name: l.name
+      }
+    end
+
+    render json: tmp
+  end
+
 end

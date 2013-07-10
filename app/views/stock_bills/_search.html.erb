@@ -26,13 +26,6 @@
 </div>
 
 <div class="control-group">
-  <%= label_tag "checked_at",raw("<code>状态</code>"),:class => "pull-left width" %>
-    <div class="controls pull-left">
-  <%= select_tag "checked_at",options_for_select([["已审核","nil"],["未审核","true"]],params["checked_at"]),:include_blank => true,:class => "input-medium select2 all" %>
-  </div>
-</div>
-
-<div class="control-group">
   <%= label_tag "search[_type_eq]",raw("<code>出/入库</code>"),:class => "pull-left width" %>
     <div class="controls pull-left">
   <%= select_tag "search[_type_eq]",options_for_select([["入库单","StockInBill"],["出库单","StockOutBill"]],params["search"]["_type_eq"]),:include_blank => true,:class => "input-medium select2 all" %>
@@ -60,15 +53,15 @@ t_gte]",raw("<code>创建时间</code>"),:class => "pull-left width" %>
     <div class="controls pull-left">
   <%= text_field_tag "search[stocked_at_gte]",params["search"]["stocked_at_lte"],:class => "input-medium datetimepicker_full" %>~
 
-  <%= text_field_tag "search[stocked_at_lte]",params["search"]["stocked_at_lte"],:class => "input-medium datetimepicker_full" %>  
+  <%= text_field_tag "search[stocked_at_lte]",params["search"]["stocked_at_lte"],:class => "input-medium datetimepicker_full" %>
   </div>
 </div>
 
 <div class="control-group">
 <div class="pull-left">
   <span class="label label-info">共有<%= @count %>条数据</span>
-  <% params[:search] ||= {} %> 
-  <%  sku_id = params[:search][:bill_products_sku_id_eq] %>        
+  <% params[:search] ||= {} %>
+  <%  sku_id = params[:search][:bill_products_sku_id_eq] %>
   <% if sku_id.present? %>
   <span class="label label-inverse">
     <%= sku = Sku.find_by_sku_id(sku_id); "#{sku.try(:title)}(#{sku.try(:sku_id)})"%>

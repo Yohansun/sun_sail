@@ -192,6 +192,7 @@ MagicOrders::Application.routes.draw do
     end
     collection do
       get :logistic_templates
+      get :all_logistics
       get :logistic_area
       get :remove_logistic_area
       get :create_logistic_area

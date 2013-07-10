@@ -103,6 +103,8 @@
               <%- end %>
             </tbody>
           </table>
+          <span class="lable label-warning">是否开票</span>:  <%= @bill.is_cash_sale %>
+          <span class="lable label-warning">发票抬头</span>:  <%= @bill.website %>
           <span class="lable label-warning">开票金额</span>(订单实付金额 - 运费):  <%= @bill.bill_products_price %>
         </div>
       </div>

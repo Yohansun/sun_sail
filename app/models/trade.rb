@@ -239,7 +239,7 @@ class Trade
 
   has_many :deliver_bills
 
-  has_one :stock_out_bill
+  has_many :stock_out_bills
   belongs_to :customer, :class_name => "Customer", :foreign_key => "buyer_nick",:primary_key => "name"
 
   enum_attr :status, [["没有创建支付宝交易"                ,"TRADE_NO_CREATE_PAY"],
@@ -395,8 +395,20 @@ class Trade
     end
   end
 
+  def stock_out_bill # always should be the only active one
+    stock_out_bills.where(:status.ne => "CLOSED").first
+  end
+
   def reset_seller
     return unless seller_id
+    stock_out_bills.where(:status.ne => "CLOSED").each do |bill|
+      if ['CREATED', 'CHECKED', 'SYNCK_FAILED', 'CANCELD_OK'].include?(bill.status)
+        bill.update_attributes(status: 'CLOSED') #关闭之前的出库单
+        bill.increase_activity #恢复仓库的可用库存
+      else
+        return #已出库或者已同步 不允许分流重置
+      end
+    end
     update_attributes(seller_id: nil, seller_name: nil, dispatched_at: nil)
     deliver_bills.delete_all
   end
@@ -483,7 +495,14 @@ class Trade
   end
 
   def generate_stock_out_bill
-    return if stock_out_bill.present?
+    stock_out_bills.where(:status.ne => "CLOSED").each do |bill|
+      if ['CREATED', 'CHECKED', 'SYNCK_FAILED', 'CANCELD_OK'].include?(bill.status)
+        bill.update_attributes(status: 'CLOSED') #关闭之前的出库单
+        bill.increase_activity #恢复仓库的可用库存
+      else
+        return #已出库或者已同步 不允许生成新的出库单
+      end
+    end
 
     if _type == "TaobaoTrade"
       remark = "客服备注: #{cs_memo} 卖家备注: #{seller_memo} 客户留言:#{buyer_message}"
