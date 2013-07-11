@@ -135,7 +135,7 @@ class ProductsController < ApplicationController
     if @product.blank?
       @skus = current_user.settings.tmp_skus += Array.wrap(sku)
     else
-      Sku.create(:code=>params[:tmp_sku][:code],:account_id => current_account.id,:product_id => params[:id],:sku_properties_attributes => params[:sku_property])
+      Sku.create(:sku_id=>params[:tmp_sku][:sku_id],:account_id => current_account.id,:product_id => params[:id],:sku_properties_attributes => params[:sku_property])
       @skus = @product.skus
     end
 
