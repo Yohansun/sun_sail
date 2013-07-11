@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130615090309) do
+ActiveRecord::Schema.define(:version => 20130711061855) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -427,7 +427,7 @@ ActiveRecord::Schema.define(:version => 20130615090309) do
   add_index "sku_properties", ["sku_id"], :name => "index_sku_properties_on_sku_id"
 
   create_table "skus", :force => true do |t|
-    t.integer "sku_id",          :limit => 8
+    t.string  "sku_id"
     t.integer "num_iid",         :limit => 8
     t.string  "properties",                   :default => ""
     t.string  "properties_name",              :default => ""
