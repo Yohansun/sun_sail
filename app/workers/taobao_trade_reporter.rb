@@ -9,11 +9,11 @@ class TaobaoTradeReporter
     report = TradeReport.find(id)
     return unless report
     account = report.fetch_account
-    if report.batch_export_ids 
+    if report.batch_export_ids
       trades = Trade.where(:_id.in => report.batch_export_ids.split(',')).order_by(:created.desc)
-    else  
+    else
       trades = report.trades.order_by(:created.desc)
-    end  
+    end
     book = Spreadsheet::Workbook.new
     sheet1 = book.create_worksheet
     sheet1[0, 0] = "订单列表"
@@ -44,7 +44,9 @@ class TaobaoTradeReporter
               "买家座机",
               "商品名",
               "商品编码",
-              "商品数量"]
+              "商品数量",
+              "物流商",
+              "物流单号"]
 
     max_skus_count = account.taobao_skus.map(&:skus).map(&:count).max
 
@@ -119,6 +121,10 @@ class TaobaoTradeReporter
       shop_discount =  trade.shop_discount
       other_discount = trade.other_discount #第三方造成的优惠
 
+      #物流信息
+      logistic_name = trade.logistic_name
+      logistic_waybill = trade.logistic_waybill
+
       trade_orders = trade.orders
 
       trade_orders.each_with_index do |order, order_index|
@@ -169,7 +175,9 @@ class TaobaoTradeReporter
                 receiver_phone,            #读取买家联系电话-座机
                 title,                     #读取淘宝商品名
                 outer_iid,                 #读取淘宝商品编码
-                order_num]
+                order_num,                 #读取商品数
+                logistic_name,             #读取物流商，没有的话为空
+                logistic_waybill]          #读取物流单号，没有的话为空
 
         order.package_info.each_with_index do |product, index|
           body << "#{product.fetch(:outer_id)}"
@@ -204,6 +212,7 @@ class TaobaoTradeReporter
                 rate_result,                 #读取买家评价结果，没有的话为空
                 rate_content,                #读取买家评价内容，没有的话为空
                 rate_created]                #读取买家评价时间，没有的话为空
+
 
 
         sheet1.row(row_number).concat(body)
