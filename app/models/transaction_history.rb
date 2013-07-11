@@ -23,7 +23,7 @@ class TransactionHistory
 
   enum_attr :status, Trade::STATUS,:not_valid => true
 
-  embedded_in :customer
+  embedded_in :customer,:inverse_of => :transaction_histories
   
   after_save { customer.touch }
 

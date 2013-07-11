@@ -8,7 +8,7 @@ class Customer
   field :buyer_area, type: String #顾客下单的地区
   field :account_id, type: Integer
 
-  embeds_many :transaction_histories, :order => :created.desc
+  embeds_many :transaction_histories, :order => :created.desc, :inverse_of => :customer
   validates :name,:presence => true, :uniqueness => {:scope => :account_id}
 
   accepts_nested_attributes_for :transaction_histories, :allow_destroy => true, :reject_if => proc { |obj| obj.blank? }
