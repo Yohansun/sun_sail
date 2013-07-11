@@ -57,6 +57,8 @@ zh-CN:
   permissions_tag_return_ref: 退除多余货品
   permissions_tag_create_handmade_trade: 新增人工订单
   permissions_tag_edit_handmade_trade: 编辑人工订单
+  permissions_tag_lock_trade: 锁定人工订单
+  permissions_tag_activate_trade: 激活人工订单
   permissions_tag_cs_memo: 客服备注
   permissions_tag_gift_memo: 赠品管理
   permissions_tag_mark_unusual_state: 标注异常

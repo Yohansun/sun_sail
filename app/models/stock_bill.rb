@@ -147,7 +147,7 @@ class StockBill
       if _type == "StockOutBill"
         "已出库"
       else
-       "已入库"
+        "已入库"
       end
     when "CANCELD_OK" then "撤销同步成功"
     when "CANCELD_FAILED" then "撤销同步失败"

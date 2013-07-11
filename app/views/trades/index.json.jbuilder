@@ -1,4 +1,6 @@
 json.array!(@trades) do |json, trade|
+  stock_out_bill = trade.stock_out_bill if trade.stock_out_bill
+  json.stock_status = stock_out_bill.status if stock_out_bill
   json.trades_count @trades_count
   json.id trade._id
   json.tid trade.tid
@@ -102,4 +104,6 @@ json.array!(@trades) do |json, trade|
   json.merged_trade_ids trade.merged_trade_ids
   json.merged_by_trade_id trade.merged_by_trade_id
   json.mergeable_id trade.mergeable_id
+
+  json.is_locked trade.is_locked
 end

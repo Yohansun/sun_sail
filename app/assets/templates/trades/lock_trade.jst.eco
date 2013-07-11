@@ -1,0 +1,16 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal">×</button>
+  <h3>锁定人工订单</h3>
+</div><!-- modal-header -->
+
+<div class="modal-body">
+  <div><p class='error' style='color:red;'></p></div>
+<fieldset>
+  <p>确认锁定订单<%= @trade.get("tid") %>?</p>
+</fieldset>
+</div>
+
+<div class="modal-footer">
+  <a class="btn" data-dismiss="modal">取消</a>
+  <a class="btn btn-primary save">确认锁定</a>
+</div><!-- modal-footer -->

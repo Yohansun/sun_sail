@@ -296,6 +296,8 @@ MagicOrders::Application.routes.draw do
   get "/trades/batch_add_gift", to: "trades#batch_add_gift"
   get "/trades/verify_add_gift", to: "trades#verify_add_gift"
   get "/trades/deliver_list", to: "trades#deliver_list"
+  get "/trades/lock_trade", to: "trades#lock_trade"
+  get "/trades/activate_trade", to: "trades#activate_trade"
   post "/trades/merge", to: "trades#merge"
   get "/trades/split/:id", to: "trades#split"
   get "/deliver_bills/print_deliver_bill.:format", to: "deliver_bills#print_deliver_bill"

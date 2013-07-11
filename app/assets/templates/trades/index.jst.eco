@@ -17,6 +17,7 @@
       <li><a href="#" data-trade-mode='trades' data-trade-status='undelivered'>待发货<em></em></a></li>
       <li><a href="#" data-trade-mode='trades' data-trade-status='delivered'>已发货<em></em></a></li>
       <li><a href="#" data-trade-mode='trades' data-trade-status='unusual_all'>问题订单<em></em></a></li>
+      <li><a href="#" data-trade-mode='trades' data-trade-status='locked'>锁定人工订单<em></em></a></li>
       <li><a href="#" data-trade-mode="deliver_bills" data-trade-status="all">发货单<em></em></a></li>
       <li><a href="#" data-trade-mode="logistic_bills" data-trade-status="all">物流单<em></em></a></li>
       <!-- <li class=''><a href="#after_order" data-toggle="tab">售后订单</a></li> -->
@@ -42,6 +43,8 @@
             <li><a href="#" data-toggle="modal" data-type="return_ref">退除多余货品</a></li>
             <li><a href="/custom_trades/new" data-type="create_handmade_trade">新增人工订单</a></li>
             <li><a href="#" data-type="edit_handmade_trade">编辑人工订单</a></li>
+            <li><a href="#" data-type="lock_trade">锁定人工订单</a></li>
+            <li><a href="#" data-type="activate_trade">激活人工订单</a></li>
             <li><a href="#" data-toggle="modal" data-modal-action='true' data-type="modify_receiver_information">订单用户信息修改</a></li>
             <li><a href="#" data-batch-operation='true' data-toggle="modal" data-modal-action='true' data-type="merge_trades_manually">手动合并订单</a></li>
             <li><a href="#" data-toggle="modal" data-modal-action='true' data-type="split_merged_trades">取消订单合并</a></li>
