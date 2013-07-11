@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 class LogisticsController < ApplicationController
   layout "management"
-  before_filter :authorize,:except => [:logistic_templates,:edit,:user_list,:logistic_user_list]
+  before_filter :authorize
 
   def index
     @logistics = current_account.logistics.page(params[:page])
@@ -150,7 +150,7 @@ class LogisticsController < ApplicationController
 
   def all_logistics
     tmp = []
-    @logistics = Logistic.all
+    @logistics = Logistic.with_account(current_account.id)
     @logistics.each do |l|
       tmp << {
         id: l.id,
