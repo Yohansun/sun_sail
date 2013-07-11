@@ -86,6 +86,7 @@ class User < ActiveRecord::Base
 
   def allow_read?(control,action="index")
     return true if self.superadmin?
+    return true if MagicOrder::DefaultAccesses.any?{|c,actions| c == control.to_s && actions.include?(action.to_s)}
     arys = parsed_permission[control.to_s] & MagicOrder::ActionDelega.keys
     MagicOrder::ActionDelega.slice(*arys).any?{|x,y| y.include?(action.to_s)}
   end

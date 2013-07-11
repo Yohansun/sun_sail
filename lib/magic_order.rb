@@ -10,6 +10,12 @@ module MagicOrder
     "send_customers_messages" => ["send_messages","invoice_messages","get_recipients"]
   }.freeze
 
+  DefaultAccesses = {
+    "logistics" => ["logistic_templates",
+                    "user_list",
+                    "all_logistics"]
+  }.freeze
+
   class AccessControl
     class << self
       def map
