@@ -36,9 +36,6 @@
               <a href="/customers?search_custom[meta_sort]=receiver_mobile.asc">顾客联系电话</a>
             </th>
             <th>
-              <a href="/customers?search_custom[meta_sort]=email.asc">顾客邮箱</a>
-            </th>
-            <th>
               <a href="/customers?search_custom[meta_sort]=receiver_state.asc">省</a>
             </th>
             <th>
@@ -57,7 +54,6 @@
               <td><%= check_box_tag "search[_id_in][]",customer.id %></th>
               <td><%= customer.name %></th>                <!--Newly Add-->
               <td><%= customer.receiver_mobile %></th>
-              <td><%= customer.email %></th>
               <td><%= customer.receiver_state %></th>
               <td><%= customer.receiver_city %></th>
               <td><%= customer.receiver_district %></th>

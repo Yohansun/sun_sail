@@ -32,7 +32,6 @@
         <th><input id="checkbox_all" type="checkbox" value="option1"></th>
         <th>顾客ID</th>
         <th width="88px">联系电话</th>
-        <th width="200px">顾客邮箱</th>
         <th>订单编号</th>
         <th>购买商品</th>
         <th>商品生命周期</th>
@@ -54,7 +53,6 @@
                     <td rowspan="<%= col_num%>"><%= check_box_tag "search[_id_in][]",customer.id %></td>
                     <td rowspan="<%= col_num%>"><%= customer.name %></td>                <!--Newly Add-->
                     <td rowspan="<%= col_num%>"><%= customer.receiver_mobile %></td>
-                    <td rowspan="<%= col_num%>"><%= customer.email %></td>
                   <%- end -%>
                   <%- if p_idx == 0 -%>
                     <td rowspan="<%= trade.product_ids.length%>"><%= trade.tid %></td>
