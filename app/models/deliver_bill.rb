@@ -15,7 +15,7 @@ class DeliverBill
   def logistic=(logistic)
     update_attributes logistic_id: logistic.id, logistic_name: logistic.name
   end
-  
+
   # bill = DeliverBill.find(params[:id])
   # params[:partition]
   # => {"1" => [1,2,3],"2" => [4,5,6],"3" => [7,8,9]}
@@ -32,7 +32,7 @@ class DeliverBill
     duplicates.map(&:save!)
     self.destroy
   end
-  
+
   private
   def duplicate
     self.clone

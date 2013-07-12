@@ -16,7 +16,7 @@ class TradesController < ApplicationController
     else
       offset = params[:offset] || 0
       limit = params[:limit] || 20
-      @trades = Trade.filter(current_account, current_user, params).unmerged
+      @trades = Trade.filter(current_account, current_user, params)
     end
     @trades_count = @trades.count
     @trades = TradeDecorator.decorate(@trades.limit(limit).skip(offset).order_by(:created.desc))

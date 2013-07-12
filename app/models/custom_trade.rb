@@ -109,84 +109,23 @@ class CustomTrade < Trade
   #   self.operation_logs.create(operated_at: Time.now, operation: operation_desc)
   # end
 
-  def dispatch!(seller = nil)
-    return false unless dispatchable?
-
-    seller ||= matched_seller
-
-    return false if seller.blank?
-
-    # 更新订单状态为已分派
-    update_attributes(seller_id: seller.id, seller_name: seller.name, dispatched_at: Time.now)
-
-    # 如果满足自动化设置条件，分派后订单自动发货
-    auto_settings = self.fetch_account.settings.auto_settings
-    if auto_settings['auto_deliver'] && auto_settings["deliver_condition"] == "dispatched_trade"
-      auto_deliver!
-    end
-
-    # 生成默认发货单
-    generate_deliver_bill
-
-    generate_stock_out_bill
-  end
-
   def matched_seller(area = nil)
     area ||= default_area
     SellerMatcher.match_trade_seller(self, area)
   end
 
-  def splitable?
-    false
-  end
+  # def splitable?
+  #   false
+  # end
 
-  def dispatchable?
-    seller_id.blank? && status == 'WAIT_SELLER_SEND_GOODS'
-  end
+  # def calculate_fee
+  #   goods_fee = self.orders.inject(0) { |sum, order| sum + order.total_fee.to_f}
+  #   goods_fee.to_f + self.post_fee.to_f
+  # end
 
-  def out_iids
-    self.orders.map {|o| o.outer_iid}
-  end
-
-  def receiver_address_array
-    [self.receiver_state, self.receiver_city, self.receiver_district]
-  end
-
-  def calculate_fee
-    goods_fee = self.orders.inject(0) { |sum, order| sum + order.total_fee.to_f}
-    goods_fee.to_f + self.post_fee.to_f
-  end
-
-  def bill_infos_count
-    self.orders.inject(0) { |sum, order| sum + order.bill_info.count }
-  end
-
-  def taobao_status_memo
-    case status
-    when "TRADE_NO_CREATE_PAY"
-      "没有创建支付宝交易"
-    when "WAIT_BUYER_PAY"
-      "等待付款"
-    when "WAIT_SELLER_SEND_GOODS"
-      "已付款，待发货"
-    when "WAIT_BUYER_CONFIRM_GOODS"
-      "已付款，已发货"
-    when "TRADE_BUYER_SIGNED"
-      "买家已签收,货到付款专用"
-    when "TRADE_FINISHED"
-      "交易成功"
-    when "TRADE_CLOSED"
-      "交易已关闭"
-    when "TRADE_CLOSED_BY_TAOBAO"
-      "交易被淘宝关闭"
-    when "ALL_WAIT_PAY"
-      "包含：等待买家付款、没有创建支付宝交易"
-    when "ALL_CLOSED"
-      "包含：交易关闭、交易被淘宝关闭"
-    else
-      status
-    end
-  end
+  # def bill_infos_count
+  #   self.orders.inject(0) { |sum, order| sum + order.bill_info.count }
+  # end
 
   def self.make_new_trade(trade, current_account, current_user)
     trade[:receiver_state] = Area.find(trade[:receiver_state]).try(:name) rescue nil

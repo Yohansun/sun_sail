@@ -2,6 +2,8 @@
 
 class Trade
   include Mongoid::Document
+  # Mongoid 4.0.0版本中移除了Paranoia，Versioning
+  # 现在这是两个独立的gem包，升级Mongoid的时候请注意添加
   include Mongoid::Paranoia
   include Mongoid::Versioning
   include Mongoid::Timestamps
@@ -174,9 +176,9 @@ class Trade
   field :operator_name
 
   #订单合并
-  field :merged_trade_ids, type:Array
-  field :merged_by_trade_id, type:String
-  field :mergeable_id, type:String
+  field :merged_trade_ids, type: Array
+  field :merged_by_trade_id, type: String
+  field :mergeable_id, type: String
 
   #人工订单锁定
   field :is_locked, type: Boolean, default: false
@@ -239,10 +241,13 @@ class Trade
   embeds_many :ref_batches
   embeds_many :manual_sms_or_emails
   embeds_many :trade_gifts
+  embeds_many :taobao_orders
+  embeds_many :promotion_details
 
   has_many :deliver_bills
 
   has_many :stock_out_bills
+
   belongs_to :customer, :class_name => "Customer", :foreign_key => "buyer_nick",:primary_key => "name"
 
   enum_attr :status, [["没有创建支付宝交易"                ,"TRADE_NO_CREATE_PAY"],
@@ -267,7 +272,7 @@ class Trade
 
 
   scope  :paid_undispatched, ->{where({status:"WAIT_SELLER_SEND_GOODS", dispatched_at:nil})}
-  scope  :unmerged, ->{where(merged_by_trade_id:nil)}
+  # scope  :unmerged, ->{where(merged_by_trade_id:nil)}
   scope  :be_merged, ->{where({merged_by_trade_id:{"$ne"=>nil}})}
   scope  :is_merger, ->{where({merged_trade_ids:{"$ne"=>nil}})}
 
@@ -789,18 +794,67 @@ class Trade
     TradeTaobaoDeliver.perform_async(self.id)
   end
 
-  def receiver_address_array
-    # overwrite this method
-    # 请按照 省市区 的顺序生成array
-    []
+  def dispatchable?
+    seller_id.blank? && status == 'WAIT_SELLER_SEND_GOODS'
   end
 
   def dispatch!(seller = nil)
-    # overwrite this method
+    return false unless dispatchable?
+
+    seller ||= matched_seller
+
+    return false if seller.blank?
+
+    # 更新订单状态为已分派
+    update_attributes(seller_id: seller.id, seller_name: seller.name, dispatched_at: Time.now)
+
+    # 如果满足自动化设置条件，分派后订单自动发货
+    auto_settings = self.fetch_account.settings.auto_settings
+    if auto_settings['auto_deliver'] && auto_settings["deliver_condition"] == "dispatched_trade"
+      auto_deliver!
+    end
+
+    # 生成默认发货单
+    generate_deliver_bill
+    generate_stock_out_bill
   end
 
+  ## model属性方法 ##
+
   def out_iids
-    # overwrite this method
+    self.orders.map {|o| o.outer_iid}
+  end
+
+  def receiver_address_array
+    # 请按照 省市区 的顺序生成array
+    [self.receiver_state, self.receiver_city, self.receiver_district]
+  end
+
+  def taobao_status_memo
+    case status
+    when "TRADE_NO_CREATE_PAY"
+      "没有创建支付宝交易"
+    when "WAIT_BUYER_PAY"
+      "等待付款"
+    when "WAIT_SELLER_SEND_GOODS"
+      "已付款，待发货"
+    when "WAIT_BUYER_CONFIRM_GOODS"
+      "已付款，已发货"
+    when "TRADE_BUYER_SIGNED"
+      "买家已签收,货到付款专用"
+    when "TRADE_FINISHED"
+      "交易成功"
+    when "TRADE_CLOSED"
+      "交易已关闭"
+    when "TRADE_CLOSED_BY_TAOBAO"
+      "交易被淘宝关闭"
+    when "ALL_WAIT_PAY"
+      "包含：等待买家付款、没有创建支付宝交易"
+    when "ALL_CLOSED"
+      "包含：交易关闭、交易被淘宝关闭"
+    else
+      status
+    end
   end
 
   def custom_type

@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 class UnusualStateMarker
   include Sidekiq::Worker
-  sidekiq_options :queue => :unusual_state_marker
+  sidekiq_options :queue => :auto_process #自动标注异常订单队列
 
   def perform(id, version)
     account = Account.find(id)

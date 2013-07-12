@@ -2,8 +2,10 @@
 <td data-col='trade_source'>
 <% if @bill.get('trade_source') == "赠品" || @bill.get('trade_source') == "人工" : %>
   <span class="label label-important"><%= @bill.get('trade_source') %></span>
-<% else : %>
+<% else if @bill.get('trade_source') == "淘宝" : %>
   <span class="label label-warning"><%= @bill.get('trade_source') %></span>
+<% else : %>
+  <span class="label label-darkorchid"><%= @bill.get('trade_source') %></span>
 <% end %>
 </td>
 <td data-col='tid'><%= @bill.get('tid') %></td>

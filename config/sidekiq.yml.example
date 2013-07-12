@@ -7,12 +7,9 @@
 
 :queues:
   - [reporter, 3]
-  - [delay_auto_dispatch, 3]
+  - [auto_process, 3]
   - [taobao_memo_fetcher, 3]
   - [taobao_promotion_fetcher, 3]
-  - [unusual_state_marker, 3]
-  - [taobao_memo_sync, 3]
-  - [trade_taobao_auto_deliver, 3]
   # - [sms, 3]
   # - [email, 3]
   # - [taobao, 3]

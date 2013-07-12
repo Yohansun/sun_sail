@@ -113,7 +113,7 @@
             <option value="has_cs_memo">客服备注</option>
             <option value="has_seller_memo">卖家备注</option>
             <option value="has_buyer_message">买家备注</option>
-            <option value="has_logistic_memo">物流公司备注</option>
+            <!-- <option value="has_logistic_memo">物流公司备注</option> -->
             <option value="has_gift_memo">赠品备注</option>
             <option value="has_unusual_state">异常备注</option>
           </select>
