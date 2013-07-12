@@ -178,6 +178,9 @@ class Trade
   field :merged_by_trade_id, type:String
   field :mergeable_id, type:String
 
+  #人工订单锁定
+  field :is_locked, type: Boolean, default: false
+
   # ADD INDEXES TO SPEED UP
   # 简单搜索index
   index tid: -1
@@ -879,7 +882,12 @@ class Trade
 
   # 订单筛选
   def self.filter(current_account, current_user, params)
-    trades = Trade.where(account_id: current_account.id)
+    # 锁定订单被soft-delete
+    if params[:trade_type] && params[:trade_type] == "locked"
+      trades = Trade.deleted.where(account_id: current_account.id)
+    else
+      trades = Trade.where(account_id: current_account.id)
+    end
 
     paid_not_deliver_array = ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"]
     paid_and_delivered_array = ["WAIT_BUYER_CONFIRM_GOODS","WAIT_GOODS_RECEIVE_CONFIRM","WAIT_BUYER_CONFIRM_GOODS_ACOUNTED","WAIT_SELLER_SEND_GOODS_ACOUNTED"]
@@ -991,7 +999,7 @@ class Trade
       # when 'invoice_sent'
       #   trade_type_hash = {:status.in => paid_and_delivered_array, :seller_confirm_invoice_at.ne => nil}
 
-      #退货
+      # 退货
       when 'request_return'
         trade_type_hash = {:request_return_at.ne => nil, confirm_return_at: nil}
       when 'confirm_return'
@@ -1004,6 +1012,10 @@ class Trade
         trade_type_hash = {has_color_info: true, :status.in => paid_not_deliver_array, confirm_color_at: nil}
       when "color_confirmed"
         trade_type_hash = {has_color_info: true, :status.in => paid_not_deliver_array, :confirm_color_at.ne => nil}
+
+      # 锁定
+      when 'locked'
+        trade_type_hash = {is_locked: true}
 
       # 登录时的默认显示
       when "default"

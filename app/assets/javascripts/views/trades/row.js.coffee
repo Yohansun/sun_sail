@@ -89,6 +89,8 @@ class MagicOrders.Views.TradesRow extends Backbone.View
       $('#op-toolbar .batch_ops .dropdown-menu a').css('display', 'none')
       $('#op-toolbar .batch_ops .dropdown-menu  a[data-batch-operation]').css('display', '')
       $('#op-toolbar .batch_ops .dropdown-menu  a[data-batch_type]').css('display', '')
+      if @model.get('is_locked') == true
+        $('#op-toolbar .batch_ops .dropdown-menu  a[data-batch_type]').hide()
 
     else if $('#all_orders input.trade_check:checked').length == 1
       # initial display all btns
@@ -96,6 +98,8 @@ class MagicOrders.Views.TradesRow extends Backbone.View
       $('#op-toolbar .batch_ops .dropdown-menu  a[data-batch_type=batch_export]').removeAttr('style')
       $('#op-toolbar .dropdown-menu').parents('div.btn-group').css('display', '')
       # $('#op-toolbar .batch_ops .dropdown-menu a').css('display', '')
+      if @model.get('is_locked') == true
+        $('#op-toolbar .batch_ops .dropdown-menu  a[data-batch_type]').hide()
 
       trade = $('#all_orders input.trade_check:checked')[0]
       $('#op-toolbar .dropdown-menu').removeAttr('style')

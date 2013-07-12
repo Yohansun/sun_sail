@@ -166,6 +166,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     viewClassName = "Trades" + _.classify(operation_key)
     modalDivID = "#trade_" + operation_key
 
+
     @model = new MagicOrders.Models.Trade(id: id)
     @model.fetch success: (model, response) =>
       $.unblockUI()
@@ -201,7 +202,19 @@ class MagicOrders.Routers.Trades extends Backbone.Router
             $('#select_category').select2 data: c_data
           $("#select_product").select2 data: []
           $('#select_sku').select2 data: []
-
+        when 'lock_trade'
+          $(modalDivID).find('.save').hide()
+          if model.get('stock_status') == "CANCELING"
+            $(modalDivID).find('.error').html('此订单目前无法撤销,请稍后执行操作')
+          else if model.get('stock_status') == "STOCKED" && model.get('stock_status') == "CANCELED_FAILED"
+            $(modalDivID).find('.error').html('此订单已出库，无法撤销')
+          else if model.get('stock_status') == "SYNCKED"
+            $(modalDivID).find('.error').html('此订单已同步出库单，请先撤销此订单出库单')
+          else
+            if model.get('dispatched_at')
+              $(modalDivID).find('.error').html('此订单已分流，请先分流重置订单')
+            else
+              $(modalDivID).find('.save').show()
       $(modalDivID).modal('show')
 
   splited: (id) ->

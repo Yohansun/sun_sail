@@ -92,7 +92,7 @@ class TradesController < ApplicationController
   end
 
   def show
-    @trade = TradeDecorator.decorate(Trade.where(_id: params[:id]).first)
+    @trade = TradeDecorator.decorate(Trade.where(_id: params[:id]).first || Trade.deleted.where(_id: params[:id]).first)
     # if params[:splited]
     #   @splited_orders = matched_seller_info(@trade)
     # end
@@ -100,14 +100,16 @@ class TradesController < ApplicationController
   end
 
   def update
-    @trade = Trade.where(_id: params[:id]).first
+    @trade = Trade.where(_id: params[:id]).first || Trade.deleted.where(_id: params[:id]).first
     notifer_seller_flag = false
 
-    if params[:seller_id].present?
-      seller = current_account.sellers.find_by_id params[:seller_id]
-      @trade.dispatch!(seller) if seller
-    elsif params[:seller_id].nil?
-      @trade.reset_seller
+    if params[:seller_id]
+      if params[:seller_id] != "void"
+        seller = current_account.sellers.find_by_id params[:seller_id]
+        @trade.dispatch!(seller) if seller
+      elsif params[:seller_id] == "void"
+        @trade.reset_seller
+      end
     end
 
     if params[:delivered_at] == true
@@ -265,7 +267,6 @@ class TradesController < ApplicationController
     if params[:modify_payment_no]
       @trade.modify_payment_no = params[:modify_payment_no]
     end
-
 
     [
       # for modify receiver informations
@@ -427,6 +428,20 @@ class TradesController < ApplicationController
     end
 
     render json: {isSuccess: true}
+  end
+
+  def lock_trade
+    trade = Trade.where(_id: params[:id]).first
+    trade.update_attributes(is_locked: true)
+    trade.delete
+    render json: {id: trade.id}
+  end
+
+  def activate_trade
+    trade = Trade.deleted.where(_id: params[:id]).first
+    trade.restore
+    trade.update_attributes(is_locked: false)
+    render json: {id: trade.id}
   end
 
   def seller_for_area
