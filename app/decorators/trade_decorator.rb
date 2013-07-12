@@ -346,13 +346,13 @@ class TradeDecorator < Draper::Base
           else
             if trade.is_auto_dispatch == true
               if trade.fetch_account.settings.enable_module_third_party_stock == 1
-                "已分派,#{trade.stock_out_bill.try(:status_text)},自动分派"
+                "已分派,#{trade.stock_out_bill.try(:status_text) || '出库单已关闭'},自动分派"
               else
                 "已分派,待设置物流,自动分派"
               end
             elsif trade.is_auto_dispatch == false
               if trade.fetch_account.settings.enable_module_third_party_stock == 1
-                "已分派,#{trade.stock_out_bill.try(:status_text)},手动分派"
+                "已分派,#{trade.stock_out_bill.try(:status_text) || '出库单已关闭'},手动分派"
               else
                 "已分派,待设置物流,手动分派"
               end
