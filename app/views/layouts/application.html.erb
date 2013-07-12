@@ -6,7 +6,7 @@
     <% if current_account.try(:key) == 'dulux' %>
     <title><%= current_account.settings.site_title_basic %></title>
     <% else %>
-    <title><%= content_for?(:title) ? yield(:title) : "Magic Orders" %></title>
+    <title><%= content_for?(:title) ? yield(:title) : "Magic Orders-做最好用的品牌电子商务ERP系统" %></title>
     <% end %>
     <%= csrf_meta_tags %>
 
