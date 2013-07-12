@@ -206,7 +206,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
           $(modalDivID).find('.save').hide()
           if model.get('stock_status') == "CANCELING"
             $(modalDivID).find('.error').html('此订单目前无法撤销,请稍后执行操作')
-          else if model.get('stock_status') == "STOCKED" && model.get('stock_status') == "CANCELED_FAILED"
+          else if model.get('stock_status') == "STOCKED" || model.get('stock_status') == "CANCELED_FAILED"
             $(modalDivID).find('.error').html('此订单已出库，无法撤销')
           else if model.get('stock_status') == "SYNCKED"
             $(modalDivID).find('.error').html('此订单已同步出库单，请先撤销此订单出库单')
