@@ -1,0 +1,34 @@
+<%
+  breadcrumb << ["系统设置", users_path]
+  breadcrumb << ["基础数据管理", stocks_safe_stock_path]
+  breadcrumb << ["订单管理", trade_searches_path]
+  breadcrumb << ["开票默认设置"]
+%>
+<div class="span10">
+  <ul class="nav nav-tabs">
+    <li class="active"><a href="/trades/invoice_setting">开票默认设置</a></li>
+  </ul>
+  <div class="tab-content">
+    <div class="tab-pane active" id="invoice_settings">
+      <%= form_tag "/trades/change_invoice_setting", :method => "post" do -%>
+      <!--  <form action="/trades/change_invoice_setting" method="post" remote="true">-->
+       <fieldset class="mar_l80"><!-- 开票默认设置 beginning -->
+          <h4>开票默认设置:</h4>
+          <div class="mar_l80">
+            <div class="control-group">
+              <label class="radio pull-left input-small">
+                <input type="radio" name="settings[open_auto_mark_invoice]" value="1" <%='checked' if @setting['open_auto_mark_invoice'] == 1 %>>全部开票
+              </label>
+              <label class="radio">
+                <input type="radio" name="settings[open_auto_mark_invoice]" value="0" <%='checked' if @setting['open_auto_mark_invoice'].present? == false %>>全部不开票
+              </label>
+            </div>
+          </div>
+        </fieldset>
+        <div class="pagination-centered mar_t30">
+          <button class="btn btn-primary" type="submit">保存</button>
+        </div>
+      <% end %>
+    </div>
+  </div><!-- tab-content end -->
+</div>

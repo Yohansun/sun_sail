@@ -3,7 +3,7 @@ require 'rchardet19'
 
 class TradesController < ApplicationController
   layout false, :only => :print_deliver_bill
-  layout 'management', only: :show_percent
+  layout 'management', only: [:show_percent, :invoice_setting]
   respond_to :json, :xls
   before_filter :authorize,:only => [:index,:print_deliver_bill]
 
@@ -520,10 +520,23 @@ class TradesController < ApplicationController
     redirect_to trades_show_percent_path
   end
 
+  def invoice_setting
+    @setting = current_account.settings
+  end
+
+  def change_invoice_setting
+    if params[:settings][:open_auto_mark_invoice] == "1"
+      current_account.settings.open_auto_mark_invoice = 1
+    else
+      current_account.settings.open_auto_mark_invoice = nil
+    end
+    flash[:notice] = "保存成功"
+    redirect_to trades_invoice_setting_path
+  end
+
   def merge
     ids = params[:ids]
     trades = Trade.find ids
-
     merged_trade = Trade.merge_trades trades
     render :json=>merged_trade
   end
