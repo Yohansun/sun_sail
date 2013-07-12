@@ -38,7 +38,7 @@
 -->
         </ul>
     </li>
-    <% @basedata = ["stocks","logistics","category_properties","categories", "logistic_groups", "trade_searches", "areas", "orders", "notify"] %>
+    <% @basedata = ["stocks","logistics","category_properties","categories", "logistic_groups", "trade_searches", "areas", "orders", "notify", "trades"] %>
     <li class="<%= display?(@basedata,"active") %>">
       <a href="#" class="" data-toggle="collapse" data-target="#base_data">
         <i class="icon-chevron-right"></i> 基础数据管理
@@ -76,12 +76,13 @@
           <li class="<%= display?("logistics","active") %>"><a href="/logistics"  data-toggle="collapse" data-target="#logistics_menu">
             <i class="<%= display?("logistics","active") %>"></i>物流公司管理</a>
           </li>
-          <li class="<%= display?("trade_searches","active") %>">
+          <li class="<%= display?(["trade_searches","trades"],"active")%>">
             <a href="#"  data-toggle="collapse" data-target="#orders_menu">订单管理</a>
-            <ul id="orders_menu" class="collapse <%= display?("trade_searches","in") %> third_menu">
-              <li class="<%= display?(["trade_searches","trades"],"active") %>"><a href="/trade_searches">自定义查询</a>
+            <ul id="orders_menu" class="collapse <%= display?(["trade_searches","trades"],"in") %> third_menu">
+              <li class="<%= display?("trade_searches","active") %>"><a href="/trade_searches">自定义查询</a>
               </li>
               <li class="<%= display?("trades","active","show_percent") %>"><a href="/trades/show_percent">分配比设置</a></li>
+              <li class="<%= display?("trades","active","invoice_setting") %>"><a href="/trades/invoice_setting">开票默认设置</a></li>
             </ul>
           </li>
 
