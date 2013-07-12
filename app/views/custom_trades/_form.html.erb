@@ -5,6 +5,8 @@
         <fieldset class="span5">
           <%= f.input :receiver_name, label: '收货人姓名：', :input_html =>{ :class => "input-large"} %>
           <%= f.input :receiver_mobile, label: '收货人手机：', :input_html =>{ :class => "input-large"} %>
+          <%= f.input :tid, label: '订单编号：', :input_html =>{ :class => "input-large"} %>
+          <%= f.input :buyer_nick, label: '收货人淘宝ID：', :input_html =>{ :class => "input-large"} %>
           <%= f.input :created, label: '下单时间：', :input_html =>{ :class => "input-large js-datetimepicker", :value => "#{@custom_trade.pay_time.try(:strftime, '%Y-%m-%d %H:%M:%S')}"}, readonly: true %>
           <div class="control-group string required">
             <label class="string required control-label">

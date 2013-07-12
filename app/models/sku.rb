@@ -34,8 +34,8 @@ class Sku < ActiveRecord::Base
     "#{product.try(:name)}#{name}"
   end
 
-  def title_with_sku_id
-    title << (sku_id.blank? ? "" : " [#{sku_id}] ")
+  def title_with_product_id
+    title << (product.blank? ? "" : " [#{product.outer_id}] ")
   end
 
   def name
@@ -45,7 +45,7 @@ class Sku < ActiveRecord::Base
   def value
      values_name * "|"
   end
-  
+
   def values_name
     sku_properties.map(&:cached_property_value)
   end
@@ -58,7 +58,7 @@ class Sku < ActiveRecord::Base
       props.each{|prop|
         pid,uid,pname,pvalue = prop.split(':')
 
-        # may create 4 data : category_property, category_property_value, 
+        # may create 4 data : category_property, category_property_value,
         #  and association between properties and categories
         #  and sku_properties
 
