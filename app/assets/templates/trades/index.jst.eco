@@ -288,7 +288,9 @@
           <button type="submit" class="btn">保存搜索</button>
         </div>
         <span class="help-inline"></span>
-
+        <div class="controls">
+          <p>如果需要管理搜索条件，请前往 系统设置>基础数据管理>订单设置>自定义查询 进行设置</p>
+        </div>
       </div>
     </form>
     <p>
