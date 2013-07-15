@@ -257,5 +257,9 @@
     $.post("/products/tie_to_native_skus", {taobao_sku_id: taobao_sku_id, infos: infos}, function(result){});
     $('#sku_binding').modal('hide');
   })
+
+  $('table#taobao_product_table tr').click(function() {
+    $(this).find('td input:radio').prop('checked', true);
+  })
 </script>
 <% end %>
