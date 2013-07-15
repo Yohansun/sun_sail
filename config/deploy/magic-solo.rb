@@ -1,15 +1,13 @@
 # -*- encoding : utf-8 -*-
 require 'hipchat/capistrano'
-
-set :rvm_ruby_string, '1.9.3'
-set :rvm_type, :system
+set :rvm_ruby_string, '1.9.3@magic-orders'
 
 set :repository, "git@git.networking.io:nioteam/magic_orders.git"
 set :branch, "solo_dev"
 
-server "magic-solo.networking.io", :web, :app, :db, primary: true
-set :user, "root"
-set :deploy_to, "/var/rails/magic-solo"
+server "121.196.130.171", :web, :app, :db, primary: true
+set :user, "rails"
+set :deploy_to, "/home/rails/server/magic-solo"
 
 set :assets_dependencies, %w(app/assets lib/assets vendor/assets Gemfile.lock config/routes.rb)
 
@@ -36,9 +34,9 @@ namespace :deploy do
   end
 
 
-  desc "restart all monit tasks"
-  task :monit_restart_all do
-    run "monit restart all"
+  desc "restart magic_solo god tasks"
+  task :god_restart_magic_solo do
+    run "rvmsudo god restart magic_solo"
   end
 
   desc "Symlink shared resources on each release"
@@ -58,7 +56,9 @@ namespace :deploy do
 end
 
 after 'deploy:finalize_update', 'deploy:symlink_shared'
-before "deploy:restart", "deploy:monit_restart_all"
+
+# can't execute because of permission.
+# before "deploy:restart", "deploy:god_restart_magic_solo"
 
 namespace :db do
   desc "migrate db"
