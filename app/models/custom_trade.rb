@@ -14,6 +14,7 @@ class CustomTrade < Trade
   validates_length_of :receiver_name, maximum: 20, message: "内容过长"
   validates_length_of :receiver_address, maximum: 100, message: "内容过长"
   validates_length_of :cs_memo, maximum: 400, message: "内容过长"
+  validates_format_of :tid, with: /^[0-9A-Z]{15,19}$/, message: "只能是大写字母和数字，长度在15-19之间"
   CH_EN_NUM_FORMAT = /^(\w|[\u4E00-\u9FA5])+$/
   validates :receiver_name, format: { with: CH_EN_NUM_FORMAT, message: "姓名格式不正确"}
   # validates :receiver_address, format: { with: CH_EN_NUM_FORMAT, message: "地址格式不正确"}
