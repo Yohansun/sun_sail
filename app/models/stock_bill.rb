@@ -48,8 +48,8 @@ class StockBill
   validates_uniqueness_of :tid, :if => :active_tid_exists?
 
   validates :op_name,:length => { :maximum => 50 }, :allow_blank => true
-  validates :op_phone, format: { with: /\d+-\d+/ }, :allow_blank => true
-  validates :op_mobile, length: {is: 11}, :allow_blank => true
+  # validates :op_phone, format: { with: /\d+-\d+/ }, :allow_blank => true
+  # validates :op_mobile, length: {is: 11}, :allow_blank => true
   validates :op_address, length: {:maximum => 100}, :allow_blank => true
   validates :remark, length: {:maximum => 500}, :allow_blank => true
   validate do
