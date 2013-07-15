@@ -67,9 +67,15 @@
 </div><!-- tab-content -->
 </div><!-- span10 -->
 </div><!--row-fluid -->
+<% content_for :tail do %>
 <script>
   function processChecked(full_url){
-    var stock_product_ids = $('input[name=\"bill_ids[]\"]:checked').map(function(){ return $(this).val()}).get().join(',');
-    $(location).attr('href', full_url + '&export_ids=' + stock_product_ids);
+    var bill_ids = $('input[name=\"bill_ids[]\"]:checked').map(function(){ return $(this).val()}).get().join(',');
+    $(location).attr('href', full_url + '&export_ids=' + bill_ids);
   }
+
+  $(function() {
+    clickTableRow("bills_table");
+  });
 </script>
+<% end %>

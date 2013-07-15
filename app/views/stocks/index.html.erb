@@ -9,7 +9,7 @@
           <%= render :partial => "search",:locals => {:f => f} %>
         <% end %>
       </div>
-      
+
       <div class="btn-toolbar">
         <div class="btn-group">
           <button class="btn btn-warning">操作</button>
@@ -37,7 +37,7 @@
         <fieldset class="js-modal modal hide fade" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true" id="batch_update_activity_stock">
           <%= render "batch_update_activity_stock" %>
         </fieldset>
-          <table class="table table-hover table-bordered table-striped table-condensed js-table">
+          <table class="table table-hover table-bordered table-striped table-condensed js-table" id="stocks_table">
             <thead>
               <tr>
                 <th width="2%"><input type="checkbox"></th>
@@ -48,7 +48,7 @@
                 <th width="10%"><%= sort_link @search, :category_name,"商品分类" %></th>
                 <th width="10%"><%= sort_link @search, :activity,"可用库存" %></th>
                 <th width="10%"><%= sort_link @search, :actual,"实际库存" %></th>
-                <th width="10%"><%= sort_link @search, :safe_value,"安全库存" %></th>                
+                <th width="10%"><%= sort_link @search, :safe_value,"安全库存" %></th>
                 <th width="10%">库存状态</th>
               </tr>
             </thead>
@@ -130,6 +130,8 @@ $(function() {
     var sku_title = $(tr_name).text();
     $("#product_name").text(sku_title);
   })
+
+  clickTableRow("stocks_table");
 })
 </script>
 <% end %>
