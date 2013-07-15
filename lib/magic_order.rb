@@ -188,16 +188,19 @@ MagicOrder::AccessControl.map do |map|
                                  "determine_the_storage",
                                  "stock_in_bills#create",
                                  "stock_out_bills#create",
+                                 "stock_in_bills#update",
+                                 "stock_out_bills#update",
                                  "stock_in_bills#sync",
                                  "stock_out_bills#sync",
                                  "stock_in_bills#check",
                                  "stock_out_bills#check",
                                  "stock_in_bills#rollback",
                                  "stock_out_bills#rollback",
-                                 "stock_in_bills#add_product",
-                                 "stock_out_bills#add_product",
-                                 "stock_in_bills#remove_product",
-                                 "stock_out_bills#remove_product"]
+                                 "stock_in_bills#lock",
+                                 "stock_out_bills#lock",
+                                 "stock_in_bills#unlock",
+                                 "stock_out_bills#unlock"
+                               ]
   end
   #数据模块
   map.project_module :datas do |map|

@@ -1,1 +1,1 @@
-<td id="status_<%= bill.id %>"><%= bill.status_text %></td>
+<td id="status_<%= bill.id %>"><%= raw bill.operation_locked? ? "<b style='color:red'>#{bill.operation_name}</b>" : bill.status_text %></td>

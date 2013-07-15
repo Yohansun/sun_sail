@@ -26,15 +26,15 @@ describe "StockOutBills" do
   
   describe "POST /warehouses/1/stock_out_bills#create" do
     it "should not be save" do
-      post warehouse_stock_out_bills_path(@warehouse),{stock_out_bill: {key: "value"},warehouse_id: @warehouse.id,bill_product_ids: "1,2"}
+      post warehouse_stock_out_bills_path(@warehouse),{stock_out_bill: {key: "value"},warehouse_id: @warehouse.id}
       expect(response).to render_template(:new)
       response.status.should be(200)
     end
 
-    it "should be save" do
+    pending "should be save" do
       StockOutBill.any_instance.stub(save: true)
-      post warehouse_stock_out_bills_path(@warehouse),{stock_out_bill: {key: "value"},warehouse_id: @warehouse.id,bill_product_ids: "1,2"}
-      expect(response).to redirect_to(warehouse_stock_out_bills_path(@warehouse))
+      post warehouse_stock_out_bills_path(@warehouse),{stock_out_bill: {key: "value"},warehouse_id: @warehouse.id}
+      expect(response).to redirect_to(warehouse_stock_out_bill_path(@warehouse,@stock_out_bill))
       response.status.should be(302)
       follow_redirect!
       expect(response).to render_template(:index)
@@ -62,14 +62,14 @@ describe "StockOutBills" do
     #暂时没有编辑的功能
     pending "update failure" do
       StockOutBill.any_instance.stub(update_attributes: false)
-      put warehouse_stock_out_bill_path(@warehouse,@stock_out_bill),:product_ids => '1,2'
+      put warehouse_stock_out_bill_path(@warehouse,@stock_out_bill)
       expect(response).to render_template(:edit)
       response.status.should be(200)
     end
     
     #暂时没有编辑的功能
     pending "update success" do
-      put warehouse_stock_out_bill_path(@warehouse,@stock_out_bill),:product_ids => '1,2'
+      put warehouse_stock_out_bill_path(@warehouse,@stock_out_bill)
       expect(response).to redirect_to(warehouse_stock_out_bills_path(@warehouse))
       response.status.should be(302)
       follow_redirect!
@@ -95,22 +95,6 @@ describe "StockOutBills" do
   describe "POST /warehouses/1/stock_out_bills#rollback" do
     it "works! (now write some real specs)" do
       post rollback_warehouse_stock_out_bills_path(@warehouse,:format => :js),:bill_ids => [@stock_out_bill.id]
-      response.status.should be(200)
-    end
-  end
-  
-  describe "POST /warehouses/1/stock_out_bills#add_product" do
-    it "works! (now write some real specs)" do
-      sku = create(:sku,:account_id => current_account.id,:product => create(:product,:account_id => current_account.id))
-      post add_product_warehouse_stock_out_bills_path(@warehouse,:format => :js),:product => {:real_number => 1,:sku_id => sku.id,:number => 1,:total_price => 1}
-      response.status.should be(200)
-    end
-  end
-  
-  describe "POST /warehouses/1/stock_out_bills#remove_product" do
-    it "works! (now write some real specs)" do
-      current_user.settings.stub(:tmp_products => [])
-      post remove_product_warehouse_stock_out_bills_path(@warehouse,:format => :js)
       response.status.should be(200)
     end
   end

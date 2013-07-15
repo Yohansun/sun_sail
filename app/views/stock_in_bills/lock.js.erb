@@ -1,0 +1,4 @@
+<%- @bills.each do |bill|%>
+$("#status_<%= bill.id %>").replaceWith("<%= j render('status', bill: bill) %>")
+<%- end %>
+alert("<%= j @message %>");

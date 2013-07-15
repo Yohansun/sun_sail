@@ -1,9 +1,7 @@
 # -*- encoding : utf-8 -*-
 class StockInBillsController < ApplicationController
-  include StockBillsHelper
   before_filter :set_warehouse
   before_filter :default_conditions,:on => [:edit,:show,:update,:add_product,:remove_product]
-  before_filter :fetch_bills,:except => :index
   before_filter :authorize,:except => :fetch_bils
 
   def index
@@ -24,26 +22,22 @@ class StockInBillsController < ApplicationController
   end
 
 	def new
-    @products = (current_user.settings.tmp_products ||= [])
-    @products = specified_tmp_products(@products)
     @bill = StockInBill.new(default_search)
+    @bill.bill_products.build
   end
 
   def create
     stock_in_bills = params[:stock_in_bill].merge!(default_search)
     @bill = StockInBill.new(stock_in_bills)
-    bill_product_ids = params[:bill_product_ids].split(',')
-    build_product(@bill,bill_product_ids)
-    @bill.update_bill_products
     @bill.status = "CREATED"
+    update_areas!(@bill)
+    @bill.update_bill_products
     if @bill.save
-      update_areas!(@bill)
-      tmp_products = current_user.settings.tmp_products
-      tmp_products = tmp_products.reject { |x| bill_product_ids.include?(x.id.to_s) }
-      current_user.settings.tmp_products = tmp_products
-      redirect_to  warehouse_stock_in_bills_path(@warehouse)
+      flash[:notice] = "入库单#{@bill.tid}创建成功"
+      redirect_to  warehouse_stock_in_bill_path(@warehouse,@bill)
     else
-      @products = (current_user.settings.tmp_products ||= [])
+      #TODO 错误提示重复
+      flash[:error] = (@bill.errors.full_messages.uniq + @bill.bill_products_errors).to_sentence
       render :new
     end
   end
@@ -61,30 +55,24 @@ class StockInBillsController < ApplicationController
 
   def update
     @bill = StockInBill.find_by(@conditions)
-    @products = @bill.bill_products
-    parse_area(@bill)
-    bill_product_ids = params[:bill_product_ids].split(',')
-    if @bill.update_attributes(params[:stock_in_bill])
-      update_areas!(@bill)
-      @bill.bill_products.not_in(:id => bill_product_ids).delete
-      redirect_to :action => :index
+    update_areas!(@bill)
+    @bill.attributes = params[:stock_in_bill]
+    @bill.update_bill_products
+    if @bill.save
+      flash[:notice] = "入库单#{@bill.tid}更新成功!"
+      redirect_to warehouse_stock_in_bill_path(@warehouse,@bill)
     else
+      #TODO 错误提示重复
+      flash[:error] = (@bill.errors.full_messages.uniq + @bill.bill_products_errors).to_sentence
       render :edit
     end
-  end
-
-  def fetch_bills
-    bills = StockInBill.where(default_search).desc(:checked_at)
-    unchecked, checked = bills.partition { |b| b.checked_at.nil? }
-    @bills = unchecked + checked
-    @bills = Kaminari.paginate_array(@bills).page(params[:page]).per(20)
   end
 
   def sync
     @operated_bills = StockInBill.any_in(_id: params[:bill_ids])
     @operated_bills.each do |bill|
+      bill.build_log(current_user,'同步')
       bill.sync
-      bill.operation_logs.create(operated_at: Time.now, operator: current_user.name, operator_id: current_user.id, operation: '同步')
     end
     respond_to do |f|
       f.js
@@ -94,8 +82,8 @@ class StockInBillsController < ApplicationController
   def check
     @operated_bills = StockInBill.any_in(_id: params[:bill_ids])
     @operated_bills.each do |bill|
+      bill.build_log(current_user,'审核')
       bill.check
-      bill.operation_logs.create(operated_at: Time.now, operator: current_user.name, operator_id: current_user.id, operation: '审核')
     end
     respond_to do |f|
       f.js
@@ -105,44 +93,29 @@ class StockInBillsController < ApplicationController
   def rollback
     @operated_bills = StockInBill.any_in(_id: params[:bill_ids])
     @operated_bills.each do |bill|
+      bill.build_log(current_user,'取消')
       bill.rollback
-      bill.operation_logs.create(operated_at: Time.now, operator: current_user.name, operator_id: current_user.id, operation: '取消')
     end
     respond_to do |f|
       f.js
     end
   end
 
-  def add_product
-    @bill = StockInBill.find_by(@conditions) rescue false
-
-    params[:product][:real_number] = params[:product][:number] if params[:product][:real_number].blank?
-    if @bill.present?
-      @tmp_products = @bill.bill_products
-      @bill.bill_products.build(params[:product])
-      @bill.update_bill_products
-      @bill.save
-    else
-      add_tmp_product(params[:product])
-    end
+  def lock
+    @bills = StockInBill.where(default_search).any_in(_id: params[:bill_ids])
+    failed = @bills.collect {|bill| bill.build_log(current_user,'锁定') &&  [bill.tid,bill.lock!]}.reject {|t,m| m == true}
+    error_message = failed.collect {|a| a.join(":")}.join(";")
+    @message = failed.blank? ? "入库单#{@bills.map(&:tid).join(',')}锁定成功." : "入库单#{error_message}."
     respond_to do |format|
       format.js
     end
   end
 
-  def remove_product
-    @bill = StockInBill.find_by(@conditions) rescue false
-    if @bill.present?
-      @tmp_products = @bill.bill_products
-      @bill.bill_products.in(:id => params[:bill_product_ids]).delete
-    else
-      @tmp_products = current_user.settings.tmp_products
-      if params[:bill_product_ids].present?
-        @tmp_products = @tmp_products.reject { |x| params[:bill_product_ids].include?(x.id.to_s) }
-        current_user.settings.tmp_products = @tmp_products
-      end
-      @tmp_products = specified_tmp_products(@tmp_products)
-    end
+  def unlock
+    @bills = StockInBill.where(default_search).any_in(_id: params[:bill_ids])
+    failed = @bills.collect {|bill| bill.build_log(current_user,'激活') && [bill.tid,bill.unlock!]}.reject {|t,m| m == true}
+    error_message = failed.collect {|a| a.join(":")}.join(';')
+    @message = failed.blank? ? "入库单#{@bills.map(&:tid).join(',')}激活成功." : "入库单#{error_message}."
     respond_to do |format|
       format.js
     end

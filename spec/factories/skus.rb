@@ -2,5 +2,6 @@
 
 FactoryGirl.define do
   factory :sku do
+    after(:create) { FactoryGirl.create(:product)}
   end
 end

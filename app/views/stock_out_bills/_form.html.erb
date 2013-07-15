@@ -1,145 +1,136 @@
-<style>
-  .form-horizontal .controls {
-    margin-left: 0px;
-  }
-  .input-small.select2.product {
-    width: 800px!important;
-  }
-  .row-fluid.product {
-    min-height: 0px;
-  }
-  .input-small.select2.logictic {
-    width: 150px!important;
-  }
-</style>
-
-<div class="row-fluid">
-
-  <div class="span12">
-    <ul class="nav nav-tabs">
-      <li class="active"><%= link_to "新建出库单", new_warehouse_stock_out_bill_path(@warehouse) %></li>
-      <li><%= link_to "入库单", warehouse_stock_in_bills_path(@warehouse) %></li>
-      <li><%= link_to "出库单", warehouse_stock_out_bills_path(@warehouse) %></li>
-      <li><%= link_to "所有进销", warehouse_stock_bills_path(@warehouse) %></li>
-    </ul><!-- nav-tabs -->
-    <%= simple_form_for @bill,:url => warehouse_stock_out_bills_path(@warehouse,@bill),:html => {:class => "form-horizontal"} do |f| %>
-    <%= hidden_field_tag "bill_product_ids" %>
-    <div class="btn-toolbar">
-      <%= f.submit "保存",:onclick => "validateStockBill()",:class => "btn btn-warning btn-small save_stock_out_bill" %>
-      <%= link_to "取消",warehouse_stock_out_bills_path(@warehouse) ,:class => "btn btn-warning btn-small" %>
-    </div>
-    <div class="well clearfix">
-      <fieldset class="span6">
-        <%= f.input :op_name, label: "收货人",:input_html  => {:class => "input-medium"} %>
-        <%= f.input :op_mobile, label: "手机",:input_html  => {:class => "input-medium"} %>
-        <%= f.input :op_zip, label: "邮编",:input_html  => {:class => "input-medium"} %>
-
-        <!-- <div class="control-group">
-          <label class="control pull-left">收货仓库：</label>
-          <select class="input-medium select2">
-            <option value="默认仓库">默认仓库</option>
-          </select>
-        </div> -->
-        <div class="control-group">
-          <%= f.input :stock_type,label: "出库类型", collection: StockOutBill::STOCK_TYPE, as: :select,:input_html => {class: "input-medium select2"} %>
-        </div>
-        <%= f.input :stocked_at, label: "出库时间",input_html: {class: "input-medium js-datetimepicker"} %>
-        <div class="control-group">
-          <label class="select required control-label" for="stock_out_bill_stock_type"><abbr title="必填的">*</abbr> 是否开票</label>
-          <%=select_tag :is_cash_sale, options_for_select(["需要开票",
-          "需开专票",
-          "无需开票"], params[:is_cash_sale]), :class=>"select2 is_cash_sale"%>
-          <%=f.text_field :website, :input_html => {:class => 'input-xxlarge'}, :placeholder=>"请输入发票内容...", :required=>"required", :style=>"display:none;", :id=>"cash_sale_name" %>
-        </div>
-      </fieldset><!-- form left area -->
-      <fieldset class="span6">
-        <%= f.input :op_phone, label: "固定电话",:class => "input-medium" %>
-        <%= f.input :op_address, label: "收货地址",:class => "input-medium" %>
-
-        <div class="control-group">
-          <label class="control-label">地域</label>
-          <select id="" class="level_1 input-medium input-small pull-left radius_no_rb select2" name="stock_out_bill[op_state]">
-            <option>省</option>
-          </select>
-          <select id="" class="level_2 input-medium input-small pull-left radius_no select2" name="stock_out_bill[op_city]">
-            <option>市</option>
-          </select>
-          <select id="" class="level_3 input-medium input-small pull-left radius_no_tl select2" name="stock_out_bill[op_district]">
-            <option>区</option>
-          </select>
-        </div>
-        <%= f.input :logistic_id,label: "物流公司", collection: Logistic.with_account(current_account.id).collect {|x| [x.name,x.id]},as: :select, input_html: {class: "input-small select2 logictic"} %>
-        <div class="control-group">
-          <%= f.label :remark,"备注",:class => "control pull-left",:style => "width:70px" %>
-          <%= f.text_area :remark,:class => "span9",:rows => "5" %>
-        </div>
-      </fieldset><!-- form right area -->
-    </div>
-    <% end %>
-
-    <ul class="nav nav-tabs js-nav_tabs">
-      <li class="active"><a href="#good_info" data-toggle="tab">商品信息</a></li>
-    </ul>
-    <%= form_tag add_product_warehouse_stock_out_bills_path(@warehouse),:class => "form-horizontal",:remote => true do  %>
-    <%= hidden_field_tag "id",params[:id] %>
-    <div class="btn-toolbar">
-      <%= button_tag "添加",:class => "btn btn-warning btn-small" ,:onclick => "validateProductValues()" %>
-    </div>
-    <fieldset>
-      <% @current_user_skus = current_account.skus %>
+<%= simple_form_for @bill,:url => path,:html => {:class => "form-horizontal",:id => "stock_out_bill"} do |f| %>
+<div class="btn-toolbar">
+  <%= f.submit "保存",:class => "btn btn-warning btn-small save" %>
+  <%= link_to "取消",warehouse_stock_out_bills_path(@warehouse) ,:class => "btn btn-warning btn-small save_stock_out_bill" %>
+</div>
+<div class="well clearfix">
+  <fieldset class="span6">
+    <%= f.input :op_name, label: "收货人",:input_html  => {:class => "input-medium"} %>
+    <%= f.input :op_mobile, label: "手机",:input_html  => {:class => "input-medium"} %>
+    <%= f.input :op_zip, label: "邮编",:input_html  => {:class => "input-medium"} %>
+    <!-- <div class="control-group">
+      <label class="control pull-left">收货仓库：</label>
+      <select class="input-medium select2">
+      <option value="默认仓库">默认仓库</option>
+      </select>
+      </div> -->
       <div class="control-group">
-        <%= label_tag "product[sku_id]", "商品名称",:class => "control-label",:style => "width:70px;text-align:left;" %>
-        <%= select_tag "product[sku_id]",options_for_select(@current_user_skus.collect {|x| [x.title_with_product_id,x.id]}),:include_blank => true,:class => "input-small pull-left radius_no select2 product" ,:id => "product_title"%>
+        <%= f.input :stock_type,label: "出库类型", collection: StockOutBill::STOCK_TYPE, as: :select,:input_html => {class: "input-medium select2"} %>
+      </div>
+      <%= f.input :stocked_at, label: "出库时间",input_html: {class: "input-medium js-datetimepicker"} %>
+      <div class="control-group">
+        <label class="select required control-label" for="stock_out_bill_stock_type"><abbr title="必填的">*</abbr> 是否开票</label>
+        <%=select_tag :is_cash_sale, options_for_select(["需要开票",
+        "需开专票",
+        "无需开票"], params[:is_cash_sale]), :class=>"select2 is_cash_sale"%>
+        <%=f.text_field :website, :input_html => {:class => 'input-xxlarge'}, :placeholder=>"请输入发票内容...", :required=>"required", :style=>"display:none;", :id=>"cash_sale_name" %>
+      </div>
+    </fieldset><!-- form left area -->
+    <fieldset class="span6">
+      <%= f.input :op_phone, label: "固定电话",:class => "input-medium" %>
+      <%= f.input :op_address, label: "收货地址",:class => "input-medium" %>
+
+      <div class="control-group">
+        <label class="control-label">地域</label>
+        <select id="" class="level_1 input-medium input-small pull-left radius_no_rb select2" name="stock_out_bill[op_state]">
+          <option>省</option>
+        </select>
+        <select id="" class="level_2 input-medium input-small pull-left radius_no select2" name="stock_out_bill[op_city]">
+          <option>市</option>
+        </select>
+        <select id="" class="level_3 input-medium input-small pull-left radius_no_tl select2" name="stock_out_bill[op_district]">
+          <option>区</option>
+        </select>
+      </div>
+      <%= f.input :logistic_id,label: "物流公司", collection: Logistic.with_account(current_account.id).collect {|x| [x.name,x.id]},as: :select, input_html: {class: "input-small select2 logictic"} %>
+      <div class="control-group">
+        <%= f.label :remark,"备注",:class => "control pull-left",:style => "width:70px" %>
+        <%= f.text_area :remark,:class => "span9",:rows => "5" %>
+      </div>
+    </fieldset><!-- form right area -->
+  </div>
+
+  <ul class="nav nav-tabs js-nav_tabs">
+    <li class="active"><a href="#good_info" data-toggle="tab">商品信息</a></li>
+  </ul>
+  <%= f.add_nested_fields_link :bill_products,'添加',:class => "btn btn-warning btn-small"%>
+
+  <%= f.nested_fields_for :bill_products do |product|  %>
+  <fieldset class="span12">
+    <div class="control-group">
+      <% @current_user_skus = current_account.skus %>
+      <%= product.label :sku_id,"商品名称",:class => "control-label" %>
+      <%= product.select :sku_id,@current_user_skus.collect {|x| [x.title_with_product_id,x.id]},{:include_blank => true},{:class => "select2 span10 product checkdata"} %>
+    </div>
+  </fieldset>
+  <div class="well clearfix">
+    <fieldset class="span2">
+      <div class="control-group">
+        <%= product.label :number,"数量：",:class => "control pull-left" %>
+        <%= product.text_field :number,:class => "input-small checkdata" %>
       </div>
     </fieldset>
-    <div>
-      <fieldset class="span6">
-        <div class="control-group">
-          <label class="control-label">数量：</label>
-          <input type="text" class="input-medium" name="product[number]" placeholder="10" id="product_number">
-        </div>
-        <div class="control-group">
-          <label class="control-label">进货价：</label>
-          <input type="text" class="input-medium" placeholder="100" name="product[price]" id="product_price">
-        </div>
-      </fieldset><!-- form left area -->
-      <fieldset class="span6">
-        <div class="control-group">
-          <label class="control pull-left">SKU编码：</label>
-          <input class="input-medium" id="disabledSku" type="text" placeholder="" disabled>
-        </div>
-        <div class="control-group">
-          <label class="control-label">实际总价：</label>
-          <input type="text" class="input-medium" placeholder="500" name="product[total_price]" id="product_total_price">
-        </div>
-      </fieldset><!-- form right area -->
-    </div>
-    <% end %>
-    <div id="products">
-      <%= render :partial => "products",:locals => {:products => @products} %>
-    </div>
-  </div><!--span10 -->
-</div><!--row-fluid -->
-<% content_for :tail do %>
-<script type="text/javascript" charset="utf-8">
-$(function(){
-  $(".is_cash_sale").change(function(){
-    if($(".is_cash_sale").find("option:selected").text()=="无需开票"){
-    $("#cash_sale_name").hide()
-    }else{
-    $("#cash_sale_name").show()
+    <fieldset class="span2">
+      <div class="control-group">
+        <%= product.label :price,"进货价：",:class => "control pull-left" %>
+        <%= product.text_field :price,:class => "input-small checkdata" %>
+      </div>
+    </fieldset><!-- form left area -->
+    <fieldset class="span2">
+      <div class="control-group">
+        <label class="control pull-left">SKU编码：</label>
+        <input class="input-small sku" id="disabledSku" type="text" placeholder="" disabled>
+      </div>
+    </fieldset><!-- form left area -->
+
+    <fieldset class="span2">
+      <div class="control-group">
+        <%= product.label :total_price,"实际总价：",:class => "control pull-left" %>
+        <%= product.text_field :total_price,:class => "input-small checkdata" %>
+        <%= product.remove_nested_fields_link "删除" %>
+      </div>
+    </fieldset><!-- form right area -->
+  </div>
+  <% end %>
+  <% end %>
+  <% content_for :tail do %>
+  <script type="text/javascript" charset="utf-8">
+  $(function(){
+    var options = {
+      data  : linkage_data
     }
+    var sel = new LinkageSelect(options);
+    sel.bind('.level_1','<%= @bill.op_state %>');
+    sel.bind('.level_2','<%= @bill.op_city %>');
+    sel.bind('.level_3','<%= @bill.op_district %>');
+
+    $(".is_cash_sale").change(function(){
+      if($(".is_cash_sale").find("option:selected").text()=="无需开票"){
+      $("#cash_sale_name").hide()
+      }else{
+      $("#cash_sale_name").show()
+      }
+    })
+
+    var parseSkus = <%= raw Hash[@current_user_skus.collect {|x| [x.id.to_s,x.sku_id.to_s]}].to_json %>;
+    $(".product").each(function(){
+      var sku_id = parseSkus[$(this).val()];
+      $(this).parent().parent().parent().find(":input[disabled]:first").val(sku_id)
+    });
+    $(".product").live("change",function(){
+      var sku_id = parseSkus[$(this).val()];
+      $(this).parent().parent().parent().find(":input[disabled]:first").val(sku_id)
+    });
+
+    $("#stock_out_bill").validate({
+      rules: {
+        "stock_out_bill[op_name]": { required: true},
+      },
+      messages: {
+        "stock_out_bill[op_name]": { required: "不能为空" }
+      }
+    });
+    $(":input.checkdata").each(function(){ $(this).rules("add",{required: true,number: true,messages: {required: "不能为空",number: "必须是数字"}}) })
   })
-  var parseSkus = <%= raw Hash[@current_user_skus.collect {|x| [x.id.to_s,x.sku_id.to_s]}].to_json %>;
-  $("#product_title").change(function(){
-    var sku_id = parseSkus[$(this).val()];
-    $("#disabledSku").val(sku_id)
-  })
-  $(".save_stock_out_bill").click(function(){
-    if($(".is_cash_sale").find("option:selected").text()=="需开专票" && $("#cash_sale_name").val()==""){
-        alert('请输入发票抬头');
-    }
-  })
-})
-</script>
-<% end %>
+  </script>
+  <% end %>

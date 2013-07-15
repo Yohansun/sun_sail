@@ -24,7 +24,7 @@ $ ->
         link = action + val
       window.location= link
       
-  $(".magic_operation").click (e) ->
+  $(".magic_operation").live "click", ->
     if checked_inputs().length < 1
       e.stopImmediatePropagation()
       alert("请选择")
@@ -37,8 +37,11 @@ $ ->
         action = action.replace(/(\/*)$/,'/')
       method = $(this).attr("request")
       form.attr({action: action ,method: method })
-      form.removeAttr("data-remote") if $(this).attr("data-remote") != "true"
       # Skip href #id
       if !href.match(/^#.+/)
         if ($(this).attr("message") && confirm($(this).attr("message")) || !$(this).attr("message"))
+          if $(this).attr("data-remote") == "true"
+            form.attr("data-remote",'true')
+          else
+            form.removeAttr("data-remote")
           form.submit()

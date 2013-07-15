@@ -81,8 +81,9 @@
             <thead>
               <tr>
                 <th>商品编码</th>
-                <th>商品SKU</th>
+                <th>商品SKU编码</th>
                 <th>商品名称</th>
+                <th>实际入库</th>
                 <th>商品单价</th>
                 <th>商品数量</th>
                 <th>商品总价</th>
@@ -92,8 +93,9 @@
               <%- @bill.bill_products.each do |product| %>
               <tr>
                 <td><%= product.outer_id %></td>
-                <td><%= product.sku_id %></td>
+                <td><%= product.sku.try(:sku_id) %></td>
                 <td><%= product.title %></td>
+                <td><%= product.real_number %></td>
                 <td><%= product.price %></td>
                 <td><%= product.number %></td>
                 <td><%= product.total_price %></td>
