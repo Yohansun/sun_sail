@@ -53,7 +53,7 @@
     <div class="control-group">
       <% @current_user_skus = current_account.skus %>
       <%= product.label :sku_id,"商品名称",:class => "control-label" %>
-      <%= product.select :sku_id,@current_user_skus.collect {|x| [x.title_with_sku_id,x.id]},{:include_blank => true},{:class => "select2 span10 product checkdata"} %>
+      <%= product.select :sku_id,@current_user_skus.collect {|x| [x.title_with_product_id,x.id]},{:include_blank => true},{:class => "select2 span10 product checkdata"} %>
     </div>
   </fieldset>
   <div class="well clearfix">
