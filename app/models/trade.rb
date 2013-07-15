@@ -518,7 +518,7 @@ class Trade
       remark = cs_memo
     end
 
-    bill = StockOutBill.create(trade_id: _id,
+    bill = stock_out_bills.new(
                                op_state:receiver_state,
                                op_city: receiver_city,
                                op_district: receiver_district,
