@@ -126,6 +126,24 @@
     }
     hide_show_edit();
   })
+
+  $("table#product_table tr").click(function(event) {
+    if(event.target.type != "checkbox"){
+      var eleCheckbox = $('td :checkbox', this);
+      if(eleCheckbox.length){
+        var product_id = _.trim(eleCheckbox.attr('id'), "check_");
+        if(eleCheckbox.attr("checked")=="checked"){
+          eleCheckbox.removeAttr("checked");
+          $.get("/products/abandon_product", {product_id: product_id}, function(result){});
+        }else{
+          eleCheckbox.attr("checked", "checked");
+          $.get("/products/pick_product", {product_id: product_id}, function(result){});
+        }
+        hide_show_edit();
+      }
+    }
+  });
+
   var picked_products = <%= raw current_account.settings.picked_product.to_json %>
   for (var i in picked_products){
     $("#check_"+picked_products[i]).attr("checked", "checked")
