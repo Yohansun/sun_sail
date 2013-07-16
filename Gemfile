@@ -11,6 +11,7 @@ gem 'jbuilder'
 
 gem "meta_search"
 gem 'hipchat'
+gem 'whenever',"~> 0.8.3", :require => false
 
 group :assets do
   gem 'sass-rails', '~> 3.2.3'

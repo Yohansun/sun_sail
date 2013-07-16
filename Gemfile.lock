@@ -81,6 +81,7 @@ GEM
     certified (0.1.1)
     childprocess (0.3.6)
       ffi (~> 1.0, >= 1.0.6)
+    chronic (0.9.1)
     client_side_validations (3.2.1)
     client_side_validations-simple_form (2.0.1)
       client_side_validations (~> 3.2.0)
@@ -464,6 +465,9 @@ GEM
       rack (>= 1.0)
       rack-test (>= 0.5.3)
     websocket (1.0.6)
+    whenever (0.8.3)
+      activesupport (>= 2.3.4)
+      chronic (>= 0.6.3)
     wicked (0.2.0)
       activesupport (>= 3.0.7)
       rails (>= 3.0.7)
@@ -560,5 +564,6 @@ DEPENDENCIES
   uglifier (>= 1.0.3)
   wash_out (= 0.6.1)
   webrat
+  whenever (~> 0.8.3)
   wicked
   wirble
