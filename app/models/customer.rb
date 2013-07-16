@@ -21,9 +21,9 @@ class Customer
   ]
 
   EXACT_PHRASE = [
-    ["顾客ID","search[name_eq]"],
-    ["联系电话","search[transaction_histories_receiver_mobile_eq]"],
-    ["顾客邮箱","search[email_eq]"],
+    ["顾客ID","search[name_like]"],
+    ["联系电话","search[transaction_histories_receiver_mobile_like]"],
+#    ["顾客邮箱","search[email_like]"],
     ["顾客地址","search[transaction_histories_receiver_address_like]"]
   ]
 
