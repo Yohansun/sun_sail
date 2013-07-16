@@ -37,4 +37,5 @@ class MagicOrders.Views.TradesSetupLogistic extends Backbone.View
     @model.save {setup_logistic: true}, success: (model, response)->
       view = new MagicOrders.Views.TradesRow(model: model)
       $("#trade_#{model.get('id')}").replaceWith(view.render().el)
+      checkedTradeRow(model.get('id'))
       $('#trade_setup_logistic').modal('hide')

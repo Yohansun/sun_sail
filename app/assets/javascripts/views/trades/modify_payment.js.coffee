@@ -1,7 +1,7 @@
 class MagicOrders.Views.TradesModifyPayment extends Backbone.View
 
   template: JST['trades/modify_payment']
- 
+
   events:
     'click .save': 'save'
     'click .clear_info': 'clear_info'
@@ -33,7 +33,7 @@ class MagicOrders.Views.TradesModifyPayment extends Backbone.View
       return
 
     @model.save {
-    	'modify_payment': $("#modify_payment").val(), 
+    	'modify_payment': $("#modify_payment").val(),
     	'modify_payment_at': $("#modify_payment_at").val(),
     	'modify_payment_no': $("#modify_payment_no").val(),
     	'modify_payment_memo': $("#modify_payment_memo").val()
@@ -42,6 +42,7 @@ class MagicOrders.Views.TradesModifyPayment extends Backbone.View
 
       view = new MagicOrders.Views.TradesRow(model: model)
       $("#trade_#{model.get('id')}").replaceWith(view.render().el)
+      checkedTradeRow(model.get('id'))
       $("a[rel=popover]").popover({placement: 'left', html:true})
       $('#trade_modify_payment').modal('hide')
 

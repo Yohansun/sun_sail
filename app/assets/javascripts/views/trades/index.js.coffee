@@ -365,6 +365,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
           model.fetch success: (model, response) =>
             view = new MagicOrders.Views.TradesRow(model: model)
             $("#trade_#{model.get('id')}").replaceWith(view.render().el)
+            checkedTradeRow(model.get('id'))
             $("a[rel=popover]").popover({placement: 'left', html:true})
         $('#batch_deliver').modal('hide')
       else
