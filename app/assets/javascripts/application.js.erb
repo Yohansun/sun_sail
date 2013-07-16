@@ -305,7 +305,13 @@ function clickTableRow(tableId){
   var trSelector = "table#" + tableId + " td";
   $(trSelector).click(function(event) {
     if (event.target.type !== 'checkbox') {
-      $(':checkbox', $(this).parent()).trigger('click');
+      var currentCheckbox = $(':checkbox', $(this).parent());
+
+      if(currentCheckbox.length == 1){
+        currentCheckbox.trigger("click");
+      }else{
+        $(':checkbox', $(this).parent().prevAll(".row_merged:first")).trigger('click');
+      }
     }
   });
 }
