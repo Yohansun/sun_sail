@@ -14,7 +14,9 @@ task :brands_stocks_20130625 => :environment do
         sku = product.skus.create(account_id: account.id, product_id: product.id, num_iid: product.num_iid)
       end
       stock = StockProduct.where(product_id: product.id, seller_id: seller.id, sku_id: sku.id, num_iid: product.num_iid, account_id: account.id).first_or_create
-      stock.update_attributes(max: 999999, actual: actual, activity: activity, safe_value: 20)
+      p "#{outer_id} before #{stock.actual}"
+      stock.update_attributes(actual: actual, activity: activity)
+      p "#{outer_id} after #{stock.actual}"
     else
       p "product not found #{outer_id}"
     end
