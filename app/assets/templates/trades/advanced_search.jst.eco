@@ -177,7 +177,34 @@
         <a class="add_batch_search_tag" href="#" title="添加搜索"><i class="icon-plus"></i>添加搜索</a>
       </div>
     </fieldset>
-
+    <% if Backbone.history.fragment == "deliver_bills/deliver_bills-all" : %>
+      <fieldset>
+        <div class="control-group">
+          <label class="pull-left"><code>状态：</code></label>
+          <div class="controls pull-left">
+            <select class="input-small pull-left select2" id="trade_print">
+              <option value="deliver_bills_print_at">已打印</option>
+              <option value="un_deliver_bill_printed_at">未打印</option>
+            </select>
+          </div>
+          <a class="add_printable" href="#" title="添加搜索"><i class="icon-plus"></i>添加搜索</a>
+        </div>
+      </fieldset>
+    <% end %>
+    <% if Backbone.history.fragment == "logistic_bills/logistic_bills-all" : %>
+      <fieldset>
+        <div class="control-group">
+          <label class="pull-left"><code>状态：</code></label>
+          <div class="controls pull-left">
+            <select class="input-small pull-left select2" id="logistics_trade_print">
+              <option value="logistics_bill_printed_at">已打印</option>
+              <option value="un_logistics_bill_printed_at">未打印</option>
+            </select>
+          </div>
+          <a class="add_logistics_printable" href="#" title="添加搜索"><i class="icon-plus"></i>添加搜索</a>
+        </div>
+      </fieldset>
+    <% end %>
     <fieldset>
       <label class="pull-left" ><code>当前搜索条件：</code></label>
       <div class="controls clearfix search_tags_group"></div>

@@ -1136,6 +1136,22 @@ class Trade
                   search_tags_hash.update({:mergeable_id=> {"$ne"=>nil}})
                   conditions[key] << {:mergeable_id=> {"$ne"=>nil}}
                 end
+              elsif key == "print_at"
+                if value == 'un_deliver_bill_printed_at'
+                  search_tags_hash.update({deliver_bill_printed_at: nil})
+                  conditions[key] << {deliver_bill_printed_at: nil}
+                elsif value == 'deliver_bills_print_at'
+                  search_tags_hash.update({:deliver_bill_printed_at => {"$ne"=>nil} })
+                  conditions[key] << {:deliver_bill_printed_at => {"$ne"=>nil} }
+                end
+              elsif key == "logistics_print_at"
+                if value == "un_logistics_bill_printed_at"
+                  search_tags_hash.update({:logistic_printed_at=> nil })
+                  conditions[key] << {:logistic_printed_at=> nil }
+                elsif value == "logistics_bill_printed_at"
+                  search_tags_hash.update({:logistic_printed_at => {"$ne"=>nil} })
+                  conditions[key] << {:logistic_printed_at => {"$ne"=>nil}  }
+                end
               else
                 search_tags_hash.update(Hash[key.to_sym, value])
                 conditions[key] << Hash[key.to_sym, value]

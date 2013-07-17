@@ -12,6 +12,8 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
     'click .add_merge_type_search_tag': 'addMergeTypeSearchTag'
     'click .add_batch_search_tag': 'addBatchSearchTag'
     'click .advanced_btn': 'advancedSearch'
+    'click .add_printable': 'addPrintable'
+    'click .add_logistics_printable': 'addLogisticsPrintable'
     'click .remove_search_tag': 'removeSearchTag'
     'change .search_option' : 'changeInputFrame'
     'change #simple_load_search_criteria': 'simpleLoadSearchCriteria'
@@ -232,6 +234,38 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
     $('.search_tags_group').append("<span class='search_tag pull-left'>"+
                                      "<label class='help-inline'>"+type_text+"</label>"+
                                      "<input type='hidden' name='merge_type' value='"+type+"'>"+
+                                     "<button class='remove_search_tag' value=''> x </button></span>")
+    @catchSearchMotion()
+
+  addPrintable:(e)->
+    e.preventDefault()
+    type = @getSearchValue('.add_printable','select')
+    type_text = @getText('.add_printable','select')
+
+    tag = $(".search_tags_group input[name=print_at]")
+    value = type
+    if @check_tag_exist tag,value
+      alert("该搜索条件已经添加过")
+      return false
+    $('.search_tags_group').append("<span class='search_tag pull-left'>"+
+                                     "<label class='help-inline'>"+type_text+"</label>"+
+                                     "<input type='hidden' name='print_at' value='"+type+"'>"+
+                                     "<button class='remove_search_tag' value=''> x </button></span>")
+    @catchSearchMotion()
+
+  addLogisticsPrintable:(e)->
+    e.preventDefault()
+    type = @getSearchValue('.add_logistics_printable','select')
+    type_text = @getText('.add_logistics_printable','select')
+
+    tag = $(".search_tags_group input[name=logistics_print_at]")
+    value = type
+    if @check_tag_exist tag,value
+      alert("该搜索条件已经添加过")
+      return false
+    $('.search_tags_group').append("<span class='search_tag pull-left'>"+
+                                     "<label class='help-inline'>"+type_text+"</label>"+
+                                     "<input type='hidden' name='logistics_print_at' value='"+type+"'>"+
                                      "<button class='remove_search_tag' value=''> x </button></span>")
     @catchSearchMotion()
 
