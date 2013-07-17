@@ -107,14 +107,6 @@ describe StockInBillsController do
 
   describe "PUT update" do
     describe "with valid params" do
-      it "updates the requested stock_in_bill" do
-        # Assuming there are no other stock_in_bills in the database, this
-        # specifies that the StockInBill created on the previous line
-        # receives the :update_attributes message with whatever params are
-        # submitted in the request.
-        StockInBill.any_instance.should_receive(:update_attributes).with({ "these" => "params" })
-        put :update, {:warehouse_id => warehouse,:id => stock_in_bill.to_param, :stock_in_bill => { "these" => "params" }}, valid_session
-      end
 
       it "assigns the requested stock_in_bill as @stock_in_bill" do
         put :update, {:warehouse_id => warehouse,:id => stock_in_bill.to_param, :stock_in_bill => valid_attributes}, valid_session
