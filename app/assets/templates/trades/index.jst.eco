@@ -59,7 +59,7 @@
           <ul class="dropdown-menu index_pops">
             <li><a href="#" data-toggle="modal" data-type="cs_memo">客服备注</a></li>
             <li><a href="#" data-toggle="modal" data-type="gift_memo">赠品管理</a></li>
-            <li><a href="#" data-toggle="modal" data-type="invoice">发票内容</a></li>
+            <li><a href="#" data-toggle="modal" data-type="invoice">开票设置</a></li>
             <li><a href="#" data-toggle="modal" data-type="color">订单调色</a></li>
             <li><a href="#" data-toggle="modal" data-type="confirm_color">确认调色</a></li>
             <li><a href="#" data-toggle="modal" data-type="seller_confirm_invoice">确认开票</a></li>

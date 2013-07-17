@@ -127,10 +127,14 @@ class MagicOrders.Views.TradesRow extends Backbone.View
         menu_items.each ->
           if $.inArray($(this).data('type')+'', MagicOrders.enabled_operation_items) is -1
             $(this).css('display', 'none')
+          else
+            $('#op-toolbar .btn-group .dropdown-menu  a[data-type=invoice]').removeAttr('style')
 
         $('#op-toolbar .dropdown-menu').each ->
           if $(this).find('li a[style]').length is $(this).find('li a').length
             $(this).parents('div.btn-group').css('display', 'none')
+          else
+            $('#op-toolbar .btn-group .dropdown-menu  a[data-type=invoice]').parent().removeAttr('style')
     else
       MagicOrders.enabled_operation_items = MagicOrders.trade_pops[MagicOrders.trade_mode]
       $('#op-toolbar').find('[data-type]').each ->
