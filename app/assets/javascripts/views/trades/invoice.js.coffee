@@ -16,7 +16,7 @@ class MagicOrders.Views.TradesInvoice extends Backbone.View
     this
 
   save: ->
-    if $("#invoice_name_text").val() == "" || $("#invoice_date_text").val() == ""
+    if $("#invoice_name_text").val() == ""
       if $(".no_invoice").attr("checked") == "checked"
         $('#trade_invoice').modal('hide')
         # window.history.back()
@@ -27,7 +27,6 @@ class MagicOrders.Views.TradesInvoice extends Backbone.View
 
       @model.set "invoice_type", $('input[name=invoice_type]:checked').val()
       @model.set "invoice_name", $("#invoice_name_text").val()
-      @model.set "invoice_date", $("#invoice_date_text").val()
       @model.set "operation", "申请开票"
       @model.save {'invoice_name': $("#invoice_name_text").val()}, success: (model, response) =>
         $.unblockUI()
@@ -40,10 +39,10 @@ class MagicOrders.Views.TradesInvoice extends Backbone.View
         # window.history.back()
 
   no_invoice: (e) ->
-    $("#invoice_name_text,#invoice_date_text").attr("disabled","true")
+    $("#invoice_name_text").attr("disabled","true")
 
   need_invoice: (e) ->
-    $("#invoice_name_text,#invoice_date_text").removeAttr("disabled")
+    $("#invoice_name_text").removeAttr("disabled")
 
   is_invoice: (e) ->
-    $("#invoice_name_text,#invoice_date_text").removeAttr("disabled")
+    $("#invoice_name_text").removeAttr("disabled")
