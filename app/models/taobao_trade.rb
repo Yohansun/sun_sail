@@ -105,24 +105,24 @@ class TaobaoTrade < Trade
     end
   end
 
-  def orders_total_price
-    self.orders.inject(0) { |sum, order| sum + order.price*order.num}
-  end
+  # def orders_total_price
+  #   self.orders.inject(0) { |sum, order| sum + order.price*order.num}
+  # end
 
-  def vip_discount
-    promotion_details.where(promotion_id: /^shopvip/i).sum(&:discount_fee)
-  end
+  # def vip_discount
+  #   promotion_details.where(promotion_id: /^shopvip/i).sum(&:discount_fee)
+  # end
 
-  def shop_bonus
-    promotion_details.where(promotion_id: /^shopbonus/i).sum(&:discount_fee)
-  end
+  # def shop_bonus
+  #   promotion_details.where(promotion_id: /^shopbonus/i).sum(&:discount_fee)
+  # end
 
-  def shop_discount
-    promotion_details.where(promotion_id: /^(?!shopvip|shopbonus)/i).sum(&:discount_fee)
-  end
+  # def shop_discount
+  #   promotion_details.where(promotion_id: /^(?!shopvip|shopbonus)/i).sum(&:discount_fee)
+  # end
 
-  def other_discount
-    (total_fee + post_fee - payment - promotion_fee).to_f.round(2)
-  end
+  # def other_discount
+  #   (total_fee + post_fee - payment - promotion_fee).to_f.round(2)
+  # end
 
 end

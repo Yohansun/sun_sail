@@ -1365,6 +1365,26 @@ class Trade
     self.taobao_orders = new_orders
   end
 
+  def orders_total_price
+    self.orders.inject(0) { |sum, order| sum + order.price*order.num}
+  end
+
+  def vip_discount
+    promotion_details.where(promotion_id: /^shopvip/i).sum(&:discount_fee)
+  end
+
+  def shop_bonus
+    promotion_details.where(promotion_id: /^shopbonus/i).sum(&:discount_fee)
+  end
+
+  def shop_discount
+    promotion_details.where(promotion_id: /^(?!shopvip|shopbonus)/i).sum(&:discount_fee)
+  end
+
+  def other_discount
+    (total_fee + post_fee - payment - promotion_fee).to_f.round(2)
+  end
+
   private
     def check_associate_deliver_bills
       DeliverBill.where(trade_id: self._id).delete_all if self.deleted_at != nil

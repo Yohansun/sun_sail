@@ -39,6 +39,7 @@ class TaobaoOrder < Order
 
   embedded_in :taobao_trades
   embedded_in :custom_trades
+  embedded_in :trades
 
   def account_id
     taobao_trades.account_id
@@ -284,6 +285,8 @@ class TaobaoOrder < Order
         fee = payment
       end
     elsif custom_trades
+      fee = payment
+    elsif trades
       fee = payment
     end
     fee
