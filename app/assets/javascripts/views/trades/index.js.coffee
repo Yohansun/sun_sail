@@ -79,9 +79,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
         $(@el).find(".trade_count_info").append("<span id='bottom_line'><b>当前无订单</b></span>")
       else
         $(@el).find(".trade_count_info").append("<span id='bottom_line'><b>当前为最后一条订单</b></span>")
-    $(@el).find('a[data-trade-mode='+MagicOrders.trade_mode+'][data-trade-status="'+MagicOrders.trade_type+'"]').parents('li').addClass('active')
-    name = $(@el).find('a[data-trade-mode='+MagicOrders.trade_mode+'][data-trade-status="'+MagicOrders.trade_type+'"]').text()
-    $(@el).find('#current_name').text(name)
+
     $(@el).find(".index_pops li").hide()
     for pop in MagicOrders.trade_pops[MagicOrders.trade_mode]
       if MagicOrders.role_key == 'admin'
@@ -308,7 +306,11 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     @search_trade_status = link.data('trade-status')
     MagicOrders.trade_mode = link.data('trade-mode')
     status = link.data('trade-status')
-    Backbone.history.navigate("#{MagicOrders.trade_mode}/" + "#{MagicOrders.trade_mode}-#{status}", true)
+    nvg_path = "#{MagicOrders.trade_mode}/" + "#{MagicOrders.trade_mode}-#{status}"
+    search_id = link.data('search-id')
+    if search_id
+      nvg_path += "?sid=" + search_id
+    Backbone.history.navigate(nvg_path, true)
 
     MagicOrders.original_path = window.location.hash
 
@@ -452,6 +454,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
         if @simple_search_value != ''
           @search_hash[@simple_search_option] = @simple_search_value
 
+    trade_collection = new MagicOrders.Collections.Trades()
     length = $('.search_tags_group').children().find('input').length
     if length != 0
       for num in [0..(length-1)]
@@ -468,7 +471,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
       MagicOrders.trade_type = "undispatched"
       @trade_type = "undispatched"
 
-    @collection.fetch data: {trade_type: @trade_type, search: @search_hash}, success: (collection) =>
+    trade_collection.fetch data: {trade_type: @trade_type, search: @search_hash}, success: (collection) =>
       if collection.length > 0
         @offset = @offset + 20
         @trade_number = 0
@@ -483,6 +486,8 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
   switchSearchCriteria: (e) ->
     e.preventDefault()
+    $("ul#global-menus li.active").removeClass("active")
+    $(e.target).parent().addClass("active")
     $("#load_search_criteria").val($(e.target).attr("data-search-criteria")).change()
     if(!$("#search_toggle").is(":visible"))
       $(".advanced_btn:first").click()

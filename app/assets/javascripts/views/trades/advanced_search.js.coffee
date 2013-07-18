@@ -44,8 +44,19 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
       name = $("input[name=name]",form).val()
       if name == null || name.trim() == ''
         return
+
+      search_hash = {}
+      inputItems = $('.search_tags_group').children().find('input')
+      for idx in [0..(inputItems.length - 1)]
+        jqueryItem = $(inputItems[idx])
+        attr_name = jqueryItem.attr("name")
+        search_hash[attr_name] ||= []
+        search_hash[attr_name].push(jqueryItem.val())
       criteria.save {
        html:$(".search_tags_group").html(),
+       search_hash: search_hash,
+       trade_mode: MagicOrders.trade_mode,
+       trade_type: MagicOrders.trade_type,
        name:name
       }, success: (model,response) ->
         #@search_criterias.push(model)
@@ -389,11 +400,15 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
         if criteria.get("show_in_simple_model") == true
           $("#simple_load_search_criteria").append("<option value='"+criteria.get("_id")+"'>"+criteria.get("name")+"</option>")
         if criteria.get("show_in_tabs")
-          $("#global-menus").append("<li><a href='#' data-search-criteria='"+criteria.get("_id")+"'>"+criteria.get("name")+"</a></li>")
+          trade_mode = criteria.get("trade_mode") || "trades"
+          trade_type = criteria.get("trade_type") || "all"
+          $("#global-menus").append("<li><a href='#' data-trade-mode='"+trade_mode+"' data-trade-status='"+trade_type+"' data-search-id='"+criteria.get("_id")+"'>"+criteria.get("name")+"</a></li>")
 
+      if MagicOrders.search_id
+        currentLink = $("#global-menus").find('a[data-search-id="'+MagicOrders.search_id+'"]').first()
+      else
+        currentLink = $("#global-menus").find('a[data-trade-mode='+MagicOrders.trade_mode+'][data-trade-status="'+MagicOrders.trade_type+'"]').first()
 
-
-
-
-
-
+      if currentLink
+        currentLink.parents("li").addClass("active")
+        $("#current_name").text(currentLink.text())

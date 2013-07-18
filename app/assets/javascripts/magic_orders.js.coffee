@@ -24,6 +24,11 @@ window.MagicOrders =
 
     @trade_type = ''
 
+    search_id_reg = /sid=([0-9a-z]{24})/
+    reg_result = /sid=([0-9a-z]{24})/.exec(location.hash.toString())
+    if reg_result && reg_result.length == 2
+      @search_id = reg_result[1]
+
     @enabled_operation_items = []
 
     # 初始化时需要隐藏的订单列

@@ -1,6 +1,7 @@
 class MagicOrders.Routers.LogisticBills extends Backbone.Router
   routes:
     'logistic_bills': 'index'
+    'logistic_bills/:trade_mode-:trade_type?sid=:trade_search_id': 'index'
     'logistic_bills/:trade_mode-:trade_type': 'index'
     'logistic_bills/:id/splited': 'splited'
     'logistic_bills/:id/:operation': 'operation'
@@ -36,7 +37,7 @@ class MagicOrders.Routers.LogisticBills extends Backbone.Router
         @isFixed = false
         @nav.removeClass('subnav-fixed')
 
-  index: (trade_mode = "logistic_bills", trade_type = null) ->
+  index: (trade_mode = "logistic_bills", trade_type = null, trade_search_id = '') ->
     # reset the index stage, hide all popups
     $('.modal').modal('hide')
 
@@ -46,9 +47,15 @@ class MagicOrders.Routers.LogisticBills extends Backbone.Router
     @trade_type = trade_type
     MagicOrders.trade_mode = trade_mode
     MagicOrders.trade_type = trade_type
+    search_data = {trade_type: trade_type}
+    if /[0-9a-z]{24}/.exec(trade_search_id)
+      MagicOrders.search_id = trade_search_id
+      search_data["search_id"] = trade_search_id
+    else
+      MagicOrders.search_id = ''
     blocktheui()
     @show_top_nav()
-    @collection.fetch data: {trade_type: trade_type}, success: (collection, response) =>
+    @collection.fetch data: search_data, success: (collection, response) =>
       @mainView = new MagicOrders.Views.LogisticBillsIndex(collection: collection, trade_type: trade_type)
       $('#content').html(@mainView.render().el)
       @searchView = new MagicOrders.Views.TradesAdvancedSearch()

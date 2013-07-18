@@ -16,6 +16,12 @@ class TradesController < ApplicationController
     else
       offset = params[:offset] || 0
       limit = params[:limit] || 20
+      if params[:search_id].present?
+        trade_search = TradeSearch.find(params["search_id"]) rescue trade_search = nil
+        if trade_search.present? && trade_search.search_hash.present?
+          params[:search] = trade_search.search_hash
+        end
+      end
       @trades = Trade.filter(current_account, current_user, params)
     end
     @trades_count = @trades.count
