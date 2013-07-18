@@ -331,6 +331,8 @@ class TradeDecorator < Draper::Base
   def taobao_order_status_text
     if trade.return_ref_status.present?
       trade.return_ref_status
+    elsif trade.refund_ref_status.present?
+      trade.refund_ref_status
     else
       case trade.status
       when "TRADE_NO_CREATE_PAY", "WAIT_BUYER_PAY", "ALL_WAIT_PAY"

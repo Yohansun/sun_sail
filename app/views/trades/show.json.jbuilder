@@ -105,6 +105,7 @@ end
 
 json.add_ref @trade.ref_batches.where(ref_type: "add_ref").first
 json.return_ref @trade.ref_batches.where(ref_type: "return_ref").last
+json.refund_ref @trade.ref_batches.where(ref_type: "refund_ref").last
 
 if @trade._type == "TaobaoPurchaseOrder"
   json.distributor_username @trade.distributor_username

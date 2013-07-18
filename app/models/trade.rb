@@ -419,6 +419,16 @@ class Trade
     end
   end
 
+  def refund_ref
+    ref_batches.where(ref_type: "refund_ref").last
+  end
+
+  def refund_ref_status
+    if refund_ref.present?
+      refund_ref.ref_logs.last.operation
+    end
+  end
+
   def stock_out_bill # always should be the only active one
     stock_out_bills.where(:status.ne => "CLOSED").first
   end

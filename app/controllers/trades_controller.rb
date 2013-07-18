@@ -361,6 +361,31 @@ class TradesController < ApplicationController
       end
     end
 
+    # 申请退款
+    if params[:refund_ref_hash] && params[:refund_ref_hash][:ref_batch]
+      ref_batch = @trade.ref_batches.where(ref_type: "refund_ref").last
+      if ref_batch.present?
+        ref_batch.update_attributes(status: params[:refund_ref_hash][:ref_batch][:status],
+                                    ref_payment: params[:refund_ref_hash][:ref_batch][:ref_payment])
+      else
+        ref_batch = @trade.ref_batches.create(batch_num: @trade.ref_batches.count + 1,
+                                              ref_type: "refund_ref",
+                                              status: params[:refund_ref_hash][:ref_batch][:status],
+                                              ref_payment: params[:refund_ref_hash][:ref_batch][:ref_payment])
+      end
+      ref_batch.change_ref_orders(params[:refund_ref_hash][:ref_order_array])
+      ref_batch.add_ref_log(current_user, params[:refund_ref_hash][:ref_memo])
+    end
+
+    if params[:refund_ref_status]
+      ref_batch = @trade.ref_batches.where(ref_type: "refund_ref").first
+      ref_batch.update_attributes(status: params[:refund_ref_status])
+      ref_batch.add_ref_log(current_user, params[:refund_ref_memo])
+      if params[:refund_ref_status] == 'cancel_refund_ref'
+        ref_batch.ref_orders.delete_all
+      end
+    end
+
     if @trade.save
       @trade = TradeDecorator.decorate(@trade)
       if notifer_seller_flag && @trade.status == "WAIT_SELLER_SEND_GOODS" && @trade.seller
@@ -370,6 +395,9 @@ class TradesController < ApplicationController
       unless params[:operation].blank?
         if params[:operation] == "确认退货"
           operation = @trade.ref_batches.where(ref_type: "return_ref").first.operation_text
+          @trade.operation_logs.create(operated_at: Time.now, operator: current_user.name, operator_id: current_user.id, operation: operation)
+        elsif params[:operation] == "确认退款"
+          operation = @trade.ref_batches.where(ref_type: "refund_ref").first.operation_text
           @trade.operation_logs.create(operated_at: Time.now, operator: current_user.name, operator_id: current_user.id, operation: operation)
         else
           @trade.operation_logs.create(operated_at: Time.now, operator: current_user.name, operator_id: current_user.id, operation: params[:operation])

@@ -209,19 +209,24 @@ class MagicOrders.Routers.Trades extends Backbone.Router
             $('#select_category').select2 data: c_data
           $("#select_product").select2 data: []
           $('#select_sku').select2 data: []
-        when 'lock_trade'
-          $(modalDivID).find('.save').hide()
+        when 'lock_trade','refund_ref'
           if model.get('stock_status') == "CANCELING"
-            $(modalDivID).find('.error').html('此订单目前无法撤销,请稍后执行操作')
+            alert('此订单目前无法撤销,请稍后执行操作')
+            Backbone.history.navigate("#{MagicOrders.trade_mode}/" + "#{MagicOrders.trade_mode}-#{MagicOrders.trade_type}", false)
+            return
           else if model.get('stock_status') == "STOCKED" || model.get('stock_status') == "CANCELED_FAILED"
-            $(modalDivID).find('.error').html('此订单已出库，无法撤销')
+            alert('此订单已出库，无法撤销')
+            Backbone.history.navigate("#{MagicOrders.trade_mode}/" + "#{MagicOrders.trade_mode}-#{MagicOrders.trade_type}", false)
+            return
           else if model.get('stock_status') == "SYNCKED"
-            $(modalDivID).find('.error').html('此订单已同步出库单，请先撤销此订单出库单')
+            alert('此订单已同步出库单，请先撤销此订单出库单')
+            Backbone.history.navigate("#{MagicOrders.trade_mode}/" + "#{MagicOrders.trade_mode}-#{MagicOrders.trade_type}", false)
+            return
           else
             if model.get('dispatched_at')
-              $(modalDivID).find('.error').html('此订单已分流，请先分流重置订单')
-            else
-              $(modalDivID).find('.save').show()
+              alert('此订单已分流，请先分流重置订单')
+              Backbone.history.navigate("#{MagicOrders.trade_mode}/" + "#{MagicOrders.trade_mode}-#{MagicOrders.trade_type}", false)
+              return
       $(modalDivID).modal('show')
 
   splited: (id) ->

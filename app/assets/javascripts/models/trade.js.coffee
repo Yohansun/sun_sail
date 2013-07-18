@@ -81,17 +81,27 @@ class MagicOrders.Models.Trade extends Backbone.Model
 
           if this.attributes.seller_id is null && type != '赠品' && $.inArray('invoice_settings',trades) > -1
             enabled_items.push('invoice_settings') #开票设置
+
+          if (this.attributes.refund_ref == null || this.attributes.refund_ref['status'] == 'cancel_refund_ref') && $.inArray('request_refund_ref',trades) > -1
+            enabled_items.push('refund_ref') #申请退款
+          if this.attributes.refund_ref && (this.attributes.refund_ref['status'] == 'confirm_refund_ref' || this.attributes.refund_ref['status'] == 'request_refund_ref') && $.inArray('confirm_refund_ref',trades) > -1
+            enabled_items.push('refund_ref') #确认退款
+          if $.inArray('cancel_refund_ref',trades) > -1
+            enabled_items.push('refund_ref') #取消退款
+
         when "WAIT_BUYER_CONFIRM_GOODS" # "已付款，已发货"
           if this.attributes.add_ref && this.attributes.add_ref['status'] == 'request_add_ref' && $.inArray('confirm_add_ref',trades) > -1
             enabled_items.push('add_ref') #确认补货
           if (this.attributes.add_ref == null) && $.inArray('request_add_ref',trades) > -1
             enabled_items.push('add_ref') #申请补货
+
           if (this.attributes.return_ref == null || this.attributes.return_ref['status'] == 'cancel_return_ref') && $.inArray('request_return_ref',trades) > -1
             enabled_items.push('return_ref') #申请退货
           if this.attributes.return_ref && (this.attributes.return_ref['status'] == 'confirm_return_ref' || this.attributes.return_ref['status'] == 'request_return_ref') && $.inArray('confirm_return_ref',trades) > -1
             enabled_items.push('return_ref') #确认退货
           if this.attributes.return_ref && this.attributes.return_ref['status'] == 'return_ref_money' && $.inArray('cancel_return_ref',trades) > -1
             enabled_items.push('return_ref') #取消退货
+
           if $.inArray('logistic_memo',trades) > -1
             enabled_items.push('logistic_memo') #物流公司备注
 
