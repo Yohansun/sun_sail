@@ -1,5 +1,5 @@
 # -*- encoding : utf-8 -*-
-class TradeTaobaoAutoDeliver
+class TradeAutoDeliver
   include Sidekiq::Worker
   sidekiq_options :queue => :auto_process #自动发货队列
 
