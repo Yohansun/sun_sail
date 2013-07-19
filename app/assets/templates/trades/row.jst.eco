@@ -143,7 +143,7 @@
 <% end %>
 
 <td data-col='invoice_info'>
-  <% if @trade.get 'invoice_name' : %>
+  <% if @trade.get 'invoice_type' : %>
   <a href="javascript:void(0)" rel="popover" data-content="<%= @trade.get 'invoice_type' %><br/><%= @trade.get 'invoice_name' %><br/><%= @trade.get 'invoice_content' %>" data-original-title="<b>发票信息</b>"><i class="icon-invoice"></i></a>
   <% end %>
 </td>

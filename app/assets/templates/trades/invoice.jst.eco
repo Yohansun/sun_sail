@@ -25,13 +25,13 @@
     <% if @trade.get('invoice_type') == null || @trade.get('invoice_type') == "无需开票": %>
       <label class="control-label">发票抬头：
         <div class="controls">
-          <input type="text" placeholder="输入文字..." class="input-xlarge" id="invoice_name_text" value="<%= @trade.get 'invoice_name' %>" disabled="true">
+          <input type="text" placeholder="输入文字..." class="input-xlarge" id="invoice_name_text" value="" disabled="true">
         </div>
       </label>
     <% else: %>
       <label class="control-label">发票抬头：
         <div class="controls">
-          <input type="text" placeholder="输入文字..." class="input-xlarge" id="invoice_name_text" value="<%= @trade.get 'invoice_name' %>" disabled="true">
+          <input type="text" placeholder="输入文字..." class="input-xlarge" id="invoice_name_text" value="<%= @trade.get 'invoice_name' %>" >
         </div>
       </label>
     <% end %>

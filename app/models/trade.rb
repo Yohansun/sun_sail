@@ -535,6 +535,7 @@ class Trade
                                logistic_id: logistic_id,
                                remark: remark,
                                website: invoice_name,
+                               is_cash_sale: invoice_type,
                                stock_typs: "CM",
                                account_id: account_id,
                                checked_at: Time.now,
