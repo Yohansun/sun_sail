@@ -75,18 +75,18 @@ class TaobaoTrade < Trade
     (trades.map(&:status) - ["WAIT_BUYER_CONFIRM_GOODS"]).size == 0 && !trades.map(&:delivered_at).include?(nil)
   end
 
-  def deliver!
-    return unless self.deliverable?
-    TradeTaobaoDeliver.perform_async(self.id)
-  end
+  # def deliver!
+  #   return unless self.deliverable?
+  #   TradeDeliver.perform_async(self.id)
+  # end
 
-  def auto_deliver!
-    result = self.fetch_account.can_auto_deliver_right_now
-    TradeTaobaoAutoDeliver.perform_in((result == true ? self.fetch_account.settings.auto_settings['deliver_silent_gap'].to_i.hours : result), self.id)
-    self.is_auto_deliver = true
-    self.operation_logs.create(operated_at: Time.now, operation: "自动发货")
-    self.save
-  end
+  # def auto_deliver!
+  #   result = self.fetch_account.can_auto_deliver_right_now
+  #   TradeAutoDeliver.perform_in((result == true ? self.fetch_account.settings.auto_settings['deliver_silent_gap'].to_i.hours : result), self.id)
+  #   self.is_auto_deliver = true
+  #   self.operationπa_logs.create(operated_at: Time.now, operation: "自动发货")
+  #   self.save
+  # end
 
   ## model属性方法 ##
 
@@ -105,24 +105,24 @@ class TaobaoTrade < Trade
     end
   end
 
-  def orders_total_price
-    self.orders.inject(0) { |sum, order| sum + order.price*order.num}
-  end
+  # def orders_total_price
+  #   self.orders.inject(0) { |sum, order| sum + order.price*order.num}
+  # end
 
-  def vip_discount
-    promotion_details.where(promotion_id: /^shopvip/i).sum(&:discount_fee)
-  end
+  # def vip_discount
+  #   promotion_details.where(promotion_id: /^shopvip/i).sum(&:discount_fee)
+  # end
 
-  def shop_bonus
-    promotion_details.where(promotion_id: /^shopbonus/i).sum(&:discount_fee)
-  end
+  # def shop_bonus
+  #   promotion_details.where(promotion_id: /^shopbonus/i).sum(&:discount_fee)
+  # end
 
-  def shop_discount
-    promotion_details.where(promotion_id: /^(?!shopvip|shopbonus)/i).sum(&:discount_fee)
-  end
+  # def shop_discount
+  #   promotion_details.where(promotion_id: /^(?!shopvip|shopbonus)/i).sum(&:discount_fee)
+  # end
 
-  def other_discount
-    (total_fee + post_fee - payment - promotion_fee).to_f.round(2)
-  end
+  # def other_discount
+  #   (total_fee + post_fee - payment - promotion_fee).to_f.round(2)
+  # end
 
 end

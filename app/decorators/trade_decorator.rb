@@ -375,9 +375,9 @@ class TradeDecorator < Draper::Base
         else
           if trade.is_auto_deliver == true && trade.is_auto_dispatch == true
             "已发货,待确认发货,自动发货, 自动分派"
-          elsif trade.is_auto_deliver == true && trade.is_auto_dispatch == false
-            "已发货,待确认发货,手动发货, 自动分派"
           elsif trade.is_auto_deliver == false && trade.is_auto_dispatch == true
+            "已发货,待确认发货,手动发货, 自动分派"
+          elsif trade.is_auto_deliver == true && trade.is_auto_dispatch == false
             "已发货,待确认发货,自动发货, 手动分派"
           else
             "已发货,待确认发货,手动发货, 手动分派"

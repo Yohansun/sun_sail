@@ -677,7 +677,7 @@ class Trade
     else
       bill = deliver_bills.create(deliver_bill_number: "#{tid}01", seller_id: seller_id, seller_name: seller_name, account_id: account_id)
       orders.each do |order|
-        taobao_sku = order.taobao_sku
+        taobao_sku = order.taobao_sku || order.local_skus.first
         sku_id = taobao_sku.try(:id)
         sku_name = taobao_sku.try(:name)
         bill.bill_products.create(title: order.title, outer_id: order.outer_iid, num_iid: order.num_iid, sku_id: sku_id, sku_name: sku_name, colors: order.color_num, number: order.num, memo: order.cs_memo)
@@ -787,16 +787,23 @@ class Trade
   end
 
   def deliverable?
-    trades = TaobaoTrade.where(tid: tid).select do |trade|
+    trades = Trade.where(tid: tid).select do |trade|
       trade.orders.where(:refund_status.in => ['NO_REFUND', 'CLOSED']).size != 0
     end
     (trades.map(&:status) - ["WAIT_BUYER_CONFIRM_GOODS"]).size == 0 && !trades.map(&:delivered_at).include?(nil)
   end
 
-  # 操作方法
   def deliver!
     return unless self.deliverable?
-    TradeTaobaoDeliver.perform_async(self.id)
+    TradeDeliver.perform_async(self.id)
+  end
+
+  def auto_deliver!
+    result = self.fetch_account.can_auto_deliver_right_now
+    TradeAutoDeliver.perform_in((result == true ? self.fetch_account.settings.auto_settings['deliver_silent_gap'].to_i.hours : result), self.id)
+    self.is_auto_deliver = true
+    self.operation_logs.create(operated_at: Time.now, operation: "自动发货")
+    self.save
   end
 
   def dispatchable?
@@ -1364,6 +1371,26 @@ class Trade
 
   def orders=(new_orders)
     self.taobao_orders = new_orders
+  end
+
+  def orders_total_price
+    self.orders.inject(0) { |sum, order| sum + order.price*order.num}
+  end
+
+  def vip_discount
+    promotion_details.where(promotion_id: /^shopvip/i).sum(&:discount_fee)
+  end
+
+  def shop_bonus
+    promotion_details.where(promotion_id: /^shopbonus/i).sum(&:discount_fee)
+  end
+
+  def shop_discount
+    promotion_details.where(promotion_id: /^(?!shopvip|shopbonus)/i).sum(&:discount_fee)
+  end
+
+  def other_discount
+    (total_fee + post_fee - payment - promotion_fee).to_f.round(2)
   end
 
   private

@@ -75,9 +75,14 @@
             }
             if same_order
               same_order.num += order.num
-              same_order.cs_memo ||=  ""
+              same_order.payment = same_order.order_payment
+              same_order.payment += order.order_payment
+              same_order.total_fee += order.total_fee
+              same_order.discount_fee += order.discount_fee
+              same_order.cs_memo ||= ""
               same_order.cs_memo += order.cs_memo.to_s + "\n" if order.cs_memo
             else
+              order.payment = order.order_payment
               new_trade.taobao_orders << order
             end
           }

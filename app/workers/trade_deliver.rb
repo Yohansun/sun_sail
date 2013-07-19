@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
-class TradeTaobaoDeliver
+class TradeDeliver
   include Sidekiq::Worker
-  sidekiq_options :queue => :taobao
+  sidekiq_options :queue => :trade_deliver
 
   def perform(id)
     trade = Trade.find(id)

@@ -50,7 +50,7 @@ class CustomTrade < Trade
       gift_tid = tid.dup
       main_trade.trade_gifts.where(gift_tid: gift_tid).first.update_attributes(delivered_at: Time.now)
     end
-    TradeTaobaoDeliver.perform_async(self.id)
+    TradeDeliver.perform_async(self.id)
   end
 
   def auto_deliver!
@@ -61,7 +61,10 @@ class CustomTrade < Trade
       main_trade.trade_gifts.where(gift_tid: gift_tid).first.update_attributes(delivered_at: Time.now)
     end
     result = self.fetch_account.can_auto_deliver_right_now
-    TradeTaobaoAutoDeliver.perform_in((result == true ? self.fetch_account.settings.auto_settings['deliver_silent_gap'].to_i.hours : result), self.id)
+    TradeAutoDeliver.perform_in((result == true ? self.fetch_account.settings.auto_settings['deliver_silent_gap'].to_i.hours : result), self.id)
+    self.is_auto_deliver = true
+    self.operation_logs.create(operated_at: Time.now, operation: "自动发货")
+    self.save
   end
 
   #### CustomTrade 目前默认不能自动分派 ####
