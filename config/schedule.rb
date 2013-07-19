@@ -9,19 +9,25 @@ root_path = File.expand_path('.')
 set :output, File.join(root_path,'log/cron_log.log')
 Accounts = {
   :brands => [:brands,{
-    :to => %w(asher_qian@allyes.com
-    lynn_lin@allyes.com 
-    zhao_wang@allyes.com 
-    nancy_wu@allyes.com 
-    fei_wang@allyes.com 
-    yang_wang@allyes.com)
-  },
-  :bcc => %w(errors@networking.io
-  wynn@doorder.com
-  michelle@doorder.com
-  clover@doorder.com
-  pumpkin@doorder.com)
+    # :to => %w(asher_qian@allyes.com
+    # lynn_lin@allyes.com
+    # zhao_wang@allyes.com
+    # nancy_wu@allyes.com
+    # fei_wang@allyes.com
+    # yang_wang@allyes.com),
+    :to => %w(
+    pumpkin@doorder.com
+    steven@doorder.com
+    xiaoliang@networking.io
+    zhoubin@networking.io
+    )
+  # :bcc => %w(errors@networking.io
+  # wynn@doorder.com
+  # michelle@doorder.com
+  # clover@doorder.com
+  # pumpkin@doorder.com)
   }]
+}
 every :day, :at => '2:00am', :roles => [:app] do
   runner "Reports.trades_consolidate_with_day(*#{Accounts[:brands]}).deliver!"
 end
