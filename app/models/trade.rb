@@ -676,7 +676,7 @@ class Trade
     else
       bill = deliver_bills.create(deliver_bill_number: "#{tid}01", seller_id: seller_id, seller_name: seller_name, account_id: account_id)
       orders.each do |order|
-        taobao_sku = order.taobao_sku
+        taobao_sku = order.taobao_sku || order.local_skus.first
         sku_id = taobao_sku.try(:id)
         sku_name = taobao_sku.try(:name)
         bill.bill_products.create(title: order.title, outer_id: order.outer_iid, num_iid: order.num_iid, sku_id: sku_id, sku_name: sku_name, colors: order.color_num, number: order.num, memo: order.cs_memo)

@@ -16,8 +16,9 @@ class BillProduct
 
   embedded_in :deliver_bill, :inverse_of => :bill_product
   embedded_in :stock_bill
-  validates :number,:price,:total_price,:numericality => {greater_than: 0}
-  validates_numericality_of :real_number,:greater_than => proc { |r| r.stock_bill.try(:_type) == "StockInBill" ? 0 : -1 }
+  # validates :number,:price,:total_price,:numericality => {greater_than: 0}
+  validates :number,:price,:total_price,:numericality => true
+  validates_numericality_of :real_number, :greater_than => proc { |r| r.stock_bill.try(:_type) == "StockInBill" ? 0 : -1 }
   validates :sku_id,:presence => true
 
   #validates :real_number, presence: true
