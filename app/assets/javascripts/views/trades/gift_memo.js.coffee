@@ -135,6 +135,7 @@ class MagicOrders.Views.TradesGiftMemo extends Backbone.View
 
         view = new MagicOrders.Views.TradesRow(model: model)
         $("#trade_#{model.get('id')}").replaceWith(view.render().el)
+        checkedTradeRow(model.get('id'))
         $("a[rel=popover]").popover({placement: 'left', html:true})
         $('#trade_gift_memo').modal('hide')
 

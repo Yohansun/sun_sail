@@ -20,6 +20,7 @@ class MagicOrders.Views.TradesConfirmColor extends Backbone.View
 
       view = new MagicOrders.Views.TradesRow(model: model)
       $("#trade_#{model.get('id')}").replaceWith(view.render().el)
+      checkedTradeRow(model.get('id'))
       $("a[rel=popover]").popover({placement: 'left', html:true})
 
       $('#trade_confirm_color').modal('hide')
