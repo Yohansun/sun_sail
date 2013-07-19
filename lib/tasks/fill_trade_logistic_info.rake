@@ -9,16 +9,16 @@ task :fill_trade_logistic_info   => :environment do
     trade.logistic_waybill = trade.tid
     trade.save!
     p [trade.logistic_name , trade.logistic_code, trade.logistic_waybill ]
-  end  
+  end
 end
 task :fill_trade_delivered_status => :environment do
   # no need to judge trade.status
   trades = TaobaoTrade.where(status: "WAIT_SELLER_SEND_GOODS")
   trades.each do |trade|
     if trade.delivered_at
-      TradeTaobaoDeliver.new.perform(trade.id)
+      TradeDeliver.new.perform(trade.id)
       trade.update_attributes(status: "WAIT_BUYER_CONFIRM_GOODS")
       p "deliver #{trade.tid}"
-    end  
-  end  
+    end
+  end
 end

@@ -50,7 +50,7 @@ class CustomTrade < Trade
       gift_tid = tid.dup
       main_trade.trade_gifts.where(gift_tid: gift_tid).first.update_attributes(delivered_at: Time.now)
     end
-    TradeTaobaoDeliver.perform_async(self.id)
+    TradeDeliver.perform_async(self.id)
   end
 
   def auto_deliver!

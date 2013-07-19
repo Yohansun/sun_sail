@@ -77,7 +77,7 @@ class TaobaoTrade < Trade
 
   # def deliver!
   #   return unless self.deliverable?
-  #   TradeTaobaoDeliver.perform_async(self.id)
+  #   TradeDeliver.perform_async(self.id)
   # end
 
   # def auto_deliver!
