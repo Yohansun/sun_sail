@@ -2,89 +2,11 @@
   <div class="span10 w100">
     <%= render partial: "layouts/all_crumbs" %>
     <%= render partial: "layouts/warehouse_menu" %>
-
-    <div class="tab-content">
-      <div class="tab-pane active" id="stock_check">
-        <%= form_for @search ,:url => stocks_path , :html => {:class => "well well-small form-horizontal font12",:id => "search"},:method => :get do |f| %>
-          <%= render :partial => "search",:locals => {:f => f} %>
-        <% end %>
-      </div>
-
-      <div class="btn-toolbar">
-        <div class="btn-group">
-          <button class="btn btn-warning">操作</button>
-          <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
-            <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu">
-            <li>
-              <%= link_to "导出","#",:onclick => "processChecked('#{stocks_path(:search => params[:search],:format => :xls,:on => '?')}')"%>
-            </li>
-            <li>
-              <%= link_to_authorize "批量设置安全库存","#batch_update_safety_stock",:target_url => "/stocks/batch_update_safety_stock",:class => "magic_operation set_stock", "data-toggle" => "modal",:request => :post,:id => "set_safety_stock" %>
-            </li>
-            <li>
-              <%= link_to_authorize "批量设置可用库存","#batch_update_activity_stock",:target_url => "/stocks/batch_update_activity_stock",:class => "magic_operation set_stock", "data-toggle" => "modal",:request => :post,:id => "set_actual_stock" %>
-            </li>
-          </ul>
-        </div>
-      </div>
-
-        <%= form_tag "/",:method => "post",:id => "stocks_index_form", :remote => true,:class => "simple-operation cmxform" do %>
-        <fieldset class="js-modal modal hide fade" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true" id="batch_update_safety_stock">
-          <%= render "batch_update_safety_stock" %>
-        </fieldset>
-        <fieldset class="js-modal modal hide fade" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true" id="batch_update_activity_stock">
-          <%= render "batch_update_activity_stock" %>
-        </fieldset>
-          <table class="table table-hover table-bordered table-striped table-condensed js-table" id="stocks_table">
-            <thead>
-              <tr>
-                <th width="2%"><input type="checkbox"></th>
-                <th width="5%">序号</th>
-                <th width="10%"><%= sort_link @search, :sku_sku_id,"SKU编码" %> </th>
-                <th><%= sort_link @search, :product_name,"商品SKU名称" %> </th>
-                <th width="10%"><%= sort_link @search, :product_outer_id,"商品编码" %></th>
-                <th width="10%"><%= sort_link @search, :category_name,"商品分类" %></th>
-                <th width="10%"><%= sort_link @search, :activity,"可用库存" %></th>
-                <th width="10%"><%= sort_link @search, :actual,"实际库存" %></th>
-                <th width="10%"><%= sort_link @search, :safe_value,"安全库存" %></th>
-                <th width="10%">库存状态</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% @stock_products.each_with_index do |stock_product, index| %>
-              <tr id="<%=dom_id(stock_product)%>">
-                <td><input type="checkbox" name="stock_product_ids[]" value="<%= stock_product.id %>"></td>
-                <td><%=  index + 1  %></td>
-                <td><%= stock_product.sku.try(:sku_id) %></td>
-                <td class="sku_title"><%= stock_product.sku.try(:title) %></td>
-                <td><%= stock_product.product.try(:outer_id) %></td>
-                <td><%= stock_product.category.try(:name) %></td>
-                <td><%= stock_product.activity %></td>
-                <td><%= stock_product.actual %></td>
-                <td><%= stock_product.safe_value %></td>
-                <td><%= stock_product.storage_status %></td>
-              </tr>
-              <% end %>
-            </tbody>
-          </table>
-        <%- end %>
-        <div class='clearfix'>
-          <div class="pull-right" style="margin-left: 5px;margin-top: -2px;">
-            <%= paginate @stock_products %>
-          </div>
-          <!-- <p></p> -->
-          <%= form_tag("/stocks", :method => "get", :class => 'pagination trade_count_info form-inline pull-right') do %>
-          <input style="visibility:hidden;" name="page" value="<%= params[:page]%>"/>
-          <label style="color:#005580;">当前每页显示：</label>
-          <%=select_tag :number, options_for_select([["加载20项","20"],
-                  ["加载50项","50"],
-                  ["加载100项", "100"]], params[:number]),  :class => 'nomargin input-medium', :onchange => "this.form.submit();" %>
-          <%- end -%>
-        </div>
-      </div><!--span10 -->
-    </div><!-- tab-content -->
+    <% if @warehouse.blank? %>
+    <%= render "all_stocks" %>
+    <% else %>
+    <%= render "detail_for_warehouse_stocks" %>
+    <% end %>
   </div><!-- span10 -->
 </div><!--row-fluid-->
 

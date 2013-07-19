@@ -5,47 +5,41 @@
 </style>
 
 <div class="control-group">
-  <%= f.label :category_id_eq,raw("<code>商品分类</code>"),:class => "pull-left" %>
+  <%= f.label :product_id_eq,raw("<code>商品名称</code>"),:class => "pull-left"  %>
   <div class="controls pull-left">
-    <%= f.select :category_id_eq,current_account.categories.collect {|x| [x.name,x.id]},
-    {:include_blank => true},{:class => "input-small pull-left select2 all"}  %>
+    <%= f.select :product_id_eq,current_account.products.collect {|x| [x.name,x.id]},
+    {:include_blank => true},{:class => "input-small pull-left select2 product all"}  %>
   </div>
   <div class="pull-left">
     <button type="button pull-left" class="btn btn-info search" id="simple_search_button">筛选</button>
   </div>
 </div>
-
-
 <div class="control-group">
-  <%= f.label :product_id_eq,raw("<code>商品名称</code>"),:class => "pull-left"  %>
+  <label class="pull-left width"><code>地域：</code></label>
   <div class="controls pull-left">
-    <%= f.select :product_id_eq,current_account.skus.collect {|x| [x.title,x.product_id]},
-    {:include_blank => true},{:class => "input-small pull-left select2 product all"}  %>
-  </div>
-</div>
-
-<div class="control-group">
-    <%= f.label :sku_sku_id_eq,raw("<code>SKU编码</code>"),:class => "pull-left" %>
-  <div class="controls pull-left">
-    <%= f.text_field :sku_sku_id_eq%>
-  </div>
-</div>
-
-<div class="control-group">
-  <%= label_tag "storage_status",raw("<code>库存状态</code>"),:class => "pull-left"  %>
-  <div class="controls pull-left">
-    <%= select_tag "storage_status",options_for_select(StockProduct::STORAGE_STATUS.keys,params["storage_status"]),{:include_blank => true,:class => "input-small pull-left select2 all"} %>
-  </div>
-</div>
-
-<div class="control-group">
-  <div class="pull-left">
-    <span class="label label-info">共有<%= @count %>条数据</span>
+    <select id="" class="level_1 input-medium input-small pull-left" name="op_state">
+      <option>省</option>
+    </select>
+    <select id="" class="level_2 input-medium input-small pull-left" name="op_city">
+      <option>市</option>
+    </select>
+    <select id="" class="level_3 input-medium input-small pull-left" name="op_district">
+      <option>区</option>
+    </select>
   </div>
 </div>
 <% content_for :tail do %>
 <script type="text/javascript" charset="utf-8">
 $(function() {
+  var options = {
+    data  : linkage_data
+  }
+
+  var sel = new LinkageSelect(options);
+  sel.bind('.level_1','<%= params[:op_state] %>');
+  sel.bind('.level_2','<%= params[:op_city] %>');
+  sel.bind('.level_3','<%= params[:op_district] %>');
+
   $.each($('form').find("select.all"),function(){
     $(this).select2({
       placeholder: "全部",

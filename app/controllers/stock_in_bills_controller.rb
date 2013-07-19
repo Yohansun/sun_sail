@@ -153,6 +153,7 @@ class StockInBillsController < ApplicationController
       search[:bill_products_sku_id_eq] = params[:bill_products_sku_id_eq]
     end
     search[:status_eq] = params[:status] if params[:status].present?
+    search[:stock_type_not_eq] = "IVIRTUAL" if search[:stock_type_eq].blank?
   end
 
   def default_search

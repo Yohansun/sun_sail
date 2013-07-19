@@ -3,18 +3,19 @@
 #
 # Table name: stock_products
 #
-#  id         :integer(4)      not null, primary key
-#  created_at :datetime        not null
-#  updated_at :datetime        not null
-#  max        :integer(4)      default(0)
-#  safe_value :integer(4)      default(0)
-#  activity   :integer(4)      default(0)
-#  actual     :integer(4)      default(0)
-#  product_id :integer(4)
-#  seller_id  :integer(4)
-#  sku_id     :integer(8)
-#  num_iid    :integer(8)
-#  account_id :integer(4)
+#  id           :integer(4)      not null, primary key
+#  created_at   :datetime        not null
+#  updated_at   :datetime        not null
+#  max          :integer(4)      default(0)
+#  safe_value   :integer(4)      default(0)
+#  activity     :integer(4)      default(0)
+#  actual       :integer(4)      default(0)
+#  product_id   :integer(4)
+#  seller_id    :integer(4)
+#  sku_id       :integer(8)
+#  num_iid      :integer(8)
+#  account_id   :integer(4)
+#  lock_version :integer(4)      default(0), not null
 #
 
 class StockProduct < ActiveRecord::Base
@@ -41,7 +42,27 @@ class StockProduct < ActiveRecord::Base
     "正常" => "stock_products.activity >= stock_products.safe_value and stock_products.actual != stock_products.max"
   }
   
-  
+  def self.batch_update_activity_stock(relation,number)
+    success = []
+    fails = []
+    relation.each do |record|
+      record.update_activity_stock(number) ? success.push(record.id) : fails.push(record.id)
+    end
+    [success,fails]
+  end
+
+  def update_activity_stock(activity)
+    transaction do
+      self.activity = activity
+      self.changes[:activity].tap do |ary|
+        poor = ary.first - ary.last
+        self.actual -= poor
+        klass = poor > 0 ? StockOutBill : StockInBill
+        return true if self.save! && create_stock_bill(klass,poor.abs)
+      end if self.activity_changed?
+    end rescue false
+  end
+
   def storage_status
     	if activity < safe_value
     		'预警'
@@ -52,4 +73,10 @@ class StockProduct < ActiveRecord::Base
     	end
     end
 
+  private
+  def create_stock_bill(klass,number)
+    bill = klass.new(stock_typs: "VIRTUAL",:seller_id => self.seller_id ,account_id: self.account_id,bill_products_attributes: {"0" => {real_number: number, number: number,sku_id: self.sku_id}})
+    bill.update_bill_products
+    bill.save!
+  end
 end

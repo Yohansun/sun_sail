@@ -113,10 +113,10 @@
     });
     $("#stock_in_bill").validate({
       rules: {
-        "stock_in_bill[op_name]": { required: true},
+        "stock_in_bill[stocked_at]": { required: true},
       },
       messages: {
-        "stock_in_bill[op_name]": { required: "不能为空" }
+        "stock_in_bill[stocked_at]": { required: "入库时间不能为空" }
       }
     });
     $(":input.checkdata").each(function(){ $(this).rules("add",{required: true,number: true,messages: {required: "不能为空",number: "必须是数字"}}) })

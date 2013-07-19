@@ -58,8 +58,8 @@ class StockBill
 
   belongs_to :trade, :class_name => "Trade", :foreign_key => "tid",:primary_key => "tid"
 
-  IN_STOCK_TYPE   = [["调拨入库", "IIR"], ["正常入库", "IFG"], ["拆分入库", "ICF"], ["加工入库", "IOT"], ["退货入库", "IRR"], ["特殊入库(免费)", "IMF"]]
-  OUT_STOCK_TYPE  = [["拆分出库", "ORS"], ["调拨出库", "ODB"], ["加工出库", "OKT"], ["退货出库", "OTT"], ["销售出库", "OCM"], ["报废出库", "OOT"], ["补货出库", "OWR"], ["特殊出库(免费)", "OMF"], ["退大货出库", "OTD"]]
+  IN_STOCK_TYPE   = [["调拨入库", "IIR"], ["正常入库", "IFG"], ["拆分入库", "ICF"], ["加工入库", "IOT"], ["退货入库", "IRR"], ["特殊入库(免费)", "IMF"],["虚拟入库","IVIRTUAL"]]
+  OUT_STOCK_TYPE  = [["拆分出库", "ORS"], ["调拨出库", "ODB"], ["加工出库", "OKT"], ["退货出库", "OTT"], ["销售出库", "OCM"], ["报废出库", "OOT"], ["补货出库", "OWR"], ["特殊出库(免费)", "OMF"], ["退大货出库", "OTD"],["虚拟出库","OVIRTUAL"]]
 
   STOCK_TYPE = IN_STOCK_TYPE + OUT_STOCK_TYPE
 
@@ -123,6 +123,12 @@ class StockBill
     self.increase_activity if self._type == 'StockOutBill' #出库单才更新库存
     self.save(validate: false)
   end
+
+  # MUST BE READ
+  # 如果新建一个入库单或者更改bill_products的时候必须要调用这个
+  # 为什么不用callback? 每次save都要,调用这个影响数据库IO.
+  # 为什么不用 *_create or *_update 因为在update_attributes中的  bill_products的时候必须要使用attributes=
+  # marked_for_destruction?才会生效. 虽然目前没有使用到. 详细看分支 stocks 最后一个commit内容.
 
   def update_bill_products
     bill_products.each do |bp|
