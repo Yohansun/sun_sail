@@ -786,16 +786,23 @@ class Trade
   end
 
   def deliverable?
-    trades = TaobaoTrade.where(tid: tid).select do |trade|
+    trades = Trade.where(tid: tid).select do |trade|
       trade.orders.where(:refund_status.in => ['NO_REFUND', 'CLOSED']).size != 0
     end
     (trades.map(&:status) - ["WAIT_BUYER_CONFIRM_GOODS"]).size == 0 && !trades.map(&:delivered_at).include?(nil)
   end
 
-  # 操作方法
   def deliver!
     return unless self.deliverable?
     TradeTaobaoDeliver.perform_async(self.id)
+  end
+
+  def auto_deliver!
+    result = self.fetch_account.can_auto_deliver_right_now
+    TradeTaobaoAutoDeliver.perform_in((result == true ? self.fetch_account.settings.auto_settings['deliver_silent_gap'].to_i.hours : result), self.id)
+    self.is_auto_deliver = true
+    self.operationπa_logs.create(operated_at: Time.now, operation: "自动发货")
+    self.save
   end
 
   def dispatchable?

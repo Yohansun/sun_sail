@@ -103,6 +103,7 @@ class StockApiController < ApplicationController
 
         # In case of handmade stock_out_bill
         if trade
+          is_first_set = !trade.logistic_waybill.present?
           logistic = Logistic.find_by_code(output_back['carrierID'])
           trade.update_attributes(
             logistic_waybill: output_back['shipNo'],
@@ -110,6 +111,11 @@ class StockApiController < ApplicationController
             logistic_code: output_back['carrierID'],
             logistic_id: logistic.try(:id)
           )
+        end
+
+        auto_settings = current_account.settings.auto_settings
+        if auto_settings['auto_deliver'] && auto_settings["deliver_condition"] == "has_logistic_waybill_trade" && is_first_set
+          trade.auto_deliver!
         end
 
         skus = output_back['send']['sku']

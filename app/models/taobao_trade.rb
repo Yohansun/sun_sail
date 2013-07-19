@@ -75,18 +75,18 @@ class TaobaoTrade < Trade
     (trades.map(&:status) - ["WAIT_BUYER_CONFIRM_GOODS"]).size == 0 && !trades.map(&:delivered_at).include?(nil)
   end
 
-  def deliver!
-    return unless self.deliverable?
-    TradeTaobaoDeliver.perform_async(self.id)
-  end
+  # def deliver!
+  #   return unless self.deliverable?
+  #   TradeTaobaoDeliver.perform_async(self.id)
+  # end
 
-  def auto_deliver!
-    result = self.fetch_account.can_auto_deliver_right_now
-    TradeTaobaoAutoDeliver.perform_in((result == true ? self.fetch_account.settings.auto_settings['deliver_silent_gap'].to_i.hours : result), self.id)
-    self.is_auto_deliver = true
-    self.operation_logs.create(operated_at: Time.now, operation: "自动发货")
-    self.save
-  end
+  # def auto_deliver!
+  #   result = self.fetch_account.can_auto_deliver_right_now
+  #   TradeTaobaoAutoDeliver.perform_in((result == true ? self.fetch_account.settings.auto_settings['deliver_silent_gap'].to_i.hours : result), self.id)
+  #   self.is_auto_deliver = true
+  #   self.operationπa_logs.create(operated_at: Time.now, operation: "自动发货")
+  #   self.save
+  # end
 
   ## model属性方法 ##
 
