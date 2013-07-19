@@ -107,7 +107,7 @@
           <tr>
             <td colspan="1"><b>开票信息</b></td>
             <td colspan="4" class="reedit_text js-invoice-label">
-              <% if @bill.get('invoice_name') : %>
+              <% if @bill.get('invoice_type') : %>
                 <%= @bill.get('invoice_type')%> <%= @bill.get('invoice_name')%> <%= @bill.get('invoice_content')%> <%= @bill.get('invoice_date')%>
               <% end %>
             </td>

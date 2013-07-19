@@ -20,11 +20,17 @@ class StockApiController < ApplicationController
       if asn_details
         asns = asn_details['ASNs']
         custmor_order_no = asns['CustmorOrderNo']
-        stock_in_bill = StockInBill.where(tid: custmor_order_no).first
-        unless stock_in_bill
-          render soap: "ORDER_NOT_FOUND"
+
+        unless StockInBill.where(tid: custmor_order_no).exists?
+          render soap: "ORDER NOT FOUND"
           return
         end
+        stock_in_bill = StockInBill.where(tid: custmor_order_no, status: 'SYNCKED').first
+        unless stock_in_bill
+          render soap: "ORDER STATUS UNCHANGEABLE"
+          return
+        end
+
         record = stock_in_bill.bml_input_backs.create(
           custmor_order_no: custmor_order_no,
           asnno: asns['ASNNo'],
@@ -84,9 +90,13 @@ class StockApiController < ApplicationController
       if output_backs
         output_back = output_backs['outputBack']
         tid = output_back['orderNo']
-        stock_out_bill = StockOutBill.where(tid: tid).first
-        unless stock_out_bill
+        unless StockOutBill.where(tid: tid).exists?
           render soap: "ORDER NOT FOUND"
+          return
+        end
+        stock_out_bill = StockOutBill.where(tid: tid, status: 'SYNCKED').first
+        unless stock_out_bill
+          render soap: "ORDER STATUS UNCHANGEABLE"
           return
         end
         record = stock_out_bill.bml_output_backs.create(
