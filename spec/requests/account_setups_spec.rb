@@ -89,33 +89,38 @@ describe "AccountSetups" do
 
   describe "PUT /account_setups#update_preprocess" do
     #Please don't use redirect_to :back
-    pending "works! (now write some real specs)" do
-      put update_preprocess_settings_account_setups_path(:auto_settings => {:off => true})
-      response.status.should be(200)
+    it "works! (now write some real specs)" do
+        put update_preprocess_settings_account_setups_path(:auto_settings => {:off => true}),{},{"HTTP_REFERER"=>'http://test.com/sessions/new'}
+      
+      response.status.should be(302)
     end
   end
 
   describe "PUT /account_setups#update_dispatch_settings" do
     #Please don't use redirect_to :back
-    pending "works! (now write some real specs)" do
-      put update_dispatch_settings_account_setups_path(:auto_settings => {:off => true})
-      response.status.should be(200)
+    it "works! (now write some real specs)" do
+        @request.env['HTTP_REFERER'] = 'http://test.com/sessions/new'
+        put update_dispatch_settings_account_setups_path(:auto_settings => {:off => true}),{},{"HTTP_REFERER"=>'http://test.com/sessions/new'}
+      response.status.should be(302)
     end
   end
 
   describe "PUT /account_setups#update_deliver_settings" do
     #Please don't use redirect_to :back
-    pending "works! (now write some real specs)" do
-      put update_deliver_settings_account_setups_path(:auto_settings => {:off => true})
-      response.status.should be(200)
+    it "works! (now write some real specs)" do
+        @request.env['HTTP_REFERER'] = 'http://test.com/sessions/new'
+        put update_deliver_settings_account_setups_path(:auto_settings => {:off => true}),{},{"HTTP_REFERER"=>'http://test.com/sessions/new'}
+      response.status.should be(302)
     end
   end
 
   describe "PUT /account_setups#update_automerge_settings" do
     #Please don't use redirect_to :back
-    pending "works! (now write some real specs)" do
-      put update_automerge_settings_account_setups_path(:auto_settings => {:off => true})
-      response.status.should be(200)
+    it "works! (now write some real specs)" do
+        @request.env['HTTP_REFERER'] = 'http://test.com/sessions/new'
+        put update_automerge_settings_account_setups_path(:auto_settings => {:off => true}),{},{"HTTP_REFERER"=>'http://test.com/sessions/new'}
+      
+      response.status.should be(302)
     end
   end
 end

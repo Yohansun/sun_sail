@@ -20,7 +20,7 @@ describe "Stocks" do
     end
   end
   describe "GET /stocks/safe_stock" do
-    pending "works! (now write some real specs)" do
+    it "works! (now write some real specs)" do
       get "/stocks/safe_stock"
       response.status.should be(200)
     end
@@ -40,8 +40,8 @@ describe "Stocks" do
   end
   
   describe "POST /stocks/edit_safe_stock" do
-    pending "works! (now write some real specs)" do
-      post edit_safe_stock_stocks_path
+    it "works! (now write some real specs)" do
+      post "/stocks/edit_safe_stock", {id:stock.id}
       response.status.should be(200)
     end
   end

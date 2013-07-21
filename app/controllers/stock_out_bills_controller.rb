@@ -36,7 +36,7 @@ class StockOutBillsController < ApplicationController
     @bill.update_bill_products
     if @bill.save
       flash[:notice] = "出库单#{@bill.tid}创建成功"
-      redirect_to warehouse_stock_out_bill_path(@warehouse,@bill)
+      redirect_to warehouse_stock_out_bill_path(@warehouse.id,@bill.id)
     else
       #TODO 错误提示重复
       flash[:error] = (@bill.errors.full_messages.uniq + @bill.bill_products_errors).to_sentence

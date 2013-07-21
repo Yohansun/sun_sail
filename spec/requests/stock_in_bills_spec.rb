@@ -31,13 +31,15 @@ describe "StockInBills" do
       response.status.should be(200)
     end
 
-    pending "should be save" do
-      StockInBill.any_instance.stub(save: true)
-      post warehouse_stock_in_bills_path(@warehouse),{stock_in_bill: {stock_type: "IIR"}}
-      expect(response).to redirect_to(warehouse_stock_in_bills_path(@warehouse.to_param,assigns(:bill).to_param))
+    it "should be save" do
+      #StockInBill.any_instance.stub(save: true)
+      post warehouse_stock_in_bills_path(@warehouse),{stock_in_bill: {stock_type: "IIR",
+        bill_products_attributes:{"0"=>{sku_id:666,number:200,price:16,real_number:200,total_price:3200}}
+      }}
+      expect(response).to redirect_to(warehouse_stock_in_bill_path(@warehouse.id,assigns(:bill).id))
       response.status.should be(302)
       follow_redirect!
-      expect(response).to render_template(:index)
+      expect(response).to render_template(:show)
       response.status.should be(200)
     end
   end
@@ -60,13 +62,14 @@ describe "StockInBills" do
   
   describe "PUT /warehouses/1/stock_in_bills#update" do
     it "update failure" do
-      StockInBill.any_instance.stub(update_attributes: false)
+      StockInBill.any_instance.stub(save: false)
       put warehouse_stock_in_bill_path(@warehouse,@stock_in_bill)
       expect(response).to render_template(:edit)
       response.status.should be(200)
     end
     
     it "update success" do
+      StockInBill.any_instance.stub(save: true)
       put warehouse_stock_in_bill_path(@warehouse,@stock_in_bill)
       expect(response).to redirect_to(warehouse_stock_in_bill_path(@warehouse,@stock_in_bill))
       response.status.should be(302)
