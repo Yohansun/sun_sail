@@ -143,8 +143,8 @@
 <% end %>
 
 <td data-col='invoice_info'>
-  <% if @trade.get 'invoice_type' : %>
-  <a href="javascript:void(0)" rel="popover" data-content="<%= @trade.get 'invoice_type' %><br/><%= @trade.get 'invoice_name' %><br/><%= @trade.get 'invoice_content' %>" data-original-title="<b>发票信息</b>"><i class="icon-invoice"></i></a>
+  <% if @trade.get('invoice_type') && @trade.get('invoice_type') != "无需开票" : %>
+  <a href="javascript:void(0)" rel="popover" data-content="<%= @trade.get 'invoice_type' %><br/><%= @trade.get 'invoice_name' %><br/>" data-original-title="<b>发票信息</b>"><i class="icon-invoice"></i></a>
   <% end %>
 </td>
 <td data-col='point_fee'>
