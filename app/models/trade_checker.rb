@@ -4,7 +4,7 @@ class TradeChecker
   class TaobaoBase < TaobaoTrade
     scope :bad_deliver_status_of_orders, ->(account_id,start_time,end_time) do
       time_range_with_account(account_id,start_time,end_time).only(:tid, :status, :track_goods_status).
-      where(:status => "WAIT_SELLER_SEND_GOODS", :track_goods_status => "INIT",:_type => "TaobaoTrade")
+      where(:status => "WAIT_SELLER_SEND_GOODS", :delivered_at.ne => nil,:_type => "TaobaoTrade")
     end
 
     scope :hidden_orders,     ->(account_id,start_time,end_time) do
