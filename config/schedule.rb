@@ -31,6 +31,14 @@ Accounts = {
 every :day, :at => '2:00am', :roles => [:app] do
   runner "Reports.trades_consolidate_with_day(*#{Accounts[:brands]}).deliver!"
 end
+
+every :day, :at => '9:00am', :roles => [:app] do
+  runner "TradeChecker.new(:brands).invoke"
+end
+
+every :day, :at => '9:00pm', :roles => [:app] do
+  runner "TradeChecker.new(:brands).invoke"
+end
 #
 # every 2.hours do
 #   command "/usr/bin/some_great_command"

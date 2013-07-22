@@ -274,9 +274,21 @@ class Trade
   # scope  :unmerged, ->{where(merged_by_trade_id:nil)}
   scope  :be_merged, ->{where({merged_by_trade_id:{"$ne"=>nil}})}
   scope  :is_merger, ->{where({merged_trade_ids:{"$ne"=>nil}})}
-  scope :time_range_with_account, ->(account_id,date){
-    date = date.to_time(:local) if date.is_a?(String)
-    time_range = date.beginning_of_day..date.end_of_day
+
+  # Trade.time_range_with_account(1,Time.now)
+  # selector: {"account_id"=>1, "created"=>{"$gte"=>2013-07-16 16:00:00 UTC, "$lte"=>2013-07-17 15:59:59 UTC}}
+  # ==
+  # Trade.time_range_with_account(1,Time.now.ago(2.days),Time.now)
+  # selector: {"account_id"=>1, "created"=>{"$gte"=>2013-07-14 16:00:00 UTC, "$lte"=>2013-07-17 15:59:59 UTC}}
+
+  scope :time_range_with_account, ->(account_id,start_date,end_date=nil){
+    start_date = start_date.to_time(:local) if start_date.is_a?(String)
+    time_range = if end_date.blank?
+      start_date.beginning_of_day..start_date.end_of_day
+    else
+      end_date = end_date.to_time(:local) if end_date.is_a?(String)
+      start_date.beginning_of_day..end_date.end_of_day
+    end
     where(account_id: account_id).between(created: time_range)
   }
 

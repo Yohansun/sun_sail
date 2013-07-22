@@ -1,16 +1,18 @@
 # -*- encoding : utf-8 -*-
 class DailyOrdersNotifier < ActionMailer::Base
  
-   def check_status_result(account_id, start_time, end_time, lost_orders, wrong_orders, bad_status_orders, hidden_orders)
-    account = Account.find_by_id(account_id)
+   def check_status_result(trade_checker)
+
+    @trade_checkers = [trade_checker]
+    #默认发送今天凌晨1点到现在的数据
+    if trade_checker.end_time.to_date != Date.today
+      @today_trade_checker = TradeChecker.new(trade_checker.account_key,time: Time.now,ago: 0)
+      @today_trade_checker.taobao_trade_status
+      @trade_checkers << @today_trade_checker
+    end
+    account = trade_checker.account
     from = account.settings.email_notifier_from
     reciever = account.settings.check_status_result_reciever
-    @start_time = start_time
-    @end_time = end_time
-    @lost_orders = lost_orders
-    @wrong_orders = wrong_orders
-    @bad_status_orders = bad_status_orders
-    @hidden_orders = hidden_orders
     mail(:from => from, :to => reciever, :subject => "#{account.settings.site_title_basic} 异常核查报告 #{Time.now}")
   end
 

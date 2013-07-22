@@ -60,7 +60,7 @@ describe "StockInBills" do
   
   describe "PUT /warehouses/1/stock_in_bills#update" do
     it "update failure" do
-      StockInBill.any_instance.stub(update_attributes: false)
+      StockInBill.any_instance.stub(save: false)
       put warehouse_stock_in_bill_path(@warehouse,@stock_in_bill)
       expect(response).to render_template(:edit)
       response.status.should be(200)
