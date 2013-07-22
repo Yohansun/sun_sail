@@ -223,8 +223,8 @@ class TaobaoProductsPuller
       trade_source = TradeSource.find_by_id(trade_source_id)
       account = Account.find_by_id(trade_source.account_id)
 
-      trades = Trade.where(trade_source_id: trade_source_id).only(:trade_source_id, "taobao_orders.num_iid").where(trade_source_id: trade_source_id)
-      num_iids = trades.map(&:taobao_orders).flatten.map(&:values).flatten.uniq
+      trades = Trade.where(trade_source_id: trade_source_id).only("taobao_orders.num_iid")
+      num_iids = trades.map(&:taobao_orders).flatten.map(&:num_iid).flatten.uniq
       num_iids.each do |num_iid|
         #通过num_iid调用taobao.item.get获取sku相关信息
         item_get_response = TaobaoQuery.get({method: 'taobao.item.get',  fields: 'num,detail_url,title,sku.properties_name,sku.properties,sku.quantity, sku.sku_id, outer_id, product_id, pic_url,cid,price', num_iid: num_iid}, trade_source_id)
