@@ -19,7 +19,7 @@ class Reports < ActionMailer::Base
     raise "没有找到#{account_key}该账户" if @account.nil?
     @trades = Trade.time_range_with_account(@account.id,options[:date])
 
-    options[:from] = @account.settings.email_notifier_from
+    options[:from] ||= @account.settings.email_notifier_from
 
     @paid_trades = @trades.where(:pay_time.ne => nil)
 

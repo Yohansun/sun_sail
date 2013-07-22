@@ -7,6 +7,7 @@
 #
 root_path = File.expand_path('.')
 set :output, File.join(root_path,'log/cron_log.log')
+DEFAULT_FROM = "magic-notifer@networking.io"
 Accounts = {
   :brands => [:brands,{
     # :to => %w(asher_qian@allyes.com
@@ -20,24 +21,38 @@ Accounts = {
     steven@doorder.com
     xiaoliang@networking.io
     zhoubin@networking.io
-    )
-  # :bcc => %w(errors@networking.io
-  # wynn@doorder.com
-  # michelle@doorder.com
-  # clover@doorder.com
-  # pumpkin@doorder.com)
+    mark@doorder.com
+    ),
+  # :bcc => STORY_1207,
+  :from => "#{DEFAULT_FROM}"
   }]
 }
+
+
+
+STORY_1204 = %w(
+errors@networking.io
+wynn@doorder.com
+michelle@doorder.com
+clover@doorder.com
+pumpkin@doorder.com
+zhoubin@networking.io
+wang@networking.io
+xiaoliang@networking.io
+)
+
+STORY_1207 = STORY_1204 + %w(mark@doorder.com steven@doorder.com)
+
 every :day, :at => '2:00am', :roles => [:app] do
   runner "Reports.trades_consolidate_with_day(*#{Accounts[:brands]}).deliver!"
 end
 
 every :day, :at => '9:00am', :roles => [:app] do
-  runner "TradeChecker.new(:brands).invoke"
+  runner "trade_checker = TradeChecker.new(:brands).taobao_trade_status;DailyOrdersNotifier.check_status_result(trade_checker,:to => #{STORY_1204},:from => \"#{DEFAULT_FROM}\").deliver!"
 end
 
 every :day, :at => '9:00pm', :roles => [:app] do
-  runner "TradeChecker.new(:brands).invoke"
+  runner "trade_checker = TradeChecker.new(:brands).taobao_trade_status;DailyOrdersNotifier.check_status_result(trade_checker,:to => #{STORY_1204},:from => \"#{DEFAULT_FROM}\").deliver!"
 end
 #
 # every 2.hours do

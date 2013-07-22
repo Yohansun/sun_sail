@@ -14,6 +14,11 @@ set :assets_dependencies, %w(app/assets lib/assets vendor/assets Gemfile.lock co
 set :hipchat_token, "4cbf6fde19410295cad3d202a87ade"
 set :hipchat_room_name, "Release House"
 set :hipchat_announce, false
+
+# Whenever
+set :whenever_command, "bundle exec whenever"
+require "whenever/capistrano"
+
 # tasks
 namespace :deploy do
 

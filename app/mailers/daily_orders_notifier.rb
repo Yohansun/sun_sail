@@ -1,19 +1,31 @@
 # -*- encoding : utf-8 -*-
 class DailyOrdersNotifier < ActionMailer::Base
- 
-   def check_status_result(trade_checker)
+  # trade_checker = TradeChecker.new(:brands).taobao_trade_status
+  # DailyOrdersNotifier.check_status_result(trade_checker,:to => '...',:bcc => '...').deliver!
+   def check_status_result(*args)
+     puts args
+     options = args.extract_options!
+     options[:tag] ||= '异常核查报告'
+     trade_checker = args.shift
 
     @trade_checkers = [trade_checker]
+
     #默认发送今天凌晨1点到现在的数据
     if trade_checker.end_time.to_date != Date.today
-      @today_trade_checker = TradeChecker.new(trade_checker.account_key,time: Time.now,ago: 0)
-      @today_trade_checker.taobao_trade_status
-      @trade_checkers << @today_trade_checker
+      @trade_checkers << TradeChecker.new(trade_checker.account_key,time: Time.now,ago: 0).taobao_trade_status
     end
     account = trade_checker.account
-    from = account.settings.email_notifier_from
-    reciever = account.settings.check_status_result_reciever
-    mail(:from => from, :to => reciever, :subject => "#{account.settings.site_title_basic} 异常核查报告 #{Time.now}")
+    options[:from] ||= account.settings.email_notifier_from
+
+    options[:subject] = subject(account.name,options[:tag],Time.now.strftime("%Y-%m-%d %H:%M:%S"))
+
+    options[:to] ||= account.settings.check_status_result_reciever
+
+    hash = options.slice(:to,:bcc,:subject,:from).keep_if {|k,v| !v.nil?}
+
+    raise ArgumentError,"Recipient mail can't be blank! " if options[:to].blank?
+
+    mail(hash)
   end
 
   def yesterday(account_id)
@@ -40,5 +52,12 @@ class DailyOrdersNotifier < ActionMailer::Base
     email_subject = "#{yesterday.strftime("%Y年%m月%d日")} #{@account.settings.site_title_basic} 电商数据"
 
     mail(:from => from, :to => reciever, :cc => cc, :bcc => bcc, :subject => email_subject)
+  end
+  private
+  # subject '白兰氏','异常核查报告','2013-07-09 10:10:24'
+  # => "Magic白兰氏 异常核查报告 2013-07-09 10:10:24"
+  def subject(*extra)
+    subject = "Magic"
+    subject << extra.join(" ")
   end
 end
