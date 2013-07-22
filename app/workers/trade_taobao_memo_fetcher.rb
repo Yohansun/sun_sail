@@ -34,6 +34,7 @@ class TradeTaobaoMemoFetcher
         invoice_name = "个人"
       end
       trade.invoice_name = invoice_name
+      trade.invoice_type = "需要开票"
       trade.save
     end
 
