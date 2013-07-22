@@ -32,7 +32,7 @@
       </thead>
       <tbody id="gift_list">
         <% for tg in @trade.get('trade_gifts'): %>
-        <tr class="product_<%= tg.product_id %>">
+        <tr id="<%= tg.sku_id %>" class="product_<%= tg.product_id %>">
           <td><%= tg.gift_tid %></td>
           <td><%= tg.gift_title %></td>
           <td>

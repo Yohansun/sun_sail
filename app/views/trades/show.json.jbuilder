@@ -132,6 +132,7 @@ end
 
 json.trade_gifts @trade.trade_gifts do |json, gift|
   json.id gift._id
+  json.product_id gift.product_id
   json.gift_tid gift.gift_tid
   json.trade_id gift.trade_id
   json.gift_title gift.gift_title
