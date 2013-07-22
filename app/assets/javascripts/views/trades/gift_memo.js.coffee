@@ -23,18 +23,26 @@ class MagicOrders.Views.TradesGiftMemo extends Backbone.View
     $.get '/categories/product_templates', {category_id: category_id}, (p_data)->
       if p_data.length == 0
         alert("此分类下目前无商品")
+        $('#select_product').val("")
+        $('#select_sku').val("")
         $("#select_product").select2 data: []
         $('#select_sku').select2 data: []
       else
+        $('#select_product').val("")
+        $('#select_sku').val("")
         $("#select_product").select2 data: p_data
+        $('#select_sku').select2 data: []
+
 
   change_sku: ->
     product_id = $('#select_product').val()
     $.get '/categories/sku_templates', {product_id: product_id}, (s_data)=>
       if s_data.length == 0 or (s_data.length == 1 and s_data[0].text == "")
+        $('#select_sku').val("")
         $('#select_sku').select2 data: []
         @has_sku = false
       else
+        $('#select_sku').val("")
         $('#select_sku').select2 data: s_data
 
   add_gift: ->
