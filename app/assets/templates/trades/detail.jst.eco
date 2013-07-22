@@ -134,7 +134,7 @@
           <tr>
             <td colspan="1"><b>开票信息</b></td>
             <td colspan="4" class="reedit_text js-invoice-label">
-              <% if @trade.get('invoice_type') : %>
+              <% if @trade.get('invoice_type') && @trade.get('invoice_type') != "无需开票": %>
                 <%= @trade.get('invoice_type')%> <%= @trade.get('invoice_name')%> <%= @trade.get('invoice_content')%> <%= @trade.get('invoice_date')%>
               <% end %>
             </td>
@@ -256,8 +256,8 @@
               <td>
                 <div class="control-group">
                   <label class="control-label">发票类型：
-                    <input type="radio" name="invoice_type" value="普通发票" <% if @trade.get('invoice_type') == "普通发票": %> checked="checked" <% end %>>&nbsp;普通发票
-                    <input type="radio" name="invoice_type" value="增值税发票" <% if @trade.get('invoice_type') == "增值税发票": %> checked="checked" <% end %>>&nbsp;增值税发票
+                    <input type="radio" name="invoice_type" value="需要开票" <% if @trade.get('invoice_type') == "需要开票": %> checked="checked" <% end %>>&nbsp;需要开票
+                    <input type="radio" name="invoice_type" value="需开专票" <% if @trade.get('invoice_type') == "需开专票": %> checked="checked" <% end %>>&nbsp;需开专票
                   </label>
                 </div>
                 <div class="control-group">

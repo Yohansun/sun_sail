@@ -107,8 +107,8 @@
           <tr>
             <td colspan="1"><b>开票信息</b></td>
             <td colspan="4" class="reedit_text js-invoice-label">
-              <% if @bill.get('invoice_type') : %>
-                <%= @bill.get('invoice_type')%> <%= @bill.get('invoice_name')%> <%= @bill.get('invoice_content')%> <%= @bill.get('invoice_date')%>
+              <% if @trade.get('invoice_type') && @trade.get('invoice_type') != "无需开票" : %>
+                <%= @bill.get('invoice_type')%> <%= @bill.get('invoice_name')%>
               <% end %>
             </td>
           </tr>
@@ -120,9 +120,9 @@
               </tr>
               <tr>
                 <td colspan="1"><b>金额调整</b></td>
-                <td colspan="4" class="reedit_text js-gift-memo-label"> 
+                <td colspan="4" class="reedit_text js-gift-memo-label">
                   <% if @bill.get('modify_payment') :%>
-                    ¥ 
+                    ¥
                   <% end %>
                   <%= @bill.get('modify_payment') %>
                 </td>
@@ -140,7 +140,7 @@
         <input name="utf8" type="hidden" value="&#x2713;" />
         <input name="_method" type="hidden" value="put" />
         <input name="authenticity_token" type="hidden" value="" />
-  
+
         <div class="modal-body">
           <div class="dualboxs">
             <div class="control-group">
@@ -163,7 +163,7 @@
                     <i class="icon-chevron-right"></i>
                   </label>
                   <select multiple="multiple" class="js-selects" name="split_invoice_id[2][]">
-              
+
                   </select>
                   <div class="control-group hidden">
                     <button class="btn btn-mini js-remove" type="button">删除</button>
