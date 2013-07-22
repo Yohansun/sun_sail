@@ -2,7 +2,7 @@
 class StockInBillsController < ApplicationController
   before_filter :set_warehouse
   before_filter :default_conditions,:on => [:edit,:show,:update,:add_product,:remove_product]
-  before_filter :authorize,:except => :fetch_bils
+  before_filter :authorize #,:except => :fetch_bils
 
   def index
     parse_params

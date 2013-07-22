@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 class ProductsController < ApplicationController
 
-  before_filter :authorize,:except => [:fetch_products,:pick_product,:abandon_product,:fetch_category_properties, :taobao_skus]
+  before_filter :authorize #,:except => [:fetch_products,:pick_product,:abandon_product,:fetch_category_properties, :taobao_skus]
   before_filter :get_products,:only => [:sync_taobao_products,:confirm_sync]
   before_filter :tmp_skus, :only => [:new,:create,:add_sku,:remove_sku]
 
