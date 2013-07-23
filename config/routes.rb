@@ -99,7 +99,6 @@ MagicOrders::Application.routes.draw do
   end
 
   match '/auth/taodan/callback', to: 'taobao_app_tokens#create'
-  match '/test_init', to: 'taobao_app_tokens#test'
 
   get "callbacks/jingdong"
   get '/autologin', to: 'users#autologin'
