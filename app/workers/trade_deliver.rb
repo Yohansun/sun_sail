@@ -21,7 +21,7 @@ class TradeDeliver
             logistic_waybill = trade.logistic_waybill
             logistic_code = trade.logistic_code
           else
-            logistic_waybill = "其它"
+            logistic_waybill = merged_trade.tid
             logistic_code = "其它"
           end
 
@@ -32,7 +32,9 @@ class TradeDeliver
               out_sid: logistic_waybill,
               company_code: logistic_code}, merged_trade.trade_source_id
             )
-            errors << response['error_response']
+            if response['error_response'] &&  response['error_response']['sub_msg']
+              errors << response['error_response']['sub_msg']
+            end
           end
         }
       else
@@ -42,8 +44,12 @@ class TradeDeliver
           out_sid: trade.logistic_waybill,
           company_code: trade.logistic_code}, source_id
         )
-        errors = response['error_response']
+        if response['error_response'] &&  response['error_response']['sub_msg']
+          errors << response['error_response']['sub_msg']
+        end
       end
+
+      errors = errors.uniq
 
       if errors.blank?
         trade = TradeDecorator.decorate(trade)
@@ -70,7 +76,9 @@ class TradeDeliver
         end
       else
         Notifier.deliver_errors(id, errors, trade.account_id).deliver
-        trade.unusual_states.build(reason: "发货异常#{errors['sub_msg']}", key: 'other_unusual_state', created_at: Time.now)
+        errors.each do |error_reason|
+          trade.unusual_states.build(reason: "发货异常: #{errors_reason}", key: 'other_unusual_state', created_at: Time.now)
+        end
         trade.save
         trade.update_attributes!(status: 'WAIT_SELLER_SEND_GOODS')
       end
