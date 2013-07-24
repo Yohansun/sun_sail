@@ -18,7 +18,7 @@ class Notifier < ActionMailer::Base
          :body => notify_content,
          :from => account.settings.email_notifier_from
         )
-  end  
+  end
 
   def init_user_notifications(email, pwd, account_id)
     account = Account.find_by_id(account_id)
@@ -41,7 +41,7 @@ class Notifier < ActionMailer::Base
   def puller_errors(errors, account_id)
     account = Account.find_by_id(account_id)
     mail(:to => %w{errors@networking.io},
-         :subject => "订单抓取异常提醒",
+         :subject => "#{account.key}订单抓取异常提醒",
          :body => "错误代码: #{errors}",
          :from => account.settings.email_notifier_from
         )
@@ -66,7 +66,7 @@ class Notifier < ActionMailer::Base
         @trade_deliver_info = "请及时发货，谢谢。"
       else
         @area_name = seller.interface_name
-        to_emails = seller.interface_email   
+        to_emails = seller.interface_email
         to_emails = [] << to_emails unless to_emails.is_a?(Array)
         cc_emails = @trade.cc_emails
         @trade_deliver_info = "请及时通知经销商联系客户发货，并让其发货同时在“经销商后台”点击“确认发货”。之后请回复本邮件告知已发货。谢谢。"
@@ -81,9 +81,9 @@ class Notifier < ActionMailer::Base
       mail_subject = "#{@trade_from}订单#{@tid}-#{@area_name}（#{Time.now.strftime("%Y/%m/%d")}），请及时发货"
       reply_to = @account.settings.email_notifier_from
       bcc = @account.settings.email_notifier_dispatch_bcc
-      
+
       mail(:to => to_emails, :cc => cc_emails, :bcc => bcc, :subject => mail_subject, :reply_to => reply_to, :from => @account.settings.email_notifier_from)  if to_emails.present?
-   
+
     end
   end
 end

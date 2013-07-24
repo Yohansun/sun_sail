@@ -50,13 +50,13 @@ class TaobaoProductsPuller
           total_results = products.count
           total_pages ||= total_results / 100
           products.each do |product|
+            if product['cat_name'].present?
+              category = Category.where(name: product['cat_name'], account_id: account.id).first_or_create
+            else
+              category = Category.where(name: '其他').first_or_create
+            end
             taobao_product = TaobaoProduct.where(product_id: product['product_id']).first
             if taobao_product
-              if product['cat_name'].present?
-                category = Category.where(name: product['cat_name'], account_id: account.id).first_or_create
-              else
-                category = Category.where(name: '其他').first_or_create
-              end
               taobao_product.category_id = category.id
               taobao_product.cat_name = product['cat_name']
               taobao_product.save!(validate: false)
@@ -71,7 +71,6 @@ class TaobaoProductsPuller
         end
         page_no += 1
       end until(total_pages.nil? || total_pages == 0 || page_no > total_pages )
-
     end
 
 

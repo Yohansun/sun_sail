@@ -77,7 +77,7 @@ class TradeDeliver
       else
         Notifier.deliver_errors(id, errors, trade.account_id).deliver
         errors.each do |error_reason|
-          trade.unusual_states.build(reason: "发货异常: #{errors_reason}", key: 'other_unusual_state', created_at: Time.now)
+          trade.unusual_states.build(reason: "发货异常: #{error_reason}", key: 'other_unusual_state', created_at: Time.now)
         end
         trade.save
         trade.update_attributes!(status: 'WAIT_SELLER_SEND_GOODS')
