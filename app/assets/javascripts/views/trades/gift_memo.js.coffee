@@ -23,18 +23,26 @@ class MagicOrders.Views.TradesGiftMemo extends Backbone.View
     $.get '/categories/product_templates', {category_id: category_id}, (p_data)->
       if p_data.length == 0
         alert("此分类下目前无商品")
+        $('#select_product').val("")
+        $('#select_sku').val("")
         $("#select_product").select2 data: []
         $('#select_sku').select2 data: []
       else
+        $('#select_product').val("")
+        $('#select_sku').val("")
         $("#select_product").select2 data: p_data
+        $('#select_sku').select2 data: []
+
 
   change_sku: ->
     product_id = $('#select_product').val()
     $.get '/categories/sku_templates', {product_id: product_id}, (s_data)=>
       if s_data.length == 0 or (s_data.length == 1 and s_data[0].text == "")
+        $('#select_sku').val("")
         $('#select_sku').select2 data: []
         @has_sku = false
       else
+        $('#select_sku').val("")
         $('#select_sku').select2 data: s_data
 
   add_gift: ->
@@ -68,10 +76,10 @@ class MagicOrders.Views.TradesGiftMemo extends Backbone.View
       alert("数量格式不正确。")
       return
 
-    product_ids = $("#gift_list tr").map(->
+    sku_ids = $("#gift_list tr").map(->
       $(this).attr "id"
     ).get()
-    if $.inArray(product_id, product_ids) != -1
+    if $.inArray(sku_id, sku_ids) != -1
       alert("已添加过赠品")
       return
 
@@ -88,7 +96,7 @@ class MagicOrders.Views.TradesGiftMemo extends Backbone.View
     else
       trade_tid = ''
       split_text = "不拆分"
-    $('#gift_list').append("<tr id='"+product_id+"' class='product_"+sku_id+" new_add_gift'>"+
+    $('#gift_list').append("<tr id='"+sku_id+"' class='product_"+product_id+" new_add_gift'>"+
                            "  <td>"+gift_tid+"</td>"+
                            "  <td>"+gift_title+"</td>"+
                            "  <td>"+trade_tid+"</td>"+
@@ -115,8 +123,8 @@ class MagicOrders.Views.TradesGiftMemo extends Backbone.View
         else
           if $gift_info.attr('class').slice(-12) == "new_add_gift"
 
-            product_id = $gift_info.attr('id')
-            sku_id = $gift_info.attr('class').slice(8, -13)
+            sku_id = $gift_info.attr('id')
+            product_id = $gift_info.attr('class').slice(8, -13)
             gift_tid = $gift_info.children("td:eq(0)").text()
             gift_title = $gift_info.children("td:eq(1)").text()
             if $gift_info.children("td:eq(2)").text() == ''

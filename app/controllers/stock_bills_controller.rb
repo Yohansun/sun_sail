@@ -1,7 +1,7 @@
 class StockBillsController < ApplicationController
   before_filter :set_warehouse
-  before_filter :authorize,:except => :fetch_bils
-  before_filter :fetch_bills
+  before_filter :authorize #,:except => :fetch_bils
+  # before_filter :fetch_bills
 
   def index
     parse_params

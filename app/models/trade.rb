@@ -570,14 +570,15 @@ class Trade
           if product
             binding_number = binding.number * order_num
             stock_product = fetch_account.stock_products.where(product_id: product.id, sku_id: sku_id).first
+            order_price = (order.price == 0 ? 0 : product.price)
             if stock_product
               bill.bill_products.build(
                 stock_product_id: stock_product.id,
                 title: sku.title,
                 outer_id: product.outer_id,
                 sku_id: sku_id,
-                price: product.price,
-                total_price: product.price * binding_number,
+                price: order_price,
+                total_price: order_price * binding_number,
                 number: binding_number,
                 remark: order.cs_memo
               )

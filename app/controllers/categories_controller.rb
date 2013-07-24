@@ -3,9 +3,9 @@ class CategoriesController < ApplicationController
 
   layout "management"
 
-  before_filter :authorize,:except => [:autocomplete,:new,:show,:edit,:deletes,
-                                       :category_templates,:product_templates,
-                                       :sku_templates]
+  before_filter :authorize #,:except => [:autocomplete,:new,:show,:edit,:deletes,
+                                       # :category_templates,:product_templates,
+                                       # :sku_templates]
 
   def index
     @categories = current_account.categories

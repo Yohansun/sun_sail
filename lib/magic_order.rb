@@ -7,13 +7,26 @@ module MagicOrder
     "destroy" =>  ["destroy","delete","deletes"],
     "edit_depot" => ["edit_depot","update_depot"],
     "customers_detail" => ["index","potential","paid","around","show"],
-    "send_customers_messages" => ["send_messages","invoice_messages","get_recipients"]
+    "send_customers_messages" => ["send_messages","invoice_messages","get_recipients"],
+    "bind_skus" => ["change_taobao_skus","search_native_skus","tie_to_native_skus","taobao_skus"]
   }.freeze
 
   DefaultAccesses = {
     "logistics" => ["logistic_templates",
                     "user_list",
-                    "all_logistics"]
+                    "all_logistics"],
+    "categories" => ["autocomplete",
+                    "category_templates",
+                    "product_templates",
+                    "sku_templates"],
+    "sales" => ["add_node"],
+    "users" => ["autologin",
+                "search",
+                "edit_with_role"],
+    "products" => ["fetch_products",
+                   "pick_product",
+                   "abandon_product",
+                   "fetch_category_properties"]
   }.freeze
 
   class AccessControl
@@ -141,10 +154,9 @@ MagicOrder::AccessControl.map do |map|
                                  "taobao_product"]
     map.permission :operations, ["create",
                                  "update",
-                                 "taobao_skus",
                                  "export_products",
                                  "update_on_sale",
-                                 "tie_to_native_skus",
+                                 "bind_skus",
                                  "sync_taobao_products",
                                  "confirm_sync",
                                  "remove_sku",
@@ -209,7 +221,8 @@ MagicOrder::AccessControl.map do |map|
                                  "sales#summary",
                                  "trade_reports#detail",
                                  "sales#product_analysis",
-                                 "sales#show",
+                                 "sales#detail",
+                                 "sales#update",
                                  "sales#area_analysis",
                                  "sales#time_analysis",
                                  "sales#price_analysis",

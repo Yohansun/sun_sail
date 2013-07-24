@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 class SalesController < ApplicationController
-  before_filter :authorize,:except => [:add_node, :edit, :update, :fetch_data]
+  before_filter :authorize #,:except => [:add_node, :edit, :update, :fetch_data]
   include SalesHelper
 
   def summary
@@ -68,11 +68,11 @@ class SalesController < ApplicationController
     end
   end
 
-  def fetch_data
-    respond_to do |format|
-      format.js
-    end
-  end
+  # def fetch_data
+  #   respond_to do |format|
+  #     format.js
+  #   end
+  # end
 
   def product_analysis
     @start_time = (params[:start_time].to_time(:local) rescue nil) || 1.month.ago
