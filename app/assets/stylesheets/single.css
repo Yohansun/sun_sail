@@ -44,9 +44,9 @@ code{color: #08C;}
 .affix .open_advance{right:40px;}
 .icon-arrow-up{background-position: -289px -96px!important;}
 
-.radius_no_tl{border-radius:0 4px 4px 0!important;}
+/*.radius_no_tl{border-radius:0 4px 4px 0!important;}
 .radius_no_rb{border-radius:4px 0 0 4px!important;border-right:0!important;}
-.radius_no{border-radius:0!important;border-width:1px 0!important;}
+.radius_no{border-radius:0!important;border-width:1px 0!important;}*/
 /*all orders*/
 .affix .nav-tabs,.nav-tabs.subnav{background:#e1e1e1;z-index:999;padding-top:3px;padding-left:25px;}
 .nav-tabs.affix + .tab-content{margin-top:40px;}
