@@ -73,7 +73,7 @@ class TradeChecker
 
       trades = Array.wrap(response['trades_sold_get_response']['trades']['trade']) rescue []
       next if trades.blank?
-      trades.each {|trade| abnormal_collections_with_taobao(trade['tid'].to_s) }
+      trades.each {|trade| abnormal_collections_with_taobao(trade) }
     end
   end
 
@@ -95,11 +95,12 @@ class TradeChecker
   end
 
   private
-  def abnormal_collections_with_taobao(tid)
+  def abnormal_collections_with_taobao(taobao_trade)
+    tid = taobao_trade["tid"].to_s
     taobao_trades = TaobaoTrade.where(tid: tid).only(:status)
     if local_trade = taobao_trades.first
       # ERROR: 淘宝与本地状态不同步订单
-      if local_trade.status != trade['status']
+      if local_trade.status != taobao_trade['status']
         @wrong_orders << tid if (local_trade.splitted && taobao_trades.distinct(:status).length == 1) || !local_trade.splitted
       end
     else
