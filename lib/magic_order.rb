@@ -145,6 +145,7 @@ MagicOrder::AccessControl.map do |map|
                                  "modify_receiver_information",
                                  "merge_trades_manually",
                                  "split_merged_trades",
+                                 "invoice_settings",
                                  "split_invoice"]
   end
   #商品管理

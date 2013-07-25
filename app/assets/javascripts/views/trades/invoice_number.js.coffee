@@ -31,6 +31,6 @@ class MagicOrders.Views.TradesInvoiceNumber extends Backbone.View
 
         view = new MagicOrders.Views.TradesRow(model: model)
         $("#trade_#{model.get('id')}").replaceWith(view.render().el)
-        checkedTradeRow(model.get('id'))
+        view.reloadOperationMenu()
         $("a[rel=popover]").popover({placement: 'left', html:true})
         $('#trade_invoice_number').modal('hide')

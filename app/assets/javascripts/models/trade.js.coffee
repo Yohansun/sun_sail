@@ -29,6 +29,8 @@ class MagicOrders.Models.Trade extends Backbone.Model
         when "WAIT_BUYER_PAY" # "等待付款"
           if $.inArray('modify_payment',trades) > -1
             enabled_items.push('modify_payment') #金额调整
+          if this.attributes.seller_id is null && type != '赠品' && $.inArray('invoice_settings',trades) > -1
+            enabled_items.push('invoice_settings') #开票设置
         when "WAIT_SELLER_SEND_GOODS" # "已付款，待发货"
           enabled_items.push('modify_receiver_information')
           enabled_items.push('merge_trades_manually')
@@ -77,6 +79,8 @@ class MagicOrders.Models.Trade extends Backbone.Model
           if $.inArray('batch_add_gift',trades) > -1
             enabled_items.push('batch_add_gift') #批量添加赠品
 
+          if this.attributes.seller_id is null && type != '赠品' && $.inArray('invoice_settings',trades) > -1
+            enabled_items.push('invoice_settings') #开票设置
         when "WAIT_BUYER_CONFIRM_GOODS" # "已付款，已发货"
           if this.attributes.add_ref && this.attributes.add_ref['status'] == 'request_add_ref' && $.inArray('confirm_add_ref',trades) > -1
             enabled_items.push('add_ref') #确认补货

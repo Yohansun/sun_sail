@@ -192,7 +192,9 @@ class TradesController < ApplicationController
       @trade.seller_confirm_deliver_at = Time.now
     end
 
-    if params[:seller_confirm_invoice_at] == true
+    if @trade.changes.keys.find{|k| k.to_s=~/^invoice/}
+      @trade.seller_confirm_invoice_at = nil
+    elsif params[:seller_confirm_invoice_at] == true
       @trade.seller_confirm_invoice_at = Time.now
     end
 
