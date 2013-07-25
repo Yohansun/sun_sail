@@ -81,7 +81,7 @@ class TradeChecker
     #标杆仓库只能查询近一个星期之内的数据
     start_date,end_date = start_time.to_date,end_time.to_date
     if start_time < Time.now.beginning_of_day.ago(7.days)
-      @exceptions << "标杆仓库只能查询最近一个星期内的数据"
+      @exceptions << ExceptionNotifier.new("标杆仓库只能查询最近一个星期内的数据")
       return
     end
 
@@ -110,7 +110,7 @@ class TradeChecker
   end
 
   def abnormal_collections_with_stock(tid,logistic_waybill)
-    trade = catch_exception("标杆仓库 tid为#{tid} 在本地没有找到此订单"){ TaobaoTrade.find_by(:tid => tid) }
+    trade = catch_exception("标杆仓库 tid为#{tid} 在本地没有找到此订单"){ Trade.find_by(:tid => tid) }
     return if trade.blank?
     @biaogan_diff << tid if trade.logistic_waybill != logistic_waybill
   end
@@ -137,7 +137,14 @@ class TradeChecker
   def catch_exception(message,&block)
     yield
   rescue Exception => e
-    @exceptions << "#{message} #{e.message}"
+    @exceptions << ExceptionNotifier.new(message,e.message)
     return false
+  end
+  class ExceptionNotifier
+    attr_reader :text,:exception
+    def initialize(text,exception="")
+      @text = text
+      @exception = exception
+    end
   end
 end
