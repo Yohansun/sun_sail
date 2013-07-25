@@ -3,7 +3,6 @@ class DailyOrdersNotifier < ActionMailer::Base
   # trade_checker = TradeChecker.new(:brands).taobao_trade_status
   # DailyOrdersNotifier.check_status_result(trade_checker,:to => '...',:bcc => '...').deliver!
    def check_status_result(*args)
-     puts args
      options = args.extract_options!
      options[:tag] ||= '异常核查报告'
      trade_checker = args.shift
@@ -21,7 +20,7 @@ class DailyOrdersNotifier < ActionMailer::Base
 
     options[:to] ||= account.settings.check_status_result_reciever
 
-    hash = options.slice(:to,:bcc,:subject,:from).keep_if {|k,v| !v.nil?}
+    hash = options.slice(:to,:bcc,:cc,:subject,:from).keep_if {|k,v| !v.nil?}
 
     raise ArgumentError,"Recipient mail can't be blank! " if options[:to].blank?
 

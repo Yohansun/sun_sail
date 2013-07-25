@@ -1,5 +1,10 @@
 # -*- encoding : utf-8 -*-
 require "savon"
+# == 系统订单异常信息
+# * 淘宝与本地状态不同步订单 & 漏掉订单
+# * 本地发货状态异常订单
+# * 标记有留言但是留言还没有抓取到的订单
+# * 标杆已反馈信息但系统没更新的订单
 class TradeChecker
   class TaobaoBase < TaobaoTrade
     scope :bad_deliver_status_of_orders, ->(account_id,start_time,end_time) do
@@ -16,17 +21,32 @@ class TradeChecker
   attr_writer :lost_orders,:wrong_orders
   attr_reader :account_key,:account,:trade_source,:start_time,:end_time,:options,:lost_orders,:wrong_orders,:bad_deliver_status_of_orders,:hidden_orders,:biaogan_diff,:exceptions
 
-  # TradeChecker.new(account_key,time: Time.now, ago: -1).invoke
-  # - arguments for options
-  #   - *time* Time.now
-  #     => start_time = end_time = time
-  #   - *ago*  3.days
-  #     => start_time,end_time = [time,time.ago(number)].sort   #number can be -number or +number
+  # === Example
+  #    TradeChecker.new(:brands,time: Time.now, ago: -1).invoke
+  # === Options
+  # [:time]
+  #   统计的开始时间
+  # [:ago]
+  #   *  2 2天后
+  #   * -2 2天前
+  # === SendMail Options
+  #    TradeChecker.new(:brands,time: Time.now, ago: -1,:to => 'zhoubin@networking.io',:from => "exception@networking.io").invoke
+  # [:tag]
+  #   summary of subject
+  #   Default is '异常核查报告'
+  # [:to]
+  #   same as send mail option +:to+
+  # [:from]
+  #   same as send mail option +:from+
+  # [:bcc]
+  #   same as send mail option +:bcc+
+  # [:cc]
+  #   same as send mail option +:cc+
   def initialize(*args)
     @options = args.extract_options!
     @options.symbolize_keys!
     @account_key = args.shift
-    raise "account_key can't be blank!" if  account_key.blank?
+    raise ArgumentError,"account_key can't be blank!" if  account_key.blank?
     @options[:time] ||= Date.yesterday
     @account = Account.find_by_key(account_key) or raise("没有找到account key为#{account_key}的账户")
     @trade_source_id = @account.trade_source.id
@@ -34,21 +54,14 @@ class TradeChecker
     # 抓取昨天 的订单, 检查本地状态和淘宝状态是否匹配
     @options[:ago] ||= 0
     @start_time , @end_time = process_time(@options[:time],@options[:ago].days)
-
-    @lost_orders        = []
-    @wrong_orders       = []
-    @bad_deliver_status_of_orders  = []
-    @hidden_orders      = []
-    @biaogan_diff       = []
-    @exceptions         = []
+    @lost_orders,@wrong_orders,@bad_deliver_status_of_orders,@hidden_orders,@biaogan_diff,@exceptions =  Array.new(6) { [] }
+    @mail = options.slice(:to,:from,:bcc,:cc).reject{|k,v| v.blank?}
   end
 
   def invoke
-    DailyOrdersNotifier.check_status_result(taobao_trade_status).deliver!
+    DailyOrdersNotifier.check_status_result(taobao_trade_status,@mail).deliver!
   end
 
-  # 订单异常报告
-  #
   def taobao_trade_status
     # 淘宝与本地状态不同步订单 & 漏掉订单
     checking_trades_with_taobao

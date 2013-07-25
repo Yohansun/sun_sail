@@ -25,7 +25,7 @@ class Reports < ActionMailer::Base
 
     options[:subject] = subject(@account.name,options[:tag],options[:date].strftime("%Y-%m-%d"))
 
-    hash = options.slice(:to,:bcc,:subject,:from).keep_if {|k,v| !v.nil?}
+    hash = options.slice(:to,:bcc,:cc,:subject,:from).keep_if {|k,v| !v.nil?}
 
     raise ArgumentError,"Recipient mail can't be blank! " if options[:to].blank?
     
