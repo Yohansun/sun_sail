@@ -11,7 +11,6 @@ class MagicOneHitFetcher
       trade_sources = account.trade_sources
       return if trade_sources.blank?
       trade_sources.each do |trade_source|
-        unless
         TaobaoTradePuller.create(Time.now - 3.month, Time.now, trade_source.id)
         TaobaoLogisticsOrdersPuller.create(Time.now - 3.month, Time.now, trade_source.id)
         TaobaoProductsPuller.create_from_trades!(trade_source.id)
