@@ -11,8 +11,6 @@ class TaobaoLogisticsOrdersPuller
       trade_source = TradeSource.find_by_id(trade_source_id)
       account_id = trade_source.try(:account_id)
 
-#      p "starting add_logistics.................."
-
       logistics_response = TaobaoQuery.get({method: 'taobao.logistics.companies.get', fields: 'code,name'}, trade_source_id)
       logistics = {}.tap do |lg|
         logistics_response['logistics_companies_get_response']['logistics_companies']['logistics_company'].each do |info|
@@ -20,8 +18,6 @@ class TaobaoLogisticsOrdersPuller
           lg[info["name"]] = [new_lg.id, info["code"]]
         end
       end
-
-#      p "starting add_logistics_to_trades: since #{start_time}"
 
       begin
         response = TaobaoQuery.get({
@@ -33,7 +29,6 @@ class TaobaoLogisticsOrdersPuller
         )
 
         unless response['logistics_orders_get_response']
-#          p response
           break
         end
 
@@ -64,7 +59,6 @@ class TaobaoLogisticsOrdersPuller
             trade.logistic_code = logistics[trade.logistic_name][1]
 
             trade.save
-#            p "update trade #{trade.tid}"
           end
         end
         page_no += 1

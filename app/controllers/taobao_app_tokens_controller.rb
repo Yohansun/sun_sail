@@ -21,8 +21,11 @@ class TaobaoAppTokensController < ApplicationController
         source["description"] = source.delete("desc")
         source["name"] = source.delete("nick")
         trade_source.update_attributes(source)
-      end  
-      MagicOneHitFetcher.perform_async(account.id)
+      end
+      unless account.settings.one_hit_fetcher_started
+        account.settings.one_hit_fetcher_started = true
+        MagicOneHitFetcher.perform_async(account.id)
+      end
       redirect_to account_setups_path
     else
       render text: "response_get_failed : #{response.inspect}"
