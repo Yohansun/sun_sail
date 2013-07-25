@@ -16,7 +16,7 @@ Accounts = {
     # nancy_wu@allyes.com
     # fei_wang@allyes.com
     # yang_wang@allyes.com),
-    :to => STORY_1207,
+    :to => %w(magic_sh@doorder.com errors@networking.io),
    :bcc => "zhoubin@networking.io",
   :from => "#{DEFAULT_FROM}"
   }]
@@ -32,16 +32,6 @@ pumpkin@doorder.com
 zhoubin@networking.io
 wang@networking.io
 xiaoliang@networking.io
-)
-
-STORY_1207 = %w(
-errors@networking.io
-wynn@doorder.com
-michelle@doorder.com
-clover@doorder.com
-pumpkin@doorder.com
-mark@doorder.com
-steven@doorder.com
 )
 
 every :day, :at => '2:00am', :roles => [:app] do
