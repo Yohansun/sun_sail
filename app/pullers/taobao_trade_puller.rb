@@ -23,6 +23,16 @@ class TaobaoTradePuller
         end
       end
 
+      # 设置一个最早边界值，边界值之外的订单不能抓取。比如客户7月份之前下的订单不能出现在我们的系统。
+      # sample: 2013-07-25 17:22:15 +0800
+      # system timezone matters.
+      created_boundary = account.settings.taobao_trade_created_boundary.to_time(:local) rescue nil
+      if created_boundary.respond_to?(:to_time)
+        if created_boundary > start_time
+          start_time = created_boundary
+        end
+      end
+
       if end_time.blank?
         end_time = Time.now
       end
