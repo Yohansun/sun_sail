@@ -110,7 +110,7 @@ class TradeChecker
   end
 
   def abnormal_collections_with_stock(tid,logistic_waybill)
-    trade = catch_exception("标杆仓库 tid为#{tid} 在本地没有找到此订单"){ Trade.find_by(:tid => tid) }
+    trade = catch_exception("标杆仓库 tid为#{tid} 在本地没有找到此订单"){ Trade.unscoped.find_by(:tid => tid) }
     return if trade.blank?
     @biaogan_diff << tid if trade.logistic_waybill != logistic_waybill
   end
