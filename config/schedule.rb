@@ -34,15 +34,15 @@ wang@networking.io
 xiaoliang@networking.io
 )
 
-every :day, :at => '2:00am', :roles => [:app] do
+every :day, :at => '2:00am' do
   runner "Reports.trades_consolidate_with_day(*#{Accounts[:brands]}).deliver!"
 end
 
-every :day, :at => '9:00am', :roles => [:app] do
+every :day, :at => '9:00am' do
   runner "TradeChecker.new(:brands,:to => #{STORY_1204},:from => \"#{DEFAULT_FROM}\").invoke"
 end
 
-every :day, :at => '9:00pm', :roles => [:app] do
+every :day, :at => '9:00pm' do
   runner "TradeChecker.new(:brands,:to => #{STORY_1204},:from => \"#{DEFAULT_FROM}\").invoke"
 end
 #
