@@ -180,3 +180,27 @@
     </div>
   </div>
 </div>
+
+<div id="save_search_criteria_modal" class="modal hide fade">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3>保存高级搜索条件</h3>
+  </div>
+  <div class="modal-body">
+    <form action="" class="form-inline offset2" id="save_search_criteria_form">
+      <div class="control-group">
+        <div class="controls">
+          <input type="text" name='name' id="name" class="input-medium search-query" placeholder="输入名称">
+          <button type="submit" class="btn">保存搜索</button>
+        </div>
+        <span class="help-inline"></span>
+        <div class="controls">
+          <p>如果需要管理搜索条件，请前往 系统设置>基础数据管理>订单设置>自定义查询 进行设置</p>
+        </div>
+      </div>
+    </form>
+    <p>
+
+    </p>
+  </div>
+</div>

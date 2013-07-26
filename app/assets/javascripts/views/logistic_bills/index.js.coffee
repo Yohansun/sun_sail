@@ -56,7 +56,6 @@ class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
     @collection.each(@appendTrade)
     $("a[rel=popover]").popover({placement: 'left', html:true})
     $(@el).find(".get_offset").html(@offset)
-    $(@el).find('a[data-trade-mode='+MagicOrders.trade_mode+'][data-trade-status="'+MagicOrders.trade_type+'"]').parents('li').addClass('active')
     @loadStatusCount()
     $("#content").removeClass("search-expand")
     this
@@ -82,7 +81,12 @@ class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
     $('.dropdown.open .dropdown-toggle').dropdown('toggle')
     MagicOrders.trade_mode = $(link).data('trade-mode')
     status = $(link).data('trade-status')
-    Backbone.history.navigate("#{MagicOrders.trade_mode}/" + "#{MagicOrders.trade_mode}-#{status}", true)
+    nvg_path = "#{MagicOrders.trade_mode}/" + "#{MagicOrders.trade_mode}-#{status}"
+    search_id = $(link).data('search-id')
+    if search_id
+      nvg_path += "?sid=" + search_id
+    Backbone.history.navigate(nvg_path, true)
+    MagicOrders.original_path = window.location.hash
     MagicOrders.original_path = window.location.hash
 
   optAll: (e) ->

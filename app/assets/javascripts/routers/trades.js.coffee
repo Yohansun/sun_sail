@@ -2,6 +2,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
   routes:
     '': 'main'
     'trades': 'index'
+    'trades/:trade_mode-:trade_type?sid=:trade_search_id': 'index'
     'trades/:trade_mode-:trade_type': 'index'
     'send/:trade_mode-:trade_type': 'index'
     'color/:trade_mode-:trade_type': 'index'
@@ -52,7 +53,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
   main: () ->
     Backbone.history.navigate('trades', true)
 
-  index: (trade_mode = "trades", trade_type = 'my_trade') ->
+  index: (trade_mode = "trades", trade_type = 'my_trade', trade_search_id = '') ->
     # reset the index stage, hide all popups
     $('.modal').modal('hide')
 
@@ -63,9 +64,15 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     @trade_type = trade_type
     MagicOrders.trade_mode = trade_mode
     MagicOrders.trade_type = trade_type
+    search_data = {trade_type: trade_type}
+    if /[0-9a-z]{24}/.exec(trade_search_id)
+      MagicOrders.search_id = trade_search_id
+      search_data["search_id"] = trade_search_id
+    else
+      MagicOrders.search_id = ''
     blocktheui()
     @show_top_nav()
-    @collection.fetch data: {trade_type: trade_type}, success: (collection, response) =>
+    @collection.fetch data: search_data, success: (collection, response) =>
       @mainView = new MagicOrders.Views.TradesIndex(collection: collection, trade_type: trade_type)
       $('#content').html(@mainView.render().el)
       @searchView = new MagicOrders.Views.TradesAdvancedSearch()

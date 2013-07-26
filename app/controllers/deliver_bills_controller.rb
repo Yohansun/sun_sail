@@ -20,6 +20,13 @@ class DeliverBillsController < ApplicationController
       end
     end
 
+    if params[:search_id].present?
+      trade_search = TradeSearch.find(params["search_id"]) rescue trade_search = nil
+      if trade_search.present? && trade_search.search_hash.present?
+        params[:search] = trade_search.search_hash
+      end
+    end
+
     if params[:search]
       @trades = Trade.filter(current_account, current_user, params).where(:dispatched_at.ne => nil)
       trade_ids = @trades.map(&:_id)
