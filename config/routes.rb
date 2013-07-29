@@ -110,8 +110,9 @@ MagicOrders::Application.routes.draw do
   end
 
   match '/auth/taodan/callback', to: 'taobao_app_tokens#create'
+  match '/auth/jingdong/callback', to: 'jingdong_app_tokens#index'
 
-  get "callbacks/jingdong"
+  #get "callbacks/jingdong"
   get '/autologin', to: 'users#autologin'
   devise_for :users, :path => '', :path_names => {:sign_in => 'login'},
     controllers: { sessions: "sessions" , registrations: "registrations"}
