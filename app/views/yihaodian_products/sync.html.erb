@@ -1,14 +1,4 @@
 <div class="container-fluid">
-
-  <div class="page-header">
-    <h1><small>同步一号店商品</small></h1>
-  </div>
-  <ul class="nav nav-tabs affix">
-    <li><a href="/products">本地商品</a></li>
-    <li><a href="/products/taobao_products">淘宝商品</a></li>
-    <li><a href="/jingdong_products">京东商品</a></li>
-    <li class="active"><a href="/yihaodian_products">一号店商品</a></li>
-  </ul><!-- nav-tabs -->
   <%= render "products" %>
   <%= render "skus" %>
   <button type="button" class="btn btn-success"><%= link_to "确认同步", syncing_yihaodian_products_path,:method => :put %></button>

@@ -1,4 +1,16 @@
 <%
-  breadcrumb << ["物流公司管理", logistics_path] << "编辑物流公司"
+  breadcrumb << ["系统设置", users_path]
+  breadcrumb << ["基础数据管理", stocks_safe_stock_path]
+  breadcrumb << ["物流公司管理", logistics_path]
+  brandcrumb << ["编辑物流公司"]
 %>
-        <%= render 'form' %>
+<div class="row-fluid">
+  <div class="span10 w100">
+    <ul class="nav nav-tabs">
+      <li class="active"><a href="/logistics">物流公司管理</a></li>
+    </ul><!-- nav-tabs -->
+    <div class="tab-content">
+      <%= render 'form' %>
+    </div>
+  </div>
+</div>

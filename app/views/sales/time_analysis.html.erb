@@ -1,86 +1,71 @@
-<div class="container-fluid">
-  <div class="row-fluid">
-    <ul class="breadcrumb" style="position:relative;">
-      <li><a href="/">Magic</a><span class="divider">/</span></li>
-      <li><a href="/sales/summary">数据魔方</a><span class="divider">/</span></li>
-      <li><a href="/sales/area_analysis">买家分析</a><span class="divider">/</span></li>
-      <li class="active">购买时段分析</li>
-    </ul><!-- breadcrumb -->
-    <%= render 'header' %>
-    <%= render 'select_time' %>
+<% content_for :sub_nav do %>
+  <%= render 'header' %>
+<% end %>
 
-    <!-- <div class="controls clearfix">
-      <div class="btns btn-group pull-left">
-        <a href="#" class="btn btn-warning">导出数据</a>
-      </div>
-    </div> -->
-
-    <div class="mar_t10">
-      <ul class="nav nav-tabs reset_border nomargin" id="myTab_sub">
-        <li class="active"><a href="#tab2" data-toggle="tab">数据概况</a></li>
+<%= render 'select_time' %>
+<div class="mar_t10">
+  <ul class="nav nav-tabs reset_border nomargin" id="myTab_sub">
+    <li class="active"><a href="#tab2" data-toggle="tab">数据概况</a></li>
+  </ul>
+  <div class="tab-content reset_border">
+    <div class="tab-pane active chart_opts" id="tab1">
+      <ul class="clearfix aug_data_tops nomargin">
+        <li class="span2 noborder">
+          <%- @time_data.sort{|a, b| b[2] <=> a [2]}.each_with_index do |value, i| %>
+          <div>
+            <a href="#" class="pull-right"><!--<img src="/assets/aug_details.jpg">--></a>高峰成交时段TOP<%= i + 1 %>
+          </div>
+          <big><strong><%= value.try(:[],0) + ":00-" + value.try(:[],1) + ":00" %></strong></big>
+        </li>
+        <%- break if i == 4 %>
+        <li class="span2">
+        <%- end %>
       </ul>
-      <div class="tab-content reset_border">
-        <div class="tab-pane active chart_opts" id="tab1">
-          <ul class="clearfix aug_data_tops nomargin">
-            <li class="span2 noborder">
-              <%- @time_data.sort{|a, b| b[2] <=> a [2]}.each_with_index do |value, i| %>
-              <div>
-                <a href="#" class="pull-right"><!--<img src="/assets/aug_details.jpg">--></a>高峰成交时段TOP<%= i + 1 %>
-              </div>
-              <big><strong><%= value.try(:[],0) + ":00-" + value.try(:[],1) + ":00" %></strong></big>
-            </li>
-            <%- break if i == 4 %>
-            <li class="span2">
-            <%- end %>
-          </ul>
-        </div>
-       </div>
     </div>
+   </div>
+</div>
 
-    <div class="mar_t10">
-      <ul class="nav nav-tabs reset_border nomargin" id="myTab_sub">
-        <li class="active"><a href="#tab2" data-toggle="tab">数据图</a></li>
-      </ul>
-      <div class="tab-content reset_border padding_t20">
-        <div class="tab-pane active chart_opts" id="tab1">
-          <div id="chartdiv" style="width: 100%; height: 400px;"></div>
-        </div>
-      </div>
+<div class="mar_t10">
+  <ul class="nav nav-tabs reset_border nomargin" id="myTab_sub">
+    <li class="active"><a href="#tab2" data-toggle="tab">数据图</a></li>
+  </ul>
+  <div class="tab-content reset_border padding_t20">
+    <div class="tab-pane active chart_opts" id="tab1">
+      <div id="chartdiv" style="width: 100%; height: 400px;"></div>
     </div>
-
-    <div class="mar_t10">
-      <ul class="nav nav-tabs reset_border nomargin" id="myTab_sub">
-        <li class="active"><a href="#tab1" data-toggle="tab">数据报表</a></li>
-      </ul>
-      <div class="tab-content reset_border padding_t20">
-        <div class="tab-pane active chart_opts" id="tab1">
-          <table class="table table-striped table-bordered table-condensed td_colors mar_t">
-            <thead>
-              <tr>
-                <th>序号</th>
-                <th>小时段</th>
-                <th>总成交金额占比</th>
-                <th>总成交人数</th>
-                <th>日平均成交人数</th>
-              </tr>
-            </thead>
-            <tbody>
-              <%- @time_data.each_with_index do |value, j| %>
-              <tr>
-                <td><%= j + 1 %></td>
-                <td><%= value.try(:[],0) + ":00-" + value.try(:[],1) + ":00" %></td>
-                <td><%= value.try(:[],2).to_s + "%" %></td>
-                <td><%= value.try(:[],3) %></td>
-                <td><%= value.try(:[],4) %></td>
-              </tr>
-              <%- end %>
-            </tbody>
-          </table>
-        </div>
-       </div>
-    </div>
-
   </div>
+</div>
+
+<div class="mar_t10">
+  <ul class="nav nav-tabs reset_border nomargin" id="myTab_sub">
+    <li class="active"><a href="#tab1" data-toggle="tab">数据报表</a></li>
+  </ul>
+  <div class="tab-content reset_border padding_t20">
+    <div class="tab-pane active chart_opts" id="tab1">
+      <table class="table table-striped table-bordered table-condensed td_colors mar_t">
+        <thead>
+          <tr>
+            <th>序号</th>
+            <th>小时段</th>
+            <th>总成交金额占比</th>
+            <th>总成交人数</th>
+            <th>日平均成交人数</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%- @time_data.each_with_index do |value, j| %>
+          <tr>
+            <td><%= j + 1 %></td>
+            <td><%= value.try(:[],0) + ":00-" + value.try(:[],1) + ":00" %></td>
+            <td><%= value.try(:[],2).to_s + "%" %></td>
+            <td><%= value.try(:[],3) %></td>
+            <td><%= value.try(:[],4) %></td>
+          </tr>
+          <%- end %>
+        </tbody>
+      </table>
+    </div>
+   </div>
 </div>
 
 <% content_for :tail do -%>

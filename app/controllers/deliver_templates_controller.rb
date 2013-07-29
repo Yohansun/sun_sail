@@ -1,5 +1,6 @@
 # encoding: utf-8
 class DeliverTemplatesController < ApplicationController
+  layout "management"
   before_filter :authorize
 
   def index

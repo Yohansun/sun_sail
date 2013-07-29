@@ -1,5 +1,6 @@
 # encoding: utf-8
 class LogisticGroupsController < ApplicationController
+  layout "management"
   before_filter :fetch_group, only: [:destroy]
 
   def index

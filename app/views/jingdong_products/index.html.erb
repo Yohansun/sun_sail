@@ -1,98 +1,93 @@
-<div class="row-fluid">
-  <div class="span10 w100">
-  <!-- <div class="row-fluid"> -->
-    <%= render partial: "layouts/all_crumbs" %>
-    <%= render partial: "products/sidebar" %>
-    <div class="tab-content">
-      <div class="tab-pane active" id="stock_check">
-        <form class="well well-small form-horizontal font12">
-          <fieldset>
-            <div class="control-group">
-              <label class="pull-left"><code>精准：</code></label>
-              <div class="controls pull-left">
-                <select name="key" class="input-small pull-left select2 radius_no_rb">
-                  <option value="ware_id_eq" <%= 'selected' if params[:key] == "ware_id_eq" %>>商品ID</option>
-                  <option value="title_eq" <%= 'selected' if params[:key] == "title_eq" %>>商品名称</option>
-                </select>
-                <input type="text" class="input-medium radius_no_tl" name="value" value="<%= params[:value] %>" placeholder="输入关键字...">
-              </div>
-              <div class="pull-left">
-                <button type="button pull-left" class="btn btn-small btn-primary">搜索</button>
-              </div>
-            </div>
-          </fieldset><!-- form line1 area -->
-        </form>
+<% content_for :sub_nav do %>
+  <%= render partial: "products/sidebar" %>
+<% end %>
+
+<div class="tab-pane active" id="stock_check">
+  <form class="well well-small form-horizontal font12">
+    <fieldset>
+      <div class="control-group">
+        <label class="pull-left"><code>精准：</code></label>
+        <div class="controls pull-left">
+          <select name="key" class="input-small pull-left select2 radius_no_rb">
+            <option value="ware_id_eq" <%= 'selected' if params[:key] == "ware_id_eq" %>>商品ID</option>
+            <option value="title_eq" <%= 'selected' if params[:key] == "title_eq" %>>商品名称</option>
+          </select>
+          <input type="text" class="input-medium radius_no_tl" name="value" value="<%= params[:value] %>" placeholder="输入关键字...">
+        </div>
+        <div class="pull-left">
+          <button type="button pull-left" class="btn btn-small btn-primary">搜索</button>
+        </div>
       </div>
+    </fieldset><!-- form line1 area -->
+  </form>
+</div>
 
-      <div class="btn-toolbar">
-        <div class="btn-group">
-          <button class="btn btn-warning">操作</button>
-          <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
-            <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu">
-            <li><a href="#" id="show_jingdong_product">查看</a></li>
-            <li><a href="#" id="tie_to_native_skus">绑定本地SKU</a></li>
-          </ul>
-        </div><!-- btn-group -->
-        <div class="btn btn-warning"><%= link_to "同步京东数据", sync_jingdong_products_path %></div>
-      </div><!-- btn-groups end -->
+<div class="btn-toolbar">
+  <div class="btn-group">
+    <button class="btn btn-warning">操作</button>
+    <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+      <li><a href="#" id="show_jingdong_product">查看</a></li>
+      <li><a href="#" id="tie_to_native_skus">绑定本地SKU</a></li>
+    </ul>
+  </div><!-- btn-group -->
+  <div class="btn btn-warning"><%= link_to "同步京东数据", sync_jingdong_products_path %></div>
+</div><!-- btn-groups end -->
 
-      <div class="tab-content">
-        <div class="tab-pane" id="native_goods">
-        </div><!-- single_good end -->
+<div class="tab-content">
+  <div class="tab-pane" id="native_goods">
+  </div><!-- single_good end -->
 
-        <div class="tab-pane active" id="jingdong_goods">
-          <table class="table table-hover table-bordered table-striped table-condensed" id="jingdong_product_table">
-            <thead>
-              <tr>
-                <th><!-- <input type="radio"> --></th>
-                <th>商品ID</th>
-                <th>商品状态</th>
-                <th>商品标题</th>
-                <th>商品描述</th>
-                <th>进货价</th>
-                <th>市场价</th>
-                <th>京东价</th>
-                <th>状态</th>
-                <th>是否已绑定SKU</th>
-              </tr>
-            </thead>
-            <tbody>
-              <%- @jingdong_products.each do |product| %>
-              <tr id='product_<%= product.id %>'>
-                <td><input class='jingdong_product_check' name="jingdong_product_radio" type="radio"></td>
-                <td><%= product.ware_id %></td>
-                <td><%= product.ware_status_name %></td>
-                <td><%= product.title %></td>
-                <td><%= product.desc %></td>
-                <td><%= number_to_currency product.cost_price %></td>
-                <td><%= number_to_currency product.market_price %></td>
-                <td><%= number_to_currency(product.jd_price) %></td>
-                <td><%= product.status_name %></td>
-                <td><%= product.has_bindings %></td>
-              </tr>
-              <%- end %>
-            </tbody>
-          </table>
+  <div class="tab-pane active" id="jingdong_goods">
+    <table class="table table-hover table-bordered table-striped table-condensed" id="jingdong_product_table">
+      <thead>
+        <tr>
+          <th><!-- <input type="radio"> --></th>
+          <th>商品ID</th>
+          <th>商品状态</th>
+          <th>商品标题</th>
+          <th>商品描述</th>
+          <th>进货价</th>
+          <th>市场价</th>
+          <th>京东价</th>
+          <th>状态</th>
+          <th>是否已绑定SKU</th>
+        </tr>
+      </thead>
+      <tbody>
+        <%- @jingdong_products.each do |product| %>
+        <tr id='product_<%= product.id %>'>
+          <td><input class='jingdong_product_check' name="jingdong_product_radio" type="radio"></td>
+          <td><%= product.ware_id %></td>
+          <td><%= product.ware_status_name %></td>
+          <td><%= product.title %></td>
+          <td><%= product.desc %></td>
+          <td><%= number_to_currency product.cost_price %></td>
+          <td><%= number_to_currency product.market_price %></td>
+          <td><%= number_to_currency(product.jd_price) %></td>
+          <td><%= product.status_name %></td>
+          <td><%= product.has_bindings %></td>
+        </tr>
+        <%- end %>
+      </tbody>
+    </table>
 
-          <div class='clearfix'>
-            <div class="pull-right" style="margin-left: 5px;margin-top: -2px;">
-              <%= paginate @jingdong_products %>
-            </div>
-            <!-- <p></p> -->
-            <%= form_tag("/jingdong_products", :method => "get", :class => 'pagination trade_count_info form-inline pull-right') do %>
-            <input style="visibility:hidden;" name="page" value="<%= params[:page]%>"/>
-            <label style="color:#005580;">当前每页显示：</label>
-            <%=select_tag :number, options_for_select([["加载20项","20"],
-                    ["加载50项","50"],
-                    ["加载100项", "100"]], params[:number]),  :class => 'nomargin input-medium', :onchange => "this.form.submit();" %>
-            <%- end -%>
-          </div>
-        </div><!-- all_goods end -->
+    <div class='clearfix'>
+      <div class="pull-right" style="margin-left: 5px;margin-top: -2px;">
+        <%= paginate @jingdong_products %>
       </div>
+      <!-- <p></p> -->
+      <%= form_tag("/jingdong_products", :method => "get", :class => 'pagination trade_count_info form-inline pull-right') do %>
+      <input style="visibility:hidden;" name="page" value="<%= params[:page]%>"/>
+      <label style="color:#005580;">当前每页显示：</label>
+      <%=select_tag :number, options_for_select([["加载20项","20"],
+              ["加载50项","50"],
+              ["加载100项", "100"]], params[:number]),  :class => 'nomargin input-medium', :onchange => "this.form.submit();" %>
+      <%- end -%>
     </div>
-  </div>
+  </div><!-- all_goods end -->
 </div>
 
 <!-- Modal -->

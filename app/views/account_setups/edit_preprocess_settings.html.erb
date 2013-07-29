@@ -1,21 +1,21 @@
-<div class="container-fluid">
-  <div class="row-fluid">
-    <%= render partial: "layouts/setting_nav" %>
-    <div class="span10">
-      <%= render partial: "crumbs"%>
-      <ul class="nav nav-tabs" style="margin-top: 5px;">
-        <li class="active"><a href="/account_setups/edit_preprocess_settings">订单预处理</a></li>
-        <li><a href="/account_setups/edit_dispatch_settings">订单分派</a></li>
-        <li><a href="/account_setups/edit_deliver_settings">订单发货</a></li>
-        <li><a href="/account_setups/edit_automerge_settings">自动合并订单</a></li>
-        <!--<li><a href="#default_logistics" data-toggle="tab">选择默认物流商</a></li>
-        <li><a href="#autobusiness_set" data-toggle="tab">自动化业务设置</a></li>
-        <li><a href="#login_user_set" data-toggle="tab">设置系统登录用户</a></li> -->
-      </ul><!-- nav-tabs -->
-
-      <div class="tab-content">
-        <div class="tab-pane active" id="preprocess_settings">
-          <%= form_tag('/account_setups/update_preprocess_settings', class: 'form-horizontal', method: 'put') do -%>
+<%
+  breadcrumb << ["自动化设置", "/account_setups/edit_preprocess_settings"]
+  breadcrumb << ["订单预处理"]
+%>
+<div class="row-fluid">
+  <div class="span10 w100">
+    <ul class="nav nav-tabs" style="margin-top: 5px;">
+      <li class="active"><a href="/account_setups/edit_preprocess_settings">订单预处理</a></li>
+      <li><a href="/account_setups/edit_dispatch_settings">订单分派</a></li>
+      <li><a href="/account_setups/edit_deliver_settings">订单发货</a></li>
+      <li><a href="/account_setups/edit_automerge_settings">自动合并订单</a></li>
+      <!--<li><a href="#default_logistics" data-toggle="tab">选择默认物流商</a></li>
+      <li><a href="#autobusiness_set" data-toggle="tab">自动化业务设置</a></li>
+      <li><a href="#login_user_set" data-toggle="tab">设置系统登录用户</a></li> -->
+    </ul><!-- nav-tabs -->
+    <div class="tab-content">
+      <div class="tab-pane active" id="users">
+        <%= form_tag('/account_setups/update_preprocess_settings', class: 'form-horizontal', method: 'put') do -%>
             <fieldset class="mar_l80"><!-- 订单预处理 beginning -->
               <h4>订单预处理设置：</h4>
               <div>
@@ -31,64 +31,13 @@
                 <p class="clear">
                   <label class="input-large pull-left">请选择自动预处理静默时间：</label>
                   <select name="auto_settings[preprocess_silent_gap]" class="input-mini">
-                    <% [0,1,2,6,12,24,48,72].each do |i| %>
-                    <option value= "<%= i %>" <%= 'selected' if @setting['preprocess_silent_gap'] == i.to_s %>><%= i %></option>
-                    <% end %>
+                  <% [0,1,2,6,12,24,48,72].each do |i| %>
+                  <option value= "<%= i %>" <%= 'selected' if @setting['preprocess_silent_gap'] == i.to_s %>><%= i %></option>
+                  <% end %>
                   </select>小时
                 </p>
               </div>
-              <!-- <div class="mar_l80">
-                <label class="input-large pull-left">自动拆分：</label>
-                <div class="controls ml210">
-                  <div class="control-group">
-                    <label class="radio pull-left input-small">
-                      <input type="radio" name="auto_settings[auto_split]" <%='checked' if @setting['auto_split'] == 1 %>>开启
-                    </label> -->
-                    <!-- <div class="mar_l80">
-                      <p class="mt2">请选择所需功能：</p>
-                      <div class="control-group">
-                        <label class="checkbox">
-                          <input type="checkbox" name="auto_settings[split_conditions][split_non_stock_trade]" <%= 'checked' if @setting['split_conditions']['split_non_stock_trade'] == 1 %>>统一订单，自动将无库存商品拆分
-                        </label>
-                      </div>
-                      <div class="control-group">
-                        <label class="checkbox">
-                          <input type="checkbox" name="auto_settings[split_conditions][split_seperate_stock_trade]" <%- if @setting['split_conditions']['split_seperate_stock_trade'] == 1 %> checked="checked" <%- end %>>统一订单，若商品在不同仓库拆分
-                        </label>
-                      </div>
-                    </div> -->
-                  <!-- </div>
-                  <div class="control-group">
-                    <label class="radio pull-left input-small">
-                      <input type="radio" value="off" name="auto_settings[auto_split]" <%='checked' if @setting['auto_split'].present? == false %>>关闭
-                    </label>
-                    <div>
-                      <p class="mt2 muted">需要客服在系统内操作按钮“拆分”，订单状态才会按照自动拆分规则进行拆分</p>
-                    </div>
-                  </div>
-                </div>
-              </div> -->
-              <!-- <div>
-                <label class="input-large pull-left">自动合并：</label>
-                <div class="controls ml210">
-                  <div class="control-group">
-                    <label class="radio pull-left input-small">
-                      <input type="radio" name="auto_settings[auto_recover]" <%='checked' if @setting['auto_recover'] == 1 %>>开启
-                    </label>
-                    <div>
-                      <p class="mt2">当订单的状态，订单的收货人姓名，订单收货人联系方式，订单发货地址相同的情况下</p>
-                    </div>
-                  </div>
-                  <div class="control-group">
-                    <label class="radio pull-left input-small">
-                      <input type="radio" value="off" name="auto_settings[auto_recover]" <%='checked' if @setting['auto_recover'].present? == false %>>关闭
-                    </label>
-                    <div>
-                      <p class="mt2">需要客服在系统内操作按钮“合并”，订单状态才会按照自动拆分规则进行合并</p>
-                    </div>
-                  </div>
-                </div>
-              </div> -->
+
               <div>
                 <label class="input-large pull-left">自动同步备注：</label>
                 <div class="controls ml210">
@@ -103,14 +52,6 @@
                       <p class="mt2 muted">将淘宝的顾客备注，同步到系统中的客服备注</p>
                     </div>
                   </div>
-                  <!-- <div class="control-group">
-                    <label class="radio pull-left input-small">
-                      <input type="radio" value="off" name="auto_settings[auto_sync_memo]" <%='checked' if @setting['auto_sync_memo'].present? == false %>>关闭
-                    </label>
-                    <div>
-                      <p class="mt2 muted">系统不会将淘宝备注，同步到系统的客服备注中</p>
-                    </div>
-                  </div> -->
                 </div>
               </div>
               <div>
@@ -127,78 +68,59 @@
                       <p class="mt2 muted">满足以下被勾选的条件的订单，将被自动标记为异常订单</p>
                       <table class="table table-condensed noborder">
                         <thead>
-                          <tr>
-                            <th>订单状态异常</th>
-                            <!-- <th>订单金额异常</th> -->
-                            <!-- <th>订单备注异常</th> -->
-                          </tr>
+                        <tr>
+                          <th>订单状态异常</th>
+                        </tr>
                         </thead>
                         <tbody>
                           <tr>
                             <td>
                               <input type="checkbox" class="pull-left" style="margin-top:4px;" name="auto_settings[unusual_conditions][unusual_waitpay]" <%= 'checked' if @setting['unusual_conditions']['unusual_waitpay'] == 1 %>>当订单已下单，超过
-                                <select name="auto_settings[unusual_conditions][max_unpaid_days]" class="input-mini">
-                                  <% (1..7).each do |i| %>
+                              <select name="auto_settings[unusual_conditions][max_unpaid_days]" class="input-mini">
+                                <% (1..7).each do |i| %>
                                   <option value= "<%= i %>" <%= 'selected' if @setting['unusual_conditions']["max_unpaid_days"] == i.to_s %>><%= i %></option>
-                                  <% end %>
-                                </select>天未付款
-                                <!-- <input type="text" name="auto_settings[unusual_conditions][max_unpaid_days]" class="input-mini" value="<%= @setting['unusual_conditions']['max_unpaid_days']%>"/> -->
+                                <% end %>
+                              </select>天未付款
                             </td>
-                            <!-- <td>
-                              <input type="checkbox" class="pull-left" style="margin-top:4px;" name="auto_settings[unusual_conditions][unusual_payment]" <%= 'checked' if @setting['unusual_conditions']['unusual_payment'] == 1 %>>当订单的实付金额小于订单总金额
-                                <input type="text" name="auto_settings[unusual_conditions][unusual_payment_rate]" class="input-mini" value="<%= @setting['unusual_conditions']['unusual_payment_rate']%>"/>%
-                            </td> -->
-                            <!-- <td>
-                              <input type="checkbox" class="pull-left" style="margin-top:4px;" name="auto_settings[unusual_conditions][unusual_memo]" <%= 'checked' if @setting['unusual_conditions']['unusual_memo'] == 1 %>>当订单备注中有
-                                <input type="text" name="auto_settings[unusual_conditions][unusual_memo_text]" class="input-  mini" value="<%= @setting['unusual_conditions']['unusual_memo_text']%>"/>文字时
-                            </td> -->
                           </tr>
                           <tr>
                             <td>
                               <input type="checkbox" class="pull-left" style="margin-top:4px;" name="auto_settings[unusual_conditions][unusual_dispatch]" <%= 'checked' if @setting['unusual_conditions']['unusual_dispatch'] == 1 %>>当订单已付款，超过
-                                <select name="auto_settings[unusual_conditions][max_undispatched_days]" class="input-mini">
-                                  <% (1..7).each do |i| %>
+                              <select name="auto_settings[unusual_conditions][max_undispatched_days]" class="input-mini">
+                                <% (1..7).each do |i| %>
                                   <option value= "<%= i %>" <%= 'selected' if @setting['unusual_conditions']["max_undispatched_days"] == i.to_s %>><%= i %></option>
-                                  <% end %>
-                                </select>天未分派
-                                <!-- <input type="text" class="input-mini" name="auto_settings[unusual_conditions][max_undispatched_days]" value="<%= @setting['unusual_conditions']['max_undispatched_days']%>"/> -->
+                                <% end %>
+                              </select>天未分派
                             </td>
-                            <!-- <td></td> -->
-                            <!-- <td></td> -->
                           </tr>
                           <tr>
                             <td>
                               <input type="checkbox" class="pull-left" style="margin-top:4px;" name="auto_settings[unusual_conditions][unusual_deliver]" <%= 'checked' if @setting['unusual_conditions']['unusual_deliver'] == 1 %>>当订单已分派，超过
-                                <select name="auto_settings[unusual_conditions][max_undelivered_days]" class="input-mini">
-                                  <% (1..7).each do |i| %>
+                              <select name="auto_settings[unusual_conditions][max_undelivered_days]" class="input-mini">
+                                <% (1..7).each do |i| %>
                                   <option value= "<%= i %>" <%= 'selected' if @setting['unusual_conditions']["max_undelivered_days"] == i.to_s %>><%= i %></option>
-                                  <% end %>
-                                </select>天未发货
-                                <!-- <input type="text" name="auto_settings[unusual_conditions][max_undelivered_days]" class="input-mini" value="<%= @setting['unusual_conditions']['max_undelivered_days']%>"/> -->
+                                <% end %>
+                              </select>天未发货
                             </td>
-                            <!-- <td>
-                              <input type="checkbox" class="pull-left" style="margin-top:4px;" name="auto_settings[unusual_conditions][has_refund]" <%= 'checked' if @setting['unusual_conditions']['has_refund'] == 1 %>>当订单有退款或者部分退款
-                            </td> -->
-                            <!-- <td></td> -->
                           </tr>
                           <tr>
                             <td>
                               <input type="checkbox" class="pull-left" style="margin-top:4px;" name="auto_settings[unusual_conditions][unusual_receive]" <%= 'checked' if @setting['unusual_conditions']['unusual_receive'] == 1 %>>当订单已发货，超过
-                                <select name="auto_settings[unusual_conditions][max_unreceived_days]" class="input-mini">
-                                  <% 7.downto(1) do |i| %>
+                              <select name="auto_settings[unusual_conditions][max_unreceived_days]" class="input-mini">
+                                <% 7.downto(1) do |i| %>
                                   <option value= "<%= i %>" <%= 'selected' if @setting['unusual_conditions']["max_unreceived_days"] == i.to_s %>><%= i %></option>
-                                  <% end %>
-                                </select>天未实际收货
+                                <% end %>
+                              </select>天未实际收货
                             </td>
                           </tr>
                           <tr>
                             <td>
                               <input type="checkbox" class="pull-left" style="margin-top:4px;" name="auto_settings[unusual_conditions][unusual_repair]" <%= 'checked' if @setting['unusual_conditions']['unusual_repair'] == 1 %>>当订单已标记，超过
-                                <select name="auto_settings[unusual_conditions][max_unrepaired_days]" class="input-mini">
-                                  <% (1..7).each do |i| %>
+                              <select name="auto_settings[unusual_conditions][max_unrepaired_days]" class="input-mini">
+                                <% (1..7).each do |i| %>
                                   <option value= "<%= i %>" <%= 'selected' if @setting['unusual_conditions']["max_unrepaired_days"] == i.to_s %>><%= i %></option>
-                                  <% end %>
-                                </select>天未处理异常
+                                <% end %>
+                              </select>天未处理异常
                             </td>
                           </tr>
                         </tbody>
@@ -212,9 +134,7 @@
               <button id="auto_settings_button" class="btn btn-primary" type="submit">保存</button>
             </div>
           <% end %>
-        </div>
-
-      </div><!-- tab-content end -->
+      </div>
     </div>
   </div>
 </div>

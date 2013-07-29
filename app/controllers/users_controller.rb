@@ -33,6 +33,8 @@ class UsersController < ApplicationController
     else
       @users = users.page params[:page]
     end
+    @roles = current_account.roles
+    @user = current_account.users.new
   end
 
   def search

@@ -1,109 +1,106 @@
-<div class="tab-content">
-  <div class="tab-pane active" id="stock_check">
-    <%= form_for @search ,:url => stocks_path_adapter , :html => {:class => "well well-small form-horizontal font12",:id => "search"},:method => :get do |f| %>
-      <%= render :partial => "search",:locals => {:f => f} %>
-    <% end %>
-  </div>
+<div class="tab-pane active" id="stock_check">
+  <%= form_for @search ,:url => stocks_path_adapter , :html => {:class => "well well-small form-horizontal font12",:id => "search"},:method => :get do |f| %>
+    <%= render :partial => "search",:locals => {:f => f} %>
+  <% end %>
+</div>
 
-  <div class="btn-toolbar">
-    <div class="btn-group">
-      <button class="btn btn-warning">操作</button>
-      <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
-        <span class="caret"></span>
-      </button>
-      <ul class="dropdown-menu">
-        <li>
-          <%= link_to "导出","#",:onclick => "processChecked('#{stocks_path(warehouse_id: params[:warehouse_id], :search => params[:search],:format => :xls,:on => '?')}')"%>
-        </li>
-        <li>
-          <%= link_to_authorize "批量设置安全库存","#batch_update_safety_stock",:target_url => "/stocks/batch_update_safety_stock?warehouse_id=#{params[:warehouse_id]}",:class => "magic_operation set_stock", "data-toggle" => "modal",:request => :post,:id => "set_safety_stock" %>
-        </li>
-        <li>
-          <%= link_to_authorize "批量设置实际库存","#batch_update_actual_stock",:target_url => "/stocks/batch_update_actual_stock?warehouse_id=#{params[:warehouse_id]}",:class => "magic_operation set_stock", "data-toggle" => "modal",:request => :post,:id => "set_actual_stock" %>
-        </li>
-      </ul>
-    </div>
-    <div class="btns btn-group pull-right js-field_set">
-      <a href="#" class="btn btn-success btn_mar4">显示设置</a>
-      <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-success dropdown_check_btn"><span class="caret"></span></button>
-      <ul class="dropdown-menu dropdown_check" id="dropdown_check">
-        <%= form_tag "/users/update_visible_columns", :id => "visible_columns"%>
-          <input type="hidden" name="model_name" value="stock_product"/>
-          <input type="hidden" name="action_name" value="<%= @warehouse.blank? ? "stock_product_all_visible_cols" : "stock_product_detail_visible_cols" %>"/>
-          <% @all_cols.each do |col_name, view_name| %>
-          <li data-col="<%= col_name %>">
-            <label class="checkbox" style="padding-left:35px;">
-              <input type="checkbox" class="test_checkbox" name="visible_columns[]" value="<%= col_name %>" <%= ' checked="checked"' if @visible_cols.include?(col_name) %>/>
-              <%= view_name %>
-            </label>
-          </li>
-          <% end %>
-        </form>
-      </ul>
-    </div>
+<div class="btn-toolbar">
+  <div class="btn-group">
+    <button class="btn btn-warning">操作</button>
+    <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+      <li>
+        <%= link_to "导出","#",:onclick => "processChecked('#{stocks_path(warehouse_id: params[:warehouse_id], :search => params[:search],:format => :xls,:on => '?')}')"%>
+      </li>
+      <li>
+        <%= link_to_authorize "批量设置安全库存","#batch_update_safety_stock",:target_url => "/stocks/batch_update_safety_stock?warehouse_id=#{params[:warehouse_id]}",:class => "magic_operation set_stock", "data-toggle" => "modal",:request => :post,:id => "set_safety_stock" %>
+      </li>
+      <li>
+        <%= link_to_authorize "批量设置实际库存","#batch_update_actual_stock",:target_url => "/stocks/batch_update_actual_stock?warehouse_id=#{params[:warehouse_id]}",:class => "magic_operation set_stock", "data-toggle" => "modal",:request => :post,:id => "set_actual_stock" %>
+      </li>
+    </ul>
   </div>
+  <div class="btns btn-group pull-right js-field_set">
+    <a href="#" class="btn btn-success btn_mar4">显示设置</a>
+    <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-success dropdown_check_btn"><span class="caret"></span></button>
+    <ul class="dropdown-menu dropdown_check" id="dropdown_check">
+      <%= form_tag "/users/update_visible_columns", :id => "visible_columns"%>
+        <input type="hidden" name="model_name" value="stock_product"/>
+        <input type="hidden" name="action_name" value="<%= @warehouse.blank? ? "stock_product_all_visible_cols" : "stock_product_detail_visible_cols" %>"/>
+        <% @all_cols.each do |col_name, view_name| %>
+        <li data-col="<%= col_name %>">
+          <label class="checkbox" style="padding-left:35px;">
+            <input type="checkbox" class="test_checkbox" name="visible_columns[]" value="<%= col_name %>" <%= ' checked="checked"' if @visible_cols.include?(col_name) %>/>
+            <%= view_name %>
+          </label>
+        </li>
+        <% end %>
+      </form>
+    </ul>
+  </div>
+</div>
 
-    <%= form_tag "/",:method => "post",:id => "stocks_index_form",:class => "simple-operation cmxform" do %>
-    <fieldset class="js-modal modal hide fade" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true" id="batch_update_safety_stock">
-      <%= render "batch_update_safety_stock" %>
-    </fieldset>
-    <fieldset class="js-modal modal hide fade" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true" id="batch_update_actual_stock">
-      <%= render "batch_update_actual_stock" %>
-    </fieldset>
-      <table class="table table-hover table-bordered table-striped table-condensed js-table" id="stocks_table">
-        <thead>
-          <tr>
-            <th><input type="checkbox"></th>
-            <%- @all_cols.each do |col_name, view_name| -%>
-              <th data-col="<%= col_name %>" style="<%= 'display:none' unless @visible_cols.include?(col_name) %>">
-                <%= sort_link @search, col_name, view_name %>
-              </th>
-            <%- end -%>
-          </tr>
-        </thead>
-        <tbody>
-          <% @stock_products.each do |stock_product| %>
-          <tr id="<%=dom_id(stock_product)%>">
-            <td><input type="checkbox" name="stock_product_ids[]" value="<%= stock_product.id %>"></td>
-            <%- @all_cols.each do |col_name, view_name| -%>
-            <td  class="<%= 'sku_title' if col_name=="product_name" %>" data-col="<%= col_name %>" style="<%= 'display:none' unless @visible_cols.include?(col_name) %>">
-              <% case col_name
-               when "sku_sku_id" %>
-              <%= stock_product.sku.try(:sku_id) %>
-              <% when "product_name" %>
-                <%= stock_product.sku.try(:title) %>
-              <% when "product_outer_id" %>
-                <%= stock_product.product.try(:outer_id) %>
-              <% when "category_name" %>
-                <%= stock_product.category.try(:name) %>
-              <% when "seller_id" %>
-                <%= stock_product.seller.try(:name) %>
-              <% when "forecast" %>
-                <%- hold = @hold_hash.fetch(stock_product.id.to_s) rescue 0 %>
-                <%- forecast = stock_product.activity - hold %>
-                <%= forecast %>
-              <% else %>
-                <%= stock_product.send(col_name) rescue "" %>
-              <% end %>
-            </td>
-            <%- end -%>
-          </tr>
-          <% end %>
-        </tbody>
-      </table>
-    <%- end %>
-    <div class='clearfix'>
-      <div class="pull-right" style="margin-left: 5px;margin-top: -2px;">
-        <%= paginate @stock_products %>
-      </div>
-      <!-- <p></p> -->
-      <%= form_tag(stocks_path_adapter, :method => "get", :class => 'pagination trade_count_info form-inline pull-right') do %>
-      <input style="visibility:hidden;" name="page" value="<%= params[:page]%>"/>
-      <label style="color:#005580;">当前每页显示：</label>
-      <%=select_tag :number, options_for_select([["加载20项","20"],
-              ["加载50项","50"],
-              ["加载100项", "100"]], params[:number]),  :class => 'nomargin input-medium', :onchange => "this.form.submit();" %>
-      <%- end -%>
-    </div>
-  </div><!--span10 -->
-</div><!-- tab-content -->
+<%= form_tag "/",:method => "post",:id => "stocks_index_form",:class => "simple-operation cmxform" do %>
+  <fieldset class="js-modal modal hide fade" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true" id="batch_update_safety_stock">
+    <%= render "batch_update_safety_stock" %>
+  </fieldset>
+  <fieldset class="js-modal modal hide fade" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true" id="batch_update_actual_stock">
+    <%= render "batch_update_actual_stock" %>
+  </fieldset>
+  <table class="table table-hover table-bordered table-striped table-condensed js-table" id="stocks_table">
+    <thead>
+      <tr>
+        <th><input type="checkbox"></th>
+        <%- @all_cols.each do |col_name, view_name| -%>
+          <th data-col="<%= col_name %>" style="<%= 'display:none' unless @visible_cols.include?(col_name) %>">
+            <%= sort_link @search, col_name, view_name %>
+          </th>
+        <%- end -%>
+      </tr>
+    </thead>
+    <tbody>
+      <% @stock_products.each do |stock_product| %>
+        <tr id="<%=dom_id(stock_product)%>">
+          <td><input type="checkbox" name="stock_product_ids[]" value="<%= stock_product.id %>"></td>
+          <%- @all_cols.each do |col_name, view_name| -%>
+          <td  class="<%= 'sku_title' if col_name=="product_name" %>" data-col="<%= col_name %>" style="<%= 'display:none' unless @visible_cols.include?(col_name) %>">
+            <% case col_name
+             when "sku_sku_id" %>
+            <%= stock_product.sku.try(:sku_id) %>
+            <% when "product_name" %>
+              <%= stock_product.sku.try(:title) %>
+            <% when "product_outer_id" %>
+              <%= stock_product.product.try(:outer_id) %>
+            <% when "category_name" %>
+              <%= stock_product.category.try(:name) %>
+            <% when "seller_id" %>
+              <%= stock_product.seller.try(:name) %>
+            <% when "forecast" %>
+              <%- hold = @hold_hash.fetch(stock_product.id.to_s) rescue 0 %>
+              <%- forecast = stock_product.activity - hold %>
+              <%= forecast %>
+            <% else %>
+              <%= stock_product.send(col_name) rescue "" %>
+            <% end %>
+          </td>
+          <%- end -%>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<%- end %>
+<div class='clearfix'>
+  <div class="pull-right" style="margin-left: 5px;margin-top: -2px;">
+    <%= paginate @stock_products %>
+  </div>
+  <!-- <p></p> -->
+  <%= form_tag(stocks_path_adapter, :method => "get", :class => 'pagination trade_count_info form-inline pull-right') do %>
+    <input style="visibility:hidden;" name="page" value="<%= params[:page]%>"/>
+    <label style="color:#005580;">当前每页显示：</label>
+    <%=select_tag :number, options_for_select([["加载20项","20"],
+            ["加载50项","50"],
+          ["加载100项", "100"]], params[:number]),  :class => 'nomargin input-medium', :onchange => "this.form.submit();" %>
+  <%- end -%>
+</div>

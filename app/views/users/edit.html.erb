@@ -1,31 +1,38 @@
-    <ul class="breadcrumb" style="position:relative;">
-      <li><a href="/">Magic</a><span class="divider">/</span></li>
-      <li><a href="/users">系统设置</a><span class="divider">/</span></li>
-      <li><a href="/users">用户管理</a><span class="divider">/</span></li>
-      <li><a href="/users"><%=current_user.name%></a><span class="divider">/</span></li>
-      <li class="active">编辑</li>
-    </ul><!-- breadcrumb -->
-
-    <%= simple_form_for @user, html: {:class =>'well form-horizontal'} do |f| %>
-      <fieldset class="add_unit">
-
-        <div class="control-group">
-          <%= f.input :email, :label => "邮箱：", class: 'input-xlarge' %>
+<%
+  breadcrumb << ["系统设置", users_path]
+  breadcrumb << ["用户管理", users_path]
+  breadcrumb << ["编辑用户"]
+%> 
+<div class="row-fluid">
+  <div class="span10 w100">
+    <ul class="nav nav-tabs">
+      <li class="active"><a href="/users">用户</a></li>
+      <li><a href="/users/roles">角色</a></li>
+    </ul><!-- nav-tabs -->
+    <div class="tab-content">
+      <%= simple_form_for @user, html: {:class =>'well form-horizontal'} do |f| %>
+        <fieldset class="add_unit">
+  
+          <div class="control-group">
+            <%= f.input :email, :label => "邮箱：", class: 'input-xlarge' %>
+          </div>
+        </fieldset>
+  
+        <fieldset class="add_unit">
+          <div class="control-group">
+            <%= f.input :password, :label => "密码：", class: 'input-xlarge' %>
+          </div>
+  
+          <div class="control-group">
+            <%= f.input :password_confirmation, :label => "确认密码：", class: 'input-xlarge' %>
+          </div>
+        </fieldset>
+  
+        <div class="form-actions">
+           <input type='hidden' name="ac" value="<%= params[:ac] ? params[:ac] : params[:action] %>"/>
+           <%= f.button :submit, :value => "保存", class: "btn btn-primary edit"%>
         </div>
-      </fieldset>
-
-      <fieldset class="add_unit">
-        <div class="control-group">
-          <%= f.input :password, :label => "密码：", class: 'input-xlarge' %>
-        </div>
-
-        <div class="control-group">
-          <%= f.input :password_confirmation, :label => "确认密码：", class: 'input-xlarge' %>
-        </div>
-      </fieldset>
-
-      <div class="form-actions">
-         <input type='hidden' name="ac" value="<%= params[:ac] ? params[:ac] : params[:action] %>"/>
-         <%= f.button :submit, :value => "保存", class: "btn btn-primary edit"%>
-      </div>
-    <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>

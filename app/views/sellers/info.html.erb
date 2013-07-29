@@ -1,74 +1,63 @@
-<div class="container-fluid">
-  <div class="row-fluid">
-    <ul class="breadcrumb" style="position:relative;">
-      <li><a href="/">Magic</a><span class="divider">/</span></li>
-      <li><a href="/sellers">经销机构管理</a><span class="divider">/</span></li>
-      <li class="active">经销商详情<span class="divider">/</span></li>
-      <li class="active"><%= @seller.name %></li>
-    </ul><!-- breadcrumb -->
+<form class="well form-horizontal info_check">
+  <fieldset>
+    <div class="control-group">
+      <label class="control-label" for=""><span class="atv">*</span>经销商简称：</label>
+      <div class="controls">
+        <p class="mar_t5"><%= @seller.name %></p>
+      </div>
+    </div>
 
-    <form class="well form-horizontal info_check">
-      <fieldset>
-        <div class="control-group">
-          <label class="control-label" for=""><span class="atv">*</span>经销商简称：</label>
-          <div class="controls">
-            <p class="mar_t5"><%= @seller.name %></p>
-          </div>
-        </div>
+    <div class="control-group">
+      <label class="control-label" for=""><span class="atv">*</span>经销商全称：</label>
+      <div class="controls">
+        <p class="mar_t5"><%= @seller.fullname %></p>
+      </div>
+    </div>
 
-        <div class="control-group">
-          <label class="control-label" for=""><span class="atv">*</span>经销商全称：</label>
-          <div class="controls">
-            <p class="mar_t5"><%= @seller.fullname %></p>
-          </div>
-        </div>
+    <div class="control-group">
+      <label class="control-label" for="">手机：</label>
+      <div class="controls">
+        <p class="mar_t5"><%= @seller.mobile %></p>
+      </div>
+    </div>
 
-        <div class="control-group">
-          <label class="control-label" for="">手机：</label>
-          <div class="controls">
-            <p class="mar_t5"><%= @seller.mobile %></p>
-          </div>
-        </div>
+    <div class="control-group">
+      <label class="control-label" for="">联系人：</label>
+      <div class="controls">
+        <p class="mar_t5"><%= @seller.interface %></p>
+      </div>
+    </div>
 
-        <div class="control-group">
-          <label class="control-label" for="">联系人：</label>
-          <div class="controls">
-            <p class="mar_t5"><%= @seller.interface %></p>
-          </div>
-        </div>
+    <div class="control-group">
+      <label class="control-label" for="">地址：</label>
+      <div class="controls">
+        <p class="mar_t5"><%= @seller.address %></p>
+      </div>
+    </div>
 
-        <div class="control-group">
-          <label class="control-label" for="">地址：</label>
-          <div class="controls">
-            <p class="mar_t5"><%= @seller.address %></p>
-          </div>
-        </div>
+    <div class="control-group">
+      <label class="control-label" for="">绩效打分：</label>
+      <div class="controls">
+        <p class="mar_t5"><%= @seller.performance_score %></p>
+      </div>
+    </div>
 
-        <div class="control-group">
-          <label class="control-label" for="">绩效打分：</label>
-          <div class="controls">
-            <p class="mar_t5"><%= @seller.performance_score %></p>
-          </div>
-        </div>
+    <div class="control-group">
+      <label class="control-label" for="">Email：</label>
+      <div class="controls">
+        <p class="mar_t5"><%= @seller.email %></p>
+      </div>
+    </div>
 
-        <div class="control-group">
-          <label class="control-label" for="">Email：</label>
-          <div class="controls">
-            <p class="mar_t5"><%= @seller.email %></p>
-          </div>
-        </div>
+    <div class="control-group">
+      <label class="control-label" for="">抄送Email：</label>
+      <div class="controls">
+        <p class="mar_t5" style="white-space:normal;word-wrap:break-word;width:30%;"><%= @seller.cc_emails %></p>
+      </div>
+    </div>
 
-        <div class="control-group">
-          <label class="control-label" for="">抄送Email：</label>
-          <div class="controls">
-            <p class="mar_t5" style="white-space:normal;word-wrap:break-word;width:30%;"><%= @seller.cc_emails %></p>
-          </div>
-        </div>
-
-        <div class="form-actions">
-          <a href="/sellers" class="btn btn-info">返回上一级</a>
-        </div>
-      </fieldset>
-    </form>
-  </div>
-</div>
+    <div class="form-actions">
+      <a href="/sellers" class="btn btn-info">返回上一级</a>
+    </div>
+  </fieldset>
+</form>

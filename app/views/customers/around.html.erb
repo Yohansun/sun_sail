@@ -1,144 +1,143 @@
-<div class="container-fluid">
-  <div class="row-fluid">
-    <%= render "nav" %>
-    <form ation="/trades_reports" class="well form-horizontal">
-      <div class="control-group nomargin">
-        <%= render :partial => "search",:locals => {:path => customers_path} %>
-      </div>
-    </form>
-    <div class="btn-toolbar">
-      <div class="btn-group">
-        <button class="btn btn-warning">操作</button>
-        <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
-          <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu">
-          <li>
-            <%= link_to "导出","#",:onclick => "exportChecked('#{format_url(:xls)}')" %>
-          </li>
-          <li>
-            <%= link_to_authorize "发送短信","#",:target_url => "/customers/send_messages",:request => "get",:class => "magic_operation"%>
-          </li>
-          <li>
-            <%= link_to_authorize "详细", "#",:target_url => "/customers",:class => "magic_detail"%>
-          </li>
-        </ul>
-      </div>
-      <div class="btns btn-group pull-right js-field_set">
-        <a href="#" class="btn btn-success btn_mar4">显示设置</a>
-        <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-success dropdown_check_btn"><span class="caret"></span></button>
-        <ul class="dropdown-menu dropdown_check" id="dropdown_check">
-          <%= form_tag "/users/update_visible_columns", :id => "visible_columns"%>
-            <input type="hidden" name="model_name" value="customer"/>
-            <input type="hidden" name="action_name" value="<%= params[:action] %>"/>
-            <% @all_cols.each do |key, value| %>
-            <li data-col="<%= key %>">
-              <label class="checkbox" style="padding-left:35px;">
-                <input type="checkbox" class="test_checkbox" name="visible_columns[]" value="<%= key %>" <%= ' checked="checked"' if @visible_cols.include?(key) %>/>
-                <%= value %>
-              </label>
-            </li>
-            <% end %>
-          </form>
-        </ul>
-      </div>
-    </div>
-    <%= form_tag "",:id => "customers",:class => "simple-operation" do %>
-    <%= hidden_field_tag "product_ids",@product_ids.join(',') rescue "" %>
-      <table class="table table-striped table-bordered mar_t10" id="customers_table">
-        <thead>
-          <tr>
-            <th><input id="checkbox_all" type="checkbox" value="option1"></th>
-            <th data-col="name" style="<%= 'display:none' unless @visible_cols.include?("name") %>">
-              顾客昵称
-            </th>
-            <th data-col="receiver_mobile" width="88px" style="<%= 'display:none' unless @visible_cols.include?("receiver_mobile") %>">
-              联系电话
-            </th>
-            <th data-col="trade_id" style="<%= 'display:none' unless @visible_cols.include?("trade_id") %>">
-              订单编号
-            </th>
-            <th data-col="product_name" style="<%= 'display:none' unless @visible_cols.include?("product_name") %>">
-              购买商品
-            </th>
-            <th data-col="use_days" style="<%= 'display:none' unless @visible_cols.include?("use_days") %>">
-              商品生命周期
-            </th>
-            <th data-col="receiver_state" style="<%= 'display:none' unless @visible_cols.include?("receiver_state") %>">
-              （收货）省
-            </th>
-            <th data-col="receiver_city" style="<%= 'display:none' unless @visible_cols.include?("receiver_city") %>">
-              （收货）市
-            </th>
-            <th data-col="receiver_district" style="<%= 'display:none' unless @visible_cols.include?("receiver_district") %>">
-              （收货）区
-            </th>
-            <th data-col="receiver_address" style="<%= 'display:none' unless @visible_cols.include?("receiver_address") %>">
-              （收货）地址
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-        <% @customers.each_with_index do |customer| %>
-          <%- if customer.product_trades.present? -%>
-            <%
-               col_num = customer.product_trades.sum{|trade| (trade.product_ids & @product_ids rescue trade.product_ids).size}
-            %>
-            <%- customer.product_trades.each_with_index do |trade, t_idx| -%>
-              <%- (trade.product_ids & @product_ids rescue trade.product_ids).each_with_index do |product_id, p_idx| -%>
-                <tr class="export_excel<%= " row_merged" if t_idx == 0 && p_idx == 0 %>">
-                  <%- if t_idx == 0 && p_idx == 0 %>
-                    <td rowspan="<%= col_num%>"><%= check_box_tag "search[_id_in][]",customer.id %></td>
-                    <td rowspan="<%= col_num%>" data-col="name" style="<%= 'display:none' unless @visible_cols.include?("name") %>"><%= customer.name %></td>
-                    <td rowspan="<%= col_num%>" data-col="receiver_mobile" style="<%= 'display:none' unless @visible_cols.include?("receiver_mobile") %>"><%= customer.receiver_mobile %></td>
-                  <%- end -%>
-                  <%- if p_idx == 0 -%>
-                    <td rowspan="<%= trade.product_ids.length%>" data-col="trade_id" style="<%= 'display:none' unless @visible_cols.include?("trade_id") %>"><%= trade.tid %></td>
-                  <%- end -%>
-                  <td data-col="product_name" style="<%= 'display:none' unless @visible_cols.include?("product_name") %>"><%= product(@products,product_id).name rescue "" %></td>
-                  <td data-col="use_days" style="<%= 'display:none' unless @visible_cols.include?("use_days") %>"><%= product(@products,product_id).category.use_days rescue "" %>天</td>
-                  <%- if t_idx == 0 && p_idx == 0 %>
-                    <td rowspan="<%= col_num%>" data-col="receiver_state" style="<%= 'display:none' unless @visible_cols.include?("receiver_state") %>"><%= customer.receiver_state %></td>
-                    <td rowspan="<%= col_num%>" data-col="receiver_city" style="<%= 'display:none' unless @visible_cols.include?("receiver_city") %>"><%= customer.receiver_city %></td>
-                    <td rowspan="<%= col_num%>" data-col="receiver_district" style="<%= 'display:none' unless @visible_cols.include?("receiver_district") %>"><%= customer.receiver_district %></td>
-                    <td rowspan="<%= col_num%>" data-col="receiver_address" style="<%= 'display:none' unless @visible_cols.include?("receiver_address") %>"><%= customer.receiver_address %></td>
-                  <%- end -%>
-                </tr>
+<% content_for :sub_nav do %>
+  <%= render "nav" %>
+<% end %>
+<form ation="/trades_reports" class="well form-horizontal">
+  <div class="control-group nomargin">
+    <%= render :partial => "search",:locals => {:path => customers_path} %>
+  </div>
+</form>
+<div class="btn-toolbar">
+  <div class="btn-group">
+    <button class="btn btn-warning">操作</button>
+    <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+      <li>
+        <%= link_to "导出","#",:onclick => "exportChecked('#{format_url(:xls)}')" %>
+      </li>
+      <li>
+        <%= link_to_authorize "发送短信","#",:target_url => "/customers/send_messages",:request => "get",:class => "magic_operation"%>
+      </li>
+      <li>
+        <%= link_to_authorize "详细", "#",:target_url => "/customers",:class => "magic_detail"%>
+      </li>
+    </ul>
+  </div>
+  <div class="btns btn-group pull-right js-field_set">
+    <a href="#" class="btn btn-success btn_mar4">显示设置</a>
+    <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-success dropdown_check_btn"><span class="caret"></span></button>
+    <ul class="dropdown-menu dropdown_check" id="dropdown_check">
+      <%= form_tag "/users/update_visible_columns", :id => "visible_columns"%>
+        <input type="hidden" name="model_name" value="customer"/>
+        <input type="hidden" name="action_name" value="<%= params[:action] %>"/>
+        <% @all_cols.each do |key, value| %>
+        <li data-col="<%= key %>">
+          <label class="checkbox" style="padding-left:35px;">
+            <input type="checkbox" class="test_checkbox" name="visible_columns[]" value="<%= key %>" <%= ' checked="checked"' if @visible_cols.include?(key) %>/>
+            <%= value %>
+          </label>
+        </li>
+        <% end %>
+      </form>
+    </ul>
+  </div>
+</div>
+<%= form_tag "",:id => "customers",:class => "simple-operation" do %>
+  <%= hidden_field_tag "product_ids",@product_ids.join(',') rescue "" %>
+  <table class="table table-striped table-bordered mar_t10" id="customers_table">
+    <thead>
+      <tr>
+        <th><input id="checkbox_all" type="checkbox" value="option1"></th>
+        <th data-col="name" style="<%= 'display:none' unless @visible_cols.include?("name") %>">
+          顾客昵称
+        </th>
+        <th data-col="receiver_mobile" width="88px" style="<%= 'display:none' unless @visible_cols.include?("receiver_mobile") %>">
+          联系电话
+        </th>
+        <th data-col="trade_id" style="<%= 'display:none' unless @visible_cols.include?("trade_id") %>">
+          订单编号
+        </th>
+        <th data-col="product_name" style="<%= 'display:none' unless @visible_cols.include?("product_name") %>">
+          购买商品
+        </th>
+        <th data-col="use_days" style="<%= 'display:none' unless @visible_cols.include?("use_days") %>">
+          商品生命周期
+        </th>
+        <th data-col="receiver_state" style="<%= 'display:none' unless @visible_cols.include?("receiver_state") %>">
+          （收货）省
+        </th>
+        <th data-col="receiver_city" style="<%= 'display:none' unless @visible_cols.include?("receiver_city") %>">
+          （收货）市
+        </th>
+        <th data-col="receiver_district" style="<%= 'display:none' unless @visible_cols.include?("receiver_district") %>">
+          （收货）区
+        </th>
+        <th data-col="receiver_address" style="<%= 'display:none' unless @visible_cols.include?("receiver_address") %>">
+          （收货）地址
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+    <% @customers.each_with_index do |customer| %>
+      <%- if customer.product_trades.present? -%>
+        <%
+           col_num = customer.product_trades.sum{|trade| (trade.product_ids & @product_ids rescue trade.product_ids).size}
+        %>
+        <%- customer.product_trades.each_with_index do |trade, t_idx| -%>
+          <%- (trade.product_ids & @product_ids rescue trade.product_ids).each_with_index do |product_id, p_idx| -%>
+            <tr class="export_excel<%= " row_merged" if t_idx == 0 && p_idx == 0 %>">
+              <%- if t_idx == 0 && p_idx == 0 %>
+                <td rowspan="<%= col_num%>"><%= check_box_tag "search[_id_in][]",customer.id %></td>
+                <td rowspan="<%= col_num%>" data-col="name" style="<%= 'display:none' unless @visible_cols.include?("name") %>"><%= customer.name %></td>
+                <td rowspan="<%= col_num%>" data-col="receiver_mobile" style="<%= 'display:none' unless @visible_cols.include?("receiver_mobile") %>"><%= customer.receiver_mobile %></td>
               <%- end -%>
-            <%- end -%>
-          <%- else -%>
-            <tr>
-              <td><%= check_box_tag "search[_id_in][]",customer.id %></td>
-              <td data-col="name" style="<%= 'display:none' unless @visible_cols.include?("name") %>">
-                <%= customer.name %>
-              </td>                <!--Newly Add-->
-              <td data-col="receiver_mobile" style="<%= 'display:none' unless @visible_cols.include?("receiver_mobile") %>">
-                <%= customer.receiver_mobile %>
-              </td>
-              <td data-col="trade_id" style="<%= 'display:none' unless @visible_cols.include?("trade_id") %>"></td>
-              <td data-col="product_name" style="<%= 'display:none' unless @visible_cols.include?("product_name") %>"></td>
-              <td data-col="use_days" style="<%= 'display:none' unless @visible_cols.include?("use_days") %>"></td>
-              <td data-col="receiver_state" style="<%= 'display:none' unless @visible_cols.include?("receiver_state") %>">
-                <%= customer.receiver_state %>
-              </td>
-              <td data-col="receiver_city" style="<%= 'display:none' unless @visible_cols.include?("receiver_city") %>">
-                <%= customer.receiver_city %>
-              </td>
-              <td data-col="receiver_district" style="<%= 'display:none' unless @visible_cols.include?("receiver_district") %>">
-                <%= customer.receiver_district %>
-              </td>
-              <td data-col="receiver_address" style="<%= 'display:none' unless @visible_cols.include?("receiver_address") %>">
-                <%= customer.receiver_address %>
-              </td>
+              <%- if p_idx == 0 -%>
+                <td rowspan="<%= trade.product_ids.length%>" data-col="trade_id" style="<%= 'display:none' unless @visible_cols.include?("trade_id") %>"><%= trade.tid %></td>
+              <%- end -%>
+              <td data-col="product_name" style="<%= 'display:none' unless @visible_cols.include?("product_name") %>"><%= product(@products,product_id).name rescue "" %></td>
+              <td data-col="use_days" style="<%= 'display:none' unless @visible_cols.include?("use_days") %>"><%= product(@products,product_id).category.use_days rescue "" %>天</td>
+              <%- if t_idx == 0 && p_idx == 0 %>
+                <td rowspan="<%= col_num%>" data-col="receiver_state" style="<%= 'display:none' unless @visible_cols.include?("receiver_state") %>"><%= customer.receiver_state %></td>
+                <td rowspan="<%= col_num%>" data-col="receiver_city" style="<%= 'display:none' unless @visible_cols.include?("receiver_city") %>"><%= customer.receiver_city %></td>
+                <td rowspan="<%= col_num%>" data-col="receiver_district" style="<%= 'display:none' unless @visible_cols.include?("receiver_district") %>"><%= customer.receiver_district %></td>
+                <td rowspan="<%= col_num%>" data-col="receiver_address" style="<%= 'display:none' unless @visible_cols.include?("receiver_address") %>"><%= customer.receiver_address %></td>
+              <%- end -%>
             </tr>
           <%- end -%>
-        <% end %>
-        </tbody>
-      </table>
+        <%- end -%>
+      <%- else -%>
+        <tr>
+          <td><%= check_box_tag "search[_id_in][]",customer.id %></td>
+          <td data-col="name" style="<%= 'display:none' unless @visible_cols.include?("name") %>">
+            <%= customer.name %>
+          </td>                <!--Newly Add-->
+          <td data-col="receiver_mobile" style="<%= 'display:none' unless @visible_cols.include?("receiver_mobile") %>">
+            <%= customer.receiver_mobile %>
+          </td>
+          <td data-col="trade_id" style="<%= 'display:none' unless @visible_cols.include?("trade_id") %>"></td>
+          <td data-col="product_name" style="<%= 'display:none' unless @visible_cols.include?("product_name") %>"></td>
+          <td data-col="use_days" style="<%= 'display:none' unless @visible_cols.include?("use_days") %>"></td>
+          <td data-col="receiver_state" style="<%= 'display:none' unless @visible_cols.include?("receiver_state") %>">
+            <%= customer.receiver_state %>
+          </td>
+          <td data-col="receiver_city" style="<%= 'display:none' unless @visible_cols.include?("receiver_city") %>">
+            <%= customer.receiver_city %>
+          </td>
+          <td data-col="receiver_district" style="<%= 'display:none' unless @visible_cols.include?("receiver_district") %>">
+            <%= customer.receiver_district %>
+          </td>
+          <td data-col="receiver_address" style="<%= 'display:none' unless @visible_cols.include?("receiver_address") %>">
+            <%= customer.receiver_address %>
+          </td>
+        </tr>
+      <%- end -%>
     <% end %>
-  </div>
-  <%= paginate @customers %>
-</div>
+    </tbody>
+  </table>
+<% end %>
+<%= paginate @customers %>
+
 <% content_for :tail do %>
 <script>
   $(function() {

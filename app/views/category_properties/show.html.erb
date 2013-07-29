@@ -1,32 +1,48 @@
 <%
-  breadcrumb << ["商品属性管理", categories_path] << [@category_property.name]
+  breadcrumb << ["系统设置", users_path]
+  breadcrumb << ["基础数据管理", stocks_safe_stock_path]
+  breadcrumb << ["商品设置", categories_path]
+  breadcrumb << ["商品属性管理", category_properties_path]
+  breadcrumb << ["查看商品属性"]
 %>
-<%- model_class = CategoryProperty -%>
-<div class="page-header">
-  <h1><%=t '.title', :default => model_class.model_name.human %></h1>
+<div class="row-fluid">
+  <div class="span10 w100">
+    <ul class="nav nav-tabs">
+      <li><a href="/categories">分类管理</a></li>
+      <li class="active"><a href="/category_properties">属性管理</a></li>
+    </ul><!-- nav-tabs -->
+    <div class="tab-content">
+      <%- model_class = CategoryProperty -%>
+      <div class="page-header">
+        <h1><%=t '.title', :default => model_class.model_name.human %></h1>
+      </div>
+      
+      <dl class="dl-horizontal">
+        <dt><strong><%= model_class.human_attribute_name(:category_id) %>:</strong></dt>
+        <dd><%= @category_property.category_id %></dd>
+        <dt><strong><%= model_class.human_attribute_name(:name) %>:</strong></dt>
+        <dd><%= @category_property.name %></dd>
+        <dt><strong><%= model_class.human_attribute_name(:value_type) %>:</strong></dt>
+        <dd><%= @category_property.value_type %></dd>
+        <dt><strong><%= model_class.human_attribute_name(:taobao_id) %>:</strong></dt>
+        <dd><%= @category_property.taobao_id %></dd>
+        <dt><strong><%= model_class.human_attribute_name(:status) %>:</strong></dt>
+        <dd><%= @category_property.status %></dd>
+      </dl>
+      
+      <div class="form-actions">
+        <%= link_to t('.back', :default => t("helpers.links.back")),
+                    category_properties_path, :class => 'btn'  %>
+        <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                    edit_category_property_path(@category_property), :class => 'btn' %>
+        <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                    category_property_path(@category_property),
+                    :method => 'delete',
+                    :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                    :class => 'btn btn-danger' %>
+      </div>
+    </div>
+  </div>
 </div>
 
-<dl class="dl-horizontal">
-  <dt><strong><%= model_class.human_attribute_name(:category_id) %>:</strong></dt>
-  <dd><%= @category_property.category_id %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:name) %>:</strong></dt>
-  <dd><%= @category_property.name %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:value_type) %>:</strong></dt>
-  <dd><%= @category_property.value_type %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:taobao_id) %>:</strong></dt>
-  <dd><%= @category_property.taobao_id %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:status) %>:</strong></dt>
-  <dd><%= @category_property.status %></dd>
-</dl>
 
-<div class="form-actions">
-  <%= link_to t('.back', :default => t("helpers.links.back")),
-              category_properties_path, :class => 'btn'  %>
-  <%= link_to t('.edit', :default => t("helpers.links.edit")),
-              edit_category_property_path(@category_property), :class => 'btn' %>
-  <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-              category_property_path(@category_property),
-              :method => 'delete',
-              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-              :class => 'btn btn-danger' %>
-</div>

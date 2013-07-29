@@ -1,39 +1,36 @@
 <% params[:message] ||= {} %>
-<div class="row-fluid">
+<% content_for :sub_nav do %>
   <ul class="nav nav-tabs">
     <li class="<%= params[:action] =~ /send_messages|invoice_messages/ ? "active" : "" %>">
       <a href="/customers/send_messages %>">发送消息</a>
     </li>
   </ul>
   <% if flash[:notice].present? %>
-  <div class="alert alert-success">
-    <%= flash[:notice] %>
-  </div>
+    <div class="alert alert-success">
+      <%= flash[:notice] %>
+    </div>
   <% elsif flash[:error].present? %>
-  <div class="alert alert-error">
-    <%= flash[:error] %>
-  </div>
+    <div class="alert alert-error">
+      <%= flash[:error] %>
+    </div>
   <% end %>
-  <div class="span10">
-    <div class="form-actions">
-    <%= simple_form_for @message,:url => invoice_messages_customers_path(:product_ids => params[:product_ids]),:html => {:class => "well form-horizontal"} do |f| %>
-        <%= f.input :recipients,hint: '请使用英文 ","或 ";" 进行分隔',:input_html  => {:class => "input-xxlarge",:id => "recipients"} %>
-        <div class="control-group">
-          <%= f.input :send_type, collection: [["短信","sms"],["邮件","mail"]], as: :select,:input_html => {class: "input-medium select2",:id => "send_type"} %>
-        </div>
-        <%= f.input :title,:input_html  => {:class => "input-xxlarge"} %>
-        
-        <%= f.input :content,as: :text,:input_html => {:class => "span9", :rows => 10}  %>
-        <div class="form-actions">
+<% end %>
 
-          <%= f.button :submit, :value => "发送", class: "btn btn-primary"%>
-        </div>
-                  <a href="/customers/around">返回</a>
-      </div>
+<%= simple_form_for @message,:url => invoice_messages_customers_path(:product_ids => params[:product_ids]),:html => {:class => "well form-horizontal"} do |f| %>
+  <%= f.input :recipients,hint: '请使用英文 ","或 ";" 进行分隔',:input_html  => {:class => "input-xxlarge",:id => "recipients"} %>
+  <div class="control-group">
+    <%= f.input :send_type, collection: [["短信","sms"],["邮件","mail"]], as: :select,:input_html => {class: "input-medium select2",:id => "send_type"} %>
+  </div>
+  <%= f.input :title,:input_html  => {:class => "input-xxlarge"} %>
 
-    <% end %>
-  </div><!--span10 -->
-</div><!--row-fluid -->
+  <%= f.input :content,as: :text,:input_html => {:class => "span9", :rows => 10}  %>
+
+  <div class="form-actions">
+    <%= f.button :submit, :value => " 发送 ", class: "btn btn-primary", style: "height:30px;" %>&nbsp;&nbsp;
+    <a href="/customers/around" class='btn'>返回</a>
+  </div>
+<% end %>
+
 <% content_for :tail do -%>
   <script type="text/javascript">
     $(function(){

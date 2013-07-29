@@ -1,33 +1,25 @@
-<div class="container-fluid">
-  <div class="row-fluid">
-    <%= render partial: "layouts/setting_nav" %>
-    <div class="span10">
-      <%= render partial: "crumbs" %>
-      <ul class="nav nav-tabs">
-        <li class="active"><a href="/stocks/edit_depot">仓库编辑</a></li>
-        <!-- <li><a href="/stocks/safe_stock">仓库编辑</a></li> -->
-      </ul><!-- nav-tabs -->
-      <div class="tab-content">
-        <div class="tab-pane active" id="users">
+<% content_for :sub_nav do %>
+  <ul class="nav nav-tabs">
+    <li class="active"><a href="/stocks/edit_depot">仓库编辑</a></li>
+    <!-- <li><a href="/stocks/safe_stock">仓库编辑</a></li> -->
+  </ul><!-- nav-tabs -->
+<% end %>
 
-          <div class="limits" id="limits">
-            <%= simple_form_for @depot,:url => update_depot_stock_path(@depot),:html => {:method => :put,:class => "form-horizontal"} do |f| %>
-            <div class="control-group">
-              <%= f.input :stock_name, :label => "仓库名称：", class: 'input-xlarge' %>
-            </div>
-            <div class="control-group">
-              <%= f.input :stock_user_id,:as => :select ,:collection => current_account.users.collect {|user| [user.name,user.id]}, :label => "负责人：", class: 'input-xlarge' %>
-            </div>
-            <div class="control-group">
-              <%= f.input :has_stock,:as => :select,:collection => Seller::HAS_STOCK,:include_blank => false, :label => "状态：", class: 'input-xlarge' %>
-            </div>
-            <div class="controls mar_t20">
-              <button class="btn btn-primary">保存</button>
-            </div>
-            <% end %>
-          </div><!-- limits end -->
-        </div><!-- tab-content end -->
-      </div>
+<div class="tab-pane active" id="users">
+  <div class="limits" id="limits">
+    <%= simple_form_for @depot,:url => update_depot_stock_path(@depot),:html => {:method => :put,:class => "form-horizontal"} do |f| %>
+    <div class="control-group">
+      <%= f.input :stock_name, :label => "仓库名称：", class: 'input-xlarge' %>
     </div>
-  </div>
-</div>
+    <div class="control-group">
+      <%= f.input :stock_user_id,:as => :select ,:collection => current_account.users.collect {|user| [user.name,user.id]}, :label => "负责人：", class: 'input-xlarge' %>
+    </div>
+    <div class="control-group">
+      <%= f.input :has_stock,:as => :select,:collection => Seller::HAS_STOCK,:include_blank => false, :label => "状态：", class: 'input-xlarge' %>
+    </div>
+    <div class="controls mar_t20">
+      <button class="btn btn-primary">保存</button>
+    </div>
+    <% end %>
+  </div><!-- limits end -->
+</div><!-- tab-content end -->

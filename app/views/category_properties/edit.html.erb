@@ -1,5 +1,19 @@
 <%
-  breadcrumb << ["商品属性管理", categories_path] << [@category_property.name]
+  breadcrumb << ["系统设置", users_path]
+  breadcrumb << ["基础数据管理", stocks_safe_stock_path]
+  breadcrumb << ["商品设置", categories_path]
+  breadcrumb << ["商品属性管理", category_properties_path]
+  breadcrumb << ["编辑商品属性"]
 %>
-<%- model_class = CategoryProperty -%>
+<div class="row-fluid">
+  <div class="span10 w100">
+    <ul class="nav nav-tabs">
+      <li><a href="/categories">分类管理</a></li>
+      <li class="active"><a href="/category_properties">属性管理</a></li>
+    </ul><!-- nav-tabs -->
+    <div class="tab-content">
+      <%- model_class = CategoryProperty -%>
       <%= render :partial => 'form' %>
+    </div>
+  </div>
+</div> 

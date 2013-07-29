@@ -1,5 +1,21 @@
-<p id="notice"><%= notice %></p>
-
-
-<%= link_to 'Edit', edit_trade_search_path(@trade_search) %> |
-<%= link_to 'Back', trade_searches_path %>
+<%
+  breadcrumb << ["系统设置", users_path]
+  breadcrumb << ["基础数据管理", stocks_safe_stock_path]
+  breadcrumb << ["订单管理", trade_searches_path]
+  breadcrumb << ["自定义查询设置", trade_searches_path]
+  breadcrumb << ["编辑自定义查询"]
+%>
+<div class="row-fluid">
+  <div class="span10 w100">
+    <ul class="nav nav-tabs">
+      <li class="active"><a href="/trade_searches">自定义查询设置</a></li>
+      <li><a href="/trades/show_percent">订单分配设置</a></li>
+      <li><a href="/trades/invoice_setting">开票默认设置</a></li>
+    </ul><!-- nav-tabs -->
+    <div class="tab-content">
+      <p id="notice"><%= notice %></p>
+      <%= link_to 'Edit', edit_trade_search_path(@trade_search) %> |
+      <%= link_to 'Back', trade_searches_path %>
+    </div>
+  </div>
+</div>

@@ -112,4 +112,194 @@ module ApplicationHelper
       content_tag :div,flash[:notice],:class => "alert alert-success"
     end
   end
+
+  def li_tag(title, attributes = {})
+    string_attributes = attributes.inject('') do |attrs, pair|
+      unless pair.last.nil?
+        attrs << %( #{pair.first}="#{CGI::escapeHTML(pair.last.to_s)}")
+      end
+      attrs
+    end
+    "<li#{string_attributes}>#{title}</li>"
+  end
+
+  def href_li_item(title, link_url = nil, attributes = {})
+    link_url = params[:controller] if link_url.blank?
+    title = %Q[<a href="/#{link_url}">#{title}</a><span class="divider">/</span>]
+    li_tag(title, attributes)
+  end
+
+  def active_li_item(title, attributes = {})
+    attributes = attributes.merge({:class => "active"})
+    li_tag(title, {:class => "active"}.merge(attributes))
+  end
+
+  def page_brandcrumb
+    items = []
+
+    act_name = params[:action]
+    case params[:controller]
+    when "stocks"
+      items << href_li_item("仓库管理")
+      items << active_li_item("库存查询")
+    when "warehouses"
+      items << href_li_item("仓库管理", "stocks")
+      items << active_li_item("所有仓库")
+    when "stock_bills"
+      items << href_li_item("仓库管理", "stocks")
+      items << active_li_item("所有进销")
+    when "sellers"
+      items << href_li_item("经销商管理")
+      items << active_li_item("经销商")
+    when "areas"
+      if ["sellers", "import"].include?(act_name)
+        items << href_li_item("经销商管理", "sellers")
+        active_li_item("地区经销商")
+      else
+        active_li_item("经销商管理")
+      end
+    when "stock_in_bills"
+      items << href_li_item("仓库管理", "stocks")
+      items << case act_name
+        when "new", "create"
+          active_li_item("新建入库单")
+        when "edit", "update"
+          active_li_item("编辑入库单")
+        else
+          active_li_item("入库单")
+        end
+    when "stock_out_bills"
+      items << href_li_item("仓库管理", "stocks")
+      items << case act_name
+        when "new", "create"
+          active_li_item("新建出库单")
+        when "edit", "update"
+          active_li_item("编辑出库单")
+        else
+          active_li_item("出库单")
+        end
+    when "products"
+      items << href_li_item("商品管理")
+      case act_name
+      when "taobao_products"
+        items <<  active_li_item("淘宝商品")
+      when "taobao_product"
+        items << href_li_item("淘宝商品", "products/taobao_products")
+        items <<  active_li_item(@product.name)
+      when "edit", "update"
+        items << href_li_item("本地商品")
+        items <<  active_li_item("编辑商品")
+      when "new", "create"
+        items << href_li_item("本地商品")
+        items <<  active_li_item("新增商品")
+      when "show"
+        items << href_li_item("本地商品")
+        title = @product.present? ? @product.name : "查看商品"
+        items <<  active_li_item(title)
+      when "sync_taobao_products"
+        items <<  active_li_item("同步淘宝商品")
+      else
+        items <<  active_li_item("本地商品")
+      end
+    when "jingdong_products"
+      items << href_li_item("商品管理")
+      case act_name
+      when "show"
+        items << href_li_item("京东商品")
+        items <<  active_li_item("查看商品")
+      when "sync"
+        items << href_li_item("京东商品")
+        items <<  active_li_item("同步结果")
+      else
+        items << active_li_item("京东商品")
+      end
+    when "yihaodian_products"
+      items << href_li_item("商品管理")
+      case act_name
+      when "show"
+        items << href_li_item("一号店商品")
+        items <<  active_li_item("查看商品")
+      when "sync"
+        items << href_li_item("一号店商品")
+        items <<  active_li_item("同步结果")
+      else
+        items << active_li_item("一号店商品")
+      end
+    when "customers"
+      items << href_li_item("顾客管理")
+      items <<  case act_name
+                when "paid"
+                  active_li_item("购买顾客")
+                when "potential"
+                  active_li_item("潜在顾客")
+                when "around"
+                  active_li_item("回头顾客")
+                when "show"
+                  title = @customer.present? ? @customer.name : ""
+                  active_li_item(title)
+                when "send_messages"
+                  active_li_item("发送消息")
+                else
+                  active_li_item("所有顾客")
+                end
+    when "trade_reports"
+      items << href_li_item("数据魔方", "sales/summary")
+      case act_name
+      when "index"
+        items << active_li_item("报表下载")
+      end
+    when "trades"
+      case act_name
+      when "my_alerts"
+        items << active_li_item("我的异常订单")
+      end
+    when "sales"
+      items << href_li_item("数据魔方", "sales/summary")
+      if ["summary", "product_analysis", "show", "edit"].include?(act_name)
+        items << href_li_item("销售分析", "sales/summary")
+        case act_name
+        when "summary"
+          items << active_li_item("概要")
+        when "product_analysis"
+          items << active_li_item("热销产品分析")
+        when "show"
+          sale_name = if @sale.present?
+                    @sale.name
+                  else
+                    ""
+                  end
+          items << active_li_item("实时销售#{sale_name}")
+          items << li_tag(link_to('设定', edit_sale_path), style: "position:absolute;right:30px;top:66px;")
+        when "edit"
+          sale_name = if @sale.present?
+                    @sale.name
+                  else
+                    ""
+                  end
+          items << active_li_item("实时销售#{sale_name}")
+        end
+      elsif act_name =~ /_analysis$/
+        items <<  href_li_item("买家分析", "sales/area_analysis")
+        items <<  case act_name
+                  when "area_analysis"
+                    active_li_item("买家地域分析")
+                  when "time_analysis"
+                    active_li_item("购买时段分析")
+                  when "price_analysis"
+                    active_li_item("商品标价分析")
+                  when "frequency_analysis"
+                    active_li_item("购买频次分析")
+                  when "univalent_analysis"
+                    active_li_item("客单价分析")
+                  end
+      end
+    when "registrations"
+      case act_name
+      when "edit"
+        items <<  active_li_item("个人设置")
+      end
+    end
+
+    items.join("")
+  end
 end
