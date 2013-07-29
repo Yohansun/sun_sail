@@ -402,7 +402,20 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
         if criteria.get("show_in_tabs")
           trade_mode = criteria.get("trade_mode") || "trades"
           trade_type = criteria.get("trade_type") || "all"
-          $("#global-menus").append("<li><a href='#' data-trade-mode='"+trade_mode+"' data-trade-status='"+trade_type+"' data-search-id='"+criteria.get("_id")+"'>"+criteria.get("name")+"</a></li>")
+          $("#global-menus").append("<li><a href='#' data-trade-mode='"+trade_mode+"' data-trade-status='"+trade_type+"' data-search-id='"+criteria.get("_id")+"'>"+criteria.get("name")+"<em></em></a></li>")
+
+          switch trade_mode
+            when "trades"
+              coll = new MagicOrders.Collections.Trades()
+            when "deliver_bills"
+              coll = new MagicOrders.Collections.DeliverBills()
+            when "logistic_bills"
+              coll = new MagicOrders.Collections.DeliverBills()
+          coll.fetch  data:{trade_type:trade_type, trade_status:trade_type, search_id:criteria.get("_id"),limit:1}, success: (collection, response)->
+            count = 0
+            if(collection.length > 0)
+              count = collection.models[0].get("trades_count") || collection.models[0].get("bills_count")
+            $("[data-search-id='"+criteria.get("_id")+"'] em").text("("+count+")")
 
       if MagicOrders.search_id
         currentLink = $("#global-menus").find('a[data-search-id="'+MagicOrders.search_id+'"]').first()
