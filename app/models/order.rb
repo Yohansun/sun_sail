@@ -2,6 +2,13 @@ class Order
   include Mongoid::Document
   include Mongoid::Timestamps
 
+  field :oid, type: String
+
+  field :total_fee, type: Float, default: 0.0
+  field :payment, type: Float, default: 0.0
+  field :discount_fee, type: Float, default: 0.0
+  field :adjust_fee, type: Float
+
   field :cs_memo, type: String                    # 客服备注
 
   field :color_num, type: Array, default: []      # 调色字段

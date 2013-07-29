@@ -8,7 +8,6 @@ class CustomTrade < Trade
   # 赠品订单特有field
   field :main_trade_id, type: String
 
-
   validates_presence_of :tid, :receiver_name, :receiver_mobile, :receiver_state, :receiver_city, :receiver_address, :created, :pay_time, message: "信息不完整"
   validates_uniqueness_of :tid, message: "操作频率过大，请重试"
   validates_length_of :receiver_name, maximum: 20, message: "内容过长"

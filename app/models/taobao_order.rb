@@ -1,25 +1,32 @@
 # -*- encoding:utf-8 -*-
 
 class TaobaoOrder < Order
+
   field :oid, type: String
   field :status, type: String
+  field :refund_status, type: String
+
   field :outer_id, type: String
+  field :outer_iid, type: String
+  field :num_iid, type: String
+  field :local_product_id, type: Integer
+
+  field :sku_id, type: String
+  field :local_sku_id, type: Integer
+  field :outer_sku_id, type: String
+  field :sku_properties_name, type: String
+
   field :title, type: String
   field :price, type: Float, default: 0.0
-  field :num_iid, type: String
-  field :item_meal_id, type: String
-  field :item_meal_name, type: String
-  field :sku_id, type: String
-  field :local_product_id, type: Integer
-  field :local_sku_id, type: Integer
   field :num, type: Integer
-  field :outer_sku_id, type: String
   field :total_fee, type: Float, default: 0.0
   field :payment, type: Float, default: 0.0
   field :discount_fee, type: Float, default: 0.0
   field :adjust_fee, type: Float
+
+  field :item_meal_id, type: String
+  field :item_meal_name, type: String
   field :modified, type: DateTime
-  field :sku_properties_name, type: String
   field :refund_id, type: String
   field :is_oversold, type: Boolean
   field :is_service_order, type: Boolean
@@ -27,8 +34,6 @@ class TaobaoOrder < Order
   field :pic_path, type: String
   field :seller_nick, type: String
   field :buyer_nick, type: String
-  field :refund_status, type: String
-  field :outer_iid, type: String
   field :snapshot_url, type: String
   field :snapshot, type: String
   field :timeout_action_time, type: DateTime

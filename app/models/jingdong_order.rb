@@ -1,12 +1,15 @@
 class JingdongOrder < Order
 
-  field :sku_id, type: String
-  field :outer_sku_id, type: String
-  field :sku_name, type: String
-  field :jd_price, type: Float
-  field :gift_point, type: String
-  field :ware_id, type: String
-  field :item_total, type: Integer
+  field :sku_id,                      type: String
+  field :outer_sku_id,                type: String
+  field :sku_name,     as: :title,    type: String # 商品的名称+SKU规格
+
+  field :jd_price,     as: :price,    type: Float
+  field :item_total,   as: :num,      type: Integer
+  field :ware_id,      as: :num_iid,  type: String
+
+  #京东子订单特有字段
+  field :gift_point,                  type: String
 
   embedded_in :jingdong_trades
 
@@ -19,8 +22,8 @@ class JingdongOrder < Order
   end
 
   def sku_properties
-
-  end  
+    #DO SOMETHING WITH SKU_NAME
+  end
 
   def bill_info
     tmp = {}

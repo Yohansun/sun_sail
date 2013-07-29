@@ -1,9 +1,9 @@
 class PromotionDetail
   include Mongoid::Document
   include Mongoid::Timestamps
-  
-  field :oid,      type: String
-  field :promotion_id,      type: String
+
+  field :oid,                 type: String
+  field :promotion_id,        type: String
   field :promotion_name,      type: String
   field :promotion_desc,      type: String
   field :discount_fee,        type: Float

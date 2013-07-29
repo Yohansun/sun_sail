@@ -1,35 +1,42 @@
 class JingdongTrade < Trade
-  field :created, type: DateTime,       as: :order_start_time
-  field :tid, type: String,             as: :order_id
-  field :buyer_message, type: String,   as: :order_remark
-  field :status,type: String,           as: :order_state
 
-  #field :order_state, type: String
-  #field :order_remark, type: String
-
-  field :vender_id, type: String
+  #京东特有字段
   field :pay_type, type: String
-  field :order_total_price, type: Float
-  field :order_seller_price, type: Float
-  field :order_payment, type: Float
-  field :freight_price, type: Float
-  field :seller_discount, type: Float
-  field :order_state_remark, type: String
-  field :delivery_type, type: String
-  field :invoice_info, type: String
+  field :vender_id, type: String
 
-  field :order_end_time, type: DateTime
-  field :consign_time, type: DateTime
-  
-  field :consignee_info_fullname, type: String
-  field :consignee_info_full_address, type: String
-  field :consignee_info_telephone, type: String
-  field :consignee_info_mobile, type: String
-  field :consignee_info_province, type: String
-  field :consignee_info_city, type: String
-  field :consignee_info_county, type: String
+  field :order_seller_price, type: Float   # 订单货款金额
+  field :delivery_type, type: String       # 送货日期类型
+  field :order_state_remark, type: String  # 中文状态
+  field :return_order, type: String        # 换货订单标识
+  field :pin, type: String                 # 买家账号信息
+
+  #对应trade字段
+  field :order_id,          as: :tid, type: String
+  field :order_total_price, as: :total_fee, type: Float
+  field :order_payment,     as: :order_payment, type: Float
+  field :freight_price,     as: :post_fee, type: Float
+  field :seller_discount,   as: :discount_fee, type: Float
+
+  field :order_state,       as: :status, type: String
+
+  field :order_remark,      as: :buyer_message, type: String
+  field :vender_remark,     as: :seller_memo, type: String
+  field :invoice_info,      as: :invoice_type, type: String
+
+  field :order_start_time,  as: :created, type: DateTime
+  ## 京东订单无付款时间！！ ##
+  field :order_end_time,    as: :consign_time, type: DateTime
+
+  field :fullname,          as: :receiver_name, type: String
+  field :full_address,      as: :receiver_address, type: String
+  field :telephone,         as: :receiver_phone, type: String
+  field :mobile,            as: :receiver_mobile, type: String
+  field :province,          as: :receiver_state, type: String
+  field :city,              as: :receiver_city, type: String
+  field :county,            as: :receiver_district, type: String
 
   embeds_many :jingdong_orders
+  embeds_many :coupon_details
 
   def orders
     self.jingdong_orders
@@ -53,12 +60,11 @@ class JingdongTrade < Trade
 
   def post_fee
     freight_price.blank?  ?  0  :  freight_price
-  end 
+  end
 
   def total_fee
     order_seller_price.to_f + post_fee.to_f - seller_discount.to_f
-  end  
-
+  end
 
   def status=(status)
     case status
