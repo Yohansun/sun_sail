@@ -9,13 +9,12 @@ class TaobaoOrder < Order
   field :outer_id, type: String
   field :outer_iid, type: String
   field :num_iid, type: String
-  field :local_product_id, type: Integer
+  # field :local_product_id, type: Integer
 
   field :sku_id, type: String
-  field :local_sku_id, type: Integer
+
   field :outer_sku_id, type: String
   field :sku_properties_name, type: String
-
   field :title, type: String
   field :price, type: Float, default: 0.0
   field :num, type: Integer
