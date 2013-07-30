@@ -1,0 +1,8 @@
+Description:
+  创建一个新的需要同步的电子商务同步接口
+
+Example:
+    `rails generate e_commerce:synchronization taobao_product`
+
+    Create fields:
+        create  app/models/taobao_product_sync.rb
