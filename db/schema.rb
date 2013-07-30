@@ -268,6 +268,16 @@ ActiveRecord::Schema.define(:version => 20130916092012) do
     t.string   "size_value"
     t.datetime "created_at",                                  :null => false
     t.datetime "updated_at",                                  :null => false
+
+  create_table "jingdong_app_tokens", :force => true do |t|
+    t.integer  "account_id"
+    t.string   "access_token"
+    t.string   "refresh_token"
+    t.string   "jingdong_user_id"
+    t.string   "jingdong_user_nick"
+    t.integer  "trade_source_id"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
   end
 
   create_table "logistic_areas", :force => true do |t|
