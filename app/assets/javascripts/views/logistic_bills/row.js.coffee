@@ -8,7 +8,7 @@ class MagicOrders.Views.LogisticBillsRow extends Backbone.View
     'click [data-type]': 'show_type'
     'click a[rel=popover]': "addHover"
     'click': 'highlight'
-    'click input.trade_check': 'toggleOperationMenu'
+    'click input.trade_check': 'freezeCheck'
 
   initialize: ->
 
@@ -38,7 +38,13 @@ class MagicOrders.Views.LogisticBillsRow extends Backbone.View
 
   highlight: (e) =>
     $("#trades_table tr").removeClass 'info'
-    $(@el).addClass 'info'
+    $(e.currentTarget).addClass 'info'
+    if $(e.currentTarget).find('input').attr("checked") == 'checked'
+      $(e.currentTarget).find('input').attr("checked", false)
+      @toggleOperationMenu()
+    else
+      $(e.currentTarget).find('input').attr("checked", true)
+      @toggleOperationMenu()
 
   addHover: (e) ->
     $(e.target).parent().toggleClass('lovely_pop')
@@ -51,6 +57,12 @@ class MagicOrders.Views.LogisticBillsRow extends Backbone.View
     $('.popover_close_btn').click ->
       $('.lovely_pop').click()
       $('.lovely_pop').toggleClass('lovely_pop')
+
+  freezeCheck: (e) =>
+    e.stopPropagation()
+    $("#trades_table tr").removeClass 'info'
+    $(@el).addClass 'info'
+    @toggleOperationMenu()
 
   toggleOperationMenu: ->
     if $('#all_orders input.trade_check:checked').length > 1
