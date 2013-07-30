@@ -27,11 +27,9 @@ class AccountSetupsController < ApplicationController
       (render_wizard; return) if !@user.save
 
       @user.add_role(:admin)
-      Notifier.init_user_notifications(@user.email, @user.password, @account.id).deliver if @user.email.present?
-      if @user.phone.present?
-        # USE SYSTEM SMS INTERFACE.
-      end
-      # CREATE SELLER IN ORDER TO SYNC STOCK FOR SOME REASON.
+
+      InitUserNotifier.perform_async(@account.id, @user.email, @user.password, @user.phone)
+
       current_account.settings[:wizard_step] = ""
       sign_in @user # auto login after create admin user
     when :options_setup
@@ -150,10 +148,9 @@ class AccountSetupsController < ApplicationController
       end
       user.save
       user.add_role(role)
-      Notifier.init_user_notifications(user.email, user.password, @account.id).deliver if user.email.present?
-      if user.phone.present?
-        # USE SYSTEM SMS INTERFACE.
-      end
+
+      InitUserNotifier.perform_async(@account.id, @user.email, @user.password, @user.phone)
+
     end
   end
 
