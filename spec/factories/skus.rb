@@ -2,6 +2,6 @@
 
 FactoryGirl.define do
   factory :sku do
-    after(:create) { FactoryGirl.create(:product)}
+    product { |obj| FactoryGirl.create(:product,:account_id => obj.account_id)}
   end
 end

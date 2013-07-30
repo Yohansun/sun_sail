@@ -22,7 +22,7 @@ describe WarehousesHelper do
         "入库单"  => "/warehouses/1/stock_in_bills",
         "出库单"  => "/warehouses/1/stock_out_bills",
         "所有进销" => "/warehouses/1/stock_bills",
-        "库存查询" => "/stocks"
+        "库存查询" => "/warehouses/1/stocks"
         })
     end
 
@@ -32,13 +32,14 @@ describe WarehousesHelper do
     end
 
     it "should be mutiple warehouse detail page tabs" do
-      params = {:controller => "stock_in_bills"}
+      params = {:controller => "stock_in_bills",:warehouse_id => current_account.sellers.first.id}
       helper.stub!(:params).and_return(params)
       current_account.sellers.stub!(:count).and_return(2)
       helper.warehouse_tabs(warehouse).should eq({
         "入库单"  =>"/warehouses/1/stock_in_bills",
         "出库单"  =>"/warehouses/1/stock_out_bills",
-        "所有进销" =>"/warehouses/1/stock_bills"
+        "所有进销" =>"/warehouses/1/stock_bills",
+        "库存查询" => "/warehouses/1/stocks"
         })
     end
   end

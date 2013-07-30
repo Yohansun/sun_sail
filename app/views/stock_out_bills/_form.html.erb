@@ -32,13 +32,13 @@
 
       <div class="control-group">
         <label class="control-label">地域</label>
-        <select id="" class="level_1 input-medium input-small pull-left radius_no_rb select2" name="stock_out_bill[op_state]">
+        <select id="" class="level_1 input-medium input-small pull-left" name="stock_out_bill[op_state]">
           <option>省</option>
         </select>
-        <select id="" class="level_2 input-medium input-small pull-left radius_no select2" name="stock_out_bill[op_city]">
+        <select id="" class="level_2 input-medium input-small pull-left" name="stock_out_bill[op_city]">
           <option>市</option>
         </select>
-        <select id="" class="level_3 input-medium input-small pull-left radius_no_tl select2" name="stock_out_bill[op_district]">
+        <select id="" class="level_3 input-medium input-small pull-left" name="stock_out_bill[op_district]">
           <option>区</option>
         </select>
       </div>
@@ -125,9 +125,17 @@
     $("#stock_out_bill").validate({
       rules: {
         "stock_out_bill[op_name]": { required: true},
+        "stock_out_bill[op_zip]": { required: true},
+        "stock_out_bill[op_mobile]": { required: true},
+        "stock_out_bill[op_address]": { required: true},
+        "stock_out_bill[op_district]": { required: true}
       },
       messages: {
-        "stock_out_bill[op_name]": { required: "不能为空" }
+        "stock_out_bill[op_name]": { required: "收货人不能为空" },
+        "stock_out_bill[op_zip]": { required: "邮编不能为空" },
+        "stock_out_bill[op_mobile]": { required: "手机号不能为空" },
+        "stock_out_bill[op_address]": { required: "收货地址不能为空" },
+        "stock_out_bill[op_district]": { required: "地域不能为空"}
       }
     });
     $(":input.checkdata").each(function(){ $(this).rules("add",{required: true,number: true,messages: {required: "不能为空",number: "必须是数字"}}) })

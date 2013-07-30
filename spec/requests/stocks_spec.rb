@@ -50,12 +50,12 @@ describe "Stocks" do
     
     it "works! (now write some real specs)" do
       post batch_update_activity_stock_stocks_path(:stock_product_ids => [stock.id],:activity => "a")
-      flash[:error].should eq("请输入整数")
+      flash[:error].should eq("请输入大于 0 的整数")
       expect(response).to redirect_to(stocks_path)
       response.status.should be(302)
     end
     
-    it "work" do
+    pending "work" do
       post batch_update_activity_stock_stocks_path(:stock_product_ids => [stock.id],:activity => 1)
       expect(response).to redirect_to(stocks_path)
       flash[:notice].should eq("更新成功")

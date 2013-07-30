@@ -32,6 +32,9 @@ class Area < ActiveRecord::Base
   has_many :onsite_service_areas
   has_many :sellers, through: :sellers_areas
   has_many :logistics, through: :logistic_areas
+  #Area.rebot(省ID,[市ID])
+  #Area.rebot(3198,[3213]) or Area.rebot(3198)
+  scope :robot, ->(s,q=[]) { where("parent_id in (?)",q.or(select(:id).where(:parent_id => s))) }
 
   before_save :set_pinyin
 
