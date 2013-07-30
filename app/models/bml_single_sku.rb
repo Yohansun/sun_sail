@@ -15,10 +15,10 @@ class BmlSingleSku
   end
 
   #推送 SKU 同步信息至仓库
-  def self.single_sku_to_wms(product)
+  def self.single_sku_to_wms(account, product)
     xml = BmlSingleSku.xml(product)
-    client = Savon.client(wsdl: $biaogan_client)
-    response = client.call(:single_sku_to_wms, message:{CustomerId: $biaogan_customer_id, PWD: $biaogan_customer_password,xml:xml})
+    client = Savon.client(wsdl: account.settings.biaogan_client)
+    response = client.call(:single_sku_to_wms, message:{CustomerId: account.settings.biaogan_customer_id, PWD: account.settings.biaogan_customer_password,xml:xml})
     response.body[:single_sku_to_wms_response][:out]
   end
 
