@@ -178,6 +178,8 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
             $(location).attr('href', '/custom_trades/'+trade_id+'/edit')
           else if $(e.target).data('modal-action')==true
             @do_modal_action e
+          else if type == "invoice_settings"
+            Backbone.history.navigate('trades/'+trade_id+"/invoice", true)
           else
             Backbone.history.navigate('trades/'+trade_id+"/"+type, true)
         else
@@ -367,7 +369,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
           model.fetch success: (model, response) =>
             view = new MagicOrders.Views.TradesRow(model: model)
             $("#trade_#{model.get('id')}").replaceWith(view.render().el)
-            checkedTradeRow(model.get('id'))
+            view.reloadOperationMenu()
             $("a[rel=popover]").popover({placement: 'left', html:true})
         $('#batch_deliver').modal('hide')
       else

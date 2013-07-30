@@ -63,7 +63,7 @@ class MagicOrders.Views.TradesModifyReceiverInformation extends Backbone.View
       $.unblockUI()
       view = new MagicOrders.Views.TradesRow(model: self.model)
       $("#trade_"+self.model.get("id")).replaceWith(view.render().el)
-      checkedTradeRow(self.model.get("id"))
+      view.reloadOperationMenu()
       $("#trade_modify_receiver_information").modal("hide")
 
 
