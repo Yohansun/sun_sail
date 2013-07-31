@@ -2,6 +2,9 @@ require 'sidekiq/web'
 
 MagicOrders::Application.routes.draw do
 
+
+  resources :jingdong_products
+
   resources :customers ,:only => [:index,:show] do
 
     collection do

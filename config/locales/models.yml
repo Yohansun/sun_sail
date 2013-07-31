@@ -12,7 +12,64 @@ zh-CN:
         name: 名称
       stock_csv_file:
         path: 文件
-
+      jingdong_product:
+        ware_id: "商品ID"
+        spu_id: "spu ID"
+        cid: "分类ID 三级类目ID"
+        vender_id: "商家ID"
+        shop_id: "店铺ID"
+        ware_status: "商品状态"
+        title: "商品标题"
+        item_num: 货号
+        upc_code: UPC编码
+        transport_id: 运费模板
+        online_time: 最后上架时间
+        offline_time: 最后下架时间
+        attributes: 可选属性
+        desc: 商品描述
+        producter: 生产厂商
+        wrap: 包装规格
+        cubage: 长:宽:高
+        pack_listing: 包装清单
+        service: 售后服务
+        cost_price: 进货价
+        market_price: 市场价
+        jd_price: 京东价
+        stock_num: 库存
+        logo: 商品的主图
+        creator: 录入人
+        status: 状态
+        weight: 重量
+        created: WARE_WARE创建时间
+        modified: WARE_WARE修改时间
+        outer_id: 外部id(商家设置的外部id)
+        shop_categorys: 自定义店内分类
+        is_pay_first: 是否先款后货
+        is_can_vat: 发票限制
+        is_imported: 是否进口商品
+        is_health_product: 是否保健品
+        is_shelf_life: 是否保质期管理商品
+        shelf_life_days: 保质期
+        is_serial_no: 是否序列号管理
+        is_appliances_card: 大家电购物卡
+        is_special_wet: 是否特殊液体
+        ware_big_small_model: 商品件型
+        ware_pack_type: 商品包装
+      jingdong_sku:
+        sku_id: sku id
+        shop_id: 店铺id
+        ware_id: 所属商品id
+        status: 状态
+        attributes: sku销售属性组合字符串 #（颜色，大小，等等，可通过类目API获取某类目下的销售属性）,格式是aid1:vid1;aid2:vid2
+        stock_num: 库存
+        jd_price: 京东价
+        cost_price: 进货价
+        market_price: 市场价
+        outer_id: 外部id    #商家设置的外部id
+        created: 创建时间
+        modified: 修改时间
+        color_value: 颜色对应的值
+        size_value: 尺码对应的值
 
   mongoid:
     models:

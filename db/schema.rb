@@ -204,6 +204,72 @@ ActiveRecord::Schema.define(:version => 20130916092012) do
     t.integer  "account_id"
   end
 
+  create_table "jingdong_products", :force => true do |t|
+    t.integer  "ware_id",              :limit => 8,                                :null => false
+    t.string   "spu_id"
+    t.integer  "cid"
+    t.integer  "vender_id"
+    t.integer  "shop_id"
+    t.string   "ware_status"
+    t.string   "title"
+    t.string   "item_num"
+    t.string   "upc_code"
+    t.integer  "transport_id"
+    t.string   "online_time"
+    t.string   "offline_time"
+    t.string   "attribute_s"
+    t.text     "desc"
+    t.string   "producter"
+    t.string   "wrap"
+    t.string   "cubage"
+    t.string   "pack_listing"
+    t.string   "service"
+    t.decimal  "cost_price",                        :precision => 10, :scale => 0
+    t.decimal  "market_price",                      :precision => 10, :scale => 0
+    t.decimal  "jd_price",                          :precision => 10, :scale => 0
+    t.integer  "stock_num"
+    t.string   "logo"
+    t.string   "creator"
+    t.string   "status"
+    t.integer  "weight"
+    t.datetime "created"
+    t.datetime "modified"
+    t.string   "outer_id"
+    t.string   "shop_categorys"
+    t.boolean  "is_pay_first"
+    t.boolean  "is_can_vat"
+    t.boolean  "is_imported"
+    t.boolean  "is_health_product"
+    t.boolean  "is_shelf_life"
+    t.integer  "shelf_life_days"
+    t.boolean  "is_serial_no"
+    t.boolean  "is_appliances_card"
+    t.boolean  "is_special_wet"
+    t.integer  "ware_big_small_model"
+    t.integer  "ware_pack_type"
+    t.datetime "created_at",                                                       :null => false
+    t.datetime "updated_at",                                                       :null => false
+  end
+
+  create_table "jingdong_skus", :force => true do |t|
+    t.integer  "sku_id"
+    t.integer  "shop_id"
+    t.integer  "ware_id"
+    t.string   "status"
+    t.string   "attribute_s"
+    t.integer  "stock_num"
+    t.decimal  "jd_price",     :precision => 10, :scale => 0
+    t.decimal  "cost_price",   :precision => 10, :scale => 0
+    t.decimal  "market_price", :precision => 10, :scale => 0
+    t.string   "outer_id"
+    t.datetime "created"
+    t.datetime "modified"
+    t.string   "color_value"
+    t.string   "size_value"
+    t.datetime "created_at",                                  :null => false
+    t.datetime "updated_at",                                  :null => false
+  end
+
   create_table "logistic_areas", :force => true do |t|
     t.integer  "logistic_id"
     t.integer  "area_id"
@@ -473,17 +539,18 @@ ActiveRecord::Schema.define(:version => 20130916092012) do
   add_index "stock_histories", ["seller_id"], :name => "index_stock_histories_on_seller_id"
 
   create_table "stock_products", :force => true do |t|
-    t.datetime "created_at",                             :null => false
-    t.datetime "updated_at",                             :null => false
-    t.integer  "max",                     :default => 0
-    t.integer  "safe_value",              :default => 0
-    t.integer  "activity",                :default => 0
-    t.integer  "actual",                  :default => 0
+    t.datetime "created_at",                               :null => false
+    t.datetime "updated_at",                               :null => false
+    t.integer  "max",                       :default => 0
+    t.integer  "safe_value",                :default => 0
+    t.integer  "activity",                  :default => 0
+    t.integer  "actual",                    :default => 0
     t.integer  "product_id"
     t.integer  "seller_id"
-    t.integer  "sku_id",     :limit => 8
-    t.integer  "num_iid",    :limit => 8
+    t.integer  "sku_id",       :limit => 8
+    t.integer  "num_iid",      :limit => 8
     t.integer  "account_id"
+    t.integer  "lock_version",              :default => 0, :null => false
   end
 
   add_index "stock_products", ["seller_id"], :name => "index_stock_products_on_seller_id"
@@ -616,6 +683,7 @@ ActiveRecord::Schema.define(:version => 20130916092012) do
     t.boolean  "superadmin",             :default => false, :null => false
     t.boolean  "can_assign_trade"
     t.integer  "trade_percent"
+    t.integer  "price",                  :default => 0
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
