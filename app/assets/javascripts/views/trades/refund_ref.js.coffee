@@ -1,14 +1,13 @@
-class MagicOrders.Views.TradesReturnRef extends Backbone.View
+class MagicOrders.Views.TradesRefundRef extends Backbone.View
 
-  template: JST['trades/return_ref']
+  template: JST['trades/refund_ref']
 
   events:
-    'click .return_ref_sku' : 'returnRefSku'
+    'click .refund_ref_sku' : 'returnRefSku'
     'click .delete_ref_sku' : 'deleteRefSku'
-    'click .request_return_ref' : 'requestReturnRef'
-    'click .confirm_return_ref' : 'confirmSave'
-    'click .return_ref_money' : 'confirmSave'
-    'click .cancel_return_ref' : 'confirmSave'
+    'click .request_refund_ref' : 'requestReturnRef'
+    'click .confirm_refund_ref' : 'confirmSave'
+    'click .cancel_refund_ref' : 'confirmSave'
 
   initialize: ->
     @model.on("fetch", @render, this)
@@ -25,7 +24,7 @@ class MagicOrders.Views.TradesReturnRef extends Backbone.View
     this
 
   returnRefSku: ->
-    num = $('.return_ref_num').val()
+    num = $('.refund_ref_num').val()
     if num == ''
       alert("数量不能为空。")
     else if /^[1-9]{1}[0-9]*$/.test(num) != true
@@ -35,7 +34,7 @@ class MagicOrders.Views.TradesReturnRef extends Backbone.View
       sku_id = $(".skus_in_order option:selected").val().split(";")[0]
       total_num = $(".skus_in_order option:selected").val().split(";")[1]
       if parseInt(num) > parseInt(total_num)
-        alert('退货数量大于购买数量')
+        alert('退款数量大于购买数量')
         return
       sku_ids = $(".ref_table tr").map(->
         $(this).attr "id"
@@ -53,20 +52,20 @@ class MagicOrders.Views.TradesReturnRef extends Backbone.View
     $(e.currentTarget).parents('tr').remove()
 
   requestReturnRef: ->
-    payment = $('.return_ref_payment').val()
+    payment = $('.refund_ref_payment').val()
     if payment == ''
       alert("金额不能为空。")
     else if /^[0-9]+(\.[0-9]*)?$/.test(payment) != true
       alert("金额格式不正确。")
-    else if parseFloat(payment) > parseFloat(@model.get('total_fee'))
-      alert("退货金额大于购买金额。")
+    else if parseFloat(payment) >= parseFloat(@model.get('total_fee'))
+      alert("退款金额大于等于购买金额，全额退款订单请直接锁定。")
     else
       if $('.ref_table tr').length == 0
-        alert("未添加退货商品")
+        alert("未添加退款商品")
       else
         blocktheui()
 
-        return_ref_hash = {}
+        refund_ref_hash = {}
         ref_order_array = []
         ref_batch = {}
         length = $('.ref_table tr').length
@@ -78,20 +77,20 @@ class MagicOrders.Views.TradesReturnRef extends Backbone.View
             ref_order_array.push sku_id+","+title+","+num
 
         ref_batch['ref_payment'] = payment
-        ref_batch['ref_type'] = 'return_ref'
-        ref_batch['status'] = 'request_return_ref'
-        return_ref_hash['ref_memo'] = $('.ref_memo').val()
-        return_ref_hash['ref_order_array'] = ref_order_array
-        return_ref_hash['ref_batch'] = ref_batch
+        ref_batch['ref_type'] = 'refund_ref'
+        ref_batch['status'] = 'request_refund_ref'
+        refund_ref_hash['ref_memo'] = $('.ref_memo').val()
+        refund_ref_hash['ref_order_array'] = ref_order_array
+        refund_ref_hash['ref_batch'] = ref_batch
 
-        @model.set "operation", "申请退货"
-        @model.save {return_ref_hash: return_ref_hash},
+        @model.set "operation", "申请线下退款"
+        @model.save {refund_ref_hash: refund_ref_hash},
           success: (model, response) =>
             $.unblockUI()
 
             view = new MagicOrders.Views.TradesRow(model: model)
             $("a[rel=popover]").popover({placement: 'left', html:true})
-            $('#trade_return_ref').modal('hide')
+            $('#trade_refund_ref').modal('hide')
             items = model.check_operations()
             MagicOrders.enabled_operation_items = items
             menu_items = $('#op-toolbar').find('[data-type]')
@@ -110,14 +109,14 @@ class MagicOrders.Views.TradesReturnRef extends Backbone.View
   confirmSave: (e) ->
     status = $(e.currentTarget).attr('class').split(" ")[2]
     memo = $('.ref_memo').val()
-    @model.set "operation", "确认退货"
-    @model.save {return_ref_status: status, return_ref_memo: memo},
+    @model.set "operation", "确认线下退款"
+    @model.save {refund_ref_status: status, refund_ref_memo: memo},
       success: (model, response) =>
         $.unblockUI()
 
         view = new MagicOrders.Views.TradesRow(model: model)
         $("a[rel=popover]").popover({placement: 'left', html:true})
-        $('#trade_return_ref').modal('hide')
+        $('#trade_refund_ref').modal('hide')
         items = model.check_operations()
         MagicOrders.enabled_operation_items = items
         menu_items = $('#op-toolbar').find('[data-type]')

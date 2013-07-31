@@ -98,13 +98,14 @@ json.orders OrderDecorator.decorate(@trade.orders) do |json, order|
     json.refund_status order.refund_status
   end
 
-  json.contents (@trade._type == 'TaobaoTrade' || @trade._type == 'CustomTrade') ? get_package(order, @trade.created_at) : []
+  json.contents get_package(order, @trade.created_at)
   json.bill_info order.bill_info
   json.packaged false
 end
 
 json.add_ref @trade.ref_batches.where(ref_type: "add_ref").first
 json.return_ref @trade.ref_batches.where(ref_type: "return_ref").last
+json.refund_ref @trade.ref_batches.where(ref_type: "refund_ref").last
 
 if @trade._type == "TaobaoPurchaseOrder"
   json.distributor_username @trade.distributor_username

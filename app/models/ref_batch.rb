@@ -46,7 +46,14 @@ class RefBatch
       '确认退款'
     when 'cancel_return_ref'
       '取消退货'
+    when 'request_refund_ref'
+      '申请线下退款'
+    when 'confirm_refund_ref'
+      '确认线下退款'
+    when 'cancel_refund_ref'
+      '取消线下退款'
     end
+
   end
 
 end

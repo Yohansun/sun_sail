@@ -55,6 +55,10 @@ zh-CN:
   permissions_tag_confirm_return_ref: 退除多余货品(确认退货，退款)
   permissions_tag_cancel_return_ref: 退除多余货品(取消退货)
   permissions_tag_return_ref: 退除多余货品
+  permissions_tag_request_refund_ref: 线下退款(申请退款)
+  permissions_tag_confirm_refund_ref: 线下退款(确认退款)
+  permissions_tag_cancel_refund_ref: 线下退款(取消退款)
+  permissions_tag_refund_ref: 线下退款
   permissions_tag_create_handmade_trade: 新增人工订单
   permissions_tag_edit_handmade_trade: 编辑人工订单
   permissions_tag_lock_trade: 锁定人工订单

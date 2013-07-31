@@ -32,6 +32,12 @@ class MagicOrders.Views.TradesAddRef extends Backbone.View
       title = $(".skus_in_order option:selected").text()
       sku_id = $(".skus_in_order option:selected").val().split(";")[0]
       total_num = $(".skus_in_order option:selected").val().split(";")[1]
+      sku_ids = $(".ref_table tr").map(->
+        $(this).attr "id"
+      ).get()
+      if $.inArray(sku_id, sku_ids) != -1
+        alert("已添加过商品")
+        return
       tr = "<tr id='"+sku_id+"'><td>"+title+"</td>"
       tr += "<td>"+total_num+"</td>"
       tr += "<td>"+num+"</td>"

@@ -62,7 +62,7 @@ class TaobaoTradePuller
 
         trades.each do |trade|
 
-          next if ($redis.sismember('TaobaoTradeTids',trade['tid']) || TaobaoTrade.where(tid: trade['tid']).exists?)
+          next if ($redis.sismember('TaobaoTradeTids',trade['tid']) || TaobaoTrade.unscoped.where(tid: trade['tid']).exists?)
           orders = trade.delete('orders')
           trade = TaobaoTrade.new(trade)
 
@@ -159,13 +159,13 @@ class TaobaoTradePuller
     end
 
     def update_end_time
-        trades = Trade.where(end_time: nil).and(status: 'TRADE_FINISHED')
-        trades.each do |trade|
-          response = TaobaoQuery.get({method: 'taobao.trade.get', fields: 'end_time', tid: trade.tid}, trade.trade_source_id)
-          if response["trade_get_response"] && response["trade_get_response"]["trade"] && response["trade_get_response"]["trade"]["end_time"]
-            trade.update_attributes(end_time: response["trade_get_response"]["trade"]["end_time"])
-          end
+      trades = Trade.where(end_time: nil).and(status: 'TRADE_FINISHED')
+      trades.each do |trade|
+        response = TaobaoQuery.get({method: 'taobao.trade.get', fields: 'end_time', tid: trade.tid}, trade.trade_source_id)
+        if response["trade_get_response"] && response["trade_get_response"]["trade"] && response["trade_get_response"]["trade"]["end_time"]
+          trade.update_attributes(end_time: response["trade_get_response"]["trade"]["end_time"])
         end
+      end
     end
 
     def update(start_time = nil, end_time = nil, trade_source_id)

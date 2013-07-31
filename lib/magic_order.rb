@@ -85,7 +85,10 @@ MagicOrder::AccessControl.map do |map|
                                  'confirm_add_ref',
                                  'request_return_ref',
                                  'confirm_return_ref',
-                                 'cancel_return_ref']
+                                 'cancel_return_ref',
+                                 'request_refund_ref',
+                                 'confirm_refund_ref',
+                                 'cancel_refund_ref']
     # map.permission :operations, ["logistic_waybill",
     #                              "seller",
     #                              "cs_memo",
@@ -118,6 +121,7 @@ MagicOrder::AccessControl.map do |map|
     #                              "confirm_check_goods"]
     map.permission :operations, ["add_ref",
                                  "return_ref",
+                                 "refund_ref",
                                  "edit_handmade_trade",
                                  "create_handmade_trade",
                                  "lock_trade",

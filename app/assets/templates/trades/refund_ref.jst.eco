@@ -1,0 +1,132 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+  <h3>线下退款</h3>
+</div>
+<% if @trade.get('refund_ref') == null || @trade.get('refund_ref')['status'] == 'cancel_refund_ref' : %>
+<div class="modal-body">
+  <fieldset class="form-inline mar_b15">
+    <div class="control-group">
+      <p>订单退款：</p>
+      <select class="input-medium skus_in_order">
+        <option>列出所有单品</option>
+      </select>
+      <input class="input-medium refund_ref_num" type="text" placeholder="输入退款数量">
+      <a class="btn refund_ref_sku">添加退款产品</a>
+    </div>
+
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th width="40%">产品名称</th>
+          <th width="25%">总数量</th>
+          <th width="25%">退款数量</th>
+          <th width="10%">操作</th>
+        </tr>
+      </thead>
+      <tbody class="ref_table">
+      </tbody>
+    </table>
+  </fieldset>
+  <% if @trade.get('refund_ref') != null : %>
+  <fieldset class="mar_b15">
+    <p>操作日志：</p>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th width="30%">操作时间</th>
+          <th width="20%">操作</th>
+          <th width="20%">操作人</th>
+          <th width="30%">备注</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for log in @trade.get('refund_ref')['ref_logs'] : %>
+        <tr>
+          <td><%= _.strLeft((log['operated_at'].replace('T', ' ')), '+') %></td>
+          <td><%= log['operation'] %></td>
+          <td><%= log['operator'] %></td>
+          <td><%= log['log_memo'] %></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </fieldset>
+  <% end %>
+  <fieldset class="mar_b15">
+    <p>备注：</p>
+    <textarea class="ref_memo" rows="5"></textarea>
+  </fieldset>
+  <fieldset class="form-inline">
+    <label>退款金额：</label>
+    <input type="text" class="input-medium refund_ref_payment" placeholder="输入金额">
+  </fieldset>
+</div>
+<div class="modal-footer">
+  <a class="btn" data-dismiss="modal">取消</a>
+  <a class="btn btn-primary request_refund_ref">申请线下退款</a>
+</div>
+<% else if @trade.get('refund_ref')['status'] != 'cancel_refund_ref' : %>
+<div class="modal-body">
+  <fieldset class="form-inline mar_b15">
+    <div class="control-group">
+      <p>订单退款：</p>
+    </div>
+
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th width="80%">产品名称</th>
+          <th width="20%">退款数量</th>
+        </tr>
+      </thead>
+      <tbody class="ref_table">
+        <% for order in @trade.get('refund_ref')['ref_orders'] : %>
+        <tr>
+          <td><%= order['title'] %></td>
+          <td><%= order['num'] %></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </fieldset>
+  <fieldset class="mar_b15">
+    <p>操作日志：</p>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th width="30%">操作时间</th>
+          <th width="20%">操作</th>
+          <th width="20%">操作人</th>
+          <th width="30%">备注</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for log in @trade.get('refund_ref')['ref_logs'] : %>
+        <tr>
+          <td><%= _.strLeft((log['operated_at'].replace('T', ' ')), '+') %></td>
+          <td><%= log['operation'] %></td>
+          <td><%= log['operator'] %></td>
+          <td><%= log['log_memo'] %></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </fieldset>
+  <fieldset class="mar_b15">
+    <p>备注：</p>
+    <textarea class="ref_memo" rows="5"></textarea>
+  </fieldset>
+  <fieldset class="form-inline">
+    <label>退款金额：<%= @trade.get('refund_ref')['ref_payment'] %></label>
+  </fieldset>
+</div>
+<div class="modal-footer">
+  <% if @trade.get('refund_ref')['status'] != 'confirm_refund_ref'  : %>
+  <a class="btn" data-dismiss="modal">取消</a>
+  <a class="btn btn-primary confirm_refund_ref">确认线下退款</a>
+  <% else : %>
+  <a class="btn" data-dismiss="modal">取消</a>
+  <a class="btn btn-primary cancel_refund_ref">取消线下退款</a>
+  <% end %>
+</div>
+<% end %>

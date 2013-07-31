@@ -20,8 +20,9 @@
         merged_trades = []
         trades.each{|t|
           if t.is_merged?
-            ts = Trade.find t.merged_trade_ids
+            ts = Trade.unscoped.find t.merged_trade_ids
             ts.each{|tt|
+              tt.restore
               t_trades << tt
             }
             merged_trades << t
@@ -133,7 +134,7 @@
           trade.delete # soft-delete,no callbacks
         end
 
-        merged_trades.each{|trade| trade.destroy}
+        merged_trades.each{|trade| trade.delete!}
 
         new_trade.merged_trade_ids
       end
