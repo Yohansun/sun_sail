@@ -5,9 +5,9 @@
 </div>
 <div class="well clearfix">
   <fieldset class="span6">
-    <%= f.input :op_name, label: "收货人",:input_html  => {:class => "input-medium"} %>
-    <%= f.input :op_mobile, label: "手机",:input_html  => {:class => "input-medium"} %>
-    <%= f.input :op_zip, label: "邮编",:input_html  => {:class => "input-medium"} %>
+    <%= f.input :op_name, label: "*收货人",:input_html  => {:class => "input-medium", :id => "op_name"} %>
+    <%= f.input :op_mobile, label: "*手机",:input_html  => {:class => "input-medium"} %>
+    <%= f.input :op_zip, label: "*邮编",:input_html  => {:class => "input-medium"} %>
     <!-- <div class="control-group">
       <label class="control pull-left">收货仓库：</label>
       <select class="input-medium select2">
@@ -15,7 +15,7 @@
       </select>
       </div> -->
       <div class="control-group">
-        <%= f.input :stock_type,label: "出库类型", collection: StockOutBill::STOCK_TYPE, as: :select,:input_html => {class: "input-medium select2"} %>
+        <%= f.input :stock_type,label: "*出库类型", collection: StockOutBill::STOCK_TYPE, as: :select,:input_html => {class: "input-medium select2"} %>
       </div>
       <%= f.input :stocked_at, label: "出库时间",input_html: {class: "input-medium js-datetimepicker"} %>
       <div class="control-group">
@@ -28,10 +28,10 @@
     </fieldset><!-- form left area -->
     <fieldset class="span6">
       <%= f.input :op_phone, label: "固定电话",:class => "input-medium" %>
-      <%= f.input :op_address, label: "收货地址",:class => "input-medium" %>
+      <%= f.input :op_address, label: "*收货地址",:class => "input-medium" %>
 
       <div class="control-group">
-        <label class="control-label">地域</label>
+        <label class="control-label">*地域</label>
         <select id="" class="level_1 input-medium input-small pull-left" name="stock_out_bill[op_state]">
           <option>省</option>
         </select>
