@@ -98,7 +98,7 @@ json.orders OrderDecorator.decorate(@trade.orders) do |json, order|
     json.refund_status order.refund_status
   end
 
-  json.contents (@trade._type == 'TaobaoTrade' || @trade._type == 'CustomTrade') ? get_package(order, @trade.created_at) : []
+  json.contents get_package(order, @trade.created_at)
   json.bill_info order.bill_info
   json.packaged false
 end

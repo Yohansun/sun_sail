@@ -36,6 +36,12 @@ class MagicOrders.Views.TradesRefundRef extends Backbone.View
       if parseInt(num) > parseInt(total_num)
         alert('退款数量大于购买数量')
         return
+      sku_ids = $(".ref_table tr").map(->
+        $(this).attr "id"
+      ).get()
+      if $.inArray(sku_id, sku_ids) != -1
+        alert("已添加过商品")
+        return
       tr = "<tr id='"+sku_id+"'><td>"+title+"</td>"
       tr += "<td>"+total_num+"</td>"
       tr += "<td>"+num+"</td>"
