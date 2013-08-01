@@ -286,7 +286,7 @@ class ProductsController < ApplicationController
         if info_array[0] == "need_delete"
           bindings.where(sku_id: info_array[1].to_i, number: info_array[2].to_i).delete_all
         elsif info_array[0] == "new_add"
-          SkuBinding.create(taobao_sku_id: params[:taobao_sku_id].to_i, sku_id: info_array[1].to_i, number: info_array[2].to_i)
+          SkuBinding.create(resource_id: params[:taobao_sku_id].to_i,resource_type: "TaobaoSku", sku_id: info_array[1].to_i, number: info_array[2].to_i)
         end
       end
     end

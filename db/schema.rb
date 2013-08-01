@@ -495,9 +495,12 @@ ActiveRecord::Schema.define(:version => 20130916092012) do
   add_index "settings", ["thing_type", "thing_id", "var"], :name => "index_settings_on_thing_type_and_thing_id_and_var", :unique => true
 
   create_table "sku_bindings", :force => true do |t|
-    t.integer "sku_id",        :limit => 8
-    t.integer "taobao_sku_id", :limit => 8
-    t.integer "number",        :limit => 8
+    t.integer "sku_id",          :limit => 8
+    t.integer "number",          :limit => 8
+    t.integer "jingdong_sku_id"
+    t.string  "sku_type"
+    t.integer "resource_id"
+    t.integer "resource_type"
   end
 
   create_table "sku_properties", :force => true do |t|
@@ -523,6 +526,7 @@ ActiveRecord::Schema.define(:version => 20130916092012) do
     t.integer "product_id"
     t.integer "account_id"
     t.string  "code"
+    t.string  "sku_type"
   end
 
   create_table "stock_csv_files", :force => true do |t|
