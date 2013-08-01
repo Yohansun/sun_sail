@@ -204,6 +204,17 @@ ActiveRecord::Schema.define(:version => 20130916092012) do
     t.integer  "account_id"
   end
 
+  create_table "jingdong_app_tokens", :force => true do |t|
+    t.integer  "account_id"
+    t.string   "access_token"
+    t.string   "refresh_token"
+    t.string   "jingdong_user_id"
+    t.string   "jingdong_user_nick"
+    t.integer  "trade_source_id"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
+  end
+
   create_table "jingdong_products", :force => true do |t|
     t.integer  "ware_id",              :limit => 8,                                :null => false
     t.string   "spu_id"
@@ -217,7 +228,6 @@ ActiveRecord::Schema.define(:version => 20130916092012) do
     t.integer  "transport_id"
     t.string   "online_time"
     t.string   "offline_time"
-    t.string   "attribute_s"
     t.text     "desc"
     t.string   "producter"
     t.string   "wrap"
@@ -249,6 +259,8 @@ ActiveRecord::Schema.define(:version => 20130916092012) do
     t.integer  "ware_pack_type"
     t.datetime "created_at",                                                       :null => false
     t.datetime "updated_at",                                                       :null => false
+    t.string   "attribute_s"
+    t.integer  "account_id"
   end
 
   create_table "jingdong_skus", :force => true do |t|
@@ -256,7 +268,6 @@ ActiveRecord::Schema.define(:version => 20130916092012) do
     t.integer  "shop_id"
     t.integer  "ware_id"
     t.string   "status"
-    t.string   "attribute_s"
     t.integer  "stock_num"
     t.decimal  "jd_price",     :precision => 10, :scale => 0
     t.decimal  "cost_price",   :precision => 10, :scale => 0
@@ -268,16 +279,8 @@ ActiveRecord::Schema.define(:version => 20130916092012) do
     t.string   "size_value"
     t.datetime "created_at",                                  :null => false
     t.datetime "updated_at",                                  :null => false
-
-  create_table "jingdong_app_tokens", :force => true do |t|
+    t.string   "attribute_s"
     t.integer  "account_id"
-    t.string   "access_token"
-    t.string   "refresh_token"
-    t.string   "jingdong_user_id"
-    t.string   "jingdong_user_nick"
-    t.integer  "trade_source_id"
-    t.datetime "created_at",         :null => false
-    t.datetime "updated_at",         :null => false
   end
 
   create_table "logistic_areas", :force => true do |t|

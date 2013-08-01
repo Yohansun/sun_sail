@@ -2,9 +2,6 @@ require 'sidekiq/web'
 
 MagicOrders::Application.routes.draw do
 
-
-  resources :jingdong_products
-
   resources :customers ,:only => [:index,:show] do
 
     collection do
@@ -178,6 +175,13 @@ MagicOrders::Application.routes.draw do
       get :closed
       get :export
       get :import
+    end
+  end
+
+  resources :jingdong_products do
+    collection do
+      get :sync
+      put :syncing
     end
   end
 

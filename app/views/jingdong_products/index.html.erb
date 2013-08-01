@@ -1,21 +1,121 @@
-<h1>Listing jingdong_products</h1>
+<div class="row-fluid">
+  <div class="span10 w100">
+  <!-- <div class="row-fluid"> -->
+    <%= render partial: "layouts/all_crumbs" %>
+    <ul class="nav nav-tabs">
+      <li><a href="/products">本地商品</a></li>
+      <li><a href="/products/taobao_products">淘宝商品</a></li>
+      <li class="active"><a href="/jingdong_products">京东商品</a></li>
+      <!-- <li><a href="#set_good" data-toggle="tab">套装</a></li>
+      <li><a href="#active_goods" data-toggle="tab">活动商品</a></li> -->
+    </ul><!-- nav-tabs -->
+    <div class="tab-content">
+      <div class="tab-pane active" id="stock_check">
+        <form class="well well-small form-horizontal font12" style="margin-top:50px;">
+          <fieldset>
+            <div class="control-group">
+              <label class="pull-left"><code>精准：</code></label>
+              <div class="controls pull-left">
+                <select name="key" class="input-small pull-left select2 radius_no_rb">
+                  <option value="name" <%= 'selected' if params[:key] == "name" %>>名称</option>
+                  <option value="outer_id" <%= 'selected' if params[:key] == "outer_id" %>>商品外部编码</option>
+                  <option value="cat_name" <%= 'selected' if params[:key] == "cat_name" %>>商品类目名称</option>
+                </select>
+                <input type="text" class="input-medium radius_no_tl" name="value" value="<%= params[:value] %>" placeholder="输入关键字...">
+              </div>
+              <div class="pull-left">
+                <button type="button pull-left" class="btn btn-small btn-primary">搜索</button>
+              </div>
+            </div>
+          </fieldset><!-- form line1 area -->
+        </form>
+      </div>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+      <div class="btn-toolbar">
+        <div class="btn-group">
+          <button class="btn btn-warning">操作</button>
+          <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li><a href="#" id="show_taobao_product">查看</a></li>
+            <li><a href="#" id="tie_to_native_skus">绑定本地SKU</a></li>
+          </ul>
+        </div><!-- btn-group -->
+        <div class="btn btn-warning"><%= link_to "同步京东数据", sync_jingdong_products_path %></div>
+      </div><!-- btn-groups end -->
 
-<% @jingdong_products.each do |jingdong_product| %>
-  <tr>
-    <td><%= link_to 'Show', jingdong_product %></td>
-    <td><%= link_to 'Edit', edit_jingdong_product_path(jingdong_product) %></td>
-    <td><%= link_to 'Destroy', jingdong_product, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
+      <div class="tab-content">
+        <div class="tab-pane" id="native_goods">
+        </div><!-- single_good end -->
+
+        <div class="tab-pane active" id="taobao_goods">
+          <table class="table table-hover table-bordered table-striped table-condensed" id="taobao_product_table">
+            <thead>
+              <tr>
+                <th><!-- <input type="radio"> --></th>
+                <th>商品ID</th>
+                <th>商品状态</th>
+                <th>商品标题</th>
+                <th>商品描述</th>
+                <th>进货价</th>
+                <th>市场价</th>
+                <th>京东价</th>
+                <th>状态</th>
+              </tr>
+            </thead>
+            <tbody>
+              <%- @jingdong_products.each do |product| %>
+              <tr id='product_<%= product.id %>'>
+                <td><input class='taobao_product_check' name="taobao_product_radio" type="radio"></td>
+                <td><%= product.ware_id %></td>
+                <td><%= product.ware_status_name %></td>
+                <td><%= product.title %></td>
+                <td><%= product.desc %></td>
+                <td><%= number_to_currency product.cost_price %></td>
+                <td><%= number_to_currency product.market_price %></td>
+                <td><%= number_to_currency(product.jd_price) %></td>
+                <td><%= product.status_name %></td>
+              </tr>
+              <%- end %>
+            </tbody>
+          </table>
+
+          <div class='clearfix'>
+            <div class="pull-right" style="margin-left: 5px;margin-top: -2px;">
+              <%= paginate @jingdong_products %>
+            </div>
+            <!-- <p></p> -->
+            <%= form_tag("/jingdong_products", :method => "get", :class => 'pagination trade_count_info form-inline pull-right') do %>
+            <input style="visibility:hidden;" name="page" value="<%= params[:page]%>"/>
+            <label style="color:#005580;">当前每页显示：</label>
+            <%=select_tag :number, options_for_select([["加载20项","20"],
+                    ["加载50项","50"],
+                    ["加载100项", "100"]], params[:number]),  :class => 'nomargin input-medium', :onchange => "this.form.submit();" %>
+            <%- end -%>
+          </div>
+        </div><!-- all_goods end -->
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<% content_for :tail do %>
+<script type="text/javascript">
+  $('#show_taobao_product').on('click', function(event){
+    event.preventDefault()
+    if($('#taobao_product_table input:checked').length == 1){
+      var product_id = $('#taobao_product_table input:checked').parents('tr').attr('id')
+      product_id = _.trim(product_id, "product_")
+      window.location.href = "/jingdong_products/"+product_id
+    } else{
+      alert("请选择一件商品。");
+    }
+  })
+
+  $('table#taobao_product_table tr').click(function() {
+    $(this).find('td input:radio').prop('checked', true);
+  })
+</script>
 <% end %>
-</table>
-
-<br />
-
-<%= link_to 'New Jingdong product', new_jingdong_product_path %>

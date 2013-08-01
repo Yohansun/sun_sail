@@ -20,6 +20,7 @@ class CreateJingdongSkus < ActiveRecord::Migration
       t.datetime  :modified             #jingdong sku修改时间
       t.string    :color_value          #颜色对应的值
       t.string    :size_value           #尺码对应的值
+      t.integer   :account_id
       t.timestamps
     end
   end

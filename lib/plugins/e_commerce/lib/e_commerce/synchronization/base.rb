@@ -4,19 +4,10 @@ module ECommerce
   #同步类
   module Synchronization
     class Base
-      include State
-      include Set
+      include ECommerce::Synchronization::State
+      include ECommerce::Synchronization::Set
 
       attr_accessor :klass
-      extend Module.new {
-        def set_klass(name)
-          define_method(:klass) { @klass = name.to_s.camelize }
-        end
-
-        def identifier(name)
-          define_method(:primary_key) { @primary_key = name }
-        end
-      }
 
       def self.inherited(base)
         base.class_eval {
@@ -26,9 +17,11 @@ module ECommerce
         }
       end
 
-      def initialize(name)
+      def initialize(var)
         response
+        raise "alias_columns must be Hash" unless alias_columns.is_a?(Hash)
         raise "Not initialized `identifier' for #{self.class.name}" if primary_key.blank?
+        raise NameError,"uninitialized constant #{klass}" if !Object.const_defined?(klass.to_s)
       end
 
       def response

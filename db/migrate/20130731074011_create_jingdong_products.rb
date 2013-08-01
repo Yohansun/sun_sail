@@ -51,6 +51,7 @@ class CreateJingdongProducts < ActiveRecord::Migration
                                                      #0免费、1超大件、2超大件半件、3大件、4大件半件、5中件、6中件半件、7小件、8超小件
       t.integer :ware_pack_type                      #商品包装：
                                                      #1普通商品、2易碎品、3裸瓶液体、4带包装液体、5按原包装出库
+      t.integer :account_id
       t.timestamps
     end
   end
