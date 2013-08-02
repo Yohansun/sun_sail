@@ -272,15 +272,6 @@ class Trade
 
   belongs_to :customer, :class_name => "Customer", :foreign_key => "buyer_nick",:primary_key => "name"
 
-  enum_attr :status, [["没有创建支付宝交易"                ,"TRADE_NO_CREATE_PAY"],
-                      ["等待买家付款"                     ,"WAIT_BUYER_PAY"],
-                      ["等待卖家发货,即:买家已付款"         ,"WAIT_SELLER_SEND_GOODS"],
-                      ["等待买家确认收货,即:卖家已发货"      ,"WAIT_BUYER_CONFIRM_GOODS"],
-                      ["买家已签收,货到付款专用"            ,"TRADE_BUYER_SIGNED"],
-                      ["交易成功"                         ,"TRADE_FINISHED"],
-                      ["付款以后用户退款成功，交易自动关闭"   ,"TRADE_CLOSED"],
-                      ["付款以前，卖家或买家主动关闭交易"     ,"TRADE_CLOSED_BY_TAOBAO"]],:not_valid => true
-
   attr_accessor :matched_seller
 
   validate :color_num_do_not_exist, :on => :update, :if => :color_num_changed?

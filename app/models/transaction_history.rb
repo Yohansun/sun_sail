@@ -21,12 +21,13 @@ class TransactionHistory
   field :account_id        , type: Integer
   field :product_ids       , type: Array, default: []
 
-  enum_attr :status, Trade::STATUS,:not_valid => true
+  enum_attr :status, TaobaoTrade::STATUS,:not_valid => true
 
   embedded_in :customer,:inverse_of => :transaction_histories
   
   after_save { customer.touch }
 
   validates :tid, :presence => true,:uniqueness => true
+  belongs_to :trade,:class_name => "Trade", :foreign_key => "tid",:primary_key => "tid"
 
 end

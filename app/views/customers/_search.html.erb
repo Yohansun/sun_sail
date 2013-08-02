@@ -30,7 +30,7 @@
       <!--
         transaction_histories_status_in 可多选 (multiple)
       -->
-      <%= select_tag "search[transaction_histories_status_in][]",options_for_select(Trade::STATUS,params[:search][:transaction_histories_status_in]),:class => "input-medium pull-left",:id => "exact_phrase",:include_blank => true %>
+      <%= select_tag "search[transaction_histories_status_in][]",options_for_select(TransactionHistory::STATUS,params[:search][:transaction_histories_status_in]),:class => "input-medium pull-left",:id => "exact_phrase",:include_blank => true %>
       <!-- mutiple select -->
       <!-- <span class="toggle-multiselect">&nbsp;</span> -->
     </div>
