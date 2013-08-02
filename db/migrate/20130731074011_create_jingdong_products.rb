@@ -54,5 +54,6 @@ class CreateJingdongProducts < ActiveRecord::Migration
       t.integer :account_id
       t.timestamps
     end
+    add_index :jingdong_products,:ware_id, unique: true
   end
 end
