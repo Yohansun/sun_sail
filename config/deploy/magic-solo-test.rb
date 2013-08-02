@@ -3,6 +3,7 @@ require 'hipchat/capistrano'
 
 set :rvm_ruby_string, '1.9.3'
 set :rvm_type, :system
+set :rvm_path, "/usr/local/rvm"
 set :repository, "git@git.networking.io:nioteam/magic_orders.git"
 set :branch, "solo_dev"
 
