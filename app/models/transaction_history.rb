@@ -24,7 +24,7 @@ class TransactionHistory
   enum_attr :status, TaobaoTrade::STATUS,:not_valid => true
 
   embedded_in :customer,:inverse_of => :transaction_histories
-  
+
   after_save { customer.touch }
 
   validates :tid, :presence => true,:uniqueness => true

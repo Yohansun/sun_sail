@@ -3,18 +3,18 @@ class CustomersPuller
   class << self
     def initialize!(account_id=nil)
       conditions = default_condition(account_id)
-      customers,taobao_trades = Customer.where(conditions),TaobaoTrade.where(conditions)
+      customers,trades = Customer.where(conditions),Trade.where(conditions)
       raise "Already initialized!" if customers.count > 1
-      find_or_create(taobao_trades.desc(:tid))
+      find_or_create(trades.desc(:tid))
     end
 
     def update(account_id=nil)
       conditions = default_condition(account_id).merge({:news => 1})
-      news_taobao_trades = TaobaoTrade.where(conditions)
+      news_trades = Trade.where(conditions)
 
-      find_or_create(news_taobao_trades) do |taobao_trade|
-        taobao_trade.news = 2
-        taobao_trade.save(:validate => false)
+      find_or_create(news_trades) do |trade|
+        trade.news = 2
+        trade.save(:validate => false)
       end
     end
 
@@ -41,38 +41,38 @@ class CustomersPuller
     end
 
     def default_condition(account_id=nil)
-      account_id.present? ? {:account_id => account_id} : {}
+      conditions = {:_type.in => %w(TaobaoTrade JingdongTrade YihaodianTrade)}
+      account_id.present? ? conditions.merge({:account_id => account_id}) : conditions
     end
 
     def transaction_history_fields
       TransactionHistory.fields.except("_id","_type").keys
     end
 
-    def transaction_history_attributes(taobao_trade)
-      attrs = taobao_trade.attributes.slice(*transaction_history_fields)
-      orders = taobao_trade.orders
+    def transaction_history_attributes(trade)
+      attrs = trade.attributes.slice(*transaction_history_fields)
+      orders = trade.orders
       products = orders.collect {|x| x.products}.flatten.compact
       product_ids = products.collect {|x| x.id rescue nil}.compact
       attrs.merge({"product_ids" => product_ids})
     end
 
     def find_or_create(news_trades,&block)
-      news_trades.each do |taobao_trade|
-        conditions = {:name => taobao_trade.buyer_nick,:account_id => taobao_trade.account_id}
+      news_trades.each do |trade|
+        conditions = {:name => trade.buyer_nick,:account_id => trade.account_id,:ec_name => trade._type }
         customer = Customer.find_or_create_by(conditions)
         transaction_histories           = customer.transaction_histories
-        transaction_history             = transaction_histories.find_by(:tid => taobao_trade.tid) rescue customer.transaction_histories.build
-        transaction_history.attributes  = transaction_history_attributes(taobao_trade)
-        customers_attributes            = parse_attributes(taobao_trade)
+        transaction_history             = transaction_histories.find_by(:tid => trade.tid) rescue customer.transaction_histories.build
+        transaction_history.attributes  = transaction_history_attributes(trade)
+        customers_attributes            = parse_attributes(trade)
         customer.update_attributes(customers_attributes)
 
-        yield(taobao_trade) if block_given?
+        yield(trade) if block_given?
       end
-
     end
 
-    def parse_attributes(taobao_trade)
-      attrs = taobao_trade.attributes
+    def parse_attributes(trade)
+      attrs = trade.attributes
       {"buyer_nick" => "name","buyer_email" => "email"}.each_pair do |k,v|
         attrs[v] = attrs.delete(k)
       end
