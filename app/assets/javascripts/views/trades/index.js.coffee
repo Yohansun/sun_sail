@@ -456,7 +456,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
         if @simple_search_value != ''
           @search_hash[@simple_search_option] = @simple_search_value
 
-    trade_collection = new MagicOrders.Collections.Trades()
+    # trade_collection = new MagicOrders.Collections.Trades()
     length = $('.search_tags_group').children().find('input').length
     if length != 0
       for num in [0..(length-1)]
@@ -473,7 +473,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
       MagicOrders.trade_type = "undispatched"
       @trade_type = "undispatched"
 
-    trade_collection.fetch data: {trade_type: @trade_type, search: @search_hash}, success: (collection) =>
+    @collection.fetch data: {trade_type: @trade_type, search: @search_hash}, success: (collection) =>
       if collection.length > 0
         @offset = @offset + 20
         @trade_number = 0
