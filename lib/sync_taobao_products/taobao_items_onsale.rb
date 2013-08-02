@@ -3,30 +3,30 @@ class TaobaoItemsOnsale
   GET_SIZE = 100
   attr_accessor :nick,:responsed,:products,:total_results,:products,:account
   @remember = false
-  
+
   def initialize(account)
     @page_no        = 1
     @account        = account
-    @trade_source   = @account.trade_source
+    @trade_source   = @account.taobao_source
     @nick           = @account.key == "nippon " ? '立邦漆官方旗舰店'  : @trade_source.name
     @responsed      = get_products(@nick,@page_no,@trade_source.id)
     @total_results  = get_total_results
     @products       = get_items rescue raise("没有找到商品")
   end
-  
+
   def products
-    return @products if @remember 
+    return @products if @remember
     @pages = @total_results / GET_SIZE + (@total_results % GET_SIZE == 0 ? 0 : 1)
-    
+
     @pages.times do |page|
       @responsed = get_products(@nick,@page_no+=1,@trade_source.id)
       @products += get_items if @page_no <= @pages
     end
-    
+
     @remember = true
     @products = @products.collect {|item| TaobaoItemProduct.new(item,@nick,@account.id,@trade_source.id) }
   end
-  
+
   def fetch
     @products = TaobaoItemsOnsale.new(@account).products
   end

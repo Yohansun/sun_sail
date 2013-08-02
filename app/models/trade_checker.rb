@@ -160,4 +160,5 @@ class TradeChecker
       @exception = exception
     end
   end
+
 end

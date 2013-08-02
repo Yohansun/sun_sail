@@ -8,7 +8,7 @@ class TaobaoProductSync < ECommerce::Synchronization::Base
   def initialize(nick)
     @nick = nick
     @account = Account.find_by_key(nick)
-    @trade_source = @account.trade_source
+    @trade_source = @account.taobao_source
     super
   end
 

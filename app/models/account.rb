@@ -62,6 +62,9 @@ class Account < ActiveRecord::Base
   has_many :taobao_skus
   has_one :trade_source
   has_one :deliver_template
+  has_many :trade_sources
+  has_one :taobao_source, class_name: "TradeSource", conditions: {trade_type: 'Taobao'}
+  has_one :jingdong_source, class_name: "TradeSource", conditions: {trade_type: 'Jingdong'}
 
   validates :name, presence: true
   validates :key, presence: true, uniqueness: true
