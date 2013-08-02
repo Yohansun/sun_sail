@@ -23,11 +23,11 @@ class StockOutBill < StockBill
         stock.customerName op_name
         stock.payment ""
         stock.orderTime ""
-        stock.website website || "个人" # MOVED TO SETTINGS
+        stock.website website || (self.account.settings.open_auto_mark_invoice==1 ? "个人" : "" rescue "") # MOVED TO SETTINGS
         stock.freight trade.try(:post_fee)
         stock.serviceCharge 0.00
         stock.payTime ""
-        stock.isCashsale is_cash_sale || "需要开票"  # MOVED TO SETTINGS
+        stock.isCashsale is_cash_sale || (self.account.settings.open_auto_mark_invoice==1 ? "需要开票" : "无需开票" rescue "无需开票")  # MOVED TO SETTINGS
         stock.priority ""
         stock.expectedTime ""
         stock.requiredTime ""

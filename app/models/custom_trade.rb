@@ -139,9 +139,18 @@ class CustomTrade < Trade
     custom_trade.account_id = current_account.id
     #custom_trade.tid = (Time.now.to_i.to_s + current_user.id.to_s + rand(10..99).to_s + "H" )
     custom_trade.custom_type = "handmade_trade"
-    if trade[:has_invoice_info] == "true"
+    if current_account.settings.open_auto_mark_invoice == 1
+      if trade[:seller_memo]
+        invoice_name = trade[:seller_memo].scan(/\$.*\$/).present? ? trade[:seller_memo].scan(/\$.*\$/).first : nil
+      end
+      if invoice_name.present?
+        invoice_name.slice!(0)
+        invoice_name.slice!(-1)
+      else
+        invoice_name = "个人"
+      end
+      custom_trade.invoice_name = invoice_name
       custom_trade.invoice_type = "需要开票"
-      custom_trade.invoice_name = "个人"
       custom_trade.invoice_date = Time.now
     end
     custom_trade
