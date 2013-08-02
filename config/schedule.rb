@@ -10,14 +10,13 @@ set :output, File.join(root_path,'log/cron_log.log')
 DEFAULT_FROM = "magic-notifer@networking.io"
 Accounts = {
   :brands => [:brands,{
-    # :to => %w(asher_qian@allyes.com
-    # lynn_lin@allyes.com
-    # zhao_wang@allyes.com
-    # nancy_wu@allyes.com
-    # fei_wang@allyes.com
-    # yang_wang@allyes.com),
-    :to => %w(magic_sh@doorder.com errors@networking.io),
-   :bcc => "zhoubin@networking.io",
+    :to => %w(asher_qian@allyes.com
+    lynn_lin@allyes.com
+    zhao_wang@allyes.com
+    nancy_wu@allyes.com
+    fei_wang@allyes.com
+    yang_wang@allyes.com),
+   :bcc => %w(magic_sh@doorder.com errors@networking.io),
   :from => "#{DEFAULT_FROM}"
   }]
 }
