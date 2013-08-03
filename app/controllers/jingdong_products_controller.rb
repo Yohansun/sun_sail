@@ -3,6 +3,8 @@ class JingdongProductsController < ApplicationController
   before_filter :authorize
   # GET /products/jingdong_products
   def index
+    params[:search] ||= {}
+    params[:search][params[:key].to_sym] = params[:value] if params[:key].present? && params[:value].present?
     @search = JingdongProduct.with_account(current_account.id).search(params[:search])
     @jingdong_products = @search.page(params[:page])
   end

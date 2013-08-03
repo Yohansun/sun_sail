@@ -2,24 +2,17 @@
   <div class="span10 w100">
   <!-- <div class="row-fluid"> -->
     <%= render partial: "layouts/all_crumbs" %>
-    <ul class="nav nav-tabs">
-      <li><a href="/products">本地商品</a></li>
-      <li><a href="/products/taobao_products">淘宝商品</a></li>
-      <li class="active"><a href="/jingdong_products">京东商品</a></li>
-      <!-- <li><a href="#set_good" data-toggle="tab">套装</a></li>
-      <li><a href="#active_goods" data-toggle="tab">活动商品</a></li> -->
-    </ul><!-- nav-tabs -->
+    <%= render partial: "products/sidebar" %>
     <div class="tab-content">
       <div class="tab-pane active" id="stock_check">
-        <form class="well well-small form-horizontal font12" style="margin-top:50px;">
+        <form class="well well-small form-horizontal font12">
           <fieldset>
             <div class="control-group">
               <label class="pull-left"><code>精准：</code></label>
               <div class="controls pull-left">
                 <select name="key" class="input-small pull-left select2 radius_no_rb">
-                  <option value="name" <%= 'selected' if params[:key] == "name" %>>名称</option>
-                  <option value="outer_id" <%= 'selected' if params[:key] == "outer_id" %>>商品外部编码</option>
-                  <option value="cat_name" <%= 'selected' if params[:key] == "cat_name" %>>商品类目名称</option>
+                  <option value="ware_id_eq" <%= 'selected' if params[:key] == "ware_id_eq" %>>商品ID</option>
+                  <option value="title_eq" <%= 'selected' if params[:key] == "title_eq" %>>商品名称</option>
                 </select>
                 <input type="text" class="input-medium radius_no_tl" name="value" value="<%= params[:value] %>" placeholder="输入关键字...">
               </div>

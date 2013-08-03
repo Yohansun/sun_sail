@@ -42,6 +42,11 @@ module ApplicationHelper
     url_parameters = Rails.application.routes.recognize_path url
     request[:controller] == url_parameters[:controller] ? options[:assert_true] : options[:assert_false]
   end
+
+  def current_page?(url)
+    url_parameters = Rails.application.routes.recognize_path url
+    (request[:controller] == url_parameters[:controller]) && (request[:action] == url_parameters[:action])
+  end
   
   def format_url(var)
     url = request.fullpath
