@@ -155,4 +155,9 @@ json.merged_trade_ids @trade.merged_trade_ids
 json.merged_by_trade_id @trade.merged_by_trade_id
 json.mergeable_id @trade.mergeable_id
 
+json.is_paid_not_delivered @trade.is_paid_not_delivered
+json.is_paid_and_delivered @trade.is_paid_and_delivered
+json.is_succeeded @trade.is_succeeded
+json.is_closed @trade.is_closed
+
 json.is_locked @trade.is_locked

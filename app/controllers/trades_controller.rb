@@ -122,7 +122,7 @@ class TradesController < ApplicationController
     # 发货
     if params[:delivered_at] == true
       @trade.delivered_at = Time.now
-      @trade.status = 'WAIT_BUYER_CONFIRM_GOODS'
+      @trade.change_status_to_deliverd
       if params['logistic_info'] == '其他' and @trade.logistic_waybill.nil?
         logistic = current_account.logistics.find_by_name '其他'
         if logistic
@@ -145,6 +145,7 @@ class TradesController < ApplicationController
       end
     end
 
+    #PENDING 京东订单赠品订单应该是custom_order,用本地sku的id,用本地商品的名称
     # 赠品更新
     @trade.gift_memo = params[:gift_memo].strip if params[:gift_memo]
     if params[:delete_gifts]
@@ -351,8 +352,7 @@ class TradesController < ApplicationController
 
     if @trade.save
       @trade = TradeDecorator.decorate(@trade)
-      #分流后客服备注修改发短信通知经销商
-      if notifer_seller_flag && @trade.status == "WAIT_SELLER_SEND_GOODS" && @trade.seller
+      if notifer_seller_flag && @trade.is_paid_not_delivered && @trade.seller
         TradeDispatchEmail.perform_async(@trade.id, @trade.seller_id, 'second')
         TradeDispatchSms.perform_async(@trade.id, @trade.seller_id, 'second')
       end
@@ -487,24 +487,24 @@ class TradesController < ApplicationController
     end
   end
 
-  def split_trade
-    @trade = Trade.find params[:id]
-    new_trade_ids = if current_account.key == 'dulux'
-      split_orders(@trade)
-    else
-      TradeSplitter.new(@trade).split!
-    end
+  # def split_trade
+  #   @trade = Trade.find params[:id]
+  #   new_trade_ids = if current_account.key == 'dulux'
+  #     split_orders(@trade)
+  #   else
+  #     TradeSplitter.new(@trade).split!
+  #   end
 
-    @trade.operation_logs.build(operated_at: Time.now, operation: '拆单', operator_id: current_user.id, operator: current_user.name)
-    respond_to do |format|
-      format.json { render json: {ids: new_trade_ids} }
-    end
-  end
+  #   @trade.operation_logs.build(operated_at: Time.now, operation: '拆单', operator_id: current_user.id, operator: current_user.name)
+  #   respond_to do |format|
+  #     format.json { render json: {ids: new_trade_ids} }
+  #   end
+  # end
 
   def batch_deliver
     Trade.any_in(_id: params[:ids]).each do |trade|
       trade.delivered_at = Time.now
-      trade.status = "WAIT_BUYER_CONFIRM_GOODS"
+      trade.change_status_to_deliverd
       trade.save # this will trigger observer.
     end
     render json: {isSuccess: true}
@@ -516,21 +516,21 @@ class TradesController < ApplicationController
     end
   end
 
-  def recover
-    trade = Trade.find params[:id]
-    parent_trade = Trade.deleted.where(tid: trade.tid, splitted_tid: nil).first
+  # def recover
+  #   trade = Trade.find params[:id]
+  #   parent_trade = Trade.deleted.where(tid: trade.tid, splitted_tid: nil).first
 
-    success = if parent_trade
-      Trade.where(tid: trade.tid).delete_all
-      parent_trade.operation_logs.build(operated_at: Time.now, operation: '订单合并')
-      parent_trade.save
-      parent_trade.restore
-    end
+  #   success = if parent_trade
+  #     Trade.where(tid: trade.tid).delete_all
+  #     parent_trade.operation_logs.build(operated_at: Time.now, operation: '订单合并')
+  #     parent_trade.save
+  #     parent_trade.restore
+  #   end
 
-    respond_to do |format|
-      format.json { render json: {is_success: success.present? } }
-    end
-  end
+  #   respond_to do |format|
+  #     format.json { render json: {is_success: success.present? } }
+  #   end
+  # end
 
   def show_percent
     @users = current_account.users.where(can_assign_trade: true).where(active: true).order(:created_at)

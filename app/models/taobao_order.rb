@@ -4,7 +4,7 @@ class TaobaoOrder < Order
 
   field :oid, type: String
   field :status, type: String
-  field :refund_status, type: String
+  # field :refund_status, type: String
 
   field :outer_id, type: String
   field :outer_iid, type: String

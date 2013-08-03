@@ -543,6 +543,7 @@ class Trade
   end
 
   def generate_stock_out_bill
+    return if _type == 'JingdongTrade'
     stock_out_bills.where(:status.ne => "CLOSED").each do |bill|
       if bill.do_close #关闭之前的出库单
         bill.increase_activity #恢复仓库的可用库存
@@ -844,7 +845,7 @@ class Trade
   end
 
   def dispatchable?
-    seller_id.blank? && status == 'WAIT_SELLER_SEND_GOODS'
+    seller_id.blank? && is_paid_not_delivered
   end
 
   def dispatch!(seller = nil)
@@ -995,12 +996,13 @@ class Trade
     paid_not_deliver_array = ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"]
     paid_and_delivered_array = ["WAIT_BUYER_CONFIRM_GOODS","WAIT_GOODS_RECEIVE_CONFIRM","WAIT_BUYER_CONFIRM_GOODS_ACOUNTED","WAIT_SELLER_SEND_GOODS_ACOUNTED"]
     closed_array = ["TRADE_CLOSED","TRADE_CANCELED","TRADE_CLOSED_BY_TAOBAO", "ALL_CLOSED"]
+    succeed_array = ["TRADE_FINISHED","FINISHED_L"]
 
     #contains TaobaoOrder and SubPurchaseOrder
     taobao_trade_refund_array = ["WAIT_SELLER_AGREE","SELLER_REFUSE_BUYER","WAIT_BUYER_RETURN_GOODS","WAIT_SELLER_CONFIRM_GOODS","CLOSED", "SUCCESS"]
     taobao_purchase_refund_array = ['TRADE_REFUNDED', 'TRADE_REFUNDING']
 
-    succeed_array = ["TRADE_FINISHED","FINISHED_L"]
+
 
     if current_user.seller.present?
       seller = current_user.seller
@@ -1412,8 +1414,10 @@ class Trade
       elsif self.custom_type == 'handmade_trade'
         '人工'
       end
-    else
+    elsif self._type == "TaobaoTrade"
       '淘宝'
+    elsif self._type == "JingdongTrade"
+      '京东'
     end
   end
 
@@ -1443,6 +1447,41 @@ class Trade
 
   def other_discount
     (total_fee + post_fee - payment - promotion_fee).to_f.round(2)
+  end
+
+  #判断订单状态
+  def is_paid_not_delivered
+    ["WAIT_SELLER_SEND_GOODS",
+     "WAIT_SELLER_DELIVERY",
+     "WAIT_SELLER_STOCK_OUT"].include?(status)
+  end
+
+  def is_paid_and_delivered
+    ["WAIT_BUYER_CONFIRM_GOODS",
+     "WAIT_GOODS_RECEIVE_CONFIRM",
+     "WAIT_BUYER_CONFIRM_GOODS_ACOUNTED",
+     "WAIT_SELLER_SEND_GOODS_ACOUNTED"].include?(status)
+  end
+
+  def change_status_to_deliverd
+    if self._type == "JingdongTrade"
+      self.status = "WAIT_GOODS_RECEIVE_CONFIRM"
+    else
+      self.status = "WAIT_BUYER_CONFIRM_GOODS"
+    end
+  end
+
+  def is_succeeded
+    ["TRADE_FINISHED",
+     "FINISHED_L"].include?(status)
+  end
+
+  def is_closed
+    ["TRADE_CLOSED",
+     "TRADE_CANCELED",
+     "TRADE_CLOSED_BY_TAOBAO",
+     "ALL_CLOSED",
+     'LOCKED'].include?(status)
   end
 
   private

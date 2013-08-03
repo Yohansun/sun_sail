@@ -6,7 +6,7 @@ class TradeAutoDeliver
   def perform(id)
     trade = Trade.find(id)
     trade.delivered_at = Time.now
-    trade.status = 'WAIT_BUYER_CONFIRM_GOODS'
+    trade.change_status_to_deliverd
     trade.save   #observer会自动调用deliver
     trade.operation_logs.create(operated_at: Time.now, operation: "订单自动发货")
   end

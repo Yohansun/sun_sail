@@ -1,15 +1,17 @@
+# -*- encoding:utf-8 -*-
+
 class JingdongOrder < Order
 
-  field :sku_id,                      type: String
-  field :outer_sku_id,                type: String
-  field :sku_name,     as: :title,    type: String # 商品的名称+SKU规格
+  field :sku_id,                         type: String
+  field :outer_sku_id,                   type: String
+  field :title,        as: :sku_name,    type: String # 商品的名称+SKU规格
 
-  field :jd_price,     as: :price,    type: Float
-  field :item_total,   as: :num,      type: Integer
-  field :ware_id,      as: :num_iid,  type: String
+  field :price,        as: :jd_price,    type: Float
+  field :num,          as: :item_total,  type: Integer
+  field :num_iid,      as: :ware_id,     type: String
 
   #京东子订单特有字段
-  field :gift_point,                  type: String
+  field :gift_point,                     type: String
 
   embedded_in :jingdong_trades
 
@@ -66,13 +68,16 @@ class JingdongOrder < Order
       number: 1,
       storage_num: '',
       title: sku_name,
-      colors: tmp
+      colors: []
     }]
   end
 
   def refund_status_text
-    #PENDING
-    #DO SOMETHING WITH THE RETURNED REFUND INFO
+    case self.refund_status
+      when "RETURNED" then "售后"
+      when "REJECTED" then "拒收"
+      when "FROMWAREHOUSE" then "大库入"
+    end
   end
 
   def order_price
@@ -90,11 +95,6 @@ class JingdongOrder < Order
       end
     end
     discount_fee ||  0
-  end
-
-  #PENDING  ##THIS IS TEMPORARY
-  def refund_status
-    "NO_REFUND"
   end
 
 end

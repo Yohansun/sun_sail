@@ -7,6 +7,7 @@ class JingdongTradePuller
 
       account = Account.find(account_id)
       trade_source = account.jingdong_source
+      trade_source_id = trade_source.id
 
       # 给客服分配订单需要的查询
       users = account.users.where(can_assign_trade: true, active: true).order(:created_at) rescue nil
@@ -54,25 +55,37 @@ class JingdongTradePuller
         total_results = response['order_search_response']['order_search']['order_total']
         total_pages = total_results / 10
         next if total_results < 1
-
         # default_seller_id = account.settings.default_seller_id
 
         trades = response['order_search_response']['order_search']['order_info_list']
         next if trades.blank?
 
         trades.each do |t|
+          #抓取JingdongTrade基本信息
           orders = t.delete('item_info_list')
           consignee_info = t.delete("consignee_info")
+          coupon_details = t.delete("coupon_detail_list")
           t.update(consignee_info)
           unless ($redis.sismember('JingdongTradeTids', t['order_id']) || JingdongTrade.where(tid: t['order_id']).exists?)
             trade = JingdongTrade.new(t)
+
             orders.each do |order|
               order = trade.jingdong_orders.build(order)
+            end
+
+            #获取优惠信息
+            if coupon_details.present?
+              coupon_details.each do |detail|
+                detail = trade.coupon_details.build(detail)
+              end
             end
 
             trade.trade_source_id = trade_source_id
             trade.account_id = account_id
             trade.operation_logs.build(operated_at: Time.now, operation: '从京东抓取订单')
+
+            #设置付款时间
+            trade.pay_time = Time.now
 
             if users
               trade.set_operator(users,total_percent)
@@ -81,8 +94,9 @@ class JingdongTradePuller
             trade.save
 
             $redis.sadd('JingdongTradeTids',t['order_id'])
+            TradeJingdongMemoFetcher.perform_async(trade.tid)
 
-            #PENDING 抓取memo,抓取coupon_details,自动化功能
+            #TODO 自动分流功能
             # auto dispatch
 
             # if trade.order_remark.blank? && (trade.order_state == "WAIT_SELLER_DELIVERY" || trade.order_state == "WAIT_SELLER_STOCK_OUT")
@@ -95,13 +109,15 @@ class JingdongTradePuller
 
             trade.update_attributes(t)
           end
-
         end
+
         page_no += 1
       end until(page_no > total_pages || total_pages == 0)
 
       #同步本地顾客管理下面的"副本订单"
       CustomerFetch.perform_async(account_id)
+      #抓取订单退货信息
+      JingdongRefundOrderMarker.perform_async(account_id)
     end
 
   end

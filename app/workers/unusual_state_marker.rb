@@ -76,6 +76,7 @@ class UnusualStateMarker
         end
       end
 
+      #PENDING 京东如何抓取物流信息？？
       # 超过n天未实际收货
       if conditions['unusual_receive']
         check_time = conditions['max_unreceived_days'].to_i.days.ago

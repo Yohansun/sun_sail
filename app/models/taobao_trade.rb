@@ -76,8 +76,9 @@ class TaobaoTrade < Trade
     return false unless auto_dispatchable?
     dispatch!
     self.is_auto_dispatch = true
-    self.operation_logs.create(operated_at: Time.now, operation: "自动分派")
-    self.save
+    if self.save
+      self.operation_logs.create(operated_at: Time.now, operation: "自动分派")
+    end
   end
 
   ## 发货相关 ##

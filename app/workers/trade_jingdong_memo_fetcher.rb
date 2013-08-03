@@ -4,20 +4,9 @@ class TradeJingdongMemoFetcher
   sidekiq_options :queue => :jingdong_memo_fetcher
   def perform(tid)
     trade = JingdongTrade.where(tid: tid).first
-    return unless trade && trade._type != "CustomTrade"
+    return unless trade
     source_id = trade.trade_source_id
     account = trade.fetch_account
-    #PENDING 接口怎么写？
-    response = TaobaoQuery.get({
-      method: 'taobao.trade.get',
-      fields: 'buyer_message, seller_memo',
-      tid: tid}, source_id
-    )
-    return unless response && response["trade_get_response"]
-    remote_trade = response["trade_get_response"]["trade"]
-    return unless remote_trade
-    trade.update_attributes(buyer_message: remote_trade['buyer_message']) if remote_trade['buyer_message']
-    trade.update_attributes(seller_memo: remote_trade['seller_memo']) if remote_trade['seller_memo']
 
     # 自动从memo导入发票抬头
     if account.settings.open_auto_mark_invoice == 1

@@ -2,28 +2,6 @@
 class TradeDecorator < Draper::Base
   decorates :trade
 
-  def status
-    case trade._type
-      when 'TaobaoPurchaseOrder'
-        trade.status
-      when 'TaobaoTrade','CustomTrade','Trade'
-        trade.status
-      when 'JingdongTrade'
-        trade.order_state
-    end
-  end
-
-  def created
-    case trade._type
-      when 'TaobaoPurchaseOrder'
-        trade.created
-      when 'TaobaoTrade','CustomTrade','Trade'
-        trade.created
-      when 'JingdongTrade'
-        trade.order_start_time
-    end
-  end
-
   def pay_time
     case trade._type
       when 'TaobaoPurchaseOrder'
@@ -31,6 +9,7 @@ class TradeDecorator < Draper::Base
       when 'TaobaoTrade','CustomTrade','Trade'
         trade.pay_time
       when 'JingdongTrade'
+        # trade.pay_time
     end
   end
 
@@ -38,10 +17,8 @@ class TradeDecorator < Draper::Base
     case trade._type
       when 'TaobaoPurchaseOrder'
         trade.consign_time || trade.delivered_at
-      when 'TaobaoTrade','CustomTrade','Trade'
+      when 'TaobaoTrade','CustomTrade','Trade','JingdongTrade'
         trade.consign_time
-      when 'JingdongTrade'
-        trade.order_end_time
     end
   end
 
@@ -60,10 +37,8 @@ class TradeDecorator < Draper::Base
     case trade._type
       when 'TaobaoPurchaseOrder'
         trade.receiver['name']
-      when 'TaobaoTrade','CustomTrade','Trade'
+      when 'TaobaoTrade','CustomTrade','Trade','JingdongTrade'
         trade.receiver_name
-      when 'JingdongTrade'
-        trade.consignee_info['fullname']
     end
   end
 
@@ -71,10 +46,8 @@ class TradeDecorator < Draper::Base
     case trade._type
       when 'TaobaoPurchaseOrder'
         trade.receiver['mobile_phone']
-      when 'TaobaoTrade','CustomTrade','Trade'
+      when 'TaobaoTrade','CustomTrade','Trade','JingdongTrade'
         trade.receiver_mobile
-      when 'JingdongTrade'
-        trade.consignee_info['mobile']
     end
   end
 
@@ -82,10 +55,8 @@ class TradeDecorator < Draper::Base
     case trade._type
       when 'TaobaoPurchaseOrder'
         trade.receiver['phone']
-      when 'TaobaoTrade','CustomTrade','Trade'
+      when 'TaobaoTrade','CustomTrade','Trade','JingdongTrade'
         trade.receiver_phone
-      when 'JingdongTrade'
-        trade.consignee_info['telephone']
     end
   end
 
@@ -116,7 +87,7 @@ class TradeDecorator < Draper::Base
       when 'TaobaoTrade','CustomTrade','Trade'
         trade.receiver_address
       when 'JingdongTrade'
-        trade.consignee_info['full_address'].try(:delete, self.receiver_state).try(:delete, self.receiver_city).try(:delete, self.receiver_district)
+        trade.receiver_address.try(:delete, self.receiver_state).try(:delete, self.receiver_city).try(:delete, self.receiver_district)
     end
   end
 
@@ -124,10 +95,8 @@ class TradeDecorator < Draper::Base
     case trade._type
       when 'TaobaoPurchaseOrder'
         trade.receiver['district']
-      when 'TaobaoTrade','CustomTrade','Trade'
+      when 'TaobaoTrade','CustomTrade','Trade','JingdongTrade'
         trade.receiver_district
-      when 'JingdongTrade'
-        trade.consignee_info['county']
     end
   end
 
@@ -135,10 +104,8 @@ class TradeDecorator < Draper::Base
     case trade._type
       when 'TaobaoPurchaseOrder'
         trade.receiver['city']
-      when 'TaobaoTrade','CustomTrade','Trade'
+      when 'TaobaoTrade','CustomTrade','Trade','JingdongTrade'
         trade.receiver_city
-      when 'JingdongTrade'
-        trade.consignee_info['city']
     end
   end
 
@@ -146,10 +113,8 @@ class TradeDecorator < Draper::Base
     case trade._type
       when 'TaobaoPurchaseOrder'
         trade.receiver['state']
-      when 'TaobaoTrade','CustomTrade','Trade'
+      when 'TaobaoTrade','CustomTrade','Trade','JingdongTrade'
         trade.receiver_state
-      when 'JingdongTrade'
-        trade.consignee_info['province']
     end
   end
 
@@ -187,14 +152,7 @@ class TradeDecorator < Draper::Base
   end
 
   def total_fee
-    case trade._type
-    when 'TaobaoPurchaseOrder'
-      trade.payment
-    when 'TaobaoTrade','CustomTrade','Trade'
-      trade.payment
-    when 'JingdongTrade'
-      trade.order_seller_price
-    end
+    trade.payment
   end
 
   def point_fee
@@ -213,9 +171,7 @@ class TradeDecorator < Draper::Base
     case trade._type
     when 'TaobaoPurchaseOrder'
       trade.orders_total_fee
-    when 'TaobaoTrade','CustomTrade','Trade'
-      trade.total_fee
-    when 'JingdongTrade'
+    when 'TaobaoTrade','CustomTrade','Trade','JingdongTrade'
       trade.total_fee
     end
   end
@@ -224,10 +180,8 @@ class TradeDecorator < Draper::Base
     case trade._type
     when 'TaobaoPurchaseOrder'
       trade.memo
-    when 'TaobaoTrade','CustomTrade','Trade'
+    when 'TaobaoTrade','CustomTrade','Trade','JingdongTrade'
       trade.buyer_message
-    when 'JingdongTrade'
-      trade.order_remark
     end
   end
 
@@ -245,10 +199,10 @@ class TradeDecorator < Draper::Base
     case trade._type
     when 'TaobaoPurchaseOrder'
       trade.supplier_memo
-    when 'TaobaoTrade','CustomTrade','Trade'
+    when 'TaobaoTrade','CustomTrade','Trade','JingdongTrade'
       trade.seller_memo
-    when 'JingdongTrade'
-      [trade.pay_type, trade.delivery_type, trade.invoice_info].join("; ")
+    # when 'JingdongTrade'
+    #   [trade.pay_type, trade.delivery_type, trade.invoice_info].join("; ")
     end
   end
 

@@ -7,7 +7,7 @@ class TradeObserver < Mongoid::Observer
 
     yield
 
-    if object.status_changed? && object.status == "WAIT_SELLER_SEND_GOODS" && object.pay_time_changed? && object.pay_time.present?
+    if object.status_changed? && object.is_paid_not_delivered && object.pay_time_changed? && object.pay_time.present?
       send_sms_to_buyer(object)
     end
 
@@ -39,11 +39,16 @@ class TradeObserver < Mongoid::Observer
     TradeDispatchEmail.perform_async(id, seller_id, 'new')
     TradeDispatchSms.perform_async(id, seller_id, 'new')
   end
+
   def send_sms_to_buyer(trade)
     trade = TradeDecorator.decorate(trade)
     mobile = trade.receiver_mobile_phone
     trade_tid = trade.tid
-    content = "亲您好，感谢您的购买，您的订单号为#{trade_tid}，我们会尽快为您安排发货。【#{trade.fetch_account.settings.shopname_taobao}】"
+    if trade._type == "JingdongTrade"
+      content = "亲您好，感谢您的购买，您的订单号为#{trade_tid}，我们会尽快为您安排发货。【#{trade.fetch_account.settings.shopname_jingdong}】"
+    else
+      content = "亲您好，感谢您的购买，您的订单号为#{trade_tid}，我们会尽快为您安排发货。【#{trade.fetch_account.settings.shopname_taobao}】"
+    end
     notify_kind = "before_send_goods"
     if content && mobile
       SmsNotifier.perform_async(content, mobile, trade_tid ,notify_kind)

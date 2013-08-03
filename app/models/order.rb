@@ -3,6 +3,7 @@ class Order
   include Mongoid::Timestamps
 
   field :oid, type: String
+  field :refund_status, type: String, default: "NO_REFUND"
 
   field :total_fee, type: Float, default: 0.0
   field :payment, type: Float, default: 0.0
