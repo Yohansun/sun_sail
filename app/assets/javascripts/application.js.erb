@@ -381,3 +381,23 @@ $(function () {
 
     });
 });
+
+// 设置列表页可显示“列”
+function visibleTableColumns(dropdownSelector, formSelector, tableSelector){
+  $(dropdownSelector+" input[type=checkbox]").change(function(){
+    var columnName = $(this).val();
+    var elmSeletor = tableSelector+" th[data-col="+columnName+"],td[data-col="+columnName+"]";
+    if($(this).attr("checked") == "checked"){
+      $(elmSeletor).show();
+    }else{
+      $(elmSeletor).hide();
+    }
+
+    var formItem = $(formSelector);
+    $.ajax({
+      type: "POST",
+      url: "/users/update_visible_columns",
+      data: formItem.serializeArray(),
+      async: true});
+  });
+}

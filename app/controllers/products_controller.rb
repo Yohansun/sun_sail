@@ -33,7 +33,10 @@ class ProductsController < ApplicationController
 
     respond_to do |format|
       format.xls
-      format.html
+      format.html{
+        @all_cols = current_account.settings.product_cols
+        @visible_cols = current_account.settings.product_visible_cols
+      }
     end
   end
 
@@ -227,7 +230,10 @@ class ProductsController < ApplicationController
 
     respond_to do |format|
       format.xls
-      format.html
+      format.html{
+        @all_cols = current_account.settings.taobao_product_cols
+        @visible_cols = current_account.settings.taobao_product_visible_cols
+      }
     end
   end
 

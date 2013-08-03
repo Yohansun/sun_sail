@@ -16,7 +16,10 @@ class StockInBillsController < ApplicationController
     @count = @search.count
 
     respond_to do |format|
-      format.html
+      format.html{
+        @all_cols = current_account.settings.stock_in_bill_cols
+        @visible_cols = current_account.settings.stock_in_bill_visible_cols
+      }
       format.xls
     end
   end

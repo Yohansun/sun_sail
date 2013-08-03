@@ -241,6 +241,7 @@ MagicOrders::Application.routes.draw do
       post :unlock_users
       post :users_muti
       post :delete
+      post :update_visible_columns
     end
     get :edit_with_role , :on => :member
   end

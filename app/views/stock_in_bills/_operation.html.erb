@@ -1,16 +1,16 @@
-<td id="operation_<%= bill.id %>">
+<td id="operation_<%= bill.id %>"  data-col="operation" style="<%= 'display:none' unless @visible_cols.include?("operation") %>">
   <%- if bill.created_at.present? -%>
   <span class='label'>
     创建<%= bill.created_at.try(:to_s,:db) %>
   </span>
   <br>
-  <%- end %> 
+  <%- end %>
   <%- if bill.stocked_at.present? -%>
   <span class='label label-success'>
     入库<%= bill.stocked_at.try(:to_s,:db) %>
   </span>
   <br>
-  <%- end %> 
+  <%- end %>
   <%- if bill.checked_at.present? -%>
   <span class='label'>
     审核 <%= raw bill.checked_at.strftime("%m-%d %H:%M:%S") -%>

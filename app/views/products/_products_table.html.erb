@@ -2,16 +2,29 @@
   <thead>
     <tr>
       <th><input type="checkbox" id="check_all_products"></input>全选</th>
-      <th nowrap>商品ID</th>
-      <th nowrap>商品名称</th>
-      <th width="20%">商品分类</th>
-      <th nowrap>商品编码</th>
-      <th width="20%">商品属性</th>
-      <th nowrap>是否上架</th>
+      <%- @all_cols.each do |col_name, view_name| -%>
+        <th data-col="<%= col_name %>" style="<%= 'display:none' unless @visible_cols.include?(col_name) %>">
+          <%= view_name %>
+        </th>
+      <%- end -%>
     </tr>
   </thead>
   <tbody>
-    <%= render @products %>
+    <% @products.each do |product| %>
+      <tr id='product_<%= product.id %>'>
+        <td><input id='check_<%= product.id %>' class='product_check' type="checkbox"></input></td>
+          <%- @all_cols.each do |col_name, view_name| -%>
+          <td  class="<%= 'sku_title' if col_name=="product_name" %>" data-col="<%= col_name %>" style="<%= 'display:none' unless @visible_cols.include?(col_name) %>">
+            <% case col_name
+             when "category_id" %>
+              <%= product.category.try(:name) %>
+            <% else %>
+              <%= product.send(col_name) rescue "" %>
+            <% end %>
+          </td>
+        <%- end -%>
+      </tr>
+    <%- end -%>
   </tbody>
 </table>
 <div class='clearfix'>

@@ -48,6 +48,22 @@
           <%- end %>
         </ul>
       </div><!-- btn-group -->
+      <div class="btns btn-group pull-right js-field_set">
+        <input type="hidden" name="model_name" value="stock_in_bill"/>
+        <input type="hidden" name="action_name" value="index"/>
+        <a href="#" class="btn btn-success btn_mar4">显示设置</a>
+        <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-success dropdown_check_btn"><span class="caret"></span></button>
+        <ul class="dropdown-menu dropdown_check" id="dropdown_check">
+          <% @all_cols.each do |col_name, view_name| %>
+          <li data-col="<%= col_name %>">
+            <label class="checkbox" style="padding-left:35px;">
+              <input type="checkbox" class="test_checkbox" name="visible_columns[]" value="<%= col_name %>" <%= ' checked="checked"' if @visible_cols.include?(col_name) %>/>
+              <%= view_name %>
+            </label>
+          </li>
+          <% end %>
+        </ul>
+      </div>
     </div>
     <%= render "table" %>
     <%- end %>
@@ -77,6 +93,7 @@
 
   $(function() {
     clickTableRow("bills_table");
+    visibleTableColumns("#dropdown_check", "#stock_in_bills_form", "#bills_table");
   });
 </script>
 <% end %>

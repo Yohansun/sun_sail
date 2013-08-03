@@ -13,6 +13,8 @@ class StockBillsController < ApplicationController
     @number = params[:number] if params[:number].present?
     @bills = @search.page(params[:page]).per(@number)
     @count = @search.count
+    @all_cols = current_account.settings.stock_bill_cols
+    @visible_cols = current_account.settings.stock_bill_visible_cols
   end
 
   def fetch_bills
