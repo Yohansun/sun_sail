@@ -9,7 +9,7 @@ module ECommerce
       attr_accessor :changed,:latest,:alias_columns
 
       def parsing
-        @changed,@latest = Array.new(2) { [] }
+        @changed,@latest = Array.new(2) { klass.where("1=0") }
 
         response_ary = response
         rdup = response_ary.dup
@@ -27,8 +27,8 @@ module ECommerce
       end
 
       def perform
-        sames = [@changed,@latest].flatten
-        sames.map(&:save!)
+        all = [@changed,@latest].flatten
+        all.map(&:save!)
       end
 
       def relations

@@ -5,12 +5,13 @@ class JingdongProductSync < ECommerce::Synchronization::Base
   set_variable :page_count, proc { |v|  total_results.zero? ? 1 : (total_results / get_size.to_f).ceil}
   alias_columns :attributes => "attribute_s"
 
-  def initialize(var=nil)
+  def initialize(key)
+    @account = Account.find_by_key key
     super
   end
 
   def response
-    @response = JingdongFu.get({method: '360buy.ware.listing.get', page_size: get_size, page: page_no})
+    @response = JingdongQuery.get({method: '360buy.ware.listing.get', page_size: get_size, page: page_no},@account.id)
     @response["ware_listing_get_response"]["ware_infos"] rescue []
   end
   
