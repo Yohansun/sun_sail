@@ -164,7 +164,10 @@ MagicOrder::AccessControl.map do |map|
   map.project_module :products do |map|
     map.permission :reads,      ["detail",
                                  "taobao_products",
-                                 "taobao_product"]
+                                 "taobao_product",
+                                 "jingdong_products#detail",
+                                 "jingdong_products#sync"
+                               ]
     map.permission :operations, ["create",
                                  "update",
                                  "export_products",
@@ -173,7 +176,9 @@ MagicOrder::AccessControl.map do |map|
                                  "sync_taobao_products",
                                  "confirm_sync",
                                  "remove_sku",
-                                 "add_sku"]
+                                 "add_sku",
+                                 "jingdong_products#syncing"
+                               ]
 
   end
 
