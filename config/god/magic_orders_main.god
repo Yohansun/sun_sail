@@ -2,6 +2,18 @@ rails_env   = ENV['RAILS_ENV']  || "production"
 rails_root  = ENV['RAILS_ROOT'] || "/home/rails/server/magic-solo/current"
 num_workers = rails_env == 'production' ? 1 : 1
 
+God::Contacts::Email.defaults do |d|
+  d.from_email = 'errors@networking.io'
+  d.from_name = 'Magic-Solo God Warnings'
+  d.delivery_method = :sendmail
+end
+
+God.contact(:email) do |c|
+  c.name = 'god'
+  c.group = 'errors'
+  c.to_email = 'errors@networking.io'
+end
+
 num_workers.times do |num|
   God.watch do |w|
     w.dir      = "#{rails_root}"
@@ -10,13 +22,14 @@ num_workers.times do |num|
     w.interval = 30.seconds
 
     # 可选队列 sms email jingdong taobao_purchase taobao
-    w.start = "bundle exec sidekiq -q trade_manual_notify -q reporter -q auto_process -q taobao_memo_fetcher -q taobao_promotion_fetcher -q trade_deliver -q biaogan -q customer_fetch -q one_hit_fetcher -q customer_message -e production &> log/sidekiq.log"
+    w.start = "bundle exec sidekiq -q trade_manual_notify -q reporter -q auto_process -q taobao_memo_fetcher -q taobao_promotion_fetcher -q trade_deliver -q biaogan -q customer_fetch -q one_hit_fetcher -q customer_message -q init_user_notifier -e production &> log/sidekiq.log"
 
     # restart if memory gets too high
     w.transition(:up, :restart) do |on|
       on.condition(:memory_usage) do |c|
         c.above = 350.megabytes
         c.times = 2
+        c.notify = {:contacts => ['errors'], :priority => 1, :category => 'MAIN'}
       end
     end
 
@@ -32,6 +45,7 @@ num_workers.times do |num|
       on.condition(:process_running) do |c|
         c.running = true
         c.interval = 5.seconds
+        c.notify = {:contacts => ['errors'], :priority => 1, :category => 'MAIN'}
       end
 
       # failsafe
@@ -39,6 +53,7 @@ num_workers.times do |num|
         c.times = 5
         c.transition = :start
         c.interval = 5.seconds
+        c.notify = {:contacts => ['errors'], :priority => 1, :category => 'MAIN'}
       end
     end
 
@@ -46,6 +61,7 @@ num_workers.times do |num|
     w.transition(:up, :start) do |on|
       on.condition(:process_running) do |c|
         c.running = false
+        c.notify = {:contacts => ['errors'], :priority => 1, :category => 'MAIN'}
       end
     end
   end

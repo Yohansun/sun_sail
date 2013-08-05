@@ -24,6 +24,7 @@ gem 'jquery-rails'
 group :test, :development do
   gem "better_errors"
   gem "debugger"
+  gem "better_errors"
   gem "guard"
   gem "guard-bundler"
   gem "guard-rspec"
@@ -113,5 +114,5 @@ gem "clockwork", "~> 0.5.0"
 
 group :production do
   gem "exception_notification", "~> 2.6.1"
-  # gem 'newrelic_rpm'
+  gem 'newrelic_rpm'
 end

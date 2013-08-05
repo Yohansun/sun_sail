@@ -270,6 +270,7 @@ GEM
     net-ssh (2.6.7)
     net-ssh-gateway (1.2.0)
       net-ssh (>= 2.6.5)
+    newrelic_rpm (3.6.4.122)
     nokogiri (1.5.6)
     nori (2.0.4)
     oauth2 (0.8.0)
@@ -534,6 +535,7 @@ DEPENDENCIES
   mini_magick
   mongoid (= 3.1.0)
   mysql2
+  newrelic_rpm
   omniauth
   omniauth-oauth2
   paperclip (~> 2.4)

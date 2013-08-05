@@ -53,6 +53,7 @@ namespace :deploy do
     run "ln -nfs #{shared_path}/config/jingdong.yml #{release_path}/config/jingdong.yml"
     run "ln -nfs #{shared_path}/config/mongoid.yml #{release_path}/config/mongoid.yml"
     run "ln -nfs #{shared_path}/config/redis.yml #{release_path}/config/redis.yml"
+    run "ln -nfs #{shared_path}/config/newrelic.yml #{release_path}/config/newrelic.yml"
     run "ln -nfs #{shared_path}/system #{release_path}/public/system"
     run "ln -nfs #{shared_path}/data #{release_path}/data"
 

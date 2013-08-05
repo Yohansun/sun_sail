@@ -1,4 +1,31 @@
-[201,204].each do |taobao_trade_source_id|
+###### TRADE SOURCE
+
+### KEEP AWAY
+# 100 babybetter母婴旗舰店
+# 204 万科白马欧美母婴店
+# 205 欧贝贝organic baby有机棉婴儿用品店
+
+### READY TO USE
+# 201 白兰氏官方旗舰店
+# 206 瑞莱旗舰店
+# 207 gnc雍恒专卖店
+# 208 榜眼图书专营店
+# 209 优悠汇
+# 210 粉兔珍宝
+
+God::Contacts::Email.defaults do |d|
+  d.from_email = 'errors@networking.io'
+  d.from_name = 'Magic-Solo God Warnings'
+  d.delivery_method = :sendmail
+end
+
+God.contact(:email) do |c|
+  c.name = 'god'
+  c.group = 'errors'
+  c.to_email = 'errors@networking.io'
+end
+
+[201,206,207,208,209,210].each do |taobao_trade_source_id|
   God.watch do |w|
     w.name = "taobao_puller_#{taobao_trade_source_id}"
     w.group = 'magic_solo'
@@ -11,6 +38,7 @@
     w.start_if do |start|
       start.condition(:process_running) do |c|
         c.running = false
+        c.notify = {:contacts => ['errors'], :priority => 1, :category => 'TAOBAOTRADEPULLER'}
       end
     end
 
@@ -18,6 +46,7 @@
     w.transition(:init, { true => :up, false => :start }) do |on|
       on.condition(:process_running) do |c|
         c.running = true
+        c.notify = {:contacts => ['errors'], :priority => 1, :category => 'TAOBAOTRADEPULLER'}
       end
     end
 
@@ -25,18 +54,23 @@
     w.transition([:start, :restart], :up) do |on|
       on.condition(:process_running) do |c|
         c.running = true
+        c.notify = {:contacts => ['errors'], :priority => 1, :category => 'TAOBAOTRADEPULLER'}
       end
 
       # failsafe
       on.condition(:tries) do |c|
         c.times = 5
         c.transition = :start
+        c.notify = {:contacts => ['errors'], :priority => 1, :category => 'TAOBAOTRADEPULLER'}
       end
     end
 
     # start if process is not running
     w.transition(:up, :start) do |on|
-      on.condition(:process_exits)
+      on.condition(:process_running) do |c|
+        c.running = false
+        c.notify = {:contacts => ['errors'], :priority => 1, :category => 'MAIN'}
+      end
     end
   end
 end
