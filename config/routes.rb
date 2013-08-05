@@ -47,6 +47,7 @@ MagicOrders::Application.routes.draw do
   end
   match "/stocks/safe_stock", to: 'stocks#safe_stock'
   post "/stocks/edit_safe_stock", to: 'stocks#edit_safe_stock'
+  post "/stock_bills/update_status", to: 'stocks#update_status'
   match "/stocks/change_product_type", to: 'stocks#change_product_type'
   get "notify/sms"
   get "notify/email"

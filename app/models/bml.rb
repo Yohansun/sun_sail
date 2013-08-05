@@ -1,6 +1,35 @@
 # -*- encoding : utf-8 -*-
 require "savon"
 class Bml
+
+  def self.so_to_wms(account, xml)
+    client = Savon.client(wsdl: account.settings.biaogan_client)
+    response = client.call(:so_to_wms, message:{CustomerId: account.settings.biaogan_customer_id, PWD: account.settings.biaogan_customer_password,xml: xml})
+    response.body[:so_to_wms_response][:out]
+  end
+
+  def self.cancel_order_rx(account, tid)
+    client = Savon.client(wsdl: account.settings.biaogan_client)
+    response = client.call(:cancel_order_rx) do
+      message CustomerId: account.settings.biaogan_customer_id, PWD: account.settings.biaogan_customer_password, orderid: tid
+    end
+    response.body[:cancel_order_rx_response][:out]
+  end
+
+  def self.ans_to_wms(account, xml)
+    client = Savon.client(wsdl: account.settings.biaogan_client)
+    response = client.call(:ans_to_wms, message:{CustomerId: account.settings.biaogan_customer_id, PWD: account.settings.biaogan_customer_password,xml: xml})
+    response.body[:ans_to_wms_response][:out]
+  end
+
+  def self.cancel_asn_rx(account, tid)
+    client = Savon.client(wsdl: account.settings.biaogan_client)
+    response = client.call(:cancel_asn_rx) do
+      message CustomerId: account.settings.biaogan_customer_id, PWD: account.settings.biaogan_customer_password, AsnNo: tid
+    end
+    response.body[:cancel_asn_rx_response][:out]
+  end
+
   def self.search_order_status(account, tid)
     client = Savon.client(wsdl: account.settings.biaogan_client)
       response = client.call(:search_order_status) do

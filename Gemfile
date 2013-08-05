@@ -24,7 +24,6 @@ gem 'jquery-rails'
 group :test, :development do
   gem "better_errors"
   gem "debugger"
-  gem "better_errors"
   gem "guard"
   gem "guard-bundler"
   gem "guard-rspec"

@@ -331,6 +331,7 @@ class Trade
                                total_fee: 0,
                                payment: 0,
                                discount_fee: 0,
+                               outer_iid: gift_product.outer_id,
                                adjust_fee: 0,
                                num_iid: gift_product.num_iid,
                                sku_id:  sku.try(:sku_id),  # this should be skus.sku_id not skus.id, and its' type is string not integer.
@@ -606,13 +607,14 @@ class Trade
           product = sku.try(:product)
           if product
             stock_product = fetch_account.stock_products.where(product_id: product.id, sku_id: sku_id).first
+            order_price = (order.price == 0 ? 0 : product.price)
             if stock_product
               bill.bill_products.build(
                 stock_product_id: stock_product.id,
                 title: sku.title,
                 outer_id: product.outer_id,
                 sku_id: sku_id,
-                price: product.price,
+                price: order_price,
                 total_price: product.price * order_num,
                 number: order_num,
                 remark: order.cs_memo

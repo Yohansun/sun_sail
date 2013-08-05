@@ -28,20 +28,19 @@ class StockProduct < ActiveRecord::Base
   validates_numericality_of :safe_value, :actual, :activity, :max, greater_than_or_equal_to: 0, message: '数量不能小于零'
   validates_numericality_of :activity, less_than_or_equal_to: :actual
   validates_presence_of :product_id, :account_id, message: '必填项'
-  validates_uniqueness_of :sku_id, scope: :account_id, message: '必填项'
   belongs_to :product
   belongs_to :sku
   belongs_to :seller
   has_one :category , :through => :product,:source => :category
   has_and_belongs_to_many :colors
   scope :with_account, ->(account_id) { where(:account_id => account_id) }
-  
+
   STORAGE_STATUS = {
     "预警" => "stock_products.activity < stock_products.safe_value",
     "满仓" => "stock_products.actual = stock_products.max",
     "正常" => "stock_products.activity >= stock_products.safe_value and stock_products.actual != stock_products.max"
   }
-  
+
   def self.batch_update_activity_stock(relation,number)
     success = []
     fails = []
