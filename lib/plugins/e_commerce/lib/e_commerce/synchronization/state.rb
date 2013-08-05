@@ -41,6 +41,8 @@ module ECommerce
 
       private
       def update_attributes(record,attrs)
+        attrs.merge!(default_attributes)
+        attrs.stringify_keys!
         attrs.slice(*fields).each_pair { |column_name,value| record.send("#{alias_column(column_name)}=",mongoize(column_name,value))}
         record
       end
@@ -56,6 +58,10 @@ module ECommerce
 
       def alias_column(column_name)
         alias_columns[column_name] || column_name
+      end
+
+      def default_attributes
+        @default_attributes || {}
       end
     end
   end

@@ -4,9 +4,12 @@ class JingdongProductSync < ECommerce::Synchronization::Base
   set_variable :page_no, 1
   set_variable :page_count, proc { |v|  total_results.zero? ? 1 : (total_results / get_size.to_f).ceil}
   alias_columns :attributes => "attribute_s"
+  attr_reader :account_id
 
   def initialize(key)
     @account = Account.find_by_key key
+    @account_id = @account.id
+    @default_attributes = {account_id: @account_id}
     super
   end
 

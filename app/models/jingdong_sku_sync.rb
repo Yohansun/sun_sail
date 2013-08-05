@@ -1,16 +1,20 @@
 #encoding: utf-8
 
-# j = JingdongProductSync.new
+# j = JingdongProductSync.new(:vanward)
 # j.parsing
-# d = JingdongSkuSync.new(j.ware_ids)
+# d = JingdongSkuSync.new({ware_ids: j.ware_ids,account_id: j.account_id})
 # d.parsing
 
 class JingdongSkuSync < ECommerce::Synchronization::Base
   identifier 'ware_id'
   alias_columns :attributes => "attribute_s"
   
-  def initialize(ware_ids)
-    @ware_ids = Array.wrap(ware_ids)
+  def initialize(options={})
+    options.symbolize_keys!
+    raise "The *ware_ids* option can't be blank" if options[:ware_ids].blank?
+    raise "The *account_id* option can't be blank" if options[:account_id].blank?
+    @ware_ids = options.delete(:ware_ids)
+    @default_attributes = options
     @split_ids = []
   end
 

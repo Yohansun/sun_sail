@@ -1,6 +1,7 @@
 #encoding: utf-8
 class JingdongProductsController < ApplicationController
   before_filter :authorize
+  before_filter :scan_sync,:only => [:sync,:syncing]
   # GET /products/jingdong_products
   def index
     params[:search] ||= {}
@@ -16,18 +17,10 @@ class JingdongProductsController < ApplicationController
 
   # GET /products/jingdong_products/sync
   def sync
-    @sync_products = JingdongProductSync.new(current_account.key)
-    @sync_products.parsing
-    @sync_skus = JingdongSkuSync.new(@sync_products.ware_ids)
-    @sync_skus.parsing
   end
 
   # PUT /products/jingdong_products/1/syncing
   def syncing
-    @sync_products = JingdongProductSync.new(current_account.key)
-    @sync_products.parsing
-    @sync_skus = JingdongSkuSync.new(@sync_products.ware_ids)
-    @sync_skus.parsing
     [@sync_skus,@sync_products].map(&:perform)
     redirect_to :action => :index
     flash[:notice] = "同步成功"
@@ -81,5 +74,13 @@ class JingdongProductsController < ApplicationController
       end
     end
     render :nothing => true, status: 200
+  end
+
+  private
+  def scan_sync
+    @sync_products = JingdongProductSync.new(current_account.key)
+    @sync_products.parsing
+    @sync_skus = JingdongSkuSync.new({ware_ids: @sync_products.ware_ids, account_id: @sync_products.account_id})
+    @sync_skus.parsing
   end
 end
