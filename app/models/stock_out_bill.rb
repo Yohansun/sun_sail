@@ -13,7 +13,7 @@ class StockOutBill < StockBill
     stock.RequestOrderList do
       stock.RequestOrderInfo do
         stock.warehouseid "BML_KSWH"
-        stock.customerId $biaogan_customer_id
+        stock.customerId account.settings.biaogan_customer_id
         stock.orderCode tid
         stock.systemId tid
         stock.orderType stock_typs
@@ -87,8 +87,8 @@ class StockOutBill < StockBill
 
   def so_to_wms_worker
     if ((trade && trade.status == "WAIT_SELLER_SEND_GOODS") || (!trade))
-      client = Savon.client(wsdl: $biaogan_client)
-      response = client.call(:so_to_wms, message:{CustomerId: $biaogan_customer_id, PWD: $biaogan_customer_password,xml: xml})
+      client = Savon.client(wsdl: account.settings.biaogan_client)
+      response = client.call(:so_to_wms, message:{CustomerId: account.settings.biaogan_customer_id, PWD: account.settings.biaogan_customer_password,xml: xml})
       result_xml = response.body[:so_to_wms_response][:out]
       result = Hash.from_xml(result_xml).as_json
       if result['Response']['success'] == 'true'
@@ -103,9 +103,9 @@ class StockOutBill < StockBill
 
   #发送订单取消信息至仓库
   def cancel_order_rx_worker
-    client = Savon.client(wsdl: $biaogan_client)
+    client = Savon.client(wsdl: account.settings.biaogan_client)
     response = client.call(:cancel_order_rx) do
-      message CustomerId: $biaogan_customer_id, PWD: $biaogan_customer_password, AsnNo: tid
+      message CustomerId: account.settings.biaogan_customer_id, PWD: account.settings.biaogan_customer_password, AsnNo: tid
     end
     result_xml = response.body[:cancel_order_rx_response][:out]
     result = Hash.from_xml(result_xml).as_json
