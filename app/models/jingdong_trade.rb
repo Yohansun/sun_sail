@@ -13,10 +13,10 @@ class JingdongTrade < Trade
 
   #对应trade字段
   field :tid,               as: :order_id, type: String
-  field :total_fee,         as: :order_total_price, type: Float
-  field :payment,           as: :order_payment, type: Float
-  field :post_fee,          as: :freight_price, type: Float
-  field :discount_fee,      as: :seller_discount, type: Float
+  field :total_fee,         as: :order_total_price, type: Float, default: 0.0
+  field :payment,           as: :order_payment, type: Float, default: 0.0
+  field :post_fee,          as: :freight_price, type: Float, default: 0.0
+  field :discount_fee,      as: :seller_discount, type: Float, default: 0.0
 
   field :status,            as: :order_state, type: String
 

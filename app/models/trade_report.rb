@@ -22,7 +22,11 @@ class TradeReport
   end
 
   def export_report
-    TaobaoTradeReporter.perform_async(id)
+    if self.conditions['search']['_type'] == "JingdongTrade"
+      JingdongTradeReporter.perform_async(id)
+    else
+      TaobaoTradeReporter.perform_async(id)
+    end
   end
 
   def username
