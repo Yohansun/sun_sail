@@ -11,10 +11,11 @@ class JingdongProductSync < ECommerce::Synchronization::Base
   end
 
   def response
-    @response = JingdongQuery.get({method: '360buy.ware.listing.get', page_size: get_size, page: page_no},@account.id)
+    query_conditions = @account.jingdong_query_conditions
+    @response = JingdongQuery.get({method: '360buy.ware.listing.get', page_size: get_size, page: page_no},query_conditions)
     @response["ware_listing_get_response"]["ware_infos"] rescue []
   end
-  
+
   def total_results
     @total_results ||= @response["ware_listing_get_response"]["total"]
   end

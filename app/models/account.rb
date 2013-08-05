@@ -420,4 +420,16 @@ class Account < ActiveRecord::Base
   def create_default_roles
     self.roles.create(:name=>:admin).add_all_permissions
   end
+
+  def jingdong_query_conditions
+    trade_source = self.jingdong_source
+    conditions = {}
+    if trade_source
+      conditions = trade_source.attributes.update("access_token" => trade_source.jingdong_app_token.access_token)
+      if Rails.env == "development" || Rails.env == "test"
+        conditions = conditions.update("is_sandbox" => 'true')
+      end
+    end
+    conditions
+  end
 end

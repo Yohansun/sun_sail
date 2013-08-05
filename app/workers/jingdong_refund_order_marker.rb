@@ -6,11 +6,12 @@ class JingdongRefundOrderMarker
   def perform(account_id)
     start_time = 1.week.ago.strftime("%Y-%m-%d %H:%M:%S")
     end_time = Time.now.strftime("%Y-%m-%d %H:%M:%S")
+    query_conditions = Account.find(account_id).jingdong_query_conditions
     #没有加query_fields,需要加
     response = JingdongQuery.get({method: '360buy.after.search',
                                   select_fields: 'receive_state,return_item_list',
                                   page: 100,
-                                  page_size: 10}, account_id)
+                                  page_size: 10}, query_conditions)
     if response['after_search_response']
       return_infos = response['after_search_response']['after']["return_infos"]
       if return_infos.present?

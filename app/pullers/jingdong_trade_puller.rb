@@ -39,13 +39,14 @@ class JingdongTradePuller
       end
 
       order_states = 'WAIT_SELLER_DELIVERY,WAIT_SELLER_STOCK_OUT,WAIT_GOODS_RECEIVE_CONFIRM,FINISHED_L,TRADE_CANCELED'
+      query_conditions = account.jingdong_query_conditions
       begin
         response = JingdongQuery.get({method: '360buy.order.search',
           order_state: order_states,
           start_date: start_time.strftime("%Y-%m-%d %H:%M:%S"),
           end_date: end_time.strftime("%Y-%m-%d %H:%M:%S"),
           page: page_no,
-          page_size: 10}, account_id)
+          page_size: 10}, query_conditions)
 
         unless response['order_search_response']
           Notifier.puller_errors(response, account_id).deliver
