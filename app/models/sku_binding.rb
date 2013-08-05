@@ -9,7 +9,7 @@
 #
 
 class SkuBinding < ActiveRecord::Base
-  attr_accessible :sku_id, :taobao_sku_id, :number
+  attr_protected []
   belongs_to :resource,:polymorphic => true,:include => :skus
   belongs_to :sku
 end

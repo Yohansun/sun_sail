@@ -9,7 +9,6 @@ class JingdongTrade < Trade
   field :delivery_type, type: String       # 送货日期类型
   field :order_state_remark, type: String  # 中文状态
   field :return_order, type: String        # 换货订单标识
-  field :pin, type: String                 # 买家账号信息
 
   #对应trade字段
   field :tid,               as: :order_id, type: String
@@ -29,6 +28,7 @@ class JingdongTrade < Trade
   field :pay_time
   field :consign_time,      as: :order_end_time, type: DateTime
 
+  field :buyer_nick,        as: :pin, type: String
   field :receiver_name,     as: :fullname, type: String
   field :receiver_address,  as: :full_address, type: String
   field :receiver_phone,    as: :telephone, type: String

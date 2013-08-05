@@ -297,7 +297,7 @@ class ProductsController < ApplicationController
 
   require 'sync_taobao_products'
   def get_products
-    products          =  CompareProduct.new(current_account)
+    products          = CompareProduct.new(current_account)
     @news_products    = products.not_exists
     @changes_products = products.changes
   rescue Exception => e

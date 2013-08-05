@@ -37,7 +37,7 @@ class TaobaoSku < ActiveRecord::Base
     sku_name
   end
 
-   def value
+  def value
     value = ''
     if properties_name.present?
       properties = properties_name.split(';')

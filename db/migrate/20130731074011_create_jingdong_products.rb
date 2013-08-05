@@ -19,7 +19,7 @@ class CreateJingdongProducts < ActiveRecord::Migration
       t.integer :transport_id                        #运费模板
       t.string  :online_time                         #最后上架时间
       t.string  :offline_time                        #最后下架时间
-      t.string  :attribute_s                          #可选属性
+      t.string  :attribute_s                         #可选属性
       t.text    :desc                                #商品描述
       t.string  :producter                           #生产厂商
       t.string  :wrap                                #包装规格
@@ -47,7 +47,7 @@ class CreateJingdongProducts < ActiveRecord::Migration
       t.boolean :is_serial_no                        #是否序列号管理： false为否，true为是
       t.boolean :is_appliances_card                  #大家电购物卡： false为否，true为是
       t.boolean :is_special_wet                      #是否特殊液体： false为否，true为是
-      t.integer :ware_big_small_model                #商品件型： 
+      t.integer :ware_big_small_model                #商品件型：
                                                      #0免费、1超大件、2超大件半件、3大件、4大件半件、5中件、6中件半件、7小件、8超小件
       t.integer :ware_pack_type                      #商品包装：
                                                      #1普通商品、2易碎品、3裸瓶液体、4带包装液体、5按原包装出库
