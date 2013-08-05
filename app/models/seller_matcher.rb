@@ -25,7 +25,8 @@ class SellerMatcher
     sellers = area.sellers.where(id: seller_ids, active: true).reorder("performance_score DESC")
   end
 
-  def self.match_trade_seller(trade, area)
+  def self.match_trade_seller(trade_id, area)
+    trade = Trade.find(trade_id)
     matched_sellers = nil
     trade.orders.each do |order|
       matched_sellers ||= match_item_sellers(area, order)
