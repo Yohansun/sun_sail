@@ -178,7 +178,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
             $(location).attr('href', '/custom_trades/'+trade_id+'/edit')
           else if $(e.target).data('modal-action')==true
             @do_modal_action e
-          else if type == "invoice_settings"
+          else if type == "invoice"
             Backbone.history.navigate('trades/'+trade_id+"/invoice", true)
           else
             Backbone.history.navigate('trades/'+trade_id+"/"+type, true)

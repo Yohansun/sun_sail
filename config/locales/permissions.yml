@@ -122,7 +122,7 @@ zh-CN:
   permissions_tag_total_fee: 实付金额
   permissions_tag_logistic: 物流配送商
   permissions_tag_order_split: 拆分
-  permissions_tag_invoice_settings: 开票设置
+  permissions_tag_invoice: 开票设置
   permissions_tag_invoice_number: 发票号设置
   permissions_tag_invoice_value: 开票金额
   permissions_tag_invoice_date: 完成日期
