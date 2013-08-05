@@ -1,0 +1,12 @@
+<table class="table table-striped table-bordered table-condensed td_colors mar_t">
+  <thead>
+    <th>经销商简称</th>
+    <th>导入状态</th>
+  </thead>
+  <% status_list.each do |key, value| %>
+    <tr>
+      <td><%= key %></td>
+      <td><%= value %></td>
+    </tr>
+  <% end %>
+</table>

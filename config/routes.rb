@@ -151,6 +151,10 @@ MagicOrders::Application.routes.draw do
 
     collection do
       post :search
+      post :import_csv
+      post :confirm_import_csv
+      post :active_seller
+      post :shutdown_seller
       post :user_list
       get :seller_user
       get :seller_user_list
@@ -160,6 +164,8 @@ MagicOrders::Application.routes.draw do
       get :remove_seller_area
       get :latest
       get :closed
+      get :export
+      get :import
     end
   end
 
@@ -239,7 +245,16 @@ MagicOrders::Application.routes.draw do
     get :edit_with_role , :on => :member
   end
 
-  resources :areas
+  resources :areas do
+    collection do
+      get :sellers
+      get :export
+      get :import
+      post :import_csv
+      post :confirm_import_csv
+    end
+  end
+
   resources :trade_sources
   resources :accounts
 

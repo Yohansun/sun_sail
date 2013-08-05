@@ -103,6 +103,7 @@ $(function () {
     $('#storage_pop .open_stock').attr('href', "/sellers/" + $(this).data('id') + "/change_stock_type")
   });
 
+  //TO BE REMOVED
   $('.login_acount').click(function(argument) {
     var seller_id = $(this).attr('data-id');
     $("#seller_id_container").html(seller_id);
@@ -110,24 +111,28 @@ $(function () {
     });
   })
 
+  //TO BE REMOVED
    $('.area_management').click(function(argument) {
      var seller_id = $(this).attr('data-id');
      $.get("/sellers/seller_area", {seller_id:seller_id}, function(result){
      });
    })
 
+  //TO BE REMOVED
    $('.logistic_area').click(function(argument) {
      var logistic_id = $(this).attr('data-id');
      $.get("/logistics/logistic_area", {logistic_id:logistic_id}, function(result){
      });
    })
 
+  //TO BE REMOVED
    $('.onsite_service_area').click(function(argument) {
      var state_id = $(this).attr('data-id');
      $.get("/onsite_services/onsite_service_area", {state_id:state_id}, function(result){
      });
    })
 
+  //TO BE REMOVED
    $('.logistic_login_acount').click(function(argument) {
     var logistic_id = $(this).attr('data-id');
     $("#logistic_id_container").html(logistic_id);

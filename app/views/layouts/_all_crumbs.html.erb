@@ -15,6 +15,12 @@
   <% elsif params[:controller] == "stock_bills" %>
     <li><a href="/stocks">仓库管理</a><span class="divider">/</span></li>
     <li class='active'>所有进销</li>
+  <% elsif params[:controller] == "sellers" %>
+    <li><a href="/sellers">经销商管理</a><span class="divider">/</span></li>
+    <li class='active'>经销商</li>
+  <% elsif params[:controller] == "areas" && ["sellers", "import"].include?(params[:action]) %>
+    <li><a href="/sellers">经销商管理</a><span class="divider">/</span></li>
+    <li class='active'>地区经销商</li>
   <% elsif params[:controller] == "products" %>
     <li><a href="/products">商品管理</a><span class="divider">/</span></li>
     <% if params[:action] =~ /taobao_products/  %>

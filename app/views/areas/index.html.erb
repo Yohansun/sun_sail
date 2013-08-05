@@ -24,7 +24,7 @@
               </div>
             </div>
 
-            <table class="table table-striped table-bordered table-condensed td_colors mar_t js-table">
+            <table class="table table-striped table-bordered table-condensed td_colors mar_t js-table" id="area_table">
               <thead>
                 <tr>
                   <th width="1%"><input type="checkbox"></th>
@@ -53,3 +53,23 @@
     </div>
   </div>
 </div>
+
+<script>
+  function validateValues(item){
+    var check_values = $('input:checked').map(function(){if($(this).val() != 'on'){return ($(this).val())}});
+    if($('input:checked').length < 1) {
+      alert('请选择');
+    } else if($.inArray('<%= current_user.id %>',check_values) >= 0 && $(item).attr("goto") != "/areas"){
+      alert('不能操作自己哦 ╮(╯_╰)╭');
+    } else {
+      $('#parent_area').attr({action: $(item).attr("goto") ,method: $(item).attr("request") });
+      $('#parent_area').submit();
+    }
+  }
+
+  $('#export_areas').on('click', function(event){
+    event.preventDefault()
+    var area_ids = $('#area_table input:checked').map(function(){return _.trim($(this).attr('id'), "check_")}).get();
+    window.location.href = "/areas/export.xls?area_ids="+area_ids
+  })
+</script>

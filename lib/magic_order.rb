@@ -1,10 +1,16 @@
 #encoding: utf-8
 module MagicOrder
   ActionDelega = {
-    "detail" =>   ["index","home",'show','fetch_group'],
+    "detail" =>   ["index","home",'show','info','lastest','closed', 'children','fetch_group'],
     "create" =>   ["new","create"],
-    "update" =>   ["edit","update"],
+    "update" =>   ["edit","update", 'status_update'],
+    "active" =>   ["active", "active_seller"],
+    "shutdown" =>   ["shutdown", "shutdown_seller"],
     "destroy" =>  ["destroy","delete","deletes"],
+    "user_manage" =>  ["seller_user_list","seller_user","remove_seller_user"],
+    "area_manage" =>  ["create_seller_area","remove_seller_area", "seller_area"],
+    "export" => ["export"],
+    "import" => ["import","confirm_import_csv","import_csv"],
     "edit_depot" => ["edit_depot","update_depot"],
     "customers_detail" => ["index","potential","paid","around","show"],
     "send_customers_messages" => ["send_messages","invoice_messages","get_recipients"],
@@ -168,14 +174,29 @@ MagicOrder::AccessControl.map do |map|
                                  "add_sku"]
 
   end
+  #经销商管理
+  map.project_module :sellers do |map|
+    map.permission :reads,      ["detail"]
+    map.permission :operations, ["create",
+                                 "update",
+                                 "export",
+                                 "import",
+                                 "user_manage",
+                                 "area_manage",
+                                 "active",
+                                 "shutdown"]
+
+  end
   #地区管理
   map.project_module :areas do |map|
     map.permission :reads,      ["detail",
                                  "autocomplete",
                                  "area_search",
-                                 "export"]
+                                 "sellers"]
     map.permission :operations, ["create",
-                                 "update"]
+                                 "update",
+                                 "import",
+                                 "export"]
   end
   #发货拆分管理
   map.project_module :logistic_groups do |map|

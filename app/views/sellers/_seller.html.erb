@@ -1,0 +1,24 @@
+<tr id="seller_<%= seller.id %>">
+  <td><input id='check_<%= seller.id %>' class='seller_check' type="checkbox"></input></td>
+  <td><%= seller.id %><input type='hidden' class='parent_id' value="<%= seller.parent_id %>"></td>
+  <td><%= seller.name %></td>
+  <td><%= seller.fullname %></td>
+  <td><p style="width:100px;word-wrap:break-word"><%= seller.mobile %></p></td>
+  <td><p style="width:200px"><%= seller.email %></p></td>
+  <td>
+    <%- if seller.children.count > 0 %>
+      <div class="btn-group">
+        <%= link_to raw("<i class='icon-next_dealer'></i>"), '', "data-toggle" =>"dropdown",  :remote => true, :class => 'dropdown-toggle noshadow min_w preview_children', :onclick=>"tog(#{seller.id})", :id => seller.id%>
+        <ul class="dropdown-menu" style="left:-115px;" id='children_<%= seller.id %>'>
+        </ul>
+      </div>
+    <%- end %>
+  </td>
+  <td>
+    <% if seller.active == true %>
+      启用
+    <% elsif seller.active == false %>
+      关闭
+    <% end %>
+  </td>
+</tr>
