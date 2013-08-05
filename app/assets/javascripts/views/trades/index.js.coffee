@@ -292,6 +292,13 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
         name = $('.search_tags_group').find("input:eq("+num+")").attr('name')
         value = $('.search_tags_group').find("input:eq("+num+")").val()
         search_hash[name] = value
+      tag = $(".search_tags_group input[name=_type]")
+      if tag.length == 0
+        alert("请在高级搜索中选择来源，并添加该搜索条件")
+        return
+    else
+      alert("请在高级搜索中选择来源，并添加该搜索条件")
+      return 
 
     if @trade_type == "default"
       type_cache = "undispatched"
