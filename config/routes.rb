@@ -2,8 +2,6 @@ require 'sidekiq/web'
 
 MagicOrders::Application.routes.draw do
 
-
-
   resources :customers ,:only => [:index,:show] do
 
     collection do
@@ -53,8 +51,7 @@ MagicOrders::Application.routes.draw do
   get "notify/sms"
   get "notify/email"
 
-
-
+  wash_out :trade_api
   wash_out :stock_api
 
   resources :trade_searches do

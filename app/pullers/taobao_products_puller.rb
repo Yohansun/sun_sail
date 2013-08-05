@@ -137,7 +137,7 @@ class TaobaoProductsPuller
       trade_source = TradeSource.find_by_id(trade_source_id)
       account = Account.find_by_id(trade_source.account_id)
 
-      return if Product.where(account_id: account_id).exists?
+      return if Product.where(account_id: trade_source.account_id).exists?
 
       total_pages = nil
       page_no = 0
@@ -225,7 +225,7 @@ class TaobaoProductsPuller
       trade_source = TradeSource.find_by_id(trade_source_id)
       account = Account.find_by_id(trade_source.account_id)
 
-      return if Product.where(account_id: account_id).exists?
+      return if Product.where(account_id: trade_source.account_id).exists?
 
       trades = Trade.where(trade_source_id: trade_source_id).only("taobao_orders.num_iid")
       num_iids = trades.map(&:taobao_orders).flatten.map(&:num_iid).flatten.uniq

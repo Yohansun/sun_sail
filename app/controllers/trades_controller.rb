@@ -484,7 +484,7 @@ class TradesController < ApplicationController
     trade = Trade.find params[:id]
     area = Area.find params[:area_id]
 
-    seller = SellerMatcher.match_trade_seller(trade, area)
+    seller = SellerMatcher.match_trade_seller(trade.id, area)
     seller ||= trade.default_seller
 
     seller_id = nil
@@ -495,7 +495,7 @@ class TradesController < ApplicationController
       seller_id = seller.id
       seller_name = seller.name
       dispatchable = true
-      errors = can_lock_products?(trade, seller.id).join(',')
+      errors = can_lock_products?(trade.id, seller.id).join(',')
       if errors.present?
         seller_name += "(无法分派：#{errors})"
         dispatchable = false

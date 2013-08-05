@@ -1,7 +1,8 @@
 # -*- encoding:utf-8 -*-
 module StockProductsLockable
-  def can_lock_products?(trade, seller_id)
+  def can_lock_products?(trade_id, seller_id)
     error_messages = []
+    trade = Trade.find(trade_id)
     seller = Seller.find_by_id(seller_id)
     trade.orders.each do |order|
       package_info = order.package_info

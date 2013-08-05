@@ -115,7 +115,7 @@ class CustomTrade < Trade
 
   def matched_seller(area = nil)
     area ||= default_area
-    SellerMatcher.match_trade_seller(self, area)
+    SellerMatcher.match_trade_seller(self.id, area)
   end
 
   # def splitable?
