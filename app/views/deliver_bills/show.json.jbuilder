@@ -18,6 +18,7 @@ json.notice current_account.settings.deliver_bill_notice_info
 json.orders @bill.bill_products do |json, order|
   json.id order.id
   json.outer_id order.outer_id
+  json.outer_sku_id order.outer_sku_id
   json.sku_name order.sku_name
   json.title order.title
   json.num order.number

@@ -29,7 +29,11 @@ class JingdongOrder < Order
   end
 
   def jingdong_sku
-    #PENDING
+    if sku_id.present?
+      JingdongSku.find_by_sku_id(sku_id)
+    else
+      JingdongSku.find_by_ware_id(ware_id)
+    end
   end
 
   def sku_bindings
@@ -38,14 +42,6 @@ class JingdongOrder < Order
 
   def skus
     (jingdong_sku && jingdong_sku.skus) || local_skus || []
-  end
-
-  def products
-    skus.map(&:product)
-  end
-
-  def categories
-    products.map(&:category)
   end
 
   def bill_info

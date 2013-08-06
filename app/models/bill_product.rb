@@ -2,17 +2,18 @@ class BillProduct
   include Mongoid::Document
   include NioHelper
 
-  field :title      , type: String
-  field :outer_id   , type: String
-  field :num_iid    , type: String
+  field :title,            type: String
+  field :outer_id,         type: String
+  field :outer_sku_id,     type: String
+  field :num_iid,          type: String
   field :stock_product_id, type: Integer
-  field :sku_id     , type: Integer
-  field :colors     , type: Array
-  field :number     , type: Integer ,default: 0
-  field :real_number, type: Integer ,default: 0
-  field :memo       , type: String
-  field :price      , type: Float   ,default: 0.0
-  field :total_price, type: Float   ,default: 0.0
+  field :sku_id,           type: Integer
+  field :colors,           type: Array
+  field :number,           type: Integer ,default: 0
+  field :real_number,      type: Integer ,default: 0
+  field :memo,             type: String
+  field :price,            type: Float   ,default: 0.0
+  field :total_price,      type: Float   ,default: 0.0
 
   embedded_in :deliver_bill, :inverse_of => :bill_product
   embedded_in :stock_bill

@@ -1,6 +1,6 @@
 # -*- encoding:utf-8 -*-
 module TradesHelper
-  def get_package(order, time)
+  def get_package(order)
     tmp = []
     if order.sku_bindings.present?
       order.sku_bindings.each do |binding|
