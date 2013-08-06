@@ -73,7 +73,7 @@ class CustomersPuller
 
     def parse_attributes(trade)
       attrs = trade.attributes
-      {"buyer_nick" => "name","buyer_email" => "email"}.each_pair do |k,v|
+      {"buyer_nick" => "name","buyer_email" => "email","_type" => "ec_name"}.each_pair do |k,v|
         attrs[v] = attrs.delete(k)
       end
       attrs.slice(*customer_keys)

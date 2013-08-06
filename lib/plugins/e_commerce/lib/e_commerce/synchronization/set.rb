@@ -18,7 +18,7 @@ module ECommerce
         end
 
         def set_klass(name)
-          define_method(:klass) { @klass = name.to_s.camelize }
+          define_method(:klass) { @klass = name.to_s.camelize.constantize }
         end
 
         def identifier(name)
