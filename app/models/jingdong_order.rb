@@ -23,9 +23,14 @@ class JingdongOrder < Order
   #   super(outer_sku_id)
   # end
 
+  def sku_properties_name
+    #PENDING DO SOMETHING WITH THE SKU_NAME
+    title
+  end
+
   def sku_properties
     #PENDING
-    #DO SOMETHING WITH SKU_NAME
+    title
   end
 
   def jingdong_sku

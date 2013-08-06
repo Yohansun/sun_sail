@@ -9,17 +9,16 @@ class JingdongSku < ActiveRecord::Base
   enum_attr :status ,[["有效","VALID"],["无效","INVALID"],["删除","DELETE"]]
 
   def title
-    "#{jingdong_product.try(:title)}#{name}"
+    "#{jingdong_product.try(:title)} #{name}"
   end
 
   def name
-    #PENDING
-    ""
+    #PENDING 抓取分类名称的接口有待优化，先以value替代
+    JingdongCategory.new(self).attvalue_names.join(",") rescue ""
   end
 
   def value
-    #PENDING
-    ""
+    JingdongCategory.new(self).attvalue_names.join(",") rescue ""
   end
 
   def number(local_sku_id)
