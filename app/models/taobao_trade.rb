@@ -32,27 +32,6 @@ class TaobaoTrade < Trade
 
   attr_accessor :search_fields
 
-  ## 分派相关 ##
-  # def has_special_seller_memo?
-  #   special_seller_memo.blank?
-  # end
-
-  # def special_seller_memo
-  #   if self.fetch_account.key == 'dulux'
-  #     if seller_memo.present?
-  #       if seller_memo.strip == "@送货上门".strip
-  #         "@送货上门"
-  #       elsif seller_memo.strip == "@自提".strip
-  #         "@自提"
-  #       end
-  #     end
-  #   end
-  # end
-
-  # def splitable?
-  #   match_seller_with_conditions(self).size > 1
-  # end
-
   def matched_seller(area = nil)
     area ||= default_area
     SellerMatcher.match_trade_seller(self.id, area)
@@ -81,8 +60,6 @@ class TaobaoTrade < Trade
     end
   end
 
-  ## 发货相关 ##
-
   def deliverable?
     trades = TaobaoTrade.where(tid: tid).select do |trade|
       trade.orders.where(:refund_status.in => ['NO_REFUND', 'CLOSED']).size != 0
@@ -90,18 +67,13 @@ class TaobaoTrade < Trade
     (trades.map(&:status) - ["WAIT_BUYER_CONFIRM_GOODS"]).size == 0 && !trades.map(&:delivered_at).include?(nil)
   end
 
-  # def deliver!
-  #   return unless self.deliverable?
-  #   TradeDeliver.perform_async(self.id)
-  # end
+  def self.rescue_buyer_message(args)
+    args.each do |tid|
+      TradeTaobaoMemoFetcher.perform_async(tid)
+    end
+  end
 
-  # def auto_deliver!
-  #   result = self.fetch_account.can_auto_deliver_right_now
-  #   TradeAutoDeliver.perform_in((result == true ? self.fetch_account.settings.auto_settings['deliver_silent_gap'].to_i.hours : result), self.id)
-  #   self.is_auto_deliver = true
-  #   self.operationπa_logs.create(operated_at: Time.now, operation: "自动发货")
-  #   self.save
-  # end
+  ##DEPRECATED
 
   ## model属性方法 ##
 
@@ -114,30 +86,25 @@ class TaobaoTrade < Trade
   #   self.orders.inject(0) { |sum, order| sum + order.bill_info.count }
   # end
 
-  def self.rescue_buyer_message(args)
-    args.each do |tid|
-      TradeTaobaoMemoFetcher.perform_async(tid)
-    end
-  end
-
-  # def orders_total_price
-  #   self.orders.inject(0) { |sum, order| sum + order.price*order.num}
+  ## 分派相关 ##
+  # def has_special_seller_memo?
+  #   special_seller_memo.blank?
   # end
 
-  # def vip_discount
-  #   promotion_details.where(promotion_id: /^shopvip/i).sum(&:discount_fee)
+  # def special_seller_memo
+  #   if self.fetch_account.key == 'dulux'
+  #     if seller_memo.present?
+  #       if seller_memo.strip == "@送货上门".strip
+  #         "@送货上门"
+  #       elsif seller_memo.strip == "@自提".strip
+  #         "@自提"
+  #       end
+  #     end
+  #   end
   # end
 
-  # def shop_bonus
-  #   promotion_details.where(promotion_id: /^shopbonus/i).sum(&:discount_fee)
-  # end
-
-  # def shop_discount
-  #   promotion_details.where(promotion_id: /^(?!shopvip|shopbonus)/i).sum(&:discount_fee)
-  # end
-
-  # def other_discount
-  #   (total_fee + post_fee - payment - promotion_fee).to_f.round(2)
+  # def splitable?
+  #   match_seller_with_conditions(self).size > 1
   # end
 
   def set_alipay_data

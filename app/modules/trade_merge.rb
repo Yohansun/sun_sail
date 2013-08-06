@@ -244,7 +244,9 @@
 
     def mergeable_trades
       Trade.paid_undispatched.where({
-          id:{"$ne"=>self.id},account_id:self.account_id,:merged_by_trade_id=>nil,
+          id:{"$ne"=>self.id},
+          account_id:self.account_id,
+          :merged_by_trade_id=>nil,
           :buyer_nick=>self.buyer_nick,
           :receiver_name=>self.receiver_name,
           :receiver_mobile=>self.receiver_mobile,
@@ -254,8 +256,9 @@
           :receiver_district=>self.receiver_district,
           :receiver_zip=>self.receiver_zip,
           :receiver_address=>self.receiver_address,
-          #赠品订单不能合并
-          :main_trade_id=>nil
+          # 赠品订单不能合并,京东订单不能合并
+          :main_trade_id=>nil,
+          :_type=>{"$ne"=>"JingdongTrade"}
         })
     end
 

@@ -209,12 +209,11 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     trade_ids = trades.map ->
       this.id
     trade_ids = trade_ids.toArray()
-    console.debug(trades)
     mergeable_ids = trades.map ->
       this.attributes.mergeable_id
     uniq_ids = $.unique(mergeable_ids).toArray()
     if uniq_ids.length != 1
-      alert("您选择的订单无法合并, 请确认没有选择赠品订单, 重新检查客户ID, 以及收件人及订单状态等信息")
+      alert("您选择的订单无法合并, 请确认没有选择赠品订单,京东订单,重新检查客户ID,以及收件人及订单状态等信息")
       return false
     merged_by_status = trades.map ->
       this.attributes["merged_by_trade_id"]
@@ -298,7 +297,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
         return
     else
       alert("请在高级搜索中选择来源，并添加该搜索条件")
-      return 
+      return
 
     if @trade_type == "default"
       type_cache = "undispatched"
