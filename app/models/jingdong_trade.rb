@@ -5,10 +5,11 @@ class JingdongTrade < Trade
   field :pay_type, type: String
   field :vender_id, type: String
 
-  field :order_seller_price, type: Float   # 订单货款金额
-  field :delivery_type, type: String       # 送货日期类型
-  field :order_state_remark, type: String  # 中文状态
-  field :return_order, type: String        # 换货订单标识
+  field :order_seller_price, type: Float     # 订单货款金额
+  field :delivery_type, type: String         # 送货日期类型
+  field :order_state_remark, type: String    # 中文状态
+  field :return_order, type: String          # 换货订单标识
+  field :sop_stock_out_time, type: DateTime  # sop出库时间
 
   #对应trade字段
   field :tid,               as: :order_id, type: String
@@ -98,14 +99,13 @@ class JingdongTrade < Trade
 
   def deliverable?
     self.orders.where(:refund_status.in => ['NO_REFUND', 'CLOSED']).size != 0 &&
-    self.is_paid_not_delivered &&
-    self.delivered_at.blank?
+    self.is_paid_and_delivered &&
+    self.delivered_at.present?
   end
 
   def deliver!
     return unless self.deliverable?
-    ## 执行SOP出库，接口已调整好，由于不知道现在是否需要，先不做这个操作
-    # TradeJingdongDeliver.perform_async(self.id)
+    TradeJingdongDeliver.perform_async(self.id)
   end
 
   #PENDING NEED ADAPTION
