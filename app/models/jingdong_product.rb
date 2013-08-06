@@ -8,4 +8,5 @@ class JingdongProduct < ActiveRecord::Base
   enum_attr :ware_big_small_model, [["免费",0],["超大件",1],["超大件半件",2],["大件",3],["大件半件",4],["中件",5],["中件半件",6],["小件",7],["超小件",8]],:not_valid => true
   enum_attr :ware_pack_type,       [["普通商品",1],["易碎品",2],["裸瓶液体",3],["带包装液体",4],["按原包装出库",5]],:not_valid => true
   scope :with_account, ->(account_id){ where(account_id: account_id) }
+  belongs_to :account
 end
