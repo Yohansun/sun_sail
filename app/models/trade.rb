@@ -39,7 +39,6 @@ class Trade
   field :logistic_id, type: Integer
   field :logistic_name, type: String
 
-
   field :seller_confirm_deliver_at, type: DateTime        # 确认发货
   field :seller_confirm_invoice_at, type: DateTime        # 确认开票
 
@@ -543,7 +542,6 @@ class Trade
   end
 
   def generate_stock_out_bill
-    return if _type == 'JingdongTrade'
     stock_out_bills.where(:status.ne => "CLOSED").each do |bill|
       if bill.do_close #关闭之前的出库单
         bill.increase_activity #恢复仓库的可用库存
@@ -558,8 +556,7 @@ class Trade
       remark = cs_memo
     end
 
-    bill = stock_out_bills.new(
-                               op_state:receiver_state,
+    bill = stock_out_bills.new(op_state:receiver_state,
                                op_city: receiver_city,
                                op_district: receiver_district,
                                op_address: receiver_address,
