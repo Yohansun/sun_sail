@@ -37,8 +37,8 @@ describe TradeDecorator do
   describe "JingdongTrade" do
     context '#post_fee, seller_discount, total_fee, sum_fee' do
       before do
-        @decorator = TradeDecorator.new(build(:jingdong_trade, freight_price: 20, order_seller_price: 1000, seller_discount: 200, account_id: @current_account.id))
-        @decorator_with_zero_freight_price = TradeDecorator.new(build(:jingdong_trade, order_seller_price: 1000, seller_discount: 200, account_id: @current_account.id))
+        @decorator = TradeDecorator.new(build(:jingdong_trade, freight_price: 20, payment: 1000, total_fee: 820, seller_discount: 200, account_id: @current_account.id))
+        @decorator_with_zero_freight_price = TradeDecorator.new(build(:jingdong_trade, order_seller_price: 1000, seller_discount: 200, total_fee: 800, account_id: @current_account.id))
       end
       it { @decorator.post_fee.should == 20 }
       it { @decorator.total_fee.should == 1000 }
