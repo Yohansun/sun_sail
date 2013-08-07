@@ -52,7 +52,7 @@ class TradeReport
 
   def trades_conditions
     recursive_symbolize_keys! conditions
-  end  
+  end
 
   def keys
     trades_conditions.keys
@@ -65,7 +65,7 @@ class TradeReport
   def only_trade_type_filtered?
     (keys - [:trade_type]).blank?
   end
-  
+
   def adjust
     if only_trade_type_filtered?
       st = (Time.now - 1.month).strftime("%Y-%m-%d %H:%M")
@@ -73,12 +73,12 @@ class TradeReport
       self.conditions['search'] = {}
       self.conditions['search']['created'] = "#{st};#{et}"
       self.save
-    end    
+    end
   end
 
   def trades
     Trade.filter(fetch_account, fetch_user, trades_conditions)
-  end  
+  end
 
   def url
     "#{Rails.root}/data/#{id}.xls"
