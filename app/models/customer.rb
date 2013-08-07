@@ -13,7 +13,7 @@ class Customer
   enum_attr :ec_name, [["淘宝顾客",'TaobaoTrade'],["京东顾客","JingdongTrade"],["一号店顾客","YihaodianTrade"]]
 
   embeds_many :transaction_histories, :order => :created.desc, :inverse_of => :customer
-  validates :name,:presence => true, :uniqueness => {:scope => :account_id}
+  validates :name,:presence => true, :uniqueness => {:scope => [:account_id,:ec_name]}
 
   accepts_nested_attributes_for :transaction_histories, :allow_destroy => true, :reject_if => proc { |obj| obj.blank? }
   validates_associated :transaction_histories
