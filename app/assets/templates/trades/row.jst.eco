@@ -2,11 +2,11 @@
 <td><input class='trade_check' type="checkbox" value="option1"></td>
 <td data-col='trade_source'>
   <% if @trade.get('trade_source') == "赠品" || @trade.get('trade_source') == "人工" : %>
-    <span class="label label-important"><%= @trade.get('trade_source') %></span>
+    <span class="label label-important lable_source"><%= @trade.get('trade_source') %></span>
   <% else if @trade.get('trade_source') == "淘宝" : %>
-    <span class="label label-warning"><%= @trade.get('trade_source') %></span>
+    <span class="label label-warning lable_source"><%= @trade.get('trade_source') %></span>
   <% else : %>
-    <span class="label label-darkorchid"><%= @trade.get('trade_source') %></span>
+    <span class="label label-darkorchid lable_source"><%= @trade.get('trade_source') %></span>
   <% end %>
   <% if @trade.get('trade_source') == "分销平台" : %>
     <br><span class="label label-info">店铺代码:<%= @trade.get('distributor_usercode') %></span>

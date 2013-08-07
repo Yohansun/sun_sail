@@ -4,6 +4,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
   events:
     'click .export_orders': 'exportOrders'
+    'click .batch_export': 'batchExport'
     'click [data-trade-status]': 'selectSameStatusTrade'
     'click .batch_deliver': 'batchDeliver'
     'click .sort_product': 'sort_product'
@@ -268,6 +269,25 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     $click_li_dropdown.click ->
       $(this).parents(".dropdown").siblings().removeClass "active"
       $(this).parents(".dropdown").addClass "active"
+
+  batchExport: (e) =>
+    length = $('.trade_check:checked').parents('tr').length
+    resource = []
+    jingdong_resource = []
+    if length > 1
+      $('.trade_check:checked').parents('tr').each (index, el) ->
+        if $(el).find('.lable_source ').text() == "京东"
+          jingdong_resource.push("jingdong")
+        else
+          resource.push("taobao")
+
+    if resource.length >= 1 && jingdong_resource.length >= 1
+      alert("请选择来源相同订单")
+      return
+    else
+      Backbone.history.navigate('trades/batch/batch_export', true)
+      
+      
 
   exportOrders: (e) =>
     e.preventDefault()

@@ -93,6 +93,7 @@ class MagicOrders.Views.TradesRow extends Backbone.View
       $('#op-toolbar .batch_ops .dropdown-menu a').css('display', 'none')
       $('#op-toolbar .batch_ops .dropdown-menu  a[data-batch-operation]').css('display', '')
       $('#op-toolbar .batch_ops .dropdown-menu  a[data-batch_type]').css('display', '')
+      $('.batch_export').removeAttr('style')
       if @model.get('is_locked') == true
         $('#op-toolbar .batch_ops .dropdown-menu  a[data-batch_type]').hide()
 

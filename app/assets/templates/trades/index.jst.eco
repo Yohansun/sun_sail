@@ -112,7 +112,7 @@
           <ul class="dropdown-menu index_batch_pops">
             <li><a data-toggle="modal" class='sort_product' href='#' data-batch_type="sort_product">分拣单</a></li>
             <li><a href="#" data-toggle="modal" data-batch_type="manual_sms_or_email">发短信/邮件</a></li>
-            <li><a href="#" data-toggle="modal" data-batch_type="batch_export">导出勾选订单</a></li>
+            <li><a href="#" data-toggle="modal" class="batch_export">导出勾选订单</a></li>
             <li><a href="#" data-toggle="modal" data-batch_type="batch_add_gift">批量添加赠品</a></li>
             <% if MagicOrders.trade_mode == "trades" and MagicOrders.trade_type == "undelivered" : %>
             <li><a href='#' data-toggle="modal" class="batch_deliver" data-batch_type='batch_deliver' >批量发货</a></li>

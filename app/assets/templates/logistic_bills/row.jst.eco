@@ -1,11 +1,11 @@
 <td><input class='trade_check' type="checkbox" value="option1"></td>
 <td data-col='trade_source'>
 <% if @bill.get('trade_source') == "赠品" || @bill.get('trade_source') == "人工" : %>
-  <span class="label label-important"><%= @bill.get('trade_source') %></span>
+  <span class="label label-important lable_source"><%= @bill.get('trade_source') %></span>
 <% else if @bill.get('trade_source') == "淘宝" : %>
-  <span class="label label-warning"><%= @bill.get('trade_source') %></span>
+  <span class="label label-warning lable_source"><%= @bill.get('trade_source') %></span>
 <% else : %>
-  <span class="label label-darkorchid"><%= @bill.get('trade_source') %></span>
+  <span class="label label-darkorchid lable_source"><%= @bill.get('trade_source') %></span>
 <% end %>
 </td>
 <td data-col='tid'><%= @bill.get('tid') %></td>
