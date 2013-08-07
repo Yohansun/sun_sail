@@ -87,12 +87,19 @@ class MagicOrders.Views.TradesBatchAddGift extends Backbone.View
       split_text = "拆分"
     else
       split_text = "不拆分"
-    $('#gift_list').append("<tr id='"+product_id+"' class='product_"+sku_id+" new_add_gift'>"+
-                           "  <td>"+gift_title+"</td>"+
-                           "  <td>"+num+"</td>"+
-                           "  <td>"+split_text+"</td>"+
-                           "</tr>")
-    $.get '/trades/verify_add_gift', {ids: @trade_ids, product_id: product_id, sku_id: sku_id}, (data) ->
+
+    $.get '/trades/verify_add_gift', {ids: @trade_ids, sku_id: sku_id}, (data) ->
+      if data['has_jingdong_trade'] == true
+        alert("京东订单目前不支持此功能，请重新选择订单")
+        return
+      else
+        $('#gift_list').append("<tr id='"+product_id+"' class='product_"+sku_id+" new_add_gift'>"+
+                               "  <td>"+gift_title+"</td>"+
+                               "  <td>"+num+"</td>"+
+                               "  <td>"+split_text+"</td>"+
+                               "</tr>")
+
+    $.get '/trades/verify_add_gift', {ids: @trade_ids, sku_id: sku_id}, (data) ->
       if data['tids'] != ""
         $('.error').html('订单'+data['tids']+"已添加过"+gift_title)
 

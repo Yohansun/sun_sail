@@ -79,9 +79,6 @@ class MagicOrders.Models.Trade extends Backbone.Model
           if this.attributes.confirm_color_at is undefined && this.attributes.has_color_info is true
             enabled_items.push('confirm_color') #确认调色
 
-        if $.inArray('batch_add_gift',trades) > -1
-          enabled_items.push('batch_add_gift') #批量添加赠品
-
       if this.attributes.is_paid_and_delivered
         if this.attributes.add_ref && this.attributes.add_ref['status'] == 'request_add_ref' && $.inArray('confirm_add_ref',trades) > -1
           enabled_items.push('add_ref') #确认补货
@@ -235,7 +232,7 @@ class MagicOrders.Models.Trade extends Backbone.Model
         enabled_items.push('seller_confirm_deliver') #确认发货
 
 
-      if type != '赠品'
+      if type != '赠品' && type != '京东'
         enabled_items.push('gift_memo') #赠品备注
       if $.inArray('invoice_number',trades) > -1
         enabled_items.push('invoice_number') #发票号设置
