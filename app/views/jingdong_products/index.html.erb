@@ -111,9 +111,6 @@
         <label class="width_100 pagination-right">商品类目：<span id="jingdong_product_cat_name"></span></label>
       </fieldset>
       <fieldset class="control-group form-inline">
-        <label class="width_100 pagination-right">商家外部编码：<span id="jingdong_product_outer_id"></span></label>
-      </fieldset>
-      <fieldset class="control-group form-inline">
         <label class="width_100 pagination-right">选择京东SKU：</label>
         <select class="input-xxlarge change_jingdong_skus">
         </select>
@@ -176,6 +173,7 @@
 
   $('#tie_to_native_skus').on('click', function(event){
     event.preventDefault();
+    $('#sku_bindings_table').html("");
     if($('#jingdong_product_table input:checked').length == 1){
       var product_id = $('#jingdong_product_table input:checked').parents('tr').attr('id')
       product_id = _.trim(product_id, "product_")
@@ -184,9 +182,8 @@
           alert("此商品没有SKU");
         } else {
           $('#jingdong_product_id').text(data.product.id)
-          $('#jingdong_product_name').text(data.product.name)
+          $('#jingdong_product_name').text(data.product.title)
           $('#jingdong_product_cat_name').text(data.product.cat_name)
-          $('#jingdong_product_outer_id').text(data.product.outer_id)
           var skus_list = ""
           for(var i in data.skus){
             skus_list += "<option value="+data.skus[i].id+">"+data.skus[i].name+"</option>"

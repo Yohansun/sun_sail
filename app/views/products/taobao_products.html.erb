@@ -150,6 +150,7 @@
 
   $('#tie_to_native_skus').on('click', function(event){
     event.preventDefault();
+    $('#sku_bindings_table').html("");
     if($('#taobao_product_table input:checked').length == 1){
       var product_id = $('#taobao_product_table input:checked').parents('tr').attr('id')
       product_id = _.trim(product_id, "product_")
