@@ -103,7 +103,7 @@ class Seller < ActiveRecord::Base
 
   def self.confirm_import_from_csv(account, file_name, set_interface_only)
     skip_lines_count = 3
-    CSV.foreach(file_name) do |csv|
+    CSV.foreach(file_name, encoding: "UTF-8") do |csv|
       skip_lines_count -= 1
       next if skip_lines_count > 0
       next if csv.size == 0
@@ -162,7 +162,7 @@ class Seller < ActiveRecord::Base
   def self.import_from_csv(account, file_name)
     status_list = {}
     skip_lines_count = 3
-    CSV.foreach(file_name) do |csv|
+    CSV.foreach(file_name, encoding: "UTF-8")do |csv|
       skip_lines_count -= 1
       next if skip_lines_count > 0
       next if csv.size == 0
@@ -177,16 +177,16 @@ class Seller < ActiveRecord::Base
       seller = account.sellers.find_by_name(name)
       status_list[name] = []
       if seller
-        if fullname != seller.fullname
+        if fullname.to_s != (seller.fullname || '').to_s
           status_list[name] << "全称: 修改前#{seller.fullname || '不存在'},修改后#{fullname || '不存在'}"
         end
-        if mobile != seller.mobile
+        if mobile.to_s != (seller.mobile || '').to_s
           status_list[name] << "手机号: 修改前#{seller.mobile || '不存在'},修改后#{mobile || '不存在'}"
         end
-        if email != seller.email
+        if email.to_s != (seller.email || '').to_s
           status_list[name] << "邮箱: 修改前#{seller.email || '不存在'},修改后#{email || '不存在'}"
         end
-        if cc_emails != seller.cc_emails
+        if cc_emails.to_s != (seller.cc_emails || '').to_s
           status_list[name] << "抄送邮箱: 修改前#{seller.cc_emails || '不存在'},修改后#{cc_emails || '不存在'}"
         end
         interface = account.sellers.find_by_name(interface_name)
