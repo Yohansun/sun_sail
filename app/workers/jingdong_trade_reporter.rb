@@ -43,7 +43,6 @@ class JingdongTradeReporter
               "买家手机",
               "买家座机",
               "商品名",
-              "商品编码",
               "商品数量",
               "物流商",
               "物流单号"]
@@ -130,17 +129,16 @@ class JingdongTradeReporter
 
       trade_orders.each_with_index do |order, order_index|
         if order_index != 0
-         post_fee = trade_total_fee = trade_payment ''
+         post_fee = trade_total_fee = trade_payment = vip_discount = shop_discount = shop_bonus = other_discount = ''
         end
 
-        title = order.sku_name
-        outer_iid = order.sku_id
-        order_num = order.sku_name
-        price = order.jd_price
+        title = order.title
+        order_num = order.num
+        price = order.price
         #商品原价order_price = order.order_price
         sku_properties = order.sku_properties
         order_cs_memo = order.cs_memo
-        #退款状态refund_status_text = order.refund_status_text
+        refund_status_text = order.refund_status_text
 
         order_discount_fee = (order.discount_fee/order_num).to_f.round(2)
         #trade_discount_fee = (price - order_price - order_discount_fee).to_f.round(2)
@@ -174,8 +172,7 @@ class JingdongTradeReporter
                 #buyer_nick,                #读取买家旺旺
                 receiver_mobile,           #读取买家联系电话-手机
                 receiver_phone,            #读取买家联系电话-座机
-                title,                     #读取淘宝商品名
-                outer_iid,                 #读取淘宝商品编码
+                title,                     #读取商品名
                 order_num,                 #读取商品数
                 logistic_name,             #读取物流商，没有的话为空
                 logistic_waybill]          #读取物流单号，没有的话为空
