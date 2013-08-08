@@ -38,7 +38,7 @@
         <li><a href="#" id="seller_areas">管辖地区</a></li>
         <li><a href="#" id="seller_login">登录账号</a></li>
         <li><a href="#" id="seller_children">管理下级</a></li>
-        <li><a href="/sellers/new" id="new_seller">新建经销商</a></li>
+        <li><a href="#" id="new_seller">新建经销商</a></li>
         <li><a href="#" id="export_sellers">导出经销商</a></li>
         <li><a href="/sellers/import" id="import_sellers">导入经销商</a></li>
       </ul>
@@ -140,6 +140,17 @@
       window.location.href = "/sellers/"+seller_id+"/edit"
     } else{
       alert("请选择一个经销商。")
+    }
+  })
+
+  $('#new_seller').on('click', function(event){
+    event.preventDefault()
+    if($('#seller_table input:checked').length == 1){
+      var seller_id = $('#seller_table input:checked').attr('id')
+      seller_id = _.trim(seller_id, "check_")
+      window.location.href = "/sellers/new?parent_id="+seller_id
+    } else{
+      window.location.href = "/sellers/new"
     }
   })
 

@@ -5,6 +5,9 @@
     <%= f.input :fullname, :label => "经销商全称：", :placeholder => "输入文字...", :input_html => {:class => 'input-xlarge'} %>
     <%= f.input :mobile, :label => "手机：", :placeholder => "输入文字...", :input_html => {:class => 'input-xlarge'} %>
     <%= f.input :interface, :label => "联系人：", :placeholder => "输入文字...", :input_html => {:class => 'input-xlarge'} %>
+    <%= f.input :parent_id, :label => "上级经销商：" do %>
+      <%= f.select :parent_id, (current_account.sellers.where(active: true).map { |seller| ["#{'-' * seller.level} #{seller.name}", seller.id]}),:selected => @parent.try(:id),  :include_blank => true %>
+    <% end %>
     <%= f.input :address, :label => "地址：", :placeholder => "输入文字...", :input_html => {:class => 'input-xlarge'} %>
 
     <% if params[:action] == "edit" || params[:action] == "update" %>
@@ -12,8 +15,8 @@
             as: :string, :input_html => {:class => 'input-xlarge'} %>
     <% end %>
 
-    <%= f.input :email, :label => "Email：", :placeholder => "输入文字...", :input_html => {:class => 'input-xlarge'} %>
-    <%= f.input :cc_emails, :label => "抄送Email：", :placeholder => "输入文字...", :input_html => {:class => 'input-xlarge'} %>
+    <%= f.input :email, :label => "Email：", :placeholder => "多个邮箱以英文逗号隔开", :input_html => {:class => 'input-xlarge', :style => 'height: 60px;'} %>
+    <%= f.input :cc_emails, :label => "抄送Email：", :placeholder => "多个邮箱以英文逗号隔开", :input_html => {:class => 'input-xlarge', :style => 'height: 60px;'} %>
 
     <div class="form-actions">
       <a class="btn" href='/sellers?parent_id=<%= params[:p_id] || @seller.parent_id %>'>取消</a>

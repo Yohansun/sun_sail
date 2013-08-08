@@ -5,10 +5,10 @@ class StocksController < ApplicationController
 
   def index
     condition_relation = StockProduct.where(default_search).includes(:seller,:product)
-    condition_relation = condition_relation.where(StockProduct::STORAGE_STATUS[params[:storage_status]]).scoped if params[:storage_status].present?
+    condition_relation = condition_relation.where(:"seller.active" => true).where(StockProduct::STORAGE_STATUS[params[:storage_status]]).scoped if params[:storage_status].present?
     conditions ||= {}
     params[:search][:id_in] = params[:export_ids].split(',') if params[:export_ids].present?
-    
+
     if params[:op_state].present?
       area_ids = Area.robot(params[:op_state],params[:op_city]).select(:id).map(&:id)
       conditions.merge!({:seller_sellers_areas_area_id_in => area_ids})
@@ -27,8 +27,8 @@ class StocksController < ApplicationController
       format.xls
     end
   end
-  
-  
+
+
   def old
     select_sql = "skus.*, products.name, products.outer_id, products.product_id, products.category_id, stock_products.*"
     @stock_products = StockProduct.where(default_search).joins(:product).joins(:sku).select(select_sql).order("stock_products.product_id")
@@ -52,16 +52,16 @@ class StocksController < ApplicationController
         @stock_products = @stock_products.where("stock_products.actual != stock_products.max AND stock_products.activity >= stock_products.safe_value")
       end
     end
-    
+
     @stock_products = @stock_products.where(" good_type != 2 OR good_type IS NULL ") if current_user.seller.present?
     @stock_products = @stock_products.page params[:page]
-    
+
   end
 
   def safe_stock
     condition_relation = StockProduct.where(default_search)
     condition_relation = condition_relation.where(StockProduct::STORAGE_STATUS[params[:storage_status]]).scoped if params[:storage_status].present?
-    
+
     params[:product_id_eq] ||= nil
     params[:stock] = {"product_id_eq"=> params[:product_id_eq]}
     if params[:stock].blank?
@@ -86,11 +86,11 @@ class StocksController < ApplicationController
 
     render :json => data
   end
-  
+
   def edit_depot
     @depot = current_account.sellers.first
   end
-  
+
   def update_depot
     @depot = Seller.where(default_search).find params[:id]
 
@@ -121,7 +121,7 @@ class StocksController < ApplicationController
     else
       result = 'err'
     end
-    
+
     render :text => result
   end
 
