@@ -116,7 +116,7 @@ class JingdongTradePuller
       end until(page_no > total_pages || total_pages == 0)
 
       #同步本地顾客管理下面的"副本订单"
-      CustomerFetch.perform_async(account_id)
+      CustomerFetch.perform_async(account_id,'JingdongTrade')
       #抓取订单退货信息
       JingdongRefundOrderMarker.perform_async(account_id)
     end

@@ -176,9 +176,9 @@ class TaobaoTradePuller
             update_trade(trade, account, trade_source_id)
           end
         end
-        #同步本地顾客管理下面的"副本订单"
-        CustomerFetch.perform_async(account_id)
       end
+      #同步本地顾客管理下面的"副本订单"
+      CustomerFetch.perform_async(account_id)
     end
 
     def update_by_tid(trade)
