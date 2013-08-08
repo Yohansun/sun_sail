@@ -1,0 +1,49 @@
+<h1>Listing yihaodian_products</h1>
+
+<table>
+  <tr>
+    <th>Product code</th>
+    <th>Product cname</th>
+    <th>Product</th>
+    <th>Ean13</th>
+    <th>Category</th>
+    <th>Can sale</th>
+    <th>Outer</th>
+    <th>Can show</th>
+    <th>Verify flg</th>
+    <th>Is dup audit</th>
+    <th>Prod img</th>
+    <th>Prod detail url</th>
+    <th>Brand</th>
+    <th>Merchant category</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @yihaodian_products.each do |yihaodian_product| %>
+  <tr>
+    <td><%= yihaodian_product.product_code %></td>
+    <td><%= yihaodian_product.product_cname %></td>
+    <td><%= yihaodian_product.product_id %></td>
+    <td><%= yihaodian_product.ean13 %></td>
+    <td><%= yihaodian_product.category_id %></td>
+    <td><%= yihaodian_product.can_sale %></td>
+    <td><%= yihaodian_product.outer_id %></td>
+    <td><%= yihaodian_product.can_show %></td>
+    <td><%= yihaodian_product.verify_flg %></td>
+    <td><%= yihaodian_product.is_dup_audit %></td>
+    <td><%= yihaodian_product.prod_img %></td>
+    <td><%= yihaodian_product.prod_detail_url %></td>
+    <td><%= yihaodian_product.brand_id %></td>
+    <td><%= yihaodian_product.merchant_category_id %></td>
+    <td><%= link_to 'Show', yihaodian_product %></td>
+    <td><%= link_to 'Edit', edit_yihaodian_product_path(yihaodian_product) %></td>
+    <td><%= link_to 'Destroy', yihaodian_product, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Yihaodian product', new_yihaodian_product_path %>

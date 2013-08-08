@@ -109,15 +109,19 @@ ActiveRecord::Schema.define(:version => 20130916092012) do
 
   create_table "categories", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at",                :null => false
-    t.datetime "updated_at",                :null => false
+    t.datetime "created_at",                        :null => false
+    t.datetime "updated_at",                        :null => false
     t.integer  "parent_id"
     t.integer  "lft"
     t.integer  "rgt"
     t.integer  "depth"
     t.integer  "account_id"
-    t.integer  "status",     :default => 1
-    t.integer  "use_days",   :default => 0, :null => false
+    t.integer  "status",             :default => 1
+    t.integer  "use_days",           :default => 0, :null => false
+    t.integer  "category_id"
+    t.string   "category_type"
+    t.integer  "category_parent_id"
+    t.string   "parent_type"
   end
 
   add_index "categories", ["status"], :name => "index_categories_on_status"
@@ -263,6 +267,8 @@ ActiveRecord::Schema.define(:version => 20130916092012) do
     t.integer  "account_id"
   end
 
+  add_index "jingdong_products", ["ware_id"], :name => "index_jingdong_products_on_ware_id", :unique => true
+
   create_table "jingdong_skus", :force => true do |t|
     t.integer  "sku_id"
     t.integer  "shop_id"
@@ -282,6 +288,9 @@ ActiveRecord::Schema.define(:version => 20130916092012) do
     t.string   "attribute_s"
     t.integer  "account_id"
   end
+
+  add_index "jingdong_skus", ["status"], :name => "index_jingdong_skus_on_status"
+  add_index "jingdong_skus", ["ware_id", "sku_id"], :name => "index_jingdong_skus_on_ware_id_and_sku_id", :unique => true
 
   create_table "logistic_areas", :force => true do |t|
     t.integer  "logistic_id"
@@ -499,8 +508,9 @@ ActiveRecord::Schema.define(:version => 20130916092012) do
     t.integer "number",          :limit => 8
     t.integer "jingdong_sku_id"
     t.string  "sku_type"
+    t.integer "taobao_sku_id"
     t.integer "resource_id"
-    t.integer "resource_type"
+    t.string  "resource_type"
   end
 
   create_table "sku_properties", :force => true do |t|
@@ -713,5 +723,37 @@ ActiveRecord::Schema.define(:version => 20130916092012) do
   end
 
   add_index "users_roles", ["user_id", "role_id"], :name => "index_users_roles_on_user_id_and_role_id"
+
+  create_table "yihaodian_products", :force => true do |t|
+    t.string   "product_code",                      :null => false
+    t.string   "product_cname",                     :null => false
+    t.integer  "product_id",           :limit => 8
+    t.string   "ean13"
+    t.integer  "category_id",          :limit => 8
+    t.integer  "can_sale"
+    t.string   "outer_id"
+    t.integer  "can_show"
+    t.integer  "verify_flg"
+    t.integer  "is_dup_audit"
+    t.string   "prod_img"
+    t.string   "prod_detail_url"
+    t.integer  "brand_id",             :limit => 8
+    t.string   "merchant_category_id"
+    t.datetime "created_at",                        :null => false
+    t.datetime "updated_at",                        :null => false
+  end
+
+  create_table "yihaodian_skus", :force => true do |t|
+    t.string   "product_code",               :null => false
+    t.string   "product_cname",              :null => false
+    t.integer  "product_id",    :limit => 8
+    t.string   "ean13"
+    t.integer  "category_id",   :limit => 8
+    t.integer  "can_sale"
+    t.string   "outer_id"
+    t.integer  "can_show"
+    t.datetime "created_at",                 :null => false
+    t.datetime "updated_at",                 :null => false
+  end
 
 end
