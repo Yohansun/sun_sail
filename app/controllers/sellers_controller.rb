@@ -68,6 +68,7 @@ class SellersController < ApplicationController
 
   def new
     @seller = current_account.sellers.new
+    @parent = current_account.sellers.find_by_id params[:parent_id]
   end
 
   def show
@@ -75,15 +76,15 @@ class SellersController < ApplicationController
   end
 
   def edit
-    @seller = current_account.sellers.find params[:id]
+    @seller = current_account.sellers.find_by_id params[:id]
   end
 
   def create
     @seller = current_account.sellers.new params[:seller]
-    @seller.parent_id = params[:p_id] if params[:p_id]
+    @seller.parent_id = params[:parent_id] if params[:parent_id]
     if @seller.save
-      if params[:p_id].present?
-        redirect_to sellers_path(:parent_id => params[:p_id])
+      if params[:parent_id].present?
+        redirect_to sellers_path(:parent_id => params[:parent_id])
       else
         redirect_to sellers_path
       end
@@ -106,7 +107,7 @@ class SellersController < ApplicationController
   end
 
   def children
-    @seller = current_account.sellers.find params[:id]
+    @seller = current_account.sellers.find_by_id params[:id]
     @children = []
     @seller.children.each do |seller|
       @children << {
@@ -121,7 +122,7 @@ class SellersController < ApplicationController
 
   # TO BE REMOVED
   def status_update
-    @seller = current_account.sellers.find params[:id]
+    @seller = current_account.sellers.find_by_id params[:id]
     users = User.where(seller_id: params[:id])
     if @seller.active == true
       @seller.active =  false
@@ -159,8 +160,6 @@ class SellersController < ApplicationController
 
   def user_list
     users = current_account.users
-    seller_role = Role.find_by_name "seller"
-    interface_role = Role.find_by_name "interface"
     users = users.includes(:roles).where("roles.id = ? or roles.id = ?", seller_role.try(:id), interface_role.try(:id))
 
     if params[:user_name].present?
@@ -190,7 +189,7 @@ class SellersController < ApplicationController
 
   # TO BE REMOVED
   def change_stock_type
-    @seller = current_account.sellers.find params[:id]
+    @seller = current_account.sellers.find_by_id params[:id]
     @seller.update_attribute(:has_stock, !@seller.has_stock)
     if @seller.has_stock && !@seller.stock_opened_at
       @seller.update_attribute(:stock_opened_at, Time.now)
@@ -245,7 +244,7 @@ class SellersController < ApplicationController
   end
 
   def info
-    @seller = current_account.sellers.find params[:id]
+    @seller = current_account.sellers.find_by_id params[:id]
   end
 
   def check_module
