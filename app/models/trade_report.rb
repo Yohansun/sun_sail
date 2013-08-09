@@ -28,6 +28,13 @@ class TradeReport
       else
         TaobaoTradeReporter.perform_async(id)
       end
+    else
+      ids = self.batch_export_ids.split(",")
+      if Trade.where(id: ids.first).first.type_text == "京东"
+        JingdongTradeReporter.perform_async(id)
+      else
+        TaobaoTradeReporter.perform_async(id)
+      end
     end
   end
 
