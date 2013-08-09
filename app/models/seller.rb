@@ -96,6 +96,10 @@ class Seller < ActiveRecord::Base
     area = Area.find_by_id(id)
     area.self_and_ancestors.map(&:name).join('-') if area
   end
+  
+  def category_count
+    Category.joins(:products).joins("right join stock_products on stock_products.product_id = products.id").where("stock_products.seller_id = #{self.id}").group("categories.id").length
+  end
 
   def self.confirm_import_from_csv(account, file_name, set_interface_only)
     skip_lines_count = 3

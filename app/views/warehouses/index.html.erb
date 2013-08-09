@@ -35,11 +35,10 @@
             <th>仓库名称</th>
             <th>所属经销商</th>
             <th>商品数量</th>
+            <th>商品品类数</th>
             <th>联系人</th>
             <th>联系电话</th>
-            <th>地域</th>
-            <th>地址</th>
-            <th>开启时间</th>
+
           </tr>
         </thead>
         <tbody>
@@ -47,13 +46,11 @@
           <tr>
             <td><input type="checkbox" name="warehouse_ids[]" value="<%= warehouse.id %>"></td>
             <td><%= warehouse.stock_name %></td>
-            <td><%= warehouse.parent.try(:fullname) %></td>
+            <td><%= warehouse.name %></td>
             <td><%= warehouse.stock_products.count %></td>
-            <td><%= warehouse.user.try(:name) %></td>
+            <td><%= warehouse.category_count %></td>
+            <td><%= warehouse.interface %></td>
             <td><%= warehouse.phone %></td>
-            <td></td>
-            <td><%= warehouse.address %></td>
-            <td><%= warehouse.stock_opened_at.to_s%></td>
           </tr>
           <% end %>
         </tbody>
