@@ -1,5 +1,5 @@
 # Loads the core plugins located in lib/plugins
-require 'core_ext/object/blank'
+require 'core_ext'
 Dir.glob(File.join(Rails.root, "lib/plugins/*")).sort.each do |directory|
   if File.directory?(directory)
     lib = File.join(directory, "lib")
