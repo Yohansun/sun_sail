@@ -15,11 +15,12 @@ class JingdongSkuSync < ECommerce::Synchronization::Base
     raise "The *account_id* option can't be blank" if options[:account_id].blank?
     @ware_ids = options.delete(:ware_ids)
     @default_attributes = options
+    @query_condition = Account.find(options[:account_id]).jingdong_query_conditions
     @split_ids = []
   end
 
   def response
-    @response = JingdongFu.get({method: '360buy.ware.skus.get', ware_ids: @split_ids.join(',')})
+    @response = JingdongQuery.get({method: '360buy.ware.skus.get', ware_ids: @split_ids.join(',')},@query_condition)
     @response["ware_skus_get_response"]["skus"] rescue []
   end
   

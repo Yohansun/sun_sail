@@ -1,75 +1,112 @@
-<p id="notice"><%= notice %></p>
-
-<p>
-  <b>Product code:</b>
-  <%= @yihaodian_product.product_code %>
-</p>
-
-<p>
-  <b>Product cname:</b>
-  <%= @yihaodian_product.product_cname %>
-</p>
-
-<p>
-  <b>Product:</b>
-  <%= @yihaodian_product.product_id %>
-</p>
-
-<p>
-  <b>Ean13:</b>
-  <%= @yihaodian_product.ean13 %>
-</p>
-
-<p>
-  <b>Category:</b>
-  <%= @yihaodian_product.category_id %>
-</p>
-
-<p>
-  <b>Can sale:</b>
-  <%= @yihaodian_product.can_sale %>
-</p>
-
-<p>
-  <b>Outer:</b>
-  <%= @yihaodian_product.outer_id %>
-</p>
-
-<p>
-  <b>Can show:</b>
-  <%= @yihaodian_product.can_show %>
-</p>
-
-<p>
-  <b>Verify flg:</b>
-  <%= @yihaodian_product.verify_flg %>
-</p>
-
-<p>
-  <b>Is dup audit:</b>
-  <%= @yihaodian_product.is_dup_audit %>
-</p>
-
-<p>
-  <b>Prod img:</b>
-  <%= @yihaodian_product.prod_img %>
-</p>
-
-<p>
-  <b>Prod detail url:</b>
-  <%= @yihaodian_product.prod_detail_url %>
-</p>
-
-<p>
-  <b>Brand:</b>
-  <%= @yihaodian_product.brand_id %>
-</p>
-
-<p>
-  <b>Merchant category:</b>
-  <%= @yihaodian_product.merchant_category_id %>
-</p>
+<div class="container-fluid">
+  <div class="row-fluid">
+    <ul class="breadcrumb" style="position:relative;">
+      <li><a href="/">Magic</a><span class="divider">/</span></li>
+      <li><a href="/products">商品管理</a><span class="divider">/</span></li>
+      <li class="active">商品详情<span class="divider">/</span></li>
+      <li class="active"><%= @product.product_cname %></li>
+    </ul><!-- breadcrumb -->
 
 
-<%= link_to 'Edit', edit_yihaodian_product_path(@yihaodian_product) %> |
-<%= link_to 'Back', yihaodian_products_path %>
+    <form class="well form-horizontal info_check">
+      <fieldset class="clearfix">
+        <div class="w_48 pull-left">
+          <div class="control-group">
+            <label class="control-label" for=""><span class="atv">*</span><%= column_humanize "yihaodian_product.product_code" %></label>
+            <div class="controls">
+              <p class="mar_t5"><%= @product.product_code %></p>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label" for=""><span class="atv">*</span><%= column_humanize "yihaodian_product.product_id" %></label>
+            <div class="controls">
+              <p class="mar_t5"><%= @product.product_id %></p>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label" for=""><span class="atv">*</span><%= column_humanize "yihaodian_product.ean13" %></label>
+            <div class="controls">
+              <p class="mar_t5"><%= @product.ean13 %></p>
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label" for=""><span class="atv">*</span><%= column_humanize "yihaodian_product.category_id" %></label>
+            <div class="controls">
+              <p class="mar_t5"><%= @product.category_id %></p>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label" for=""><span class="atv">*</span><%= column_humanize "yihaodian_product.can_sale" %></label>
+            <div class="controls">
+              <p class="mar_t5"><%= @product.can_sale_name %></p>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label" for=""><span class="atv">*</span><%= column_humanize "yihaodian_product.outer_id" %></label>
+            <div class="controls">
+              <p class="mar_t5"><%= @product.outer_id %></p>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label" for=""><%= column_humanize "yihaodian_product.can_show" %></label>
+            <div class="controls">
+              <p class="mar_t5"><%= @product.can_show? ? "是" : "否" %></p>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label" for=""><%= column_humanize "yihaodian_product.verify_flg" %></label>
+            <div class="controls">
+              <p class="mar_t5"><%= @product.verify_flg_name %></p>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label" for=""><%= column_humanize "yihaodian_product.is_dup_audit" %></label>
+            <div class="controls">
+              <p class="mar_t5"><%= @product.is_dup_audit_name %></p>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label" for=""><%= column_humanize "yihaodian_product.prod_img" %></label>
+            <div class="controls">
+              <p class="mar_t5"><%= @product.prod_img %></p>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label" for=""><%= column_humanize "yihaodian_product.prod_detail_url" %></label>
+            <div class="controls">
+              <p class="mar_t5"><%= @product.prod_detail_url %></p>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label" for=""><%= column_humanize "yihaodian_product.brand_id" %></label>
+            <div class="controls">
+              <p class="mar_t5"><%= @product.brand_id %></p>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label" for=""><%= column_humanize "yihaodian_product.merchant_category_id" %></label>
+            <div class="controls">
+              <p class="mar_t5"><%= @product.merchant_category_id %></p>
+            </div>
+          </div>
+      </fieldset>
+
+      <fieldset>
+        <div class="form-actions">
+          <a href="#" class="btn btn-info" onclick="javascript:window.history.go(-1);return false;">返回上一级</a>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</div>

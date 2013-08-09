@@ -23,6 +23,10 @@ module ApplicationHelper
     ::I18n.t(k, :default => s.to_s.humanize)
   end
 
+  def column_humanize(name)
+    I18n.t("activerecord.attributes.#{name}")
+  end
+
   ##Navigation Helper
   # {:用户管理 => users_path,:订单管理 => trades_path}.each do |name, url|
   # <li class="<%= current_controller?(url,:assert_true => 'active') %>"> <%= name %> </li>

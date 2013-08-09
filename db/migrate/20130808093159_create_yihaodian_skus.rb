@@ -9,6 +9,7 @@ class CreateYihaodianSkus < ActiveRecord::Migration
       t.integer :can_sale                       #上下架状态0：下架，1：上架
       t.string  :outer_id                       #外部产品ID
       t.integer :can_show                       #是否可见,1是0否
+      t.integer :account_id
 
       t.timestamps
     end

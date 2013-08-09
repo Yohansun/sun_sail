@@ -9,34 +9,36 @@ module ECommerce
       attr_accessor :changed,:latest,:alias_columns
 
       def parsing
-        @changed,@latest = Array.new(2) { klass.where("1=0") }
+        @changed ||= []
+        @latest ||= []
 
         response_ary = response
         rdup = response_ary.dup
 
-        relations.find_each do |record|
+        relations(response_ary).find_each do |record|
           attrs = response_ary.delete {|u| u[primary_key].to_s == record.send(primary_key).to_s}
           update_attributes(record,attrs)
           @changed << record if record.changed?
         end
 
         response_ary.each do |attrs|
-          @latest << update_attributes(klass.new,attrs)
+          record = update_attributes(klass.new,attrs)
+          @latest << record if record.present?
         end
         rdup
       end
 
       def perform
-        all = [@changed,@latest].flatten
+        all = [@changed,@latest].flatten.compact
         all.map(&:save!)
       end
 
-      def relations
+      def relations(response)
         klass.where(primary_key => response.map { |u| u[primary_key.to_s] })
       end
 
       def fields
-        @fields ||= klass.columns_hash.keys + alias_columns.keys
+        klass.columns_hash.keys + alias_columns.keys
       end
 
       private

@@ -70,6 +70,21 @@ zh-CN:
         modified: 修改时间
         color_value: 颜色对应的值
         size_value: 尺码对应的值
+      yihaodian_product:
+        product_code: 商家产品编码
+        product_cname: 商家产品中文名称
+        product_id: 商品ID
+        ean13: 商品条形码
+        category_id: 商品类目ID
+        can_sale: 上下架状态
+        outer_id: 外部产品ID
+        can_show: 是否可见
+        verify_flg: 审核状态
+        is_dup_audit: 是否二次审核
+        prod_img: 图片信息列表
+        prod_detail_url: 前台商品详情页链接
+        brand_id: 品牌Id
+        merchant_category_id: 商家产品类别
 
   mongoid:
     models:

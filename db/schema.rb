@@ -756,6 +756,7 @@ ActiveRecord::Schema.define(:version => 20130916092012) do
     t.string   "merchant_category_id"
     t.datetime "created_at",                        :null => false
     t.datetime "updated_at",                        :null => false
+    t.string   "genre"
   end
 
   create_table "yihaodian_skus", :force => true do |t|

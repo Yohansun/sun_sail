@@ -10,12 +10,12 @@ class JingdongProductSync < ECommerce::Synchronization::Base
     @account = Account.find_by_key key
     @account_id = @account.id
     @default_attributes = {account_id: @account_id}
+    @query_conditions = @account.jingdong_query_conditions
     super
   end
 
   def response
-    query_conditions = @account.jingdong_query_conditions
-    @response = JingdongQuery.get({method: '360buy.ware.listing.get', page_size: get_size, page: page_no},query_conditions)
+    @response = JingdongQuery.get({method: '360buy.ware.listing.get', page_size: get_size, page: page_no},@query_conditions)
     @response["ware_listing_get_response"]["ware_infos"] rescue []
   end
 

@@ -189,6 +189,13 @@ MagicOrders::Application.routes.draw do
     end
   end
 
+  resources :yihaodian_products do
+    collection do
+      get :sync
+      put :syncing
+    end
+  end
+
   resources :products do
     resources :skus
     member do

@@ -2,7 +2,7 @@
 class JingdongProductsController < ApplicationController
   before_filter :authorize
   before_filter :scan_sync,:only => [:sync,:syncing]
-  # GET /products/jingdong_products
+  # GET /jingdong_products
   def index
     params[:search] ||= {}
     params[:search][params[:key].to_sym] = params[:value] if params[:key].present? && params[:value].present?
@@ -15,11 +15,11 @@ class JingdongProductsController < ApplicationController
     @product = JingdongProduct.with_account(current_account.id).find params[:id]
   end
 
-  # GET /products/jingdong_products/sync
+  # GET /jingdong_products/sync
   def sync
   end
 
-  # PUT /products/jingdong_products/1/syncing
+  # PUT /jingdong_products/1/syncing
   def syncing
     [@sync_skus,@sync_products].map(&:perform)
     redirect_to :action => :index
