@@ -2,6 +2,7 @@
 
 require 'omniauth/strategies/taobao'
 require 'omniauth/strategies/jingdong'
+require 'omniauth/strategies/yihaodian'
 
 Rails.application.config.middleware.use OmniAuth::Builder do
   # app name MagicOrders订单test
@@ -9,5 +10,6 @@ Rails.application.config.middleware.use OmniAuth::Builder do
    # Mention this has no matter with account
     provider :taobao,TradeSetting.taobao_app_key, TradeSetting.taobao_app_secret
     provider :jingdong,TradeSetting.jingdong_app_key, TradeSetting.jingdong_app_secret
+    provider :yihaodian,TradeSetting.yihaodian_app_key, TradeSetting.yihaodian_app_secret
   end
 end

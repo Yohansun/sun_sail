@@ -724,6 +724,21 @@ ActiveRecord::Schema.define(:version => 20130916092012) do
 
   add_index "users_roles", ["user_id", "role_id"], :name => "index_users_roles_on_user_id_and_role_id"
 
+  create_table "yihaodian_app_tokens", :force => true do |t|
+    t.integer  "account_id"
+    t.string   "access_token"
+    t.string   "refresh_token"
+    t.integer  "yihaodian_user_id"
+    t.string   "yihaodian_user_nick"
+    t.integer  "trade_source_id"
+    t.integer  "isv_id"
+    t.integer  "merchant_id"
+    t.string   "user_code"
+    t.integer  "user_type"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
+  end
+
   create_table "yihaodian_products", :force => true do |t|
     t.string   "product_code",                      :null => false
     t.string   "product_cname",                     :null => false
