@@ -107,7 +107,7 @@ class Area < ActiveRecord::Base
 
   def self.confirm_import_from_csv(account, file_name, set_interface_only)
     skip_lines_count = 3
-    CSV.foreach(file_name) do |csv|
+    CSV.foreach(file_name, encoding: "UTF-8") do |csv|
       skip_lines_count -= 1
       next if skip_lines_count > 0
       next if csv.size == 0
@@ -134,7 +134,7 @@ class Area < ActiveRecord::Base
   def self.import_from_csv(account, file_name)
     status_list = {}
     skip_lines_count = 3
-    CSV.foreach(file_name) do |csv|
+    CSV.foreach(file_name, encoding: "UTF-8") do |csv|
       skip_lines_count -= 1
       next if skip_lines_count > 0
       next if csv.size == 0

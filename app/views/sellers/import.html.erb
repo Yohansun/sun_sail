@@ -7,7 +7,7 @@
   </ul><!-- nav-tabs -->
 </ul><!-- nav-tabs -->
 <ul class="breadcrumb">
-  <li>导入经销商报表: 只接受CSV文件,可以先导出经销商报表,按照格式修改后导入</li>
+  <li>导入经销商报表: 只接受CSV文件,可以先导出经销商报表,按照格式修改(见下面的修改流程)后导入</li>
 </ul>
 <%= form_tag "/sellers/import_csv", :multipart => true, :method => :post do %>
 <div class="btn-toolbar">
@@ -18,4 +18,18 @@
   </div>
 </div>
 <% end %>
+<br><br>
+<p class="lead">修改流程</p>
+<p>1.导出经销商报表</p>
+<img src="/guides/sellers/export.png" style="width:800px" class="img-rounded">
+<br><br>
+<p>2.修改信息后，另存为csv文件</p>
+<img src="/guides/sellers/to_csv.png" style="width:800px" class="img-rounded">
+<br><br>
+<p>3.用记事本打开刚刚保存的csv文件，保存类型改为‘UTF-8’</p>
+<img src="/guides/sellers/encode.png" style="width:800px" class="img-rounded">
+<br><br>
+<p>4.导入刚才修改过的csv</p>
+<img src="/guides/sellers/import.png" style="width:800px" class="img-rounded">
+<br><br>
 </div>
