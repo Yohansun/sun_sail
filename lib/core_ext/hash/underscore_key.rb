@@ -5,7 +5,13 @@ class Hash
 
   def underscore_key!
     keys.each do |key|
-      self[key.underscore] = delete(key)
+      if self[key].is_a?(Hash)
+        self[key.underscore] = delete(key).underscore_key!
+      elsif self[key].is_a?(Array)
+        self[key.underscore] = delete(key).collect{|sub| sub.underscore_key!}
+      else
+        self[key.underscore] = delete(key)
+      end
     end
     self
   end
