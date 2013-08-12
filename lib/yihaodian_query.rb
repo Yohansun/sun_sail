@@ -36,9 +36,12 @@ module YihaodianQuery
     def get(options = {})
     end
 
-    def post(options = {})
-      @response = TaobaoFu::Rest.post(@base_url, generate_query_vars(sorted_params(options)))
-      parse_result @response
+    def post(options = {}, conditions)
+      if conditions.present?
+        YihaodianQuery.settings = conditions
+        @response = TaobaoFu::Rest.post(@base_url, generate_query_vars(sorted_params(options)))
+        parse_result @response
+      end
     end
 
     def update(options = {})
@@ -50,7 +53,7 @@ module YihaodianQuery
     def sorted_params(params = {})
       sys_params = {
         :appKey                 => @settings['app_key'],
-        :sessionKey             => @settings['session_key'],
+        :sessionKey             => @settings['access_token'],
         :format                 => OUTPUT_FORMAT,
         :ver                    => API_VERSION,
         :timestamp              => Time.now.strftime("%Y-%m-%d %H:%M:%S")

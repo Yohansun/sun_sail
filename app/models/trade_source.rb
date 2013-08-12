@@ -29,6 +29,7 @@ class TradeSource < ActiveRecord::Base
   belongs_to :account
   has_one :taobao_app_token
   has_one :jingdong_app_token
+  has_one :yihaodian_app_token
 
   validates :name, presence: true, uniqueness: true
 end

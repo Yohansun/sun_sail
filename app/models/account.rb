@@ -64,8 +64,9 @@ class Account < ActiveRecord::Base
   has_one :trade_source
   has_one :deliver_template
   has_many :trade_sources
-  has_one :taobao_source, class_name: "TradeSource", conditions: {trade_type: 'Taobao'}
-  has_one :jingdong_source, class_name: "TradeSource", conditions: {trade_type: 'Jingdong'}
+  has_one  :taobao_source, class_name: "TradeSource", conditions: {trade_type: 'Taobao'}
+  has_one  :jingdong_source, class_name: "TradeSource", conditions: {trade_type: 'Jingdong'}
+  has_one  :yihaodian_source, class_name: "TradeSource", conditions: {trade_type: 'Yihaodian'}
 
   validates :name, presence: true
   validates :key, presence: true, uniqueness: true
@@ -432,6 +433,15 @@ class Account < ActiveRecord::Base
       else
         conditions = conditions.update("is_sandbox" => false)
       end
+    end
+    conditions
+  end
+
+  def yihaodian_query_conditions
+    trade_source = self.yihaodian_source
+    conditions = {}
+    if trade_source
+      conditions = trade_source.attributes.update("access_token" => trade_source.yihaodian_app_token.access_token)
     end
     conditions
   end
