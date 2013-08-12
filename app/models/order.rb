@@ -1,6 +1,7 @@
 class Order
   include Mongoid::Document
   include Mongoid::Timestamps
+  include MagicEnum
 
   field :oid, type: String
   field :refund_status, type: String, default: "NO_REFUND"

@@ -4,12 +4,10 @@ class TaobaoOrder < Order
 
   field :oid, type: String
   field :status, type: String
-  # field :refund_status, type: String
 
   field :outer_id, type: String
   field :outer_iid, type: String
   field :num_iid, type: String
-  # field :local_product_id, type: Integer
 
   field :sku_id, type: String
 

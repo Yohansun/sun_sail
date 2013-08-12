@@ -38,7 +38,7 @@ json.array!(@trades) do |json, trade|
   json.has_refund_orders trade.has_refund_orders
   json.unusual_color_class trade.unusual_color_class if trade.unusual_color_class
   json.can_change_logistic can_change_logistic(trade)
-  json.invoice_type trade.invoice_type
+  json.invoice_type trade._type == "YihaodianTrade" ? trade.invoice_type_name : trade.invoice_type
   json.invoice_name trade.invoice_name
   json.invoice_content trade.invoice_content
   json.invoice_date trade.invoice_date.strftime("%Y-%m-%d") if trade.invoice_date

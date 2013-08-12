@@ -5,6 +5,10 @@
     <span class="label label-important lable_source"><%= @trade.get('trade_source') %></span>
   <% else if @trade.get('trade_source') == "淘宝" : %>
     <span class="label label-warning lable_source"><%= @trade.get('trade_source') %></span>
+  <% else if @trade.get('trade_source') == "京东" : %>
+    <span class="label label-skyblue lable_source"><%= @trade.get('trade_source') %></span>
+  <% else if @trade.get('trade_source') == "一号店" : %>
+    <span class="label label-lightblue lable_source"><%= @trade.get('trade_source') %></span>
   <% else : %>
     <span class="label label-darkorchid lable_source"><%= @trade.get('trade_source') %></span>
   <% end %>
@@ -111,9 +115,9 @@
 </td>
 
 <td data-col='gift_memo'>
-  <% if @trade.get('gift_memo') || @trade.get('trade_gifts').length != 0 || @trade.get('tid').slice(-2,-1) == "G" : %>
-    <% if @trade.get('tid').slice(-2,-1) == "G" : %>
-    <a href="#" data-toggle='modal' data-type="detail" class="gift_trade_pop">主订单号:</br><%= @trade.get('tid').slice(0,-2)%></a>
+  <% if @trade.get('gift_memo') || @trade.get('trade_gifts').length != 0 || @trade.get('main_trade_id') : %>
+    <% if @trade.get('main_trade_id') : %>
+    <a href="#" data-toggle='modal' data-type="detail" class="gift_trade_pop">主订单号:</br><%= @trade.get('main_trade_id') %></a>
     <% else : %>
     <a href="javascript:void(0)" rel="popover" data-content="<% for gift in @trade.get('trade_gifts'): %><%= gift.gift_title %>:<% if gift.trade_id == '' : %><%= gift.gift_tid %><% else : %><a href class='gift_trade_pop'><%= gift.gift_tid %></a><% end %></span><br/><% end %><%= @trade.get 'gift_memo' %><br/>" data-original-title="<b>赠品属性</b>"><i class="icon-gift_memo"></i></a>
     <% end %>
@@ -143,7 +147,7 @@
 <% end %>
 
 <td data-col='invoice_info'>
-  <% if @trade.get('invoice_type') && @trade.get('invoice_type') != "无需开票" : %>
+  <% if @trade.get('invoice_type') && @trade.get('invoice_type') != "无需开票" && @trade.get('invoice_type') != "不需要": %>
   <a href="javascript:void(0)" rel="popover" data-content="<%= @trade.get 'invoice_type' %><br/><%= @trade.get 'invoice_name' %><br/>" data-original-title="<b>发票信息</b>"><i class="icon-invoice"></i></a>
   <% end %>
 </td>

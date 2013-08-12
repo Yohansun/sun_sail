@@ -60,30 +60,7 @@ class JingdongTrade < Trade
   ## 分派相关 ##
   def matched_seller(area = nil)
     area ||= default_area
-    SellerMatcher.match_trade_seller(self, area)
-  end
-
-  def auto_dispatchable?
-    if !fetch_account || !fetch_account.settings.auto_settings || !self.fetch_account.settings.auto_settings["dispatch_conditions"]
-      can_auto_dispatch = false
-    else
-      dispatch_conditions = self.fetch_account.settings.auto_settings["dispatch_conditions"]
-      void_buyer_message = (dispatch_conditions["void_buyer_message"].present? ? false : true) || !has_buyer_message
-      void_seller_memo = (dispatch_conditions["void_seller_memo"].present? ? false : true) || seller_memo.blank?
-      void_cs_memo = (dispatch_conditions["void_cs_memo"].present? ? false : true) || !has_cs_memo
-      void_money = (dispatch_conditions["void_money"].present? ? false : true) || !has_refund_orders
-      can_auto_dispatch = void_buyer_message && void_seller_memo && void_cs_memo && void_money
-    end
-    can_auto_dispatch && dispatchable?
-  end
-
-  def auto_dispatch!
-    return false unless auto_dispatchable?
-    dispatch!
-    self.is_auto_dispatch = true
-    if self.save
-      self.operation_logs.create(operated_at: Time.now, operation: "自动分派")
-    end
+    SellerMatcher.match_trade_seller(self.id, area)
   end
 
   #没有考虑物流分组和物流拆分
@@ -122,22 +99,19 @@ class JingdongTrade < Trade
     #PENDING
   end
 
-  def jingdong_status_memo
-  end
-
   #PENDING
   # def total_fee
   #   order_seller_price.to_f + post_fee.to_f - seller_discount.to_f
   # end
 
-  def status=(status)
-    case status
-    when 'WAIT_BUYER_CONFIRM_GOODS'
-      self[:status] = 'WAIT_GOODS_RECEIVE_CONFIRM'
-    else
-      super status
-    end
-  end
+  # def status=(status)
+  #   case status
+  #   when 'WAIT_BUYER_CONFIRM_GOODS'
+  #     self[:status] = 'WAIT_GOODS_RECEIVE_CONFIRM'
+  #   else
+  #     super status
+  #   end
+  # end
 
   def set_has_onsite_service
     self.has_onsite_service = false

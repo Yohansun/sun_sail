@@ -821,6 +821,8 @@ class Trade
     area || city || state
   end
 
+  ## 发货相关
+
   def deliverable?
     trades = Trade.where(tid: tid).select do |trade|
       trade.orders.where(:refund_status.in => ['NO_REFUND', 'CLOSED']).size != 0
@@ -840,6 +842,8 @@ class Trade
     self.operation_logs.create(operated_at: Time.now, operation: "自动发货")
     self.save
   end
+
+  ## 分流相关
 
   def dispatchable?
     seller_id.blank? && is_paid_not_delivered
@@ -864,6 +868,29 @@ class Trade
     # 生成默认发货单
     generate_deliver_bill
     generate_stock_out_bill
+  end
+
+  def auto_dispatchable?
+    if !fetch_account || !fetch_account.settings.auto_settings || !self.fetch_account.settings.auto_settings["dispatch_conditions"]
+      can_auto_dispatch = false
+    else
+      dispatch_conditions = self.fetch_account.settings.auto_settings["dispatch_conditions"]
+      void_buyer_message = (dispatch_conditions["void_buyer_message"].present? ? false : true) || !has_buyer_message
+      void_seller_memo = (dispatch_conditions["void_seller_memo"].present? ? false : true) || seller_memo.blank?
+      void_cs_memo = (dispatch_conditions["void_cs_memo"].present? ? false : true) || !has_cs_memo
+      void_money = (dispatch_conditions["void_money"].present? ? false : true) || !has_refund_orders
+      can_auto_dispatch = void_buyer_message && void_seller_memo && void_cs_memo && void_money
+    end
+    can_auto_dispatch && dispatchable?
+  end
+
+  def auto_dispatch!
+    return false unless auto_dispatchable?
+    dispatch!
+    self.is_auto_dispatch = true
+    if self.save
+      self.operation_logs.create(operated_at: Time.now, operation: "自动分派")
+    end
   end
 
   ## model属性方法 ##
@@ -924,6 +951,11 @@ class Trade
       taobao_trade_tids = $redis.smembers 'TaobaoTradeTids'
       taobao_trade_tids.each do |tid|
         $redis.srem('TaobaoTradeTids', tid)
+      end
+    when 'YihaodianTrade'
+      yihaodian_trade_tids = $redis.smembers 'YihaodianTradeTids'
+      yihaodian_trade_tids.each do |tid|
+        $redis.srem('YihaodianTradeTids', tid)
       end
     when 'TaobaoPurchaseOrder'
       taobao_purchase_order_tids = $redis.smembers 'TaobaoPurchaseOrderTids'
@@ -990,16 +1022,32 @@ class Trade
       trades = Trade.where(account_id: current_account.id)
     end
 
-    paid_not_deliver_array = ["WAIT_SELLER_SEND_GOODS","WAIT_SELLER_DELIVERY","WAIT_SELLER_STOCK_OUT"]
-    paid_and_delivered_array = ["WAIT_BUYER_CONFIRM_GOODS","WAIT_GOODS_RECEIVE_CONFIRM","WAIT_BUYER_CONFIRM_GOODS_ACOUNTED","WAIT_SELLER_SEND_GOODS_ACOUNTED"]
-    closed_array = ["TRADE_CLOSED","TRADE_CANCELED","TRADE_CLOSED_BY_TAOBAO", "ALL_CLOSED"]
-    succeed_array = ["TRADE_FINISHED","FINISHED_L"]
+    wait_pay_array = ["WAIT_BUYER_PAY",
+                      "ORDER_WAIT_PAY"]
+    paid_not_deliver_array = ["WAIT_SELLER_SEND_GOODS",
+                              "WAIT_SELLER_DELIVERY",
+                              "WAIT_SELLER_STOCK_OUT",
+                              "ORDER_PAYED"]
+    paid_and_delivered_array = ["WAIT_BUYER_CONFIRM_GOODS",
+                                "WAIT_GOODS_RECEIVE_CONFIRM",
+                                "WAIT_BUYER_CONFIRM_GOODS_ACOUNTED",
+                                "WAIT_SELLER_SEND_GOODS_ACOUNTED",
+                                "ORDER_TRUNED_TO_DO",
+                                "ORDER_CAN_OUT_OF_WH",
+                                "ORDER_SENDED_TO_LOGITSIC",
+                                "ORDER_RECEIVED"]
+    closed_array = ["TRADE_CLOSED",
+                    "TRADE_CANCELED",
+                    "TRADE_CLOSED_BY_TAOBAO",
+                    "ALL_CLOSED",
+                    "ORDER_CANCEL"]
+    succeed_array = ["TRADE_FINISHED",
+                     "FINISHED_L",
+                     "ORDER_FINISH"]
 
     #contains TaobaoOrder and SubPurchaseOrder
     taobao_trade_refund_array = ["WAIT_SELLER_AGREE","SELLER_REFUSE_BUYER","WAIT_BUYER_RETURN_GOODS","WAIT_SELLER_CONFIRM_GOODS","CLOSED", "SUCCESS"]
     taobao_purchase_refund_array = ['TRADE_REFUNDED', 'TRADE_REFUNDING']
-
-
 
     if current_user.seller.present?
       seller = current_user.seller
@@ -1057,7 +1105,7 @@ class Trade
       when 'undispatched'
         trade_type_hash = {:status.in => paid_not_deliver_array, seller_id: nil, has_unusual_state: false, :pay_time.ne => nil}
       when 'unpaid'
-        trade_type_hash = {status: "WAIT_BUYER_PAY"}
+        trade_type_hash = {:status.in => wait_pay_array}
       when 'paid'
         trade_type_hash = {:status.in => paid_not_deliver_array + paid_and_delivered_array + succeed_array}
       when 'undelivered','seller_undelivered'
@@ -1450,19 +1498,26 @@ class Trade
   def is_paid_not_delivered
     ["WAIT_SELLER_SEND_GOODS",
      "WAIT_SELLER_DELIVERY",
-     "WAIT_SELLER_STOCK_OUT"].include?(status)
+     "WAIT_SELLER_STOCK_OUT",
+     "ORDER_PAYED"].include?(status)
   end
 
   def is_paid_and_delivered
     ["WAIT_BUYER_CONFIRM_GOODS",
      "WAIT_GOODS_RECEIVE_CONFIRM",
      "WAIT_BUYER_CONFIRM_GOODS_ACOUNTED",
-     "WAIT_SELLER_SEND_GOODS_ACOUNTED"].include?(status)
+     "WAIT_SELLER_SEND_GOODS_ACOUNTED",
+     "ORDER_TRUNED_TO_DO",
+     "ORDER_CAN_OUT_OF_WH",
+     "ORDER_SENDED_TO_LOGITSIC",
+     "ORDER_RECEIVED"].include?(status)
   end
 
   def change_status_to_deliverd
     if self._type == "JingdongTrade"
       self.status = "WAIT_GOODS_RECEIVE_CONFIRM"
+    elsif self._type == "YihaodianTrade"
+      self.status = "ORDER_SENDED_TO_LOGITSIC"
     else
       self.status = "WAIT_BUYER_CONFIRM_GOODS"
     end
@@ -1470,7 +1525,8 @@ class Trade
 
   def is_succeeded
     ["TRADE_FINISHED",
-     "FINISHED_L"].include?(status)
+     "FINISHED_L",
+     "ORDER_FINISH"].include?(status)
   end
 
   def is_closed
@@ -1478,7 +1534,8 @@ class Trade
      "TRADE_CANCELED",
      "TRADE_CLOSED_BY_TAOBAO",
      "ALL_CLOSED",
-     'LOCKED'].include?(status)
+     "LOCKED",
+     "ORDER_CANCEL"].include?(status)
   end
 
   private

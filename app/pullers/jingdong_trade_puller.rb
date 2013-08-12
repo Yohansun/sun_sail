@@ -75,6 +75,7 @@ class JingdongTradePuller
 
             orders.each do |order|
               order = trade.jingdong_orders.build(order)
+              order.oid = trade.tid
             end
 
             #获取优惠信息
@@ -109,8 +110,7 @@ class JingdongTradePuller
           else
             #trade.update_attributes(order_state: t['order_state'], order_state_remark: t['order_state_remark'], order_end_time: t['order_end_time'])
             trade = JingdongTrade.where(tid: t['order_id']).first
-            return unless trade
-
+            next unless trade
             trade.update_attributes(t)
           end
         end

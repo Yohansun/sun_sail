@@ -50,7 +50,7 @@ json.logistic_waybill @trade.logistic_waybill
 json.matched_logistics @trade.matched_logistics
 json.logistic_memo @trade.logistic_memo
 
-json.invoice_type @trade.invoice_type
+json.invoice_type @trade._type == "YihaodianTrade" ? @trade.invoice_type_name : @trade.invoice_type
 json.invoice_name @trade.invoice_name
 json.invoice_content @trade.invoice_content
 json.invoice_date @trade.invoice_date.strftime("%Y-%m-%d") if @trade.invoice_date

@@ -195,6 +195,8 @@ code{color: #08C;}
 
 /*label-background-color*/
 .label.label-darkorchid{background-color:#68228B;}
+.label.label-lightblue{background-color:#68838B;}
+.label.label-skyblue{background-color:#3299CC;}
 
 .thumbnails li{
   height: 200px;
@@ -210,6 +212,3 @@ code{color: #08C;}
   max-height: 200px;
   vertical-align: middle;
 }
-
-
-
