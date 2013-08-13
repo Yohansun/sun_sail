@@ -23,7 +23,7 @@ class Gqs
    results = Hash.from_xml(response).as_json
    if results['DATA'] && results['DATA']['RECORD']
     records = results['DATA']['RECORD']
-    records.each do|record|
+    records.each do |record|
       status = record['STATUS']
       # 1 可发 2 残疵 3 锁定 4 破损
       if status == "1"
