@@ -233,7 +233,9 @@ class StockOutBill < StockBill
       sku_id = stock_out.try(:sku_id)
       stock_product = StockProduct.find_by_id(stock_out.stock_product_id)
       if stock_product
-        stock_product.update_attributes(actual: stock_product.actual - stock_out.number, activity: stock_product.activity - stock_out.number)
+        update_attrs = {:actual => stock_product.actual - stock_out.number, :activity => stock_product.activity - stock_out.number}
+        update_attrs[:forecase] = stock_product.forecase - stock_out.number if self.trade.blank?
+        stock_product.update_attributes(update_attrs)
         true
       else
         # DO SOME ERROR NOTIFICATION
@@ -246,7 +248,9 @@ class StockOutBill < StockBill
     bill_products.each do |stock_out|
       stock_product = StockProduct.find_by_id(stock_out.stock_product_id)
       if stock_product
-        stock_product.update_attributes(actual: stock_product.actual + stock_out.number, activity: stock_product.activity + stock_out.number)
+        update_attrs = {:actual => stock_product.actual + stock_out.number, :activity => stock_product.activity + stock_out.number}
+        update_attrs[:forecase] = stock_product.forecase + stock_out.number if self.trade.blank?
+        stock_product.update_attributes(update_attrs)
         true
       else
         # DO SOME ERROR NOTIFICATION

@@ -125,4 +125,9 @@ class TaobaoTrade < Trade
   #   (total_fee + post_fee - payment - promotion_fee).to_f.round(2)
   # end
 
+  def update_stock_forecase
+    if self.status == "WAIT_SELLER_SEND_GOODS" && self.seller_id.blank?
+      update_seller_stock_forecase(self.forcase_seller_id, "decrease")
+    end
+  end
 end

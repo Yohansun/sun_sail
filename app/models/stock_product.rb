@@ -16,6 +16,7 @@
 #  num_iid      :integer(8)
 #  account_id   :integer(4)
 #  lock_version :integer(4)      default(0), not null
+#  forecase     :integer(4)      default(0)
 #
 
 class StockProduct < ActiveRecord::Base
@@ -23,7 +24,7 @@ class StockProduct < ActiveRecord::Base
 
   belongs_to :account
 
-  attr_accessible :max, :safe_value, :product_id, :seller_id, :color_ids, :actual, :activity, :sku_id, :num_iid, :account_id
+  attr_accessible :max, :safe_value, :product_id, :seller_id, :color_ids, :forecase, :actual, :activity, :sku_id, :num_iid, :account_id
 
   validates_numericality_of :safe_value, :actual, :activity, :max, greater_than_or_equal_to: 0, message: '数量不能小于零'
   validates_numericality_of :activity, less_than_or_equal_to: :actual

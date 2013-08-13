@@ -41,6 +41,7 @@
             <th><%= sort_link @search, :product_name,"商品SKU名称" %> </th>
             <th width="10%"><%= sort_link @search, :product_outer_id,"商品编码" %></th>
             <th width="10%"><%= sort_link @search, :category_name,"商品分类" %></th>
+            <th width="10%"><%= sort_link @search, :forecase,"预测库存" %></th>
             <th width="10%"><%= sort_link @search, :activity,"可用库存" %></th>
             <th width="10%"><%= sort_link @search, :actual,"实际库存" %></th>
             <th width="10%"><%= sort_link @search, :safe_value,"安全库存" %></th>
@@ -56,6 +57,7 @@
             <td class="sku_title"><%= stock_product.sku.try(:title) %></td>
             <td><%= stock_product.product.try(:outer_id) %></td>
             <td><%= stock_product.category.try(:name) %></td>
+            <td><%= stock_product.forecase %></td>
             <td><%= stock_product.activity %></td>
             <td><%= stock_product.actual %></td>
             <td><%= stock_product.safe_value %></td>

@@ -68,9 +68,9 @@ class CustomersPuller
 
         yield(taobao_trade) if block_given?
       end
-      
+
     end
-    
+
     def parse_attributes(taobao_trade)
       attrs = taobao_trade.attributes
       {"buyer_nick" => "name","buyer_email" => "email"}.each_pair do |k,v|

@@ -116,6 +116,7 @@ class TradesController < ApplicationController
       elsif params[:seller_id] == "void"
         @trade.reset_seller
       end
+      @trade.change_stock_seller
     end
 
     if params[:delivered_at] == true

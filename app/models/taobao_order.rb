@@ -150,6 +150,27 @@ class TaobaoOrder < Order
     info
   end
 
+  def sku_products
+    products = []
+    if self.sku_bindings.present?
+      self.sku_bindings.each do |binding|
+        sku_id = binding.sku_id
+        sku = Sku.find_by_id(sku_id)
+        product = sku.try(:product)
+        products << [sku_id, product] if product.present?
+      end
+    elsif self.local_skus.present?
+      self.local_skus.each do |sku|
+        sku_id = sku.id
+        sku = Sku.find_by_id(sku_id)
+        product = sku.try(:product)
+        products << [sku_id, product] if product.present?
+      end
+    end
+
+    products
+  end
+
   def avalibale_sku_names
     sku_names = []
     if taobao_skus.present?

@@ -166,6 +166,7 @@ class CustomTrade < Trade
   end
 
   def change_orders(orders, status, action_name)
+    update_seller_stock_forecase(self.forcase_seller_id, "revert")
     taobao_orders.delete_all
     orders.each do |order|
       order_array = order.split(";")
