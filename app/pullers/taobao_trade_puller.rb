@@ -84,7 +84,12 @@ class TaobaoTradePuller
           if users
             trade.set_operator(users,total_percent)
           end
+          trade.update_stock_forecase
           trade.save
+          forecase_seller_id = trade.matched_seller_with_default(nil).id rescue forecase_seller_id = nil
+          if forecase_seller_id.present?
+            trade.update_attribute(:forecase_seller_id, forecase_seller_id)
+          end
 
           $redis.sadd('TaobaoTradeTids',trade['tid'])
           TradeTaobaoMemoFetcher.perform_async(trade.tid)
@@ -236,6 +241,7 @@ class TaobaoTradePuller
                 local_trade.news = 1
               end
               local_trade.set_has_onsite_service
+              local_trade.update_stock_forecase
               local_trade.save
               if account.settings.auto_settings['auto_dispatch']
                 result = account.can_auto_dispatch_right_now

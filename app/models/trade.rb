@@ -13,6 +13,7 @@ class Trade
 
   field :account_id, type: Integer
   field :seller_id, type: Integer
+  field :forcase_seller_id, type: Integer                 #预测发货经销商
   field :seller_alipay_no, type: String
   field :seller_mobile, type: String
   field :seller_phone, type: String
@@ -458,7 +459,7 @@ class Trade
   end
 
   def matched_seller_with_default(area)
-    matched_seller(area, account_id) || default_seller(area, account_id)
+    matched_seller(area) || default_seller(area)
   end
 
   def matched_seller(area = nil)
@@ -1418,7 +1419,40 @@ class Trade
     (total_fee + post_fee - payment - promotion_fee).to_f.round(2)
   end
 
-  private
+  def change_stock_seller
+    self.changes[:seller_id].tap do |seller_ids|
+      old_seller_id, new_seller_id = seller_ids
+      old_seller_id = self.forcase_seller_id if old_seller_id.blank?
+      new_seller_id = self.forcase_seller_id if new_seller_id.blank?
+
+      if old_seller_id != new_seller_id
+        update_seller_stock_forecase(old_seller_id, "revert") if old_seller_id.present?
+        update_seller_stock_forecase(new_seller_id, "decrease") if new_seller_id.present?
+      end
+    end
+  end
+
+  def update_seller_stock_forecase(opt_seller_id, method)
+    return if opt_seller_id.blank?
+    if ['TaobaoTrade','CustomTrade'].include?(self._type)
+      self.orders.each do |order|
+        order.sku_products.each do |s_item|
+          sku_id, product = s_item
+          stock_product = StockProduct.where(account_id: self.account_id, seller_id: opt_seller_id, product_id: product.id, sku_id: sku_id).first
+          if stock_product.present?
+            case method
+            when "revert"
+              stock_product.forecase += order.num
+            when "decrease"
+              stock_product.forecase -= order.num
+            end
+            stock_product.save
+          end
+        end
+      end
+    end
+  end
+private
     def check_associate_deliver_bills
       DeliverBill.where(trade_id: self._id).delete_all if self.deleted_at != nil
     end
@@ -1471,5 +1505,4 @@ class Trade
         true
       end
     end
-
 end
