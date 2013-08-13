@@ -196,6 +196,7 @@ class Trade
   # 时间搜索index
   index created: -1
   index pay_time: -1
+  index reach_account_at: -1
   index dispatched_at: -1
   index delivered_at: -1
   index consign_time: -1
@@ -1202,8 +1203,14 @@ class Trade
                 if value_array[0].include?('-')
                   start_time = value_array[0].to_time(:local)
                   end_time = value_array[1].to_time(:local)
-                  search_tags_hash.update({key => {"$gte" => start_time, "$lt" => end_time}})
-                  conditions[key] << {key => {"$gte" => start_time, "$lt" => end_time}}
+                  if key == "reach_account_at"
+                    trades = trades.where(status: 'TRADE_FINISHED')
+                    conditions[key] << {:end_time => {"$gte" => start_time, "$lt" => end_time}}
+                    search_tags_hash.update({:end_time => {"$gte" => start_time, "$lt" => end_time}})
+                  else
+                    search_tags_hash.update({key => {"$gte" => start_time, "$lt" => end_time}})
+                    conditions[key] << {key => {"$gte" => start_time, "$lt" => end_time}}
+                  end
                 else
                   min_money = value_array[0].to_f
                   max_money = value_array[1].to_f

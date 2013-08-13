@@ -42,6 +42,7 @@
             <option value="pay_time">付款时间</option>
             <option value="dispatched_at">分派时间</option>
             <option value="delivered_at">发货时间</option>
+            <option value="reach_account_at">到账时间</option>
             <option value="rate_created">评价时间</option>
             <option value="end_time">完成时间</option>
             <option value="deliver_bill_printed_at">打印发货单时间</option>
