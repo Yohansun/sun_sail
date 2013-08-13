@@ -133,8 +133,9 @@
         <label class="pull-left" ><code>来源：</code></label>
         <div class="controls pull-left">
           <select class="input-small pull-left select2">
-            <option value="TaobaoTrade" selected="selected" >淘宝</option>
+            <option value="TaobaoTrade" selected="selected">淘宝</option>
             <option value="JingdongTrade">京东</option>
+            <option value="YihaodianTrade">一号店</option>
             <!-- <option value="TaobaoPurchaseOrder">分销平台</option> -->
             <option value="CustomTrade-gift_trade">赠品订单</option>
             <option value="CustomTrade-handmade_trade">人工订单</option>

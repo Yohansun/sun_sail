@@ -25,13 +25,18 @@ class TradeReport
     if self.conditions
       if self.conditions['search']['_type'] == "JingdongTrade"
         JingdongTradeReporter.perform_async(id)
+      elsif self.conditions['search']['_type'] == "YihaodianTrade"
+        YihaodianTradeReporter.perform_async(id)
       else
         TaobaoTradeReporter.perform_async(id)
       end
     else
       ids = self.batch_export_ids.split(",")
-      if Trade.where(id: ids.first).first.type_text == "京东"
+      trade_type = Trade.where(id: ids.first).first._type
+      if trade_type == "JingdongTrade"
         JingdongTradeReporter.perform_async(id)
+      elsif trade_type == "YihaodianTrade"
+        YihaodianTradeReporter.perform_async(id)
       else
         TaobaoTradeReporter.perform_async(id)
       end
