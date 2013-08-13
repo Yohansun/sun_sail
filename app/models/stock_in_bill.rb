@@ -33,6 +33,33 @@ class StockInBill < StockBill
 		stock.target!
 	end
 
+  def gqs_xml
+    stock = ::Builder::XmlMarkup.new
+    stock.DATA do
+      stock.RECEIPT do
+        stock.HEADER do
+          stock.RECEIPTID tid                                                   #YH2013030001  网站系统生成的订单编号 必填  VARCHAR2  30
+          stock.RECEIPTDATE stocked_at.try(:strftime, "%Y-%m-%d %H:%M")         #2013-03-27 16:00  订单创建日期  必填  DATE
+          stock.ORDERTYPE 'STD'                                                 #订单类型,淘宝订单,分销,退货
+          stock.POID tid                                                        #采购单号
+          stock.TOTALPIECESQTY bill_products_mumber
+        end
+        bill_products.each do |product|
+          stock.DETAIL do
+            stock.ITEMID product.outer_id
+            stock.STATUSID 1
+            stock.DESCR product.title
+            stock.QTYRECEIVED product.number
+            stock.QTY product.number
+            stock.UNITPRICE  product.price
+          end
+        end
+      end
+    end
+    stock.target!
+  end
+
+
 
   def check
     return if status != "CREATED" || self.operation_locked?
@@ -64,35 +91,70 @@ class StockInBill < StockBill
 
 	#推送入库通知单至仓库
   def ans_to_wms_worker
-    client = Savon.client(wsdl: account.settings.biaogan_client)
-    response = client.call(:ans_to_wms, message:{CustomerId: account.settings.biaogan_customer_id, PWD: account.settings.biaogan_customer_password, xml: xml})
-    result_xml = response.body[:ans_to_wms_response][:out]
-    result = Hash.from_xml(result_xml).as_json
-    if result['Response']['success'] == 'true'
-      update_attributes(sync_succeded_at: Time.now, status: "SYNCKED")
-      operation_logs.create(operated_at: Time.now, operation: '同步成功')
-    else
-      update_attributes(sync_failed_at: Time.now, failed_desc: result['Response']['desc'], status: "SYNCK_FAILED")
-      operation_logs.create(operated_at: Time.now, operation: "同步失败,#{result['Response']['desc']}")
+    if account.settings.third_party_wms == "biaogan"
+      result_xml = Bml.ans_to_wms(account, xml)
+    elsif account.settings.third_party_wms == "gqs"
+      result_xml = Gqs.receipt_add(account, gqs_xml)
     end
+    result = Hash.from_xml(result_xml).as_json
+
+    #BML
+    if result['Response']
+      if ['Response']['success'] == 'true')
+        update_attributes(sync_succeded_at: Time.now, status: "SYNCKED")
+        operation_logs.create(operated_at: Time.now, operation: '同步成功')
+      else
+        update_attributes(sync_failed_at: Time.now, failed_desc: result['Response']['desc'], status: "SYNCK_FAILED")
+        operation_logs.create(operated_at: Time.now, operation: "同步失败,#{result['Response']['desc']}")
+      end
+    end
+
+    #GQS
+    if result['DATA']
+      if result['DATA']['RET_CODE'] == 'SUCC'
+        update_attributes(sync_succeded_at: Time.now, status: "SYNCKED")
+        operation_logs.create(operated_at: Time.now, operation: '同步成功')
+      else
+        update_attributes(sync_failed_at: Time.now, failed_desc: result['DATA']['RET_MESSAGE'], status: "SYNCK_FAILED")
+        operation_logs.create(operated_at: Time.now, operation: "同步失败,#{result['DATA']['RET_MESSAGE']}")
+      end
+    end
+
   end
 
   #发送入库单取消信息至仓库
   def cancel_asn_rx_worker
-    client = Savon.client(wsdl: account.settings.biaogan_client)
-    response = client.call(:cancel_asn_rx) do
-      message CustomerId: account.settings.biaogan_customer_id, PWD: account.settings.biaogan_customer_password, AsnNo: tid
+    if account.settings.third_party_wms == "biaogan"
+      result_xml = Bml.cancel_asn_rx(account, tid)
+    elsif account.settings.third_party_wms == "gqs"
+      result_xml = Gqs.cancel_order(account, tid)
     end
-    result_xml = response.body[:cancel_asn_rx_response][:out]
     result = Hash.from_xml(result_xml).as_json
-    if result['Response']['success'] == 'true'
-      update_attributes(cancel_succeded_at: Time.now, status: "CANCELD_OK")
-      operation_logs.create(operated_at: Time.now, operation: '取消成功')
-      restore_stock
-    else
-      update_attributes(cancel_failed_at: Time.now, failed_desc: result['Response']['desc'], status: "CANCELD_FAILED")
-      operation_logs.create(operated_at: Time.now, operation: "取消失败,#{result['Response']['desc']}")
+
+    #BML
+    if result['Response']
+      if result['Response']['success'] == 'true'
+        update_attributes(cancel_succeded_at: Time.now, status: "CANCELD_OK")
+        operation_logs.create(operated_at: Time.now, operation: '取消成功')
+        restore_stock
+      else
+        update_attributes(cancel_failed_at: Time.now, failed_desc: result['Response']['desc'], status: "CANCELD_FAILED")
+        operation_logs.create(operated_at: Time.now, operation: "取消失败,#{result['Response']['desc']}")
+      end
     end
+
+    #GQS
+    if result['DATA']
+      if result['DATA']['RET_CODE'] == 'SUCC'
+        update_attributes(cancel_succeded_at: Time.now, status: "CANCELD_OK")
+        operation_logs.create(operated_at: Time.now, operation: '取消成功')
+        restore_stock
+      else
+        update_attributes(cancel_failed_at: Time.now, failed_desc: result['DATA']['RET_MESSAGE'], status: "CANCELD_FAILED")
+        operation_logs.create(operated_at: Time.now, operation: "取消失败,#{result['DATA']['RET_MESSAGE']}")
+      end
+    end
+
   end
 
   def sync_stock #确认入库

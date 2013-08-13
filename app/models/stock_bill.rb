@@ -153,6 +153,10 @@ class StockBill
     Logistic.find_by_id(logistic_id).try(:name)
   end
 
+  def gqs_code
+
+  end
+
   def last_record
     operation_logs.desc("id").first
   end
