@@ -33,6 +33,7 @@ class Gqs
         Rails.logger.warn "#{item_id}------#{actual}------#{activity}"
       end
     end
+   end
   end
 
   # 订单取消
