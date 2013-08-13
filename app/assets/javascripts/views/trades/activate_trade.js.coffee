@@ -14,7 +14,7 @@ class MagicOrders.Views.TradesActivateTrade extends Backbone.View
 
   save: ->
     blocktheui()
-    $.get '/trades/activate_trade', {id: @model.id, operation: "激活人工订单"}, (data) ->
+    $.get '/trades/activate_trade', {id: @model.id, operation: "激活订单"}, (data) ->
       $.unblockUI()
       $("#trade_"+data.id).hide()
       $('#trade_activate_trade').modal('hide')

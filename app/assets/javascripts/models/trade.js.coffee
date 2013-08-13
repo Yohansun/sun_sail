@@ -17,13 +17,11 @@ class MagicOrders.Models.Trade extends Backbone.Model
     state = this.attributes.status
     type = this.attributes.trade_source
     trades = MagicOrders.trade_pops['trades']
-    if this.attributes.trade_source == "人工" && this.attributes.is_locked is true
+    if this.attributes.is_locked is true
       enabled_items.push('activate_trade')
-    if this.attributes.is_locked isnt true
+    else
       if MagicOrders.role_key == "super_admin"
         enabled_items.push('seller') #订单分派,分派重置
-      if this.attributes.trade_source == "人工" && this.attributes.is_locked is false
-        enabled_items.push('lock_trade')
       switch state
         # when "TRADE_NO_CREATE_PAY" # "没有创建支付宝交易"
         when "WAIT_BUYER_PAY" # "等待付款"
@@ -31,9 +29,13 @@ class MagicOrders.Models.Trade extends Backbone.Model
             enabled_items.push('modify_payment') #金额调整
           if this.attributes.seller_id is null && type != '赠品' && $.inArray('invoice_settings',trades) > -1
             enabled_items.push('invoice_settings') #开票设置
+          if this.attributes.seller_id is null
+            enabled_items.push('lock_trade') #锁定订单
         when "WAIT_SELLER_SEND_GOODS" # "已付款，待发货"
           enabled_items.push('modify_receiver_information')
           enabled_items.push('merge_trades_manually')
+          if this.attributes.seller_id is null
+            enabled_items.push('lock_trade') #锁定订单
           if this.attributes.merged_trade_ids && this.attributes.merged_trade_ids.length > 0
             enabled_items.push('split_merged_trades')
 
