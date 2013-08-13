@@ -10,7 +10,7 @@
         <% end %>
       </div>
 
-       <div class="btn-toolbar">
+      <div class="btn-toolbar">
         <div class="btn-group">
           <button class="btn btn-warning">操作</button>
           <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
@@ -21,55 +21,80 @@
               <%= link_to "导出","#",:onclick => "processChecked('#{warehouse_stock_bills_path(@warehouse,:search => params[:search],:format => :xls,:on => '?')}')"%>
             </li>
           </ul>
-         </div>
         </div>
-
-        <table class="table table-hover table-bordered table-striped table-condensed js-table" id="bills_table">
-          <thead>
-            <tr>
-              <th width="1%"><input type="checkbox"></th>
-              <th width="5%">序号</th>
-              <th width="10%">出/入库单编号</th>
-              <th width="10%">状态</th>
-              <th width="15%">商品编码</th>
-              <th width="15%">商品名称</th>
-              <th width="10%">类型</th>
-              <th width="10%">创建时间</th>
-              <th width="10%">出/入库时间</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% @num = 0 %>
-            <%- @bills.each_with_index do |bill,index| %>
-              <%- bill.bill_products.each_with_index do |product,product_index|%>
-                <tr>
-                  <td><input type="checkbox" name="stock_bill_ids[]" value="<%= bill.id %>"></td>
-                  <td><%= @num += 1 %></td>
-                  <td><%= bill.tid %></td>
-                  <td><%= bill.status_text %></td>
-                  <td><%= product.try(:sku_id) %></td>
-                  <td><%= product.try(:title) %></td>
-                  <td><%= bill.stock_type_name  %></td>
-                  <td><%= bill.created_at.try(:to_s,:db) %></td>
-                  <td><%= bill.stocked_at.try(:strftime, "%Y-%m-%d %H:%M") %></td>
-                </tr>
-              <%- end %>
-            <%- end %>
-          </tbody>
-        </table>
-        <div class='clearfix'>
-      <div class="pull-right" style="margin-left: 5px;margin-top: -2px;">
-        <%= paginate @bills %>
+        <div class="btns btn-group pull-right js-field_set">
+          <a href="#" class="btn btn-success btn_mar4">显示设置</a>
+          <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-success dropdown_check_btn"><span class="caret"></span></button>
+          <ul class="dropdown-menu dropdown_check" id="dropdown_check">
+            <%= form_tag "/users/update_visible_columns", :id => "visible_columns"%>
+              <input type="hidden" name="model_name" value="stock_bill"/>
+              <input type="hidden" name="action_name" value="index"/>
+              <% @all_cols.each do |col_name, view_name| %>
+              <li data-col="<%= col_name %>">
+                <label class="checkbox" style="padding-left:35px;">
+                  <input type="checkbox" class="test_checkbox" name="visible_columns[]" value="<%= col_name %>" <%= ' checked="checked"' if @visible_cols.include?(col_name) %>/>
+                  <%= view_name %>
+                </label>
+              </li>
+              <% end %>
+            </form>
+          </ul>
+        </div>
       </div>
-      <!-- <p></p> -->
-      <%= form_tag("/warehouses/#{@warehouse.id}/stock_bills", :method => "get", :class => 'pagination trade_count_info form-inline pull-right') do %>
-      <input style="visibility:hidden;" name="page" value="<%= params[:page]%>"/>
-      <label style="color:#005580;">当前每页显示：</label>
-      <%=select_tag :number, options_for_select([["加载20项","20"],
-              ["加载50项","50"],
-              ["加载100项", "100"]], params[:number]),  :class => 'nomargin input-medium', :onchange => "this.form.submit();" %>
-      <%- end -%>
-    </div>
+
+      <table class="table table-hover table-bordered table-striped table-condensed js-table" id="bills_table">
+        <thead>
+          <tr>
+            <th><input type="checkbox"></th>
+            <th>序号</th>
+            <%- @all_cols.each do |col_name, view_name| -%>
+            <th data-col="<%= col_name %>" style="<%= 'display:none' unless @visible_cols.include?(col_name) %>">
+              <%= view_name %>
+            </th>
+            <%- end -%>
+          </tr>
+        </thead>
+        <tbody>
+          <% @num = 0 %>
+          <%- @bills.each_with_index do |bill,index| %>
+            <%- bill.bill_products.each_with_index do |product,product_index|%>
+              <tr>
+                <td><input type="checkbox" name="stock_bill_ids[]" value="<%= bill.id %>"></td>
+                <td><%= @num += 1 %></td>
+                <%- @all_cols.each do |col_name, view_name| -%>
+                <td data-col="<%= col_name %>" style="<%= 'display:none' unless @visible_cols.include?(col_name) %>">
+                  <%= case col_name
+                      when "product_sku"
+                        product.try(:sku_id)
+                      when "product_title"
+                        product.try(:title)
+                      when "created_at"
+                        bill.created_at.try(:to_s,:db)
+                      when "stocked_at"
+                        bill.stocked_at.try(:strftime, "%Y-%m-%d %H:%M")
+                      else
+                        bill.send(col_name)
+                      end
+                   %>
+                </td>
+                <%- end -%>
+              </tr>
+            <%- end %>
+          <%- end %>
+        </tbody>
+      </table>
+      <div class='clearfix'>
+        <div class="pull-right" style="margin-left: 5px;margin-top: -2px;">
+          <%= paginate @bills %>
+        </div>
+        <!-- <p></p> -->
+        <%= form_tag("/warehouses/#{@warehouse.id}/stock_bills", :method => "get", :class => 'pagination trade_count_info form-inline pull-right') do %>
+          <input style="visibility:hidden;" name="page" value="<%= params[:page]%>"/>
+          <label style="color:#005580;">当前每页显示：</label>
+          <%=select_tag :number, options_for_select([["加载20项","20"],
+                  ["加载50项","50"],
+                  ["加载100项", "100"]], params[:number]),  :class => 'nomargin input-medium', :onchange => "this.form.submit();" %>
+        <%- end -%>
       </div><!--span10 -->
     </div><!-- tab-content -->
   </div><!-- span10 -->
@@ -83,6 +108,7 @@
 
   $(function() {
     clickTableRow("bills_table");
+    visibleTableColumns("#dropdown_check", "#visible_columns", "#bills_table");
   });
 </script>
 <% end %>

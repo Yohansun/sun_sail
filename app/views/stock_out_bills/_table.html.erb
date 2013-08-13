@@ -3,12 +3,11 @@
     <tr>
       <th><input type="checkbox"></th>
       <th>序号</th>
-      <th>出库单编号</th>
-      <th>当前状态</th>
-      <th>历史状态</th>
-      <th>出库类型</th>
-      <th>商品数量</th>
-      <th>商品总价</th>
+      <%- @all_cols.each do |col_name, view_name| -%>
+        <th data-col="<%= col_name %>" style="<%= 'display:none' unless @visible_cols.include?(col_name) %>">
+          <%= view_name %>
+        </th>
+      <%- end -%>
     </tr>
   </thead>
   <tbody>
@@ -16,12 +15,18 @@
       <tr id='<%= bill.id %>'>
         <td><% if !bill.stock_type_ovirtual?  %><input type="checkbox" name="bill_ids[]" value="<%= bill.id%>" ><% end %></td>
         <td><%=  index + 1  %></td>
-        <td><%= bill.tid %></td>
-        <%= render "status", bill: bill%>
-        <%= render "operation", bill: bill%>
-        <td><%= bill.stock_type_name %></td>
-        <td><%= bill.bill_products_mumber %></td>
-        <td><%= bill.bill_products_price %></td>
+        <%- @all_cols.each do |col_name, view_name| -%>
+          <% case col_name
+             when "status" %>
+            <%= render "status", bill: bill%>
+          <% when "operation" %>
+            <%= render "operation", bill: bill%>
+          <% else %>
+            <td data-col="<%= col_name %>" style="<%= 'display:none' unless @visible_cols.include?(col_name) %>">
+              <%= bill.send(col_name) rescue "" %>
+            </td>
+          <% end %>
+        <%- end -%>
       </tr>
     <%- end %>
   </tbody>

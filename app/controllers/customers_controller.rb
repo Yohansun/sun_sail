@@ -4,10 +4,10 @@ class CustomersController < ApplicationController
   before_filter :init_search
   ACTIONS = {:index => "所有顾客",:potential => "潜在顾客",:paid => "购买顾客"}
   ALL_ACTIONS = ACTIONS.dup.merge({:around => "回头顾客"})
-  
+
   ACTIONS.each_pair do |_action,name|
     define_method(_action) do
-      
+
       @search = if _action == :index
         Customer.search(params[:search])
       else
@@ -17,7 +17,11 @@ class CustomersController < ApplicationController
       @number = params[:number] if params[:number].present?
       @customers = @search.page(params[:page]).per(@number)
       respond_to do |format|
-        format.html {render "index" if _action != :index}
+        format.html {
+          @all_cols = current_account.settings.customer_cols
+          @visible_cols = current_account.settings.customer_visible_cols[_action.to_s]
+          render "index"
+        }
         format.xls  {render "index"}
       end
     end
@@ -36,7 +40,10 @@ class CustomersController < ApplicationController
     @search = Customer.search(params[:search])
     @customers = @search.page(params[:page]).per(20)
     respond_to do |format|
-      format.html
+      format.html {
+          @all_cols = current_account.settings.customer_around_cols
+          @visible_cols = current_account.settings.customer_visible_cols["around"]
+        }
       format.xls
     end
   end

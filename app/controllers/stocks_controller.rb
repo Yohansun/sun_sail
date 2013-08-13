@@ -22,8 +22,17 @@ class StocksController < ApplicationController
     @number = params[:number] if params[:number].present?
     @stock_products = @search.page(params[:page]).per(@number)
     @count = @search.count
+
     respond_to do |format|
-      format.html
+      format.html{
+        if @warehouse.blank?
+          @all_cols = current_account.settings.stock_product_all_cols
+          @visible_cols = current_account.settings.stock_product_all_visible_cols
+        else
+          @all_cols = current_account.settings.stock_product_detail_cols
+          @visible_cols = current_account.settings.stock_product_detail_visible_cols
+        end
+      }
       format.xls
     end
   end

@@ -183,6 +183,33 @@ class UsersController < ApplicationController
     end
   end
 
+  def update_visible_columns
+    action_name = params[:action_name]
+    case params[:model_name]
+    when "customer"
+      if ["index", "potential", "paid", "around"].include?(action_name)
+        visible_cols = current_account.settings.customer_visible_cols
+        visible_cols[action_name] = params[:visible_columns]
+        current_account.settings["customer_visible_cols"] = visible_cols
+      end
+    when "stock_in_bill"
+      current_account.settings["stock_in_bill_visible_cols"] = params[:visible_columns]
+    when "stock_out_bill"
+      current_account.settings["stock_out_bill_visible_cols"] = params[:visible_columns]
+    when "stock_bill"
+      current_account.settings["stock_bill_visible_cols"] = params[:visible_columns]
+    when "stock_product"
+      if ["stock_product_all_visible_cols", "stock_product_detail_visible_cols"].include?(action_name)
+        current_account.settings[action_name] = params[:visible_columns]
+      end
+    when "product"
+      current_account.settings["product_visible_cols"] = params[:visible_columns]
+    when "taobao_product"
+      current_account.settings["taobao_product_visible_cols"] = params[:visible_columns]
+    end
+    render :json => {status: "success"}
+  end
+
   def destroy_role
     @role = current_account.roles.find(params[:role_id])
     @role.destroy

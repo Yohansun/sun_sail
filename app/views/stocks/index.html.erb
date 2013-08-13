@@ -2,11 +2,7 @@
   <div class="span10 w100">
     <%= render partial: "layouts/all_crumbs" %>
     <%= render partial: "layouts/warehouse_menu" %>
-    <% if @warehouse.blank? %>
-    <%= render "all_stocks" %>
-    <% else %>
-    <%= render "detail_for_warehouse_stocks" %>
-    <% end %>
+    <%= render "table" %>
   </div><!-- span10 -->
 </div><!--row-fluid-->
 
@@ -54,6 +50,7 @@ $(function() {
   })
 
   clickTableRow("stocks_table");
+  visibleTableColumns("#dropdown_check", "#visible_columns", "#stocks_table");
 })
 </script>
 <% end %>

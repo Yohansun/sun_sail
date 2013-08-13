@@ -62,6 +62,25 @@
           </ul>
         </div><!-- btn-group -->
         <a class="btn btn-warning" id="new_product" href="/products/new">新增商品</a>
+
+        <div class="btns btn-group pull-right js-field_set">
+          <a href="#" class="btn btn-success btn_mar4">显示设置</a>
+          <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-success dropdown_check_btn"><span class="caret"></span></button>
+          <ul class="dropdown-menu dropdown_check" id="dropdown_check">
+            <%= form_tag "/users/update_visible_columns", :id => "visible_columns"%>
+              <input type="hidden" name="model_name" value="product"/>
+              <input type="hidden" name="action_name" value="index"/>
+              <% @all_cols.each do |col_name, view_name| %>
+              <li data-col="<%= col_name %>">
+                <label class="checkbox" style="padding-left:35px;">
+                  <input type="checkbox" class="test_checkbox" name="visible_columns[]" value="<%= col_name %>" <%= ' checked="checked"' if @visible_cols.include?(col_name) %>/>
+                  <%= view_name %>
+                </label>
+              </li>
+              <% end %>
+            </form>
+          </ul>
+        </div>
       </div><!-- btn-groups end -->
 
       <div class="tab-content">
@@ -206,5 +225,9 @@
       $('#edit_product').show();
     }
   }
+
+  $(function() {
+    visibleTableColumns("#dropdown_check", "#visible_columns", "#product_table");
+  });
 </script>
 <% end %>

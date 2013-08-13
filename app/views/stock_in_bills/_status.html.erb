@@ -1,1 +1,1 @@
-<td id="status_<%= bill.id %>"><%= raw bill.operation_locked? ? "<b style='color:red'>#{bill.operation_name}</b>" : bill.status_text %></td>
+<td id="status_<%= bill.id %>" data-col="status" style="<%= 'display:none' unless @visible_cols.include?("status") %>"><%= raw bill.operation_locked? ? "<b style='color:red'>#{bill.operation_name}</b>" : bill.status_text %></td>
