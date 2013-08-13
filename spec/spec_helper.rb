@@ -2,7 +2,7 @@
 ENV["RAILS_ENV"] = 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
-require 'rspec/autorun'
+#require 'rspec/autorun'
 require 'spork'
 require 'devise'
 require 'factory_girl_rails'

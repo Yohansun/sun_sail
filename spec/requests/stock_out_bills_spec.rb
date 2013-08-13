@@ -31,13 +31,17 @@ describe "StockOutBills" do
       response.status.should be(200)
     end
 
-    pending "should be save" do
-      StockOutBill.any_instance.stub(save: true)
-      post warehouse_stock_out_bills_path(@warehouse),{stock_out_bill: {key: "value"},warehouse_id: @warehouse.id}
-      expect(response).to redirect_to(warehouse_stock_out_bill_path(@warehouse,@stock_out_bill))
+
+    it "should be save" do
+      #StockOutBill.any_instance.stub(save: true)
+      post warehouse_stock_out_bills_path(@warehouse),{stock_out_bill: {stock_type:"ORS", key: "value",
+          bill_products_attributes:{"0"=>{sku_id:666,number:200,price:16,real_number:200,total_price:3200}}
+        },warehouse_id: @warehouse.id}
+      expect(response).to redirect_to(warehouse_stock_out_bill_path(@warehouse,assigns(:bill).id))
       response.status.should be(302)
+
       follow_redirect!
-      expect(response).to render_template(:index)
+      expect(response).to render_template(:show)
       response.status.should be(200)
     end
   end
@@ -60,7 +64,7 @@ describe "StockOutBills" do
   
   describe "PUT /warehouses/1/stock_out_bills#update" do
     #暂时没有编辑的功能
-    pending "update failure" do
+    it "update failure" do
       StockOutBill.any_instance.stub(update_attributes: false)
       put warehouse_stock_out_bill_path(@warehouse,@stock_out_bill)
       expect(response).to render_template(:edit)
@@ -68,12 +72,13 @@ describe "StockOutBills" do
     end
     
     #暂时没有编辑的功能
-    pending "update success" do
+    it "update success" do
+      StockInBill.any_instance.stub(save: true)
       put warehouse_stock_out_bill_path(@warehouse,@stock_out_bill)
-      expect(response).to redirect_to(warehouse_stock_out_bills_path(@warehouse))
+      expect(response).to redirect_to(warehouse_stock_out_bill_path(@warehouse.id, @stock_out_bill.id))
       response.status.should be(302)
       follow_redirect!
-      expect(response).to render_template(:index)
+      expect(response).to render_template(:show)
       response.status.should be(200)
     end
   end

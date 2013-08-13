@@ -12,4 +12,12 @@ module ControllerMacros
     end
     
   end
+
+  def taobao_authed
+    let(:current_account) { FactoryGirl.create(:account) }
+    before(:each) do
+      @request.session[:account_id] = current_account.id
+      set_current_account(current_account)
+    end
+  end
 end

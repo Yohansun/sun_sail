@@ -12,6 +12,15 @@ module MagicOrders
       end      
     end
 
+
+    def set_current_account(account)
+      if account.nil?
+        controller.stub :current_account => nil
+      else
+        controller.stub :current_account => account
+      end
+    end
+
   end
 end
 
