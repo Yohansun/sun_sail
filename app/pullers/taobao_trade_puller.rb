@@ -84,11 +84,11 @@ class TaobaoTradePuller
           if users
             trade.set_operator(users,total_percent)
           end
-          trade.update_stock_forecase
           trade.save
           forecase_seller_id = trade.matched_seller_with_default(nil).id rescue forecase_seller_id = nil
           if forecase_seller_id.present?
             trade.update_attribute(:forecase_seller_id, forecase_seller_id)
+            trade.update_stock_forecase
           end
 
           $redis.sadd('TaobaoTradeTids',trade['tid'])
