@@ -10,13 +10,16 @@ class YihaodianOrder < Order
 
   field :payment,    as: :order_item_amount,  type: Float
 
+  #注意一号店的refund_status是整形
+  field :product_refund_num, type: Integer
+
   #一号店子订单没有sku_id
   #field :sku_id,                         type: String
 
   #一号店子订单特有字段
-  field :order_id,                  type: String       #订单id
-  field :order_item_id,             type: String       #订单明细ID
-  field :merchant_id,               type: String       #商家id
+  field :order_id,                  type: Integer      #订单id
+  field :order_item_id,             type: Integer      #订单明细ID
+  field :merchant_id,               type: Integer      #商家id
   field :original_price,            type: Float        #产品原价
   field :group_flag,                type: Integer      #团购产品标识，1表示团购产品,0表示非团购产品
   field :process_finish_date,       type: DateTime     #退换货完成时间
@@ -33,6 +36,8 @@ class YihaodianOrder < Order
                           ["非团购产品", 0]], not_valid: true
 
   embedded_in :yihaodian_trades
+
+  before_save :set_refund_status
 
   def account_id
     yihaodian_trades.account_id
@@ -87,18 +92,25 @@ class YihaodianOrder < Order
   end
 
   def refund_status_text
-    #YIHAO PENDING
-    ""
+    if self.product_refund_num.present?
+      yihaodian_trades.refund_status_name
+    end
+  end
+
+  def set_refund_status
+    if self.product_refund_num.present?
+      self.refund_status = "HAS_REFUND_INFO"
+    else
+      self.refund_status = "NO_REFUND"
+    end
   end
 
   def order_price
-    #YIHAO PENDING
-    0.0
+    price
   end
 
   def order_payment
-    #YIHAO PENDING
-    0.0
+    payment / num
   end
 
 end

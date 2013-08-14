@@ -3,9 +3,9 @@
 class YihaodianTrade < Trade
 
   #一号店特有字段
-  field :order_id,                 type: String                  #订单ID
+  field :order_id,                 type: Integer                 #订单ID
   field :receive_date,             type: DateTime                #确认收货时间
-  field :pay_service_type,         type: Integer                 #订单支付方式0:账户支付1:网上支付2:货到付款3:邮局汇款4:银行转账5:pos机6:万里通7:分期付款8:合同账期9:货到转账10:货到付支票
+  field :pay_service_type,         type: Integer                 #订单支付方式
   field :order_promotion_discount, type: Float, default: 0.0     #参加促销活动立减金额
   field :update_time,              type: DateTime                #更新时间
   field :site_type,                type: Integer                 #获取销售平台
@@ -44,6 +44,12 @@ class YihaodianTrade < Trade
   field :logistic_id,       as: :delivery_supplier_id, type: Integer
   field :logistic_waybill,  as: :merchant_express_nbr, type: String
 
+  #退款字段
+  field :refund_amount,     type: Float, default: 0.0
+  field :refund_code,       type: String
+  field :apply_date,        type: DateTime
+  field :refund_status,     type: Integer
+
   embeds_many :yihaodian_orders
 
   field :news, type: Integer , default: 0 #是否从一号店更新数据
@@ -77,6 +83,17 @@ class YihaodianTrade < Trade
                                 ["合同账期", 8],
                                 ["货到转账", 9],
                                 ["货到付支票", 10]],:not_valid => true
+
+  enum_attr :refund_status, [["待审核", 0],
+                             ["客服仲裁", 3],
+                             ["已拒绝", 4],
+                             ["退货中-待顾客寄回", 11],
+                             ["退货中-待确认退款", 12],
+                             ["换货中", 13],
+                             ["退款完成", 27],
+                             ["换货完成", 33],
+                             ["已撤销", 34],
+                             ["已关闭", 40]], not_valid: true
 
 
   def discount_fee
