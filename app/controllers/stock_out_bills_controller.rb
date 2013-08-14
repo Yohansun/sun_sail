@@ -3,6 +3,7 @@ class StockOutBillsController < ApplicationController
   before_filter :set_warehouse
   before_filter :default_conditions,:on => [:edit,:show,:update,:add_product,:remove_product,:fetch_bills]
   before_filter :authorize #,:except => :fetch_bils
+  before_filter :find_column_settings, :only => [:sync, :check, :rollback, :lock, :unlock]
 
   def index
     parse_params
@@ -17,8 +18,7 @@ class StockOutBillsController < ApplicationController
 
     respond_to do |format|
       format.html{
-        @all_cols = current_account.settings.stock_out_bill_cols
-        @visible_cols = current_account.settings.stock_out_bill_visible_cols
+        find_column_settings
       }
       format.xls
     end
@@ -173,5 +173,10 @@ class StockOutBillsController < ApplicationController
 
   def default_conditions
     @conditions = default_search.merge({:id => params[:id]})
+  end
+
+  def find_column_settings
+    @all_cols = current_account.settings.stock_out_bill_cols
+    @visible_cols = current_account.settings.stock_out_bill_visible_cols
   end
 end

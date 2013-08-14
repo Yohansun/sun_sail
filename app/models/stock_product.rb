@@ -57,6 +57,7 @@ class StockProduct < ActiveRecord::Base
       self.changes[:activity].tap do |ary|
         poor = ary.first - ary.last
         self.actual -= poor
+        self.forecase -= poor
         klass = poor > 0 ? StockOutBill : StockInBill
         return true if self.save! && create_stock_bill(klass,poor.abs)
       end if self.activity_changed?
