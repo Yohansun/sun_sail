@@ -18,6 +18,8 @@ class StockOutBillsController < ApplicationController
 
     respond_to do |format|
       format.html{
+        cur_page = params[:page].to_i
+        @start_no = cur_page > 0 ? (cur_page - 1) * @number + 1 : 1
         find_column_settings
       }
       format.xls
