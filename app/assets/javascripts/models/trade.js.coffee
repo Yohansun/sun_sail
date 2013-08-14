@@ -52,10 +52,11 @@ class MagicOrders.Models.Trade extends Backbone.Model
           if not this.attributes.seller_id && $.inArray('trade_split',trades) > -1
             enabled_items.push('trade_split') #订单拆分
 
+
         if this.attributes.is_locked is false and this.attributes.seller_id is null
           enabled_items.push('lock_trade') #订单锁定
 
-        if this.attributes.seller_confirm_invoice_at is undefined && type != '赠品' && $.inArray('invoice',trades) > -1
+        if this.attributes.seller_confirm_invoice_at is undefined && type != '赠品' && type != '一号店' && $.inArray('invoice',trades) > -1
           enabled_items.push('invoice') #申请开票
 
         if MagicOrders.enable_module_colors is 1
@@ -93,7 +94,7 @@ class MagicOrders.Models.Trade extends Backbone.Model
         if $.inArray('logistic_memo',trades) > -1
           enabled_items.push('logistic_memo') #物流公司备注
 
-        if this.attributes.seller_confirm_invoice_at is undefined && type != '赠品' && $.inArray('invoice',trades) > -1
+        if this.attributes.seller_confirm_invoice_at is undefined && type != '赠品' && type != '一号店' && $.inArray('invoice',trades) > -1
           enabled_items.push('invoice') #申请开票
 
         if MagicOrders.enable_module_colors is 1
@@ -191,7 +192,7 @@ class MagicOrders.Models.Trade extends Backbone.Model
       # when "TRADE_CLOSED" # "交易已关闭"
       # when "TRADE_CLOSED_BY_TAOBAO" # "交易被淘宝关闭"
 
-      if this.attributes.invoice_name && this.attributes.seller_confirm_invoice_at is undefined && this.attributes.status_text isnt "申请退款" && $.inArray('seller_confirm_invoice',trades) > -1 && this.attributes.seller_id
+      if this.attributes.invoice_name && this.attributes.seller_confirm_invoice_at is undefined && this.attributes.status_text isnt "申请退款" && type != "一号店" && type != "赠品" && $.inArray('seller_confirm_invoice',trades) > -1 && this.attributes.seller_id
         enabled_items.push('seller_confirm_invoice') #确认开票
 
       if this.attributes.pay_time
@@ -232,7 +233,7 @@ class MagicOrders.Models.Trade extends Backbone.Model
         enabled_items.push('seller_confirm_deliver') #确认发货
 
 
-      if type != '赠品' && type != '京东'
+      if type != '赠品' && type != '京东' && type != '一号店'
         enabled_items.push('gift_memo') #赠品备注
       if $.inArray('invoice_number',trades) > -1
         enabled_items.push('invoice_number') #发票号设置

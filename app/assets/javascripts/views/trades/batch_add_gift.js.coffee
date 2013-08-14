@@ -90,7 +90,10 @@ class MagicOrders.Views.TradesBatchAddGift extends Backbone.View
 
     $.get '/trades/verify_add_gift', {ids: @trade_ids, sku_id: sku_id}, (data) ->
       if data['has_jingdong_trade'] == true
-        alert("京东订单目前不支持此功能，请重新选择订单")
+        alert("京东订单,一号店订单目前不支持此功能，请重新选择订单")
+        return
+      else if data['has_gift_trade'] == true
+        alert("赠品订单不能添加赠品！")
         return
       else
         $('#gift_list').append("<tr id='"+product_id+"' class='product_"+sku_id+" new_add_gift'>"+

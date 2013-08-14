@@ -117,7 +117,7 @@
 <td data-col='gift_memo'>
   <% if @trade.get('gift_memo') || @trade.get('trade_gifts').length != 0 || @trade.get('main_trade_id') : %>
     <% if @trade.get('main_trade_id') : %>
-    <a href="#" data-toggle='modal' data-type="detail" class="gift_trade_pop">主订单号:</br><%= @trade.get('main_trade_id') %></a>
+    <a href="#" data-toggle='modal' data-type="detail" class="gift_trade_pop">主订单号:</br><%= @trade.get('tid').slice(0,-2) %></a>
     <% else : %>
     <a href="javascript:void(0)" rel="popover" data-content="<% for gift in @trade.get('trade_gifts'): %><%= gift.gift_title %>:<% if gift.trade_id == '' : %><%= gift.gift_tid %><% else : %><a href class='gift_trade_pop'><%= gift.gift_tid %></a><% end %></span><br/><% end %><%= @trade.get 'gift_memo' %><br/>" data-original-title="<b>赠品属性</b>"><i class="icon-gift_memo"></i></a>
     <% end %>

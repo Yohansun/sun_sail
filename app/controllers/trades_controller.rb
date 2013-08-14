@@ -397,12 +397,15 @@ class TradesController < ApplicationController
   def verify_add_gift
     trades = Trade.where(:_id.in => params[:ids])
     types = trades.map(&:_type).uniq
-    if types.include?("JingdongTrade")
+    if types.include?("JingdongTrade") || types.include?("YihaodianTrade")
       has_jingdong_trade = true
+    end
+    if trades.where(:main_trade_id.ne => nil).count > 0
+      has_gift_trade = true
     end
     trades_added_gift = trades.where(:trade_gifts.elem_match => {sku_id: (params[:sku_id] == "" ? nil : params[:sku_id].to_i)})
     tids = trades_added_gift.all.map(&:tid).join(",") rescue nil
-    render json: {tids: tids, has_jingdong_trade: has_jingdong_trade}
+    render json: {tids: tids, has_jingdong_trade: has_jingdong_trade, has_gift_trade: has_gift_trade}
   end
 
   def batch_add_gift

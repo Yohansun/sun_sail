@@ -34,6 +34,7 @@ class MagicOrders.Views.TradesInvoice extends Backbone.View
   no_invoice: (e) ->
     $("#invoice_name_text").attr("disabled","true")
     $("#invoice_name_text").attr("value","")
+
   need_invoice: (e) ->
     $("#invoice_name_text").removeAttr("disabled")
 
