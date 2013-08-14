@@ -6,7 +6,7 @@
       <%= form_tag warehouses_path,:method => :get, :class=>"well well-small form-horizontal font12" do %>
       <div class="control-group">
             <%= label_tag "where_name",raw("<code>精准搜索</code>"),:class => "pull-left"  %>
-            <%=select_tag "where_name", options_for_select([["仓库名称","stock_name_eq"],["经销商名称","name_eq"],["联系人","user_name_eq"],["联系电话","mobile_eq"]]),:include_blank => true, :value => "#{params[:where_name]}",:class => "input-small select2 all" %>
+            <%=select_tag "where_name", options_for_select([["仓库名称","stock_name_like"],["经销商名称","name_like"],["联系人","user_name_like"],["联系电话","mobile_like"]]),:include_blank => true, :value => "#{params[:where_name]}",:class => "input-small select2 all" %>
 
             <div class="input-append">
               <%= text_field_tag "keyword", '',:value => "#{params[:keyword] if params[:keyword]}", :class => "input-xlarge radius_no_tl"%>
@@ -72,7 +72,7 @@
       sel.bind('.level_1','<%= params[:op_state] %>');
       sel.bind('.level_2','<%= params[:op_city] %>');
       sel.bind('.level_3','<%= params[:op_district] %>');
-      
+
       $.each($('form').find("select.select2.all"),function(){
         $(this).select2({
           placeholder: "全部",
