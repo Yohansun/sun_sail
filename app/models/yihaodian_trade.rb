@@ -134,7 +134,7 @@ class YihaodianTrade < Trade
 
   def deliver!
     return unless self.deliverable?
-    TradeJingdongDeliver.perform_async(self.id)
+    TradeYihaodianDeliver.perform_async(self.id)
   end
 
   def set_has_onsite_service
@@ -155,6 +155,19 @@ class YihaodianTrade < Trade
 
   def other_discount
     0
+  end
+
+  # http://openapi.1mall.com/app/inshop/yhd.logistics.order.shipments.update.html
+  # 订单发货(更新订单物流信息)
+  def shipment
+    raise "只有待发货状态ORDER_TRUNED_TO_DO的订单才可以进行发货操作" if status_name_order_truned_to_do?
+    api = 'yhd.logistics.order.shipments.update'
+    @response ||= YihaodianQuery.post({method: api,orderCode: tid, deliverySupplierId: logistic_id, expressNbr: logistic_waybill },account.yihaodian_query_conditions)
+    @response["response"]["updateCount"].to_i == 1 || @response["response"]["errInfoList"]
+  end
+
+  def account
+    @account ||= Account.find account_id
   end
 
 end
