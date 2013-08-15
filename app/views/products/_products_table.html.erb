@@ -18,6 +18,10 @@
             <% case col_name
              when "category_id" %>
               <%= product.category.try(:name) %>
+              <% when "category_property_names" %>
+                  <% product.skus.each do |sku| %>
+                    <%= sku.value  %>
+                  <% end %>
             <% else %>
               <%= product.send(col_name) rescue "" %>
             <% end %>
