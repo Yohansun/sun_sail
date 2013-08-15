@@ -46,7 +46,6 @@
         <thead>
           <tr>
             <th><input type="checkbox"></th>
-            <th>序号</th>
             <%- @all_cols.each do |col_name, view_name| -%>
             <th data-col="<%= col_name %>" style="<%= 'display:none' unless @visible_cols.include?(col_name) %>">
               <%= view_name %>
@@ -60,7 +59,6 @@
             <%- bill.bill_products.each_with_index do |product,product_index|%>
               <tr>
                 <td><input type="checkbox" name="stock_bill_ids[]" value="<%= bill.id %>"></td>
-                <td><%= @num += 1 %></td>
                 <%- @all_cols.each do |col_name, view_name| -%>
                 <td data-col="<%= col_name %>" style="<%= 'display:none' unless @visible_cols.include?(col_name) %>">
                   <%= case col_name
@@ -72,6 +70,8 @@
                         bill.created_at.try(:to_s,:db)
                       when "stocked_at"
                         bill.stocked_at.try(:strftime, "%Y-%m-%d %H:%M")
+                      when "stock_no"
+                        @start_no + index
                       else
                         bill.send(col_name)
                       end

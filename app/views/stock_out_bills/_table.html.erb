@@ -2,7 +2,6 @@
   <thead>
     <tr>
       <th><input type="checkbox"></th>
-      <th>序号</th>
       <%- @all_cols.each do |col_name, view_name| -%>
         <th data-col="<%= col_name %>" style="<%= 'display:none' unless @visible_cols.include?(col_name) %>">
           <%= view_name %>
@@ -14,7 +13,6 @@
     <%- @bills.each_with_index do |bill, index| %>
       <tr id='<%= bill.id %>'>
         <td><% if !bill.stock_type_ovirtual?  %><input type="checkbox" name="bill_ids[]" value="<%= bill.id%>" ><% end %></td>
-        <td><%=  index + 1  %></td>
         <%- @all_cols.each do |col_name, view_name| -%>
           <% case col_name
              when "status" %>
@@ -23,7 +21,7 @@
             <%= render "operation", bill: bill%>
           <% else %>
             <td data-col="<%= col_name %>" style="<%= 'display:none' unless @visible_cols.include?(col_name) %>">
-              <%= bill.send(col_name) rescue "" %>
+              <%= col_name == "stock_no" ? @start_no + index : bill.send(col_name) rescue "" %>
             </td>
           <% end %>
         <%- end -%>

@@ -18,6 +18,9 @@ class StockBillsController < ApplicationController
     @count = @search.count
     @all_cols = current_account.settings.stock_bill_cols
     @visible_cols = current_account.settings.stock_bill_visible_cols
+
+    cur_page = params[:page].to_i
+    @start_no = cur_page > 0 ? (cur_page - 1) * @number + 1 : 1
   end
 
   def fetch_bills
