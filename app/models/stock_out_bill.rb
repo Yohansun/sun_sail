@@ -25,7 +25,7 @@ class StockOutBill < StockBill
         stock.payment ""
         stock.orderTime ""
         stock.website outer_website
-        stock.freight decorated_trade.try(:post_fee)
+        stock.freight (decorated_trade.present? ? decorated_trade.try(:post_fee) : 0.0)
         stock.serviceCharge 0.00
         stock.payTime ""
         stock.isCashsale outer_is_cash_sale
@@ -76,11 +76,11 @@ class StockOutBill < StockBill
       stock.ORDER do
         stock.HEADER do
           stock.ORDERID tid                                                                     #YH2013030001  网站系统生成的订单编号 必填  VARCHAR2  30
-          stock.ORDERDATE decorated_trade.try(:created).try(:strftime, "%Y-%m-%d %H:%M")        #2013-03-27 16:00  订单创建日期  必填  DATE
+          stock.ORDERDATE decorated_trade.present? ? decorated_trade.created.try(:strftime, "%Y-%m-%d %H:%M") : created_at.try(:strftime, "%Y-%m-%d %H:%M")        #2013-03-27 16:00  订单创建日期  必填  DATE
           stock.ORDERTYPE 'STD'                                #STD订单类型,淘宝订单,分销,退货
           stock.STORERID account.settings.gqs_brand_name       #品牌名
           stock.ORDERREF tid                                   #291983444180780 淘宝订单号 必填  VARCHAR2
-          stock.BUYERPO  decorated_trade.try(:buyer_nick)      #阿里旺旺号
+          stock.BUYERPO  decorated_trade.present? ? decorated_trade.try(:buyer_nick) : ''       #阿里旺旺号
           stock.PMTTERM  'CC'                                  #支付方式 CC-网上支付
           stock.INVOICEFLG gqs_outer_is_cash_sale              #是否开票
           stock.INVOICENM  outer_website                         #发票偷拍
@@ -98,7 +98,7 @@ class StockOutBill < StockBill
           stock.NOTES remark                                #选填  VARCHAR2  500
           stock.TRANSMETH gqs_code                              #默认为pending,即由wms系统来决定物流公司
           stock.SHIPMENTID ""                                   #快递单号  必填  NUMBER  　默认为空
-          stock.TOTALBILL decorated_trade.try(:total_fee)       #订单合计金额  必填  NUMBER  　
+          stock.TOTALBILL bill_products_price                   #订单合计金额  必填  NUMBER  　
           stock.TOTALPIECESQTY bill_products_mumber             #订单产品合计数量  必填  NUMBER  　
         end
         bill_products.each do |product|
@@ -116,7 +116,7 @@ class StockOutBill < StockBill
           stock.DESCR 'FREIGHT'
           stock.QTYSHIPPED 1
           stock.QTY 1
-          stock.UNITPRICE  trade.try(:post_fee)
+          stock.UNITPRICE  (decorated_trade.present? ? decorated_trade.try(:post_fee) : 0.0)
         end
         stock.DETAIL do
           #折扣
@@ -124,7 +124,7 @@ class StockOutBill < StockBill
           stock.DESCR 'DISCOUNT'
           stock.QTYSHIPPED 1
           stock.QTY 1
-          stock.UNITPRICE  decorated_trade.try(:seller_discount)
+          stock.UNITPRICE (decorated_trade.present? ? decorated_trade.try(:seller_discount) : 0.0)
         end
       end
     end

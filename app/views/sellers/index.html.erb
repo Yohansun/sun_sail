@@ -150,7 +150,11 @@
       seller_id = _.trim(seller_id, "check_")
       window.location.href = "/sellers/new?parent_id="+seller_id
     } else{
-      window.location.href = "/sellers/new"
+      <%- if @parent %>
+        window.location.href = "/sellers/new?parent_id=<%= @parent.id %>"
+      <%- else %>
+        window.location.href = "/sellers/new"
+      <%- end %>
     }
   })
 
