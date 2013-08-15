@@ -18,7 +18,6 @@ class YihaodianProductsController < ApplicationController
 
   # GET /yihaodian_products/sync
   def sync
-
   end
 
   # PUT /yihaodian_products/syncing
