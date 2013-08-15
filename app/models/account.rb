@@ -427,8 +427,10 @@ class Account < ActiveRecord::Base
     conditions = {}
     if trade_source
       conditions = trade_source.attributes.update("access_token" => trade_source.jingdong_app_token.access_token)
-      if Rails.env == "development" || Rails.env == "test"
-        conditions = conditions.update("is_sandbox" => 'true')
+      if Rails.env == "test"
+        conditions = conditions.update("is_sandbox" => true)
+      else
+        conditions = conditions.update("is_sandbox" => false)
       end
     end
     conditions

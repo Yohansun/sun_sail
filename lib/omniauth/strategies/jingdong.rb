@@ -6,7 +6,7 @@ module OmniAuth
       option :name, "jingdong"
 
       option :client_options, {
-        :site           => "http://auth.sandbox.360buy.com/oauth/authorize",
+        :site           => "http://auth.360buy.com/oauth/authorize",
         :authorize_url  => "/oauth/authorize",
         :token_url      => "/oauth/token"
       }
