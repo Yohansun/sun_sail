@@ -234,7 +234,7 @@ class StockOutBill < StockBill
       stock_product = StockProduct.find_by_id(stock_out.stock_product_id)
       if stock_product
         update_attrs = {:actual => stock_product.actual - stock_out.number, :activity => stock_product.activity - stock_out.number}
-        update_attrs[:forecase] = stock_product.forecase - stock_out.number if self.trade.blank?
+        update_attrs[:forecast] = stock_product.forecast - stock_out.number if self.trade.blank?
         stock_product.update_attributes(update_attrs)
         true
       else
@@ -249,7 +249,7 @@ class StockOutBill < StockBill
       stock_product = StockProduct.find_by_id(stock_out.stock_product_id)
       if stock_product
         update_attrs = {:actual => stock_product.actual + stock_out.number, :activity => stock_product.activity + stock_out.number}
-        update_attrs[:forecase] = stock_product.forecase + stock_out.number if self.trade.blank?
+        update_attrs[:forecast] = stock_product.forecast + stock_out.number if self.trade.blank?
         stock_product.update_attributes(update_attrs)
         true
       else
