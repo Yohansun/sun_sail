@@ -7,11 +7,13 @@
     </thead>
     <tbody>
       <% skus.each do |sku| %>
-      <tr>
-        <td><input type="checkbox" name="sku_ids[]" value="<%= sku.id %>"></td>
-        <td><%= sku.sku_id %></td>
-        <th><%= sku.value  %></th>
-      </tr>
+        <% unless sku.value == "" %>
+          <tr>
+            <td><input type="checkbox" name="sku_ids[]" value="<%= sku.id %>"></td>
+            <td class="sku_id"><%= sku.sku_id %></td>
+            <th class="sku_value"><%= sku.value  %></th>
+          </tr>
+        <% end %>
       <% end %>
     </tbody>
   </table>
