@@ -43,7 +43,11 @@ class Sku < ActiveRecord::Base
   end
 
   def value
-     values_name * "|"
+     if values_name * "|" == ""
+       "默认"
+     else
+       values_name * "|"
+     end
   end
 
   def values_name
