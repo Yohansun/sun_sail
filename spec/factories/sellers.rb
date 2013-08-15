@@ -2,7 +2,7 @@
 
 FactoryGirl.define do
   factory :seller do
-    name Faker::Name.last_name
-    fullname Faker::Name.name
+    sequence(:name) { |n| "foo-name-#{n}" }
+    sequence(:fullname) { |n| "foo-fullname-#{n}" }
   end
 end
