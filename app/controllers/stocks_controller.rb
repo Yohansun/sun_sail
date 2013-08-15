@@ -4,8 +4,8 @@ class StocksController < ApplicationController
   before_filter :set_warehouse
 
   def index
-    condition_relation = StockProduct.where(default_search).includes(:seller,:product)
-    condition_relation = condition_relation.where(:"seller.active" => true).where(StockProduct::STORAGE_STATUS[params[:storage_status]]).scoped if params[:storage_status].present?
+    condition_relation = StockProduct.where(default_search).where(:"sellers.active" => true).includes(:seller,:product)
+    condition_relation = condition_relation.where(StockProduct::STORAGE_STATUS[params[:storage_status]]).scoped if params[:storage_status].present?
     conditions ||= {}
     params[:search][:id_in] = params[:export_ids].split(',') if params[:export_ids].present?
 

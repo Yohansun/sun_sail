@@ -7,6 +7,7 @@ class SellersController < ApplicationController
     @sellers = current_account.sellers
     if params[:parent_id].present?
       @sellers = @sellers.where(parent_id: params[:parent_id])
+      @parent = current_account.sellers.find_by_id params[:parent_id]
     else
       @sellers = @sellers.roots
     end
