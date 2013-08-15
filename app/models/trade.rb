@@ -13,7 +13,7 @@ class Trade
 
   field :account_id, type: Integer
   field :seller_id, type: Integer
-  field :forcase_seller_id, type: Integer                 #预测发货经销商
+  field :forecast_seller_id, type: Integer                 #预测发货经销商
   field :seller_alipay_no, type: String
   field :seller_mobile, type: String
   field :seller_phone, type: String
@@ -1422,29 +1422,29 @@ class Trade
   def change_stock_seller
     self.changes[:seller_id].tap do |seller_ids|
       old_seller_id, new_seller_id = seller_ids
-      old_seller_id = self.forcase_seller_id if old_seller_id.blank?
-      new_seller_id = self.forcase_seller_id if new_seller_id.blank?
+      old_seller_id = self.forecast_seller_id if old_seller_id.blank?
+      new_seller_id = self.forecast_seller_id if new_seller_id.blank?
 
       if old_seller_id != new_seller_id
-        update_seller_stock_forecase(old_seller_id, "revert") if old_seller_id.present?
-        update_seller_stock_forecase(new_seller_id, "decrease") if new_seller_id.present?
+        update_seller_stock_forecast(old_seller_id, "revert") if old_seller_id.present?
+        update_seller_stock_forecast(new_seller_id, "decrease") if new_seller_id.present?
       end
     end
   end
 
-  def update_seller_stock_forecase(opt_seller_id, method)
+  def update_seller_stock_forecast(opt_seller_id, method)
     return if opt_seller_id.blank?
     if ['TaobaoTrade','CustomTrade'].include?(self._type)
       self.orders.each do |order|
         order.sku_products.each do |s_item|
-          sku_id, product = s_item
-          stock_product = StockProduct.where(account_id: self.account_id, seller_id: opt_seller_id, product_id: product.id, sku_id: sku_id).first
+          product = s_item[:product]
+          stock_product = StockProduct.where(account_id: self.account_id, seller_id: opt_seller_id, product_id: product.id, sku_id: s_item[:sku_id]).first
           if stock_product.present?
             case method
             when "revert"
-              stock_product.forecase += order.num
+              stock_product.forecast += order.num * s_item[:number]
             when "decrease"
-              stock_product.forecase -= order.num
+              stock_product.forecast -= order.num * s_item[:number]
             end
             stock_product.save
           end

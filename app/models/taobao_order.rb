@@ -157,14 +157,14 @@ class TaobaoOrder < Order
         sku_id = binding.sku_id
         sku = Sku.find_by_id(sku_id)
         product = sku.try(:product)
-        products << [sku_id, product] if product.present?
+        products << {sku_id: sku_id, number: binding.number, product: product} if product.present?
       end
     elsif self.local_skus.present?
       self.local_skus.each do |sku|
         sku_id = sku.id
         sku = Sku.find_by_id(sku_id)
         product = sku.try(:product)
-        products << [sku_id, product] if product.present?
+        products << {sku_id: sku_id, number: 1, product: product} if product.present?
       end
     end
 
