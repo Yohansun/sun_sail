@@ -37,7 +37,7 @@ module TaobaoQuery
       params_array = sorted_params.sort_by { |k,v| k.to_s }
       total_param = params_array.map { |key, value| key.to_s+"="+value.to_s }
       generate_query_string = URI.escape(total_param.join("&"))
-      data = HTTParty.post(base_url + generate_query_string).parsed_response.to_json #Hash2JSON
+      data = HTTParty.get(base_url + generate_query_string).parsed_response.to_json #Hash2JSON
       response = Crack::JSON.parse(data)
     end
   end
@@ -67,7 +67,7 @@ module TaobaoQuery
       total_param = params_array.map { |key, value| key.to_s+"="+value.to_s }
       total_param = total_param + ["sign=#{sign_token}"]
       generate_query_string = URI.escape(total_param.join("&"))
-      data = HTTParty.post(base_url + generate_query_string).parsed_response.to_json #Hash2JSON
+      data = HTTParty.get(base_url + generate_query_string).parsed_response.to_json #Hash2JSON
       response = Crack::JSON.parse(data)
     end
   end
