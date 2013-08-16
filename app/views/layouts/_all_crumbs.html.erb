@@ -31,6 +31,9 @@
   <% elsif params[:controller] == "jingdong_products" %>
   <li><a href="/products">商品管理</a><span class="divider">/</span></li>
   <li class='active'>京东商品</li>
+  <% elsif params[:controller] == "yihaodian_products" %>
+  <li><a href="/products">商品管理</a><span class="divider">/</span></li>
+  <li class='active'>一号店商品</li>
   <% elsif params[:controller] == "customers" %>
     <li><a href="/customers">顾客管理</a><span class="divider">/</span></li>
     <% if params[:action] =~ /paid/ %>

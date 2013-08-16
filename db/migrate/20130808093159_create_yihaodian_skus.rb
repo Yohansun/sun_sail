@@ -10,6 +10,7 @@ class CreateYihaodianSkus < ActiveRecord::Migration
       t.string  :outer_id                       #外部产品ID
       t.integer :can_show                       #是否可见,1是0否
       t.integer :account_id
+      t.integer :parent_product_id,:limit => 8 # 父类产品ID
 
       t.timestamps
     end

@@ -1,4 +1,3 @@
-<%= link_to 'New Yihaodian product', new_yihaodian_product_path %>
 <div class="row-fluid">
   <div class="span10 w100">
   <!-- <div class="row-fluid"> -->
@@ -36,7 +35,7 @@
             <li><a href="#" id="tie_to_native_skus">绑定本地SKU</a></li>
           </ul>
         </div><!-- btn-group -->
-        <div class="btn btn-warning"><%= link_to "同步京东数据", sync_yihaodian_products_path %></div>
+        <div class="btn btn-warning"><%= link_to "同步一号店数据", sync_yihaodian_products_path %></div>
       </div><!-- btn-groups end -->
 
       <div class="tab-content">
@@ -48,18 +47,21 @@
             <thead>
               <tr>
                 <th><!-- <input type="radio"> --></th>
-                <th><%= column_humanize "yihaodian_product.product_code" %></th>
-                <th><%= column_humanize "yihaodian_product.product_cname" %></th>
-                <th><%= column_humanize "yihaodian_product.product_id" %></th>
-                <th><%= column_humanize "yihaodian_product.ean13" %></th>
-                <th><%= column_humanize "yihaodian_product.category_id" %></th>
-                <th><%= column_humanize "yihaodian_product.can_sale" %></th>
-                <th><%= column_humanize "yihaodian_product.outer_id" %></th>
-                <th><%= column_humanize "yihaodian_product.can_show" %></th>
-                <th><%= column_humanize "yihaodian_product.verify_flg" %></th>
-                <th><%= column_humanize "yihaodian_product.is_dup_audit" %></th>
-                <th><%= column_humanize "yihaodian_product.brand_id" %></th>
-                <th><%= column_humanize "yihaodian_product.merchant_category_id" %></th>
+                <% %w(product_code
+                      product_cname
+                      product_id
+                      ean13
+                      category_id
+                      can_sale
+                      outer_id
+                      can_show
+                      verify_flg
+                      is_dup_audit
+                      brand_id
+                      merchant_category_id
+                      ).each do |th| %>
+                <th><%= column_humanize "yihaodian_product.#{th}" %></th>
+                <% end %>
               </tr>
             </thead>
             <tbody>

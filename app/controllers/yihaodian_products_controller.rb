@@ -39,12 +39,14 @@ class YihaodianProductsController < ApplicationController
     @combine_product = YihaodianCombineProductSync.new(key)
     # 普通商品
     @general_product = YihaodianGeneralProductSync.new(key)
-    
+
+    @products = [@serial_product,@combine_product]
+
+    @products.map(&:parsing)
+
     @serial_sku = YihaodianSerialSkuSync.new({account_id: current_account.id, product_ids: @serial_product.product_ids})
     @combine_sku = YihaodianCombineSkuSync.new({account_id: current_account.id, product_ids: @combine_product.product_ids})
-    @products = [@serial_product,@combine_product]
     @skus = [@serial_sku,@combine_sku]
-    @products.map(&:parsing)
     @skus.map(&:parsing)
     @latest_products = @products.map(&:latest).flatten.compact
     @latest_skus = @skus.map(&:latest).flatten.compact
