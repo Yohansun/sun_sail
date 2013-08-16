@@ -144,15 +144,22 @@ class StocksController < ApplicationController
 
   #POST /warehouses/batch_update_activity_stock
   def batch_update_activity_stock
-    @stock_product = StockProduct.where(default_search).find(params[:stock_product_ids].first)
-    @stock_products = StockProduct.where(default_search).where(:product_id => @stock_product.product_id)
-    activity = Integer(params[:activity]) rescue false
-    if activity && activity > 0
-      success,fails = StockProduct.batch_update_activity_stock(@stock_products,activity)
-      flash[:notice] = "ID为#{success.join(',')} 更新可用库存#{activity}成功" if success.present?
-      flash[:error] = "ID为#{fails.join(',')} 更新可用库存#{activity}失败" if fails.present?
-    else
-      flash[:error] =  "请输入大于 0 的整数"
+    if params[:stock_product_ids].is_a?(Array) && params[:stock_product_ids].present?
+      if params[:stock_product_ids].size == 1
+        stock_product = StockProduct.where(default_search).find(params[:stock_product_ids].first)
+        @stock_products = StockProduct.where(default_search).where(:product_id => stock_product.product_id) rescue @stock_products = []
+      else
+        @stock_products = StockProduct.where(default_search).where(:id => params[:stock_product_ids])
+      end
+
+      activity = params[:activity].to_i
+      if activity > 0 && @stock_products.present?
+        success,fails = StockProduct.batch_update_activity_stock(@stock_products,activity)
+        flash[:notice] = "ID为#{success.join(',')} 更新可用库存#{activity}成功" if success.present?
+        flash[:error] = "ID为#{fails.join(',')} 更新可用库存#{activity}失败" if fails.present?
+      else
+        flash[:error] =  "请输入大于 0 的整数"
+      end
     end
     redirect_to({:action => :index,:warehouse_id => params[:warehouse_id]}.reject {|k,v| v.blank?})
   end

@@ -40,8 +40,8 @@ $(function() {
         }
       });
     };
-    if ($(this).attr("id") == "set_actual_stock" &&  $("td>input:checked").length > 1 ) {
-      alert("请选择一个进行操作")
+    if ($("td>input:checked").length == 0 ) {
+      alert("请选择需要设置的商品!")
       return false
     }
     var tr_name = "#stock_product_" + $("td>input:checked:first").val() + ">td.sku_title";
