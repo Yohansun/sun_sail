@@ -184,13 +184,8 @@ class StockApiController < ApplicationController
         if trade
           if order['OPTTYPE'] == 'OrderShip'
             is_first_set = trade.logistic_waybill.blank?
-            logistic = Logistic.find_by_code(order['ExpressCode'])
-            trade.update_attributes(
-              logistic_waybill: order['ShipmentID'],
-              logistic_name: order['carrierName'],
-              logistic_code: order['ExpressCode'],
-              logistic_id: logistic.try(:id)
-            )
+            logistic = Logistic.find_by_code(order['EXPRESSCODE'])
+            trade.update_attributes!(logistic_waybill: order['SHIPMENTID'],logistic_name: logistic.try(:name),logistic_code: order['EXPRESSCODE'],logistic_id: logistic.try(:id))
 
             if account && account.settings && account.settings.auto_settings
               auto_settings = account.settings.auto_settings

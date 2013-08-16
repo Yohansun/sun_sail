@@ -183,12 +183,11 @@ class StockOutBill < StockBill
       #GQS
       if result['DATA']
         if result['DATA']['RET_CODE'] == 'SUCC'
-          update_attributes(cancel_succeded_at: Time.now, status: "CANCELD_OK")
-          operation_logs.create(operated_at: Time.now, operation: '取消成功')
-          restore_stock
+          update_attributes(sync_succeded_at: Time.now, status: "SYNCKED")
+          operation_logs.create(operated_at: Time.now, operation: '同步成功')
         else
-          update_attributes(cancel_failed_at: Time.now, failed_desc: result['DATA']['RET_MESSAGE'], status: "CANCELD_FAILED")
-          operation_logs.create(operated_at: Time.now, operation: "取消失败,#{result['DATA']['RET_MESSAGE']}")
+          update_attributes(sync_succeded_at: Time.now, failed_desc: result['DATA']['RET_MESSAGE'], status: "SYNCK_FAILED")
+          operation_logs.create(operated_at: Time.now, operation: "同步失败,#{result['DATA']['RET_MESSAGE']}")
         end
       end
     end
