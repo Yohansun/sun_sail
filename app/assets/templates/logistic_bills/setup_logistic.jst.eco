@@ -36,6 +36,11 @@
     </div>
 
     <div class="control-group form-inline">
+      <label for="" class="control-label">服务商物流ID：</label>
+      <input type="text" class="input-small logistic_id" id="logistic_id">
+    </div>
+
+    <div class="control-group form-inline">
       <label for="" class="control-label">物流单号：</label>
       <input type="text" class="span3 waybill" placeholder="请输入物流单号">
     </div>

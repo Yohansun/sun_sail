@@ -4,13 +4,14 @@ class MagicOrders.Views.TradesDeliver extends Backbone.View
 
   events:
     'click .deliver': 'deliver'
+    "change #send_logistic_select": 'set_logistic_id'
 
   initialize: ->
     @model.on("fetch", @render, this)
 
   render: ->
     $(@el).html(@template(trade: @model))
-    $.get '/logistics/logistic_templates', {type: 'all'}, (t_data) =>
+    $.get '/logistics/logistic_templates', {type: 'all', trade_type: @model.get("trade_type")}, (t_data) =>
       html_options = ''
       for item in t_data
         if @model.get('logistic_company') == item.name
@@ -25,8 +26,12 @@ class MagicOrders.Views.TradesDeliver extends Backbone.View
     blocktheui()
 
     flag = $("#send_logistic_select").find("option:selected").html() in ['其他', '虹迪', '雄瑞']
-    lid = $('#send_logistic_select').find("option:selected").attr('lid')
+    lid = $('#logistic_id').val()
     waybill = $('.send_waybill').val()
+
+    if lid == '' || lid == 'null'
+      alert '物流商ID不能为空'
+      return
 
     unless flag
       if waybill == ''
@@ -56,3 +61,7 @@ class MagicOrders.Views.TradesDeliver extends Backbone.View
         $("a[rel=popover]").popover({placement: 'left', html:true})
         $('#trade_deliver').modal('hide')
         # window.history.back()
+
+  set_logistic_id: ->
+    logistic_id = $("#send_logistic_select").find("option:selected").attr("lid")
+    $("#logistic_id").val(logistic_id)

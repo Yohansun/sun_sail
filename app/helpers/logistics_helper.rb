@@ -6,10 +6,11 @@ require 'hashie'
 module LogisticsHelper
 
   def get_logistic_id(source_type,name)
-    cache = ActiveSupport::Cache::MemoryStore.new(:expires_in => 1.hour)
+
     source_name = source_type.underscore.gsub(/trade$/,'source')
-    source_id = current_account.send(source_name).id
-    cache.fetch("#{source_type}_#{source_id}_#{name}") do
+    source_id = current_account.send(source_name).try(:id)
+
+    cache(:expires_in => 1.hour).fetch("#{source_type}_#{source_id}_#{name}") do
       case source_type
       when "TaobaoTrade"    then get_taobao_logistic(name).id rescue nil
       when "YihaodianTrade" then get_yihaodian_logistic(name).id rescue nil
@@ -36,5 +37,9 @@ module LogisticsHelper
     response = JingdongQuery.get({method: '360buy.delivery.logistics.get'},api_paramters)
     logistics_list = response["delivery_logistics_get_response"]["logistics_companies"]["logistics_list"]
     Hashie::Mash.new logistics_list.find {|u| u["logistics_name"] =~ /^#{name.to(1)}}/}
+  end
+
+  def cache(options={})
+    ActiveSupport::Cache::MemoryStore.new(options)
   end
 end

@@ -1,5 +1,6 @@
 # -*- encoding : utf-8 -*-
 class LogisticsController < ApplicationController
+  include LogisticsHelper
   layout "management"
   before_filter :authorize
 
@@ -142,7 +143,7 @@ class LogisticsController < ApplicationController
 
     @logistics.each do |l|
       tmp << {
-        id: l.id,
+        id: (get_logistic_id(params[:trade_type].to_s,l.name) rescue nil),
         xml: l.xml.inspect,
         name: l.name
       }

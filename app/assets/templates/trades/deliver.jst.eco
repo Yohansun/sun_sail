@@ -39,12 +39,22 @@
           <%= @trade.get('receiver_zip') %>
         </td>
       </tr>
-      <tr>
-        <td>物流公司：</td>
         <% if @trade.get('logistic_company') : %>
-        <td id='logistic_company'><%= @trade.get('logistic_company') %></td>
+        <tr>
+          <td>物流公司：</td>
+          <td id='logistic_company'><%= @trade.get('logistic_company') %></td>
+        </tr>
+        <td>服务商物流ID：</td>
+        <td id='logistic_id'><%= @trade.get('logistic_id') %></td>
         <% else : %>
-        <td id='logistic_company'><select id="send_logistic_select" class="input-medium"></select></td>
+        <tr>
+          <td>物流公司：</td>
+          <td id='logistic_company'><select id="send_logistic_select" class="input-medium"></select></td>
+        </tr>
+        <tr>
+          <td>服务商物流ID：</td>
+          <td><input type="text" class="input-small logistic_id" id="logistic_id"></td>
+        </tr>
         <% end %>
       </tr>
       <tr>
