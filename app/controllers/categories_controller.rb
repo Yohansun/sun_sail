@@ -83,12 +83,12 @@ class CategoriesController < ApplicationController
   end
 
   def product_templates
-    @products = Category.find(params[:category_id]).products.collect {|p| { id: p.id, text: p.name}}
+    @products = current_account.products.where(category_id: params[:category_id]).collect {|p| { id: p.id, text: p.name}}
     render json: @products
   end
 
   def sku_templates
-    product = Product.find_by_id(params[:product_id])
+    product = current_account.products.find_by_id(params[:product_id])
     if product && product.skus
       @skus = product.skus.collect {|s| { id: s.id, text: (s.name.present? ? s.name : "标准款")}}
       render json: @skus
