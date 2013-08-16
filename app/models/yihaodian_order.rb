@@ -56,15 +56,15 @@ class YihaodianOrder < Order
   end
 
   def yihaodian_sku
-    #YIHAO PENDING
+    @yihaodian_sku ||= YihaodianSku.with_account(account_id).find_by_num_iid num_iid
   end
 
   def sku_bindings
-    #YIHAO PENDING
+    yihaodian_sku.sku_bindings
   end
 
   def skus
-    #YIHAO PENDING
+    yihaodian_sku.skus
   end
 
   def bill_info
