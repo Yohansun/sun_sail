@@ -215,6 +215,11 @@ class Trade
   # 金额搜索index
   index payment: 1
 
+  #common
+  index account_id: 1
+  index trade_source_id: 1
+  index deleted_at: -1
+
   # 状态搜索index
   index status: 1
   # index splitted: -1
