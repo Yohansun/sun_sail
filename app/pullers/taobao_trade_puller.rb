@@ -80,7 +80,7 @@ class TaobaoTradePuller
           end
 
           trade.operation_logs.build(operated_at: Time.now, operation: '从淘宝抓取订单')
-          trade.set_has_onsite_service if account.settings.enable_module_onsite_service == 1
+          trade.set_has_onsite_service
           if users
             trade.set_operator(users,total_percent)
           end
