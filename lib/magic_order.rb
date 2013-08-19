@@ -14,7 +14,10 @@ module MagicOrder
     "edit_depot" => ["edit_depot","update_depot"],
     "customers_detail" => ["index","potential","paid","around","show"],
     "send_customers_messages" => ["send_messages","invoice_messages","get_recipients"],
-    "bind_skus" => ["change_taobao_skus","search_native_skus","tie_to_native_skus","taobao_skus"]
+    "taobao_bind" => ["change_taobao_skus", "tie_to_native_skus", "taobao_skus"],
+    "jingdong_bind" => ["change_jingdong_skus", "tie_to_native_skus", "jingdong_skus"],
+    "yihaodian_bind" => ["change_yihaodian_skus", "tie_to_native_skus", "yihaodian_skus"]
+
   }.freeze
 
   DefaultAccesses = {
@@ -32,7 +35,8 @@ module MagicOrder
     "products" => ["fetch_products",
                    "pick_product",
                    "abandon_product",
-                   "fetch_category_properties"]
+                   "fetch_category_properties",
+                   "search_native_skus"]
   }.freeze
 
   class AccessControl
@@ -169,19 +173,21 @@ MagicOrder::AccessControl.map do |map|
                                  "jingdong_products#sync",
                                  "yihaodian_products#detail",
                                  "yihaodian_products#sync"
-                               ]
+                                ]
     map.permission :operations, ["create",
                                  "update",
                                  "export_products",
                                  "update_on_sale",
-                                 "bind_skus",
+                                 "taobao_bind",
                                  "sync_taobao_products",
                                  "confirm_sync",
                                  "remove_sku",
                                  "add_sku",
                                  "jingdong_products#syncing",
-                                 "yihaodian_products#syncing"
-                               ]
+                                 "jingdong_products#jingdong_bind",
+                                 "yihaodian_products#syncing",
+                                 "yihaodian_products#yihaodian_bind"
+                                ]
 
   end
 

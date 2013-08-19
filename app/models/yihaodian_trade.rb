@@ -121,8 +121,8 @@ class YihaodianTrade < Trade
     orders.each do |order|
       yihaodian_sku = order.yihaodian_sku || order.local_skus.first
       sku_id = yihaodian_sku.try(:id)
-      sku_name = yihaodian_sku.try(:name)
-      bill.bill_products.create(title: order.title, outer_sku_id: order.outer_sku_id, num_iid: order.num_iid, sku_id: sku_id, sku_name: sku_name, colors: order.color_num, number: order.num, memo: order.cs_memo)
+      sku_name = yihaodian_sku.try(:product_cname)
+      bill.bill_products.create(title: order.title, outer_id: order.outer_id, num_iid: order.num_iid, sku_id: sku_id, sku_name: sku_name, colors: order.color_num, number: order.num, memo: order.cs_memo)
     end
   end
 

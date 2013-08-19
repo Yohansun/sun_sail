@@ -4,6 +4,10 @@
   <span class="label label-important lable_source"><%= @bill.get('trade_source') %></span>
 <% else if @bill.get('trade_source') == "淘宝" : %>
   <span class="label label-warning lable_source"><%= @bill.get('trade_source') %></span>
+<% else if @bill.get('trade_source') == "京东" : %>
+  <span class="label label-skyblue lable_source"><%= @bill.get('trade_source') %></span>
+<% else if @bill.get('trade_source') == "一号店" : %>
+  <span class="label label-lightblue lable_source"><%= @bill.get('trade_source') %></span>
 <% else : %>
   <span class="label label-darkorchid lable_source"><%= @bill.get('trade_source') %></span>
 <% end %>

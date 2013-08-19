@@ -56,7 +56,7 @@ class YihaodianOrder < Order
   end
 
   def yihaodian_sku
-    @yihaodian_sku ||= YihaodianSku.with_account(account_id).find_by_num_iid num_iid
+    @yihaodian_sku ||= YihaodianSku.with_account(account_id).find_by_product_id(product_id)
   end
 
   def sku_bindings

@@ -1027,12 +1027,12 @@ class Trade
     paid_not_deliver_array = ["WAIT_SELLER_SEND_GOODS",
                               "WAIT_SELLER_DELIVERY",
                               "WAIT_SELLER_STOCK_OUT",
-                              "ORDER_PAYED"]
+                              "ORDER_PAYED",
+                              "ORDER_TRUNED_TO_DO"]
     paid_and_delivered_array = ["WAIT_BUYER_CONFIRM_GOODS",
                                 "WAIT_GOODS_RECEIVE_CONFIRM",
                                 "WAIT_BUYER_CONFIRM_GOODS_ACOUNTED",
                                 "WAIT_SELLER_SEND_GOODS_ACOUNTED",
-                                "ORDER_TRUNED_TO_DO",
                                 "ORDER_CAN_OUT_OF_WH",
                                 "ORDER_SENDED_TO_LOGITSIC",
                                 "ORDER_RECEIVED"]
@@ -1499,7 +1499,8 @@ class Trade
     ["WAIT_SELLER_SEND_GOODS",
      "WAIT_SELLER_DELIVERY",
      "WAIT_SELLER_STOCK_OUT",
-     "ORDER_PAYED"].include?(status)
+     "ORDER_PAYED",
+     "ORDER_TRUNED_TO_DO"].include?(status)
   end
 
   def is_paid_and_delivered
@@ -1507,7 +1508,6 @@ class Trade
      "WAIT_GOODS_RECEIVE_CONFIRM",
      "WAIT_BUYER_CONFIRM_GOODS_ACOUNTED",
      "WAIT_SELLER_SEND_GOODS_ACOUNTED",
-     "ORDER_TRUNED_TO_DO",
      "ORDER_CAN_OUT_OF_WH",
      "ORDER_SENDED_TO_LOGITSIC",
      "ORDER_RECEIVED"].include?(status)
