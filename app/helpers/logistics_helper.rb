@@ -26,7 +26,7 @@ module LogisticsHelper
     end
 
     logistics_company = response["logistics_companies_get_response"]["logistics_companies"]["logistics_company"]
-    Hashie::Mash.new logistics_company.find {|u| u["name"] =~ /^#{name.to(1)}}/}
+    Hashie::Mash.new logistics_company.find {|u| u["name"] =~ /^#{name.to(1)}/}
   end
 
   def get_yihaodian_logistic(name,cache_name=nil)
@@ -37,7 +37,7 @@ module LogisticsHelper
     end
 
     logistics_info = response["response"]["logisticsInfoList"]["logisticsInfo"]
-    Hashie::Mash.new logistics_info.find {|u| u["companyName"] =~ /^#{name.to(1)}}/}
+    Hashie::Mash.new logistics_info.find {|u| u["companyName"] =~ /^#{name.to(1)}/}
   end
 
   def get_jingdong_logistic(name,cache_name=nil)
@@ -48,7 +48,7 @@ module LogisticsHelper
     end
 
     logistics_list = response["delivery_logistics_get_response"]["logistics_companies"]["logistics_list"]
-    Hashie::Mash.new logistics_list.find {|u| u["logistics_name"] =~ /^#{name.to(1)}}/}
+    Hashie::Mash.new logistics_list.find {|u| u["logistics_name"] =~ /^#{name.to(1)}/}
   end
 
   def cache(options={})
