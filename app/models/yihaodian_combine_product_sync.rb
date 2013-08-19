@@ -16,8 +16,7 @@ class YihaodianCombineProductSync < ECommerce::Synchronization::Base
   end
 
   def response
-    YihaodianQuery.load 'config/yihaodian.yml'
-    @response = YihaodianQuery.post({method: "yhd.combine.products.search",verifyFlg: 2, pageRows: get_size, curPage: page_no},@query_condition)
+    @response = YihaodianQuery.post({method: "yhd.combine.products.search",canSale: 1, pageRows: get_size, curPage: page_no},@query_condition)
     @response["response"]["comProductList"]["comProduct"].each { |hash| hash.underscore_key! } rescue []
   end
 

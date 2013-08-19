@@ -40,7 +40,7 @@ class YihaodianProductsController < ApplicationController
     # 普通商品
     @general_product = YihaodianGeneralProductSync.new(key)
 
-    @products = [@serial_product,@combine_product]
+    @products = [@serial_product,@combine_product,@general_product]
 
     @products.map(&:parsing)
 

@@ -16,7 +16,6 @@ class YihaodianGeneralProductSync < ECommerce::Synchronization::Base
   end
 
   def response
-    YihaodianQuery.load 'config/yihaodian.yml'
     @response = YihaodianQuery.post({method: "yhd.general.products.search",verifyFlg: 2, pageRows: get_size, curPage: page_no},@query_condition)
     @response["response"]["productList"]["product"].each {|hash| hash.underscore_key!} rescue []
   end
