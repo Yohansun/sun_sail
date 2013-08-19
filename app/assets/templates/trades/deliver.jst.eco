@@ -44,7 +44,7 @@
           <td>物流公司：</td>
           <td id='logistic_company'><%= @trade.get('logistic_company') %></td>
         </tr>
-        <td>服务商物流ID：</td>
+        <td>本地物流商ID：</td>
         <td id='logistic_id'><%= @trade.get('logistic_id') %></td>
         <% else : %>
         <tr>

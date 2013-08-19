@@ -21,7 +21,7 @@ class MagicOrders.Views.TradesSetupLogistic extends Backbone.View
 
   save: ->
     flag = $("#logistic_select").find("option:selected").html() in ['其他', '虹迪', '雄瑞']
-    lid = $('#send_logistic_select').find("option:selected").attr('lid')
+    lid = $('#logistic_select').find("option:selected").attr('lid')
     service_logistic_id = $('#service_logistic_id').val()
 
     waybill = $('.waybill').val()
