@@ -44,11 +44,14 @@ class TradeObserver < Mongoid::Observer
     trade = TradeDecorator.decorate(trade)
     mobile = trade.receiver_mobile_phone
     trade_tid = trade.tid
-    if trade._type == "JingdongTrade"
-      content = "亲您好，感谢您的购买，您的订单号为#{trade_tid}，我们会尽快为您安排发货。【#{trade.fetch_account.settings.shopname_jingdong}】"
-    else
-      content = "亲您好，感谢您的购买，您的订单号为#{trade_tid}，我们会尽快为您安排发货。【#{trade.fetch_account.settings.shopname_taobao}】"
+    shopname = case trade._type
+    when 'JingdongTrade'  then trade.fetch_account.settings.shopname_jingdong
+    when 'YihaodianTrade' then trade.fetch_account.settings.shopname_yihaodian
+    else                       trade.fetch_account.settings.shopname_taobao
     end
+
+    content = "亲您好，感谢您的购买，您的订单号为#{trade_tid}，我们会尽快为您安排发货。【#{shopname}】"
+
     notify_kind = "before_send_goods"
     if content && mobile
       SmsNotifier.perform_async(content, mobile, trade_tid ,notify_kind)
