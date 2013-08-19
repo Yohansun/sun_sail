@@ -149,7 +149,7 @@ class LogisticsController < ApplicationController
       }
     end
 
-    render json: tmp
+    render json: tmp.reject {|k,v| v.blank?}
   end
 
   def all_logistics
