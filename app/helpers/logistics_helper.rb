@@ -5,12 +5,11 @@ require 'hashie'
 # 注意验证logistic_id不能为空
 module LogisticsHelper
 
-  def get_logistic_id(source_type,name)
-
+  def get_logistic_id(source_type,name,source_id=nil)
     source_name = source_type.underscore.gsub(/trade$/,'source')
-    source_id = current_account.send(source_name).try(:id)
+    source_id ||= current_account.send(source_name).try(:id)
     cache_name = "#{source_type}:#{source_id}"
-    cache(:expires_in => 1.hour).fetch("#{cache_name}_#{name}}") do
+    cache.fetch("#{cache_name}_#{name}}") do
       case source_type
       when "TaobaoTrade"    then get_taobao_logistic(name,cache_name).id rescue nil
       when "YihaodianTrade" then get_yihaodian_logistic(name,cache_name).id rescue nil
@@ -21,7 +20,7 @@ module LogisticsHelper
 
   private
   def get_taobao_logistic(name,cache_name=nil)
-    response = cache(:expires_in => 1.hour).fetch(cache_name+"_taobao") do
+    response = cache.fetch(cache_name+"_taobao") do
       TaobaoQuery.get({method: "taobao.logistics.companies.get", fields: 'id,code,name,reg_mail_no'},current_account.taobao_source.id)
     end
 
@@ -30,9 +29,8 @@ module LogisticsHelper
   end
 
   def get_yihaodian_logistic(name,cache_name=nil)
-    api_paramters = current_account.yihaodian_query_conditions
-
-    response = cache(:expires_in => 1.hour).fetch(cache_name+"_yihaodian") do
+    response = cache.fetch(cache_name+"_yihaodian") do
+      api_paramters = current_account.yihaodian_query_conditions
       YihaodianQuery.post({method: 'yhd.logistics.deliverys.company.get'},api_paramters)
     end
 
@@ -41,9 +39,9 @@ module LogisticsHelper
   end
 
   def get_jingdong_logistic(name,cache_name=nil)
-    api_paramters = current_account.jingdong_query_conditions
 
-    response = cache(:expires_in => 1.hour).fetch(cache_name+"_jingdong") do
+    response = cache.fetch(cache_name+"_jingdong") do
+      api_paramters = current_account.jingdong_query_conditions
       JingdongQuery.get({method: '360buy.delivery.logistics.get'},api_paramters)
     end
 
@@ -51,7 +49,7 @@ module LogisticsHelper
     Hashie::Mash.new logistics_list.find {|u| u["logistics_name"] =~ /^#{name.to(1)}/}
   end
 
-  def cache(options={})
-    ActiveSupport::Cache::MemoryStore.new(options)
+  def cache
+    @cache ||= ActiveSupport::Cache::MemoryStore.new(:expires_in => 1.hour)
   end
 end

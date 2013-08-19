@@ -15,9 +15,9 @@ class MagicOrders.Views.TradesDeliver extends Backbone.View
       html_options = ''
       for item in t_data
         if @model.get('logistic_company') == item.name
-          html_options += '<option selected="selected" lid="' + item.id + '" value="' + item.xml + '">' + item.name + '</option>'
+          html_options += '<option selected="selected" lid="' + item.id + '" service_logistic_id="' + item.service_logistic_id + '" value="' + item.xml + '">' + item.name + '</option>'
         else
-          html_options += '<option lid="' + item.id + '" value="' + item.xml + '">' + item.name + '</option>'
+          html_options += '<option lid="' + item.id + '" service_logistic_id="' + item.service_logistic_id + '" value="' + item.xml + '">' + item.name + '</option>'
 
       $('#send_logistic_select').html(html_options)
     this
@@ -26,10 +26,11 @@ class MagicOrders.Views.TradesDeliver extends Backbone.View
     blocktheui()
 
     flag = $("#send_logistic_select").find("option:selected").html() in ['其他', '虹迪', '雄瑞']
-    lid = $('#logistic_id').val()
+    lid = $('#send_logistic_select').find("option:selected").attr('lid')
+    service_logistic_id = $('#service_logistic_id').val()
     waybill = $('.send_waybill').val()
 
-    if lid == '' || lid == 'null'
+    if service_logistic_id == '' || service_logistic_id == 'null'
       alert '物流商ID不能为空'
       return
 
@@ -63,5 +64,5 @@ class MagicOrders.Views.TradesDeliver extends Backbone.View
         # window.history.back()
 
   set_logistic_id: ->
-    logistic_id = $("#send_logistic_select").find("option:selected").attr("lid")
-    $("#logistic_id").val(logistic_id)
+    service_logistic_id = $("#send_logistic_select").find("option:selected").attr("service_logistic_id")
+    $("#service_logistic_id").val(service_logistic_id)

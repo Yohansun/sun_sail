@@ -14,16 +14,18 @@ class MagicOrders.Views.LogisticBillsSetupLogistic extends Backbone.View
     $.get '/logistics/logistic_templates', {type: 'all',trade_type: @model.get("trade_type")}, (t_data)->
       html_options = ''
       for item in t_data
-        html_options += '<option lid="' + item.id + '" value="' + item.xml + '">' + item.name + '</option>'
+        html_options += '<option lid="' + item.id + '" service_logistic_id="' + item.service_logistic_id + '" value="' + item.xml + '">' + item.name + '</option>'
       $('.set_logistic_waybill #logistic_select').html(html_options)
     this
 
   save: ->
     flag = $("#logistic_select").find("option:selected").html() in ['其他', '虹迪', '雄瑞']
-    lid = $('#logistic_id').val()
+    lid = $('#send_logistic_select').find("option:selected").attr('lid')
+    service_logistic_id = $('#service_logistic_id').val()
+
     waybill = $('.waybill').val()
 
-    if lid == '' || lid == 'null'
+    if service_logistic_id == '' || service_logistic_id == 'null'
       alert '物流商ID不能为空'
       return
 
@@ -37,10 +39,10 @@ class MagicOrders.Views.LogisticBillsSetupLogistic extends Backbone.View
         return
 
     new_model = new MagicOrders.Models.Trade(id: @model.id)
-    new_model.set({operation: "设置物流信息", logistic_id: lid, logistic_waybill: waybill, setup_logistic: true})
-    new_model.save {}, success: (model, response) =>
+    new_model.save {operation: "设置物流信息", logistic_id: lid, logistic_waybill: waybill, setup_logistic: true}, success: (model, response) =>
       $('#logistic_bill_setup_logistic').modal('hide')
 
   set_logistic_id: ->
-    logistic_id = $("#logistic_select").find("option:selected").attr("lid")
-    $("#logistic_id").val(logistic_id)
+    service_logistic_id = $("#logistic_select").find("option:selected").attr("service_logistic_id")
+    $("#service_logistic_id").val(service_logistic_id)
+
