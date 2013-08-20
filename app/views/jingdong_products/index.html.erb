@@ -55,6 +55,7 @@
                 <th>市场价</th>
                 <th>京东价</th>
                 <th>状态</th>
+                <th>是否已绑定SKU</th>
               </tr>
             </thead>
             <tbody>
@@ -69,6 +70,7 @@
                 <td><%= number_to_currency product.market_price %></td>
                 <td><%= number_to_currency(product.jd_price) %></td>
                 <td><%= product.status_name %></td>
+                <td><%= product.has_bindings %></td>
               </tr>
               <%- end %>
             </tbody>

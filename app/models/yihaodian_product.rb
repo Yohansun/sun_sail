@@ -12,6 +12,17 @@ class YihaodianProduct < ActiveRecord::Base
 
   before_create :build_yihaodian_sku
 
+  def has_bindings
+    status = "未绑定"
+    yihaodian_skus.each do |sku|
+      if sku.sku_bindings.present?
+        status = "已绑定"
+      else
+        status = "部分绑定" and break if status == "已绑定"
+      end
+    end
+    return status
+  end
 
   def build_yihaodian_sku
     attrs = self.attributes.slice(*YihaodianSku.column_names).except(*%w(id created_at updated_at))

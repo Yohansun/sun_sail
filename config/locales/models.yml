@@ -55,6 +55,7 @@ zh-CN:
         is_special_wet: 是否特殊液体
         ware_big_small_model: 商品件型
         ware_pack_type: 商品包装
+        has_bindings: 是否已绑定SKU
       jingdong_sku:
         sku_id: sku id
         shop_id: 店铺id
@@ -85,6 +86,7 @@ zh-CN:
         prod_detail_url: 前台商品详情页链接
         brand_id: 品牌Id
         merchant_category_id: 商家产品类别
+        has_bindings: 是否已绑定SKU
 
   mongoid:
     models:

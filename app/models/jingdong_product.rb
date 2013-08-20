@@ -61,4 +61,16 @@ class JingdongProduct < ActiveRecord::Base
   enum_attr :ware_pack_type,       [["普通商品",1],["易碎品",2],["裸瓶液体",3],["带包装液体",4],["按原包装出库",5]],:not_valid => true
   scope :with_account, ->(account_id){ where(account_id: account_id) }
   belongs_to :account
+
+  def has_bindings
+    status = "未绑定"
+    jingdong_skus.each do |sku|
+      if sku.sku_bindings.present?
+        status = "已绑定"
+      else
+        status = "部分绑定" and break if status == "已绑定"
+      end
+    end
+    return status
+  end
 end

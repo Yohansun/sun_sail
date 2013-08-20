@@ -28,12 +28,14 @@ class TaobaoProduct < ActiveRecord::Base
   # add validation
 
   def has_bindings
+    status = "未绑定"
     taobao_skus.each do |sku|
-      if sku.sku_bindings.present? && sku.sku_bindings != []
-        return "已绑定"
-        break
+      if sku.sku_bindings.present?
+        status = "已绑定"
+      else
+        status = "部分绑定" and break if status == "已绑定"
       end
     end
-    return "未绑定"
+    return status
   end
 end

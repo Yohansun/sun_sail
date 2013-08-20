@@ -59,6 +59,7 @@
                       is_dup_audit
                       brand_id
                       merchant_category_id
+                      has_bindings
                       ).each do |th| %>
                 <th><%= column_humanize "yihaodian_product.#{th}" %></th>
                 <% end %>
@@ -80,6 +81,7 @@
                 <td><%= product.is_dup_audit_name %></td>
                 <td><%= product.brand_id %></td>
                 <td><%= product.merchant_category_id %></td>
+                <td><%= product.has_bindings %></td>
               </tr>
               <%- end %>
             </tbody>
