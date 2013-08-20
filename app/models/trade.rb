@@ -1367,6 +1367,7 @@ class Trade
   end
 
   def set_has_onsite_service
+    return unless fetch_account.settings.enable_module_onsite_service == 1
     self.area_id = default_area.try(:id)
     if OnsiteServiceArea.where(area_id: default_area.id, account_id: account_id).present?
       self.has_onsite_service = true
