@@ -23,7 +23,7 @@ class YihaodianAppTokensController < ApplicationController
                                merchant_id: auth_hash.info.merchant_id,
                                user_code: auth_hash.info.user_code,
                                user_type: auth_hash.info.user_type)
-      #YihaodianInitialFetcher.perform_async(current_account.id)
+      YihaodianInitialFetcher.perform_async(current_account.id)
       render text: "一号店Token已添加,正在抓取订单数据"
     else
       render text: "Token已添加过"
