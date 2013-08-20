@@ -6,7 +6,7 @@ module OmniAuth
       option :name, "yihaodian" # can't use ali names in oauth urls
 
       option :client_options, {
-        :site           => "http://fuwu.1mall.com/login/authorize.action",
+        :site           => "https://member.1mall.com/login/authorize.action",
         :authorize_url  => "/login/authorize.action",
         :token_url      => "/login/token.action",
         :raise_errors   => false
