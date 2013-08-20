@@ -17,11 +17,14 @@ class JingdongSkuSync < ECommerce::Synchronization::Base
     @default_attributes = options
     @query_condition = Account.find(options[:account_id]).jingdong_query_conditions
     @split_ids = []
+    account = Account.find options[:account_id]
+    @api_parameters = account.jingdong_query_conditions
   end
 
   def response
-    @response = JingdongQuery.get({method: '360buy.ware.skus.get', ware_ids: @split_ids.join(',')},@query_condition)
-    @response["ware_skus_get_response"]["skus"] rescue []
+    @response = JingdongQuery.get({method: '360buy.ware.skus.get', ware_ids: @split_ids.join(',')},@api_parameters)
+    @response.key?("error_response") && raise(@response["error_response"].inspect)
+    @response["ware_skus_get_response"]["skus"]
   end
   
   def total_results

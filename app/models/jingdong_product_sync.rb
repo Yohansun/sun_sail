@@ -7,16 +7,16 @@ class JingdongProductSync < ECommerce::Synchronization::Base
   attr_reader :account_id
 
   def initialize(key)
-    @account = Account.find_by_key key
-    @account_id = @account.id
-    @default_attributes = {account_id: @account_id}
-    @query_conditions = @account.jingdong_query_conditions
+    account = Account.find_by_key key
+    @default_attributes = {account_id: @account.id}
+    @api_parameters = account.jingdong_query_conditions
     super
   end
 
   def response
-    @response = JingdongQuery.get({method: '360buy.ware.listing.get', page_size: get_size, page: page_no},@query_conditions)
-    @response["ware_listing_get_response"]["ware_infos"] rescue []
+    @response = JingdongQuery.get({method: '360buy.ware.listing.get', page_size: get_size, page: page_no},@api_parameters)
+    @response.key?("error_response") && raise(@response["error_response"].inspect)
+    @response["ware_listing_get_response"]["ware_infos"]
   end
 
   def total_results
