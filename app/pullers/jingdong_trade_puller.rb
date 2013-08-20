@@ -48,6 +48,7 @@ class JingdongTradePuller
           page: page_no,
           page_size: 10}, query_conditions)
 
+
         unless response['order_search_response']
           Notifier.puller_errors(response, account_id).deliver
           return
@@ -62,12 +63,14 @@ class JingdongTradePuller
         next if trades.blank?
 
         trades.each do |t|
+
           #抓取JingdongTrade基本信息
-          orders = t.delete('item_info_list')
-          consignee_info = t.delete("consignee_info")
-          coupon_details = t.delete("coupon_detail_list")
-          t.update(consignee_info)
-          unless ($redis.sismember('JingdongTradeTids', t['order_id']) || JingdongTrade.where(tid: t['order_id']).exists?)
+          unless ($redis.sismember('JingdongTradeTids', t['order_id']) || JingdongTrade.where(tid: t['order_id']).exists? || t['order_state'] == "TRADE_CANCELED")
+            orders = t.delete('item_info_list')
+            consignee_info = t.delete("consignee_info")
+            coupon_details = t.delete("coupon_detail_list")
+            t.update(consignee_info)
+
             trade = JingdongTrade.new(t)
 
             orders.each do |order|
