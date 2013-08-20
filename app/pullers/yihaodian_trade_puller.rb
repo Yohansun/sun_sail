@@ -84,6 +84,7 @@ class YihaodianTradePuller
 
             trade.trade_source_id = trade_source_id
             trade.account_id = account_id
+            trade.seller_nick = trade_source.name
             trade.operation_logs.build(operated_at: Time.now, operation: '从一号店抓取订单')
 
             if users

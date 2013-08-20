@@ -1,4 +1,4 @@
-json.shopname current_account.settings.shopname
+json.shopname @trade.seller_nick
 json.tid @trade.tid
 json.status @trade.status_text
 json.buyer_nick @trade.buyer_nick

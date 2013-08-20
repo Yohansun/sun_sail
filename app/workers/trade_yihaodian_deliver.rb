@@ -9,7 +9,7 @@ class TradeYihaodianDeliver
     trade = TradeDecorator.decorate(trade)
     mobile = trade.receiver_mobile_phone
     account = trade.fetch_account
-    shopname = account.yihaodian_source.yihaodian_app_token.yihaodian_user_nick
+    shopname = trade.seller_nick
     content = "亲您好，您的订单#{trade.tid}已经发货，%s，请注意查收。【#{shopname}】" % (trade.splitted? ? "该订单将由地区发送" : "我们将尽快为您送达")
 
     notify_kind = "after_send_goods"

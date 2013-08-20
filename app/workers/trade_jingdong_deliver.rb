@@ -33,7 +33,7 @@ class TradeJingdongDeliver
 
       trade = TradeDecorator.decorate(trade)
       mobile = trade.receiver_mobile_phone
-      shopname = account.settings.shopname_jingdong
+      shopname = trade.seller_nick
       if trade.splitted?
         content = "亲您好，您的订单#{tid}已经发货，该订单将由地区发送，请注意查收。【#{shopname}】"
       else

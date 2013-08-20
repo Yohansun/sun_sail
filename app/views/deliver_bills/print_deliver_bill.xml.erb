@@ -6,14 +6,14 @@
     id='<%= bill.id %>'
     batch_number = '<%= bill.print_batches.last.try(:batch_num) %>'
     tid="<%= trade.tid %>"
-    company="<%= current_account.settings.shopname %>"
+    company="<%= trade.seller_nick %>"
     phone="<%= trade.receiver_mobile %>"
     address="<%= "#{trade.receiver_state} #{trade.receiver_city} #{trade.receiver_district} #{trade.receiver_address}" %>"
     memo="<%= trade.cs_memo %>"
     num="<%= item_count(bill) %>"
     copyright="Magic"
     receiver="<%= trade.receiver_name %>"
-    nameOfOrganization="<%= current_account.settings.shopname_taobao %>"
+    nameOfOrganization="<%= trade.seller_nick %>"
     address_xiangxi="<%= "#{trade.receiver_state} #{trade.receiver_city} #{trade.receiver_district} #{trade.receiver_address}" %>"
     studiocamera="152252658"
     kehu_receiver="<%= trade.receiver_name %>"

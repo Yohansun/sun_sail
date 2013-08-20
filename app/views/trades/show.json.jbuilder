@@ -6,7 +6,8 @@ json.trade_type @trade._type
 json.current_user_is_seller current_user.seller.present?
 json.splitted_tid @trade.splitted_tid
 json.seller_id @trade.seller_id
-json.shopname current_account.settings.shopname
+json.default_seller_id current_account.settings.default_seller_id
+json.shopname @trade.seller_nick
 json.seller_name @trade.seller.name if @trade.seller
 json.status @trade.status
 json.status_text @trade.status_text

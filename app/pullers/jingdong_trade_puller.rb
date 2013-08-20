@@ -87,6 +87,7 @@ class JingdongTradePuller
 
             trade.trade_source_id = trade_source_id
             trade.account_id = account_id
+            trade.seller_nick = trade_source.name
             trade.operation_logs.build(operated_at: Time.now, operation: '从京东抓取订单')
 
             #设置付款时间
