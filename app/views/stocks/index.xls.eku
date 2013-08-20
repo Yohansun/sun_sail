@@ -2,7 +2,7 @@ __filename = "stocks_query#{Time.now.strftime("%Y/%m/%d-%H:%M:%S")}.xls"
 sheet1 = xls.create_worksheet
 sheet1[0, 0] = "库存查询数据"
 
-sheet1.row(1).concat ["SKU编码", "商品SKU名称", "商品编码", "商品分类", "可用库存", "实际库存","安全库存","库存状态"]
+sheet1.row(1).concat ["SKU编码", "商品SKU名称", "商品编码", "商品分类","预测库存", "可用库存", "实际库存","安全库存","库存状态"]
 i = 1
 @stock_products.find_each  do |stock_product|
 sheet1.update_row i+=1,
@@ -10,6 +10,7 @@ stock_product.sku.try(:sku_id),
 stock_product.sku.try(:title),
 stock_product.product.try(:outer_id),
 stock_product.category.try(:name),
+stock_product.forecast,
 stock_product.activity,
 stock_product.actual,
 stock_product.safe_value,
