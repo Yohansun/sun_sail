@@ -8,7 +8,7 @@ class JingdongProductSync < ECommerce::Synchronization::Base
 
   def initialize(key)
     account = Account.find_by_key key
-    @default_attributes = {account_id: @account.id}
+    @default_attributes = {account_id: account.id}
     @api_parameters = account.jingdong_query_conditions
     super
   end
