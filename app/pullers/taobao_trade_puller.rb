@@ -241,7 +241,6 @@ class TaobaoTradePuller
                 local_trade.news = 1
               end
               local_trade.set_has_onsite_service
-              local_trade.update_stock_forecast
               local_trade.save
               if account.settings.auto_settings['auto_dispatch']
                 result = account.can_auto_dispatch_right_now
