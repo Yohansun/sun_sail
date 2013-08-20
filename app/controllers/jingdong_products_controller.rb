@@ -7,7 +7,8 @@ class JingdongProductsController < ApplicationController
     params[:search] ||= {}
     params[:search][params[:key].to_sym] = params[:value] if params[:key].present? && params[:value].present?
     @search = JingdongProduct.with_account(current_account.id).search(params[:search])
-    @jingdong_products = @search.page(params[:page])
+    pernumber = params[:number].to_i || 20
+    @jingdong_products = @search.page(params[:page]).per(pernumber)
   end
 
   # GET /jingdong_products/1

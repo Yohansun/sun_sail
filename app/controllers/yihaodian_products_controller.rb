@@ -8,7 +8,8 @@ class YihaodianProductsController < ApplicationController
     params[:search] ||= {}
     params[:search][params[:key].to_sym] = params[:value] if params[:key].present? && params[:value].present?
     @search = @products.search(params[:search])
-    @products = @search.page(params[:page])
+    pernumber = params[:number].to_i || 20
+    @products = @search.page(params[:page]).per(pernumber)
   end
 
   # GET /yihaodian_products/1
