@@ -20,6 +20,8 @@ class YihaodianGeneralProductSync < ECommerce::Synchronization::Base
     @response = YihaodianQuery.post(params,@query_condition)
     datas = {api_results: @response,api_parameters: params,:account => @account,:result => []}
     handle_exception(datas) do
+      except_error = @response["response"]["errInfoList"]["errDetailInfo"].all? {|u| u["errorCode"] == 'yhd.combine.products.search.prod_not_found'} rescue false
+      return [] if except_error
       @response["response"]["productList"]["product"].each {|hash| hash.underscore_key!}
     end
   end
