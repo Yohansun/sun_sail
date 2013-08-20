@@ -58,6 +58,7 @@ class YihaodianTrade < Trade
                       ["已下单（货款已收）", "ORDER_PAYED"],
                       ["可以发货（已送仓库）", "ORDER_TRUNED_TO_DO"],
                       ["已出库（货在途）", "ORDER_CAN_OUT_OF_WH"],
+                      ["已出库（货在途）", "ORDER_OUT_OF_WH"],
                       ["已发送物流", "ORDER_SENDED_TO_LOGITSIC"],
                       ["货物用户已收到", "ORDER_RECEIVED"],
                       ["订单完成", "ORDER_FINISH"],

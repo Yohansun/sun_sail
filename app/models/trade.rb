@@ -1035,6 +1035,7 @@ class Trade
                                 "WAIT_BUYER_CONFIRM_GOODS_ACOUNTED",
                                 "WAIT_SELLER_SEND_GOODS_ACOUNTED",
                                 "ORDER_CAN_OUT_OF_WH",
+                                "ORDER_OUT_OF_WH",
                                 "ORDER_SENDED_TO_LOGITSIC",
                                 "ORDER_RECEIVED"]
     closed_array = ["TRADE_CLOSED",
@@ -1510,6 +1511,7 @@ class Trade
      "WAIT_BUYER_CONFIRM_GOODS_ACOUNTED",
      "WAIT_SELLER_SEND_GOODS_ACOUNTED",
      "ORDER_CAN_OUT_OF_WH",
+     "ORDER_OUT_OF_WH",
      "ORDER_SENDED_TO_LOGITSIC",
      "ORDER_RECEIVED"].include?(status)
   end
