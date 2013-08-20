@@ -60,8 +60,8 @@ class StockInBillsController < ApplicationController
 
   def update
     @bill = StockInBill.find_by(@conditions)
-    update_areas!(@bill)
     @bill.attributes = params[:stock_in_bill]
+    update_areas!(@bill)
     @bill.update_bill_products
     if @bill.save
       flash[:notice] = "入库单#{@bill.tid}更新成功!"
