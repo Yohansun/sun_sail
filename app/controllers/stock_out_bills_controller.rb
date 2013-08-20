@@ -62,10 +62,10 @@ class StockOutBillsController < ApplicationController
 
   def update
     @bill = StockOutBill.find_by(@conditions)
-    update_areas!(@bill)
     @bill.attributes = params[:stock_out_bill]
+    update_areas!(@bill)
     @bill.update_bill_products
-    if @bill.update_attributes(params[:stock_out_bill])
+    if @bill.save
       flash[:notice] = "出库单#{@bill.tid}更新成功!"
       redirect_to warehouse_stock_out_bill_path(@warehouse,@bill)
     else
