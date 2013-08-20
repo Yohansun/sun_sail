@@ -1,11 +1,13 @@
 require 'e_commerce/synchronization/state'
 require 'e_commerce/synchronization/set'
+require 'e_commerce/notifer_exception'
 module ECommerce
   #同步类
   module Synchronization
     class Base
       include ECommerce::Synchronization::State
       include ECommerce::Synchronization::Set
+      include ECommerce::NotiferException
 
       attr_accessor :klass
 

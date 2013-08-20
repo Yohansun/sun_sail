@@ -8,10 +8,10 @@
 class JingdongSkuSync < ECommerce::Synchronization::Base
   identifier 'ware_id'
   alias_columns :attributes => "attribute_s"
+  set_variable :api,'360buy.ware.skus.get'
   
   def initialize(options={})
     options.symbolize_keys!
-    raise "The *ware_ids* option can't be blank" if options[:ware_ids].blank?
     raise "The *account_id* option can't be blank" if options[:account_id].blank?
     @ware_ids = options.delete(:ware_ids)
     @default_attributes = options
@@ -22,9 +22,13 @@ class JingdongSkuSync < ECommerce::Synchronization::Base
   end
 
   def response
-    @response = JingdongQuery.get({method: '360buy.ware.skus.get', ware_ids: @split_ids.join(',')},@api_parameters)
-    @response.key?("error_response") && raise(@response["error_response"].inspect)
-    @response["ware_skus_get_response"]["skus"]
+    return [] if @split_ids.blank?
+    params = {method: api, ware_ids: @split_ids.join(',')}
+    @response = JingdongQuery.get(params,@api_parameters)
+    datas = {api_results: @response,api_parameters: params,:account => @account,:result => []}
+    handle_exception(datas) do
+      @response["ware_skus_get_response"]["skus"]
+    end
   end
   
   def total_results
@@ -32,6 +36,9 @@ class JingdongSkuSync < ECommerce::Synchronization::Base
   end
   
   def parsing
+    @changed ||= []
+    @latest ||= []
+
     @ware_ids.each_slice(10) do |ware_ids|
       @split_ids = ware_ids
       super
