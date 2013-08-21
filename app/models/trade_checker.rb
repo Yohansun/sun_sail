@@ -99,7 +99,7 @@ class TradeChecker
     end
 
     (start_date..end_date).each do |date|
-      response = catch_exception("标杆仓库API异常(:shipment_info_query_by_date)") { Bml.shipment_info_query_by_date(date) }
+      response = catch_exception("标杆仓库API异常(:shipment_info_query_by_date)") { Bml.shipment_info_query_by_date(account,date) }
       response.blank? && next
       hash = catch_exception("标杆仓库 / [#{start_date}] 没有记录") { Hash.from_xml(response)["outputBacks"]["outputBack"] }
       hash.blank? && next
