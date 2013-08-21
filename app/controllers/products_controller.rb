@@ -11,7 +11,7 @@ class ProductsController < ApplicationController
       if params[:info_type] == "sku_info"
         @products = @products.joins(:skus).where("properties_name like ?", "%#{params[:info]}%")
       else
-        @products = @products.where("BINARY #{params[:info_type]} like ? or #{params[:info_type]} = ?", "%#{params[:info].strip}%", params[:info].strip)
+        @products = @products.where("#{params[:info_type]} like ? or #{params[:info_type]} = ?", "%#{params[:info].strip}%", params[:info].strip)
       end
     end
     if params[:category_id].present? && params[:category_id] != '0'
@@ -225,7 +225,7 @@ class ProductsController < ApplicationController
     @native_skus = current_account.skus
     @products = current_account.taobao_products
     if params[:key] && params[:value] && params[:value] != ''
-      @products = @products.where("BINARY #{params[:key]} like ? ", "%#{params[:value].strip}%")
+      @products = @products.where("#{params[:key]} like ? ", "%#{params[:value].strip}%")
     end
     @number = 20
     @number = params[:number] if params[:number].present?
