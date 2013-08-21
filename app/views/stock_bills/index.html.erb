@@ -63,7 +63,7 @@
                 <td data-col="<%= col_name %>" style="<%= 'display:none' unless @visible_cols.include?(col_name) %>">
                   <%= case col_name
                       when "product_sku"
-                        product.try(:sku_id)
+                        product.try(:outer_id)
                       when "product_title"
                         product.try(:title)
                       when "created_at"
