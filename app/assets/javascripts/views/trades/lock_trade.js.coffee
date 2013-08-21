@@ -15,6 +15,11 @@ class MagicOrders.Views.TradesLockTrade extends Backbone.View
   save: ->
     blocktheui()
     $.get '/trades/lock_trade', {id: @model.id, operation: "锁定订单"}, (data) ->
-      $.unblockUI()
-      $("#trade_"+data.id).hide()
-      $('#trade_lock_trade').modal('hide')
+      if data.status_changed == true
+        alert("执行操作期间订单状态变化，无法执行锁定")
+        $.unblockUI()
+        $('#trade_lock_trade').modal('hide')
+      else
+        $.unblockUI()
+        $("#trade_"+data.id).hide()
+        $('#trade_lock_trade').modal('hide')
