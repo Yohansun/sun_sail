@@ -11,11 +11,17 @@ class MagicOrders.Views.TradesSetupLogistic extends Backbone.View
 
   render: ->
     $(@el).html(@template(trade: @model))
+    logistic_name = @model.get('logistic_name')
     $.get '/logistics/logistic_templates', {type: 'all',trade_type: @model.get("trade_type")}, (t_data)->
       html_options = ''
       for item in t_data
-        html_options += '<option lid="' + item.id + '" service_logistic_id="' + item.service_logistic_id + '" value="' + item.xml + '">' + item.name + '</option>'
+        if logistic_name == item.name
+          html_options += '<option selected="selected" lid="' + item.id + '" service_logistic_id="' + item.service_logistic_id + '" value="' + item.xml + '">' + item.name + '</option>'
+        else
+          html_options += '<option lid="' + item.id + '" service_logistic_id="' + item.service_logistic_id + '" value="' + item.xml + '">' + item.name + '</option>'
       $('#logistic_select').html(html_options)
+      service_logistic_id = $("#logistic_select").find("option:selected").attr("service_logistic_id")
+      $("#service_logistic_id").val(service_logistic_id)
 
     this
 

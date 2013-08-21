@@ -69,6 +69,8 @@ class MagicOrders.Views.LogisticBillsRow extends Backbone.View
       $('#op-toolbar .dropdown-menu').parents('div.btn-group').css('display', 'none')
       $('#op-toolbar .batch_ops').show()
     else if $('#all_orders input.trade_check:checked').length == 1
+      if @model.get('delivered_at')
+        $('#op-toolbar .index_pops').find('[data-type=setup_logistic]').hide()
       $('#op-toolbar .dropdown-menu').parents('div.btn-group').removeAttr('style')
       $('#op-toolbar .batch_ops').css('display', 'none')
       trade = $('#all_orders input.trade_check:checked')[0]

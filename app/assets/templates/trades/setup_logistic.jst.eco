@@ -42,7 +42,7 @@
 
     <div class="control-group form-inline">
       <label for="" class="control-label">物流单号：</label>
-      <input type="text" class="span3 waybill" placeholder="请输入物流单号">
+      <input type="text" class="span3 waybill" placeholder="请输入物流单号" value="<%= @trade.get('logistic_waybill') %>">
     </div>
   </fieldset>
 </div>

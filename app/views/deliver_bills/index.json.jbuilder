@@ -14,6 +14,7 @@ json.array!(@bills) do |json, bill|
   json.trade_source trade.trade_source
   json.logistic_name trade.logistic_name
   json.logistic_waybill trade.logistic_waybill
+  json.delivered_at trade.delivered_at.try(:strftime,"%Y-%m-%d %H:%M:%S")
   json.orders bill.bill_products do |json, order|
     json.outer_id order.outer_id
     json.outer_sku_id order.outer_sku_id
