@@ -469,9 +469,13 @@ class TradesController < ApplicationController
 
   def lock_trade
     trade = Trade.where(_id: params[:id]).first
-    trade.update_attributes(is_locked: true)
-    trade.delete
-    render json: {id: trade.id}
+    if (trade.stock_out_bill && ["CANCELING", "STOCKED", "CANCELED_FAILED", "SYNCKED"].include?(trade.stock_out_bill.status)) || trade.dispatched_at.present?
+      render json: {status_changed: true}
+    else
+      trade.update_attributes(is_locked: true)
+      trade.delete
+      render json: {id: trade.id}
+    end
   end
 
   def activate_trade
