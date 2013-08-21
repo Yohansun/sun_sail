@@ -124,7 +124,7 @@
         <label class="width_100 pagination-right">商品类目：<span id="yihaodian_product_cat_name"></span></label>
       </fieldset>
       <fieldset class="control-group form-inline">
-        <label class="width_100 pagination-right">选择京东SKU：</label>
+        <label class="width_100 pagination-right">选择一号店SKU：</label>
         <select class="input-xxlarge change_yihaodian_skus">
         </select>
       </fieldset>
@@ -195,7 +195,7 @@
           alert("此商品没有SKU");
         } else {
           $('#yihaodian_product_id').text(data.product.id)
-          $('#yihaodian_product_name').text(data.product.title)
+          $('#yihaodian_product_name').text(data.product.product_cname)
           $('#yihaodian_product_cat_name').text(data.product.cat_name)
           var skus_list = ""
           for(var i in data.skus){
