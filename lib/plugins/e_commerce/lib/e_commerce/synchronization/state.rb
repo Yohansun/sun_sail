@@ -38,7 +38,7 @@ module ECommerce
       end
 
       def fields
-        klass.columns_hash.keys + alias_columns.keys
+        klass.columns_hash.keys + alias_columns.keys + nested_columns
       end
 
       private
@@ -51,11 +51,20 @@ module ECommerce
 
       def mongoize(column,value)
         column = alias_column(column)
-        klass.columns_hash[column].klass.mongoize(value)
+
+        if nested_columns.include?(column)
+          value
+        else
+          klass.columns_hash[column].klass.mongoize(value)
+        end
       end
 
       def alias_columns
         @alias_columns ||= {}
+      end
+      
+      def nested_columns
+        klass.nested_attributes_options.collect {|k,v| "#{k}_attributes"}
       end
 
       def alias_column(column_name)
