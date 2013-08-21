@@ -106,9 +106,9 @@ $ ->
             canSubmit = false
             error_message = "只有已审核的库单允许同步"
             break
-          if operation_name=="撤销" && $.inArray(bill_status, ["SYNCKING", "SYNCKED"]) == -1
+          if operation_name=="撤销" && bill_status!="SYNCKED"
             canSubmit = false
-            error_message = "只有同步中或已同步待出/入库的库单允许撤销"
+            error_message = "只有已同步待出/入库的库单允许撤销"
             break
       if canSubmit
         if confirm("确定要"+operation_name+"吗？")
