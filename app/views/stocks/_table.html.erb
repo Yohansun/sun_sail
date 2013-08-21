@@ -72,7 +72,7 @@
               <%= stock_product.sku.try(:sku_id) %>
               <% when "product_name" %>
                 <%= stock_product.sku.try(:title) %>
-              <% when "outer_id" %>
+              <% when "product_outer_id" %>
                 <%= stock_product.product.try(:outer_id) %>
               <% when "category_name" %>
                 <%= stock_product.category.try(:name) %>
