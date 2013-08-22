@@ -50,7 +50,6 @@ class YihaodianTradePuller
           curPage: page_no,
           pageRows: 10}, query_conditions).underscore_key
 
-        p response
 
         unless response['response']['error_count'] == 0
           Notifier.puller_errors(response, account_id).deliver

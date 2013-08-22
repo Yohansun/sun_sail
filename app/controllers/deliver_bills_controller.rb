@@ -188,6 +188,7 @@ class DeliverBillsController < ApplicationController
         list << {
           name: trade.receiver_name,
           tid: trade.tid,
+          type: trade._type,
           batch_num: bill.print_batches.last.batch_num,
           serial_num: bill.print_batches.last.serial_num.to_s[-4..-1],
           address: trade.receiver_full_address,
@@ -198,6 +199,7 @@ class DeliverBillsController < ApplicationController
         list << {
           name: trade.receiver_name,
           tid: trade.tid,
+          type: trade._type,
           batch_num: "无批次号",
           serial_num: "无流水号",
           address: trade.receiver_full_address,
@@ -237,7 +239,8 @@ class DeliverBillsController < ApplicationController
         trade = Trade.where(tid: info['tid']).first
         is_first_set = !trade.logistic_waybill.present?
         trade.logistic_code = logistic.try(:code)
-        trade.logistic_waybill = info["logistic"].present? ? info["logistic"] : trade.tid
+        trade.service_logistic_id = params[:service_logistic_id]
+        trade.logistic_waybill = info["logistic_waybill"].present? ? info["logistic_waybill"] : trade.tid
         trade.logistic_name = logistic.try(:name)
         trade.logistic_id = logistic.try(:id)
         trade.save

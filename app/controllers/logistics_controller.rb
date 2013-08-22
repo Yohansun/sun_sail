@@ -140,19 +140,31 @@ class LogisticsController < ApplicationController
     unless params[:type] && params[:type] == 'all'
       @logistics = @logistics.where("xml is not null")
     end
-    if params[:trade_type].present?
+    if params[:trade_type].present? && params[:trade_type] != "CustomTrade"
       source_type = params[:trade_type].underscore.gsub(/trade$/,'source')
       source_id = current_account.send(source_type).try(:id)
     end
 
-    @logistics.each do |l|
-      tmp << {
-        id: l.id,
-        service_logistic_id: (get_logistic_id(params[:trade_type].to_s,l.name,source_id) rescue nil),
-        xml: l.xml.inspect,
-        name: l.name
-      }
+    if params[:trade_type] == "CustomTrade"
+      @logistics.each do |l|
+        tmp << {
+          id: l.id,
+          service_logistic_id: l.id,
+          xml: l.xml.inspect,
+          name: l.name
+        }
+      end
+    else
+      @logistics.each do |l|
+        tmp << {
+          id: l.id,
+          service_logistic_id: (get_logistic_id(params[:trade_type].to_s,l.name,source_id) rescue nil),
+          xml: l.xml.inspect,
+          name: l.name
+        }
+      end
     end
+
     render json: tmp.reject {|h| h[:service_logistic_id].blank?}
   end
 

@@ -141,6 +141,7 @@ class TradesController < ApplicationController
         @trade.logistic_id = logistic.try(:id)
         @trade.logistic_name = logistic.try(:name)
         @trade.logistic_code = logistic.try(:code)
+        @trade.service_logistic_id = params[:service_logistic_id]
         @trade.logistic_waybill = params[:logistic_waybill].present? ? params[:logistic_waybill] : @trade.tid
       end
     end
@@ -243,6 +244,7 @@ class TradesController < ApplicationController
         @trade.logistic_name = logistic.name
         @trade.logistic_code = logistic.code
         @trade.logistic_id = logistic.id
+        @trade.service_logistic_id = params[:service_logistic_id]
       end
     end
 

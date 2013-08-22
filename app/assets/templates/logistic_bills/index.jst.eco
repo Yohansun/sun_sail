@@ -199,6 +199,10 @@
           <label class="input-small nomargin">物流公司：</label>
           <select class="input-medium logistic_select"></select>
         </div>
+        <div class="control-group form-inline">
+          <label for="" class="control-label">服务商物流ID：</label>
+          <input type="text" class="input-small service_logistic_id" id="batch_service_logistic_id">
+        </div>
         <table class="table table-bordered">
           <thead>
             <tr>

@@ -38,7 +38,7 @@ class Trade
   field :logistic_waybill, type: String                   # 物流运单号
   field :logistic_id, type: Integer
   field :logistic_name, type: String
-  field :server_logistic_id, type:Integer                 # 服务商物流ID(比如淘宝 京东 一号店等)
+  field :service_logistic_id, type:Integer                # 服务商物流ID(比如淘宝 京东 一号店等)
 
   field :seller_confirm_deliver_at, type: DateTime        # 确认发货
   field :seller_confirm_invoice_at, type: DateTime        # 确认开票
