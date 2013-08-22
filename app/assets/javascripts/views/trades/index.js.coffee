@@ -214,7 +214,9 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
       this.attributes.mergeable_id
     uniq_ids = $.unique(mergeable_ids).toArray()
     if uniq_ids.length != 1
-      alert("您选择的订单无法合并, 请确认没有选择赠品订单,京东订单,重新检查客户ID,以及收件人及订单状态等信息")
+      alert("\t您选择的订单无法合并,请确认:\n
+             1.选择的订单为淘宝或人工订单\n
+             2.选择的订单基本信息完全相同")
       return false
     merged_by_status = trades.map ->
       this.attributes["merged_by_trade_id"]

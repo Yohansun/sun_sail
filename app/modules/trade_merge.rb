@@ -256,9 +256,9 @@
           :receiver_district=>self.receiver_district,
           :receiver_zip=>self.receiver_zip,
           :receiver_address=>self.receiver_address,
-          # 赠品订单不能合并,京东订单不能合并
+          # 赠品订单不能合并,京东订单不能合并,一号店订单不能合并
           :main_trade_id=>nil,
-          :_type=>{"$ne"=>"JingdongTrade"}
+          :_type=>{"$nin"=>["JingdongTrade", "YihaodianTrade"]}
         })
     end
 
