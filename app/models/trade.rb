@@ -192,7 +192,7 @@ class Trade
   index seller_id: 1
   index logistic_name: 1
   index logistic_waybill: -1
-  index "unusual_states.repair_man" => 1
+  index logistic_code: 1
 
   # 时间搜索index
   index created: -1
@@ -201,6 +201,8 @@ class Trade
   index dispatched_at: -1
   index delivered_at: -1
   index consign_time: -1
+  index end_time: -1
+  index deleted_at: -1
   index rate_created: -1
   index deliver_bill_printed_at: -1
   index logistic_printed_at: -1
@@ -216,16 +218,19 @@ class Trade
   # 金额搜索index
   index payment: 1
 
-  #common
+  #ID index
   index account_id: 1
   index trade_source_id: 1
-  index deleted_at: -1
+  index merged_by_trade_id: 1
+  index mergeable_id: 1
+  index operator_id: 1
+  index logistic_id: 1
+
 
   # 状态搜索index
   index status: 1
   # index splitted: -1
   # index splitted_tid: -1
-  # index trade_source_id: 1
 
   # 信息搜索index
   # index has_color_info: 1
@@ -235,12 +240,22 @@ class Trade
   # index has_buyer_message: 1
 
   # 来源搜索index
-  # index _type: 1
+  index _type: 1
 
   # 区域搜索index
   index receiver_state: 1
   index receiver_district: 1
   index receiver_city: 1
+
+  #子文档搜索
+  index "unusual_states.repair_man" => 1
+  index "unusual_states.repaired_at" => -1
+  index "unusual_states.key" => 1
+  index "unusual_states.reason" => 1
+  index "unusual_states.note" => 1
+  index "trade_gifts.gift_title" => 1
+  index "trade_gifts.gift_memo" => 1
+  index "taobao_orders.title" => 1
 
   embeds_many :unusual_states
   embeds_many :operation_logs
