@@ -100,7 +100,7 @@ class StockInBill < StockBill
 
     #BML
     if result['Response']
-      if ['Response']['success'] == 'true'
+      if result['Response']['success'] == 'true'
         update_attributes(sync_succeded_at: Time.now, status: "SYNCKED")
         operation_logs.create(operated_at: Time.now, operation: '同步成功')
       else
