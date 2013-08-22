@@ -83,8 +83,8 @@ class YihaodianTradeReporter
     sheet1.row(1).concat(header)
      trades.each_with_index do |trade, trade_index|
       trade_source = trade.type_text
-      tid = trade.order_id
-      taobao_status_memo = trade.status
+      tid = trade.tid
+      status_memo = trade.status_name
       created = trade.created.try(:strftime,"%Y-%m-%d %H:%M:%S")
       pay_time = trade.pay_time.try(:strftime,"%Y-%m-%d %H:%M:%S")
       dispatched_at = trade.dispatched_at.try(:strftime,"%Y-%m-%d %H:%M:%S")
@@ -156,7 +156,7 @@ class YihaodianTradeReporter
 
         body = [trade_source,              #读取订单平台来源
                 tid,                       #读取淘宝订单编号或拆分订单编号
-                taobao_status_memo,        #读取订单当前状态
+                status_memo,               #读取订单当前状态
                 created,                   #读取订单下单时间
                 pay_time,                  #读取订单付款时间
                 dispatched_at,             #读取系统最后一次分派时间

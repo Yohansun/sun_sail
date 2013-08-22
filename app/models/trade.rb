@@ -1465,6 +1465,8 @@ class Trade
       '淘宝'
     elsif self._type == "JingdongTrade"
       '京东'
+    elsif self._type == "YihaodianTrade"
+      '一号店'
     end
   end
 
