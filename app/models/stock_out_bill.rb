@@ -66,7 +66,7 @@ class StockOutBill < StockBill
   end
 
   def gqs_outer_is_cash_sale
-    (is_cash_sale == "无需开票" ? "0" : "1") || (self.account.settings.open_auto_mark_invoice==1 ? "1" : "0" rescue "0")
+    ((is_cash_sale == "无需开票"|| is_cash_sale.nil?) ? "0" : "1")|| (self.account.settings.open_auto_mark_invoice==1 ? "1" : "0" rescue "0")
   end
 
   def gqs_xml
