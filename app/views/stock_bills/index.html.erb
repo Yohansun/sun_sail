@@ -62,7 +62,7 @@
                 <%- @all_cols.each do |col_name, view_name| -%>
                 <td data-col="<%= col_name %>" style="<%= 'display:none' unless @visible_cols.include?(col_name) %>">
                   <%= case col_name
-                      when "product_sku"
+                      when "product_outer_id"
                         product.try(:outer_id)
                       when "product_title"
                         product.try(:title)
