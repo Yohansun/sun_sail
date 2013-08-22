@@ -37,7 +37,7 @@ class Gqs
   end
 
   # 订单取消
-  def self.order_cancel(account, tid)
+  def self.cancel_order(account, tid)
     xml = "<DATA><ORDER><ORDERID>#{tid}</ORDERID><NOTES>客户取消订单</NOTES><OPTTYPE>OrderCance</OPTTYPE><OPTTIME>#{Time.now.try(:strftime, "%Y-%m-%d %H:%M")}</OPTTIME></ORDER></DATA>"
     base_uri = URI.encode "http://service.gqsscm.com/yh/GQSHandler.ashx"
     options = {:body => {brand: account.settings.gqs_brand_name, method: 'OrderCance', content: xml}}
