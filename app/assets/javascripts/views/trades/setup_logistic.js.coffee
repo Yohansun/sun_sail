@@ -21,14 +21,14 @@ class MagicOrders.Views.TradesSetupLogistic extends Backbone.View
           html_options += '<option lid="' + item.id + '" service_logistic_id="' + item.service_logistic_id + '" value="' + item.xml + '">' + item.name + '</option>'
       $('#logistic_select').html(html_options)
       service_logistic_id = $("#logistic_select").find("option:selected").attr("service_logistic_id")
-      $("#service_logistic_id").val(service_logistic_id)
+      $("#set_service_logistic_id").val(service_logistic_id)
 
     this
 
   save: ->
     flag = $("#logistic_select").find("option:selected").html() in ['其他', '虹迪', '雄瑞']
     lid = $('#logistic_select').find("option:selected").attr('lid')
-    service_logistic_id = $('#service_logistic_id').val()
+    service_logistic_id = $('#set_service_logistic_id').val()
 
     waybill = $('.waybill').val()
     if service_logistic_id == '' || service_logistic_id == 'null'
@@ -53,4 +53,4 @@ class MagicOrders.Views.TradesSetupLogistic extends Backbone.View
 
   set_logistic_id: ->
     service_logistic_id = $("#logistic_select").find("option:selected").attr("service_logistic_id")
-    $("#service_logistic_id").val(service_logistic_id)
+    $("#set_service_logistic_id").val(service_logistic_id)

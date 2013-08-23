@@ -42,10 +42,16 @@
         <% if @trade.get('logistic_company') : %>
         <tr>
           <td>物流公司：</td>
-          <td id='logistic_company'><%= @trade.get('logistic_company') %></td>
+          <td id='logistic_company'><select id="send_logistic_select" class="input-medium" disabled></select></td>
         </tr>
-        <td>本地物流商ID：</td>
-        <td id='logistic_id'><%= @trade.get('logistic_id') %></td>
+        <tr>
+          <td>本地物流商ID</td>
+          <td id="logistic_id"><%= @trade.get('logistic_id')%></td>
+        <tr>
+        <tr>
+          <td>服务商物流ID：</td>
+          <td><input type="text" class="input-small service_logistic_id" id="service_logistic_id" readonly></td>
+        </tr>
         <% else : %>
         <tr>
           <td>物流公司：</td>
