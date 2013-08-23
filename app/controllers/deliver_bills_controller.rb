@@ -182,26 +182,19 @@ class DeliverBillsController < ApplicationController
 
   def logistic_waybill_list
     list = []
+    has_wrong_trade = false
     DeliverBill.find(params[:ids]).each do |bill|
       trade = TradeDecorator.decorate(bill.trade)
-      if bill.print_batches.last != nil
-        list << {
-          name: trade.receiver_name,
-          tid: trade.tid,
-          type: trade._type,
-          batch_num: bill.print_batches.last.batch_num,
-          serial_num: bill.print_batches.last.serial_num.to_s[-4..-1],
-          address: trade.receiver_full_address,
-          logistic_name: trade.logistic_name || '',
-          logistic_waybill: trade.logistic_waybill || ''
-        }
+      if trade.delivered_at.present?
+        has_wrong_trade = true
+        break
       else
         list << {
           name: trade.receiver_name,
           tid: trade.tid,
           type: trade._type,
-          batch_num: "无批次号",
-          serial_num: "无流水号",
+          batch_num: (bill.print_batches.last != nil ? bill.print_batches.last.batch_num : "无批次号"),
+          serial_num: (bill.print_batches.last != nil ? bill.print_batches.last.serial_num.to_s[-4..-1] : "无流水号"),
           address: trade.receiver_full_address,
           logistic_name: trade.logistic_name || '',
           logistic_waybill: trade.logistic_waybill || ''
@@ -216,12 +209,11 @@ class DeliverBillsController < ApplicationController
     end
 
     respond_to do |format|
-      format.json { render json: list }
+      format.json { render json: {list: list, has_wrong_trade: has_wrong_trade} }
     end
   end
 
   def verify_logistic_waybill
-    error = ""
     waybills = params[:data]
     existed_waybills = Trade.where(:logistic_waybill.in => waybills, logistic_id: params[:logistic]).only(:logistic_waybill).collect(&:logistic_waybill).compact
     if existed_waybills == []

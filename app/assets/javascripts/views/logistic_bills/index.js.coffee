@@ -189,56 +189,60 @@ class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
 
     logistics = {}
     $.get '/deliver_bills/logistic_waybill_list', {ids: tmp}, (data) ->
-      html = ''
-      trade_types = Array::map.call(data, (d) ->
-        return d.type
-      )
-      uniq_types = $.unique(trade_types)
-
-      if uniq_types.length == 1
-        for trade in data
-          html += '<tr>'
-          html += '<td nowrap>' + trade.tid + '</td>'
-          html += '<td nowrap>' + trade.batch_num + '</td>'
-          html += '<td nowrap>' + trade.serial_num + '</td>'
-          html += '<td nowrap>' + trade.name + '</td>'
-          html += '<td>' + trade.address + '</td>'
-          html += '<td><input class="logistic_waybill" type="text"></td></tr>'
-
-          $('#set_logistics_tbody').html(html)
-
-          lname = trade.logistic_name
-          lname = '无物流公司' if lname == ''
-          logistics[lname] = logistics[lname] || 0
-          logistics[lname] += 1
-
-        flag = ''
-        notice = '其中'
-        for key, value of logistics
-          notice += key + value + '单'
-          flag = key if value == tmp.length
-
-        $.get '/logistics/logistic_templates', {type: 'all', trade_type: uniq_types[0]}, (t_data)->
-          html_options = ''
-          for item in t_data
-            html_options += '<option lid="' + item.id + '" service_logistic_id="' + item.service_logistic_id + '" value="' + item.xml + '">' + item.name + '</option>'
-
-          $('#ord_logistics_billnum_mult .logistic_select').html(html_options)
-          service_logistic_id = $("#ord_logistics_billnum_mult .logistic_select").find("option:selected").attr("service_logistic_id")
-          $("#batch_service_logistic_id").val(service_logistic_id)
-
-          if flag == ''
-            $('#ord_logistics_billnum_mult .info').html(notice)
-          else
-            $("#ord_logistics_billnum_mult option:contains('" + flag + "')").attr('selected', 'selected')
-
-          $('#ord_logistics_billnum_mult').modal('show')
-
-          $('#ord_logistics_billnum_mult').on 'shown', ->
-            $("#set_logistics_tbody input:first").focus()
-      else
-        alert("请选择同一来源的发货单。")
+      if data.has_wrong_trade == true
+        alert('选择的订单中包含已发货订单！')
         return
+      else
+        html = ''
+        trade_types = Array::map.call(data.list, (d) ->
+          return d.type
+        )
+        uniq_types = $.unique(trade_types)
+        console.log(uniq_types)
+        if uniq_types.length == 1
+          for trade in data.list
+            html += '<tr>'
+            html += '<td nowrap>' + trade.tid + '</td>'
+            html += '<td nowrap>' + trade.batch_num + '</td>'
+            html += '<td nowrap>' + trade.serial_num + '</td>'
+            html += '<td nowrap>' + trade.name + '</td>'
+            html += '<td>' + trade.address + '</td>'
+            html += '<td><input class="logistic_waybill" type="text"></td></tr>'
+
+            $('#set_logistics_tbody').html(html)
+
+            lname = trade.logistic_name
+            lname = '无物流公司' if lname == ''
+            logistics[lname] = logistics[lname] || 0
+            logistics[lname] += 1
+
+          flag = ''
+          notice = '其中'
+          for key, value of logistics
+            notice += key + value + '单'
+            flag = key if value == tmp.length
+
+          $.get '/logistics/logistic_templates', {type: 'all', trade_type: uniq_types[0]}, (t_data)->
+            html_options = ''
+            for item in t_data
+              html_options += '<option lid="' + item.id + '" service_logistic_id="' + item.service_logistic_id + '" value="' + item.xml + '">' + item.name + '</option>'
+
+            $('#ord_logistics_billnum_mult .logistic_select').html(html_options)
+            service_logistic_id = $("#ord_logistics_billnum_mult .logistic_select").find("option:selected").attr("service_logistic_id")
+            $("#batch_service_logistic_id").val(service_logistic_id)
+
+            if flag == ''
+              $('#ord_logistics_billnum_mult .info').html(notice)
+            else
+              $("#ord_logistics_billnum_mult option:contains('" + flag + "')").attr('selected', 'selected')
+
+            $('#ord_logistics_billnum_mult').modal('show')
+
+            $('#ord_logistics_billnum_mult').on 'shown', ->
+              $("#set_logistics_tbody input:first").focus()
+        else
+          alert("请选择同一来源的发货单。")
+          return
 
   enterReplaceTab: (e)->
     input = $(e.currentTarget).parents("tr").next().find("input:first")
@@ -266,17 +270,12 @@ class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
 
     logistic_waybill_array = []
     $('#ord_logistics_billnum_mult').find('td .logistic_waybill').each ->
-      if $(this).val() != "" && $(this).val() != undefined && $(this).val() != null
+      if (!flag && $(this).val() != "") && $(this).val() != undefined && $(this).val() != null && /^\w+$/.test($(this).val())
         logistic_waybill_array.push($(this).val())
-
-      unless flag
-        unless /^\w+$/.test($(this).val())
-          alert('输入单号不符合规则')
-          return
 
     unless flag
       if logistic_waybill_array.length != MagicOrders.idCarrier.length
-        alert('物流单号与选中产品个数不匹配')
+        alert('输入单号不符合规则')
         return
       else
         unique_array = logistic_waybill_array.slice()
@@ -295,7 +294,7 @@ class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
         else
           $.get '/deliver_bills/logistic_waybill_list', {ids: MagicOrders.idCarrier}, (data) ->
             html = ''
-            for trade, i in data
+            for trade, i in data.list
               html += '<tr>'
               html += '<td class="tid" nowrap>' + trade.tid + '</td>'
               html += '<td nowrap>' + trade.batch_num + '</td>'
@@ -317,7 +316,7 @@ class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
     else
       $.get '/deliver_bills/logistic_waybill_list', {ids: MagicOrders.idCarrier}, (data) ->
           html = ''
-          for trade, i in data
+          for trade, i in data.list
             html += '<tr>'
             html += '<td class="tid" nowrap>' + trade.tid + '</td>'
             html += '<td nowrap>' + trade.batch_num + '</td>'
@@ -343,7 +342,7 @@ class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
     a.each (i)->
       tid = $(a[i]).find('td.tid').html()
       logistic_waybill = $(a[i]).find('td.logistic_bill').html()
-      h = {tid: tid, logistic: logistic_waybill}
+      h = {tid: tid, logistic_waybill: logistic_waybill}
       bb.push(h)
 
     logistic = $('#ord_logistics_billnum_mult .logistic_select').find("option:selected").attr('lid')
