@@ -4,7 +4,7 @@ class TradeYihaodianDeliver
   sidekiq_options :queue => :trade_yihaodian_deliver
 
   def perform(id)
-    trade = YihaodianTrade.find(id) rescue raise("没有找到一号店订单号为#{id}")
+    trade = YihaodianTrade.where(_id: id).first rescue raise("没有找到一号店订单号为#{id}")
 
     trade = TradeDecorator.decorate(trade)
     mobile = trade.receiver_mobile_phone
