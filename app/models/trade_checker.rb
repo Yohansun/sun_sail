@@ -110,7 +110,7 @@ class TradeChecker
   private
   def abnormal_collections_with_taobao(taobao_trade)
     tid = taobao_trade["tid"].to_s
-    taobao_trades = Trade.unscoped.where(tid: tid).only(:status)
+    taobao_trades = Trade.where(tid: tid).only(:status)
     if local_trade = taobao_trades.first
       # ERROR: 淘宝与本地状态不同步订单
       if local_trade.status != taobao_trade['status']
@@ -123,7 +123,7 @@ class TradeChecker
   end
 
   def abnormal_collections_with_stock(tid,logistic_waybill)
-    trade = catch_exception("标杆仓库 tid为#{tid} 在本地没有找到此订单"){ Trade.unscoped.find_by(:tid => tid) }
+    trade = catch_exception("标杆仓库 tid为#{tid} 在本地没有找到此订单"){ Trade.find_by(:tid => tid) }
     return if trade.blank?
     @biaogan_diff << tid if trade.logistic_waybill.blank?
   end

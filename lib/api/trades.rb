@@ -5,6 +5,7 @@ module Api
       result = ::Builder::XmlMarkup.new
       result.trades do
         trades.each do |trade|
+          account = trade.fetch_account
           result.trade do
             result.tid trade.tid
             result.receiver_name trade.receiver_name
@@ -45,17 +46,47 @@ module Api
 
             result.orders do
               trade.orders.each do |order|
-                result.order do
-                  result.title order.title
-                  result.num order.num
-                  if order.price == 0
-                    result.order_type "EA"
-                  else
-                    result.order_type "PK"
+                if order.sku_bindings.present?
+                  order.sku_bindings.each do |binding|
+                    sku_id = binding.sku_id
+                    sku =  account.skus.find_by_id(sku_id)
+                    product = sku.try(:product)
+                    if product
+                      taobao_product = account.taobao_products.find_by_outer_id(product.outer_id)
+                      order_number = binding.number * order.num
+                      result.order do
+                        result.title product.name
+                        result.num order_number
+                        if order.price == 0
+                          result.order_type "EA"
+                        else
+                          result.order_type "PK"
+                        end
+                        result.price (taobao_product.try(:price) || product.try(:price))
+                        result.item_outer_id (taobao_product.try(:outer_id) || product.try(:outer_id))
+                      end
+                    end
                   end
-                  result.price order.price
-                  product = Product.find_by_num_iid(order.num_iid) || Product.find_by_cid(order.cid) || Sku.find_by_id(order.local_sku_id).try(:product)
-                  result.item_outer_id (order.item_outer_id || product.try(:outer_id))
+                elsif order.local_skus.present?
+                  order.local_skus.each do |sku|
+                    sku_id = sku.id
+                    sku = account.skus.find_by_id(sku_id)
+                    product = sku.try(:product)
+                    if product
+                      taobao_product = account.taobao_products.find_by_outer_id(product.outer_id)
+                      result.order do
+                        result.title product.name
+                        result.num order.num
+                        if order.price == 0
+                          result.order_type "EA"
+                        else
+                          result.order_type "PK"
+                        end
+                        result.price (taobao_product.try(:price) || product.try(:price))
+                        result.item_outer_id (taobao_product.try(:outer_id) || product.try(:outer_id))
+                      end
+                    end
+                  end
                 end
               end
             end
