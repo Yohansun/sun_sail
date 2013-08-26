@@ -1,0 +1,10 @@
+<%= simple_form_for @template, wrapper: :add_trade, html: {class: 'well form-search mar_t10'} do |f| %>
+  <fieldset>
+    <%= f.input :name, label: '模版名称:' %>
+    <%= f.input :xml, label: '发货单模版:' %>
+    <%= f.input :image, label: '发货单模版图片:' %>
+  </fieldset>
+  <div class="form-actions">
+    <%= f.button :submit, :value => "保存", class: "btn btn-primary"%>
+  </div>
+<% end %>
