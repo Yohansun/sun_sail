@@ -186,7 +186,7 @@ class StockOutBill < StockBill
           update_attributes(sync_succeded_at: Time.now, status: "SYNCKED")
           operation_logs.create(operated_at: Time.now, operation: '同步成功')
         else
-          update_attributes(sync_succeded_at: Time.now, failed_desc: result['DATA']['RET_MESSAGE'], status: "SYNCK_FAILED")
+          update_attributes(sync_failed_at: Time.now, failed_desc: result['DATA']['RET_MESSAGE'], status: "SYNCK_FAILED")
           operation_logs.create(operated_at: Time.now, operation: "同步失败,#{result['DATA']['RET_MESSAGE']}")
         end
       end
