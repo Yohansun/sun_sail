@@ -102,6 +102,7 @@ gem 'omniauth-oauth2'
 gem 'rest-client'
 gem 'httparty'
 gem 'rchardet19'
+gem 'state_machine', "~> 1.2.0"
 
 #test mail
 gem "mails_viewer"
