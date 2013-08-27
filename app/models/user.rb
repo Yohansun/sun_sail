@@ -92,7 +92,13 @@ class User < ActiveRecord::Base
   end
 
   def display_name
-    name || email
+    if self.name.present?
+      self.name
+    elsif self.username.present?
+      self.username
+    else
+      self.email
+    end
   end
 
   def allowed_to?(control,action)
