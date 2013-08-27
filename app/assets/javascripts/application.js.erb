@@ -401,3 +401,15 @@ function visibleTableColumns(dropdownSelector, formSelector, tableSelector){
       async: true});
   });
 }
+
+
+// 三秒后关闭alert
+function closeAlertAfterThreeSecond(){
+  $(".alert").fadeOut()
+}
+
+$(function(){
+  setTimeout(function(){
+    closeAlertAfterThreeSecond();
+  }, 3000);
+});
