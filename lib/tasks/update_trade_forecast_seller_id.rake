@@ -8,7 +8,7 @@ task :update_trade_forecast_seller_id => :environment do
 
   offset, limit_count = 0, 100
   while true do
-    trades = Array(Trade.skip(offset).limit(limit_count))
+    trades = Array(Trade.where(status: 'WAIT_SELLER_SEND_GOODS', seller_id: nil).skip(offset).limit(limit_count))
     trades.each_with_index do |trade, idx|
       puts "trade_id:#{trade.id}, idx:#{offset+idx}"
       next if trade.forecast_seller_id.present?
