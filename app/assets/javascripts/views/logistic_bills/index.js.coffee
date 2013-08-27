@@ -140,7 +140,7 @@ class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
         html += '<td>' + trade.name + '</td>'
         html += '<td>' + trade.address + '</td></tr>'
 
-      $.get '/logistics/logistic_templates', {}, (t_data)->
+      $.get '/logistics/logistic_templates', {type: 'all'}, (t_data)->
         html_options = ''
         for item in t_data
           html_options += '<option lid="' + item.id + '" value="' + item.xml + '">' + item.name + '</option>'
