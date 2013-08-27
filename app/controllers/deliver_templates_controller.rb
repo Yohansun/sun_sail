@@ -4,7 +4,7 @@ class DeliverTemplatesController < ApplicationController
 
   def index
     @templates = DeliverTemplate.all
-    @default_template_id = current_account.deliver_template.id
+    @default_template_id = current_account.deliver_template.id rescue nil
   end
 
   def new
