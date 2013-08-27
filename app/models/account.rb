@@ -60,6 +60,7 @@ class Account < ActiveRecord::Base
   has_many :skus
   has_many :taobao_skus
   has_one :trade_source
+  has_one :deliver_template
 
   validates :name, presence: true
   validates :key, presence: true, uniqueness: true

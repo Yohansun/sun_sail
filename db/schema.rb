@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130711061855) do
+ActiveRecord::Schema.define(:version => 20130826022026) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -180,6 +180,15 @@ ActiveRecord::Schema.define(:version => 20130711061855) do
   end
 
   add_index "colors_stock_products", ["stock_product_id"], :name => "index_colors_stock_products_on_stock_product_id"
+
+  create_table "deliver_templates", :force => true do |t|
+    t.string   "name"
+    t.string   "xml"
+    t.string   "image"
+    t.string   "account_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "feature_product_relationships", :force => true do |t|
     t.integer  "product_id"

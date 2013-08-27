@@ -77,6 +77,12 @@ MagicOrders::Application.routes.draw do
     end
   end
 
+  resources :deliver_templates do
+    collection do
+      post :change_default_template
+    end
+  end
+
   resources :reconcile_statements, only: [:index, :show] do
     member do
       put :audit

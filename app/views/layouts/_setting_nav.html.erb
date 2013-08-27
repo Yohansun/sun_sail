@@ -38,7 +38,7 @@
 -->
         </ul>
     </li>
-    <% @basedata = ["stocks","logistics","category_properties","categories", "logistic_groups", "trade_searches", "areas", "orders", "notify", "trades"] %>
+    <% @basedata = ["stocks","logistics","category_properties","categories", "logistic_groups", "deliver_templates", "trade_searches", "areas", "orders", "notify", "trades"] %>
     <li class="<%= display?(@basedata,"active") %>">
       <a href="#" class="" data-toggle="collapse" data-target="#base_data">
         <i class="icon-chevron-right"></i> 基础数据管理
@@ -55,12 +55,14 @@
               </li>
             </ul>
           </li>
-          <li class="<%= display?("logistic_groups","active") %>"><a href="#"  data-toggle="collapse" data-target="#shipments_menu">发货管理</a>
-            <ul id="shipments_menu" class="collapse <%= display?("logistic_groups","in") %> third_menu">
+          <li class="<%= display?(["logistic_groups","deliver_templates"],"active") %>"><a href="#"  data-toggle="collapse" data-target="#shipments_menu">发货管理</a>
+            <ul id="shipments_menu" class="collapse <%= display?(["logistic_groups","deliver_templates"],"in") %> third_menu">
               <li class="<%= display?("logistic_groups","active") %>">
                 <a href="/logistic_groups">发货拆分管理</a>
               </li>
-              <li class=""><a href="#">发货单管理</a></li>
+              <li class="<%= display?("deliver_templates","active") %>">
+                <a href="/deliver_templates">发货单管理</a>
+              </li>
             </ul>
           </li>
           <li class="<%= display?(["categories","category_properties"],"active") %>" ><a href="#"  data-toggle="collapse" data-target="#products_menu">商品设置</a>

@@ -21,6 +21,7 @@ zh-CN:
   permissions_deliver: 发货单模式
   permissions_logistics: "物流管理"
   permissions_logistic_groups: "发货拆分管理"
+  permissions_deliver_templates: "发货单模版管理"
   permissions_check: 验货模式
   permissions_send: 发货模式
   permissions_return: 退货模式
@@ -37,6 +38,7 @@ zh-CN:
 
   permissions_tag_create: 创建
   permissions_tag_update: 编辑
+  permissions_tag_change_default_template: 修改默认发货单模版
   permissions_tag_active: 开启
   permissions_tag_shutdown: 关闭
   permissions_tag_destroy: 删除

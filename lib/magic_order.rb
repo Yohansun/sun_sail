@@ -84,6 +84,7 @@ end
 #modes 不同模式下可见订单列
 #oerations 不同角色显示的“操作”弹出项
 MagicOrder::AccessControl.map do |map|
+
   #订单管理
   map.project_module :trades do |map|
     map.permission :reads,      ["detail",
@@ -158,6 +159,7 @@ MagicOrder::AccessControl.map do |map|
                                  "invoice_settings",
                                  "split_invoice"]
   end
+
   #商品管理
   map.project_module :products do |map|
     map.permission :reads,      ["detail",
@@ -174,6 +176,7 @@ MagicOrder::AccessControl.map do |map|
                                  "add_sku"]
 
   end
+
   #经销商管理
   map.project_module :sellers do |map|
     map.permission :reads,      ["detail"]
@@ -187,6 +190,7 @@ MagicOrder::AccessControl.map do |map|
                                  "shutdown"]
 
   end
+
   #地区管理
   map.project_module :areas do |map|
     map.permission :reads,      ["detail",
@@ -198,12 +202,20 @@ MagicOrder::AccessControl.map do |map|
                                  "import",
                                  "export"]
   end
+
   #发货拆分管理
   map.project_module :logistic_groups do |map|
     map.permission :reads,      ["detail"]
     map.permission :operations, ["create",
                                  "destroy"]
   end
+
+  #发货单模版管理
+  map.project_module :deliver_templates do |map|
+    map.permission :reads,      ["detail"]
+    map.permission :operations, ["change_default_template"]
+  end
+
   #仓库模块
   map.project_module :stocks do |map|
     map.permission :reads,      ["warehouses#index",

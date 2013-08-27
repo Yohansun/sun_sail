@@ -195,3 +195,21 @@ code{color: #08C;}
 
 /*label-background-color*/
 .label.label-darkorchid{background-color:#68228B;}
+
+.thumbnails li{
+  height: 200px;
+}
+.thumbnails a.thumbnail{
+  height: 160px;
+  text-align: center;
+  display: table-cell;
+  vertical-align: middle;
+
+}
+.thumbnails div img{
+  max-height: 200px;
+  vertical-align: middle;
+}
+
+
+
