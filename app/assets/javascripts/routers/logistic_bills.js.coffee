@@ -94,7 +94,7 @@ class MagicOrders.Routers.LogisticBills extends Backbone.Router
       $(modalDivID + ' .datepicker').datetimepicker(format: 'yyyy-mm-dd',autoclose: true,minView: 2)
 
       if operation_key == 'print_logistic_bill'
-        $.get '/logistics/logistic_templates', {}, (t_data)->
+        $.get '/logistics/logistic_templates', {type: 'all'}, (t_data)->
           html_options = ''
           for item in t_data
             html_options += '<option lid="' + item.id + '" value="' + item.xml + '">' + item.name + '</option>'
