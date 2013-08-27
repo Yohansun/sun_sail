@@ -56,10 +56,11 @@ class Seller < ActiveRecord::Base
 
   validates :name, presence: true, uniqueness: { scope: :account_id }
 
-  before_save :set_pinyin
+  before_save :set_pinyin_and_stock_name
 
-  def set_pinyin
+  def set_pinyin_and_stock_name
     self.pinyin = Hz2py.do(name).split(" ").map { |name| name[0, 1] }.join
+    self.stock_name = self.name if self.stock_name.blank?
   end
 
   def interface_mobile
@@ -96,7 +97,7 @@ class Seller < ActiveRecord::Base
     area = Area.find_by_id(id)
     area.self_and_ancestors.map(&:name).join('-') if area
   end
-  
+
   def category_count
     Category.joins(:products).joins("right join stock_products on stock_products.product_id = products.id").where("stock_products.seller_id = #{self.id}").group("categories.id").length
   end
