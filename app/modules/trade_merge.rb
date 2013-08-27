@@ -205,11 +205,13 @@
 
         enabled = {1=>true, 0=>false}[enabled] || false
 
+        auto_merged_before = trades.map(&:auto_merged_once).uniq.include?(true)
 
         # if trades pay time in a setted time(like 15.min)
         if  first_time+interval.minutes > latest_time &&
             (start_at.blank? || Time.now > Time.parse(start_at)) &&
             (end_at.blank? || Time.now < Time.parse(end_at)) &&
+            !auto_merged_before &&
             enabled
 
           return can_auto_merge
@@ -225,8 +227,9 @@
     def trig_auto_merge
       if !self.is_merged? &&
          self.dispatched_at.blank? &&
-         self.status == "WAIT_SELLER_SEND_GOODS" #&&
-         #(new_record? || status_changed?)
+         self.status == "WAIT_SELLER_SEND_GOODS" &&
+         self.auto_merged_once == false
+         # && (new_record? || status_changed?)
         self.auto_merge_trades
       end
     end
@@ -264,6 +267,8 @@
       when 0
         return trades.map(&:id)
       when 1
+        #订单默认只能自动合并一次
+        trades.update_all(auto_merged_once: true)
         return Trade.merge_trades trades
       when 2
         if force

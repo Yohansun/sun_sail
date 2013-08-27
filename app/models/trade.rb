@@ -82,6 +82,7 @@ class Trade
   field :has_onsite_service, type: Boolean, default: false
   field :has_refund_orders, type: Boolean, default: false
   field :has_invoice_info, type: Boolean, default: false
+  field :auto_merged_once, type: Boolean, default: false
 
 
   field :num, type: Integer
