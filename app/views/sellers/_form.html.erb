@@ -2,6 +2,7 @@
   <fieldset>
     <input type="hidden" value = "<%=params[:p_id]%>" name = "p_id"%>
     <%= f.input :name, :label => "经销商简称：", :placeholder => "输入文字...", :input_html => {:class => 'input-xlarge'} %>
+    <%= f.input :stock_name, :label => "仓库名称：", :placeholder => "输入文字...", :input_html => {:class => 'input-xlarge'} %>
     <%= f.input :fullname, :label => "经销商全称：", :placeholder => "输入文字...", :input_html => {:class => 'input-xlarge'} %>
     <%= f.input :mobile, :label => "手机：", :placeholder => "输入文字...", :input_html => {:class => 'input-xlarge'} %>
     <%= f.input :interface, :label => "联系人：", :placeholder => "输入文字...", :input_html => {:class => 'input-xlarge'} %>
