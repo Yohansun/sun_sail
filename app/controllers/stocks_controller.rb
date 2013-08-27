@@ -68,23 +68,24 @@ class StocksController < ApplicationController
   end
 
   def safe_stock
-    condition_relation = StockProduct.where(default_search)
-    condition_relation = condition_relation.where(StockProduct::STORAGE_STATUS[params[:storage_status]]).scoped if params[:storage_status].present?
+    # condition_relation = StockProduct.where(default_search)
+    # condition_relation = condition_relation.where(StockProduct::STORAGE_STATUS[params[:storage_status]]).scoped if params[:storage_status].present?
 
-    params[:product_id_eq] ||= nil
-    params[:stock] = {"product_id_eq"=> params[:product_id_eq]}
-    if params[:stock].blank?
-      @search = condition_relation.search
-    else
-      @search = condition_relation.search(params[:stock])
-    end
+    # params[:product_id_eq] ||= nil
+    # params[:stock] = {"product_id_eq"=> params[:product_id_eq]}
+    # if params[:stock].blank?
+    #   @search = condition_relation.search
+    # else
+    #   @search = condition_relation.search(params[:stock])
+    # end
 
-    @stock_products = @search.page params[:page]
-    @count = @search.count
-    respond_to do |format|
-      format.html
-      format.xls
-    end
+    # @stock_products = @search.page params[:page]
+    # @count = @search.count
+    # respond_to do |format|
+    #   format.html
+    #   format.xls
+    # end
+    redirect_to "/"
   end
 
   def change_product_type
@@ -97,17 +98,19 @@ class StocksController < ApplicationController
   end
 
   def edit_depot
-    @depot = current_account.sellers.first
+    # @depot = current_account.sellers.first
+    redirect_to "/"
   end
 
   def update_depot
-    @depot = Seller.where(default_search).find params[:id]
+    # @depot = Seller.where(default_search).find params[:id]
 
-    if @depot.update_attributes(params[:seller])
-      redirect_to :action => "edit_depot"
-    else
-      render :action => "edit_depot"
-    end
+    # if @depot.update_attributes(params[:seller])
+    #   redirect_to :action => "edit_depot"
+    # else
+    #   render :action => "edit_depot"
+    # end
+    redirect_to "/"
   end
 
   def edit_safe_stock

@@ -226,7 +226,7 @@ MagicOrder::AccessControl.map do |map|
     # map.permission :operations, ["create",
     #                              "update",
     #                              "destroy"]
-    map.permission :operations, ["edit_depot",
+    map.permission :operations, [#"edit_depot",
                                  "audit",
                                  "sync",
                                  "batch_update_safety_stock",

@@ -44,17 +44,17 @@
         <i class="icon-chevron-right"></i> 基础数据管理
       </a>
         <ul id="base_data" class="collapse <%= display?(@basedata,"in") %>">
-          <li class="<%= display?("stocks","active")%>">
+          <!-- <li class="<%#= display?("stocks","active")%>">
             <a href="#"  data-toggle="collapse" data-target="#stocks_menu">仓库设置</a>
-            <ul id="stocks_menu" class="collapse <%= display?("stocks","in",["safe_stock","change_product_type","edit_depot","update_depot"]) %> third_menu">
-              <li class="<%= display?("stocks","active",["safe_stock","change_product_type"]) %>">
+            <ul id="stocks_menu" class="collapse <%#= display?("stocks","in",["safe_stock","change_product_type","edit_depot","update_depot"]) %> third_menu">
+              <li class="<%#= display?("stocks","active",["safe_stock","change_product_type"]) %>">
                 <a href="/stocks/safe_stock">安全库存管理</a>
               </li>
-              <li class="<%= display?("stocks","active",["edit_depot","update_depot"]) %>">
+              <li class="<%#= display?("stocks","active",["edit_depot","update_depot"]) %>">
                 <a href="/stocks/edit_depot">仓库编辑</a>
               </li>
             </ul>
-          </li>
+          </li> -->
           <li class="<%= display?(["logistic_groups","deliver_templates"],"active") %>"><a href="#"  data-toggle="collapse" data-target="#shipments_menu">发货管理</a>
             <ul id="shipments_menu" class="collapse <%= display?(["logistic_groups","deliver_templates"],"in") %> third_menu">
               <li class="<%= display?("logistic_groups","active") %>">
