@@ -136,7 +136,7 @@ zh-CN:
   permissions_tag_new_storehouse: 新增出库单
   permissions_tag_increase_in_commodity: 增加商品
   permissions_tag_determine_the_library: 确定出库
-  permissions_tag_edit_depot: 编辑仓库
+  #permissions_tag_edit_depot: 编辑仓库
   permissions_tag_determine_the_storage: 确定入库
   permissions_tag_user_activities#detail: "人员查看"
   permissions_tag_user_activities#all: "查看所有人员"
