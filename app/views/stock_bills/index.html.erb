@@ -56,7 +56,7 @@
         <tbody>
           <% @num = 0 %>
           <%- @bills.each_with_index do |bill,index| %>
-            <%- bill.arrange_products(params[:search][:bill_products_outer_id_eq]).each_with_index do |product,product_index|%>
+            <%- bill.arrange_products(params[:search][:bill_products_sku_id_eq], params[:search][:bill_products_outer_id_eq]).each_with_index do |product,product_index|%>
               <tr>
                 <td><input type="checkbox" name="stock_bill_ids[]" value="<%= bill.id %>"></td>
                 <%- @all_cols.each do |col_name, view_name| -%>

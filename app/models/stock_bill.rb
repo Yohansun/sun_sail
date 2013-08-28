@@ -200,11 +200,10 @@ class StockBill
     bill_products.select {|product| !product.valid?}.collect {|x| x.errors.full_messages}.flatten.uniq
   end
 
-  def arrange_products(outer_id)
-    if outer_id.blank?
-      bill_products
-    else
-      bill_products.where(outer_id: outer_id)
-    end
+  def arrange_products(sku_id, outer_id)
+    visible_products = bill_products
+    visible_products = bill_products.where(sku_id: sku_id) if sku_id.present?
+    visible_products = visible_products.where(outer_id: outer_id) if outer_id.present?
+    visible_products
   end
 end

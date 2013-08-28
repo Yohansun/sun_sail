@@ -11,7 +11,7 @@
 <div class="control-group">
   <%= label_tag "sku",raw("<code>商品SKU名称</code>"),:class => "pull-left width"%>
     <div class="controls pull-left">
-  <%= select_tag "sku",options_for_select(current_account.skus.collect{ |sku|  [sku.title,sku_id_or_num_iid(sku)] },params["sku"]),:include_blank => true,:class => "input-small select2 product all" %>
+  <%=  select_tag "search[bill_products_sku_id_eq]",options_for_select(current_account.skus.collect{ |sku|  [sku.title,sku.id] }, params[:search][:bill_products_sku_id_eq]),:include_blank => true,:class => "input-small select2 product all" %>
 </div>
 <div class="pull-left">
   <button type="button pull-left" class="btn btn-info search" id="simple_search_button">筛选</button>
@@ -60,13 +60,6 @@ t_gte]",raw("<code>创建时间</code>"),:class => "pull-left width" %>
 <div class="control-group">
 <div class="pull-left">
   <span class="label label-info">共有<%= @count %>条数据</span>
-  <% params[:search] ||= {} %>
-  <%  sku_id = params[:search][:bill_products_sku_id_eq] %>
-  <% if sku_id.present? %>
-  <span class="label label-inverse">
-    <%= sku = Sku.find_by_sku_id(sku_id); "#{sku.try(:title)}(#{sku.try(:sku_id)})"%>
-  </span>
-  <% end %>
 </div>
 </div>
 
