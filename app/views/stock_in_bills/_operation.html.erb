@@ -55,7 +55,7 @@
   <%- end -%>
   <%- if bill.confirm_stocked_at.present? -%>
   <span class='label'>
-    确认出库 <%= raw bill.confirm_stocked_at.strftime("%m-%d %H:%M:%S") -%>
+    确认入库 <%= raw bill.confirm_stocked_at.strftime("%m-%d %H:%M:%S") -%>
   </span>
   <br>
   <%- end -%>

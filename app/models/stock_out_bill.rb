@@ -229,7 +229,6 @@ class StockOutBill < StockBill
 
   def sync_stock #确认出库
     bill_products.each do |stock_out|
-      sku_id = stock_out.try(:sku_id)
       stock_product = StockProduct.find_by_id(stock_out.stock_product_id)
       if stock_product
         update_attrs = {:actual => stock_product.actual - stock_out.number, :activity => stock_product.activity - stock_out.number}
