@@ -195,4 +195,12 @@ class StockBill
   def bill_products_errors
     bill_products.select {|product| !product.valid?}.collect {|x| x.errors.full_messages}.flatten.uniq
   end
+
+  def arrange_products(outer_id)
+    if outer_id.blank?
+      bill_products
+    else
+      bill_products.where(outer_id: outer_id)
+    end
+  end
 end
