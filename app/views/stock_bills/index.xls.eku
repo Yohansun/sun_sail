@@ -4,10 +4,10 @@ sheet1[0, 0] = "所有进销查询数据"
 
 sheet1.row(1).concat ["订单编号", "商品编码", "商品名称", "类型", "创建时间", "出/入库时间"]
 
-@num = 0
-@search.each do do |bill|
+@num = 1
+@search.each do |bill|
   bill.arrange_products(params[:search][:bill_products_sku_id_eq], params[:search][:bill_products_outer_id_eq]).each_with_index do |product|
-   sheet1.update_row @num+=2,
+   sheet1.update_row @num+=1,
    bill.tid,
    product.try(:outer_id),
    product.try(:title),
