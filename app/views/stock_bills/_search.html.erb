@@ -19,9 +19,9 @@
 </div>
 
 <div class="control-group">
-  <%= label_tag "bill_products_sku_id_eq",raw("<code>商品编码</code>"),:class => "pull-left width" %>
+  <%= label_tag "search[bill_products_outer_id_eq]",raw("<code>商品编码</code>"),:class => "pull-left width" %>
     <div class="controls pull-left">
-  <%= text_field_tag "bill_products_sku_id_eq", params["bill_products_sku_id_eq"] %>
+  <%= text_field_tag "search[bill_products_outer_id_eq]", params['search']["bill_products_outer_id_eq"] %>
 </div>
 </div>
 
