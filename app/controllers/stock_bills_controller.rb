@@ -8,14 +8,11 @@ class StockBillsController < ApplicationController
 
   def index
     parse_params
-    if /(?<sku_type>bill_products_sku_id_eq|bill_products_num_iid_eq)/ =~ params[:sku]
-      params[:search]["#{sku_type}"] = params[:sku].gsub("#{sku_type}",'')
-    end
     @search = @bills.search(params[:search])
+    @count = @search.map(&:bill_products).count
     @number = 20
     @number = params[:number] if params[:number].present?
     @bills = @search.page(params[:page]).per(@number)
-    @count = @search.count
     @all_cols = current_account.settings.stock_bill_cols
     @visible_cols = current_account.settings.stock_bill_visible_cols
 
@@ -34,9 +31,6 @@ class StockBillsController < ApplicationController
   def parse_params
     search = params[:search] ||= {}
     params[:search][:_id_in] = params[:export_ids].split(',') if params[:export_ids].present?
-    if params[:bill_products_sku_id_eq].present?
-      search[:bill_products_sku_id_eq] = params[:bill_products_sku_id_eq]
-    end
   end
 
   def update_status

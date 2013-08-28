@@ -2,17 +2,15 @@ __filename = "所有进销查询数据#{Time.now.strftime("%Y/%m/%d-%H:%M:%S")}.
 sheet1 = xls.create_worksheet
 sheet1[0, 0] = "所有进销查询数据"
 
-sheet1.row(1).concat ["出/入库单编", "状态", "商品编码", "商品名称", "类型", "创建时间", "出/入库时间"]
+sheet1.row(1).concat ["订单编号", "商品编码", "商品名称", "类型", "创建时间", "出/入库时间"]
 
 @num = 0
-@search.each_with_index do |bill|
-  bill.bill_products.each do |product|
+@search.each do do |bill|
+  bill.arrange_products(params[:search][:bill_products_sku_id_eq], params[:search][:bill_products_outer_id_eq]).each_with_index do |product|
    sheet1.update_row @num+=2,
    bill.tid,
-   bill.status_text,
-   product.try(:sku_id),
+   product.try(:outer_id),
    product.try(:title),
-   bill.stock_type_name,
    bill.created_at.try(:to_s,:db),
    bill.stocked_at.try(:to_s,:db)
   end
