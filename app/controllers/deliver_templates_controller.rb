@@ -27,11 +27,11 @@ class DeliverTemplatesController < ApplicationController
   end
 
   def change_default_template
-    current_account.deliver_template = DeliverTemplate.find params[:deliver_thumbnail]
+    current_account.deliver_template = (DeliverTemplate.find params[:deliver_thumbnail] rescue nil)
     if current_account.deliver_template.present?
       flash[:notice] = '默认发货单模版设置成功'
     else
-      flash[:alert] = '默认发货单模版设置失败'
+      flash[:notice] = '默认发货单模版设置失败,请重新选择'
     end
     redirect_to :back
   end
