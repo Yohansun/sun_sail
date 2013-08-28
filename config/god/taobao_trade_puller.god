@@ -12,6 +12,8 @@
 # 208 榜眼图书专营店
 # 209 优悠汇
 # 210 粉兔珍宝
+# 211 大自然官方旗舰店
+# 212 爱肯官方旗舰店
 
 God::Contacts::Email.defaults do |d|
   d.from_email = 'errors@networking.io'
@@ -25,7 +27,7 @@ God.contact(:email) do |c|
   c.to_email = 'errors@networking.io'
 end
 
-taobao_trade_source_ids = [201,206,207,208,209,210]
+taobao_trade_source_ids = [201,206,207,208,209,210,211,212]
 God.watch do |w|
   w.name = "taobao_puller"
   w.group = 'magic_solo'
