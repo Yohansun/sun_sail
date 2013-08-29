@@ -135,7 +135,8 @@ class StockOutBill < StockBill
     return if status != "CREATED" || self.operation_locked?
     update_attributes(checked_at: Time.now, status: "CHECKED")
     if account && account.settings.enable_module_third_party_stock != 1
-      sync_stock
+      decrease_activity
+      decrease_actual
     end
   end
 
@@ -207,7 +208,6 @@ class StockOutBill < StockBill
       if result['Response']['success'] == 'true'
         update_attributes(cancel_succeded_at: Time.now, status: "CANCELD_OK")
         operation_logs.create(operated_at: Time.now, operation: '取消成功')
-        restore_stock
       else
         update_attributes(cancel_failed_at: Time.now, failed_desc: result['Response']['desc'], status: "CANCELD_FAILED")
         operation_logs.create(operated_at: Time.now, operation: "取消失败,#{result['Response']['desc']}")
@@ -219,7 +219,6 @@ class StockOutBill < StockBill
       if result['DATA']['RET_CODE'] == 'SUCC'
         update_attributes(cancel_succeded_at: Time.now, status: "CANCELD_OK")
         operation_logs.create(operated_at: Time.now, operation: '取消成功')
-        restore_stock
       else
         update_attributes(cancel_failed_at: Time.now, failed_desc: result['DATA']['RET_MESSAGE'], status: "CANCELD_FAILED")
         operation_logs.create(operated_at: Time.now, operation: "取消失败,#{result['DATA']['RET_MESSAGE']}")
@@ -227,41 +226,12 @@ class StockOutBill < StockBill
     end
   end
 
-  def sync_stock #确认出库
-    bill_products.each do |stock_out|
-      stock_product = StockProduct.find_by_id(stock_out.stock_product_id)
-      if stock_product
-        update_attrs = {:actual => stock_product.actual - stock_out.number, :activity => stock_product.activity - stock_out.number}
-        update_attrs[:forecast] = stock_product.forecast - stock_out.number if self.trade.blank?
-        stock_product.update_attributes(update_attrs)
-        true
-      else
-        # DO SOME ERROR NOTIFICATION
-        false
-      end
-    end
-  end
-
-  def restore_stock #恢复仓库的可用库存和实际库存
-    bill_products.each do |stock_out|
-      stock_product = StockProduct.find_by_id(stock_out.stock_product_id)
-      if stock_product
-        update_attrs = {:actual => stock_product.actual + stock_out.number, :activity => stock_product.activity + stock_out.number}
-        update_attrs[:forecast] = stock_product.forecast + stock_out.number if self.trade.blank?
-        stock_product.update_attributes(update_attrs)
-        true
-      else
-        # DO SOME ERROR NOTIFICATION
-        false
-      end
-    end
-  end
-
-  def increase_activity #恢复仓库的可用库存
+  def increase_activity #订单重新分流，或者出库单关闭，恢复仓库的可用库存
     bill_products.each do |stock_out|
       stock_product = StockProduct.find_by_id(stock_out.stock_product_id)
       if stock_product
         stock_product.update_attributes(activity: stock_product.activity + stock_out.number)
+        stock_product.update_attributes(forecast: stock_product.forecast + stock_out.number) if self.trade.blank?
         true
       else
         # DO SOME ERROR NOTIFICATION
@@ -275,6 +245,7 @@ class StockOutBill < StockBill
       stock_product = StockProduct.find_by_id(stock_out.stock_product_id)
       if stock_product
         stock_product.update_attributes(activity: stock_product.activity - stock_out.number)
+        stock_product.update_attributes(forecast: stock_product.forecast - stock_out.number) if self.trade.blank?
         true
       else
         # DO SOME ERROR NOTIFICATION

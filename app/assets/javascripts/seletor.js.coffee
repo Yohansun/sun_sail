@@ -98,11 +98,11 @@ $ ->
             canSubmit = false
             error_message = "已锁定的库单不能" + operation_name
             break
-          if operation_name=="审核" && bill_status!="CREATED" && bill_status!="SYNCK_FAILED"
+          if operation_name=="审核" && bill_status!="CREATED"
             canSubmit = false
             error_message = "只有待审核的库单允许审核"
             break
-          if operation_name=="同步" && bill_status!="CHECKED"
+          if operation_name=="同步" && bill_status!="CHECKED" && bill_status!="SYNCK_FAILED"
             canSubmit = false
             error_message = "只有已审核的库单允许同步"
             break
