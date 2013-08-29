@@ -33,7 +33,7 @@ wang@networking.io
 xiaoliang@networking.io
 )
 
-every :day, :at => '2:00am' do
+every :day, :at => '10:00am' do
   runner "Reports.trades_consolidate_with_day(*#{Accounts[:brands]}).deliver!"
 end
 
