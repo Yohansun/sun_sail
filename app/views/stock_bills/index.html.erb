@@ -66,6 +66,8 @@
                         product.try(:outer_id)
                       when "product_title"
                         product.try(:title)
+                      when "product_number"
+                        product.try(:number)
                       when "created_at"
                         bill.created_at.try(:to_s,:db)
                       when "stocked_at"
