@@ -88,7 +88,9 @@ class TaobaoTradePuller
           forecast_seller_id = trade.matched_seller_with_default(nil).id rescue forecast_seller_id = nil
           if forecast_seller_id.present?
             trade.update_attribute(:forecast_seller_id, forecast_seller_id)
-            trade.update_stock_forecast
+            if trade.status == "WAIT_SELLER_SEND_GOODS" && trade.seller_id.blank?
+              trade.update_stock_forecast
+            end
           end
 
           $redis.sadd('TaobaoTradeTids',trade['tid'])
@@ -233,6 +235,7 @@ class TaobaoTradePuller
           trades.each do |trade|
             TaobaoTrade.where(tid: trade['tid']).each do |local_trade|
               next unless updatable?(local_trade, trade['status'])
+              trade_old_status = local_trade.status
               orders = trade.delete('orders')
               trade['trade_source_id'] = trade_source_id
               local_trade.update_attributes(trade)
@@ -242,6 +245,10 @@ class TaobaoTradePuller
               end
               local_trade.set_has_onsite_service
               local_trade.save
+
+              if trade_old_status != "WAIT_SELLER_SEND_GOODS" && local_trade.status == "WAIT_SELLER_SEND_GOODS" && local_trade.seller_id.blank?
+                local_trade.update_stock_forecast
+              end
               if account.settings.auto_settings['auto_dispatch']
                 result = account.can_auto_dispatch_right_now
                 DelayAutoDispatch.perform_in((result == true ? account.settings.auto_settings['dispatch_silent_gap'].to_i.hours : result), local_trade.id)

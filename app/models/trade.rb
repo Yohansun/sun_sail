@@ -486,7 +486,7 @@ class Trade
 
   def matched_seller(area = nil)
     area ||= default_area
-    @matched_seller ||= SellerMatcher.new(self).matched_seller(area)
+    @matched_seller ||= SellerMatcher.match_trade_seller(self.id, area)
   end
 
   def matched_logistics
@@ -867,6 +867,7 @@ class Trade
 
     # 更新订单状态为已分派
     update_attributes(seller_id: seller.id, seller_name: seller.name, dispatched_at: Time.now)
+    change_stock_seller
 
     # 如果满足自动化设置条件，分派后订单自动发货
     auto_settings = self.fetch_account.settings.auto_settings
@@ -1451,13 +1452,16 @@ class Trade
   def change_stock_seller
     self.changes[:seller_id].tap do |seller_ids|
       old_seller_id, new_seller_id = seller_ids
-      old_seller_id = self.forecast_seller_id if old_seller_id.blank?
-      new_seller_id = self.forecast_seller_id if new_seller_id.blank?
+      reset_stock_forecast_stock(old_seller_id, new_seller_id)
+    end
+  end
 
-      if old_seller_id != new_seller_id
-        update_seller_stock_forecast(old_seller_id, "revert") if old_seller_id.present?
-        update_seller_stock_forecast(new_seller_id, "decrease") if new_seller_id.present?
-      end
+  def reset_stock_forecast_stock(old_seller_id, new_seller_id)
+    old_seller_id = self.forecast_seller_id if old_seller_id.blank?
+    new_seller_id = self.forecast_seller_id if new_seller_id.blank?
+    if old_seller_id != new_seller_id
+      update_seller_stock_forecast(old_seller_id, "revert") if old_seller_id.present?
+      update_seller_stock_forecast(new_seller_id, "decrease") if new_seller_id.present?
     end
   end
 
