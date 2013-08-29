@@ -134,8 +134,8 @@ class StockOutBill < StockBill
   def check
     return if status != "CREATED" || self.operation_locked?
     update_attributes(checked_at: Time.now, status: "CHECKED")
+    decrease_activity
     if account && account.settings.enable_module_third_party_stock != 1
-      decrease_activity
       decrease_actual
     end
   end
