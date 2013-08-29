@@ -84,7 +84,7 @@
     var chartData = [];
 
     <% @final_hash.each do |time, value| -%>
-      chartData.push({date: new Date(<%= time.year %>, <%= time.month - 1 %>, <%= time.day %>, <%= time.hour %>, <%= time.min %>, <%= time.sec %>), amount: <%= value["created_fee"].round(2) %>, amountall: <%= value["paid_fee"].round(2) %>})
+      chartData.push({date: new Date(<%= time.year %>, <%= time.month - 1 %>, <%= time.day %>, <%= time.hour %>, <%= time.min %>, <%= time.sec %>), amount: <%= value["created_fee"].to_f.round(2) %>, amountall: <%= value["paid_fee"].to_f.round(2) %>})
     <% end -%>
 
     //var average = 55.4;
