@@ -117,8 +117,8 @@ class TradeChecker
         @wrong_orders << tid if (local_trade.splitted && taobao_trades.distinct(:status).length == 1) || !local_trade.splitted
       end
     else
-      # ERROR: 漏掉订单
-      @lost_orders << tid
+      # ERROR: 漏掉订单,考虑合并删除的订单
+      @lost_orders << tid unless Trade.unscoped.where(tid: tid).exists?
     end
   end
 
