@@ -69,6 +69,7 @@ class JingdongTradePuller
             orders = t.delete('item_info_list')
             consignee_info = t.delete("consignee_info")
             coupon_details = t.delete("coupon_detail_list")
+            t.delete('payment_confirm_time') if t['payment_confirm_time'] == '0001-01-01 00:00:00'
             t.update(consignee_info)
 
             trade = JingdongTrade.new(t)

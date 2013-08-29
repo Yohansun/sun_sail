@@ -12,31 +12,30 @@ class JingdongTrade < Trade
   field :sop_stock_out_time, type: DateTime  # sop出库时间
 
   #对应trade字段
-  field :tid,               as: :order_id, type: String
-  field :total_fee,         as: :order_total_price, type: Float, default: 0.0
-  field :payment,           as: :order_payment, type: Float, default: 0.0
-  field :post_fee,          as: :freight_price, type: Float, default: 0.0
-  field :discount_fee,      as: :seller_discount, type: Float, default: 0.0
+  field :tid,                   as: :order_id, type: String
+  field :total_fee,             as: :order_total_price, type: Float, default: 0.0
+  field :payment,               as: :order_payment, type: Float, default: 0.0
+  field :post_fee,              as: :freight_price, type: Float, default: 0.0
+  field :discount_fee,          as: :seller_discount, type: Float, default: 0.0
 
-  field :status,            as: :order_state, type: String
+  field :status,                as: :order_state, type: String
 
-  field :buyer_message,     as: :order_remark, type: String
-  field :seller_memo,       as: :vender_remark, type: String
-  field :invoice_type,      as: :invoice_info, type: String
+  field :buyer_message,         as: :order_remark, type: String
+  field :seller_memo,           as: :vender_remark, type: String
+  field :invoice_type,          as: :invoice_info, type: String
 
-  field :created,           as: :order_start_time, type: DateTime
-  ## 京东订单无付款时间,目前以订单抓取时间为付款时间 ##
-  field :pay_time
-  field :consign_time,      as: :order_end_time, type: DateTime
+  field :created,               as: :order_start_time, type: DateTime
+  field :payment_confirm_time,  as: :pay_time, type: DateTime
+  field :consign_time,          as: :order_end_time, type: DateTime
 
-  field :buyer_nick,        as: :pin, type: String
-  field :receiver_name,     as: :fullname, type: String
-  field :receiver_address,  as: :full_address, type: String
-  field :receiver_phone,    as: :telephone, type: String
-  field :receiver_mobile,   as: :mobile, type: String
-  field :receiver_state,    as: :province, type: String
-  field :receiver_city,     as: :city, type: String
-  field :receiver_district, as: :county, type: String
+  field :buyer_nick,            as: :pin, type: String
+  field :receiver_name,         as: :fullname, type: String
+  field :receiver_address,      as: :full_address, type: String
+  field :receiver_phone,        as: :telephone, type: String
+  field :receiver_mobile,       as: :mobile, type: String
+  field :receiver_state,        as: :province, type: String
+  field :receiver_city,         as: :city, type: String
+  field :receiver_district,     as: :county, type: String
 
   embeds_many :jingdong_orders
   embeds_many :coupon_details
