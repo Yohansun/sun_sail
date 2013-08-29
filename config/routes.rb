@@ -304,7 +304,6 @@ MagicOrders::Application.routes.draw do
     end
   end
 
-  match '/alerts', to: 'trades#alerts'
   match '/my_alerts', to: 'trades#my_alerts'
   get "trades/new", to: "trades#new"
   get "/trades/create", to: "trades#create"
