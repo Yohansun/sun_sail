@@ -14,8 +14,8 @@ class MagicOrders.Views.TradesSellerConfirmDeliver extends Backbone.View
 
   save: ->
     blocktheui()
-    @model.set "operation", "确认发货"
-    @model.save 'seller_confirm_deliver_at', true, success: (model, response) =>
+    new_model = new MagicOrders.Models.Trade(id: @model.id)
+    new_model.save {operation: "确认发货", seller_confirm_deliver_at: true}, success: (model, response) =>
       $.unblockUI()
 
       view = new MagicOrders.Views.TradesRow(model: model)
@@ -24,4 +24,3 @@ class MagicOrders.Views.TradesSellerConfirmDeliver extends Backbone.View
       $("a[rel=popover]").popover({placement: 'left', html:true})
 
       $('#trade_seller_confirm_deliver').modal('hide')
-      #window.history.back()

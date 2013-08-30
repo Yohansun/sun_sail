@@ -83,8 +83,9 @@ class MagicOrders.Views.TradesRefundRef extends Backbone.View
         refund_ref_hash['ref_order_array'] = ref_order_array
         refund_ref_hash['ref_batch'] = ref_batch
 
-        @model.set "operation", "申请线下退款"
-        @model.save {refund_ref_hash: refund_ref_hash},
+
+        new_model = new MagicOrders.Models.Trade(id: @model.id)
+        new_model.save {operation: "申请线下退款", refund_ref_hash: refund_ref_hash},
           success: (model, response) =>
             $.unblockUI()
 
@@ -109,8 +110,8 @@ class MagicOrders.Views.TradesRefundRef extends Backbone.View
   confirmSave: (e) ->
     status = $(e.currentTarget).attr('class').split(" ")[2]
     memo = $('.ref_memo').val()
-    @model.set "operation", "确认线下退款"
-    @model.save {refund_ref_status: status, refund_ref_memo: memo},
+    new_model = new MagicOrders.Models.Trade(id: @model.id)
+    new_model.save {operation: "确认线下退款", refund_ref_status: status, refund_ref_memo: memo},
       success: (model, response) =>
         $.unblockUI()
 

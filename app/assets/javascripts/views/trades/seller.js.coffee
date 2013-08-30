@@ -25,7 +25,7 @@ class MagicOrders.Views.TradesSeller extends Backbone.View
     blocktheui()
     if $("#trade_seller_id").val() > 0
       @model.set "operation", "订单分派"
-      @model.save {seller_id: $("#trade_seller_id").val()}, success: (model, response) =>
+      @model.set {seller_id: $("#trade_seller_id").val()}, success: (model, response) =>
         $.unblockUI()
         view = new MagicOrders.Views.TradesRow(model: model)
         $("#trade_#{model.get('id')}").replaceWith(view.render().el)
@@ -38,7 +38,7 @@ class MagicOrders.Views.TradesSeller extends Backbone.View
   reset_seller: ->
     blocktheui()
     @model.set "operation", "分派重置"
-    @model.save 'seller_id', "void", success: (model, response) =>
+    @model.set 'seller_id', "void", success: (model, response) =>
       $.unblockUI()
 
       view = new MagicOrders.Views.TradesRow(model: model)

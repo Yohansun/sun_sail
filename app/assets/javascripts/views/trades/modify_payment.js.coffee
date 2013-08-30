@@ -15,7 +15,6 @@ class MagicOrders.Views.TradesModifyPayment extends Backbone.View
 
   save: ->
     blocktheui()
-    @model.set "operation", "金额调整"
 
     unless /^[0-9]*$/.test($("#modify_payment_no").val())
       alert("支付宝交易号格式错误")
@@ -32,11 +31,13 @@ class MagicOrders.Views.TradesModifyPayment extends Backbone.View
       $.unblockUI()
       return
 
-    @model.save {
-    	'modify_payment': $("#modify_payment").val(),
-    	'modify_payment_at': $("#modify_payment_at").val(),
-    	'modify_payment_no': $("#modify_payment_no").val(),
-    	'modify_payment_memo': $("#modify_payment_memo").val()
+    new_model = new MagicOrders.Models.Trade(id: @model.id)
+    new_model.save {
+      operation: "金额调整"
+      modify_payment: $("#modify_payment").val()
+      modify_payment_at: $("#modify_payment_at").val()
+      modify_payment_no: $("#modify_payment_no").val()
+      modify_payment_memo: $("#modify_payment_memo").val()
     }, success: (model, response) =>
       $.unblockUI()
 

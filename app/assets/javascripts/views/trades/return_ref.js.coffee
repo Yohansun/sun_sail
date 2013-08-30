@@ -84,8 +84,8 @@ class MagicOrders.Views.TradesReturnRef extends Backbone.View
         return_ref_hash['ref_order_array'] = ref_order_array
         return_ref_hash['ref_batch'] = ref_batch
 
-        @model.set "operation", "申请退货"
-        @model.save {return_ref_hash: return_ref_hash},
+        new_model = new MagicOrders.Models.Trade(id: @model.id)
+        new_model.save {operation: "申请退货", return_ref_hash: return_ref_hash},
           success: (model, response) =>
             $.unblockUI()
 
@@ -110,8 +110,8 @@ class MagicOrders.Views.TradesReturnRef extends Backbone.View
   confirmSave: (e) ->
     status = $(e.currentTarget).attr('class').split(" ")[2]
     memo = $('.ref_memo').val()
-    @model.set "operation", "确认退货"
-    @model.save {return_ref_status: status, return_ref_memo: memo},
+    new_model = new MagicOrders.Models.Trade(id: @model.id)
+    new_model.save {operation: "确认退货", return_ref_status: status, return_ref_memo: memo},
       success: (model, response) =>
         $.unblockUI()
 

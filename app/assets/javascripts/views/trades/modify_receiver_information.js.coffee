@@ -52,7 +52,9 @@ class MagicOrders.Views.TradesModifyReceiverInformation extends Backbone.View
       return
     blocktheui()
     self = this
-    @model.save {
+    new_model = new MagicOrders.Models.Trade(id: @model.id)
+    new_model.save {
+     operation: "订单用户信息修改"
      receiver_name:form["name"].value
      receiver_mobile:form["mobile"].value
      receiver_state:form["select_state"].value

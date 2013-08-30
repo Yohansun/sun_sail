@@ -15,10 +15,8 @@ class MagicOrders.Views.TradesLogisticMemo extends Backbone.View
   save: ->
     blocktheui()
 
-    @model.set "operation", "物流单备注"
-    @model.set "logistic_memo", $("#logistic_memo_text").val()
-
-    @model.save {},
+    new_model = new MagicOrders.Models.Trade(id: @model.id)
+    new_model.save {operation: "物流单备注", logistic_memo: $("#logistic_memo_text").val()},
       success: (model, response) =>
         $.unblockUI()
 

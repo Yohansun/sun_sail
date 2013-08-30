@@ -15,10 +15,8 @@
   save: ->
     blocktheui()
 
-    @model.set "operation", "输入物流单号"
-    @model.set "logistic_waybill", $(".logistic_waybill").val()
-
-    @model.save {},
+    new_model = new MagicOrders.Models.Trade(id: @model.id)
+    new_model.save {operation: "输入物流单号", logistic_waybill: $(".logistic_waybill").val()},
       success: (model, response) =>
         $.unblockUI()
 

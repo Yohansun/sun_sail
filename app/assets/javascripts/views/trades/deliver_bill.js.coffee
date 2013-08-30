@@ -14,7 +14,8 @@ class MagicOrders.Views.TradesDeliverBill extends Backbone.View
 
   print: (e) ->
     blocktheui()
-    @model.save 'deliver_bill_printed_at', true, success: (model, response) =>    # 存储出货单最近一次的打印时间
+    new_model = new MagicOrders.Models.Trade(id: @model.id)
+    new_model.save {operation: "打印发货单", deliver_bill_printed_at: true}, success: (model, response) =>
       $.unblockUI()
       print_body = $(@el).find(".modal-body")
       print_body.wrapInner('<div class="print_content"></div>')

@@ -20,10 +20,8 @@ class MagicOrders.Views.TradesInvoice extends Backbone.View
       alert("请输入正确的发票抬头")
     else
       blocktheui()
-      @model.set "invoice_type", $('input[name=invoice_type]:checked').val()
-      @model.set "invoice_name", $("#invoice_name_text").val()
-      @model.set "operation", "申请开票"
-      @model.save {'invoice_name': $("#invoice_name_text").val()}, success: (model, response) =>
+      new_model = new MagicOrders.Models.Trade(id: @model.id)
+      new_model.save {operation: "申请开票", invoice_type: $('input[name=invoice_type]:checked').val(), invoice_name: $("#invoice_name_text").val()}, success: (model, response) =>
         $.unblockUI()
         view = new MagicOrders.Views.TradesRow(model: model)
         $("#trade_#{model.get('id')}").replaceWith(view.render().el)

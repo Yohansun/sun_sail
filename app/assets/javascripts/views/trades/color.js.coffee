@@ -27,8 +27,8 @@ class MagicOrders.Views.TradesColor extends Backbone.View
 
       order.color_num = color_num
 
-    @model.set "operation", "申请调色"
-    @model.save {},
+    new_model = new MagicOrders.Models.Trade(id: @model.id)
+    new_model.save {operation: "申请调色", orders: @model.orders},
       success: (model, response) =>
         $.unblockUI()
 
