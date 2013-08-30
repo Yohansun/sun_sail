@@ -42,6 +42,10 @@
       <label for="" class="control-label">物流公司：</label>
       <select id="logistic_select" class="input-medium"></select>
     </div>
+    <div class="control-group form-inline">
+      <label for="" class="control-label">服务商物流ID：</label>
+      <input type="text" class="input-small service_logistic_id" id="service_logistic_id">
+    </div>
   </fieldset>
 </div>
 
