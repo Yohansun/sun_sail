@@ -194,87 +194,6 @@ class TradesController < ApplicationController
       @trade.split_logistic(params[:logistic_ids])
     end
 
-    # if params[:logistic_id]
-    #   logistic = Logistic.find_by_id params[:logistic_id]
-    #   if logistic
-    #     @trade.logistic_name = logistic.name
-    #     @trade.logistic_code = logistic.code
-    #     @trade.logistic_id = logistic.id
-    #   end
-    # end
-
-    # @trade.invoice_type = params[:invoice_type].strip if params[:invoice_type]
-    # @trade.invoice_name = params[:invoice_name].strip if params[:invoice_name]
-    # @trade.invoice_content = params[:invoice_content].strip if params[:invoice_content]
-    # @trade.invoice_date = params[:invoice_date].strip if params[:invoice_date]
-    # @trade.invoice_number = params[:invoice_number].strip if params[:invoice_number]
-
-    # if params[:seller_confirm_deliver_at] == true
-    #   @trade.seller_confirm_deliver_at = Time.now
-    # end
-
-    # if @trade.changes.keys.find{|k| k.to_s=~/^invoice/}
-    #   @trade.seller_confirm_invoice_at = nil
-    # elsif params[:seller_confirm_invoice_at] == true
-    #   @trade.seller_confirm_invoice_at = Time.now
-    # end
-
-    # if params[:confirm_color_at] == true
-    #   @trade.confirm_color_at = Time.now
-    # end
-
-    # if params[:confirm_check_goods_at] == true
-    #   @trade.confirm_check_goods_at = Time.now
-    # end
-
-    # if params[:confirm_receive_at] == true
-    #   @trade.confirm_receive_at = Time.now
-    #   @trade.status = 'TRADE_FINISHED' if @trade._type = "CustomTrade"
-    # end
-
-    # if params[:request_return_at] == true
-    #   @trade.request_return_at = Time.now
-    #   trade_decorator = TradeDecorator.decorate(@trade)
-    #   content = "#{@trade.seller.try(:name)}经销商您好，您有一笔退货订单需要处理。订单号：#{@trade.tid}，买家姓名：#{trade_decorator.receiver_name}，手机：#{trade_decorator.receiver_mobile_phone}，请尽快登录系统查看！"
-    #   SmsNotifier.perform_async(content, @trade.seller.try(:mobile), @trade.tid, 'request_return')
-    # end
-
-    # if params[:confirm_return_at] == true
-    #   @trade.confirm_return_at = Time.now
-    # end
-
-    # if params[:confirm_refund_at] == true
-    #   @trade.confirm_refund_at = Time.now
-    # end
-
-    # if params[:logistic_waybill].present?
-    #   @trade.logistic_waybill = params[:logistic_waybill]
-    # end
-
-    # if params[:logistic_memo].present?
-    #   @trade.logistic_memo = params[:logistic_memo]
-    # end
-
-    # if params[:deliver_bill_printed_at] == true
-    #   @trade.deliver_bill_printed_at = Time.now
-    # end
-
-    # if params[:modify_payment]
-    #   @trade.modify_payment = params[:modify_payment]
-    # end
-
-    # if params[:modify_payment_at]
-    #   @trade.modify_payment_at = params[:modify_payment_at]
-    # end
-
-    # if params[:modify_payment_memo]
-    #   @trade.modify_payment_memo = params[:modify_payment_memo]
-    # end
-
-    # if params[:modify_payment_no]
-    #   @trade.modify_payment_no = params[:modify_payment_no]
-    # end
-
     # 修改信息
     [:receiver_name,
      :receiver_mobile,
@@ -319,8 +238,15 @@ class TradesController < ApplicationController
       if @trade.changed.include? 'cs_memo'
         notifer_seller_flag = true
       end
+      logistic = Logistic.find_by_id params[:logistic_id]
+      if logistic
+        @trade.logistic_name = logistic.name
+        @trade.logistic_code = logistic.code
+        @trade.logistic_id = logistic.id
+      end
     end
 
+    #客服备注，调色信息，唯一码等子订单信息修改
     unless params[:orders].blank?
       params[:orders].each do |item|
         order = @trade.orders.where(_id: item[:id]).first
@@ -399,7 +325,7 @@ class TradesController < ApplicationController
       end
     end
 
-    # 申请退款
+    # 申请线下退款
     if params[:refund_ref_hash] && params[:refund_ref_hash][:ref_batch]
       ref_batch = @trade.ref_batches.where(ref_type: "refund_ref").last
       if ref_batch.present?
@@ -426,7 +352,7 @@ class TradesController < ApplicationController
 
     if @trade.save
       @trade = TradeDecorator.decorate(@trade)
-      #分流发短信
+      #分流后客服备注修改发短信通知经销商
       if notifer_seller_flag && @trade.status == "WAIT_SELLER_SEND_GOODS" && @trade.seller
         TradeDispatchEmail.perform_async(@trade.id, @trade.seller_id, 'second')
         TradeDispatchSms.perform_async(@trade.id, @trade.seller_id, 'second')
