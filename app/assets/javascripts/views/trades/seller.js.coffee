@@ -24,6 +24,14 @@ class MagicOrders.Views.TradesSeller extends Backbone.View
   set_seller: ->
     blocktheui()
     if $("#trade_seller_id").val() > 0
+
+      for order in @model.get('orders')
+        if order.sku_bindings.length == 0
+          alert("订单中有未绑定本地SKU的商品，请先绑定本地SKU")
+          $.unblockUI()
+          return
+          break
+
       @model.set "operation", "订单分派"
       @model.set {seller_id: $("#trade_seller_id").val()}, success: (model, response) =>
         $.unblockUI()

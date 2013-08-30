@@ -93,6 +93,7 @@ json.orders OrderDecorator.decorate(@trade.orders) do |json, order|
   json.barcode order.barcode
   json.refund_status_text order.refund_status_text
   json.order_gift_tid order.order_gift_tid
+  json.sku_bindings order.sku_bindings
 
   if @trade._type == 'TaobaoTrade'
     json.refund_status order.refund_status
