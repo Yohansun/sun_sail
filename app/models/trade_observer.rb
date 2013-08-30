@@ -28,6 +28,10 @@ class TradeObserver < Mongoid::Observer
       object.has_sent_send_logistic_rate_sms = true
     end
 
+    if object.request_return_at_changed? && object.request_return_at.present?
+      send_return_sms_to_seller(object)
+    end
+
   end
 
   protected
@@ -62,5 +66,11 @@ class TradeObserver < Mongoid::Observer
     if content && mobile
       SmsNotifier.perform_async(content, mobile, trade_tid ,notify_kind)
     end
+  end
+
+  def send_return_sms_to_seller(trade)
+    trade_decorator = TradeDecorator.decorate(trade)
+    content = "#{trade.seller.try(:name)}经销商您好，您有一笔退货订单需要处理。订单号：#{trade.tid}，买家姓名：#{trade_decorator.receiver_name}，手机：#{trade_decorator.receiver_mobile_phone}，请尽快登录系统查看！"
+    SmsNotifier.perform_async(content, trade.seller.try(:mobile), trade.tid, 'request_return')
   end
 end

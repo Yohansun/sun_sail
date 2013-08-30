@@ -1485,7 +1485,9 @@ class Trade
       end
     end
   end
-private
+
+  private
+
     def check_associate_deliver_bills
       DeliverBill.where(trade_id: self._id).delete_all if self.deleted_at != nil
     end

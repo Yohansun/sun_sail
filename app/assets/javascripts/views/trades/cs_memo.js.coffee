@@ -29,8 +29,6 @@ class MagicOrders.Views.TradesCsMemo extends Backbone.View
 
     lid = $('#logistic_select').find("option:selected").attr('lid')
 
-    @model.set('logistic_id', lid)
-
     order_cs_memos = {}
     for item in $(".order_cs_memo")
       order_id = $(item).data("order-id")
@@ -41,9 +39,8 @@ class MagicOrders.Views.TradesCsMemo extends Backbone.View
     for order, i in orders
       orders[i].cs_memo = order_cs_memos[order.id]
 
-    @model.set("orders", orders)
-    @model.set "operation", "客服备注"
-    @model.save {'cs_memo': $("#cs_memo_text").val()}, success: (model, response) =>
+    new_model = new MagicOrders.Models.Trade(id: @model.id)
+    new_model.save {operation: "客服备注", logistic_id: lid, orders: orders, cs_memo: $("#cs_memo_text").val()}, success: (model, response) =>
       $.unblockUI()
 
       view = new MagicOrders.Views.TradesRow(model: model)
@@ -52,4 +49,3 @@ class MagicOrders.Views.TradesCsMemo extends Backbone.View
       $("a[rel=popover]").popover({placement: 'left', html:true})
 
       $('#trade_cs_memo').modal('hide')
-      # window.history.back()

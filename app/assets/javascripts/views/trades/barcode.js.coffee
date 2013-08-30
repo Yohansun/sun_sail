@@ -52,8 +52,10 @@ class MagicOrders.Views.TradesBarcode extends Backbone.View
       $.unblockUI()
       alert("格式不正确,只能为16位数字")
       return
-    @model.set "operation", "输入唯一码"
-    @model.save {},
+
+    new_model = new MagicOrders.Models.Trade(id: @model.id)
+    new_model.set({operation: "输入唯一码", orders: @model.orders})
+    new_model.save {},
       success: (model, response) =>
         $.unblockUI()
 

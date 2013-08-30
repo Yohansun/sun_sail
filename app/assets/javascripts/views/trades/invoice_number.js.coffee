@@ -24,8 +24,8 @@ class MagicOrders.Views.TradesInvoiceNumber extends Backbone.View
       alert("发票格式不正确")
       return
 
-    @model.set "operation", "发票号设置"
-    @model.save {"invoice_number": $("#invoice_number_text").val()},
+    new_model = new MagicOrders.Models.Trade(id: @model.id)
+    new_model.save {operation: "发票号设置", invoice_number: $("#invoice_number_text").val()},
       success: (model, response) =>
         $.unblockUI()
 

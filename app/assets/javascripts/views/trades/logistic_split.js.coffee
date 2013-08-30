@@ -2,7 +2,7 @@ class MagicOrders.Views.TradesLogisticSplit extends Backbone.View
 
   template: JST['trades/logistic_split']
 
-  events: 
+  events:
     "click .js-split" : 'split'
 
   initialize: ->
@@ -26,7 +26,8 @@ class MagicOrders.Views.TradesLogisticSplit extends Backbone.View
     for item in $('table')
       logistic_ids[$(item).find('.bill_id').html()] = $(item).find('select').val()
 
-    @model.save {logistic_ids: logistic_ids},
+    new_model = new MagicOrders.Models.Trade(id: @model.id)
+    new_model.save {operation: "物流单拆分", logistic_ids: logistic_ids},
       success: (model, response) =>
         $.unblockUI()
         $('#trade_logistic_split').modal('hide')

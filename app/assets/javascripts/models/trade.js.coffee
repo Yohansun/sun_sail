@@ -125,7 +125,7 @@ class MagicOrders.Models.Trade extends Backbone.Model
         # when "TRADE_CLOSED" # "交易已关闭"
         # when "TRADE_CLOSED_BY_TAOBAO" # "交易被淘宝关闭"
 
-      if this.attributes.invoice_name && this.attributes.seller_confirm_invoice_at is undefined && this.attributes.status_text isnt "申请退款" && $.inArray('seller_confirm_invoice',trades) > -1
+      if this.attributes.invoice_name && this.attributes.seller_confirm_invoice_at is undefined && this.attributes.status_text isnt "申请退款" && $.inArray('seller_confirm_invoice',trades) > -1 && this.attributes.seller_id
         enabled_items.push('seller_confirm_invoice') #确认开票
 
       if this.attributes.pay_time

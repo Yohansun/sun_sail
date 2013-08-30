@@ -14,8 +14,8 @@ class MagicOrders.Views.TradesRequestReturn extends Backbone.View
 
   save: ->
     blocktheui()
-    @model.set "operation", "申请退货"
-    @model.save 'request_return_at', true, success: (model, response) =>
+    new_model = new MagicOrders.Models.Trade(id: @model.id)
+    new_model.save {operation: "申请退货", request_return_at: true}, success: (model, response) =>
       $.unblockUI()
 
       view = new MagicOrders.Views.TradesRow(model: model)

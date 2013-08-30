@@ -33,6 +33,8 @@ class CustomTrade < Trade
 
   embeds_many :taobao_orders
 
+  before_update :check_finish_status
+
   def created_larger_than_pay_time
     if (pay_time.to_i - created.to_i) < 0
       errors.add(:created, "下单时间不能晚于付款时间")
@@ -217,4 +219,10 @@ class CustomTrade < Trade
   def other_discount
     0
   end
+
+  private
+
+    def check_finish_status
+      status = 'TRADE_FINISHED' if confirm_receive_at.present?
+    end
 end

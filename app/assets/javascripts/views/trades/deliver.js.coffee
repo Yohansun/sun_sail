@@ -39,11 +39,8 @@ class MagicOrders.Views.TradesDeliver extends Backbone.View
         alert('输入物流单号不符合规则')
         return
 
-    @model.set('logistic_id', lid)
-    @model.set('logistic_waybill', waybill)
-    @model.set('delivered_at', true)
-    @model.set "operation", "订单发货"
-    @model.save {'logistic_info': $("#logistic_company").html(), setup_logistic: true},
+    new_model = new MagicOrders.Models.Trade(id: @model.id)
+    new_model.save {operation: "客服备注", logistic_id: lid, logistic_waybill: waybill, delivered_at: true, logistic_info: $("#logistic_company").html(), setup_logistic: true}, success: (model, response) =>
       error: (model, error, response) ->
         $.unblockUI()
         alert(response)

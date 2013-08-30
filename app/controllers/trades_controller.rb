@@ -109,6 +109,7 @@ class TradesController < ApplicationController
     @trade = Trade.where(_id: params[:id]).first || Trade.deleted.where(_id: params[:id]).first
     notifer_seller_flag = false
 
+    # 分流
     if params[:seller_id]
       if params[:seller_id] != "void"
         seller = current_account.sellers.find_by_id params[:seller_id]
@@ -119,6 +120,7 @@ class TradesController < ApplicationController
       @trade.change_stock_seller
     end
 
+    # 发货
     if params[:delivered_at] == true
       @trade.delivered_at = Time.now
       @trade.status = 'WAIT_BUYER_CONFIRM_GOODS'
@@ -133,15 +135,7 @@ class TradesController < ApplicationController
       end
     end
 
-    if params[:logistic_id]
-      logistic = Logistic.find_by_id params[:logistic_id]
-      if logistic
-        @trade.logistic_name = logistic.name
-        @trade.logistic_code = logistic.code
-        @trade.logistic_id = logistic.id
-      end
-    end
-
+    # 设置物流信息
     if params[:setup_logistic] == true
       logistic = current_account.logistics.find_by_id params[:logistic_id]
       unless @trade.logistic_id.present? && params[:delivered_at] == true
@@ -149,13 +143,6 @@ class TradesController < ApplicationController
         @trade.logistic_name = logistic.try(:name)
         @trade.logistic_code = logistic.try(:code)
         @trade.logistic_waybill = params[:logistic_waybill].present? ? params[:logistic_waybill] : @trade.tid
-      end
-    end
-
-    if params[:cs_memo]
-      @trade.cs_memo = params[:cs_memo].strip
-      if @trade.changed.include? 'cs_memo'
-        notifer_seller_flag = true
       end
     end
 
@@ -189,22 +176,7 @@ class TradesController < ApplicationController
       end
     end
 
-    @trade.invoice_type = params[:invoice_type].strip if params[:invoice_type]
-    @trade.invoice_name = params[:invoice_name].strip if params[:invoice_name]
-    @trade.invoice_content = params[:invoice_content].strip if params[:invoice_content]
-    @trade.invoice_date = params[:invoice_date].strip if params[:invoice_date]
-    @trade.invoice_number = params[:invoice_number].strip if params[:invoice_number]
-
-    if params[:seller_confirm_deliver_at] == true
-      @trade.seller_confirm_deliver_at = Time.now
-    end
-
-    if @trade.changes.keys.find{|k| k.to_s=~/^invoice/}
-      @trade.seller_confirm_invoice_at = nil
-    elsif params[:seller_confirm_invoice_at] == true
-      @trade.seller_confirm_invoice_at = Time.now
-    end
-
+    # 异常标注及解决
     unless params[:reason].blank?
       state = @trade.unusual_states.create!(reason: params[:reason], plan_repair_at: params[:plan_repair_at], note: params[:state_note], created_at: Time.now, reporter: current_user.name, repair_man: params[:repair_man])
       state.update_attributes(key: state.add_key)
@@ -217,74 +189,137 @@ class TradesController < ApplicationController
       states.update_all(repair_man: current_user.name, repaired_at: Time.now)
     end
 
+    # 物流拆分？
     if params[:logistic_ids].present?
       @trade.split_logistic(params[:logistic_ids])
     end
 
-    if params[:confirm_color_at] == true
-      @trade.confirm_color_at = Time.now
-    end
+    # if params[:logistic_id]
+    #   logistic = Logistic.find_by_id params[:logistic_id]
+    #   if logistic
+    #     @trade.logistic_name = logistic.name
+    #     @trade.logistic_code = logistic.code
+    #     @trade.logistic_id = logistic.id
+    #   end
+    # end
 
-    if params[:confirm_check_goods_at] == true
-      @trade.confirm_check_goods_at = Time.now
-    end
+    # @trade.invoice_type = params[:invoice_type].strip if params[:invoice_type]
+    # @trade.invoice_name = params[:invoice_name].strip if params[:invoice_name]
+    # @trade.invoice_content = params[:invoice_content].strip if params[:invoice_content]
+    # @trade.invoice_date = params[:invoice_date].strip if params[:invoice_date]
+    # @trade.invoice_number = params[:invoice_number].strip if params[:invoice_number]
 
-    if params[:confirm_receive_at] == true
-      @trade.confirm_receive_at = Time.now
-      @trade.status = 'TRADE_FINISHED' if @trade._type = "CustomTrade"
-    end
+    # if params[:seller_confirm_deliver_at] == true
+    #   @trade.seller_confirm_deliver_at = Time.now
+    # end
 
-    if params[:request_return_at] == true
-      @trade.request_return_at = Time.now
-      trade_decorator = TradeDecorator.decorate(@trade)
-      content = "#{@trade.seller.try(:name)}经销商您好，您有一笔退货订单需要处理。订单号：#{@trade.tid}，买家姓名：#{trade_decorator.receiver_name}，手机：#{trade_decorator.receiver_mobile_phone}，请尽快登录系统查看！"
-      SmsNotifier.perform_async(content, @trade.seller.try(:mobile), @trade.tid, 'request_return')
-    end
+    # if @trade.changes.keys.find{|k| k.to_s=~/^invoice/}
+    #   @trade.seller_confirm_invoice_at = nil
+    # elsif params[:seller_confirm_invoice_at] == true
+    #   @trade.seller_confirm_invoice_at = Time.now
+    # end
 
-    if params[:confirm_return_at] == true
-      @trade.confirm_return_at = Time.now
-    end
+    # if params[:confirm_color_at] == true
+    #   @trade.confirm_color_at = Time.now
+    # end
 
-    if params[:confirm_refund_at] == true
-      @trade.confirm_refund_at = Time.now
-    end
+    # if params[:confirm_check_goods_at] == true
+    #   @trade.confirm_check_goods_at = Time.now
+    # end
 
-    if params[:logistic_waybill].present?
-      @trade.logistic_waybill = params[:logistic_waybill]
-    end
+    # if params[:confirm_receive_at] == true
+    #   @trade.confirm_receive_at = Time.now
+    #   @trade.status = 'TRADE_FINISHED' if @trade._type = "CustomTrade"
+    # end
 
-    if params[:logistic_memo].present?
-      @trade.logistic_memo = params[:logistic_memo]
-    end
+    # if params[:request_return_at] == true
+    #   @trade.request_return_at = Time.now
+    #   trade_decorator = TradeDecorator.decorate(@trade)
+    #   content = "#{@trade.seller.try(:name)}经销商您好，您有一笔退货订单需要处理。订单号：#{@trade.tid}，买家姓名：#{trade_decorator.receiver_name}，手机：#{trade_decorator.receiver_mobile_phone}，请尽快登录系统查看！"
+    #   SmsNotifier.perform_async(content, @trade.seller.try(:mobile), @trade.tid, 'request_return')
+    # end
 
-    if params[:deliver_bill_printed_at] == true
-      @trade.deliver_bill_printed_at = Time.now
-    end
+    # if params[:confirm_return_at] == true
+    #   @trade.confirm_return_at = Time.now
+    # end
 
-    if params[:modify_payment]
-      @trade.modify_payment = params[:modify_payment]
-    end
+    # if params[:confirm_refund_at] == true
+    #   @trade.confirm_refund_at = Time.now
+    # end
 
-    if params[:modify_payment_at]
-      @trade.modify_payment_at = params[:modify_payment_at]
-    end
+    # if params[:logistic_waybill].present?
+    #   @trade.logistic_waybill = params[:logistic_waybill]
+    # end
 
-    if params[:modify_payment_memo]
-      @trade.modify_payment_memo = params[:modify_payment_memo]
-    end
+    # if params[:logistic_memo].present?
+    #   @trade.logistic_memo = params[:logistic_memo]
+    # end
 
-    if params[:modify_payment_no]
-      @trade.modify_payment_no = params[:modify_payment_no]
-    end
+    # if params[:deliver_bill_printed_at] == true
+    #   @trade.deliver_bill_printed_at = Time.now
+    # end
 
-    [
-      # for modify receiver informations
-      :receiver_name, :receiver_mobile, :receiver_state, :receiver_city, :receiver_district, :receiver_address
+    # if params[:modify_payment]
+    #   @trade.modify_payment = params[:modify_payment]
+    # end
+
+    # if params[:modify_payment_at]
+    #   @trade.modify_payment_at = params[:modify_payment_at]
+    # end
+
+    # if params[:modify_payment_memo]
+    #   @trade.modify_payment_memo = params[:modify_payment_memo]
+    # end
+
+    # if params[:modify_payment_no]
+    #   @trade.modify_payment_no = params[:modify_payment_no]
+    # end
+
+    # 修改信息
+    [:receiver_name,
+     :receiver_mobile,
+     :receiver_state,
+     :receiver_city,
+     :receiver_district,
+     :receiver_address,
+
+     :modify_payment,
+     :modify_payment_at,
+     :modify_payment_no,
+     :modify_payment_memo,
+
+     :logistic_waybill,
+     :logistic_memo,
+
+     :invoice_type,
+     :invoice_name,
+     :invoice_content,
+     :invoice_date,
+     :invoice_number,
     ].each{|key|
-      @trade[key] = params[key] if params[key]
+      @trade[key] = params[key].strip if params[key]
     }
 
+    # 标注当前时间
+    [:deliver_bill_printed_at,
+     :confirm_refund_at,
+     :confirm_return_at,
+     :confirm_check_goods_at,
+     :confirm_color_at,
+     :seller_confirm_deliver_at,
+     :confirm_receive_at,
+     :request_return_at,
+     :seller_confirm_invoice_at
+    ].each{|key|
+      @trade[key] = Time.now if params[key]
+    }
 
+    if params[:cs_memo]
+      @trade.cs_memo = params[:cs_memo].strip
+      if @trade.changed.include? 'cs_memo'
+        notifer_seller_flag = true
+      end
+    end
 
     unless params[:orders].blank?
       params[:orders].each do |item|
@@ -317,6 +352,8 @@ class TradesController < ApplicationController
       end
     end
 
+
+    #手动发送邮件短信
     unless params[:notify_content].blank?
       notify = @trade.manual_sms_or_emails.create(notify_sender: params[:notify_sender],
                                           notify_receiver: params[:notify_receiver],
@@ -389,11 +426,14 @@ class TradesController < ApplicationController
 
     if @trade.save
       @trade = TradeDecorator.decorate(@trade)
+      #分流发短信
       if notifer_seller_flag && @trade.status == "WAIT_SELLER_SEND_GOODS" && @trade.seller
         TradeDispatchEmail.perform_async(@trade.id, @trade.seller_id, 'second')
         TradeDispatchSms.perform_async(@trade.id, @trade.seller_id, 'second')
       end
-      unless params[:operation].blank?
+
+      #写入操作日志
+      if params[:operation]
         if params[:operation] == "确认退货"
           operation = @trade.ref_batches.where(ref_type: "return_ref").first.operation_text
           @trade.operation_logs.create(operated_at: Time.now, operator: current_user.name, operator_id: current_user.id, operation: operation)
@@ -404,6 +444,7 @@ class TradesController < ApplicationController
           @trade.operation_logs.create(operated_at: Time.now, operator: current_user.name, operator_id: current_user.id, operation: params[:operation])
         end
       end
+
       respond_with(@trade) do |format|
         format.json { render :show, status: :ok }
       end

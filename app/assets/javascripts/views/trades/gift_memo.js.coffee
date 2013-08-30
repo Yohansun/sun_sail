@@ -129,10 +129,8 @@ class MagicOrders.Views.TradesGiftMemo extends Backbone.View
             num = $gift_info.children("td:eq(3)").text()
             @add_gifts[i] = {"sku_id": sku_id, "gift_tid": gift_tid, "gift_title": gift_title, "trade_id": trade_id, "product_id": product_id, "num": num}
 
-    @model.set "operation", "赠品修改"
-    @model.set "delete_gifts", @delete_gifts
-    @model.set "add_gifts", @add_gifts
-    @model.save {"gift_memo": $("#gift_memo_text").val()},
+    new_model = new MagicOrders.Models.Trade(id: @model.id)
+    new_model.save {operation: "赠品修改", delete_gifts: @delete_gifts, add_gifts: @add_gifts, gift_memo: $("#gift_memo_text").val()}, success: (model, response) =>
       success: (model, response) =>
         $.unblockUI()
 
