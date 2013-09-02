@@ -2,5 +2,7 @@
 
 FactoryGirl.define do
   factory :taobao_sku do
+    num_iid 1234567
+    sku_id  123
   end
 end

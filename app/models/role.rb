@@ -9,7 +9,6 @@
 #  resource_type    :string(255)
 #  created_at       :datetime        not null
 #  updated_at       :datetime        not null
-#  byname           :string(255)
 #  permissions      :text
 #  account_id       :integer(4)      not null
 #  can_assign_trade :boolean(1)

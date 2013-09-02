@@ -624,7 +624,7 @@ class Trade
           end
         end
       elsif order.local_skus.present?
-         order.local_skus.each do |sku|
+        order.local_skus.each do |sku|
           sku_id = sku.id
           sku = Sku.find_by_id(sku_id)
           product = sku.try(:product)
