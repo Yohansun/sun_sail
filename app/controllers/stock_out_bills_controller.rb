@@ -12,7 +12,7 @@ class StockOutBillsController < ApplicationController
     unchecked, checked = @search.partition { |b| b.checked_at.nil? }
     @bills = unchecked + checked
     @number = 20
-    @number = params[:number] if params[:number].present?
+    @number = params[:number].to_i if params[:number].present?
     @bills = Kaminari.paginate_array(@bills).page(params[:page]).per(@number)
     @count = @search.count
 
