@@ -11,7 +11,7 @@ class StockBillsController < ApplicationController
     @search = @bills.search(params[:search])
     @count = @search.map(&:bill_products).count
     @number = 20
-    @number = params[:number] if params[:number].present?
+    @number = params[:number].to_i if params[:number].present?
     @bills = @search.page(params[:page]).per(@number)
     @all_cols = current_account.settings.stock_bill_cols
     @visible_cols = current_account.settings.stock_bill_visible_cols

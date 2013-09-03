@@ -56,29 +56,84 @@
         <tbody>
           <% @num = 0 %>
           <%- @bills.each_with_index do |bill,index| %>
-            <%- bill.arrange_products(params[:search][:bill_products_sku_id_eq], params[:search][:bill_products_outer_id_eq]).each_with_index do |product,product_index|%>
+            <% products = bill.arrange_products(params[:search][:bill_products_sku_id_eq], params[:search][:bill_products_outer_id_eq])
+              product_size = products.size
+            %>
+            <%- products.each_with_index do |product,product_index|%>
               <tr>
-                <td><input type="checkbox" name="stock_bill_ids[]" value="<%= bill.id %>"></td>
-                <%- @all_cols.each do |col_name, view_name| -%>
-                <td data-col="<%= col_name %>" style="<%= 'display:none' unless @visible_cols.include?(col_name) %>">
-                  <%= case col_name
-                      when "product_outer_id"
-                        product.try(:outer_id)
-                      when "product_title"
-                        product.try(:title)
-                      when "product_number"
-                        product.try(:number)
-                      when "created_at"
-                        bill.created_at.try(:to_s,:db)
-                      when "stocked_at"
-                        bill.stocked_at.try(:strftime, "%Y-%m-%d %H:%M")
-                      when "stock_no"
-                        @start_no + index
-                      else
-                        bill.send(col_name)
-                      end
-                   %>
-                </td>
+                <!-- 合并行 -->
+                <%- if product_index == 0 -%>
+                  <td rowspan="<%= product_size %>">
+                    <input type="checkbox" name="stock_bill_ids[]" value="<%= bill.id %>">
+                  </td>
+                  <%- @all_cols.each do |col_name, view_name| -%>
+                    <%- if ["stock_no", "tid", "status_text", "stock_type_name", "created_at", "stocked_at"].include?(col_name) -%>
+                      <td data-col="<%= col_name %>" rowspan="<%= product_size %>" style="<%= 'display:none' unless @visible_cols.include?(col_name) %>">
+                        <%= case col_name
+                            when "product_outer_id"
+                              product.try(:outer_id)
+                            when "product_title"
+                              product.try(:title)
+                            when "product_number"
+                              product.try(:number)
+                            when "created_at"
+                              bill.created_at.try(:to_s,:db)
+                            when "stocked_at"
+                              bill.stocked_at.try(:strftime, "%Y-%m-%d %H:%M")
+                            when "stock_no"
+                              @start_no + index
+                            else
+                              bill.send(col_name)
+                            end
+                         %>
+                      </td>
+                    <%- else -%>
+                      <td data-col="<%= col_name %>" style="<%= 'display:none' unless @visible_cols.include?(col_name) %>">
+                        <%= case col_name
+                          when "product_outer_id"
+                            product.try(:outer_id)
+                          when "product_title"
+                            product.try(:title)
+                          when "product_number"
+                            product.try(:number)
+                          when "created_at"
+                            bill.created_at.try(:to_s,:db)
+                          when "stocked_at"
+                            bill.stocked_at.try(:strftime, "%Y-%m-%d %H:%M")
+                          when "stock_no"
+                            @start_no + index
+                          else
+                            bill.send(col_name)
+                          end
+                       %>
+                      </td>
+                    <%- end -%>
+                  <%- end -%>
+                <!-- 被合并行 product_index > 0 -->
+                <%- else -%>
+                  <%- @all_cols.each do |col_name, view_name| -%>
+                    <%- unless ["stock_no", "tid", "status_text", "stock_type_name", "created_at", "stocked_at"].include?(col_name) -%>
+                      <td data-col="<%= col_name %>" style="<%= 'display:none' unless @visible_cols.include?(col_name) %>">
+                        <%= case col_name
+                          when "product_outer_id"
+                            product.try(:outer_id)
+                          when "product_title"
+                            product.try(:title)
+                          when "product_number"
+                            product.try(:number)
+                          when "created_at"
+                            bill.created_at.try(:to_s,:db)
+                          when "stocked_at"
+                            bill.stocked_at.try(:strftime, "%Y-%m-%d %H:%M")
+                          when "stock_no"
+                            @start_no + index
+                          else
+                            bill.send(col_name)
+                          end
+                       %>
+                      </td>
+                    <%- end -%>
+                  <%- end -%>
                 <%- end -%>
               </tr>
             <%- end %>
