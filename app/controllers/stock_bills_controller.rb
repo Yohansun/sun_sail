@@ -72,7 +72,7 @@ class StockBillsController < ApplicationController
           end
 
           if order['OPTTYPE'] == 'OrderShip'
-            stock_bill.update_attributes(confirm_stocked_at: Time.now, status: 'STOCKED')
+            stock_bill.do_stock
             stock_bill.operation_logs.create(operated_at: Time.now, operation: '确认成功')
           elsif order['OPTTYPE'] == 'OrderSign'
             stock_bill.operation_logs.create(operated_at: Time.now, operation: '签收')

@@ -74,6 +74,75 @@ class StockBill
 
   alias_method :stock_typs=, :stock_type=
 
+  state_machine :state, :initial => :created, :attribute => :status do
+    #审核bill
+    event :do_check do
+      transition :created => :checked, :if => lambda {|bill| !bill.operation_locked? }
+    end
+
+    #同步中
+    event :do_syncking do
+      transition [:synck_failed, :checked, :canceld_ok] => :syncking, :if => lambda {|bill| !bill.operation_locked? }
+    end
+
+    #已同步待出/入库
+    event :do_syncked do
+      transition :syncking => :syncked
+    end
+
+    #同步失败
+    event :do_synck_fail do
+      transition :syncking => :synck_failed
+    end
+
+    #出/入库
+    event :do_stock do
+      transition all - [:closed] => :stocked
+    end
+
+    #关闭
+    event :do_close do
+      transition [:created, :checked, :synck_failed, :canceld_ok] => :closed
+    end
+
+    #撒销同步
+    event :do_canceling do
+      transition :syncked => :canceling, :if => lambda {|bill| !bill.operation_locked? }
+    end
+
+    #撒销成功
+    event :do_cancel_ok do
+      transition :canceling => :canceld_ok
+    end
+
+    #撤销失败
+    event :do_cancel_fail do
+      transition :canceling => :canceld_failed
+    end
+
+    [:created, :checked, :syncking, :syncked, :synck_failed, :stocked, :closed, :canceling, :canceld_ok, :canceld_failed].each do |s_name|
+      state s_name, :value => s_name.to_s.upcase
+    end
+
+    after_transition :save_change_status_timestrap
+  end
+
+  def save_change_status_timestrap
+    status_keys = {:checked => "checked_at",
+                   :syncking => "sync_at",
+                   :syncked => "sync_succeded_at",
+                   :synck_failed => "sync_failed_at",
+                   :stocked => "confirm_stocked_at",
+                   :canceling => "canceled_at",
+                   :canceld_ok => "cancel_succeded_at",
+                   :canceld_failed => "cancel_failed_at"
+                  }
+    attr_name = status_keys[self.state_name]
+    if attr_name.present?
+      self.update_attribute(attr_name, Time.now)
+    end
+  end
+
   def active_tid_exists?
     StockBill.any_in(:status.ne => 'CLOSED').where(tid: tid).exists?
   end

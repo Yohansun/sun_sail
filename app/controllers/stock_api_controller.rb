@@ -60,7 +60,7 @@ class StockApiController < ApplicationController
           )
         end
         if stock_in_bill.sync_stock
-          stock_in_bill.update_attributes(confirm_stocked_at: Time.now, status: 'STOCKED')
+          stock_in_bill.do_stock
           stock_in_bill.operation_logs.create(operated_at: Time.now, operation: '确认入库成功')
           render soap: "SUCCESS"
         else
@@ -140,7 +140,7 @@ class StockApiController < ApplicationController
           record.bml_sku_with_nums.create(sku: sku, num: num)
         end
         if stock_out_bill.decrease_actual
-          stock_out_bill.update_attributes(confirm_stocked_at: Time.now, status: 'STOCKED')
+          stock_out_bill.do_stock
           stock_out_bill.operation_logs.create(operated_at: Time.now, operation: '确认出库成功')
           render soap: "SUCCESS"
         else
@@ -201,7 +201,7 @@ class StockApiController < ApplicationController
         end
 
         if order['OPTTYPE'] == 'OrderShip'
-          stock_bill.update_attributes(confirm_stocked_at: Time.now, status: 'STOCKED')
+          stock_bill.do_stock
           stock_bill.operation_logs.create(operated_at: Time.now, operation: '确认成功')
         elsif order['OPTTYPE'] == 'OrderSign'
           stock_bill.operation_logs.create(operated_at: Time.now, operation: '签收')

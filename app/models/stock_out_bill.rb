@@ -132,8 +132,7 @@ class StockOutBill < StockBill
   end
 
   def check
-    return if status != "CREATED" || self.operation_locked?
-    update_attributes(checked_at: Time.now, status: "CHECKED")
+    do_check
     decrease_activity
     if account && account.settings.enable_module_third_party_stock != 1
       decrease_actual
@@ -141,14 +140,12 @@ class StockOutBill < StockBill
   end
 
   def sync
-    return if !['SYNCK_FAILED','CHECKED','CANCELD_OK'].include?(status) || self.operation_locked?
-    update_attributes(sync_at: Time.now, status: "SYNCKING")
+    do_syncking
     so_to_wms
   end
 
   def rollback
-    return if status != "SYNCKED" || self.operation_locked?
-    update_attributes(canceled_at: Time.now, status: "CANCELING")
+    do_canceling
     cancel_order_rx
   end
 
@@ -173,10 +170,11 @@ class StockOutBill < StockBill
       #BML
       if result['Response']
         if result['Response']['success'] == 'true'
-          update_attributes(sync_succeded_at: Time.now, status: "SYNCKED")
+          do_syncked
           operation_logs.create(operated_at: Time.now, operation: '同步成功')
         else
-          update_attributes(sync_failed_at: Time.now, failed_desc: result['Response']['desc'], status: "SYNCK_FAILED")
+          self.failed_desc = result['Response']['desc']
+          do_synck_fail
           operation_logs.create(operated_at: Time.now, operation: "同步失败,#{result['Response']['desc']}")
         end
       end
@@ -184,10 +182,11 @@ class StockOutBill < StockBill
       #GQS
       if result['DATA']
         if result['DATA']['RET_CODE'] == 'SUCC'
-          update_attributes(sync_succeded_at: Time.now, status: "SYNCKED")
+          do_syncked
           operation_logs.create(operated_at: Time.now, operation: '同步成功')
         else
-          update_attributes(sync_failed_at: Time.now, failed_desc: result['DATA']['RET_MESSAGE'], status: "SYNCK_FAILED")
+          self.failed_desc = result['DATA']['RET_MESSAGE']
+          do_synck_fail
           operation_logs.create(operated_at: Time.now, operation: "同步失败,#{result['DATA']['RET_MESSAGE']}")
         end
       end
@@ -206,10 +205,11 @@ class StockOutBill < StockBill
     #BML
     if result['Response']
       if result['Response']['success'] == 'true'
-        update_attributes(cancel_succeded_at: Time.now, status: "CANCELD_OK")
+        do_cancel_ok
         operation_logs.create(operated_at: Time.now, operation: '取消成功')
       else
-        update_attributes(cancel_failed_at: Time.now, failed_desc: result['Response']['desc'], status: "CANCELD_FAILED")
+        self.failed_desc = result['Response']['desc']
+        do_cancel_fail
         operation_logs.create(operated_at: Time.now, operation: "取消失败,#{result['Response']['desc']}")
       end
     end
@@ -217,10 +217,11 @@ class StockOutBill < StockBill
     #GQS
     if result['DATA']
       if result['DATA']['RET_CODE'] == 'SUCC'
-        update_attributes(cancel_succeded_at: Time.now, status: "CANCELD_OK")
+        do_cancel_ok
         operation_logs.create(operated_at: Time.now, operation: '取消成功')
       else
-        update_attributes(cancel_failed_at: Time.now, failed_desc: result['DATA']['RET_MESSAGE'], status: "CANCELD_FAILED")
+        self.failed_desc = result['DATA']['RET_MESSAGE']
+        do_cancel_fail
         operation_logs.create(operated_at: Time.now, operation: "取消失败,#{result['DATA']['RET_MESSAGE']}")
       end
     end

@@ -70,8 +70,9 @@ module MagicOrders
       g.stylesheets   false
       g.javascripts   false
       g.helper        false
-      g.fixture_replacement :factory_girl      
+      g.fixture_replacement :factory_girl
     end
 
   end
 end
+StateMachine::Machine.ignore_method_conflicts = true
