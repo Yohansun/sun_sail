@@ -3,20 +3,19 @@
 #
 # Table name: stock_products
 #
-#  id           :integer(4)      not null, primary key
-#  created_at   :datetime        not null
-#  updated_at   :datetime        not null
-#  max          :integer(4)      default(0)
-#  safe_value   :integer(4)      default(0)
-#  activity     :integer(4)      default(0)
-#  actual       :integer(4)      default(0)
-#  product_id   :integer(4)
-#  seller_id    :integer(4)
-#  sku_id       :integer(8)
-#  num_iid      :integer(8)
-#  account_id   :integer(4)
-#  lock_version :integer(4)      default(0), not null
-#  forecast     :integer(4)      default(0)
+#  id         :integer(4)      not null, primary key
+#  created_at :datetime        not null
+#  updated_at :datetime        not null
+#  max        :integer(4)      default(0)
+#  safe_value :integer(4)      default(0)
+#  activity   :integer(4)      default(0)
+#  actual     :integer(4)      default(0)
+#  product_id :integer(4)
+#  seller_id  :integer(4)
+#  sku_id     :integer(8)
+#  num_iid    :integer(8)
+#  account_id :integer(4)
+#  forecast   :integer(4)      default(0)
 #
 
 class StockProduct < ActiveRecord::Base

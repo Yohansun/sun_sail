@@ -4,7 +4,7 @@
 # Table name: skus
 #
 #  id              :integer(4)      not null, primary key
-#  sku_id          :integer(8)
+#  sku_id          :string(255)
 #  num_iid         :integer(8)
 #  properties      :string(255)     default("")
 #  properties_name :string(255)     default("")
