@@ -268,7 +268,7 @@
         return trades.map(&:id)
       when 1
         #订单默认只能自动合并一次
-        trades.update_all(auto_merged_once: true)
+        trades.each{|t| t.update_attributes(auto_merged_once: true)}
         return Trade.merge_trades trades
       when 2
         if force
