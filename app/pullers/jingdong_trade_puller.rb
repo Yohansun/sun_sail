@@ -38,13 +38,14 @@ class JingdongTradePuller
         end_time = Time.now
       end
 
-      order_states = 'WAIT_SELLER_DELIVERY,WAIT_SELLER_STOCK_OUT,WAIT_GOODS_RECEIVE_CONFIRM,FINISHED_L,TRADE_CANCELED'
+      order_states = 'WAIT_SELLER_DELIVERY,WAIT_SELLER_STOCK_OUT,WAIT_GOODS_RECEIVE_CONFIRM,FINISHED_L'
       query_conditions = account.jingdong_query_conditions
       begin
         response = JingdongQuery.get({method: '360buy.order.search',
           order_state: order_states,
           start_date: start_time.strftime("%Y-%m-%d %H:%M:%S"),
           end_date: end_time.strftime("%Y-%m-%d %H:%M:%S"),
+          optional_fields: 'order_id,vender_id,pay_type,order_total_price,order_payment,order_seller_price,freight_price,seller_discount,order_state,order_state_remark,delivery_type,invoice_info,order_remark,order_start_time,order_end_time,consignee_info,item_info_list,coupon_detail_list,return_order,vender_remark,pin,balance_used,modified,payment_confirm_time,logistics_id,waybill,vat_invoice_info',
           page: page_no,
           page_size: 10}, query_conditions)
 
@@ -62,15 +63,21 @@ class JingdongTradePuller
         trades = response['order_search_response']['order_search']['order_info_list']
         next if trades.blank?
 
+        #抓取JingdongTrade基本信息
         trades.each do |t|
+          orders = t.delete('item_info_list')
+          consignee_info = t.delete("consignee_info")
+          coupon_details = t.delete("coupon_detail_list")
+          t.delete('payment_confirm_time') if t['payment_confirm_time'] == '0001-01-01 00:00:00'
+          t.delete('order_end_time') if (t['order_end_time'] == '0001-01-01 00:00:00' || t['order_end_time'] == '1970-01-01 00:00:00')
+          t.update(consignee_info)
 
-          #抓取JingdongTrade基本信息
+          #京东没有发货时间，所以以抓取时的时间代替
+          if t['order_state'] == "WAIT_GOODS_RECEIVE_CONFIRM" || t['order_state'] == "FINISHED_L"
+            t['consign_time'] = Time.now
+          end
+
           unless ($redis.sismember('JingdongTradeTids', t['order_id']) || JingdongTrade.where(tid: t['order_id']).exists? || t['order_state'] == "TRADE_CANCELED")
-            orders = t.delete('item_info_list')
-            consignee_info = t.delete("consignee_info")
-            coupon_details = t.delete("coupon_detail_list")
-            t.delete('payment_confirm_time') if t['payment_confirm_time'] == '0001-01-01 00:00:00'
-            t.update(consignee_info)
 
             trade = JingdongTrade.new(t)
 
@@ -90,9 +97,6 @@ class JingdongTradePuller
             trade.account_id = account_id
             trade.seller_nick = trade_source.name
             trade.operation_logs.build(operated_at: Time.now, operation: '从京东抓取订单')
-
-            #设置付款时间
-            trade.pay_time = Time.now
 
             if users
               trade.set_operator(users,total_percent)

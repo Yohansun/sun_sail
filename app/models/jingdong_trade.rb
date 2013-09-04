@@ -26,7 +26,7 @@ class JingdongTrade < Trade
 
   field :created,               as: :order_start_time, type: DateTime
   field :payment_confirm_time,  as: :pay_time, type: DateTime
-  field :consign_time,          as: :order_end_time, type: DateTime
+  field :end_time,              as: :order_end_time, type: DateTime
 
   field :buyer_nick,            as: :pin, type: String
   field :receiver_name,         as: :fullname, type: String
@@ -36,6 +36,10 @@ class JingdongTrade < Trade
   field :receiver_state,        as: :province, type: String
   field :receiver_city,         as: :city, type: String
   field :receiver_district,     as: :county, type: String
+
+  field :logistic_id,           as: :logistics_id, type: String
+  field :logistic_waybill,      as: :waybill, type: String
+
 
   embeds_many :jingdong_orders
   embeds_many :coupon_details

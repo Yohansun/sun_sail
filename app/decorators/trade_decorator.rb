@@ -9,7 +9,7 @@ class TradeDecorator < Draper::Base
       when 'TaobaoTrade','CustomTrade','Trade','YihaodianTrade'
         trade.pay_time
       when 'JingdongTrade'
-        # trade.pay_time
+        trade.pay_time
     end
   end
 
