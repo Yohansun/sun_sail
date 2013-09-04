@@ -24,7 +24,6 @@ class MagicOrders.Views.TradesSeller extends Backbone.View
   set_seller: ->
     blocktheui()
     if $("#trade_seller_id").val() > 0
-
       for order in @model.get('orders')
         if order.sku_bindings.length == 0
           alert("订单中有未绑定本地SKU的商品，请先绑定本地SKU")
@@ -32,8 +31,8 @@ class MagicOrders.Views.TradesSeller extends Backbone.View
           return
           break
 
-      @model.set "operation", "订单分派"
-      @model.set {seller_id: $("#trade_seller_id").val()}, success: (model, response) =>
+      new_model = new MagicOrders.Models.Trade(id: @model.id)
+      new_model.save {operation: "订单分派", seller_id: $("#trade_seller_id").val()}, success: (model, response) =>
         $.unblockUI()
         view = new MagicOrders.Views.TradesRow(model: model)
         $("#trade_#{model.get('id')}").replaceWith(view.render().el)
@@ -41,12 +40,11 @@ class MagicOrders.Views.TradesSeller extends Backbone.View
         $("a[rel=popover]").popover({placement: 'left', html:true})
 
         $('#trade_seller').modal('hide')
-        # window.history.back()
 
   reset_seller: ->
     blocktheui()
-    @model.set "operation", "分派重置"
-    @model.set 'seller_id', "void", success: (model, response) =>
+    new_model = new MagicOrders.Models.Trade(id: @model.id)
+    new_model.save {operation: "分派重置", seller_id: "void"}, success: (model, response) =>
       $.unblockUI()
 
       view = new MagicOrders.Views.TradesRow(model: model)
@@ -55,4 +53,3 @@ class MagicOrders.Views.TradesSeller extends Backbone.View
       $("a[rel=popover]").popover({placement: 'left', html:true})
 
       $('#trade_seller').modal('hide')
-      # window.history.back()
