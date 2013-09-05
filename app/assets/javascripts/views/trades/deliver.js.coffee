@@ -11,6 +11,7 @@ class MagicOrders.Views.TradesDeliver extends Backbone.View
 
   render: ->
     $(@el).html(@template(trade: @model))
+    logistic_name = @model.get('logistic_name')
     $.get '/logistics/logistic_templates', {type: 'all', trade_type: @model.get("trade_type")}, (t_data) =>
       html_options = ''
       for item in t_data
