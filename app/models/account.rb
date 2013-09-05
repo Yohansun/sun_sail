@@ -37,6 +37,7 @@ class Account < ActiveRecord::Base
   has_many :bbs_categories
   has_many :bbs_topics
   has_many :categories
+  has_many :category_properties
   has_many :colors
   has_many :packages
   has_many :products

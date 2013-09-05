@@ -66,7 +66,7 @@ class Sku < ActiveRecord::Base
         #  and association between properties and categories
         #  and sku_properties
 
-        property_value = CategoryPropertyValue.find_or_create_by_name_value(pname,pvalue)
+        property_value = CategoryPropertyValue.find_or_create_by_name_value(account_id, pname, pvalue)
         property = property_value.category_property
 
         # association exist ?
@@ -77,7 +77,7 @@ class Sku < ActiveRecord::Base
           end
         end
 
-        self.sku_properties.create(category_property_value:property_value, category_property:property)
+        self.sku_properties.create(account_id: account_id, category_property_value:property_value, category_property:property)
       }
     end
   end
