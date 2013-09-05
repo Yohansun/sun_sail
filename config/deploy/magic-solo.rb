@@ -62,6 +62,7 @@ namespace :deploy do
 end
 
 after 'deploy:finalize_update', 'deploy:symlink_shared'
+after 'deploy:finalize_update', 'magic_order:setup'
 
 # can't execute because of permission.
 # before "deploy:restart", "deploy:god_restart_magic_solo"
@@ -70,6 +71,13 @@ namespace :db do
   desc "migrate db"
   task :migrate, :roles => :app do
     run "cd #{release_path} && RAILS_ENV=production rake db:migrate"
+  end
+end
+
+namespace :magic_order do
+  desc 'update data'
+  task :setup, :roles => :app do
+    run "cd #{release_path} && RAILS_ENV=production rake magic_order:setup"
   end
 end
 

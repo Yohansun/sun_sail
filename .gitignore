@@ -14,3 +14,4 @@ data/*.xls
 .ruby-version
 .rvmrc
 coverage
+lib/tasks/setup.log
