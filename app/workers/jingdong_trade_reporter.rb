@@ -29,17 +29,17 @@ class JingdongTradeReporter
               "订单编号",
               "当前状态",
               "下单时间",
-              ##"付款时间",##
+              "付款时间",
               "分派时间",
               "发货时间",
-              "支付宝到帐时间",           #读取交易关闭的时间
+              "交易完成时间",             #读取交易关闭的时间
               "发货仓库",                #读取发货仓库名
               "买家地址-省",
               "买家地址-市",
               "买家地址-区",
               "买家地址",
               "买家姓名",
-              #"买家旺旺",
+              "买家昵称",
               "买家手机",
               "买家座机",
               "商品名",
@@ -47,25 +47,14 @@ class JingdongTradeReporter
               "物流商",
               "物流单号"]
 
-    # max_skus_count = account.jingdong_skus.map(&:skus).map(&:count).max
-
-    # (1..max_skus_count).each do |index|
-    #   header << "子商品#{index}编码"
-    #   header << "子商品#{index}数量"
-    # end
-
-    header += [ #"商品单价",               #读取淘宝该商品原价
+    header += [ #"商品单价",              #读取淘宝该商品原价
                 "商品售价",               #读取淘宝该商品市场价
-                "商品优惠",               #读取商品优惠
-                "订单优惠",               #除“商品优惠”外的其他优惠的总和
+                #"商品优惠",               #读取商品优惠
+                #"订单优惠",               #除“商品优惠”外的其他优惠的总和
                 "商品实付价",
-                "vip优惠",
-                "店铺优惠券",
-                "店铺折扣",
-                #"优惠金额",
                 "运费",                   #读取运费，如果一笔订单里商品多，则只要显示在第一行就好
                 "订单总金额",              #读取订单的总金额，如果一笔订单里商品多，则只要显示在第一行就好
-                "订单实付金额",            #读取订单的实付金额，如果一笔订单里商品多，则只要显示在第一行就好
+                # "订单实付金额",            #读取订单的实付金额，如果一笔订单里商品多，则只要显示在第一行就好
                 #"多退金额",
                 #"少补金额",
                 "买家留言",
@@ -85,19 +74,18 @@ class JingdongTradeReporter
      trades.each_with_index do |trade, trade_index|
       trade_source = trade.type_text
       tid = trade.order_id
-      taobao_status_memo = trade.status
+      jingdong_status_memo = trade.status_name
       created = trade.created.try(:strftime,"%Y-%m-%d %H:%M:%S")
-      ## 京东订单无付款时间！！ ##pay_time = trade.pay_time.try(:strftime,"%Y-%m-%d %H:%M:%S")
+      pay_time = trade.pay_time.try(:strftime,"%Y-%m-%d %H:%M:%S")
       dispatched_at = trade.dispatched_at.try(:strftime,"%Y-%m-%d %H:%M:%S")
-      delivered_at = trade.delivered_at.try(:strftime,"%Y-%m-%d %H:%M:%S")
-      end_time = trade.status == "TRADE_FINISHED" ? trade.end_time.try(:strftime,"%Y-%m-%d %H:%M:%S") : ''
+      delivered_at = trade.delivered_at.try(:strftime,"%Y-%m-%d %H:%M:%S") || trade.consign_time.try(:strftime,"%Y-%m-%d %H:%M:%S")
+      end_time = (trade.status == "FINISHED_L" ? trade.end_time.try(:strftime,"%Y-%m-%d %H:%M:%S") : '')
       stock_name = "默认仓库"
 
-      sum_fee = trade.total_fee
       post_fee = trade.post_fee
       trade_total_fee = trade.total_fee
-      trade_payment = trade.total_fee
-      seller_discount = trade.promotion_fee || 0#no show
+      trade_payment = trade.payment
+      seller_discount = trade.seller_discount || 0 #no show
       #trade_add_ref_money = trade.ref_batches.where(ref_type: 'add_ref').first.ref_payment rescue nil
       #trade_return_ref_money = -(trade.ref_batches.where(ref_type: 'return_ref').last.ref_payment) rescue nil
 
@@ -106,20 +94,14 @@ class JingdongTradeReporter
       receiver_district = trade.county
       receiver_address = trade.full_address
       receiver_name = trade.fullname
-      #buyer_nick = trade.buyer_nick
+      buyer_nick = trade.buyer_nick
       receiver_mobile = trade.mobile
       receiver_phone = trade.telephone
 
       buyer_message = trade.order_remark
       trade_cs_memo = trade.cs_memo
       trade_gift_memo = trade.gift_memo
-      invoice_name = trade.invoice_name
-
-      #METION SPLITED TRADE HERE MAY DIFFER
-      vip_discount = trade.vip_discount
-      shop_bonus = trade.shop_bonus
-      shop_discount =  trade.shop_discount
-      other_discount = trade.other_discount #第三方造成的优惠
+      invoice_name = trade.invoice_info
 
       #物流信息
       logistic_name = trade.logistic_name
@@ -140,26 +122,18 @@ class JingdongTradeReporter
         order_cs_memo = order.cs_memo
         refund_status_text = order.refund_status_text
 
-        order_discount_fee = (order.discount_fee/order_num).to_f.round(2)
-        #trade_discount_fee = (price - order_price - order_discount_fee).to_f.round(2)
-        order_payment = order.order_payment
+        # order_discount_fee = (order.discount_fee/order_num).to_f.round(2)
+        # trade_discount_fee = (price - order_price - order_discount_fee).to_f.round(2)
+        # order_payment = order.order_payment
 
-        # rate_content = rate_created = rate_result = ''
-        # rate = TaobaoTradeRate.where(oid: order.oid).first || TaobaoTradeRate.where(tid: trade.tid).first
-
-        # if rate
-        #   rate_result = rate.result
-        #   rate_content = rate.content
-        #   rate_created = rate.created
-        # end
 
         row_number += 1
 
         body = [trade_source,              #读取订单平台来源
                 tid,                       #读取淘宝订单编号或拆分订单编号
-                taobao_status_memo,        #读取订单当前状态
+                jingdong_status_memo,      #读取订单当前状态
                 created,                   #读取订单下单时间
-                #pay_time,                  #读取订单付款时间
+                pay_time,                  #读取订单付款时间
                 dispatched_at,             #读取系统最后一次分派时间
                 delivered_at,              #读取系统进行发货的时间
                 end_time,                  #读取交易关闭的时间
@@ -169,7 +143,7 @@ class JingdongTradeReporter
                 receiver_district,         #读取订单买家地址-区
                 receiver_address,          #读取订单买家地址
                 receiver_name,             #读取买家姓名
-                #buyer_nick,                #读取买家旺旺
+                buyer_nick,                #读取买家旺旺
                 receiver_mobile,           #读取买家联系电话-手机
                 receiver_phone,            #读取买家联系电话-座机
                 title,                     #读取商品名
@@ -177,24 +151,11 @@ class JingdongTradeReporter
                 logistic_name,             #读取物流商，没有的话为空
                 logistic_waybill]          #读取物流单号，没有的话为空
 
-        # order.package_info.each_with_index do |product, index|
-        #   body << "#{product.fetch(:outer_id)}"
-        #   body << "#{product.fetch(:number)}"
-        # end
-
-        # empty_cols_count = (max_skus_count -  order.package_info.count) * 2
-
-        # empty_cols_count.times {body << ""}
-
         body +=[price,                       #读取淘宝该商品市场价
-                #order_price,                 #读取淘宝该商品原价
-                order_discount_fee,          #读取商品优惠
-                #trade_discount_fee,          #除“商品优惠”外的其他优惠的总和
-                order_payment,
-                vip_discount,                #读取VIP优惠，没有的话为空
-                shop_bonus,                  #读取店铺优惠，没有的话为空
-                shop_discount,               #读取店铺折扣，没有的话为空
-                other_discount,              #除可读到优惠以外第三方造成的优惠
+                # order_price,                 #读取淘宝该商品原价
+                # order_discount_fee,           #读取商品优惠
+                # trade_discount_fee,          #除“商品优惠”外的其他优惠的总和
+                # order_payment,
                 post_fee,                    #读取运费，如果一笔订单里商品多，则只要显示在第一行就好
                 trade_total_fee,             #读取订单的总金额，如果一笔订单里商品多，则只要显示在第一行就好
                 trade_payment,               #读取订单的实付金额，如果一笔订单里商品多，则只要显示在第一行就好
@@ -207,9 +168,6 @@ class JingdongTradeReporter
                 invoice_name,                #读取发票信息，没有的话为空
                 sku_properties,              #读取商品属性，没有的话为空
                 refund_status_text,          #读取退款状态，没有的话为空 读取VIP优惠，没有的话为空
-                #rate_result,                 #读取买家评价结果，没有的话为空
-                #rate_content,                #读取买家评价内容，没有的话为空
-                #rate_created                #读取买家评价时间，没有的话为空
                 ]
 
 

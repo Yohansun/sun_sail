@@ -12,12 +12,12 @@ class YihaodianTrade < Trade
   field :order_coupon_discount,    type: Float, default: 0.0     #商家抵用券支付金额
   field :order_platform_discount,  type: Float, default: 0.0     #1mall平台抵用券支付金额
   field :end_user_id,              type: Integer                 #用户ID
+  field :product_amount,           type: Float, default: 0.0     #产品总额
 
   #对应Trade字段
   field :tid,               as: :order_code, type: String
   field :status,            as: :order_status, type: String
 
-  field :total_fee,         as: :product_amount, type: Float, default: 0.0
   field :post_fee,          as: :order_delivery_fee, type: Float, default: 0.0
   field :payment,           as: :order_amount, type: Float, default: 0.0
 
@@ -96,6 +96,9 @@ class YihaodianTrade < Trade
                              ["已撤销", 34],
                              ["已关闭", 40]], not_valid: true
 
+  def total_fee
+    product_amount + post_fee
+  end
 
   def discount_fee
     order_promotion_discount + order_coupon_discount + order_platform_discount
