@@ -53,11 +53,7 @@ class ProductsController < ApplicationController
     @skus.each do |sku|
       @product.skus.build({:account_id => current_account.id}.merge(sku.attributes))
     end
-
     if @product.save
-      if params[:product]['good_type'] == '2' && params[:child_iid].present?
-        @product.create_packages(params[:child_iid])
-      end
       sku_value = []
       @product.skus.each {|sku| sku_value << sku.value unless sku.value == ""}
       @product.skus.create(account_id: current_account.id, product_id: @product.id, num_iid: @product.num_iid) if sku_value.size == 0
@@ -75,12 +71,6 @@ class ProductsController < ApplicationController
 
   def update
     @product = current_account.products.find params[:id]
-
-    if params[:product]['good_type'] == '2' && params[:child_iid].present?
-      @product.packages.delete_all
-      @product.create_packages(params[:child_iid])
-    end
-
     if @product.update_attributes(params[:product])
       redirect_to products_path
     else
