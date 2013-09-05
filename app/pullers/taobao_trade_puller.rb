@@ -244,6 +244,7 @@ class TaobaoTradePuller
                 local_trade.news = 1
               end
               local_trade.set_has_onsite_service
+              local_trade.set_alipay_data
               local_trade.save
 
               if trade_old_status != "WAIT_SELLER_SEND_GOODS" && local_trade.status == "WAIT_SELLER_SEND_GOODS" && local_trade.seller_id.blank?

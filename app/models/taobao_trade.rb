@@ -4,7 +4,12 @@ class TaobaoTrade < Trade
   include StockProductsLockable
   #include Dulux::Splitter
 
-  field :news, type: Integer , default: 0 #是否从淘宝更新数据
+  #是否从淘宝更新数据
+  field :news, type: Integer , default: 0
+  #交易完成订单对应支付宝帐单的最后一次修改时间
+  field :alipay_last_modified_time, type: DateTime
+  field :alipay_payment, type: Float
+
   #  淘宝抓取过来的数据,本地老的数据进行更新后标记为"已更新",
   #  待其他操作(更新本地顾客)处理完毕后标记为已处理
   enum_attr :news, [["无更新",0],["已更新",1],["已处理",2]]
@@ -128,6 +133,27 @@ class TaobaoTrade < Trade
   def update_stock_forecast
     if self.status == "WAIT_SELLER_SEND_GOODS" && self.seller_id.blank?
       update_seller_stock_forecast(self.forecast_seller_id, "decrease")
+    end
+  end
+
+  def set_alipay_data
+    if status == "TRADE_FINISHED"
+      start_time = consign_time || delivered_at
+      response = TaobaoQuery.get({method: 'alipay.user.trade.search',
+                                start_time: start_time.strftime("%Y-%m-%d %H:%M:%S"),
+                                end_time: (start_time + 7.days).strftime("%Y-%m-%d %H:%M:%S"),
+                                alipay_order_no: alipay_no,
+                                order_type: 'TRADE',
+                                order_status: 'TRADE_FINISHED',
+                                order_from: "TAOBAO",
+                                page_no: 1,
+                                page_size: 10},
+                                trade_source_id
+                              )
+      modified_time = response['alipay_user_trade_search_response']['trade_records']['trade_record'][0]['modified_time'].to_time(:local) rescue nil
+      total_amount = response['alipay_user_trade_search_response']['trade_records']['trade_record'][0]['total_amount'] rescue nil
+      alipay_last_modified_time = modified_time if modified_time
+      alipay_payment = total_amount.to_f if total_amount
     end
   end
 end
