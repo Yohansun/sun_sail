@@ -449,6 +449,7 @@ class TradesController < ApplicationController
     trade = Trade.deleted.where(_id: params[:id]).first
     trade.restore
     trade.update_attributes(is_locked: false)
+    TaobaoTradePuller.update_by_tid(trade)
     render json: {id: trade.id}
   end
 
