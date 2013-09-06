@@ -233,29 +233,7 @@ class TaobaoTradePuller
           next if trades.blank?
 
           trades.each do |trade|
-            TaobaoTrade.where(tid: trade['tid']).each do |local_trade|
-              next unless updatable?(local_trade, trade['status'])
-              trade_old_status = local_trade.status
-              orders = trade.delete('orders')
-              trade['trade_source_id'] = trade_source_id
-              local_trade.update_attributes(trade)
-              if local_trade.changed?
-                local_trade.operation_logs.build(operated_at: Time.now, operation: "从淘宝更新订单,更新#{local_trade.changed.try(:join, ',')}")
-                local_trade.news = 1
-              end
-              local_trade.set_has_onsite_service
-              local_trade.set_alipay_data
-              local_trade.save
-
-              if trade_old_status != "WAIT_SELLER_SEND_GOODS" && local_trade.status == "WAIT_SELLER_SEND_GOODS" && local_trade.seller_id.blank?
-                local_trade.update_stock_forecast
-              end
-              if account.settings.auto_settings['auto_dispatch']
-                result = account.can_auto_dispatch_right_now
-                DelayAutoDispatch.perform_in((result == true ? account.settings.auto_settings['dispatch_silent_gap'].to_i.hours : result), local_trade.id)
-              end
-              TradeTaobaoMemoFetcher.perform_async(local_trade.tid)
-            end
+            update_trade(trade, account, trade_source_id)
           end
           #同步本地顾客管理下面的"副本订单"
           CustomerFetch.perform_async(account_id)
@@ -263,8 +241,55 @@ class TaobaoTradePuller
       end
     end
 
+    def update_by_tid(trade)
+
+      trade_source_id = trade.trade_source_id
+      tid = trade.tid
+      account = trade.fetch_account
+      account_id = account.id
+
+      response = TaobaoQuery.get({
+        method: 'taobao.trade.fullinfo.get',
+        fields: 'total_fee, created, tid, status, post_fee, receiver_name, pay_time, receiver_state, receiver_city, receiver_district, receiver_address, receiver_zip, receiver_mobile, receiver_phone, buyer_nick, tile, type, point_fee, is_lgtype, is_brand_sale, is_force_wlb, modified, alipay_id, alipay_no, alipay_url, shipping_type, buyer_obtain_point_fee, cod_fee, cod_status, commission_fee, seller_nick, consign_time, received_payment, payment, timeout_action_time, has_buyer_message, real_point_fee',
+        tid: tid}, trade_source_id
+      )
+
+      unless response['trade_fullinfo_get_response']
+        Notifier.puller_errors(response, account_id).deliver
+      end
+
+      trade = response['trade_fullinfo_get_response']['trade']
+      update_trade(trade, account, trade_source_id)
+    end
+
     def updatable?(local_trade, remote_status)
       !local_trade.splitted || (local_trade.splitted && remote_status != local_trade.status && remote_status != "WAIT_SELLER_SEND_GOODS" && local_trade.delivered_at.blank?)
+    end
+
+    def update_trade(trade, account, trade_source_id)
+      TaobaoTrade.where(tid: trade['tid']).each do |local_trade|
+        next unless updatable?(local_trade, trade['status'])
+        trade_old_status = local_trade.status
+        orders = trade.delete('orders')
+        trade['trade_source_id'] = trade_source_id
+        local_trade.update_attributes(trade)
+        if local_trade.changed?
+          local_trade.operation_logs.build(operated_at: Time.now, operation: "从淘宝更新订单,更新#{local_trade.changed.try(:join, ',')}")
+          local_trade.news = 1
+        end
+        local_trade.set_has_onsite_service
+        local_trade.set_alipay_data
+        local_trade.save
+
+        if trade_old_status != "WAIT_SELLER_SEND_GOODS" && local_trade.status == "WAIT_SELLER_SEND_GOODS" && local_trade.seller_id.blank?
+          local_trade.update_stock_forecast
+        end
+        if account.settings.auto_settings['auto_dispatch']
+          result = account.can_auto_dispatch_right_now
+          DelayAutoDispatch.perform_in((result == true ? account.settings.auto_settings['dispatch_silent_gap'].to_i.hours : result), local_trade.id)
+        end
+        TradeTaobaoMemoFetcher.perform_async(local_trade.tid)
+      end
     end
 
     def update_by_created(start_time = nil, end_time = nil, trade_source_id)
