@@ -53,6 +53,10 @@ end
 every :day, :at => '9:00pm' do
   runner "TradeChecker.new(:brands,:to => #{STORY_1204},:from => \"#{DEFAULT_FROM}\").invoke"
 end
+
+every :day, :at => '2:00pm' do
+  runner "Notifier.system_sms_out_of_usage_notifications.deliver"
+end
 #
 # every 2.hours do
 #   command "/usr/bin/some_great_command"

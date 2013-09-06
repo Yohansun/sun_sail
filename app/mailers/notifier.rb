@@ -29,6 +29,19 @@ class Notifier < ActionMailer::Base
         )
   end
 
+  def system_sms_out_of_usage_notifications
+    url = TradeSetting.sms_usage_querey_address
+    left_count = HTTParty.get(url).parsed_response
+    if left_count.to_i < 1000
+      mail(:to => 'clover@doorder.com',
+        :cc => 'errors@networking.io',
+        :subject => 'Magic短信余额不足提醒',
+        :body => "Magic短信余额已不足1000条,现为#{left_count}条,请尽快充值",
+        :from => "errors@networking.io"
+      )
+    end
+  end
+
   def deliver_errors(id, errors, account_id)
     account = Account.find_by_id(account_id)
     mail(:to => %w{errors@networking.io},
