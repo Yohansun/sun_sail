@@ -7,7 +7,7 @@
     </thead>
     <tbody>
       <% skus.each do |sku| %>
-        <% unless sku.value == "" %>
+        <% unless sku.value == "默认" %>
           <tr>
             <td><input type="checkbox" name="sku_ids[]" value="<%= sku.id %>"></td>
             <td class="sku_id"><%= sku.sku_id %></td>

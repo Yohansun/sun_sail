@@ -17,16 +17,16 @@ task :import_new_product_for_GNC => :environment do
     product_code,warehouse_code,product_name,category_property_value,category_name = attributes
     category = account.categories.where(name: category_name).first_or_create(use_days: 1)
     p "category_id = #{category.id}"
-    unless CategoryProperty.where(:name => "含量").length == 0
+    unless current_account.category_properties.where(:name => "含量").length == 0
       same_length = []
-      CategoryProperty.where(:name => "含量").each do |cate|
+      current_account.category_properties.where(:name => "含量").each do |cate|
         unless category_property_value == cate.values.map(&:value) *' | '
           same_length << category_property_value
         else
           category_properties = cate
         end
       end
-      if same_length.length == CategoryProperty.where(:name => "含量").length
+      if same_length.length == current_account.category_properties.where(:name => "含量").length
         category_properties = category.category_properties.create(:name => "含量", :value_text => category_property_value, :value_type=> "1", :status => "1")
       end
     else
@@ -41,7 +41,7 @@ task :import_new_product_for_GNC => :environment do
         category_property_id = c.id
         category_property_values_list = c.values.map(&:id) *' | '
       end
-    end 
+    end
     sku = Sku.where(product_id: new_product.id, account_id: account.id).first_or_create(:sku_properties_attributes => {"#{category_property_id}" => {:category_property_value_id => category_property_values_list }})
     account.sellers.each do |seller|
       seller.stock_products.create(product_id: new_product.id, sku_id: sku.id, account_id: account.id, max: 999999, safe_value: 20)

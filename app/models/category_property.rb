@@ -39,9 +39,6 @@ class CategoryProperty < ActiveRecord::Base
 
   scope :name_eq, ->(name){ where(["category_properties.name = ?",name])}
 
-
-
-
   def value_text
     Array.wrap(values_name)*"\n"
   end
