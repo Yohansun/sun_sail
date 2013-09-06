@@ -591,8 +591,8 @@ class Trade
           product = sku.try(:product)
           if product
             binding_number = binding.number * order_num
-            stock_product = fetch_account.stock_products.where(product_id: product.id, sku_id: sku_id, seller_id: seller_id).first
-            order_price = (order.price == 0 ? 0 : product.taobao_price)
+            stock_product = fetch_account.stock_products.where(seller_id: seller_id, product_id: product.id, sku_id: sku_id).first
+            order_price = (order.price == 0 ? 0 : product.price)
             if stock_product
               bill.bill_products.build(
                 stock_product_id: stock_product.id,
@@ -617,7 +617,7 @@ class Trade
           sku = Sku.find_by_id(sku_id)
           product = sku.try(:product)
           if product
-            stock_product = fetch_account.stock_products.where(product_id: product.id, sku_id: sku_id, seller_id: seller_id).first
+            stock_product = fetch_account.stock_products.where(seller_id: seller_id, product_id: product.id, sku_id: sku_id).first
             order_price = (order.price == 0 ? 0 : product.price)
             if stock_product
               bill.bill_products.build(
