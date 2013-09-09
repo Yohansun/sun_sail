@@ -158,8 +158,8 @@ class StocksController < ApplicationController
       activity = params[:activity].to_i
       if activity > 0 && @stock_products.present?
         success,fails = StockProduct.batch_update_activity_stock(@stock_products,activity)
-        flash[:notice] = "ID为#{success.join(',')} 更新可用库存#{activity}成功" if success.present?
-        flash[:error] = "ID为#{fails.join(',')} 更新可用库存#{activity}失败" if fails.present?
+        flash[:notice] = "ID为#{success.join(',')} 更新实际库存#{activity}成功" if success.present?
+        flash[:error] = "ID为#{fails.join(',')} 更新实际库存#{activity}失败" if fails.present?
       else
         flash[:error] =  "请输入大于 0 的整数"
       end
