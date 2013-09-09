@@ -191,7 +191,7 @@ zh-CN:
   permissions_tag_bind_skus: "绑定本地SKU"
   permissions_tag_warehouses#index: "查看所有仓库"
   permissions_tag_batch_update_safety_stock: "批量设置安全库存"
-  permissions_tag_batch_update_activity_stock: "批量设置可用库存"
+  permissions_tag_batch_update_activity_stock: "批量设置实际库存"
   permissions_tag_stock_in_bills#update: "更新入库单"
   permissions_tag_stock_out_bills#update: "更新出库单"
   permissions_tag_stock_in_bills#detail: "查看入库单"
