@@ -25,7 +25,7 @@ class JingdongTrade < Trade
   field :invoice_type,          as: :invoice_info, type: String
 
   field :created,               as: :order_start_time, type: DateTime
-  field :payment_confirm_time,  as: :pay_time, type: DateTime
+  field :pay_time,              as: :payment_confirm_time, type: DateTime
   field :end_time,              as: :order_end_time, type: DateTime
 
   field :buyer_nick,            as: :pin, type: String
