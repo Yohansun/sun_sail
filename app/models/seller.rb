@@ -41,7 +41,7 @@ class Seller < ActiveRecord::Base
   enum_attr :has_stock, [["启用",true],["禁用",false]]
 
   attr_accessible :has_stock, :stock_opened_at,:mobile, :telephone, :cc_emails, :email, :pinyin, :interface, :fullname, :name,
-                  :parent_id, :address, :performance_score, :user_id,:stock_name,:stock_user_id,:areas, :active
+                  :parent_id, :address, :performance_score, :user_id,:stock_name,:stock_user_id,:areas, :active, :trade_type
 
   has_many :users
   has_many :sellers_areas, dependent: :destroy
@@ -52,10 +52,13 @@ class Seller < ActiveRecord::Base
   belongs_to :user
   belongs_to :account
 
+  enum_attr :trade_type, [["淘宝", "Taobao"],["京东", "Jingdong"],["一号店", "Yihaodian"]]
+
   scope :with_account, lambda {|account_id| where(account_id: account_id)}
   scope :order_with_parent_id, order(:parent_id)
 
   validates :name, presence: true, uniqueness: { scope: :account_id }
+  validates :trade_type, presence: true
 
   before_save :set_pinyin_and_stock_name
 

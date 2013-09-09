@@ -1,6 +1,7 @@
 <tr id="seller_<%= seller.id %>">
   <td><input id='check_<%= seller.id %>' class='seller_check' type="checkbox"></input></td>
   <td><%= seller.id %><input type='hidden' class='parent_id' value="<%= seller.parent_id %>"></td>
+  <td><%= seller.trade_type_name %></td>
   <td><%= seller.name %></td>
   <td><%= seller.fullname %></td>
   <td><p style="width:100px;word-wrap:break-word"><%= seller.mobile %></p></td>

@@ -6,6 +6,7 @@
     <%= f.input :fullname, :label => "经销商全称：", :placeholder => "输入文字...", :input_html => {:class => 'input-xlarge'} %>
     <%= f.input :mobile, :label => "手机：", :placeholder => "输入文字...", :input_html => {:class => 'input-xlarge'} %>
     <%= f.input :interface, :label => "联系人：", :placeholder => "输入文字...", :input_html => {:class => 'input-xlarge'} %>
+    <%= f.input :trade_type, :label => "来源：", :placeholder => "输入文字...", collection: [["淘宝", "Taobao"],["京东", "Jingdong"],["一号店", "Yihaodian"]], :input_html =>{ :class => "input-large"} %>
     <%= f.input :parent_id, :label => "上级经销商：" do %>
       <%= f.select :parent_id, (current_account.sellers.where(active: true).map { |seller| ["#{'-' * seller.level} #{seller.name}", seller.id]}),:selected => @parent.try(:id),  :include_blank => true %>
     <% end %>

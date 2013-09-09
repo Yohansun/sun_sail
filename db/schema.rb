@@ -480,6 +480,7 @@ ActiveRecord::Schema.define(:version => 20130916092012) do
     t.integer  "account_id"
     t.string   "stock_name"
     t.integer  "stock_user_id"
+    t.string   "trade_type"
   end
 
   create_table "sellers_areas", :force => true do |t|
