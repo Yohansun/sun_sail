@@ -3,7 +3,7 @@
   $(function() {
     MagicOrders.role_key = "trades";
     MagicOrders.company = "<%= current_account.key %>"
-    MagicOrders.user = "<%= current_user.name %>"
+    MagicOrders.user = "<%= current_user.name || current_user.username %>"
     MagicOrders.current_user_seller_id = "<%= current_user.seller_id.to_i %>"
     MagicOrders.logistics = new MagicOrders.Collections.Logistics();
     MagicOrders.logistics.reset(<%= raw @logistics.to_json %>);
