@@ -41,18 +41,18 @@ class StockProduct < ActiveRecord::Base
     "正常" => "stock_products.activity >= stock_products.safe_value and stock_products.actual != stock_products.max"
   }
 
-  def self.batch_update_activity_stock(relation,number)
+  def self.batch_update_actual_stock(relation,number)
     success = []
     fails = []
     relation.each do |record|
-      record.update_activity_stock(number) ? success.push(record.id) : fails.push(record.id)
+      record.update_actual_stock(number) ? success.push(record.id) : fails.push(record.id)
     end
     [success,fails]
   end
 
-  def update_activity_stock(activity)
+  def update_actual_stock(actual)
     transaction do
-      self.actual = activity
+      self.actual = actual
       self.changes[:actual].tap do |ary|
         poor = ary.first - ary.last
         self.activity -= poor

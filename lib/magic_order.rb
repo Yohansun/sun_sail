@@ -230,7 +230,7 @@ MagicOrder::AccessControl.map do |map|
                                  "audit",
                                  "sync",
                                  "batch_update_safety_stock",
-                                 "batch_update_activity_stock",
+                                 "batch_update_actual_stock",
                                  "new_single_storage",
                                  "new_storehouse",
                                  "increase_in_commodity",

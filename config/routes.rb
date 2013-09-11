@@ -18,7 +18,7 @@ MagicOrders::Application.routes.draw do
     get :edit_depot     ,:on => :collection
     put :update_depot   ,:on => :member
     post :batch_update_safety_stock, :on => :collection
-    post :batch_update_activity_stock, :on => :collection
+    post :batch_update_actual_stock, :on => :collection
   end
 
   resources :warehouses   ,:only => [:index] do
@@ -42,7 +42,7 @@ MagicOrders::Application.routes.draw do
       get :edit_depot     ,:on => :collection
       put :update_depot   ,:on => :member
       post :batch_update_safety_stock, :on => :collection
-      post :batch_update_activity_stock, :on => :collection
+      post :batch_update_actual_stock, :on => :collection
     end
   end
   match "/stocks/safe_stock", to: 'stocks#safe_stock'
