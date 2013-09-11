@@ -257,6 +257,19 @@ class TradeDecorator < Draper::Base
     end
   end
 
+  def auto_dispatch_left_seconds(current_account)
+    if current_account.settings.auto_settings['auto_dispatch'] && trade.auto_dispatchable?
+      if current_account.can_auto_dispatch_right_now == true
+        sec = (trade.updated_at + current_account.settings.auto_settings['dispatch_silent_gap'].to_i.hours - Time.now).to_i
+        sec > 0 ? sec : 0
+      else
+        current_account.can_auto_dispatch_right_now
+      end
+    else
+      -1
+    end
+  end
+
   protected
 
   def fenxiao_status_text

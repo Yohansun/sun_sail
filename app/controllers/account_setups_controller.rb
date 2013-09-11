@@ -121,7 +121,11 @@ class AccountSetupsController < ApplicationController
   end
 
   def update_dispatch_settings
-    @setting = decorate_auto_settings(params[:auto_settings])
+    default_conditions = {"void_seller_memo"=>"off", "void_buyer_message"=>"off", "void_cs_memo"=>"off", "void_money"=>"off"}
+    hash_auto_settings = params[:auto_settings] || {}
+    hash_conditions = hash_auto_settings["dispatch_conditions"] || {}
+    hash_auto_settings["dispatch_conditions"] = default_conditions.merge(hash_conditions)
+    @setting = decorate_auto_settings(hash_auto_settings)
     current_settings = current_account.settings.auto_settings
     current_settings.update(@setting)
     current_account.settings.auto_settings = current_settings

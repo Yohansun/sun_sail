@@ -75,16 +75,16 @@
                       </label>
                     -->
                     <label class="checkbox">
-                      <input type="checkbox" name="auto_settings[dispatch_conditions][void_seller_memo]" <%= 'checked' if @setting['dispatch_conditions']['void_seller_memo'] == 1 %>>卖家无留言
+                      <input type="checkbox" name="auto_settings[dispatch_conditions][void_seller_memo]" <%= "checked='checked'" if @setting['dispatch_conditions']['void_seller_memo'] == 1 %>>卖家无留言
                     </label>
                     <label class="checkbox">
-                      <input type="checkbox" name="auto_settings[dispatch_conditions][void_buyer_message]" <%= 'checked' if @setting['dispatch_conditions']['void_buyer_message'] == 1 %>>买家无留言
+                      <input type="checkbox" name="auto_settings[dispatch_conditions][void_buyer_message]" <%= "checked='checked'" if @setting['dispatch_conditions']['void_buyer_message'] == 1 %>>买家无留言
                     </label>
                     <label class="checkbox">
-                      <input type="checkbox" name="auto_settings[dispatch_conditions][void_cs_memo]" <%= 'checked' if @setting['dispatch_conditions']['void_cs_memo'] == 1 %>>客服无备注
+                      <input type="checkbox" name="auto_settings[dispatch_conditions][void_cs_memo]" <%= "checked='checked'" if @setting['dispatch_conditions']['void_cs_memo'] == 1 %>>客服无备注
                     </label>
                     <label class="checkbox">
-                      <input type="checkbox" name="auto_settings[dispatch_conditions][void_money]" <%= 'checked' if @setting['dispatch_conditions']['void_money'] == 1 %>>订单未退款
+                      <input type="checkbox" name="auto_settings[dispatch_conditions][void_money]" <%= "checked='checked'" if @setting['dispatch_conditions']['void_money'] == 1 %>>订单未退款
                     </label>
                     <!--
                       <label class="checkbox">
