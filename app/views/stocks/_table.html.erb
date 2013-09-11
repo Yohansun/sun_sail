@@ -19,7 +19,7 @@
           <%= link_to_authorize "批量设置安全库存","#batch_update_safety_stock",:target_url => "/stocks/batch_update_safety_stock?warehouse_id=#{params[:warehouse_id]}",:class => "magic_operation set_stock", "data-toggle" => "modal",:request => :post,:id => "set_safety_stock" %>
         </li>
         <li>
-          <%= link_to_authorize "批量设置实际库存","#batch_update_activity_stock",:target_url => "/stocks/batch_update_activity_stock?warehouse_id=#{params[:warehouse_id]}",:class => "magic_operation set_stock", "data-toggle" => "modal",:request => :post,:id => "set_actual_stock" %>
+          <%= link_to_authorize "批量设置实际库存","#batch_update_actual_stock",:target_url => "/stocks/batch_update_actual_stock?warehouse_id=#{params[:warehouse_id]}",:class => "magic_operation set_stock", "data-toggle" => "modal",:request => :post,:id => "set_actual_stock" %>
         </li>
       </ul>
     </div>
@@ -47,8 +47,8 @@
     <fieldset class="js-modal modal hide fade" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true" id="batch_update_safety_stock">
       <%= render "batch_update_safety_stock" %>
     </fieldset>
-    <fieldset class="js-modal modal hide fade" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true" id="batch_update_activity_stock">
-      <%= render "batch_update_activity_stock" %>
+    <fieldset class="js-modal modal hide fade" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true" id="batch_update_actual_stock">
+      <%= render "batch_update_actual_stock" %>
     </fieldset>
       <table class="table table-hover table-bordered table-striped table-condensed js-table" id="stocks_table">
         <thead>
