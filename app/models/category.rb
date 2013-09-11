@@ -27,7 +27,9 @@ class Category < ActiveRecord::Base
   accepts_nested_attributes_for :category_properties#, :allow_destroy => true
 
   attr_accessible :name, :parent_id, :lft, :rgt,  :status, :category_property_ids,:use_days
-  validates :use_days,:numericality => {:greater_than => 0,:less_than => 100000},:presence => true
+
+  # range from 0 to 100000
+  validates :use_days,:numericality => {:greater_than => -1,:less_than => 100000},:presence => true
 
   validates :name, presence: true, uniqueness: { scope: :account_id }
 
