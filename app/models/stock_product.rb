@@ -52,14 +52,14 @@ class StockProduct < ActiveRecord::Base
 
   def update_activity_stock(activity)
     transaction do
-      self.activity = activity
-      self.changes[:activity].tap do |ary|
+      self.actual = activity
+      self.changes[:actual].tap do |ary|
         poor = ary.first - ary.last
-        self.actual -= poor
+        self.activity -= poor
         self.forecast -= poor
         klass = poor > 0 ? StockOutBill : StockInBill
         return true if self.save! && create_stock_bill(klass,poor.abs)
-      end if self.activity_changed?
+      end if self.actual_changed?
     end rescue false
   end
 
@@ -75,7 +75,7 @@ class StockProduct < ActiveRecord::Base
 
   private
   def create_stock_bill(klass,number)
-    bill = klass.new(stock_typs: "VIRTUAL",:seller_id => self.seller_id ,account_id: self.account_id,bill_products_attributes: {"0" => {real_number: number, number: number,sku_id: self.sku_id}})
+    bill = klass.new(stock_typs: "VIRTUAL", :status => "STOCKED", :confirm_stocked_at => Time.now, :seller_id => self.seller_id ,account_id: self.account_id,bill_products_attributes: {"0" => {real_number: number, number: number,sku_id: self.sku_id}})
     bill.update_bill_products
     bill.save!
   end

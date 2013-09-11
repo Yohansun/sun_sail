@@ -42,8 +42,8 @@
             <button class="btn btn-primary btn_mar4"><i class="icon-user icon-white"></i> <%= current_user.display_name %></button>
             <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle"><span class="caret"></span></button>
             <ul class="dropdown-menu">
-              <li><%= link_to raw("<i class='icon-user'></i>个人中心"), my_alerts_path %></li>
-              <li><%= link_to raw("<i class='icon-edit'></i>修改信息"), edit_user_registration_path %></li>
+              <li><%= link_to raw("<i class='icon-user'></i>个人设置"), edit_user_registration_path %></li>
+              <li><%= link_to raw("<i class='icon-edit'></i>我的异常订单"), my_alerts_path %></li>
               <li><%= link_to raw("<i class='icon-off'></i>注销"), destroy_user_session_path, method: :delete %></li>
             </ul>
           </div>
@@ -121,9 +121,9 @@
             </li>
             <li class="divider-vertical"></li>
           </ul>
-          
+
           <%= render partial: "layouts/exception_center" %>
-          
+
           <% end %>
         </div>
       </div>
