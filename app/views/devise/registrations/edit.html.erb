@@ -1,21 +1,43 @@
-<h2>用户编辑</h2>
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span2 bs-docs-sidebar">
+      <ul class="nav nav-list bs-docs-sidenav affix span2">
+        <li><%= link_to raw("<i class='icon-chevron-right'></i>个人中心"), show_me_users_path %></li>
+        <li class="active"><%= link_to raw("<i class='icon-chevron-right'></i>修改信息"), edit_user_registration_path %></li>
+      </ul>
+    </div>
+    <div class="span10">
+      <ul class="nav nav-tabs js-nav_tabs">
+        <li class="active"><a href="#mycenter" data-toggle="tab">修改信息</a></li>
+      </ul><!-- nav-tabs -->
 
-<%= simple_form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put ,:class =>'well form-horizontal'}) do |f| %>
-<%= f.error_notification %>
-
-<%= f.input :email, :required => true, :autofocus => true,:label => "邮箱地址" %>
-<%= f.input :current_password, :required => true,:label => " 当前密码" %>
-<fieldset class="add_unit">
-  <div class="control-group">
-    <%= f.input :password_confirmation, :required => false,:label => "密码" %>
+      <div class="tab-content">
+        <div class="tab-pane active" id="mycenter">
+          <%= simple_form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put ,:class =>'well form-horizontal'}) do |f| %>
+            <%= f.error_notification %>
+            <div class="row-fluid">
+              <fieldset class="span12">
+                <%= f.input :username, :required => true, :autofocus => true,:label => "用户名" %>
+                <%= f.input :name, :label => "姓名" %>
+                <%= f.input :email, :required => true, :label => "邮箱地址" %>
+                <%= f.input :phone, :label => "手机" %>
+                <%= f.input :current_password, :required => true, :label => " 当前密码" %>
+                <fieldset class="add_unit">
+                  <div class="control-group">
+                    <%= f.input :password_confirmation, :required => false,:label => "更新密码" %>
+                  </div>
+                  <div class="control-group">
+                    <%= f.input :password, :autocomplete => "off", :required => false,:label => "重复更新密码" %>
+                  </div>
+                </fieldset>
+              </fieldset>
+              <div class="span11 offset1">
+                <%= f.button :submit, :value => "保存", class: "btn btn-small"%>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div><!-- tab-content end -->
+    </div>
   </div>
-  <div class="control-group">
-
-    <%= f.input :password, :autocomplete => "off", :required => false,:label => "重复密码" %>
-  </div>
-</fieldset>
-
-<div class="form-actions">
-  <%= f.button :submit, :value => "保存", class: "btn btn-primary edit"%>
 </div>
-<% end %>

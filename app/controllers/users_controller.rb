@@ -1,6 +1,6 @@
 # encoding: utf-8
 class UsersController < ApplicationController
-  layout "management"
+  layout "management", except: [:show_me]
   before_filter :authorize #,:except => [:autologin,:search,:edit_with_role]
 
   def autologin
@@ -58,6 +58,10 @@ class UsersController < ApplicationController
 
   def show
     @user = current_account.users.find params[:id]
+  end
+
+  def show_me
+    @user = current_user
   end
 
   def new
