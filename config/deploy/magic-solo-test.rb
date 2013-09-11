@@ -39,6 +39,8 @@ namespace :deploy do
 
   desc "Symlink shared resources on each release"
   task :symlink_shared, :roles => :app do
+    run "touch #{shared_path}/setup.log"
+    run "ln -nfs #{shared_path}/setup.log #{release_path}/lib/tasks/setup.log"
     run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
     run "ln -nfs #{shared_path}/config/mailers.yml #{release_path}/config/mailers.yml"
     run "ln -nfs #{shared_path}/config/sidekiq.yml #{release_path}/config/sidekiq.yml"
@@ -70,3 +72,11 @@ end
 # end
 
 # after 'deploy:create_symlink', 'sidekiq:restart'
+namespace :magic_order do
+  desc 'update data'
+  task :setup, :roles => :app do
+    run "cd #{release_path} && RAILS_ENV=production rake magic_order:setup"
+  end
+end
+
+after 'deploy:symlink_shared', 'magic_order:setup'

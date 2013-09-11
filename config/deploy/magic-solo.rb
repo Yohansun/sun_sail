@@ -46,6 +46,8 @@ namespace :deploy do
 
   desc "Symlink shared resources on each release"
   task :symlink_shared, :roles => :app do
+    run "touch #{shared_path}/setup.log"
+    run "ln -nfs #{shared_path}/setup.log #{release_path}/lib/tasks/setup.log"
     run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
     run "ln -nfs #{shared_path}/config/sidekiq.yml #{release_path}/config/sidekiq.yml"
     run "ln -nfs #{shared_path}/config/mailers.yml #{release_path}/config/mailers.yml"
@@ -62,7 +64,6 @@ namespace :deploy do
 end
 
 after 'deploy:finalize_update', 'deploy:symlink_shared'
-after 'deploy:finalize_update', 'magic_order:setup'
 
 # can't execute because of permission.
 # before "deploy:restart", "deploy:god_restart_magic_solo"
@@ -81,3 +82,4 @@ namespace :magic_order do
   end
 end
 
+after 'deploy:symlink_shared', 'magic_order:setup'
