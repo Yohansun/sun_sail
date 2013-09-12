@@ -4,84 +4,38 @@ class TaobaoProductsPuller
 
     # Below methods are strongly recommed to use oauth2.
 
-    def sync_pic(trade_source_id)
-      trade_source = TradeSource.find_by_id(trade_source_id)
-      account = Account.find_by_id(trade_source.account_id)
-      if account.key == "nippon"
-        nick = '立邦漆官方旗舰店'
-      else
-        nick = trade_source.name
-      end
-
-      response = TaobaoQuery.get({method: 'taobao.products.get', nick: nick, fields: 'pic_url, product_id'}, trade_source_id)
-      if  response['products_get_response']['products'].present? &&  response['products_get_response']['products']['product'].present?
-        products = response['products_get_response']['products']['product']
-        products.each do |product|
-          taobao_product = TaobaoProduct.where(product_id: product['product_id']).first
-          if taobao_product
-            taobao_product.pic_url = product['pic_url']
-            taobao_product.save!(validate: false)
-          end
-          local_product = Product.where(product_id: product['product_id']).first
-          if local_product
-            local_product.pic_url = product['pic_url']
-            local_product.save!(validate: false)
-          end
-        end
-      end
-    end
-
     # after create products, remember to sync cat_name
     def sync_cat_name(trade_source_id)
       trade_source = TradeSource.find_by_id(trade_source_id)
       account = Account.find_by_id(trade_source.account_id)
-      total_pages = nil
-      page_no = 0
-      if  account.key == "nippon"
-        nick = '立邦漆官方旗舰店'
-      else
-        nick = trade_source.name
-      end
 
-      begin
-        response = TaobaoQuery.get({method: 'taobao.products.get', nick: nick,  fields: 'cat_name, product_id', page_no: page_no, page_size: 100}, trade_source_id)
-        if response['products_get_response']['products'].present? &&  response['products_get_response']['products']['product'].present?
-          products = response['products_get_response']['products']['product']
-          total_results = products.count
-          total_pages ||= total_results / 100
-          products.each do |product|
-            if product['cat_name'].present?
-              category = Category.where(name: product['cat_name'], account_id: account.id).first_or_create
-            else
-              category = Category.where(name: '其他').first_or_create
-            end
-            taobao_product = TaobaoProduct.where(product_id: product['product_id']).first
-            if taobao_product
-              taobao_product.category_id = category.id
-              taobao_product.cat_name = product['cat_name']
-              taobao_product.save!(validate: false)
-            end
-            local_product = Product.where(product_id: product['product_id']).first
-            if local_product
-              local_product.cat_name = product['cat_name']
-              local_product.category_id = category.id
-              local_product.save!(validate: false)
-            end
+      account.products.each do |product|
+        response = TaobaoQuery.get({method: 'taobao.product.get', fields: 'cat_name', product_id: product.product_id}, trade_source_id)
+        if response['product_get_response'].present? &&  response['product_get_response']['product'].present?
+          response = response['product_get_response']['product']
+          if response['cat_name'].present?
+            category = account.categories.where(name: response['cat_name']).first_or_create
+          else
+            category = account.categories.where(name: '其他').first_or_create
+          end
+          product.cat_name = response['cat_name']
+          product.category_id = category.id
+          product.save!
+          taobao_product = account.taobao_products.where(product_id: product.product_id).first
+          if taobao_product
+            taobao_product.category_id = category.id
+            taobao_product.cat_name = response['cat_name']
+            taobao_product.save!
           end
         end
-        page_no += 1
-      end until(total_pages.nil? || total_pages == 0 || page_no > total_pages )
+      end
     end
 
 
     def create_item!(trade_source_id, num_iid)
       trade_source = TradeSource.find_by_id(trade_source_id)
       account = Account.find_by_id(trade_source.account_id)
-      if account.key == "nippon "
-        nick = '立邦漆官方旗舰店'
-      else
-        nick = trade_source.name
-      end
+      nick = trade_source.name rescue nil
       item_get_response = TaobaoQuery.get({method: 'taobao.item.get',  fields: 'num,detail_url,title,sku.properties_name,sku.properties,sku.quantity, sku.sku_id, outer_id, product_id, pic_url,cid,price', num_iid: num_iid, nick: nick}, trade_source_id)
       sku_items = item_get_response['item_get_response']['item']
       sku_items_count = sku_items.count
@@ -94,13 +48,13 @@ class TaobaoProductsPuller
         pic_url = sku_items['pic_url']
         price = sku_items['price']
 
-        local_product = Product.find_by_num_iid(num_iid)
+        local_product = account.products.find_by_num_iid(num_iid)
         unless local_product
-          local_product = Product.create(account_id: account.id, name: name, detail_url: detail_url, outer_id: outer_id,  num_iid: num_iid, product_id: product_id, cid: cid, pic_url: pic_url, price: price)
+          local_product = account.products.create(name: name, detail_url: detail_url, outer_id: outer_id,  num_iid: num_iid, product_id: product_id, cid: cid, pic_url: pic_url, price: price)
         end
-        taobao_product = TaobaoProduct.find_by_num_iid(local_product.num_iid)
+        taobao_product = account.taobao_products.find_by_num_iid(local_product.num_iid)
         unless taobao_product
-          taobao_product = TaobaoProduct.create(account_id: account.id, category_id: local_product.category_id, num_iid: local_product.num_iid, price: local_product.price, outer_id: local_product.outer_id, product_id: local_product.product_id, cat_name: local_product.cat_name, pic_url: local_product.pic_url, cid: local_product.cid, name: local_product.name)
+          taobao_product = account.taobao_products.create(category_id: local_product.category_id, num_iid: local_product.num_iid, price: local_product.price, outer_id: local_product.outer_id, product_id: local_product.product_id, cat_name: local_product.cat_name, pic_url: local_product.pic_url, cid: local_product.cid, name: local_product.name)
         end
         if sku_items['skus'] && sku_items['skus']['sku'].count > 0
           sku_items['skus']['sku'].each do |sku|
@@ -108,27 +62,29 @@ class TaobaoProductsPuller
             quantity = sku['quantity']
             properties_name = sku['properties_name']
             properties = sku['properties']
-            taobao_sku = taobao_product.taobao_skus.where(account_id: account.id, taobao_product_id: taobao_product.id, num_iid: num_iid, sku_id: sku_id).first
+            taobao_sku = taobao_product.taobao_skus.where(account_id: account.id,sku_id: sku_id).first
             unless taobao_sku
-              taobao_sku = taobao_product.taobao_skus.create(account_id: account.id, taobao_product_id: taobao_product.id, num_iid: num_iid, sku_id: sku_id, properties_name: properties_name, properties: properties)
+              taobao_sku = taobao_product.taobao_skus.create(account_id: account.id, num_iid: num_iid, sku_id: sku_id, properties_name: properties_name, properties: properties)
             end
-            sku = local_product.skus.where(account_id: account.id, product_id: local_product.id, num_iid: num_iid, sku_id: sku_id).first
+            sku = local_product.skus.where(account_id: account.id, sku_id: sku_id).first
             unless sku
-              sku = local_product.skus.create(account_id: account.id, product_id: local_product.id, num_iid: num_iid, sku_id: sku_id, properties_name: properties_name, properties: properties)
-
-              StockProduct.create(product_id: local_product.id, seller_id: account.sellers.first.id, sku_id: sku.id, num_iid: local_product.num_iid, account_id: account.id, max: 999999, actual: quantity, activity: quantity, safe_value: 20)
+              sku = local_product.skus.create(account_id: account.id, num_iid: num_iid, sku_id: sku_id, properties_name: properties_name, properties: properties)
+              local_product.stock_products.create(seller_id: account.sellers.first.id, sku_id: sku.id, num_iid: num_iid, account_id: account.id, max: 999999, actual: quantity, activity: quantity, safe_value: 20)
+              SkuBinding.where(sku_id: sku.id, taobao_sku_id: taobao_sku.id, number: 1).first_or_create
             end
           end
         else
           quantity = sku_items['num']
-          taobao_sku = taobao_product.taobao_skus.where(account_id: account.id, taobao_product_id: taobao_product.id, num_iid: num_iid).first_or_create
-          sku = local_product.skus.where(account_id: account.id, product_id: local_product.id, num_iid: num_iid).first_or_create
-          StockProduct.create(product_id: local_product.id, seller_id: account.sellers.first.id, sku_id: sku.id, num_iid: local_product.num_iid, account_id: account.id, max: 999999, actual: quantity, activity: quantity, safe_value: 20)
-          # NEED SELLER TO SYNC STOCK FOR SOME REASON.
-        end
-
-        if sku && taobao_sku
-          SkuBinding.where(sku_id: sku.id, taobao_sku_id: taobao_sku.id, number: 1).first_or_create
+          taobao_sku = taobao_product.taobao_skus.first
+          unless taobao_sku
+            taobao_sku = taobao_product.taobao_skus.create(account_id: account.id, num_iid: num_iid)
+          end
+          sku = local_product.skus.first
+          unless sku
+            sku = local_product.skus.create(account_id: account.id, num_iid: num_iid)
+            local_product.stock_products.create(seller_id: account.sellers.first.id, sku_id: sku.id, num_iid: num_iid, account_id: account.id, max: 999999, actual: quantity, activity: quantity, safe_value: 20)
+            SkuBinding.where(sku_id: sku.id, taobao_sku_id: taobao_sku.id, number: 1).first_or_create
+          end
         end
       end
     end
@@ -137,33 +93,28 @@ class TaobaoProductsPuller
       trade_source = TradeSource.find_by_id(trade_source_id)
       account = Account.find_by_id(trade_source.account_id)
 
-      return if Product.where(account_id: trade_source.account_id).exists?
+      # 每个店铺的create!方法只应该在店铺初始化的时候走一次
+      return if account.products.exists?
 
       total_pages = nil
       page_no = 0
-
-      if account.key == "nippon "
-        nick = '立邦漆官方旗舰店'
-      else
-        nick = trade_source.name
-      end
+      nick = trade_source.name rescue nil
 
       num_iids = []
       begin
         #调用taobao.items.onsale.get获取获取当前用户作为卖家的出售中的商品num_iid
-        items_onsale_response = TaobaoQuery.get({method: 'taobao.items.onsale.get', fields: 'num_iid', nick: nick}, trade_source_id)
-        if  items_onsale_response['items_onsale_get_response']['items'].present? &&  items_onsale_response['items_onsale_get_response']['items']['item'].present?
+        items_onsale_response = TaobaoQuery.get({method: 'taobao.items.onsale.get', fields: 'num_iid', nick: nick, page_no: page_no, page_size: 40}, trade_source_id)
+        if items_onsale_response['items_onsale_get_response']['items'].present? &&  items_onsale_response['items_onsale_get_response']['items']['item'].present?
           items = items_onsale_response['items_onsale_get_response']['items']['item']
-          total_results = items_onsale_response['items_onsale_get_response']['total_results']
-          total_pages ||= total_results / 100
-          if total_results > 0
-            items.each do |item|
-              num_iids << item['num_iid']
-            end
+          total_results = items_onsale_response['items_onsale_get_response']['total_results'].to_i
+          total_pages ||= total_results / 40
+          next if total_results < 1
+          items.each do |item|
+            num_iids << item['num_iid']
           end
         end
         page_no += 1
-      end until(total_pages.nil? || total_pages == 0 || page_no > total_pages )
+      end until(page_no > total_pages || total_pages == 0)
 
       num_iids.each do |num_iid|
         #通过num_iid调用taobao.item.get获取sku相关信息
@@ -180,13 +131,13 @@ class TaobaoProductsPuller
           cid = sku_items['cid']
           pic_url = sku_items['pic_url']
           price = sku_items['price']
-          local_product = Product.find_by_num_iid(num_iid)
+          local_product = account.products.find_by_num_iid(num_iid)
           unless local_product
-            local_product = Product.create(account_id: account.id, name: name, detail_url: detail_url, outer_id: outer_id,  num_iid: num_iid, product_id: product_id, cid: cid, pic_url: pic_url, price: price)
+            local_product = account.products.create(name: name, detail_url: detail_url, outer_id: outer_id,  num_iid: num_iid, product_id: product_id, cid: cid, pic_url: pic_url, price: price)
           end
-          taobao_product = TaobaoProduct.find_by_num_iid(local_product.num_iid)
+          taobao_product = account.taobao_products.find_by_num_iid(local_product.num_iid)
           unless taobao_product
-            taobao_product = TaobaoProduct.create(account_id: account.id, category_id: local_product.category_id, num_iid: local_product.num_iid, price: local_product.price, outer_id: local_product.outer_id, product_id: local_product.product_id, cat_name: local_product.cat_name, pic_url: local_product.pic_url, cid: local_product.cid, name: local_product.name)
+            taobao_product = account.taobao_products.create(category_id: local_product.category_id, num_iid: local_product.num_iid, price: local_product.price, outer_id: local_product.outer_id, product_id: local_product.product_id, cat_name: local_product.cat_name, pic_url: local_product.pic_url, cid: local_product.cid, name: local_product.name)
           end
           if sku_items['skus'] && sku_items['skus']['sku'].count > 0
             sku_items['skus']['sku'].each do |sku|
@@ -194,27 +145,29 @@ class TaobaoProductsPuller
               quantity = sku['quantity']
               properties_name = sku['properties_name']
               properties = sku['properties']
-              taobao_sku = taobao_product.taobao_skus.where(account_id: account.id, taobao_product_id: taobao_product.id, num_iid: num_iid, sku_id: sku_id).first
+              taobao_sku = taobao_product.taobao_skus.where(account_id: account.id,sku_id: sku_id).first
               unless taobao_sku
-                taobao_sku = taobao_product.taobao_skus.create(account_id: account.id, taobao_product_id: taobao_product.id, num_iid: num_iid, sku_id: sku_id, properties_name: properties_name, properties: properties)
+                taobao_sku = taobao_product.taobao_skus.create(account_id: account.id, num_iid: num_iid, sku_id: sku_id, properties_name: properties_name, properties: properties)
               end
-              sku = local_product.skus.where(account_id: account.id, product_id: local_product.id, num_iid: num_iid, sku_id: sku_id).first
+              sku = local_product.skus.where(account_id: account.id, sku_id: sku_id).first
               unless sku
-                sku = local_product.skus.create(account_id: account.id, product_id: local_product.id, num_iid: num_iid, sku_id: sku_id, properties_name: properties_name, properties: properties)
+                sku = local_product.skus.create(account_id: account.id, num_iid: num_iid, sku_id: sku_id, properties_name: properties_name, properties: properties)
+                local_product.stock_products.create(seller_id: account.sellers.first.id, sku_id: sku.id, num_iid: num_iid, account_id: account.id, max: 999999, actual: quantity, activity: quantity, safe_value: 20)
+                SkuBinding.where(sku_id: sku.id, taobao_sku_id: taobao_sku.id, number: 1).first_or_create
               end
-              StockProduct.create(product_id: local_product.id, seller_id: account.sellers.first.id, sku_id: sku.id, num_iid: local_product.num_iid, account_id: account.id, max: 999999, actual: quantity, activity: quantity, safe_value: 20)
-
-              # NEED SELLER TO SYNC STOCK FOR SOME REASON.
             end
           else
             quantity = sku_items['num']
-            taobao_sku = taobao_product.taobao_skus.where(account_id: account.id, taobao_product_id: taobao_product.id, num_iid: num_iid).first_or_create
-            sku = local_product.skus.where(account_id: account.id, product_id: local_product.id, num_iid: num_iid).first_or_create
-            StockProduct.create(product_id: local_product.id, seller_id: account.sellers.first.id, sku_id: sku.id, num_iid: local_product.num_iid, account_id: account.id, max: 999999, actual: quantity, activity: quantity, safe_value: 20)
-            # NEED SELLER TO SYNC STOCK FOR SOME REASON.
-          end
-          if sku && taobao_sku
-            SkuBinding.where(sku_id: sku.id, taobao_sku_id: taobao_sku.id, number: 1).first_or_create
+            taobao_sku = taobao_product.taobao_skus.first
+            unless taobao_sku
+              taobao_sku = taobao_product.taobao_skus.create(account_id: account.id, num_iid: num_iid)
+            end
+            sku = local_product.skus.first
+            unless sku
+              sku = local_product.skus.create(account_id: account.id, num_iid: num_iid)
+              local_product.stock_products.create(seller_id: account.sellers.first.id, sku_id: sku.id, num_iid: num_iid, account_id: account.id, max: 999999, actual: quantity, activity: quantity, safe_value: 20)
+              SkuBinding.where(sku_id: sku.id, taobao_sku_id: taobao_sku.id, number: 1).first_or_create
+            end
           end
         end
       end # num_iids each ends
@@ -225,7 +178,8 @@ class TaobaoProductsPuller
       trade_source = TradeSource.find_by_id(trade_source_id)
       account = Account.find_by_id(trade_source.account_id)
 
-      return if Product.where(account_id: trade_source.account_id).exists?
+      # 每个店铺的create_from_trades!方法只应该在店铺初始化的时候走一次
+      return if account.products.exists?
 
       trades = Trade.where(trade_source_id: trade_source_id).only("taobao_orders.num_iid")
       num_iids = trades.map(&:taobao_orders).flatten.map(&:num_iid).flatten.uniq
@@ -245,13 +199,13 @@ class TaobaoProductsPuller
           pic_url = sku_items['pic_url']
           price = sku_items['price']
 
-          local_product = Product.find_by_num_iid(num_iid)
+          local_product = account.products.find_by_num_iid(num_iid)
           unless local_product
-            local_product = Product.create(account_id: account.id, name: name, detail_url: detail_url, outer_id: outer_id,  num_iid: num_iid, product_id: product_id, cid: cid, pic_url: pic_url, price: price)
+            local_product = account.products.create(name: name, detail_url: detail_url, outer_id: outer_id,  num_iid: num_iid, product_id: product_id, cid: cid, pic_url: pic_url, price: price)
           end
-          taobao_product = TaobaoProduct.find_by_num_iid(local_product.num_iid)
+          taobao_product = account.taobao_products.find_by_num_iid(local_product.num_iid)
           unless taobao_product
-            taobao_product = TaobaoProduct.create(account_id: account.id, category_id: local_product.category_id, num_iid: local_product.num_iid, price: local_product.price, outer_id: local_product.outer_id, product_id: local_product.product_id, cat_name: local_product.cat_name, pic_url: local_product.pic_url, cid: local_product.cid, name: local_product.name)
+            taobao_product = account.taobao_products.create(category_id: local_product.category_id, num_iid: local_product.num_iid, price: local_product.price, outer_id: local_product.outer_id, product_id: local_product.product_id, cat_name: local_product.cat_name, pic_url: local_product.pic_url, cid: local_product.cid, name: local_product.name)
           end
           if sku_items['skus'] && sku_items['skus']['sku'].count > 0
             sku_items['skus']['sku'].each do |sku|
@@ -259,29 +213,29 @@ class TaobaoProductsPuller
               quantity = sku['quantity']
               properties_name = sku['properties_name']
               properties = sku['properties']
-              taobao_sku = taobao_product.taobao_skus.where(account_id: account.id, taobao_product_id: taobao_product.id, num_iid: num_iid, sku_id: sku_id).first
+              taobao_sku = taobao_product.taobao_skus.where(account_id: account.id,sku_id: sku_id).first
               unless taobao_sku
-                taobao_sku = taobao_product.taobao_skus.create(account_id: account.id, taobao_product_id: taobao_product.id, num_iid: num_iid, sku_id: sku_id, properties_name: properties_name, properties: properties)
+                taobao_sku = taobao_product.taobao_skus.create(account_id: account.id, num_iid: num_iid, sku_id: sku_id, properties_name: properties_name, properties: properties)
               end
-              sku = local_product.skus.where(account_id: account.id, product_id: local_product.id, num_iid: num_iid, sku_id: sku_id).first
+              sku = local_product.skus.where(account_id: account.id, sku_id: sku_id).first
               unless sku
-                sku = local_product.skus.create(account_id: account.id, product_id: local_product.id, num_iid: num_iid, sku_id: sku_id, properties_name: properties_name, properties: properties)
+                sku = local_product.skus.create(account_id: account.id, num_iid: num_iid, sku_id: sku_id, properties_name: properties_name, properties: properties)
+                local_product.stock_products.create(seller_id: account.sellers.first.id, sku_id: sku.id, num_iid: num_iid, account_id: account.id, max: 999999, actual: quantity, activity: quantity, safe_value: 20)
+                SkuBinding.where(sku_id: sku.id, taobao_sku_id: taobao_sku.id, number: 1).first_or_create
               end
-              StockProduct.create(product_id: local_product.id, seller_id: account.sellers.first.id, sku_id: sku.id, num_iid: local_product.num_iid, account_id: account.id, max: 999999, actual: quantity, activity: quantity, safe_value: 20)
-              # NEED SELLER TO SYNC STOCK FOR SOME REASON.
             end
           else
-            unless taobao_product
-              taobao_product = TaobaoProduct.create(account_id: account.id, category_id: local_product.category_id, num_iid: local_product.num_iid, price: local_product.price, outer_id: local_product.outer_id, product_id: local_product.product_id, cat_name: local_product.cat_name, pic_url: local_product.pic_url, cid: local_product.cid, name: local_product.name)
-            end
             quantity = sku_items['num']
-            taobao_sku = taobao_product.taobao_skus.where(account_id: account.id, taobao_product_id: taobao_product.id, num_iid: num_iid).first_or_create
-            sku = local_product.skus.where(account_id: account.id, product_id: local_product.id, num_iid: num_iid).first_or_create
-            StockProduct.create(product_id: local_product.id, seller_id: account.sellers.first.id, sku_id: sku.id, num_iid: local_product.num_iid, account_id: account.id, max: 999999, actual: quantity, activity: quantity, safe_value: 20)
-            # NEED SELLER TO SYNC STOCK FOR SOME REASON.
-          end
-          if sku && taobao_sku
-            SkuBinding.where(sku_id: sku.id, taobao_sku_id: taobao_sku.id, number: 1).first_or_create
+            taobao_sku = taobao_product.taobao_skus.first
+            unless taobao_sku
+              taobao_sku = taobao_product.taobao_skus.create(account_id: account.id, num_iid: num_iid)
+            end
+            sku = local_product.skus.first
+            unless sku
+              sku = local_product.skus.create(account_id: account.id, num_iid: num_iid)
+              local_product.stock_products.create(seller_id: account.sellers.first.id, sku_id: sku.id, num_iid: num_iid, account_id: account.id, max: 999999, actual: quantity, activity: quantity, safe_value: 20)
+              SkuBinding.where(sku_id: sku.id, taobao_sku_id: taobao_sku.id, number: 1).first_or_create
+            end
           end
         end
       end # num_iids each ends
