@@ -14,13 +14,6 @@ MagicOrders::Application.routes.draw do
     end
   end
 
-  resources :stocks     , only: [:index] do
-    get :edit_depot     ,:on => :collection
-    put :update_depot   ,:on => :member
-    post :batch_update_safety_stock, :on => :collection
-    post :batch_update_actual_stock, :on => :collection
-  end
-
   resources :warehouses   ,:only => [:index] do
     post :batch_update_safety_stock,:on => :collection
     resources :stock_bills
@@ -39,13 +32,26 @@ MagicOrders::Application.routes.draw do
       post :unlock        ,:on => :collection
     end
     resources :stocks     , only: [:index] do
-      get :edit_depot     ,:on => :collection
+      collection do
+        get :edit_depot
+        post :batch_update_safety_stock
+        post :batch_update_activity_stock
+        put :inventory
+      end
       put :update_depot   ,:on => :member
-      post :batch_update_safety_stock, :on => :collection
-      post :batch_update_actual_stock, :on => :collection
     end
     resources :stock_csv_files
   end
+
+  resources :stocks     , only: [:index] do
+    put :update_depot   ,:on => :member
+    collection do
+      post :batch_update_safety_stock
+      post :batch_update_activity_stock
+      get :edit_depot
+    end
+  end
+
   match "/stocks/safe_stock", to: 'stocks#safe_stock'
   post "/stocks/edit_safe_stock", to: 'stocks#edit_safe_stock'
   post "/stock_bills/update_status", to: 'stock_bills#update_status'

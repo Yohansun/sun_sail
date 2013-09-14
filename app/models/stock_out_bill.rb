@@ -136,7 +136,7 @@ class StockOutBill < StockBill
   def check
     do_check
     decrease_activity
-    if account && account.settings.enable_module_third_party_stock != 1
+    if account && account.settings.enable_module_third_party_stock != 1 || self.stock_type == "OINVENTORY"
       decrease_actual
     end
   end

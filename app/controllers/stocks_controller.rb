@@ -5,7 +5,7 @@ class StocksController < ApplicationController
   before_filter :set_hold_hash, only: [:index]
 
   def index
-    condition_relation = StockProduct.where(default_search).where(:"sellers.active" => true).includes(:seller,:product)
+    condition_relation = default_scoped.where(:"sellers.active" => true).includes(:seller,:product)
     condition_relation = condition_relation.where(StockProduct::STORAGE_STATUS[params[:storage_status]]).scoped if params[:storage_status].present?
     conditions ||= {}
     conditions[:id_in] = params[:export_ids].split(',') if params[:export_ids].present?
@@ -40,7 +40,7 @@ class StocksController < ApplicationController
 
   def old
     select_sql = "skus.*, products.name, products.outer_id, products.product_id, products.category_id, stock_products.*"
-    @stock_products = StockProduct.where(default_search).joins(:product).joins(:sku).select(select_sql).order("stock_products.product_id")
+    @stock_products = default_scoped.joins(:product).joins(:sku).select(select_sql).order("stock_products.product_id")
     if params[:info_type].present? && params[:info].present?
       if params[:info_type] == "sku_info"
         @stock_products = @stock_products.where("skus.properties_name like ?", "%#{params[:info]}%")
@@ -89,7 +89,7 @@ class StocksController < ApplicationController
   end
 
   def change_product_type
-    @stock_products = StockProduct.where(default_search).joins(:product).select("products.name as product_name,stock_products.product_id as stock_product_product_id,products.product_id as product_product_id")
+    @stock_products = default_scoped.joins(:product).select("products.name as product_name,stock_products.product_id as stock_product_product_id,products.product_id as product_product_id")
     @stock_products_name = @stock_products.collect {|x| { id: x.stock_product_product_id, text: x.product_name}}
     @stock_products_id = @stock_products.collect {|x| { id: x.stock_product_product_id, text: x.product_product_id}}
     data = [@stock_products_name, @stock_products_id]
@@ -117,7 +117,7 @@ class StocksController < ApplicationController
     value = params[:value]
     bool = false
 
-    @stock_product = StockProduct.where(default_search).find params[:id]
+    @stock_product = default_scoped.find params[:id]
     if @stock_product.blank?
     else
       if value =~ /\d/
@@ -139,7 +139,7 @@ class StocksController < ApplicationController
 
   #POST /warehouses/batch_update_safety_stock
   def batch_update_safety_stock
-    @stock_products = StockProduct.where(default_search).where(:id => params[:stock_product_ids])
+    @stock_products = default_scoped.where(:id => params[:stock_product_ids])
     safe_value = params[:safe_value].to_i
     @stock_products.each {|stock| stock.update_attributes!(safe_value: safe_value,audit_comment: "batch_update_safety_stock") }
     redirect_to({:action => :index,:warehouse_id => params[:warehouse_id]}.reject {|k,v| v.blank?})
@@ -149,10 +149,10 @@ class StocksController < ApplicationController
   def batch_update_actual_stock
     if params[:stock_product_ids].is_a?(Array) && params[:stock_product_ids].present?
       if params[:stock_product_ids].size == 1
-        stock_product = StockProduct.where(default_search).find(params[:stock_product_ids].first)
-        @stock_products = StockProduct.where(default_search).where(:product_id => stock_product.product_id) rescue @stock_products = []
+        stock_product = default_scoped.find(params[:stock_product_ids].first)
+        @stock_products = default_scoped.where(:product_id => stock_product.product_id) rescue @stock_products = []
       else
-        @stock_products = StockProduct.where(default_search).where(:id => params[:stock_product_ids])
+        @stock_products = default_scoped.where(:id => params[:stock_product_ids])
       end
 
       actual = params[:actual].to_i
@@ -165,6 +165,22 @@ class StocksController < ApplicationController
       end
     end
     redirect_to({:action => :index,:warehouse_id => params[:warehouse_id]}.reject {|k,v| v.blank?})
+  end
+
+  def inventory
+    if default_scoped.can_inventory?
+      if default_scoped.inventory!
+        flash[:notice] = "盘点出库单创建成功"
+      else
+        flash[:error] = "盘点失败,数据保存失败"
+      end
+    else
+      flash[:error] = "系统有未出库出库单或已付款待分派订单，不能进行盘点"
+    end
+  rescue Exception => e
+    flash[:error] = e.message
+  ensure
+    redirect_to :action => :index
   end
 
   private
@@ -194,11 +210,11 @@ class StocksController < ApplicationController
     @hold_hash = hold_hash
   end
   def default_search
-    if @warehouse.blank?
-      {account_id: current_account.id}
-    else
-      {account_id: current_account.id,:seller_id => @warehouse.id}
-    end
+    {account_id: current_account.id,seller_id: @warehouse && @warehouse.id}.reject {|k,v| v.blank?}
+  end
+
+  def default_scoped
+    StockProduct.where(default_search)
   end
 
 end

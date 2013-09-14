@@ -264,7 +264,8 @@ MagicOrder::AccessControl.map do |map|
                                  "stock_in_bills#lock",
                                  "stock_out_bills#lock",
                                  "stock_in_bills#unlock",
-                                 "stock_out_bills#unlock"
+                                 "stock_out_bills#unlock",
+                                 "stock_products#inventory"
                                ]
   end
   #数据模块

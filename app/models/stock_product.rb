@@ -65,18 +65,65 @@ class StockProduct < ActiveRecord::Base
   end
 
   def storage_status
-  	if activity < safe_value
-  		'预警'
-  	elsif actual == max
-  		'满仓'
-  	else
-  		'正常'
-  	end
+    if activity < safe_value
+      '预警'
+    elsif actual == max
+      '满仓'
+    else
+      '正常'
+    end
+  end
+
+  def self.can_inventory?
+    default_scopes = inventory_scopes
+
+    bill_status = %w(CHECKED SYNCKED SYNCKING SYNCK_FAILED CANCELD_OK CANCELING CANCELD_FAILED)
+    trade_status = %w(WAIT_SELLER_SEND_GOODS WAIT_SELLER_DELIVERY WAIT_SELLER_STOCK_OUT ORDER_PAYED ORDER_TRUNED_TO_DO)
+    !(StockOutBill.where(default_scopes.merge(status: bill_status)).exists? &&
+    Trade.where(default_scopes.(status: trade_status)).exists?)
+  end
+
+  def self.inventory!
+    stock_out_bill = StockOutBill.where(inventory_scopes).new({
+      stock_typs:                 "OINVENTORY",
+      bill_products_mumber:       scoped.sum(:actual),
+      bill_products_price:        scoped.joins(:product).sum("products.price * stock_products.actual")
+      })
+
+    StockProduct.where(inventory_scopes).find_each do |stock_product|
+      stock_out_bill.bill_products.new(stock_product.generate_out_bill_attributes)
+    end
+
+    stock_out_bill.save!
+  end
+
+  def self.inventory_scopes
+    conditions = scoped.where_values_hash
+    raise "account_id & seller_id can't be blank!" unless conditions.key?(:account_id) && conditions.key?(:seller_id)
+
+    conditions = conditions.slice(:account_id,:seller_id)
+    raise "当前已有未审核的盘点出库单!" if  StockOutBill.where(conditions.merge(stock_type: "OINVENTORY",status: "CREATED")).exists?
+    conditions
+  end
+
+  def generate_out_bill_attributes(options={})
+    product = self.product
+    sku = self.sku
+    {
+      title:        sku.title,
+      outer_id:     product.outer_id,
+      num_iid:      sku.num_iid,
+      stock_product_id: self.id,
+      number:       self.actual,
+      sku_id:       self.sku_id,
+      price:        product.price,
+      total_price:  product.price * self.actual
+    }.merge(options)
   end
 
   private
   def create_stock_bill(klass,number)
-    bill = klass.new(stock_typs: "VIRTUAL", :status => "STOCKED", :confirm_stocked_at => Time.now, :seller_id => self.seller_id ,account_id: self.account_id, bill_products_attributes: {"0" => {real_number: number, number: number,sku_id: self.sku_id}})
+    bill = klass.new(stock_typs: "VIRTUAL", status: "STOCKED", confirm_stocked_at: Time.now, seller_id: self.seller_id ,account_id: self.account_id,bill_products_attributes: {"0" => generate_out_bill_attributes(number: number)})
     bill.update_bill_products
     bill.save!
   end

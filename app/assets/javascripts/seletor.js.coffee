@@ -26,7 +26,7 @@ $ ->
 
   $(".magic_operation").live "click", ->
     if checked_inputs().length < 1
-      e.stopImmediatePropagation()
+      @stopImmediatePropagation
       alert("请选择")
       return false
     else
