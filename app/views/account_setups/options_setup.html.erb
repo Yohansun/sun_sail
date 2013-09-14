@@ -1,4 +1,4 @@
-<body class='whiteSmoke_bg'>
+<body class="whiteSmoke_bg">
   <div class="navbar navbar-inverse navbar-fixed-top">
     <div class="navbar">
       <div class="navbar-inner">
@@ -8,90 +8,77 @@
       </div>
     </div>
   </div>
-  <div class="container-fluid clearfix">
+
+  <div class="container-fluid start_key">
     <div class="row-fluid">
-      <div class="span2 bs-docs-sidebar">
-        <ul class="nav nav-list bs-docs-sidenav affix span2">
-          <li class="active"><a href="javascript:void(0)">
-            <i class="icon-chevron-right"></i> 一键开始</a>
-          </li>
-        </ul>
-      </div>
-      <div class="span10">
-        <ul class="nav nav-tabs">
-          <li><a href="javascript:void(0)">管理员设置</a></li>
-          <li><a href="javascript:void(0)">数据自动设置</a></li>
-          <li class="active"><a href="javascript:void(0)">自动化业务设置</a></li>
-          <li><a href="javascript:void(0)">设置系统登录用户</a></li>
-        </ul>
-        <div class="tab-content">
-          <%= form_tag('/account_setups/options_setup', :method => :put)  do %>
-            <p>请选择您的自动化业务设置：</p>
-            <fieldset>
-              <label>自动发货</label>
-              <div class="control-group">
-                <label class="radio pull-left">
-                  <input type="radio" name="auto_deliver"  value="on" >是
-                </label>
-                <div class="controls">
-                  <p class="muted">当订单在返回物流单号的同时，就同步将物流面单的参数返回淘宝</p>
-                  <p class="text-error">注意：若有订单是物流信息出错的，淘宝发货状态将失败</p>
+      <h4 class="pagination-centered start_tit">亲，有几个功能非常的好用哦。赶紧设置试一试！</h4>
+      <ul class="unstyled pagination-centered clearfix start_tips start_tips3">
+        <li class="pull-left" style="width:25%;">管理员设置</li>
+        <li class="pull-left" style="width:27%;">店铺初始化</li>
+        <li class="active pull-left" style="width:25%;">店铺功能设置</li>
+        <li class="pull-left" style="width:20%;">店铺帐号设置</li>
+      </ul>
+      <%= simple_form_for User.new, url: account_setup_path, method: :put, html: { class: 'form-horizontal start_form3'} do |f| %>
+        <div class="clearfix">
+          <div class="well span8 offset2">
+            <ul class="thumbnails">
+              <li class="span6">
+                <div class="thumbnail">
+                  <img src="/images/account_setups/start_key3_1.jpg" alt="">
+                  <h5 class="">自动发货</h5>
+                  <div>
+                    <label class="radio clearfix">
+                      <input type="radio" class="pull-left" name="auto_deliver"  value="on" >
+                      <strong class="pull-left">设置：</strong>
+                      <div class="start_option">当订单在返回物流单号的同时，就同步将物流面单的参数返回淘宝。<br><strong>注意：若有订单的物流信息出错时，淘宝发货状态将失败。</strong></div>
+                    </label>
+                    <label class="radio">
+                      <input type="radio" name="auto_deliver" class="pull-left" value="off">
+                      <strong class="pull-left">不设置：</strong>
+                      <div class="start_option">需要点击发货按钮，订单才会自动发货。</div>
+                    </label>
+                  </div>
                 </div>
-              </div>
-              <div class="control-group">
-                <label class="radio pull-left">
-                  <input type="radio" checked="" name="auto_deliver" value="off">否
-                </label>
-                <div class="controls">
-                  <p class="muted">需要点击发货的按钮，订单才会自动发货</p>
+              </li>
+              <li class="span6">
+                <div class="thumbnail">
+                  <img src="/images/account_setups/start_key3_2.jpg" alt="">
+                  <h5 class="">自动分派</h5>
+                  <div>
+                    <label class="radio clearfix">
+                      <input type="radio" name="auto_dispatch" class="pull-left" value="on">
+                      <strong class="pull-left">设置：</strong>
+                      <div class="start_option">审单通过的订单，自动分派到仓库。</div>
+                    </label>
+                    <label class="radio">
+                      <input type="radio" name="auto_dispatch" class="pull-left" value="off">
+                      <strong class="pull-left">不设置：</strong>
+                      <div class="start_option">需要客服在系统内点击“分派”到仓库。</div>
+                    </label>
+                  </div>
                 </div>
-              </div>
-            </fieldset><!-- end -->
-
-            <!-- <fieldset>
-              <label>自动审单</label>
-              <div class="control-group">
-                <label class="radio pull-left">
-                  <input type="radio" name="autocheck"  value="on" >是
-                </label>
-                <div class="controls">
-                  <p class="muted">当订单已付款没有客户备注，客服备注，并且库存充足无需要拆单，知道审单通过</p>
-                </div>
-              </div>
-              <div class="control-group">
-                <label class="radio pull-left">
-                  <input type="radio" checked="" name="autocheck"  value="off">否
-                </label>
-                <div class="controls">
-                  <p class="muted">需要客服在系统内操作按钮“审单”，订单状态才会改为已审单</p>
-                </div>
-              </div>
-            </fieldset> -->
-
-            <fieldset>
-              <label>自动分派</label>
-              <div class="control-group">
-                <label class="radio pull-left">
-                  <input type="radio" name="auto_dispatch"   value="on">是
-                </label>
-                <div class="controls">
-                  <p class="muted">当审单通过的订单，自动分派到仓库</p>
-                </div>
-              </div>
-
-              <div class="control-group">
-                <label class="radio pull-left">
-                  <input type="radio" checked="" name="auto_dispatch"  value="off">否
-                </label>
-                <div class="controls">
-                  <p class="muted">需要客服在系统内操作按钮“分派”。订单分到仓库</p>
-                </div>
-              </div>
-            </fieldset><!-- end -->
-            <button class="btn">下一步</button>
-          <% end %>
-        </div><!-- tab-content end -->
-      </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="pagination-centered">
+          <%= f.submit ' 下一步 ', :id => "btn-next-step", :name => "next-step", :class => "btn", :disabled =>"disabled" %>
+          <%= f.submit '  跳过  ', :name => "skip-step", :class => "btn btn-success" %>
+        </div>
+      <%- end -%>
     </div>
   </div>
 </body>
+<% content_for :tail do -%>
+  <script type="text/javascript">
+    $(function(){
+      $("input[type=radio]").change(function(){
+        var checkedDeliver = $('input:radio[name="auto_deliver"]:checked').val();
+        var checkedDispatch = $('input:radio[name="auto_dispatch"]:checked').val();
+        if(typeof(checkedDeliver) != "undefined" && typeof(checkedDispatch) != "undefined"){
+          $("input#btn-next-step").removeAttr("disabled");
+        }
+      });
+    });
+  </script>
+<% end %>

@@ -61,7 +61,7 @@ class User < ActiveRecord::Base
   validates :phone, format: { with: PHONE_FORMAT}, uniqueness: true, allow_blank: true
 
   validates_presence_of :password, on: :create
-  validates :username , uniqueness: true, presence: true
+  validates :username , uniqueness: true, presence: true, format: { with: /\A[A-Za-z]{4,9}\z/}
 
   validate :has_phone_or_email?
 

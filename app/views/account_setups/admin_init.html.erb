@@ -8,60 +8,80 @@
       </div>
     </div>
   </div>
-  <div class="container-fluid clearfix">
+
+  <div class="container-fluid start_key">
     <div class="row-fluid">
-      <div class="span2 bs-docs-sidebar">
-        <ul class="nav nav-list bs-docs-sidenav affix span2">
-          <li class="active"><a href="javascript:void(0)">
-            <i class="icon-chevron-right"></i> 一键开始</a>
-          </li>
-        </ul>
-      </div>
-      <div class="span10">
-        <ul class="nav nav-tabs">
-          <li class="active"><a href="javascript:void(0)">管理员设置</a></li>
-          <li><a href="javascript:void(0)">数据自动设置</a></li>
-          <li><a href="javascript:void(0)">自动化业务设置</a></li>
-          <li><a href="javascript:void(0)">设置系统登录用户</a></li>
-        </ul>
-        <div class="tab-content">
-          <%= simple_form_for @user||User.new, url: account_setup_path, method: :put,
-            html: { class: 'form-horizontal', style: 'margin-top: 20px;'}, validate: false do |f| %>
-            <div class='offset1'>
-              <p>请设置管理员账户信息</p>
-              <p>系统将为您自动生成密码， 并发送到您的邮箱中，请确保您的邮箱正确。<br/>
-登录系统后，您可以在 "修改信息" 页面修改密码。</p>
+      <h4 class="pagination-centered start_tit">亲,赶快设置店铺的管理员信息吧,其他信息可在"商户编辑"里修改.</h4>
+      <ul class="unstyled pagination-centered clearfix start_tips start_tips1">
+        <li class="active pull-left" style="width:25%;">管理员设置</li>
+        <li class="pull-left" style="width:27%;">店铺初始化</li>
+        <li class="pull-left" style="width:25%;">店铺功能设置</li>
+        <li class="pull-left" style="width:20%;">店铺帐号设置</li>
+      </ul>
+      <%= form_for @user||User.new, url: account_setup_path, method: :put, html: { class: 'form-horizontal start_form1'} do |f| %>
+        <div class="clearfix">
+          <div class="well span8 offset2">
+            <div class="clearfix <%= 'control-group error' if @user.present? && @user.errors[:email].present? %>">
+              <label class="offset1 form-inline pull-left" for="Email">
+                <i class="icon-envelope_key icon-keystart pull-left"></i>
+                <%= f.text_field :email, class: "input-xlarge", placeholder: "邮箱，如example@doorder.com"%>
+              </label>
+              <small class="muted control-group error">
+                <strong class="text-warning">＊</strong>
+                <%- if @user.present? && @user.errors[:email].present? %>
+                  <%- if @user.email.blank? -%>
+                    输入信息不能为空
+                  <%- else -%>
+                    填写格式不正确
+                  <%- end -%>
+                <%- else -%>
+                  系统将为您自动生成密码，并发送到您的邮箱中，请确保您的邮箱正确。
+                <%- end -%>
+              </small>
             </div>
-            <div class="clearfix">
-              <%= f.input :email, label: '登录邮箱', placeholder: 'example@doorder.com' %>
-              <%= f.input :phone, label: '手机号码', placeholder: '13312345678' %>
-              <%= f.input :username, :label => "用户名" %>
-              <%= f.input :name, :label => "姓名" %>
+            <div class="clearfix <%= 'control-group error' if @user.present? && @user.errors[:phone].present? %>">
+              <label class="offset1 form-inline pull-left" for="phone">
+                <i class="icon-phone_key icon-keystart pull-left"></i>
+                <%= f.text_field :phone, class: "input-xlarge", placeholder: "11位有效手机号码"%>
+              </label>
+              <small class="muted">
+                <strong class="text-warning">＊</strong>
+                <%- if @user.present? && @user.errors[:phone].present? %>
+                  <%- if @user.phone.blank? -%>
+                    输入信息不能为空
+                  <%- else -%>
+                    填写格式不正确
+                  <%- end -%>
+                <%- else -%>
+                  请输入有效的手机号码。
+                <%- end -%>
+              </small>
             </div>
-            <div class="form-actions">
-              <%= f.button :submit, '下一步', :"data-disable-with" => '提交中...' %>
+            <div class="clearfix <%= 'control-group error' if @user.present? && @user.errors[:username].present? %>">
+              <label class="offset1 form-inline pull-left" for="name">
+                <i class="icon-user_key icon-keystart pull-left"></i>
+                <%= f.text_field :username, class: "input-xlarge", placeholder: "用户名就是你的登陆名哦."%>
+              </label>
+              <small class="muted">
+                <strong class="text-warning">＊</strong>
+                <%- if @user.present? && @user.errors[:username].present? %>
+                  <%- if @user.username.blank? -%>
+                    输入信息不能为空
+                  <%- else -%>
+                    填写格式不正确
+                  <%- end -%>
+                <%- else -%>
+                  4-9位字母字符
+                <%- end -%>
+               </small>
             </div>
-          <% end %>  
+          </div>
         </div>
-      </div>
+        <div class="pagination-centered">
+          <%= f.submit '下一步', :name => "next_step", :class => "btn" %>
+          <%= f.submit '立即使用', :name => "init_finished", :class => "btn btn-success" %>
+        </div>
+      <%- end -%>
     </div>
   </div>
 </body>
-<%content_for :tail do%>
-<script>
-
-  $("#new_user").validate({
-    messages:{
-      "user[email]":{
-        required:"Email 不能为空",
-        email:"请输入正确的 Email"
-      },
-      "user[username]":{
-        required:"用户名不能为空"
-      }
-    }
-  }
-)
-
-</script>
-<%end%>

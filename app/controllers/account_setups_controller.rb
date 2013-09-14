@@ -19,6 +19,7 @@ class AccountSetupsController < ApplicationController
   end
 
   def update
+    next_step_name = next_step
     case step
     when :admin_init
       @user = User.new(params[:user])
@@ -31,6 +32,17 @@ class AccountSetupsController < ApplicationController
       InitUserNotifier.perform_async(@account.id, @user.email, @user.password, @user.phone)
 
       current_account.settings[:wizard_step] = ""
+      if params[:init_finished].present?
+        next_step_name = :finish
+        @account.settings.init_data_ready = false
+        @account.settings.auto_settings = {'split_conditions' => {},
+                                          'dispatch_conditions'=>{},
+                                          'unusual_conditions'=>{},
+                                          'auto_deliver' => nil,
+                                          'auto_dispatch' => nil}
+      else
+        current_account.settings[:wizard_step] = next_step_name
+      end
       sign_in @user # auto login after create admin user
     when :options_setup
       @account.settings.auto_settings = {'split_conditions' => {}, 'dispatch_conditions'=>{}, 'unusual_conditions'=>{}}
@@ -42,7 +54,7 @@ class AccountSetupsController < ApplicationController
       create_users(params[:stock_admin], :stock_admin)
       create_users(params[:interface], :interface)
     end
-    current_account.settings[:wizard_step] = next_step
+    current_account.settings[:wizard_step] = next_step_name
     render_wizard @account
   end
 
@@ -58,7 +70,7 @@ class AccountSetupsController < ApplicationController
   # invoke this action on front-end view by JavaScript
   def data_fetch_check
     result = @account ? @account.settings.init_data_ready == true : false
-    render json: {ready: result }
+    render json: {ready: result}
   end
 
   # Please send a PUT request with account id as params[:id] to this action when
@@ -66,7 +78,7 @@ class AccountSetupsController < ApplicationController
   # eg: http://magicorder.networking.io/account_setups/:id/data_fetch_finish
   def data_fetch_finish
     account = Account.find_by_id(params[:id] )
-    # account.settings.init_data_ready = true if account
+    account.settings.init_data_ready = true if account
     head :ok
   end
 
