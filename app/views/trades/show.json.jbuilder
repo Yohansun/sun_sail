@@ -100,6 +100,7 @@ json.orders OrderDecorator.decorate(@trade.orders) do |json, order|
   json.contents get_package(order, @trade.created_at)
   json.bill_info order.bill_info
   json.packaged false
+  json.package_info order.package_info
 end
 
 json.add_ref @trade.ref_batches.where(ref_type: "add_ref").first
