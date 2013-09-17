@@ -5,14 +5,14 @@ class AccountSetup
     this.start_data_fetch()
 
   start_data_fetch: ->
-    $('.account-setup .js-data-start').bind 'click', (e) ->
+    $('#js-data-start').bind 'click', (e) ->
       dom = $(e.currentTarget)
       dom.attr('disabled', true)
       # alert 'data fetch starting...'
       $.post "/account_setups/"+dom.data('account-id')+"/data_fetch_start"
       # checking the data fetch processing progress every 15*1000ms
       window.AccountSetup.check_data_fetch(current_account.id)
-      $(this).data("check_timer", setInterval("AccountSetup.check_data_fetch(current_account.id)", 15 * 1000))
+      $(this).data("check_timer", setInterval("AccountSetup.check_data_fetch(current_account.id)", 2 * 1000))
 
   check_data_fetch: (account_id)->
     $.ajax "/account_setups/"+account_id+"/data_fetch_check",
@@ -22,12 +22,15 @@ class AccountSetup
         if response.ready is true
           $(".progress .bar").each ->
             clearInterval($(this).data("timer"));
-            clearInterval($('.account-setup .js-data-start').data("check_timer"))
-            $(this).css("margin-left","0").css("width","100%");
+            clearInterval($('#js-data-start').data("check_timer"))
+            $(this).css("width","100%");
 
-          $('.js-data-fetch').toggle()
-          $('.js-data-next-step').toggle()
+          $('#btn-next-step').removeAttr("disabled");
         else
-          # alert 'processing...'
-
+          run_times = parseInt($("div#run_times").html())
+          if isNaN(run_times)
+            run_times = 1
+          else
+            run_times += 1
+          $("div#run_times").html(run_times)
 window.AccountSetup ?= new AccountSetup
