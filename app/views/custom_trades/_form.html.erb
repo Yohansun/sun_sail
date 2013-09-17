@@ -29,7 +29,7 @@
           <%= f.input :receiver_phone, label: '固定电话：', :input_html =>{ :class => "input-large" } %>
           <%= f.input :receiver_zip, label: '收货人邮编：', :input_html =>{ :class => "input-large" } %>
           <%= f.input :pay_time, label: '付款时间：', :input_html =>{ :class => "input-large js-datetimepicker", :value => "#{@custom_trade.pay_time.try(:strftime, '%Y-%m-%d %H:%M:%S')}"}, readonly: true %>
-          <%= f.input :status, label: '订单状态：', collection: [["已付款，待发货","WAIT_SELLER_SEND_GOODS"]], :input_html =>{ :class => "input-large select2" }, selected: ["已付款，待发货","WAIT_SELLER_SEND_GOODS"] %>
+          <%= f.input :status, label: '订单状态：', collection: [["已付款，待分派","WAIT_SELLER_SEND_GOODS"]], :input_html =>{ :class => "input-large select2" }, selected: ["已付款，待分派","WAIT_SELLER_SEND_GOODS"] %>
           <%#= f.input :has_invoice_info, label: '是否开发票：', collection: [["是","true"],["否","false"]], :input_html =>{ :class => "input-mini select2" }, selected: ["#{@custom_trade.invoice_name == nil ? '否' : '是'}","#{@custom_trade.invoice_name == nil ? 'false' : 'true'}"] %>
         </fieldset><!-- form right area -->
       </div>
