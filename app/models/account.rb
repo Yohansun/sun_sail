@@ -68,6 +68,10 @@ class Account < ActiveRecord::Base
 
   after_create :create_default_roles,:init_settings,:create_default_seller
 
+  def trades
+    Trade.where(account_id: id)
+  end
+
   def in_time_gap(start_at, end_at)
     if start_at != nil && end_at != nil
       if start_at < end_at

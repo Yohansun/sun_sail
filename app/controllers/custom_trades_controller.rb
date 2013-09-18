@@ -12,11 +12,7 @@ class CustomTradesController < ApplicationController
     if params[:taobao_orders]
       @custom_trade.change_orders(params[:taobao_orders], params[:custom_trade][:status], action_name)
       if @custom_trade.save
-        forecast_seller_id = @custom_trade.matched_seller_with_default(nil).id rescue forecast_seller_id = nil
-        if forecast_seller_id.present?
-          @custom_trade.update_attribute(:forecast_seller_id, forecast_seller_id)
-          @custom_trade.update_seller_stock_forecast(forecast_seller_id, "decrease")
-        end
+        SetForecastSellerWorker.perform_async(@custom_trade.id)
         redirect_to "/app#trades"
       else
         render :new
@@ -37,7 +33,7 @@ class CustomTradesController < ApplicationController
     if params[:taobao_orders]
       @custom_trade.change_orders(params[:taobao_orders], params[:custom_trade][:status], action_name)
       if @custom_trade.save
-        @custom_trade.update_seller_stock_forecast(@custom_trade.forecast_seller_id, "decrease")
+        SetForecastSellerWorker.perform_async(@custom_trade.id)
         redirect_to "/app#trades"
       else
         render :edit

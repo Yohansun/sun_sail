@@ -14,7 +14,7 @@ task :update_brands_stocks => :environment do
       end
       stock = StockProduct.where(product_id: product.id, seller_id: seller.id, sku_id: sku.id, num_iid: product.num_iid, account_id: account.id).first_or_create
       p "#{outer_id} before #{stock.actual}"
-      stock.update_attributes(actual: actual, activity: actual, forecast: actual)
+      stock.update_attributes(actual: actual, activity: actual)
       p "#{outer_id} after #{stock.actual}"
     else
       p "product not found #{outer_id}"
@@ -36,7 +36,7 @@ task :gnc_stocks_20130821 => :environment do
         sku = product.skus.create(account_id: account.id, product_id: product.id, num_iid: product.num_iid)
       end
       stock = StockProduct.where(product_id: product.id, seller_id: seller.id, sku_id: sku.id, num_iid: product.num_iid, account_id: account.id).first_or_create
-      stock.update_attributes(actual: number, activity: number, forecast: number)
+      stock.update_attributes(actual: number, activity: number)
     else
       p "product not found #{outer_id}"
     end
@@ -57,7 +57,7 @@ task :richlife_stocks_20130821 => :environment do
         sku = product.skus.create(account_id: account.id, product_id: product.id, num_iid: product.num_iid)
       end
       stock = StockProduct.where(product_id: product.id, seller_id: seller.id, sku_id: sku.id, num_iid: product.num_iid, account_id: account.id).first_or_create
-      stock.update_attributes(actual: number, activity: number, forecast: number)
+      stock.update_attributes(actual: number, activity: number)
     else
       p "product not found #{outer_id}"
     end
