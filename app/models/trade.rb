@@ -1391,17 +1391,25 @@ class Trade
     end
   end
 
-  def set_operator(users,total_percent)
-    if total_percent >= 1
-      rand_number = rand(1..total_percent)
+  def operators
+    fetch_account.users.where(can_assign_trade: true).where(active: true).order(:created_at) rescue []
+  end
+
+  def operation_percent
+    operators.inject(0) { |sum, el| sum += el.trade_percent.to_i }
+  end
+
+  def set_operator
+    if operation_percent >= 1
+      rand_number = rand(1..operation_percent)
       count = 0
-      users.each do |u|
-        percent = u.trade_percent || 0
+      operators.each do |operator|
+        percent = operator.trade_percent || 0
         if rand_number <= percent + count
-          update_attributes(operator_id: u.id, operator_name: u.username)
+          update_attributes(operator_id: operator.id, operator_name: operator.username)
           return
         else
-          count += u.trade_percent
+          count += operator.trade_percent
         end
       end
     end
