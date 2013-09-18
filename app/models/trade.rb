@@ -602,7 +602,7 @@ class Trade
           if product
             binding_number = binding.number * order_num
             stock_product = fetch_account.stock_products.where(product_id: product.id, sku_id: sku_id).first
-            order_price = (order.price == 0 ? 0 : product.price)
+            order_price = (order.price == 0 ? 0 : product.taobao_price)
             if stock_product
               bill.bill_products.build(
                 stock_product_id: stock_product.id,

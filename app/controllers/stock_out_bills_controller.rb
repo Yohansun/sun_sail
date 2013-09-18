@@ -57,6 +57,7 @@ class StockOutBillsController < ApplicationController
 
   def show
     @bill = StockOutBill.find_by(@conditions)
+    @trade = TradeDecorator.decorate(@bill.trade) if @bill.trade
     @products = @bill.bill_products
   end
 

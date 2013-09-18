@@ -59,6 +59,14 @@ class Product < ActiveRecord::Base
     end
   end
 
+  def taobao_price
+    taobao_product.try(:price)
+  end
+
+  def taobao_product
+    TaobaoProduct.find_by_outer_id(outer_id) || TaobaoProduct.find_by_num_iid(num_iid)
+  end
+
   def sku_names
     self.skus.map(&:name).join(",")
   end
