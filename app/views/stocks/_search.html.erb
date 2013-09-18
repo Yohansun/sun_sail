@@ -15,17 +15,9 @@
   </div>
 </div>
 <div class="control-group">
-  <label class="pull-left width"><code>地域：</code></label>
+  <%= f.label :product_outer_id_eq,raw("<code>商品编码</code>"),:class => "pull-left"  %>
   <div class="controls pull-left">
-    <select id="" class="level_1 input-medium input-small pull-left" name="op_state">
-      <option>省</option>
-    </select>
-    <select id="" class="level_2 input-medium input-small pull-left" name="op_city">
-      <option>市</option>
-    </select>
-    <select id="" class="level_3 input-medium input-small pull-left" name="op_district">
-      <option>区</option>
-    </select>
+    <%= f.text_field :product_outer_id_eq,{:class => "input-large pull-left"}  %>
   </div>
 </div>
 <% content_for :tail do %>
