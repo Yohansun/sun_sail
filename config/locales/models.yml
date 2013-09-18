@@ -4,12 +4,14 @@ zh-CN:
       category: "商品分类"
       message: "消息"
       role: "角色"
-    
+
     attributes:
       category:
         use_days: "商品生命周期(天)"
       role:
         name: 名称
+      stock_csv_file:
+        path: 文件
 
 
   mongoid:

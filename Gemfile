@@ -112,6 +112,9 @@ gem "paperclip", "~> 2.4"
 #Schedule works using sidekiq
 gem "clockwork", "~> 0.5.0"
 
+#Handle CSV import
+gem 'csv-mapper', '~> 0.5.1'
+
 group :production do
   gem "exception_notification", "~> 2.6.1"
   gem 'newrelic_rpm'

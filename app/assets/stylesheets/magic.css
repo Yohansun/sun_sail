@@ -391,3 +391,6 @@ select, input[type="file"]{height:26px;}
 .bigtoggle_parents .modal-body{max-height:none!important;/*max-height:80%!important;*/}
 .modal .modal-header h3 span{position:absolute;right:0px;top:9px;width:13px;height:10px;background:url(/assets/bigtoggle.png) no-repeat -13px 0px;cursor:pointer;}
 .modal .modal-header h3 span.bigtoggle{background-position:0 0;}
+
+/*error input show inline*/
+.field_with_errors { display: inline; }

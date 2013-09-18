@@ -75,7 +75,7 @@ class StockProduct < ActiveRecord::Base
 
   private
   def create_stock_bill(klass,number)
-    bill = klass.new(stock_typs: "VIRTUAL", :status => "STOCKED", :confirm_stocked_at => Time.now, :seller_id => self.seller_id ,account_id: self.account_id,bill_products_attributes: {"0" => {real_number: number, number: number,sku_id: self.sku_id}})
+    bill = klass.new(stock_typs: "VIRTUAL", :status => "STOCKED", :confirm_stocked_at => Time.now, :seller_id => self.seller_id ,account_id: self.account_id, bill_products_attributes: {"0" => {real_number: number, number: number,sku_id: self.sku_id}})
     bill.update_bill_products
     bill.save!
   end
