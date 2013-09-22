@@ -451,6 +451,7 @@ ActiveRecord::Schema.define(:version => 20130916092012) do
     t.integer  "upload_user_id"
     t.string   "stock_in_bill_id"
     t.boolean  "used"
+    t.integer  "seller_id"
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
   end
