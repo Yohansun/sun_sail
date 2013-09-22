@@ -18,21 +18,15 @@ class TradeDeliver
         # A B订单被合并成C订单了，现在C订单只会返回一个物流单号，但淘宝那边还是两个订单，而且不同订单需要填写不同的物流单号
         # 解决方案：A订单回馈C订单的物流单号，而B订单的物流单号就写其他
         trades = Trade.deleted.where(:_id.in => trade.merged_trade_ids)
+        trades.update_all(logistic_waybill: trade.logistic_waybill,logistic_code: trade.logistic_code)
         trades.each_with_index{|merged_trade,index|
-          if index == 0
-            logistic_waybill = trade.logistic_waybill
-            logistic_code = trade.logistic_code
-          else
-            logistic_waybill = merged_trade.tid
-            logistic_code = "其它"
-          end
 
           if merged_trade.is_a? TaobaoTrade
             response = TaobaoQuery.get({
               method: 'taobao.logistics.offline.send',
               tid: merged_trade.tid,
-              out_sid: logistic_waybill,
-              company_code: logistic_code}, merged_trade.trade_source_id
+              out_sid: trade.logistic_waybill,
+              company_code: trade.logistic_code}, merged_trade.trade_source_id
             )
             if response['error_response'] &&  response['error_response']['sub_msg']
               errors << response['error_response']['sub_msg']
