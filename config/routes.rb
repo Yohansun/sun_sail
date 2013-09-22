@@ -44,6 +44,7 @@ MagicOrders::Application.routes.draw do
       post :batch_update_safety_stock, :on => :collection
       post :batch_update_actual_stock, :on => :collection
     end
+    resources :stock_csv_files
   end
   match "/stocks/safe_stock", to: 'stocks#safe_stock'
   post "/stocks/edit_safe_stock", to: 'stocks#edit_safe_stock'

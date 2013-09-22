@@ -1,0 +1,21 @@
+<div class="row-fluid">
+  <div class="span10 w100">
+    <%= render partial: "layouts/all_crumbs" %>
+    <%= render partial: "layouts/warehouse_menu" %>
+
+    <div class="tab-content">
+      <ul class="breadcrumb">
+        <li>导入库存: 只接受CSV格式的文件,可以先导出库存商品报表,按照格式修改后导入</li>
+      </ul>
+
+      <%= form_for @csv_file, url: warehouse_stock_csv_files_path, class: "well form-horizontal", method: 'post' do |f| %>
+      <div class="btn-toolbar">
+        <div class="btn-group">
+          <%= f.file_field :path %>
+          <%= f.submit "提交", :class => 'btn' %>
+        </div>
+      </div>
+      <% end %>
+    </div>
+  </div>
+</div>

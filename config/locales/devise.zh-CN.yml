@@ -12,7 +12,7 @@ zh-CN:
       not_saved:
         one: "因为 1 个错误导致此 %{resource}保存失败:"
         other: "因为 %{count}个错误导致此 %{resource}保存失败:"
-      extension_white_list_error: "图片格式不正确"
+      extension_white_list_error: "上传格式不正确"
   devise:
     failure:
       already_authenticated: '您已经登录.'
@@ -24,7 +24,7 @@ zh-CN:
       timeout: '您已登录超时，请重新登录.'
       inactive: '您还没有激活帐户.'
       user:
-        not_found_in_database: 用户不存在     
+        not_found_in_database: 用户不存在
     sessions:
       signed_in: '登录成功.'
       signed_out: '退出成功.'
@@ -59,4 +59,3 @@ zh-CN:
         subject: '重置密码信息'
       unlock_instructions:
         subject: '解锁信息'
-    
