@@ -18,7 +18,7 @@ class YihaodianTradePuller
       #一号店开始时间、结束时间范围不能超过15天
       if start_time.blank?
         latest_created_order = YihaodianTrade.only("created").order_by(:created.desc).limit(1).first
-        if latest_created_order
+        if (latest_created_order && latest_created_order.created > 14.days.ago)
           start_time = latest_created_order.created - 1.hour
         else
           start_time = 14.days.ago
