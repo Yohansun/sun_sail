@@ -11,14 +11,22 @@ DEFAULT_FROM = "magic-notifer@networking.io"
 Accounts = {
   :brands => [:brands,{
     :to => %w(asher_qian@allyes.com
-    lynn_lin@allyes.com
-    zhao_wang@allyes.com
-    nancy_wu@allyes.com
-    fei_wang@allyes.com
-    yang_wang@allyes.com),
-   :bcc => %w(magic_sh@doorder.com errors@networking.io),
-  :from => "#{DEFAULT_FROM}"
-  }]
+              lynn_lin@allyes.com
+              zhao_wang@allyes.com
+              nancy_wu@allyes.com
+              fei_wang@allyes.com
+              yang_wang@allyes.com),
+    :bcc  => %w(magic_sh@doorder.com errors@networking.io),
+    :from => "#{DEFAULT_FROM}"
+    }],
+    #瑞莱
+  :"911573445" => [:"911573445",{
+    :to => %w(zhao_wang@allyes.com
+              linda_jin@allyes.com
+              yao_wu@allyes.com),
+    :bcc => %w(magic_sh@doorder.com),
+    :from => "#{DEFAULT_FROM}"
+    }]
 }
 
 
@@ -35,6 +43,7 @@ xiaoliang@networking.io
 
 every :day, :at => '10:00am' do
   runner "Reports.trades_consolidate_with_day(*#{Accounts[:brands]}).deliver!"
+  runner "Reports.trades_consolidate_with_day(*#{Accounts[:"911573445"]}).deliver!"
 end
 
 every :day, :at => '9:00am' do
