@@ -16,6 +16,20 @@ module WarehousesHelper
     {"所有仓库"  => warehouses_path,"库存查询"  => "/stocks"}
   end
 
+  def stocks_path_adapter
+    warehouse_count = current_account.sellers.count
+    if warehouse_count > 1
+      if params[:warehouse_id]
+         "/warehouses/#{params[:warehouse_id]}/stocks"
+      else
+        stocks_path
+      end
+    else
+      warehouse = current_account.sellers.first
+      "/warehouses/#{warehouse.id}/stocks"
+    end
+  end
+
   def warehouse_tabs(warehouse)
     warehouse_count = current_account.sellers.count
     two_tabs_controllers = params[:controller] =~ /stock_in_bills|stock_out_bills|stock_bills|stocks/

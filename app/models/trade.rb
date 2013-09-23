@@ -601,7 +601,7 @@ class Trade
           product = sku.try(:product)
           if product
             binding_number = binding.number * order_num
-            stock_product = fetch_account.stock_products.where(product_id: product.id, sku_id: sku_id).first
+            stock_product = fetch_account.stock_products.where(product_id: product.id, sku_id: sku_id, seller_id: seller_id).first
             order_price = (order.price == 0 ? 0 : product.taobao_price)
             if stock_product
               bill.bill_products.build(
@@ -627,7 +627,7 @@ class Trade
           sku = Sku.find_by_id(sku_id)
           product = sku.try(:product)
           if product
-            stock_product = fetch_account.stock_products.where(product_id: product.id, sku_id: sku_id).first
+            stock_product = fetch_account.stock_products.where(product_id: product.id, sku_id: sku_id, seller_id: seller_id).first
             order_price = (order.price == 0 ? 0 : product.price)
             if stock_product
               bill.bill_products.build(
@@ -865,7 +865,6 @@ class Trade
 
     # 更新订单状态为已分派
     update_attributes(seller_id: seller.id, seller_name: seller.name, dispatched_at: Time.now)
-    change_stock_seller
 
     # 如果满足自动化设置条件，分派后订单自动发货
     auto_settings = self.fetch_account.settings.auto_settings
@@ -1391,17 +1390,25 @@ class Trade
     end
   end
 
-  def set_operator(users,total_percent)
-    if total_percent >= 1
-      rand_number = rand(1..total_percent)
+  def operators
+    fetch_account.users.where(can_assign_trade: true).where(active: true).order(:created_at) rescue []
+  end
+
+  def operation_percent
+    operators.inject(0) { |sum, el| sum += el.trade_percent.to_i }
+  end
+
+  def set_operator
+    if operation_percent >= 1
+      rand_number = rand(1..operation_percent)
       count = 0
-      users.each do |u|
-        percent = u.trade_percent || 0
+      operators.each do |operator|
+        percent = operator.trade_percent || 0
         if rand_number <= percent + count
-          update_attributes(operator_id: u.id, operator_name: u.username)
+          update_attributes(operator_id: operator.id, operator_name: operator.username)
           return
         else
-          count += u.trade_percent
+          count += operator.trade_percent
         end
       end
     end
@@ -1445,43 +1452,6 @@ class Trade
 
   def other_discount
     (total_fee + post_fee - payment - promotion_fee).to_f.round(2)
-  end
-
-  def change_stock_seller
-    self.changes[:seller_id].tap do |seller_ids|
-      old_seller_id, new_seller_id = seller_ids
-      reset_stock_forecast_stock(old_seller_id, new_seller_id)
-    end
-  end
-
-  def reset_stock_forecast_stock(old_seller_id, new_seller_id)
-    old_seller_id = self.forecast_seller_id if old_seller_id.blank?
-    new_seller_id = self.forecast_seller_id if new_seller_id.blank?
-    if old_seller_id != new_seller_id
-      update_seller_stock_forecast(old_seller_id, "revert") if old_seller_id.present?
-      update_seller_stock_forecast(new_seller_id, "decrease") if new_seller_id.present?
-    end
-  end
-
-  def update_seller_stock_forecast(opt_seller_id, method)
-    return if opt_seller_id.blank?
-    if ['TaobaoTrade','CustomTrade'].include?(self._type)
-      self.orders.each do |order|
-        order.sku_products.each do |s_item|
-          product = s_item[:product]
-          stock_product = StockProduct.where(account_id: self.account_id, seller_id: opt_seller_id, product_id: product.id, sku_id: s_item[:sku_id]).first
-          if stock_product.present?
-            case method
-            when "revert"
-              stock_product.forecast += order.num * s_item[:number]
-            when "decrease"
-              stock_product.forecast -= order.num * s_item[:number]
-            end
-            stock_product.save
-          end
-        end
-      end
-    end
   end
 
   private

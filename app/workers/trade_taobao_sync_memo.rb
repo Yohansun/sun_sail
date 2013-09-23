@@ -5,6 +5,5 @@ class TradeTaobaoSyncMemo
   def perform(tid)
     trade = TaobaoTrade.where(tid: tid).first
     trade.update_attributes(cs_memo: trade.buyer_message) if trade.buyer_message
-    trade.save
   end
 end

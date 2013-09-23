@@ -12,7 +12,7 @@
 
           <% if current_user.allow_read?(:stocks) && current_account.key != 'nippon' %>
            <div>
-            <%= link_to stock_path_by_user, class: 'indexStart4' do %>
+            <%= link_to stocks_path_adapter, class: 'indexStart4' do %>
               <span>仓库管理</span>
             <% end %>
             </div>

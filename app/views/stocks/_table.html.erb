@@ -1,6 +1,6 @@
 <div class="tab-content">
   <div class="tab-pane active" id="stock_check">
-    <%= form_for @search ,:url => stocks_path , :html => {:class => "well well-small form-horizontal font12",:id => "search"},:method => :get do |f| %>
+    <%= form_for @search ,:url => stocks_path_adapter , :html => {:class => "well well-small form-horizontal font12",:id => "search"},:method => :get do |f| %>
       <%= render :partial => "search",:locals => {:f => f} %>
     <% end %>
   </div>
@@ -13,7 +13,7 @@
       </button>
       <ul class="dropdown-menu">
         <li>
-          <%= link_to "导出","#",:onclick => "processChecked('#{stocks_path(:search => params[:search],:format => :xls,:on => '?')}')"%>
+          <%= link_to "导出","#",:onclick => "processChecked('#{stocks_path(warehouse_id: params[:warehouse_id], :search => params[:search],:format => :xls,:on => '?')}')"%>
         </li>
         <li>
           <%= link_to_authorize "批量设置安全库存","#batch_update_safety_stock",:target_url => "/stocks/batch_update_safety_stock?warehouse_id=#{params[:warehouse_id]}",:class => "magic_operation set_stock", "data-toggle" => "modal",:request => :post,:id => "set_safety_stock" %>
@@ -78,6 +78,10 @@
                 <%= stock_product.category.try(:name) %>
               <% when "seller_id" %>
                 <%= stock_product.seller.try(:name) %>
+              <% when "forecast" %>
+                <%- hold = @hold_hash.fetch(stock_product.id.to_s) rescue 0 %>
+                <%- forecast = stock_product.activity - hold %>
+                <%= forecast %>
               <% else %>
                 <%= stock_product.send(col_name) rescue "" %>
               <% end %>
@@ -93,7 +97,7 @@
         <%= paginate @stock_products %>
       </div>
       <!-- <p></p> -->
-      <%= form_tag("/stocks", :method => "get", :class => 'pagination trade_count_info form-inline pull-right') do %>
+      <%= form_tag(stocks_path_adapter, :method => "get", :class => 'pagination trade_count_info form-inline pull-right') do %>
       <input style="visibility:hidden;" name="page" value="<%= params[:page]%>"/>
       <label style="color:#005580;">当前每页显示：</label>
       <%=select_tag :number, options_for_select([["加载20项","20"],

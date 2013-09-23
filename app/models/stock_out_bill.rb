@@ -232,7 +232,6 @@ class StockOutBill < StockBill
       stock_product = StockProduct.find_by_id(stock_out.stock_product_id)
       if stock_product
         stock_product.update_attributes(activity: stock_product.activity + stock_out.number)
-        stock_product.update_attributes(forecast: stock_product.forecast + stock_out.number) if self.trade.blank?
         true
       else
         # DO SOME ERROR NOTIFICATION
@@ -246,7 +245,6 @@ class StockOutBill < StockBill
       stock_product = StockProduct.find_by_id(stock_out.stock_product_id)
       if stock_product
         stock_product.update_attributes(activity: stock_product.activity - stock_out.number)
-        stock_product.update_attributes(forecast: stock_product.forecast - stock_out.number) if self.trade.blank?
         true
       else
         # DO SOME ERROR NOTIFICATION

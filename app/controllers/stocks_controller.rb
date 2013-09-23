@@ -2,6 +2,7 @@
 class StocksController < ApplicationController
   before_filter :authorize
   before_filter :set_warehouse
+  before_filter :set_hold_hash, only: [:index]
 
   def index
     condition_relation = StockProduct.where(default_search).where(:"sellers.active" => true).includes(:seller,:product)
@@ -36,7 +37,6 @@ class StocksController < ApplicationController
       format.xls
     end
   end
-
 
   def old
     select_sql = "skus.*, products.name, products.outer_id, products.product_id, products.category_id, stock_products.*"
@@ -171,6 +171,28 @@ class StocksController < ApplicationController
   def set_warehouse
     @warehouse = Seller.find(params[:warehouse_id]) rescue false
   end
+  def set_hold_hash
+    hold_hash = {}
+    trades = current_account.trades.where(status: 'WAIT_SELLER_SEND_GOODS', seller_id: nil, :forecast_seller_id.ne => nil)
+    trades.each do |trade|
+      trade.orders.each do |order|
+        order.sku_bindings.each do |binding|
+          sku_id = binding.sku_id
+          sku = Sku.find_by_id(binding.sku_id)
+          product = sku.try(:product)
+          if product
+            number = binding.number * order.num
+            stock_product_id = current_account.stock_products.where(product_id: product.id, sku_id: sku_id, seller_id: trade.forecast_seller_id).first.id.to_s rescue nil
+            if stock_product_id
+              hold_hash[stock_product_id] ||= 0
+              hold_hash[stock_product_id] += number
+            end
+          end
+        end
+      end
+    end
+    @hold_hash = hold_hash
+  end
   def default_search
     if @warehouse.blank?
       {account_id: current_account.id}
@@ -178,4 +200,5 @@ class StocksController < ApplicationController
       {account_id: current_account.id,:seller_id => @warehouse.id}
     end
   end
+
 end

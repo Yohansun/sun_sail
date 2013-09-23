@@ -209,7 +209,7 @@ class StockBill
       stock_product = account.stock_products.where(sku_id: sku.id, product_id: product.id, seller_id: seller_id).first
       unless stock_product
         stock_product = account.stock_products.create(product_id: product.id, seller_id: seller_id, sku_id: sku.id, num_iid: product.num_iid)
-        stock_product.update_attributes(actual: 0, activity: 0, forecast: 0)
+        stock_product.update_attributes(actual: 0, activity: 0)
       end
       bp.stock_product_id = stock_product.try(:id)
     end

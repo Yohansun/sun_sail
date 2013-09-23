@@ -130,12 +130,6 @@ class TaobaoTrade < Trade
   #   (total_fee + post_fee - payment - promotion_fee).to_f.round(2)
   # end
 
-  def update_stock_forecast
-    if self.status == "WAIT_SELLER_SEND_GOODS" && self.seller_id.blank?
-      update_seller_stock_forecast(self.forecast_seller_id, "decrease")
-    end
-  end
-
   def set_alipay_data
     if status == "TRADE_FINISHED"
       start_time = consign_time || delivered_at

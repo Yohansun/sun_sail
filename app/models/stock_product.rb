@@ -15,7 +15,6 @@
 #  sku_id     :integer(8)
 #  num_iid    :integer(8)
 #  account_id :integer(4)
-#  forecast   :integer(4)      default(0)
 #
 
 class StockProduct < ActiveRecord::Base
@@ -23,7 +22,7 @@ class StockProduct < ActiveRecord::Base
 
   belongs_to :account
 
-  attr_accessible :max, :safe_value, :product_id, :seller_id, :color_ids, :forecast, :actual, :activity, :sku_id, :num_iid, :account_id
+  attr_accessible :max, :safe_value, :product_id, :seller_id, :color_ids, :actual, :activity, :sku_id, :num_iid, :account_id
 
   validates_numericality_of :safe_value, :actual, :activity, :max, greater_than_or_equal_to: 0, message: '数量不能小于零'
   validates_numericality_of :activity, less_than_or_equal_to: :actual
@@ -56,7 +55,6 @@ class StockProduct < ActiveRecord::Base
       self.changes[:actual].tap do |ary|
         poor = ary.first - ary.last
         self.activity -= poor
-        self.forecast -= poor
         klass = poor > 0 ? StockOutBill : StockInBill
         return true if self.save! && create_stock_bill(klass,poor.abs)
       end if self.actual_changed?
@@ -64,14 +62,14 @@ class StockProduct < ActiveRecord::Base
   end
 
   def storage_status
-    	if activity < safe_value
-    		'预警'
-    	elsif actual == max
-    		'满仓'
-    	else
-    		'正常'
-    	end
-    end
+  	if activity < safe_value
+  		'预警'
+  	elsif actual == max
+  		'满仓'
+  	else
+  		'正常'
+  	end
+  end
 
   private
   def create_stock_bill(klass,number)

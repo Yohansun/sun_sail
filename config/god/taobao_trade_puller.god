@@ -4,16 +4,20 @@
 # 100 babybetter母婴旗舰店
 # 204 万科白马欧美母婴店
 # 205 欧贝贝organic baby有机棉婴儿用品店
+# 208 榜眼图书专营店
+# 209 优悠汇
+# 210 粉兔珍宝
+# 212 爱肯官方旗舰店
+# 213 叶卫洋
+# 214 优衣库官方旗舰店
+
 
 ### READY TO USE
 # 201 白兰氏官方旗舰店
 # 206 瑞莱旗舰店
 # 207 gnc雍恒专卖店
-# 208 榜眼图书专营店
-# 209 优悠汇
-# 210 粉兔珍宝
 # 211 大自然官方旗舰店
-# 212 爱肯官方旗舰店
+
 
 God::Contacts::Email.defaults do |d|
   d.from_email = 'errors@networking.io'
@@ -27,7 +31,7 @@ God.contact(:email) do |c|
   c.to_email = 'errors@networking.io'
 end
 
-taobao_trade_source_ids = [201,206,207,208,209,210,211,212]
+taobao_trade_source_ids = [201,206,207,211]
 God.watch do |w|
   w.name = "taobao_puller"
   w.group = 'magic_solo'

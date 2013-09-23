@@ -161,7 +161,6 @@ class StockInBill < StockBill
       stock_product = StockProduct.find_by_id(stock_in.stock_product_id)
       if stock_product
         update_attrs = {:actual => stock_product.actual + stock_in.number, :activity => stock_product.activity + stock_in.number}
-        update_attrs[:forecast] = stock_product.forecast + stock_in.number if self.trade.blank?
         stock_product.update_attributes(update_attrs)
         true
       else

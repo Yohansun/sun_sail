@@ -82,7 +82,7 @@
                   <li><a href="/trade_reports"><i class='icon-signal'> </i>数据魔方</a></li>
                 <%- end %>
                 <%  if current_user.allow_read?(:stocks) %>
-                <li><%= link_to raw("<i class='icon-globe'> </i>仓库管理"), stocks_path, class: "stocks" %></li>
+                  <li><%= link_to raw("<i class='icon-globe'> </i>仓库管理"), stocks_path_adapter, class: "stocks" %>
                 <% end %>
                 <% if current_user.allow_read?(:products) %>
                 <li><%= link_to raw("<i class='icon-gift'> </i>商品管理"), products_path, class: "products" %></li>
