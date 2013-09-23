@@ -1,6 +1,7 @@
 # -*- encoding : utf-8 -*-
 class StockCsvFile < ActiveRecord::Base
   attr_protected []
+  belongs_to :seller
   mount_uploader :path, StockCsvFileUploader
 
   validates_presence_of :path
