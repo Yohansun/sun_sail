@@ -47,6 +47,7 @@ class Seller < ActiveRecord::Base
   has_many :sellers_areas, dependent: :destroy
   has_many :areas, through: :sellers_areas
   has_many :stock_products, dependent: :destroy
+  has_many :stock_csv_files, dependent: :destroy
   has_one :stock
   belongs_to :user
   belongs_to :account
