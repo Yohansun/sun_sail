@@ -76,7 +76,7 @@ class TaobaoTradePuller
 
       trade = response['trade_fullinfo_get_response']['trade']
       return if trade.blank?
-      next if ($redis.sismember('TaobaoTradeTids',trade['tid']) || TaobaoTrade.unscoped.where(tid: trade['tid']).exists?)
+      return if ($redis.sismember('TaobaoTradeTids',trade['tid']) || TaobaoTrade.unscoped.where(tid: trade['tid']).exists?)
       create_trade(trade, account, trade_source_id)
     end
 
