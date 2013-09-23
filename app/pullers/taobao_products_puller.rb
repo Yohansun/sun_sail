@@ -70,7 +70,7 @@ class TaobaoProductsPuller
             unless sku
               sku = local_product.skus.create(account_id: account.id, num_iid: num_iid, sku_id: sku_id, properties_name: properties_name, properties: properties)
               local_product.stock_products.create(seller_id: account.sellers.first.id, sku_id: sku.id, num_iid: num_iid, account_id: account.id, max: 999999, actual: quantity, activity: quantity, safe_value: 20)
-              SkuBinding.where(sku_id: sku.id, taobao_sku_id: taobao_sku.id, number: 1).first_or_create
+              SkuBinding.where(sku_id: sku.id, number: 1).first_or_create
             end
           end
         else
@@ -83,7 +83,7 @@ class TaobaoProductsPuller
           unless sku
             sku = local_product.skus.create(account_id: account.id, num_iid: num_iid)
             local_product.stock_products.create(seller_id: account.sellers.first.id, sku_id: sku.id, num_iid: num_iid, account_id: account.id, max: 999999, actual: quantity, activity: quantity, safe_value: 20)
-            SkuBinding.where(sku_id: sku.id, taobao_sku_id: taobao_sku.id, number: 1, resource_id: taobao_sku.id,resource_type: "TaobaoSku").first_or_create
+            SkuBinding.where(sku_id: sku.id, number: 1, resource_id: taobao_sku.id,resource_type: "TaobaoSku").first_or_create
           end
         end
       end
@@ -153,7 +153,7 @@ class TaobaoProductsPuller
               unless sku
                 sku = local_product.skus.create(account_id: account.id, num_iid: num_iid, sku_id: sku_id, properties_name: properties_name, properties: properties)
                 local_product.stock_products.create(seller_id: account.sellers.first.id, sku_id: sku.id, num_iid: num_iid, account_id: account.id, max: 999999, actual: quantity, activity: quantity, safe_value: 20)
-                SkuBinding.where(sku_id: sku.id, taobao_sku_id: taobao_sku.id, number: 1).first_or_create
+                SkuBinding.where(sku_id: sku.id, number: 1).first_or_create
               end
             end
           else
@@ -166,7 +166,7 @@ class TaobaoProductsPuller
             unless sku
               sku = local_product.skus.create(account_id: account.id, num_iid: num_iid)
               local_product.stock_products.create(seller_id: account.sellers.first.id, sku_id: sku.id, num_iid: num_iid, account_id: account.id, max: 999999, actual: quantity, activity: quantity, safe_value: 20)
-              SkuBinding.where(sku_id: sku.id, taobao_sku_id: taobao_sku.id, number: 1, resource_id: taobao_sku.id,resource_type: "TaobaoSku").first_or_create
+              SkuBinding.where(sku_id: sku.id, number: 1, resource_id: taobao_sku.id,resource_type: "TaobaoSku").first_or_create
             end
           end
         end
@@ -221,7 +221,7 @@ class TaobaoProductsPuller
               unless sku
                 sku = local_product.skus.create(account_id: account.id, num_iid: num_iid, sku_id: sku_id, properties_name: properties_name, properties: properties)
                 local_product.stock_products.create(seller_id: account.sellers.first.id, sku_id: sku.id, num_iid: num_iid, account_id: account.id, max: 999999, actual: quantity, activity: quantity, safe_value: 20)
-                SkuBinding.where(sku_id: sku.id, taobao_sku_id: taobao_sku.id, number: 1).first_or_create
+                SkuBinding.where(sku_id: sku.id, number: 1).first_or_create
               end
             end
           else
@@ -234,7 +234,7 @@ class TaobaoProductsPuller
             unless sku
               sku = local_product.skus.create(account_id: account.id, num_iid: num_iid)
               local_product.stock_products.create(seller_id: account.sellers.first.id, sku_id: sku.id, num_iid: num_iid, account_id: account.id, max: 999999, actual: quantity, activity: quantity, safe_value: 20)
-              SkuBinding.where(sku_id: sku.id, taobao_sku_id: taobao_sku.id, number: 1, resource_id: taobao_sku.id,resource_type: "TaobaoSku").first_or_create
+              SkuBinding.where(sku_id: sku.id, number: 1, resource_id: taobao_sku.id,resource_type: "TaobaoSku").first_or_create
             end
           end
         end
