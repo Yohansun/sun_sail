@@ -5,6 +5,7 @@ class TaobaoTradePuller
       trade_source = TradeSource.find_by_id(trade_source_id)
       account_id = trade_source.account_id
       account = Account.find_by_id(account_id)
+      page_no = 1
 
       if start_time.blank?
         if TaobaoTrade.where(account_id: account_id).count > 1
@@ -28,7 +29,7 @@ class TaobaoTradePuller
       if end_time.blank?
         end_time = Time.now
       end
-
+      has_next = true
       while has_next
         has_next = false
         response = TaobaoQuery.get({
@@ -84,7 +85,7 @@ class TaobaoTradePuller
       orders = trade.delete('orders')
       trade = TaobaoTrade.new(trade)
       trade.trade_source_id = trade_source_id
-      trade.account_id = account_id
+      trade.account_id = account.id
       order = orders['order']
 
       unless order.is_a?(Array)
@@ -240,6 +241,7 @@ class TaobaoTradePuller
       end
 
       page_no = 1
+      has_next = true
       while has_next
         has_next = false
         response = TaobaoQuery.get({

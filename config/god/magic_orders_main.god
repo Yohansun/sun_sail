@@ -22,7 +22,7 @@ num_workers.times do |num|
     w.interval = 30.seconds
 
     # 可选队列 sms email jingdong taobao_purchase taobao
-    w.start = "bundle exec sidekiq -q trade_deliver -q biaogan -q trade_manual_notify -q auto_process -q taobao_memo_fetcher -q taobao_promotion_fetcher -q one_hit_fetcher -q customer_message -q init_user_notifier -q reporter -q customer_fetch -e production &> log/sidekiq.log"
+    w.start = "bundle exec sidekiq -q trade_deliver -q biaogan -q puller -q trade_manual_notify -q auto_process -q taobao_memo_fetcher -q taobao_promotion_fetcher -q one_hit_fetcher -q customer_message -q init_user_notifier -q reporter -q customer_fetch -e production &> log/sidekiq.log"
 
     # restart if memory gets too high
     w.transition(:up, :restart) do |on|
