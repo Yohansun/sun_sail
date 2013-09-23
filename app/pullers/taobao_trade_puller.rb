@@ -37,7 +37,7 @@ class TaobaoTradePuller
           start_created: start_time.strftime("%Y-%m-%d %H:%M:%S"),
           end_created: end_time.strftime("%Y-%m-%d %H:%M:%S"),
           page_no: page_no,
-          page_size: 40
+          page_size: 40,
           use_has_next: true}, trade_source_id
           )
 
