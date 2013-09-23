@@ -106,6 +106,7 @@ class MagicOrders.Views.TradesGiftMemo extends Backbone.View
 
   save: ->
     blocktheui()
+    $('.save').attr("disabled","disabled")
     @add_gifts = {}
     @delete_gifts = []
     length = $('#gift_list').find('tr').length
