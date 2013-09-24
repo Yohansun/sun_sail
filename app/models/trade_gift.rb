@@ -12,5 +12,7 @@ class TradeGift
   field :num,              type: Integer
   field :delivered_at,     type: DateTime
 
+  validates_uniqueness_of :gift_tid
+
   embedded_in :trades
 end

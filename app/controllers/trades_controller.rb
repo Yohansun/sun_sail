@@ -156,7 +156,7 @@ class TradesController < ApplicationController
           if trade_gift.delivered_at == nil && trade_gift.trade_id.present?
             Trade.where(tid: gift_tid).first.delete
           else
-            @trade.taobao_orders.where(order_gift_tid: gift_tid).delete
+            @trade.taobao_orders.where(order_gift_tid: gift_tid).first.delete
           end
           @trade.trade_gifts.where(gift_tid: gift_tid).first.delete
         end

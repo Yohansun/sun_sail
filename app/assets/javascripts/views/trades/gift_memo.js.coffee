@@ -72,7 +72,8 @@ class MagicOrders.Views.TradesGiftMemo extends Backbone.View
       return
 
     sku_ids = $("#gift_list tr").map(->
-      $(this).attr "id"
+      if $(this).attr('style') != "display: none;"
+        return $(this).attr "id"
     ).get()
     if $.inArray(sku_id, sku_ids) != -1
       alert("已添加过赠品")
@@ -106,7 +107,6 @@ class MagicOrders.Views.TradesGiftMemo extends Backbone.View
 
   save: ->
     blocktheui()
-    $('.save').attr("disabled","disabled")
     @add_gifts = {}
     @delete_gifts = []
     length = $('#gift_list').find('tr').length
@@ -143,4 +143,5 @@ class MagicOrders.Views.TradesGiftMemo extends Backbone.View
 
       error: (model, error, response) =>
         $.unblockUI()
-        alert("输入错误")
+        alert("操作频率过大")
+        $('#trade_gift_memo').modal('hide')

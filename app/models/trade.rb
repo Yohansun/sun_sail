@@ -338,7 +338,7 @@ class Trade
     sku = Sku.find_by_id(local_sku_id)
     gift_product = Product.find_by_id(value['product_id'].to_i)
     self.taobao_orders.create!(_type: "TaobaoOrder",
-                               oid: self.tid.slice(/G[0-9]*$/),
+                               oid: self.tid,
                                status: "WAIT_SELLER_SEND_GOODS",
                                title: value['gift_title'].try(:gsub, '标准款', ''),
                                price: 0,
