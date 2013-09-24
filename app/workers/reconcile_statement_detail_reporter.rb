@@ -3,8 +3,8 @@
 class ReconcileStatementDetailReporter
   include Sidekiq::Worker
   include ReconcileStatementDetailsHelper
-  sidekiq_options :queue => :reporter, :retry => false
-  
+  sidekiq_options :queue => :reporter, :retry => false, unique: true, unique_job_expiration: 60
+
   def perform(rs_detail_id, money_type)
     book = Spreadsheet::Workbook.new
     sheet1 = book.create_worksheet
@@ -14,7 +14,7 @@ class ReconcileStatementDetailReporter
     rsd = ReconcileStatementDetail.find(rs_detail_id)
     rs = rsd.reconcile_statement
     sheet1.row(1).concat(["订单编号", "订单来源", "顾客姓名", "送货地址"] + info_array + ["到账日期", "订单状态"])
-    
+
     TradeDecorator.decorate(rsd.select_trades("default")).each_with_index do |trade, i|
       info_array = judge_money_type_td(trade, money_type)
       import_array = [trade.tid, trade.trade_source, trade.receiver_name, trade.receiver_address, info_array, trade.pay_time.strftime("%Y-%m-%d"), trade.status_text].flatten

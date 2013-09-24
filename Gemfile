@@ -81,6 +81,7 @@ gem 'jingdong_fu'
 gem 'hz2py'
 
 gem 'sidekiq'
+gem 'sidekiq-unique-jobs'
 gem 'slim'
 gem 'sinatra', :require => nil
 

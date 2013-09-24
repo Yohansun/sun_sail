@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 class TradeYihaodianMemoFetcher
   include Sidekiq::Worker
-  sidekiq_options :queue => :yihaodian_memo_fetcher
+  sidekiq_options :queue => :yihaodian_memo_fetcher, unique: true, unique_job_expiration: 60
   def perform(tid)
     trade = YihaodianTrade.where(tid: tid).first
     return unless trade

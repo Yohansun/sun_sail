@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 class WangwangDataReprocess
   include Sidekiq::Worker
-  sidekiq_options :queue => :wangwang_data_reprocess
+  sidekiq_options :queue => :wangwang_data_reprocess, unique: true, unique_job_expiration: 60
 
   def perform(start_date = nil, end_date = nil)
     start_date ||= (Time.now - 1.day).to_date

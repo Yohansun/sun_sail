@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 class TradeTaobaoPromotionFetcher
 	include Sidekiq::Worker
-  sidekiq_options :queue => :taobao_promotion_fetcher
+  sidekiq_options :queue => :taobao_promotion_fetcher, unique: true, unique_job_expiration: 60
 
   def perform(tid)
     trade = TaobaoTrade.where(tid: tid).first

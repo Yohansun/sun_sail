@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 class TradeAutoDeliver
   include Sidekiq::Worker
-  sidekiq_options :queue => :auto_process #自动发货队列
+  sidekiq_options :queue => :auto_process, unique: true, unique_job_expiration: 60 #自动发货队列
 
   def perform(id)
     trade = Trade.find(id)
