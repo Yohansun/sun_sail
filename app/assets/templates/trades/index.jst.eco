@@ -165,6 +165,9 @@
           <!-- <th>操作</th> -->
           <th data-col='trade_source'>订单来源</th>
           <th data-col='tid'>订单编号</th>
+          <th data-col='order_title'>商品名称</th>
+          <th data-col='order_num'>售卖数量</th>
+          <th data-col='payment'>实付金额</th>
           <th data-col='status'>当前状态</th>
           <th data-col='status_history' style="max-width:130px">历史状态</th>
           <th data-col='receiver_id'>客户ID(客户姓名)</th>                <!--Newly Add-->
