@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 class TradeJingdongMemoFetcher
   include Sidekiq::Worker
-  sidekiq_options :queue => :jingdong_memo_fetcher
+  sidekiq_options :queue => :jingdong_memo_fetcher, unique: true, unique_job_expiration: 60
   def perform(tid)
     trade = JingdongTrade.where(tid: tid).first
     return unless trade

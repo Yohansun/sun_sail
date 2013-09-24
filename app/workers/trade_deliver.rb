@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 class TradeDeliver
   include Sidekiq::Worker
-  sidekiq_options :queue => :trade_deliver
+  sidekiq_options :queue => :trade_deliver, unique: true, unique_job_expiration: 60
 
   def perform(id)
     trade = Trade.find(id)

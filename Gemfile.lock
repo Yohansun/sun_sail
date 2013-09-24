@@ -394,6 +394,8 @@ GEM
       multi_json (~> 1)
       redis (~> 3)
       redis-namespace
+    sidekiq-unique-jobs (2.6.7)
+      sidekiq (~> 2.6)
     simple_form (2.0.4)
       actionpack (~> 3.0)
       activemodel (~> 3.0)
@@ -561,6 +563,7 @@ DEPENDENCIES
   savon (= 2.1.0)
   shoulda-matchers
   sidekiq
+  sidekiq-unique-jobs
   simple_form
   simplecov
   sinatra

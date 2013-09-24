@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 class TradeTaobaoMemoFetcher
 	include Sidekiq::Worker
-  sidekiq_options :queue => :taobao_memo_fetcher
+  sidekiq_options :queue => :taobao_memo_fetcher, unique: true, unique_job_expiration: 60
   def perform(tid)
     trade = TaobaoTrade.where(tid: tid).first
     return unless trade && trade._type != "CustomTrade"

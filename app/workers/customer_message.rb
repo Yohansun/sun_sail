@@ -1,8 +1,8 @@
 #encoding: utf-8
 class CustomerMessage
   include Sidekiq::Worker
-  sidekiq_options :queue => :customer_message
-  
+  sidekiq_options :queue => :customer_message, unique: true, unique_job_expiration: 60
+
   def perform(message)
     if message.send_type_sms?
       account = message.account

@@ -1,7 +1,7 @@
 #encoding: utf-8
 class CustomerFetch
   include Sidekiq::Worker
-  sidekiq_options :queue => :customer_fetch, :retry => false
+  sidekiq_options :queue => :customer_fetch, :retry => false, unique: true, unique_job_expiration: 60
 
   def perform(account_id=nil,ec_name=nil)
     if account_id && ec_name
