@@ -104,7 +104,7 @@ class YihaodianTradePuller
 
         page_no += 1
       end until(page_no > total_pages || total_pages == 0)
-      #同步本地顾客管理下面的"副本订单"
+      #同步本地顾客管理下面的"副本订单" : 注意 一号店没有顾客相关信息无法做顾客管理
       #CustomerFetch.perform_async(account_id,'YihaodianTrade')
       #抓取订单退货信息
       YihaodianRefundOrderMarker.perform_async(account_id)
