@@ -22,6 +22,8 @@ class Order
   #赠品子订单专用field
   field :order_gift_tid, type: String
 
+  validates_uniqueness_of :order_gift_tid, allow_blank: true
+
   def local_skus
     sku = Sku.find_by_id(local_sku_id)
     sku == nil ? [] : [sku]
