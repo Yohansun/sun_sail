@@ -12,9 +12,9 @@ class CustomersPuller
       find_or_create(trades.desc(:tid))
     end
 
-    def update(account_id=nil)
+    def update(account_id=nil,ec=Trade)
       conditions = default_condition(account_id).merge({:news => 1})
-      news_trades = Trade.where(conditions)
+      news_trades = ec.where(conditions)
 
       find_or_create(news_trades) do |trade|
         trade.news = 2
@@ -49,13 +49,7 @@ class CustomersPuller
       end
 
       def #{ec.underscore}_update(account_id=nil)
-        conditions = default_condition(account_id).merge({:news => 1})
-        news_trades = #{ec}.where(conditions)
-
-        find_or_create(news_trades) do |trade|
-          trade.news = 2
-          trade.save(:validate => false)
-        end
+        update(account_id,#{ec})
       end
       EOF
     end
