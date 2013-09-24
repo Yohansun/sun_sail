@@ -257,6 +257,15 @@ class TradeDecorator < Draper::Base
     end
   end
 
+  def can_auto_dispatch
+    case trade._type
+    when 'TaobaoTrade'
+      trade.status == "WAIT_SELLER_SEND_GOODS" && trade.auto_dispatchable?
+    else
+      false
+    end
+  end
+
   protected
 
   def fenxiao_status_text

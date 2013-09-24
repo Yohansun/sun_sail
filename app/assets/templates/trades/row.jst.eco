@@ -34,6 +34,9 @@
 <td data-col='status'>
   <span class="label label-success"><%= @trade.get('status_text') %></span>
   <span class="label label-warn"><%= @trade.get('last_unusual_state') %></span>
+  <% if @trade.get('can_auto_dispatch') : %>
+    <span class="label label-warning endtime"></span>
+  <% end %>
 </td>
 <td data-col='status_history'>
   <span class="label">下单 <%= @trade.get('created') %></span>
