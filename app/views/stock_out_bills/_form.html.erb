@@ -6,7 +6,7 @@
 <div class="well clearfix">
   <fieldset class="span6">
     <%= f.input :op_name, label: "*收货人",:input_html  => {:class => "input-medium", :id => "op_name"} %>
-    <%= f.input :op_mobile, label: "*手机",:input_html  => {:class => "input-medium"} %>
+    <%= f.input :op_mobile, label: "手机",:input_html  => {:class => "input-medium"} %>
     <%= f.input :op_zip, label: "*邮编",:input_html  => {:class => "input-medium"} %>
     <!-- <div class="control-group">
       <label class="control pull-left">收货仓库：</label>
@@ -126,14 +126,14 @@
       rules: {
         "stock_out_bill[op_name]": { required: true},
         "stock_out_bill[op_zip]": { required: true},
-        "stock_out_bill[op_mobile]": { required: true},
+        // "stock_out_bill[op_mobile]": { required: true},
         "stock_out_bill[op_address]": { required: true},
         "stock_out_bill[op_district]": { required: true}
       },
       messages: {
         "stock_out_bill[op_name]": { required: "收货人不能为空" },
         "stock_out_bill[op_zip]": { required: "邮编不能为空" },
-        "stock_out_bill[op_mobile]": { required: "手机号不能为空" },
+        // "stock_out_bill[op_mobile]": { required: "手机号不能为空" },
         "stock_out_bill[op_address]": { required: "收货地址不能为空" },
         "stock_out_bill[op_district]": { required: "地域不能为空"}
       }
