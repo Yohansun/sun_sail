@@ -71,14 +71,6 @@ class MagicOrders.Views.TradesGiftMemo extends Backbone.View
       alert("数量格式不正确。")
       return
 
-    sku_ids = $("#gift_list tr").map(->
-      if $(this).attr('style') != "display: none;"
-        return $(this).attr "id"
-    ).get()
-    if $.inArray(sku_id, sku_ids) != -1
-      alert("已添加过赠品")
-      return
-
     product_name = $("#select_product").select2('data').text
     if $("#select_sku").select2('data') != null
       sku_name = $("#select_sku").select2('data').text
