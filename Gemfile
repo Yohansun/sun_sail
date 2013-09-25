@@ -22,7 +22,6 @@ end
 gem 'jquery-rails'
 
 group :test, :development do
-  gem "better_errors"
   gem "debugger"
   gem "guard"
   gem "guard-bundler"

@@ -1,5 +1,13 @@
 <ul class="nav nav-tabs">
-  <% {"本地商品" => products_path, "淘宝商品" => taobao_products_products_path,"京东商品" => jingdong_products_path,"一号店商品" => yihaodian_products_path}.each_pair do |name,url| %>
-  <li class="<%= current_page?(url) ? "active" : '' %>"><%= link_to_authorize name,url %></li>
+  <%- tab_hash = {"本地商品" => products_path, "淘宝商品" => taobao_products_products_path,"京东商品" => jingdong_products_path, "一号店商品" => yihaodian_products_path} %>
+  <%- if controller_name = "products" %>
+    <%- if action_name == "import" %>
+      <%- tab_hash["导入商品"] = import_products_path %>
+    <%- elsif action_name == "import_csv"  %>
+      <%- tab_hash["导入商品确认"] = import_csv_products_path %>
+    <%- end %>
+  <%- end %>
+  <% tab_hash.each_pair do |name,url| %>
+    <li class="<%= current_page?(url) ? "active" : '' %>"><%= link_to_authorize name,url %></li>
   <% end %>
 </ul><!-- nav-tabs -->

@@ -176,6 +176,7 @@ MagicOrder::AccessControl.map do |map|
                                 ]
     map.permission :operations, ["create",
                                  "update",
+                                 "import",
                                  "export_products",
                                  "update_on_sale",
                                  "taobao_bind",

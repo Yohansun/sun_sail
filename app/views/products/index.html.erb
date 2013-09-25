@@ -50,10 +50,11 @@
             <span class="caret"></span>
           </button>
           <ul class="dropdown-menu">
-            <li><a href="#" id="show_product">查看</a></li>
-            <li><a href="#" id="edit_product">编辑</a></li>
+            <li><a href="#" id="show_product">查看商品</a></li>
+            <li><a href="#" id="edit_product">编辑商品</a></li>
             <li><a href="#" id="product_on_sale">上/下架</a></li>
-            <li><a href="#" id="export_products">导出</a><%#= link_to "导出", products_path(:format => "xls"), id: "export_products" %></li>
+            <li><a href="#" id="export_products">导出商品</a>
+            <li><a href="/products/import">导入商品</a></li>
           </ul>
         </div><!-- btn-group -->
         <a class="btn btn-warning" id="new_product" href="/products/new">新增商品</a>

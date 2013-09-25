@@ -44,7 +44,8 @@ class Product < ActiveRecord::Base
 
   attr_accessible :name, :product_id, :outer_id, :storage_num, :price, :color_ids, :pic_url, :category_id, :features, :feature_ids, :cat_name, :detail_url, :num_iid, :cid, :account_id, :logistic_group_id, :on_sale,:skus_attributes
 
-  validates_uniqueness_of :outer_id, :allow_blank => true, message: "信息已存在"
+  validates :outer_id, presence: true, uniqueness: { scope: :account_id }
+
   validates_presence_of :name, :price, message: "信息不能为空"
   validates_numericality_of :price, message: "所填项必须为数字"
   validates_length_of :name, maximum: 100, message: "内容过长"
@@ -81,5 +82,48 @@ class Product < ActiveRecord::Base
 
   def category_property_names
     self.category.category_properties.map(&:name)*" | " if self.category
+  end
+
+   def self.confirm_import_from_csv(account, file_name)
+    records = CsvMapper.import(file_name) do |csv|
+      start_at_row 2
+      [name, category_name, outer_id]
+    end
+
+    records.each do |record|
+      if record.outer_id.present? && record.name.present?
+        unless account.products.exists?(outer_id: record.outer_id)
+          product = account.products.create(outer_id: record.outer_id, name: record.name)
+          category = account.categories.where(name: record.category_name).first_or_create
+          product.update_attributes(category_id: category.id)
+          product.skus.create(account_id: account.id)
+        end
+      end
+    end
+  end
+
+  def self.import_from_csv(account, file_name)
+    records = CsvMapper.import(file_name) do |csv|
+      start_at_row 2
+      [name, category_name, outer_id, info, errors]
+    end
+
+    records.each do |record|
+      if record.outer_id.present?
+        if account.products.exists?(outer_id: record.outer_id)
+          record.errors = "商品编码已存在, 跳过"
+        else
+          if record.name.blank?
+            record.errors = "未输入商品名称, 跳过"
+          else
+            record.info = "正常导入"
+          end
+        end
+      else
+        record.errors = "未输入商品编码, 跳过"
+      end
+    end
+
+    records
   end
 end
