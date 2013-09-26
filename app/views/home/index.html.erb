@@ -26,42 +26,12 @@
     MagicOrders.init();
   });
 </script>
-<script>
-  $(function(){
-    var nMS= parseInt($("#left_times").html());
-    setInterval(function(){
-      nMS -= 1;
-      $(".endtime").each(function(){
-        var obj = $(this);
-        var str = "";
-
-
-        if(nMS > 0){
-          var myH = parseInt(nMS/3600);
-          if(myH < 10){
-            myH = "0"+myH;
-          }
-          var myM = parseInt(nMS/60%60);
-          if(myM < 10){
-            myM = "0"+myM;
-          }
-          var myS = parseInt(nMS%60);
-          if(myS < 10){
-            myS = "0" + myS;
-          }
-          var str = "<i class='icon-time trade_status_icon'></i>还剩"+myH+":"+myM+":"+myS+"被分派";
-        }
-        obj.html(str);
-      });
-    }, 1000); //每个0.1秒执行一次
-  });
-</script>
 <% end -%>
 
 <div class="row-fluid content" id="content">
   Loading...
 </div>
-<span id="left_times" style="display:none"><%= current_account.can_auto_dispatch_right_now == true ? 0 : current_account.can_auto_dispatch_right_now.to_i %></span>
+
 <div id="trade_detail" class="trade modal fade hide" tabindex="-1" style="width: 890px; margin-left: -445px;"></div>
 <div id="trade_modify_receiver_information" class="trade modal fade hide" tabindex="-1" style="width: 890px;margin-left: -445px;"></div>
 <div id="split_invoice" class="delvier modal fade hide" tabindex="-1" style="width: 890px; margin-left: -445px;"></div>
