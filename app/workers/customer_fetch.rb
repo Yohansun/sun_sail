@@ -5,6 +5,7 @@ class CustomerFetch
 
   def perform(account_id=nil,ec_name=nil)
     if account_id && ec_name
+      ec_name = ec_name.underscore
       CustomersPuller.send("#{ec_name}_sync",account_id)
       CustomersPuller.send("#{ec_name}_update",account_id)
     else
