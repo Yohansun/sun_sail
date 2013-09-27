@@ -72,7 +72,7 @@ class Account < ActiveRecord::Base
   validates :name, presence: true
   validates :key, presence: true, uniqueness: true
 
-  after_create :create_default_roles,:init_settings,:create_default_seller
+  after_create :create_default_roles,:initialize_auto_settings,:init_settings,:create_default_seller
 
   def trades
     Trade.where(account_id: id)
@@ -118,11 +118,9 @@ class Account < ActiveRecord::Base
     return in_time_gap(self.settings.auto_settings["start_deliver_at"], self.settings.auto_settings["end_deliver_at"])
   end
 
+  # 用户无权更改的setting默认值
   def setting_values
     [
-      ["auto_settings",{'split_conditions' => {},
-                        'dispatch_conditions'=>{},
-                        'unusual_conditions'=>{}}],
       ["trade_modes",{"trades"=>"订单模式",
                       "deliver"=>"发货单模式",
                       "logistics"=>"物流单模式",
@@ -420,6 +418,12 @@ class Account < ActiveRecord::Base
     setting_values.each{|key,value|
       self.settings[key] = value
     }
+  end
+
+  private
+
+  def initialize_auto_settings
+    self.settings["auto_settings"] = {'split_conditions' => {},'dispatch_conditions'=>{},'unusual_conditions'=>{}}
   end
 
   def create_default_seller
