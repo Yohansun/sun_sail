@@ -90,7 +90,7 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
     $(@el).find('.add_status_search_tag').parents('fieldset').hide()
     if MagicOrders.trade_mode == 'trades'
       $(@el).find('.add_batch_search_tag').parents('fieldset').hide()
-    if MagicOrders.trade_mode == "trades" && MagicOrders.trade_type == "all"
+    if MagicOrders.trade_mode == "trades" && (MagicOrders.trade_type == "all" || MagicOrders.trade_type == "my_trade")
       $(@el).find('.add_status_search_tag').parents('fieldset').show()
     this
 
