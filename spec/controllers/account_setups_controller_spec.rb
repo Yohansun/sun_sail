@@ -11,7 +11,7 @@ describe AccountSetupsController do
     end
 
     it "should create a user, and goto data_fetch step" do
-      post :update, :id=>"admin_init", :user=>{email:"test@doorder.com",phone:"13312345678",username:"test_user",name:"test_user"}
+      post :update, :id=>"admin_init", :user=>{email:"test@doorder.com",phone:"13312345678",username:"testuser",name:"test_user"}
       User.find_by_name("test_user").name.should == "test_user"
       response.should redirect_to("/account_setups/data_fetch")
     end

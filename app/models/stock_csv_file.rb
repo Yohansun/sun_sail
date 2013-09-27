@@ -1,4 +1,18 @@
 # -*- encoding : utf-8 -*-
+# == Schema Information
+#
+# Table name: stock_csv_files
+#
+#  id               :integer(4)      not null, primary key
+#  path             :string(255)
+#  upload_user_id   :integer(4)
+#  stock_in_bill_id :string(255)
+#  used             :boolean(1)
+#  seller_id        :integer(4)
+#  created_at       :datetime        not null
+#  updated_at       :datetime        not null
+#
+
 class StockCsvFile < ActiveRecord::Base
   attr_protected []
   belongs_to :seller
