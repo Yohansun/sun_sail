@@ -13,11 +13,11 @@ module ApplicationHelper
       end
     end
   end
-  
+
   def authorize?(control=params[:controller],act=params[:action])
     current_user.allowed_to?(control,act)
   end
-  
+
   def l_or_humanize(s, options={})
     k = "#{options[:prefix]}#{s}".to_sym
     ::I18n.t(k, :default => s.to_s.humanize)
@@ -51,10 +51,10 @@ module ApplicationHelper
     url_parameters = Rails.application.routes.recognize_path url
     (request[:controller] == url_parameters[:controller]) && (request[:action] == url_parameters[:action])
   end
-  
+
   def format_url(var)
     url = request.fullpath
-    url.include?('?') ? url.gsub('?',".#{var}?") : (url.to_s << ".#{var}?") 
+    url.include?('?') ? url.gsub('?',".#{var}?") : (url.to_s << ".#{var}?")
   end
 
   def top_nav_name
@@ -71,12 +71,12 @@ module ApplicationHelper
       ''
     end
   end
-  
+
   def breadcrumb
     @breadcrumb ||= [['Magic', root_path]]
     @breadcrumb
   end
-  
+
   def display?(control_name,name,action_names=[])
     matched = nil
     matched = params[:controller] =~ /#{control_name.is_a?(Array) ? control_name.join('|') : control_name}/

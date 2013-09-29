@@ -205,11 +205,14 @@ MagicOrders::Application.routes.draw do
       get :taobao_product
     end
     collection do
+      post :import_csv
+      post :confirm_import_csv
       get :fetch_products
       get :taobao_products
       get :pick_product
       get :abandon_product
       get :export_products
+      get :import
       post :update_on_sale
       get :taobao_skus
       get :change_taobao_skus

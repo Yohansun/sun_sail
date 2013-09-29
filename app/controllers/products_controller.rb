@@ -1,8 +1,8 @@
 # -*- encoding : utf-8 -*-
 class ProductsController < ApplicationController
 
-  before_filter :authorize #,:except => [:fetch_products,:pick_product,:abandon_product,:fetch_category_properties, :taobao_skus]
-  before_filter :get_products,:only => [:sync_taobao_products,:confirm_sync]
+  before_filter :authorize
+  before_filter :get_products, :only => [:sync_taobao_products,:confirm_sync]
   before_filter :tmp_skus, :only => [:new,:create,:add_sku,:remove_sku]
 
   def index
@@ -32,7 +32,6 @@ class ProductsController < ApplicationController
     @products = @products.order("updated_at DESC").page(params[:page]).per(@number)
 
     respond_to do |format|
-      format.xls
       format.html{
         @all_cols = current_account.settings.product_cols
         @visible_cols = current_account.settings.product_visible_cols
@@ -42,6 +41,27 @@ class ProductsController < ApplicationController
 
   def show
     @product = current_account.products.find params[:id]
+  end
+
+  def confirm_import_csv
+    if params[:csv] && File.exists?(params[:csv])
+      Product.confirm_import_from_csv(current_account, params[:csv])
+    end
+    redirect_to products_path
+  end
+
+  def import_csv
+    if params[:file] && params[:file].tempfile
+      @csv = "#{Rails.root}/public/#{Time.now.to_i}.csv"
+      FileUtils.mv params[:file].tempfile, @csv
+      begin
+        @products = Product.import_from_csv(current_account, @csv)
+      rescue Exception => e
+        Rails.logger.info e.inspect
+        flash[:notice] = "上传文件有误请重新上传,只接受csv文件,可以先导出商品,按照格式修改后导入" + e.inspect
+        redirect_to :back
+      end
+    end
   end
 
   def new
@@ -85,25 +105,23 @@ class ProductsController < ApplicationController
     redirect_to products_path
   end
 
-  #GET /products/sync_taobao_products
   def sync_taobao_products
   end
 
-  #PUT /products/confirm_sync
   def confirm_sync
-    TaobaoProduct.transaction do
-      TaobaoSku.transaction do
-        @changes_products.map(&:save!)
-        @news_products.map(&:insert!)
+    begin
+      TaobaoProduct.transaction do
+        TaobaoSku.transaction do
+          @changes_products.map(&:save!)
+          @news_products.map(&:insert!)
+        end
       end
+      redirect_to :action => :taobao_products
+    rescue Exception => e
+      render :text => e.message
     end
-
-    redirect_to :action => :taobao_products
-  rescue Exception => e
-    render :text => e.message
   end
 
-  #GET /products/fetch_category_properties
   def fetch_category_properties
     @category = current_account.categories.find(params[:category_id])
     @category_properties = @category.category_properties
@@ -113,38 +131,35 @@ class ProductsController < ApplicationController
     end
   end
 
-  #POST /products/add_sku
   def add_sku
-    sku = OpenStruct.new({:id =>Time.now.strftime("%Y%m%d%k%M%S%L") }.merge!(params[:tmp_sku] || {}))
+    begin
+      sku = OpenStruct.new({:id =>Time.now.strftime("%Y%m%d%k%M%S%L") }.merge!(params[:tmp_sku] || {}))
+      values = []
+      params[:sku_property].each do |k,v|
+        sku.sku_properties ||= []
+        sku.sku_properties << OpenStruct.new(v.merge(:id => k))
+        values << CategoryPropertyValue.find(v["category_property_value_id"]).value
+      end
+      sku.value = values * " | "
+      sku.attributes = {"sku_properties_attributes" => params[:sku_property]}.merge!(params[:tmp_sku] || {})
 
-    values = []
-    params[:sku_property].each do |k,v|
-      sku.sku_properties ||= []
-      sku.sku_properties << OpenStruct.new(v.merge(:id => k))
-      values << CategoryPropertyValue.find(v["category_property_value_id"]).value
+      @product = current_account.products.find_by_id params[:id]
+
+      if @product.blank?
+        @skus = current_user.settings.tmp_skus += Array.wrap(sku)
+      else
+        Sku.create(:sku_id=>params[:tmp_sku][:sku_id],:account_id => current_account.id,:product_id => params[:id],:sku_properties_attributes => params[:sku_property])
+        @skus = @product.skus
+      end
+    rescue Exception => e
+      @error_message = e.message
+      @error_message = "Sku信息不能为空" if params[:sku_property].blank?
     end
-    sku.value = values * " | "
-    sku.attributes = {"sku_properties_attributes" => params[:sku_property]}.merge!(params[:tmp_sku] || {})
-
-    @product = current_account.products.find_by_id params[:id]
-
-    if @product.blank?
-      @skus = current_user.settings.tmp_skus += Array.wrap(sku)
-    else
-      Sku.create(:sku_id=>params[:tmp_sku][:sku_id],:account_id => current_account.id,:product_id => params[:id],:sku_properties_attributes => params[:sku_property])
-      @skus = @product.skus
-    end
-
-  rescue Exception => e
-    @error_message = e.message
-    @error_message = "Sku信息不能为空" if params[:sku_property].blank?
-
     respond_to do |format|
       format.js
     end
   end
 
-  #PUT /products/remove_sku
   def remove_sku
     sku_ids = params[:sku_ids]
     @skus.delete_if {|sku| sku_ids.include?(sku.id) }
@@ -297,11 +312,13 @@ class ProductsController < ApplicationController
 
   require 'sync_taobao_products'
   def get_products
-    products          = CompareProduct.new(current_account)
-    @news_products    = products.not_exists
-    @changes_products = products.changes
-  rescue Exception => e
-    render :text => e.message
+    begin
+      products          = CompareProduct.new(current_account)
+      @news_products    = products.not_exists
+      @changes_products = products.changes
+    rescue Exception => e
+      render :text => e.message
+    end
   end
 
   def tmp_skus
