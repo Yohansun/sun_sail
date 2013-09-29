@@ -8,7 +8,7 @@ class CustomTrade < Trade
   # 赠品订单特有field
   field :main_trade_id, type: String
 
-  validates_presence_of :tid, :receiver_name, :receiver_mobile, :receiver_state, :receiver_city, :receiver_address, :created, :pay_time, message: "信息不完整"
+  validates_presence_of :tid, :receiver_name, :receiver_state, :receiver_city, :receiver_address, :created, :pay_time, message: "信息不完整"
   validates_uniqueness_of :tid, message: "操作频率过大，请重试"
   validates_length_of :receiver_name, maximum: 20, message: "内容过长"
   validates_length_of :receiver_address, maximum: 100, message: "内容过长"
@@ -24,11 +24,12 @@ class CustomTrade < Trade
                   14[57]\d{8}  # 14 号段
                   )$
                   }x
-  validates :receiver_mobile, format: { with: MOBILE_FORMAT, message: "手机号格式不正确"}
+  validates :receiver_mobile, format: { with: MOBILE_FORMAT, message: "手机号格式不正确"}, allow_blank: true
   validates_length_of :receiver_phone, maximum: 15, message: "内容过长", allow_blank: true
   validates :receiver_phone, format: { with: /^[0-9-]+$/, message: "座机号格式不正确"}, allow_blank: true
   validates :receiver_zip, format: { with: /^[0-9]{6}$/, message: "邮编格式不正确"}, allow_blank: true
   validate :created_larger_than_pay_time, :message => "下单时间不能晚于付款时间"
+  validate :have_either_telephone_or_sell, :message => "手机号和座机号必须填写一个"
 
   embeds_many :taobao_orders
 
@@ -37,6 +38,13 @@ class CustomTrade < Trade
   def created_larger_than_pay_time
     if (pay_time.to_i - created.to_i) < 0
       errors.add(:created, "下单时间不能晚于付款时间")
+    end
+  end
+
+  def have_either_telephone_or_sell
+    if (receiver_phone.blank? && receiver_mobile.blank?)
+      errors.add(:receiver_phone, "手机号和座机号必须填写其中任一个")
+      errors.add(:receiver_mobile, "手机号和座机号必须填写其中任一个")
     end
   end
 
