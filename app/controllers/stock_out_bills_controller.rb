@@ -3,7 +3,10 @@ class StockOutBillsController < ApplicationController
   before_filter :set_warehouse
   before_filter :default_conditions,:on => [:edit,:show,:update,:add_product,:remove_product,:fetch_bills]
   before_filter :authorize #,:except => :fetch_bils
-  before_filter :find_column_settings, :only => [:sync, :check, :rollback, :lock, :unlock]
+  before_filter :only => [:sync, :check, :rollback, :lock, :unlock] do
+    find_column_settings
+    validate_optional_status
+  end
 
   def index
     parse_params
@@ -59,6 +62,9 @@ class StockOutBillsController < ApplicationController
     @bill = StockOutBill.find_by(@conditions)
     @trade = TradeDecorator.decorate(@bill.trade) if @bill.trade
     @products = @bill.bill_products
+    if @bill.private_stock_type?
+      render template: "stock_bills/private_stock_type_templete"
+    end
   end
 
   def update
@@ -181,5 +187,18 @@ class StockOutBillsController < ApplicationController
   def find_column_settings
     @all_cols = current_account.settings.stock_out_bill_cols
     @visible_cols = current_account.settings.stock_out_bill_visible_cols
+  end
+
+  def validate_optional_status
+    private_stock_types = StockOutBill::PRIVATE_OUT_STOCK_TYPE
+    hava_private_type = StockOutBill.where(:id.in => params[:bill_ids],:stock_type.in => private_stock_types.map(&:last)).exists?
+    message = "不能操作类型为#{private_stock_types.map(&:first).join(',')}的出库单"
+    if hava_private_type
+      respond_to do |format|
+        format.html { redirect_to(action: :index,error: message)}
+        format.js   { render js: "alert('#{message}')" }
+      end
+      return
+    end
   end
 end
