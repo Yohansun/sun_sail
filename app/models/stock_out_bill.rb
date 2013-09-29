@@ -5,7 +5,9 @@ class StockOutBill < StockBill
   belongs_to :trade
   embeds_many :bml_output_backs
 
-  enum_attr :stock_type, StockBill::OUT_STOCK_TYPE
+  PUBLIC_STOCK_TYPE  = PUBLIC_OUT_STOCK_TYPE
+  PRIVATE_STOCK_TYPE = PRIVATE_OUT_STOCK_TYPE
+  enum_attr :stock_type, OUT_STOCK_TYPE
   validates_inclusion_of :stock_type, :in => STOCK_TYPE_VALUES
 
   def xml
