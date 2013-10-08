@@ -12,7 +12,7 @@
   <tbody>
     <%- @bills.each_with_index do |bill, index| %>
       <tr id='<%= bill.id %>'>
-        <td><% if !bill.stock_type_ivirtual? %><input type="checkbox" name="bill_ids[]" value="<%= bill.id %>" ><% end %></td>
+        <td><input type="checkbox" name="bill_ids[]" value="<%= bill.id %>" ></td>
         <%- @all_cols.each do |col_name, view_name| -%>
           <% case col_name
              when "status" %>

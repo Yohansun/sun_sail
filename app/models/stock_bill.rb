@@ -170,6 +170,10 @@ class StockBill
   def stock_typs
     stock_type.gsub(/^(I|O)/,'')
   end
+  
+  def private_stock_type?
+    PRIVATE_STOCK_TYPE.map(&:last).include?(stock_type.to_s)
+  end
 
   def generate_tid
     if tid.blank?

@@ -1,0 +1,8 @@
+zh-CN:
+  stock_bill:
+    tid: "%{stock}编号"
+    stock_type: "%{stock}类型"
+    stocked_at: "%{stock}时间"
+    
+  history_status: 历史状态
+  current_status: 当前状态
