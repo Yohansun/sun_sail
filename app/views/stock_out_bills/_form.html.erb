@@ -15,7 +15,7 @@
       </select>
       </div> -->
       <div class="control-group">
-        <%= f.input :stock_type,label: "*出库类型", collection: StockOutBill::STOCK_TYPE, as: :select,:input_html => {class: "input-medium select2"} %>
+        <%= f.input :stock_type,label: "*出库类型", collection: StockInBill::PUBLIC_OUT_STOCK_TYPE, as: :select,:input_html => {class: "input-medium select2"} %>
       </div>
       <%= f.input :stocked_at, label: "出库时间",input_html: {class: "input-medium js-datetimepicker"} %>
       <div class="control-group">

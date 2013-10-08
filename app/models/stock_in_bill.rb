@@ -4,7 +4,9 @@ class StockInBill < StockBill
   include MagicEnum
 	embeds_many :bml_input_backs
 
-  enum_attr :stock_type,StockBill::IN_STOCK_TYPE
+  PUBLIC_STOCK_TYPE = PUBLIC_IN_STOCK_TYPE
+  PRIVATE_STOCK_TYPE = PRIVATE_IN_STOCK_TYPE
+  enum_attr :stock_type,IN_STOCK_TYPE
   validates_inclusion_of :stock_type, :in => STOCK_TYPE_VALUES
 
 	def xml

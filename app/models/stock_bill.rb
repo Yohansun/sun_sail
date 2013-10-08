@@ -58,10 +58,24 @@ class StockBill
 
   belongs_to :trade, :class_name => "Trade", :foreign_key => "tid",:primary_key => "tid"
 
-  IN_STOCK_TYPE   = [["调拨入库", "IIR"], ["正常入库", "IFG"], ["拆分入库", "ICF"], ["加工入库", "IOT"], ["退货入库", "IRR"], ["特殊入库(免费)", "IMF"], ["调整入库","IVIRTUAL"], ["期初入库","IINITIAL"]]
-  OUT_STOCK_TYPE  = [["拆分出库", "ORS"], ["调拨出库", "ODB"], ["加工出库", "OKT"], ["退货出库", "OTT"], ["销售出库", "OCM"], ["报废出库", "OOT"], ["补货出库", "OWR"], ["特殊出库(免费)", "OMF"], ["退大货出库", "OTD"],["调整出库","OVIRTUAL"]]
+  # 可选的入库类型
+  PUBLIC_IN_STOCK_TYPE   = [["调拨入库", "IIR"], ["正常入库", "IFG"], ["拆分入库", "ICF"], ["加工入库", "IOT"], ["退货入库", "IRR"], ["特殊入库(免费)", "IMF"]]
+  # 可选的出库类型
+  PUBLIC_OUT_STOCK_TYPE  = [["拆分出库", "ORS"], ["调拨出库", "ODB"], ["加工出库", "OKT"], ["退货出库", "OTT"], ["销售出库", "OCM"], ["报废出库", "OOT"], ["补货出库", "OWR"], ["特殊出库(免费)", "OMF"], ["退大货出库", "OTD"]]
+  # 不可选的入库类型
+  PRIVATE_IN_STOCK_TYPE   = [["期初入库","IINITIAL"],["调整入库","IVIRTUAL"]]
+  # 不可选的出库类型
+  PRIVATE_OUT_STOCK_TYPE = [["调整出库","OVIRTUAL"]]
+  # 所有的入库类型
+  IN_STOCK_TYPE = PUBLIC_IN_STOCK_TYPE + PRIVATE_OUT_STOCK_TYPE
+  # 所有的出库类型
+  OUT_STOCK_TYPE = PUBLIC_OUT_STOCK_TYPE + PRIVATE_OUT_STOCK_TYPE
 
-  STOCK_TYPE = IN_STOCK_TYPE + OUT_STOCK_TYPE
+  PUBLIC_STOCK_TYPE  = PUBLIC_IN_STOCK_TYPE + PUBLIC_OUT_STOCK_TYPE
+
+  PRIVATE_STOCK_TYPE = PRIVATE_IN_STOCK_TYPE + PRIVATE_OUT_STOCK_TYPE
+
+  STOCK_TYPE = PUBLIC_STOCK_TYPE + PRIVATE_STOCK_TYPE
 
   enum_attr :stock_type, STOCK_TYPE
   enum_attr :operation, [['初始化',"none"],['已锁定',"locked"],['已激活','activated']]
