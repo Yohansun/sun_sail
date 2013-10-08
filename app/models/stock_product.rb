@@ -18,6 +18,7 @@
 #
 
 class StockProduct < ActiveRecord::Base
+  audited
   # paginates_per 20
 
   belongs_to :account
@@ -44,17 +45,18 @@ class StockProduct < ActiveRecord::Base
     success = []
     fails = []
     relation.each do |record|
-      record.update_actual_stock(number) ? success.push(record.id) : fails.push(record.id)
+      record.update_actual_stock(number,__method__) ? success.push(record.id) : fails.push(record.id)
     end
     [success,fails]
   end
 
-  def update_actual_stock(actual)
+  def update_actual_stock(actual,action)
     transaction do
       self.actual = actual
       self.changes[:actual].tap do |ary|
         poor = ary.first - ary.last
         self.activity -= poor
+        self.audit_comment = action || __method__
         klass = poor > 0 ? StockOutBill : StockInBill
         return true if self.save! && create_stock_bill(klass,poor.abs)
       end if self.actual_changed?

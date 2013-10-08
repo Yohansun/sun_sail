@@ -141,7 +141,7 @@ class StocksController < ApplicationController
   def batch_update_safety_stock
     @stock_products = StockProduct.where(default_search).where(:id => params[:stock_product_ids])
     safe_value = params[:safe_value].to_i
-    @stock_products.update_all(:safe_value => safe_value)
+    @stock_products.each {|stock| stock.update_attributes!(safe_value: safe_value,audit_comment: "batch_update_safety_stock") }
     redirect_to({:action => :index,:warehouse_id => params[:warehouse_id]}.reject {|k,v| v.blank?})
   end
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130916092012) do
+ActiveRecord::Schema.define(:version => 20131008061938) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -30,6 +30,8 @@ ActiveRecord::Schema.define(:version => 20130916092012) do
     t.integer "account_id"
     t.integer "user_id"
   end
+
+  add_index "accounts_users", ["user_id", "account_id"], :name => "index_accounts_users_on_account_id_and_user_id"
 
   create_table "alipay_trade_histories", :force => true do |t|
     t.string   "finance_trade_sn"
@@ -82,8 +84,33 @@ ActiveRecord::Schema.define(:version => 20130916092012) do
     t.string   "zip"
   end
 
+  add_index "areas", ["lft"], :name => "index_areas_on_lft"
+  add_index "areas", ["name", "parent_id"], :name => "index_sellers_areas_on_name_and_parent_id"
   add_index "areas", ["name"], :name => "index_areas_on_name"
   add_index "areas", ["parent_id"], :name => "index_areas_on_parent_id"
+  add_index "areas", ["rgt"], :name => "index_areas_on_rgt"
+  add_index "areas", ["seller_id"], :name => "index_areas_on_seller_id"
+
+  create_table "audits", :force => true do |t|
+    t.integer  "auditable_id"
+    t.string   "auditable_type"
+    t.integer  "associated_id"
+    t.string   "associated_type"
+    t.integer  "user_id"
+    t.string   "user_type"
+    t.string   "username"
+    t.string   "action"
+    t.text     "audited_changes"
+    t.integer  "version",         :default => 0
+    t.string   "comment"
+    t.string   "remote_address"
+    t.datetime "created_at"
+  end
+
+  add_index "audits", ["associated_id", "associated_type"], :name => "associated_index"
+  add_index "audits", ["auditable_id", "auditable_type"], :name => "auditable_index"
+  add_index "audits", ["created_at"], :name => "index_audits_on_created_at"
+  add_index "audits", ["user_id", "user_type"], :name => "user_index"
 
   create_table "bbs_categories", :force => true do |t|
     t.string   "name"
@@ -109,21 +136,20 @@ ActiveRecord::Schema.define(:version => 20130916092012) do
 
   create_table "categories", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at",                        :null => false
-    t.datetime "updated_at",                        :null => false
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
     t.integer  "parent_id"
     t.integer  "lft"
     t.integer  "rgt"
     t.integer  "depth"
     t.integer  "account_id"
-    t.integer  "status",             :default => 1
-    t.integer  "use_days",           :default => 0, :null => false
-    t.integer  "category_id"
-    t.string   "category_type"
-    t.integer  "category_parent_id"
-    t.string   "parent_type"
+    t.integer  "status",     :default => 1
+    t.integer  "use_days",   :default => 0, :null => false
   end
 
+  add_index "categories", ["account_id"], :name => "index_categories_on_account_id"
+  add_index "categories", ["lft"], :name => "index_categories_on_lgt"
+  add_index "categories", ["rgt"], :name => "index_categories_on_rgt"
   add_index "categories", ["status"], :name => "index_categories_on_status"
 
   create_table "categories_category_properties", :id => false, :force => true do |t|
@@ -141,6 +167,7 @@ ActiveRecord::Schema.define(:version => 20130916092012) do
     t.integer  "status"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.integer  "account_id"
   end
 
   add_index "category_properties", ["name"], :name => "index_category_properties_on_name"
@@ -300,6 +327,7 @@ ActiveRecord::Schema.define(:version => 20130916092012) do
     t.integer  "account_id"
   end
 
+  add_index "logistic_areas", ["account_id"], :name => "index_logistic_areas_on_account_id"
   add_index "logistic_areas", ["area_id"], :name => "index_logistic_areas_on_area_id"
   add_index "logistic_areas", ["logistic_id"], :name => "index_logistic_areas_on_logistic_id"
 
@@ -336,12 +364,16 @@ ActiveRecord::Schema.define(:version => 20130916092012) do
     t.integer  "account_id"
   end
 
+  add_index "logistics", ["account_id"], :name => "index_logistics_on_account_id"
+
   create_table "onsite_service_areas", :force => true do |t|
     t.string   "account_id"
     t.integer  "area_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
+
+  add_index "onsite_service_areas", ["area_id", "account_id"], :name => "index_onsite_service_areas_on_account_id_and_area_id"
 
   create_table "packages", :force => true do |t|
     t.string   "outer_id"
@@ -364,9 +396,9 @@ ActiveRecord::Schema.define(:version => 20130916092012) do
 
   create_table "products", :force => true do |t|
     t.string   "name",              :limit => 100,                               :default => "",   :null => false
-    t.string   "outer_id",          :limit => 20,                                :default => "",   :null => false
-    t.string   "product_id",        :limit => 20,                                :default => "",   :null => false
-    t.string   "storage_num",       :limit => 20,                                :default => "",   :null => false
+    t.string   "outer_id",          :limit => 20,                                :default => ""
+    t.string   "product_id",        :limit => 20,                                :default => ""
+    t.string   "storage_num",       :limit => 20,                                :default => ""
     t.decimal  "price",                            :precision => 8, :scale => 2, :default => 0.0,  :null => false
     t.integer  "quantity_id"
     t.integer  "category_id"
@@ -387,6 +419,12 @@ ActiveRecord::Schema.define(:version => 20130916092012) do
     t.integer  "logistic_group_id"
     t.boolean  "on_sale",                                                        :default => true
   end
+
+  add_index "products", ["account_id"], :name => "index_products_on_account_id"
+  add_index "products", ["category_id"], :name => "index_products_on_category_id"
+  add_index "products", ["num_iid"], :name => "index_products_on_num_iid"
+  add_index "products", ["outer_id"], :name => "index_products_on_outer_id"
+  add_index "products", ["storage_num"], :name => "index_products_on_storage_num"
 
   create_table "quantities", :force => true do |t|
     t.string   "name"
@@ -430,13 +468,60 @@ ActiveRecord::Schema.define(:version => 20130916092012) do
   add_index "reconcile_statements", ["created_at"], :name => "index_reconcile_statements_on_created_at"
   add_index "reconcile_statements", ["trade_store_source"], :name => "index_reconcile_statements_on_trade_store_source"
 
+  create_table "refund_orders", :force => true do |t|
+    t.integer  "refund_product_id"
+    t.string   "title"
+    t.decimal  "total_price",       :precision => 10, :scale => 0, :default => 0
+    t.decimal  "refund_price",      :precision => 10, :scale => 0, :default => 0
+    t.integer  "num",                                              :default => 0, :null => false
+    t.integer  "account_id"
+    t.string   "order_type"
+    t.datetime "created_at",                                                      :null => false
+    t.datetime "updated_at",                                                      :null => false
+    t.integer  "seller_id"
+    t.string   "tid"
+    t.integer  "outer_id"
+    t.integer  "sku_id"
+    t.string   "oid"
+    t.string   "num_iid"
+    t.integer  "stock_product_id"
+  end
+
+  create_table "refund_products", :force => true do |t|
+    t.integer  "refund_id",         :limit => 8
+    t.string   "buyer_name",                                                                      :null => false
+    t.string   "mobile"
+    t.string   "phone"
+    t.string   "zip"
+    t.string   "status",                                                                          :null => false
+    t.datetime "refund_time"
+    t.integer  "state_id"
+    t.integer  "city_id"
+    t.integer  "district_id"
+    t.string   "address"
+    t.text     "reason"
+    t.decimal  "total_price",                    :precision => 10, :scale => 0, :default => 0,    :null => false
+    t.decimal  "refund_fee",                     :precision => 10, :scale => 0, :default => 0,    :null => false
+    t.integer  "account_id",                                                                      :null => false
+    t.string   "ec_name"
+    t.boolean  "is_location",                                                   :default => true, :null => false
+    t.datetime "created_at",                                                                      :null => false
+    t.datetime "updated_at",                                                                      :null => false
+    t.text     "status_operations"
+    t.integer  "seller_id"
+    t.string   "maker"
+    t.integer  "total_num"
+    t.string   "num_iid"
+    t.string   "creater"
+    t.string   "tid"
+  end
+
   create_table "roles", :force => true do |t|
     t.string   "name"
     t.integer  "resource_id"
     t.string   "resource_type"
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
-    t.string   "byname"
     t.text     "permissions"
     t.integer  "account_id",       :null => false
     t.boolean  "can_assign_trade"
@@ -461,8 +546,8 @@ ActiveRecord::Schema.define(:version => 20130916092012) do
     t.string   "address"
     t.string   "mobile"
     t.string   "phone"
-    t.datetime "created_at",                           :null => false
-    t.datetime "updated_at",                           :null => false
+    t.datetime "created_at",                              :null => false
+    t.datetime "updated_at",                              :null => false
     t.integer  "parent_id"
     t.integer  "lft"
     t.integer  "rgt"
@@ -480,8 +565,14 @@ ActiveRecord::Schema.define(:version => 20130916092012) do
     t.integer  "account_id"
     t.string   "stock_name"
     t.integer  "stock_user_id"
-    t.string   "trade_type"
+    t.string   "trade_type",        :default => "Taobao"
   end
+
+  add_index "sellers", ["account_id"], :name => "index_areas_on_account_id"
+  add_index "sellers", ["active"], :name => "index_sellers_on_active"
+  add_index "sellers", ["lft"], :name => "index_sellers_on_lft"
+  add_index "sellers", ["performance_score"], :name => "index_sellers_on_performance_score"
+  add_index "sellers", ["rgt"], :name => "index_sellers_on_rgt"
 
   create_table "sellers_areas", :force => true do |t|
     t.integer  "seller_id"
@@ -490,6 +581,7 @@ ActiveRecord::Schema.define(:version => 20130916092012) do
     t.datetime "updated_at", :null => false
   end
 
+  add_index "sellers_areas", ["area_id", "seller_id"], :name => "index_sellers_areas_on_area_id_and_seller_id"
   add_index "sellers_areas", ["area_id"], :name => "index_sellers_areas_on_area_id"
   add_index "sellers_areas", ["seller_id"], :name => "index_sellers_areas_on_seller_id"
 
@@ -505,14 +597,13 @@ ActiveRecord::Schema.define(:version => 20130916092012) do
   add_index "settings", ["thing_type", "thing_id", "var"], :name => "index_settings_on_thing_type_and_thing_id_and_var", :unique => true
 
   create_table "sku_bindings", :force => true do |t|
-    t.integer "sku_id",          :limit => 8
-    t.integer "number",          :limit => 8
-    t.integer "jingdong_sku_id"
-    t.string  "sku_type"
-    t.integer "taobao_sku_id"
+    t.integer "sku_id",        :limit => 8
+    t.integer "number",        :limit => 8
     t.integer "resource_id"
     t.string  "resource_type"
   end
+
+  add_index "sku_bindings", ["sku_id"], :name => "index_stock_sku_bindings_on_sku_id_and_taobao_sku_id"
 
   create_table "sku_properties", :force => true do |t|
     t.integer  "sku_id"
@@ -537,15 +628,19 @@ ActiveRecord::Schema.define(:version => 20130916092012) do
     t.integer "product_id"
     t.integer "account_id"
     t.string  "code"
-    t.string  "sku_type"
   end
+
+  add_index "skus", ["account_id"], :name => "index_skus_on_account_id"
+  add_index "skus", ["num_iid"], :name => "index_skus_on_num_iid"
+  add_index "skus", ["product_id", "account_id"], :name => "index_skus_on_account_id_and_product_id"
+  add_index "skus", ["product_id"], :name => "index_skus_on_product_id"
+  add_index "skus", ["sku_id"], :name => "index_skus_on_sku_id"
 
   create_table "stock_csv_files", :force => true do |t|
     t.string   "path"
     t.integer  "upload_user_id"
     t.string   "stock_in_bill_id"
     t.boolean  "used"
-    t.integer  "seller_id"
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
   end
@@ -567,21 +662,22 @@ ActiveRecord::Schema.define(:version => 20130916092012) do
   add_index "stock_histories", ["seller_id"], :name => "index_stock_histories_on_seller_id"
 
   create_table "stock_products", :force => true do |t|
-    t.datetime "created_at",                               :null => false
-    t.datetime "updated_at",                               :null => false
-    t.integer  "max",                       :default => 0
-    t.integer  "safe_value",                :default => 0
-    t.integer  "activity",                  :default => 0
-    t.integer  "actual",                    :default => 0
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
+    t.integer  "max",                     :default => 0
+    t.integer  "safe_value",              :default => 0
+    t.integer  "activity",                :default => 0
+    t.integer  "actual",                  :default => 0
     t.integer  "product_id"
     t.integer  "seller_id"
-    t.integer  "sku_id",       :limit => 8
-    t.integer  "num_iid",      :limit => 8
+    t.integer  "sku_id",     :limit => 8
+    t.integer  "num_iid",    :limit => 8
     t.integer  "account_id"
-    t.integer  "lock_version",              :default => 0, :null => false
   end
 
+  add_index "stock_products", ["seller_id", "account_id"], :name => "index_stock_products_on_account_id_and_seller_id"
   add_index "stock_products", ["seller_id"], :name => "index_stock_products_on_seller_id"
+  add_index "stock_products", ["sku_id", "product_id"], :name => "index_stock_products_on_sku_id_and_product_id"
 
   create_table "stocks", :force => true do |t|
     t.string   "name"
@@ -612,6 +708,9 @@ ActiveRecord::Schema.define(:version => 20130916092012) do
     t.boolean  "need_refresh",                               :default => true
   end
 
+  add_index "taobao_app_tokens", ["account_id"], :name => "index_taobao_app_tokens_on_account_id"
+  add_index "taobao_app_tokens", ["trade_source_id"], :name => "index_taobao_app_tokens_on_trade_source_id"
+
   create_table "taobao_products", :force => true do |t|
     t.integer  "category_id"
     t.integer  "account_id"
@@ -623,18 +722,28 @@ ActiveRecord::Schema.define(:version => 20130916092012) do
     t.string   "pic_url"
     t.string   "cid"
     t.string   "name"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                              :null => false
+    t.datetime "updated_at",                                              :null => false
   end
+
+  add_index "taobao_products", ["account_id"], :name => "index_taobao_products_on_account_id"
+  add_index "taobao_products", ["category_id"], :name => "index_taobao_products_on_category_id"
+  add_index "taobao_products", ["outer_id"], :name => "index_taobao_products_on_outer_id"
 
   create_table "taobao_skus", :force => true do |t|
     t.integer "sku_id",            :limit => 8
     t.integer "taobao_product_id", :limit => 8
     t.integer "num_iid",           :limit => 8
-    t.string  "properties",                     :default => ""
-    t.string  "properties_name",                :default => ""
+    t.string  "properties"
+    t.string  "properties_name"
     t.integer "quantity"
     t.integer "account_id"
   end
+
+  add_index "taobao_skus", ["account_id"], :name => "index_taobao_skus_on_account_id"
+  add_index "taobao_skus", ["num_iid"], :name => "index_taobao_skus_on_num_iid"
+  add_index "taobao_skus", ["sku_id"], :name => "index_taobao_skus_on_sku_id"
+  add_index "taobao_skus", ["taobao_product_id"], :name => "index_taobao_skus_on_taobao_product_id"
 
   create_table "taobao_trade_rates", :force => true do |t|
     t.string   "tid"
@@ -654,6 +763,15 @@ ActiveRecord::Schema.define(:version => 20130916092012) do
 
   add_index "taobao_trade_rates", ["oid"], :name => "index_taobao_trade_rates_on_oid"
   add_index "taobao_trade_rates", ["tid"], :name => "index_taobao_trade_rates_on_tid"
+
+  create_table "third_parties", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "account_id"
+    t.string   "name"
+    t.string   "authentication_token"
+    t.datetime "created_at",           :null => false
+    t.datetime "updated_at",           :null => false
+  end
 
   create_table "trade_sources", :force => true do |t|
     t.integer  "account_id"
@@ -675,6 +793,8 @@ ActiveRecord::Schema.define(:version => 20130916092012) do
     t.string   "title"
     t.string   "description"
   end
+
+  add_index "trade_sources", ["account_id"], :name => "index_trade_sources_on_account_id"
 
   create_table "upload_files", :force => true do |t|
     t.datetime "created_at",        :null => false
@@ -711,7 +831,6 @@ ActiveRecord::Schema.define(:version => 20130916092012) do
     t.boolean  "superadmin",             :default => false, :null => false
     t.boolean  "can_assign_trade"
     t.integer  "trade_percent"
-    t.integer  "price",                  :default => 0
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
@@ -751,26 +870,29 @@ ActiveRecord::Schema.define(:version => 20130916092012) do
     t.integer  "can_show"
     t.integer  "verify_flg"
     t.integer  "is_dup_audit"
-    t.string   "prod_img"
+    t.text     "prod_img"
     t.string   "prod_detail_url"
     t.integer  "brand_id",             :limit => 8
     t.string   "merchant_category_id"
     t.datetime "created_at",                        :null => false
     t.datetime "updated_at",                        :null => false
-    t.string   "genre"
+    t.integer  "genre"
+    t.integer  "account_id"
   end
 
   create_table "yihaodian_skus", :force => true do |t|
-    t.string   "product_code",               :null => false
-    t.string   "product_cname",              :null => false
-    t.integer  "product_id",    :limit => 8
+    t.string   "product_code",                   :null => false
+    t.string   "product_cname",                  :null => false
+    t.integer  "product_id",        :limit => 8
     t.string   "ean13"
-    t.integer  "category_id",   :limit => 8
+    t.integer  "category_id",       :limit => 8
     t.integer  "can_sale"
     t.string   "outer_id"
     t.integer  "can_show"
-    t.datetime "created_at",                 :null => false
-    t.datetime "updated_at",                 :null => false
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
+    t.integer  "account_id"
+    t.integer  "parent_product_id", :limit => 8
   end
 
 end
