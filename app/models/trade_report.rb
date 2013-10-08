@@ -14,7 +14,8 @@ class TradeReport
   field :request_at, type:DateTime
 
   def fetch_account
-    Account.find_by_id(account_id)
+    return Account.find_by_id(self.account_id) if self.account_id_change
+    @account ||= Account.find_by_id(account_id)
   end
 
   def fetch_user

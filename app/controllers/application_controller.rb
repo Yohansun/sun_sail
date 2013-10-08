@@ -28,7 +28,7 @@ class ApplicationController < ActionController::Base
   end
 
   def current_account
-    @current_account = Account.find_by_id(session[:account_id]) || Account.find_by_id(current_user.try(:accounts).try(:first).try(:id))
+    @current_account ||= Account.find_by_id(session[:account_id]) || Account.find_by_id(current_user.try(:accounts).try(:first).try(:id))
   end
 
   def alert_count

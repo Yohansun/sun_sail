@@ -308,7 +308,8 @@ class Trade
 
 
   def fetch_account
-    Account.find_by_id(self.account_id)
+    return Account.find_by_id(self.account_id) if self.account_id_change
+    @account ||= Account.find_by_id(self.account_id)
   end
 
   def fields_for_gift_trade
