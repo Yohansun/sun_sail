@@ -20,7 +20,7 @@ group :assets do
 end
 
 gem 'jquery-rails'
-
+gem "audited-activerecord", "~> 3.0"
 group :test, :development do
   gem "debugger"
   gem "guard"
