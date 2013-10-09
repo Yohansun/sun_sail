@@ -85,7 +85,7 @@ class StockProduct < ActiveRecord::Base
 
   def self.inventory!
     stock_out_bill = StockOutBill.where(inventory_scopes).new({
-      stock_typs:                 "OINVENTORY",
+      stock_type:                 "OINVENTORY",
       bill_products_mumber:       scoped.sum(:actual),
       bill_products_price:        scoped.joins(:product).sum("products.price * stock_products.actual")
       })
