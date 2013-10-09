@@ -178,6 +178,9 @@ module ApplicationHelper
         else
           active_li_item("出库单")
         end
+    when "stock_csv_files"
+      items << href_li_item("仓库管理", "stocks")
+      items << active_li_item("库存导入")
     when "products"
       items << href_li_item("商品管理")
       case act_name

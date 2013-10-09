@@ -2,4 +2,7 @@
   <% warehouse_tabs(@warehouse).each do |name,url|  %>
   <li class="<%= current_controller?(url,:assert_true => 'active')  %>"><%= link_to_authorize name, url %></li>
   <% end %>
+  <% if params[:controller] == "stock_csv_files" %>
+  <li class="active"><%= link_to "库存导入", new_warehouse_stock_csv_file_path(warehouse_id: params[:warehouse_id]) %></li>
+  <% end %>
 </ul><!-- nav-tabs -->

@@ -24,6 +24,9 @@
         <li>
           <%= link_to_authorize "盘点",inventory_warehouse_stocks_path(params[:warehouse_id]),:method => :put,:confirm => "确认盘点?" %>
         </li>
+        <li>
+          <%= link_to_authorize "库存导入", new_warehouse_stock_csv_file_path(warehouse_id: params[:warehouse_id]) %>
+        </li>
       <% end %>
     </ul>
   </div>

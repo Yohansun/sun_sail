@@ -7,8 +7,7 @@ module WarehousesHelper
               "入库单"  => "/warehouses/#{warehouse}/stock_in_bills",
               "出库单"  => "/warehouses/#{warehouse}/stock_out_bills",
               "所有进销" => "/warehouses/#{warehouse}/stock_bills",
-              "库存查询" => "/warehouses/#{warehouse}/stocks",
-              "库存导入" => "/warehouses/#{warehouse}/stock_csv_files/new"
+              "库存查询" => "/warehouses/#{warehouse}/stocks"
             }
           }
 
