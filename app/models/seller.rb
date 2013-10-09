@@ -29,6 +29,7 @@
 #  account_id        :integer(4)
 #  stock_name        :string(255)
 #  stock_user_id     :integer(4)
+#  trade_type        :string(255)
 #
 
 

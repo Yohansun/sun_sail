@@ -31,7 +31,26 @@ class TradeObserver < Mongoid::Observer
     if object.request_return_at_changed? && object.request_return_at.present?
       send_return_sms_to_seller(object)
     end
+  end
 
+  def around_update(object)
+
+    yield
+
+    if object._type == "Trade"
+      trades = Trade.deleted.where(:_id.in => object.merged_trade_ids)
+      object.changes.each do |key, value|
+        next if ["seller_memo",
+                 "cs_memo",
+                 "gift_memo",
+                 "buyer_message",
+                 "promotion_fee",
+                 "total_fee",
+                 "payment",
+                 "merged_trade_ids"].include?(key)
+        trades.update_all(key.to_sym => value[1])
+      end
+    end
   end
 
   protected

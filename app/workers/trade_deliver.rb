@@ -14,9 +14,7 @@ class TradeDeliver
 
     if trade._type != "CustomTrade"
       if trade.is_merged?
-        # STORY #982 订单管理-订单发货 合并订单发货物流信息返回到淘宝订单
-        # A B订单被合并成C订单了，现在C订单只会返回一个物流单号，但淘宝那边还是两个订单，而且不同订单需要填写不同的物流单号
-        # 解决方案：A订单回馈C订单的物流单号，而B订单的物流单号就写其他
+        #返回合并订单各分订单物流信息
         trades = Trade.deleted.where(:_id.in => trade.merged_trade_ids)
         trades.update_all(logistic_waybill: trade.logistic_waybill,logistic_code: trade.logistic_code)
         trades.each_with_index{|merged_trade,index|
