@@ -1,4 +1,29 @@
 #encoding: utf-8
+# == Schema Information
+#
+# Table name: yihaodian_products
+#
+#  id                   :integer(4)      not null, primary key
+#  product_code         :string(255)     not null
+#  product_cname        :string(255)     not null
+#  product_id           :integer(8)
+#  ean13                :string(255)
+#  category_id          :integer(8)
+#  can_sale             :integer(4)
+#  outer_id             :string(255)
+#  can_show             :integer(4)
+#  verify_flg           :integer(4)
+#  is_dup_audit         :integer(4)
+#  prod_img             :text
+#  prod_detail_url      :string(255)
+#  brand_id             :integer(8)
+#  merchant_category_id :string(255)
+#  genre                :integer(4)
+#  account_id           :integer(4)
+#  created_at           :datetime        not null
+#  updated_at           :datetime        not null
+#
+
 class YihaodianProduct < ActiveRecord::Base
   include MagicEnum
   attr_protected []

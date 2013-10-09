@@ -15,6 +15,7 @@
 #  sku_id     :integer(8)
 #  num_iid    :integer(8)
 #  account_id :integer(4)
+#  forecast   :integer(4)      default(0)
 #
 
 class StockProduct < ActiveRecord::Base
