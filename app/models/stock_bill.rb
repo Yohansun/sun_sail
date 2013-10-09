@@ -65,7 +65,7 @@ class StockBill
   # 不可选的入库类型
   PRIVATE_IN_STOCK_TYPE   = [["期初入库","IINITIAL"],["调整入库","IVIRTUAL"]]
   # 不可选的出库类型
-  PRIVATE_OUT_STOCK_TYPE = [["调整出库","OVIRTUAL"]]
+  PRIVATE_OUT_STOCK_TYPE = [["调整出库","OVIRTUAL"],["盘点出库","OINVENTORY"]]
   # 所有的入库类型
   IN_STOCK_TYPE = PUBLIC_IN_STOCK_TYPE + PRIVATE_OUT_STOCK_TYPE
   # 所有的出库类型

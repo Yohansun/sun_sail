@@ -216,3 +216,4 @@ zh-CN:
   permissions_tag_stock_out_bills#lock: "出库单锁定"
   permissions_tag_stock_in_bills#unlock: "出库单激活"
   permissions_tag_stock_out_bills#unlock: "出库单激活"
+  permissions_tag_stock_products#inventory: "盘点"
