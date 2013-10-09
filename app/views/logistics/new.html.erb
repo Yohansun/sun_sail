@@ -1,14 +1,26 @@
 <%
-  breadcrumb << ["物流公司管理", logistics_path] << "新增物流公司"
+  breadcrumb << ["系统设置", users_path]
+  breadcrumb << ["基础数据管理", stocks_safe_stock_path]
+  breadcrumb << ["物流公司管理", logistics_path]
+  brandcrumb << ["新增物流公司"]
 %>
-        <%= simple_form_for @logistic, html: {:class =>'well form-horizontal'} do |f| %>
-          <fieldset class="add_unit">
-            <%= f.input :name, :label => "物流公司名称：",class: 'input-xlarge' %>
-            <%= f.input :code, :label => "物流公司Code：",class: 'input-xlarge' %>
-            <%= f.input :xml, :label => "物流单模版图片：",class: 'input-xlarge' %>
-          </fieldset>
+<div class="row-fluid">
+  <div class="span10 w100">
+    <ul class="nav nav-tabs">
+      <li class="active"><a href="/logistics">物流公司管理</a></li>
+    </ul><!-- nav-tabs -->
+    <div class="tab-content">
+      <%= simple_form_for @logistic, html: {:class =>'well form-horizontal'} do |f| %>
+        <fieldset class="add_unit">
+          <%= f.input :name, :label => "物流公司名称：",class: 'input-xlarge' %>
+          <%= f.input :code, :label => "物流公司Code：",class: 'input-xlarge' %>
+          <%= f.input :xml, :label => "物流单模版图片：",class: 'input-xlarge' %>
+        </fieldset>
 
-          <div class="form-actions">
-            <%= f.button :submit, :value => "保存", class: "btn btn-primary edit"%>
-          </div>
-        <% end %>
+        <div class="form-actions">
+          <%= f.button :submit, :value => "保存", class: "btn btn-primary edit"%>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

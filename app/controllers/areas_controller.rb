@@ -1,6 +1,7 @@
 # -*- encoding : utf-8 -*-
 class AreasController < ApplicationController
   skip_before_filter :authenticate_user!
+  layout 'management'
 
   before_filter(:only => :index) do |controller|
     authenticate_user! && authorize unless controller.request.format.js?

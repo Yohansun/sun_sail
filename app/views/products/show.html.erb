@@ -1,103 +1,91 @@
-<div class="container-fluid">
-  <div class="row-fluid">
-    <ul class="breadcrumb" style="position:relative;">
-      <li><a href="/">Magic</a><span class="divider">/</span></li>
-      <li><a href="/products">商品管理</a><span class="divider">/</span></li>
-      <li class="active">商品详情<span class="divider">/</span></li>
-      <li class="active"><%= @product.name %></li>
-    </ul><!-- breadcrumb -->
-
-
-    <form class="well form-horizontal info_check">
-      <fieldset class="clearfix">
-        <div class="w_48 pull-left">
-          <div class="control-group">
-            <label class="control-label" for=""><span class="atv">*</span>淘宝ID：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.product_id %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for=""><span class="atv">*</span>商品数字ID：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.num_iid %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for=""><span class="atv">*</span>商品名称：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.name %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for=""><span class="atv">*</span>商品编码：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.outer_id %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for=""><span class="atv">*</span>仓库编号：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.storage_num %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for=""><span class="atv">*</span>价格：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.price %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for="">分类：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.category.try(:name) %></p>
-            </div>
-          </div>
-
-          <% if current_account.settings.enable_module_logistic_group == 1 %>
-            <div class="control-group">
-              <label class="control-label" for="">发货拆分：</label>
-              <div class="controls">
-                <p class="mar_t5"><%= @product.logistic_group.try(:name) %></p>
-              </div>
-            </div>
-          <% end %>
-
-          <% if current_account.settings.enable_module_colors == 1 %>
-            <div class="control-group">
-              <label class="control-label" for="">颜色：</label>
-              <div class="controls">
-                <p class="mar_t5"><%= @product.colors.map(&:name).join(';') %></p>
-              </div>
-            </div>
-          <% end %>
-         </div>
-
-         <% if @product.pic_url.present? %>
-           <div class="w_48 pull-left">
-            <div class="control-group">
-              <label class="control-label tl" for="">商品图片：</label>
-              <div class="controls">
-                <ul style="list-style-type:none;" class="clearfix">
-                  <li><%= image_tag @product.pic_url %></li>
-                </ul>
-              </div>
-            </div>
-           </div>
-          <% end %>
-      </fieldset>
-
-      <fieldset>
-        <div class="form-actions">
-          <a href="#" class="btn btn-info" onclick="javascript:window.history.go(-1);return false;">返回上一级</a>
+<form class="well form-horizontal info_check">
+  <fieldset class="clearfix">
+    <div class="w_48 pull-left">
+      <div class="control-group">
+        <label class="control-label" for=""><span class="atv">*</span>淘宝ID：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.product_id %></p>
         </div>
-      </fieldset>
-    </form>
-  </div>
-</div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for=""><span class="atv">*</span>商品数字ID：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.num_iid %></p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for=""><span class="atv">*</span>商品名称：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.name %></p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for=""><span class="atv">*</span>商品编码：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.outer_id %></p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for=""><span class="atv">*</span>仓库编号：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.storage_num %></p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for=""><span class="atv">*</span>价格：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.price %></p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="">分类：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.category.try(:name) %></p>
+        </div>
+      </div>
+
+      <% if current_account.settings.enable_module_logistic_group == 1 %>
+        <div class="control-group">
+          <label class="control-label" for="">发货拆分：</label>
+          <div class="controls">
+            <p class="mar_t5"><%= @product.logistic_group.try(:name) %></p>
+          </div>
+        </div>
+      <% end %>
+
+      <% if current_account.settings.enable_module_colors == 1 %>
+        <div class="control-group">
+          <label class="control-label" for="">颜色：</label>
+          <div class="controls">
+            <p class="mar_t5"><%= @product.colors.map(&:name).join(';') %></p>
+          </div>
+        </div>
+      <% end %>
+     </div>
+
+     <% if @product.pic_url.present? %>
+       <div class="w_48 pull-left">
+        <div class="control-group">
+          <label class="control-label tl" for="">商品图片：</label>
+          <div class="controls">
+            <ul style="list-style-type:none;" class="clearfix">
+              <li><%= image_tag @product.pic_url %></li>
+            </ul>
+          </div>
+        </div>
+       </div>
+      <% end %>
+  </fieldset>
+
+  <fieldset>
+    <div class="form-actions">
+      <a href="#" class="btn btn-info" onclick="javascript:window.history.go(-1);return false;">返回上一级</a>
+    </div>
+  </fieldset>
+</form>

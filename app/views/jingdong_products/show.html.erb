@@ -1,320 +1,308 @@
-<div class="container-fluid">
-  <div class="row-fluid">
-    <ul class="breadcrumb" style="position:relative;">
-      <li><a href="/">Magic</a><span class="divider">/</span></li>
-      <li><a href="/products">商品管理</a><span class="divider">/</span></li>
-      <li class="active">商品详情<span class="divider">/</span></li>
-      <li class="active"><%= @product.title %></li>
-    </ul><!-- breadcrumb -->
-
-
-    <form class="well form-horizontal info_check">
-      <fieldset class="clearfix">
-        <div class="w_48 pull-left">
-          <div class="control-group">
-            <label class="control-label" for=""><span class="atv">*</span>商品ID：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.ware_id %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for=""><span class="atv">*</span>spu ID：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.spu_id %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for=""><span class="atv">*</span>分类ID 三级类目ID：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.cid %></p>
-            </div>
-          </div>
-          <div class="control-group">
-            <label class="control-label" for=""><span class="atv">*</span>商家ID：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.vender_id %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for=""><span class="atv">*</span>店铺ID：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.shop_id %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for=""><span class="atv">*</span>商品状态：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.ware_status_name %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for="">货号：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.item_num %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for="">UPC编码：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.upc_code %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for="">运费模板：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.transport_id %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for="">最后上架时间：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.online_time %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for="">最后下架时间：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.offline_time %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for="">可选属性：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.attribute_s %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for="">商品描述：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.desc %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for="">生产厂商：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.producter %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for="">包装规格：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.wrap %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for="">长:宽:高：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.cubage %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for="">包装清单：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.pack_listing %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for="">售后服务：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.service %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for="">进货价：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.cost_price %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for="">市场价：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.market_price %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for="">京东价：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.jd_price %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for="">库存：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.stock_num %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for="">库存：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.stock_num %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for="">录入人：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.creator %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for="">状态：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.status_name %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for="">重量：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.weight %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for="">WARE_WARE创建时间：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.created %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for="">WARE_WARE修改时间：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.modified %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for="">外部id(商家设置的外部id)：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.outer_id %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for="">自定义店内分类：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.shop_categorys %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for="">是否先款后货：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.is_pay_first? ? "是" : "否" %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for="">发票限制：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.is_can_vat? ? "是" : "否" %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for="">是否进口商品：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.is_imported? ? "是" : "否" %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for="">是否保健品：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.is_health_product? ? "是" : "否" %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for="">是否保质期管理商品：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.is_shelf_life? ? "是" : "否" %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for="">保质期：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.shelf_life_days %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for="">是否序列号管理：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.is_serial_no? ? "是" : "否" %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for="">大家电购物卡：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.is_appliances_card? ? "是" : "否" %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for="">是否特殊液体：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.is_special_wet? ? "是" : "否" %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for="">商品件型：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.ware_big_small_model_name %></p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label" for="">商品件型：</label>
-            <div class="controls">
-              <p class="mar_t5"><%= @product.ware_pack_type_name %></p>
-            </div>
-          </div>
-         </div>
-
-         <div class="w_48 pull-left">
-           <div class="control-group">
-             <label class="control-label tl" for="">商品的主图：</label>
-             <div class="controls">
-               <ul style="list-style-type:none;" class="clearfix">
-                 <li><%= image_tag @product.logo %></li>
-               </ul>
-             </div>
-           </div>
-         </div>
-      </fieldset>
-
-      <fieldset>
-        <div class="form-actions">
-          <a href="#" class="btn btn-info" onclick="javascript:window.history.go(-1);return false;">返回上一级</a>
+<form class="well form-horizontal info_check">
+  <fieldset class="clearfix">
+    <div class="w_48 pull-left">
+      <div class="control-group">
+        <label class="control-label" for=""><span class="atv">*</span>商品ID：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.ware_id %></p>
         </div>
-      </fieldset>
-    </form>
-  </div>
-</div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for=""><span class="atv">*</span>spu ID：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.spu_id %></p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for=""><span class="atv">*</span>分类ID 三级类目ID：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.cid %></p>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for=""><span class="atv">*</span>商家ID：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.vender_id %></p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for=""><span class="atv">*</span>店铺ID：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.shop_id %></p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for=""><span class="atv">*</span>商品状态：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.ware_status_name %></p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="">货号：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.item_num %></p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="">UPC编码：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.upc_code %></p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="">运费模板：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.transport_id %></p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="">最后上架时间：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.online_time %></p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="">最后下架时间：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.offline_time %></p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="">可选属性：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.attribute_s %></p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="">商品描述：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.desc %></p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="">生产厂商：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.producter %></p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="">包装规格：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.wrap %></p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="">长:宽:高：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.cubage %></p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="">包装清单：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.pack_listing %></p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="">售后服务：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.service %></p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="">进货价：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.cost_price %></p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="">市场价：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.market_price %></p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="">京东价：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.jd_price %></p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="">库存：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.stock_num %></p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="">库存：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.stock_num %></p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="">录入人：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.creator %></p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="">状态：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.status_name %></p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="">重量：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.weight %></p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="">WARE_WARE创建时间：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.created %></p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="">WARE_WARE修改时间：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.modified %></p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="">外部id(商家设置的外部id)：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.outer_id %></p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="">自定义店内分类：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.shop_categorys %></p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="">是否先款后货：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.is_pay_first? ? "是" : "否" %></p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="">发票限制：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.is_can_vat? ? "是" : "否" %></p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="">是否进口商品：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.is_imported? ? "是" : "否" %></p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="">是否保健品：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.is_health_product? ? "是" : "否" %></p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="">是否保质期管理商品：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.is_shelf_life? ? "是" : "否" %></p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="">保质期：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.shelf_life_days %></p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="">是否序列号管理：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.is_serial_no? ? "是" : "否" %></p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="">大家电购物卡：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.is_appliances_card? ? "是" : "否" %></p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="">是否特殊液体：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.is_special_wet? ? "是" : "否" %></p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="">商品件型：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.ware_big_small_model_name %></p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="">商品件型：</label>
+        <div class="controls">
+          <p class="mar_t5"><%= @product.ware_pack_type_name %></p>
+        </div>
+      </div>
+     </div>
+
+     <div class="w_48 pull-left">
+       <div class="control-group">
+         <label class="control-label tl" for="">商品的主图：</label>
+         <div class="controls">
+           <ul style="list-style-type:none;" class="clearfix">
+             <li><%= image_tag @product.logo %></li>
+           </ul>
+         </div>
+       </div>
+     </div>
+  </fieldset>
+
+  <fieldset>
+    <div class="form-actions">
+      <a href="#" class="btn btn-info" onclick="javascript:window.history.go(-1);return false;">返回上一级</a>
+    </div>
+  </fieldset>
+</form>

@@ -1,56 +1,50 @@
-<div class="container-fluid">
-  <div class="row-fluid">
-    <ul class="breadcrumb" style="position:relative;">
-      <li><a href="/">Magic</a><span class="divider">/</span></li>
-      <li><a href="/sales/summary">数据魔方</a><span class="divider">/</span></li>
-      <li><a href="/sales/area_analysis">买家分析</a><span class="divider">/</span></li>
-      <li class="active">客单价分析</li>
-    </ul><!-- breadcrumb -->
-    <%= render 'header' %>
-    <%= render 'select_time' %>
+<% content_for :sub_nav do %>
+  <%= render 'header' %>
+<% end %>
 
-    <div class="mar_t10">
-      <ul class="nav nav-tabs reset_border nomargin">
-        <li class="active"><a href="#tab1" data-toggle="tab">数据图</a></li>
-      </ul>
+<%= render 'select_time' %>
+<div class="mar_t10">
+  <ul class="nav nav-tabs reset_border nomargin">
+    <li class="active"><a href="#tab1" data-toggle="tab">数据图</a></li>
+  </ul>
 
-      <div class="tab-content reset_border padding_t20">
-        <div class="tab-pane active chart_opts" id="tab1">
-          <div id="chartdiv" style="width: 100%; height: 400px;"></div>
-        </div>
-      </div>
-    </div>
-    <div class="mar_t10">
-      <ul class="nav nav-tabs reset_border nomargin" id="myTab_sub">
-        <li class="active"><a href="#tab1" data-toggle="tab">数据报表</a></li>
-      </ul>
-      <div class="tab-content reset_border padding_t20">
-        <div class="tab-pane active chart_opts" id="tab1">
-          <table class="table table-striped table-bordered table-condensed td_colors mar_t">
-            <thead>
-              <tr>
-                <th>序号</th>
-                <th>客单价区间</th>
-                <th>人数</th>
-                <th>人数占比</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% @univalent_data.each_with_index do |value, j| -%>
-                <tr>
-                  <td><%= j + 1 %></td>
-                  <td><%= value[0].first.to_s + "-" + value[0].last.to_s %></td>
-                  <td><%= value.try(:[],1) %></td>
-                  <td><%= value.try(:[],2) %>%</td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-        </div>
-      </div>
+  <div class="tab-content reset_border padding_t20">
+    <div class="tab-pane active chart_opts" id="tab1">
+      <div id="chartdiv" style="width: 100%; height: 400px;"></div>
     </div>
   </div>
 </div>
+
+<div class="mar_t10">
+  <ul class="nav nav-tabs reset_border nomargin" id="myTab_sub">
+    <li class="active"><a href="#tab1" data-toggle="tab">数据报表</a></li>
+  </ul>
+  <div class="tab-content reset_border padding_t20">
+    <div class="tab-pane active chart_opts" id="tab1">
+      <table class="table table-striped table-bordered table-condensed td_colors mar_t">
+        <thead>
+          <tr>
+            <th>序号</th>
+            <th>客单价区间</th>
+            <th>人数</th>
+            <th>人数占比</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @univalent_data.each_with_index do |value, j| -%>
+            <tr>
+              <td><%= j + 1 %></td>
+              <td><%= value[0].first.to_s + "-" + value[0].last.to_s %></td>
+              <td><%= value.try(:[],1) %></td>
+              <td><%= value.try(:[],2) %>%</td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
 <% content_for :tail do -%>
 <script type="text/javascript">
 var chart;

@@ -1,119 +1,118 @@
-<div class="row-fluid">
-  <div class="span10">
-    <ul class="nav nav-tabs">
-      <li class="active"><%= link_to "#{@bill.tid}出库单", warehouse_stock_out_bills_path(@warehouse) %></li>
-      <li><%= link_to "入库单", warehouse_stock_in_bills_path(@warehouse) %></li>
-      <li><%= link_to "出库单", warehouse_stock_out_bills_path(@warehouse) %></li>
-      <li><%= link_to "所有进销", warehouse_stock_bills_path(@warehouse) %></li>
-    </ul><!-- nav-tabs -->
-    <form class="form-horizontal mar_t30">
-      <div class="well clearfix">
-        <fieldset class="span6">
-          <div class="form-inline">
-            <label>出库单编号：</label><%= @bill.tid %>
-          </div>
-          <div class="form-inline">
-            <label>收货人：</label><%= @bill.op_name %>
-          </div>
-          <div class="form-inline">
-            <label>手机：</label><%= @bill.op_mobile %>
-          </div>
-          <div class="form-inline">
-            <label>邮编：</label><%= @bill.op_zip %>
-          </div>
-          <div class="form-inline">
-            <label>市：</label><%= @bill.op_city %>
-          </div>
-          <div class="form-inline">
-            <label>发货仓库：</label>默认仓库
-          </div>
-          <div class="form-inline">
-            <label>出库类型：</label><%= @bill.stock_type_name %>
-          </div>
-          <fieldset class="form-inline">
-            <label>备注：</label><%= @bill.remark %>
-          </fieldset>
-          <fieldset class="form-inline">
-            <fieldset class="form-inline">
-              <label>历史状态：</label>
-              <%- if @bill.operation_logs.present? -%>
-              <br/>
-              <%- @bill.operation_logs.each do |log| %>
-              <label>
-                <%= "#{log.operated_at.strftime("%Y-%m-%d %H:%M:%S")}, #{log.operation}  #{log.operator}" %>
-              </label>
-              <br/>
-              <%- end %>
-              <%- end -%>
-            </fieldset>
-          </fieldset>
-        </fieldset><!-- form left area -->
-        <fieldset class="span6">
-          <div class="form-inline">
-            <label>当前状态：</label><%= @bill.status_text %>
-          </div>
-          <div class="form-inline">
-            <label>固定电话：</label><%= @bill.op_phone %>
-          </div>
-          <div class="form-inline">
-            <label>收货地址：</label><%= @bill.op_address %>
-          </div>
-          <div class="form-inline">
-            <label>省：</label><%= @bill.op_state %>
-          </div>
-          <div class="form-inline">
-            <label>区：</label><%= @bill.op_district %>
-          </div>
-          <div class="form-inline">
-            <label>物流公司：</label><%= @bill.logistic_name %>
-          </div>
-          <div class="form-inline">
-            <label>出库时间：</label><%= @bill.stocked_at %>
-          </div>
-        </fieldset>
-      </form>
-    </div>
-    <div class="clearfix">
-      <ul class="nav nav-tabs">
-        <li class="active"><a href="#good_info" data-toggle="tab">商品信息</a></li>
-      </ul>
-      <div class="tab-content noborder_content">
-        <div class="tab-pane active">
-          <table class="table table-hover table-bordered table-striped table-condensed">
-            <thead>
-              <tr>
-                <th>商品编码</th>
-                <th>商品SKU编码</th>
-                <th>商品名称</th>
-                <th>商品单价</th>
-                <th>商品数量</th>
-                <th>商品总价</th>
-              </tr>
-            </thead>
-            <tbody>
-              <%- @bill.bill_products.each do |product| %>
-              <tr>
-                <td><%= product.outer_id %></td>
-                <td><%= product.sku.try(:sku_id) %></td>
-                <td><%= product.title %></td>
-                <td><%= product.price %></td>
-                <td><%= product.number %></td>
-                <td><%= product.total_price %></td>
-              </tr>
-              <%- end %>
-            </tbody>
-          </table>
-          <%- if @trade %>
-            <br><span class="lable label-warning">订单金额</span>:  <%= @trade.sum_fee %>
-            <br><span class="lable label-warning">订单折扣</span>:  <%= @trade.seller_discount %>
-            <br><span class="lable label-warning">运费</span>:  <%= @trade.post_fee %>
-            <br><span class="lable label-warning">订单实付金额(订单金额-订单折扣+运费)</span>:  <%= @trade.total_fee %>
-          <%- end%>
-          <br><span class="lable label-warning">是否开票</span>:  <%= @bill.is_cash_sale %>
-          <br><span class="lable label-warning">发票抬头</span>:  <%= @bill.website %>
-          <br><span class="lable label-warning">开票金额</span>(订单实付金额 - 运费):  <%= @bill.bill_products_price %>
-        </div>
+<% content_for :sub_nav do %>
+  <ul class="nav nav-tabs">
+    <li class="active"><%= link_to "#{@bill.tid}出库单", warehouse_stock_out_bills_path(@warehouse) %></li>
+    <li><%= link_to "入库单", warehouse_stock_in_bills_path(@warehouse) %></li>
+    <li><%= link_to "出库单", warehouse_stock_out_bills_path(@warehouse) %></li>
+    <li><%= link_to "所有进销", warehouse_stock_bills_path(@warehouse) %></li>
+  </ul><!-- nav-tabs -->
+<% end %>
+
+<form class="form-horizontal mar_t30">
+  <div class="well clearfix">
+    <fieldset class="span6">
+      <div class="form-inline">
+        <label>出库单编号：</label><%= @bill.tid %>
       </div>
+      <div class="form-inline">
+        <label>收货人：</label><%= @bill.op_name %>
+      </div>
+      <div class="form-inline">
+        <label>手机：</label><%= @bill.op_mobile %>
+      </div>
+      <div class="form-inline">
+        <label>邮编：</label><%= @bill.op_zip %>
+      </div>
+      <div class="form-inline">
+        <label>市：</label><%= @bill.op_city %>
+      </div>
+      <div class="form-inline">
+        <label>发货仓库：</label>默认仓库
+      </div>
+      <div class="form-inline">
+        <label>出库类型：</label><%= @bill.stock_type_name %>
+      </div>
+      <fieldset class="form-inline">
+        <label>备注：</label><%= @bill.remark %>
+      </fieldset>
+      <fieldset class="form-inline">
+        <fieldset class="form-inline">
+          <label>历史状态：</label>
+          <%- if @bill.operation_logs.present? -%>
+          <br/>
+          <%- @bill.operation_logs.each do |log| %>
+          <label>
+            <%= "#{log.operated_at.strftime("%Y-%m-%d %H:%M:%S")}, #{log.operation}  #{log.operator}" %>
+          </label>
+          <br/>
+          <%- end %>
+          <%- end -%>
+        </fieldset>
+      </fieldset>
+    </fieldset><!-- form left area -->
+    <fieldset class="span6">
+      <div class="form-inline">
+        <label>当前状态：</label><%= @bill.status_text %>
+      </div>
+      <div class="form-inline">
+        <label>固定电话：</label><%= @bill.op_phone %>
+      </div>
+      <div class="form-inline">
+        <label>收货地址：</label><%= @bill.op_address %>
+      </div>
+      <div class="form-inline">
+        <label>省：</label><%= @bill.op_state %>
+      </div>
+      <div class="form-inline">
+        <label>区：</label><%= @bill.op_district %>
+      </div>
+      <div class="form-inline">
+        <label>物流公司：</label><%= @bill.logistic_name %>
+      </div>
+      <div class="form-inline">
+        <label>出库时间：</label><%= @bill.stocked_at %>
+      </div>
+    </fieldset>
+  </div>
+</form>
+<div class="clearfix">
+  <ul class="nav nav-tabs">
+    <li class="active"><a href="#good_info" data-toggle="tab">商品信息</a></li>
+  </ul>
+  <div class="tab-content noborder_content">
+    <div class="tab-pane active">
+      <table class="table table-hover table-bordered table-striped table-condensed">
+        <thead>
+          <tr>
+            <th>商品编码</th>
+            <th>商品SKU编码</th>
+            <th>商品名称</th>
+            <th>商品单价</th>
+            <th>商品数量</th>
+            <th>商品总价</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%- @bill.bill_products.each do |product| %>
+          <tr>
+            <td><%= product.outer_id %></td>
+            <td><%= product.sku.try(:sku_id) %></td>
+            <td><%= product.title %></td>
+            <td><%= product.price %></td>
+            <td><%= product.number %></td>
+            <td><%= product.total_price %></td>
+          </tr>
+          <%- end %>
+        </tbody>
+      </table>
+      <%- if @trade %>
+        <br><span class="lable label-warning">订单金额</span>:  <%= @trade.sum_fee %>
+        <br><span class="lable label-warning">订单折扣</span>:  <%= @trade.seller_discount %>
+        <br><span class="lable label-warning">运费</span>:  <%= @trade.post_fee %>
+        <br><span class="lable label-warning">订单实付金额(订单金额-订单折扣+运费)</span>:  <%= @trade.total_fee %>
+      <%- end%>
+      <br><span class="lable label-warning">是否开票</span>:  <%= @bill.is_cash_sale %>
+      <br><span class="lable label-warning">发票抬头</span>:  <%= @bill.website %>
+      <br><span class="lable label-warning">开票金额</span>(订单实付金额 - 运费):  <%= @bill.bill_products_price %>
     </div>
   </div>
 </div>

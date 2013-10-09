@@ -5,9 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="/assets/favicon.ico" />
     <% if current_account.try(:key) == 'dulux' %>
-    <title><%= current_account.settings.site_title_basic %></title>
+      <title><%= current_account.settings.site_title_basic %></title>
     <% else %>
-    <title><%= content_for?(:title) ? yield(:title) : "Magic Orders-做最好用的品牌电子商务ERP系统" %></title>
+      <title>
+        <%= content_for?(:title) ? yield(:title) : "Magic Orders-做最好用的品牌电子商务ERP系统" %>
+      </title>
     <% end %>
     <%= csrf_meta_tags %>
 
@@ -31,122 +33,13 @@
     </script>
   </head>
   <body>
-
-    <div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container-fluid">
-          <%= link_to image_tag("logo.png"), root_path, class: 'brand' %>
-          <% if user_signed_in? -%>
-
-          <div class="btns btn-group pull-right" style="min-width:120px;">
-            <button class="btn btn-primary btn_mar4"><i class="icon-user icon-white"></i> <%= current_user.display_name %></button>
-            <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle"><span class="caret"></span></button>
-            <ul class="dropdown-menu">
-              <li><%= link_to raw("<i class='icon-user'></i>个人设置"), edit_user_registration_path %></li>
-              <li><%= link_to raw("<i class='icon-edit'></i>我的异常订单"), my_alerts_path %></li>
-              <li><%= link_to raw("<i class='icon-off'></i>注销"), destroy_user_session_path, method: :delete %></li>
-            </ul>
-          </div>
-
-          <ul class="nav nav-pills" id="top-nav">
-            <% if current_user.allow_read?(:trades) %>
-            <li class="active trades" style="display:none"><a href="/app#trades">订单管理</a></li>
-            <% end %>
-            <% if current_account.key == 'nippon' %>
-              <li class="trades" style="display:none"><a href="http://shop.nipponpaint.com.cn/admin/orders">官网订单</a></li>
-            <% end %>
-            <% if ['sales', 'user_activities', 'trade_reports'].include?(controller_name)  %>
-                <%- if false %><!--注释人员-->
-                <li class="<%= 'active' if controller_name == 'user_activities'%>">
-                  <%= link_to "人员",user_activities_path if authorize?("user_activities","index")  %>
-                <%- end %>
-                <li class="<%= 'active' if controller_name == 'trade_reports'%>">
-                  <%= link_to "报表下载",trade_reports_path if authorize?("trade_reports","index")%></li>
-                <li class="<%= 'active' if controller_name == 'sales'%>">
-                  <%= link_to "销售", sales_product_analysis_path if authorize?("sales","product_analysis")  %></li>
-            <% end %>
-          </ul>
-
-          <ul class="nav pull-right">
-            <li id="fat-menu" class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Magic<b class="caret"></b></a>
-              <ul class="dropdown-menu">
-                <% if current_user.allow_read?(:trades) %>
-                <li><a href="/app#trades" class="trades"><i class='icon-shopping-cart'> </i>订单管理</a></li>
-                <% end %>
-                <%- if  current_user.allowed_to?("sales","summary")%>
-                  <li><a href="/sales/summary"><i class='icon-signal'> </i>数据魔方</a></li>
-                <%- elsif  current_user.allow_read?(:datas,"trade_reports#index") %>
-                  <li><a href="/trade_reports"><i class='icon-signal'> </i>数据魔方</a></li>
-                <%- end %>
-                <%  if current_user.allow_read?(:stocks) %>
-                <li><%= link_to raw("<i class='icon-globe'> </i>仓库管理"), stocks_path_adapter, class: "stocks" %></li>
-                <% end %>
-                <% if current_user.allow_read?(:products) %>
-                <li><%= link_to raw("<i class='icon-gift'> </i>商品管理"), products_path, class: "products" %></li>
-                <% end %>
-                <%  if current_user.allow_read?(:customers) %>
-                <li><%= link_to raw("<i class='icon-user'> </i>顾客管理"), customers_path, class: "customers" %></li>
-                <% end %>
-                <% if current_user.allow_read?(:sellers) && current_account.settings.enable_module_muti_sellers == 1 %>
-                <li><%= link_to raw("<i class='icon-briefcase'></i>经销商管理"), sellers_path %></li>
-                <% end %>
-                <% if current_account.settings.enable_module_wangwang == true %>
-                <li><a href="/callcenter/contrastive_performance"><i class='icon-plane'> </i>客服管理</a></li>
-                <% end %>
-                <% if current_user.allowed_to?("users","index") %>
-                <li class= "divider"></li>
-                <li><a href="/users" class="users"><i class='icon-asterisk'> </i>系统设置</a></li>
-                <% end %>
-              </ul>
-            </li>
-            <li class="divider-vertical"></li>
-          </ul>
-
-          <ul class="nav pull-right">
-            <li id="fat-menu" class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                帐户(<%= current_account.name %>)
-                <%- if current_user.superadmin? -%>
-                <b class="caret"></b>
-                <ul class="dropdown-menu">
-                  <%- current_user.accounts.each do |account| -%>
-                  <li><%= link_to account.name, switch_account_path(id: account.id) %></li>
-                  <%- end -%>
-                </ul>
-                <%- end -%>
-              </a>
-            </li>
-            <li class="divider-vertical"></li>
-          </ul>
-
-          <%= render partial: "layouts/exception_center" %>
-
-          <% end %>
-        </div>
-      </div>
-    </div>
+    <%= render :partial => "layouts/top_menus" %>
     <%= flash_message %>
-    <div class="container-fluid" style="<%= request.path == root_path ? '' : 'min-height:800px;' %>">
-      <div class="row-fluid">
 
+    <div class="container-fluid" style="<%= request.path == root_path ? '' : 'min-height:840px;' %>">
+      <div class="row-fluid">
         <%= render partial: "layouts/setting_nav" %>
         <div class="span10">
-
-          <!--
-          <header class="jumbotron subhead" id="overview">
-            <div class="subnav">
-              <ul class="nav nav-pills">
-                <% if current_user.allow_read?(:products) %>
-                <% end %>
-                <li><%= link_to '商品类别管理', categories_path, class: "categories" %></li>
-                <% if current_account.settings.enable_module_colors == 1 %>
-                <% end %>
-                  <li><%= link_to '商品属性管理', category_properties_path %></li>
-              </ul>
-            </div>
-          </header>
-          -->
           <div class="row-fluid">
             <ul class="breadcrumb" style="position:relative;">
               <%breadcrumb.each{|bc|
@@ -163,16 +56,15 @@
                 <%end%>
               <%}%>
             </ul><!-- breadcrumb -->
-
-
-
             <%= yield %>
-
           </div>
         </div>
       </div>
     </div> <!-- /container -->
-    <footer style="bottom: 0;<%= request.path == root_path ? 'position: fixed;' : '' %>text-align: center;width: 100%;"><p>&copy; Doorder/NIO team 2012</p></footer>
+
+    <footer class="page_footer">
+      <p>&copy; Doorder/NIO team 2012</p>
+    </footer>
     <%= javascript_include_tag "application" %>
     <%= javascript_include_tag "/areas.js" %>
     <%= yield :tail -%>

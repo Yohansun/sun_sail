@@ -1,81 +1,68 @@
-<div class="container-fluid">
+<div class="bs-docs-example">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>淘宝ID  </th>
+        <th>淘宝商品名</th>
+        <th>商家外部编码</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @news_products.each_with_index do |product,index| %>
+      <tr>
+        <td><%= index + 1 %></td>
+        <td><%= product.num_iid %></td>
+        <td><%= product.title %></td>
+        <td><%= product.outer_id %></td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
 
-  <div class="page-header">
-    <h1><small>同步淘宝商品</small></h1>
-  </div>
-  <ul class="nav nav-tabs affix">
-    <li><a href="/products">本地商品</a></li>
-    <li class="active"><a href="/products/taobao_products">淘宝商品</a></li>
-    <!-- <li><a href="#set_good" data-toggle="tab">套装</a></li>
-      <li><a href="#active_goods" data-toggle="tab">活动商品</a></li> -->
-    </ul><!-- nav-tabs -->
-    <p><h4>新增淘宝商品</h4></p>
-    <div class="bs-docs-example">
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>淘宝ID</th>
-            <th>淘宝商品名</th>
-            <th>商家外部编码</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @news_products.each_with_index do |product,index| %>
-          <tr>
-            <td><%= index + 1 %></td>
-            <td><%= product.num_iid %></td>
-            <td><%= product.title %></td>
-            <td><%= product.outer_id %></td>
-          </tr>
+<p><h4>属性变更商品</h4></p>
+<div class="bs-docs-example">
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>淘宝ID</th>
+        <th>淘宝商品名</th>
+        <th>商家外部编码</th>
+        <th>变更属性</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @changes_products.each_with_index do |product,index| %>
+      <tr>
+        <td><%= index + 1 %></td>
+        <td><%= product.num_iid %></td>
+        <td><%= product.name %></td>
+        <td><%= product.outer_id %></td>
+        <td>
+          <% product.changes.each do |key,values| %>
+          <%= key %>: <span class="label label-important">-<%= values.first %></span>
+                      <span class="label label-success">+<%= values.last %></span></br>
           <% end %>
-        </tbody>
-      </table>
-    </div>
-    <p><h4>属性变更商品</h4></p>
-    <div class="bs-docs-example">
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>淘宝ID</th>
-            <th>淘宝商品名</th>
-            <th>商家外部编码</th>
-            <th>变更属性</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @changes_products.each_with_index do |product,index| %>
-          <tr>
-            <td><%= index + 1 %></td>
-            <td><%= product.num_iid %></td>
-            <td><%= product.name %></td>
-            <td><%= product.outer_id %></td>
-            <td>
-              <% product.changes.each do |key,values| %>
-              <%= key %>: <span class="label label-important">-<%= values.first %></span>
-                          <span class="label label-success">+<%= values.last %></span></br>
-              <% end %>
-                  
-              <% product.taobao_skus.each do |taobao_sku| %>
-                <% if taobao_sku.new_record? %>
-                Skus:<%=taobao_sku.id%>:</br>
-                <span class="label label-success">+<%= taobao_sku.attributes.collect {|x,y| "#{x}:#{y}"}.join(',')  %></span></br>
-                <% elsif taobao_sku.changed? %>
-                Skus:<%=taobao_sku.id%>:</br>
-		                <% taobao_sku.changes.each do |key,values| %>
-                    <%= key %>: <span class="label label-important">-<%= values.first %></span><span class="label label-success">+<%= values.last %></span></br>
-                    <% end %>
+
+          <% product.taobao_skus.each do |taobao_sku| %>
+            <% if taobao_sku.new_record? %>
+            Skus:<%=taobao_sku.id%>:</br>
+            <span class="label label-success">+<%= taobao_sku.attributes.collect {|x,y| "#{x}:#{y}"}.join(',')  %></span></br>
+            <% elsif taobao_sku.changed? %>
+            Skus:<%=taobao_sku.id%>:</br>
+                <% taobao_sku.changes.each do |key,values| %>
+                <%= key %>: <span class="label label-important">-<%= values.first %></span><span class="label label-success">+<%= values.last %></span></br>
                 <% end %>
-              <% end %>
-            </td>
-          </tr>
+            <% end %>
           <% end %>
-        </tbody>
-      </table>
-      <button type="button" class="btn btn-success"><%= link_to "确认同步", confirm_sync_products_path,:method => :put %></button>
-      <%= link_to "取消",taobao_products_products_path,:class => "btn btn-info" %>
-      <p>&nbsp;</p>
-    </div>
-  </div>
+        </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <button type="button" class="btn btn-success"><%= link_to "确认同步", confirm_sync_products_path,:method => :put %></button>
+  <%= link_to "取消",taobao_products_products_path,:class => "btn btn-info" %>
+  <p>&nbsp;</p>
 </div>

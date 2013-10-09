@@ -1,73 +1,68 @@
-<div class="row-fluid">
-  <div class="span10 w100">
-  <!-- <div class="row-fluid"> -->
-    <%= render partial: "layouts/all_crumbs" %>
-    <%= render partial: "products/sidebar" %>
-    <div class="tab-content">
-      <div class="tab-pane active" id="stock_check">
-        <form class="well well-small form-horizontal font12">
-          <fieldset>
-            <div class="control-group">
-              <label class="pull-left"><code>精准：</code></label>
-              <div class="controls pull-left">
-                <select name="key" class="input-small pull-left select2 radius_no_rb">
-                  <option value="name" <%= 'selected' if params[:key] == "name" %>>名称</option>
-                  <option value="outer_id" <%= 'selected' if params[:key] == "outer_id" %>>商品外部编码</option>
-                  <option value="cat_name" <%= 'selected' if params[:key] == "cat_name" %>>商品类目名称</option>
-                </select>
-                <input type="text" class="input-medium radius_no_tl" name="value" value="<%= params[:value] %>" placeholder="输入关键字...">
-              </div>
-              <div class="pull-left">
-                <button type="button pull-left" class="btn btn-small btn-primary">搜索</button>
-              </div>
-            </div>
-          </fieldset><!-- form line1 area -->
-        </form>
-      </div>
+<% content_for :sub_nav do %>
+  <%= render partial: "products/sidebar" %>
+<% end %>
 
-      <div class="btn-toolbar">
-        <div class="btn-group">
-          <button class="btn btn-warning">操作</button>
-          <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
-            <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu">
-            <li><a href="#" id="show_taobao_product">查看</a></li>
-            <li><a href="#" id="tie_to_native_skus">绑定本地SKU</a></li>
-          </ul>
-        </div><!-- btn-group -->
-        <div class="btn btn-warning"><%= link_to "同步淘宝数据", sync_taobao_products_products_path %></div>
-
-        <div class="btns btn-group pull-right js-field_set">
-          <a href="#" class="btn btn-success btn_mar4">显示设置</a>
-          <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-success dropdown_check_btn"><span class="caret"></span></button>
-          <ul class="dropdown-menu dropdown_check" id="dropdown_check">
-            <%= form_tag "/users/update_visible_columns", :id => "visible_columns"%>
-              <input type="hidden" name="model_name" value="stock_bill"/>
-              <input type="hidden" name="action_name" value="index"/>
-              <% @all_cols.each do |col_name, view_name| %>
-              <li data-col="<%= col_name %>">
-                <label class="checkbox" style="padding-left:35px;">
-                  <input type="checkbox" class="test_checkbox" name="visible_columns[]" value="<%= col_name %>" <%= ' checked="checked"' if @visible_cols.include?(col_name) %>/>
-                  <%= view_name %>
-                </label>
-              </li>
-              <% end %>
-            </form>
-          </ul>
+<div class="tab-pane active" id="stock_check">
+  <form class="well well-small form-horizontal font12">
+    <fieldset>
+      <div class="control-group">
+        <label class="pull-left"><code>精准：</code></label>
+        <div class="controls pull-left">
+          <select name="key" class="input-small pull-left select2 radius_no_rb">
+            <option value="name" <%= 'selected' if params[:key] == "name" %>>名称</option>
+            <option value="outer_id" <%= 'selected' if params[:key] == "outer_id" %>>商品外部编码</option>
+            <option value="cat_name" <%= 'selected' if params[:key] == "cat_name" %>>商品类目名称</option>
+          </select>
+          <input type="text" class="input-medium radius_no_tl" name="value" value="<%= params[:value] %>" placeholder="输入关键字...">
         </div>
-      </div><!-- btn-groups end -->
-
-      <div class="tab-content">
-        <div class="tab-pane" id="native_goods">
-        </div><!-- single_good end -->
-
-        <div class="tab-pane active" id="taobao_goods">
-          <%= render 'taobao_products_table' %>
-        </div><!-- all_goods end -->
+        <div class="pull-left">
+          <button type="button pull-left" class="btn btn-small btn-primary">搜索</button>
+        </div>
       </div>
-    </div>
+    </fieldset><!-- form line1 area -->
+  </form>
+</div>
+
+<div class="btn-toolbar">
+  <div class="btn-group">
+    <button class="btn btn-warning">操作</button>
+    <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+      <li><a href="#" id="show_taobao_product">查看</a></li>
+      <li><a href="#" id="tie_to_native_skus">绑定本地SKU</a></li>
+    </ul>
+  </div><!-- btn-group -->
+  <div class="btn btn-warning"><%= link_to "同步淘宝数据", sync_taobao_products_products_path %></div>
+
+  <div class="btns btn-group pull-right js-field_set">
+    <a href="#" class="btn btn-success btn_mar4">显示设置</a>
+    <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-success dropdown_check_btn"><span class="caret"></span></button>
+    <ul class="dropdown-menu dropdown_check" id="dropdown_check">
+      <%= form_tag "/users/update_visible_columns", :id => "visible_columns"%>
+        <input type="hidden" name="model_name" value="stock_bill"/>
+        <input type="hidden" name="action_name" value="index"/>
+        <% @all_cols.each do |col_name, view_name| %>
+        <li data-col="<%= col_name %>">
+          <label class="checkbox" style="padding-left:35px;">
+            <input type="checkbox" class="test_checkbox" name="visible_columns[]" value="<%= col_name %>" <%= ' checked="checked"' if @visible_cols.include?(col_name) %>/>
+            <%= view_name %>
+          </label>
+        </li>
+        <% end %>
+      </form>
+    </ul>
   </div>
+</div><!-- btn-groups end -->
+
+<div class="tab-content">
+  <div class="tab-pane" id="native_goods">
+  </div><!-- single_good end -->
+
+  <div class="tab-pane active" id="taobao_goods">
+    <%= render 'taobao_products_table' %>
+  </div><!-- all_goods end -->
 </div>
 
 <!-- Modal -->

@@ -8,16 +8,22 @@
   .checkbox.inline + .checkbox.inline {
     margin-left: 0px;
   }
-
 </style>
-      <ul class="nav nav-tabs ">
-        <li><a href="/users">用户</a></li>
-        <li><a href="/users/roles">角色</a></li>
-        <li class="active"><a href="/users/limits">权限</a></li>
-      </ul><!-- nav-tabs -->
-      <div class="tab-content">
-        <div class="limits" id="limits">
-          <%= simple_form_for @role, :url => update_permissions_users_path(:role_id => params[:role_id]),:html => {:method => :put,:class => "form-horizontal"} do |f| %>
+<%
+  breadcrumb << ["系统设置", users_path]
+  breadcrumb << ["角色管理", roles_users_path]
+  breadcrumb << ["权限设置"]
+%> 
+<div class="row-fluid">
+  <div class="span10 w100">
+    <ul class="nav nav-tabs">
+      <li><a href="/users">用户</a></li>
+      <li><a href="/users/roles">角色</a></li>
+      <li class="active"><a href="/users/limits">权限</a></li>
+    </ul><!-- nav-tabs -->
+    <div class="tab-content">
+      <div class="limits" id="limits">
+        <%= simple_form_for @role, :url => update_permissions_users_path(:role_id => params[:role_id]),:html => {:method => :put,:class => "form-horizontal"} do |f| %>
           <fieldset class="form-inline mar_b15">
             <strong><%= f.label :name,"角色名称:" %></strong>
             <%= @role.name %>
@@ -27,31 +33,31 @@
               <input type="checkbox" name="can_assign_trade" <%='checked' if @role.can_assign_trade == true %>>开启分配订单
             </label>
           </fieldset>
-              <p>请选择该角色需要的模块和功能</p>
-              <% MagicOrder::AccessControl.permissions.group_by{|x| x.project_module}.each do |project_name,permissions| %>
-
-              <fieldset class="form-inline">
-                <h5 class="checkbox">
-                  <%= l_or_humanize(project_name,:prefix => "permissions_") %>
-                </h5>
-                <% permissions.each do |permission| %>
-                <div class="controls">
-                  <p class="nomargin"><strong><%= l_or_humanize(permission.name,:prefix => "permissions_") %></strong></p>
-                  <% permission.actions.each do |action| %>
-                  <label class="checkbox inline">
-                    <% (params["permissions"] ||= {}) && params["permissions"]["#{@role.name}"] ||= {} %>
-                    <% permission_name = "#{project_name}_#{action}" %>
-                    <%= check_box_tag "permissions[#{project_name}][]",action,params["permissions"][action].try(:include?,permission_name) || (@role.permissions[project_name.to_s].try(:include?,action) )  %><%= l_or_humanize(action,:prefix => "permissions_tag_") %>
-                  </label>
-                  <% end %>
-                </div>
-                <% end%>
-              </fieldset>
-              <% end %>
-
-              <div class="controls mar_t20">
-                <button class="btn btn-primary">保存角色</button>
+          <p>请选择该角色需要的模块和功能</p>
+          <% MagicOrder::AccessControl.permissions.group_by{|x| x.project_module}.each do |project_name,permissions| %>
+            <fieldset class="form-inline">
+              <h5 class="checkbox">
+                <%= l_or_humanize(project_name,:prefix => "permissions_") %>
+              </h5>
+              <% permissions.each do |permission| %>
+              <div class="controls">
+                <p class="nomargin"><strong><%= l_or_humanize(permission.name,:prefix => "permissions_") %></strong></p>
+                <% permission.actions.each do |action| %>
+                <label class="checkbox inline">
+                  <% (params["permissions"] ||= {}) && params["permissions"]["#{@role.name}"] ||= {} %>
+                  <% permission_name = "#{project_name}_#{action}" %>
+                  <%= check_box_tag "permissions[#{project_name}][]",action,params["permissions"][action].try(:include?,permission_name) || (@role.permissions[project_name.to_s].try(:include?,action) )  %><%= l_or_humanize(action,:prefix => "permissions_tag_") %>
+                </label>
+                <% end %>
               </div>
-              <% end %>
-          </div><!-- limits end -->
-        </div><!-- tab-content end -->
+              <% end%>
+            </fieldset>
+          <% end %>
+          <div class="controls mar_t20">
+            <button class="btn btn-primary">保存角色</button>
+          </div>
+        <% end %>
+      </div><!-- limits end -->     
+    </div>
+  </div>
+</div>

@@ -1,11 +1,18 @@
-<div class="container-fluid">
-  <div class="row-fluid">
-    <%= render partial: "layouts/setting_nav" %>
-    <div class="span10">
-      <%= render partial: "crumbs" %>
-      <div class="row-fluid">
-        <%= render partial: 'form' %>
-      </div>
+<%
+  breadcrumb << ["系统设置", users_path]
+  breadcrumb << ["基础数据管理", stocks_safe_stock_path]
+  breadcrumb << ["发货管理", logistic_groups_path]
+  breadcrumb << ["发货单管理", deliver_templates_path]
+  breadcrumb << ["新建发货单模版"]
+%>      
+<div class="row-fluid">
+  <div class="span10 w100">
+    <ul class="nav nav-tabs">
+      <li><a href="/logistic_groups">发货拆分管理</a></li>
+      <li class="active"><a href="/deliver_templates">发货单管理</a></li>
+    </ul><!-- nav-tabs -->
+    <div class="tab-content">
+      <%= render partial: 'form' %>
     </div>
   </div>
 </div>

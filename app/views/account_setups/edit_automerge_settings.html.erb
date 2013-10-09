@@ -1,66 +1,57 @@
-<div class="container-fluid">
-  <div class="row-fluid">
-    <%= render partial: "layouts/setting_nav" %>
-    <div class="span10">
-      <%= render partial: "crumbs"%>
-      <ul class="nav nav-tabs">
-        <li><a href="/account_setups/edit_preprocess_settings">订单预处理</a></li>
-        <li><a href="/account_setups/edit_dispatch_settings">订单分派</a></li>
-        <li><a href="/account_setups/edit_deliver_settings">订单发货</a></li>
-        <li class="active"><a href="/account_setups/edit_automerge_settings">自动合并订单</a></li>
-        <!--<li><a href="#default_logistics" data-toggle="tab">选择默认物流商</a></li>
-        <li><a href="#autobusiness_set" data-toggle="tab">自动化业务设置</a></li>
-        <li><a href="#login_user_set" data-toggle="tab">设置系统登录用户</a></li> -->
-      </ul><!-- nav-tabs -->
+<%
+  breadcrumb << ["自动化设置", "/account_setups/edit_preprocess_settings"]
+  breadcrumb << ["自动合并订单"]
+%>
+<div class="row-fluid">
+  <div class="span10 w100">
+    <ul class="nav nav-tabs">
+      <li><a href="/account_setups/edit_preprocess_settings">订单预处理</a></li>
+      <li><a href="/account_setups/edit_dispatch_settings">订单分派</a></li>
+      <li><a href="/account_setups/edit_deliver_settings">订单发货</a></li>
+      <li class="active"><a href="/account_setups/edit_automerge_settings">自动合并订单</a></li>
+      <!--<li><a href="#default_logistics" data-toggle="tab">选择默认物流商</a></li>
+      <li><a href="#autobusiness_set" data-toggle="tab">自动化业务设置</a></li>
+      <li><a href="#login_user_set" data-toggle="tab">设置系统登录用户</a></li> -->
+    </ul><!-- nav-tabs -->
 
-      <div class="tab-content">
-        <div class="tab-pane active" id="automerge_settings">
-          <%= form_tag('/account_setups/update_automerge_settings', class: 'form-horizontal', method: 'put') do -%> 
-
-            <%if flash[:notice]%>
-            <div class="alert alert-success span10">
-              <button type="button" class="close" data-dismiss="alert">&times;</button>
-              <%=flash[:notice]%>
+    <div class="tab-content">
+      <div class="tab-pane active" id="automerge_settings">
+        <%= form_tag('/account_setups/update_automerge_settings', class: 'form-horizontal', method: 'put') do -%>
+          <fieldset class="mar_l80"><!-- 订单自动发货 beginning -->
+            <h4>订单自动合并设置：</h4>
+            <div class="mar_l80">
+              <div class="control-group">
+                <label class="radio pull-left input-small">
+                  <input type="radio" name="auto_settings[auto_merge]" <%='checked' if @setting['auto_merge'] == 1 %>>开启
+                </label>
+                <label class="radio">
+                  <input type="radio" value="off" name="auto_settings[auto_merge]" <%='checked' if @setting['auto_merge'].present? == false %>>关闭
+                </label>
+                <p class="clear">
+                  <label class="input-large pull-left">请输入自动合并时间范围：</label>
+                  <input type="text" class="input-mini timepickers radius_no_rb" name="auto_settings[auto_merge_start_at]" value="<%= @setting['auto_merge_start_at']%>">
+                  <i class="icon-arrow-right"></i>
+                  <input type="text" class="input-mini timepickers radius_no_rb" name="auto_settings[auto_merge_end_at]" value="<%= @setting['auto_merge_end_at']%>">
+                  <span class="muted">(不选择默认为全天开启)</span>
+                </p>
+              </div>
+              <div>
+                <p class="clear">
+                  <label class="input-large pull-left">付款间隔时间：</label>
+                  <select name="auto_settings[auto_merge_pay_time_interval]" class="input-mini">
+                    <% [5,10,15,20,25,30,35,40,45,50,55,60].each do |i| %>
+                    <option value= "<%= i %>" <%= 'selected' if @setting['auto_merge_pay_time_interval'] == i.to_s %>><%= i %>分钟</option>
+                    <% end %>
+                  </select>
+                </p>
+              </div>
             </div>
-            <%end%>
-
-            <fieldset class="mar_l80"><!-- 订单自动发货 beginning -->
-                <h4>订单自动合并设置：</h4>
-                <div class="mar_l80">
-                  <div class="control-group">
-                    <label class="radio pull-left input-small">
-                      <input type="radio" name="auto_settings[auto_merge]" <%='checked' if @setting['auto_merge'] == 1 %>>开启
-                    </label>
-                    <label class="radio">
-                      <input type="radio" value="off" name="auto_settings[auto_merge]" <%='checked' if @setting['auto_merge'].present? == false %>>关闭
-                    </label>
-                    <p class="clear">
-                      <label class="input-large pull-left">请输入自动合并时间范围：</label>
-                      <input type="text" class="input-mini timepickers radius_no_rb" name="auto_settings[auto_merge_start_at]" value="<%= @setting['auto_merge_start_at']%>">
-                      <i class="icon-arrow-right"></i>
-                      <input type="text" class="input-mini timepickers radius_no_rb" name="auto_settings[auto_merge_end_at]" value="<%= @setting['auto_merge_end_at']%>">
-                      <span class="muted">(不选择默认为全天开启)</span>
-                    </p>
-                  </div>
-                  <div>
-                    <p class="clear">
-                      <label class="input-large pull-left">付款间隔时间：</label>
-                      <select name="auto_settings[auto_merge_pay_time_interval]" class="input-mini">
-                        <% [5,10,15,20,25,30,35,40,45,50,55,60].each do |i| %>
-                        <option value= "<%= i %>" <%= 'selected' if @setting['auto_merge_pay_time_interval'] == i.to_s %>><%= i %>分钟</option>
-                        <% end %>
-                      </select>
-                    </p>
-                  </div>
-                </div>
-            </fieldset>
-            <div class="pagination-centered mar_t30">
-              <button id="auto_settings_button" class="btn btn-primary" type="submit">保存</button>
-            </div>
-          <% end %>
-        </div>
-
-      </div><!-- tab-content end -->
-    </div>
+          </fieldset>
+          <div class="pagination-centered mar_t30">
+            <button id="auto_settings_button" class="btn btn-primary" type="submit">保存</button>
+          </div>
+        <% end %>
+      </div>
+    </div><!-- tab-content end -->
   </div>
 </div>

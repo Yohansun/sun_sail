@@ -1,6 +1,7 @@
 # -*- encoding:utf-8 -*-
 class AccountSetupsController < ApplicationController
   include Wicked::Wizard
+  layout  "management"
   before_filter :check_account_wizard_status, only:[:show]
 
   skip_before_filter :verify_authenticity_token, only: [:data_fetch_finish]

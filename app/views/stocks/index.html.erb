@@ -1,10 +1,8 @@
-<div class="row-fluid">
-  <div class="span10 w100">
-    <%= render partial: "layouts/all_crumbs" %>
-    <%= render partial: "layouts/warehouse_menu" %>
-    <%= render "table" %>
-  </div><!-- span10 -->
-</div><!--row-fluid-->
+<% content_for :sub_nav do %>
+  <%= render partial: "layouts/warehouse_menu" %>
+<% end %>
+
+<%= render "table" %>
 
 <% content_for :tail do %>
 <script>

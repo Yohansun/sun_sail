@@ -1,3 +1,9 @@
+<%
+  breadcrumb << ["系统设置", users_path]
+  breadcrumb << ["基础数据管理", stocks_safe_stock_path]
+  breadcrumb << ["短信&邮件统计", "/notify/sms"]
+  breadcrumb << ["邮件"]
+%>
 <div class="row-fluid">
   <div class="span10 w100">
     <ul class="nav nav-tabs">
@@ -5,74 +11,72 @@
       <li class="active"><a href="/notify/email">邮件</a></li>
     </ul><!-- nav-tabs -->
     <div class="tab-content">
-    <div class="tab-pane active" id="users">
+      <div class="tab-pane active" id="users">
+        <div class="tab-pane active well well-small " id="notify_search">
+        	<%= form_for "search", :url => '/notify/email', :html => {:class => "form-horizontal font12", :id => "search"}, :method => :get do |f| %>
+           <%= render :partial => 'search',:locals => {:f => f} %>
+           <fieldset class="pull-right">
+        		  <%= f.text_field :key_word, :class => "input-medium", :value => @key_word %>
+           		<%= button_tag "搜索", :class => "btn btn-small btn-info" %>
+        		</fieldset>
+          <% end %>
+        </div>
 
-    <div class="tab-pane active well well-small " id="notify_search">
-    	<%= form_for "search", :url => '/notify/email', :html => {:class => "form-horizontal font12", :id => "search"}, :method => :get do |f| %>
-       <%= render :partial => 'search',:locals => {:f => f} %>
+        <div class="container-fluid">
+        	<div class="row-fluid">
+        		<div class="span8">
+        			<div class="control-group">
+        		    <div class="pull-left">
+        		      <span class="label label-info">合计已发送: <%= @count %> 条</span>
+        		    </div>
+        		  </div>
+        		</div>
+        		<div class="span4">
+        			<%= link_to "导出报表","#",:onclick => "processChecked('#{notify_email_path(:search => params[:search],:format => :xls,:on => '?')}')", :class => 'btn btn-success btn-small pull-right'%>
+        		</div>
+        	</div>
+        </div>
 
-       <fieldset class="pull-right">
-    		  <%= f.text_field :key_word, :class => "input-medium", :value => @key_word %>
-       		<%= button_tag "搜索", :class => "btn btn-small btn-info" %>
-    		</fieldset>
-      <% end %>
-    </div>
-
-    <div class="container-fluid">
-    	<div class="row-fluid">
-    		<div class="span8">
-    			<div class="control-group">
-    		    <div class="pull-left">
-    		      <span class="label label-info">合计已发送: <%= @count %> 条</span>
-    		    </div>
-    		  </div>
-    		</div>
-    		<div class="span4">
-    			<%= link_to "导出报表","#",:onclick => "processChecked('#{notify_email_path(:search => params[:search],:format => :xls,:on => '?')}')", :class => 'btn btn-success btn-small pull-right'%>
-    		</div>
-    	</div>
-    </div>
-
-    <%= form_tag "",:method => :post,:id => "edit_user" do %>
-
-    <table id="tb" class="table table-hover table-bordered table-striped table-condensed js-table">
-      <thead>
-        <tr>
-          <th width="5%">发送人</th>
-          <th width="10%">邮件地址</th>
-          <th width="10%">发送主题</th>
-          <th width="35%">发送内容</th>
-          <th width="10%">发送时间</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @notifies.each do |notif| %>
-        <tr>
-          <td><%= notif.notify_sender %></td>
-          <td><%= notif.notify_contact %></td>
-          <td><%= notif.notify_theme %></td>
-          <td>
-            <a href="javascript:void(0)" class="btn" data-toggle="popover" data-content="<%= notif.notify_content %>" style="width:300px;height:20px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;" title=''><%= "#{notif.notify_content}" %></a>
-          </td>
-          <td><%= notif.notify_time.strftime("%Y-%m-%d %H:%M:%S") %></td>
-        </tr>
+        <%= form_tag "",:method => :post,:id => "edit_user" do %>
+          <table id="tb" class="table table-hover table-bordered table-striped table-condensed js-table">
+            <thead>
+              <tr>
+                <th width="5%">发送人</th>
+                <th width="10%">邮件地址</th>
+                <th width="10%">发送主题</th>
+                <th width="35%">发送内容</th>
+                <th width="10%">发送时间</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @notifies.each do |notif| %>
+              <tr>
+                <td><%= notif.notify_sender %></td>
+                <td><%= notif.notify_contact %></td>
+                <td><%= notif.notify_theme %></td>
+                <td>
+                  <a href="javascript:void(0)" class="btn" data-toggle="popover" data-content="<%= notif.notify_content %>" style="width:300px;height:20px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;" title=''><%= "#{notif.notify_content}" %></a>
+                </td>
+                <td><%= notif.notify_time.strftime("%Y-%m-%d %H:%M:%S") %></td>
+              </tr>
+              <% end %>
+            </tbody>
+          </table>
         <% end %>
-      </tbody>
-    </table>
-    <% end %>
-    </div></div>
+      </div>
+    </div>
     <div class='clearfix'>
       <div class="pull-right" style="margin-left: 5px;margin-top: -2px;">
         <%= paginate @notifies %>
       </div>
       <!-- <p></p> -->
       <%= form_tag("/notify/sms", :method => "get", :class => 'pagination trade_count_info form-inline pull-right') do %>
-      <input style="visibility:hidden;" name="page" value="<%= params[:page]%>"/>
-      <label style="color:#005580;">当前每页显示：</label>
-      <%=select_tag :number, options_for_select([["加载20项","20"],
-              ["加载50项","50"],
-              ["加载100项", "100"]], params[:number]),  :class => 'nomargin input-medium', :onchange => "this.form.submit();" %>
-      <%- end -%>
+        <input style="visibility:hidden;" name="page" value="<%= params[:page]%>"/>
+        <label style="color:#005580;">当前每页显示：</label>
+        <%=select_tag :number, options_for_select([["加载20项","20"],
+                ["加载50项","50"],
+                ["加载100项", "100"]], params[:number]),  :class => 'nomargin input-medium', :onchange => "this.form.submit();" %>
+        <%- end -%>
     </div>
   </div>
 </div>

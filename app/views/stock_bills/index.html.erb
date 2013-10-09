@@ -1,161 +1,157 @@
-<div class="row-fluid">
-  <div class="span10 w100">
-    <%= render partial: "layouts/all_crumbs" %>
-    <%= render partial: "layouts/warehouse_menu" %>
+<% content_for :sub_nav do %>
+  <%= render partial: "layouts/warehouse_menu" %>
+<% end %>
 
-    <div class="tab-content">
-      <div class="tab-pane active" id="stock_check">
-        <%= form_tag warehouse_stock_bills_path(@warehouse),:method => "get",:class => "well well-small form-horizontal font12"  do %>
-        <%= render :partial => "search" %>
+<div class="tab-pane active" id="stock_check">
+  <%= form_tag warehouse_stock_bills_path(@warehouse),:method => "get",:class => "well well-small form-horizontal font12"  do %>
+  <%= render :partial => "search" %>
+  <% end %>
+</div>
+
+<div class="btn-toolbar">
+  <div class="btn-group">
+    <button class="btn btn-warning">操作</button>
+    <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+      <li>
+        <%= link_to "导出","#",:onclick => "processChecked('#{warehouse_stock_bills_path(@warehouse,:search => params[:search],:format => :xls,:on => '?')}')"%>
+      </li>
+    </ul>
+  </div>
+  <div class="btns btn-group pull-right js-field_set">
+    <a href="#" class="btn btn-success btn_mar4">显示设置</a>
+    <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-success dropdown_check_btn"><span class="caret"></span></button>
+    <ul class="dropdown-menu dropdown_check" id="dropdown_check">
+      <%= form_tag "/users/update_visible_columns", :id => "visible_columns"%>
+        <input type="hidden" name="model_name" value="stock_bill"/>
+        <input type="hidden" name="action_name" value="index"/>
+        <% @all_cols.each do |col_name, view_name| %>
+        <li data-col="<%= col_name %>">
+          <label class="checkbox" style="padding-left:35px;">
+            <input type="checkbox" class="test_checkbox" name="visible_columns[]" value="<%= col_name %>" <%= ' checked="checked"' if @visible_cols.include?(col_name) %>/>
+            <%= view_name %>
+          </label>
+        </li>
         <% end %>
-      </div>
+      </form>
+    </ul>
+  </div>
+</div>
 
-      <div class="btn-toolbar">
-        <div class="btn-group">
-          <button class="btn btn-warning">操作</button>
-          <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
-            <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu">
-            <li>
-              <%= link_to "导出","#",:onclick => "processChecked('#{warehouse_stock_bills_path(@warehouse,:search => params[:search],:format => :xls,:on => '?')}')"%>
-            </li>
-          </ul>
-        </div>
-        <div class="btns btn-group pull-right js-field_set">
-          <a href="#" class="btn btn-success btn_mar4">显示设置</a>
-          <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-success dropdown_check_btn"><span class="caret"></span></button>
-          <ul class="dropdown-menu dropdown_check" id="dropdown_check">
-            <%= form_tag "/users/update_visible_columns", :id => "visible_columns"%>
-              <input type="hidden" name="model_name" value="stock_bill"/>
-              <input type="hidden" name="action_name" value="index"/>
-              <% @all_cols.each do |col_name, view_name| %>
-              <li data-col="<%= col_name %>">
-                <label class="checkbox" style="padding-left:35px;">
-                  <input type="checkbox" class="test_checkbox" name="visible_columns[]" value="<%= col_name %>" <%= ' checked="checked"' if @visible_cols.include?(col_name) %>/>
-                  <%= view_name %>
-                </label>
-              </li>
-              <% end %>
-            </form>
-          </ul>
-        </div>
-      </div>
-
-      <table class="table table-hover table-bordered table-striped table-condensed js-table" id="bills_table">
-        <thead>
-          <tr>
-            <th><input type="checkbox"></th>
+<table class="table table-hover table-bordered table-striped table-condensed js-table" id="bills_table">
+  <thead>
+    <tr>
+      <th><input type="checkbox"></th>
+      <%- @all_cols.each do |col_name, view_name| -%>
+      <th data-col="<%= col_name %>" style="<%= 'display:none' unless @visible_cols.include?(col_name) %>">
+        <%= view_name %>
+      </th>
+      <%- end -%>
+    </tr>
+  </thead>
+  <tbody>
+    <% @num = 0 %>
+    <%- @bills.each_with_index do |bill,index| %>
+      <% products = bill.arrange_products(params[:search][:bill_products_sku_id_eq], params[:search][:bill_products_outer_id_eq])
+        product_size = products.size
+      %>
+      <%- products.each_with_index do |product,product_index|%>
+        <tr>
+          <!-- 合并行 -->
+          <%- if product_index == 0 -%>
+            <td rowspan="<%= product_size %>">
+              <input type="checkbox" name="stock_bill_ids[]" value="<%= bill.id %>">
+            </td>
             <%- @all_cols.each do |col_name, view_name| -%>
-            <th data-col="<%= col_name %>" style="<%= 'display:none' unless @visible_cols.include?(col_name) %>">
-              <%= view_name %>
-            </th>
+              <%- if ["stock_no", "tid", "status_text", "stock_type_name", "created_at", "stocked_at"].include?(col_name) -%>
+                <td data-col="<%= col_name %>" rowspan="<%= product_size %>" style="<%= 'display:none' unless @visible_cols.include?(col_name) %>">
+                  <%= case col_name
+                      when "product_outer_id"
+                        product.try(:outer_id)
+                      when "product_title"
+                        product.try(:title)
+                      when "product_number"
+                        product.try(:number)
+                      when "created_at"
+                        bill.created_at.try(:to_s,:db)
+                      when "stocked_at"
+                        bill.stocked_at.try(:strftime, "%Y-%m-%d %H:%M")
+                      when "stock_no"
+                        @start_no + index
+                      else
+                        bill.send(col_name)
+                      end
+                   %>
+                </td>
+              <%- else -%>
+                <td data-col="<%= col_name %>" style="<%= 'display:none' unless @visible_cols.include?(col_name) %>">
+                  <%= case col_name
+                    when "product_outer_id"
+                      product.try(:outer_id)
+                    when "product_title"
+                      product.try(:title)
+                    when "product_number"
+                      product.try(:number)
+                    when "created_at"
+                      bill.created_at.try(:to_s,:db)
+                    when "stocked_at"
+                      bill.stocked_at.try(:strftime, "%Y-%m-%d %H:%M")
+                    when "stock_no"
+                      @start_no + index
+                    else
+                      bill.send(col_name)
+                    end
+                 %>
+                </td>
+              <%- end -%>
             <%- end -%>
-          </tr>
-        </thead>
-        <tbody>
-          <% @num = 0 %>
-          <%- @bills.each_with_index do |bill,index| %>
-            <% products = bill.arrange_products(params[:search][:bill_products_sku_id_eq], params[:search][:bill_products_outer_id_eq])
-              product_size = products.size
-            %>
-            <%- products.each_with_index do |product,product_index|%>
-              <tr>
-                <!-- 合并行 -->
-                <%- if product_index == 0 -%>
-                  <td rowspan="<%= product_size %>">
-                    <input type="checkbox" name="stock_bill_ids[]" value="<%= bill.id %>">
-                  </td>
-                  <%- @all_cols.each do |col_name, view_name| -%>
-                    <%- if ["stock_no", "tid", "status_text", "stock_type_name", "created_at", "stocked_at"].include?(col_name) -%>
-                      <td data-col="<%= col_name %>" rowspan="<%= product_size %>" style="<%= 'display:none' unless @visible_cols.include?(col_name) %>">
-                        <%= case col_name
-                            when "product_outer_id"
-                              product.try(:outer_id)
-                            when "product_title"
-                              product.try(:title)
-                            when "product_number"
-                              product.try(:number)
-                            when "created_at"
-                              bill.created_at.try(:to_s,:db)
-                            when "stocked_at"
-                              bill.stocked_at.try(:strftime, "%Y-%m-%d %H:%M")
-                            when "stock_no"
-                              @start_no + index
-                            else
-                              bill.send(col_name)
-                            end
-                         %>
-                      </td>
-                    <%- else -%>
-                      <td data-col="<%= col_name %>" style="<%= 'display:none' unless @visible_cols.include?(col_name) %>">
-                        <%= case col_name
-                          when "product_outer_id"
-                            product.try(:outer_id)
-                          when "product_title"
-                            product.try(:title)
-                          when "product_number"
-                            product.try(:number)
-                          when "created_at"
-                            bill.created_at.try(:to_s,:db)
-                          when "stocked_at"
-                            bill.stocked_at.try(:strftime, "%Y-%m-%d %H:%M")
-                          when "stock_no"
-                            @start_no + index
-                          else
-                            bill.send(col_name)
-                          end
-                       %>
-                      </td>
-                    <%- end -%>
-                  <%- end -%>
-                <!-- 被合并行 product_index > 0 -->
-                <%- else -%>
-                  <%- @all_cols.each do |col_name, view_name| -%>
-                    <%- unless ["stock_no", "tid", "status_text", "stock_type_name", "created_at", "stocked_at"].include?(col_name) -%>
-                      <td data-col="<%= col_name %>" style="<%= 'display:none' unless @visible_cols.include?(col_name) %>">
-                        <%= case col_name
-                          when "product_outer_id"
-                            product.try(:outer_id)
-                          when "product_title"
-                            product.try(:title)
-                          when "product_number"
-                            product.try(:number)
-                          when "created_at"
-                            bill.created_at.try(:to_s,:db)
-                          when "stocked_at"
-                            bill.stocked_at.try(:strftime, "%Y-%m-%d %H:%M")
-                          when "stock_no"
-                            @start_no + index
-                          else
-                            bill.send(col_name)
-                          end
-                       %>
-                      </td>
-                    <%- end -%>
-                  <%- end -%>
-                <%- end -%>
-              </tr>
-            <%- end %>
-          <%- end %>
-        </tbody>
-      </table>
-      <div class='clearfix'>
-        <div class="pull-right" style="margin-left: 5px;margin-top: -2px;">
-          <%= paginate @bills %>
-        </div>
-        <!-- <p></p> -->
-        <%= form_tag("/warehouses/#{@warehouse.id}/stock_bills", :method => "get", :class => 'pagination trade_count_info form-inline pull-right') do %>
-          <input style="visibility:hidden;" name="page" value="<%= params[:page]%>"/>
-          <label style="color:#005580;">当前每页显示：</label>
-          <%=select_tag :number, options_for_select([["加载20项","20"],
-                  ["加载50项","50"],
-                  ["加载100项", "100"]], params[:number]),  :class => 'nomargin input-medium', :onchange => "this.form.submit();" %>
-        <%- end -%>
-      </div><!--span10 -->
-    </div><!-- tab-content -->
-  </div><!-- span10 -->
-</div><!--row-fluid -->
+          <!-- 被合并行 product_index > 0 -->
+          <%- else -%>
+            <%- @all_cols.each do |col_name, view_name| -%>
+              <%- unless ["stock_no", "tid", "status_text", "stock_type_name", "created_at", "stocked_at"].include?(col_name) -%>
+                <td data-col="<%= col_name %>" style="<%= 'display:none' unless @visible_cols.include?(col_name) %>">
+                  <%= case col_name
+                    when "product_outer_id"
+                      product.try(:outer_id)
+                    when "product_title"
+                      product.try(:title)
+                    when "product_number"
+                      product.try(:number)
+                    when "created_at"
+                      bill.created_at.try(:to_s,:db)
+                    when "stocked_at"
+                      bill.stocked_at.try(:strftime, "%Y-%m-%d %H:%M")
+                    when "stock_no"
+                      @start_no + index
+                    else
+                      bill.send(col_name)
+                    end
+                 %>
+                </td>
+              <%- end -%>
+            <%- end -%>
+          <%- end -%>
+        </tr>
+      <%- end %>
+    <%- end %>
+  </tbody>
+</table>
+<div class='clearfix'>
+  <div class="pull-right" style="margin-left: 5px;margin-top: -2px;">
+    <%= paginate @bills %>
+  </div>
+  <!-- <p></p> -->
+  <%= form_tag("/warehouses/#{@warehouse.id}/stock_bills", :method => "get", :class => 'pagination trade_count_info form-inline pull-right') do %>
+    <input style="visibility:hidden;" name="page" value="<%= params[:page]%>"/>
+    <label style="color:#005580;">当前每页显示：</label>
+    <%=select_tag :number, options_for_select([["加载20项","20"],
+            ["加载50项","50"],
+            ["加载100项", "100"]], params[:number]),  :class => 'nomargin input-medium', :onchange => "this.form.submit();" %>
+  <%- end -%>
+</div><!--span10 -->
+
 <% content_for :tail do %>
 <script>
   function processChecked(full_url){

@@ -1,35 +1,31 @@
-<header class="jumbotron subhead" id="overview">
-  <div class="subnav">
-    <ul class="nav nav-pills">
-      <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-          销售分析
-          <b class="caret"></b>
-        </a>
-        <ul class="dropdown-menu">
-          <li><a href="/sales/summary">概要</a></li>
-          <li><a href="/sales/product_analysis">热销产品分析</a></li>
-          <li><a href="/sales/show">实时销售</a></li>
-          <!-- <li><a href="#">买家购买分析</a></li>
-          <li><a href="#">促销手段分析</a></li> -->
-        </ul>
-      </li>
-      <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">
-          买家分析
-          <b class="caret"></b>
-        </a>
-        <ul class="dropdown-menu">
-          <li><a href="/sales/area_analysis">买家地域分析</a></li>
-          <li><a href="/sales/time_analysis">购买时段分析</a></li>
-          <li><a href="/sales/price_analysis">商品标价分析</a></li>
-          <li><a href="/sales/frequency_analysis">购买频次分析</a></li>
-          <li><a href="/sales/univalent_analysis">客单价分析</a></li>
-          <!-- <li><a href="/sales/customer_analysis">性别年龄分析</a></li>
-          <li><a href="#">买家信用分析</a></li>
-          <li><a href="#">来访时段分析</a></li> -->
-        </ul>
-      </li>
+<ul class="nav nav-tabs" id="overview">
+  <li class="dropdown <%= ["summary", "product_analysis", "show"].include?(params[:action]) ? "active" : "" %>">
+    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+      销售分析
+      <b class="caret"></b>
+    </a>
+    <ul class="dropdown-menu">
+      <li><a href="/sales/summary">概要</a></li>
+      <li><a href="/sales/product_analysis">热销产品分析</a></li>
+      <li><a href="/sales/show">实时销售</a></li>
+      <!-- <li><a href="#">买家购买分析</a></li>
+      <li><a href="#">促销手段分析</a></li> -->
     </ul>
-  </div>
-</header>
+  </li>
+  <li class="dropdown <%= ["area_analysis", "time_analysis", "price_analysis", "frequency_analysis", "univalent_analysis"].include?(params[:action]) ? "active" : "" %>">
+    <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">
+      买家分析
+      <b class="caret"></b>
+    </a>
+    <ul class="dropdown-menu">
+      <li><a href="/sales/area_analysis">买家地域分析</a></li>
+      <li><a href="/sales/time_analysis">购买时段分析</a></li>
+      <li><a href="/sales/price_analysis">商品标价分析</a></li>
+      <li><a href="/sales/frequency_analysis">购买频次分析</a></li>
+      <li><a href="/sales/univalent_analysis">客单价分析</a></li>
+      <!-- <li><a href="/sales/customer_analysis">性别年龄分析</a></li>
+      <li><a href="#">买家信用分析</a></li>
+      <li><a href="#">来访时段分析</a></li> -->
+    </ul>
+  </li>
+</ul>
