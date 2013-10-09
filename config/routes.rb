@@ -35,7 +35,7 @@ MagicOrders::Application.routes.draw do
       collection do
         get :edit_depot
         post :batch_update_safety_stock
-        post :batch_update_activity_stock
+        post :batch_update_actual_stock
         put :inventory
       end
       put :update_depot   ,:on => :member
@@ -47,7 +47,7 @@ MagicOrders::Application.routes.draw do
     put :update_depot   ,:on => :member
     collection do
       post :batch_update_safety_stock
-      post :batch_update_activity_stock
+      post :batch_update_actual_stock
       get :edit_depot
     end
   end

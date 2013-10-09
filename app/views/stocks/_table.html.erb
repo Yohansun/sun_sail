@@ -15,10 +15,10 @@
         <%= link_to "导出","#",:onclick => "processChecked('#{stocks_path(warehouse_id: params[:warehouse_id], :search => params[:search],:format => :xls,:on => '?')}')"%>
       </li>
       <li>
-        <%= link_to_authorize "批量设置安全库存","#batch_update_safety_stock",:target_url => "/stocks/batch_update_safety_stock?warehouse_id=#{params[:warehouse_id]}",:class => "magic_operation set_stock", "data-toggle" => "modal",:request => :post,:id => "set_safety_stock" %>
+        <%= link_to_authorize "批量设置安全库存","#batch_update_safety_stock",:target_url => batch_update_safety_stock_stocks_path(warehouse_id: params[:warehouse_id]),:class => "magic_operation set_stock", "data-toggle" => "modal",:request => :post,:id => "set_safety_stock" %>
       </li>
       <li>
-        <%= link_to_authorize "批量设置实际库存","#batch_update_actual_stock",:target_url => "/stocks/batch_update_actual_stock?warehouse_id=#{params[:warehouse_id]}",:class => "magic_operation set_stock", "data-toggle" => "modal",:request => :post,:id => "set_actual_stock" %>
+        <%= link_to_authorize "批量设置实际库存","#batch_update_actual_stock",:target_url => batch_update_actual_stock_stocks_path(warehouse_id: params[:warehouse_id]),:class => "magic_operation set_stock", "data-toggle" => "modal",:request => :post,:id => "set_actual_stock" %>
       </li>
       <% if @warehouse.present? %>
         <li>
