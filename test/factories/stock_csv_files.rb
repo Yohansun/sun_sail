@@ -2,5 +2,6 @@
 
 FactoryGirl.define do
   factory :stock_csv_file do
+    path Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/test.csv')))
   end
 end
