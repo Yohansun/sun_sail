@@ -44,11 +44,15 @@ class MagicOrders.Views.TradesCsMemo extends Backbone.View
       order_cs_memos[order_id] = order_cs_memo
 
     orders = @model.get('orders')
+    new_orders = []
     for order, i in orders
-      orders[i].cs_memo = order_cs_memos[order.id]
+      new_order = {}
+      new_order["id"] = order.id
+      new_order["cs_memo"] = order_cs_memos[order.id]
+      new_orders.push new_order
 
     new_model = new MagicOrders.Models.Trade(id: @model.id)
-    new_model.save {operation: "客服备注", logistic_id: lid, orders: orders, cs_memo: $("#cs_memo_text").val(), service_logistic_id: $("#service_logistic_id").val()}, success: (model, response) =>
+    new_model.save {operation: "客服备注", logistic_id: lid, orders: new_orders, cs_memo: $("#cs_memo_text").val(), service_logistic_id: $("#service_logistic_id").val()}, success: (model, response) =>
       $.unblockUI()
 
       view = new MagicOrders.Views.TradesRow(model: model)
