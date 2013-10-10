@@ -33,7 +33,7 @@ describe ReconcileStatementDetailsController do
 
       context 'render data first' do
         before {
-          @file_name = File.open("#{Rails.root}/spec/files/test.xls")
+          @file_name = File.open("#{Rails.root}/spec/fixtures/test.xls")
           controller.should_receive(:send_file).and_return(@file_name)
           controller.stub!(:render)
           get :export_detail, reconcile_statement_id: @rsd.reconcile_statement_id, id: @rsd.id, money_type: "alipay_revenue"

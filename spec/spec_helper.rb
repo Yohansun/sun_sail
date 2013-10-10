@@ -58,6 +58,12 @@ Spork.prefork do
       DatabaseCleaner.strategy = :truncation
       DatabaseCleaner.clean
     end
+
+    config.after(:each) do
+      if Rails.env.test?
+        FileUtils.rm_rf(Dir["#{Rails.root}/spec/support/uploads"])
+      end
+    end
   end
 end
 

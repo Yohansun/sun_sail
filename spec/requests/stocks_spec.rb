@@ -22,7 +22,7 @@ describe "Stocks" do
   describe "GET /stocks/safe_stock" do
     it "works! (now write some real specs)" do
       get "/stocks/safe_stock"
-      response.status.should be(200)
+      response.status.should be(302)
     end
   end
   describe "GET /stocks/change_product_type" do
@@ -35,7 +35,7 @@ describe "Stocks" do
   describe "GET /stocks/edit_depot" do
     it "works! (now write some real specs)" do
       get edit_depot_stocks_path
-      response.status.should be(200)
+      response.status.should be(302)
     end
   end
 
