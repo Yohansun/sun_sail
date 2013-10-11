@@ -21,5 +21,5 @@ class MagicOrders.Views.TradesLockTrade extends Backbone.View
         $('#trade_lock_trade').modal('hide')
       else
         $.unblockUI()
-        $("#trade_"+data.id).hide()
+        $("#trade_"+data.id).remove()
         $('#trade_lock_trade').modal('hide')
