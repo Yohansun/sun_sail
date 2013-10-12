@@ -92,7 +92,7 @@
           </tr>
         </thead>
         <tbody>
-          <%- @bill.bill_products.each do |product| %>
+          <%- @products.each do |product| %>
           <tr>
             <td><%= product.outer_id %></td>
             <td><%= product.sku.try(:sku_id) %></td>
@@ -104,6 +104,7 @@
           <%- end %>
         </tbody>
       </table>
+      <%= paginate @products %>
       <%- if @trade %>
         <br><span class="lable label-warning">订单金额</span>:  <%= @trade.sum_fee %>
         <br><span class="lable label-warning">订单折扣</span>:  <%= @trade.seller_discount %>

@@ -134,11 +134,19 @@ class StockOutBill < StockBill
   end
 
   def check
-    do_check
-    decrease_activity
-    if account && account.settings.enable_module_third_party_stock != 1 || self.stock_type == "OINVENTORY"
-      decrease_actual
+    StockProduct.transaction do
+      error_activity = decrease_activity
+      error_records = error_activity == true ? [] : error_activity
+      if account && account.settings.enable_module_third_party_stock != 1 || self.stock_type_oinventory?
+        error_actual = decrease_actual
+        error_records << error_actual if error_actual != true
+      end
+      raise error_records.flatten.compact.collect{|x| '库存ID为' << x.id.to_s << ':' << x.errors.full_messages.join(',')}.join('\n') if error_records.present?
+      do_check
+      return true
     end
+  rescue Exception => e
+    e.message
   end
 
   def sync
@@ -243,29 +251,45 @@ class StockOutBill < StockBill
   end
 
   def decrease_activity #减去仓库的可用库存
-    bill_products.each do |stock_out|
-      stock_product = StockProduct.find_by_id(stock_out.stock_product_id)
-      if stock_product
-        stock_product.update_attributes(activity: stock_product.activity - stock_out.number)
-        true
-      else
-        # DO SOME ERROR NOTIFICATION
-        false
+    error_records = []
+    StockProduct.transaction do
+      bill_products.each do |stock_out|
+        stock_product = StockProduct.find_by_id(stock_out.stock_product_id)
+        if stock_product
+          if !stock_product.update_attributes(activity: stock_product.activity - stock_out.number)
+            error_records << stock_product
+          end
+        else
+          # DO SOME ERROR NOTIFICATION
+          false
+        end
       end
+      raise if error_records.present?
+      return true
     end
+  rescue Exception
+    error_records
   end
 
   def decrease_actual #减去仓库的实际库存
-    bill_products.each do |stock_out|
-      stock_product = StockProduct.find_by_id(stock_out.stock_product_id)
-      if stock_product
-        stock_product.update_attributes(actual: stock_product.actual - stock_out.number)
-        true
-      else
-        # DO SOME ERROR NOTIFICATION
-        false
+    error_records = []
+    StockProduct.transaction do
+      bill_products.each do |stock_out|
+        stock_product = StockProduct.find_by_id(stock_out.stock_product_id)
+        if stock_product
+          if !stock_product.update_attributes(actual: stock_product.actual - stock_out.number)
+            error_records << stock_product
+          end
+        else
+          # DO SOME ERROR NOTIFICATION
+          false
+        end
       end
+      raise if error_records.present?
+      return true
     end
+  rescue Exception
+    error_records
   end
 
 end

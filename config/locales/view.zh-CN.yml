@@ -3,6 +3,8 @@ zh-CN:
     tid: "%{stock}编号"
     stock_type: "%{stock}类型"
     stocked_at: "%{stock}时间"
+  stock_in_bills: "%{tid}入库单"
+  stock_out_bills: "%{tid}出库单"
     
   history_status: 历史状态
   current_status: 当前状态
