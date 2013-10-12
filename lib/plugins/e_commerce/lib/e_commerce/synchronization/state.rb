@@ -28,9 +28,16 @@ module ECommerce
         rdup
       end
 
-      def perform
-        all = [@changed,@latest].flatten.compact
-        all.map(&:save!)
+      def perform(iden=nil)
+        hash = {:changed => @changed,:latest => @latest}
+
+        records = if iden.present?
+          raise "参数必须是 #{hash.keys} 中的" if !hash.key?(iden.to_sym)
+          hash[iden.to_sym]
+        else
+          hash.values.flatten.compact
+        end
+        records.map(&:save!)
       end
 
       def relations(response)
