@@ -1,0 +1,3 @@
+<% @third_party.each do |third_party| %>
+  $("#<%=dom_id(third_party)%> td.authentication_token").html("<%= third_party.authentication_token %>")
+<% end %>
