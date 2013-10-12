@@ -1,16 +1,13 @@
 # -*- encoding : utf-8 -*-
 class StockOutBillsController < ApplicationController
   before_filter :set_warehouse
-  before_filter :default_conditions,:on => [:edit,:show,:update,:add_product,:remove_product,:fetch_bills]
   before_filter :authorize #,:except => :fetch_bils
-  before_filter :only => [:sync, :check, :rollback, :lock, :unlock] do
-    find_column_settings
-    validate_optional_status
-  end
+  before_filter :find_column_settings, :only => [:sync, :check, :rollback, :lock, :unlock]
+  before_filter :validate_optional_status, only: [:edit, :sync, :rollback, :lock, :unlock,:update]
 
   def index
     parse_params
-    @bills = StockOutBill.where(default_search).desc(:checked_at)
+    @bills = default_scope.desc(:checked_at)
     @search = @bills.search(params[:search])
     unchecked, checked = @search.partition { |b| b.checked_at.nil? }
     @bills = unchecked + checked
@@ -30,13 +27,12 @@ class StockOutBillsController < ApplicationController
   end
 
 	def new
-    @bill = StockOutBill.new(default_search)
+    @bill = default_scope.new
     @bill.bill_products.build
   end
 
   def create
-    params[:stock_out_bill].merge!(default_search)
-    @bill = StockOutBill.new(params[:stock_out_bill])
+    @bill = default_scope.new(params[:stock_out_bill])
     @bill.status = "CREATED"
     @bill.is_cash_sale = params[:is_cash_sale] if params[:is_cash_sale].present?
     @bill.website = params[:website] if params[:website].present?
@@ -53,22 +49,22 @@ class StockOutBillsController < ApplicationController
   end
 
   def edit
-    @bill = StockOutBill.find_by(@conditions)
+    @bill = default_scope.find params[:id]
     @products = @bill.bill_products
     parse_area(@bill)
   end
 
   def show
-    @bill = StockOutBill.find_by(@conditions)
+    @bill = default_scope.find params[:id]
     @trade = TradeDecorator.decorate(@bill.trade) if @bill.trade
-    @products = @bill.bill_products
+    @products = @bill.bill_products.page(params[:page])
     if @bill.private_stock_type?
       render template: "stock_bills/private_stock_type_templete"
     end
   end
 
   def update
-    @bill = StockOutBill.find_by(@conditions)
+    @bill = default_scope.find params[:id]
     @bill.attributes = params[:stock_out_bill]
     update_areas!(@bill)
     @bill.update_bill_products
@@ -83,7 +79,7 @@ class StockOutBillsController < ApplicationController
   end
 
   def sync
-    @operated_bills = StockOutBill.any_in(_id: params[:bill_ids])
+    @operated_bills = default_scope.any_in(_id: params[:bill_ids])
     @operated_bills.each do |bill|
       #PUT INTO QUEUE LATER
       bill.build_log(current_user,'同步')
@@ -95,11 +91,16 @@ class StockOutBillsController < ApplicationController
   end
 
   def check
-    @operated_bills = StockOutBill.any_in(_id: params[:bill_ids])
+    @error_records = []
+    @operated_bills = default_scope.any_in(_id: params[:bill_ids])
+    render(:js => "alert('不能操作状态为已出库的出库单')") and return if @operated_bills.where(status: "STOCKED").exists?
     @operated_bills.each do |bill|
       #PUT INTO QUEUE LATER
-      bill.build_log(current_user,'审核')
-      bill.check
+      assert = bill.check
+      if assert != true
+        @error_records << bill.tid
+        logger.error "[DATA-EXCEPTION #{Time.now.to_s(:db)}] 用户ID(#{current_user.id})审核出库单#{bill.tid}失败: #{assert}"
+      end
     end
     respond_to do |f|
       f.js
@@ -107,7 +108,7 @@ class StockOutBillsController < ApplicationController
   end
 
   def rollback
-    @operated_bills = StockOutBill.any_in(_id: params[:bill_ids])
+    @operated_bills = default_scope.any_in(_id: params[:bill_ids])
     @operated_bills.each do |bill|
       #PUT INTO QUEUE LATER
       bill.build_log(current_user,'取消')
@@ -119,8 +120,8 @@ class StockOutBillsController < ApplicationController
   end
 
   def lock
-    @bills = StockOutBill.where(default_search).any_in(_id: params[:bill_ids])
-    failed = @bills.collect {|bill| [bill.tid,bill.lock!]}.reject {|t,m| m == true}
+    @bills = default_scope.any_in(_id: params[:bill_ids])
+    failed = @bills.collect {|bill| [bill.tid,bill.lock!(current_user)]}.reject {|t,m| m == true}
     error_message = failed.collect {|a| a.join(":")}.join(";")
     @message = failed.blank? ? "出库单#{@bills.map(&:tid).join(',')}锁定成功." : "出库单#{error_message}."
     respond_to do |format|
@@ -129,8 +130,8 @@ class StockOutBillsController < ApplicationController
   end
 
   def unlock
-    @bills = StockOutBill.where(default_search).any_in(_id: params[:bill_ids])
-    failed = @bills.collect {|bill| [bill.tid,bill.unlock!]}.reject {|t,m| m == true}
+    @bills = default_scope.any_in(_id: params[:bill_ids])
+    failed = @bills.collect {|bill| [bill.tid,bill.unlock!(current_user)]}.reject {|t,m| m == true}
     error_message = failed.collect {|a| a.join(":")}.join(';')
     @message = failed.blank? ? "出库单#{@bills.map(&:tid).join(',')}激活成功." : "出库单#{error_message}."
     respond_to do |format|
@@ -176,12 +177,8 @@ class StockOutBillsController < ApplicationController
         search[:stock_type_not_eq] = "OVIRTUAL" if search[:stock_type_eq].blank?
   end
 
-  def default_search
-    {account_id: current_account.id,:seller_id => @warehouse.id}
-  end
-
-  def default_conditions
-    @conditions = default_search.merge({:id => params[:id]})
+  def default_scope
+    StockOutBill.where({account_id: current_account.id,:seller_id => @warehouse.id}.reject{|x,y| y.nil?})
   end
 
   def find_column_settings
@@ -191,10 +188,11 @@ class StockOutBillsController < ApplicationController
 
   def validate_optional_status
     private_stock_types = StockOutBill::PRIVATE_OUT_STOCK_TYPE
-    hava_private_type = StockOutBill.where(:id.in => params[:bill_ids],:stock_type.in => private_stock_types.map(&:last)).exists?
+    hava_private_type = StockOutBill.where(:id.in => params[:bill_ids] || [params[:id]],:stock_type.in => private_stock_types.map(&:last)).exists?
     message = "不能操作类型为#{private_stock_types.map(&:first).join(',')}的出库单"
     if hava_private_type
       respond_to do |format|
+        flash[:error] = message
         format.html { redirect_to(action: :index,error: message)}
         format.js   { render js: "alert('#{message}')" }
       end

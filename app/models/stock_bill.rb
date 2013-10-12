@@ -192,7 +192,7 @@ class StockBill
     Account.find_by_id(account_id)
   end
 
-  def lock!
+  def lock!(user)
     return "不能再次锁定!" if self.operation_locked?
     notice = "同步至仓库出库单需要先撤销同步后才能锁定"
     return notice if self.status == "SYNCKED"
@@ -200,15 +200,15 @@ class StockBill
     self.operation = "locked"
     self.operation_time = Time.now
     self.decrease_activity if self._type == 'StockOutBill' #出库单才更新库存
-    self.save(validate: false)
+    build_log(user,"锁定") if self.save(validate: false)
   end
 
-  def unlock!
+  def unlock!(user)
     return "只能操作的状态为: 已锁定." if !self.operation_locked?
     self.operation = "activated"
     self.operation_time = Time.now
     self.increase_activity if self._type == 'StockOutBill' #出库单才更新库存
-    self.save(validate: false)
+    build_log(user,"激活") if self.save(validate: false)
   end
 
   # MUST BE READ
@@ -255,7 +255,12 @@ class StockBill
   def status_text
     case status
     when "CREATED" then "待审核"
-    when "CHECKED" then "已审核待同步"
+    when "CHECKED"
+      if private_stock_type?
+        "已审核"
+      else
+        "已审核待同步"
+      end
     when "SYNCKING" then "同步中"
     when "SYNCKED"
       if _type == "StockOutBill"

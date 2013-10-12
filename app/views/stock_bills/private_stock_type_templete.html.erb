@@ -1,7 +1,7 @@
 <div class="row-fluid">
   <div class="span12">
     <ul class="nav nav-tabs">
-      <li class="active"><%= link_to "#{@bill.tid}入库单", warehouse_stock_in_bills_path(@warehouse) %></li>
+      <li class="active"><%= link_to t(params[:controller],tid: @bill.tid), controller: params[:controller],action: 'index', warehouse_id: @warehouse %></li>
       <li><%= link_to "入库单", warehouse_stock_in_bills_path(@warehouse) %></li>
       <li><%= link_to "出库单", warehouse_stock_out_bills_path(@warehouse) %></li>
       <li><%= link_to "所有进销", warehouse_stock_bills_path(@warehouse) %></li>
@@ -53,19 +53,17 @@
                 <th>商品编码</th>
                 <th>商品SKU编码</th>
                 <th>商品名称</th>
-                <th>实际入库</th>
                 <th>商品单价</th>
                 <th>商品数量</th>
                 <th>商品总价</th>
               </tr>
             </thead>
             <tbody>
-              <%- @bill.bill_products.each do |product| %>
+              <%- @products.each do |product| %>
               <tr>
                 <td><%= product.outer_id %></td>
                 <td><%= product.sku.try(:sku_id) %></td>
                 <td><%= product.title %></td>
-                <td><%= product.real_number %></td>
                 <td><%= product.price %></td>
                 <td><%= product.number %></td>
                 <td><%= product.total_price %></td>
@@ -73,6 +71,7 @@
               <%- end %>
             </tbody>
           </table>
+          <%= paginate @products %>
           <%- if @trade && @bill.is_a?(StockOutBill) %>
             <br><span class="lable label-warning">订单金额</span>:  <%= @trade.sum_fee %>
             <br><span class="lable label-warning">订单折扣</span>:  <%= @trade.seller_discount %>

@@ -1,17 +1,15 @@
 # -*- encoding : utf-8 -*-
 class StockInBillsController < ApplicationController
   before_filter :set_warehouse
-  before_filter :default_conditions,:on => [:edit,:show,:update,:add_product,:remove_product]
   before_filter :authorize #,:except => :fetch_bils
-  before_filter :only => [:sync, :check, :rollback, :lock, :unlock] do
-    find_column_settings
-    validate_optional_status
-  end
+  before_filter :find_column_settings, :only => [:sync, :check, :rollback, :lock, :unlock]
+  before_filter :validate_optional_status, :only => [:edit,:sync, :rollback, :lock, :unlock,:update]
 
   def index
     parse_params
-    @bills = StockInBill.where(default_search).desc(:checked_at)
+    @bills = default_scope.desc(:checked_at)
     @search = @bills.search(params[:search])
+
     unchecked, checked = @search.partition { |b| b.checked_at.nil? }
     @bills = unchecked + checked
     @number = 20
@@ -30,13 +28,12 @@ class StockInBillsController < ApplicationController
   end
 
 	def new
-    @bill = StockInBill.new(default_search)
+    @bill = default_scope.new
     @bill.bill_products.build
   end
 
   def create
-    stock_in_bills = params[:stock_in_bill].merge!(default_search)
-    @bill = StockInBill.new(stock_in_bills)
+    @bill = default_scope.new(params[:stock_in_bill])
     @bill.status = "CREATED"
     update_areas!(@bill)
     @bill.update_bill_products
@@ -51,21 +48,21 @@ class StockInBillsController < ApplicationController
   end
 
   def edit
-    @bill = StockInBill.find_by(@conditions)
+    @bill = default_scope.find params[:id]
     @products = @bill.bill_products
     parse_area(@bill)
   end
 
   def show
-    @bill = StockInBill.find_by(@conditions)
-    @products = @bill.bill_products
+    @bill = default_scope.find params[:id]
+    @products = @bill.bill_products.page(params[:page])
     if @bill.private_stock_type?
       render template: "stock_bills/private_stock_type_templete"
     end
   end
 
   def update
-    @bill = StockInBill.find_by(@conditions)
+    @bill = default_scope.find params[:id]
     @bill.attributes = params[:stock_in_bill]
     update_areas!(@bill)
     @bill.update_bill_products
@@ -80,7 +77,7 @@ class StockInBillsController < ApplicationController
   end
 
   def sync
-    @operated_bills = StockInBill.any_in(_id: params[:bill_ids])
+    @operated_bills = default_scope.any_in(_id: params[:bill_ids])
     @operated_bills.each do |bill|
       bill.build_log(current_user,'同步')
       bill.sync
@@ -91,7 +88,8 @@ class StockInBillsController < ApplicationController
   end
 
   def check
-    @operated_bills = StockInBill.any_in(_id: params[:bill_ids])
+    @operated_bills = default_scope.any_in(_id: params[:bill_ids])
+    render(:js => "alert('不能操作状态为已入库的入库单')") and return if @operated_bills.where(status: "STOCKED").exists?
     @operated_bills.each do |bill|
       bill.build_log(current_user,'审核')
       bill.check
@@ -102,7 +100,7 @@ class StockInBillsController < ApplicationController
   end
 
   def rollback
-    @operated_bills = StockInBill.any_in(_id: params[:bill_ids])
+    @operated_bills = default_scope.any_in(_id: params[:bill_ids])
     @operated_bills.each do |bill|
       bill.build_log(current_user,'取消')
       bill.rollback
@@ -113,8 +111,8 @@ class StockInBillsController < ApplicationController
   end
 
   def lock
-    @bills = StockInBill.where(default_search).any_in(_id: params[:bill_ids])
-    failed = @bills.collect {|bill| bill.build_log(current_user,'锁定') &&  [bill.tid,bill.lock!]}.reject {|t,m| m == true}
+    @bills = default_scope.any_in(_id: params[:bill_ids])
+    failed = @bills.collect {|bill| bill.build_log(current_user,'锁定') &&  [bill.tid,bill.lock!(current_user)]}.reject {|t,m| m == true}
     error_message = failed.collect {|a| a.join(":")}.join(";")
     @message = failed.blank? ? "入库单#{@bills.map(&:tid).join(',')}锁定成功." : "入库单#{error_message}."
     respond_to do |format|
@@ -123,8 +121,8 @@ class StockInBillsController < ApplicationController
   end
 
   def unlock
-    @bills = StockInBill.where(default_search).any_in(_id: params[:bill_ids])
-    failed = @bills.collect {|bill| bill.build_log(current_user,'激活') && [bill.tid,bill.unlock!]}.reject {|t,m| m == true}
+    @bills = default_scope.any_in(_id: params[:bill_ids])
+    failed = @bills.collect {|bill| bill.build_log(current_user,'激活') && [bill.tid,bill.unlock!(current_user)]}.reject {|t,m| m == true}
     error_message = failed.collect {|a| a.join(":")}.join(';')
     @message = failed.blank? ? "入库单#{@bills.map(&:tid).join(',')}激活成功." : "入库单#{error_message}."
     respond_to do |format|
@@ -167,12 +165,8 @@ class StockInBillsController < ApplicationController
     search[:stock_type_not_eq] = "IVIRTUAL" if search[:stock_type_eq].blank?
   end
 
-  def default_search
-    {account_id: current_account.id,:seller_id => @warehouse.id}
-  end
-
-  def default_conditions
-    @conditions = default_search.merge({:id => params[:id]})
+  def default_scope
+    StockInBill.where({account_id: current_account.id,:seller_id => @warehouse.id}.reject{|x,y| y.nil?})
   end
 
   def find_column_settings
@@ -181,11 +175,12 @@ class StockInBillsController < ApplicationController
   end
 
   def validate_optional_status
-    private_stock_types = StockOutBill::PRIVATE_OUT_STOCK_TYPE
-    hava_private_type = StockInBill.where(:id.in => params[:bill_ids],:stock_type.in => private_stock_types.map(&:last)).exists?
+    private_stock_types = StockInBill::PRIVATE_IN_STOCK_TYPE
+    hava_private_type = StockInBill.where(:id.in => params[:bill_ids] || [params[:id]],:stock_type.in => private_stock_types.map(&:last)).exists?
     message = "不能操作类型为#{private_stock_types.map(&:first).join(',')}的入库单"
     if hava_private_type
       respond_to do |format|
+        flash[:error] = message
         format.html { redirect_to(action: :index,error: message)}
         format.js   { render js: "alert('#{message}')" }
       end
