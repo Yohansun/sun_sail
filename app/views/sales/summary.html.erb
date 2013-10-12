@@ -11,49 +11,53 @@
   <p>选择时间段内订单数为0，请选择其他时间段<p>
   <% end %>
 </div>
-<div class="well" style="height:150px">
-  <h4 style="text-align:center;">订单统计</h4>
-  <fieldset class="span3"></fieldset>
-  <fieldset class="span4">
-    <div class="control-group">
-      <label>本日的订单总数：<%= info[0][0] %></label>
-      <label>本日未付款订单数：<%= info[0][1] %></label>
-      <label>本日已付款订单数：<%= info[0][2] %></label>
-      <label>本日部分退款订单数：<%= info[0][3] %></label>
-      <label>本日全额退款订单数：<%= info[0][4] %></label>
+<div class="clearfix">
+  <div class="span6">
+    <div class="well" style="height:150px">
+      <h4 style="text-align:center;">订单统计</h4>
+      <fieldset class="pull-left">
+        <div class="control-group" style="margin-left: 50px;">
+          <label>本日的订单总数：<%= info[0][0] %></label>
+          <label>本日未付款订单数：<%= info[0][1] %></label>
+          <label>本日已付款订单数：<%= info[0][2] %></label>
+          <label>本日部分退款订单数：<%= info[0][3] %></label>
+          <label>本日全额退款订单数：<%= info[0][4] %></label>
+        </div>
+      </fieldset>
+      <fieldset>
+        <div class="control-group" style="margin-left: 150px;">
+          <label>本月的订单总数：<%= info[1][0] %></label>
+          <label>本月未付款订单数：<%= info[1][1] %></label>
+          <label>本月已付款订单数：<%= info[1][2] %></label>
+          <label>本月部分退款订单数：<%= info[1][3] %></label>
+          <label>本月全额退款订单数：<%= info[1][4] %></label>
+        </div>
+      </fieldset>
     </div>
-  </fieldset>
-  <fieldset class="span3">
-    <div class="control-group">
-      <label>本月的订单总数：<%= info[1][0] %></label>
-      <label>本月未付款订单数：<%= info[1][1] %></label>
-      <label>本月已付款订单数：<%= info[1][2] %></label>
-      <label>本月部分退款订单数：<%= info[1][3] %></label>
-      <label>本月全额退款订单数：<%= info[1][4] %></label>
+  </div>
+  <div class="span6">
+    <div class="well" style="height:150px">
+      <h4 style="text-align:center;">金额统计</h4>
+      <fieldset class="pull-left">
+        <div class="control-group" style="margin-left: 50px;">
+          <label>本日完成订单总额：<%= info[0][5] %></label>
+          <label>本日下单订单总额：<%= info[0][6] %></label>
+          <label>本日付款订单总额：<%= info[0][7] %></label>
+          <label>本日退货订单总额：<%= info[0][8] %></label>
+          <label>本日取消订单总额：<%= info[0][9] %></label>
+        </div>
+      </fieldset>
+      <fieldset>
+        <div class="control-group" style="margin-left: 150px;">
+          <label>本月完成订单总额：<%= info[1][5] %></label>
+          <label>本月下单订单总额：<%= info[1][6] %></label>
+          <label>本月付款订单总额：<%= info[1][7] %></label>
+          <label>本月退货订单总额：<%= info[1][8] %></label>
+          <label>本月取消订单总额：<%= info[1][9] %></label>
+        </div>
+      </fieldset>
     </div>
-  </fieldset>
-</div>
-<div class="well" style="height:150px">
-  <h4 style="text-align:center;">金额统计</h4>
-  <fieldset class="span3"></fieldset>
-  <fieldset class="span4">
-    <div class="control-group">
-      <label>本日完成订单总额：<%= info[0][5] %></label>
-      <label>本日下单订单总额：<%= info[0][6] %></label>
-      <label>本日付款订单总额：<%= info[0][7] %></label>
-      <label>本日退货订单总额：<%= info[0][8] %></label>
-      <label>本日取消订单总额：<%= info[0][9] %></label>
-    </div>
-  </fieldset>
-  <fieldset class="span3">
-    <div class="control-group">
-      <label>本月完成订单总额：<%= info[1][5] %></label>
-      <label>本月下单订单总额：<%= info[1][6] %></label>
-      <label>本月付款订单总额：<%= info[1][7] %></label>
-      <label>本月退货订单总额：<%= info[1][8] %></label>
-      <label>本月取消订单总额：<%= info[1][9] %></label>
-    </div>
-  </fieldset>
+  </div>
 </div>
 <!-- <div class="well" style="height:50px">
   <h4 style="text-align:center;">净收入统计</h4>

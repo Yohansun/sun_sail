@@ -1,12 +1,13 @@
+<% content_for :sub_nav do %>
+<%= render partial: "layouts/warehouse_menu" %>
+<% end %>
 <div class="row-fluid">
   <div class="span12">
-    <%= render partial: "layouts/all_crumbs" %>
-    <%= render partial: "layouts/warehouse_menu" %>
     <div class="tab-content">
       <%= form_tag warehouses_path,:method => :get, :class=>"well well-small form-horizontal font12" do %>
       <div class="control-group">
             <%= label_tag "where_name",raw("<code>精准搜索</code>"),:class => "pull-left"  %>
-            <%=select_tag "where_name", options_for_select([["仓库名称","stock_name_like"],["经销商名称","name_like"],["联系人","user_name_like"],["联系电话","mobile_like"]]),:include_blank => true, :value => "#{params[:where_name]}",:class => "input-small select2 all" %>
+            <%= select_tag "where_name", options_for_select([["仓库名称","stock_name_like"],["经销商名称","name_like"],["联系人","user_name_like"],["联系电话","mobile_like"]]),:include_blank => true, :value => "#{params[:where_name]}",:class => "input-small select2 all" %>
 
             <div class="input-append">
               <%= text_field_tag "keyword", '',:value => "#{params[:keyword] if params[:keyword]}", :class => "input-xlarge radius_no_tl"%>
