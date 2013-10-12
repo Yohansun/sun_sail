@@ -1,12 +1,10 @@
-<div class="container-fluid">
-  <div class="row-fluid">
-    <div class="add_order">
-      <ul class="nav nav-tabs js-nav_tabs">
-        <li class="active"><a href="#add_order" data-toggle="tab">编辑订单</a></li>
-      </ul><!-- nav-tabs -->
-
-      <%= render 'form' %>
-
-    </div>
+<% content_for :sub_nav do %>
+  <ul class="nav nav-tabs js-nav_tabs">
+    <li class="active"><a href="#add_order" data-toggle="tab">编辑订单</a></li>
+  </ul><!-- nav-tabs -->
+<% end %>
+<div class="row-fluid">
+  <div class="add_order">
+    <%= render 'form' %>
   </div>
 </div>

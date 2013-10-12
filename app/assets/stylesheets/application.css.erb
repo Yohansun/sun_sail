@@ -634,9 +634,9 @@ tr.notice_tr td:last-child{
 .breadcrumb{
   background-color: #FFFFFF;
   margin: 5px 0px 5px 0px;
-  -webkit-border-radius: 4px 0 0 4px!important;
+  /*-webkit-border-radius: 4px 0 0 4px!important;
   -moz-border-radius: 4px 0 0 4px!important;
-  border-radius: 4px 0 0 4px!important;
+  border-radius: 4px 0 0 4px!important;*/
   -webkit-box-shadow: inset 0 1px 0 #fff, 0 1px 5px rgba(0,0,0,.1);
   -moz-box-shadow: inset 0 1px 0 #fff, 0 1px 5px rgba(0,0,0,.1);
   box-shadow: inset 0 1px 0 #fff, 0 1px 5px rgba(0,0,0,.1);
@@ -648,7 +648,11 @@ footer.page_footer{
   text-align: center;
   width: 100%;
 }
+
 .tab-content{min-height: 760px;}
+.tab-content.reset_border{min-height: 10px;}
+.tab-content.noborder_content{min-height: 10px;}
+
 
 /*start key*/
 .start_key .start_tit{font:24px "Microsoft Yahei";color:#dc9b17;margin:20px 0 45px;}
@@ -678,3 +682,7 @@ footer.page_footer{
 .start_form3 .start_option{margin-left:40px;text-align:left;}
 .start_form3 label{font-size:12px;margin:10px 25px 0;/*line-height:16px;*/}
 .start_form3 label strong{color:#b1874a;}
+
+
+/* system setting */
+.span2.bs-docs-sidebar{background-color: #FFF}

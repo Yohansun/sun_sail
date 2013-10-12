@@ -1,3 +1,8 @@
+<% content_for :sub_nav do %>
+  <ul class="nav nav-tabs js-nav_tabs">
+    <li class="active"><a href="/products/new" data-toggle="tab">新增商品</a></li>
+  </ul><!-- nav-tabs -->
+<% end %>
 <%= simple_form_for @product, html: {class: 'well form-horizontal re_padding50'} do |f| %>
 <fieldset class="group">
   <div class="w_48 pull-left">
@@ -53,7 +58,7 @@
 <%= hidden_field_tag "id", @product.id %>
 <div id="add_properties">
   <%= render :partial => "add_category_property",:locals => {:category_properties => @category_properties} %>
-  
+
 </div>
 <% end %>
 
@@ -62,7 +67,7 @@
 
 <%= form_tag remove_sku_products_path,:remote => true,:method => :put,:class => "form-horizontal"  do %>
 <div class="btn-toolbar" style="top: 71px;">
-  <%= button_tag "删除" ,:class => "btn btn-warning btn-small" %>  
+  <%= button_tag "删除" ,:class => "btn btn-warning btn-small" %>
 </div>
 <%= hidden_field_tag "id",@product.id %>
 <div id="skus">
@@ -77,15 +82,15 @@
   $last_tr_checkbox.click(function(){
     $('#check_color').find(':checkbox').prop('checked',$last_tr_checkbox.prop('checked'))
   });
-  
+
   $(function(){
-    
+
     if( $("#category").val() != ''){ zAb() };
-    
+
     $("#category").change(function(){
       zAb();
     });
-    
+
     function zAb(){
       var category_id = $("#category").val();
       $.ajax({

@@ -1,13 +1,13 @@
+<% content_for :sub_nav do %>
+  <%= render partial: "products/sidebar" %>
+<% end %>
 <div class="row-fluid">
   <div class="span10 w100">
-    <%= render partial: "layouts/all_crumbs" %>
-    <%= render partial: "products/sidebar" %>
     <div class="tab-content">
       <div class="tab-pane active" id="stock_check">
         <%= form_tag "/products/import_csv", :multipart => true, :method => :post do %>
           <div class="btn-toolbar">
             <div class="btn-group">
-              <b class="btn btn-warning">选择文件</b>
               <%= file_field_tag "file" %>
               <%= submit_tag "提交", :class => 'btn' %>
             </div>

@@ -1,4 +1,7 @@
- <div class="tab-pane active" id="stock_check">
+<% content_for :sub_nav do %>
+  <%= render partial: "products/sidebar" %>
+<% end %>
+<div class="tab-pane active" id="stock_check">
   <%= simple_form_for "product", url: products_path, html: { method: "get", class: "well form-search form-horizontal font12"}, :wrapper => :search do |f| %>
     <fieldset class="form-inline mar_t5">
       <div class="pull-left mar_r10">

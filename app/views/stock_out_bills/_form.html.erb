@@ -1,18 +1,18 @@
 <%= simple_form_for @bill,:url => path,:html => {:class => "form-horizontal",:id => "stock_out_bill"} do |f| %>
-<div class="btn-toolbar">
-  <%= f.submit "保存",:class => "btn btn-warning btn-small save" %>
-  <%= link_to "取消",warehouse_stock_out_bills_path(@warehouse) ,:class => "btn btn-warning btn-small save_stock_out_bill" %>
-</div>
-<div class="well clearfix">
-  <fieldset class="span6">
-    <%= f.input :op_name, label: "*收货人",:input_html  => {:class => "input-medium", :id => "op_name"} %>
-    <%= f.input :op_mobile, label: "手机",:input_html  => {:class => "input-medium"} %>
-    <%= f.input :op_zip, label: "*邮编",:input_html  => {:class => "input-medium"} %>
-    <!-- <div class="control-group">
-      <label class="control pull-left">收货仓库：</label>
-      <select class="input-medium select2">
-      <option value="默认仓库">默认仓库</option>
-      </select>
+  <div class="btn-toolbar">
+    <%= f.submit "保存",:class => "btn btn-warning btn-small save" %>
+    <%= link_to "取消",warehouse_stock_out_bills_path(@warehouse) ,:class => "btn btn-warning btn-small save_stock_out_bill" %>
+  </div>
+  <div class="well clearfix">
+    <fieldset class="span6">
+      <%= f.input :op_name, label: "*收货人",:input_html  => {:class => "input-medium", :id => "op_name"} %>
+      <%= f.input :op_mobile, label: "手机",:input_html  => {:class => "input-medium"} %>
+      <%= f.input :op_zip, label: "*邮编",:input_html  => {:class => "input-medium"} %>
+      <!-- <div class="control-group">
+        <label class="control pull-left">收货仓库：</label>
+        <select class="input-medium select2">
+        <option value="默认仓库">默认仓库</option>
+        </select>
       </div> -->
       <div class="control-group">
         <%= f.input :stock_type,label: "*出库类型", collection: StockInBill::PUBLIC_OUT_STOCK_TYPE, as: :select,:input_html => {class: "input-medium select2"} %>
@@ -53,92 +53,77 @@
   <ul class="nav nav-tabs js-nav_tabs">
     <li class="active"><a href="#good_info" data-toggle="tab">商品信息</a></li>
   </ul>
-  <%= f.add_nested_fields_link :bill_products,'添加',:class => "btn btn-warning btn-small"%>
-
-  <%= f.nested_fields_for :bill_products do |product|  %>
-  <fieldset class="span12">
-    <div class="control-group">
-      <% @current_user_skus = current_account.skus %>
-      <%= product.label :sku_id,"商品名称",:class => "control-label" %>
-      <%= product.select :sku_id,@current_user_skus.collect {|x| [x.title_with_product_id,x.id]},{:include_blank => true},{:class => "select2 span10 product checkdata"} %>
-    </div>
-  </fieldset>
-  <div class="well clearfix">
-    <fieldset class="span2">
-      <div class="control-group">
-        <%= product.label :number,"数量：",:class => "control pull-left" %>
-        <%= product.text_field :number,:class => "input-small checkdata" %>
-      </div>
-    </fieldset>
-    <fieldset class="span2">
-      <div class="control-group">
-        <%= product.label :price,"进货价：",:class => "control pull-left" %>
-        <%= product.text_field :price,:class => "input-small checkdata" %>
-      </div>
-    </fieldset><!-- form left area -->
-    <fieldset class="span2">
-      <div class="control-group">
-        <label class="control pull-left">SKU编码：</label>
-        <input class="input-small sku" id="disabledSku" type="text" placeholder="" disabled>
-      </div>
-    </fieldset><!-- form left area -->
-
-    <fieldset class="span2">
-      <div class="control-group">
-        <%= product.label :total_price,"实际总价：",:class => "control pull-left" %>
-        <%= product.text_field :total_price,:class => "input-small checkdata" %>
-        <%= product.remove_nested_fields_link "删除" %>
-      </div>
-    </fieldset><!-- form right area -->
+  <div class="btn-toolbar">
+    <%= f.add_nested_fields_link :bill_products,'添加',:class => "btn btn-warning btn-small"%>
   </div>
+  <%= f.nested_fields_for :bill_products do |product|  %>
+    <div class="well clearfix">
+      <fieldset class="span6">
+        <% @current_user_skus = current_account.skus %>
+        <div class="control-group">
+          <%= product.label :sku_id,"商品名称：",:class => "control-label" %>
+          <%= product.select :sku_id,@current_user_skus.collect {|x| [x.title_with_product_id,x.id]},{:include_blank => true},{:class => "select2 input-xlarge product checkdata"} %>
+        </div>
+        <%= product.remove_nested_fields_link "删除" %>
+      </fieldset>
+      <fieldset class="span6">
+        <%= product.input :number, label: "数量：",:class => "input-medium checkdata" %>
+        <%= product.input :price, label: "进货价：",:class => "input-medium checkdata" %>
+        <%= product.input :total_price, label: "实际总价：",:class => "input-medium checkdata pull-left" %>
+        <div class="control-group">
+          <label class="control pull-left">SKU编码：</label>
+          <input class="input-large sku" id="disabledSku" type="text" placeholder="" disabled>
+        </div>
+      </fieldset>
+    </div>
   <% end %>
-  <% end %>
-  <% content_for :tail do %>
-  <script type="text/javascript" charset="utf-8">
-  $(function(){
-    var options = {
-      data  : linkage_data
+<% end %>
+<% content_for :tail do %>
+<script type="text/javascript" charset="utf-8">
+$(function(){
+  var options = {
+    data  : linkage_data
+  }
+  var sel = new LinkageSelect(options);
+  sel.bind('.level_1','<%= @bill.op_state %>');
+  sel.bind('.level_2','<%= @bill.op_city %>');
+  sel.bind('.level_3','<%= @bill.op_district %>');
+
+  $(".is_cash_sale").change(function(){
+    if($(".is_cash_sale").find("option:selected").text()=="无需开票"){
+    $("#cash_sale_name").hide()
+    }else{
+    $("#cash_sale_name").show()
     }
-    var sel = new LinkageSelect(options);
-    sel.bind('.level_1','<%= @bill.op_state %>');
-    sel.bind('.level_2','<%= @bill.op_city %>');
-    sel.bind('.level_3','<%= @bill.op_district %>');
-
-    $(".is_cash_sale").change(function(){
-      if($(".is_cash_sale").find("option:selected").text()=="无需开票"){
-      $("#cash_sale_name").hide()
-      }else{
-      $("#cash_sale_name").show()
-      }
-    })
-
-    var parseSkus = <%= raw Hash[@current_user_skus.collect {|x| [x.id.to_s,x.sku_id.to_s]}].to_json %>;
-    $(".product").each(function(){
-      var sku_id = parseSkus[$(this).val()];
-      $(this).parent().parent().parent().find(":input[disabled]:first").val(sku_id)
-    });
-    $(".product").live("change",function(){
-      var sku_id = parseSkus[$(this).val()];
-      $(this).parent().parent().parent().find(":input[disabled]:first").val(sku_id)
-    });
-
-    $("#stock_out_bill").validate({
-      rules: {
-        "stock_out_bill[op_name]": { required: true},
-        "stock_out_bill[op_zip]": { required: true},
-        // "stock_out_bill[op_mobile]": { required: true},
-        "stock_out_bill[op_address]": { required: true},
-        "stock_out_bill[op_district]": { required: true}
-      },
-      messages: {
-        "stock_out_bill[op_name]": { required: "收货人不能为空" },
-        "stock_out_bill[op_zip]": { required: "邮编不能为空" },
-        // "stock_out_bill[op_mobile]": { required: "手机号不能为空" },
-        "stock_out_bill[op_address]": { required: "收货地址不能为空" },
-        "stock_out_bill[op_district]": { required: "地域不能为空"}
-      }
-    });
-    $(":input.checkdata").each(function(){ $(this).rules("add",{required: true,number: true,messages: {required: "不能为空",number: "必须是数字"}}) })
   })
-  </script>
-  <% end %>
+
+  var parseSkus = <%= raw Hash[@current_user_skus.collect {|x| [x.id.to_s,x.sku_id.to_s]}].to_json %>;
+  $(".product").each(function(){
+    var sku_id = parseSkus[$(this).val()];
+    $(this).parent().parent().parent().find(":input[disabled]:first").val(sku_id)
+  });
+  $(".product").live("change",function(){
+    var sku_id = parseSkus[$(this).val()];
+    $(this).parent().parent().parent().find(":input[disabled]:first").val(sku_id)
+  });
+
+  $("#stock_out_bill").validate({
+    rules: {
+      "stock_out_bill[op_name]": { required: true},
+      "stock_out_bill[op_zip]": { required: true},
+      // "stock_out_bill[op_mobile]": { required: true},
+      "stock_out_bill[op_address]": { required: true},
+      "stock_out_bill[op_district]": { required: true}
+    },
+    messages: {
+      "stock_out_bill[op_name]": { required: "收货人不能为空" },
+      "stock_out_bill[op_zip]": { required: "邮编不能为空" },
+      // "stock_out_bill[op_mobile]": { required: "手机号不能为空" },
+      "stock_out_bill[op_address]": { required: "收货地址不能为空" },
+      "stock_out_bill[op_district]": { required: "地域不能为空"}
+    }
+  });
+  $(":input.checkdata").each(function(){ $(this).rules("add",{required: true,number: true,messages: {required: "不能为空",number: "必须是数字"}}) })
+})
+</script>
+<% end %>
