@@ -1,0 +1,62 @@
+<style>
+.pull-left.width {
+  width: 80px;;
+}
+</style>
+<% params[:search] ||= {} %>
+
+
+<div class="control-group">
+    <%= label_tag "search[tid_eq]",raw("<code>退货单编号</code>"),:class => "pull-left width" %>
+  <div class="controls pull-left">
+    <%= text_field_tag "search[tid_eq]",params[:search][:tid_eq] %>
+  </div>
+  <div class="pull-left">
+    <button type="button pull-left" class="btn btn-info search" id="simple_search_button">筛选</button>
+  </div>
+</div>
+<div class="control-group">
+    <%= label_tag "search[status_eq]",raw("<code>状态</code>"),:class => "pull-left width" %>
+  <div class="controls pull-left">
+  <%= select_tag "search[status_eq]",options_for_select([["待审核", "CREATED"],["已审核待同步","CHECKED"],["同步中","SYNCKING"], ["已同步待出库", "SYNCKED"],["同步失败待同步", "SYNCK_FAILED"], ["已关闭", "CLOSED"],["已出库", "STOCKED"],["撤销同步成功", "CANCELD_OK"],["撤销同步中", "CANCELING"],["撤销同步失败","CANCELD_FAILED"]] ,params[:search][:status_eq]),:include_blank => true,:class => "input-large select2 all" %>
+  </div>
+</div>
+
+<div class="control-group">
+    <%= label_tag "search[returned_at_gte]", raw("<code>退货时间</code>"),:class => "pull-left width" %>
+  <div class="controls pull-left">
+
+    <%= text_field_tag "search[refund_time_gte]",params["search"]["returned_at_gte"],:class => "input-medium datetimepicker_full" %>~
+
+    <%= text_field_tag "search[refund_time_lte]",params["search"]["returned_at_lte"],:class => "input-medium datetimepicker_full" %>
+  </div>
+</div>
+
+<div class="control-group">
+  <label class="pull-left width"><code>金额：</code></label>
+  <div class="controls pull-left">
+    <input type="text" name="return_money_gte" placeholder="请输入最小金额" class="input-medium return_min_money">
+    <i class="icon-arrow-right" style="margin-top:0px;"></i>
+    <input type="text" name="return_money_lte " placeholder="请输入最大金额" class="input-medium return_max_money">
+  </div>
+</div>
+
+<div class="control-group">
+  <div class="pull-left">
+    <span class="label label-info">共有<%= @refund_products.total_count %>条数据</span>
+  </div>
+</div>
+<% content_for :tail do -%>
+  <%= javascript_include_tag "LinkageSelect.js" %>
+  <script type="text/javascript">
+    $(function() {
+
+      $.each($('form').find("select.all"),function(){
+        $(this).select2({
+          placeholder: "全部",
+          allowClear: true
+        });
+      })
+    });
+</script>
+<% end -%>

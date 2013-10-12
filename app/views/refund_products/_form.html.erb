@@ -1,0 +1,203 @@
+<%= simple_form_for @refund_product,:url => path,:html => {:class => "form-horizontal",:id => "refund_product"} do |f| %>
+<div class="btn-toolbar">
+  <%= f.submit "保存",:class => "btn btn-warning btn-small save" %>
+  <%= link_to "取消",warehouse_refund_products_path(@warehouse) ,:class => "btn btn-warning btn-small save_refund_product" %>
+</div>
+<div class="well clearfix">
+  <fieldset class="span6">
+    <%= f.input :buyer_name, label: "退货人",:input_html  => {:class => "input-medium", :id => "op_name"} %>
+    <%= f.input :phone, label: "固定电话",:input_html => {:class => "input-medium"} %>
+    <!-- <div class="control-group">
+      <label class="control pull-left">收货仓库：</label>
+      <select class="input-medium select2">
+      <option value="默认仓库">默认仓库</option>
+      </select>
+      </div> -->
+      <!-- <div class="control-group">
+        <%#= f.input :status,label: "*退货状态",:input_html  => {:class => "input-medium"} %>
+      </div> -->
+      <div class="control-group">
+        <label class="control-label">*地域</label>
+        <select id="" class="level_1 input-medium input-small pull-left" name="refund_product[state_id]">
+          <option>省</option>
+        </select>
+        <select id="" class="level_2 input-medium input-small pull-left" name="refund_product[city_id]">
+          <option>市</option>
+        </select>
+        <select id="" class="level_3 input-medium input-small pull-left" name="refund_product[district_id]">
+          <option>区</option>
+        </select>
+      </div>
+      <%= f.input :address, label: "退货地址",:input_html => {:class => "input-medium"} %>
+      <%= f.input :tid,:label => "订单号",:input_html => {:class => "span10 product_bill checkdata select_trade"} %>
+    </fieldset><!-- form left area -->
+    <fieldset class="span6">
+      <%= f.input :mobile, label: "*手机",:input_html  => {:class => "input-medium"} %>
+      <%= f.input :zip, label: "*邮编",:input_html  => {:class => "input-medium"} %>
+      <div class="control-group string optional">
+       <%= f.label :refund_time,"*退货时间",:class => "string optional control-label" %>
+       <div class="controls">
+         <%= f.text_field :refund_time,class: "input-medium js-datetimepicker" %>
+       </div>
+      </div>
+      <div class="control-group">
+        <%= f.label :reason,"备注",:class => "control pull-left",:style => "width:70px" %>
+        <%= f.text_area :reason,:class => "span9",:rows => "5" %>
+      </div>
+    </fieldset><!-- form right area -->
+  </div>
+  <ul class="nav nav-tabs js-nav_tabs">
+    <li class="active"><a href="#good_info" data-toggle="tab">退货信息</a></li>
+  </ul>
+  <div id="childs">
+  <%= f.add_nested_fields_link :refund_orders,'添加',:class => "btn btn-warning btn-small"%>
+  <%= f.nested_fields_for :refund_orders do |product|  %>
+    <div class="well clearfix">
+      <fieldset>
+        <div class="control-group">
+          <%= product.label :sku_id,"退货商品: ",:class => "control-label" %>
+          <%= product.select :sku_id,product.object.bill_products ? product.object.bill_products.collect {|x| [x.title,x.sku_id]} : [],{:include_blank => true},{:class => "select2 span10 product checkdata select_order"} %>
+        </div>
+      </fieldset>
+    </div>
+    <div class="well clearfix">
+      <fieldset class="span2">
+        <div class="control-group">
+          <%= product.label :num,"数量：",:class => "control pull-left" %>
+          <%= product.text_field :num,:class => "input-small checkdata" %>
+        </div>
+      </fieldset>
+      <fieldset class="span2">
+        <div class="control-group">
+          <%= product.label :refund_price,"退货金额：",:class => "control pull-left" %>
+          <%= product.text_field :refund_price,:class => "input-small checkdata" %>
+        </div>
+      </fieldset><!-- form left area -->
+      <fieldset class="span6">
+        <div class="control-group">
+          <label class="control pull-left">SKU编码：</label>
+          <span class="input-large sku_code" ><%= product.object.sku.try(:sku_id) %></span>
+        </div>
+      </fieldset><!-- form left area -->
+      <%= product.remove_nested_fields_link "删除" %>
+    </div>
+  <% end %>
+</div>
+<% end %>
+<% content_for :tail do %>
+<script type="text/javascript" charset="utf-8">
+$(function(){
+  var options = {
+    data  : linkage_data
+  }
+  var sel = new LinkageSelect(options);
+  sel.bind('.level_1','<%= @refund_product.state_id %>');
+  sel.bind('.level_2','<%= @refund_product.city_id %>');
+  sel.bind('.level_3','<%= @refund_product.district_id %>');
+
+  $(".select_trade").live("change",function(){
+    var tid = $(this).val();
+    $select_orders = $("select.select_order");
+    $select_orders.each(function(){ $(this).select2('data',null) });
+    $.get("/stock_out_bills/get_products.json",{tid: tid,warehouse_id: "<%= params[:warehouse_id] %>"},function(data){})
+    .done(function(data) {
+      var options = '<option value></option>';
+      $.each(data,function(index,value){
+        options += '<option value="' + value.sku_id + '" sku_code="' +  value.sku_code + '"' + '">' + value.title + '</option>';
+      });
+      $select_orders.each(function(){ $(this).html(options) });
+    })
+    .fail(function() { alert("没有找到出库单号为" + tid); })
+  });
+
+  // 初始化
+  remote_select(".select_trade");
+  // 添加后的元素初始化select2的ajax
+  $("#childs").on("mouseover","div.select_order",function(){
+    $the_first_selector = $("div.select_order").first().next();
+    $the_last_selector = $("div.select_order").last().next();
+    if($the_last_selector.find("option").length == 1){
+      $the_last_selector.html($the_first_selector.html());
+    }
+  });
+
+  $("#refund_product").validate({
+    rules: {
+      "refund_product[buyer_name]": { required: true},
+      "refund_product[zip]": { required: true},
+      "refund_product[mobile]": { required: true},
+      "refund_product[address]": { required: true},
+      "refund_product[refund_time]": {required: true},
+      "refund_product[district_id]": { required: true}
+    },
+    messages: {
+      "refund_product[buyer_name]": { required: "收货人不能为空" },
+      "refund_product[zip]": { required: "邮编不能为空" },
+      "refund_product[mobile]": { required: "手机号不能为空" },
+      "refund_product[address]": { required: "收货地址不能为空" },
+      "refund_product[refund_time]": { required: "退款时间不能为空" },
+      "refund_product[district_id]": { required: "地域不能为空"}
+    }
+  });
+  $(":input.checkdata").each(function(){ $(this).rules("add",{required: true,messages: {required: "不能为空"}}) });
+});
+function BillFormatResult(bill) {
+    var markup = "<table class='movie-result'><tr>";
+    markup += "<td class='movie-info'><div class='movie-title'>" + bill.tid + "</div>";
+    markup += "</td></tr></table>"
+    return markup;
+};
+
+function BillFormatSelection(bill) {
+    return bill.tid;
+};
+function remote_select(e){
+  $(e).select2({
+      placeholder: "选择订单",
+      minimumInputLength: 1,
+      id: function(e) { return e.tid; },
+      ajax: { // instead of writing the function to execute the request we use Select2's convenient helper
+      url: "/stock_out_bills/get_bills.json",
+      dataType: 'json',
+      data: function (term, page) {
+        return {
+          tid: term, // search term
+          page_limit: 10,
+          warehouse_id: "<%= params[:warehouse_id] %>",
+          type: "StockOutBill"
+        };
+      },
+      results: function (data, page) { // parse the results into the format expected by Select2.
+        // since we are using custom formatting functions we do not need to alter remote JSON data
+        return {results: data};
+      }
+    },
+    initSelection: function(element, callback) {
+      // the input tag has a value attribute preloaded that points to a preselected movie's id
+      // this function resolves that id attribute to an object that select2 can render
+      // using its formatResult renderer - that way the movie name is shown preselected
+      var id=$(element).val();
+      if (id!=="") {
+        $.ajax("/stock_out_bills/get_bills.json", {
+          data: {
+            warehouse_id: "<%= params[:warehouse_id] %>",
+            tid: id,
+            type: "StockOutBill"
+          },
+          dataType: "json"
+        }).done(function(data) { callback(data[0]);});
+      }
+    },
+    formatResult: BillFormatResult, // omitted for brevity, see the source of this page
+    formatSelection: BillFormatSelection,  // omitted for brevity, see the source of this page
+    dropdownCssClass: "bigdrop", // apply css that makes the dropdown taller
+    escapeMarkup: function (m) { return m; } // we do not want to escape markup since we are displaying html in results
+  });
+  $(".select_order").on("change",function(){
+    $sku_code_el = $(this).parent().parent().parent().next().find("span.sku_code");
+    var sku_code = $(this).find(":selected").attr("sku_code");
+    $sku_code_el.html(sku_code);
+  });
+}
+</script>
+<% end %>

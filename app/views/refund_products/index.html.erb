@@ -1,0 +1,104 @@
+<div class="row-fluid">
+  <div class="span10 w100">
+    <%= render partial: "layouts/all_crumbs" %>
+    <%= render partial: "layouts/warehouse_menu" %>
+
+    <div class="tab-content">
+        <div class="tab-pane active" id="stock_check">
+        <%= form_tag warehouse_refund_products_path(@warehouse),:method => "get",:class => "well well-small form-horizontal all"  do %>
+        <%= render :partial => "search" %>
+        <% end %>
+      </div>
+      
+      <%= form_tag "/",:method => "post",:class => "simple-operation",:id => "refund_products_form", :remote => true do %>
+          <div class="btn-toolbar">
+            <div class="btn-group">
+              <button class="btn btn-warning">操作</button>
+              <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu">
+                <li>
+                  <%= link_to "导出","#",:class => "magic_operation", :target_url => warehouse_refund_products_path(@warehouse,format: :xls),:check => false,:request => :get %>
+                </li>
+                <li>
+                  <%= link_to_authorize "新建", new_warehouse_refund_product_path(@warehouse) %>
+                </li>
+                <li>
+                  <%= link_to_authorize "编辑","#", :class => "magic_detail", :target_url => edit_warehouse_refund_product_path(@warehouse,':id') %>
+                </li>
+                <li><%= link_to_authorize "查看","#",:class => "magic_detail",:target_url => "/warehouses/#{@warehouse.id}/refund_products" %></li>
+                <li>
+                  <%= link_to_authorize "锁定", "#",:target_url => "/warehouses/#{@warehouse.id}/refund_products/locking",:request => "post",:remote => true,:message => "确认锁定吗?",:class => "magic_operation"  %>
+                </li>
+                <li>
+                  <%= link_to_authorize "激活", "#",:target_url => "/warehouses/#{@warehouse.id}/refund_products/enable",:request => "post",:remote => true,:message => "确认激活吗?",:class => "magic_operation"  %>
+                </li>
+                <li>
+                  <%= link_to_authorize "审核", "#",:target_url => "/warehouses/#{@warehouse.id}/refund_products/check",:remote => true,:request => "post",:message => "确认审核吗?",:class => "magic_operation"  %>
+                </li>
+                <li>
+                  <%= link_to_authorize "同步", "#",:target_url => "/warehouses/#{@warehouse.id}/refund_products/sync",:remote => true,:remote => true,:request => "post",:message => "确认同步吗?" ,:class => "magic_operation"  %>
+                </li>
+                <li>
+                  <%= link_to_authorize "撤销", "#",:target_url => "/warehouses/#{@warehouse.id}/refund_products/rollback",:remote => true,:remote => true,:request => "post",:message => "确认撤销吗?"  ,:class => "magic_operation"  %>
+                </li>
+              </ul>
+            </div>
+            <div class="btn btn-warning"><%= link_to "退货同步", refund_fetch_warehouse_refund_products_path(@warehouse) %></div>
+          </div>
+          
+          <table class="table table-hover table-bordered table-striped table-condensed js-table" id="refund_products_table">
+            <thead>
+              <tr>
+                <th width="1%"><input type="checkbox"></th>
+                <th width="5%">序号</th>
+                <th width="10%">退货单ID</th>
+                <th width="10%">退货单编号</th>
+                <th width="10%">当前状态</th>
+                <th width="10%">历史状态</th>
+                <th width="10%">退货金额</th>
+              </tr>
+            </thead>
+            <tbody>
+              <%- @refund_products.each_with_index do |refund_product, index| %>
+                <tr>
+                  <td><input type="checkbox" name="refund_product_ids[]" value="<%= refund_product.id%>" ></td>
+                  <td><%=  index + 1  %></td>
+                  <td><%= refund_product.refund_id %></td>
+                  <td><%= refund_product.tid %></td>
+                  <td id="status_<%= refund_product.id %>"><%= refund_product.status_name %></td>
+                  <%= render "operation", refund_product: refund_product%>
+                  <td><%= refund_product.try(:refund_fee) %></td>
+                </tr>
+              <%- end %>
+            </tbody>
+          </table>
+      <% end %>
+    </div>
+    <div class='clearfix'>
+      <div class="pull-right" style="margin-left: 5px;margin-top: -2px;">
+        <%= paginate @refund_products %>
+      </div>
+      <!-- <p></p> -->
+      <%= form_tag("/warehouses/#{@warehouse.id}/refund_products", :method => "get", :class => 'pagination trade_count_info form-inline pull-right') do %>
+      <input style="visibility:hidden;" name="page" value="<%= params[:page]%>"/>
+      <label style="color:#005580;">当前每页显示：</label>
+      <%=select_tag :number, options_for_select([["加载20项","20"],
+              ["加载50项","50"],
+              ["加载100项", "100"]], params[:number]),  :class => 'nomargin input-medium', :onchange => "this.form.submit();" %>
+      <%- end -%>
+    </div>
+  </div>
+</div>
+<% content_for :tail do %>
+<script>
+  function processChecked(full_url){
+    var refund_product_ids = $('input[name=\"refund_product_ids[]\"]:checked').map(function(){ return $(this).val()}).get().join(',');
+    $(location).attr('href', full_url + '&export_ids=' + refund_product_ids);
+  }
+  $(function() {
+    clickTableRow("refund_products_table");
+  });
+</script>
+<% end %>

@@ -208,7 +208,7 @@ class StockOutBill < StockBill
     if account.settings.third_party_wms == "biaogan"
       result_xml = Bml.cancel_order_rx(account, tid)
     elsif account.settings.third_party_wms == "gqs"
-      result_xml = Gqs.cancel_order(account, tid)
+      result_xml = Gqs.cancel_order(account, orderid: tid,notes: '客户取消订单',opttype: 'OrderCance',opttime: Time.now.to_s(:db),method: 'OrderCance',_prefix: "order")
     end
     result = Hash.from_xml(result_xml).as_json
 

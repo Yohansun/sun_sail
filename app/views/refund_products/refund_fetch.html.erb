@@ -1,0 +1,7 @@
+<div class="container-fluid">
+  <%= render partial: "layouts/all_crumbs" %>
+
+  <%= render partial: "taobao_refund" %>
+  <button type="button" class="btn btn-success"><%= link_to "确认同步", refund_save_warehouse_refund_products_path(@warehouse),:method => :put %></button>
+  <%= link_to "取消",warehouse_refund_products_path,:class => "btn btn-info" %>
+</div>

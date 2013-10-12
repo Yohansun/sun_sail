@@ -25,7 +25,7 @@ $ ->
       window.location= link
 
   $(".magic_operation").live "click", ->
-    if checked_inputs().length < 1
+    if checked_inputs().length < 1 && $(this).attr("check") != "false"
       @stopImmediatePropagation
       alert("请选择")
       return false

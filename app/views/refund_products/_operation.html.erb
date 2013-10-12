@@ -1,0 +1,11 @@
+<td id="operation_<%= refund_product.id %>">
+  <%- if refund_product.status_operations.present? -%>
+    <% refund_product.status_operations.each do |status| %>
+      <% status.each do |key, value| %>
+        <span class='label label-success'>
+          <%= RefundProduct::STATUS.rassoc(key.to_s).to_a.first %>:<%= value.to_s(:db) %>
+        </span>
+      <% end %>
+    <% end %>
+  <% end %>
+</td>

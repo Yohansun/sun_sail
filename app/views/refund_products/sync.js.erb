@@ -1,0 +1,4 @@
+<%- @operated_bills.each do |refund_product|%>
+$("#status_<%= refund_product.id %>").replaceWith("<%= j render('status', refund_product: refund_product) %>")
+$("#operation_<%= refund_product.id %>").replaceWith("<%= j render('operation', refund_product: refund_product) %>")
+<%- end %>

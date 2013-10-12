@@ -139,6 +139,22 @@ class StockOutBillsController < ApplicationController
     end
   end
 
+  def get_bills
+    type = params[:type]
+    @stock_bills = default_scope.where(:_type => type,:tid => /#{params[:tid]}/)
+    respond_to do |format|
+      format.json { render partial: "partials/stock_bills.json"}
+    end
+  end
+
+  def get_products
+    @bill = default_scope.find_by(tid: params[:tid])
+    @bill_products = @bill.bill_products
+    respond_to do |format|
+      format.json { render partial: "partials/bill_products.json"}
+    end
+  end
+
   private
 
   def set_warehouse
@@ -150,7 +166,6 @@ class StockOutBillsController < ApplicationController
     bill.op_state    = Area.find(op_state).name     if Area.exists?(op_state)
     bill.op_city     = Area.find(op_city).name      if Area.exists?(op_city)
     bill.op_district = Area.find(op_district).name  if Area.exists?(op_district)
-    bill.save
   end
 
   def parse_area(bill)
@@ -174,7 +189,7 @@ class StockOutBillsController < ApplicationController
       search[:bill_products_sku_id_eq] = params[:bill_products_sku_id_eq]
     end
     search[:status_eq] = params[:status] if params[:status].present?
-        search[:stock_type_not_eq] = "OVIRTUAL" if search[:stock_type_eq].blank?
+    search[:stock_type_not_eq] = "OVIRTUAL" if search[:stock_type_eq].blank?
   end
 
   def default_scope

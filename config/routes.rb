@@ -2,6 +2,11 @@ require 'sidekiq/web'
 
 MagicOrders::Application.routes.draw do
 
+  resources :third_parties do
+    post :reset_token, on: :collection
+  end
+
+
   resources :customers ,:only => [:index,:show] do
 
     collection do
@@ -17,20 +22,38 @@ MagicOrders::Application.routes.draw do
   resources :warehouses   ,:only => [:index] do
     post :batch_update_safety_stock,:on => :collection
     resources :stock_bills
+    resources :refund_products do
+      collection do
+        post :locking
+        post :sync
+        post :check
+        post :rollback
+        post :enable
+        get  :refund_fetch
+        put  :refund_save
+      end
+    end
+
     resources :stock_in_bills do
-      post :sync          , :on => :collection
-      post :check         , :on => :collection
-      post :rollback      , :on => :collection
-      post :lock          ,:on => :collection
-      post :unlock        ,:on => :collection
+      collection do
+        post :sync
+        post :check
+        post :rollback
+        post :lock
+        post :unlock
+      end
     end
+
     resources :stock_out_bills do
-      post :sync          , :on => :collection
-      post :check         , :on => :collection
-      post :rollback      , :on => :collection
-      post :lock          ,:on => :collection
-      post :unlock        ,:on => :collection
+      collection do
+        post :sync
+        post :check
+        post :rollback
+        post :lock
+        post :unlock
+      end
     end
+
     resources :stocks     , only: [:index] do
       collection do
         get :edit_depot
@@ -41,6 +64,7 @@ MagicOrders::Application.routes.draw do
       put :update_depot   ,:on => :member
     end
     resources :stock_csv_files
+    resources :refund_products
   end
 
   resources :stocks     , only: [:index] do
@@ -52,6 +76,8 @@ MagicOrders::Application.routes.draw do
     end
   end
 
+  match "/stock_out_bills/get_bills",to: "stock_out_bills#get_bills"
+  match "/stock_out_bills/get_products",to: "stock_out_bills#get_products"
   match "/stocks/safe_stock", to: 'stocks#safe_stock'
   post "/stocks/edit_safe_stock", to: 'stocks#edit_safe_stock'
   post "/stock_bills/update_status", to: 'stock_bills#update_status'
@@ -399,6 +425,9 @@ MagicOrders::Application.routes.draw do
   end
 
   root to: "home#dashboard"
+  # API
+  require 'api'
+  mount MagicOrder::API => '/api'
 
   match '/go/npsellers', :to => 'go#npsellers'
   match "/app", to: "home#index"

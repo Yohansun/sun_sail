@@ -1,0 +1,35 @@
+<div class="page-header">
+  <h1><small>淘宝退货商品</small></h1>
+</div>
+<p><h4>新增商品</h4></p>
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>退货ID</th>
+      <th>退货人</th>
+      <th>退货时间</th>
+      <th>退货地址</th>
+      <th>退货描述</th>
+      <th>交易总额</th>
+      <th>退货商品</th>
+      <th>退货数量</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @taobao_refunds.each_with_index do |product,index| %>
+    <tr>
+      <td><%= index + 1 %></td>
+      <td><%= product.refund_id %></td>
+      <td><%= product.buyer_name %></td>
+      <td><%= product.refund_time %></td>
+      <td><%= product.address %></td>
+      <td><%= product.reason %></td>
+      <td><%= product.refund_fee %></td>
+      <% refund_order = product.refund_orders.first %>
+      <td><%= refund_order.title %></td>
+      <td><%= refund_order.num %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
