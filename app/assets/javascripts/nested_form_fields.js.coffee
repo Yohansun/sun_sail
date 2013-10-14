@@ -21,7 +21,7 @@ jQuery ->
 
     $template.before( $parsed_template )
     #初始化select2
-    $("##{association_path}_attributes_#{n}_sku_id").select2()
+    $("select.select2").select2()
     #验证表单
     $parsed_template.find(":input.checkdata").each () ->
       $(this).rules("add",{required: true,number: true,messages: {required: "不能为空",number: "必须是数字"}})

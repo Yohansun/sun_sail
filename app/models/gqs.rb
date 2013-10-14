@@ -37,10 +37,18 @@ class Gqs
   end
 
   # 订单取消
-  def self.cancel_order(account, tid)
-    xml = "<DATA><ORDER><ORDERID>#{tid}</ORDERID><NOTES>客户取消订单</NOTES><OPTTYPE>OrderCance</OPTTYPE><OPTTIME>#{Time.now.try(:strftime, "%Y-%m-%d %H:%M")}</OPTTIME></ORDER></DATA>"
+  def self.cancel_order(account,options={})
+    options.symbolize_keys!
+    method , prefix = options.delete(:method),options.delete(:_prefix)
+    raise "prefix can't be nil" if prefix.nil?
+    raise "method can't be nil" if method.nil?
+
+    xml = options.prefix_root(prefix).deep_transform_keys {|k,v|
+      k.to_s.upcase
+    }.to_xml(root: "DATA",skip_instruct: true)
+
     base_uri = URI.encode "http://service.gqsscm.com/yh/GQSHandler.ashx"
-    options = {:body => {brand: account.settings.gqs_brand_name, method: 'OrderCance', content: xml}}
+    options = {:body => {brand: account.settings.gqs_brand_name, method: method, content: xml}}
     response = HTTParty.post(base_uri, options).parsed_response.squish.force_encoding('utf-8')
   end
 

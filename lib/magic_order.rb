@@ -16,7 +16,8 @@ module MagicOrder
     "send_customers_messages" => ["send_messages","invoice_messages","get_recipients"],
     "taobao_bind" => ["change_taobao_skus", "tie_to_native_skus", "taobao_skus"],
     "jingdong_bind" => ["change_jingdong_skus", "tie_to_native_skus", "jingdong_skus"],
-    "yihaodian_bind" => ["change_yihaodian_skus", "tie_to_native_skus", "yihaodian_skus"]
+    "yihaodian_bind" => ["change_yihaodian_skus", "tie_to_native_skus", "yihaodian_skus"],
+    'refund_products_fetch' => %w(refund_fetch refund_save)
 
   }.freeze
 
@@ -237,7 +238,9 @@ MagicOrder::AccessControl.map do |map|
                                  "detail",
                                  "stock_in_bills#detail",
                                  "stock_out_bills#detail",
-                                 "stock_bills#detail"]
+                                 "stock_bills#detail",
+                                 "refund_products#detail"
+                               ]
     # map.permission :operations, ["create",
     #                              "update",
     #                              "destroy"]
@@ -266,6 +269,14 @@ MagicOrder::AccessControl.map do |map|
                                  "stock_in_bills#unlock",
                                  "stock_out_bills#unlock",
                                  "stock_products#inventory"
+                                 "refund_products#create",
+                                 "refund_products#update",
+                                 "refund_products#sync",
+                                 "refund_products#check",
+                                 "refund_products#rollback",
+                                 "refund_products#locking",
+                                 "refund_products#enable",
+                                 "refund_products#refund_products_fetch"
                                ]
   end
   #数据模块

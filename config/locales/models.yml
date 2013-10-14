@@ -6,6 +6,12 @@ zh-CN:
       role: "角色"
 
     attributes:
+      refund_product:
+        refund_orders: "退货商品"
+      refund_product/refund_orders:
+        title: "商品名称"
+        num: "退货数量"
+        refund_price: "退货金额"
       category:
         use_days: "商品生命周期(天)"
       role:
@@ -87,6 +93,21 @@ zh-CN:
         brand_id: 品牌Id
         merchant_category_id: 商家产品类别
         has_bindings: 是否已绑定SKU
+
+    errors:
+      models:
+        refund_product:
+          attributes:
+            status:
+              invalid_transition: 操作失败
+
+    state_machines:
+      events:
+        check: 审核
+        sync: 同步
+        locking: 锁定
+        enable: 激活
+        cancle: 撤销同步
 
   mongoid:
     models:

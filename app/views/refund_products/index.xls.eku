@@ -1,0 +1,28 @@
+__filename = "退货单#{Time.now.strftime("%Y/%m/%d-%H:%M:%S")}.xls"
+sheet1 = xls.create_worksheet
+sheet1[0, 0] = "退货单查询数据"
+
+sheet1.row(1).concat ["退货编号", "退货人", "手机号", "退货状态","退货时间", "订单号","退货商品","商品编号","退款金额","退货数量", "退货地址"]
+i = 1
+@refund_products.find_each  do |refund_product|
+  refund_product.refund_orders.each do |refund_order|
+    sheet1.update_row i+=1,
+    refund_product.refund_id,
+    refund_product.buyer_name,
+    refund_product.mobile,
+    refund_product.status_name,
+    refund_product.refund_time.to_s(:db),
+    refund_product.tid,
+    refund_order.title,
+    refund_order.num_iid,
+    refund_order.refund_price,
+    refund_order.num,
+    refund_product.address,
+    refund_product.refund_fee
+  end
+end
+
+title_format = Spreadsheet::Format.new(:color => :blue, :weight => :bold, :size => 14)
+sheet1.row(0).set_format(0, title_format)
+bold = Spreadsheet::Format.new(:pattern_fg_color => :yellow, :weight => :bold)
+sheet1.row(1).default_format = bold

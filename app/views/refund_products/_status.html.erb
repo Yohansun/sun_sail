@@ -1,0 +1,7 @@
+<td id="status_<%= refund_product.id %>" data-col="status" >
+	<% if refund_product.status_name == "已锁定" %>
+	  <b style='color:red;'><%= refund_product.status_name %></b>
+	<% else %>
+	  <b><%= refund_product.status_name %></b>
+	<% end %>
+</td>

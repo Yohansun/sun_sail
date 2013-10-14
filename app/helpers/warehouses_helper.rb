@@ -6,6 +6,7 @@ module WarehousesHelper
             {
               "入库单"  => "/warehouses/#{warehouse}/stock_in_bills",
               "出库单"  => "/warehouses/#{warehouse}/stock_out_bills",
+              "退货单"  => "/warehouses/#{warehouse}/refund_products",
               "所有进销" => "/warehouses/#{warehouse}/stock_bills",
               "库存查询" => "/warehouses/#{warehouse}/stocks"
             }
@@ -31,7 +32,7 @@ module WarehousesHelper
 
   def warehouse_tabs(warehouse)
     warehouse_count = current_account.sellers.count
-    two_tabs_controllers = params[:controller] =~ /stock_in_bills|stock_out_bills|stock_bills|stocks/
+    two_tabs_controllers = params[:controller] =~ /stock_in_bills|refund_products|stock_out_bills|stock_bills|stocks/
     if warehouse_count > 1
       params[:warehouse_id].blank? ? one_tabs : CHILD_TABS[warehouse.id]
     elsif warehouse_count == 1
