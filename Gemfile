@@ -115,6 +115,10 @@ gem "clockwork", "~> 0.5.0"
 #Handle CSV import
 gem 'csv-mapper', '~> 0.5.1'
 
+# API
+gem 'grape', "~> 0.5.0"
+gem "grape-entity"
+
 group :production do
   gem "exception_notification", "~> 2.6.1"
   gem 'newrelic_rpm'
