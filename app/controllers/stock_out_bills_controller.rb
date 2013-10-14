@@ -189,7 +189,8 @@ class StockOutBillsController < ApplicationController
       search[:bill_products_sku_id_eq] = params[:bill_products_sku_id_eq]
     end
     search[:status_eq] = params[:status] if params[:status].present?
-    search[:stock_type_not_eq] = "OVIRTUAL" if search[:stock_type_eq].blank?
+    # search[:stock_type_not_eq] = "OVIRTUAL" if search[:stock_type_eq].blank?
+    # This line is strange and confused.
   end
 
   def default_scope

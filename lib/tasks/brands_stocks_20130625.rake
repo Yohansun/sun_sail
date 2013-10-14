@@ -63,3 +63,56 @@ task :richlife_stocks_20130821 => :environment do
     end
   end
 end
+
+task :batch_modify_stocks => :environment do
+  file = ENV['file']
+  account_id = ENV['account_id']
+  account = Account.find account_id
+  seller = account.sellers.first
+
+  CSV.foreach("#{file}") do |row|
+    outer_id = row[0].strip
+    number = row[1].strip
+    product = account.products.find_by_outer_id(outer_id)
+    if product
+      sku = product.skus.first
+      unless sku
+        sku = product.skus.create(account_id: account.id, product_id: product.id, num_iid: product.num_iid)
+      end
+      stock_product = StockProduct.where(product_id: product.id, seller_id: seller.id, sku_id: sku.id, num_iid: product.num_iid, account_id: account.id).first_or_create
+
+      change = stock_product.actual.to_i - number.to_i
+
+      puts "--------------------------------"
+      puts outer_id + ',' + change.to_s
+
+      next if change == 0
+
+      if change > 0
+        bill = StockOutBill.new(stock_typs: "VIRTUAL", status: "STOCKED", confirm_stocked_at: Time.now, seller_id: seller.id ,account_id: account_id)
+        changed = change
+      else
+        bill = StockInBill.new(stock_typs: "VIRTUAL", status: "STOCKED", confirm_stocked_at: Time.now, seller_id: seller.id ,account_id: account_id)
+        changed = change * -1
+      end
+
+      bill.bill_products.build(stock_product_id: stock_product.id, title: sku.title, outer_id: product.outer_id, sku_id: sku.id, price: 0, total_price: 0, number: changed)
+      bill.bill_products_mumber = bill.bill_products.sum(:number)
+      bill.bill_products_price = 0
+      bill.save!
+
+
+      puts  bill.as_json
+
+      if change > 0
+        bill.decrease_activity
+        bill.decrease_actual
+      else
+        bill.sync_stock
+      end
+
+    else
+      p "product not found #{outer_id}"
+    end
+  end
+end

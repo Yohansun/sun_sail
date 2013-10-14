@@ -27,8 +27,12 @@ class StockProduct < ActiveRecord::Base
   attr_accessible :max, :safe_value, :product_id, :seller_id, :color_ids, :actual, :activity, :sku_id, :num_iid, :account_id
 
   validates_numericality_of :safe_value, :actual, :activity, :max, greater_than_or_equal_to: 0, message: '数量不能小于零'
-  validates_numericality_of :activity, less_than_or_equal_to: :actual
+
+  # This should be, but not proper to validate it.
+  # validates_numericality_of :activity, less_than_or_equal_to: :actual
+
   validates_presence_of :product_id, :account_id, message: '必填项'
+
   belongs_to :product
   belongs_to :sku
   belongs_to :seller
