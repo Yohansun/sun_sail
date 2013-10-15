@@ -1,103 +1,101 @@
-<div class="tab-content">
-  <div class="tab-pane active" id="add_order">
-    <%= simple_form_for @custom_trade, wrapper: :add_trade, html: {class: 'form-horizontal '} do |f| %>
-      <div class="well clearfix">
-        <fieldset class="span5">
-          <%= f.input :receiver_name, label: '收货人姓名：', :input_html =>{ :class => "input-large"} %>
-          <%= f.input :receiver_mobile, label: '收货人手机：', :input_html =>{ :class => "input-large"} %>
-          <%= f.input :tid, label: '订单编号：', :input_html =>{ :class => "input-large"} %>
-          <%= f.input :buyer_nick, label: '收货人淘宝ID：', :input_html =>{ :class => "input-large"} %>
-          <%= f.input :created, label: '下单时间：', :input_html =>{ :class => "input-large js-datetimepicker", :value => "#{@custom_trade.pay_time.try(:strftime, '%Y-%m-%d %H:%M:%S')}"}, readonly: true %>
-          <div class="control-group string required">
-            <label class="string required control-label">
-              <abbr title="必填的">*</abbr> 收货人地域：
-            </label>
-            <select id="" class="trade_level_1 input-medium input-small pull-left required" name="custom_trade[receiver_state]">
-              <option>省</option>
-            </select>
-            <select id="" class="trade_level_2 input-medium input-small pull-left required" name="custom_trade[receiver_city]">
-              <option>市</option>
-            </select>
-            <select id="" class="trade_level_3 input-medium input-small pull-left required" name="custom_trade[receiver_district]">
-              <option>区</option>
-            </select>
-          </div>
-          <%= f.input :receiver_address, label: '详细地址：', :input_html =>{ :class => "input-xlarge" } %>
-          <%= f.input :seller_memo, as: :text, label: '备注：', :input_html =>{ :class => "span8", rows: 3 } %>
-        </fieldset><!-- form left area -->
-        <fieldset class="span5">
-          <%= f.input :receiver_phone, label: '固定电话：', :input_html =>{ :class => "input-large" } %>
-          <%= f.input :receiver_zip, label: '收货人邮编：', :input_html =>{ :class => "input-large" } %>
-          <%= f.input :pay_time, label: '付款时间：', :input_html =>{ :class => "input-large js-datetimepicker", :value => "#{@custom_trade.pay_time.try(:strftime, '%Y-%m-%d %H:%M:%S')}"}, readonly: true %>
-          <%= f.input :status, label: '订单状态：', collection: [["已付款，待分派","WAIT_SELLER_SEND_GOODS"]], :input_html =>{ :class => "input-large select2" }, selected: ["已付款，待分派","WAIT_SELLER_SEND_GOODS"] %>
-          <%#= f.input :has_invoice_info, label: '是否开发票：', collection: [["是","true"],["否","false"]], :input_html =>{ :class => "input-mini select2" }, selected: ["#{@custom_trade.invoice_name == nil ? '否' : '是'}","#{@custom_trade.invoice_name == nil ? 'false' : 'true'}"] %>
-        </fieldset><!-- form right area -->
-      </div>
+<div class="tab-pane active" id="add_order">
+  <%= simple_form_for @custom_trade, wrapper: :add_trade, html: {class: 'form-horizontal '} do |f| %>
+    <div class="well clearfix">
+      <fieldset class="span5">
+        <%= f.input :receiver_name, label: '收货人姓名：', :input_html =>{ :class => "input-large"} %>
+        <%= f.input :receiver_mobile, label: '收货人手机：', :input_html =>{ :class => "input-large"} %>
+        <%= f.input :tid, label: '订单编号：', :input_html =>{ :class => "input-large"} %>
+        <%= f.input :buyer_nick, label: '收货人淘宝ID：', :input_html =>{ :class => "input-large"} %>
+        <%= f.input :created, label: '下单时间：', :input_html =>{ :class => "input-large js-datetimepicker", :value => "#{@custom_trade.pay_time.try(:strftime, '%Y-%m-%d %H:%M:%S')}"}, readonly: true %>
+        <div class="control-group string required">
+          <label class="string required control-label">
+            <abbr title="必填的">*</abbr> 收货人地域：
+          </label>
+          <select id="" class="trade_level_1 input-medium input-small pull-left required" name="custom_trade[receiver_state]">
+            <option>省</option>
+          </select>
+          <select id="" class="trade_level_2 input-medium input-small pull-left required" name="custom_trade[receiver_city]">
+            <option>市</option>
+          </select>
+          <select id="" class="trade_level_3 input-medium input-small pull-left required" name="custom_trade[receiver_district]">
+            <option>区</option>
+          </select>
+        </div>
+        <%= f.input :receiver_address, label: '详细地址：', :input_html =>{ :class => "input-xlarge" } %>
+        <%= f.input :seller_memo, as: :text, label: '备注：', :input_html =>{ :class => "span8", rows: 3 } %>
+      </fieldset><!-- form left area -->
+      <fieldset class="span5">
+        <%= f.input :receiver_phone, label: '固定电话：', :input_html =>{ :class => "input-large" } %>
+        <%= f.input :receiver_zip, label: '收货人邮编：', :input_html =>{ :class => "input-large" } %>
+        <%= f.input :pay_time, label: '付款时间：', :input_html =>{ :class => "input-large js-datetimepicker", :value => "#{@custom_trade.pay_time.try(:strftime, '%Y-%m-%d %H:%M:%S')}"}, readonly: true %>
+        <%= f.input :status, label: '订单状态：', collection: [["已付款，待分派","WAIT_SELLER_SEND_GOODS"]], :input_html =>{ :class => "input-large select2" }, selected: ["已付款，待分派","WAIT_SELLER_SEND_GOODS"] %>
+        <%#= f.input :has_invoice_info, label: '是否开发票：', collection: [["是","true"],["否","false"]], :input_html =>{ :class => "input-mini select2" }, selected: ["#{@custom_trade.invoice_name == nil ? '否' : '是'}","#{@custom_trade.invoice_name == nil ? 'false' : 'true'}"] %>
+      </fieldset><!-- form right area -->
+    </div>
 
 
-      <div>
-        <ul class="nav nav-tabs js-nav_tabs">
-          <!-- <li><a href="#good_info" data-toggle="tab">商品信息</a></li> -->
-          <li class="active"><a href="#add_good" data-toggle="tab">新增商品</a></li>
-        </ul>
-        <div class="tab-content noborder_content">
-          <div class="tab-pane active" id="good_info">
-            <form class="form-horizontal">
-              <fieldset>
-                <div class="control-group">
-                  <label class="control-label" style="text-align:left;">选择淘宝商品：</label>
-                  <select class="input-xxlarge pull-left select2 taobao_product_list">
-                    <% @taobao_products.each do |product| %>
-                      <option value="<%= product.num_iid %>"><%= product.name %></option>
-                    <% end %>
-                  </select>
-                </div>
-                <div class="control-group">
-                  <label class="control-label">选择对应SKU：</label>
-                  <select id="taobao_skus_options" class="input-xlarge">
-                  </select>
-                  <input class="input-small" type="text" id="taobao_order_num" placeholder="数量">
-                  <input class="input-small" type="text" id="taobao_order_payment" placeholder="实付金额">
-                  <a class="btn btn-small btn-warning" type="button" id="add_taobao_product">添加</a>
-                </div>
-              </fieldset><!-- form area -->
-            </form>
-            <table class="table table-hover table-bordered table-striped table-condensed js-table_goods">
-              <thead>
-                <tr>
-                  <th width="10%">商品编码</th><!--num_iid-->
-                  <th width="35%">商品名称</th><!--title-->
-                  <th width="15%">商品SKU</th><!--sku_id-->
-                  <th width="10%">商品数量</th><!--num-->
-                  <th width="10%">商品实付金额</th><!--payment-->
-                  <th width="10%"></th>
-                </tr>
-              </thead>
-              <tbody id="taobao_orders_table">
-                <% @custom_trade.taobao_orders.each do |order| %>
-                <tr>
-                  <td><%= order.num_iid %></td>
-                  <td><%= order.title %></td>
-                  <td>此商品没有SKU</td>
-                  <td><%= order.num %></td>
-                  <td><%= order.payment %></td>
-                  <td><a class="btn btn-small btn-info delete_taobao_order">删除</a></td>
-                  <input type='hidden' name='taobao_orders[]' value="<%= order.num_iid %>;<%= order.sku_id %>;<%= order.num %>;<%= order.payment%>;<%= order.title %>;"></input>
-                </tr>
-                <% end %>
-              </tbody>
-            </table>
+    <div>
+      <ul class="nav nav-tabs js-nav_tabs nomargin">
+        <!-- <li><a href="#good_info" data-toggle="tab">商品信息</a></li> -->
+        <li class="active"><a href="#add_good" data-toggle="tab">新增商品</a></li>
+      </ul>
+      <div class="tab-content noborder_content">
+        <div class="tab-pane active" id="good_info">
+          <form class="form-horizontal">
+            <fieldset>
+              <div class="control-group">
+                <label class="control-label" style="text-align:left;">选择淘宝商品：</label>
+                <select class="input-xxlarge pull-left select2 taobao_product_list">
+                  <% @taobao_products.each do |product| %>
+                    <option value="<%= product.num_iid %>"><%= product.name %></option>
+                  <% end %>
+                </select>
+              </div>
+              <div class="control-group">
+                <label class="control-label">选择对应SKU：</label>
+                <select id="taobao_skus_options" class="input-xlarge">
+                </select>
+                <input class="input-small" type="text" id="taobao_order_num" placeholder="数量">
+                <input class="input-small" type="text" id="taobao_order_payment" placeholder="实付金额">
+                <a class="btn btn-small btn-warning" type="button" id="add_taobao_product">添加</a>
+              </div>
+            </fieldset><!-- form area -->
+          </form>
+          <table class="table table-hover table-bordered table-striped table-condensed js-table_goods">
+            <thead>
+              <tr>
+                <th width="10%">商品编码</th><!--num_iid-->
+                <th width="35%">商品名称</th><!--title-->
+                <th width="15%">商品SKU</th><!--sku_id-->
+                <th width="10%">商品数量</th><!--num-->
+                <th width="10%">商品实付金额</th><!--payment-->
+                <th width="10%"></th>
+              </tr>
+            </thead>
+            <tbody id="taobao_orders_table">
+              <% @custom_trade.taobao_orders.each do |order| %>
+              <tr>
+                <td><%= order.num_iid %></td>
+                <td><%= order.title %></td>
+                <td>此商品没有SKU</td>
+                <td><%= order.num %></td>
+                <td><%= order.payment %></td>
+                <td><a class="btn btn-small btn-info delete_taobao_order">删除</a></td>
+                <input type='hidden' name='taobao_orders[]' value="<%= order.num_iid %>;<%= order.sku_id %>;<%= order.num %>;<%= order.payment%>;<%= order.title %>;"></input>
+              </tr>
+              <% end %>
+            </tbody>
+          </table>
 
-            <div class="btn-toolbar">
-              <%= f.button :submit, "保存", :class => "btn btn-warning btn-small save_orders" %>
-              <a href="/app#trades" class="btn btn-warning btn-small">取消</a>
-            </div>
+          <div class="btn-toolbar">
+            <%= f.button :submit, "保存", :class => "btn btn-warning btn-small save_orders" %>
+            <a href="/app#trades" class="btn btn-warning btn-small">取消</a>
           </div>
         </div>
       </div>
-    <% end %>
-  </div><!-- add_order end -->
-</div><!-- tab-content end -->
+    </div>
+  <% end %>
+</div><!-- add_order end -->
 
 <% content_for :tail do %>
 <script type="text/javascript">

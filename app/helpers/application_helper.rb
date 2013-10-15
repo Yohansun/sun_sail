@@ -256,6 +256,13 @@ module ApplicationHelper
       when "my_alerts"
         items << active_li_item("我的异常订单")
       end
+    when "custom_trades"
+      case act_name
+      when "new"
+        items << active_li_item("新建订单")
+      when "edit"
+        items << active_li_item("编辑订单")
+      end
     when "sales"
       items << href_li_item("数据魔方", "sales/summary")
       if ["summary", "product_analysis", "show", "edit"].include?(act_name)

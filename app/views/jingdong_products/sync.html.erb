@@ -1,3 +1,8 @@
+<% content_for :sub_nav do %>
+  <ul class="nav nav-tabs js-nav_tabs">
+    <li class="active"><a href="/jingdong_products/sync" data-toggle="tab">同步京东商品</a></li>
+  </ul><!-- nav-tabs -->
+<% end %>
 <div class="container-fluid">
   <%= render "products" %>
   <%= render "skus" %>
