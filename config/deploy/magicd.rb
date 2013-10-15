@@ -7,7 +7,7 @@ set :branch, "magicd0509"
 
 server "magicd.networking.io", :web, :app, :db, primary: true
 set :user, "root"
-set :deploy_to, "/var/rails/magic_orders"
+set :deploy_to, "/bigdata/var/rails/magic_orders"
 
 
 # tasks
