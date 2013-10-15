@@ -6,6 +6,8 @@ MagicOrders::Application.routes.draw do
     collection do
       get :default
       get :overview
+      get :reload_trades_percent_analysis
+      get :reload_customers_percent_analysis
     end
   end
 

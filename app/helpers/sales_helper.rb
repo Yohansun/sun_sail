@@ -85,8 +85,8 @@ module SalesHelper
       }
     }
 
-    created_trades = Trade.where(account_id: current_account.id).between(created: (start_at.to_time - 8.hours)..(end_at.to_time - 8.hours))
-    paid_trades = Trade.where(account_id: current_account.id).between(pay_time: (start_at.to_time - 8.hours)..(end_at.to_time - 8.hours))
+    created_trades = current_account.trades.between(created: (start_at.to_time - 8.hours)..(end_at.to_time - 8.hours))
+    paid_trades = current_account.trades.between(pay_time: (start_at.to_time - 8.hours)..(end_at.to_time - 8.hours))
 
     #计算总金额
     amount_all = created_trades.try(:sum, :payment) || 0
@@ -149,7 +149,11 @@ module SalesHelper
     [amount_all,amount_paid,final_hash]
   end
 
-  def product_data(trades, old_trades)
+  def product_data(start_at, end_at)
+
+    trades = TaobaoTrade.where(account_id: current_account.id).between(created: start_at..end_at).in(status: ["TRADE_FINISHED","FINISHED_L"])
+    time_gap = (end_at - start_at).to_i
+    old_trades = TaobaoTrade.where(account_id: current_account.id).between(created: (start_at - time_gap.seconds)..start_at).in(status: ["TRADE_FINISHED","FINISHED_L"])
 
     ##对数据map_reduce
     map = %Q{
@@ -226,7 +230,7 @@ module SalesHelper
       }
     }
 
-    trades = Trade.between(created: start_at..end_at).in(status: ["TRADE_FINISHED","FINISHED_L"])
+    trades = current_account.trades.between(created: start_at..end_at).in(status: ["TRADE_FINISHED","FINISHED_L"])
     map_reduce_info = trades.map_reduce(map, reduce).out(inline: true).sort{|a, b| a['_id'] <=> b['_id']}
 
     #处理数据
@@ -264,7 +268,7 @@ module SalesHelper
       }
     }
 
-    trades = Trade.between(created: start_at..end_at).in(status: ["TRADE_FINISHED","FINISHED_L"])
+    trades = current_account.trades.between(created: start_at..end_at).in(status: ["TRADE_FINISHED","FINISHED_L"])
     map_reduce_info = trades.map_reduce(map, reduce).out(inline: true)
 
     #处理数据
@@ -293,7 +297,7 @@ module SalesHelper
   end
 
   def time_data(start_at, end_at)
-    trades = Trade.in(status: ["TRADE_FINISHED","FINISHED_L"])
+    trades = current_account.trades.in(status: ["TRADE_FINISHED","FINISHED_L"])
     day_gap = ((end_at - start_at)/86400).to_i
     start_time = start_at
     day_info = []
@@ -361,7 +365,7 @@ module SalesHelper
        }
      }
 
-     trades = Trade.between(created: start_at..end_at).in(status: ["TRADE_FINISHED","FINISHED_L"])
+     trades = current_account.trades.between(created: start_at..end_at).in(status: ["TRADE_FINISHED","FINISHED_L"])
      frequency = trades.map_reduce(map, reduce).out(inline: true)
      purchase_num = Array.new(15,0)
      frequency_info = []
@@ -402,7 +406,7 @@ module SalesHelper
        }
      }
 
-     trades = Trade.between(created: start_at..end_at).in(status: ["TRADE_FINISHED","FINISHED_L"])
+     trades = current_account.trades.between(created: start_at..end_at).in(status: ["TRADE_FINISHED","FINISHED_L"])
      univalent = trades.map_reduce(map, reduce).out(inline: true)
      univalent_info = []
      total_num = 0

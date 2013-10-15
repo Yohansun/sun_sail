@@ -125,6 +125,7 @@ var App = function () {
                 }, 50); // wait 50ms until window resize finishes.
             });
         }
+        $(window).resize();
     }
 
     //* BEGIN:CORE HANDLERS *//
@@ -784,7 +785,7 @@ var App = function () {
         blockUI: function (el, centerY) {
             var el = jQuery(el);
             el.block({
-                    message: '<img src="../images/index2/ajax-loading.gif" align="">',
+                    message: '<img src="/assets/overview/ajax-loading.gif" align="">',
                     centerY: centerY != undefined ? centerY : true,
                     css: {
                         top: '10%',

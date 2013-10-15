@@ -37,13 +37,21 @@ module TradesHelper
   end
 
   def summary_analysis
+    [today_summary,month_summary]
+  end
+
+  def today_summary
     start_at = Time.now.beginning_of_day
     end_at = Time.now.end_of_day
-    today_summary = calculate_infos(start_at, end_at)
+    summary = calculate_infos(start_at, end_at)
+    summary
+  end
+
+  def month_summary
     start_at = Time.now.beginning_of_month
     end_at = Time.now.end_of_month
-    month_summary = calculate_infos(start_at, end_at)
-    [today_summary,month_summary]
+    summary = calculate_infos(start_at, end_at)
+    summary
   end
 
   def calculate_infos(start_at, end_at)

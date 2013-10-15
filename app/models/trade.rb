@@ -306,6 +306,41 @@ class Trade
     where(account_id: account_id).between(created: time_range)
   }
 
+  StatusHash = {
+    "wait_pay_array"               => ["WAIT_BUYER_PAY",
+                                       "ORDER_WAIT_PAY"],
+    "paid_not_deliver_array"       => ["WAIT_SELLER_SEND_GOODS",
+                                       "WAIT_SELLER_DELIVERY",
+                                       "WAIT_SELLER_STOCK_OUT",
+                                       "ORDER_PAYED",
+                                       "ORDER_TRUNED_TO_DO"],
+    "paid_and_delivered_array"     => ["WAIT_BUYER_CONFIRM_GOODS",
+                                       "WAIT_GOODS_RECEIVE_CONFIRM",
+                                       "WAIT_BUYER_CONFIRM_GOODS_ACOUNTED",
+                                       "WAIT_SELLER_SEND_GOODS_ACOUNTED",
+                                       "ORDER_CAN_OUT_OF_WH",
+                                       "ORDER_OUT_OF_WH",
+                                       "ORDER_SENDED_TO_LOGITSIC",
+                                       "ORDER_RECEIVED"],
+    "closed_array"                 => ["TRADE_CLOSED",
+                                       "TRADE_CANCELED",
+                                       "TRADE_CLOSED_BY_TAOBAO",
+                                       "ALL_CLOSED",
+                                       "ORDER_CANCEL"],
+    "succeed_array"                => ["TRADE_FINISHED",
+                                       "FINISHED_L",
+                                       "ORDER_FINISH"],
+    # contains TaobaoOrder and SubPurchaseOrder
+    "taobao_trade_refund_array"    => ["WAIT_SELLER_AGREE",
+                                       "SELLER_REFUSE_BUYER",
+                                       "WAIT_BUYER_RETURN_GOODS",
+                                       "WAIT_SELLER_CONFIRM_GOODS",
+                                       "CLOSED",
+                                       "SUCCESS"],
+    "taobao_purchase_refund_array" => ['TRADE_REFUNDED',
+                                       'TRADE_REFUNDING']
+  }.freeze
+
 
   def fetch_account
     return Account.find_by_id(self.account_id) if self.account_id_change
@@ -1026,34 +1061,6 @@ class Trade
       trades = Trade.where(account_id: current_account.id)
     end
 
-    wait_pay_array = ["WAIT_BUYER_PAY",
-                      "ORDER_WAIT_PAY"]
-    paid_not_deliver_array = ["WAIT_SELLER_SEND_GOODS",
-                              "WAIT_SELLER_DELIVERY",
-                              "WAIT_SELLER_STOCK_OUT",
-                              "ORDER_PAYED",
-                              "ORDER_TRUNED_TO_DO"]
-    paid_and_delivered_array = ["WAIT_BUYER_CONFIRM_GOODS",
-                                "WAIT_GOODS_RECEIVE_CONFIRM",
-                                "WAIT_BUYER_CONFIRM_GOODS_ACOUNTED",
-                                "WAIT_SELLER_SEND_GOODS_ACOUNTED",
-                                "ORDER_CAN_OUT_OF_WH",
-                                "ORDER_OUT_OF_WH",
-                                "ORDER_SENDED_TO_LOGITSIC",
-                                "ORDER_RECEIVED"]
-    closed_array = ["TRADE_CLOSED",
-                    "TRADE_CANCELED",
-                    "TRADE_CLOSED_BY_TAOBAO",
-                    "ALL_CLOSED",
-                    "ORDER_CANCEL"]
-    succeed_array = ["TRADE_FINISHED",
-                     "FINISHED_L",
-                     "ORDER_FINISH"]
-
-    #contains TaobaoOrder and SubPurchaseOrder
-    taobao_trade_refund_array = ["WAIT_SELLER_AGREE","SELLER_REFUSE_BUYER","WAIT_BUYER_RETURN_GOODS","WAIT_SELLER_CONFIRM_GOODS","CLOSED", "SUCCESS"]
-    taobao_purchase_refund_array = ['TRADE_REFUNDED', 'TRADE_REFUNDING']
-
     if current_user.seller.present?
       seller = current_user.seller
       self_and_descendants_ids = seller.self_and_descendants.map(&:id)
@@ -1106,39 +1113,39 @@ class Trade
       when 'all'
         trade_type_hash = nil
       when 'dispatched'
-        trade_type_hash = {:dispatched_at.ne => nil, :status.in => paid_not_deliver_array + paid_and_delivered_array}
+        trade_type_hash = {:dispatched_at.ne => nil, :status.in => StatusHash["paid_not_deliver_array"] + StatusHash["paid_and_delivered_array"]}
       when 'undispatched'
-        trade_type_hash = {:status.in => paid_not_deliver_array, seller_id: nil, has_unusual_state: false, :pay_time.ne => nil}
+        trade_type_hash = {:status.in => StatusHash["paid_not_deliver_array"], seller_id: nil, has_unusual_state: false, :pay_time.ne => nil}
       when 'unpaid'
-        trade_type_hash = {:status.in => wait_pay_array}
+        trade_type_hash = {:status.in => StatusHash['wait_pay_array']}
       when 'paid'
-        trade_type_hash = {:status.in => paid_not_deliver_array + paid_and_delivered_array + succeed_array}
+        trade_type_hash = {:status.in => StatusHash["paid_not_deliver_array"] + StatusHash["paid_not_deliver_array"] + StatusHash["succeed_array"]}
       when 'undelivered','seller_undelivered'
-        trade_type_hash = {:dispatched_at.ne => nil, :status.in => paid_not_deliver_array, has_unusual_state: false}
+        trade_type_hash = {:dispatched_at.ne => nil, :status.in => StatusHash["paid_not_deliver_array"], has_unusual_state: false}
       when 'delivered','seller_delivered'
-        trade_type_hash = {:status.in => paid_and_delivered_array, has_unusual_state: false}
+        trade_type_hash = {:status.in => StatusHash["paid_and_delivered_array"], has_unusual_state: false}
       when 'refund'
-        trade_type_hash = {"$or" => [{ :"taobao_orders.refund_status" => {:'$in' => taobao_trade_refund_array}}, {:"taobao_sub_purchase_orders.status" => {:'$in' => taobao_purchase_refund_array}}]}
+        trade_type_hash = {"$or" => [{ :"taobao_orders.refund_status" => {:'$in' => StatusHash["taobao_trade_refund_array"]}}, {:"taobao_sub_purchase_orders.status" => {:'$in' => StatusHash["taobao_purchase_refund_array"]}}]}
       when 'return'
         trade_type_hash = {:request_return_at.ne => nil}
       when 'closed'
-        trade_type_hash = {:status.in => closed_array}
+        trade_type_hash = {:status.in => StatusHash["closed_array"]}
       when 'unusual_trade'
         trade_type_hash = {status: "TRADE_NO_CREATE_PAY"}
       when 'deliver_unconfirmed'
-        trade_type_hash = {seller_confirm_deliver_at: nil, :status.in => paid_and_delivered_array}
+        trade_type_hash = {seller_confirm_deliver_at: nil, :status.in => StatusHash["paid_and_delivered_array"]}
 
       # # 发货单
       # when "deliver_bill_unprinted"
-      #   trade_type_hash = {deliver_bill_printed_at: nil, :dispatched_at.ne => nil, :status.in => paid_not_deliver_array + paid_and_delivered_array}
+      #   trade_type_hash = {deliver_bill_printed_at: nil, :dispatched_at.ne => nil, :status.in => StatusHash["paid_not_deliver_array"] + StatusHash["paid_and_delivered_array"]}
       # when "deliver_bill_printed"
-      #   trade_type_hash = {:deliver_bill_printed_at.ne => nil, :dispatched_at.ne => nil, :status.in => paid_not_deliver_array + paid_and_delivered_array}
+      #   trade_type_hash = {:deliver_bill_printed_at.ne => nil, :dispatched_at.ne => nil, :status.in => StatusHash["paid_not_deliver_array"] + StatusHash["paid_and_delivered_array"]}
 
       # # 物流单
       # when "logistic_waybill_void"
-      #   trade_type_hash = {logistic_waybill: nil, :status.in => paid_not_deliver_array}
+      #   trade_type_hash = {logistic_waybill: nil, :status.in => StatusHash["paid_not_deliver_array"]}
       # when "logistic_waybill_exist"
-      #   trade_type_hash = {:logistic_waybill.ne => nil, :status.in => paid_not_deliver_array + paid_and_delivered_array + succeed_array}
+      #   trade_type_hash = {:logistic_waybill.ne => nil, :status.in => StatusHash["StatusHash["paid_not_deliver_array"]"] + StatusHash["paid_and_delivered_array"] + StatusHash["succeed_array"]}
       # when "logistic_bill_unprinted"
       #   trade_type_hash = {"$and" => [{"logistic_printed_at" => nil}, {"$or" => [{status: 'WAIT_SELLER_SEND_GOODS'}, {status: 'WAIT_BUYER_CONFIRM_GOODS', "delivered_at" => {"$gt" => 23.hours.ago}}]}]}
       # when "logistic_bill_printed"
@@ -1152,7 +1159,7 @@ class Trade
       # when 'invoice_filled'
       #   trade_type_hash = {:seller_confirm_invoice_at.ne => nil}
       # when 'invoice_sent'
-      #   trade_type_hash = {:status.in => paid_and_delivered_array, :seller_confirm_invoice_at.ne => nil}
+      #   trade_type_hash = {:status.in => StatusHash["paid_and_delivered_array"], :seller_confirm_invoice_at.ne => nil}
 
       # 退货
       when 'request_return'
@@ -1162,11 +1169,11 @@ class Trade
 
       # 调色
       when "color_unmatched"
-        trade_type_hash = {has_color_info: false, :status.in => paid_not_deliver_array}
+        trade_type_hash = {has_color_info: false, :status.in => StatusHash["paid_not_deliver_array"]}
       when "color_matched"
-        trade_type_hash = {has_color_info: true, :status.in => paid_not_deliver_array, confirm_color_at: nil}
+        trade_type_hash = {has_color_info: true, :status.in => StatusHash["paid_not_deliver_array"], confirm_color_at: nil}
       when "color_confirmed"
-        trade_type_hash = {has_color_info: true, :status.in => paid_not_deliver_array, :confirm_color_at.ne => nil}
+        trade_type_hash = {has_color_info: true, :status.in => StatusHash["paid_not_deliver_array"], :confirm_color_at.ne => nil}
 
       # 锁定
       when 'locked'
@@ -1176,11 +1183,11 @@ class Trade
       when "default"
         # 经销商登录默认显示未发货订单
         if current_user.seller.present?
-          trades = trades.where(:dispatched_at.ne => nil, :status.in => paid_not_deliver_array)
+          trades = trades.where(:dispatched_at.ne => nil, :status.in => StatusHash["paid_not_deliver_array"])
         else
         # 管理员，客服登录默认显示未分派淘宝订单
         # if current_user.has_role?(:cs) || current_user.has_role?(:admin)
-          trades = trades.where(:status.in => paid_not_deliver_array, seller_id: nil).where(_type: 'TaobaoTrade')
+          trades = trades.where(:status.in => StatusHash["paid_not_deliver_array"], seller_id: nil).where(_type: 'TaobaoTrade')
         end
       end
     end

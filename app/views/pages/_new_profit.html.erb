@@ -1,0 +1,14 @@
+<div class="span3 responsive" data-tablet="span6" data-desktop="span3">
+  <div class="dashboard-stat yellow">
+    <div class="visual">
+      <i class="icon-bar-chart"></i>
+    </div>
+    <div class="details">
+      <div class="number"><%= Rails.cache.read("new_profit") %>¥</div>
+      <div class="desc">今日新进收益</div>
+    </div>
+    <a class="more" href="/sales/summary">
+      查看销售数据<i class="m-icon-swapright icon-circle-arrow-right"></i>
+    </a>
+  </div>
+</div>
