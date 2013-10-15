@@ -2,6 +2,13 @@ require 'sidekiq/web'
 
 MagicOrders::Application.routes.draw do
 
+  resource :page do
+    collection do
+      get :default
+      get :overview
+    end
+  end
+
   resources :third_parties do
     post :reset_token, on: :collection
   end
@@ -424,7 +431,7 @@ MagicOrders::Application.routes.draw do
     mount Sidekiq::Web => '/sidekiq'
   end
 
-  root to: "home#dashboard"
+  root to: "pages#index"
   # API
   require 'api'
   mount MagicOrder::API => '/api'
