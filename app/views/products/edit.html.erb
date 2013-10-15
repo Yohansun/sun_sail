@@ -1,1 +1,6 @@
+<% content_for :sub_nav do %>
+  <ul class="nav nav-tabs js-nav_tabs">
+    <li class="active"><a href="/products/#{@product.id}/edit" data-toggle="tab">编辑商品</a></li>
+  </ul><!-- nav-tabs -->
+<% end %>
 <%= render 'form' %>

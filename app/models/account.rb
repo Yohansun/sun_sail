@@ -420,20 +420,6 @@ class Account < ActiveRecord::Base
     }
   end
 
-  private
-
-  def initialize_auto_settings
-    self.settings["auto_settings"] = {'split_conditions' => {},'dispatch_conditions'=>{},'unusual_conditions'=>{}}
-  end
-
-  def create_default_seller
-    self.sellers.create(name:self.name,fullname:self.name, has_stock:true, areas:Area.leaves, trade_type: "Taobao")
-  end
-
-  def create_default_roles
-    self.roles.create(:name=>:admin).add_all_permissions
-  end
-
   def jingdong_query_conditions
     trade_source = self.jingdong_source
     conditions = {}
@@ -456,4 +442,19 @@ class Account < ActiveRecord::Base
     end
     conditions
   end
+
+  private
+
+  def initialize_auto_settings
+    self.settings["auto_settings"] = {'split_conditions' => {},'dispatch_conditions'=>{},'unusual_conditions'=>{}}
+  end
+
+  def create_default_seller
+    self.sellers.create(name:self.name,fullname:self.name, has_stock:true, areas:Area.leaves, trade_type: "Taobao")
+  end
+
+  def create_default_roles
+    self.roles.create(:name=>:admin).add_all_permissions
+  end
+
 end

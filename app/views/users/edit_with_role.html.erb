@@ -2,12 +2,11 @@
   breadcrumb << ["系统设置", users_path]
   breadcrumb << ["用户管理", users_path]
   breadcrumb << ["编辑用户"]
-%> 
+%>
 <div class="row-fluid">
   <div class="span10 w100">
     <ul class="nav nav-tabs">
-      <li class="active"><a href="/users">用户</a></li>
-      <li><a href="/users/roles">角色</a></li>
+      <li class="active"><a href="/users/#{@user.id}/edit_with_role">编辑用户</a></li>
     </ul><!-- nav-tabs -->
     <div class="tab-content">
       <%= simple_form_for @user,:url => user_path(@user,:from_path => "edit_with_role"), html: {:class =>'well form-horizontal'} do |f| %>

@@ -3,63 +3,61 @@
 <% end %>
 <div class="row-fluid">
   <div class="span12">
-    <div class="tab-content">
-      <%= form_tag warehouses_path,:method => :get, :class=>"well well-small form-horizontal font12" do %>
-      <div class="control-group">
-            <%= label_tag "where_name",raw("<code>精准搜索</code>"),:class => "pull-left"  %>
-            <%= select_tag "where_name", options_for_select([["仓库名称","stock_name_like"],["经销商名称","name_like"],["联系人","user_name_like"],["联系电话","mobile_like"]]),:include_blank => true, :value => "#{params[:where_name]}",:class => "input-small select2 all" %>
+    <%= form_tag warehouses_path,:method => :get, :class=>"well well-small form-horizontal font12" do %>
+    <div class="control-group">
+          <%= label_tag "where_name",raw("<code>精准搜索</code>"),:class => "pull-left"  %>
+          <%= select_tag "where_name", options_for_select([["仓库名称","stock_name_like"],["经销商名称","name_like"],["联系人","user_name_like"],["联系电话","mobile_like"]]),:include_blank => true, :value => "#{params[:where_name]}",:class => "input-small select2 all" %>
 
-            <div class="input-append">
-              <%= text_field_tag "keyword", '',:value => "#{params[:keyword] if params[:keyword]}", :class => "input-xlarge radius_no_tl"%>
-              <%= button_tag "过滤", :class => "btn btn-small btn-info" %>
-            </div>
+          <div class="input-append">
+            <%= text_field_tag "keyword", '',:value => "#{params[:keyword] if params[:keyword]}", :class => "input-xlarge radius_no_tl"%>
+            <%= button_tag "过滤", :class => "btn btn-small btn-info" %>
           </div>
-      <% end %>
-      <div class="btn-toolbar">
-        <div class="btn-group">
-          <button class="btn btn-warning">操作</button>
-          <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
-            <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu">
-            <li>
-              <%= link_to_authorize "详细", "#",:target_url => "/warehouses/:id/stock_in_bills",:class => "magic_detail" %>
-            </li>
-          </ul>
         </div>
+    <% end %>
+    <div class="btn-toolbar">
+      <div class="btn-group">
+        <button class="btn btn-warning">操作</button>
+        <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          <li>
+            <%= link_to_authorize "详细", "#",:target_url => "/warehouses/:id/stock_in_bills",:class => "magic_detail" %>
+          </li>
+        </ul>
       </div>
-      <%= form_tag "",:method => :get,:id => "customers" do %>
-      <table class="table table-hover table-bordered table-striped table-condensed js-table">
-        <thead>
-          <tr>
-            <th width="2%"><input type="checkbox"></th>
-            <th>仓库名称</th>
-            <th>所属经销商</th>
-            <th>商品数量</th>
-            <th>商品品类数</th>
-            <th>联系人</th>
-            <th>联系电话</th>
+    </div>
+    <%= form_tag "",:method => :get,:id => "customers" do %>
+    <table class="table table-hover table-bordered table-striped table-condensed js-table">
+      <thead>
+        <tr>
+          <th width="2%"><input type="checkbox"></th>
+          <th>仓库名称</th>
+          <th>所属经销商</th>
+          <th>商品数量</th>
+          <th>商品品类数</th>
+          <th>联系人</th>
+          <th>联系电话</th>
 
-          </tr>
-        </thead>
-        <tbody>
-          <% @warehouses.each do |warehouse| %>
-          <tr>
-            <td><input type="checkbox" name="warehouse_ids[]" value="<%= warehouse.id %>"></td>
-            <td><%= warehouse.stock_name %></td>
-            <td><%= warehouse.name %></td>
-            <td><%= warehouse.stock_products.count %></td>
-            <td><%= warehouse.category_count %></td>
-            <td><%= warehouse.interface %></td>
-            <td><%= warehouse.phone %></td>
-          </tr>
-          <% end %>
-        </tbody>
-      </table>
-      <% end %>
-          <%= paginate @warehouses %>
-      </div><!--span10 -->
-    </div><!-- tab-content -->
+        </tr>
+      </thead>
+      <tbody>
+        <% @warehouses.each do |warehouse| %>
+        <tr>
+          <td><input type="checkbox" name="warehouse_ids[]" value="<%= warehouse.id %>"></td>
+          <td><%= warehouse.stock_name %></td>
+          <td><%= warehouse.name %></td>
+          <td><%= warehouse.stock_products.count %></td>
+          <td><%= warehouse.category_count %></td>
+          <td><%= warehouse.interface %></td>
+          <td><%= warehouse.phone %></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <% end %>
+        <%= paginate @warehouses %>
+    </div><!--span10 -->
   </div><!-- span10 -->
 </div><!--row-fluid-->
 <% content_for :tail do -%>

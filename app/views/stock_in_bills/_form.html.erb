@@ -56,17 +56,18 @@
         <%= product.label :sku_id,"商品名称：",:class => "control-label" %>
         <%= product.select :sku_id,@current_user_skus.collect {|x| [x.title_with_product_id,x.id]},{:include_blank => true},{:class => "select2 input-xlarge product checkdata"} %>
       </div>
-      <%= product.remove_nested_fields_link "删除" %>
-    </fieldset>
-    <fieldset class="span6">
-      <%= product.input :number, label: "数量：",:class => "input-medium checkdata" %>
       <%= product.input :price, label: "进货价：",:class => "input-medium checkdata" %>
-      <%= product.input :real_number, label: "实际入库：",:class => "input-medium checkdata" %>
-      <%= product.input :total_price, label: "实际总价：",:class => "input-medium checkdata pull-left" %>
       <div class="control-group">
         <label class="control pull-left">SKU编码：</label>
         <input class="input-large sku" id="disabledSku" type="text" placeholder="" disabled>
       </div>
+    </fieldset>
+    <fieldset class="span6">
+      <%= product.input :number, label: "数量：",:class => "input-medium checkdata" %>
+      <%= product.input :real_number, label: "实际入库：",:class => "input-medium checkdata" %>
+      <label class="control pull-left">实际总价：</label>
+      <%= product.text_field :total_price, :class => "input-large checkdata" %>
+      <%= product.remove_nested_fields_link "删除" %>
     </fieldset>
   </div>
   <% end %>
