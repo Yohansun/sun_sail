@@ -189,24 +189,38 @@ class TaobaoTradePuller
       account_id = account.id
       response = TaobaoQuery.get({
         method: 'taobao.trade.fullinfo.get',
-        fields: 'total_fee, created, tid, status, post_fee, receiver_name, pay_time, end_time, receiver_state, receiver_city, receiver_district, receiver_address, receiver_zip, receiver_mobile, receiver_phone, buyer_nick, tile, type, point_fee, is_lgtype, is_brand_sale, is_force_wlb, modified, alipay_id, alipay_no, alipay_url, shipping_type, buyer_obtain_point_fee, cod_fee, cod_status, commission_fee, seller_nick, consign_time, received_payment, payment, timeout_action_time, has_buyer_message, real_point_fee',
+        fields: 'total_fee, tid, status, adjust_fee, post_fee, receiver_name, pay_time, end_time, receiver_state, receiver_city, receiver_district, receiver_address, receiver_zip, receiver_mobile, receiver_phone, buyer_nick, title, type, point_fee, modified, alipay_id, alipay_no, alipay_url, shipping_type, buyer_obtain_point_fee, cod_fee, cod_status, commission_fee, consign_time, received_payment, payment, timeout_action_time, has_buyer_message, real_point_fee, orders',
         tid: tid}, trade_source_id
       )
       trade = response['trade_fullinfo_get_response']['trade']
       update_trade(trade, account, trade_source_id)
     end
 
-    def updatable?(local_trade, remote_status)
-      !local_trade.splitted || (local_trade.splitted && remote_status != local_trade.status && remote_status != "WAIT_SELLER_SEND_GOODS" && local_trade.delivered_at.blank?)
+    def updatable?(local_trade, remote_status, has_refund_status)
+      has_refund_status || !local_trade.splitted || (local_trade.splitted && remote_status != local_trade.status && remote_status != "WAIT_SELLER_SEND_GOODS" && local_trade.delivered_at.blank?)
     end
 
     def update_trade(trade, account, trade_source_id)
       TaobaoTrade.where(tid: trade['tid']).each do |local_trade|
-        next unless updatable?(local_trade, trade['status'])
+
         trade_old_status = local_trade.status
-        orders = trade.delete('orders')
+        orders = trade.delete('orders').delete('order')
+
+        has_refund_status = (orders.map {|x| x.fetch('refund_status')}.uniq - ["NO_REFUND"]).present?
+        next unless updatable?(local_trade, trade['status'], has_refund_status)
+
         trade['trade_source_id'] = trade_source_id
         local_trade.update_attributes(trade)
+
+        unless orders.is_a?(Array)
+          orders = [] << orders
+        end
+
+        orders.each do |order|
+          local_order = local_trade.orders.where(oid: order['oid']).first
+          local_order.update_attributes(order)
+        end
+
         if local_trade.changed?
           local_trade.operation_logs.build(operated_at: Time.now, operation: "从淘宝更新订单,更新#{local_trade.changed.try(:join, ',')}")
           local_trade.news = 1
