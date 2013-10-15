@@ -268,7 +268,7 @@ MagicOrder::AccessControl.map do |map|
                                  "stock_out_bills#lock",
                                  "stock_in_bills#unlock",
                                  "stock_out_bills#unlock",
-                                 "stock_products#inventory"
+                                 "stock_products#inventory",
                                  "refund_products#create",
                                  "refund_products#update",
                                  "refund_products#sync",
