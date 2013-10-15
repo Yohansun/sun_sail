@@ -583,7 +583,9 @@ class Trade
       bill.tid = tid
     end
 
-    orders.each do |order|
+    regular_orders = orders.where(refund_status: 'NO_REFUND')
+
+    regular_orders.each do |order|
       order_num = order.num
       if order.sku_bindings.present?
         order.sku_bindings.each do |binding|
@@ -643,7 +645,7 @@ class Trade
       end
     end
     bill.bill_products_mumber = bill.bill_products.sum(:number)
-    bill.bill_products_price = self.payment - self.post_fee
+    bill.bill_products_price = regular_orders.sum(:payment) - self.post_fee
     bill.save
     bill.decrease_activity #减去仓库的可用库存
   end

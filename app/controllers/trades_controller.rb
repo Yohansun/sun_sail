@@ -217,7 +217,13 @@ class TradesController < ApplicationController
      :invoice_date,
      :invoice_number,
     ].each{|key|
-      @trade[key] = params[key].strip if params[key]
+      if params[key]
+        if params[key].respond_to?(:strip)
+          @trade[key] = params[key].strip
+        else
+          @trade[key] = params[key]
+        end
+      end
     }
 
     # 标注当前时间
