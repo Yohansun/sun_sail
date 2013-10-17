@@ -1,0 +1,14 @@
+<div class="span3 responsive" data-tablet="span6" data-desktop="span3">
+  <div class="dashboard-stat green">
+    <div class="visual">
+      <i class="icon-shopping-cart"></i>
+    </div>
+    <div class="details">
+      <div class="number"><%= Rails.cache.read("new_add_trades") %></div>
+      <div class="desc">今日新增订单</div>
+    </div>
+    <a class="more" href="/app">
+      查看更多订单<i class="m-icon-swapright icon-circle-arrow-right"></i>
+    </a>
+  </div>
+</div>

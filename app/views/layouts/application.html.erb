@@ -35,7 +35,7 @@
     <%= flash_message %>
 
     <div class="container-fluid" style="<%= request.path == root_path ? '' : 'min-height:840px;' %>">
-      <%- if params[:controller] == "home" || params[:controller] == "sessions" -%>
+      <%- if params[:controller] =~ /home|session|pages/ -%>
         <%= yield %>
       <%- else -%>
         <div class="row-fluid">

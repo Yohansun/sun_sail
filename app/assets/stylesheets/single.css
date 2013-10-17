@@ -178,7 +178,7 @@ code{color: #08C;}
 /*icon*/
 [class^="icon-flag_"],
 [class*=" icon-flag_"] {
-  background-image:url(../images/flags.jpg);
+  background-image:url(/assets/flags.jpg);
   width:27px;height:30px;
 }
 .icon-flag_red{background-position:0 0;}

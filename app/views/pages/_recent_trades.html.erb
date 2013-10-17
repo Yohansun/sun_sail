@@ -1,0 +1,64 @@
+<div class="span6">
+  <ul class="nav nav-tabs js-nav_tabs">
+    <li class="active"><a href="#recent_trades_1" data-toggle="tab">待分派</a></li>
+    <li><a href="#recent_trades_2" data-toggle="tab">待发货</a></li>
+    <li><a href="#recent_trades_3" data-toggle="tab">已发货</a></li>
+  </ul><!-- nav-tabs -->
+  <div class="tab-content">
+    <%- [@undispatched_trades, @undelivered_trades, @delivered_trades].each_with_index do |trades, i| %>
+      <div class="tab-pane <% if i == 0 %> active <% end %>" id="recent_trades_<%= i+1 %>">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th class="">订单号</th>
+              <th class="">商品名称(售卖数量)</th>
+              <th style="width:70px">实付金额</th>
+            </tr>
+          </thead>
+          <tbody>
+            <%- trades.each do |trade| %>
+            <tr>
+              <td class=""><%= trade.tid %></td>
+              <td class="">
+                <% trade.orders.each do |o| %>
+                  <% if o.order_gift_tid == nil %>
+                    <p><%= o.title %>  <label class="label"><%= o.num %></label></p><br>
+                  <% end %>
+                <% end %>
+              </td>
+              <td class=""><%= trade.payment %></td>
+            </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% end %>
+  </div>
+</div>
+<div class="span6">
+  <h6 class="index2_tit"><i class="icon-bell"></i>问题订单</h6>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th class="">订单号</th>
+        <th class="">异常原因</th>
+        <th class="">提交时间</th>
+        <th class="">提交人</th>
+      </tr>
+    </thead>
+    <tbody>
+      <%- @unusual_trades.each do |trade| %>
+        <% trade.unusual_states.where(repaired_at: nil).each_with_index do |u, i| %>
+          <tr>
+            <%- if i == 0 %>
+            <td class="" rowspan="<%= trade.unusual_states.where(repaired_at: nil).count %>"><%= trade.tid %></td>
+            <% end %>
+            <td class=""><%= u.reason %></td>
+            <td class=""><%= u.created_at.strftime("%Y-%m-%d %H:%M:%S") %></td>
+            <td class=""><%= u.reporter %></td>
+          </tr>
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>
+</div>

@@ -77,13 +77,7 @@ class SalesController < ApplicationController
   def product_analysis
     @start_time = (params[:start_time].to_time(:local) rescue nil) || 1.month.ago
     @end_time = (params[:end_time].to_time(:local) rescue nil) || Time.now
-    @trades = TaobaoTrade.where(account_id: current_account.id).between(created: @start_time..@end_time).in(status: ["TRADE_FINISHED","FINISHED_L"])
-    time_gap = (@end_time - @start_time).to_i
-    @old_trades = TaobaoTrade.where(account_id: current_account.id).between(created: (@start_time - time_gap.seconds)..@start_time).in(status: ["TRADE_FINISHED","FINISHED_L"])
-
-    if @trades && @old_trades
-      @product_data = product_data(@trades, @old_trades)
-    end
+    @product_data = product_data(@start_time, @end_time) rescue []
   end
 
   def area_analysis

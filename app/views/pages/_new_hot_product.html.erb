@@ -1,0 +1,14 @@
+<div class="span3 responsive" data-tablet="span6" data-desktop="span3">
+  <div class="dashboard-stat blue">
+    <div class="visual">
+      <i class="icon-comments"></i>
+    </div>
+    <div class="details">
+      <div class="number"><%= Rails.cache.read("new_hot_product") %></div>
+      <div class="desc">今日热卖商品</div>
+    </div>
+    <a class="more" href="/sales/product_analysis">
+      查看商品数据统计<i class="m-icon-swapright icon-circle-arrow-right"></i>
+    </a>
+  </div>
+</div>

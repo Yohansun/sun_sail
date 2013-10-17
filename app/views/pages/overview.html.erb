@@ -1,0 +1,97 @@
+<div class="row-fluid">
+  <%= render 'new_add_trades' %>
+  <%= render 'new_profit' %>
+  <%= render 'new_top_one_district' %>
+  <%= render 'new_hot_product' %>
+</div>
+<div class="row-fluid">
+  <div class="span6">
+    <%= render 'new_sale_analysis' %>
+  </div>
+  <div class="span6">
+    <div class="span12">
+      <%= render 'new_frequency_analysis' %>
+      <%= render 'new_time_analysis' %>
+    </div>
+  </div>
+</div>
+<div class="row-fluid">
+  <div class="span6">
+    <%= render 'new_trades_analysis' %>
+  </div>
+  <div class="span6">
+    <%= render 'new_customers_analysis' %>
+  </div>
+</div>
+<div class="row-fluid">
+  <%= render 'recent_trades' %>
+</div>
+
+
+<%- content_for :tail do %>
+  <script type="text/javascript">
+    jQuery(document).ready(function() {
+
+      App.init();
+      Charts.init();
+
+      //线性图初始化
+
+      var create_amount = []
+      var pay_amount = []
+      <%- Rails.cache.read("sale_chart").each do |t, value| %>
+        var time = new Date(<%= t.year %>, <%= t.month - 1 %>, <%= t.day %>, <%= t.hour %>+8, <%= t.min %>)
+        create_amount.push([time, <%= value["created_fee"].to_f.round(2) %>]);
+        pay_amount.push([time, <%= value["paid_fee"].to_f.round(2) %>]);
+      <% end %>
+
+      Charts.initTradesCharts(create_amount, pay_amount);
+
+      //柱状图初始化
+
+      var frequency_range = []
+      <%- Rails.cache.read("frequency_range").each_with_index do |value, i| %>
+        frequency_range.push([<%= i %>, <%= value[0] %>]);
+      <% end %>
+
+      var time_range = []
+      <%- Rails.cache.read("time_range").each do |value| %>
+        time_range.push([<%= value[1].to_i %>, <%= value[3] %>]);
+      <% end %>
+
+      Charts.initFrequencyCharts(frequency_range);
+      Charts.initTimeCharts(time_range);
+
+      //饼状图刷新
+
+      $('.easy-pie-chart-reload-trades').click(function(){
+        $.get("/page/reload_trades_percent_analysis", {}).done(function(){
+          var paid_percent = <%= Rails.cache.read("trades_percent_analysis")["paid_percent"] %>
+          var unpaid_percent = <%= Rails.cache.read("trades_percent_analysis")["unpaid_percent"] %>
+          var undelivered_percent = <%= Rails.cache.read("trades_percent_analysis")["undelivered_percent"] %>
+          $('.number.paid_trades_percent').data('easyPieChart').update(paid_percent);
+          $('.number.unpaid_trades_percent').data('easyPieChart').update(unpaid_percent);
+          $('.number.undelivered_trades_percent').data('easyPieChart').update(undelivered_percent);
+          $('.number.paid_trades_percent span').text(paid_percent);
+          $('.number.unpaid_trades_percent span').text(unpaid_percent);
+          $('.number.undelivered_trades_percent span').text(undelivered_percent);
+        })
+      });
+
+      $('.easy-pie-chart-reload-customers').click(function(){
+        $.get("/page/reload_customers_percent_analysis", {}).done(function(){
+          var potential_percent = <%= Rails.cache.read("customers_percent_analysis")["potential_percent"] %>
+          var new_percent = <%= Rails.cache.read("customers_percent_analysis")["new_percent"] %>
+          var familiar_percent = <%= Rails.cache.read("customers_percent_analysis")["familiar_percent"] %>
+          $('.number.potential_customers_percent').data('easyPieChart').update(potential_percent);
+          $('.number.new_customers_percent').data('easyPieChart').update(new_percent);
+          $('.number.familiar_customers_percent').data('easyPieChart').update(familiar_percent);
+          $('.number.potential_customers_percent span').text(potential_percent);
+          $('.number.new_customers_percent span').text(new_percent);
+          $('.number.familiar_customers_percent span').text(familiar_percent);
+        })
+      });
+
+   });
+  </script>
+<% end %>

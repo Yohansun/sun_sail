@@ -38,7 +38,7 @@
 -->
         </ul>
     </li>
-    <% @basedata = ["stocks","logistics","category_properties","categories", "logistic_groups", "deliver_templates", "trade_searches", "areas", "orders", "notify", "trades"] %>
+    <% @basedata = ["stocks","logistics","category_properties","categories", "logistic_groups", "deliver_templates", "trade_searches", "areas", "orders", "notify", "trades","pages"] %>
     <li class="<%= display?(@basedata,"active") %>">
       <a href="#" class="" data-toggle="collapse" data-target="#base_data">
         <i class="icon-chevron-right"></i> 基础数据管理
@@ -101,9 +101,7 @@
               </li>
             </ul>
           </li>
-
-            </a>
-          </li>
+          <li class="<%= "active" if params[:controller] == "pages" %>"><a href="/page"  data-toggle="collapse" data-target="#areas_menu">默认登陆页面</a></li>
         </ul>
     </li>
 

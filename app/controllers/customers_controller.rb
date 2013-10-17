@@ -36,7 +36,7 @@ class CustomersController < ApplicationController
 
   #GET /customers/around
   def around
-    @products = Product.includes(:category).all
+    @products = Product.where(account_id: current_account.id).includes(:category).all
     @search = Customer.search(params[:search])
     @customers = @search.page(params[:page]).per(20)
     respond_to do |format|
