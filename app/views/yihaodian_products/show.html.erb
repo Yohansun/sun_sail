@@ -1,3 +1,8 @@
+<% content_for :sub_nav do %>
+  <ul class="nav nav-tabs js-nav_tabs">
+    <li class="active"><a href="/yihaodian_products/<%= @product.id %>" data-toggle="tab"><%= @product.product_cname %></a></li>
+  </ul><!-- nav-tabs -->
+<% end %>
 <form class="well form-horizontal info_check">
   <fieldset class="clearfix">
     <div class="w_48 pull-left">

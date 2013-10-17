@@ -158,6 +158,16 @@ module ApplicationHelper
       else
         active_li_item("经销商管理")
       end
+    when "refund_products"
+      items << href_li_item("仓库管理", "stocks")
+      items << case act_name
+        when "new", "create"
+          active_li_item("新建退货单")
+        when "edit", "update"
+          active_li_item("编辑退货单")
+        else
+          active_li_item("退货单")
+        end
     when "stock_in_bills"
       items << href_li_item("仓库管理", "stocks")
       items << case act_name
@@ -192,6 +202,9 @@ module ApplicationHelper
       when "edit", "update"
         items << href_li_item("本地商品")
         items <<  active_li_item("编辑商品")
+      when "import", "import_csv"
+        items << href_li_item("本地商品")
+        items <<  active_li_item("导入商品")
       when "new", "create"
         items << href_li_item("本地商品")
         items <<  active_li_item("新增商品")
@@ -209,7 +222,8 @@ module ApplicationHelper
       case act_name
       when "show"
         items << href_li_item("京东商品")
-        items <<  active_li_item("查看商品")
+        title = @product.present? ? @product.title : "查看商品"
+        items <<  active_li_item(title)
       when "sync"
         items << href_li_item("京东商品")
         items <<  active_li_item("同步结果")
@@ -221,7 +235,8 @@ module ApplicationHelper
       case act_name
       when "show"
         items << href_li_item("一号店商品")
-        items <<  active_li_item("查看商品")
+        title = @product.present? ? @product.product_cname : "查看商品"
+        items <<  active_li_item(title)
       when "sync"
         items << href_li_item("一号店商品")
         items <<  active_li_item("同步结果")
@@ -257,6 +272,7 @@ module ApplicationHelper
         items << active_li_item("我的异常订单")
       end
     when "custom_trades"
+      items << href_li_item("订单管理", "app#trades")
       case act_name
       when "new"
         items << active_li_item("新建订单")

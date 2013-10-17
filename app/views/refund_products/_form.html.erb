@@ -53,33 +53,27 @@
   <%= f.add_nested_fields_link :refund_orders,'添加',:class => "btn btn-warning btn-small"%>
   <%= f.nested_fields_for :refund_orders do |product|  %>
     <div class="well clearfix">
-      <fieldset>
+      <fieldset class="span6">
         <div class="control-group">
           <%= product.label :sku_id,"退货商品: ",:class => "control-label" %>
-          <%= product.select :sku_id,product.object.bill_products ? product.object.bill_products.collect {|x| [x.title,x.sku_id]} : [],{:include_blank => true},{:class => "select2 span10 product checkdata select_order"} %>
+          <%= product.select :sku_id,product.object.bill_products ? product.object.bill_products.collect {|x| [x.title,x.sku_id]} : [],{:include_blank => true},{:class => "select2 product checkdata select_order input-large"} %>
         </div>
-      </fieldset>
-    </div>
-    <div class="well clearfix">
-      <fieldset class="span2">
         <div class="control-group">
-          <%= product.label :num,"数量：",:class => "control pull-left" %>
+          <%= product.label :num,"退货数量：",:class => "control pull-left" %>
           <%= product.text_field :num,:class => "input-small checkdata" %>
         </div>
+        <%= product.remove_nested_fields_link "删除" %>
       </fieldset>
       <fieldset class="span2">
         <div class="control-group">
           <%= product.label :refund_price,"退货金额：",:class => "control pull-left" %>
           <%= product.text_field :refund_price,:class => "input-small checkdata" %>
         </div>
-      </fieldset><!-- form left area -->
-      <fieldset class="span6">
         <div class="control-group">
-          <label class="control pull-left">SKU编码：</label>
+          <label class="control pull-left">商品SKU：</label>
           <span class="input-large sku_code" ><%= product.object.sku.try(:sku_id) %></span>
         </div>
       </fieldset><!-- form left area -->
-      <%= product.remove_nested_fields_link "删除" %>
     </div>
   <% end %>
 </div>

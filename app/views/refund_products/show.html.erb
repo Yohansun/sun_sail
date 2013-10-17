@@ -1,115 +1,113 @@
-<div class="row-fluid">
-  <div class="span10">
-    <ul class="nav nav-tabs">
-      <li class="active"><%= link_to "#{@refund_product.refund_id}退货单", warehouse_stock_out_bills_path(@warehouse) %></li>
-      <li><%= link_to "入库单", warehouse_stock_in_bills_path(@warehouse) %></li>
-      <li><%= link_to "退货单", warehouse_refund_products_path(@warehouse) %></li>
-      <li><%= link_to "出库单", warehouse_stock_out_bills_path(@warehouse) %></li>
-      <li><%= link_to "所有进销", warehouse_stock_bills_path(@warehouse) %></li>
-    </ul><!-- nav-tabs -->
-    <form class="form-horizontal mar_t30">
-      <div class="well clearfix">
-        <fieldset class="span6">
-          <div class="form-inline">
-            <label>退货编号：</label><%= @refund_product.refund_id %>
-          </div>
-          <div class="form-inline">
-            <label>当前状态：</label><%= @refund_product.status_name %>
-          </div>
-          <div class="form-inline">
-            <label>退货人：</label><%= @refund_product.buyer_name %>
-          </div>
-          <div class="form-inline">
-            <label>手机：</label><%= @refund_product.mobile %>
-          </div>
-          <div class="form-inline">
-            <label>邮编：</label><%= @refund_product.zip %>
-          </div>
-          <fieldset class="form-inline">
-            <label>备注：</label><%= @refund_product.reason %>
-          </fieldset>
-          <fieldset class="form-inline">
-            <fieldset class="form-inline">
-              <label>历史状态：</label>
-              <%- if @refund_product.status_operations.present? -%>
-              <br/>
-                <% @refund_product.status_operations.each do |status| %>
-                  <% status.each do |key, value| %>
-                    <span class='label label-success'>
-                      <% if key.to_s == "created" %>
-                          待审核:<%= value.strftime('%Y-%m-%d %H:%M:%S') %>
-                      <% elsif key.to_s == "checked" %>
-                        已审核待同步:<%= value.strftime('%Y-%m-%d %H:%M:%S') %>
-                      <% elsif key.to_s == "syncked" %>
-                        已同步:<%= value.strftime('%Y-%m-%d %H:%M:%S') %>
-                      <% elsif key.to_s == "locked" %>
-                        已锁定:<%= value.strftime('%Y-%m-%d %H:%M:%S') %>
-                      <% else key.to_s == "enabled" %>
-                        已激活:<%= value.strftime('%Y-%m-%d %H:%M:%S') %>
-                      <% end %>
-                    </span>
-                  <% end %>
-                <% end %>
-              <br/>
-              <%- end -%>
-            </fieldset>
-          </fieldset>
-        </fieldset><!-- form left area -->
-        <fieldset class="span6">
-          <div class="form-inline">
-            <label>订单编号：</label><%= @refund_product.tid %>
-          </div>
-          <div class="form-inline">
-            <label>固定电话：</label><%= @refund_product.phone %>
-          </div>
-          <div class="form-inline">
-            <label>市：</label><%= @refund_product.area_city_name %>
-          </div>
-          <div class="form-inline">
-            <label>省：</label><%= @refund_product.area_state_name %>
-          </div>
-          <div class="form-inline">
-            <label>区：</label><%= @refund_product.area_district_name %>
-          </div>
-          <div class="form-inline">
-            <label>收货地址：</label><%= @refund_product.address %>
-          </div>
-          <div class="form-inline">
-            <label>退货时间: </label><%= @refund_product.refund_time.to_s(:db) %>
-          </div>
-        </fieldset>
-      </form>
-    </div>
-    <div class="clearfix">
-      <ul class="nav nav-tabs">
-        <li class="active"><a href="#good_info" data-toggle="tab">商品信息</a></li>
-      </ul>
-      <div class="tab-content noborder_content">
-        <div class="tab-pane active">
-          <table class="table table-hover table-bordered table-striped table-condensed">
-            <thead>
-              <tr>
-                <th>商品名称</th>
-                <th>总数量</th>
-                <th>退货数量</th>
-                <th>商品SKU</th>
-                <th>退货金额</th>
-              </tr>
-            </thead>
-            <tbody>
-              <%- @refund_product.refund_orders.each do |product| %>
-              <tr>
-                <td><%= product.title %></td>
-                <td><%= product.bill_product.number %></td>
-                <td><%= product.num %></td>
-                <td><%= product.sku.try(:title) %></td>
-                <td><%= product.refund_price %></td>
-              </tr>
-              <%- end %>
-            </tbody>
-          </table>
-        </div>
+<% content_for :sub_nav do %>
+  <ul class="nav nav-tabs">
+    <li class="active"><%= link_to "#{@refund_product.refund_id}退货单", warehouse_stock_out_bills_path(@warehouse) %></li>
+    <li><%= link_to "入库单", warehouse_stock_in_bills_path(@warehouse) %></li>
+    <li><%= link_to "退货单", warehouse_refund_products_path(@warehouse) %></li>
+    <li><%= link_to "出库单", warehouse_stock_out_bills_path(@warehouse) %></li>
+    <li><%= link_to "所有进销", warehouse_stock_bills_path(@warehouse) %></li>
+  </ul><!-- nav-tabs -->
+<% end %>
+<form class="form-horizontal mar_t30">
+  <div class="well clearfix">
+    <fieldset class="span6">
+      <div class="form-inline">
+        <label>退货编号：</label><%= @refund_product.refund_id %>
       </div>
+      <div class="form-inline">
+        <label>当前状态：</label><%= @refund_product.status_name %>
+      </div>
+      <div class="form-inline">
+        <label>退货人：</label><%= @refund_product.buyer_name %>
+      </div>
+      <div class="form-inline">
+        <label>手机：</label><%= @refund_product.mobile %>
+      </div>
+      <div class="form-inline">
+        <label>邮编：</label><%= @refund_product.zip %>
+      </div>
+      <fieldset class="form-inline">
+        <label>备注：</label><%= @refund_product.reason %>
+      </fieldset>
+      <fieldset class="form-inline">
+        <fieldset class="form-inline">
+          <label>历史状态：</label>
+          <%- if @refund_product.status_operations.present? -%>
+          <br/>
+            <% @refund_product.status_operations.each do |status| %>
+              <% status.each do |key, value| %>
+                <span class='label label-success'>
+                  <% if key.to_s == "created" %>
+                      待审核:<%= value.strftime('%Y-%m-%d %H:%M:%S') %>
+                  <% elsif key.to_s == "checked" %>
+                    已审核待同步:<%= value.strftime('%Y-%m-%d %H:%M:%S') %>
+                  <% elsif key.to_s == "syncked" %>
+                    已同步:<%= value.strftime('%Y-%m-%d %H:%M:%S') %>
+                  <% elsif key.to_s == "locked" %>
+                    已锁定:<%= value.strftime('%Y-%m-%d %H:%M:%S') %>
+                  <% else key.to_s == "enabled" %>
+                    已激活:<%= value.strftime('%Y-%m-%d %H:%M:%S') %>
+                  <% end %>
+                </span>
+              <% end %>
+            <% end %>
+          <br/>
+          <%- end -%>
+        </fieldset>
+      </fieldset>
+    </fieldset><!-- form left area -->
+    <fieldset class="span6">
+      <div class="form-inline">
+        <label>订单编号：</label><%= @refund_product.tid %>
+      </div>
+      <div class="form-inline">
+        <label>固定电话：</label><%= @refund_product.phone %>
+      </div>
+      <div class="form-inline">
+        <label>市：</label><%= @refund_product.area_city_name %>
+      </div>
+      <div class="form-inline">
+        <label>省：</label><%= @refund_product.area_state_name %>
+      </div>
+      <div class="form-inline">
+        <label>区：</label><%= @refund_product.area_district_name %>
+      </div>
+      <div class="form-inline">
+        <label>收货地址：</label><%= @refund_product.address %>
+      </div>
+      <div class="form-inline">
+        <label>退货时间: </label><%= @refund_product.refund_time.to_s(:db) %>
+      </div>
+    </fieldset>
+  </div>
+</form>
+<div class="clearfix">
+  <ul class="nav nav-tabs nomargin">
+    <li class="active"><a href="#good_info" data-toggle="tab">商品信息</a></li>
+  </ul>
+  <div class="tab-content noborder_content">
+    <div class="tab-pane active">
+      <table class="table table-hover table-bordered table-striped table-condensed">
+        <thead>
+          <tr>
+            <th>商品名称</th>
+            <th>总数量</th>
+            <th>退货数量</th>
+            <th>商品SKU</th>
+            <th>退货金额</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%- @refund_product.refund_orders.each do |product| %>
+          <tr>
+            <td><%= product.title %></td>
+            <td><%= product.bill_product.number %></td>
+            <td><%= product.num %></td>
+            <td><%= product.sku.try(:title) %></td>
+            <td><%= product.refund_price %></td>
+          </tr>
+          <%- end %>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
