@@ -32,4 +32,49 @@ class TradeSource < ActiveRecord::Base
   has_one :yihaodian_app_token
 
   validates :name, presence: true, uniqueness: true
+
+  after_commit :write_cache
+
+  class << self
+    # *ActiveRecord::Querying#find* cache.
+    # Does not support to *ActiveRecord::Relation#find*
+    # For example:
+    #     TradeSource.find 1
+    #     => TradeSource Load (0.4ms)  SELECT `trade_sources`.* FROM `trade_sources` WHERE `trade_sources`.`id` = 1 LIMIT 1
+    #     =>  #<TradeSource id: 1,name: "foo",.....>
+    #     TradeSource.find 1
+    #     =>  #<TradeSource id: 1,name: "foo",.....>
+    #     TradeSource.find(1).update_attributes(name: "bar")
+    #     =>  #<TradeSource id: 1,name: "bar",.....>
+    #     TradeSource.find 1
+    #     =>  #<TradeSource id: 1,name: "bar",.....>
+    def find_with_old(*args)
+      cache.fetch(cache_key(*args)) { write_cache(*args) }
+    end
+
+    def write_cache(*args)
+      cache.write(cache_key(*args),self.find_without_old(*args),expires_in: 24.hours)
+      cache.read(cache_key(*args))
+    end
+
+    alias_method_chain :find,:old
+
+    def cache_key(*args)
+      prefix << args.join(":")
+    end
+
+    def prefix
+      self.name << "- "
+    end
+
+    def cache
+      Rails.cache
+    end
+  end
+
+  def write_cache
+    reg = /^#{self.class.prefix}.+[#{id}]+|all|first|last/
+    Rails.cache.delete_matched(reg)
+    self.class.write_cache(id)
+  end
 end

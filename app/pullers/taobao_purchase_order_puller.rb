@@ -3,7 +3,7 @@
 class TaobaoPurchaseOrderPuller
   class << self
     def create(start_time = nil, end_time = nil, trade_source_id)
-      trade_source = TradeSource.find_by_id(trade_source_id)
+      trade_source = TradeSource.find(trade_source_id)
       account_id = trade_source.account_id
       account = Account.find_by_id(account_id)
       if start_time.blank?
@@ -102,7 +102,7 @@ class TaobaoPurchaseOrderPuller
     end
 
     def update(start_time = nil, end_time = nil, trade_source_id)
-      trade_source = TradeSource.find_by_id(trade_source_id)
+      trade_source = TradeSource.find(trade_source_id)
       account_id = trade_source.account_id
       account = Account.find_by_id(account_id)
 

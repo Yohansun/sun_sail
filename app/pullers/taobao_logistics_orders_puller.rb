@@ -8,7 +8,7 @@ class TaobaoLogisticsOrdersPuller
       start_time ||= Time.now - 3.months
       end_time ||= Time.now
 
-      trade_source = TradeSource.find_by_id(trade_source_id)
+      trade_source = TradeSource.find(trade_source_id)
       account_id = trade_source.try(:account_id)
 
       logistics_response = TaobaoQuery.get({method: 'taobao.logistics.companies.get', fields: 'code,name'}, trade_source_id)

@@ -4,7 +4,7 @@ require 'oauth2'
 module TaobaoQuery
 
   def self.get(options = {}, trade_source_id = nil)
-    source = TradeSource.find_by_id(trade_source_id)
+    source = TradeSource.find(trade_source_id)
     account = Account.find_by_id(source.account_id)
     if account
       if account.settings.taobao_auth_method == "TOP"
@@ -18,7 +18,7 @@ module TaobaoQuery
 
   def self.oauth_https_get(options, trade_source_id)
     #source_name用来选择订单源，代替之前的Taobaofu.select_source
-    source = TradeSource.find_by_id(trade_source_id)
+    source = TradeSource.find(trade_source_id)
     if source && source.taobao_app_token
       token = source.taobao_app_token
 
@@ -44,7 +44,7 @@ module TaobaoQuery
 
   def self.oauth_http_get(options, trade_source_id)
     #source_name用来选择订单源，代替之前的Taobaofu.select_source
-    source = TradeSource.find_by_id(trade_source_id)
+    source = TradeSource.find(trade_source_id)
     if source && source.taobao_app_token
       token = source.taobao_app_token
 
