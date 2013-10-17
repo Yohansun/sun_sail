@@ -275,7 +275,7 @@ module ApplicationHelper
       items << href_li_item("订单管理", "app#trades")
       case act_name
       when "new"
-        items << active_li_item("新建订单")
+        items << active_li_item("新增订单")
       when "edit"
         items << active_li_item("编辑订单")
       end
