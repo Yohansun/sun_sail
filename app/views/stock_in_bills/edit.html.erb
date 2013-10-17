@@ -19,6 +19,7 @@
     <li><%= link_to "入库单", warehouse_stock_in_bills_path(@warehouse) %></li>
     <li><%= link_to "出库单", warehouse_stock_out_bills_path(@warehouse) %></li>
     <li><%= link_to "所有进销", warehouse_stock_bills_path(@warehouse) %></li>
+    <li><%= link_to "退货单", warehouse_refund_products_path(@warehouse) %></li>
   </ul><!-- nav-tabs -->
 <% end %>
 <%= render :partial => "form",:locals => {:path => warehouse_stock_in_bill_path(@warehouse,@bill)} %>
