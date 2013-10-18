@@ -95,8 +95,8 @@ var Charts = function () {
                   ticks: 11,
                   tickDecimals: 0,
                   mode: "time",
-                  timeformat: "%H",
-                  tickSize: [1, "hour"]
+                  timeformat: "%m/%d",
+                  tickSize: [3, "day"]
               },
               yaxis: {
                   ticks: 11,
