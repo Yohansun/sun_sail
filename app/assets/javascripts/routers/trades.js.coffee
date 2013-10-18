@@ -33,22 +33,8 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     $("#top-nav li").hide()
     $("#top-nav li.trades").show()
 
-  form_height: ->
-    out_height = $('.js-affix').outerHeight();
-    $('.btn-toolbar').css('top', out_height + 71 + 'px');
-
   processScroll: =>
-    scrollTop = $(window).scrollTop()
-    if scrollTop >= @navTop && !@isFixed
-      @isFixed = true
-      @nav.addClass('subnav-fixed')
-    else
-      if scrollTop <= @navTop && @isFixed
-        @isFixed = false
-        @nav.removeClass('subnav-fixed')
     $('.js-affix').affix()
-    @form_height()
-
 
   main: () ->
     Backbone.history.navigate('trades', true)
@@ -101,23 +87,12 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $(".label_advanced").hide()
     else
       $(".label_advanced").show()
-    @nav = $('.subnav')
-    @navTop = $('.subnav').length && $('.subnav').offset().top - 40
-#    $(window).off 'scroll'
-#    $(window).on 'scroll', @processScroll
-    @processScroll
-    $('.js-affix').affix()
+    $(window).on 'scroll', @processScroll
     $('.label_advanced').bind 'click', ->
-      $(this).parents("fieldset").siblings(".search_advanced").toggle 0, ->
-        out_height = $('.js-affix').outerHeight()
-        $('.btn-toolbar').css('top', out_height + 71 + 'px')
-
       $(this).parent().toggleClass('open_advance')
-      # $(this).find('i').toggleClass('icon-arrow-up')
       className = $('.js-open_advance').find('i').hasClass('icon-arrow-down')
       $('.js-open_advance').find('i').toggleClass( className ? 'icon-arrow-up' : 'icon-arrow-down')
       $('.js-open_advance').find('i').removeClass('icon-arrow-down').addClass('icon-arrow-up')
-      # $.unblockUI()
 
     # # 新订单提醒相关
     # if collection.models.length > 0

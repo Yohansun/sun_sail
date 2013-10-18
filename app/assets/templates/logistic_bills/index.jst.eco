@@ -1,190 +1,102 @@
-<style type="text/css">
-  .timeEntry_control { vertical-align: middle; margin-left: -1px; margin-top: 0px; cursor: pointer; }
-  * html .timeEntry_control { margin-top: -2px; }
-</style>
+<ul class="breadcrumb" style="position:relative;">
+  <li><a href="/">Magic</a><span class="divider">/</span></li>
+  <li><a href="/app#trades">订单管理</a><span class="divider">/</span></li>
+  <li id='current_name'>物流单</li>
+</ul><!-- breadcrumb -->
 
-<!-- <header class="jumbotron subhead" id="overview">
-  <div class="subnav">
-    <ul class="nav nav-pills">
-      <% unless MagicOrders.company == "dulux" and MagicOrders.role_key == 'logistic' : %>
-      <li class="dropdown" id="trade_selector">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">
-          订单<b class="caret"></b>
-        </a>
-        <ul class="dropdown-menu">
-          <li><a href="#trades" data-trade-mode="trades" data-trade-status="all">所有</a></li>
-          <% if MagicOrders.role_key != 'seller' : %>
-          <li><a href="#" data-trade-mode="trades" data-trade-status="unpaid">未付款</a></li>
-          <li><a href="#" data-trade-mode="trades" data-trade-status="paid">已付款</a></li>
-          <li><a href="#" data-trade-mode="trades" data-trade-status="undispatched">未分派</a></li>
-          <% end %>
-          <li><a href="#" data-trade-mode="trades" data-trade-status="dispatched">已分派</a></li>
-          <li><a href="#" data-trade-mode="trades" data-trade-status="undelivered">已分派，未发货</a></li>
-          <li><a href="#" data-trade-mode="trades" data-trade-status="delivered">已发货</a></li>
-          <li><a href="#" data-trade-mode="trades" data-trade-status="deliver_unconfirmed">已发货，未确认发货</a></li>
-          <li><a href="#" data-trade-mode="trades" data-trade-status="refund">退款</a></li>
-          <li><a href="#" data-trade-mode="trades" data-trade-status="return">退货</a></li>
-          <% if MagicOrders.role_key != 'seller' : %>
-          <li><a href="#" data-trade-mode="trades" data-trade-status="closed">交易关闭</a></li>
-          <li><a href="#" data-trade-mode="trades" data-trade-status="unusual_trade">交易异常</a></li>
-          <% end %>
-        </ul>
-      </li>
-      <% end %>
-      <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">
-          发货单
-          <b class="caret"></b>
-        </a>
-        <ul class="dropdown-menu">
-          <li><a href="#" data-trade-mode="deliver_bills" data-trade-status="all">所有发货单</a></li>
-          <li><a href="#" data-trade-mode="deliver_bills" data-trade-status="unprinted">未打印</a></li>
-          <li><a href="#" data-trade-mode="deliver_bills" data-trade-status="printed">已打印</a></li>
-        </ul>
-      </li>
-      <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-          物流单<b class="caret"></b>
-        </a>
-        <ul class="dropdown-menu">
-          <li><a href="#" data-trade-mode="logistic_bills" data-trade-status="all">所有物流单</a></li>
-          <li><a href="#" data-trade-mode="logistic_bills" data-trade-status="unprinted">未打印物流单</a></li>
-          <li><a href="#" data-trade-mode="logistic_bills" data-trade-status="printed">已打印物流单</a></li>
-          <li><a href="#" data-trade-mode="logistic_bills" data-trade-status="waybill_void">未设置物流信息</a></li>
-          <li><a href="#" data-trade-mode="logistic_bills" data-trade-status="waybill_exist">已设置物流信息</a></li>
-        </ul>
-      </li>
-      <% unless MagicOrders.company == "dulux" and MagicOrders.role_key == 'logistic' : %>
-        <li class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-            发货
-            <b class="caret"></b>
-          </a>
-          <ul class="dropdown-menu">
-            <li><a href="#" data-trade-mode="send" data-trade-status="seller_undelivered">未发货</a></li>
-            <li><a href="#" data-trade-mode="send" data-trade-status="seller_delivered">已发货</a></li>
-          </ul>
-        </li>
-      <% end %>
-      <% if MagicOrders.enable_module_colors == 1 : %>
-        <li class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-            调色
-            <b class="caret"></b>
-          </a>
-          <ul class="dropdown-menu">
-            <li><a href="#" data-trade-mode="color" data-trade-status="color_unmatched">未申请调色</a></li>
-            <li><a href="#" data-trade-mode="color" data-trade-status="color_matched">已申请,未确认调色</a></li>
-            <li><a href="#" data-trade-mode="color" data-trade-status="color_confirmed">已确认调色</a></li>
-          </ul>
-        </li>
-      <% end %>
-    </ul>
-  </div>
-</header> -->
+<ul id='global-menus' class="nav nav-tabs nomargin js-affix" data-spy="affix" data-offset-top="41">
+  <li><a href="#" data-trade-mode="trades" data-trade-status="my_trade">我的订单<em></em></a></li>
+  <li><a href="#" data-trade-mode="trades" data-trade-status="all">所有订单<em></em></a></li>
+  <!-- <li><a href="#" data-trade-mode="trades" data-trade-status="default">待审核<em></em></a></li> -->
+  <li><a href="#" data-trade-mode="trades" data-trade-status="undispatched">待分派<em></em></a></li>
+  <li><a href="#" data-trade-mode='trades' data-trade-status='undelivered'>待发货<em></em></a></li>
+  <li><a href="#" data-trade-mode='trades' data-trade-status='delivered'>已发货<em></em></a></li>
+  <li><a href="#" data-trade-mode='trades' data-trade-status='unusual_all'>问题订单<em></em></a></li>
+  <li><a href="#" data-trade-mode='trades' data-trade-status='locked'>锁定人工订单<em></em></a></li>
+  <li><a href="#" data-trade-mode="deliver_bills" data-trade-status="all">发货单<em></em></a></li>
+  <li><a href="#" data-trade-mode="logistic_bills" data-trade-status="all">物流单<em></em></a></li>
+  <!-- <li class=''><a href="#after_order" data-toggle="tab">售后订单</a></li> -->
+</ul>
 
-<div class="row-fluid" id="main-top">
-  <div class="affix">
-    <ul class="breadcrumb" style="position:relative;">
-      <li><a href="/">Magic</a><span class="divider">/</span></li>
-      <li><a href="/app#trades">订单管理</a><span class="divider">/</span></li>
-      <li id='current_name'>物流单</li>
-    </ul><!-- breadcrumb -->
-    <ul id='global-menus' class="nav nav-tabs">
-      <li><a href="#" data-trade-mode="trades" data-trade-status="my_trade">我的订单<em></em></a></li>
-      <li><a href="#" data-trade-mode="trades" data-trade-status="all">所有订单<em></em></a></li>
-      <!-- <li><a href="#" data-trade-mode="trades" data-trade-status="default">待审核<em></em></a></li> -->
-      <li><a href="#" data-trade-mode="trades" data-trade-status="undispatched">待分派<em></em></a></li>
-      <li><a href="#" data-trade-mode='trades' data-trade-status='undelivered'>待发货<em></em></a></li>
-      <li><a href="#" data-trade-mode='trades' data-trade-status='delivered'>已发货<em></em></a></li>
-      <li><a href="#" data-trade-mode='trades' data-trade-status='unusual_all'>问题订单<em></em></a></li>
-      <li><a href="#" data-trade-mode='trades' data-trade-status='locked'>锁定人工订单<em></em></a></li>
-      <li><a href="#" data-trade-mode="deliver_bills" data-trade-status="all">发货单<em></em></a></li>
-      <li><a href="#" data-trade-mode="logistic_bills" data-trade-status="all">物流单<em></em></a></li>
-      <!-- <li class=''><a href="#after_order" data-toggle="tab">售后订单</a></li> -->
-    </ul>
-    <div class="row-fluid" style="margin: 0 20px;">
+<div class='tab-content' id='all_orders'>
+  <div class="tab-pane active">
 
-      <div id='search_form'></div>
+    <div class="well-white">
+      <div class="affix_white js-affix" data-spy="affix" data-offset-top="41">
+        <div id='search_form'></div>
 
-      <div id='op-toolbar' class="btn-toolbar js-affix" data-spy="affix" data-offset-top="144">
-        <div class="btn-group">
-          <button class="btn btn-warning">操作</button>
-          <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
-            <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu index_pops">
-            <li><a data-toggle="modal" href="#" data-type="print_logistic_bill">打印物流单</a></li>
-            <li><a data-toggle="modal" href="#" data-type="setup_logistic">设置物流信息</a></li>
-          </ul>
-        </div>
+        <div id='op-toolbar' class="btn-toolbar">
+          <div class="btn-group">
+            <button class="btn btn-warning">操作</button>
+            <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu index_pops">
+              <li><a data-toggle="modal" href="#" data-type="print_logistic_bill">打印物流单</a></li>
+              <li><a data-toggle="modal" href="#" data-type="setup_logistic">设置物流信息</a></li>
+            </ul>
+          </div>
 
-        <div class="btns btn-group batch_ops">
-          <a href="javascript:void(0)" class="btn btn-warning">批量操作</a>
-          <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-warning btn_left4">
-            <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu">
-            <li><a data-toggle="modal" class='print_logistics' href="#">批量打印物流单</a></li>
-            <li><a data-toggle="modal" class='return_logistics' href='#'>批量设置物流信息</a></li>
-          </ul>
+          <div class="btns btn-group batch_ops">
+            <a href="javascript:void(0)" class="btn btn-warning">批量操作</a>
+            <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-warning btn_left4">
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+              <li><a data-toggle="modal" class='print_logistics' href="#">批量打印物流单</a></li>
+              <li><a data-toggle="modal" class='return_logistics' href='#'>批量设置物流信息</a></li>
+            </ul>
+          </div>
+
+          <div class="btns btn-group pull-right">
+            <a href="javascript:void(0)" class="btn btn-success btn_mar4">显示设置</a>
+            <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-success dropdown_check_btn"><span class="caret"></span></button>
+            <ul class="dropdown-menu dropdown_check" id="cols_filter">
+              <% for key in _.keys(window.MagicOrders.trade_cols): %>
+              <li data-col="<%= key %>">
+                <label class="checkbox" style="padding-left:35px;">
+                  <input type="checkbox" value="<%= key %>">
+                  <%= window.MagicOrders.trade_cols[key] %>
+                </label>
+              </li>
+              <% end %>
+            </ul>
+          </div>
         </div>
       </div>
 
-      <div class="btn-toolbar js-affix" data-spy="affix" data-offset-top="144">
-        <div class="btns btn-group pull-right" style="margin-right: 30px;margin-top: -40px">
-          <a href="javascript:void(0)" class="btn btn-success btn_mar4">显示设置</a>
-          <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-success dropdown_check_btn"><span class="caret"></span></button>
-          <ul class="dropdown-menu dropdown_check" id="cols_filter">
-            <% for key in _.keys(window.MagicOrders.trade_cols): %>
-            <li data-col="<%= key %>">
-              <label class="checkbox" style="padding-left:35px;">
-                <input type="checkbox" value="<%= key %>">
-                <%= window.MagicOrders.trade_cols[key] %>
-              </label>
-            </li>
-            <% end %>
-          </ul>
+      <div class="well-border">
+        <table class="table table-striped table-bordered table-condensed td_colors" id="trades_table">
+          <thead>
+            <tr>
+              <th><input id="checkbox_all" type="checkbox" value="option1">全选</th>
+              <th data-col='tid'>订单信息</th>
+              <th data-col='order_goods' style="min-width:90px">商品详细</th>
+              <th data-col='receiver_info' style="min-width:90px">客户信息</th>
+              <th data-col='logistic_bill_info'>物流信息</th>
+            </tr>
+          </thead>
+          <tbody id="trade_rows">
+          </tbody>
+        </table>
+        <div class='trade_count_info' style="text-align:center;;margin:0 auto;">
+          <select id='load_count' class='nomargin input-medium'>
+            <option value='20'>加载20项</option>
+            <option value='50'>加载50项</option>
+            <option value='100'>加载100项</option>
+          </select>
+          <a href="#" data-type="loadMoreTrades" id="bottom_line" class="btn">加载更多物流单</a>
+          <% unless @bills.length == 0 : %>
+          <span class="controls mar_t5" >当前显示：全部物流单 <span class="complete_offset"><%= @bills.at(0).get('bills_count') %></span> 项中的 <span class="get_offset"></span> 项</span>
+          <% else : %>
+          <span class="controls mar_t5" >当前显示：全部物流单 <span class="complete_offset">0</span> 项中的 0 项</span>
+          <% end %>
         </div>
       </div>
-    </div>
-
-  </div>
-  <div class='tab-content' id='all_orders'>
-
-
-    <table class="table table-striped table-bordered table-condensed td_colors" id="trades_table">
-      <thead>
-        <tr>
-          <th><input id="checkbox_all" type="checkbox" value="option1">全选</th>
-          <th data-col='trade_source'>订单来源</th>
-          <th data-col='tid'>订单编号</th>
-          <th data-col='order_goods' style="min-width:90px">商品详细</th>
-          <th data-col='receiver_name' style="min-width:90px">客户ID(客户姓名)</th>
-          <th data-col='receiver_address' style="min-width:100px">联系地址(联系电话)</th>
-          <th data-col='logistic_company'>物流配送商(物流单号)</th>
-          <th data-col='logistic_bill_status'>物流单状态</th>
-          <!-- <th>操作</th> -->
-        </tr>
-      </thead>
-      <tbody id="trade_rows">
-      </tbody>
-    </table>
-    <div class='trade_count_info' style="text-align:center;;margin:0 auto;">
-      <select id='load_count' class='nomargin input-medium'>
-        <option value='20'>加载20项</option>
-        <option value='50'>加载50项</option>
-        <option value='100'>加载100项</option>
-      </select>
-      <a href="#" data-type="loadMoreTrades" id="bottom_line" class="btn">加载更多物流单</a>
-      <% unless @bills.length == 0 : %>
-      <span class="controls mar_t5" >当前显示：全部物流单 <span class="complete_offset"><%= @bills.at(0).get('bills_count') %></span> 项中的 <span class="get_offset"></span> 项</span>
-      <% else : %>
-      <span class="controls mar_t5" >当前显示：全部物流单 <span class="complete_offset">0</span> 项中的 0 项</span>
-      <% end %>
     </div>
   </div>
 </div>
+
 
 <div id="ord_logistics_billnum_mult" class="logistic_bill modal hide fade" tabindex="-1" style="width: 890px;margin-left: -445px;">
   <div class="modal-header">

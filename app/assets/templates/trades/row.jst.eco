@@ -1,23 +1,23 @@
 <td></td>
 <td><input class='trade_check' type="checkbox" value="option1"></td>
-<td data-col='trade_source'>
+<!-- <td data-col='trade_source'>
+</td> -->
+
+<td data-col='tid'>
   <% if @trade.get('trade_source') == "赠品" || @trade.get('trade_source') == "人工" : %>
-    <span class="label label-important lable_source"><%= @trade.get('trade_source') %></span>
+    <span class="label label-important label_source"><%= @trade.get('trade_source') %></span>
   <% else if @trade.get('trade_source') == "淘宝" : %>
-    <span class="label label-warning lable_source"><%= @trade.get('trade_source') %></span>
+    <span class="label label-warning label_source"><%= @trade.get('trade_source') %></span>
   <% else if @trade.get('trade_source') == "京东" : %>
-    <span class="label label-skyblue lable_source"><%= @trade.get('trade_source') %></span>
+    <span class="label label-skyblue label_source"><%= @trade.get('trade_source') %></span>
   <% else if @trade.get('trade_source') == "一号店" : %>
-    <span class="label label-lightblue lable_source"><%= @trade.get('trade_source') %></span>
+    <span class="label label-lightblue label_source"><%= @trade.get('trade_source') %></span>
   <% else : %>
-    <span class="label label-darkorchid lable_source"><%= @trade.get('trade_source') %></span>
+    <span class="label label-darkorchid label_source"><%= @trade.get('trade_source') %></span>
   <% end %>
   <% if @trade.get('trade_source') == "分销平台" : %>
     <br><span class="label label-info">店铺代码:<%= @trade.get('distributor_usercode') %></span>
   <% end %>
-</td>
-
-<td data-col='tid'>
   <a href="#" data-toggle="modal" data-type="detail" class="pop_detail">
     <% if @trade.get('splitted_tid'): %>
       <span class="label label-info">拆分订单</span>
@@ -31,31 +31,9 @@
     <span class="label label-info">主订单号:<%= @trade.get('tc_order_id') %></span>
   <% end %>
 </td>
-
-<td data-col='order_title'>
-  <% for order in @trade.get('orders') : %>
-    <% if order.order_gift_tid == null : %>
-      <lable class="label "><%= order.title %></lable><br>
-    <% end %>
-  <% end %>
-</td>
-<td data-col='order_num'>
-  <% for order in @trade.get('orders') : %>
-    <% if order.order_gift_tid == null : %>
-      <%= order.num %><br>
-    <% end %>
-  <% end %>
-</td>
-<td data-col='payment'>
-  <span>
-    <%= @trade.get('total_fee')%>
-  </span>
-</td>
 <td data-col='status'>
-  <span class="label label-success"><%= @trade.get('status_text') %></span>
+  <span class="label label-info">当前状态：<%= @trade.get('status_text') %></span>
   <span class="label label-warn"><%= @trade.get('last_unusual_state') %></span>
-</td>
-<td data-col='status_history'>
   <span class="label">下单 <%= @trade.get('created') %></span>
   <% if @trade.get('pay_time'): %>
     <span class="label label-success">付款 <%= @trade.get('pay_time') %></span>
@@ -98,43 +76,40 @@
   <% if @trade.get('logistic_printed_at'): %>
     <span class="label label-success">打印物流单 <%= @trade.get('logistic_printed_at') %></span>
   <% end %>
+  <span class="label label-info">指派：<%= @trade.get('operator') %></span>
 </td>
-<td data-col='receiver_id'><%= @trade.get('buyer_nick') %>
+<!-- <td data-col='operator'>
+  <span class="label label-info">指派：<%#= @trade.get('operator') %></span>
+</td> -->
+
+<td data-col='products_info'>
+  <% for order in @trade.get('orders') : %>
+    <% if order.order_gift_tid == null : %>
+      <label class="label "><%= order.title %> X <%= order.num %></label><br>
+      <label class="label label-info">实付金额：<%= @trade.get('total_fee')%>  使用积分：<%= @trade.get('point_fee') %></label>
+    <% end %>
+  <% end %>
+</td>
+<td data-col='receiver_info'>
+  <%= @trade.get('buyer_nick') %>
   <% if @trade.get('receiver_name') : %>
-(<%= @trade.get('receiver_name') %>)
+    (<%= @trade.get('receiver_name') %>)<br/>
   <% end %>
-</td>
-
-
-<td data-col='receiver_address'>
-  <%= @trade.get('receiver_state') %> <%= @trade.get('receiver_city') %> <%= @trade.get('receiver_district') %> <%= @trade.get('receiver_address') %><br/>
   <% if @trade.get('receiver_mobile_phone') : %>
-    (<%= @trade.get('receiver_mobile_phone') %>)
+    <%= @trade.get('receiver_mobile_phone') %><br/>
   <% end %>
+  <%= @trade.get('receiver_state') %> <%= @trade.get('receiver_city') %> <%= @trade.get('receiver_district') %> <%= @trade.get('receiver_address') %><br/>
 </td>
 
-<!--<td data-col='buyer_message'>
-  <%# if @trade.get('buyer_message'): %>
-  <a href="javascript:void(0)" rel="popover" data-content="<%#= @trade.get 'buyer_message' %>" data-original-title="<b>买家留言</b>">
-    <i class="icon-msg"></i>
-  </a>
-  <%# end %>
-</td>-->
-
-<td data-col='seller_memo'>
+<td data-col='memos'>
   <% if @trade.get 'seller_memo': %>
   <a href="javascript:void(0)" rel="popover" data-content="<%= @trade.get 'seller_memo' %>" data-original-title="<b>卖家备注</b>">
     <i class="icon-comm"></i>
   </a>
   <% end %>
-</td>
-<td data-col='cs_memo'>
   <% if @trade.get('has_cs_memo') == true : %>
   <a href="javascript:void(0)" rel="popover" data-content="<%= @trade.get 'cs_memo' %><br/><br/><% for order in @trade.get('orders'): %><% if order.cs_memo: %><b><%= order.title %>:</b> <span style= 'color:#08C' ><%= order.cs_memo %></span><br/><% end %><% end %>" data-original-title="<b>客服备注</b>"><i class="icon-comm_serv"></i></a>
   <% end %>
-</td>
-
-<td data-col='gift_memo'>
   <% if @trade.get('gift_memo') || @trade.get('trade_gifts').length != 0 || @trade.get('main_trade_id') : %>
     <% if @trade.get('main_trade_id') : %>
     <a href="#" data-toggle='modal' data-type="detail" class="gift_trade_pop">主订单号:</br><%= @trade.get('tid').slice(0,-2) %></a>
@@ -142,19 +117,15 @@
     <a href="javascript:void(0)" rel="popover" data-content="<% for gift in @trade.get('trade_gifts'): %><%= gift.gift_title %>:<% if gift.trade_id == '' : %><%= gift.gift_tid %><% else : %><a href class='gift_trade_pop'><%= gift.gift_tid %></a><% end %></span><br/><% end %><%= @trade.get 'gift_memo' %><br/>" data-original-title="<b>赠品属性</b>"><i class="icon-gift_memo"></i></a>
     <% end %>
   <% end %>
-</td>
-
-<td data-col='deliver_bill'>
-  <span class="label label-warning"><%= @trade.get('deliver_bill_count') %></span>
-</td>
-
-<% if MagicOrders.enable_module_colors == 1 : %>
-<td data-col='color_info'>
-  <% if @trade.get('has_color_info') == true : %>
-    <a href="#"><i class="icon-color" data-type="color_info"></i></a>
+  <% if @trade.get('invoice_type') && @trade.get('invoice_type') != "无需开票" && @trade.get('invoice_type') != "不需要": %>
+    <a href="javascript:void(0)" rel="popover" data-content="<%= @trade.get 'invoice_type' %><br/><%= @trade.get 'invoice_name' %><br/>" data-original-title="<b>发票信息</b>"><i class="icon-invoice"></i></a>
+  <% end %>
+  <% if MagicOrders.enable_module_colors == 1 : %>
+    <% if @trade.get('has_color_info') == true : %>
+      <a href="#"><i class="icon-color" data-type="color_info"></i></a>
+    <% end %>
   <% end %>
 </td>
-<% end %>
 
 <% if MagicOrders.enable_module_onsite_service == 1 : %>
 <td data-col='onsite_service'>
@@ -165,63 +136,15 @@
   <% end %>
 </td>
 <% end %>
-
-<td data-col='invoice_info'>
-  <% if @trade.get('invoice_type') && @trade.get('invoice_type') != "无需开票" && @trade.get('invoice_type') != "不需要": %>
-  <a href="javascript:void(0)" rel="popover" data-content="<%= @trade.get 'invoice_type' %><br/><%= @trade.get 'invoice_name' %><br/>" data-original-title="<b>发票信息</b>"><i class="icon-invoice"></i></a>
-  <% end %>
-</td>
-<td data-col='point_fee'>
-  <%= @trade.get('point_fee') %>
-</td>
-
-<td data-col='operator'>
-  <%= @trade.get('operator') %>
-</td>
-
-<!--<td data-col='total_fee'>
-  ￥<%#= @trade.get('total_fee') %>
-</td>-->
-
-<!-- <td data-col='deliver_bill' ><!--发货单--</td> -->
-<td data-col='deliver_bill_id' ><!--发货单编号--></td>
-<td data-col='deliver_bill_status' >
-<% if @trade.get('deliver_bill_printed_at') : %>
-  已打印
-<% else : %>
-  未打印
-<% end %>
-</td>
-<td data-col='logistic_bill_status' >
-<% if @trade.get('logistic_printed_at') : %>
-  已打印
-<% else : %>
-  未打印
-<% end %>
-</td>
-<td data-col='order_goods' >
-  <a href="javascript:void(0)" rel="popover" data-content="<% for order in @trade.get('orders'): %> <%= order.title %> <%= order.num %>件<br/> <% end %>" data-original-title="<b>商品详细</b>"><i class="icon-detail"></i></a>
-</td>
-<!-- <td data-col='logistic_bill'>物流单</td> -->
-<td data-col='invoice_type' ><%= @trade.get 'invoice_type' %></td>
-<td data-col='invoice_name' ><%= @trade.get 'invoice_name' %></td>
-<td data-col='invoice_value' >
-  <% if @trade.get 'invoice_name' : %>
-    ￥<%= @trade.get 'invoice_value' %>
-  <% end %>
-</td>
-<td data-col='invoice_date' style="min-width:70px"><%= @trade.get 'invoice_date' %></td>
-<!-- <td data-col='order_split' ><!--拆分--</td> -->
-<td data-col='seller' nowrap>
-    <%= @trade.get('seller_name') %>
-    <% if @trade.get('interface_name') || @trade.get('interface_mobile') : %>
-    (<%= @trade.get('interface_name') %><br/>
-    <%= @trade.get('interface_mobile') %>)
-    <% end %>
-</td>
-<td data-col='logistic' nowrap>
-<%= @trade.get('logistic_name') %>
-  <% if @trade.get('logistic_waybill') : %>
-  (<%= @trade.get('logistic_waybill')%>)
-  <% end %>
+<td data-col='deliver_info nowrap'>
+  <label class="label label-info">
+    经销商：<br />
+    <%= @trade.get('seller_name') %><br />
+    (<%= @trade.get('interface_name') %> <%= @trade.get('interface_mobile') %>)
+  </label><br />
+  <label class="label label-info">
+    物流商：<br />
+    <%= @trade.get('logistic_name') %><br />
+    (<%= @trade.get('logistic_waybill') %> )
+  </label>
 </td>

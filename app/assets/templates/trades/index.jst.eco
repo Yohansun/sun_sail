@@ -1,224 +1,183 @@
-<style type="text/css">
-  .timeEntry_control { vertical-align: middle; margin-left: -1px; margin-top: 0px; cursor: pointer; }
-  * html .timeEntry_control { margin-top: -2px; }
-</style>
-<div class="row-fluid" id="main-top">
-  <div class="affix">
-    <ul class="breadcrumb" style="position:relative;">
-      <li><a href="/">Magic</a><span class="divider">/</span></li>
-      <li><a href="/app#trades">订单管理</a><span class="divider">/</span></li>
-      <li id='current_name'>所有订单</li>
-    </ul><!-- breadcrumb -->
-    <ul id='global-menus' class="nav nav-tabs">
-      <li><a href="#" data-trade-mode="trades" data-trade-status="my_trade">我的订单<em></em></a></li>
-      <li><a href="#" data-trade-mode="trades" data-trade-status="all">所有订单<em></em></a></li>
-      <!-- <li><a href="#" data-trade-mode="trades" data-trade-status="default">待审核<em></em></a></li> -->
-      <li><a href="#" data-trade-mode="trades" data-trade-status="undispatched">待分派<em></em></a></li>
-      <li><a href="#" data-trade-mode='trades' data-trade-status='undelivered'>待发货<em></em></a></li>
-      <li><a href="#" data-trade-mode='trades' data-trade-status='delivered'>已发货<em></em></a></li>
-      <li><a href="#" data-trade-mode='trades' data-trade-status='unusual_all'>问题订单<em></em></a></li>
-      <li><a href="#" data-trade-mode='trades' data-trade-status='locked'>锁定订单<em></em></a></li>
-      <li><a href="#" data-trade-mode="deliver_bills" data-trade-status="all">发货单<em></em></a></li>
-      <li><a href="#" data-trade-mode="logistic_bills" data-trade-status="all">物流单<em></em></a></li>
-      <!-- <li class=''><a href="#after_order" data-toggle="tab">售后订单</a></li> -->
-    </ul>
-    <div class="row-fluid" style="margin: 0 20px;">
-      <div id='search_form'></div>
+<ul class="breadcrumb" style="position:relative;">
+  <li><a href="/">Magic</a><span class="divider">/</span></li>
+  <li><a href="/app#trades">订单管理</a><span class="divider">/</span></li>
+  <li id='current_name'>所有订单</li>
+</ul><!-- breadcrumb -->
 
-      <div id='op-toolbar' class="btn-toolbar js-affix" data-offset-top="144">
-        <div class="btn-group batch_ops">
-          <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
-            操作
-            <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu index_pops">
-            <li><a href="#" data-toggle="modal" data-type="export_orders" class="export_orders">导出数据</a></li>
-            <!-- <li><a href="javascript:void(0);" data-toolbar-item='2'>删除</a></li> -->
-            <li><a href="#" data-toggle="modal" data-type="detail">订单详情</a></li>
-            <li><a href="#" data-toggle="modal" data-type="operation_log">订单日志</a></li>
-            <li><a href="#" data-toggle="modal" data-type="modify_payment">金额调整</a></li>
-            <li><a href="#" data-toggle="modal" data-type="invoice_number">发票号设置</a></li>
-            <li><a href="#" data-toggle="modal" data-type="barcode">输入唯一码</a></li>
-            <li><a href="#" data-toggle="modal" data-type="add_ref">补充不足货品</a></li>
-            <li><a href="#" data-toggle="modal" data-type="return_ref">退除多余货品</a></li>
-            <li><a href="#" data-toggle="modal" data-type="refund_ref">线下退款</a></li>
-            <li><a href="/custom_trades/new" data-type="create_handmade_trade">新增人工订单</a></li>
-            <li><a href="#" data-type="edit_handmade_trade">编辑人工订单</a></li>
-            <li><a href="#" data-type="lock_trade">锁定订单</a></li>
-            <li><a href="#" data-type="activate_trade">激活订单</a></li>
-            <li><a href="#" data-toggle="modal" data-modal-action='true' data-type="modify_receiver_information">订单用户信息修改</a></li>
-            <li><a href="#" data-batch-operation='true' data-toggle="modal" data-modal-action='true' data-type="merge_trades_manually">手动合并订单</a></li>
-            <li><a href="#" data-toggle="modal" data-modal-action='true' data-type="split_merged_trades">取消订单合并</a></li>
-          </ul>
-        </div>
+<ul id='global-menus' class="nav nav-tabs nomargin js-affix" data-spy="affix" data-offset-top="41">
+  <li><a href="#" data-trade-mode="trades" data-trade-status="my_trade">我的订单<em></em></a></li>
+  <li><a href="#all" data-trade-mode="trades" data-trade-status="all" data-toggle="tab">所有订单<em></em></a></li>
+  <!-- <li><a href="#" data-trade-mode="trades" data-trade-status="default">待审核<em></em></a></li> -->
+  <li><a href="#" data-trade-mode="trades" data-trade-status="undispatched">待分派<em></em></a></li>
+  <li><a href="#" data-trade-mode='trades' data-trade-status='undelivered'>待发货<em></em></a></li>
+  <li><a href="#" data-trade-mode='trades' data-trade-status='delivered'>已发货<em></em></a></li>
+  <li><a href="#" data-trade-mode='trades' data-trade-status='unusual_all'>问题订单<em></em></a></li>
+  <li><a href="#" data-trade-mode='trades' data-trade-status='locked'>锁定订单<em></em></a></li>
+  <li><a href="#" data-trade-mode="deliver_bills" data-trade-status="all">发货单<em></em></a></li>
+  <li><a href="#" data-trade-mode="logistic_bills" data-trade-status="all">物流单<em></em></a></li>
+  <!-- <li class=''><a href="#after_order" data-toggle="tab">售后订单</a></li> -->
+</ul>
 
-        <div class="btn-group">
-          <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
-            审单
-            <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu index_pops">
-            <li><a href="#" data-toggle="modal" data-type="cs_memo">客服备注</a></li>
-            <li><a href="#" data-toggle="modal" data-type="gift_memo">赠品管理</a></li>
-            <li><a href="#" data-toggle="modal" data-type="invoice">开票设置</a></li>
-            <li><a href="#" data-toggle="modal" data-type="color">订单调色</a></li>
-            <li><a href="#" data-toggle="modal" data-type="confirm_color">确认调色</a></li>
-            <li><a href="#" data-toggle="modal" data-type="seller_confirm_invoice">确认开票</a></li>
-            <li><a href="#" data-toggle="modal" data-type="splited">订单拆分</a></li>
-            <li><a href="#" data-toggle="modal" data-type="recover">订单合并</a></li>
-            <!-- <li><a href="#" data-toggle="modal">取消审核</a></li> -->
-            <li><a href="#" data-toggle="modal" data-type="mark_unusual_state">标注异常</a></li>
-          </ul>
-        </div>
-
-        <div class="btn-group">
-          <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
-            分派
-            <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu index_pops">
-            <li><a href="#" data-toggle="modal" data-type="seller">设置分派</a></li>
-          </ul>
-        </div>
-
-        <div class="btn-group">
-          <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
-            发货
-            <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu index_pops">
-            <!-- <li><a data-toggle="modal" class='sort_product' href='#'>分拣单</a></li> -->
-            <li><a href="#" data-toggle="modal" data-type="deliver">订单发货</a></li>
-            <li><a href="#" data-toggle="modal" data-type="seller_confirm_deliver">确认发货</a></li>
-            <li><a href="#" data-toggle="modal" data-type="logistic_split">物流拆分</a></li>
-            <li><a href="#" data-toggle="modal" data-type="logistic_memo">物流公司备注</a></li>
-            <li><a href="#" data-toggle="modal" data-type="confirm_check_goods">确认验货</a></li>
-            <li><a href="#" data-toggle="modal" data-type="confirm_receive">确认买家已收货</a></li>
-            <li><a href="#" data-toggle="modal" data-type="setup_logistic">设置物流信息</a></li>
-            <!--<li><a href="#" data-toggle="modal" data-type="request_return">申请退货</a></li>
-            <li><a href="#" data-toggle="modal" data-type="confirm_return">确认退货</a></li>
-            <li><a href="#" data-toggle="modal" data-type="confirm_refund">确认退款</a></li>
-            <li><a data-toggle="modal" href="#" data-type="reassign">订单转交</a></li>
-            <li><a href="#" data-toggle="modal" data-type="logistic_waybill">输入物流单号</a></li>
-            <li><a data-toggle="modal" href="#" data-type="logistic_company">物流公司</a></li> -->
-          </ul>
-        </div>
-
-        <div class="btns btn-group batch_ops">
-          <button data-toggle="dropdown" class="btn dropdown-toggle btn-warning btn_left4">
-            批量操作
-            <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu index_batch_pops">
-            <li><a data-toggle="modal" class='sort_product' href='#' data-batch_type="sort_product">分拣单</a></li>
-            <li><a href="#" data-toggle="modal" data-batch_type="manual_sms_or_email">发短信/邮件</a></li>
-            <li><a href="#" data-toggle="modal" class="batch_export">导出勾选订单</a></li>
-            <li><a href="#" data-toggle="modal" data-batch_type="batch_add_gift">批量添加赠品</a></li>
-            <% if MagicOrders.trade_mode == "trades" and MagicOrders.trade_type == "undelivered" : %>
-            <li><a href='#' data-toggle="modal" class="batch_deliver" data-batch_type='batch_deliver' >批量发货</a></li>
-            <li><a href='#' data-toggle="modal" data-batch_type='batch_check_goods'>批量验货</a></li>
-            <% end %>
-          </ul>
-        </div>
-      </div>
-
-      <div class="btn-toolbar js-affix" data-spy="affix" data-offset-top="144">
-        <div class="btns btn-group pull-right" style="margin-right: 30px;margin-top: -40px">
-          <a href="#" class="btn btn-success btn_mar4">显示设置</a>
-          <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-success dropdown_check_btn"><span class="caret"></span></button>
-          <ul class="dropdown-menu dropdown_check" id="cols_filter">
-            <% for key in _.keys(window.MagicOrders.trade_cols): %>
-            <li data-col="<%= key %>">
-              <label class="checkbox" style="padding-left:35px;">
-                <input type="checkbox" value="<%= key %>">
-                <%= window.MagicOrders.trade_cols[key] %>
-              </label>
-            </li>
-            <% end %>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-
-  <div class='tab-content' id='all_orders'>
-    <!--
-        <ul class="breadcrumb" style="position:relative;">
-          <li><a href="#">Magic</a><span class="divider">/</span></li>
-          <li><a href="#">订单管理</a><span class="divider">/</span></li>
-          <li class="active trade_nav">所有订单</li>
-        </ul>
-     -->
-
-
+<div class='tab-content' id='all_orders'>
+  <div class="tab-pane active">
     <div class="alert alert-info hide" id="newTradesNotifer">
       <a href="#" id="newTradesNotiferLink">有<span>0</span>条新订单, 点击加载新订单数据</a>
     </div>
 
-    <table class="table table-striped table-bordered table-condensed td_colors" id="trades_table">
-      <thead>
-        <tr>
-          <th>序号</th>
-          <th><input id="checkbox_all" type="checkbox" value="option1">全选</th>
-          <!-- <th>操作</th> -->
-          <th data-col='trade_source'>订单来源</th>
-          <th data-col='tid'>订单编号</th>
-          <th data-col='order_title'>商品名称</th>
-          <th data-col='order_num'>售卖数量</th>
-          <th data-col='payment'>实付金额</th>
-          <th data-col='status'>当前状态</th>
-          <th data-col='status_history' style="max-width:130px">历史状态</th>
-          <th data-col='receiver_id'>客户ID(客户姓名)</th>                <!--Newly Add-->
-          <th data-col='receiver_address' style="min-width:100px">联系地址(联系电话)</th>
-          <!-- <th data-col='buyer_message'>客户<br/>留言</th> -->
-          <th data-col='seller_memo'>卖家<br/>备注</th>
-          <th data-col='cs_memo'>客服<br/>备注</th>
-          <th data-col='gift_memo'>赠品<br/>备注</th>
-          <th data-col='deliver_bill'>发货单</th>
-          <% if MagicOrders.enable_module_colors == 1 : %>
-            <th data-col='color_info'>调色<br/>信息</th>
+    <div class="well-white">
+      <div class="affix_white js-affix" data-spy="affix" data-offset-top="41">
+        <div id='search_form'></div>
+
+        <div id='op-toolbar' class="btn-toolbar">
+          <div class="btn-group batch_ops">
+            <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
+              操作
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu index_pops">
+              <li><a href="#" data-toggle="modal" data-type="export_orders" class="export_orders">导出数据</a></li>
+              <!-- <li><a href="javascript:void(0);" data-toolbar-item='2'>删除</a></li> -->
+              <li><a href="#" data-toggle="modal" data-type="detail">订单详情</a></li>
+              <li><a href="#" data-toggle="modal" data-type="operation_log">订单日志</a></li>
+              <li><a href="#" data-toggle="modal" data-type="modify_payment">金额调整</a></li>
+              <li><a href="#" data-toggle="modal" data-type="invoice_number">发票号设置</a></li>
+              <li><a href="#" data-toggle="modal" data-type="barcode">输入唯一码</a></li>
+              <li><a href="#" data-toggle="modal" data-type="add_ref">补充不足货品</a></li>
+              <li><a href="#" data-toggle="modal" data-type="return_ref">退除多余货品</a></li>
+              <li><a href="#" data-toggle="modal" data-type="refund_ref">线下退款</a></li>
+              <li><a href="/custom_trades/new" data-type="create_handmade_trade">新增人工订单</a></li>
+              <li><a href="#" data-type="edit_handmade_trade">编辑人工订单</a></li>
+              <li><a href="#" data-type="lock_trade">锁定订单</a></li>
+              <li><a href="#" data-type="activate_trade">激活订单</a></li>
+              <li><a href="#" data-toggle="modal" data-modal-action='true' data-type="modify_receiver_information">订单用户信息修改</a></li>
+              <li><a href="#" data-batch-operation='true' data-toggle="modal" data-modal-action='true' data-type="merge_trades_manually">手动合并订单</a></li>
+              <li><a href="#" data-toggle="modal" data-modal-action='true' data-type="split_merged_trades">取消订单合并</a></li>
+            </ul>
+          </div>
+
+          <div class="btn-group">
+            <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
+              审单
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu index_pops">
+              <li><a href="#" data-toggle="modal" data-type="cs_memo">客服备注</a></li>
+              <li><a href="#" data-toggle="modal" data-type="gift_memo">赠品管理</a></li>
+              <li><a href="#" data-toggle="modal" data-type="invoice">开票设置</a></li>
+              <li><a href="#" data-toggle="modal" data-type="color">订单调色</a></li>
+              <li><a href="#" data-toggle="modal" data-type="confirm_color">确认调色</a></li>
+              <li><a href="#" data-toggle="modal" data-type="seller_confirm_invoice">确认开票</a></li>
+              <li><a href="#" data-toggle="modal" data-type="splited">订单拆分</a></li>
+              <li><a href="#" data-toggle="modal" data-type="recover">订单合并</a></li>
+              <!-- <li><a href="#" data-toggle="modal">取消审核</a></li> -->
+              <li><a href="#" data-toggle="modal" data-type="mark_unusual_state">标注异常</a></li>
+            </ul>
+          </div>
+
+          <div class="btn-group">
+            <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
+              分派
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu index_pops">
+              <li><a href="#" data-toggle="modal" data-type="seller">设置分派</a></li>
+            </ul>
+          </div>
+
+          <div class="btn-group">
+            <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
+              发货
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu index_pops">
+              <!-- <li><a data-toggle="modal" class='sort_product' href='#'>分拣单</a></li> -->
+              <li><a href="#" data-toggle="modal" data-type="deliver">订单发货</a></li>
+              <li><a href="#" data-toggle="modal" data-type="seller_confirm_deliver">确认发货</a></li>
+              <li><a href="#" data-toggle="modal" data-type="logistic_split">物流拆分</a></li>
+              <li><a href="#" data-toggle="modal" data-type="logistic_memo">物流公司备注</a></li>
+              <li><a href="#" data-toggle="modal" data-type="confirm_check_goods">确认验货</a></li>
+              <li><a href="#" data-toggle="modal" data-type="confirm_receive">确认买家已收货</a></li>
+              <li><a href="#" data-toggle="modal" data-type="setup_logistic">设置物流信息</a></li>
+              <!--<li><a href="#" data-toggle="modal" data-type="request_return">申请退货</a></li>
+              <li><a href="#" data-toggle="modal" data-type="confirm_return">确认退货</a></li>
+              <li><a href="#" data-toggle="modal" data-type="confirm_refund">确认退款</a></li>
+              <li><a data-toggle="modal" href="#" data-type="reassign">订单转交</a></li>
+              <li><a href="#" data-toggle="modal" data-type="logistic_waybill">输入物流单号</a></li>
+              <li><a data-toggle="modal" href="#" data-type="logistic_company">物流公司</a></li> -->
+            </ul>
+          </div>
+
+          <div class="btns btn-group batch_ops">
+            <button data-toggle="dropdown" class="btn dropdown-toggle btn-warning btn_left4">
+              批量操作
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu index_batch_pops">
+              <li><a data-toggle="modal" class='sort_product' href='#' data-batch_type="sort_product">分拣单</a></li>
+              <li><a href="#" data-toggle="modal" data-batch_type="manual_sms_or_email">发短信/邮件</a></li>
+              <li><a href="#" data-toggle="modal" class="batch_export">导出勾选订单</a></li>
+              <li><a href="#" data-toggle="modal" data-batch_type="batch_add_gift">批量添加赠品</a></li>
+              <% if MagicOrders.trade_mode == "trades" and MagicOrders.trade_type == "undelivered" : %>
+              <li><a href='#' data-toggle="modal" class="batch_deliver" data-batch_type='batch_deliver' >批量发货</a></li>
+              <li><a href='#' data-toggle="modal" data-batch_type='batch_check_goods'>批量验货</a></li>
+              <% end %>
+            </ul>
+          </div>
+
+          <div class="btns btn-group pull-right">
+            <a href="#" class="btn btn-success btn_mar4">显示设置</a>
+            <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-success dropdown_check_btn"><span class="caret"></span></button>
+            <ul class="dropdown-menu dropdown_check" id="cols_filter">
+              <% for key in _.keys(window.MagicOrders.trade_cols): %>
+              <li data-col="<%= key %>">
+                <label class="checkbox" style="padding-left:35px;">
+                  <input type="checkbox" value="<%= key %>">
+                  <%= window.MagicOrders.trade_cols[key] %>
+                </label>
+              </li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="well-bordered">
+        <table class="table table-striped table-bordered table-condensed td_colors" id="trades_table">
+          <thead>
+            <tr>
+              <th>序号</th>
+              <th><input id="checkbox_all" type="checkbox" value="option1">全选</th>
+              <th data-col='tid'>订单编号</th>
+              <th data-col='status' style="max-width:130px">订单状态</th>
+              <th data-col='products_info'>商品信息</th>
+              <th data-col='receiver_info'>客户信息</th>
+              <th data-col='memos'>备注</th>
+              <% if MagicOrders.enable_module_onsite_service == 1 : %>
+                <th data-col='onsite_service'>上门<br/>服务</th>
+              <% end %>
+              <th data-col='deliver_info'>配送信息</th>
+            </tr>
+          </thead>
+          <tbody id="trade_rows"></tbody>
+        </table>
+
+        <div class='trade_count_info' style="text-align:center;;margin:0 auto;">
+          <select id='load_count' class='nomargin input-medium'>
+            <option value='20'>加载20项</option>
+            <option value='50'>加载50项</option>
+            <option value='100'>加载100项</option>
+          </select>
+          <a href="#" data-type="loadMoreTrades" id="bottom_line" class="btn">加载更多订单</a>
+          <% unless @trades.length == 0 : %>
+          <span class="controls mar_t5" >当前显示：全部订单 <span class="complete_offset"><%= @trades.at(0).get('trades_count') %></span> 项中的 <span class="get_offset"></span> 项</span>
+          <% else : %>
+          <span class="controls mar_t5" >当前显示：全部订单 <span class="complete_offset">0</span> 项中的 0 项</span>
           <% end %>
-          <% if MagicOrders.enable_module_onsite_service == 1 : %>
-            <th data-col='onsite_service'>上门<br/>服务</th>
-          <% end %>
-          <th data-col='invoice_info'>发票<br/>信息</th>
-          <th data-col='point_fee'>使用<br/>积分</th>
-          <!-- <th data-col='total_fee' nowrap>实付金额</th> -->
-          <th data-col='deliver_bill_id'>发货单编号</th>
-          <th data-col='deliver_bill_status'>发货单状态</th>
-          <th data-col='logistic_bill_status'>物流单状态</th>
-          <th data-col='order_goods'>商品详细</th>
-          <!-- <th data-col='logistic_bill'>物流单</th> -->
-          <th data-col='invoice_type'>发票类型</th>
-          <th data-col='invoice_name'>发票抬头</th>
-          <th data-col='invoice_value'>开票金额</th>
-          <th data-col='invoice_date'>完成日期</th>
-          <!-- <th data-col='order_split'>拆分</th> -->
-          <th data-col='operator'>操作人</th>
-          <th data-col='seller' style="min-width:90px">配送经销商(上级经销商)</th>
-          <th data-col='logistic' style="min-width:90px">物流配送商(物流单号)</th>
-        </tr>
-      </thead>
-      <tbody id="trade_rows">
-      </tbody>
-    </table>
-    <div class='trade_count_info' style="text-align:center;;margin:0 auto;">
-      <select id='load_count' class='nomargin input-medium'>
-        <option value='20'>加载20项</option>
-        <option value='50'>加载50项</option>
-        <option value='100'>加载100项</option>
-      </select>
-      <a href="#" data-type="loadMoreTrades" id="bottom_line" class="btn">加载更多订单</a>
-      <% unless @trades.length == 0 : %>
-      <span class="controls mar_t5" >当前显示：全部订单 <span class="complete_offset"><%= @trades.at(0).get('trades_count') %></span> 项中的 <span class="get_offset"></span> 项</span>
-      <% else : %>
-      <span class="controls mar_t5" >当前显示：全部订单 <span class="complete_offset">0</span> 项中的 0 项</span>
-      <% end %>
+        </div>
+      </div>
     </div>
-  </div> <!-- end tab-content -->
-</div>
+  </div>
+</div> <!-- end tab-content -->
 
 <div id="batch_deliver" class="trade modal fade hide" tabindex="-1" style="width: 890px;margin-left: -445px;">
   <div class="modal-header">
