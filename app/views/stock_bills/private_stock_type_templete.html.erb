@@ -76,13 +76,13 @@
           </table>
           <%= paginate @products %>
           <%- if @trade && @bill.is_a?(StockOutBill) %>
-            <br><span class="lable label-warning">订单金额</span>:  <%= @trade.sum_fee %>
-            <br><span class="lable label-warning">订单折扣</span>:  <%= @trade.seller_discount %>
-            <br><span class="lable label-warning">运费</span>:  <%= @trade.post_fee %>
-            <br><span class="lable label-warning">订单实付金额(订单金额-订单折扣+运费)</span>:  <%= @trade.total_fee %>
-            <br><span class="lable label-warning">是否开票</span>:  无需开票
-            <br><span class="lable label-warning">发票抬头</span>:
-            <br><span class="lable label-warning">开票金额</span> 0.0
+            <br><span class="label label-warning">订单金额</span>:  <%= @trade.sum_fee %>
+            <br><span class="label label-warning">订单折扣</span>:  <%= @trade.seller_discount %>
+            <br><span class="label label-warning">运费</span>:  <%= @trade.post_fee %>
+            <br><span class="label label-warning">订单实付金额(订单金额-订单折扣+运费)</span>:  <%= @trade.total_fee %>
+            <br><span class="label label-warning">是否开票</span>:  无需开票
+            <br><span class="label label-warning">发票抬头</span>:
+            <br><span class="label label-warning">开票金额</span> 0.0
           <%- end%>
 
 

@@ -1,49 +1,45 @@
 <td><input class='trade_check' type="checkbox" value="option1"></td>
-<td data-col='trade_source'>
-<% if @bill.get('trade_source') == "赠品" || @bill.get('trade_source') == "人工" : %>
-  <span class="label label-important lable_source"><%= @bill.get('trade_source') %></span>
-<% else if @bill.get('trade_source') == "淘宝" : %>
-  <span class="label label-warning lable_source"><%= @bill.get('trade_source') %></span>
-<% else if @bill.get('trade_source') == "京东" : %>
-  <span class="label label-skyblue lable_source"><%= @bill.get('trade_source') %></span>
-<% else if @bill.get('trade_source') == "一号店" : %>
-  <span class="label label-lightblue lable_source"><%= @bill.get('trade_source') %></span>
-<% else : %>
-  <span class="label label-darkorchid lable_source"><%= @bill.get('trade_source') %></span>
-<% end %>
+<td data-col='tid'>
+  <% if @bill.get('trade_source') == "赠品" || @bill.get('trade_source') == "人工" : %>
+    <span class="label label-important label_source"><%= @bill.get('trade_source') %></span>
+  <% else if @bill.get('trade_source') == "淘宝" : %>
+    <span class="label label-warning label_source"><%= @bill.get('trade_source') %></span>
+  <% else if @bill.get('trade_source') == "京东" : %>
+    <span class="label label-skyblue label_source"><%= @bill.get('trade_source') %></span>
+  <% else if @bill.get('trade_source') == "一号店" : %>
+    <span class="label label-lightblue label_source"><%= @bill.get('trade_source') %></span>
+  <% else : %>
+    <span class="label label-darkorchid label_source"><%= @bill.get('trade_source') %></span>
+  <% end %>
+  <%= @bill.get('tid') %>
 </td>
-<td data-col='tid'><%= @bill.get('tid') %></td>
 <td data-col='order_goods'>
   <% for product in @bill.get('orders') : %>
-    <%= product.title %> X <%= product.num %><br>
+    <%= product.title %> X <%= product.num %>
     <% if MagicOrders.enable_module_colors == 1 : %>
       <span class="label label-info">调色信息</span><%= product.color_info %><br>
     <% end %>
     <% if MagicOrders.enable_module_sku_properties == 1 : %>
       <span class="label label-info">商品属性</span><%= product.sku_properties %><br>
     <% end %>
-    <span class="label label-info">客服留言</span><%= product.cs_memo %>
+    <span class="label label-info">客服留言：</span><%= product.cs_memo %><br>
   <% end %>
 </td>
-<td data-col='receiver_name'>
+<td data-col='receiver_info'>
   <%= @bill.get('buyer_nick') %>
   <% if @bill.get('receiver_name') : %>
   (<%= @bill.get('receiver_name') %>)
   <% end %>
-</td>
-<td data-col='receiver_address'>
   <%= @bill.get('receiver_address') %>
   <% if @bill.get('receiver_mobile') : %>
   (<%= @bill.get('receiver_mobile') %>)
   <% end %>
 </td>
-<td data-col='logistic'>
+<td data-col='logistic_bill_info'>
   <%= @bill.get('logistic_name') %>
   <% if @bill.get('logistic_waybill') : %>
   (<%= @bill.get('logistic_waybill') %>)
   <% end %>
-</td>
-<td data-col='logistic_bill_status'>
   <span class="label label-warning">
     <% if @bill.get('is_logistic_printed') : %>
     已打印

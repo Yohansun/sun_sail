@@ -28,14 +28,7 @@ class MagicOrders.Routers.LogisticBills extends Backbone.Router
     $("#top-nav li.trades").show()
 
   processScroll: =>
-    scrollTop = $(window).scrollTop()
-    if scrollTop >= @navTop && !@isFixed
-        @isFixed = true
-        @nav.addClass('subnav-fixed')
-    else
-      if scrollTop <= @navTop && @isFixed
-        @isFixed = false
-        @nav.removeClass('subnav-fixed')
+    $('.js-affix').affix()
 
   index: (trade_mode = "logistic_bills", trade_type = null, trade_search_id = '') ->
     # reset the index stage, hide all popups
@@ -61,11 +54,7 @@ class MagicOrders.Routers.LogisticBills extends Backbone.Router
       @searchView = new MagicOrders.Views.TradesAdvancedSearch()
       $("#search_form").html(@searchView.render().el)
       $("a[rel=popover]").popover(placement: 'left')
-      @nav = $('.subnav')
-      @navTop = $('.subnav').length && $('.subnav').offset().top - 40
-      $(window).off 'scroll'
       $(window).on 'scroll', @processScroll
-      @processScroll
       switch trade_type
         when 'unprinted' then $('.trade_nav').html('未打印')
         when 'printed' then $('.trade_nav').html('已打印')

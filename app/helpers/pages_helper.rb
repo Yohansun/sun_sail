@@ -35,19 +35,19 @@ module PagesHelper
   end
 
   def sale_chart_hash
-    generate_sale_chart_data(Time.now.beginning_of_day, Time.now)[2]
+    generate_sale_chart_data(1.month.ago, Time.now)[2]
   end
 
   def frequency_range_array
-    frequency_data(1.week.ago, Time.now)
+    frequency_data(1.month.ago, Time.now)
   end
 
   def time_range_array
-    time_data(1.week.ago, Time.now)
+    time_data(1.month.ago, Time.now)
   end
 
   def trades_percent_analysis_hash
-    total_trades = current_account.trades.between(created: 1.day.ago..Time.now)
+    total_trades = current_account.trades.between(created: 1.month.ago..Time.now)
     total_trades_count = total_trades.count
     if total_trades_count == 0
       paid_percent, unpaid_percent, undelivered_percent = [0,0,0]
@@ -62,7 +62,7 @@ module PagesHelper
   end
 
   def customers_percent_analysis_hash
-    total_customers = Customer.search(:transaction_histories_created_at_gt => 1.day.ago).where(account_id: current_account.id)
+    total_customers = Customer.search(:transaction_histories_created_at_gt => 1.month.ago).where(account_id: current_account.id)
     total_customers_count = total_customers.count
     if total_customers_count == 0
       potential_percent, new_percent, familiar_percent = [0,0,0]

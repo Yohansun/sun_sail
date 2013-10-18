@@ -94,11 +94,6 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
       $(@el).find('.add_status_search_tag').parents('fieldset').show()
     this
 
-  # 用于对齐高级搜索栏和操作菜单栏
-  catchSearchMotion: ->
-    out_height = $('.js-affix').outerHeight();
-    $('.btn-toolbar').css('top', out_height + 71 + 'px');
-
   # 加载地域搜索框
   render_select_state: ->
     view = new MagicOrders.Views.AreasSelectState()
@@ -115,7 +110,6 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
   advancedSearch: (e) ->
     e.preventDefault()
     $("#search_toggle").toggle()
-    @catchSearchMotion()
     $('.advanced_in_the_air').toggleClass 'simple_search'
     $("#simple_search_button").toggleClass 'simple_search'
     $("#simple_load_search_criteria").toggle()
@@ -152,7 +146,6 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
                                      "<label class='help-inline'>"+time_type_text+" "+start_at+" 至 "+end_at+"</label>"+
                                      "<input type='hidden' name='"+time_type+"' value='"+value+"'>"+
                                      "<button class='remove_search_tag' value=''> x </button></span>")
-      @catchSearchMotion()
     else
       alert("请输入完整的起始时间。")
 
@@ -167,8 +160,6 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
       tag = $(".search_tags_group input[name=status]")
     else
       tag = $(".search_tags_group input[name="+status+"]")
-
-
 
     if status.slice(0,6) == 'status'
       value = status+";"+status_boolean
@@ -188,7 +179,6 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
                                      "<label class='help-inline'>"+status_boolean_text+" "+status_text+"</label>"+
                                      "<input type='hidden' name='"+status+"' value='"+value+"'>"+
                                      "<button class='remove_search_tag' value=''> x </button></span>")
-    @catchSearchMotion()
 
 
   addMemoSearchTag: (e) ->
@@ -213,7 +203,6 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
                                    " "+include_boolean_text+" "+include_text+"</label>"+
                                    "<input type='hidden' name="+has_memo+" value='"+value+"'>"+
                                    "<button class='remove_search_tag' value=''> x </button></span>")
-    @catchSearchMotion()
 
   addSourceSearchTag: (e) ->
     e.preventDefault()
@@ -230,7 +219,6 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
                                      "<label class='help-inline'>"+type_text+"</label>"+
                                      "<input type='hidden' name='_type' value='"+type+"'>"+
                                      "<button class='remove_search_tag' value=''> x </button></span>")
-    @catchSearchMotion()
 
   addMergeTypeSearchTag:(e)->
     e.preventDefault()
@@ -246,7 +234,6 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
                                      "<label class='help-inline'>"+type_text+"</label>"+
                                      "<input type='hidden' name='merge_type' value='"+type+"'>"+
                                      "<button class='remove_search_tag' value=''> x </button></span>")
-    @catchSearchMotion()
 
   addPrintable:(e)->
     e.preventDefault()
@@ -262,7 +249,6 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
                                      "<label class='help-inline'>"+type_text+"</label>"+
                                      "<input type='hidden' name='print_at' value='"+type+"'>"+
                                      "<button class='remove_search_tag' value=''> x </button></span>")
-    @catchSearchMotion()
 
   addLogisticsPrintable:(e)->
     e.preventDefault()
@@ -278,7 +264,6 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
                                      "<label class='help-inline'>"+type_text+"</label>"+
                                      "<input type='hidden' name='logistics_print_at' value='"+type+"'>"+
                                      "<button class='remove_search_tag' value=''> x </button></span>")
-    @catchSearchMotion()
 
   addAreaSearchTag: (e) ->
     e.preventDefault()
@@ -296,7 +281,7 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
                                        "<label class='help-inline'>"+state+" "+city+" "+district+"</label>"+
                                        "<input type='hidden' name='area' value='"+value+"'>"+
                                        "<button class='remove_search_tag' value=''> x </button></span>")
-      @catchSearchMotion()
+
     else
       alert("请至少选择一级地区。")
 
@@ -320,7 +305,7 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
                                        "<button class='remove_search_tag' value=''> x </button></span>")
       else
         alert("金额格式不正确。")
-      @catchSearchMotion()
+
     else
       alert("请输入完整的区间。")
 
@@ -339,7 +324,6 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
                                        "<label class='help-inline'>批次号："+from+" 至 "+to+"</label>"+
                                        "<input type='hidden' name='batch' value='"+value+"'>"+
                                        "<button class='remove_search_tag' value=''> x </button></span>")
-        @catchSearchMotion()
       else
         alert("单号填写不完整。")
     else
@@ -348,16 +332,11 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
   removeSearchTag: (e) ->
     e.preventDefault()
     $(e.currentTarget).parent('.search_tag').remove()
-    @catchSearchMotion()
 
   saveSearchCriteria:(e)->
     self = this
     e.preventDefault()
     $("#save_search_criteria_modal").modal("show")
-
-  submitSearchCriteriaForm:(e)->
-
-
 
   simpleLoadSearchCriteria:(e)->
     e.preventDefault()
@@ -382,8 +361,6 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
     criteria = criteria[0]
     if criteria
       $('.search_tags_group').html(criteria.get("html"))
-
-
 
   updateSearchCriteriaSelection: ->
     self = this

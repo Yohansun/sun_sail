@@ -272,7 +272,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
   batchExport: =>
     trade_types = $('.trade_check:checked').map ->
-      $(this).parents("tr:first").find('.lable_source').text()
+      $(this).parents("tr:first").find('.label_source').text()
 
     if $.unique(trade_types).toArray().length > 1
       alert("请选择来源相同订单")

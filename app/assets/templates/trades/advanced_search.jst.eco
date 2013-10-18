@@ -1,4 +1,4 @@
-  <form class="well well-small form-horizontal font12 js-affix order_search_form" data-offset-top="103">
+  <form class="well well-small form-horizontal font12 order_search_form">
   <fieldset>
     <div class="control-group">
       <label class="pull-left" for=""><code>精准：</code></label>
