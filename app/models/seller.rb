@@ -208,12 +208,12 @@ class Seller < ActiveRecord::Base
         original_usernames = seller.users.map(&:username)
         disctinct_usernames = original_usernames & usernames
         if (disctinct_usernames - original_usernames) != (original_usernames - disctinct_usernames)
-          status_list[name] << "登陆账号: 修改前#{original_usernames || '不存在'},修改后#{(usernames == ['未设定'] || usernames == []) ? '不存在' : usernames}"
+          status_list[name] << "登录账号: 修改前#{original_usernames || '不存在'},修改后#{(usernames == ['未设定'] || usernames == []) ? '不存在' : usernames}"
         end
         usernames.each do |username|
           user = account.users.find_by_username(username)
           if !user && username
-            status_list[name] << "新建登陆账号: #{username}"
+            status_list[name] << "新建登录账号: #{username}"
           end
         end
         if (seller_closed == "是" && seller.active) || (seller_closed == "否" && !seller.active)

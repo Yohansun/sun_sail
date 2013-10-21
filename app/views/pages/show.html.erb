@@ -1,17 +1,17 @@
 <%
   breadcrumb << ["系统设置", users_path]
   breadcrumb << ["基础数据管理", stocks_safe_stock_path]
-  breadcrumb << ["默认登陆页面设置"]
+  breadcrumb << ["默认首页设置"]
 %>
 <div class="row-fluid">
   <div class="span10 w100">
     <ul class="nav nav-tabs">
-      <li class="active"><a href="/areas">默认登陆页面设置</a></li>
+      <li class="active"><a href="/page">默认首页设置</a></li>
     </ul><!-- nav-tabs -->
     <div class="tab-content">
-      <%= form_tag page_path, :method => :put, :id => "parent_area",:class => "form-horizontal" do %>
-      <fieldset class="mar_l80"><!-- 开票默认设置 beginning -->
-         <h4>开票默认设置:</h4>
+      <%= form_tag page_path, :method => :put, :class => "form-horizontal" do %>
+      <fieldset class="mar_l80"><!-- 默认首页设置 beginning -->
+         <h4>默认首页设置:</h4>
          <div class="mar_l80">
            <div class="control-group">
                <% {:default => "图标首页",:overview => "概况首页"}.each do |key,name| %>

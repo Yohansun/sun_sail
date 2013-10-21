@@ -24,7 +24,7 @@ class Notifier < ActionMailer::Base
     account = Account.find_by_id(account_id)
     mail(:to => email,
          :subject => 'Magic系统初始化用户提醒',
-         :body => "帐号:#{email},密码: #{pwd},请登陆后尽快修改密码",
+         :body => "帐号:#{email},密码: #{pwd},请登录后尽快修改密码",
          :from => account.settings.email_notifier_from
         )
   end
