@@ -1,44 +1,44 @@
+<% content_for :sub_nav do %>
+  <%= render partial: "layouts/warehouse_menu" %>
+<% end %>
 <div class="row-fluid">
   <div class="span10 w100">
-    <%= render partial: "layouts/all_crumbs" %>
-    <%= render partial: "layouts/warehouse_menu" %>
 
-    <div class="tab-content">
-      <ul class="breadcrumb">
-        <li>本次一共上传了<%= @csv_info_count %>条商品库存信息</li>
-      </ul>
-
-      <table class="table table-hover table-bordered table-striped table-condensed">
-        <thead>
-          <tr>
-            <%- @csv_header.each do |header| -%>
-              <th><%= header %></th>
-            <%- end -%>
-          </tr>
-        </thead>
-        <tbody>
-          <% @csv_info.each do |info| %>
-          <tr>
-            <%- info.each do |detail| -%>
-              <td><%= detail %></td>
-            <%- end -%>
-          </tr>
-          <% end %>
-        </tbody>
-      </table>
-      <div class='clearfix'>
-        <div class="pull-right" style="margin-left: 5px;margin-top: -2px;">
-          <%= paginate @csv_info %>
-        </div>
+    <ul class="breadcrumb">
+      <li>本次一共上传了<%= @csv_info_count %>条商品库存信息</li>
+    </ul>
+    <br/>
+    <table class="table table-hover table-bordered table-striped table-condensed">
+      <thead>
+        <tr>
+          <%- @csv_header.each do |header| -%>
+            <th><%= header %></th>
+          <%- end -%>
+        </tr>
+      </thead>
+      <tbody>
+        <% @csv_info.each do |info| %>
+        <tr>
+          <%- info.each do |detail| -%>
+            <td><%= detail %></td>
+          <%- end -%>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <div class='clearfix'>
+      <div class="pull-right" style="margin-left: 5px;margin-top: -2px;">
+        <%= paginate @csv_info %>
       </div>
-      <div class="pull-left mar_r10">
-        <%= form_for @csv_file, url: warehouse_stock_csv_file_path, :method => "put" do |f| %>
-          <%= f.submit "确定导入", :class => 'btn' %>
-        <%- end -%>
-      </div>
-      <%= form_for @csv_file, url: warehouse_stock_csv_file_path, :method => "delete" do |f| %>
-        <%= f.submit "取消", :class => 'btn' %>
+    </div>
+    <div class="pull-left mar_r10">
+      <%= form_for @csv_file, url: warehouse_stock_csv_file_path, :method => "put" do |f| %>
+        <%= f.submit "确定导入", :class => 'btn' %>
       <%- end -%>
     </div>
+    <%= form_for @csv_file, url: warehouse_stock_csv_file_path, :method => "delete" do |f| %>
+      <%= f.submit "取消", :class => 'btn' %>
+    <%- end -%>
+
   </div>
 </div>

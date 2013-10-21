@@ -63,7 +63,7 @@ class StockInBill < StockBill
 
   def check
     do_check
-    if account && account.settings.enable_module_third_party_stock != 1
+    if account && account.settings.enable_module_third_party_stock != 1 && stock_type != "IINITIAL"
       sync_stock
     else
       initial_stock if stock_type == "IINITIAL"
@@ -155,7 +155,6 @@ class StockInBill < StockBill
         operation_logs.create(operated_at: Time.now, operation: "取消失败,#{result['DATA']['RET_MESSAGE']}")
       end
     end
-
   end
 
   def sync_stock #确认入库
