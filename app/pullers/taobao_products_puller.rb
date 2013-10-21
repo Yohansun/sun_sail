@@ -6,7 +6,7 @@ class TaobaoProductsPuller
 
     # after create products, remember to sync cat_name
     def sync_cat_name(trade_source_id)
-      trade_source = TradeSource.find_by_id(trade_source_id)
+      trade_source = TradeSource.find(trade_source_id)
       account = Account.find_by_id(trade_source.account_id)
 
       account.products.each do |product|
@@ -33,7 +33,7 @@ class TaobaoProductsPuller
 
 
     def create_item!(trade_source_id, num_iid)
-      trade_source = TradeSource.find_by_id(trade_source_id)
+      trade_source = TradeSource.find(trade_source_id)
       account = Account.find_by_id(trade_source.account_id)
       nick = trade_source.name rescue nil
       item_get_response = TaobaoQuery.get({method: 'taobao.item.get',  fields: 'num,detail_url,title,sku.properties_name,sku.properties,sku.quantity, sku.sku_id, outer_id, product_id, pic_url,cid,price', num_iid: num_iid, nick: nick}, trade_source_id)
@@ -90,7 +90,7 @@ class TaobaoProductsPuller
     end
 
     def create!(trade_source_id)
-      trade_source = TradeSource.find_by_id(trade_source_id)
+      trade_source = TradeSource.find(trade_source_id)
       account = Account.find_by_id(trade_source.account_id)
 
       # 每个店铺的create!方法只应该在店铺初始化的时候走一次
@@ -175,7 +175,7 @@ class TaobaoProductsPuller
     end # create ends
 
     def create_from_trades!(trade_source_id)
-      trade_source = TradeSource.find_by_id(trade_source_id)
+      trade_source = TradeSource.find(trade_source_id)
       account = Account.find_by_id(trade_source.account_id)
 
       # 每个店铺的create_from_trades!方法只应该在店铺初始化的时候走一次

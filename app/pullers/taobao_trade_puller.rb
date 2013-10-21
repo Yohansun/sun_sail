@@ -2,7 +2,7 @@
 class TaobaoTradePuller
   class << self
     def create(start_time = nil, end_time = nil, trade_source_id)
-      trade_source = TradeSource.find_by_id(trade_source_id)
+      trade_source = TradeSource.find(trade_source_id)
       account_id = trade_source.account_id
       account = Account.find_by_id(account_id)
       page_no = 1
@@ -66,7 +66,7 @@ class TaobaoTradePuller
     end
 
     def create_by_tid(tid, trade_source_id)
-      trade_source = TradeSource.find_by_id(trade_source_id)
+      trade_source = TradeSource.find(trade_source_id)
       account_id = trade_source.account_id
       account = Account.find_by_id(account_id)
 
@@ -126,7 +126,7 @@ class TaobaoTradePuller
     end
 
     def update(start_time = nil, end_time = nil, trade_source_id)
-      trade_source = TradeSource.find_by_id(trade_source_id)
+      trade_source = TradeSource.find(trade_source_id)
       account_id = trade_source.account_id
       account = Account.find_by_id(account_id)
 
@@ -242,7 +242,7 @@ class TaobaoTradePuller
     end
 
     def update_by_created(start_time = nil, end_time = nil, trade_source_id)
-      trade_source = TradeSource.find_by_id(trade_source_id)
+      trade_source = TradeSource.find(trade_source_id)
       account_id = trade_source.account_id
       account = Account.find_by_id(trade_source.account_id)
 
