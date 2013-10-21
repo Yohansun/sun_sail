@@ -22,7 +22,11 @@ class StockCsvFilesController < ApplicationController
         flash[:notice] = "未上传文件"
       end
     else
-      flash[:notice] = "导入失败，请先检查确认没有未审核的期初入库单"
+      if @warehouse_csvs.last && @warehouse_csvs.last.stock_in_bill_id.blank?
+        redirect_to :action => "show", :id => @csv_file.id
+      else
+        flash[:notice] = "导入失败，请先检查确认没有未审核的期初入库单"
+      end
     end
 
     flash[:notice].present? ? (render :new) : (redirect_to :action => "show", :id => @csv_file.id)
