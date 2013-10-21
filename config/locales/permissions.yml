@@ -33,7 +33,7 @@ zh-CN:
   permissions_tag_stock_products: 库存查询
   permissions_tag_stock_history: 进销记录
 
-  permissions_tag_user_manage: 登陆绑定
+  permissions_tag_user_manage: 登录绑定
   permissions_tag_area_manage: 地区绑定
 
   permissions_tag_create: 创建
@@ -175,9 +175,9 @@ zh-CN:
   permissions_tag_logistics#destroy: "删除物流公司"
   permissions_tag_logistics#create_logistic_area: "物流公司添加管辖地区"
   permissions_tag_logistics#remove_logistic_area: "物流公司删除管辖地区"
-  permissions_tag_logistics#logistic_user_list: "物流公司添加登陆账号"
-  permissions_tag_logistics#remove_logistic_user: "物流公司删除登陆账号"
-  permissions_tag_logistics#logistic_user: "查看物流公司登陆账号"
+  permissions_tag_logistics#logistic_user_list: "物流公司添加登录账号"
+  permissions_tag_logistics#remove_logistic_user: "物流公司删除登录账号"
+  permissions_tag_logistics#logistic_user: "查看物流公司登录账号"
   permissions_tag_account_setups#update_auto_settings: "更新自动化设置"
   permissions_tag_categories#detail: "查看分类"
   permissions_tag_categories#create: "创建分类"
