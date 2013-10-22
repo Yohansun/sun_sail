@@ -76,7 +76,9 @@
   <% if @trade.get('logistic_printed_at'): %>
     <span class="label label-success">打印物流单 <%= @trade.get('logistic_printed_at') %></span>
   <% end %>
+  <% if @trade.get('operator'): %>
   <span class="label label-info">指派：<%= @trade.get('operator') %></span>
+  <% end %>
 </td>
 <!-- <td data-col='operator'>
   <span class="label label-info">指派：<%#= @trade.get('operator') %></span>
@@ -93,12 +95,11 @@
 <td data-col='receiver_info'>
   <%= @trade.get('buyer_nick') %>
   <% if @trade.get('receiver_name') : %>
-    (<%= @trade.get('receiver_name') %>)<br/>
+    (<%= @trade.get('receiver_name') %>)
   <% end %>
-  <% if @trade.get('receiver_mobile_phone') : %>
-    <%= @trade.get('receiver_mobile_phone') %><br/>
-  <% end %>
-  <%= @trade.get('receiver_state') %> <%= @trade.get('receiver_city') %> <%= @trade.get('receiver_district') %> <%= @trade.get('receiver_address') %><br/>
+  <br/>
+  <%= @trade.get('receiver_state') %> <%= @trade.get('receiver_city') %> <%= @trade.get('receiver_district') %> <br/>
+  <%= @trade.get('receiver_address') %> (<%= @trade.get('receiver_mobile_phone') %>)<br/>
 </td>
 
 <td data-col='memos'>
@@ -137,14 +138,18 @@
 </td>
 <% end %>
 <td data-col='deliver_info nowrap'>
+  <% if @trade.get('seller_name') == true : %>
   <label class="label label-info">
     经销商：<br />
     <%= @trade.get('seller_name') %><br />
     (<%= @trade.get('interface_name') %> <%= @trade.get('interface_mobile') %>)
   </label><br />
+  <% end %>
+  <% if @trade.get('logistic_name') == true : %>
   <label class="label label-info">
     物流商：<br />
     <%= @trade.get('logistic_name') %><br />
     (<%= @trade.get('logistic_waybill') %> )
   </label>
+  <% end %>
 </td>
