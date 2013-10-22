@@ -86,9 +86,9 @@ class MagicOrders.Views.TradesRow extends Backbone.View
     @toggleOperationMenu()
 
   toggleOperationMenu: ->
-    $('#op-toolbar .dropdown-menu').parents('div.btn-group').removeAttr('style')
+    $('#op-toolbar .yellow-ops .dropdown-menu').parents('div.btn-group').removeAttr('style')
     if $('#all_orders input.trade_check:checked').length > 1
-      $('#op-toolbar .dropdown-menu').parents('div.btn-group').css('display', 'none')
+      $('#op-toolbar .yellow-ops .dropdown-menu').parents('div.btn-group').css('display', 'none')
       $('#op-toolbar .batch_ops').show()
       $('#op-toolbar .batch_ops .dropdown-menu a').css('display', 'none')
       $('#op-toolbar .batch_ops .dropdown-menu  a[data-batch-operation]').css('display', '')
@@ -96,18 +96,22 @@ class MagicOrders.Views.TradesRow extends Backbone.View
       $('.batch_export').removeAttr('style')
       if @model.get('is_locked') == true
         $('#op-toolbar .batch_ops .dropdown-menu  a[data-batch_type]').hide()
+        $('#op-toolbar .batch_ops .dropdown-menu  a[data-batch-operation]').hide()
+        $('#op-toolbar .batch_ops .dropdown-menu').each ->
+          if $(this).find('li a[style]').length is $(this).find('li a').length
+            $(this).parents('div.btn-group').css('display', 'none')
 
     else if $('#all_orders input.trade_check:checked').length == 1
       # initial display all btns
       $('#op-toolbar .batch_ops').show()
       $('#op-toolbar .batch_ops .dropdown-menu  a[data-batch_type=batch_export]').removeAttr('style')
-      $('#op-toolbar .dropdown-menu').parents('div.btn-group').css('display', '')
-      # $('#op-toolbar .batch_ops .dropdown-menu a').css('display', '')
+      $('#op-toolbar .yellow-ops .dropdown-menu').parents('div.btn-group').css('display', '')
       if @model.get('is_locked') == true
         $('#op-toolbar .batch_ops .dropdown-menu  a[data-batch_type]').hide()
+        $('#op-toolbar .batch_ops .dropdown-menu  a[data-batch-operation]').hide()
 
       trade = $('#all_orders input.trade_check:checked')[0]
-      $('#op-toolbar .dropdown-menu').removeAttr('style')
+      $('#op-toolbar .yellow-ops .dropdown-menu').removeAttr('style')
       $('#op-toolbar').find('[data-type]').each ->
         $(this).removeAttr('style')
 
@@ -121,7 +125,7 @@ class MagicOrders.Views.TradesRow extends Backbone.View
             if $.inArray($(this).data('type')+'', MagicOrders.enabled_operation_items) is -1
               $(this).css('display', 'none')
 
-          $('#op-toolbar .dropdown-menu').each ->
+          $('#op-toolbar .yellow-ops .dropdown-menu').each ->
             if $(this).find('li a[style]').length is $(this).find('li a').length
               $(this).parents('div.btn-group').css('display', 'none')
       else
@@ -133,12 +137,12 @@ class MagicOrders.Views.TradesRow extends Backbone.View
           if $.inArray($(this).data('type')+'', MagicOrders.enabled_operation_items) is -1
             $(this).css('display', 'none')
 
-        $('#op-toolbar .dropdown-menu').each ->
+        $('#op-toolbar .yellow-ops .dropdown-menu').each ->
           if $(this).find('li a[style]').length is $(this).find('li a').length
             $(this).parents('div.btn-group').css('display', 'none')
     else
       MagicOrders.enabled_operation_items = MagicOrders.trade_pops[MagicOrders.trade_mode]
       $('#op-toolbar').find('[data-type]').each ->
         $(this).removeAttr('style')
-      $('#op-toolbar .dropdown-menu').removeAttr('style')
-      $('#op-toolbar .dropdown-menu').parents('div.btn-group').removeAttr('style')
+      $('#op-toolbar .yellow-ops .dropdown-menu').removeAttr('style')
+      $('#op-toolbar .yellow-ops .dropdown-menu').parents('div.btn-group').removeAttr('style')
