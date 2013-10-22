@@ -77,7 +77,7 @@ class AccountSetupsController < ApplicationController
   # data fetch job finished in backend
   # eg: http://magicorder.networking.io/account_setups/:id/data_fetch_finish
   def data_fetch_finish
-    account = Account.find_by_id(params[:id] )
+    account = Account.find(params[:id])
     account.settings.init_data_ready = true if account
     head :ok
   end

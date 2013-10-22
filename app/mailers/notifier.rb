@@ -3,7 +3,7 @@ class Notifier < ActionMailer::Base
   helper :application
 
   def app_token_errors(token,response, account_id)
-    account = Account.find_by_id(account_id)
+    account = Account.find(account_id)
     mail(:to => %w{errors@networking.io},
          :subject => "#{account.key}淘宝app token授权失败",
          :body => "淘宝app token:#{token.to_yaml} \n 错误代码:#{response['error_description']}",
@@ -12,7 +12,7 @@ class Notifier < ActionMailer::Base
   end
 
   def manual_notify(mails, notify_content, notify_theme, account_id)
-    account = Account.find_by_id(account_id)
+    account = Account.find(account_id)
     mail(:to => mails,
          :subject => notify_theme,
          :body => notify_content,
@@ -21,7 +21,7 @@ class Notifier < ActionMailer::Base
   end
 
   def init_user_notifications(email, pwd, account_id)
-    account = Account.find_by_id(account_id)
+    account = Account.find(account_id)
     mail(:to => email,
          :subject => 'Magic系统初始化用户提醒',
          :body => "帐号:#{email},密码: #{pwd},请登录后尽快修改密码",
@@ -43,7 +43,7 @@ class Notifier < ActionMailer::Base
   end
 
   def deliver_errors(id, errors, account_id)
-    account = Account.find_by_id(account_id)
+    account = Account.find(account_id)
     mail(:to => %w{errors@networking.io},
          :subject => "#{account.key}发货异常提醒",
          :body => "订单ID: #{id}  \n 错误代码: #{errors} ",
@@ -52,7 +52,7 @@ class Notifier < ActionMailer::Base
   end
 
   def puller_errors(errors, account_id)
-    account = Account.find_by_id(account_id)
+    account = Account.find(account_id)
     mail(:to => %w{errors@networking.io},
          :subject => "#{account.key}订单抓取异常提醒",
          :body => "错误代码: #{errors}",
@@ -63,7 +63,7 @@ class Notifier < ActionMailer::Base
   def dispatch(id, seller_id, notify_kind)
     object = Trade.find id
     account_id = object.account_id
-    @account = Account.find_by_id(account_id)
+    @account = Account.find(account_id)
     seller = Seller.find seller_id
     @trade = TradeDecorator.decorate(object)
 

@@ -189,7 +189,7 @@ class StockBill
   end
 
   def account
-    Account.find_by_id(account_id)
+    Account.find(account_id)
   end
 
   def lock!(user)
