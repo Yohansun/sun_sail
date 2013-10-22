@@ -34,7 +34,7 @@
     <%= render :partial => "layouts/top_menus" %>
     <%= flash_message %>
 
-    <div class="container-fluid" style="<%= request.path == root_path ? '' : 'min-height:840px;' %>">
+    <div class="container-fluid">
       <%- if params[:controller] =~ /home|session|pages/ -%>
         <%= yield %>
       <%- else -%>
@@ -53,7 +53,7 @@
       <%- end -%>
     </div> <!-- /container -->
 
-    <footer class="page_footer">
+    <footer class="page_footer" style="margin-top: 0px;">
       <p>&copy; Doorder/NIO team 2012</p>
     </footer>
     <%= javascript_include_tag "application" %>
