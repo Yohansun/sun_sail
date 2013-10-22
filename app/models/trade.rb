@@ -1053,12 +1053,18 @@ class Trade
   end
 
   # 订单筛选
-  def self.filter(current_account, current_user, params)
-    # 锁定订单被soft-delete
-    if params[:trade_type] && params[:trade_type] == "locked"
-      trades = Trade.deleted.where(account_id: current_account.id)
+  def self.filter(current_account, current_user, params, type="scoped")
+
+    if type == "unscoped"
+      trades = Trade.unscoped.where(is_locked: false)
     else
-      trades = Trade.where(account_id: current_account.id)
+      trades = Trade
+    end
+
+    if params[:trade_type] && params[:trade_type] == "locked"
+      trades = trades.deleted.where(account_id: current_account.id)
+    else
+      trades = trades.where(account_id: current_account.id)
     end
 
     if current_user.seller.present?
@@ -1135,22 +1141,6 @@ class Trade
       when 'deliver_unconfirmed'
         trade_type_hash = {seller_confirm_deliver_at: nil, :status.in => StatusHash["paid_and_delivered_array"]}
 
-      # # 发货单
-      # when "deliver_bill_unprinted"
-      #   trade_type_hash = {deliver_bill_printed_at: nil, :dispatched_at.ne => nil, :status.in => StatusHash["paid_not_deliver_array"] + StatusHash["paid_and_delivered_array"]}
-      # when "deliver_bill_printed"
-      #   trade_type_hash = {:deliver_bill_printed_at.ne => nil, :dispatched_at.ne => nil, :status.in => StatusHash["paid_not_deliver_array"] + StatusHash["paid_and_delivered_array"]}
-
-      # # 物流单
-      # when "logistic_waybill_void"
-      #   trade_type_hash = {logistic_waybill: nil, :status.in => StatusHash["paid_not_deliver_array"]}
-      # when "logistic_waybill_exist"
-      #   trade_type_hash = {:logistic_waybill.ne => nil, :status.in => StatusHash["StatusHash["paid_not_deliver_array"]"] + StatusHash["paid_and_delivered_array"] + StatusHash["succeed_array"]}
-      # when "logistic_bill_unprinted"
-      #   trade_type_hash = {"$and" => [{"logistic_printed_at" => nil}, {"$or" => [{status: 'WAIT_SELLER_SEND_GOODS'}, {status: 'WAIT_BUYER_CONFIRM_GOODS', "delivered_at" => {"$gt" => 23.hours.ago}}]}]}
-      # when "logistic_bill_printed"
-      #   trade_type_hash = {"$and" => [{"logistic_printed_at" =>{"$ne" => nil}}, {"$or" => [{status: 'WAIT_SELLER_SEND_GOODS'}, {status: 'WAIT_BUYER_CONFIRM_GOODS', "delivered_at" => {"$gt" => 23.hours.ago}}]}]}
-
       # # 发票
       # when 'invoice_all'
       #   trade_type_hash = {:invoice_name.ne => nil}
@@ -1192,7 +1182,6 @@ class Trade
       end
     end
 
-
     conditions = {}
     ## 筛选
     if params[:search]
@@ -1203,11 +1192,9 @@ class Trade
 
         conditions[key] ||= []
 
-
         values = [values] if !values.is_a? Array
 
         values.each{|value|
-
           value_array = value.split(";")
           length = value_array.length
           case length
@@ -1239,6 +1226,9 @@ class Trade
                 elsif value == 'mergeable'
                   search_tags_hash.update({:mergeable_id=> {"$ne"=>nil}})
                   conditions[key] << {:mergeable_id=> {"$ne"=>nil}}
+                elsif value == 'export_merged'
+                  search_tags_hash.update({:merged_by_trade_id=> {"$ne"=>nil}})
+                  conditions[key] << {:merged_by_trade_id=> {"$ne"=>nil}}
                 end
               elsif key == "print_at"
                 if value == 'un_deliver_bill_printed_at'

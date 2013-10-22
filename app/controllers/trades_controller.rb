@@ -43,6 +43,8 @@ class TradesController < ApplicationController
     if params[:search]
       params['search'] =  params['search'].select {|k,v| v != "undefined"  }
       params['search'].each do |k,v|
+        array_flag = false
+        v = v.join("&") and array_flag = true if v.is_a?(Array)
         guess_encoding = CharDet.detect(v, :silent => true).encoding
         if guess_encoding != "utf-8"
           v.force_encoding(guess_encoding)
@@ -50,6 +52,7 @@ class TradesController < ApplicationController
         else
           v.force_encoding("utf-8")
         end
+        v = v.split("&") if array_flag == true
         params['search'][k] = v
       end
     end

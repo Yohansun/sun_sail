@@ -139,6 +139,7 @@
             <!-- <option value="TaobaoPurchaseOrder">分销平台</option> -->
             <option value="CustomTrade-gift_trade">赠品订单</option>
             <option value="CustomTrade-handmade_trade">人工订单</option>
+            <option value="Trade">合并订单</option>
           </select>
         </div>
         <a class="add_source_search_tag" href="#" title="添加搜索"><i class="icon-plus"></i>添加搜索</a>

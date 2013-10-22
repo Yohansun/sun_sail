@@ -280,16 +280,14 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     else
       Backbone.history.navigate('trades/batch/batch_export', true)
 
-
-
   exportOrders: (e) =>
     e.preventDefault()
 
     search_hash = {}
 
     simple_search_option = $('.search_option').children('option:selected').val()
-    simple_search_value = $(".search_value").val()
-    search_logistic = $(".search_logistic").val()
+    simple_search_value  = $(".search_value").val()
+    search_logistic      = $(".search_logistic").val()
 
     if simple_search_option != ''
       if simple_search_option == 'logistic_name'
@@ -302,8 +300,9 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     if length != 0
       for num in [0..(length-1)]
         name = $('.search_tags_group').find("input:eq("+num+")").attr('name')
+        search_hash[name] ||= []
         value = $('.search_tags_group').find("input:eq("+num+")").val()
-        search_hash[name] = value
+        search_hash[name].push(value)
       tag = $(".search_tags_group input[name=_type]")
       if tag.length == 0
         alert("请在高级搜索中选择来源，并添加该搜索条件")
@@ -319,6 +318,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
     $('.export_orders').addClass('export_orders_disabled disabled').removeClass('export_orders')
     $.get("/api/trades/export", {trade_type: type_cache, search: search_hash})
+
 
   selectSameStatusTrade: (e) =>
     e.preventDefault()
@@ -475,7 +475,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
         if @simple_search_value != ''
           @search_hash[@simple_search_option] = @simple_search_value
 
-    # trade_collection = new MagicOrders.Collections.Trades()
     length = $('.search_tags_group').children().find('input').length
     if length != 0
       for num in [0..(length-1)]

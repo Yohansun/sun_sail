@@ -76,14 +76,37 @@ class TradeReport
     if only_trade_type_filtered?
       st = (Time.now - 1.month).strftime("%Y-%m-%d %H:%M")
       et = Time.now.strftime("%Y-%m-%d %H:%M")
-      self.conditions['search'] = {}
       self.conditions['search']['created'] = "#{st};#{et}"
       self.save
     end
   end
 
+  def adjust_merged_trade_search
+    adapted_conditions = self.conditions
+    types = adapted_conditions["search"]["_type"]
+    if types.present?
+      if types == ["Trade"]
+        adapted_conditions['search']["merge_type"] = "export_merged"
+        adapted_conditions['search']["_type"] = ["TaobaoTrade", "CustomTrade-handmade_trade"]
+      else
+        adapted_conditions['search']["_type"].delete("Trade")
+      end
+    end
+    self.reload
+    recursive_symbolize_keys! adapted_conditions
+  end
+
+  def change_scope
+    scope = "scoped"
+    self.conditions["search"]["_type"]
+    if self.conditions["search"]["_type"]
+      scope = "unscoped" if self.conditions["search"]["_type"].include?("Trade")
+    end
+    scope
+  end
+
   def trades
-    Trade.filter(fetch_account, fetch_user, trades_conditions)
+    Trade.filter(fetch_account, fetch_user, self.adjust_merged_trade_search, change_scope)
   end
 
   def url
