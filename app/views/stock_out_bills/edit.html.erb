@@ -23,8 +23,6 @@
 <% end %>
 <div class="row-fluid">
   <div class="span10 w100">
-    <div class="tab-content">
-      <%= render :partial => "form",:locals => {:path => warehouse_stock_out_bill_path(@warehouse,@bill)} %>
-    </div>
+    <%= render :partial => "form",:locals => {:path => warehouse_stock_out_bill_path(@warehouse,@bill)} %>
   </div>
 </div>

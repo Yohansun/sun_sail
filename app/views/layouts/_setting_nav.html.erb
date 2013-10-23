@@ -12,12 +12,12 @@
         <i class="icon-chevron-right"></i> 自动化设置
       </a>
         <ul id="autoset_menu" class="collapse <%= display?("account_setups","in") %>">
-          <li class="<%= "active" if params[:controller] == "account_setups" && params[:action] =~ /edit_preprocess_settings/ %>">
+          <li class="<%= "b_active" if params[:controller] == "account_setups" && params[:action] =~ /edit_preprocess_settings/ %>">
             <a href="/account_setups/edit_preprocess_settings">订单预处理</a>
           </li>
-          <li class="<%= "active" if params[:controller] == "account_setups" && params[:action] =~ /edit_dispatch_settings/ %>"><a href="/account_setups/edit_dispatch_settings">自动分派</a></li>
-          <li class="<%= "active" if params[:controller] == "account_setups" && params[:action] =~ /edit_deliver_settings/ %>"><a href="/account_setups/edit_deliver_settings">自动发货</a></li>
-          <li class="<%= "active" if params[:controller] == "account_setups" && params[:action] =~ /edit_automerge_settings/ %>"><a href="/account_setups/edit_automerge_settings">自动合并订单</a></li>
+          <li class="<%= "b_active" if params[:controller] == "account_setups" && params[:action] =~ /edit_dispatch_settings/ %>"><a href="/account_setups/edit_dispatch_settings">自动分派</a></li>
+          <li class="<%= "b_active" if params[:controller] == "account_setups" && params[:action] =~ /edit_deliver_settings/ %>"><a href="/account_setups/edit_deliver_settings">自动发货</a></li>
+          <li class="<%= "b_active" if params[:controller] == "account_setups" && params[:action] =~ /edit_automerge_settings/ %>"><a href="/account_setups/edit_automerge_settings">自动合并订单</a></li>
         </ul>
     </li>
 
@@ -26,10 +26,10 @@
         <i class="icon-chevron-right"></i> 用户管理
       </a>
         <ul id="users_menu" class="collapse <%= display?("users","in") %>">
-          <li class="<%= display?("users","active","index") %>">
+          <li class="<%= display?("users","b_active","index") %>">
             <a href="/users"  data-toggle="collapse" data-target="#users">用户</a>
           </li>
-          <li class="<%= display?("users","active","roles") %>"><a href="/users/roles"  data-toggle="collapse" data-target="#users_role">角色</a>
+          <li class="<%= display?("users","b_active","roles") %>"><a href="/users/roles"  data-toggle="collapse" data-target="#users_role">角色</a>
           </li>
 <!--
           <li class="<%= display?("users","active",["update_permissions","limits"]) %>">
@@ -57,51 +57,51 @@
           </li> -->
           <li class="<%= display?(["logistic_groups","deliver_templates"],"active") %>"><a href="#"  data-toggle="collapse" data-target="#shipments_menu">发货管理</a>
             <ul id="shipments_menu" class="collapse <%= display?(["logistic_groups","deliver_templates"],"in") %> third_menu">
-              <li class="<%= display?("logistic_groups","active") %>">
+              <li class="<%= display?("logistic_groups","b_active") %>">
                 <a href="/logistic_groups">发货拆分管理</a>
               </li>
-              <li class="<%= display?("deliver_templates","active") %>">
+              <li class="<%= display?("deliver_templates","b_active") %>">
                 <a href="/deliver_templates">发货单管理</a>
               </li>
             </ul>
           </li>
           <li class="<%= display?(["categories","category_properties"],"active") %>" ><a href="#"  data-toggle="collapse" data-target="#products_menu">商品设置</a>
             <ul id="products_menu" class="collapse <%= display?(["categories","category_properties"],"in") %> third_menu">
-              <li class="<%= display?("categories","active") %>">
+              <li class="<%= display?("categories","b_active") %>">
                 <a href="/categories">分类管理</a>
               </li>
-              <li class="<%= display?("category_properties","active") %>">
+              <li class="<%= display?("category_properties","b_active") %>">
                 <a href="/category_properties">属性管理</a>
               </li>
             </ul>
           </li>
           <li class="<%= display?("logistics","active") %>"><a href="/logistics"  data-toggle="collapse" data-target="#logistics_menu">
-            <i class="<%= display?("logistics","active") %>"></i>物流公司管理</a>
+            <i class="<%= display?("logistics","b_active") %>"></i>物流公司管理</a>
           </li>
           <li class="<%= display?(["trade_searches","trades"],"active")%>">
             <a href="#"  data-toggle="collapse" data-target="#orders_menu">订单管理</a>
             <ul id="orders_menu" class="collapse <%= display?(["trade_searches","trades"],"in") %> third_menu">
-              <li class="<%= display?("trade_searches","active") %>"><a href="/trade_searches">自定义查询</a>
+              <li class="<%= display?("trade_searches","b_active") %>"><a href="/trade_searches">自定义查询</a>
               </li>
-              <li class="<%= display?("trades","active","show_percent") %>"><a href="/trades/show_percent">分配比设置</a></li>
-              <li class="<%= display?("trades","active","invoice_setting") %>"><a href="/trades/invoice_setting">开票默认设置</a></li>
+              <li class="<%= display?("trades","b_active","show_percent") %>"><a href="/trades/show_percent">分配比设置</a></li>
+              <li class="<%= display?("trades","b_active","invoice_setting") %>"><a href="/trades/invoice_setting">开票默认设置</a></li>
             </ul>
           </li>
 
-          <li class="<%= "active" if params[:controller] == "areas" %>"><a href="/areas"  data-toggle="collapse" data-target="#areas_menu">地域管理</a></li>
+          <li class="<%= "b_active" if params[:controller] == "areas" %>"><a href="/areas"  data-toggle="collapse" data-target="#areas_menu">地域管理</a></li>
 
           <li class="<%= display?("notify","active")%>">
             <a href="#"  data-toggle="collapse" data-target="#sms_email_menu">短信&邮件统计</a>
             <ul id="sms_email_menu" class="collapse <%= display?("notify","in",["sms","email"]) %> third_menu">
-              <li class="<%= display?("notify","active",["sms"]) %>">
+              <li class="<%= display?("notify","b_active",["sms"]) %>">
                 <a href="/notify/sms">手机短信</a>
               </li>
-              <li class="<%= display?("notify","active",["email"]) %>">
+              <li class="<%= display?("notify","b_active",["email"]) %>">
                 <a href="/notify/email">邮件</a>
               </li>
             </ul>
           </li>
-          <li class="<%= "active" if params[:controller] == "pages" %>"><a href="/page"  data-toggle="collapse" data-target="#areas_menu">默认首页设置</a></li>
+          <li class="<%= "b_active" if params[:controller] == "pages" %>"><a href="/page"  data-toggle="collapse" data-target="#areas_menu">默认首页设置</a></li>
         </ul>
     </li>
 
