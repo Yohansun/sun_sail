@@ -3,7 +3,7 @@ require 'omniauth-oauth2'
 module OmniAuth
   module Strategies
     class Jingdong < OmniAuth::Strategies::OAuth2
-      option :name, "jingdong"
+      option :name, "jidong"  # 京东不让用jingdong
 
       option :client_options, {
         :site           => "http://auth.360buy.com/oauth/authorize",

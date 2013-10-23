@@ -151,7 +151,7 @@ MagicOrders::Application.routes.draw do
   end
 
   match '/auth/taodan/callback', to: 'taobao_app_tokens#create'
-  match '/auth/jingdong/callback', to: 'jingdong_app_tokens#index'
+  match '/auth/jidong/callback', to: 'jingdong_app_tokens#index'
   match '/auth/yihaodian/callback', to: 'yihaodian_app_tokens#index'
 
   #get "callbacks/jingdong"
