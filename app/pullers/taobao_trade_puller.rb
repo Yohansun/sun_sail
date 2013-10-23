@@ -97,21 +97,20 @@ class TaobaoTradePuller
         taobao_order = trade.taobao_orders.build(o)
       end
 
-      SetHasOnsiteServiceWorker.perform_async(trade.id) if account.settings.enable_module_onsite_service == 1
-      SetAlipayDataWorker.perform_async(trade.id) if trade.status == "TRADE_FINISHED"
-      SetForecastSellerWorker.perform_async(trade.id)
-      SetTradeOperator.perform_async(trade.id)
-      TradeTaobaoMemoFetcher.perform_async(trade.tid)
-      TradeTaobaoPromotionFetcher.perform_async(trade.tid)
+      if trade.save
+        SetForecastSellerWorker.perform_async(trade.id)
+        SetHasOnsiteServiceWorker.perform_async(trade.id) if account.settings.enable_module_onsite_service == 1
+        SetAlipayDataWorker.perform_async(trade.id) if trade.status == "TRADE_FINISHED"
+        SetTradeOperator.perform_async(trade.id)
+        TradeTaobaoMemoFetcher.perform_async(trade.tid)
+        TradeTaobaoPromotionFetcher.perform_async(trade.tid)
+        $redis.sadd('TaobaoTradeTids',trade['tid'])
+        trade.operation_logs.build(operated_at: Time.now, operation: '从淘宝抓取订单')
 
-      trade.save
-
-      $redis.sadd('TaobaoTradeTids',trade['tid'])
-      trade.operation_logs.build(operated_at: Time.now, operation: '从淘宝抓取订单')
-
-      if account.settings.auto_settings['auto_dispatch']
-        result = account.can_auto_dispatch_right_now
-        DelayAutoDispatch.perform_in((result == true ?  account.settings.auto_settings['dispatch_silent_gap'].to_i.hours : result), trade.id)
+        if account.settings.auto_settings['auto_dispatch']
+          result = account.can_auto_dispatch_right_now
+          DelayAutoDispatch.perform_in((result == true ?  account.settings.auto_settings['dispatch_silent_gap'].to_i.hours : result), trade.id)
+        end
       end
     end
 
