@@ -29,14 +29,13 @@
         <div id='search_form'></div>
 
         <div id='op-toolbar' class="btn-toolbar">
-          <div class="btn-group batch_ops">
+          <div class="btn-group yellow-ops batch_ops">
             <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
               操作
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu index_pops">
               <li><a href="#" data-toggle="modal" data-type="export_orders" class="export_orders">导出数据</a></li>
-              <!-- <li><a href="javascript:void(0);" data-toolbar-item='2'>删除</a></li> -->
               <li><a href="#" data-toggle="modal" data-type="detail">订单详情</a></li>
               <li><a href="#" data-toggle="modal" data-type="operation_log">订单日志</a></li>
               <li><a href="#" data-toggle="modal" data-type="modify_payment">金额调整</a></li>
@@ -55,7 +54,7 @@
             </ul>
           </div>
 
-          <div class="btn-group">
+          <div class="btn-group yellow-ops">
             <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
               审单
               <span class="caret"></span>
@@ -74,7 +73,7 @@
             </ul>
           </div>
 
-          <div class="btn-group">
+          <div class="btn-group yellow-ops">
             <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
               分派
               <span class="caret"></span>
@@ -84,7 +83,7 @@
             </ul>
           </div>
 
-          <div class="btn-group">
+          <div class="btn-group yellow-ops">
             <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
               发货
               <span class="caret"></span>
@@ -107,7 +106,7 @@
             </ul>
           </div>
 
-          <div class="btns btn-group batch_ops">
+          <div class="btns btn-group yellow-ops batch_ops">
             <button data-toggle="dropdown" class="btn dropdown-toggle btn-warning btn_left4">
               批量操作
               <span class="caret"></span>
@@ -124,7 +123,7 @@
             </ul>
           </div>
 
-          <div class="btns btn-group pull-right">
+          <div class="btns btn-group green-ops pull-right">
             <a href="#" class="btn btn-success btn_mar4">显示设置</a>
             <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-success dropdown_check_btn"><span class="caret"></span></button>
             <ul class="dropdown-menu dropdown_check" id="cols_filter">

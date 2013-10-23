@@ -22,7 +22,9 @@
     <% if MagicOrders.enable_module_sku_properties == 1 : %>
       <span class="label label-info">商品属性</span><%= product.sku_properties %><br>
     <% end %>
+    <% if product.cs_memo : %>
     <span class="label label-info">客服留言：</span><%= product.cs_memo %><br>
+    <% end %>
   <% end %>
 </td>
 <td data-col='receiver_info'>
@@ -30,6 +32,7 @@
   <% if @bill.get('receiver_name') : %>
   (<%= @bill.get('receiver_name') %>)
   <% end %>
+  <br/>
   <%= @bill.get('receiver_address') %>
   <% if @bill.get('receiver_mobile') : %>
   (<%= @bill.get('receiver_mobile') %>)
