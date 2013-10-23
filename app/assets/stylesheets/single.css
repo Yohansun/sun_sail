@@ -54,11 +54,6 @@ code{color: #08C;}
 /*.affix{width:100%;top:41px;left:0;right:0;}*/
 /*#all_orders{margin-top:185px;}*/
 /*.search-expand #all_orders{margin-top:550px;}*/
-.affix{top:75px;width:93.8%;z-index:10;}
-.affix_white{background:#fff;padding:10px 0;}
-.affix_white.affix{
-    border-bottom:1px solid #ddd;width:auto;left:41px;right:41px;
-  }
 #all_orders .affix{top:73px;z-index:3;border-radius:0 0 3px 3px;}
 #all_orders .btn-toolbar .dropdown-menu a.disabled {
   color: #ddd;
