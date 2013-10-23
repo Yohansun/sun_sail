@@ -87,7 +87,7 @@ class YihaodianTradePuller
             trade.operation_logs.build(operated_at: Time.now, operation: '从一号店抓取订单')
 
             if users
-              trade.set_operator(users,total_percent)
+              trade.set_operator
             end
 
             trade.save!
