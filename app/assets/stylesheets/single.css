@@ -57,7 +57,7 @@ code{color: #08C;}
 .affix{top:75px;width:93.8%;z-index:10;}
 .affix_white{background:#fff;padding:10px 0;}
 .affix_white.affix{
-    border-bottom:1px solid #ddd;
+    border-bottom:1px solid #ddd;width:auto;left:41px;right:41px;
   }
 #all_orders .affix{top:73px;z-index:3;border-radius:0 0 3px 3px;}
 #all_orders .btn-toolbar .dropdown-menu a.disabled {
@@ -157,10 +157,11 @@ code{color: #08C;}
 #autobusiness .control-group{margin-left:60px;}
 #autobusiness .controls{margin-left:80px;}
 /*autoset setting_auto.html*/
-.nav .collapse{border: 1px solid #E5E5E5;border-width:0 1px;margin-left: 0px;padding-left: 26px;list-style: none;}
+.nav .collapse{margin-left: 0px;padding-left: 26px;list-style: none;}
 .nav .collapse li{line-height:14px;padding:5px 0;}
 /*.nav .collapse li.active{list-style:circle;margin-left:15px;}*/
 .nav .collapse li.active{margin-left:15px;}
+.nav .collapse li.b_active{margin-left:15px;font-weight:bold;}
 .nav .collapse li a{text-decoration:none;}
 .timeEntry_control{border-radius:0 4px 4px 0;}
 .noborder td,.noborder th{border:0!important;}
