@@ -44,6 +44,11 @@
           <li id="fat-menu" class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Magic<b class="caret"></b></a>
             <ul class="dropdown-menu">
+              <li>
+                <%= link_to root_path do %>
+                  <i class='icon-home'> </i>系统首页
+                <% end %>
+              </li>
               <% if current_user.allow_read?(:trades) %>
                 <li>
                   <a href="/app#trades" class="trades"><i class='icon-shopping-cart'> </i>订单管理</a>
