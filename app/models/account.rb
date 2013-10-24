@@ -79,7 +79,7 @@ class Account < ActiveRecord::Base
   end
 
   def in_time_gap(start_at, end_at)
-    if start_at != nil && end_at != nil
+    if start_at.present? && end_at.present?
       if start_at < end_at
         start_time = (Time.now.to_date.to_s + " " + start_at).to_time(:local).to_i
         end_time = (Time.now.to_date.to_s + " " + end_at).to_time(:local).to_i
@@ -112,6 +112,15 @@ class Account < ActiveRecord::Base
 
   def can_auto_dispatch_right_now
     return in_time_gap(self.settings.auto_settings["start_dispatch_at"], self.settings.auto_settings["end_dispatch_at"])
+  end
+
+  def auto_dispatch_left_seconds
+    result = in_time_gap(self.settings.auto_settings["start_dispatch_at"], self.settings.auto_settings["end_dispatch_at"])
+    if result == true
+      settings.auto_settings['dispatch_silent_gap'].to_i.hours
+    else
+      result
+    end
   end
 
   def can_auto_deliver_right_now

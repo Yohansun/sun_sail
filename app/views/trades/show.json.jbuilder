@@ -166,3 +166,4 @@ json.is_succeeded @trade.is_succeeded
 json.is_closed @trade.is_closed
 
 json.is_locked @trade.is_locked
+json.auto_dispatch_left_seconds @trade.auto_dispatch_left_seconds(current_account)
