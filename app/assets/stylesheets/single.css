@@ -4,7 +4,7 @@ select{height:26px;line-height:26px;}
 .tab-content{overflow: visible;}
 /*magic copy*/
 body {
-  padding-top:45px;
+  /*padding-top:45px;*/
   position: relative;
   background-color: #fff;
 }
