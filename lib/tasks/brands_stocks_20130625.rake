@@ -22,24 +22,38 @@ task :update_brands_stocks => :environment do
   end
 end
 task :gnc_stocks_20130821 => :environment do
-  CSV.foreach("#{Rails.root}/lib/tasks/gnc_stocks_20130821.csv") do |row|
-    outer_id = row[0].to_s.rjust(6, '0')
+  CSV.foreach("#{Rails.root}/gnc.csv") do |row|
+    outer_id = row[0].present? ? row[0].to_s.strip : 0
     name = row[1]
-    number = row[2]
+    tmall_number = row[2].to_i
+    jd_number = row[3].to_i
+    yhd_number = row[4].to_i
+
     account = Account.find 10
-    seller = account.sellers.first
+
+    tmall_seller = account.sellers.where(trade_type: "Taobao").first
+    jd_seller = account.sellers.where(trade_type: "Jingdong").first
+    yhd_seller = account.sellers.where(trade_type: "Yihaodian").first
+
     product = account.products.find_by_outer_id(outer_id)
     if product
-      puts product.name + '-------' + name
-      sku = product.skus.first
-      unless sku
-        sku = product.skus.create(account_id: account.id, product_id: product.id, num_iid: product.num_iid)
-      end
-      stock = StockProduct.where(product_id: product.id, seller_id: seller.id, sku_id: sku.id, num_iid: product.num_iid, account_id: account.id).first_or_create
-      stock.update_attributes(actual: number, activity: number)
     else
-      p "product not found #{outer_id}"
+      product = account.products.create!(name: name, outer_id: outer_id)
     end
+    sku = product.skus.first
+
+    unless sku
+      sku = product.skus.create(account_id: account.id, product_id: product.id, num_iid: product.num_iid)
+    end
+
+    tmall_stock = StockProduct.where(product_id: product.id, seller_id: tmall_seller.id, sku_id: sku.id, num_iid: product.num_iid, account_id: account.id).first_or_create
+    tmall_stock.update_attributes(actual: tmall_number, activity: tmall_number)
+
+    jd_stock = StockProduct.where(product_id: product.id, seller_id: jd_seller.id, sku_id: sku.id, num_iid: product.num_iid, account_id: account.id).first_or_create
+    jd_stock.update_attributes(actual: jd_number, activity: jd_number)
+
+    yhd_stock = StockProduct.where(product_id: product.id, seller_id: yhd_seller.id, sku_id: sku.id, num_iid: product.num_iid, account_id: account.id).first_or_create
+    yhd_stock.update_attributes(actual: yhd_number, activity: yhd_number)
   end
 end
 task :richlife_stocks_20130821 => :environment do
