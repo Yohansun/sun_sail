@@ -168,8 +168,23 @@ class StockOutBill < StockBill
     BiaoganPusher.perform_async(self._id, "cancel_order_rx_worker")
   end
 
+  def sendable?
+    if trade
+      case trade._type
+      when 'TaobaoTrade','CustomTrade','Trade','TaobaoPurchaseOrder'
+        trade.status == "WAIT_SELLER_SEND_GOODS"
+      when 'YihaodianTrade'
+        trade.status == "ORDER_TRUNED_TO_DO"
+      when 'JingdongTrade'
+        trade.status == "WAIT_SELLER_STOCK_OUT"
+      end
+    else
+      true
+    end
+  end
+
   def so_to_wms_worker
-    if ((trade && trade.status == "WAIT_SELLER_SEND_GOODS") || (!trade))
+    if sendable?
       if account.settings.third_party_wms == "biaogan"
         result_xml = Bml.so_to_wms(account, xml)
       elsif account.settings.third_party_wms == "gqs"
