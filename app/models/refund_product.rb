@@ -1,6 +1,6 @@
 #encoding: utf-8
 class RefundProduct < ActiveRecord::Base
-  attr_protected []
+  attr_protected [:status_operations]
   include MagicEnum
   has_many :refund_orders,:inverse_of => :refund_product,:dependent => :destroy
   belongs_to :account
@@ -17,11 +17,16 @@ class RefundProduct < ActiveRecord::Base
   end
 
   serialize :status_operations, Array
-  before_create do
-    self.status_operations = [{:created => Time.now}]
-  end
 
-  before_save :init
+  before_save do
+    self.refund_fee = refund_orders.map(&:refund_price).sum
+  end
+  
+  def initialize(*)
+    super
+    self.status_operations = [{:created => Time.now}]
+    self.refund_id = Time.now.to_f.to_s.gsub('.','').to(15) if refund_id.nil?
+  end
 
   scope :with_account, ->(account_id) { where(account_id: account_id)}
 
@@ -174,10 +179,6 @@ class RefundProduct < ActiveRecord::Base
   end
 
   private
-  def init
-    self.refund_id = Time.now.to_f.to_s.gsub('.','').to(15) if refund_id.blank?
-    self.refund_fee = refund_orders.map(&:refund_price).sum
-  end
 
   def put_operation
     self.status_operations << {state_name => Time.now}
