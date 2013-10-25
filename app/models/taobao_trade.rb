@@ -88,20 +88,20 @@ class TaobaoTrade < Trade
     if status == "TRADE_FINISHED"
       start_time = consign_time || delivered_at
       response = TaobaoQuery.get({method: 'alipay.user.trade.search',
-                                start_time: start_time.strftime("%Y-%m-%d %H:%M:%S"),
-                                end_time: (start_time + 7.days).strftime("%Y-%m-%d %H:%M:%S"),
-                                alipay_order_no: alipay_no,
-                                order_type: 'TRADE',
-                                order_status: 'TRADE_FINISHED',
-                                order_from: "TAOBAO",
-                                page_no: 1,
-                                page_size: 10},
-                                trade_source_id
-                              )
+                                  start_time: start_time.strftime("%Y-%m-%d %H:%M:%S"),
+                                  end_time: (start_time + 7.days).strftime("%Y-%m-%d %H:%M:%S"),
+                                  alipay_order_no: alipay_no,
+                                  order_type: 'TRADE',
+                                  order_status: 'TRADE_FINISHED',
+                                  order_from: "TAOBAO",
+                                  page_no: 1,
+                                  page_size: 10},
+                                  trade_source_id
+                                )
       modified_time = response['alipay_user_trade_search_response']['trade_records']['trade_record'][0]['modified_time'].to_time(:local) rescue nil
       total_amount = response['alipay_user_trade_search_response']['trade_records']['trade_record'][0]['total_amount'] rescue nil
-      alipay_last_modified_time = modified_time if modified_time
-      alipay_payment = total_amount.to_f if total_amount
+      self.alipay_last_modified_time = modified_time if modified_time
+      self.alipay_payment = total_amount.to_f if total_amount
     end
   end
 end
