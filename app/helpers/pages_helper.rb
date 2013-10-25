@@ -4,15 +4,29 @@ module PagesHelper
   include TradesHelper
   def pages_hash
     {
-      "new_add_trades"                => new_add_trades_int,               #今日新增订单
-      "new_profit"                    => new_profit_float,                 #今日新进收益
-      "new_top_one_district"          => new_top_one_district_string,      #今日买家集中省份TOP1
-      "new_hot_product"               => new_hot_product_string,           #今日热卖商品
-      "sale_chart"                    => sale_chart_hash,                  #销售分析
-      "frequency_range"               => frequency_range_array,            #购买频次分析
-      "time_range"                    => time_range_array,                 #购买时段分析
-      "trades_percent_analysis"       => trades_percent_analysis_hash,     #订单分析
-      "customers_percent_analysis"    => customers_percent_analysis_hash   #顾客分析
+      "pages_#{current_account.id}_new_add_trades"                => new_add_trades_int,               #今日新增订单
+      "pages_#{current_account.id}_new_profit"                    => new_profit_float,                 #今日新进收益
+      "pages_#{current_account.id}_new_top_one_district"          => new_top_one_district_string,      #今日买家集中省份TOP1
+      "pages_#{current_account.id}_new_hot_product"               => new_hot_product_string,           #今日热卖商品
+      "pages_#{current_account.id}_sale_chart"                    => sale_chart_hash,                  #销售分析
+      "pages_#{current_account.id}_frequency_range"               => frequency_range_array,            #购买频次分析
+      "pages_#{current_account.id}_time_range"                    => time_range_array,                 #购买时段分析
+      "pages_#{current_account.id}_trades_percent_analysis"       => trades_percent_analysis_hash,     #订单分析
+      "pages_#{current_account.id}_customers_percent_analysis"    => customers_percent_analysis_hash   #顾客分析
+    }
+  end
+
+  def pages_cache
+    {
+      "new_add_trades"                => Rails.cache.read("pages_#{current_account.id}_new_add_trades"),               #今日新增订单
+      "new_profit"                    => Rails.cache.read("pages_#{current_account.id}_new_profit"),                   #今日新进收益
+      "new_top_one_district"          => Rails.cache.read("pages_#{current_account.id}_new_top_one_district"),         #今日热门省份
+      "new_hot_product"               => Rails.cache.read("pages_#{current_account.id}_new_hot_product"),              #今日热卖商品
+      "sale_chart"                    => Rails.cache.read("pages_#{current_account.id}_sale_chart"),                   #销售分析
+      "frequency_range"               => Rails.cache.read("pages_#{current_account.id}_frequency_range"),              #购买频次分析
+      "time_range"                    => Rails.cache.read("pages_#{current_account.id}_time_range"),                   #购买时段分析
+      "trades_percent_analysis"       => Rails.cache.read("pages_#{current_account.id}_trades_percent_analysis"),      #订单分析
+      "customers_percent_analysis"    => Rails.cache.read("pages_#{current_account.id}_customers_percent_analysis")    #顾客分析
     }
   end
 
@@ -56,9 +70,9 @@ module PagesHelper
       unpaid_percent = (total_trades.where(pay_time: nil).count.to_f / total_trades_count).round(2)*100
       undelivered_percent = (total_trades.and(delivered_at: nil, consign_time: nil).count.to_f / total_trades_count).round(2)*100
     end
-    {"paid_percent" => paid_percent,
-     "unpaid_percent" => unpaid_percent,
-     "undelivered_percent" => undelivered_percent}
+    {"paid_percent" => paid_percent.to_i,
+     "unpaid_percent" => unpaid_percent.to_i,
+     "undelivered_percent" => undelivered_percent.to_i}
   end
 
   def customers_percent_analysis_hash
@@ -71,9 +85,9 @@ module PagesHelper
       new_percent = (total_customers.between(created_at: Time.now.beginning_of_day..Time.now).count.to_f / total_customers_count).round(2)*100
       familiar_percent = (total_customers.search(:transaction_histories_status_in => Trade::StatusHash["succeed_array"]).count.to_f / total_customers_count).round(2)*100
     end
-    {"potential_percent" => potential_percent,
-     "new_percent" => new_percent,
-     "familiar_percent" => familiar_percent}
+    {"potential_percent" => potential_percent.to_i,
+     "new_percent" => new_percent.to_i,
+     "familiar_percent" => familiar_percent.to_i}
   end
 
   def recent_trades

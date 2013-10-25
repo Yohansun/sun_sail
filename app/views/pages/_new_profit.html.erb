@@ -4,7 +4,7 @@
       <i class="icon-bar-chart"></i>
     </div>
     <div class="details">
-      <div class="number"><%= Rails.cache.read("new_profit") %>¥</div>
+      <div class="number"><%= pages_cache["new_profit"] %>¥</div>
       <div class="desc">今日新进收益</div>
     </div>
     <a class="more" href="/sales/summary">

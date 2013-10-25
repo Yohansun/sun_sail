@@ -8,21 +8,21 @@
         <div class="row-fluid">
           <div class="span4">
             <div class="easy-pie-chart">
-              <div class="number paid_trades_percent"  data-percent="<%= (Rails.cache.read('trades_percent_analysis')['paid_percent'] || 0) %>"><span><%= (Rails.cache.read('trades_percent_analysis')['paid_percent'] || 0) %></span>%</div>
+              <div class="number paid_trades_percent"  data-percent="<%= (pages_cache['trades_percent_analysis']['paid_percent'] || 0) %>"><span><%= (pages_cache['trades_percent_analysis']['paid_percent'] || 0) %></span>%</div>
               <a class="title" href="#">已付款订单 <i class="m-icon-swapright"></i></a>
             </div>
           </div>
           <div class="margin-bottom-10 visible-phone"></div>
           <div class="span4">
             <div class="easy-pie-chart">
-              <div class="number unpaid_trades_percent"  data-percent="<%= (Rails.cache.read("trades_percent_analysis")["unpaid_percent"] || 0) %>"><span><%= (Rails.cache.read("trades_percent_analysis")["unpaid_percent"] || 0) %></span>%</div>
+              <div class="number unpaid_trades_percent"  data-percent="<%= (pages_cache["trades_percent_analysis"]["unpaid_percent"] || 0) %>"><span><%= (pages_cache["trades_percent_analysis"]["unpaid_percent"] || 0) %></span>%</div>
               <a class="title" href="#">未付款订单 <i class="m-icon-swapright"></i></a>
             </div>
           </div>
           <div class="margin-bottom-10 visible-phone"></div>
           <div class="span4">
             <div class="easy-pie-chart">
-              <div class="number undelivered_trades_percent"  data-percent="<%= (Rails.cache.read("trades_percent_analysis")["undelivered_percent"] || 0) %>"><span><%= Rails.cache.read("trades_percent_analysis")["undelivered_percent"] || 0 %></span>%</div>
+              <div class="number undelivered_trades_percent"  data-percent="<%= (pages_cache["trades_percent_analysis"]["undelivered_percent"] || 0) %>"><span><%= pages_cache["trades_percent_analysis"]["undelivered_percent"] || 0 %></span>%</div>
               <a class="title" href="#">未发货订单 <i class="m-icon-swapright"></i></a>
             </div>
           </div>

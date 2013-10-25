@@ -4,7 +4,7 @@
       <i class="icon-shopping-cart"></i>
     </div>
     <div class="details">
-      <div class="number"><%= Rails.cache.read("new_add_trades") %></div>
+      <div class="number"><%= pages_cache["new_add_trades"] %></div>
       <div class="desc">今日新增订单</div>
     </div>
     <a class="more" href="/app">
