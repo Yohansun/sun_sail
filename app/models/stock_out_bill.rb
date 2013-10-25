@@ -140,6 +140,7 @@ class StockOutBill < StockBill
       if account && account.settings.enable_module_third_party_stock != 1 || self.stock_type_oinventory?
         error_actual = decrease_actual
         error_records << error_actual if error_actual != true
+        self.stocked_at = Time.now
       end
       raise error_records.flatten.compact.collect{|x| '库存ID为' << x.id.to_s << ':' << x.errors.full_messages.join(',')}.join('\n') if error_records.present?
       do_check
