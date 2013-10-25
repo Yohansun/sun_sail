@@ -87,7 +87,7 @@ class RefundProductsController < ApplicationController
 
   def locking
     @refund_products = default_scope.find params[:refund_product_ids].to_a
-    faileds  = @refund_products.collect {|refund_product| refund_product.tid if !refund_product.locking}
+    faileds  = @refund_products.collect {|refund_product| refund_product.tid if !refund_product.locking}.compact
 
     @message = faileds.blank? ? "退货单#{@refund_products.map(&:refund_id).join(',')}锁定成功." : "退货单#{faileds.join(',')}锁定失败."
     respond_to do |format|
@@ -97,7 +97,7 @@ class RefundProductsController < ApplicationController
 
   def enable
     @refund_products = default_scope.find params[:refund_product_ids].to_a
-    faileds = @refund_products.collect {|refund_product| refund_product.tid if !refund_product.enable }
+    faileds = @refund_products.collect {|refund_product| refund_product.tid if !refund_product.enable }.compact
 
     @message = faileds.blank? ? "退货订单#{@refund_products.map(&:refund_id).join(',')}激活成功." : "退货订单#{faileds.join(',')}."
     respond_to do |format|
