@@ -1,5 +1,5 @@
 <ul class="nav nav-tabs boder_eee_r10 nomargin">
-  <li class="active"><a href="/sales/frequency_analysis">购买频次分析(<%= 1.month.ago.strftime("%Y/%m/%d")+"~"+Time.now.strftime("%Y/%m/%d") %>)</a></li>
+  <li class="active"><a href="/sales/frequency_analysis">购买频次分析(<%= page_time_range %>)</a></li>
 </ul><!-- nav-tabs -->
 <div class="tab-content pr3">
   <div class="tab-pane active">
@@ -9,7 +9,7 @@
           <img src="/assets/overview/loading.gif" alt="loading" />
         </div>
         <div id="frequency_analysis_block_content" class="hide">
-          <div id="frequency_analysis_block" style="height:109px;"></div>
+          <div id="frequency_analysis_block" style="height:118.5px;"></div>
         </div>
       </div>
     </div>

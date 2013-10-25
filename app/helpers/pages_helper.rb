@@ -6,7 +6,7 @@ module PagesHelper
     {
       "pages_#{current_account.id}_new_add_trades"                => new_add_trades_int,               #今日新增订单
       "pages_#{current_account.id}_new_profit"                    => new_profit_float,                 #今日新进收益
-      "pages_#{current_account.id}_new_top_one_district"          => new_top_one_district_string,      #今日买家集中省份TOP1
+      "pages_#{current_account.id}_new_top_one_district"          => new_top_one_district_string,      #今日热门省份
       "pages_#{current_account.id}_new_hot_product"               => new_hot_product_string,           #今日热卖商品
       "pages_#{current_account.id}_sale_chart"                    => sale_chart_hash,                  #销售分析
       "pages_#{current_account.id}_frequency_range"               => frequency_range_array,            #购买频次分析
@@ -28,6 +28,10 @@ module PagesHelper
       "trades_percent_analysis"       => Rails.cache.read("pages_#{current_account.id}_trades_percent_analysis"),      #订单分析
       "customers_percent_analysis"    => Rails.cache.read("pages_#{current_account.id}_customers_percent_analysis")    #顾客分析
     }
+  end
+
+  def page_time_range
+    1.month.ago.strftime("%Y/%m/%d")+"~"+Time.now.strftime("%Y/%m/%d")
   end
 
   def new_add_trades_int
