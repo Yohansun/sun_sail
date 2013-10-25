@@ -351,7 +351,7 @@ module SalesHelper
   def frequency_data(start_at, end_at)
     map = %Q{
       function() {
-          emit(this.buyer_nick, {num: 1 });
+        emit(this.buyer_nick, {num: 1});
       }
     }
 

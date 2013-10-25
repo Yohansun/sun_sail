@@ -1,5 +1,5 @@
 <ul class="nav nav-tabs boder_eee_r10 nomargin">
-  <li class="active"><a href="/customers">顾客分析(<%= 1.month.ago.strftime("%Y/%m/%d")+"~"+Time.now.strftime("%Y/%m/%d") %>)</a></li>
+  <li class="active"><a href="/customers">顾客分析(<%= page_time_range %>)</a></li>
 </ul><!-- nav-tabs -->
 <div class="tab-content pr3">
   <div class="tab-pane active">
@@ -8,21 +8,21 @@
         <div class="row-fluid">
           <div class="span4">
             <div class="easy-pie-chart">
-              <div class="number potential_customers_percent"  data-percent="<%= (Rails.cache.read("customers_percent_analysis")["potential_percent"] || 0) %>"><span><%= (Rails.cache.read("customers_percent_analysis")["potential_percent"] || 0) %></span>%</div>
+              <div class="number potential_customers_percent"  data-percent="<%= (pages_cache["customers_percent_analysis"]["potential_percent"] || 0) %>"><span><%= (pages_cache["customers_percent_analysis"]["potential_percent"] || 0) %></span>%</div>
               <a class="title" href="#">潜在下单顾客 <i class="m-icon-swapright"></i></a>
             </div>
           </div>
           <div class="margin-bottom-10 visible-phone"></div>
           <div class="span4">
             <div class="easy-pie-chart">
-              <div class="number new_customers_percent"  data-percent="<%= (Rails.cache.read("customers_percent_analysis")["new_percent"] || 0) %>"><span><%= (Rails.cache.read("customers_percent_analysis")["new_percent"] || 0) %></span>%</div>
+              <div class="number new_customers_percent"  data-percent="<%= (pages_cache["customers_percent_analysis"]["new_percent"] || 0) %>"><span><%= (pages_cache["customers_percent_analysis"]["new_percent"] || 0) %></span>%</div>
               <a class="title" href="#">新增购买顾客 <i class="m-icon-swapright"></i></a>
             </div>
           </div>
           <div class="margin-bottom-10 visible-phone"></div>
           <div class="span4">
             <div class="easy-pie-chart">
-              <div class="number familiar_customers_percent"  data-percent="<%= (Rails.cache.read("customers_percent_analysis")["familiar_percent"] || 0) %>"><span><%= (Rails.cache.read("customers_percent_analysis")["familiar_percent"] || 0) %></span>%</div>
+              <div class="number familiar_customers_percent"  data-percent="<%= (pages_cache["customers_percent_analysis"]["familiar_percent"] || 0) %>"><span><%= (pages_cache["customers_percent_analysis"]["familiar_percent"] || 0) %></span>%</div>
               <a class="title" href="#">经常购买顾客 <i class="m-icon-swapright"></i></a>
             </div>
           </div>

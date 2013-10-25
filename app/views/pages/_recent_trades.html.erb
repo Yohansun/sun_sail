@@ -22,7 +22,7 @@
               <td class="">
                 <% trade.orders.each do |o| %>
                   <% if o.order_gift_tid == nil %>
-                    <p><%= o.title %>  <label class="label"><%= o.num %></label></p><br>
+                    <label class="label"><%= o.title %><br/> X<%= o.num %></label>
                   <% end %>
                 <% end %>
               </td>

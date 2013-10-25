@@ -4,7 +4,7 @@
       <i class="icon-gift"></i>
     </div>
     <div class="details">
-      <div class="number"><%= Rails.cache.read("new_hot_product") %></div>
+      <div class="number"><%= pages_cache["new_hot_product"] %></div>
       <div class="desc">今日热卖商品</div>
     </div>
     <a class="more" href="/sales/product_analysis">

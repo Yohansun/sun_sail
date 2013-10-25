@@ -15,12 +15,12 @@ class PagesController < ApplicationController
 
   def overview
     refresh_pages_content if pages_cache_empty
+
     @undispatched_trades, @undelivered_trades, @delivered_trades, @unusual_trades = recent_trades
     render layout: "application"
   end
 
   def show
-
   end
 
   def update
@@ -30,12 +30,12 @@ class PagesController < ApplicationController
   end
 
   def reload_trades_percent_analysis
-    refresh_content("trades_percent_analysis", trades_percent_analysis_hash)
+    refresh_content("pages_#{current_account.id}_trades_percent_analysis", trades_percent_analysis_hash)
     render :nothing => true
   end
 
   def reload_customers_percent_analysis
-    refresh_content("customers_percent_analysis", customers_percent_analysis_hash)
+    refresh_content("pages_#{current_account.id}_customers_percent_analysis", customers_percent_analysis_hash)
     render :nothing => true
   end
 
