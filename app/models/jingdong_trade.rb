@@ -98,10 +98,6 @@ class JingdongTrade < Trade
   #   self.invoice_name
   # end
 
-  def auto_deliver!
-    #PENDING
-  end
-
   #PENDING
   # def total_fee
   #   order_seller_price.to_f + post_fee.to_f - seller_discount.to_f
