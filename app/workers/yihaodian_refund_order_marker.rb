@@ -13,7 +13,7 @@ class YihaodianRefundOrderMarker
 
     if response["response"]['error_count'] > 0
       errors = response["response"]['err_info_list']['err_detail_info'].collect{|e| e['error_des']}.uniq
-      if errors.include?("获取退货列表信息失败(根据指定的参数查不到相应的退货信息!)") && errors.count == 1
+      if errors.include?("根据指定的参数查不到相应的退货信息!") && errors.count == 1
         return
       else
         Notifier.puller_errors(response, account_id).deliver
