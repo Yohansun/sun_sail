@@ -6,8 +6,11 @@ GIT
       rails (>= 3.0.0)
 
 GEM
-  remote: http://ruby.taobao.org/
+  remote: http://rubygems.org/
   specs:
+    act_as_cached (0.0.3)
+      activerecord (>= 3.0.0)
+      activesupport (>= 3.0.0)
     actionmailer (3.2.12)
       actionpack (= 3.2.12)
       mail (~> 2.4.4)
@@ -512,6 +515,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  act_as_cached (~> 0.0.3)
   annotate (~> 2.4.1.beta1)
   audited-activerecord (~> 3.0)
   awesome_nested_set

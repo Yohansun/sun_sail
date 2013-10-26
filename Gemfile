@@ -1,4 +1,4 @@
-source 'http://ruby.taobao.org/'
+source 'http://rubygems.org/'
 
 gem 'rails', '>= 3.2.11'
 
@@ -73,7 +73,7 @@ gem 'awesome_nested_set'
 gem 'kaminari'
 gem 'rolify'
 gem 'backbone-on-rails'
-
+gem "act_as_cached", "~> 0.0.3"
 gem 'taobao_fu_reload', "~> 1.1.2"
 gem 'jingdong_fu'
 

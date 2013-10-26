@@ -29,6 +29,7 @@
 #
 class Account < ActiveRecord::Base
   include RailsSettings
+  act_as_cached
 
   attr_accessible :key, :name, :seller_name, :address, :deliver_bill_info, :phone, :website, :point_out
 

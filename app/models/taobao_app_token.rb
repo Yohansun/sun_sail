@@ -23,6 +23,7 @@
 
 # encoding : utf-8 -*-
 class TaobaoAppToken < ActiveRecord::Base
+  act_as_cached
   belongs_to :account
   belongs_to :trade_source
   attr_accessible :trade_source_id, :taobao_user_id, :taobao_user_nick, :account_id, :access_token, :refresh_token, :last_refresh_at, :refresh_token_last_refresh_at, :re_expires_in, :r1_expires_in, :r2_expires_in, :w1_expires_in,  :w2_expires_in, :need_refresh
