@@ -1,7 +1,7 @@
 #encoding: utf-8
 class PagesController < ApplicationController
   layout "management"
-  before_filter :authorize
+  # before_filter :authorize
   before_filter :find_template
   include PagesHelper
 
