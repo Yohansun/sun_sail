@@ -681,7 +681,7 @@ class Trade
     end
     bill.bill_products_mumber = bill.bill_products.sum(:number)
     bill.bill_products_price = regular_orders.sum(:payment) - self.post_fee
-    bill.save
+    bill.save!
     bill.decrease_activity #减去仓库的可用库存
   end
 
@@ -898,6 +898,7 @@ class Trade
     # 更新订单状态为已分派
     update_attributes(seller_id: seller.id, seller_name: seller.name, dispatched_at: Time.now)
 
+    update_attributes!(seller_id: seller.id, seller_name: seller.name, dispatched_at: Time.now)
     # 如果满足自动化设置条件，分派后订单自动发货
     auto_settings = self.fetch_account.settings.auto_settings
     if auto_settings['auto_deliver'] && auto_settings["deliver_condition"] == "dispatched_trade"

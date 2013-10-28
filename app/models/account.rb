@@ -63,7 +63,6 @@ class Account < ActiveRecord::Base
   has_many :roles, :dependent => :destroy
   has_many :skus
   has_many :taobao_skus
-  has_one :trade_source
   has_one :deliver_template
   has_many :trade_sources
   has_one  :taobao_source, class_name: "TradeSource", conditions: {trade_type: 'Taobao'}
@@ -394,7 +393,7 @@ class Account < ActiveRecord::Base
   end
 
   def jingdong_query_conditions
-    trade_source = self.jingdong_source
+    trade_source = TradeSource.where(account_id: self.id, trade_type: "Jingdong").first
     conditions = {}
     if trade_source
       conditions = trade_source.attributes.update("access_token" => trade_source.jingdong_app_token.access_token)
@@ -408,7 +407,7 @@ class Account < ActiveRecord::Base
   end
 
   def yihaodian_query_conditions
-    trade_source = self.yihaodian_source
+    trade_source = TradeSource.where(account_id: self.id, trade_type: "Yihaodian").first
     conditions = {}
     if trade_source
       conditions = trade_source.attributes.update("access_token" => trade_source.yihaodian_app_token.access_token)
