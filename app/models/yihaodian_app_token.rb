@@ -19,7 +19,6 @@
 #
 
 class YihaodianAppToken < ActiveRecord::Base
-  act_as_cached
   belongs_to :account
   belongs_to :trade_source
 

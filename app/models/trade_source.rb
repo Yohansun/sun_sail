@@ -25,7 +25,6 @@
 #
 
 class TradeSource < ActiveRecord::Base
-  act_as_cached
   attr_accessible :account_id, :app_key, :name, :secret_key, :session, :sid, :cid, :bulletin, :title, :description, :created, :modified, :trade_type
   belongs_to :account
   has_one :taobao_app_token
