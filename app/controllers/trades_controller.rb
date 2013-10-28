@@ -115,7 +115,7 @@ class TradesController < ApplicationController
     # 分流
     if params[:seller_id]
       if params[:seller_id] != "void"
-        seller = current_account.sellers.find_by_id params[:seller_id]
+        seller = current_account.sellers.find(params[:seller_id])
         @trade.dispatch!(seller) if seller
       elsif params[:seller_id] == "void"
         @trade.reset_seller

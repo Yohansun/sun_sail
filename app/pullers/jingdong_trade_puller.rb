@@ -6,7 +6,7 @@ class JingdongTradePuller
       page_no = 1
 
       account = Account.find(account_id)
-      trade_source = account.jingdong_source
+      trade_source = TradeSource.where(account_id: account_id, trade_type: "Jingdong").first
       trade_source_id = trade_source.id
 
       # 给客服分配订单需要的查询
