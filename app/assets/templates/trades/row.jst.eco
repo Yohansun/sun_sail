@@ -141,14 +141,14 @@
 </td>
 <% end %>
 <td data-col='deliver_info nowrap'>
-  <% if @trade.get('seller_name') == true : %>
+  <% if @trade.get('seller_name') : %>
   <label class="label label-info">
     经销商：<br />
     <%= @trade.get('seller_name') %><br />
     (<%= @trade.get('interface_name') %> <%= @trade.get('interface_mobile') %>)
   </label><br />
   <% end %>
-  <% if @trade.get('logistic_name') == true : %>
+  <% if @trade.get('logistic_name') : %>
   <label class="label label-info">
     物流商：<br />
     <%= @trade.get('logistic_name') %><br />
