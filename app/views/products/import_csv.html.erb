@@ -1,41 +1,33 @@
-<div class="row-fluid">
-  <div class="span10 w100">
-    <%= render partial: "layouts/all_crumbs" %>
-    <%= render partial: "products/sidebar" %>
-    <div class="tab-content">
-      <div class="tab-pane active" id="stock_check">
-        <ul class="breadcrumb">
-          <li>商品导入确认,共<%= @products.count %>行</li>
-        </ul>
-        <%- if @products.count > 0 %>
-          <table class="table table-bordered table-condensed td_colors mar_t">
-            <thead>
-              <th>商品名称</th>
-              <th>商品分类</th>
-              <th>商品编码</th>
-              <th>预期结果</th>
-            </thead>
-            <% @products.each do |product| %>
-              <%- if product.errors.present? %>
-                <tr style="background-color:#BDB76B">
-              <%- else %>
-                <tr>
-              <%- end %>
-              <td><%= product.name %></td>
-              <td><%= product.category_name %></td>
-              <td><%= product.outer_id %></td>
-              <td><%= product.errors || product.info %></td>
-              </tr>
-            <% end %>
-          </table>
-          <a class="btn btn-warning" id="confirm_import_csv">确认导入</a>
-          <a class="btn"  href="/products">取消导入</a>
+<div class="tab-pane active" id="stock_check">
+  <ul class="breadcrumb">
+    <li>商品导入确认,共<%= @products.count %>行</li>
+  </ul>
+  <%- if @products.count > 0 %>
+    <table class="table table-bordered table-condensed td_colors mar_t">
+      <thead>
+        <th>商品名称</th>
+        <th>商品分类</th>
+        <th>商品编码</th>
+        <th>预期结果</th>
+      </thead>
+      <% @products.each do |product| %>
+        <%- if product.errors.present? %>
+          <tr style="background-color:#BDB76B">
         <%- else %>
-          <a class="btn"  href="/products">取消导入</a>
+          <tr>
         <%- end %>
-      </div>
-    </div>
-  </div>
+        <td><%= product.name %></td>
+        <td><%= product.category_name %></td>
+        <td><%= product.outer_id %></td>
+        <td><%= product.errors || product.info %></td>
+        </tr>
+      <% end %>
+    </table>
+    <a class="btn btn-warning" id="confirm_import_csv">确认导入</a>
+    <a class="btn"  href="/products">取消导入</a>
+  <%- else %>
+    <a class="btn"  href="/products">取消导入</a>
+  <%- end %>
 </div>
 
 <% content_for :tail do %>
