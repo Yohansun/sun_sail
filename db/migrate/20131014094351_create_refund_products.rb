@@ -2,8 +2,8 @@
 class CreateRefundProducts < ActiveRecord::Migration
   def change
     create_table :refund_products do |t|
-      t.string    :refund_id    ,limit:   5..8              #退货id
-      t.string    :buyer_name   ,null:    false             #退货人
+      t.integer   :refund_id    ,limit:   5..8              #退货id
+      t.string    :buyer_name                               #退货人
       t.string    :mobile                                   #手机号
       t.string    :phone                                    #电话号码
       t.string    :zip                                      #邮编
