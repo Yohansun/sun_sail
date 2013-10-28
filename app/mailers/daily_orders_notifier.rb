@@ -28,7 +28,7 @@ class DailyOrdersNotifier < ActionMailer::Base
   end
 
   def yesterday(account_id)
-    @account = Account.find_by_id(account_id)
+    @account = Account.find(account_id)
     reciever = @account.settings.email_dailyorders_yesterday_reciever
     cc = @account.settings.email_dailyorders_yesterday_cc
     bcc = @account.settings.email_dailyorders_yesterday_bcc

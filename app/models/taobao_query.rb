@@ -5,7 +5,7 @@ module TaobaoQuery
 
   def self.get(options = {}, trade_source_id = nil)
     source = TradeSource.find(trade_source_id)
-    account = Account.find_by_id(source.account_id)
+    account = Account.find(source.account_id)
     if account
       if account.settings.taobao_auth_method == "TOP"
         TaobaoFu.select_source(trade_source_id)

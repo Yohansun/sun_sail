@@ -1,7 +1,6 @@
 # encoding: utf-8
 class AccountsController < ApplicationController
   before_filter :authenticate_user!
-  before_filter :current_account
   def index
   	@account = Account.new
   end
@@ -15,9 +14,4 @@ class AccountsController < ApplicationController
   		)
     render :index
   end
-
-  def current_account
-    @current_account = Account.find_by_id(session[:account_id]) || Account.find_by_id(current_user.try(:accounts).try(:first).try(:id))
-  end
-
 end

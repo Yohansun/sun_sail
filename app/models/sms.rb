@@ -20,7 +20,7 @@ class Sms
   end
 
   def self.receive(account_id)
-    account = Account.find_by_id(account_id)
+    account = Account.find(account_id)
     if account.key == "nippon"
       Sms.soap_receive(account_id)
     else
@@ -79,7 +79,7 @@ class Sms
   end
 
   def self.http_receive(account_id)
-    account = Account.find_by_id(account_id)
+    account = Account.find(account_id)
     client = account.settings.sms_http_receive_gateway
     uid = account.settings.sms_http_uid
     pwd = account.settings.sms_http_pwd

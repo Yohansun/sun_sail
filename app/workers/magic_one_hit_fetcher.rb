@@ -6,7 +6,7 @@ class MagicOneHitFetcher
 
   def perform(account_id)
     # more settings here
-    account = Account.find_by_id(account_id)
+    account = Account.find(account_id)
     if !Trade.where(account_id: account_id).exists? && !Product.where(account_id: account_id).exists?
       trade_sources = account.trade_sources
       return if trade_sources.blank?

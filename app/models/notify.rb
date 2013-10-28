@@ -19,8 +19,8 @@ class Notify
 	scope :order_desc, order_by("created_at desc")
 
   def fetch_account
-    return Account.find_by_id(self.account_id) if self.account_id_change
-    @account ||= Account.find_by_id(self.account_id)
+    return Account.find(self.account_id) if self.account_id_change
+    @account ||= Account.find(self.account_id)
   end
 
 end

@@ -4,7 +4,7 @@ class TaobaoTradePuller
     def create(start_time = nil, end_time = nil, trade_source_id)
       trade_source = TradeSource.find(trade_source_id)
       account_id = trade_source.account_id
-      account = Account.find_by_id(account_id)
+      account = Account.find(account_id)
       page_no = 1
 
       if start_time.blank?
@@ -68,7 +68,7 @@ class TaobaoTradePuller
     def create_by_tid(tid, trade_source_id)
       trade_source = TradeSource.find(trade_source_id)
       account_id = trade_source.account_id
-      account = Account.find_by_id(account_id)
+      account = Account.find(account_id)
 
       response = TaobaoQuery.get({
         method: 'taobao.trade.fullinfo.get', tid: tid,
@@ -127,7 +127,7 @@ class TaobaoTradePuller
     def update(start_time = nil, end_time = nil, trade_source_id)
       trade_source = TradeSource.find(trade_source_id)
       account_id = trade_source.account_id
-      account = Account.find_by_id(account_id)
+      account = Account.find(account_id)
 
       if start_time.blank?
         if TaobaoTrade.where(account_id: account_id).count > 1
@@ -243,7 +243,7 @@ class TaobaoTradePuller
     def update_by_created(start_time = nil, end_time = nil, trade_source_id)
       trade_source = TradeSource.find(trade_source_id)
       account_id = trade_source.account_id
-      account = Account.find_by_id(trade_source.account_id)
+      account = Account.find(trade_source.account_id)
 
       if start_time.blank?
         latest_created_order = TaobaoTrade.only(:created, :account_id).where(account_id: account_id).order_by(:created.desc).limit(1).first
