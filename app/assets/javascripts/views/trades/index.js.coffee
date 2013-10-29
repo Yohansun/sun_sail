@@ -66,7 +66,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
     @first_rendered = false
     @collection.each(@appendTrade)
-    $("a[rel=popover]").popover({placement: 'left', html:true})
+
     if @identity == 'seller'
       $(@el).find(".trade_nav").text("未发货订单")
     if @identity == 'logistic'
@@ -389,7 +389,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
             view = new MagicOrders.Views.TradesRow(model: model)
             $("#trade_#{model.get('id')}").replaceWith(view.render().el)
             view.reloadOperationMenu()
-            $("a[rel=popover]").popover({placement: 'left', html:true})
+
         $('#batch_deliver').modal('hide')
       else
         alert('失败')
@@ -408,7 +408,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
   # 新订单提醒
   renderNew: =>
     @collection.each(@prependTrade)
-    $("a[rel=popover]").popover({placement: 'left', html:true})
+
     $.unblockUI()
 
   fetch_new_trades: =>
@@ -448,7 +448,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
       else
         $(".get_offset").html($(".complete_offset").html())
 
-      $("a[rel=popover]").popover({placement: 'left', html:true})
+
 
     $.unblockUI()
 

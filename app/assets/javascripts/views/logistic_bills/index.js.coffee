@@ -55,7 +55,7 @@ class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
 
     @first_rendered = false
     @collection.each(@appendTrade)
-    $("a[rel=popover]").popover({placement: 'left', html:true})
+
     $(@el).find(".get_offset").html(@offset)
     @loadStatusCount()
     $("#content").removeClass("search-expand")
@@ -391,7 +391,7 @@ class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
       else
         $(".get_offset").html($(".complete_offset").html())
 
-      $("a[rel=popover]").popover({placement: 'left', html:true})
+
 
     $.unblockUI()
 

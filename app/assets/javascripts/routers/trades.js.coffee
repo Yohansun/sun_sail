@@ -63,7 +63,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $('#content').html(@mainView.render().el)
       @searchView = new MagicOrders.Views.TradesAdvancedSearch()
       $("#search_form").html(@searchView.render().el)
-      $("a[rel=popover]").popover({placement: 'left', html:true})
+
       switch trade_type
         when 'undispatched_for_days' then $('.trade_nav').html('未分派时间过长')
         when 'undelivered_for_days' then $('.trade_nav').html('未发货时间过长')

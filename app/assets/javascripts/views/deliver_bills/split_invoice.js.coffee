@@ -67,7 +67,7 @@ class MagicOrders.Views.DeliverBillsSplitInvoice extends Backbone.View
       alert("不能为空值,请先关闭或赋值后在提交")
 
   handleResponse: (response, status, xhr, form) =>
-    $("a[rel=popover]").popover({placement: 'left', html:true})
+
     $('#split_invoice').modal('hide')
     Backbone.history.navigate('#deliver_bills/deliver_bills-all', true)
 

@@ -35,10 +35,9 @@ class MagicOrders.Views.TradesRow extends Backbone.View
     for col in MagicOrders.trade_cols_hidden[MagicOrders.trade_mode]
       $(@el).find("td[data-col=#{col}]").hide()
 
-    $("a[rel=popover]").popover({placement: 'left', html:true})
     if MagicOrders.cache_trade_number != 0
       $(@el).find("td:first").html("#{MagicOrders.cache_trade_number}")
-      #$(@el).find('.trade_check').attr("checked","checked")
+    $(@el).find("a[rel=popover]").popover({placement: 'left', html:true})
     this
 
   show_type: (e) ->
