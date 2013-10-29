@@ -28,6 +28,7 @@
 #  updated_at :datetime        not null
 #
 class Account < ActiveRecord::Base
+  include FinderCache
   include RailsSettings
 
   attr_accessible :key, :name, :seller_name, :address, :deliver_bill_info, :phone, :website, :point_out
