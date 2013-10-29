@@ -85,7 +85,8 @@ class MagicOrders.Views.TradesAddRef extends Backbone.View
             $.unblockUI()
 
             view = new MagicOrders.Views.TradesRow(model: model)
-            $("a[rel=popover]").popover({placement: 'left', html:true})
+            $("#trade_#{model.get('id')}").replaceWith(view.render().el)
+            view.reloadOperationMenu()
             $('#trade_add_ref').modal('hide')
             items = model.check_operations()
             MagicOrders.enabled_operation_items = items
@@ -105,7 +106,8 @@ class MagicOrders.Views.TradesAddRef extends Backbone.View
         $.unblockUI()
 
         view = new MagicOrders.Views.TradesRow(model: model)
-        $("a[rel=popover]").popover({placement: 'left', html:true})
+        $("#trade_#{model.get('id')}").replaceWith(view.render().el)
+        view.reloadOperationMenu()
         $('#trade_add_ref').modal('hide')
         items = model.check_operations()
         MagicOrders.enabled_operation_items = items

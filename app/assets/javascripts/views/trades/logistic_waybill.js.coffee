@@ -23,7 +23,7 @@
         view = new MagicOrders.Views.TradesRow(model: model)
         $("#trade_#{model.get('id')}").replaceWith(view.render().el)
         view.reloadOperationMenu()
-        $("a[rel=popover]").popover({placement: 'left', html:true})
+
         $('#logistic_waybill').modal('hide')
 
       error: (model, error, response) =>

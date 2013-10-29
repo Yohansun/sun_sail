@@ -13,9 +13,9 @@ class MagicOrders.Views.SellersSellerArea extends Backbone.View
     $(@el).html(@template(seller: @model))
     this
 
-  # decontrol_child: ->    
+  # decontrol_child: ->
   #   @child_ids = []
-  #   for item,i in $(".decontrol_child") 
+  #   for item,i in $(".decontrol_child")
   #     child_ids[i] = $(item).data("child-id")
 
   # save: (e) ->
@@ -26,6 +26,6 @@ class MagicOrders.Views.SellersSellerArea extends Backbone.View
 
   #       view = new MagicOrders.Views.SellersRow(model: model)
   #       $("#trade_#{model.get('id')}").replaceWith(view.render().el)
-  #       $("a[rel=popover]").popover({placement: 'left', html:true})
+  #
 
   #       $('#seller_area').modal('hide')

@@ -61,7 +61,7 @@ class MagicOrders.Views.TradesDeliver extends Backbone.View
           $("#trade_#{model.get('id')}").replaceWith(view.render().el)
           view.reloadOperationMenu()
 
-        $("a[rel=popover]").popover({placement: 'left', html:true})
+
         $('#trade_deliver').modal('hide')
         # window.history.back()
 
