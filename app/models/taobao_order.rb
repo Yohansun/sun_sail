@@ -71,70 +71,6 @@ class TaobaoOrder < Order
     (taobao_sku && taobao_sku.skus) || local_skus || []
   end
 
-  # def local_skus
-  #   sku = Sku.find_by_id(local_sku_id)
-  #   sku == nil ? [] : [sku]
-  # end
-
-  # def products
-  #   skus.map(&:product)
-  # end
-
-  # def categories
-  #   products.map(&:category)
-  # end
-
-  # def package_info
-  #   info = []
-  #   if sku_bindings.present?
-  #     sku_bindings.each do |binding|
-  #       sku = binding.sku
-  #       next unless sku
-  #       product = sku.product
-  #       next unless product
-  #       stock_product_ids = StockProduct.where(product_id: product.id, sku_id: sku.id).map(&:id)
-  #       info << {
-  #         sku_id: binding.sku_id,
-  #         outer_id: product.outer_id,
-  #         stock_product_ids: stock_product_ids,
-  #         number: binding.number,
-  #         title: sku.title
-  #       }
-  #     end
-  #   elsif local_skus.present?
-  #     local_skus.each do |sku|
-  #       product = sku.product
-  #       next unless product
-  #       stock_product_ids = StockProduct.where(product_id: product.id, sku_id: sku.id).map(&:id)
-  #       info << {
-  #         sku_id: sku.id,
-  #         outer_id: product.outer_id,
-  #         stock_product_ids: stock_product_ids,
-  #         number: self.num,
-  #         title: sku.title
-  #       }
-  #     end
-  #   end
-  #   info
-  # end
-
-  # def package_products
-  #   info = []
-  #   if sku_bindings.present?
-  #     sku_bindings.each do |binding|
-  #       product = binding.sku.try(:product)
-  #       number = binding.number
-  #       info << Array.new(number,product)
-  #     end
-  #   elsif local_skus.present?
-  #     local_skus.each do |sku|
-  #       product = sku.product
-  #       info << Array.new(self.num,product)
-  #     end
-  #   end
-  #   info = info.flatten
-  # end
-
   def sku_products
     products = []
     if self.sku_bindings.present?
@@ -152,43 +88,8 @@ class TaobaoOrder < Order
         products << {sku_id: sku_id, number: 1, product: product} if product.present?
       end
     end
-
     products
   end
-
-  # def child_outer_id
-  #   info = []
-  #   if sku_bindings.present?
-  #     sku_bindings.each do |binding|
-  #       product = binding.sku.try(:product)
-  #       number = binding.number
-  #       info << [product, number]
-  #     end
-  #   elsif local_skus.present?
-  #     local_skus.each do |sku|
-  #       product = sku.product
-  #       info << [product, self.num]
-  #     end
-  #   end
-  #   info
-  # end
-
-  # def avalibale_sku_names
-  #   sku_names = []
-  #   if taobao_skus.present?
-  #     taobao_skus.map(&:name).each do |name|
-  #       sku_names << name.split(':').last
-  #     end
-  #   elsif jingodng_skus.present?
-  #     #PENDING
-  #   elsif local_skus.present?
-  #     local_skus.map(&:name).each do |name|
-  #       sku_names << name.split(':').last
-  #     end
-  #   end
-  #   sku_names.join(',')
-  # end
-
 
   # def color_map(color_num)
   #   result = []
@@ -252,32 +153,6 @@ class TaobaoOrder < Order
   # end
 
   def bill_info
-    # if product
-    #   product.color_map(color_num)
-    # else
-    #   tmp = {}
-    #   color_num.each do |nums|
-    #     next if nums.blank?
-
-    #     num = nums[0]
-    #     next if num.blank?
-
-    #     if tmp.has_key? num
-    #       tmp["#{num}"][0] += 1
-    #     else
-    #       tmp["#{num}"] = [1, Color.find_by_num(num).try(:name)]
-    #     end
-    #   end
-
-    #   [{
-    #     outer_id: '',
-    #     number: 1,
-    #     storage_num: '',
-    #     title: title,
-    #     colors: []
-    #   }]
-    # end
-
     [{
       outer_id: '',
       number: 1,
