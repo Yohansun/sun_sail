@@ -218,7 +218,12 @@ class TaobaoTradePuller
 
         orders.each do |order|
           local_order = local_trade.orders.where(oid: order['oid']).first
-          local_order.update_attributes(order)
+          if local_order
+            local_order.update_attributes(order)
+          else
+            response = "--#{account.key}---#{local_trade.tid}----#{order['oid']}---"
+            Notifier.puller_errors(response, account.id).deliver
+          end
         end
 
         if local_trade.changed?
