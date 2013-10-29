@@ -124,6 +124,17 @@ class UnusualStateMarker
           end
         end
       end
+
+      #买家要求退款
+      account.trades.and(:status.in => Trade::StatusHash["paid_not_deliver_array"], has_refund_orders: true).each do |trade|
+        if trade.unusual_states.where(key: 'buyer_demand_refund').count == 0
+          trade.unusual_states.create(reason: "买家要求退款",
+                                      key: "buyer_demand_refund",
+                                      reporter: "系统预警",
+                                      reporter_role: "magic_system",
+                                      created_at: Time.now)
+        end
+      end
     end
     # 如果标注异常时间间隔改变，关闭队列，在controller中会重开新队列
     if version == conditions['frequency_version']
