@@ -42,7 +42,7 @@ class StockInBill < StockBill
         stock.HEADER do
           stock.RECEIPTID tid                                                   #YH2013030001  网站系统生成的订单编号 必填  VARCHAR2  30
           stock.RECEIPTDATE stocked_at.try(:strftime, "%Y-%m-%d %H:%M")         #2013-03-27 16:00  订单创建日期  必填  DATE
-          stock.ORDERTYPE 'STD'                                                 #订单类型,淘宝订单,分销,退货
+          stock.RECEIPTTYPE 'STD'                                               #订单类型,淘宝订单,分销,退货
           stock.POID tid                                                        #采购单号
           stock.TOTALPIECESQTY bill_products_mumber
         end

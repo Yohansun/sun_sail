@@ -153,7 +153,7 @@ class RefundProduct < ActiveRecord::Base
         stock.HEADER do
           stock.RECEIPTID tid
           stock.RECEIPTDATE refund_time.to_s(:db)
-          stock.ORDERTYPE 'RETURN'
+          stock.RECEIPTTYPE 'RETURN'
           stock.POID tid                                                        #采购单号
           stock.TOTALPIECESQTY refund_orders.map(&:num).sum
           stock.SHIPCONTACT buyer_name
