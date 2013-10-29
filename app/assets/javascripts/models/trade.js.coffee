@@ -32,6 +32,7 @@ class MagicOrders.Models.Trade extends Backbone.Model
         enabled_items.push('lock_trade')
 
       if this.attributes.is_paid_not_delivered
+        enabled_items.push('refund_ref')
         enabled_items.push('modify_receiver_information')
         enabled_items.push('merge_trades_manually')
         if this.attributes.merged_trade_ids && this.attributes.merged_trade_ids.length > 0

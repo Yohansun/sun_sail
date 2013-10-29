@@ -79,6 +79,9 @@
   <% if @trade.get('logistic_printed_at'): %>
     <span class="label label-success">打印物流单 <%= @trade.get('logistic_printed_at') %></span>
   <% end %>
+  <% if @trade.get('refund_ref') && @trade.get('refund_status') != "取消线下退款" : %>
+    <span class="label label-important"><%= @trade.get('refund_status') %></span>
+  <% end %>
   <% if @trade.get('operator'): %>
   <span class="label label-info">指派：<%= @trade.get('operator') %></span>
   <% end %>
