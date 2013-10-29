@@ -72,8 +72,10 @@ class StockBillsController < ApplicationController
           end
 
           if order['OPTTYPE'] == 'OrderShip'
-            stock_bill.do_stock
-            stock_bill.operation_logs.create(operated_at: Time.now, operation: '确认成功')
+            if (stock_bill._type == "StockInBill" && stock_bill.sync_stock ) || (stock_bill._type == "StockOutBill" && stock_bill.decrease_actual)
+              stock_bill.do_stock
+              stock_bill.operation_logs.create(operated_at: Time.now, operation: '确认成功')
+            end
           elsif order['OPTTYPE'] == 'OrderSign'
             stock_bill.operation_logs.create(operated_at: Time.now, operation: '签收')
           elsif order['OPTTYPE'] == 'OrderRefuse'
