@@ -165,7 +165,7 @@ class AccountSetupsController < ApplicationController
       user.save
       user.add_role(role)
 
-      InitUserNotifier.perform_async(current_account.id, @user.email, @user.password, @user.phone)
+      InitUserNotifier.perform_async(current_account.id, user.email, user.password, user.phone)
 
     end
   end
