@@ -25,6 +25,7 @@ class RefundProduct < ActiveRecord::Base
   def initialize(*)
     super
     self.status_operations = [{:created => Time.now}]
+    self.refund_time = Time.now.to_s(:db)
     self.refund_id = Time.now.to_f.to_s.gsub('.','').to(15) if refund_id.nil?
   end
 
