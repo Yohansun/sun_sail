@@ -6,7 +6,7 @@
 <div class="well clearfix">
   <fieldset class="span6">
     <%= f.input :buyer_name, label: "退货人",:input_html  => {:class => "input-medium", :id => "op_name"} %>
-    <%= f.input :phone, label: "固定电话",:input_html => {:class => "input-medium"} %>
+    <%= f.input :phone, label: "固定电话",:input_html => {:class => "input-medium", :id => "select_phone"} %>
     <!-- <div class="control-group">
       <label class="control pull-left">收货仓库：</label>
       <select class="input-medium select2">
@@ -28,12 +28,12 @@
           <option>区</option>
         </select>
       </div>
-      <%= f.input :address, label: "退货地址",:input_html => {:class => "input-medium"} %>
-      <%= f.input :tid,:label => "订单号",:input_html => {:class => "span10 product_bill checkdata select_trade"} %>
+      <%= f.input :address, label: "退货地址",:input_html => {:class => "input-medium", :id => "select_address"} %>
+      <%= f.input :tid,:label => "出库单号",:input_html => {:class => "span10 product_bill checkdata select_trade"} %>
     </fieldset><!-- form left area -->
     <fieldset class="span6">
-      <%= f.input :mobile, label: "*手机",:input_html  => {:class => "input-medium"} %>
-      <%= f.input :zip, label: "*邮编",:input_html  => {:class => "input-medium"} %>
+      <%= f.input :mobile, label: "*手机",:input_html  => {:class => "input-medium", :id => "select_mobile"} %>
+      <%= f.input :zip, label: "*邮编",:input_html  => {:class => "input-medium", :id => "select_zip"} %>
       <div class="control-group string optional">
        <%= f.label :refund_time,"*退货时间",:class => "string optional control-label" %>
        <div class="controls">
@@ -92,14 +92,35 @@ $(function(){
   $(".select_trade").live("change",function(){
     var tid = $(this).val();
     $select_orders = $("select.select_order");
+    $select_op_name = $("#op_name");
+    $select_phone = $("#select_phone");
+    $select_mobile = $("#select_mobile");
+    $select_address = $("#select_address");
+    $select_zip = $("#select_zip");
+
     $select_orders.each(function(){ $(this).select2('data',null) });
     $.get("/stock_out_bills/get_products.json",{tid: tid,warehouse_id: "<%= params[:warehouse_id] %>"},function(data){})
     .done(function(data) {
       var options = '<option value></option>';
+      var op_name = '';
+      var mobile = '';
+      var phone = '';
+      var address = '';
+      var zip = '';
       $.each(data,function(index,value){
         options += '<option value="' + value.sku_id + '" sku_code="' +  value.sku_code + '"' + '">' + value.title + '</option>';
+        op_name = value.buyer_name;
+        mobile = value.mobile
+        phone = value.phone
+        zip = value.zip
+        address = value.address
       });
       $select_orders.each(function(){ $(this).html(options) });
+      $select_op_name.val(op_name);
+      $select_mobile.val(mobile);
+      $select_phone.val(phone);
+      $select_zip.val(zip);
+      $select_address.val(address);
     })
     .fail(function() { alert("没有找到出库单号为" + tid); })
   });
