@@ -9,8 +9,10 @@ class InitUserNotifier
       sms = Sms.new(account, "Magic系统初始化用户提醒, 帐号: #{email}, 密码: #{password},请登录后尽快修改密码", mobiles)
       sms.transmit
     end
-    email = Notifier.init_user_notifications(email, password, account_id)
-    email.deliver
+    if email
+      email = Notifier.init_user_notifications(email, password, account_id)
+      email.deliver
+    end
   end
 
 end
