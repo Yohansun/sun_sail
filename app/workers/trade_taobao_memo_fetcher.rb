@@ -19,7 +19,7 @@ class TradeTaobaoMemoFetcher
     trade.update_attributes(seller_memo: remote_trade['seller_memo']) if remote_trade['seller_memo']
 
     # 自动从memo导入发票抬头
-    if account.settings.open_auto_mark_invoice == 1
+    if trade.invoice_name.blank? && account.settings.open_auto_mark_invoice == 1
       if trade.buyer_message
         invoice_buyer = trade.buyer_message.scan(/\$.*\$/).present? ? trade.buyer_message.scan(/\$.*\$/).first : nil
       end
