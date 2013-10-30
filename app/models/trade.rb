@@ -460,23 +460,13 @@ class Trade
     "#{cs_memo}  #{orders_cs_memo}"
   end
 
-  def return_ref
-    ref_batches.where(ref_type: "return_ref").last
-  end
-
-  def return_ref_status
-    if return_ref.present?
-      return_ref.ref_logs.last.operation
+  ['add_ref', 'return_ref', 'refund_ref'].each do |ref_method|
+    define_method(ref_method.to_sym) do
+      ref_batches.where(ref_type: ref_method).last
     end
-  end
 
-  def refund_ref
-    ref_batches.where(ref_type: "refund_ref").last
-  end
-
-  def refund_ref_status
-    if refund_ref.present?
-      refund_ref.ref_logs.last.operation
+    define_method((ref_method+'_status').to_sym) do
+      self.send(ref_method.to_sym).operation_text if self.send(ref_method.to_sym).present?
     end
   end
 
@@ -1501,22 +1491,11 @@ class Trade
 
   #判断订单状态
   def is_paid_not_delivered
-    ["WAIT_SELLER_SEND_GOODS",
-     "WAIT_SELLER_DELIVERY",
-     "WAIT_SELLER_STOCK_OUT",
-     "ORDER_PAYED",
-     "ORDER_TRUNED_TO_DO"].include?(status)
+    StatusHash['paid_not_deliver_array'].include?(status)
   end
 
   def is_paid_and_delivered
-    ["WAIT_BUYER_CONFIRM_GOODS",
-     "WAIT_GOODS_RECEIVE_CONFIRM",
-     "WAIT_BUYER_CONFIRM_GOODS_ACOUNTED",
-     "WAIT_SELLER_SEND_GOODS_ACOUNTED",
-     "ORDER_CAN_OUT_OF_WH",
-     "ORDER_OUT_OF_WH",
-     "ORDER_SENDED_TO_LOGITSIC",
-     "ORDER_RECEIVED"].include?(status)
+    StatusHash['paid_and_delivered_array'].include?(status)
   end
 
   def change_status_to_deliverd
@@ -1530,18 +1509,11 @@ class Trade
   end
 
   def is_succeeded
-    ["TRADE_FINISHED",
-     "FINISHED_L",
-     "ORDER_FINISH"].include?(status)
+    StatusHash['succeed_array'].include?(status)
   end
 
   def is_closed
-    ["TRADE_CLOSED",
-     "TRADE_CANCELED",
-     "TRADE_CLOSED_BY_TAOBAO",
-     "ALL_CLOSED",
-     "LOCKED",
-     "ORDER_CANCEL"].include?(status)
+    StatusHash['closed_array'].include?(status)
   end
 
   private

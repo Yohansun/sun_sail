@@ -98,12 +98,9 @@ json.array!(@trades) do |json, trade|
   #for gift_trade only!
   json.main_trade_id trade.main_trade_id if trade.main_trade_id
 
-  json.add_ref trade.ref_batches.where(ref_type: "add_ref").first
-  json.add_status trade.ref_batches.where(ref_type: "add_ref").first.try(:operation_text)
-  json.return_ref trade.ref_batches.where(ref_type: "return_ref").last
-  json.return_status trade.ref_batches.where(ref_type: "return_ref").last.try(:operation_text)
-  json.refund_ref trade.ref_batches.where(ref_type: "refund_ref").last
-  json.refund_status trade.ref_batches.where(ref_type: "refund_ref").last.try(:operation_text)
+  json.add_ref trade.add_ref
+  json.return_ref trade.return_ref
+  json.refund_ref trade.refund_ref
 
   json.merged_trade_ids trade.merged_trade_ids
   json.merged_by_trade_id trade.merged_by_trade_id
