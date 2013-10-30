@@ -39,7 +39,7 @@ class TaobaoTradePuller
           start_created: start_time.strftime("%Y-%m-%d %H:%M:%S"),
           end_created: end_time.strftime("%Y-%m-%d %H:%M:%S"),
           page_no: page_no,
-          page_size: 40,
+          page_size: 100,
           use_has_next: true}, trade_source_id
           )
 
@@ -52,16 +52,26 @@ class TaobaoTradePuller
         has_next = response['trades_sold_get_response']['has_next']
         next unless response['trades_sold_get_response']['trades']
 
-        trades = response['trades_sold_get_response']['trades']['trade']
-        unless trades.is_a?(Array)
-          trades = [] << trades
-        end
-        next if trades.blank?
 
-        trades.each do |trade|
-          next if ($redis.sismember('TaobaoTradeTids',trade['tid']) || TaobaoTrade.unscoped.where(tid: trade['tid']).exists?)
-          create_trade(trade, account, trade_source_id)
+        trades = response['trades_sold_get_response']['trades']['trade']
+        tids = trades.collect {|t| t["tid"].to_s}
+        news_tids = tids - TaobaoTrade.only(:tid).where(:tid.in => tids).distinct(:tid)
+
+        trades = trades.reject {|trade| !news_tids.include?(trade["tid"].to_s)}.each do |trade|
+          trade["taobao_orders"] = trade.delete("orders")["order"]
+          trade["trade_source_id"] = trade_source_id
+          trade["news"] = 3
+          trade["account_id"] = account.id
         end
+
+        trades = trades.collect {|trade|
+          t = TaobaoTrade.new(trade)
+          t.attributes.merge(taobao_orders: t.taobao_orders.map(&:attributes))
+        }
+
+        Trade.collection.insert(trades)
+
+        TaobaoPullerBuilder.perform_async(account_id)
       end
     end
 

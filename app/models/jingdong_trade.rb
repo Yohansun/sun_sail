@@ -43,7 +43,6 @@ class JingdongTrade < Trade
 
   embeds_many :jingdong_orders
   embeds_many :coupon_details
-  field :news, type: Integer , default: 0 #是否从京东更新数据
 
 
   enum_attr :status, [["等待出库"     ,"WAIT_SELLER_STOCK_OUT"],

@@ -52,8 +52,6 @@ class YihaodianTrade < Trade
 
   embeds_many :yihaodian_orders
 
-  field :news, type: Integer , default: 0 #是否从一号店更新数据
-
   enum_attr :status, [["已下单（货款未全收）", "ORDER_WAIT_PAY"],
                       ["已下单（货款已收）", "ORDER_PAYED"],
                       ["可以发货（已送仓库）", "ORDER_TRUNED_TO_DO"],
