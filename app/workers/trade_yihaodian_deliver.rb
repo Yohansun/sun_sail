@@ -19,7 +19,11 @@ class TradeYihaodianDeliver
       trade.stock_out_bill.decrease_actual                                if account.settings.enable_module_third_party_stock != 1
       trade.status = 'ORDER_CAN_OUT_OF_WH'
     else
-      trade.unusual_states.build(reason: "发货异常: #{trade.shipment}", key: 'other_unusual_state')
+      trade.unusual_states.build(reason: "发货异常",
+                                 key: 'other_unusual_state',
+                                 reporter: "系统预警",
+                                 reporter_role: "magic_system",
+                                 created_at: Time.now)
     end
 
     trade.save! rescue BacktraceMailer.background_exception_notification($!)
