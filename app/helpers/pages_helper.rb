@@ -43,12 +43,12 @@ module PagesHelper
   end
 
   def new_top_one_district_string
-    area_data(1.day.ago,
+    area_data(1.month.ago,
               Time.now)[0][0] rescue "暂无"
   end
 
   def new_hot_product_string
-    current_account.products.find_by_num_iid(product_data(1.day.ago,
+    current_account.products.find_by_num_iid(product_data(1.month.ago,
                                              Time.now)[0].first[0]).name rescue "暂无"
   end
 
@@ -96,10 +96,10 @@ module PagesHelper
 
   def recent_trades
     if current_user.has_role?(:admin)
-      trades = current_account.trades.between(created: 1.day.ago..Time.now)
+      trades = current_account.trades.between(created: 15.days.ago..Time.now)
       unusual_trades = trades.where(:unusual_states.elem_match => {repaired_at: nil}).only(:tid, :unusual_states).limit(5)
     else
-      trades = current_account.trades.between(created: 1.day.ago..Time.now).where(operator_id: current_user.id)
+      trades = current_account.trades.between(created: 15.days.ago..Time.now).where(operator_id: current_user.id)
       unusual_trades = trades.where(:unusual_states.elem_match => {:repair_man => current_user.name, repaired_at: nil}).only(:tid, :unusual_states).limit(5)
     end
     #Need more orders

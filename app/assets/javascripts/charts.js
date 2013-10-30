@@ -116,7 +116,7 @@ var Charts = function () {
                       var x = item.datapoint[0].toFixed(2),
                       y = item.datapoint[1].toFixed(2);
 
-                      showTooltip('24 Jan 2013', item.pageX, item.pageY, item.series.label + " of " + x + " = " + y);
+                      Charts.showTooltip('24 Jan 2013', item.pageX, item.pageY, item.series.label + " of " + x + " = " + y);
                   }
               } else {
                   $("#tooltip").remove();
@@ -195,7 +195,7 @@ var Charts = function () {
                       $("#tooltip").remove();
                       var x = item.datapoint[0].toFixed(2),
                       y = item.datapoint[1].toFixed(2);
-                      showTooltip('24 Feb 2013', item.pageX, item.pageY, x);
+                      Charts.showTooltip('24 Feb 2013', item.pageX, item.pageY, x);
                   }
               }
           });
@@ -275,7 +275,7 @@ var Charts = function () {
                       $("#tooltip").remove();
                       var x = item.datapoint[0].toFixed(2),
                       y = item.datapoint[1].toFixed(2);
-                      showTooltip('24 Feb 2013', item.pageX, item.pageY, x);
+                      Charts.showTooltip('24 Feb 2013', item.pageX, item.pageY, x);
                   }
               }
           });
