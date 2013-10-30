@@ -45,7 +45,7 @@ class MagicOrders.Views.TradesSetupLogistic extends Backbone.View
         return
 
     new_model = new MagicOrders.Models.Trade(id: @model.id)
-    new_model.save {operation: "设置物流信息", logistic_id: lid, logistic_waybill: waybill, setup_logistic: true， service_logistic_id: service_logistic_id}, success: (model, response)->
+    new_model.save {operation: "设置物流信息", logistic_id: lid, logistic_waybill: waybill, setup_logistic: true, service_logistic_id: service_logistic_id}, success: (model, response)->
       view = new MagicOrders.Views.TradesRow(model: model)
       $("#trade_#{model.get('id')}").replaceWith(view.render().el)
       view.reloadOperationMenu()
