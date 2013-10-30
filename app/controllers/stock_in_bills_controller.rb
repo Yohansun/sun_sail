@@ -49,6 +49,10 @@ class StockInBillsController < ApplicationController
 
   def edit
     @bill = default_scope.find params[:id]
+    if @bill.status != "CREATED"
+      flash[:error] = "只能编辑手动新增的状态为待审核的入库单."
+      redirect_to(:action => "index") and return
+    end
     @products = @bill.bill_products
     parse_area(@bill)
   end
