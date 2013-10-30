@@ -108,9 +108,9 @@ json.orders OrderDecorator.decorate(@trade.orders) do |json, order|
   json.package_info order.package_info
 end
 
-json.add_ref @trade.ref_batches.where(ref_type: "add_ref").first
-json.return_ref @trade.ref_batches.where(ref_type: "return_ref").last
-json.refund_ref @trade.ref_batches.where(ref_type: "refund_ref").last
+json.add_ref @trade.add_ref
+json.return_ref @trade.return_ref
+json.refund_ref @trade.refund_ref
 
 if @trade._type == "TaobaoPurchaseOrder"
   json.distributor_username @trade.distributor_username

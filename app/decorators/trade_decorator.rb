@@ -298,7 +298,9 @@ class TradeDecorator < Draper::Base
   end
 
   def taobao_order_status_text
-    if trade.return_ref_status.present?
+    if trade.add_ref_status.present?
+      trade.add_ref_status
+    elsif trade.return_ref_status.present?
       trade.return_ref_status
     elsif trade.refund_ref_status.present?
       trade.refund_ref_status
