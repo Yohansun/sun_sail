@@ -47,7 +47,7 @@ class User < ActiveRecord::Base
   # :lockable, :timeoutable and :omniauthable
 
   devise :database_authenticatable, :lockable,:registerable,
-         :recoverable, :rememberable, :trackable, :validatable
+         :recoverable, :rememberable, :trackable#, :validatable
 
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :username, :active, :can_assign_trade, :percent
@@ -56,12 +56,24 @@ class User < ActiveRecord::Base
   # attr_accessible :title, :body
 
   EMAIL_FORMAT = /\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}\z/
-  validates :email, format: { with: EMAIL_FORMAT}, uniqueness: true, presence: true
+  validates :email,
+            format: { with: EMAIL_FORMAT, message: "填写格式不正确"},
+            uniqueness: {message: "该邮箱已有人使用"},
+            presence: {message: "输入信息不能为空"},
+            allow_blank: true
+
   PHONE_FORMAT = /^(13[0-9]|15[012356789]|18[0236789]|14[57])[0-9]{8}$/
-  validates :phone, format: { with: PHONE_FORMAT}, uniqueness: true, allow_blank: true
+  PHONE_FORMAT = /^[0-9]{11}$/
+  validates :phone,
+            format: { with: PHONE_FORMAT, message: "请输入有效的手机号码"},
+            uniqueness: {message: "该手机号码已有人使用"},
+            allow_blank: true
 
   validates_presence_of :password, on: :create
-  validates :username , uniqueness: true, presence: true, format: { with: /\A[A-Za-z]{4,9}\z/}
+  validates :username ,
+            uniqueness: {message: "该用户名已有人使用"},
+            presence: {message: "填写4-9位数字或者字母"},
+            format: { with: /\A[A-Za-z0-9]{4,9}\z/, message: "填写4-9位数字或者字母"}
 
   validate :has_phone_or_email?
 
@@ -71,8 +83,13 @@ class User < ActiveRecord::Base
 
   def set_pseudo_username
     unless username
-      sudo_username = email || phone
-      self.username = sudo_username
+      last_user = User.last
+      if last_user.present?
+        last_id = last_user.id
+      else
+        last_id = 0
+      end
+      self.username = "user#{last_id+1}"
     end
   end
 
@@ -173,8 +190,8 @@ class User < ActiveRecord::Base
 
   def has_phone_or_email?
     if email.blank? && phone.blank?
-      errors.add(:email, "至少输入手机号或者邮箱")
-      errors.add(:phone, "至少输入手机号或者邮箱")
+      errors.add(:email, "至少输入手机号或者邮箱") if errors[:email].blank?
+      errors.add(:phone, "至少输入手机号或者邮箱") if errors[:phone].blank?
     end
   end
 

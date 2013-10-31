@@ -29,11 +29,7 @@
               <small class="muted control-group error">
                 <strong class="text-warning">＊</strong>
                 <%- if @user.present? && @user.errors[:email].present? %>
-                  <%- if @user.email.blank? -%>
-                    输入信息不能为空
-                  <%- else -%>
-                    填写格式不正确
-                  <%- end -%>
+                  <%= @user.errors[:email].first %>
                 <%- else -%>
                   系统将为您自动生成密码，并发送到您的邮箱中，请确保您的邮箱正确。
                 <%- end -%>
@@ -47,13 +43,9 @@
               <small class="muted">
                 <strong class="text-warning">＊</strong>
                 <%- if @user.present? && @user.errors[:phone].present? %>
-                  <%- if @user.phone.blank? -%>
-                    输入信息不能为空
-                  <%- else -%>
-                    填写格式不正确
-                  <%- end -%>
+                  <%= @user.errors[:phone].first %>
                 <%- else -%>
-                  请输入有效的手机号码。
+                  请输入有效的手机号码
                 <%- end -%>
               </small>
             </div>
@@ -65,13 +57,9 @@
               <small class="muted">
                 <strong class="text-warning">＊</strong>
                 <%- if @user.present? && @user.errors[:username].present? %>
-                  <%- if @user.username.blank? -%>
-                    输入信息不能为空
-                  <%- else -%>
-                    填写格式不正确
-                  <%- end -%>
+                  <%= @user.errors[:username].first %>
                 <%- else -%>
-                  4-9位字母字符
+                  填写4-9位数字或者字母
                 <%- end -%>
                </small>
             </div>

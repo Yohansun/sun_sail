@@ -1,7 +1,7 @@
 # -*- encoding:utf-8 -*-
 class AccountSetupsController < ApplicationController
   include Wicked::Wizard
-  layout  "management"
+  layout  :set_action_layout
   before_filter :check_account_wizard_status, only:[:show]
 
   skip_before_filter :verify_authenticity_token, only: [:data_fetch_finish]
@@ -11,6 +11,14 @@ class AccountSetupsController < ApplicationController
 
   skip_before_filter :authenticate_user!, if: proc{|c| c.current_account && c.current_user.nil?}
   steps :admin_init, :data_fetch, :options_setup, :user_init
+
+  def set_action_layout
+    if ["show", "update"].include?(params[:action])
+      "user_initialize"
+    else
+      "management"
+    end
+  end
 
   def show
     (redirect_to root_path; return) if current_account.settings[:wizard_step] == :finish
@@ -164,9 +172,7 @@ class AccountSetupsController < ApplicationController
       end
       user.save
       user.add_role(role)
-
       InitUserNotifier.perform_async(current_account.id, user.email, user.password, user.phone)
-
     end
   end
 
