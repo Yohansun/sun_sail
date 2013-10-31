@@ -2,6 +2,7 @@
 module PagesHelper
   include SalesHelper
   include TradesHelper
+  include ActionView::Helpers::TextHelper
   def pages_hash
     {
       "pages_#{current_account.id}_new_add_trades"                => new_add_trades_int,               #今日新增订单
