@@ -14,7 +14,7 @@ var Charts = function () {
           position: 'absolute',
           display: 'none',
           top: pagey - 100,
-          width: 75,
+          width: 100,
           left: pagex - 40,
           border: '0px solid #ccc',
           padding: '2px 6px',
