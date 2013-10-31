@@ -12,7 +12,7 @@ json.array!(@bill_products) do |json,product|
   json.op_city  @bill.op_city
   json.op_district  @bill.op_district
   json.address  @bill.op_address
-  json.phone  bill.op_phone
+  json.phone  @bill.op_phone
   json.mobile  @bill.op_mobile
   json.zip  @bill.op_zip
 end	

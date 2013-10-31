@@ -9,13 +9,13 @@ var Charts = function () {
         });
       },
 
-      showTooltip: function (title, x, y, contents) {
-        $('<div id="tooltip" class="chart-tooltip"><div class="date">' + title + '<\/div><div class="label label-success">CTR: ' + x / 10 + '%<\/div><div class="label label-important">Imp: ' + x * 12 + '<\/div><\/div>').css({
+      showTooltip: function (title, x, y, contents, pagex, pagey) {
+        $('<div id="tooltip" class="chart-tooltip"><div class="date">' + title + '<\/div><div class="label label-success">CTR: ' + x / 10 + '%<\/div><div class="label label-important">Imp: ' + y + '<\/div><\/div>').css({
           position: 'absolute',
           display: 'none',
-          top: y - 100,
+          top: pagey - 100,
           width: 75,
-          left: x - 40,
+          left: pagex - 40,
           border: '0px solid #ccc',
           padding: '2px 6px',
           'background-color': '#fff',
@@ -115,8 +115,7 @@ var Charts = function () {
                       $("#tooltip").remove();
                       var x = item.datapoint[0].toFixed(2),
                       y = item.datapoint[1].toFixed(2);
-
-                      Charts.showTooltip('24 Jan 2013', item.pageX, item.pageY, item.series.label + " of " + x + " = " + y);
+                      Charts.showTooltip('', item.pageX, y, 'money', item.pageX, item.pageY);
                   }
               } else {
                   $("#tooltip").remove();
@@ -195,7 +194,7 @@ var Charts = function () {
                       $("#tooltip").remove();
                       var x = item.datapoint[0].toFixed(2),
                       y = item.datapoint[1].toFixed(2);
-                      Charts.showTooltip('24 Feb 2013', item.pageX, item.pageY, x);
+                      //Charts.showTooltip('24 Feb 2013', item.pageX, item.pageY, x);
                   }
               }
           });
@@ -275,7 +274,7 @@ var Charts = function () {
                       $("#tooltip").remove();
                       var x = item.datapoint[0].toFixed(2),
                       y = item.datapoint[1].toFixed(2);
-                      Charts.showTooltip('24 Feb 2013', item.pageX, item.pageY, x);
+                      //Charts.showTooltip('24 Feb 2013', item.pageX, item.pageY, x);
                   }
               }
           });

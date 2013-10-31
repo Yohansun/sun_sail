@@ -141,7 +141,7 @@ class StockOutBillsController < ApplicationController
 
   def get_bills
     type = params[:type]
-    @stock_bills = default_scope.where(:_type => type,:tid => /#{params[:tid]}/)
+    @stock_bills = default_scope.where(:_type => type,:tid => /#{params[:tid]}/,:status => "STOCKED")
     respond_to do |format|
       format.json { render partial: "partials/stock_bills.json"}
     end
