@@ -94,6 +94,7 @@ gem 'carrierwave'
 gem "mini_magick"
 
 gem 'redis-namespace'
+gem 'redis-rails',"~> 3.2.4"
 
 gem 'client_side_validations'
 gem 'client_side_validations-simple_form'
