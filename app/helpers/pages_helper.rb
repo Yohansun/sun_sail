@@ -48,8 +48,8 @@ module PagesHelper
   end
 
   def new_hot_product_string
-    current_account.products.find_by_num_iid(product_data(1.month.ago,
-                                             Time.now)[0].first[0]).name rescue "暂无"
+    truncate(current_account.products.find_by_num_iid(product_data(1.month.ago,
+                                             Time.now)[0].first[0]).name, length: 6) rescue "暂无"
   end
 
   def sale_chart_hash
