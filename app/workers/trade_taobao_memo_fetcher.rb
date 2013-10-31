@@ -19,7 +19,7 @@ class TradeTaobaoMemoFetcher
     trade.update_attributes(seller_memo: remote_trade['seller_memo']) if remote_trade['seller_memo']
 
     # 自动从memo导入发票抬头
-    if trade.invoice_name.blank? && account.settings.open_auto_mark_invoice == 1
+    if account.settings.open_auto_mark_invoice == 1 && trade.operation_logs.where(operation: "申请开票").count == 0
       if trade.buyer_message
         invoice_buyer = trade.buyer_message.scan(/\$.*\$/).present? ? trade.buyer_message.scan(/\$.*\$/).first : nil
       end
@@ -33,9 +33,13 @@ class TradeTaobaoMemoFetcher
       else
         invoice_name = "个人"
       end
-      trade.invoice_name = invoice_name
-      trade.invoice_type = "需要开票"
-      trade.save
+      if trade.invoice_name != invoice_name
+        trade.invoice_name = invoice_name
+        trade.invoice_type = "需要开票"
+        trade.save
+        trade.operation_logs.create(operated_at: Time.now,
+                                    operation: "系统修改开票信息")
+      end
     end
 
     # 自动将买家备注同步到客服备注
