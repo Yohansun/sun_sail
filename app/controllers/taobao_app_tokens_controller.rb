@@ -7,7 +7,7 @@ class TaobaoAppTokensController < ApplicationController
     unless token
       token = TaobaoAppToken.create(taobao_user_id: info['taobao_user_id'], taobao_user_nick: info['taobao_user_nick'], access_token: auth_hash["credentials"]["token"], refresh_token: auth_hash["credentials"]["refresh_token"])
     end
-    trade_source = TradeSource.where(name: info['taobao_user_nick']).first_or_create
+    trade_source = TradeSource.where(trade_type: 'Taobao', name: info['taobao_user_nick']).first_or_create
     trade_source_id = trade_source.id
     account = Account.where(name: info['taobao_user_nick']).first_or_create
     account.update_attributes(key: info['taobao_user_id']) if account.key.blank?

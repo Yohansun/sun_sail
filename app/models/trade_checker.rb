@@ -49,8 +49,7 @@ class TradeChecker
     raise ArgumentError,"account_key can't be blank!" if  account_key.blank?
     @options[:time] ||= Date.yesterday
     @account = Account.find_by_key(account_key) or raise("没有找到account key为#{account_key}的账户")
-    @trade_source_id = @account.trade_source.id
-    @trade_source = TradeSource.find(@trade_source_id)
+    @trade_source = @account.trade_sources.where(trade_type: "Taobao").first
     # 抓取昨天 的订单, 检查本地状态和淘宝状态是否匹配
     @options[:ago] ||= 0
     @start_time , @end_time = process_time(@options[:time],@options[:ago].days)
