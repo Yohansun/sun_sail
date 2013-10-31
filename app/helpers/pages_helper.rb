@@ -86,7 +86,7 @@ module PagesHelper
       potential_percent, new_percent, familiar_percent = [0,0,0]
     else
       potential_percent = (total_customers.potential.count.to_f / total_customers_count).round(2)*100
-      new_percent = (total_customers.between(created_at: Time.now.beginning_of_day..Time.now).count.to_f / total_customers_count).round(2)*100
+      new_percent = (total_customers.paid.count.to_f / total_customers_count).round(2)*100
       familiar_percent = (total_customers.search(:transaction_histories_status_in => Trade::StatusHash["succeed_array"]).count.to_f / total_customers_count).round(2)*100
     end
     {"potential_percent" => potential_percent.to_i,
