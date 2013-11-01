@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 class JingdongRefundOrderMarker
   include Sidekiq::Worker
-  sidekiq_options :queue => :jingdong_refund_order_marker, unique: true, unique_job_expiration: 60
+  sidekiq_options :queue => :jingdong_refund_order_marker, unique: true, unique_job_expiration: 120
 
   def perform(account_id)
     start_time = 1.week.ago.strftime("%Y-%m-%d %H:%M:%S")

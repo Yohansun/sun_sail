@@ -1,7 +1,7 @@
 #encoding: utf-8
 class TaobaoPullerBuilder
   include Sidekiq::Worker
-  sidekiq_options :queue => :taobao_puller_builder, unique: true, unique_job_expiration: 60
+  sidekiq_options :queue => :taobao_puller_builder, unique: true, unique_job_expiration: 120
 
   def perform(account_id)
     account = Account.find(account_id)

@@ -3,7 +3,7 @@ require 'fileutils'
 
 class YihaodianTradeReporter
   include Sidekiq::Worker
-  sidekiq_options :queue => :reporter, unique: true, unique_job_expiration: 60
+  sidekiq_options :queue => :reporter, unique: true, unique_job_expiration: 120
 
   def perform(id)
     report = TradeReport.find(id)
