@@ -89,11 +89,9 @@
 
 <td data-col='products_info'>
   <% for order in @trade.get('orders') : %>
-    <% if order.order_gift_tid == null : %>
-      <label class="label "><%= order.title %> X <%= order.num %></label><br>
-      <label class="label label-info">实付金额：<%= @trade.get('total_fee')%>  使用积分：<%= @trade.get('point_fee') %></label>
-    <% end %>
+    <label class="label "><% if order.order_gift_tid != null : %>赠品：<% end %><%= order.title %> X <%= order.num %></label><br/>
   <% end %>
+  <label class="label label-info">实付金额：<%= @trade.get('total_fee')%>  使用积分：<%= @trade.get('point_fee') %></label>
 </td>
 <td data-col='receiver_info'>
   <%= @trade.get('buyer_nick') %>
