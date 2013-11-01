@@ -22,7 +22,7 @@ class TradesController < ApplicationController
           params[:search] = trade_search.search_hash
         end
       end
-      @trades = Trade.filter(current_account, current_user, params)
+      @trades = Trade.where(:news.lt => params[:news] || 3).filter(current_account, current_user, params)
     end
     @trades_count = @trades.count
     @trades = TradeDecorator.decorate(@trades.limit(limit).skip(offset).order_by(:created.desc))

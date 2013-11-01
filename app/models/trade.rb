@@ -170,7 +170,12 @@ class Trade
   field :sku_properties_name, type: String
   field :is_auto_dispatch, type: Boolean, default: false
   field :is_auto_deliver, type: Boolean, default: false
+  # 第三方抓取过来的订单在本地创建完成后,标记为新订单, 作用是自动创建相关的队列任务,  然后标记为 "0"
+  # 第三方抓取过来的数据,更新本地订单之后标记为 "1",
+  # 待其他操作(更新本地顾客)处理完毕后标记为   "2"
+  field :news, type: Integer , default: 0
 
+  enum_attr :news, [["无更新",0],["已更新",1],["已处理",2],["新订单",3]]
 
   #订单操作人
   field :operator_id
@@ -194,6 +199,8 @@ class Trade
   index logistic_name: 1
   index logistic_waybill: -1
   index logistic_code: 1
+
+  index news: -1
 
   # 时间搜索index
   index created: -1

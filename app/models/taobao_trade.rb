@@ -4,15 +4,9 @@ class TaobaoTrade < Trade
   include StockProductsLockable
   #include Dulux::Splitter
 
-  #是否从淘宝更新数据
-  field :news, type: Integer , default: 0
   #交易完成订单对应支付宝帐单的最后一次修改时间
   field :alipay_last_modified_time, type: DateTime
   field :alipay_payment, type: Float
-
-  #  淘宝抓取过来的数据,本地老的数据进行更新后标记为"已更新",
-  #  待其他操作(更新本地顾客)处理完毕后标记为已处理
-  enum_attr :news, [["无更新",0],["已更新",1],["已处理",2]]
 
   embeds_many :promotion_details
   embeds_many :taobao_orders

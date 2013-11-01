@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 class TradeJingdongDeliver
   include Sidekiq::Worker
-  sidekiq_options :queue => :trade_jingdong_deliver, unique: true, unique_job_expiration: 60
+  sidekiq_options :queue => :trade_jingdong_deliver, unique: true, unique_job_expiration: 120
 
   def perform(id)
     jingdong_logistics = {"YTO"=>1499, "ZTO"=>463, "OTHER"=>1274}

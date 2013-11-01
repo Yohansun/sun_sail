@@ -1,5 +1,6 @@
 # encoding : utf-8 -*-
 class TaobaoTradePuller
+  extend Bm
   class << self
     def create(start_time = nil, end_time = nil, trade_source_id)
       trade_source = TradeSource.find(trade_source_id)
@@ -29,7 +30,13 @@ class TaobaoTradePuller
       if end_time.blank?
         end_time = Time.now
       end
+
+      console_hash = {account_id: account_id, start_at: start_time,end_at: end_time}
+      logger.info("[ready] " << console_hash.collect{|x,y| "#{x}:#{y}"}.join(" "))
       has_next = true
+      results = 0
+      handles = 0
+      exists = []
       while has_next
         has_next = false
         response = TaobaoQuery.get({
@@ -39,7 +46,7 @@ class TaobaoTradePuller
           start_created: start_time.strftime("%Y-%m-%d %H:%M:%S"),
           end_created: end_time.strftime("%Y-%m-%d %H:%M:%S"),
           page_no: page_no,
-          page_size: 40,
+          page_size: 100,
           use_has_next: true}, trade_source_id
           )
 
@@ -52,17 +59,33 @@ class TaobaoTradePuller
         has_next = response['trades_sold_get_response']['has_next']
         next unless response['trades_sold_get_response']['trades']
 
-        trades = response['trades_sold_get_response']['trades']['trade']
-        unless trades.is_a?(Array)
-          trades = [] << trades
-        end
-        next if trades.blank?
 
-        trades.each do |trade|
-          next if ($redis.sismember('TaobaoTradeTids',trade['tid']) || TaobaoTrade.unscoped.where(tid: trade['tid']).exists?)
-          create_trade(trade, account, trade_source_id)
+        trades = response['trades_sold_get_response']['trades']['trade']
+        tids = trades.collect {|t| t["tid"].to_s}
+        results += tids.length
+        exists_tids = TaobaoTrade.only(:tid).where(:tid.in => tids).distinct(:tid)
+        exists << exists_tids
+        news_tids = tids - exists_tids
+
+        trades = trades.reject {|trade| !news_tids.include?(trade["tid"].to_s)}.each do |trade|
+          trade["taobao_orders"] = trade.delete("orders")["order"]
+          trade["trade_source_id"] = trade_source_id
+          trade["news"] = 3
+          trade["account_id"] = account.id
         end
+
+        trades = trades.collect {|trade|
+          t = TaobaoTrade.new(trade)
+          t.attributes.merge(taobao_orders: t.taobao_orders.map(&:attributes))
+        }
+
+        Trade.collection.insert(trades)
+        handles += trades.length
+
+        TaobaoPullerBuilder.perform_async(account_id)
       end
+
+      console_hash.merge({results: results,handles: handles,exists: exists.flatten})
     end
 
     def create_by_tid(tid, trade_source_id)
@@ -291,5 +314,15 @@ class TaobaoTradePuller
       end
       CustomerFetch.perform_async(account_id,"TaobaoTrade")
     end
+
+    def logger
+      @logger ||= MagicLogger.new(Rails.root.join("log/taobao_trade_puller.log"))
+    end
+
+    def create_with_benchmark(*args)
+      benchmark("create",result: true) { create_without_benchmark(*args) }
+    end
+
+    alias_method_chain :create,:benchmark
   end
 end

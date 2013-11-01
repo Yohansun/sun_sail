@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 class TradeTaobaoPurchaseOrderDeliver
   include Sidekiq::Worker
-  sidekiq_options :queue => :taobao_purchase, unique: true, unique_job_expiration: 60
+  sidekiq_options :queue => :taobao_purchase, unique: true, unique_job_expiration: 120
 
   def perform(id)
     trade = TaobaoPurchaseOrder.find(id)

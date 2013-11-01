@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 class InitUserNotifier
   include Sidekiq::Worker
-  sidekiq_options :queue => :init_user_notifier, unique: true, unique_job_expiration: 60
+  sidekiq_options :queue => :init_user_notifier, unique: true, unique_job_expiration: 120
 
   def perform(account_id, email, password, mobiles)
     account = Account.find(account_id)

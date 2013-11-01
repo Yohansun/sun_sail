@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 class TradeDispatchSms
   include Sidekiq::Worker
-  sidekiq_options :queue => :sms, unique: true, unique_job_expiration: 60
+  sidekiq_options :queue => :sms, unique: true, unique_job_expiration: 120
 
   def perform(id, seller_id, notify_kind)
     content = nil

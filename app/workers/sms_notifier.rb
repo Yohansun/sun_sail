@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 class SmsNotifier
   include Sidekiq::Worker
-  sidekiq_options :queue => :sms, unique: true, unique_job_expiration: 60
+  sidekiq_options :queue => :sms, unique: true, unique_job_expiration: 120
 
   def perform(content, mobile, tid, notify_kind)
     trade = Trade.where(tid: tid).first

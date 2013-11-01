@@ -3,7 +3,7 @@
 class ReconcileStatementDetailReporter
   include Sidekiq::Worker
   include ReconcileStatementDetailsHelper
-  sidekiq_options :queue => :reporter, :retry => false, unique: true, unique_job_expiration: 60
+  sidekiq_options :queue => :reporter, :retry => false, unique: true, unique_job_expiration: 120
 
   def perform(rs_detail_id, money_type)
     book = Spreadsheet::Workbook.new

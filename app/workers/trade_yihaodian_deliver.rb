@@ -1,7 +1,7 @@
 #encoding: utf-8
 class TradeYihaodianDeliver
   include Sidekiq::Worker
-  sidekiq_options :queue => :trade_yihaodian_deliver, unique: true, unique_job_expiration: 60
+  sidekiq_options :queue => :trade_yihaodian_deliver, unique: true, unique_job_expiration: 120
 
   def perform(id)
     trade = YihaodianTrade.where(_id: id).first rescue raise("没有找到一号店订单号为#{id}")

@@ -2,7 +2,7 @@
 
 class MagicOneHitFetcher
   include Sidekiq::Worker
-  sidekiq_options :queue => :one_hit_fetcher, unique: true, unique_job_expiration: 60
+  sidekiq_options :queue => :one_hit_fetcher, unique: true, unique_job_expiration: 120
 
   def perform(account_id)
     # more settings here
