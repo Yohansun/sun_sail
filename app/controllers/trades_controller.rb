@@ -505,6 +505,26 @@ class TradesController < ApplicationController
     end
   end
 
+  def estimate_dispatch
+    trade = Trade.find params[:id]
+    seller_id = trade.default_seller.try(:id)
+    if seller_id.blank?
+      dispatchable = false
+      dispatch_error = "无对应经销商"
+    else
+      dispatchable = true
+      errors = can_lock_products?(trade.id, seller_id).join(',')
+      if errors.present?
+        dispatch_error = "(无法分派：#{errors})"
+        dispatchable = false
+      end
+    end
+
+    respond_to do |format|
+      format.json { render json: {seller_id: seller_id, dispatch_error: dispatch_error, dispatchable: dispatchable} }
+    end
+  end
+
   # def split_trade
   #   @trade = Trade.find params[:id]
   #   new_trade_ids = if current_account.key == 'dulux'

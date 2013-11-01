@@ -492,8 +492,14 @@ class Trade
   end
 
   def default_seller(area = nil)
-    area ||= default_area
-    area.sellers.where(active: true, account_id: account_id).first
+    if _type == "JingdongTrade"
+      Seller.find_by_id(self.fetch_account.settings.default_jingdong_seller_id)
+    elsif _type == "YihaodianTrade"
+      Seller.find_by_id(self.fetch_account.settings.default_yihaodian_seller_id)
+    else
+      area ||= default_area
+      area.sellers.where(active: true, account_id: account_id).first
+    end
   end
 
   def matched_seller_with_default(area)

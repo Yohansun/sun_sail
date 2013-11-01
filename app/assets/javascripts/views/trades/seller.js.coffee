@@ -11,7 +11,8 @@ class MagicOrders.Views.TradesSeller extends Backbone.View
 
   render: ->
     $(@el).html(@template(trade: @model))
-    @render_area_inputs() unless @model.get('seller_id') || @model.get('trade_source') == '京东' || @model.get('trade_source') == '一号店'
+    @render_area_inputs() if @model.get('seller_id') == null && @model.get('trade_source') == '淘宝'
+    @estimate_dispatch() if @model.get('seller_id') == null && @model.get('trade_source') != '淘宝'
     this
 
   render_area_inputs: ->
@@ -20,6 +21,16 @@ class MagicOrders.Views.TradesSeller extends Backbone.View
     view = new MagicOrders.Views.AreasInputs(order_id: @model.get('id'), states: states, state: @model.get('receiver_state'), city: @model.get('receiver_city'), district: @model.get('receiver_district'))
 
     $(@el).find('#areas_inputs').html(view.render().el)
+
+  estimate_dispatch: ->
+    $.get '/api/trades/' + @model.get('id') + '/estimate_dispatch', {}, (data)=>
+      unless data.dispatchable
+        $(@el).find('.dispatch_error').html(data.dispatch_error)
+        $(@el).find('.dispatch_error').css('color', 'red')
+        $(@el).find('.set_seller').hide()
+      else
+        $("#trade_seller_id").val(data.seller_id)
+        $(@el).find('.set_seller').show()
 
   set_seller: ->
     blocktheui()
