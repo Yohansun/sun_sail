@@ -62,8 +62,7 @@ class User < ActiveRecord::Base
             presence: {message: "输入信息不能为空"},
             allow_blank: true
 
-  PHONE_FORMAT = /^(13[0-9]|15[012356789]|18[0236789]|14[57])[0-9]{8}$/
-  PHONE_FORMAT = /^[0-9]{11}$/
+  PHONE_FORMAT = /^(\w){11}$/
   validates :phone,
             format: { with: PHONE_FORMAT, message: "请输入有效的手机号码"},
             uniqueness: {message: "该手机号码已有人使用"},
