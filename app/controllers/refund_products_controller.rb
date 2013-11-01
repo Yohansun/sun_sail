@@ -8,7 +8,7 @@ class RefundProductsController < ApplicationController
   def index
     params[:search] ||= {}
     conditions = params[:search].merge({:id_in => params[:refund_product_ids]})
-    @search = default_scope.search(conditions)
+    @search = default_scope.search(conditions).order("created_at desc")
 
     @refund_products = @search.page(params[:page]).per(params[:number])
     respond_to do |format|

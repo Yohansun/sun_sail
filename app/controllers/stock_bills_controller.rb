@@ -8,7 +8,7 @@ class StockBillsController < ApplicationController
 
   def index
     parse_params
-    @search = @bills.search(params[:search])
+    @search = @bills.search(params[:search]).desc(:created_at)
     @count = @search.map(&:bill_products).count
     @number = 20
     @number = params[:number].to_i if params[:number].present?
