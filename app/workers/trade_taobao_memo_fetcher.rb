@@ -51,5 +51,16 @@ class TradeTaobaoMemoFetcher
         TradeSyncMemo.perform_in(result, trade.tid)
       end
     end
+
+    #退款订单自动标注异常
+    if trade.has_refund_orders
+      if trade.unusual_states.where(key: 'buyer_demand_refund', reporter: "系统预警").count == 0
+        trade.unusual_states.create(reason: "买家要求退款",
+                                    key: "buyer_demand_refund",
+                                    reporter: "系统预警",
+                                    reporter_role: "magic_system",
+                                    created_at: Time.now)
+      end
+    end
   end
 end

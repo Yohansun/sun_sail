@@ -3,7 +3,7 @@ class UnusualStateMarker
   include Sidekiq::Worker
   sidekiq_options :queue => :auto_process, unique: true, unique_job_expiration: 120 #自动标注异常订单队列
 
-  def perform(id, version)
+  def perform(id, version=nil)
     account = Account.find(id)
     conditions = account.settings.auto_settings["unusual_conditions"]
     if account.settings.auto_settings['auto_mark_unusual_trade'] && version == conditions['frequency_version']
@@ -124,21 +124,10 @@ class UnusualStateMarker
           end
         end
       end
-
-      #买家要求退款
-      account.trades.and(:status.in => Trade::StatusHash["paid_not_deliver_array"], has_refund_orders: true).each do |trade|
-        if trade.unusual_states.where(key: 'buyer_demand_refund').count == 0
-          trade.unusual_states.create(reason: "买家要求退款",
-                                      key: "buyer_demand_refund",
-                                      reporter: "系统预警",
-                                      reporter_role: "magic_system",
-                                      created_at: Time.now)
-        end
-      end
     end
     # 如果标注异常时间间隔改变，关闭队列，在controller中会重开新队列
     if version == conditions['frequency_version']
-      UnusualStateMarker.perform_in(account.settings.auto_settings['preprocess_silent_gap'].to_i.hours, account.id, version)
+      UnusualStateMarker.perform_in(1.day, account.id, version)
     end
   end
 end
