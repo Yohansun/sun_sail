@@ -22,9 +22,22 @@ class Notifier < ActionMailer::Base
 
   def init_user_notifications(email, pwd, account_id)
     account = Account.find(account_id)
+    content = <<-BODY 
+              尊敬的用户： 
+              
+
+              感谢您使用Magic ERP系统。 
+
+
+              系统地址：magic-solo.networking.io  
+
+              您的登录用户名为：#{email}  密码：#{pwd} 
+
+              有任何问题，欢迎致电021-54042990或发送邮件mkt@doorder.com进行咨询。
+              BODY
     mail(:to => email,
-         :subject => 'Magic系统初始化用户提醒',
-         :body => "帐号:#{email},密码: #{pwd},请登录后尽快修改密码",
+         :subject => 'Magic ERP系统通知邮件 发件人：Magic产品团队',
+         :body => content,
          :from => account.settings.email_notifier_from
         )
   end
