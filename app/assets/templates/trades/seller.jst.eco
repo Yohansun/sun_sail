@@ -37,24 +37,19 @@
         <% if @trade.get('seller_id') != null: %>
           <%= @trade.get('seller_name') %>
         <% else: %>
-          <% if @trade.get('trade_source') == '京东' : %>
-            点击"分派"按钮分派给: 默认经销商
-            <input type="hidden" id="trade_seller_id" value="<%= @trade.get('default_jingdong_seller_id') %>">
-          <% else if @trade.get('trade_source') == '一号店' : %>
-            点击"分派"按钮分派给: 默认经销商
-            <input type="hidden" id="trade_seller_id" value="<%= @trade.get('default_yihaodian_seller_id') %>">
+          <% if @trade.get('trade_source') != '淘宝' : %>
+            点击"分派"按钮分派给: 默认<%= @trade.get('trade_source') %>经销商
+            <div class="dispatch_error"></div>
           <% else: %>
             <div id="areas_inputs"></div>
           <% end %>
+          <input type="hidden" id="trade_seller_id">
         <% end %>
       <% end %>
     </label>
     <label class="control-label">订单状态：<%= @trade.get("status_text") %></label>
   </fieldset>
 </div>
-<% if @trade.get('trade_source') != '京东' && @trade.get('trade_source') != '一号店' : %>
-  <input type="hidden" id="trade_seller_id">
-<% end %>
 
 <div class="modal-footer">
   <a href='javascript:void(0)' class="btn" data-dismiss="modal">取消</a>

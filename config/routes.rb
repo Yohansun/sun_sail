@@ -414,6 +414,7 @@ MagicOrders::Application.routes.draw do
     resources :trades do
       member do
         get :seller_for_area
+        get :estimate_dispatch
         get :split_trade
         get :recover
       end
