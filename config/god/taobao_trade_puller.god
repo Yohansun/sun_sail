@@ -45,7 +45,7 @@ God.watch do |w|
 
   w.start = "cd #{app_root}; #{app_root}/script/rails runner -e production '#{cmd_string}'"
 
-  w.interval = 600.seconds
+  w.interval = 20.minutes
 
   w.start_if do |start|
     start.condition(:process_running) do |c|
