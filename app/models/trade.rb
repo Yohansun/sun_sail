@@ -1216,12 +1216,6 @@ class Trade
                 seller_ids = Seller.select(:id).where("name like ?", "%#{value.strip}%").map(&:id)
                 search_tags_hash.update({"seller_id" => {"$in" => seller_ids}})
                 conditions[key] << {"seller_id" => {"$in" => seller_ids}}
-              elsif key == 'receiver_name'
-                search_tags_hash.update({"$or" => [{receiver_name: regexp_value}, {"consignee_info.fullname" => regexp_value}, {"receiver.name" => regexp_value}]})
-                conditions[key] << {"$or" => [{receiver_name: regexp_value}, {"consignee_info.fullname" => regexp_value}, {"receiver.name" => regexp_value}]}
-              elsif key == 'receiver_mobile'
-                search_tags_hash.update({"$or" => [{receiver_mobile: regexp_value}, {"consignee_info.mobile" => regexp_value}, {"receiver.mobile_phone" => regexp_value}]})
-                conditions[key] << {"$or" => [{receiver_mobile: regexp_value}, {"consignee_info.mobile" => regexp_value}, {"receiver.mobile_phone" => regexp_value}]}
               elsif key == 'repair_man'
                 search_tags_hash.update({"unusual_states" =>{"$elemMatch" => {"repair_man" => regexp_value}}})
                 conditions[key] << {"unusual_states" =>{"$elemMatch" => {"repair_man" => regexp_value}}}
@@ -1256,9 +1250,20 @@ class Trade
                   search_tags_hash.update({:logistic_printed_at => {"$ne"=>nil} })
                   conditions[key] << {:logistic_printed_at => {"$ne"=>nil}  }
                 end
-              else
+              elsif key == "has_onsite_service" || key == "has_refund_orders"
                 search_tags_hash.update(Hash[key.to_sym, value])
                 conditions[key] << Hash[key.to_sym, value]
+              elsif key == "wait_for_dispatch"
+                if value == "true"
+                  search_tags_hash.update({:status => {"$in" => StatusHash["paid_not_deliver_array"]}, seller_id: nil, has_unusual_state: false, :pay_time => {"$ne" =>nil}})
+                  conditions[key] << {:status => {"$in" => StatusHash["paid_not_deliver_array"]}, seller_id: nil, has_unusual_state: false, :pay_time => {"$ne" =>nil}}
+                else
+                  search_tags_hash.update(:seller_id => {"$ne" =>nil})
+                  conditions[key] << {:seller_id => {"$ne" =>nil}}
+                end
+              else
+                search_tags_hash.update(Hash[key.to_sym, regexp_value])
+                conditions[key] << Hash[key.to_sym, regexp_value]
               end
             end
 
