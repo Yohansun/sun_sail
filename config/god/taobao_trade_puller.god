@@ -17,6 +17,7 @@
 # 206 瑞莱旗舰店
 # 207 gnc雍恒专卖店
 # 211 大自然官方旗舰店
+# 222 测试店铺
 
 
 God::Contacts::Email.defaults do |d|
@@ -31,7 +32,7 @@ God.contact(:email) do |c|
   c.to_email = 'errors@networking.io'
 end
 
-taobao_trade_source_ids = [201,206,207,211]
+taobao_trade_source_ids = [201,206,207,211,222]
 God.watch do |w|
   w.name = "taobao_puller"
   w.group = 'magic_solo'
