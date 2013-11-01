@@ -81,6 +81,7 @@
           </select>
           <select id="status_option" class="input-large pull-left radius_no_tl select2">
             <option value="status,WAIT_BUYER_PAY">等待付款订单</option>
+            <option value="wait_for_dispatch">待分派订单</option>
             <option value="status,WAIT_SELLER_SEND_GOODS,WAIT_SELLER_DELIVERY,WAIT_SELLER_STOCK_OUT">已付款，待发货订单</option>
             <option value="status,WAIT_BUYER_CONFIRM_GOODS,WAIT_GOODS_RECEIVE_CONFIRM">已付款，已发货订单</option>
             <option value="status,TRADE_FINISHED,FINISHED_L">交易成功订单</option>
