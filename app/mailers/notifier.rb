@@ -34,6 +34,10 @@ class Notifier < ActionMailer::Base
               您的登录用户名为：#{email}  密码：#{pwd} 
 
               有任何问题，欢迎致电021-54042990或发送邮件mkt@doorder.com进行咨询。
+              -----------------------------------------
+
+              喜的网络科技（上海）有限公司
+              http://www.doorder.com
               BODY
     mail(:to => email,
          :subject => 'Magic ERP系统通知邮件 发件人：Magic产品团队',
