@@ -881,7 +881,13 @@ class Trade
   ## 分流相关
 
   def dispatchable?
-    seller_id.blank? && is_paid_not_delivered
+    if is_locked
+      false
+    elsif has_unusual_state
+      false
+    else
+      (seller_id.blank? && is_paid_not_delivered)
+    end
   end
 
   def dispatch!(seller = nil)
