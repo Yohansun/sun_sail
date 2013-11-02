@@ -621,7 +621,11 @@ class Trade
       bill.tid = tid
     end
 
-    regular_orders = orders.where(refund_status: 'NO_REFUND')
+    if self._type == "TaobaoTrade"
+      regular_orders = orders.where(:refund_status.ne => 'SUCCESS')
+    else
+      regular_orders = orders.where(refund_status: 'NO_REFUND')
+    end
 
     regular_orders.each do |order|
       order_num = order.num
