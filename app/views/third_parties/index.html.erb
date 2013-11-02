@@ -19,7 +19,7 @@
             </button>
             <ul class="dropdown-menu">
               <li>
-                <%= link_to_authorize "编辑", "#",:target_url => edit_third_party_path(""),:request => "get",:class => "magic_detail" %>
+                <%= link_to_authorize "编辑", "#",:target_url => edit_third_party_path(":id"),:request => "get",:class => "magic_detail" %>
               </li>
               <li>
                 <%= link_to_authorize "添加", new_third_party_path%>

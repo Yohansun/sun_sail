@@ -2,10 +2,19 @@ class ThirdParty < ActiveRecord::Base
   belongs_to :user
   belongs_to :account
   attr_accessible :account_id, :name, :user_id
-  validates :name,:authentication_token,:presence => true,:uniqueness => true
+  validates :name,:authentication_token,:presence => true
+  validates :name,uniqueness: {scope: :account_id}
+  attr_protected [:authentication_token,:account_id]
 
   scope :with_account, ->(account_id) { where(:account_id => account_id) }
 
+  after_save do
+    account.settings.third_party_wms = self.name if self.is_default?
+  end
+
+  after_destroy do
+    account.settings.third_party_wms = nil if self.is_default?
+  end
 
   def reset_authentication_token!
     generate_token
