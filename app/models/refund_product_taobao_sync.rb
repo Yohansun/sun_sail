@@ -4,7 +4,7 @@ class RefundProductTaobaoSync < ECommerce::Synchronization::Base
   identifier 'refund_id'
 
   set_variable :get_size, 100
-  set_variable :page_no, 0
+  set_variable :page_no, 1
   set_variable :page_count, proc { |v|  total_results.zero? ? 1 : (total_results / get_size.to_f).ceil}
   set_variable :api,'taobao.refunds.receive.get'
   alias_columns buyer_nick: 'buyer_name',created: "refund_time"
@@ -17,8 +17,12 @@ class RefundProductTaobaoSync < ECommerce::Synchronization::Base
   end
 
   def response
-    params = {method: api, status: "WAIT_BUYER_RETURN_GOODS",page_no: page_no, page_size: get_size}
+    params = {method: api,fields: 'refund_id, tid, title,buyer_nick, seller_nick, total_fee, status, created, refund_fee', status: "WAIT_BUYER_RETURN_GOODS",page_no: page_no, page_size: get_size}
     @response = TaobaoQuery.get(params,@account.taobao_source.id)
+    handle_exception(params.merge(response: @response)) { parse_data }
+  end
+
+  def parse_data
     @response["refunds_receive_get_response"]["refunds"]["refund"].tap do |refunds|
       refunds.each_witn_index do |refund,index|
         refunds.delete(refund) && next if @refund_ids.include?(refund["refund_id"].to_i)
@@ -30,7 +34,8 @@ class RefundProductTaobaoSync < ECommerce::Synchronization::Base
           "seller_id" => seller_id,
           "address" => refund["address"],
           "reason" => refund["reason"],
-          "refund_orders_attributes" => refund_order_attributes(refund)})
+          "refund_orders_attributes" => refund_order_attributes(refund)
+          })
       end
     end
   end
