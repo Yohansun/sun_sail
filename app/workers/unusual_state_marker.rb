@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 class UnusualStateMarker
   include Sidekiq::Worker
-  sidekiq_options :queue => :auto_process #自动标注异常订单队列
+  sidekiq_options :queue => :auto_process, unique: true, unique_job_expiration: 120, unique_unlock_order: :before_yield #自动标注异常订单队列
 
   def perform(id, version=nil)
     account = Account.find(id)
