@@ -354,6 +354,16 @@ class Trade
     @account ||= Account.find(self.account_id)
   end
 
+  def get_third_party_logistic_id(logistic_id=self.logistic_id)
+    logistic = Logistic.find_by_id(logistic_id)
+    case self._type
+    when "TaobaoTrade"    then logistic && logistic.taobao_logistic_id(account_id)
+    when "JingdongTrade"  then logistic && logistic.jingdong_logistic_id(account_id)
+    when "YihaodianTrade" then logistic && logistic.yihaodian_logistic_id(account_id)
+    else nil
+    end
+  end
+
   def fields_for_gift_trade
     fields = {}
     fields["seller_nick"] = seller_nick
