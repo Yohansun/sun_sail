@@ -32,12 +32,12 @@
   <fieldset class='reset_width80'>
     <div class="control-group form-inline set_logistic_waybill">
       <label for="" class="control-label">物流公司：</label>
-      <select id="logistic_select" class="input-medium"></select>
+      <select id="set_logistic_select" class="input-medium"></select>
     </div>
 
     <div class="control-group form-inline">
       <label for="" class="control-label">服务商物流ID：</label>
-      <input type="text" class="input-small service_logistic_id" id="set_service_logistic_id">
+      <input type="text" class="input-small" id="set_service_logistic_id">
     </div>
 
     <div class="control-group form-inline">

@@ -38,14 +38,25 @@
     </table>
   </fieldset>
   <fieldset class='reset_width80'>
-    <div class="control-group form-inline set_logistic_waybill">
-      <label for="" class="control-label">物流公司：</label>
-      <select id="logistic_select" class="input-medium"></select>
-    </div>
-    <div class="control-group form-inline">
-      <label for="" class="control-label">服务商物流ID：</label>
-      <input type="text" class="input-small service_logistic_id" id="service_logistic_id">
-    </div>
+    <% if @trade.get('logistic_company') : %>
+      <div class="control-group form-inline set_logistic_waybill">
+        <label for="" class="control-label">物流公司：</label>
+        <select id="memo_logistic_select" class="input-medium" disabled></select>
+      </div>
+      <div class="control-group form-inline">
+        <label for="" class="control-label">服务商物流ID：</label>
+        <input type="text" class="input-small" id="memo_service_logistic_id" readonly>
+      </div>
+    <% else : %>
+      <div class="control-group form-inline set_logistic_waybill">
+        <label for="" class="control-label">物流公司：</label>
+        <select id="memo_logistic_select" class="input-medium"></select>
+      </div>
+      <div class="control-group form-inline">
+        <label for="" class="control-label">服务商物流ID：</label>
+        <input type="text" class="input-small" id="memo_service_logistic_id">
+      </div>
+    <% end %>
   </fieldset>
 </div>
 

@@ -50,7 +50,7 @@
         <tr>
         <tr>
           <td>服务商物流ID：</td>
-          <td><input type="text" class="input-small service_logistic_id" id="service_logistic_id" readonly></td>
+          <td><input type="text" class="input-small" id="service_logistic_id" readonly></td>
         </tr>
         <% else : %>
         <tr>
@@ -59,7 +59,7 @@
         </tr>
         <tr>
           <td>服务商物流ID：</td>
-          <td><input type="text" class="input-small service_logistic_id" id="service_logistic_id"></td>
+          <td><input type="text" class="input-small" id="service_logistic_id"></td>
         </tr>
         <% end %>
       </tr>
