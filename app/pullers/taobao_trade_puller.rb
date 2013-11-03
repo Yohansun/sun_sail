@@ -63,7 +63,7 @@ class TaobaoTradePuller
         trades = response['trades_sold_get_response']['trades']['trade']
         tids = trades.collect {|t| t["tid"].to_s}
         results += tids.length
-        exists_tids = TaobaoTrade.only(:tid).where(:tid.in => tids).distinct(:tid)
+        exists_tids = TaobaoTrade.unscoped.only(:tid).where(:tid.in => tids).distinct(:tid)
         exists << exists_tids
         news_tids = tids - exists_tids
 
