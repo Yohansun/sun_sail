@@ -161,7 +161,6 @@ class SellersController < ApplicationController
 
   def user_list
     users = current_account.users
-    users = users.includes(:roles).where("roles.id = ? or roles.id = ?", seller_role.try(:id), interface_role.try(:id))
 
     if params[:user_name].present?
       @user = users.where(["users.name like ?", "%#{params[:user_name].strip}%"])
