@@ -156,7 +156,7 @@ class StocksController < ApplicationController
       end
 
       actual = params[:actual].to_i
-      if actual > 0 && @stock_products.present?
+      if actual >= 0 && @stock_products.present?
         success,fails = StockProduct.batch_update_actual_stock(@stock_products,actual)
         flash[:notice] = "ID为#{success.join(',')} 更新实际库存#{actual}成功" if success.present?
         flash[:error] = "ID为#{fails.join(',')} 更新实际库存#{actual}失败" if fails.present?
