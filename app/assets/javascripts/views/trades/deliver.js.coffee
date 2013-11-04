@@ -48,7 +48,7 @@ class MagicOrders.Views.TradesDeliver extends Backbone.View
         return
 
     new_model = new MagicOrders.Models.Trade(id: @model.id)
-    new_model.save {operation: "客服备注", logistic_id: lid, logistic_waybill: waybill, delivered_at: true, logistic_info: $("#logistic_company").html(), setup_logistic: true, service_logistic_id: service_logistic_id},
+    new_model.save {operation: "订单发货", logistic_id: lid, logistic_waybill: waybill, delivered_at: true, logistic_info: $("#logistic_company").html(), setup_logistic: true, service_logistic_id: service_logistic_id},
       error: (model, error, response) ->
         $.unblockUI()
         alert(response)

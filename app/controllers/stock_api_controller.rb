@@ -121,7 +121,8 @@ class StockApiController < ApplicationController
             logistic_waybill: output_back['shipNo'],
             logistic_name: output_back['carrierName'],
             logistic_code: output_back['carrierID'],
-            logistic_id: logistic.try(:id)
+            logistic_id: logistic.try(:id),
+            service_logistic_id: trade.get_third_party_logistic_id(logistic.try(:id))
           )
 
           if account && account.settings && account.settings.auto_settings

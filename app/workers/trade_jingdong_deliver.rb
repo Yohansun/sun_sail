@@ -4,7 +4,6 @@ class TradeJingdongDeliver
   sidekiq_options :queue => :trade_jingdong_deliver, unique: true, unique_job_expiration: 120
 
   def perform(id)
-    jingdong_logistics = {"YTO"=>1499, "ZTO"=>463, "OTHER"=>1274}
     trade = JingdongTrade.find(id)
     return unless trade
 
@@ -16,7 +15,7 @@ class TradeJingdongDeliver
 
     response = JingdongQuery.get({method: '360buy.order.sop.outstorage',
                                   order_id: tid,
-                                  logistics_id: jingdong_logistics[trade.logistic_code || "OTHER"],
+                                  logistics_id: trade.service_logistic_id,
                                   waybill: trade.logistic_waybill,
                                   trade_no: tid
                                   }, query_conditions
