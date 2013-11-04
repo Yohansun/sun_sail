@@ -109,11 +109,12 @@ class TradeChecker
   private
   def abnormal_collections_with_taobao(taobao_trade)
     tid = taobao_trade["tid"].to_s
-    taobao_trades = Trade.where(tid: tid).only(:status)
+    taobao_trades = Trade.where(tid: tid).only(:status,:trade_source_id,:tid)
     if local_trade = taobao_trades.first
       # ERROR: 淘宝与本地状态不同步订单
       if local_trade.status != taobao_trade['status']
         @wrong_orders << tid if (local_trade.splitted && taobao_trades.distinct(:status).length == 1) || !local_trade.splitted
+        TaobaoTradePuller.update_by_tid(local_trade)
       end
     else
       # ERROR: 漏掉订单,考虑合并删除的订单
