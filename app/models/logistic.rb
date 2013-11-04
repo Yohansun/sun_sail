@@ -14,6 +14,7 @@
 #
 require 'hashie'
 class Logistic < ActiveRecord::Base
+  include FinderCache
   mount_uploader :xml, LogisticXmlUploader
   belongs_to :account
   has_many :logistic_areas
