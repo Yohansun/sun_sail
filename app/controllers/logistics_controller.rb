@@ -95,7 +95,6 @@ class LogisticsController < ApplicationController
 
   def user_list
     users = current_account.users
-    users = users.includes(:roles).where("roles.id = ?", logistic_role.id)
 
     if params[:user_name].present?
       @user = User.where(["users.logistic_id is null and users.name like ?", "%#{params[:user_name].strip}%"])
