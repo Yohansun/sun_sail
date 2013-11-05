@@ -27,9 +27,7 @@ class MagicOrders.Views.TradesInvoice extends Backbone.View
         $("#trade_#{model.get('id')}").replaceWith(view.render().el)
         view.reloadOperationMenu()
 
-
         $('#trade_invoice').modal('hide')
-        # window.history.back()
 
   no_invoice: (e) ->
     $("#invoice_name_text").attr("disabled","true")

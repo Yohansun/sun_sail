@@ -7,300 +7,132 @@
   </h3>
 </div><!-- modal-header -->
 <div class="modal-body">
-  <!-- tab menus -->
-  <!-- <ul class="nav nav-tabs" id="myTab">
-    <li class="active"><a href="#tab1" data-toggle="tab" class="active">详情</a></li>
-    <%# if MagicOrders.role_key == 'admin' or MagicOrders.role_key == 'cs' : %>
-      <li class=""><a href="#tab2" data-toggle="tab">预处理</a></li>
-      <li class=""><a href="#tab3" data-toggle="tab">日志</a></li>
-    <%# end %>
-  </ul> -->
-  <!-- tab container -->
   <div class="tab-content">
-    <!-- tab1 -->
-    <!-- <div class="tab-pane active" id="tab1"> -->
-      <table class="table table-bordered table-condensed">
-        <thead>
-          <tr>
-            <th colspan="2" width="35%">商品名称</th>
-            <th width="">数量</th>
-            <th width="15%">商品编码</th>
-            <% if MagicOrders.enable_module_colors == 1 : %>
-              <th width="230">调色信息</th>
-            <% end %>
-            <% if MagicOrders.enable_module_sku_properties == 1 : %>
-              <th width="28%">商品属性</th>
-            <% end %>
-            <% unless @trade.get('total_fee') is undefined : %>
-              <th width="">单价</th>
-            <% end %>
-            <th>备注</th>
-            <th width="10%">退货状态</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% for order in @trade.get('orders') : %>
-            <% for info in order['bill_info'] : %>
-              <tr>
-                <% if order.order_gift_tid != null : %>
-                  <td colspan="2"><%= order.title %>  <span class="label label-important">赠品</span></td>
-                <% else : %>
-                  <td colspan="2"><%= order.title %></td>
-                <% end %>
-                <td><%= order.num %></td>
-                <td></td>
-                <% if MagicOrders.enable_module_colors == 1 : %>
-                  <td class='js-color-label-<%= order.id %>'>
-                    <% for color, array of info['colors'] : %>
-                      <%= array[0] %>桶 <%= color %> <%= array[1] %><br>
-                    <% end %>
-                  </td>
-                <% end %>
-                <% if MagicOrders.enable_module_sku_properties == 1 : %>
-                  <td><%= order.sku_properties %></td>
-                <% end %>
-                <% if @trade.get('total_fee') isnt undefined and order['bill_info'].length < 2 : %>
-                  <td>￥<%= order.price %></td>
-                <% end %>
-                <td class='js-order-cs-memo-label-<%= order.id %>'><p style="overflow:hidden;white-space:normal;word-wrap:break-word;width:300px;"><%= order.cs_memo %></p></td>
-                <td><%= order.refund_status_text %></td>
-              </tr>
-              <% if order.package_info != [] : %>
-                <% for info in order.package_info : %>
-                  <tr>
-                    <td><span class="label label-warning">绑定本地</span></td>
-                    <td><%= info['title'] %></td>
-                    <td><%= info['number'] %></td>
-                    <td><%= info['outer_id'] %></td>
-                    <td>---</td>
-                    <td>---</td>
-                    <td>---</td>
-                  </tr>
-                <% end %>
-              <% end %>
-            <% end %>
+    <table class="table table-bordered table-condensed">
+      <thead>
+        <tr>
+          <th colspan="2" width="35%">商品名称</th>
+          <th width="">数量</th>
+          <th width="15%">商品编码</th>
+          <% if MagicOrders.enable_module_colors == 1 : %>
+            <th width="230">调色信息</th>
           <% end %>
-          <tr>
-            <% if MagicOrders.enable_module_colors == 1 || MagicOrders.enable_module_sku_properties == 1 : %>
-              <% if MagicOrders.enable_module_colors == 1 && MagicOrders.enable_module_sku_properties == 1 : %>
-                <td colspan="9">
+          <% if MagicOrders.enable_module_sku_properties == 1 : %>
+            <th width="28%">商品属性</th>
+          <% end %>
+          <% unless @trade.get('total_fee') is undefined : %>
+            <th width="">单价</th>
+          <% end %>
+          <th>备注</th>
+          <th width="10%">退货状态</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for order in @trade.get('orders') : %>
+          <% for info in order['bill_info'] : %>
+            <tr>
+              <% if order.order_gift_tid != null : %>
+                <td colspan="2"><%= order.title %>  <span class="label label-important">赠品</span></td>
               <% else : %>
-                <td colspan="8">
+                <td colspan="2"><%= order.title %></td>
               <% end %>
-            <% else : %>
-              <td colspan="7">
-                <b class="mar_r10">订单金额：￥<%= @trade.get('sum_fee') %></b>
-
-                <% unless @trade.get('trade_type') == 'TaobaoPurchaseOrder' : %>
-                  <b class="mar_r10">积分：￥<%= @trade.get('point_fee') || 0 %></b>
-                  <b class="mar_r10">活动优惠：￥<%= @trade.get('seller_discount') %></b>
-                <% end %>
-
-                <b class="mar_r10">物流费：￥<%= @trade.get('post_fee') %> </b>
-                <b class="mar_r10">订单实付金额：￥<%= @trade.get('total_fee')%></b>
-              </td>
-          </tr>
-<!--           <%# if (MagicOrders.role_key == 'admin' or MagicOrders.role_key == 'cs') and @trade.get('trade_type') == 'TaobaoPurchaseOrder' : %>
-            <tr>
-              <td colspan='2'>
-                <b class="mar_r10">分销商编号：<%#= @trade.get('distributor_username') %></b>
-              </td>
-              <%# if MagicOrders.enable_module_colors == 1 || MagicOrders.enable_module_sku_properties == 1 : %>
-                <%# if MagicOrders.enable_module_colors == 1 && MagicOrders.enable_module_sku_properties == 1 : %>
-                  <td colspan='5' class="tr">
-                <%# else : %>
-                  <td colspan='4' class="tr">
-                <%# end %>
-              <%# else : %>
-              <td colspan='3' class="tr">
-              <%# end %>
-                <b>分销商实付金额：￥<%#= @trade.get('distributor_payment') %></b>
-              </td>
-            </tr>
-          <%# end %> -->
-        </tbody>
-      </table>
-      <table class="table table-condensed">
-        <tbody>
-          <tr>
-            <td><b>收货人信息</b></td>
-            <td><%= @trade.get('receiver_name') %></td>
-            <td>手机:<%= @trade.get('receiver_mobile_phone') %> 座机:<%= @trade.get('receiver_phone') %></td>
-            <td>
-              <%= @trade.get('receiver_state') %>
-              <%= @trade.get('receiver_city') %>
-              <%= @trade.get('receiver_district') %>
-              <%= @trade.get('receiver_address') %>
-            </td>
-            <td><%= @trade.get('receiver_zip') %></td>
-          </tr>
-          <%if @trade.get("seller_id") : %>
-            <tr>
-              <td colspan="1"><b>配送商信息</b></td>
-              <td colspan="4" class="reedit_select"><%= @trade.get("seller_name")%></td>
-            </tr>
-          <% end %>
-          <tr>
-            <td colspan="1"><b>客服备注</b></td>
-            <td colspan="4" class="reedit_text">
-              <p style="overflow:hidden;white-space:normal;word-wrap:break-word;width:600px;"> <%= @trade.get("trade_with_orders_cs_memo")%> </p>
-            </td>
-          </tr>
-          <tr>
-            <td colspan="1"><b>开票信息</b></td>
-            <td colspan="4" class="reedit_text js-invoice-label">
-              <% if @trade.get('invoice_type') && @trade.get('invoice_type') != "无需开票": %>
-                <%= @trade.get('invoice_type')%> <%= @trade.get('invoice_name')%> <%= @trade.get('invoice_content')%> <%= @trade.get('invoice_date')%>
-              <% end %>
-            </td>
-          </tr>
-          <tr>
-            <td colspan="1"><b>赠品备注</b></td>
-            <td colspan="4" class="reedit_text js-gift-memo-label"><%= @trade.get('gift_memo') %></td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="modal-footer">
-        <a href="#" class="btn btn-primary button_print">打印</a>
-      </div>
-    <!-- </div> -->
-    <!-- tab2 -->
-    <div class="tab-pane" id="tab2">
-      <form class="">
-        <div class="control-group">
-          <label class="control-label">客服备注：&nbsp;
-            <input type="text" id="cs_memo_text" placeholder="输入文字..." class="input-xlarge" value="<%= @trade.get 'cs_memo' %>">
-          </label>
-        </div>
-        <table class="table table-bordered table-condensed">
-          <tbody>
-            <tr>
-              <th>商品</th>
+              <td><%= order.num %></td>
+              <td></td>
               <% if MagicOrders.enable_module_colors == 1 : %>
-                <th width='160px'>调色</th>
-              <% end %>
-              <th>备注</th>
-            </tr>
-            <% for order in @trade.get('orders'): %>
-              <!-- package order -->
-              <% if order.package_info != [] : %>
-                <tr>
-                  <td colspan='2'><%= order.title %> * <%= order.num %> 套</td>
-                  <td><label class="control-label"><%= order.cs_memo %></td>
-                </tr>
-                <% for info in order.package_info : %>
-                <tr>
-                  <td><%= info.title %></td>
-                  <% if MagicOrders.enable_module_colors == 1 : %>
-                    <td>
-                      <% existing_colors = [] %>
-                      <%for key, value of info.colors : %>
-                        <% for v_index in [0...value[0]] : %>
-                          <% existing_colors.push(key) %>
-                        <% end %>
-                      <% end %>
-                      <% for count in [0...(info.number*order.num)] : %>
-                          <input type="text" data-provide="typeahead" placeholder="请输入色号..." class="color_typeahead input-xlarge js-color-num-<%= order.item_id %>-<%= info.outer_id %>-<%= count %>"
-                          value='<%= existing_colors[count] %>'><br/>
-                      <% end %>
-                    </td>
+                <td class='js-color-label-<%= order.id %>'>
+                  <% for color, array of info['colors'] : %>
+                    <%= array[0] %>桶 <%= color %> <%= array[1] %><br>
                   <% end %>
+                </td>
+              <% end %>
+              <% if MagicOrders.enable_module_sku_properties == 1 : %>
+                <td><%= order.sku_properties %></td>
+              <% end %>
+              <% if @trade.get('total_fee') isnt undefined and order['bill_info'].length < 2 : %>
+                <td>￥<%= order.price %></td>
+              <% end %>
+              <td class='js-order-cs-memo-label-<%= order.id %>'><p style="overflow:hidden;white-space:normal;word-wrap:break-word;width:300px;"><%= order.cs_memo %></p></td>
+              <td><%= order.refund_status_text %></td>
+            </tr>
+            <% if order.package_info != [] : %>
+              <% for info in order.package_info : %>
+                <tr>
+                  <td><span class="label label-warning">绑定本地</span></td>
+                  <td><%= info['title'] %></td>
+                  <td><%= info['number'] %></td>
+                  <td><%= info['outer_id'] %></td>
+                  <td>---</td>
+                  <td>---</td>
                   <td>---</td>
                 </tr>
-                <% end %>
-              <% else : %>
-                <!-- independent order -->
-                <tr>
-                  <td><%= order.title %></td>
-                  <% if MagicOrders.enable_module_colors == 1 : %>
-                    <td>
-                        <% for count in [0...order.num] : %>
-                          <% colors = order.color_num[count] %>
-                          <% if colors == undefined or colors == null : %>
-                            <% colors = [] %>
-                          <% end %>
-                          <input type="text" data-provide="typeahead" placeholder="请输入色号..." class="color_typeahead input-xlarge js-color-num-<%= order.item_id %>-<%= count %>" value='<%= colors[0] %>'><br/>
-                        <% end %>
-                    </td>
-                  <%- end %>
-                  <td><label class="control-label"><%= order.cs_memo %></td>
-                </tr>
               <% end %>
             <% end %>
-          </tbody>
-        </table>
-        <div class="control-group">
-          <table class="table table-bordered table-condensed">
-            <tr>
-              <th width='50%'>开票信息</th>
-              <!-- <th>赠品信息</th> -->
-            </tr>
-            <tr>
-              <td>
-                <div class="control-group">
-                  <label class="control-label">发票类型：
-                    <input type="radio" name="invoice_type" value="需要开票" <% if @trade.get('invoice_type') == "需要开票": %> checked="checked" <% end %>>&nbsp;需要开票
-                    <input type="radio" name="invoice_type" value="需开专票" <% if @trade.get('invoice_type') == "需开专票": %> checked="checked" <% end %>>&nbsp;需开专票
-                  </label>
-                </div>
-                <div class="control-group">
-                  <label class="control-label">发票抬头：
-                      <input type="text" placeholder="输入文字..." class="input-xlarge" id="invoice_name_text" value="<%= @trade.get 'invoice_name' %>">
-                  </label>
-                </div>
-                <div class="control-group">
-                  <label class="control-label">发票内容：
-                      <input type="text" placeholder="输入文字..." class="input-xlarge" id="invoice_content_text" value="<%= @trade.get 'invoice_content' %>">
-                  </label>
-                </div>
-                <div class="control-group">
-                  <label class="control-label pick_invoice_detail">完成日期：
-                      <input type="text" class="input-large datepickers" placeholder="请填写日期(年-月-日)..." id="invoice_date_text" value="<%= @trade.get 'invoice_date' %>">
-                  </label>
-                </div>
-              </td>
-              <!-- <td>
-                <fieldset>
-                  <textarea placeholder="输入赠品备注..." style="resize:none;width:96%;height:150px;padding:5px;"
-                    id="gift_memo_text" ><%= @trade.get 'gift_memo' %></textarea>
-                </fieldset>
-              </td> -->
-            </tr>
-          </table>
-        </div>
-      </form>
-      <div class="modal-footer">
-        <button type="submit" class="btn btn-primary js-save" data-source='pre-process'>保存</button>
-      </div>
-    </div>
-    <!-- tab3 -->
-    <div class="tab-pane" id='tab3'>
-      <table class="table table-bordered table-condensed">
-        <thead>
+          <% end %>
+        <% end %>
+        <tr>
+          <% if MagicOrders.enable_module_colors == 1 || MagicOrders.enable_module_sku_properties == 1 : %>
+            <% if MagicOrders.enable_module_colors == 1 && MagicOrders.enable_module_sku_properties == 1 : %>
+              <td colspan="9">
+            <% else : %>
+              <td colspan="8">
+            <% end %>
+          <% else : %>
+            <td colspan="7">
+              <b class="mar_r10">订单金额：￥<%= @trade.get('sum_fee') %></b>
+
+              <% unless @trade.get('trade_type') == 'TaobaoPurchaseOrder' : %>
+                <b class="mar_r10">积分：￥<%= @trade.get('point_fee') || 0 %></b>
+                <b class="mar_r10">活动优惠：￥<%= @trade.get('seller_discount') %></b>
+              <% end %>
+
+              <b class="mar_r10">物流费：￥<%= @trade.get('post_fee') %> </b>
+              <b class="mar_r10">订单实付金额：￥<%= @trade.get('total_fee')%></b>
+            </td>
+        </tr>
+      </tbody>
+    </table>
+    <table class="table table-condensed">
+      <tbody>
+        <tr>
+          <td><b>收货人信息</b></td>
+          <td><%= @trade.get('receiver_name') %></td>
+          <td>手机:<%= @trade.get('receiver_mobile_phone') %> 座机:<%= @trade.get('receiver_phone') %></td>
+          <td>
+            <%= @trade.get('receiver_state') %>
+            <%= @trade.get('receiver_city') %>
+            <%= @trade.get('receiver_district') %>
+            <%= @trade.get('receiver_address') %>
+          </td>
+          <td><%= @trade.get('receiver_zip') %></td>
+        </tr>
+        <%if @trade.get("seller_id") : %>
           <tr>
-            <th>操作时间</th>
-            <th>操作</th>
-            <th>操作人</th>
+            <td colspan="1"><b>配送商信息</b></td>
+            <td colspan="4" class="reedit_select"><%= @trade.get("seller_name")%></td>
           </tr>
-        </thead>
-        <tbody>
-          <% for log in @trade.get('operation_logs') : %>
-            <tr>
-              <td><%= log.operated_at %></td>
-              <td><%= log.operation %></td>
-              <td><%= log.operator %></td>
-            </tr>
-          <% end %>
-          <% if @trade.get('operation_logs').length == 0 : %>
-            <tr>
-              <td colspan='3'>暂无数据</td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-      <div class="modal-footer">
-        <a href="#" class="btn btn-primary" data-dismiss="modal">关闭</a>
-      </div>
+        <% end %>
+        <tr>
+          <td colspan="1"><b>客服备注</b></td>
+          <td colspan="4" class="reedit_text">
+            <p style="overflow:hidden;white-space:normal;word-wrap:break-word;width:600px;"> <%= @trade.get("trade_with_orders_cs_memo")%> </p>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="1"><b>开票信息</b></td>
+          <td colspan="4" class="reedit_text js-invoice-label">
+            <% if @trade.get('invoice_type') && @trade.get('invoice_type') != "无需开票": %>
+              <%= @trade.get('invoice_type')%> <%= @trade.get('invoice_name')%> <%= @trade.get('invoice_content')%> <%= @trade.get('invoice_date')%>
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="1"><b>赠品备注</b></td>
+          <td colspan="4" class="reedit_text js-gift-memo-label"><%= @trade.get('gift_memo') %></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="modal-footer">
+      <a href="#" class="btn btn-primary button_print">打印</a>
     </div>
   </div>
 </div><!-- modal-body -->
