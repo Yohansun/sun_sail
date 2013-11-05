@@ -1369,10 +1369,10 @@ class Trade
                 conditions[key] << {"$and"=>and_cond}
 
               elsif key == "has_invoice_info"
-                search_tags_hash.update({"$or" => [{"invoice_name" => not_void},{"invoice_type" => not_void},{"invoice_content" => not_void}]})
-                search_tags_hash.update({"$or" => [{"invoice_name" => words}, {"invoice_type" => words}, {"invoice_content" => words}]}) if words
-                and_cond << {"$or" => [{"invoice_name" => not_void},{"invoice_type" => not_void},{"invoice_content" => not_void}]}
-                and_cond << {"$or" => [{"invoice_name" => words}, {"invoice_type" => words}, {"invoice_content" => words}]} if words
+                search_tags_hash.update({"$or" => [{"invoice_name" => not_void},{"invoice_content" => not_void}]})
+                search_tags_hash.update({"$or" => [{"invoice_name" => words}, {"invoice_content" => words}]}) if words
+                and_cond << {"$or" => [{"invoice_name" => not_void},{"invoice_content" => not_void}]}
+                and_cond << {"$or" => [{"invoice_name" => words}, {"invoice_content" => words}]} if words
                 conditions[key] << {"$and"=>and_cond}
 
               elsif key == "has_product_info"
