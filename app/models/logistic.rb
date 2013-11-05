@@ -12,6 +12,7 @@
 #  xml        :string(255)
 #  account_id :integer(4)
 #
+
 require 'hashie'
 class Logistic < ActiveRecord::Base
   include FinderCache

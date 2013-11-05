@@ -1,4 +1,33 @@
 #encoding: utf-8
+# == Schema Information
+#
+# Table name: refund_products
+#
+#  id                :integer(4)      not null, primary key
+#  refund_id         :integer(8)
+#  buyer_name        :string(255)
+#  mobile            :string(255)
+#  phone             :string(255)
+#  zip               :string(255)
+#  status            :string(255)
+#  refund_time       :datetime
+#  tid               :string(255)
+#  state_id          :integer(4)
+#  city_id           :integer(4)
+#  district_id       :integer(4)
+#  address           :string(255)
+#  reason            :text
+#  total_price       :integer(10)     default(0), not null
+#  refund_fee        :integer(10)     default(0), not null
+#  account_id        :integer(4)
+#  ec_name           :string(255)
+#  is_location       :boolean(1)      default(TRUE), not null
+#  seller_id         :integer(4)
+#  status_operations :text
+#  created_at        :datetime        not null
+#  updated_at        :datetime        not null
+#
+
 class RefundProduct < ActiveRecord::Base
   attr_protected [:status_operations]
   include MagicEnum
@@ -21,7 +50,7 @@ class RefundProduct < ActiveRecord::Base
   before_save do
     self.refund_fee = refund_orders.map(&:refund_price).sum
   end
-  
+
   def initialize(*)
     super
     self.status_operations = [{:created => Time.now}]
@@ -98,7 +127,7 @@ class RefundProduct < ActiveRecord::Base
   def last_operation
     status_operations.reject {|x| x.key?(:locked) || x.key?(:enabled)}.last
   end
-  
+
   def last_operation_status
     last_operation.keys.first.to_s
   end
