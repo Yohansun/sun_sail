@@ -15,7 +15,7 @@
         <li class="pull-left" style="width:25%;">管理员设置</li>
         <li class="pull-left" style="width:27%;">店铺初始化</li>
         <li class="pull-left" style="width:25%;">店铺功能设置</li>
-        <li class="active pull-left" style="width:20%;">店铺帐号设置</li>
+        <li class="active pull-left" style="width:20%;">店铺账号设置</li>
       </ul>
       <%= simple_form_for User.new, url: account_setup_path, method: :put, html: { class: 'form-horizontal start_form3'} do |f| %>
         <div class="clearfix">
@@ -24,18 +24,18 @@
               <li class="span6">
                 <div class="thumbnail">
                   <img src="/images/account_setups/start_key4_1.jpg" alt="">
-                  <h5 class="" style="background:#e6b831;">客服帐号设置</h5>
+                  <h5 class="" style="background:#e6b831;">客服账号设置</h5>
                   <div>
-                    <input class="pagination-centered input-xlarge" name='cs' type="text" placeholder="请输入客服登录帐号的邮箱或手机">
+                    <input class="pagination-centered input-xlarge" name='cs' type="text" placeholder="请输入客服登录账号的邮箱或手机">
                   </div>
                 </div>
               </li>
               <li class="span6">
                 <div class="thumbnail">
                   <img src="/images/account_setups/start_key4_2.jpg" alt="">
-                  <h5 class="">仓库管理员帐号设置</h5>
+                  <h5 class="">仓库管理员账号设置</h5>
                   <div>
-                    <input name='stock_admin' class="pagination-centered input-xlarge" type="text" placeholder="请输入仓库管理帐号的邮箱或手机">
+                    <input name='stock_admin' class="pagination-centered input-xlarge" type="text" placeholder="请输入仓库管理账号的邮箱或手机">
                   </div>
                 </div>
               </li>
