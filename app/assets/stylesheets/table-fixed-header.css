@@ -3,7 +3,7 @@ table .header-fixed {
   top: 180px;
   /*left: 0;*/
   /*right: 0;*/
-  z-index: 1020; /* 10 less than .navbar-fixed to prevent any overlap */
+  z-index: 2; /* 10 less than .navbar-fixed to prevent any overlap */
   border-bottom: 1px solid #d5d5d5;
   -webkit-border-radius: 0;
      -moz-border-radius: 0;
