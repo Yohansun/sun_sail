@@ -7,7 +7,7 @@ class StockOutBillsController < ApplicationController
 
   def index
     parse_params
-    @bills = default_scope.desc(:created_at)
+    @bills = default_scope.desc(:checked_at)
     @search = @bills.search(params[:search])
     unchecked, checked = @search.partition { |b| b.checked_at.nil? }
     @bills = unchecked + checked
