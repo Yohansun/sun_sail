@@ -3,10 +3,6 @@ class FinderCacheObserver < ActiveRecord::Observer
   observe :account,:trade_source,:taobao_app_token,:logistic
 
   def after_commit(object)
-    Rails.cache.delete_matched(pattern(object.cache_path),namespace: FinderCache::NAMESPACE)
-  end
-
-  def pattern(path)
-    CACHE_STORE.to_s == "redis_store" ? path : /^#{path}$/
+    Rails.cache.delete_matched(object.cache_path,namespace: FinderCache::NAMESPACE)
   end
 end
