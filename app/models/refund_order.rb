@@ -1,4 +1,24 @@
 #encoding:utf-8
+# == Schema Information
+#
+# Table name: refund_orders
+#
+#  id                :integer(4)      not null, primary key
+#  refund_product_id :integer(4)
+#  title             :string(255)
+#  num_iid           :string(255)
+#  refund_price      :integer(10)     default(0)
+#  num               :integer(4)      default(0), not null
+#  sku_id            :integer(4)
+#  outer_id          :string(255)
+#  stock_product_id  :integer(4)
+#  account_id        :integer(4)
+#  order_type        :string(255)
+#  seller_id         :integer(4)
+#  created_at        :datetime        not null
+#  updated_at        :datetime        not null
+#
+
 class RefundOrder < ActiveRecord::Base
   attr_protected []
   belongs_to :refund_product,:inverse_of => :refund_orders

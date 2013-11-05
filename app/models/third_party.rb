@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: third_parties
+#
+#  id                   :integer(4)      not null, primary key
+#  user_id              :integer(4)
+#  account_id           :integer(4)
+#  name                 :string(255)
+#  authentication_token :string(255)
+#  created_at           :datetime        not null
+#  updated_at           :datetime        not null
+#
+
 class ThirdParty < ActiveRecord::Base
   belongs_to :user
   belongs_to :account

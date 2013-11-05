@@ -217,9 +217,9 @@ class ProductsController < ApplicationController
 
   def update_on_sale
     @products = current_account.products.where("id in (?)", current_account.settings.picked_product)
-    if params[:on_sale] == "上架"
+    if params[:on_sale].strip == "上架"
       @products.update_all(on_sale: false)
-    elsif params[:on_sale] == "下架"
+    elsif params[:on_sale].strip == "下架"
       @products.update_all(on_sale: true)
     end
     current_account.settings.picked_product = []
