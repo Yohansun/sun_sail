@@ -43,6 +43,7 @@ God.watch do |w|
   taobao_trade_source_ids.each do |taobao_trade_source_id|
     cmd_string += "TaobaoTradePuller.create(nil, nil, #{taobao_trade_source_id});TaobaoTradePuller.update(nil, nil, #{taobao_trade_source_id});"
   end
+  w.interval = 600.seconds
 
   w.start = "cd #{app_root}; #{app_root}/script/rails runner -e production '#{cmd_string}'"
 
