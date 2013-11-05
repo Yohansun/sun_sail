@@ -23,8 +23,8 @@ class StockInBill < StockBill
 			stock.products do
 				bill_products.each do |product|
 					stock.productInfo do
-						stock.spuCode product.outer_id
-						stock.itemName product.title
+						stock.spuCode product.outer_id.try(:strip)
+						stock.itemName product.title.try(:strip)
 						stock.itemCount product.number
 						stock.itemValue product.total_price
 						stock.remark ""
@@ -48,9 +48,9 @@ class StockInBill < StockBill
         end
         bill_products.each do |product|
           stock.DETAIL do
-            stock.ITEMID product.outer_id
+            stock.ITEMID product.outer_id.try(:strip)
             stock.STATUSID 1
-            stock.DESCR product.title
+            stock.DESCR product.title.try(:strip)
             stock.QTYRECEIVED product.number
             stock.QTY product.number
             stock.UNITPRICE  product.price
