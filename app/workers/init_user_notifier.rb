@@ -6,7 +6,7 @@ class InitUserNotifier
   def perform(account_id, email, password, mobiles)
     account = Account.find(account_id)
     if mobiles
-      sms = Sms.new(account, "Magic系统初始化用户提醒, 帐号: #{email}, 密码: #{password},请登录后尽快修改密码", mobiles)
+      sms = Sms.new(account, "Magic系统初始化用户提醒, 账号: #{email}, 密码: #{password},请登录后尽快修改密码", mobiles)
       sms.transmit
     end
     if email
