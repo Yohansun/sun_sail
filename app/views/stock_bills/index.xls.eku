@@ -2,7 +2,7 @@ __filename = "所有进销查询数据#{Time.now.strftime("%Y/%m/%d-%H:%M:%S")}.
 sheet1 = xls.create_worksheet
 sheet1[0, 0] = "所有进销查询数据"
 
-sheet1.row(1).concat ["订单编号", "商品编码", "商品名称", "数量", "类型", "创建时间", "出/入库时间"]
+sheet1.row(1).concat ["订单编号", "商品编码", "商品名称", "数量", "出/入库单","类型","状态", "创建时间", "出/入库时间"]
 
 @num = 1
 @search.each do |bill|
@@ -12,6 +12,9 @@ sheet1.row(1).concat ["订单编号", "商品编码", "商品名称", "数量", 
    product.try(:outer_id),
    product.try(:title),
    product.try(:number),
+   bill.type_name,
+   bill.stock_type_name,
+   bill.status_text,
    bill.created_at.try(:to_s,:db),
    bill.stocked_at.try(:to_s,:db)
   end

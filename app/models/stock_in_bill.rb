@@ -70,6 +70,10 @@ class StockInBill < StockBill
     end
   end
 
+  def type_name
+    "入库单"
+  end
+
   def sync
     do_syncking
     ans_to_wms

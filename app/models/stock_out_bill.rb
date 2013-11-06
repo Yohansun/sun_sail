@@ -63,6 +63,10 @@ class StockOutBill < StockBill
     website || (self.account.settings.open_auto_mark_invoice==1 ? "个人" : "" rescue "")
   end
 
+  def type_name
+    "出库单"
+  end
+
   def outer_is_cash_sale
     is_cash_sale || (self.account.settings.open_auto_mark_invoice==1 ? "需要开票" : "无需开票" rescue "无需开票")
   end
