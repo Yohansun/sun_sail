@@ -59,7 +59,9 @@ class StockApiController < ApplicationController
           lotatt12: detail['lotatt12']
           )
         end
-        if stock_in_bill.sync_stock
+        if stock_in_bill.status == "STOCKED"
+          render soap: "SUCCESS"
+        elsif stock_in_bill.sync_stock
           stock_in_bill.do_stock
           stock_in_bill.operation_logs.create(operated_at: Time.now, operation: '确认入库成功')
           render soap: "SUCCESS"
@@ -140,7 +142,9 @@ class StockApiController < ApplicationController
           num = sku['numNum'].to_i
           record.bml_sku_with_nums.create(sku: sku, num: num)
         end
-        if stock_out_bill.decrease_actual
+        if stock_out_bill.status == "STOCKED"
+          render soap: "SUCCESS"
+        elsif stock_out_bill.decrease_actual
           stock_out_bill.do_stock
           stock_out_bill.operation_logs.create(operated_at: Time.now, operation: '确认出库成功')
           render soap: "SUCCESS"
