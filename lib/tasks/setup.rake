@@ -16,9 +16,9 @@ namespace :magic_order do
 
     task_count = task_names.length
     task_names.each_with_index do |task_name,index|
+      task_name = task_name.gsub('/',':')
       next if invoked_task?(task_name)
       puts "[#{index+1}/#{task_count}](#{task_name})"
-      task_name = task_name.gsub('/',':')
       Rake::Task[task_name].invoke
       logger.info "RAILS_ENV=#{env} rake #{task_name}"
     end
@@ -33,8 +33,7 @@ namespace :magic_order do
   end
 
   def invoked_task?(name)
-    task_name = `grep -e "RAILS_ENV=#{env} rake #{name}$" #{logger_file}`.chomp
-    task_name.present?
+    `grep -e "RAILS_ENV=#{env} rake #{name}$" #{logger_file}`.chomp.present?
   end
 
   # lib/tasks
