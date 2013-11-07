@@ -105,6 +105,13 @@ module ApplicationHelper
     link_to(*args,&block) if current_user.allowed_to?(html_options[:controller],html_options[:action])
   end
 
+  def nested_user_categories_options(append_item = [], skip_item = nil)
+    unless skip_item.nil? || skip_item.is_a?(Category)
+      skip_item = Category.find_by_id(skip_item.to_i)
+    end
+    append_item + nested_set_options(current_account.categories, skip_item){|i| "#{'-' * i.level}#{i.name}" }
+  end
+
   def flash_message
     if flash[:error].present?
       content_tag :div,flash[:error],:class => "alert alert-error"

@@ -7,8 +7,7 @@
 <div class="control-group">
   <%= f.label :category_id_eq,raw("<code>商品分类</code>"),:class => "pull-left" %>
   <div class="controls pull-left">
-    <%= f.select :category_id_eq,current_account.categories.collect {|x| [x.name,x.id]},
-    {:include_blank => true},{:class => "input-small pull-left select2 all"}  %>
+    <%= f.select :category_id_eq, nested_user_categories_options(), {:include_blank => true}, :class => "input-small pull-left select2 all" %>
   </div>
   <div class="pull-left">
     <button type="button pull-left" class="btn btn-info search" id="simple_search_button">筛选</button>

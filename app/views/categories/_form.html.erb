@@ -2,7 +2,7 @@
   <fieldset>
     <%= f.input :name, label: '分类名' %>
     <%= f.input :parent_id, label: "上级分类"  do %>
-    	<%= f.select :parent_id, [[]]+nested_set_options(current_account.categories, @category) {|i| "#{'-' * i.level} #{i.name}" } %>
+    <%= f.select :parent_id, nested_user_categories_options([[]], @category) %>
     <% end %>
     <%= f.input :use_days %>
     <%= f.input :status, :label=>"是否启用" do%>
@@ -11,7 +11,7 @@
       <%end%>
     <%end%>
     <%= f.association :category_properties, :label=>"属性", :as=>:check_boxes, :collection=>CategoryProperty.all%>
-    
+
     <div class="form-actions">
       <%= link_to '取消', categories_path, class: 'btn' %>
       <button type="submit" class="btn btn-primary">保存</button>

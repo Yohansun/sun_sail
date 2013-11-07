@@ -1,6 +1,5 @@
 # -*- encoding : utf-8 -*-
 class CategoriesController < ApplicationController
-
   layout "management"
 
   before_filter :authorize #,:except => [:autocomplete,:new,:show,:edit,:deletes,
@@ -78,8 +77,14 @@ class CategoriesController < ApplicationController
 
   # 选择本地商品三级联动
   def category_templates
-    @categories = current_account.categories.collect {|c| { id: c.id, text: c.name}}
-    render json: @categories
+    result = []
+    items = current_account.categories.where("categories.parent_id IS NULL")
+    items.each do |root|
+      result += root.class.associate_parents(root.self_and_descendants).map do |c|
+        { id: c.id, text: "#{'-' * c.level}#{c.name}"}
+      end.compact
+    end
+    render json: result
   end
 
   def product_templates
