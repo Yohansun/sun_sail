@@ -54,35 +54,4 @@ God.watch do |w|
       c.notify = {:contacts => ['errors'], :priority => 1, :category => 'TAOBAOTRADEPULLER'}
     end
   end
-
-  # determine the state on startup
-  w.transition(:init, { true => :up, false => :start }) do |on|
-    on.condition(:process_running) do |c|
-      c.running = true
-      c.notify = {:contacts => ['errors'], :priority => 1, :category => 'TAOBAOTRADEPULLER'}
-    end
-  end
-
-  # determine when process has finished starting
-  w.transition([:start, :restart], :up) do |on|
-    on.condition(:process_running) do |c|
-      c.running = true
-      c.notify = {:contacts => ['errors'], :priority => 1, :category => 'TAOBAOTRADEPULLER'}
-    end
-
-    # failsafe
-    on.condition(:tries) do |c|
-      c.times = 5
-      c.transition = :start
-      c.notify = {:contacts => ['errors'], :priority => 1, :category => 'TAOBAOTRADEPULLER'}
-    end
-  end
-
-  # start if process is not running
-  w.transition(:up, :start) do |on|
-    on.condition(:process_running) do |c|
-      c.running = false
-      c.notify = {:contacts => ['errors'], :priority => 1, :category => 'MAIN'}
-    end
-  end
 end
