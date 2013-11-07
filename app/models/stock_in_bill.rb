@@ -74,6 +74,27 @@ class StockInBill < StockBill
     "入库单"
   end
 
+  def lock!(user)
+    return "不能再次锁定!" if self.operation_locked?
+    notice = "同步至仓库出库单需要先撤销同步后才能锁定"
+    return notice if self.status == "SYNCKED"
+    return "已经同步出库单不能锁定，请先撤销同步" if !["CHECKED","CREATED","CANCELD_OK"].include?(self.status)  #"只能操作状态为: 1.已审核，待同步. 2.待审核. 3.撤销同步成功"
+    self.operation = "locked"
+    self.operation_time = Time.now
+    build_log(user,"锁定")
+
+    self.save(validate: false)
+  end
+
+  def unlock!(user)
+    return "只能操作的状态为: 已锁定." if !self.operation_locked?
+    self.operation = "activated"
+    self.operation_time = Time.now
+    build_log(user,"激活")
+
+    self.save(validate: false)
+  end
+
   def sync
     do_syncking
     ans_to_wms

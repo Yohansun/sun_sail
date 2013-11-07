@@ -192,25 +192,6 @@ class StockBill
     Account.find(account_id)
   end
 
-  def lock!(user)
-    return "不能再次锁定!" if self.operation_locked?
-    notice = "同步至仓库出库单需要先撤销同步后才能锁定"
-    return notice if self.status == "SYNCKED"
-    return "已经同步出库单不能锁定，请先撤销同步" if !["CHECKED","CREATED","CANCELD_OK"].include?(self.status)  #"只能操作状态为: 1.已审核，待同步. 2.待审核. 3.撤销同步成功"
-    self.operation = "locked"
-    self.operation_time = Time.now
-    self.decrease_activity if self._type == 'StockOutBill' #出库单才更新库存
-    build_log(user,"锁定") if self.save(validate: false)
-  end
-
-  def unlock!(user)
-    return "只能操作的状态为: 已锁定." if !self.operation_locked?
-    self.operation = "activated"
-    self.operation_time = Time.now
-    self.increase_activity if self._type == 'StockOutBill' #出库单才更新库存
-    build_log(user,"激活") if self.save(validate: false)
-  end
-
   # MUST BE READ
   # 如果新建一个入库单或者更改bill_products的时候必须要调用这个
   # 为什么不用callback? 每次save都要,调用这个影响数据库IO.
