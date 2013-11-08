@@ -1,11 +1,11 @@
 # -*- encoding : utf-8 -*-
-require "savon"
 # == 系统订单异常信息
 # * 淘宝与本地状态不同步订单 & 漏掉订单
 # * 本地发货状态异常订单
 # * 标记有留言但是留言还没有抓取到的订单
 # * 标杆已反馈信息但系统没更新的订单
 class TradeChecker
+  class DateTypeError < Exception; end
   class TaobaoBase < TaobaoTrade
     scope :bad_deliver_status_of_orders, ->(account_id,start_time,end_time) do
       time_range_with_account(account_id,start_time,end_time).only(:tid, :status, :track_goods_status).
@@ -22,13 +22,19 @@ class TradeChecker
   attr_reader :account_key,:account,:trade_source,:start_time,:end_time,:options,:lost_orders,:wrong_orders,:bad_deliver_status_of_orders,:hidden_orders,:biaogan_diff,:exceptions
 
   # === Example
-  #    TradeChecker.new(:brands,time: Time.now, ago: -1).invoke
+  #    TradeChecker.new(:brands,time: Time.now, ago: -1.day).invoke                                 # 一天后到现在
+  #    TradeChecker.new(:brands,time: Time.now, ago: 1.day).invoke                                  # 一天前到现在
+  #    TradeChecker.new(:brands,start_time: Time.now.yesterday, end_time: Time.now).invoke          # 昨天凌晨1点到现在
   # === Options
+  # [:start_time]
+  #   查询的开始时间
+  # [:end_time]
+  #   查询的结束时间
   # [:time]
-  #   统计的开始时间
+  #   查询的计算时间
   # [:ago]
-  #   *  2 2天后
-  #   * -2 2天前
+  #   *  2 2天前
+  #   * -2 2天后
   # === SendMail Options
   #    TradeChecker.new(:brands,time: Time.now, ago: -1,:to => 'zhoubin@networking.io',:from => "exception@networking.io").invoke
   # [:tag]
@@ -47,12 +53,15 @@ class TradeChecker
     @options.symbolize_keys!
     @account_key = args.shift
     raise ArgumentError,"account_key can't be blank!" if  account_key.blank?
-    @options[:time] ||= Date.yesterday
+    @options[:time] ||= Time.now
     @account = Account.find_by_key(account_key) or raise("没有找到account key为#{account_key}的账户")
     @trade_source = @account.trade_sources.where(trade_type: "Taobao").first
     # 抓取昨天 的订单, 检查本地状态和淘宝状态是否匹配
-    @options[:ago] ||= 0
-    @start_time , @end_time = process_time(@options[:time],@options[:ago].days)
+    @options[:ago] ||= 1.day
+    @start_time , @end_time = process_time(@options[:time],@options[:ago])
+    @start_time = @options[:start_time] if @options[:start_time]
+    @end_time   = @options[:end_time] if @options[:end_time]
+    raise DateTypeError,"Time type is incorrect" if [@start_time,@end_time].any? {|x| !(x.is_a?(Time) || x.is_a?(DateTime))}
     @lost_orders,@wrong_orders,@bad_deliver_status_of_orders,@hidden_orders,@biaogan_diff,@exceptions =  Array.new(6) { [] }
     @mail = options.slice(:to,:from,:bcc,:cc).reject{|k,v| v.blank?}
   end
@@ -142,9 +151,8 @@ class TradeChecker
     time = time.to_time(:local) if !time.is_a?(Time)
     time_ago       = time.ago(ago)
     [time, time_ago].sort.tap do |times|
-      times[0] = times[0].beginning_of_day
-      times[1] = times[1].end_of_day
-      times[1] = Time.now if times[1] > Time.now
+      times[0] = times[0]
+      times[1] = times[1]
     end
   end
 

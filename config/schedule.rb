@@ -47,7 +47,7 @@ every :day, :at => '10:00am' do
 end
 
 every :day, :at => '9:00am' do
-  runner "TradeChecker.new(:brands,:to => #{STORY_1204},:from => \"#{DEFAULT_FROM}\").invoke"
+  runner "TradeChecker.new(:brands,start_time: Time.now.yesterday.beginning_of_day,end_time: Time.now - 30.minutes,:to => #{STORY_1204},:from => \"#{DEFAULT_FROM}\").invoke"
 end
 
 every :day, :at => '9:00pm' do
