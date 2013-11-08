@@ -13,6 +13,7 @@ class MagicOrders.Views.TradesRow extends Backbone.View
     'click a[rel=popover]': "addHover"
     'click input.trade_check': 'freezeCheck'
     'click': 'highlight'
+    'click .popover_close_btn': 'closePopover'
 
 
   initialize: ->
@@ -72,13 +73,14 @@ class MagicOrders.Views.TradesRow extends Backbone.View
     @toggleOperationMenu()
 
   addHover: (e) ->
-    $(e.target).parent().toggleClass('lovely_pop')
+    # $(e.target).parent().toggleClass('lovely_pop')
+    $(e.currentTarget).next('.popover').siblings('.popover').removeClass('in')
     $('.popover_close_btn').remove()
     $('.popover-inner').append('<div class="popover_close_btn" href="#">X</div>')
     $(e.target).parents('tr').siblings().find('.popover').removeClass('in')
-    $('.popover_close_btn').click ->
-      $('.lovely_pop').click()
-      $('.lovely_pop').toggleClass('lovely_pop')
+
+  closePopover: (e) ->
+    $(e.currentTarget).parents('.popover').removeClass('in')
 
   reloadOperationMenu: ->
     $("#trade_"+ @model.get('id') + " :checkbox").attr("checked", "checked")
