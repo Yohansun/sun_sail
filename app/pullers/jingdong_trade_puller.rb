@@ -1,5 +1,6 @@
 # -*- encoding : utf-8 -*-
 class JingdongTradePuller
+  PAGE_SIZE = 100
   class << self
     def create(start_time = nil, end_time = nil, account_id)
       total_pages = nil
@@ -47,7 +48,7 @@ class JingdongTradePuller
           end_date: end_time.strftime("%Y-%m-%d %H:%M:%S"),
           optional_fields: 'order_id,vender_id,pay_type,order_total_price,order_payment,order_seller_price,freight_price,seller_discount,order_state,order_state_remark,delivery_type,invoice_info,order_remark,order_start_time,order_end_time,consignee_info,item_info_list,coupon_detail_list,return_order,vender_remark,pin,balance_used,modified,payment_confirm_time,logistics_id,waybill,vat_invoice_info',
           page: page_no,
-          page_size: 10}, query_conditions)
+          page_size: PAGE_SIZE}, query_conditions)
 
 
         unless response['order_search_response']
@@ -56,7 +57,7 @@ class JingdongTradePuller
         end
 
         total_results = response['order_search_response']['order_search']['order_total']
-        total_pages = total_results / 10
+        total_pages = (total_results / PAGE_SIZE.to_f).ceil
         next if total_results < 1
         # default_seller_id = account.settings.default_seller_id
 
