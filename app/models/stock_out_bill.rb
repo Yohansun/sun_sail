@@ -164,6 +164,35 @@ class StockOutBill < StockBill
     cancel_order_rx
   end
 
+  def lock!(user)
+    return "不能再次锁定!" if self.operation_locked?
+    notice = "同步至仓库出库单需要先撤销同步后才能锁定"
+    return notice if self.status == "SYNCKED"
+    return "已经同步出库单不能锁定，请先撤销同步" if !["CHECKED","CREATED","CANCELD_OK"].include?(self.status)  #"只能操作状态为: 1.已审核，待同步. 2.待审核. 3.撤销同步成功"
+    self.operation = "locked"
+    self.operation_time = Time.now
+    build_log(user,"锁定")
+
+    if self.status != "CREATED"
+      self.increase_activity { self.save(validate: false) }
+    else
+      self.save(validate: false)
+    end
+  end
+
+  def unlock!(user)
+    return "只能操作的状态为: 已锁定." if !self.operation_locked?
+    self.operation = "activated"
+    self.operation_time = Time.now
+    build_log(user,"激活")
+
+    if self.status != "CREATED"
+      self.decrease_activity { self.save(validate: false) }
+    else
+      self.save(validate: false)
+    end
+  end
+
   #推送出库单至仓库
   def so_to_wms
     BiaoganPusher.perform_async(self._id, "so_to_wms_worker")
@@ -257,55 +286,63 @@ class StockOutBill < StockBill
     end
   end
 
-  def increase_activity #订单重新分流，或者出库单关闭，恢复仓库的可用库存
-    bill_products.each do |stock_out|
-      stock_product = StockProduct.find_by_id(stock_out.stock_product_id)
-      if stock_product
-        stock_product.update_attributes(activity: stock_product.activity + stock_out.number)
-        true
-      else
-        # DO SOME ERROR NOTIFICATION
-        false
-      end
-    end
-  end
-
-  def decrease_activity #减去仓库的可用库存
+  def increase_activity(&block) #订单重新分流，或者出库单关闭，恢复仓库的可用库存
     error_records = []
     StockProduct.transaction do
       bill_products.each do |stock_out|
         stock_product = StockProduct.find_by_id(stock_out.stock_product_id)
         if stock_product
-          if !stock_product.update_attributes(activity: stock_product.activity - stock_out.number)
-            error_records << stock_product
+          if !stock_product.update_attributes(activity: stock_product.activity + stock_out.number)
+            error_records << stock_product.errors.full_messages
           end
         else
           # DO SOME ERROR NOTIFICATION
           false
         end
       end
-      raise if error_records.present?
+      raise if error_records.present? || !(block_given? && yield)
       return true
     end
   rescue Exception
     error_records
   end
 
-  def decrease_actual #减去仓库的实际库存
+  def decrease_activity(&block) #减去仓库的可用库存
     error_records = []
     StockProduct.transaction do
       bill_products.each do |stock_out|
         stock_product = StockProduct.find_by_id(stock_out.stock_product_id)
         if stock_product
-          if !stock_product.update_attributes(actual: stock_product.actual - stock_out.number)
-            error_records << stock_product
+          if !stock_product.update_attributes(activity: stock_product.activity - stock_out.number)
+            error_records << stock_product.errors.full_messages
           end
         else
           # DO SOME ERROR NOTIFICATION
           false
         end
       end
-      raise if error_records.present?
+      raise if error_records.present? || !(block_given? && yield)
+      return true
+    end
+  rescue Exception
+    error_records
+  end
+
+  def decrease_actual(&block) #减去仓库的实际库存
+    error_records = []
+    StockProduct.transaction do
+      bill_products.each do |stock_out|
+        stock_product = StockProduct.find_by_id(stock_out.stock_product_id)
+        if stock_product
+          if !stock_product.update_attributes(actual: stock_product.actual - stock_out.number)
+            error_records << stock_product.errors.full_messages
+          end
+        else
+          # DO SOME ERROR NOTIFICATION
+          false
+        end
+      end
+      raise if error_records.present? || !(block_given? && yield)
       return true
     end
   rescue Exception
