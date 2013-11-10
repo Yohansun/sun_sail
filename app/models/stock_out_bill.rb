@@ -300,7 +300,7 @@ class StockOutBill < StockBill
           false
         end
       end
-      raise if error_records.present? || !(block_given? && yield)
+      raise if error_records.present? || !(block_given? ? yield : true)
       return true
     end
   rescue Exception
@@ -321,7 +321,7 @@ class StockOutBill < StockBill
           false
         end
       end
-      raise if error_records.present? || !(block_given? && yield)
+      raise if error_records.present? || !(block_given? ? yield : true)
       return true
     end
   rescue Exception
@@ -342,7 +342,7 @@ class StockOutBill < StockBill
           false
         end
       end
-      raise if error_records.present? || !(block_given? && yield)
+      raise if error_records.present? || !(block_given? ? yield : true)
       return true
     end
   rescue Exception
