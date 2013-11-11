@@ -76,11 +76,17 @@ class TradeChecker
     # 本地发货状态异常订单
     @bad_deliver_status_of_orders = TaobaoBase.bad_deliver_status_of_orders(account.id,start_time,end_time).distinct(:tid)
     # 标记有留言但是留言还没有抓取到的订单
-    @hidden_orders     = TaobaoBase.hidden_orders(account.id,start_time,end_time).distinct(:tid)
+    @hidden_orders     = processing_hidden_orders_with_taobao
     # 标杆已反馈信息但系统没更新的订单：
     checking_trades_with_biaogan
     TaobaoTrade.rescue_buyer_message(hidden_orders)
     return self
+  end
+
+  def processing_hidden_orders_with_taobao
+    tids = TaobaoBase.hidden_orders(account.id,start_time,end_time).distinct(:tid)
+    return tids.collect { |tid| TradeTaobaoMemoFetcher.perform_async(tid); tid.to_s << "(正在处理中...)" } if tids.present?
+    []
   end
 
   def checking_trades_with_taobao
@@ -118,12 +124,12 @@ class TradeChecker
   private
   def abnormal_collections_with_taobao(taobao_trade)
     tid = taobao_trade["tid"].to_s
-    taobao_trades = Trade.where(tid: tid).only(:status,:trade_source_id,:tid)
+    taobao_trades = Trade.where(tid: tid).only(:status,:trade_source_id,:tid,:account_id)
     if local_trade = taobao_trades.first
       # ERROR: 淘宝与本地状态不同步订单
       if local_trade.status != taobao_trade['status']
         if (local_trade.splitted && taobao_trades.distinct(:status).length == 1) || !local_trade.splitted
-          pass = catch_exception("自动更新淘宝与本地状态不同的订单") { TaobaoTradePuller.update_by_tid(local_trade); true }
+          pass = catch_exception("自动更新淘宝与本地状态不同的订单 trade:#{local_trade.inspect}") { TaobaoTradePuller.update_by_tid(local_trade); true }
           tid = tid << (pass ? "(已处理)" : "(未处理)")
           @wrong_orders << tid
         end
@@ -173,7 +179,7 @@ class TradeChecker
     attr_reader :text,:exception
     def initialize(text,exception=[])
       @text = text
-      @exception = exception
+      @exception = exception.to(30)
     end
   end
 
