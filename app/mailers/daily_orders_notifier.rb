@@ -9,9 +9,9 @@ class DailyOrdersNotifier < ActionMailer::Base
 
     @trade_checkers = [trade_checker]
 
-    #默认发送今天凌晨1点到现在的数据
+    #默认发送今天凌晨1点到现在前30分钟的数据
     if trade_checker.end_time.to_date != Date.today
-      @trade_checkers << TradeChecker.new(trade_checker.account_key,time: Time.now,ago: 0).taobao_trade_status
+      @trade_checkers << TradeChecker.new(trade_checker.account_key,start_time: Time.now.beginning_of_day,end_time: Time.now - 30.minutes).taobao_trade_status
     end
     account = trade_checker.account
     options[:from] ||= account.settings.email_notifier_from

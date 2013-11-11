@@ -89,7 +89,7 @@ class TradeChecker
     while has_next
       response = fetch_taobao_trades(page_no)
       page_no += 1
-      has_next = catch_exception("淘宝API调用异常 #{response["error_response"]}") { response['trades_sold_get_response']['has_next'] }
+      has_next = catch_exception("淘宝API调用异常 #{response["error_response"].inspect}") { response['trades_sold_get_response']['has_next'] }
       break if has_next == false
 
       trades = Array.wrap(response['trades_sold_get_response']['trades']['trade']) rescue []
@@ -122,12 +122,19 @@ class TradeChecker
     if local_trade = taobao_trades.first
       # ERROR: 淘宝与本地状态不同步订单
       if local_trade.status != taobao_trade['status']
-        @wrong_orders << tid if (local_trade.splitted && taobao_trades.distinct(:status).length == 1) || !local_trade.splitted
-        TaobaoTradePuller.update_by_tid(local_trade)
+        if (local_trade.splitted && taobao_trades.distinct(:status).length == 1) || !local_trade.splitted
+          pass = catch_exception("自动更新淘宝与本地状态不同的订单") { TaobaoTradePuller.update_by_tid(local_trade); true }
+          tid = tid << (pass ? "(已处理)" : "(未处理)")
+          @wrong_orders << tid
+        end
       end
     else
       # ERROR: 漏掉订单,考虑合并删除的订单
-      @lost_orders << tid unless Trade.unscoped.where(tid: tid).exists?
+      if !Trade.unscoped.where(tid: tid).exists?
+        pass = catch_exception("自动创建本地漏抓淘宝订单") { TaobaoTradePuller.create_trade(taobao_trade,account,trade_source.id); true }
+        tid = tid << (pass ? "(已处理)" : "(未处理)")
+        @lost_orders << tid
+      end
     end
   end
 
@@ -159,12 +166,12 @@ class TradeChecker
   def catch_exception(message,&block)
     yield
   rescue Exception => e
-    @exceptions << ExceptionNotifier.new(message,e.message)
+    @exceptions << ExceptionNotifier.new(message,e.backtrace.unshift(e.message))
     return false
   end
   class ExceptionNotifier
     attr_reader :text,:exception
-    def initialize(text,exception="")
+    def initialize(text,exception=[])
       @text = text
       @exception = exception
     end
