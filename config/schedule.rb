@@ -46,12 +46,20 @@ every :day, :at => '10:00am' do
   runner "Reports.trades_consolidate_with_day(*#{Accounts[:"911573445"]}).deliver!"
 end
 
+def start_time
+  "Time.now.yesterday.beginning_of_day"
+end
+
+def end_time
+  "Time.now.yesterday.end_of_day"
+end
+
 every :day, :at => '9:00am' do
-  runner "TradeChecker.new(:brands,start_time: Time.now.yesterday.beginning_of_day,end_time: Time.now - 30.minutes,:to => #{STORY_1204},:from => \"#{DEFAULT_FROM}\").invoke"
+  runner "TradeChecker.new(:brands,start_time: #{start_time},end_time: #{end_time},:to => #{STORY_1204},:from => \"#{DEFAULT_FROM}\").invoke"
 end
 
 every :day, :at => '9:00pm' do
-  runner "TradeChecker.new(:brands,start_time: Time.now.yesterday.beginning_of_day,end_time: Time.now - 30.minutes,:to => #{STORY_1204},:from => \"#{DEFAULT_FROM}\").invoke"
+  runner "TradeChecker.new(:brands,start_time: #{start_time},end_time: #{end_time},:to => #{STORY_1204},:from => \"#{DEFAULT_FROM}\").invoke"
 end
 
 every :day, :at => '2:00pm' do
