@@ -17,12 +17,7 @@
       <div class="control-group">
         <label class="pull-left"><code>分类：</code></label>
         <div class="controls pull-left">
-          <select name="category_id" class="input-small pull-left select2">
-            <option value="0" <%= 'selected' if params[:category_id] == '0' %>>全部</option>
-            <% current_account.categories.each do |category| %>
-            <option value="<%= category.id %>" <%= 'selected' if params[:category_id] == "#{category.id}" %>><%= category.name %></option>
-            <% end %>
-          </select>
+          <%= f.select :category_id, nested_user_categories_options([["全部", 0]]), {:selected => params[:category_id]}, :id => "category_id", :name => "category_id", :class => "input-small pull-left select2" %>
         </div>
       </div>
       <div class="control-group">
