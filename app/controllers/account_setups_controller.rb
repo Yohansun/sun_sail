@@ -48,6 +48,7 @@ class AccountSetupsController < ApplicationController
                                           'unusual_conditions'=>{},
                                           'auto_deliver' => nil,
                                           'auto_dispatch' => nil}
+        binding_account_account_to_admin
       else
         current_account.settings[:wizard_step] = next_step_name
       end
@@ -61,6 +62,7 @@ class AccountSetupsController < ApplicationController
       create_users(params[:cs], :cs)
       create_users(params[:stock_admin], :stock_admin)
       create_users(params[:interface], :interface)
+      binding_account_account_to_admin
     end
     current_account.settings[:wizard_step] = next_step_name
     render_wizard current_account
@@ -173,6 +175,14 @@ class AccountSetupsController < ApplicationController
       user.save
       user.add_role(role)
       InitUserNotifier.perform_async(current_account.id, user.email, user.password, user.phone)
+    end
+  end
+
+  def binding_account_account_to_admin
+    admin_user = User.find_by_username("admin")
+    if admin_user.present? && !admin_user.accounts.include?(current_account)
+      admin_user.accounts << current_account
+      admin_user.save
     end
   end
 
