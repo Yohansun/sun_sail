@@ -325,7 +325,13 @@ module ApplicationHelper
         items <<  active_li_item("个人设置")
       end
     end
-
+    if params[:warehouse_id] == "5725"
+      items.insert(1, href_li_item("gnc雍恒天猫专卖店", "warehouses")) 
+    elsif params[:warehouse_id] == "5726"
+      items.insert(1, href_li_item("gnc雍恒京东专卖店", "warehouses"))
+    elsif params[:warehouse_id] == "5727"
+      items.insert(1, href_li_item("gnc雍恒一号店专卖店", "warehouses"))
+    end
     items.join("")
   end
 end
