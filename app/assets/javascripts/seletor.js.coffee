@@ -86,9 +86,9 @@ $ ->
       if operation_name == "锁定"
         for item in checked_inputs()
           bill_id = $(item).val()
-          if $.inArray($("#bill_status_"+bill_id).html(), ["CREATED", "CHECKED", "CANCELD_OK", "CANCELD_FAILED"]) == -1
+          if $.inArray($("#bill_status_"+bill_id).html(), ["CREATED", "CHECKED", "CANCELD_OK"]) == -1
             canSubmit = false
-            error_message = "正在同步或已同步的库单不能锁定"
+            error_message = "只能锁定状态为1.已审核，待同步. 2.待审核. 3.撤销同步成功"
             break
       else if $.inArray(operation_name, ["审核", "同步", "撤销"]) > -1
         for item in checked_inputs()
