@@ -3,7 +3,7 @@ class StockOutBillsController < ApplicationController
   before_filter :set_warehouse
   before_filter :authorize #,:except => :fetch_bils
   before_filter :find_column_settings, :only => [:sync, :check, :rollback, :lock, :unlock]
-  before_filter :validate_optional_status, only: [:edit, :sync, :rollback, :lock, :unlock,:update]
+  before_filter :validate_optional_status, only: [:edit, :sync, :rollback,:update]
 
   def index
     parse_params
