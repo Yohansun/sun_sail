@@ -145,9 +145,12 @@ class TradeChecker
   end
 
   def abnormal_collections_with_stock(tid,logistic_waybill)
-    trade = catch_exception("标杆仓库 tid为#{tid} 在本地没有找到此订单"){ Trade.find_by(:tid => tid) }
+    trade = catch_exception("标杆仓库 tid为#{tid} 在本地没有找到此订单"){ Trade.unscoped.desc(:created_at).find_by(:tid => tid) }
     return if trade.blank?
-    @biaogan_diff << tid if trade.logistic_waybill.blank?
+    if trade.logistic_waybill.blank?
+      status_text = StockBill.where(tid: tid).desc(:created_at).first.try(:status_text)
+      @biaogan_diff << ("#{tid}(%s)" % status_text.to_s)
+    end
   end
 
   def fetch_taobao_trades(page_no)
@@ -172,7 +175,8 @@ class TradeChecker
   def catch_exception(message,&block)
     yield
   rescue Exception => e
-    @exceptions << ExceptionNotifier.new(message,e.backtrace.unshift(e.message))
+    prefix_message = [message,e.message]
+    @exceptions << ExceptionNotifier.new(message,e.backtrace.unshift(*prefix_message))
     return false
   end
   class ExceptionNotifier

@@ -26,8 +26,8 @@
         <td>
           <ul>
             <% trade_checker.exceptions.each do |exception| %>
-            <li title="<%=exception.text %> &#10;&#10;<%= raw exception.exception.join('&#10;') %>">
-              <%= truncate exception.text,length: 30 %>
+            <li title="<%= exception.exception.join("\n") %>">
+              <%= truncate exception.text,length: 40 %>
             </li>
             <% end %>
           </ul>
