@@ -76,7 +76,7 @@ MagicOrders::Application.routes.draw do
     resources :refund_products
   end
 
-  resources :stocks     , only: [:index] do
+  resources :stocks     , only: [:index,:show] do
     put :update_depot   ,:on => :member
     collection do
       post :batch_update_safety_stock
