@@ -132,7 +132,8 @@ module ApplicationHelper
 
   def href_li_item(title, link_url = nil, attributes = {})
     link_url = params[:controller] if link_url.blank?
-    title = %Q[<a href="/#{link_url}">#{title}</a><span class="divider">/</span>]
+    parameters = params.except(:controller,:action)
+    title = %Q[<a href="/#{link_url}?#{parameters.to_query}">#{title}</a><span class="divider">/</span>]
     li_tag(title, attributes)
   end
 
