@@ -63,7 +63,7 @@ MagicOrders::Application.routes.draw do
       end
     end
 
-    resources :stocks     , only: [:index] do
+    resources :stocks     , only: [:index,:show] do
       collection do
         get :edit_depot
         post :batch_update_safety_stock

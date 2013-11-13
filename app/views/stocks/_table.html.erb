@@ -20,6 +20,9 @@
       <li>
         <%= link_to_authorize "批量设置实际库存","#batch_update_actual_stock",:target_url => batch_update_actual_stock_stocks_path(warehouse_id: params[:warehouse_id]),:class => "magic_operation set_stock", "data-toggle" => "modal",:request => :post,:id => "set_actual_stock" %>
       </li>
+      <li>
+        <%= link_to_authorize "查看","#",:target_url => warehouse_stock_path(warehouse_id: params[:warehouse_id],id: ''),:class => "magic_detail",:request => :get %>
+      </li>
       <% if @warehouse.present? %>
         <li>
           <%= link_to_authorize "盘点",inventory_warehouse_stocks_path(params[:warehouse_id]),:method => :put,:confirm => "确认盘点?" %>
