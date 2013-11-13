@@ -186,7 +186,7 @@ class StockInBill < StockBill
     bill_products.each do |stock_in|
       stock_product = StockProduct.find_by_id(stock_in.stock_product_id)
       if stock_product
-        update_attrs = {:actual => stock_product.actual + stock_in.number, :activity => stock_product.activity + stock_in.number}
+        update_attrs = {:actual => stock_product.actual + stock_in.number, :activity => stock_product.activity + stock_in.number,audit_comment: "入库单ID:#{self.id}"}
         stock_product.update_attributes(update_attrs)
         true
       else

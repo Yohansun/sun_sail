@@ -6,6 +6,10 @@ zh-CN:
       role: "角色"
 
     attributes:
+      stock_product:
+        activity: 可用库存
+        actual: 实际库存
+        safe_value: 安全库存
       refund_product:
         refund_orders: "退货商品"
       refund_product/refund_orders:

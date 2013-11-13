@@ -292,7 +292,7 @@ class StockOutBill < StockBill
       bill_products.each do |stock_out|
         stock_product = StockProduct.find_by_id(stock_out.stock_product_id)
         if stock_product
-          if !stock_product.update_attributes(activity: stock_product.activity + stock_out.number)
+          if !stock_product.update_attributes(activity: stock_product.activity + stock_out.number,audit_comment: "出库单ID:#{self.id}")
             error_records << stock_product.errors.full_messages
           end
         else
@@ -313,7 +313,7 @@ class StockOutBill < StockBill
       bill_products.each do |stock_out|
         stock_product = StockProduct.find_by_id(stock_out.stock_product_id)
         if stock_product
-          if !stock_product.update_attributes(activity: stock_product.activity - stock_out.number)
+          if !stock_product.update_attributes(activity: stock_product.activity - stock_out.number,audit_comment: "出库单ID:#{self.id}")
             error_records << stock_product.errors.full_messages
           end
         else
@@ -334,7 +334,7 @@ class StockOutBill < StockBill
       bill_products.each do |stock_out|
         stock_product = StockProduct.find_by_id(stock_out.stock_product_id)
         if stock_product
-          if !stock_product.update_attributes(actual: stock_product.actual - stock_out.number)
+          if !stock_product.update_attributes(actual: stock_product.actual - stock_out.number,audit_comment: "出库单ID:#{self.id}")
             error_records << stock_product.errors.full_messages
           end
         else

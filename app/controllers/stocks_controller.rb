@@ -88,6 +88,11 @@ class StocksController < ApplicationController
     redirect_to "/"
   end
 
+  def show
+    @stock = default_scoped.find params[:id]
+    @audits = @stock.audits.descending.page(params[:page])
+  end
+
   def change_product_type
     @stock_products = default_scoped.joins(:product).select("products.name as product_name,stock_products.product_id as stock_product_product_id,products.product_id as product_product_id")
     @stock_products_name = @stock_products.collect {|x| { id: x.stock_product_product_id, text: x.product_name}}
@@ -141,7 +146,7 @@ class StocksController < ApplicationController
   def batch_update_safety_stock
     @stock_products = default_scoped.where(:id => params[:stock_product_ids])
     safe_value = params[:safe_value].to_i
-    @stock_products.each {|stock| stock.update_attributes!(safe_value: safe_value,audit_comment: "batch_update_safety_stock") }
+    @stock_products.each {|stock| stock.update_attributes!(safe_value: safe_value,audit_comment: "批量更新安全库存") }
     redirect_to({:action => :index,:warehouse_id => params[:warehouse_id]}.reject {|k,v| v.blank?})
   end
 
