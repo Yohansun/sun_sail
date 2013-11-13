@@ -70,6 +70,7 @@ class MagicOrders.Views.TradesRefundRef extends Backbone.View
         current_order_array = []
         ref_batch = {}
         length = $('.ref_table tr').length
+        order_length = $('.skus_in_order').find('option').length
         if length != 0
           for num in [0..(length-1)]
             sku_id = $(".ref_table tr:eq("+num+")").attr('id')
@@ -82,7 +83,7 @@ class MagicOrders.Views.TradesRefundRef extends Backbone.View
                 if parseInt(content.sku_id) == parseInt(sku_id) && parseInt((content.number*order.num)) == parseInt(num)
                   current_order_array.push 1
 
-          if length == current_order_array.length
+          if order_length == current_order_array.length
             alert("全部退款订单请直接锁定。")
             $.unblockUI()
             return
