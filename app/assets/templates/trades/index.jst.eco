@@ -1,3 +1,6 @@
+<style>
+  table .label{white-space: normal;}
+</style>
 <ul class="breadcrumb" style="position:relative;">
   <li><a href="/">Magic</a><span class="divider">/</span></li>
   <li><a href="/app#trades">订单管理</a><span class="divider">/</span></li>
