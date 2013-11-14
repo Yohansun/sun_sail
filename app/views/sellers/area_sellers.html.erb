@@ -59,13 +59,8 @@
     <% @leaves.each do |leave| %>
       <tr id="area_<%= leave.id %>">
         <td><input id='check_<%= leave.id %>' class='area_check' type="checkbox"></input></td>
-        <% find_parent(leave).each_with_index do |l, index| %>
-          <% unless index == 3 %>
-            <td><%= l.name %></td>
-          <% end %>
-        <% end %>
-        <% if find_parent(leave).length == 2 %>
-          <td></td>
+        <% (find_parent(leave) << nil).take(3).each do |l| %>
+          <td><%= l.try(:name) %></td>
         <% end %>
         <td><%= leave.sellers.where(account_id: current_account.id, active: true).map(&:name).try(:join, ';')%></td>
       </tr>
