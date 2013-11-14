@@ -7,7 +7,7 @@
 <% content_for :sub_nav do %>
   <ul class="nav nav-tabs">
     <li class="active"><a href="/sellers">经销商</a></li>
-    <!-- <li><a>地区经销商</a></li> -->
+    <li><a href="/sellers/area_sellers">地区经销商</a></li>
   </ul><!-- nav-tabs -->
 <% end %>
 <%= simple_form_for "seller", url: sellers_path, html: { method: "get", class: "well well-small form-horizontal font12"}, :wrapper => :search do |f| %>
