@@ -217,6 +217,7 @@ MagicOrders::Application.routes.draw do
       get :closed
       get :export
       get :import
+      get :area_sellers
     end
   end
 

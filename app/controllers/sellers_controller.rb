@@ -252,4 +252,16 @@ class SellersController < ApplicationController
     redirect_to "/" and return if !current_user.has_role?(:admin)
   end
 
+  def area_sellers
+    @state = Area.find_by_id(params[:area_id])
+    unless @state
+      if params[:area_id] && params[:area_id] == '0'
+        @state = Area
+      else
+        @state = Area.find_by_name("北京")
+      end
+    end
+    @leaves = @state.leaves
+  end
+
 end
