@@ -372,7 +372,7 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
       $("#global-menus a[data-search-criteria]").parent("li").remove()
       $("#global-menus li.seprator").remove()
       $("#global-menus").append("<li class='seprator'><span style='margin: 3px 15px;display: block;'>|</span></li>")
-      $("#global-menus").append("<li class='dropdown'><a href='#'' class='dropdown-toggle' id='select_trade' data-toggle='dropdown'>选择可合并订单 <b class='caret'></b></a><ul class='dropdown-menu'></ul></li>")
+      $("#global-menus").append("<li class='dropdown'><a href='#'' class='dropdown-toggle' id='select_trade' data-toggle='dropdown'>选择可合并订单 <b class='caret'></b></a><ul class='dropdown-menu' id='select-dropdown-menu'></ul></li>")
       $(self.search_criterias).each (index,criteria)->
         $("#load_search_criteria").append("<option value='"+criteria.get("_id")+"'>"+criteria.get("name")+"</option>")
         if criteria.get("show_in_simple_model") == true
@@ -380,7 +380,7 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
         if criteria.get("show_in_tabs")
           trade_mode = criteria.get("trade_mode") || "trades"
           trade_type = criteria.get("trade_type") || "all"
-          $(".dropdown-menu").append("<li><a href='#' data-trade-mode='"+trade_mode+"' data-trade-status='"+trade_type+"' data-search-id='"+criteria.get("_id")+"'>"+criteria.get("name")+"<em></em></a></li>")
+          $("#select-dropdown-menu").append("<li><a href='#' data-trade-mode='"+trade_mode+"' data-trade-status='"+trade_type+"' data-search-id='"+criteria.get("_id")+"'>"+criteria.get("name")+"<em></em></a></li>")
           
           switch trade_mode
             when "trades"
@@ -396,6 +396,7 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
             $("[data-search-id='"+criteria.get("_id")+"'] em").text("("+count+")")
             if $(".dropdown-menu li.active a").length > 0
               $("#select_trade").text($(".dropdown-menu li.active a").text())
+              $("#select_trade").append("<b class='caret'></b>")
       if MagicOrders.search_id
         currentLink = $("#global-menus").find('a[data-search-id="'+MagicOrders.search_id+'"]').first()
       else
