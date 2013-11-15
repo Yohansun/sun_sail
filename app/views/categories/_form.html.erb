@@ -10,7 +10,7 @@
         <%= f.check_box  :status, {}, 1,0 %> 启用
       <%end%>
     <%end%>
-    <%= f.association :category_properties, :label=>"属性", :as=>:check_boxes, :collection=>CategoryProperty.all%>
+    <%= f.association :category_properties, :label=>"属性", :as=>:check_boxes, :collection=>current_account.category_properties %>
 
     <div class="form-actions">
       <%= link_to '取消', categories_path, class: 'btn' %>
