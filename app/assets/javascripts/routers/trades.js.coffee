@@ -202,6 +202,12 @@ class MagicOrders.Routers.Trades extends Backbone.Router
               alert('此订单已分流，请先分流重置订单')
               Backbone.history.navigate("#{MagicOrders.trade_mode}/" + "#{MagicOrders.trade_mode}-#{MagicOrders.trade_type}", false)
               return
+        when 'seller'
+          if model.get('can_do_close') == false
+            alert('此订单已出库或同步，无法分流重置')
+            Backbone.history.navigate("#{MagicOrders.trade_mode}/" + "#{MagicOrders.trade_mode}-#{MagicOrders.trade_type}", false)
+            return
+
       $(modalDivID).modal('show')
 
   splited: (id) ->
