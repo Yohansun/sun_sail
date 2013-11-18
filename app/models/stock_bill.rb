@@ -45,7 +45,7 @@ class StockBill
   field :bill_products_real_mumber, type: Integer
   field :bill_products_price, type: Float
 
-  validates_uniqueness_of :tid, :if => :active_tid_exists?
+  validate :uniqueness_of_active_tid_exists
 
   validates :op_name,:length => { :maximum => 50 }, :allow_blank => true
   # validates :op_phone, format: { with: /\d+-\d+/ }, :allow_blank => true
@@ -157,8 +157,10 @@ class StockBill
     end
   end
 
-  def active_tid_exists?
-    StockBill.any_in(:status.ne => 'CLOSED').where(tid: tid).exists?
+  def uniqueness_of_active_tid_exists
+    scoped = self.class.where(:status.ne => 'CLOSED',tid: tid)
+    exist = new_record? ? scoped.exists? : scoped.where(:_id.ne => id).exists?
+    errors.add(:tid,"#{type_name}中已有相同的单号") if exist
   end
 
   def stock_typs=(val)
@@ -227,6 +229,14 @@ class StockBill
 
   def gqs_code
 
+  end
+
+  def type_name
+    case _type
+    when "StockOutBill" then "出库单"
+    when "StockInBill"  then "入库单"
+    else ""
+    end
   end
 
   def last_record
