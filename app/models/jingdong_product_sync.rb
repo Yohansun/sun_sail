@@ -7,18 +7,17 @@ class JingdongProductSync < ECommerce::Synchronization::Base
   alias_columns :attributes => "attribute_s"
   attr_reader :account_id
 
-  def initialize(key)
-    @account = Account.find_by_key key
-    @account_id = @account.id
-    @default_attributes = {account_id: @account_id}
-    @api_parameters = @account.jingdong_query_conditions
+  def initialize(trade_source_id)
+    @trade_source = TradeSource.find(trade_source_id)
+    @default_attributes = {account_id: @trade_source.account_id,genre: 0,trade_source_id: trade_source_id,shop_name: @trade_source.name}
+    @api_parameters = @trade_source.jingdong_query_conditions
     super
   end
 
   def response
     params = {method: api, page_size: get_size, page: page_no}
     @response = JingdongQuery.get(params,@api_parameters)
-    datas = {api_results: @response,api_parameters: params,:account => @account,:result => []}
+    datas = {api_results: @response,api_parameters: params,:trade_source => @trade_source,:result => []}
     handle_exception(datas) do
       @response["ware_listing_get_response"]["ware_infos"]
     end

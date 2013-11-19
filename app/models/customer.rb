@@ -8,6 +8,8 @@ class Customer
   field :alipay_no,  type: String #买家支付宝账号
   field :buyer_area, type: String #顾客下单的地区
   field :account_id, type: Integer
+  field :shop_name,  type: String
+  field :trade_source_id, type: Integer
   field :ec_name,    type: String #电商名称
 
   enum_attr :ec_name, [["淘宝顾客",'TaobaoTrade'],["京东顾客","JingdongTrade"],["一号店顾客","YihaodianTrade"]]

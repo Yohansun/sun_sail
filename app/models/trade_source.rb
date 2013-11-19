@@ -26,11 +26,23 @@
 
 class TradeSource < ActiveRecord::Base
   include FinderCache
+  include RailsSettings
+  include MagicEnum
   attr_accessible :account_id, :app_key, :name, :secret_key, :session, :sid, :cid, :bulletin, :title, :description, :created, :modified, :trade_type
   belongs_to :account
   has_one :taobao_app_token
   has_one :jingdong_app_token
   has_one :yihaodian_app_token
+
+  enum_attr :trade_type,[%w(淘宝 Taobao),%w(京东 Jingdong), %w(一号店 Yihaodian)],not_valid: true
+
+  def jingdong_query_conditions
+    attributes.dup.update("access_token" => jingdong_app_token.access_token,"is_sandbox" => Rails.env.test? ? true : false)
+  end
+
+  def yihaodian_query_conditions
+    attributes.dup.update("access_token" => yihaodian_app_token.access_token)
+  end
 
   validates :name, presence: true, uniqueness: true
 end

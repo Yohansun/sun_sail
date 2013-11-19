@@ -79,9 +79,12 @@ class JingdongProductsController < ApplicationController
 
   private
   def scan_sync
-    @sync_products = JingdongProductSync.new(current_account.key)
-    @sync_products.parsing
-    @sync_skus = JingdongSkuSync.new({ware_ids: @sync_products.ware_ids, account_id: @sync_products.account_id})
-    @sync_skus.parsing
+    @sync_products,@sync_skus = Array.new(2) {[]}
+    current_account.jingdong_sources.each do |trade_source|
+      @sync_products << sync_product = JingdongProductSync.new(trade_source.id)
+      sync_product.parsing
+      @sync_skus += sync_sku = JingdongSkuSync.new({ware_ids: @sync_products.ware_ids, account_id: @sync_products.account_id})
+      sync_sku.parsing
+    end
   end
 end

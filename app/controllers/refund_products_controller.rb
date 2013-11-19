@@ -3,6 +3,7 @@ class RefundProductsController < ApplicationController
   before_filter :authorize
   before_filter :set_warehouse
   before_filter :edit_role,:only => [:edit,:update]
+  before_filter :get_refund_products, only: [:refund_fetch,:refund_save]
 
   # /warehouses/1/refund_products
   def index
@@ -106,24 +107,13 @@ class RefundProductsController < ApplicationController
   end
 
   def refund_fetch
-    @taobao_refunds = RefundProductTaobaoSync.new(current_account.key)
-    @taobao_refunds.parsing
-    @taobao_refunds = @taobao_refunds.latest
-  rescue Exception => e
-    throw_exception(e)
-    flash[:error] = e.message
-  ensure
-    redirect_to(:action => :index) if !e.nil?
   end
 
   def refund_save
-    @taobao_refunds = RefundProductTaobaoSync.new(current_account.key)
-    @taobao_refunds.parsing
-    @taobao_refunds.perform(:latest)
-    if @taobao_refunds.latest.any?{|x| x.valid?}
+    if @taobao_refunds.all?{|x| x.save}
       flash[:notice] = "保存成功!"
     else
-      error_records = @taobao_refunds.latest.reject {|x| x.valid?}
+      error_records = @taobao_refunds.reject {|x| x.valid?}
       flash[:error] = "保存失败!" << error_records.collect {|x| x.errors.full_messages}.join(',')
     end
 
@@ -154,7 +144,7 @@ class RefundProductsController < ApplicationController
     bill.city_id     = Area.find(op_city).name      if Area.exists?(op_city)
     bill.district_id = Area.find(op_district).name  if Area.exists?(op_district)
   end
-  
+
   def edit_role
     if default_scope.can_edit.exists?(params[:id])
       @refund_product = default_scope.find params[:id]
@@ -164,8 +154,23 @@ class RefundProductsController < ApplicationController
       return
     end
   end
-  
+
   def throw_exception(e)
     BacktraceMailer.background_exception_notification(e,{data: {key: current_account.key}})
+  end
+
+  def get_refund_products
+    @taobao_refunds ||= []
+    current_account.taobao_sources.each do |trade_source|
+      taobao_refunds = RefundProductTaobaoSync.new(trade_source.id)
+      taobao_refunds.parsing
+      @taobao_refunds += taobao_refunds.latest
+    end
+
+  rescue Exception => e
+    throw_exception(e)
+    flash[:error] = e.message
+  ensure
+    redirect_to(:action => :index) if !e.nil?
   end
 end

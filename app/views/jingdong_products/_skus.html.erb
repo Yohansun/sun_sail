@@ -6,15 +6,17 @@
       <th>商品ID</th>
       <th>SKU ID</th>
       <th>状态</th>
+      <th>所属店铺</th>
     </tr>
   </thead>
   <tbody>
-    <% @sync_skus.latest.each_with_index do |sku,index| %>
+    <% @sync_skus.map(&:latest).flatten.each_with_index do |sku,index| %>
     <tr>
       <td><%= index + 1 %></td>
       <td><%= sku.ware_id %></td>
       <td><%= sku.sku_id %></td>
       <td><%= sku.status_name %></td>
+      <td><%= sku.shop_name %></td>
     </tr>
     <% end %>
   </tbody>
@@ -26,15 +28,19 @@
       <th>#</th>
       <th>商品ID</th>
       <th>SKU ID</th>
+      <th>状态</th>
+      <th>所属店铺</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
-    <% @sync_skus.changed.each_with_index do |sku,index| %>
+    <% @sync_skus.map(&:changed).flatten.each_with_index do |sku,index| %>
     <tr>
       <td><%= index + 1 %></td>
       <td><%= sku.ware_id %></td>
       <td><%= sku.sku_id %></td>
       <td><%= sku.status_name %></td>
+      <td><%= sku.shop_name %></td>
       <td>
         <% sku.changes.each do |change| %>
         <strong><%= change.first %>:</strong><span class="label label-important">-<%= change.last[0] %></span>

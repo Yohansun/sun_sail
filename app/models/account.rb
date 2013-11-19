@@ -65,9 +65,9 @@ class Account < ActiveRecord::Base
   has_many :taobao_skus
   has_one :deliver_template
   has_many :trade_sources
-  has_one  :taobao_source, class_name: "TradeSource", conditions: {trade_type: 'Taobao'}
-  has_one  :jingdong_source, class_name: "TradeSource", conditions: {trade_type: 'Jingdong'}
-  has_one  :yihaodian_source, class_name: "TradeSource", conditions: {trade_type: 'Yihaodian'}
+  has_many  :taobao_sources, class_name: "TradeSource", conditions: {trade_type: 'Taobao'}
+  has_many  :jingdong_sources, class_name: "TradeSource", conditions: {trade_type: 'Jingdong'}
+  has_many  :yihaodian_sources, class_name: "TradeSource", conditions: {trade_type: 'Yihaodian'}
 
   validates :name, presence: true
   validates :key, presence: true, uniqueness: true
@@ -376,12 +376,16 @@ class Account < ActiveRecord::Base
                             "name" => "淘宝商品名",
                             "cat_name" => "商品类目名称",
                             "outer_id" => "商品外部编码",
-                            "has_bindings" => "是否已绑定本地SKU"}],
+                            "has_bindings" => "是否已绑定本地SKU",
+                            "shop_name" => "店铺名称"
+                            }],
       ["taobao_product_visible_cols", ["num_iid",
                                     "name",
                                     "cat_name",
                                     "outer_id",
-                                    "has_bindings"]],
+                                    "has_bindings",
+                                    "shop_name"
+                                    ]],
       ["enable_token_error_notify",true]
     ]
   end
@@ -390,29 +394,6 @@ class Account < ActiveRecord::Base
     setting_values.each{|key,value|
       self.settings[key] = value
     }
-  end
-
-  def jingdong_query_conditions
-    trade_source = TradeSource.where(account_id: self.id, trade_type: "Jingdong").first
-    conditions = {}
-    if trade_source
-      conditions = trade_source.attributes.update("access_token" => trade_source.jingdong_app_token.access_token)
-      if Rails.env == "test"
-        conditions = conditions.update("is_sandbox" => true)
-      else
-        conditions = conditions.update("is_sandbox" => false)
-      end
-    end
-    conditions
-  end
-
-  def yihaodian_query_conditions
-    trade_source = TradeSource.where(account_id: self.id, trade_type: "Yihaodian").first
-    conditions = {}
-    if trade_source
-      conditions = trade_source.attributes.update("access_token" => trade_source.yihaodian_app_token.access_token)
-    end
-    conditions
   end
 
   private

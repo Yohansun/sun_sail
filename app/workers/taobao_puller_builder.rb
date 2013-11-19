@@ -3,9 +3,10 @@ class TaobaoPullerBuilder
   include Sidekiq::Worker
   sidekiq_options :queue => :taobao_puller_builder, unique: true, unique_job_expiration: 120
 
-  def perform(account_id)
-    account = Account.find(account_id)
-    news_trades = TaobaoTrade.where(:account_id => account_id,news: 3)
+  def perform(trade_source_id)
+    trade_source = TradeSource.find(trade_source_id)
+    account = Account.find(trade_source.account_id)
+    news_trades = TaobaoTrade.where(:trade_source_id => trade_source_id,account_id: account.id,news: 3)
     tids = []
     news_trades.each do |trade|
       SetForecastSellerWorker.perform_async(trade.id)

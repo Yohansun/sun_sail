@@ -4,22 +4,17 @@ class MagicOneHitFetcher
   include Sidekiq::Worker
   sidekiq_options :queue => :one_hit_fetcher, unique: true, unique_job_expiration: 120
 
-  def perform(account_id)
+  def perform(trade_source_id)
+    trade_source = TradeSource.find(trade_source_id)
+    account = Account.find(trade_source.account_id)
     # more settings here
-    account = Account.find(account_id)
-    if !Trade.where(account_id: account_id).exists? && !Product.where(account_id: account_id).exists?
-      trade_sources = account.trade_sources
-      return if trade_sources.blank?
-      trade_sources.each do |trade_source|
-        TaobaoTradePuller.create(Time.now - 3.month, Time.now, trade_source.id)
-        TaobaoLogisticsOrdersPuller.create(Time.now - 3.month, Time.now, trade_source.id)
-        TaobaoProductsPuller.create_from_trades!(trade_source.id)
-        TaobaoProductsPuller.sync_cat_name(trade_source.id)
-        base_url = TradeSetting.base_url
-        HTTParty.put("#{base_url}/account_setups/#{account_id}/data_fetch_finish")
-      end
-      CustomerFetch.perform_async(account_id)
-      account.settings.init_data_ready = true
-    end
+    TaobaoTradePuller.create(Time.now - 3.month, Time.now, trade_source_id)
+    TaobaoLogisticsOrdersPuller.create(Time.now - 3.month, Time.now, trade_source_id)
+    TaobaoProductsPuller.create_from_trades!(trade_source_id)
+    TaobaoProductsPuller.sync_cat_name(trade_source_id)
+    base_url = TradeSetting.base_url
+    HTTParty.put("#{base_url}/account_setups/#{trade_source.account_id}/data_fetch_finish")
+    CustomerFetch.perform_async(trade_source_id)
+    account.settings.init_data_ready = true if account.settings["init_data_ready"].nil?
   end
 end

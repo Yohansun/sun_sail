@@ -3,8 +3,8 @@ class CustomersPuller
   EC_NAMES = %w(TaobaoTrade JingdongTrade)
 
   class << self
-    def initialize!(account_id=nil,ec_name=nil)
-      conditions = default_condition(account_id,ec_name)
+    def initialize!(trade_source_id=nil,ec_name=nil)
+      conditions = default_condition(trade_source_id,ec_name)
       trade_conditions = conditions.dup
       trade_conditions["_type"] = trade_conditions.delete(:ec_name) if ec_name.present?
       customers,trades = Customer.where(conditions),Trade.where(trade_conditions)
@@ -12,8 +12,8 @@ class CustomersPuller
       find_or_create(trades.desc(:tid))
     end
 
-    def update(account_id=nil,ec=Trade)
-      conditions = default_condition(account_id).merge({:news => 1})
+    def update(trade_source_id=nil,ec=Trade)
+      conditions = default_condition(trade_source_id).merge({:news => 1})
       news_trades = ec.where(conditions)
 
       find_or_create(news_trades) do |trade|
@@ -22,23 +22,23 @@ class CustomersPuller
       end
     end
 
-    def sync(account_id=nil)
-      mapping_sync(account_id)
+    def sync(trade_source_id=nil)
+      mapping_sync(trade_source_id)
     end
 
-    def mapping_sync(account_id=nil)
+    def mapping_sync(trade_source_id=nil)
       EC_NAMES.each do |ec|
-        self.send("#{ec.underscore}_sync",account_id)
+        self.send("#{ec.underscore}_sync",trade_source_id)
       end
     end
 
     EC_NAMES.each do |ec|
       class_eval <<-EOF,__FILE__,__LINE__ + 1
-      def #{ec.underscore}_sync(account_id=nil)
-        conditions = default_condition(account_id).merge(:ec_name => #{ec})
+      def #{ec.underscore}_sync(trade_source_id=nil)
+        conditions = default_condition(trade_source_id).merge(:ec_name => #{ec})
         customer = latest_customer(conditions)
         #如果顾客数据为空,先进行初始化
-        customer = initialize!(account_id,#{ec}) && latest_customer(conditions) if customer.blank?
+        customer = initialize!(trade_source_id,#{ec}) && latest_customer(conditions) if customer.blank?
         #如果本地订单为空结束同步
         return if customer.blank?
         latest_transaction_history = customer.transaction_histories.first
@@ -48,8 +48,8 @@ class CustomersPuller
         find_or_create(news_trades)
       end
 
-      def #{ec.underscore}_update(account_id=nil)
-        update(account_id,#{ec})
+      def #{ec.underscore}_update(trade_source_id=nil)
+        update(trade_source_id,#{ec})
       end
       EOF
     end
@@ -63,8 +63,8 @@ class CustomersPuller
       Customer.fields.except("_id","_type").keys
     end
 
-    def default_condition(account_id=nil,ec_name=nil)
-      {account_id: account_id, ec_name: ec_name}.reject {|u,v| v.blank?}
+    def default_condition(trade_source_id=nil,ec_name=nil)
+      {trade_source_id: trade_source_id, ec_name: ec_name}.reject {|u,v| v.blank?}
     end
 
     def transaction_history_fields
@@ -81,7 +81,7 @@ class CustomersPuller
 
     def find_or_create(news_trades,&block)
       news_trades.each do |trade|
-        conditions = {:name => trade.buyer_nick,:account_id => trade.account_id,:ec_name => trade._type }
+        conditions = {:name => trade.buyer_nick,:account_id => trade.account_id,trade_source_id: trade.trade_source_id,:ec_name => trade._type }
         customer = Customer.find_or_create_by(conditions)
         transaction_histories           = customer.transaction_histories
         transaction_history             = transaction_histories.find_by(:tid => trade.tid) rescue customer.transaction_histories.build

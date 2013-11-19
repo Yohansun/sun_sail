@@ -4,14 +4,14 @@ class JingdongAppTokensController < ApplicationController
   #目前只考虑到已经创建了Account的帐户
   def index
     auth_json = JSON.parse(auth_hash.to_json)
-    trade_source = TradeSource.where(trade_type: "Jingdong", account_id: current_account.id).first
-    if trade_source.blank?
-      trade_source = TradeSource.create(trade_type: "Jingdong",
-                                        app_key: TradeSetting.jingdong_app_key,
-                                        secret_key: TradeSetting.jingdong_app_secret,
-                                        account_id: current_account.id,
-                                        name: "京东"+current_account.name)
-    end
+    trade_source = TradeSource.where(trade_type: "Jingdong", account_id: current_account.id).first ||
+    TradeSource.create({
+      trade_type: "Jingdong",
+      app_key: TradeSetting.jingdong_app_key,
+      secret_key: TradeSetting.jingdong_app_secret,
+      account_id: current_account.id,
+      name: "京东"+current_account.name
+      })
 
     token = JingdongAppToken.where(trade_source_id: trade_source.id).first
     if token.present?
