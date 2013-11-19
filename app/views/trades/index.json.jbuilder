@@ -1,7 +1,4 @@
 json.array!(@trades) do |json, trade|
-  stock_out_bill = trade.stock_out_bill if trade.stock_out_bill
-  json.stock_status stock_out_bill.status if stock_out_bill
-  json.can_do_close stock_out_bill.can_do_close? if stock_out_bill
   json.trades_count @trades_count
   json.id trade._id
   json.tid trade.tid
@@ -113,4 +110,10 @@ json.array!(@trades) do |json, trade|
   json.is_succeeded trade.is_succeeded
   json.is_closed trade.is_closed
   json.auto_dispatch_left_seconds trade.auto_dispatch_left_seconds(current_account)
+
+  #出库单状态
+  stock_out_bill = trade.stock_out_bill if trade.stock_out_bill
+  json.stock_out_bill_present stock_out_bill.present?
+  json.stock_status stock_out_bill.status if stock_out_bill
+  json.can_do_close !!stock_out_bill && stock_out_bill.can_do_close?
 end

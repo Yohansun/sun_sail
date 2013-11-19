@@ -203,7 +203,7 @@ class MagicOrders.Routers.Trades extends Backbone.Router
               Backbone.history.navigate("#{MagicOrders.trade_mode}/" + "#{MagicOrders.trade_mode}-#{MagicOrders.trade_type}", false)
               return
         when 'seller'
-          if model.get('can_do_close') == false
+          if model.get('stock_out_bill_present') && model.get('can_do_close') != true
             alert('此订单已出库或同步，无法分流重置')
             Backbone.history.navigate("#{MagicOrders.trade_mode}/" + "#{MagicOrders.trade_mode}-#{MagicOrders.trade_type}", false)
             return
