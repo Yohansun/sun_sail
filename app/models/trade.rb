@@ -493,12 +493,10 @@ class Trade
 
   def reset_seller
     return unless seller_id
-    stock_out_bills.where(:status.ne => "CLOSED").each do |bill|
-      if bill.do_close #关闭之前的出库单
-        bill.increase_activity #恢复仓库的可用库存
-      else
-        next #已出库或者已同步 不允许分流重置
-      end
+    if stock_out_bill.do_close #关闭之前的出库单
+      stock_out_bill.increase_activity #恢复仓库的可用库存
+    else
+      return #已出库或者已同步 不允许分流重置
     end
     update_attributes(seller_id: nil, seller_name: nil, dispatched_at: nil)
     deliver_bills.delete_all

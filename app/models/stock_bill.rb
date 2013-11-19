@@ -116,15 +116,15 @@ class StockBill
 
     #关闭
     event :do_close do
-      transition [:created, :checked, :synck_failed, :canceld_ok] => :closed
+      transition [:checked, :synck_failed, :canceld_ok] => :closed
     end
 
-    #撒销同步
+    #撤销同步
     event :do_canceling do
       transition :syncked => :canceling, :if => lambda {|bill| !bill.operation_locked? }
     end
 
-    #撒销成功
+    #撤销成功
     event :do_cancel_ok do
       transition :canceling => :canceld_ok
     end
@@ -172,7 +172,7 @@ class StockBill
   def stock_typs
     stock_type.gsub(/^(I|O)/,'')
   end
-  
+
   def private_stock_type?
     PRIVATE_STOCK_TYPE.map(&:last).include?(stock_type.to_s)
   end
@@ -194,12 +194,11 @@ class StockBill
     Account.find(account_id)
   end
 
-  # MUST BE READ
-  # 如果新建一个入库单或者更改bill_products的时候必须要调用这个
-  # 为什么不用callback? 每次save都要,调用这个影响数据库IO.
-  # 为什么不用 *_create or *_update 因为在update_attributes中的  bill_products的时候必须要使用attributes=
-  # marked_for_destruction?才会生效. 虽然目前没有使用到. 详细看分支 stocks 最后一个commit内容.
-
+  ## 改前必读 ##
+  # Q: 如果新建一个入库单或者更改bill_products的时候必须要调用这个, 为什么不用callback?
+  # A: 每次save都要调用这个, 影响数据库IO.
+  # Q: 为什么不用 *_create or *_update
+  # A: 因为在update_attributes中的 bill_products 的时候必须要使用attributes=, marked_for_destruction? 才会生效. 虽然目前没有使用到. 详细看分支 stocks 最后一个commit内容.
   def update_bill_products
     bill_products.each do |bp|
       sku = Sku.where(:id => bp.sku_id).first_or_initialize
@@ -228,7 +227,6 @@ class StockBill
   end
 
   def gqs_code
-
   end
 
   def type_name

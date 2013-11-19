@@ -2,6 +2,7 @@ json.id @trade._id
 json.tid @trade.tid
 stock_out_bill = @trade.stock_out_bill if @trade.stock_out_bill
 json.stock_status stock_out_bill.status if stock_out_bill
+json.can_do_close stock_out_bill.can_do_close? if stock_out_bill
 json.trade_type @trade._type
 json.current_user_is_seller current_user.seller.present?
 json.splitted_tid @trade.splitted_tid
