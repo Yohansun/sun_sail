@@ -372,7 +372,7 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
       $("#global-menus a[data-search-criteria]").parent("li").remove()
       $("#global-menus li.seprator").remove()
       $("#global-menus").append("<li class='seprator'><span style='margin: 3px 15px;display: block;'>|</span></li>")
-      $("#global-menus").append("<li class='dropdown'><a href='#'' class='dropdown-toggle' id='select_trade' data-toggle='dropdown'>选择可合并订单 <b class='caret'></b></a><ul class='dropdown-menu' id='select-dropdown-menu'></ul></li>")
+      $("#global-menus").append("<li class='dropdown'><a href='#'' class='dropdown-toggle' id='select_trade' data-toggle='dropdown'>选择自定义页面 <b class='caret'></b></a><ul class='dropdown-menu' id='select-dropdown-menu'></ul></li>")
       $(self.search_criterias).each (index,criteria)->
         $("#load_search_criteria").append("<option value='"+criteria.get("_id")+"'>"+criteria.get("name")+"</option>")
         if criteria.get("show_in_simple_model") == true
@@ -405,3 +405,5 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
       if currentLink
         currentLink.parents("li").addClass("active")
         $("#current_name").text(currentLink.text())
+    $(".js-fixed_header").fixedHeader()
+    
