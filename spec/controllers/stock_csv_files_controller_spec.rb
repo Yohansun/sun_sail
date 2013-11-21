@@ -46,13 +46,20 @@ describe StockCsvFilesController do
 
   describe "GET show" do
     it "render show" do
+      StockCsvFile.any_instance.stub(:verify_stock_csv_file).and_return(["title",1,2])
       get :show, {warehouse_id: warehouse, id: stock_csv_file.id}
       assigns(:csv_info).count.should eq(2)
     end
 
+    it "redirect to new" do
+      StockCsvFile.any_instance.stub(:verify_stock_csv_file).and_return(nil)
+      get :show, {warehouse_id: warehouse, id: stock_csv_file.id}
+      should respond_with 302
+    end
+
     it "redirect to /stock" do
       stock_csv_file.update_attributes(stock_in_bill_id: 123456)
-       get :show, {warehouse_id: warehouse, id: stock_csv_file.id}
+      get :show, {warehouse_id: warehouse, id: stock_csv_file.id}
       should respond_with 302
     end
   end

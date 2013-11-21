@@ -20,6 +20,19 @@ class StockCsvFile < ActiveRecord::Base
 
   validates_presence_of :path
 
+  def verify_stock_csv_file(current_account)
+    csv_mapper = CsvMapper.import(self.path.current_path) do
+      start_at_row 1
+      [id, sku_id, sku_name, num_iid, category, forecast, activity, actual, safe_value, storage_status]
+    end
+    if csv_mapper.slice(1..-1).each.find{|c| current_account.stock_products.find_by_id(c.id) == nil}.blank?
+      return csv_mapper
+    else
+      self.delete
+      return nil
+    end
+  end
+
   def create_stock_in_bill(current_account)
     stock_in_bill = StockInBill.new(stock_type: "IINITIAL",
                                     account_id: current_account.id,
@@ -32,7 +45,7 @@ class StockCsvFile < ActiveRecord::Base
       CSV.parse(file) do |row|
         index +=1
         next if index < 3
-        stock_product = StockProduct.find(row[0])
+        stock_product = current_account.stock_products.find(row[0])
         product = stock_product.product
         sku = stock_product.sku
 
