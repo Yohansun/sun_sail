@@ -169,6 +169,7 @@ zh-CN:
   permissions_tag_users#create_role: "创建权限"
   permissions_tag_users#update_permissions: "编辑权限"
   permissions_tag_users#destroy_role: "删除角色"
+  permissions_tag_users#seller_areas: "绑定区域"
   permissions_tag_logistics#create: "新增物流公司"
   permissions_tag_logistics#detail: "物流公司管理"
   permissions_tag_logistics#update: "编辑物流公司"

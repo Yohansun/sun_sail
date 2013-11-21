@@ -335,6 +335,11 @@ module ApplicationHelper
                     active_li_item("客单价分析")
                   end
       end
+    when "users"
+      case act_name
+      when "sale_areas"
+        items <<  active_li_item("绑定区域")
+      end
     when "registrations"
       case act_name
       when "edit"
