@@ -2,8 +2,6 @@
 
 class Trade
   include Mongoid::Document
-  # Mongoid 4.0.0版本中移除了Paranoia，Versioning
-  # 现在这是两个独立的gem包，升级Mongoid的时候请注意添加
   include Mongoid::Paranoia
   include Mongoid::Timestamps
   include MagicEnum

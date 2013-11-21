@@ -2,6 +2,7 @@
 class StockBill
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Mongoid::Paranoia
   include MagicEnum
   embeds_many :bill_products
   embeds_many :operation_logs
