@@ -488,7 +488,7 @@ class Trade
   end
 
   def stock_out_bill # always should be the only active one
-    stock_out_bills.where(:status.ne => "CLOSED").first
+    @stock_out_bill ||= stock_out_bills.where(:status.ne => "CLOSED").first
   end
 
   def reset_seller
