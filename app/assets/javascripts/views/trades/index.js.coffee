@@ -21,7 +21,8 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     'click .search': 'search'
 
     # index显示相关
-    'click #checkbox_all': 'optAll'
+    'click .header #checkbox_all': 'optAll'
+    'click .header-copy #checkbox_all': 'optCopyAll'
     'click #cols_filter input,label': 'keepColsFilterDropdownOpen'
     'click .dropdown': 'dropdownTurnGray'
     'click .btn-group': 'addBorderToTr'
@@ -93,15 +94,29 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     @loadStatusCount()
     $("#content").removeClass("search-expand")
     this
+  
+  closeCheckAll: (e) ->
+    $('.trade_check').removeAttr('checked')
+    $('#op-toolbar .dropdown-menu').parents('div.btn-group').removeAttr('style')
 
+  CheckAll: (e) ->
+    $('.trade_check').attr('checked', 'checked')
+    $('#op-toolbar .dropdown-menu').parents('div.btn-group').css('display', 'none')
+    $('#op-toolbar .batch_ops').show()
+  
   optAll: (e) ->
-    if $('#checkbox_all')[0].checked
-      $('.trade_check').attr('checked', 'checked')
-      $('#op-toolbar .dropdown-menu').parents('div.btn-group').css('display', 'none')
-      $('#op-toolbar .batch_ops').show()
+    if $('.header #checkbox_all')[0].checked
+      @CheckAll()
     else
-      $('.trade_check').removeAttr('checked')
-      $('#op-toolbar .dropdown-menu').parents('div.btn-group').removeAttr('style')
+      @closeCheckAll()
+  
+  optCopyAll: (e) ->
+    if $('.header-copy #checkbox_all')[0].checked
+      $('.header #checkbox_all')[0].checked = true
+      @CheckAll()
+    else
+      $('.header #checkbox_all')[0].checked = false
+      @closeCheckAll()
 
   keepColsFilterDropdownOpen: (event) ->
     event.stopPropagation()

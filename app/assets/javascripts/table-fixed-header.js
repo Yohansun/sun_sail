@@ -17,6 +17,11 @@ $.fn.fixedHeader = function (options) {
 
   function processScrolls() {
     if (!o.is(':visible')) return;
+    if ($('.header #checkbox_all')[0].checked ){
+      $('.header-copy #checkbox_all')[0].checked = true;
+    }else{
+      $('.header-copy #checkbox_all')[0].checked = false;
+    }
     if ($('thead.header-copy').size()) {
       $('thead.header-copy').width($head.width());
       var i, scrollTop = $win.scrollTop();
