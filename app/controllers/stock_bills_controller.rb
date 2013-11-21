@@ -8,16 +8,14 @@ class StockBillsController < ApplicationController
 
   def index
     parse_params
-    @search = @bills.search(params[:search])
+    @search = @bills.search(params[:search]).desc(:created_at)
     @count = @search.map(&:bill_products).count
-    @number = 20
-    @number = params[:number].to_i if params[:number].present?
-    @bills = @search.page(params[:page]).per(@number)
+    @bills = @search.page(params[:page]).per(params[:number])
     @all_cols = current_account.settings.stock_bill_cols
     @visible_cols = current_account.settings.stock_bill_visible_cols
 
     cur_page = params[:page].to_i
-    @start_no = cur_page > 0 ? (cur_page - 1) * @number + 1 : 1
+    @start_no = cur_page > 0 ? (cur_page - 1) * (params[:number] || @bills.default_per_page).to_i + 1 : 1
   end
 
   def fetch_bills
