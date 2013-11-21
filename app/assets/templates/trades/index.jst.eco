@@ -31,7 +31,7 @@
       <div class="affix_white js-affix" data-spy="affix" data-offset-top="41">
         <div id='search_form'></div>
 
-        <div id='op-toolbar' class="btn-toolbar">
+        <div id='op-toolbar' class="btn-toolbar nomargin">
           <div class="btn-group yellow-ops batch_ops">
             <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
               操作
