@@ -3,7 +3,8 @@ class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
   template: JST['logistic_bills/index']
 
   events:
-    'click #checkbox_all': 'optAll'
+    'click .header #checkbox_all': 'optAll'
+    'click .header-copy #checkbox_all': 'optCopyAll'
     'click [data-trade-status]': 'selectSameStatusTrade'
     'click .print_logistics': 'printLogistics'
     'click .confirm_return': 'confirmReturn'
@@ -90,14 +91,28 @@ class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
     MagicOrders.original_path = window.location.hash
     MagicOrders.original_path = window.location.hash
 
+  closeCheckAll: (e) ->
+    $('.trade_check').removeAttr('checked')
+    $('#op-toolbar .dropdown-menu').parents('div.btn-group').removeAttr('style')
+
+  CheckAll: (e) ->
+    $('.trade_check').attr('checked', 'checked')
+    $('#op-toolbar .dropdown-menu').parents('div.btn-group').css('display', 'none')
+    $('#op-toolbar .batch_ops').show()
+  
   optAll: (e) ->
-    if $('#checkbox_all')[0].checked
-      $('.trade_check').attr('checked', 'checked')
-      $('#op-toolbar .dropdown-menu').parents('div.btn-group').css('display', 'none')
-      $('#op-toolbar .batch_ops').show()
+    if $('.header #checkbox_all')[0].checked
+      @CheckAll()
     else
-      $('.trade_check').removeAttr('checked')
-      $('#op-toolbar .dropdown-menu').parents('div.btn-group').removeAttr('style')
+      @closeCheckAll()
+  
+  optCopyAll: (e) ->
+    if $('.header-copy #checkbox_all')[0].checked
+      $('.header #checkbox_all')[0].checked = true
+      @CheckAll()
+    else
+      $('.header #checkbox_all')[0].checked = false
+      @closeCheckAll()
 
   prependTrade: (bill) =>
     view = new MagicOrders.Views.LogisticBillsRow(model: bill)
