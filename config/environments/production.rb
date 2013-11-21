@@ -76,7 +76,7 @@ MagicOrders::Application.configure do
   # config.active_record.auto_explain_threshold_in_seconds = 0.5
 
   config.middleware.use ExceptionNotifier,
-    :email_prefix => "[MAGIC_ORDER ERROR] ",
-    :sender_address => %{"errors" <errors@networking.io>},
-    :exception_recipients => %w{errors@networking.io}
+    :email_prefix => "#{MagicOrders.env} | [MAGIC_ORDER ERROR] ",
+    :sender_address => "errors.%s@networking.io" % MagicOrders.env,
+    :exception_recipients => "errors@networking.io"
 end
