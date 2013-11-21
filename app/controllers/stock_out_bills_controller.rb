@@ -7,19 +7,14 @@ class StockOutBillsController < ApplicationController
 
   def index
     parse_params
-    @bills = default_scope.desc(:checked_at)
-    @search = @bills.search(params[:search])
-    unchecked, checked = @search.partition { |b| b.checked_at.nil? }
-    @bills = unchecked + checked
-    @number = 20
-    @number = params[:number].to_i if params[:number].present?
-    @bills = Kaminari.paginate_array(@bills).page(params[:page]).per(@number)
-    @count = @search.count
+    @bills = default_scope.search(params[:search]).desc(:created_at)
+    @bills = @bills.page(params[:page]).per(params[:number])
+    @count = @bills.count
 
     respond_to do |format|
       format.html{
         cur_page = params[:page].to_i
-        @start_no = cur_page > 0 ? (cur_page - 1) * @number + 1 : 1
+        @start_no = cur_page > 0 ? (cur_page - 1) * (params[:number] || @bills.default_per_page).to_i + 1 : 1
         find_column_settings
       }
       format.xls
