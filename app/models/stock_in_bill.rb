@@ -63,11 +63,8 @@ class StockInBill < StockBill
 
   def check
     do_check
-    if account && account.settings.enable_module_third_party_stock != 1 && stock_type != "IINITIAL"
-      sync_stock
-    else
-      initial_stock if stock_type == "IINITIAL"
-    end
+    sync_stock if account && account.settings.enable_module_third_party_stock != 1
+    initial_stock if stock_type == "IINITIAL"
   end
 
   def type_name
@@ -197,7 +194,6 @@ class StockInBill < StockBill
   end
 
   def initial_stock
-    sync_stock
     do_stock
     StockCsvFile.find_by_stock_in_bill_id(self.id.to_s).update_attributes(used: true)
   end
