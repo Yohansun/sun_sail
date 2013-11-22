@@ -194,6 +194,7 @@ class StockInBill < StockBill
   end
 
   def initial_stock
+    sync_stock if account && account.settings.enable_module_third_party_stock == 1
     do_stock
     StockCsvFile.find_by_stock_in_bill_id(self.id.to_s).update_attributes(used: true)
   end
