@@ -1481,11 +1481,7 @@ class Trade
 
   def type_text
     if self.custom_type.present?
-      if self.custom_type == 'gift_trade'
-        '赠品'
-      elsif self.custom_type == 'handmade_trade'
-        '人工'
-      end
+      self.custom_type_name
     elsif self._type == "TaobaoTrade"
       '淘宝'
     elsif self._type == "JingdongTrade"
