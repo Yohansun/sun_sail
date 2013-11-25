@@ -400,7 +400,7 @@ Version: 3.4.1 Timestamp: Thu Jun 27 18:02:10 PDT 2013
               user-select: none;
 }
 
-.select2-results .select2-highlighted {
+.select2-results .select2-highlighted ,.select2-highlighted td{
     background: #3875d7;
     color: #fff;
 }
