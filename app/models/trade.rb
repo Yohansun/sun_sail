@@ -272,7 +272,6 @@ class Trade
   embeds_many :promotion_details
 
   has_many :deliver_bills
-
   has_many :stock_out_bills
 
   belongs_to :customer, :class_name => "Customer", :foreign_key => "buyer_nick",:primary_key => "name"
@@ -388,24 +387,49 @@ class Trade
     local_sku_id = (value['sku_id'].to_i == 0 ? nil : value['sku_id'].to_i)
     sku = Sku.find_by_id(local_sku_id)
     gift_product = Product.find_by_id(value['product_id'].to_i)
-    self.taobao_orders.create!(_type: "TaobaoOrder",
-                               oid: value['gift_tid'],
-                               status: "WAIT_SELLER_SEND_GOODS",
-                               title: value['gift_title'].try(:gsub, '标准款', ''),
-                               price: 0,
-                               total_fee: 0,
-                               payment: 0,
-                               discount_fee: 0,
-                               outer_iid: gift_product.outer_id,
-                               adjust_fee: 0,
-                               num_iid: gift_product.num_iid,
-                               sku_id:  sku.try(:sku_id),  # this should be skus.sku_id not skus.id, and its' type is string not integer.
-                               local_sku_id:  local_sku_id, # this should be skus.id, and its' type is integer.
-                               num: value['num'].to_i,
-                               pic_path: gift_product.pic_url,
-                               refund_status: "NO_REFUND",
-                               cid: gift_product.cid,
-                               order_gift_tid: value['gift_tid'])
+    self.taobao_orders.create!(
+      _type:          "TaobaoOrder",
+      status:         "WAIT_SELLER_SEND_GOODS",
+      refund_status:  "NO_REFUND",
+      oid:            value['gift_tid'],
+      title:          value['gift_title'].try(:gsub, '标准款', ''),
+      num:            value['num'].to_i,
+      order_gift_tid: value['gift_tid'],
+      price:          0,
+      total_fee:      0,
+      payment:        0,
+      discount_fee:   0,
+      adjust_fee:     0,
+      sku_id:         sku.try(:sku_id),  # this should be skus.sku_id not skus.id, and its' type is string not integer.
+      local_sku_id:   local_sku_id, # this should be skus.id, and its' type is integer.
+      pic_path:       gift_product.pic_url,
+      cid:            gift_product.cid,
+      outer_iid:      gift_product.outer_id,
+      num_iid:        gift_product.num_iid
+    )
+  end
+
+  def update_batch(current_user, ref_type, params)
+    current_batch = self.send(ref_type.to_sym)
+    if current_batch.present?
+      current_batch.update_attributes(
+        status:       params[:ref_batch][:status],
+        ref_payment:  params[:ref_batch][:ref_payment]
+      )
+    else
+      current_batch = add_ref_batch(ref_type, params)
+    end
+    current_batch.change_ref_orders(params[:ref_order_array])
+    current_batch.add_ref_log(current_user, params[:ref_memo])
+  end
+
+  def add_ref_batch(ref_type, params)
+    self.ref_batches.create!(
+      batch_num:    self.ref_batches.count + 1,
+      ref_type:     ref_type,
+      status:       params[:ref_batch][:status],
+      ref_payment:  params[:ref_batch][:ref_payment]
+    )
   end
 
   def unusual_color_class
@@ -477,7 +501,7 @@ class Trade
 
   ['add_ref', 'return_ref', 'refund_ref'].each do |ref_method|
     define_method(ref_method.to_sym) do
-      ref_batches.where(ref_type: ref_method).last
+      ref_batches.find_batch(ref_method)
     end
 
     define_method((ref_method+'_status').to_sym) do

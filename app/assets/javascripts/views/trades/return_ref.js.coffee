@@ -37,7 +37,7 @@ class MagicOrders.Views.TradesReturnRef extends Backbone.View
       if parseInt(num) > parseInt(total_num)
         alert('退货数量大于购买数量')
         return
-      sku_ids = $(".ref_table tr").map(->
+      sku_ids = $(".return_ref_table tr").map(->
         $(this).attr "id"
       ).get()
       if $.inArray(sku_id, sku_ids) != -1
@@ -47,7 +47,7 @@ class MagicOrders.Views.TradesReturnRef extends Backbone.View
       tr += "<td>"+total_num+"</td>"
       tr += "<td>"+num+"</td>"
       tr += "<td><a class='btn delete_ref_sku'>删除</a></td></tr>"
-      $('.ref_table').append(tr)
+      $('.return_ref_table').append(tr)
 
   deleteRefSku: (e)->
     $(e.currentTarget).parents('tr').remove()
@@ -61,7 +61,7 @@ class MagicOrders.Views.TradesReturnRef extends Backbone.View
     else if parseFloat(payment) > parseFloat(@model.get('total_fee'))
       alert("退货金额大于购买金额。")
     else
-      if $('.ref_table tr').length == 0
+      if $('.return_ref_table tr').length == 0
         alert("未添加退货商品")
       else
         blocktheui()
@@ -69,12 +69,12 @@ class MagicOrders.Views.TradesReturnRef extends Backbone.View
         return_ref_hash = {}
         ref_order_array = []
         ref_batch = {}
-        length = $('.ref_table tr').length
+        length = $('.return_ref_table tr').length
         if length != 0
           for num in [0..(length-1)]
-            sku_id = $(".ref_table tr:eq("+num+")").attr('id')
-            title = $(".ref_table tr:eq("+num+")").find('td:eq(0)').text()
-            num = $(".ref_table tr:eq("+num+")").find('td:eq(2)').text()
+            sku_id = $(".return_ref_table tr:eq("+num+")").attr('id')
+            title = $(".return_ref_table tr:eq("+num+")").find('td:eq(0)').text()
+            num = $(".return_ref_table tr:eq("+num+")").find('td:eq(2)').text()
             ref_order_array.push sku_id+","+title+","+num
 
         ref_batch['ref_payment'] = payment
