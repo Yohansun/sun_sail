@@ -80,8 +80,8 @@ class TaobaoTrade < Trade
 
   def set_alipay_data
     if status == "TRADE_FINISHED"
-      start_time = consign_time || delivered_at
-      #开始和结束时间跨度不能超过7天
+      start_time = consign_time || delivered_at || end_time
+      # 开始和结束时间跨度不能超过7天
       response = TaobaoQuery.get({method: 'alipay.user.trade.search',
                                   start_time: (start_time - 1.day).strftime("%Y-%m-%d %H:%M:%S"),
                                   end_time: (start_time + 6.days).strftime("%Y-%m-%d %H:%M:%S"),
