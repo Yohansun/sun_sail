@@ -405,5 +405,7 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
       if currentLink
         currentLink.parents("li").addClass("active")
         $("#current_name").text(currentLink.text())
-    $(".js-fixed_header").fixedHeader()
+    $(".js-fixed_header").fixedHeader({
+      topOffset: 68
+    })
     
