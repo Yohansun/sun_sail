@@ -1,7 +1,7 @@
 table .header-fixed {
   position: fixed;
-  top: 180px;
-  /*left: 0;*/
+  top: 184px!important;
+  left: 41px!important;
   /*right: 0;*/
   z-index: 2; /* 10 less than .navbar-fixed to prevent any overlap */
   border-bottom: 1px solid #d5d5d5;
