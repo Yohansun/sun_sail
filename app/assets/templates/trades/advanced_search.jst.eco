@@ -138,8 +138,9 @@
             <option value="JingdongTrade">京东</option>
             <option value="YihaodianTrade">一号店</option>
             <!-- <option value="TaobaoPurchaseOrder">分销平台</option> -->
-            <option value="CustomTrade-gift_trade">赠品订单</option>
-            <option value="CustomTrade-handmade_trade">人工订单</option>
+            <% for ary in MagicOrders.custom_trade_types : %>
+            <option value="CustomTrade-<%= ary[0] %>"><%= ary[1] %></option>
+            <% end %>
             <option value="Trade">合并订单</option>
           </select>
         </div>

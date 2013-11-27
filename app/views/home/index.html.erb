@@ -8,6 +8,7 @@
     MagicOrders.logistics = new MagicOrders.Collections.Logistics();
     MagicOrders.logistics.reset(<%= raw @logistics.to_json %>);
     MagicOrders.users = new MagicOrders.Collections.Users();
+    MagicOrders.custom_trade_types = <%= raw(current_account.settings.trade_types.to_a.to_json) %>
     MagicOrders.users.reset(<%= raw @users.to_json %>);
     MagicOrders.deliver_bill_notice_info = "<%= current_account.settings.deliver_bill_notice_info %>"
     MagicOrders.enable_module_print_deliver_bill = <%= current_account.settings.enable_module_print_deliver_bill %>
