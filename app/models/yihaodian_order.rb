@@ -39,8 +39,12 @@ class YihaodianOrder < Order
 
   before_save :set_refund_status
 
+  def trade
+    yihaodian_trades
+  end
+
   def account_id
-    yihaodian_trades.account_id
+    trade.account_id
   end
 
   # def product

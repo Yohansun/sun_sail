@@ -7,7 +7,7 @@ class SellerMatcher
     seller_ids = []
     color_num = order.color_num
     color_num.delete('')
-    order.skus_info.each do |info|
+    order.skus_info_with_offline_refund.each do |info|
       stock_products = StockProduct.where(id: info.fetch(:stock_product_ids))
       avaliable_stock_products = stock_products.where("activity > #{info.fetch(:number)}")
       if color_num.present?

@@ -43,6 +43,10 @@ class TaobaoOrder < Order
   embedded_in :custom_trades
   embedded_in :trades
 
+  def trade
+    taobao_trades
+  end
+
   def account_id
     taobao_trades.account_id
   end

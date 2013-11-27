@@ -5,7 +5,7 @@ module StockProductsLockable
     trade = Trade.find(trade_id)
     seller = Seller.find_by_id(seller_id)
     trade.orders.each do |order|
-      order.skus_info.each do |info|
+      order.skus_info_with_offline_refund.each do |info|
         title = info.fetch(:sku_title)
         color_num = order.color_num
         sku_id = info.fetch(:sku_id)

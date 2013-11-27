@@ -170,12 +170,12 @@ task :export_taobao_trade_report_with_tids => :environment do
               logistic_name,             #读取物流商，没有的话为空
               logistic_waybill]          #读取物流单号，没有的话为空
 
-      order.skus_info.each_with_index do |info, index|
+      order.skus_info_with_offline_refund.each_with_index do |info, index|
         body << "#{info.fetch(:outer_id)}"
         body << "#{info.fetch(:number)}"
       end
 
-      empty_cols_count = (max_skus_count -  order.skus_info.count) * 2
+      empty_cols_count = (max_skus_count -  order.skus_info_with_offline_refund.count) * 2
 
       empty_cols_count.times {body << ""}
 

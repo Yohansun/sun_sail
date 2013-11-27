@@ -345,7 +345,6 @@ class Trade
                                        'TRADE_REFUNDING']
   }.freeze
 
-
   def fetch_account
     return Account.find(self.account_id) if self.account_id_change
     @account ||= Account.find(self.account_id)
@@ -407,6 +406,16 @@ class Trade
       outer_iid:      gift_product.outer_id,
       num_iid:        gift_product.num_iid
     )
+  end
+
+  ['add_ref', 'return_ref', 'refund_ref'].each do |ref_method|
+    define_method(ref_method.to_sym) do
+      ref_batches.find_batch(ref_method)
+    end
+
+    define_method((ref_method+'_status').to_sym) do
+      self.send(ref_method.to_sym).operation_text if self.send(ref_method.to_sym).present?
+    end
   end
 
   def update_batch(current_user, ref_type, params)
@@ -497,16 +506,6 @@ class Trade
   # fetch trade cs_memo with order cs_memo
   def trade_with_orders_cs_memo
     "#{cs_memo}  #{orders_cs_memo}"
-  end
-
-  ['add_ref', 'return_ref', 'refund_ref'].each do |ref_method|
-    define_method(ref_method.to_sym) do
-      ref_batches.find_batch(ref_method)
-    end
-
-    define_method((ref_method+'_status').to_sym) do
-      self.send(ref_method.to_sym).operation_text if self.send(ref_method.to_sym).present?
-    end
   end
 
   def stock_out_bill # always should be the only active one
@@ -616,34 +615,36 @@ class Trade
       if bill.do_close #关闭之前的出库单
         bill.increase_activity #恢复仓库的可用库存
       else
-        next #已出库或者已同步 不允许生成新的出库单
+        return #已出库或者已同步 不允许生成新的出库单
       end
     end
 
     if _type == "TaobaoTrade"
-      remark = "客服备注: #{cs_memo} 卖家备注: #{seller_memo} 客户留言:#{buyer_message}"
+      remark = "客服备注: #{cs_memo} 卖家备注: #{seller_memo} 客户留言: #{buyer_message}"
     else
       remark = cs_memo
     end
 
-    bill = stock_out_bills.new(op_state:receiver_state,
-                               op_city: receiver_city,
-                               op_district: receiver_district,
-                               op_address: receiver_address,
-                               status: 'CHECKED',
-                               op_name: receiver_name,
-                               op_mobile: receiver_mobile,
-                               op_zip: receiver_zip,
-                               op_phone: receiver_phone,
-                               logistic_id: logistic_id,
-                               remark: remark,
-                               website: invoice_name,
-                               is_cash_sale: invoice_type,
-                               stock_typs: "CM",
-                               account_id: account_id,
-                               checked_at: Time.now,
-                               created_at: Time.now,
-                               seller_id: seller_id)
+    bill = stock_out_bills.new(
+      op_state:     receiver_state,
+      op_city:      receiver_city,
+      op_district:  receiver_district,
+      op_address:   receiver_address,
+      status:       'CHECKED',
+      op_name:      receiver_name,
+      op_mobile:    receiver_mobile,
+      op_zip:       receiver_zip,
+      op_phone:     receiver_phone,
+      logistic_id:  logistic_id,
+      remark:       remark,
+      website:      invoice_name,
+      is_cash_sale: invoice_type,
+      stock_typs:   "CM",
+      account_id:   account_id,
+      checked_at:   Time.now,
+      created_at:   Time.now,
+      seller_id:    seller_id
+    )
 
     if splitted
       bill.tid = splitted_tid
@@ -658,64 +659,24 @@ class Trade
     end
 
     regular_orders.each do |order|
-      order_num = order.num
-      if order.sku_bindings.present?
-        order.sku_bindings.each do |binding|
-          sku_id = binding.sku_id
-          sku = Sku.find_by_id(binding.sku_id)
-          product = sku.try(:product)
-          if product
-            binding_number = binding.number * order_num
-            stock_product = fetch_account.stock_products.where(seller_id: seller_id, product_id: product.id, sku_id: sku_id).first
-            order_price = (order.price == 0 ? 0 : product.price)
-            if stock_product
-              bill.bill_products.build(
-                stock_product_id: stock_product.id,
-                title: sku.title,
-                outer_id: product.outer_id,
-                sku_id: sku_id,
-                price: order_price,
-                total_price: order_price * binding_number,
-                number: binding_number,
-                remark: order.cs_memo
-              )
-            else
-              # DO SOME RESCUE
-            end
-          else
-            # DO SOME RESCUE
-          end
+      order.skus_info_with_offline_refund.each do |sku_info|
+        stock_product = fetch_account.stock_products.where(seller_id: seller_id, product_id: sku_info[:product_id], sku_id: sku_info[:sku_id]).first
+        order_price = (order.price == 0 ? 0 : sku_info[:product_price])
+        if stock_product
+          bill.bill_products.build(
+            stock_product_id: stock_product.id,
+            title:            sku_info[:sku_title],
+            outer_id:         sku_info[:outer_id],
+            sku_id:           sku_info[:sku_id],
+            price:            order_price,
+            total_price:      order_price * sku_info[:number],
+            number:           sku_info[:number],
+            remark:           order.cs_memo
+          )
         end
-      elsif order.local_skus.present?
-        order.local_skus.each do |sku|
-          sku_id = sku.id
-          sku = Sku.find_by_id(sku_id)
-          product = sku.try(:product)
-          if product
-            stock_product = fetch_account.stock_products.where(seller_id: seller_id, product_id: product.id, sku_id: sku_id).first
-            order_price = (order.price == 0 ? 0 : product.price)
-            if stock_product
-              bill.bill_products.build(
-                stock_product_id: stock_product.id,
-                title: sku.title,
-                outer_id: product.outer_id,
-                sku_id: sku_id,
-                price: order_price,
-                total_price: product.price * order_num,
-                number: order_num,
-                remark: order.cs_memo
-              )
-            else
-              # DO SOME RESCUE
-            end
-          else
-            # DO SOME RESCUE
-          end
-        end
-      else
-        # DO SOME RESCUE
       end
     end
+
     bill.bill_products_mumber = bill.bill_products.sum(:number)
     bill.bill_products_price = regular_orders.sum(:payment) - self.post_fee
     bill.save!
@@ -794,66 +755,10 @@ class Trade
         bill.bill_products.create(title: order.title, outer_id: order.outer_iid, num_iid: order.num_iid, sku_id: sku_id, sku_name: sku_name, colors: order.color_num, number: order.num, memo: order.cs_memo)
       end
     end
-
   end
 
   def logistic_split
     splited = []
-    # orders.each do |order|
-    #   product = Product.find_by_outer_id order.outer_iid
-
-    #   unless product
-    #     splited.clear
-    #     break
-    #   end
-
-    #   case product.category.try(:name)
-    #   when '輔助材料'
-    #     divmod = 100000
-    #   when '木器漆'
-    #     divmod = 1
-    #   else
-    #     divmod = case product.quantity.try(:name)
-    #     when '5L'
-    #       3
-    #     when '10L', '15L', '1套'
-    #       1
-    #     else
-    #       splited.clear
-    #       break
-    #     end
-    #   end
-
-    #   div = order.num.divmod divmod
-
-    #   if div[0] != 0
-    #     div[0].times do
-    #       splited << {
-    #         bill: {
-    #           id: tid + ("%02d" % (splited.size + 1)),
-    #           number: divmod,
-    #           title: order.title,
-    #           outer_id: order.outer_iid
-    #         }
-    #       }
-    #     end
-    #   end
-
-    #   if div[1] != 0
-    #     div[1].times do
-    #       splited << {
-    #         bill: {
-    #           id: tid + ("%02d" % (splited.size + 1)),
-    #           number: 1,
-    #           title: order.title,
-    #           outer_id: order.outer_iid
-    #         }
-    #       }
-    #     end
-    #   end
-    # end
-
-    # splited
   end
 
   def split_logistic(logistic_ids)
@@ -939,9 +844,8 @@ class Trade
     return false if seller.blank?
 
     # 更新订单状态为已分派
-    update_attributes(seller_id: seller.id, seller_name: seller.name, dispatched_at: Time.now)
-
     update_attributes!(seller_id: seller.id, seller_name: seller.name, dispatched_at: Time.now)
+
     # 如果满足自动化设置条件，分派后订单自动发货
     auto_settings = self.fetch_account.settings.auto_settings
     if auto_settings['auto_deliver'] && auto_settings["deliver_condition"] == "dispatched_trade"

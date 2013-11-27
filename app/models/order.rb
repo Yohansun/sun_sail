@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class Order
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -23,6 +25,10 @@ class Order
   field :order_gift_tid, type: String
 
   validates_uniqueness_of :order_gift_tid, allow_blank: true
+
+  def trade
+    #OVERWRITTEN BY SUBCLASS
+  end
 
   def skus
     #OVERWRITTEN BY SUBCLASS
@@ -51,12 +57,26 @@ class Order
       {
         name:               sku.product.name,
         outer_id:           sku.product.outer_id,
+        product_id:         sku.product.id,
+        product_price:      sku.product.price,
         number:             self.num * (sku_bindings.find_by_sku_id(sku.id).try(:number) || 1),
         stock_product_ids:  sku.stock_product_ids,
         sku_id:             sku.id,
         sku_title:          sku.title
       }
     end
+  end
+
+  def skus_info_with_offline_refund
+    adapted_skus_info = self.skus_info
+    adapted_skus_info.each do |info|
+      if trade.refund_ref_status == '确认线下退款'
+        ref_order = trade.refund_ref.ref_orders.where(sku_id: info[:sku_id]).first
+        info[:number] -= ref_order.num if ref_order
+        adapted_skus_info.delete(info) if info[:number] == 0
+      end
+    end
+    adapted_skus_info
   end
 
   def package_products

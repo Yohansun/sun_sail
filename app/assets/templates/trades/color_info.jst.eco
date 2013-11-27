@@ -26,9 +26,9 @@
               <% if colors : %>
               <% if order.skus_info.length > 1 : %>
                 <% for sku_info in order.skus_info : %>
-                  <% for [0...sku_info.number] : %>
+                  <% for [0...sku_info['number']] : %>
                     <div class="controls">
-                      套装项目：<%= sku_info.name %>
+                      套装项目：<%= sku_info['name'] %>
                       <br>
                       <% if colors[i] == '' : %>
                         <b>不调色</b>
