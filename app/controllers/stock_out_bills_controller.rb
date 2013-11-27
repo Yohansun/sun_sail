@@ -203,7 +203,7 @@ class StockOutBillsController < ApplicationController
 
   def validate_optional_status
     private_stock_types = StockOutBill::PRIVATE_OUT_STOCK_TYPE
-    hava_private_type = StockOutBill.where(:id.in => params[:bill_ids] || [params[:id]],:operation => "locked",:stock_type.in => private_stock_types.map(&:last)).exists?
+    hava_private_type = StockOutBill.where(:id.in => params[:bill_ids] || [params[:id]]).any_of({:operation => "locked"},{:stock_type.in => private_stock_types.map(&:last)}).exists?
     message = "不能操作类型为#{private_stock_types.map(&:first).join(',')}和状态为已锁定的出库单"
     if hava_private_type
       respond_to do |format|

@@ -3,7 +3,7 @@ class StockInBillsController < ApplicationController
   before_filter :set_warehouse
   before_filter :authorize #,:except => :fetch_bils
   before_filter :find_column_settings, :only => [:sync, :check, :rollback, :lock, :unlock]
-  before_filter :validate_optional_status, :only => [:edit,:sync, :rollback, :lock, :unlock,:update]
+  before_filter :validate_optional_status, :only => [:edit,:sync, :rollback, :update]
 
   def index
     parse_params
@@ -175,7 +175,7 @@ class StockInBillsController < ApplicationController
 
   def validate_optional_status
     private_stock_types = StockInBill::PRIVATE_IN_STOCK_TYPE
-    hava_private_type = StockInBill.where(:id.in => params[:bill_ids] || [params[:id]],:operation => "locked",:stock_type.in => private_stock_types.map(&:last)).exists?
+    hava_private_type = StockInBill.where(:id.in => params[:bill_ids] || [params[:id]]).any_of({:operation => "locked"},{:stock_type.in => private_stock_types.map(&:last)}).exists?
     message = "不能操作类型为#{private_stock_types.map(&:first).join(',')}和状态为已锁定的入库单"
     if hava_private_type
       respond_to do |format|
