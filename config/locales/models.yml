@@ -25,6 +25,7 @@ zh-CN:
       jingdong_product:
         ware_id: "商品ID"
         spu_id: "spu ID"
+        shop_name: "店铺名称"
         cid: "分类ID 三级类目ID"
         vender_id: "商家ID"
         shop_id: "店铺ID"
@@ -97,6 +98,7 @@ zh-CN:
         brand_id: 品牌Id
         merchant_category_id: 商家产品类别
         has_bindings: 是否已绑定SKU
+        shop_name: 店铺名称
 
     errors:
       models:

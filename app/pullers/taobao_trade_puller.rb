@@ -9,8 +9,8 @@ class TaobaoTradePuller
       page_no = 1
 
       if start_time.blank?
-        if TaobaoTrade.where(account_id: account_id).count > 1
-          latest_created_order = TaobaoTrade.only(:created, :account_id).where(account_id: account_id).order_by(:created.desc).limit(1).first
+        if TaobaoTrade.where(account_id: account_id,trade_source_id: trade_source_id).count > 1
+          latest_created_order = TaobaoTrade.only(:created, :account_id,:trade_source_id).where(account_id: account_id,trade_source_id: trade_source_id).order_by(:created.desc).limit(1).first
           start_time = latest_created_order.created - 1.hour
         else
           start_time = Time.now - 1.month
@@ -82,7 +82,7 @@ class TaobaoTradePuller
         Trade.collection.insert(trades)
         handles += trades.length
 
-        TaobaoPullerBuilder.perform_async(account_id)
+        TaobaoPullerBuilder.perform_async(trade_source_id)
       end
 
       console_hash.merge({results: results,handles: handles,exists: exists.flatten})
@@ -154,7 +154,7 @@ class TaobaoTradePuller
 
       if start_time.blank?
         if TaobaoTrade.where(account_id: account_id).count > 1
-          latest_created_order = TaobaoTrade.only(:modified, :account_id).where(account_id: account_id).order_by(:modified.desc).limit(1).first
+          latest_created_order = TaobaoTrade.only(:modified, :account_id,:trade_source_id).where(trade_source_id: trade_source_id,account_id: account_id).order_by(:modified.desc).limit(1).first
           start_time = latest_created_order.modified - 4.hour
         else
           start_time = Time.now - 1.month
@@ -202,7 +202,7 @@ class TaobaoTradePuller
         end
       end
       #同步本地顾客管理下面的"副本订单"
-      CustomerFetch.perform_async(account_id,"TaobaoTrade")
+      CustomerFetch.perform_async(trade_source.id,"TaobaoTrade")
     end
 
     def update_by_tid(trade)
@@ -312,7 +312,7 @@ class TaobaoTradePuller
           update_trade(trade, account, trade_source_id)
         end
       end
-      CustomerFetch.perform_async(account_id,"TaobaoTrade")
+      CustomerFetch.perform_async(trade_source.id,"TaobaoTrade")
     end
 
     def logger

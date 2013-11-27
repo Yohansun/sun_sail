@@ -141,6 +141,7 @@ class Trade
   field :commission_fee, type: Float, default: 0.0
   field :trade_memo, type: String
   field :seller_nick, type: String
+  alias_method :shop_name,:seller_nick
   field :pic_path, type: String
   field :payment, type: Float, default: 0.0
   field :snapshot_url, type: String
@@ -287,6 +288,7 @@ class Trade
   before_update :set_has_unusual_state
   before_update :set_has_refund_orders
   after_destroy :check_associate_deliver_bills
+  delegate :name,to: :trade_source,allow_nil: true,prefix: true
 
 
   scope  :paid_undispatched, ->{where({status:"WAIT_SELLER_SEND_GOODS", dispatched_at:nil})}
@@ -352,12 +354,16 @@ class Trade
     @account ||= Account.find(self.account_id)
   end
 
+  def trade_source
+    @trade_source ||= TradeSource.find_by_id(trade_source_id)
+  end
+
   def get_third_party_logistic_id(logistic_id=self.logistic_id)
     logistic = Logistic.find_by_id(logistic_id)
     case self._type
-    when "TaobaoTrade"    then logistic && logistic.taobao_logistic_id(account_id)
-    when "JingdongTrade"  then logistic && logistic.jingdong_logistic_id(account_id)
-    when "YihaodianTrade" then logistic && logistic.yihaodian_logistic_id(account_id)
+    when "TaobaoTrade"    then logistic && logistic.taobao_logistic_id(trade_source_id)
+    when "JingdongTrade"  then logistic && logistic.jingdong_logistic_id(trade_source_id)
+    when "YihaodianTrade" then logistic && logistic.yihaodian_logistic_id(trade_source_id)
     else nil
     end
   end
@@ -435,13 +441,6 @@ class Trade
 
   def color_num_changed?
     orders.all.map(&:color_num_changed?).include? (true)
-  end
-
-  # model 属性方法
-  def trade_source_name
-    if trade_source_id
-      TradeSource.find(trade_source_id).name
-    end
   end
 
   # 物流公司名称

@@ -8,10 +8,13 @@
     <span class="label label-important label_source"><%= @trade.get('trade_source') %></span>
   <% else if @trade.get('trade_source') == "淘宝" : %>
     <span class="label label-warning label_source"><%= @trade.get('trade_source') %></span>
+    <span class="label label-warning label_source"><%= @trade.get("shop_name") %></span>
   <% else if @trade.get('trade_source') == "京东" : %>
     <span class="label label-skyblue label_source"><%= @trade.get('trade_source') %></span>
+    <span class="label label-skyblue label_source"><%= @trade.get("shop_name") %></span>
   <% else if @trade.get('trade_source') == "一号店" : %>
     <span class="label label-lightblue label_source"><%= @trade.get('trade_source') %></span>
+    <span class="label label-lightblue label_source"><%= @trade.get("shop_name") %></span>
   <% else : %>
     <span class="label label-darkorchid label_source"><%= @trade.get('trade_source') %></span>
   <% end %>

@@ -141,11 +141,17 @@ class LogisticsController < ApplicationController
     if params[:trade_type].present? && params[:trade_type] != "CustomTrade"
       source_type = params[:trade_type].underscore.gsub(/_trade$/,'')
     end
-
+    # TODO
+    # 默认使用统一平台下的第一个店铺的物流商信息
+    # 鉴于这一块如果做好的话得取同一平台下所有店铺物流商的集, 逻辑有点不清晰,而且代码量比较多, 而且这么做下来未必就是最好的解决方案.
+    # 最好的就是本地物流信息绑定第三方物流商,如果第三方平台中的某个店铺更新了物流信息,在本地发货的时候没有找到, 或物流商信息变更了,
+    # 导致发货失败,提示更新第三方物流,并手动绑定后在发货.
+    method = source_type.to_s << "_sources"
+    trade_source = current_account.respond_to?(method) && current_account.send(method).first
     @logistics.each do |l|
       tmp << {
         id: l.id,
-        service_logistic_id: params[:trade_type] != "CustomTrade" ? (l.send("#{source_type}_logistic_id",current_account.id) rescue nil) : l.id,
+        service_logistic_id: params[:trade_type] != "CustomTrade" ? (l.send("#{source_type}_logistic_id",trade_source.id) rescue nil) : l.id,
         xml: l.xml.inspect,
         name: l.name
       }

@@ -68,44 +68,43 @@ class Logistic < ActiveRecord::Base
     cache.fetch(name,expires_in: 1.hour,namespace: self.class.name) { yield }
   end
   # 缓存淘宝所有物流商
-  def taobao_logistics(account_id)
+  def taobao_logistics(trade_source_id)
     response = fetch_cache("taobao") do
-      source_id = Account.find(account_id).taobao_source.id
-      TaobaoQuery.get({method: "taobao.logistics.companies.get", fields: 'id,code,name,reg_mail_no'},source_id)
+      TaobaoQuery.get({method: "taobao.logistics.companies.get", fields: 'id,code,name,reg_mail_no'},trade_source_id)
     end
     logistics_company = response["logistics_companies_get_response"]["logistics_companies"]["logistics_company"] rescue []
   end
   # 缓存京东所有物流商
-  def jingdong_logistics(account_id)
+  def jingdong_logistics(trade_source_id)
     response = fetch_cache("jingdong") do
-      api_paramters = Account.find(account_id).jingdong_query_conditions
+      api_paramters = TradeSource.find(trade_source_id).jingdong_query_conditions
       JingdongQuery.get({method: '360buy.delivery.logistics.get'},api_paramters)
     end
     logistics_list = response["delivery_logistics_get_response"]["logistics_companies"]["logistics_list"] rescue []
   end
   # 缓存一号店所有物流商
-  def yihaodian_logistics(account_id)
+  def yihaodian_logistics(trade_source_id)
     response = fetch_cache("yihaodian") do
-      api_paramters = Account.find(account_id).yihaodian_query_conditions
+      api_paramters = TradeSource.find(trade_source_id).yihaodian_query_conditions
       YihaodianQuery.post({method: 'yhd.logistics.deliverys.company.get'},api_paramters)
     end
     logistics_info = response["response"]["logisticsInfoList"]["logisticsInfo"] rescue []
   end
   #获取当前物流对应淘宝物流商的ID
-  def taobao_logistic_id(account_id)
-    taobao_logistics = taobao_logistics(account_id)
+  def taobao_logistic_id(trade_source_id)
+    taobao_logistics = taobao_logistics(trade_source_id)
     m = Hashie::Mash.new taobao_logistics.find {|u| matched?(u["name"])}
     m.id
   end
   #获取当前物流对应京东物流商的ID
-  def jingdong_logistic_id(account_id)
-    jingdong_logistics = jingdong_logistics(account_id)
+  def jingdong_logistic_id(trade_source_id)
+    jingdong_logistics = jingdong_logistics(trade_source_id)
     m = Hashie::Mash.new jingdong_logistics.find {|u| matched?(u["logistics_name"])}
     m.logistics_id
   end
   #获取当前物流对应一号店物流商的ID
-  def yihaodian_logistic_id(account_id)
-    yihaodian_logistics = yihaodian_logistics(account_id)
+  def yihaodian_logistic_id(trade_source_id)
+    yihaodian_logistics = yihaodian_logistics(trade_source_id)
     m = Hashie::Mash.new yihaodian_logistics.find {|u| matched?(u["companyName"])}
     m.id
   end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131008061938) do
+ActiveRecord::Schema.define(:version => 20131119093720) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -82,6 +82,8 @@ ActiveRecord::Schema.define(:version => 20131008061938) do
     t.integer  "sellers_count",  :default => 0
     t.integer  "area_type"
     t.string   "zip"
+    t.float    "longitude"
+    t.float    "latitude"
   end
 
   add_index "areas", ["lft"], :name => "index_areas_on_lft"
@@ -94,7 +96,7 @@ ActiveRecord::Schema.define(:version => 20131008061938) do
   create_table "audits", :force => true do |t|
     t.integer  "auditable_id"
     t.string   "auditable_type"
-    t.integer  "associated_id"
+    t.string   "associated_id"
     t.string   "associated_type"
     t.integer  "user_id"
     t.string   "user_type"
@@ -105,6 +107,7 @@ ActiveRecord::Schema.define(:version => 20131008061938) do
     t.string   "comment"
     t.string   "remote_address"
     t.datetime "created_at"
+    t.text     "audited_object"
   end
 
   add_index "audits", ["associated_id", "associated_type"], :name => "associated_index"
@@ -259,6 +262,7 @@ ActiveRecord::Schema.define(:version => 20131008061938) do
     t.integer  "transport_id"
     t.string   "online_time"
     t.string   "offline_time"
+    t.string   "attribute_s"
     t.text     "desc"
     t.string   "producter"
     t.string   "wrap"
@@ -288,32 +292,35 @@ ActiveRecord::Schema.define(:version => 20131008061938) do
     t.boolean  "is_special_wet"
     t.integer  "ware_big_small_model"
     t.integer  "ware_pack_type"
+    t.integer  "account_id"
     t.datetime "created_at",                                                       :null => false
     t.datetime "updated_at",                                                       :null => false
-    t.string   "attribute_s"
-    t.integer  "account_id"
+    t.integer  "trade_source_id"
+    t.string   "shop_name"
   end
 
   add_index "jingdong_products", ["ware_id"], :name => "index_jingdong_products_on_ware_id", :unique => true
 
   create_table "jingdong_skus", :force => true do |t|
-    t.integer  "sku_id"
+    t.integer  "sku_id",                                         :null => false
     t.integer  "shop_id"
     t.integer  "ware_id"
     t.string   "status"
+    t.string   "attribute_s"
     t.integer  "stock_num"
-    t.decimal  "jd_price",     :precision => 10, :scale => 0
-    t.decimal  "cost_price",   :precision => 10, :scale => 0
-    t.decimal  "market_price", :precision => 10, :scale => 0
+    t.decimal  "jd_price",        :precision => 10, :scale => 0
+    t.decimal  "cost_price",      :precision => 10, :scale => 0
+    t.decimal  "market_price",    :precision => 10, :scale => 0
     t.string   "outer_id"
     t.datetime "created"
     t.datetime "modified"
     t.string   "color_value"
     t.string   "size_value"
-    t.datetime "created_at",                                  :null => false
-    t.datetime "updated_at",                                  :null => false
-    t.string   "attribute_s"
     t.integer  "account_id"
+    t.datetime "created_at",                                     :null => false
+    t.datetime "updated_at",                                     :null => false
+    t.integer  "trade_source_id"
+    t.string   "shop_name"
   end
 
   add_index "jingdong_skus", ["status"], :name => "index_jingdong_skus_on_status"
@@ -471,30 +478,28 @@ ActiveRecord::Schema.define(:version => 20131008061938) do
   create_table "refund_orders", :force => true do |t|
     t.integer  "refund_product_id"
     t.string   "title"
-    t.decimal  "total_price",       :precision => 10, :scale => 0, :default => 0
+    t.string   "num_iid"
     t.decimal  "refund_price",      :precision => 10, :scale => 0, :default => 0
     t.integer  "num",                                              :default => 0, :null => false
+    t.integer  "sku_id"
+    t.string   "outer_id"
+    t.integer  "stock_product_id"
     t.integer  "account_id"
     t.string   "order_type"
+    t.integer  "seller_id"
     t.datetime "created_at",                                                      :null => false
     t.datetime "updated_at",                                                      :null => false
-    t.integer  "seller_id"
-    t.string   "tid"
-    t.integer  "outer_id"
-    t.integer  "sku_id"
-    t.string   "oid"
-    t.string   "num_iid"
-    t.integer  "stock_product_id"
   end
 
   create_table "refund_products", :force => true do |t|
     t.integer  "refund_id",         :limit => 8
-    t.string   "buyer_name",                                                                      :null => false
+    t.string   "buyer_name"
     t.string   "mobile"
     t.string   "phone"
     t.string   "zip"
-    t.string   "status",                                                                          :null => false
+    t.string   "status"
     t.datetime "refund_time"
+    t.string   "tid"
     t.integer  "state_id"
     t.integer  "city_id"
     t.integer  "district_id"
@@ -502,18 +507,13 @@ ActiveRecord::Schema.define(:version => 20131008061938) do
     t.text     "reason"
     t.decimal  "total_price",                    :precision => 10, :scale => 0, :default => 0,    :null => false
     t.decimal  "refund_fee",                     :precision => 10, :scale => 0, :default => 0,    :null => false
-    t.integer  "account_id",                                                                      :null => false
+    t.integer  "account_id"
     t.string   "ec_name"
     t.boolean  "is_location",                                                   :default => true, :null => false
+    t.integer  "seller_id"
+    t.text     "status_operations"
     t.datetime "created_at",                                                                      :null => false
     t.datetime "updated_at",                                                                      :null => false
-    t.text     "status_operations"
-    t.integer  "seller_id"
-    t.string   "maker"
-    t.integer  "total_num"
-    t.string   "num_iid"
-    t.string   "creater"
-    t.string   "tid"
   end
 
   create_table "roles", :force => true do |t|
@@ -641,6 +641,7 @@ ActiveRecord::Schema.define(:version => 20131008061938) do
     t.integer  "upload_user_id"
     t.string   "stock_in_bill_id"
     t.boolean  "used"
+    t.integer  "seller_id"
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
   end
@@ -714,16 +715,18 @@ ActiveRecord::Schema.define(:version => 20131008061938) do
   create_table "taobao_products", :force => true do |t|
     t.integer  "category_id"
     t.integer  "account_id"
-    t.integer  "num_iid",     :limit => 8
-    t.decimal  "price",                    :precision => 10, :scale => 0
+    t.integer  "num_iid",         :limit => 8
+    t.decimal  "price",                        :precision => 10, :scale => 0
     t.string   "outer_id"
     t.string   "product_id"
     t.string   "cat_name"
     t.string   "pic_url"
     t.string   "cid"
     t.string   "name"
-    t.datetime "created_at",                                              :null => false
-    t.datetime "updated_at",                                              :null => false
+    t.datetime "created_at",                                                  :null => false
+    t.datetime "updated_at",                                                  :null => false
+    t.integer  "trade_source_id"
+    t.string   "shop_name"
   end
 
   add_index "taobao_products", ["account_id"], :name => "index_taobao_products_on_account_id"
@@ -738,6 +741,8 @@ ActiveRecord::Schema.define(:version => 20131008061938) do
     t.string  "properties_name"
     t.integer "quantity"
     t.integer "account_id"
+    t.integer "trade_source_id"
+    t.string  "shop_name"
   end
 
   add_index "taobao_skus", ["account_id"], :name => "index_taobao_skus_on_account_id"
@@ -769,8 +774,9 @@ ActiveRecord::Schema.define(:version => 20131008061938) do
     t.integer  "account_id"
     t.string   "name"
     t.string   "authentication_token"
-    t.datetime "created_at",           :null => false
-    t.datetime "updated_at",           :null => false
+    t.datetime "created_at",                              :null => false
+    t.datetime "updated_at",                              :null => false
+    t.boolean  "is_default",           :default => false
   end
 
   create_table "trade_sources", :force => true do |t|
@@ -874,10 +880,12 @@ ActiveRecord::Schema.define(:version => 20131008061938) do
     t.string   "prod_detail_url"
     t.integer  "brand_id",             :limit => 8
     t.string   "merchant_category_id"
-    t.datetime "created_at",                        :null => false
-    t.datetime "updated_at",                        :null => false
     t.integer  "genre"
     t.integer  "account_id"
+    t.datetime "created_at",                        :null => false
+    t.datetime "updated_at",                        :null => false
+    t.integer  "trade_source_id"
+    t.string   "shop_name"
   end
 
   create_table "yihaodian_skus", :force => true do |t|
@@ -889,10 +897,12 @@ ActiveRecord::Schema.define(:version => 20131008061938) do
     t.integer  "can_sale"
     t.string   "outer_id"
     t.integer  "can_show"
-    t.datetime "created_at",                     :null => false
-    t.datetime "updated_at",                     :null => false
     t.integer  "account_id"
     t.integer  "parent_product_id", :limit => 8
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
+    t.integer  "trade_source_id"
+    t.string   "shop_name"
   end
 
 end

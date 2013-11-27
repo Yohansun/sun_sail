@@ -13,7 +13,7 @@
 #
 
 class TaobaoSku < ActiveRecord::Base
-  attr_accessible :num_iid, :properties, :properties_name, :quantity, :taobao_product_id, :account_id, :sku_id
+  attr_protected []
   has_many :sku_bindings,:include => :sku, dependent: :destroy,:conditions => {:resource_type => "TaobaoSku"},:foreign_key => :resource_id
   has_many :skus,:include => :product, through: :sku_bindings
   belongs_to :taobao_product

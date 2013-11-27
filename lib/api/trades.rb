@@ -16,7 +16,7 @@ module Api
             result.receiver_city trade.receiver_city
             result.receiver_state trade.receiver_state
             result.receiver_zip trade.receiver_zip
-            result.trade_source_name trade.trade_source_name
+            result.trade_source_name trade.shop_name
             result.buyer_message trade.buyer_message
             result.buyer_nick trade.buyer_nick
             result.seller_memo trade.seller_memo

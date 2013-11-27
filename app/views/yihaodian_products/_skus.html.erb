@@ -6,6 +6,7 @@
       <th>商品ID</th>
       <th>上下架状态</th>
       <th>是否可见</th>
+      <th>所属店铺</th>
     </tr>
   </thead>
   <tbody>
@@ -15,6 +16,7 @@
       <td><%= sku.product_id %></td>
       <td><%= sku.can_sale_name %></td>
       <td><%= sku.can_show? ? "是" : "否" %></td>
+      <td><%= sku.shop_name %></td>
     </tr>
     <% end %>
   </tbody>
@@ -28,6 +30,8 @@
       <th>商品ID</th>
       <th>上下架状态</th>
       <th>是否可见</th>
+      <th>所属店铺</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -37,6 +41,7 @@
       <td><%= sku.product_id %></td>
       <td><%= sku.can_sale_name %></td>
       <td><%= sku.can_show? ? "是" : "否" %></td>
+      <td><%= sku.shop_name %></td>
       <td>
         <% sku.changes.each do |change| %>
         <strong><%= column_humanize change.first %>:</strong><span class="label label-important">-<%= change.last[0] %></span>

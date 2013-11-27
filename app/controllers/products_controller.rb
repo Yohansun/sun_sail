@@ -112,8 +112,7 @@ class ProductsController < ApplicationController
     begin
       TaobaoProduct.transaction do
         TaobaoSku.transaction do
-          @changes_products.map(&:save!)
-          @news_products.map(&:insert!)
+          @products.map(&:perform)
         end
       end
       redirect_to :action => :taobao_products
@@ -310,14 +309,23 @@ class ProductsController < ApplicationController
 
   private
 
-  require 'sync_taobao_products'
   def get_products
     begin
-      products          = CompareProduct.new(current_account)
-      @news_products    = products.not_exists
-      @changes_products = products.changes
+      @news_products = []
+      @changes_products = []
+      @products = []
+      TradeSource.where(trade_type: "Taobao",account_id: current_account.id).each do |trade_source|
+        begin
+          @products << product = TaobaoProductSync.new(trade_source.id)
+          product.parsing
+          @news_products    += product.latest
+          @changes_products += product.changed
+        rescue Exception
+          next
+        end
+      end
     rescue Exception => e
-      render :text => e.message
+      render(:text => e.message) and return
     end
   end
 

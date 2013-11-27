@@ -9,16 +9,16 @@ class RefundProductTaobaoSync < ECommerce::Synchronization::Base
   set_variable :api,'taobao.refunds.receive.get'
   alias_columns buyer_nick: 'buyer_name',created: "refund_time"
 
-  def initialize(nick)
-    @account = Account.find_by_key nick
-    @default_attributes = {account_id: @account.id,ec_name: "TaobaoTrade",is_location: false}
+  def initialize(trade_source_id)
+    @trade_source = TradeSource.find(trade_source_id)
+    @default_attributes = {account_id: @trade_source.account_id,ec_name: "TaobaoTrade",is_location: false}
     @refund_ids = RefundProduct.where(@default_attributes).map(&:refund_id)
     super
   end
 
   def response
     params = {method: api,fields: 'refund_id, tid, title,buyer_nick, seller_nick, total_fee, status, created, refund_fee', status: "WAIT_BUYER_RETURN_GOODS",page_no: page_no, page_size: get_size}
-    @response = TaobaoQuery.get(params,@account.taobao_source.id)
+    @response = TaobaoQuery.get(params,@trade_source.id)
     handle_exception(params.merge(response: @response)) { parse_data }
   end
 
@@ -66,7 +66,7 @@ class RefundProductTaobaoSync < ECommerce::Synchronization::Base
       refund_order_attributes = {}
       refund_price = refund.delete("refund_fee")
       order && order.skus.each_with_index do |sku,index|
-        options = {account_id: @account.id, sku_id: sku.id,num_iid: sku.num_iid}.reject {|k,v| v.blank?}
+        options = {account_id: @trade_source.account_id, sku_id: sku.id,num_iid: sku.num_iid}.reject {|k,v| v.blank?}
         stock_product = StockProduct.where(options).first
         refund_order_attributes[index.to_s] = {
           refund_price: index == 0 ? refund_price : 0,
