@@ -333,11 +333,11 @@ module ApplicationHelper
         items <<  active_li_item("个人设置")
       end
     end
-    if params[:warehouse_id] == "5725"
+    if params[:warehouse_id] == "5722"
       items.insert(1, href_li_item("gnc雍恒天猫专卖店", "warehouses")) 
-    elsif params[:warehouse_id] == "5726"
+    elsif params[:warehouse_id] == "5731"
       items.insert(1, href_li_item("gnc雍恒京东专卖店", "warehouses"))
-    elsif params[:warehouse_id] == "5727"
+    elsif params[:warehouse_id] == "5732"
       items.insert(1, href_li_item("gnc雍恒一号店专卖店", "warehouses"))
     end
     items.join("")
