@@ -49,6 +49,7 @@ namespace :deploy do
     run "touch #{shared_path}/setup.log"
     run "ln -nfs #{shared_path}/setup.log #{release_path}/lib/tasks/setup.log"
     run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
+    run "ln -nfs #{shared_path}/config/hosts.yml #{release_path}/config/hosts.yml"
     run "ln -nfs #{shared_path}/config/sidekiq.yml #{release_path}/config/sidekiq.yml"
     run "ln -nfs #{shared_path}/config/mailers.yml #{release_path}/config/mailers.yml"
     run "ln -nfs #{shared_path}/config/magic_setting.yml #{release_path}/config/magic_setting.yml"

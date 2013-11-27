@@ -1,5 +1,5 @@
 require File.expand_path('../boot', __FILE__)
-
+require 'socket'
 require 'rails/all'
 
 if defined?(Bundler)
@@ -72,7 +72,23 @@ module MagicOrders
       g.helper        false
       g.fixture_replacement :factory_girl
     end
+  end
 
+  def self.hosts
+    YAML.load(File.read("config/hosts.yml")).tap do |hosts|
+      hosts.each_pair {|name,env| hosts[name] = ActiveSupport::StringInquirer.new(env.to_s)}
+    end
+  end
+
+  # MagicOrders.env.dev?
+  # MagicOrders.env.pro?
+  # MagicOrders.hostname.(hostname)?
+  def self.env
+    hosts[hostname] || hostname
+  end
+
+  def self.hostname
+    ActiveSupport::StringInquirer.new Socket.gethostname
   end
 end
 StateMachine::Machine.ignore_method_conflicts = true
