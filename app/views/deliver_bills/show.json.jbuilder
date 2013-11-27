@@ -23,7 +23,6 @@ json.orders @bill.bill_products do |json, order|
   json.title order.title
   json.num order.number
   json.color_info order.color_info
-  json.packaged order.packaged?
   json.promotion_desc ""
   json.price ""
   json.payment ""
