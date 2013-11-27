@@ -16,7 +16,12 @@
       <tr>
         <th width="15%">购买日期</th>
         <th width="20%">宝贝</th>
+        <% if MagicOrders.enable_module_colors == 1 : %>
+        <th width="20%">调色信息</th>
+        <% end %>
+        <% if MagicOrders.enable_module_sku_properties == 1 : %>
         <th width="10%">商品属性</th>
+        <% end %>
         <th width="15%">数量</th>
         <th width="10%">原价</th>
         <th width="20%">优惠</th>
@@ -40,7 +45,12 @@
       <% end %>
       <tr>
         <td>总计</td>
-        <td></td>
+        <% if MagicOrders.enable_module_colors == 1 : %>
+          <td></td>
+        <% end %>
+        <% if MagicOrders.enable_module_sku_properties == 1 : %>
+          <td></td>
+        <% end %>
         <td></td>
         <td><%= @bill.get('product_num') %></td>
         <td></td>
@@ -48,26 +58,34 @@
         <td><%= @bill.get('total_payment') %></td>
       </tr>
       <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <% for num in [1..4] : %>
+          <td></td>
+        <% end %>
+        <% if MagicOrders.enable_module_colors == 1 : %>
+          <td></td>
+        <% end %>
+        <% if MagicOrders.enable_module_sku_properties == 1 : %>
+          <td></td>
+        <% end %>
         <td>配送运费</td>
         <td><%= @bill.get('post_fee') %></td>
       </tr>
       <tr>
+        <% for num in [1..4] : %>
         <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <% end %>
+        <% if MagicOrders.enable_module_colors == 1 : %>
+          <td></td>
+        <% end %>
+        <% if MagicOrders.enable_module_sku_properties == 1 : %>
+          <td></td>
+        <% end %>
         <td>合计</td>
         <td><%= @bill.get('total') %></td>
       </tr>
       <tr>
         <td>客户备注</td>
-        <td colspan="6"></td>
+        <td colspan="<%= 5 + MagicOrders.enable_module_colors + MagicOrders.enable_module_sku_properties %>"></td>
       </tr>
     </tbody>
   </table>
@@ -88,7 +106,7 @@
   <a class="btn" data-dismiss="modal" style='margin-top:-22px;'>关闭</a>
   <% if MagicOrders.enable_module_print_deliver_bill  == 1 : %>
     <div id="showbox"></div>
-  <% else : %>  
+  <% else : %>
     <a href="javascript:void(0)" class="btn btn-primary" onclick='startPrint()' style='margin-top:-22px;'>打印</a>
-  <% end %>  
+  <% end %>
 </div><!-- modal-footer -->

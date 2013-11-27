@@ -93,13 +93,13 @@ class MagicOrders.Views.DeliverBillsIndex extends Backbone.View
     $('.trade_check').attr('checked', 'checked')
     $('#op-toolbar .dropdown-menu').parents('div.btn-group').css('display', 'none')
     $('#op-toolbar .batch_ops').show()
-  
+
   optAll: (e) ->
     if $('.header #checkbox_all')[0].checked
       @CheckAll()
     else
       @closeCheckAll()
-  
+
   optCopyAll: (e) ->
     if $('.header-copy #checkbox_all')[0].checked
       $('.header #checkbox_all')[0].checked = true
@@ -144,13 +144,13 @@ class MagicOrders.Views.DeliverBillsIndex extends Backbone.View
         html += '<td>' + trade.name + '</td>'
         html += '<td>' + trade.address + '</td></tr>'
 
-      bind_swf(tmp, 'ffd', '')
+      bind_swf(tmp, 'ffd')
       $('#logistic_select').hide()
       $('.deliver_count').html(data.length)
       $('#print_delivers_tbody').html(html)
       $('#print_delivers').on 'hidden', ()->
-        # if MagicOrders.hasPrint == true
-        #   $.get '/trades/batch-print-deliver', {ids: MagicOrders.idCarrier}
+        if MagicOrders.hasPrint == true
+          $.get '/deliver_bills/batch-print-deliver', {ids: MagicOrders.idCarrier}
         MagicOrders.hasPrint = false
 
       $('#print_delivers').modal('show')

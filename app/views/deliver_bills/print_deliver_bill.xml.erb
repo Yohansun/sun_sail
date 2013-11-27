@@ -6,7 +6,7 @@
     id='<%= bill.id %>'
     batch_number = '<%= bill.print_batches.last.try(:batch_num) %>'
     tid="<%= trade.tid %>"
-    company="<%= trade.seller_nick %>"
+    company="<%= current_account.name %>"
     phone="<%= trade.receiver_mobile %>"
     address="<%= "#{trade.receiver_state} #{trade.receiver_city} #{trade.receiver_district} #{trade.receiver_address}" %>"
     memo="<%= trade.cs_memo %>"
@@ -19,7 +19,7 @@
     kehu_receiver="<%= trade.receiver_name %>"
     city="<%= trade.receiver_city %>"
     organization="<%= current_account.key %>"
-    kehu_phone="<%= trade.receiver_phone %>"
+    kehu_phone="<%= trade.receiver_mobile || trade.receiver_phone %>"
     jijian_name=""
     point=""
     jijian_dizhi=""
@@ -36,6 +36,7 @@
     addressee_zhen="<%= trade.receiver_district %>"
     addressee_xiangxi="<%= trade.receiver_address %>"
     jijian_date="<%= "#{Time.now.year} #{Time.now.month} #{Time.now.day}" %>"
+    product_total_num="<%= bill.bill_products.inject(0){|sum, product| sum+= product.number}%>"
     shoujian_date=""
     address_xian="这是县"
     addressee_xian="这是县"

@@ -11,7 +11,7 @@ class HomeController < ApplicationController
     @gift_products = current_account.products.where(good_type: 3)
     if params[:ids].present?
       name = []
-      Trade.find(params[:ids]).each_with_index do |trade, index|
+      Trade.where(:id.in => params[:ids]).each_with_index do |trade, index|
         trade.orders.each do |td|
           unless index == 0
             num = []
