@@ -17,8 +17,8 @@ class MagicOrders.Views.TradesRefundRef extends Backbone.View
     # 添加 sku options
     $(@el).find(".skus_in_order").empty()
     for order in @model.get('orders')
-      for content in order.contents
-        option = new Option(content.sku_title, content.sku_id+";"+(content.number*order.num))
+      for sku_info in order.skus_info
+        option = new Option(sku_info.sku_title, sku_info.sku_id+";"+sku_info.number)
         $(@el).find(".skus_in_order").append(option)
 
     this
@@ -79,8 +79,8 @@ class MagicOrders.Views.TradesRefundRef extends Backbone.View
             ref_order_array.push sku_id+","+title+","+num
 
             for order in @model.get('orders')
-              for content in order.contents
-                if parseInt(content.sku_id) == parseInt(sku_id) && parseInt((content.number*order.num)) == parseInt(num)
+              for sku_info in order.skus_info
+                if parseInt(sku_info.sku_id) == parseInt(sku_id) && parseInt(sku_info.number) == parseInt(num)
                   current_order_array.push 1
 
           if order_length == current_order_array.length

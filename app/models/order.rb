@@ -37,6 +37,21 @@ class Order
     products.map(&:category)
   end
 
+  def skus_info
+    skus = sku_bindings.collect{|b| b.sku } + local_skus
+    tmp = skus.collect do |sku|
+      next unless sku && sku.product
+      {
+        name:               sku.product.name,
+        outer_id:           sku.product.outer_id,
+        number:             self.num * (sku_bindings.find_by_sku_id(sku.id).try(:number) || 1),
+        stock_product_ids:  StockProduct.where(product_id: sku.product.id, sku_id: sku.id).map(&:id),
+        sku_id:             sku.id,
+        sku_title:          sku.title
+      }
+    end
+  end
+
   def package_info
     info = []
     if sku_bindings.present?

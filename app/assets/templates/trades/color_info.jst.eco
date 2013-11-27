@@ -24,11 +24,11 @@
               <% colors = order.color_num[index] %>
               <% i = 0 %>
               <% if colors : %>
-              <% if order.contents.length > 1 : %>
-                <% for item in order.contents : %>
-                  <% for [0...item.number] : %>
+              <% if order.skus_info.length > 1 : %>
+                <% for sku_info in order.skus_info : %>
+                  <% for [0...sku_info.number] : %>
                     <div class="controls">
-                      套装项目：<%= item.name %>
+                      套装项目：<%= sku_info.name %>
                       <br>
                       <% if colors[i] == '' : %>
                         <b>不调色</b>

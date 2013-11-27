@@ -16,8 +16,8 @@ class MagicOrders.Views.TradesAddRef extends Backbone.View
     # 添加 sku options
     $(@el).find(".skus_in_order").empty()
     for order in @model.get('orders')
-      for content in order.contents
-        option = new Option(content.sku_title, content.sku_id+";"+(content.number*order.num))
+      for sku_info in order.skus_info
+        option = new Option(sku_info.sku_title, sku_info.sku_id+";"+sku_info.number)
         $(@el).find(".skus_in_order").append(option)
 
     this
