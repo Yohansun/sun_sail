@@ -179,12 +179,12 @@ class TaobaoTradeReporter
                 logistic_name,             #读取物流商，没有的话为空
                 logistic_waybill]          #读取物流单号，没有的话为空
 
-        order.package_info.each_with_index do |product, index|
-          body << "#{product.fetch(:outer_id)}"
-          body << "#{product.fetch(:number)}"
+        order.skus_info.each_with_index do |info, index|
+          body << "#{info.fetch(:outer_id)}"
+          body << "#{info.fetch(:number)}"
         end
 
-        empty_cols_count = (max_skus_count -  order.package_info.count) * 2
+        empty_cols_count = (max_skus_count -  order.skus_info.count) * 2
 
         empty_cols_count.times {body << ""}
 

@@ -122,13 +122,13 @@ class TaobaoOrder < Order
   # end
 
   # def package_color_map(color_num)
-  #   tmp_hash = package_info
+  #   tmp_hash = skus_info
   #   color_num.each do |nums|
   #     i = 0
   #     next if nums.blank?
-  #     package_info.each_with_index do |package, index|
+  #     skus_info.each_with_index do |info, index|
   #       colors = tmp_hash[index][:colors] || {}
-  #       package[:number].times do
+  #       info[:number].times do
   #         color = nums[i]
   #         i += 1
   #         next if color.blank?

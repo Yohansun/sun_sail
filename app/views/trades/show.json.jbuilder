@@ -103,7 +103,6 @@ json.orders OrderDecorator.decorate(@trade.orders) do |json, order|
   json.skus_info order.skus_info
   json.bill_info order.bill_info
   json.packaged false
-  json.package_info order.package_info
 end
 
 json.add_ref @trade.add_ref
