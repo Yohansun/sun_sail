@@ -47,10 +47,6 @@ class TaobaoOrder < Order
     taobao_trades || custom_trades || trades
   end
 
-  def account_id
-    taobao_trades.account_id
-  end
-
   def item_outer_id
     outer_iid
   end
