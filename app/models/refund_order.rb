@@ -30,7 +30,7 @@ class RefundOrder < ActiveRecord::Base
 
   validate do
     if bill_product.nil?
-      if product = bill_products.where(num_iid: num_iid).first
+      if product = bill_products && bill_products.where(num_iid: num_iid).first
         self.sku_id = product.sku_id if self.sku_id.blank?
         errors.add(:sku_id,"出库单订单号为:#{tid}没有找到sku_id为#{sku_id}的记录") if !bill_products.where(sku_id: sku_id).exists?
       else

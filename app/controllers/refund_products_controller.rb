@@ -162,7 +162,7 @@ class RefundProductsController < ApplicationController
   def get_refund_products
     @taobao_refunds ||= []
     current_account.taobao_sources.each do |trade_source|
-      taobao_refunds = RefundProductTaobaoSync.new(trade_source.id)
+      taobao_refunds = RefundProductTaobaoSync.new(trade_source.id,seller_id: params[:warehouse_id])
       taobao_refunds.parsing
       @taobao_refunds += taobao_refunds.latest
     end

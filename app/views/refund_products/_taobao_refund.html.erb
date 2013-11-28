@@ -12,6 +12,7 @@
       <th>退货地址</th>
       <th>退货描述</th>
       <th>交易总额</th>
+      <th>退还金额</th>
       <th>退货商品</th>
       <th>退货数量</th>
     </tr>
@@ -25,6 +26,7 @@
       <td><%= product.refund_time %></td>
       <td><%= product.address %></td>
       <td><%= product.reason %></td>
+      <td><%= product.total_fee %></td>
       <td><%= product.refund_fee %></td>
       <% refund_order = product.refund_orders.first %>
       <td><%= refund_order.title %></td>
