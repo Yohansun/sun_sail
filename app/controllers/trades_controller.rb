@@ -292,72 +292,23 @@ class TradesController < ApplicationController
 
     #手动发送邮件短信
     unless params[:notify_content].blank?
-      notify = @trade.manual_sms_or_emails.create(notify_sender: params[:notify_sender],
-                                          notify_receiver: params[:notify_receiver],
-                                          notify_theme: params[:notify_theme],
-                                          notify_content: params[:notify_content],
-                                          notify_type: params[:notify_type] )
+      notify = @trade.manual_sms_or_emails.create(
+        notify_sender:    params[:notify_sender],
+        notify_receiver:  params[:notify_receiver],
+        notify_theme:     params[:notify_theme],
+        notify_content:   params[:notify_content],
+        notify_type:      params[:notify_type]
+      )
     end
 
-    # 多退少补
-    if params[:add_ref_hash] && params[:add_ref_hash][:ref_batch]
-      ref_batch = @trade.ref_batches.create(batch_num: @trade.ref_batches.count + 1,
-                                            ref_type: "add_ref",
-                                            status: params[:add_ref_hash][:ref_batch][:status],
-                                            ref_payment: params[:add_ref_hash][:ref_batch][:ref_payment])
-      ref_batch.change_ref_orders(params[:add_ref_hash][:ref_order_array])
-    end
-
-    if params[:add_ref_status]
-      @trade.ref_batches.where(ref_type: "add_ref").first.update_attributes(status: params[:add_ref_status])
-    end
-
-    if params[:return_ref_hash] && params[:return_ref_hash][:ref_batch]
-      ref_batch = @trade.ref_batches.where(ref_type: "return_ref").last
-      if ref_batch.present?
-        ref_batch.update_attributes(status: params[:return_ref_hash][:ref_batch][:status],
-                                    ref_payment: params[:return_ref_hash][:ref_batch][:ref_payment])
-      else
-        ref_batch = @trade.ref_batches.create(batch_num: @trade.ref_batches.count + 1,
-                                              ref_type: "return_ref",
-                                              status: params[:return_ref_hash][:ref_batch][:status],
-                                              ref_payment: params[:return_ref_hash][:ref_batch][:ref_payment])
+    # 多退少补，申请线下退款
+    ["add_ref", "return_ref", "refund_ref"].each do |ref_type|
+      syms = ['hash', 'status', 'memo'].inject({}){|hash, param| hash.merge(param => (ref_type + "_" + param).to_sym)}
+      if params[syms['hash']] && params[syms['hash']][:ref_batch]
+        @trade.update_batch(current_user, ref_type, params[syms['hash']])
       end
-      ref_batch.change_ref_orders(params[:return_ref_hash][:ref_order_array])
-      ref_batch.add_ref_log(current_user, params[:return_ref_hash][:ref_memo])
-    end
-
-    if params[:return_ref_status]
-      ref_batch = @trade.ref_batches.where(ref_type: "return_ref").first
-      ref_batch.update_attributes(status: params[:return_ref_status])
-      ref_batch.add_ref_log(current_user, params[:return_ref_memo])
-      if params[:return_ref_status] == 'cancel_return_ref'
-        ref_batch.ref_orders.delete_all
-      end
-    end
-
-    # 申请线下退款
-    if params[:refund_ref_hash] && params[:refund_ref_hash][:ref_batch]
-      ref_batch = @trade.ref_batches.where(ref_type: "refund_ref").last
-      if ref_batch.present?
-        ref_batch.update_attributes(status: params[:refund_ref_hash][:ref_batch][:status],
-                                    ref_payment: params[:refund_ref_hash][:ref_batch][:ref_payment])
-      else
-        ref_batch = @trade.ref_batches.create(batch_num: @trade.ref_batches.count + 1,
-                                              ref_type: "refund_ref",
-                                              status: params[:refund_ref_hash][:ref_batch][:status],
-                                              ref_payment: params[:refund_ref_hash][:ref_batch][:ref_payment])
-      end
-      ref_batch.change_ref_orders(params[:refund_ref_hash][:ref_order_array])
-      ref_batch.add_ref_log(current_user, params[:refund_ref_hash][:ref_memo])
-    end
-
-    if params[:refund_ref_status]
-      ref_batch = @trade.ref_batches.where(ref_type: "refund_ref").first
-      ref_batch.update_attributes(status: params[:refund_ref_status])
-      ref_batch.add_ref_log(current_user, params[:refund_ref_memo])
-      if params[:refund_ref_status] == 'cancel_refund_ref'
-        ref_batch.ref_orders.delete_all
+      if params[syms['status']]
+        @trade.send(ref_type.to_sym).change_status(current_user, params[syms['status']], params[syms['memo']])
       end
     end
 

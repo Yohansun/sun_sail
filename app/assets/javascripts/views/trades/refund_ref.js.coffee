@@ -17,8 +17,8 @@ class MagicOrders.Views.TradesRefundRef extends Backbone.View
     # 添加 sku options
     $(@el).find(".skus_in_order").empty()
     for order in @model.get('orders')
-      for content in order.contents
-        option = new Option(content.sku_title, content.sku_id+";"+(content.number*order.num))
+      for sku_info in order.skus_info
+        option = new Option(sku_info.sku_title, sku_info.sku_id+";"+sku_info.number)
         $(@el).find(".skus_in_order").append(option)
 
     this
@@ -36,7 +36,7 @@ class MagicOrders.Views.TradesRefundRef extends Backbone.View
       if parseInt(num) > parseInt(total_num)
         alert('退款数量大于购买数量')
         return
-      sku_ids = $(".ref_table tr").map(->
+      sku_ids = $(".refund_ref_table tr").map(->
         $(this).attr "id"
       ).get()
       if $.inArray(sku_id, sku_ids) != -1
@@ -46,7 +46,7 @@ class MagicOrders.Views.TradesRefundRef extends Backbone.View
       tr += "<td>"+total_num+"</td>"
       tr += "<td>"+num+"</td>"
       tr += "<td><a class='btn delete_ref_sku'>删除</a></td></tr>"
-      $('.ref_table').append(tr)
+      $('.refund_ref_table').append(tr)
 
   deleteRefSku: (e)->
     $(e.currentTarget).parents('tr').remove()
@@ -60,7 +60,7 @@ class MagicOrders.Views.TradesRefundRef extends Backbone.View
     else if parseFloat(payment) >= parseFloat(@model.get('total_fee'))
       alert("退款金额大于等于购买金额。")
     else
-      if $('.ref_table tr').length == 0
+      if $('.refund_ref_table tr').length == 0
         alert("未添加退款商品")
       else
         blocktheui()
@@ -69,18 +69,18 @@ class MagicOrders.Views.TradesRefundRef extends Backbone.View
         ref_order_array = []
         current_order_array = []
         ref_batch = {}
-        length = $('.ref_table tr').length
+        length = $('.refund_ref_table tr').length
         order_length = $('.skus_in_order').find('option').length
         if length != 0
           for num in [0..(length-1)]
-            sku_id = $(".ref_table tr:eq("+num+")").attr('id')
-            title = $(".ref_table tr:eq("+num+")").find('td:eq(0)').text()
-            num = $(".ref_table tr:eq("+num+")").find('td:eq(2)').text()
+            sku_id = $(".refund_ref_table tr:eq("+num+")").attr('id')
+            title = $(".refund_ref_table tr:eq("+num+")").find('td:eq(0)').text()
+            num = $(".refund_ref_table tr:eq("+num+")").find('td:eq(2)').text()
             ref_order_array.push sku_id+","+title+","+num
 
             for order in @model.get('orders')
-              for content in order.contents
-                if parseInt(content.sku_id) == parseInt(sku_id) && parseInt((content.number*order.num)) == parseInt(num)
+              for sku_info in order.skus_info
+                if parseInt(sku_info.sku_id) == parseInt(sku_id) && parseInt(sku_info.number) == parseInt(num)
                   current_order_array.push 1
 
           if order_length == current_order_array.length

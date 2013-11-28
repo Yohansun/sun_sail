@@ -23,6 +23,5 @@ json.array!(@bills) do |json, bill|
     json.num order.number
     json.cs_memo order.memo
     json.color_info order.color_info
-    json.packaged order.packaged?
   end
 end

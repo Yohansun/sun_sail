@@ -54,6 +54,10 @@ class Sku < ActiveRecord::Base
     sku_properties.map(&:cached_property_value)
   end
 
+  def stock_product_ids
+    StockProduct.where(product_id: self.product.id, sku_id: self.id).map(&:id)
+  end
+
   # migrate skus.properties_name to :sku_properties association
   def migrate_taobao_sku_props
     # if not migrated (props != blank && properties = blank)

@@ -23,7 +23,7 @@
           <th width="10%">操作</th>
         </tr>
       </thead>
-      <tbody class="ref_table">
+      <tbody class="add_ref_table">
       </tbody>
     </table>
   </fieldset>
@@ -50,7 +50,7 @@
           <th width="20%">补货数量</th>
         </tr>
       </thead>
-      <tbody class="ref_table">
+      <tbody class="add_ref_table">
         <% for order in @trade.get('add_ref')['ref_orders'] : %>
         <tr>
           <td><%= order['title'] %></td>

@@ -45,21 +45,13 @@ class TaobaoTradeSplitter
 
   def self.match_item_sellers(area, order)
     sellers = nil
-    op = Product.find_by_outer_id order.outer_iid
-    return [] unless op
     return [] if area.blank?
 
     color_num = order.color_num
     color_num.delete('')
-    op_package = op.package_info
-    op_package << {
-      outer_id: order.outer_iid,
-      number: order.num,
-      title: order.title
-    } if op_package.blank?
 
-    op_package.each do |pp|
-      sql = "products.outer_id = '#{pp[:outer_id]}' AND stock_products.activity > #{pp[:number]}"
+    order.skus_info.each do |info|
+      sql = "products.outer_id = '#{info[:outer_id]}' AND stock_products.activity > #{info[:number]}"
       products = StockProduct.joins(:product).where(sql)
 
       product_seller_ids = products.map &:seller_id

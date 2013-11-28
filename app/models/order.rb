@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class Order
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -24,6 +26,18 @@ class Order
 
   validates_uniqueness_of :order_gift_tid, allow_blank: true
 
+  def trade
+    #OVERWRITTEN BY SUBCLASS
+  end
+
+  def skus
+    #OVERWRITTEN BY SUBCLASS
+  end
+
+  def sku_bindings
+    #OVERWRITTEN BY SUBCLASS
+  end
+
   def local_skus
     sku = Sku.find_by_id(local_sku_id)
     sku == nil ? [] : [sku]
@@ -37,38 +51,32 @@ class Order
     products.map(&:category)
   end
 
-  def package_info
-    info = []
-    if sku_bindings.present?
-      sku_bindings.each do |binding|
-        sku = binding.sku
-        next unless sku
-        product = sku.product
-        next unless product
-        stock_product_ids = StockProduct.where(product_id: product.id, sku_id: sku.id).map(&:id)
-        info << {
-          sku_id: binding.sku_id,
-          outer_id: product.outer_id,
-          stock_product_ids: stock_product_ids,
-          number: binding.number,
-          title: sku.title
-        }
-      end
-    elsif local_skus.present?
-      local_skus.each do |sku|
-        product = sku.product
-        next unless product
-        stock_product_ids = StockProduct.where(product_id: product.id, sku_id: sku.id).map(&:id)
-        info << {
-          sku_id: sku.id,
-          outer_id: product.outer_id,
-          stock_product_ids: stock_product_ids,
-          number: self.num,
-          title: sku.title
-        }
+  def skus_info
+    tmp = skus.collect do |sku|
+      next unless sku && sku.product
+      {
+        name:               sku.product.name,
+        outer_id:           sku.product.outer_id,
+        product_id:         sku.product.id,
+        product_price:      sku.product.price,
+        number:             self.num * (sku_bindings.find_by_sku_id(sku.id).try(:number) || 1),
+        stock_product_ids:  sku.stock_product_ids,
+        sku_id:             sku.id,
+        sku_title:          sku.title
+      }
+    end
+  end
+
+  def skus_info_with_offline_refund
+    adapted_skus_info = self.skus_info
+    adapted_skus_info.each do |info|
+      if trade.refund_ref_status == '确认线下退款'
+        ref_order = trade.refund_ref.ref_orders.where(sku_id: info[:sku_id]).first
+        info[:number] -= ref_order.num if ref_order
+        adapted_skus_info.delete(info) if info[:number] == 0
       end
     end
-    info
+    adapted_skus_info
   end
 
   def package_products
@@ -86,38 +94,5 @@ class Order
       end
     end
     info = info.flatten
-  end
-
-  def child_outer_id
-    info = []
-    if sku_bindings.present?
-      sku_bindings.each do |binding|
-        product = binding.sku.try(:product)
-        number = binding.number
-        info << [product, number]
-      end
-    elsif local_skus.present?
-      local_skus.each do |sku|
-        product = sku.product
-        info << [product, self.num]
-      end
-    end
-    info
-  end
-
-  def avalibale_sku_names
-    sku_names = []
-    if taobao_skus.present?
-      taobao_skus.map(&:name).each do |name|
-        sku_names << name.split(':').last
-      end
-    elsif jingodng_skus.present?
-      #PENDING
-    elsif local_skus.present?
-      local_skus.map(&:name).each do |name|
-        sku_names << name.split(':').last
-      end
-    end
-    sku_names.join(',')
   end
 end

@@ -185,11 +185,11 @@
 #         return [] unless op
 #         color_num = order.color_num
 #         color_num.delete('')
-#         op_package = op.package_info
+#         op_package = op.skus_info
 #         op_package << {
 #           outer_id: order.outer_iid,
 #           number: order.num,
-#           title: order.title
+#           title: order.sku_title
 #         } if op_package.blank?
 
 #         op_package.each do |pp|

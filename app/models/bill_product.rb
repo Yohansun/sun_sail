@@ -26,10 +26,6 @@ class BillProduct
     Product.find_by_outer_id(outer_id) || Product.find_by_num_iid(num_iid)
   end
 
-  def packaged?
-    false
-  end
-
   def color_info
     readable_color(colors)
   end

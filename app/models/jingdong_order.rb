@@ -15,6 +15,10 @@ class JingdongOrder < Order
 
   embedded_in :jingdong_trades
 
+  def trade
+    jingdong_trades
+  end
+
   def account_id
     jingdong_trades.account_id
   end
