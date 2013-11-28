@@ -24,7 +24,7 @@ class RefundProductTaobaoSync < ECommerce::Synchronization::Base
 
   def parse_data
     @response["refunds_receive_get_response"]["refunds"]["refund"].tap do |refunds|
-      refunds.each_witn_index do |refund,index|
+      refunds.each_with_index do |refund,index|
         refunds.delete(refund) && next if @refund_ids.include?(refund["refund_id"].to_i)
         #去掉与数据库重名的字段
         reject_attributes(refund)
