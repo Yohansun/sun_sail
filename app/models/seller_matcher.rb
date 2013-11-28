@@ -21,7 +21,7 @@ class SellerMatcher
       seller_ids << avaliable_stock_products.map(&:seller_id)
     end
     seller_ids = seller_ids.compact.uniq
-    sellers = area.sellers.where(id: seller_ids, active: true).reorder("performance_score DESC")
+    sellers = area.sellers.where(id: seller_ids, active: true, trade_type: order._type.gsub("Trade", '')).reorder("performance_score DESC")
   end
 
   def self.match_trade_seller(trade_id, area)

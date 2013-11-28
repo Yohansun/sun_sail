@@ -15,7 +15,7 @@ module StockProductsLockable
         if has_product
           has_not_enough_activity = stock_product.activity < info.fetch(:number)
           if has_not_enough_activity
-            error_messages << "#{title}: 商品不存在"
+            error_messages << "#{title}: 库存不足"
           end
           need_colors = []
           if color_num.present?
@@ -32,7 +32,7 @@ module StockProductsLockable
             end
           end
         else
-          error_messages << "#{title}: 库存不足"
+          error_messages << "#{title}: 商品不存在"
         end
       end
     end
