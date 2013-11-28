@@ -44,7 +44,7 @@ class TaobaoOrder < Order
   embedded_in :trades
 
   def trade
-    taobao_trades
+    taobao_trades || custom_trades || trades
   end
 
   def account_id
