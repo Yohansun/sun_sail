@@ -86,6 +86,15 @@ module ApplicationHelper
     matched ? name : ""
   end
 
+  def display_icon?(control_name,name,action_names=[])
+    matched = nil
+    matched = params[:controller] =~ /#{control_name.is_a?(Array) ? control_name.join('|') : control_name}/
+    if action_names.present?
+      matched = matched && params[:action] =~ /#{action_names.is_a?(Array) ? action_names.join('|') : action_names}/
+    end
+    matched ? name : "icon-plus"
+  end
+
   # Support seletor.js.coffee :target_url
   # Same as link_to syntax
   def link_to_authorize(*args,&block)
@@ -334,7 +343,7 @@ module ApplicationHelper
       end
     end
     if params[:warehouse_id] == "5722"
-      items.insert(1, href_li_item("gnc雍恒天猫专卖店", "warehouses")) 
+      items.insert(1, href_li_item("gnc雍恒天猫专卖店", "warehouses"))
     elsif params[:warehouse_id] == "5731"
       items.insert(1, href_li_item("gnc雍恒京东专卖店", "warehouses"))
     elsif params[:warehouse_id] == "5732"
