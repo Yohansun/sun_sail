@@ -68,6 +68,12 @@
   </tbody>
 </table>  
 
+<div class='clearfix'>
+  <div class="pull-right" style="margin-left: 5px;margin-top: -2px;">
+    <%= paginate @leaves %>
+  </div>
+</div>
+
 <% content_for :tail do %>
 <script type="text/javascript">
   $('#export_areas').on('click', function(event){
