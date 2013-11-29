@@ -1,0 +1,51 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal">&times;</button>
+  <h3>批量设置物流信息</h3>
+  <p id="trade_count"></p>
+  <label for="" class="control-label">物流公司：</label>
+  <select id="set_logistic_select" class="input-medium">
+  </select>
+</div>
+<div class="modal-body">
+  <fieldset>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>订单编号</th>
+          <th>商品名称</th>
+          <th>客户信息</th>
+          <th>设置物流单号</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for trade in @trades : %>
+          <tr>
+            <td><%= trade.get('tid') %></td>
+            <td>
+              <% for order in trade.get('orders') : %>
+                <% if order.order_gift_tid != null : %>
+                  <%= order.title %>  <span class="label label-important">赠品</span><br>
+                <% else : %>
+                  <%= order.title %><br>
+                <% end %>
+              <% end %>
+            </td>
+            <td>
+            <%= trade.get('receiver_name') %><br>
+            <%= trade.get('receiver_mobile_phone') %><br>
+            <%= trade.get('receiver_state') %>
+            <%= trade.get('receiver_city') %>
+            <%= trade.get('receiver_district') %>
+            <%= trade.get('receiver_address') %>
+          </td>
+          <td><input type="text" class="span2 waybill<%= trade.get('tid') %>" placeholder="请输入物流单号" value="<%= trade.get('logistic_waybill') %>"></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </fieldset>
+</div>
+<div class="modal-footer">
+  <a href="#" class="btn" data-dismiss="modal" >取消</a>
+  <a class="btn btn-primary save">保存设置</a>
+</div><!-- modal-footer -->

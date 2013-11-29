@@ -156,7 +156,6 @@ class LogisticsController < ApplicationController
         name: l.name
       }
     end
-
     render json: tmp.reject {|h| h[:service_logistic_id].blank?}
   end
 

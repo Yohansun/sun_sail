@@ -67,6 +67,8 @@ class MagicOrders.Models.Trade extends Backbone.Model
         if this.attributes.dispatched_at isnt undefined
           if $.inArray('setup_logistic',trades) > -1
             enabled_items.push('setup_logistic') #物流单号设置
+          if $.inArray('batch_setup_logistic',trades) > -1
+            enabled_items.push('batch_setup_logistic') #物流单号设置
           if $.inArray('deliver',trades) > -1
             enabled_items.push('deliver') #订单发货
           if $.inArray('confirm_check_goods',trades) > -1
@@ -144,6 +146,8 @@ class MagicOrders.Models.Trade extends Backbone.Model
       #     if this.attributes.dispatched_at isnt undefined
       #       if $.inArray('setup_logistic',trades) > -1
       #         enabled_items.push('setup_logistic') #物流单号设置
+      #       if $.inArray('batch_setup_logistic',trades) > -1
+      #         enabled_items.push('batch_setup_logistic') #物流单号设置
       #       if $.inArray('deliver',trades) > -1
       #         enabled_items.push('deliver') #订单发货
       #       if $.inArray('confirm_check_goods',trades) > -1

@@ -122,6 +122,7 @@
               <% if MagicOrders.trade_mode == "trades" and MagicOrders.trade_type == "undelivered" : %>
               <li><a href='#' data-toggle="modal" class="batch_deliver" data-batch_type='batch_deliver' >批量发货</a></li>
               <li><a href='#' data-toggle="modal" data-batch_type='batch_check_goods'>批量验货</a></li>
+              <li><a href='#' data-toggle="modal" data-batch_type='batch_setup_logistic'>批量设置物流信息</a></li>
               <% end %>
             </ul>
           </div>
