@@ -152,12 +152,35 @@ code{color: #08C;}
 #autobusiness .control-group{margin-left:60px;}
 #autobusiness .controls{margin-left:80px;}
 /*autoset setting_auto.html*/
-.nav .collapse{margin-left: 0px;padding-left: 26px;list-style: none;}
-.nav .collapse li{line-height:14px;padding:5px 0;}
-/*.nav .collapse li.active{list-style:circle;margin-left:15px;}*/
-.nav .collapse li.active{margin-left:15px;}
-.nav .collapse li.b_active{margin-left:15px;font-weight:bold;}
-.nav .collapse li a{text-decoration:none;}
+.single_sidebar{
+  margin: 0px 0 0 0;
+  padding: 0;
+  background-color: #fff;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-box-shadow: 2px 2px 3px #ddd;
+  -moz-box-shadow: 2px 2px 3px #ddd;
+  box-shadow: 2px 2px 3px #ddd;border:none;
+  border:1px solid #e5e5e5;
+}
+/*.single_sidebar.affix{left:20px;top:15px;}*/
+.single_sidebar li{float:none;}
+.single_sidebar i{color:#0088cc;height:14px;}
+.single_sidebar > li > a{color:#000;font-weight:bold;line-height:18px;padding:5px 10px 6px;margin:0 0 -1px;border-bottom: 1px solid #e5e5e5;border-radius:0}
+.single_sidebar .active a{color:#fff;}
+.single_sidebar .collapse{border:0;margin:0 4px;padding-left: 0;list-style: none;}
+.single_sidebar .collapse.in{margin:4px;}
+.single_sidebar .collapse .third_menu{padding-left:10px;margin:0 4px 6px;}
+.single_sidebar .collapse i{margin-left:-19px;display:inline-block;}
+.single_sidebar .collapse li{line-height:14px;/*padding:4px 0;*/}
+.single_sidebar .collapse li.active{list-style:none;margin-left:0;}
+.single_sidebar .collapse li.active > a{background:#e5e5e5;border-radius:4px;padding-top:2px;}
+.single_sidebar .collapse li a{text-decoration:none;display:block;padding:3px 0 3px 38px;color:#181818;}
+.single_sidebar .collapse .third_menu .active a{color:#0088cc;text-decoration:underline;background:none;}
+.single_sidebar .icon-chevron-right{float:none;margin:0 2px 0 0;}
+.single_sidebar .active i.icon-chevron-right{color:#fff;}
+
 .timeEntry_control{border-radius:0 4px 4px 0;}
 .noborder td,.noborder th{border:0!important;}
 .mar_l80{margin-left:80px;}

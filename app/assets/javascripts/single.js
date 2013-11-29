@@ -91,4 +91,10 @@ $(function(){
 			$checked_good.parents('tr').remove()
 		};
 	});
+	$('.third_menu').on('show', function () {
+		$(this).siblings('a').children('i').attr('class','icon-minus')
+	})
+	$('.third_menu').on('hide', function () {
+		$(this).siblings('a').children('i').attr('class','icon-plus')
+	})
 });
