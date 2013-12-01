@@ -7,7 +7,7 @@ class JingdongTradePuller
       page_no = 1
 
       account = Account.find(account_id)
-      trade_source = TradeSource.where(account_id: account_id, trade_type: "Jingdong").first
+      trade_source = account.jingdong_sources.first
       trade_source_id = trade_source.id
 
       # 给客服分配订单需要的查询
@@ -40,7 +40,7 @@ class JingdongTradePuller
       end
 
       order_states = 'WAIT_SELLER_DELIVERY,WAIT_SELLER_STOCK_OUT,WAIT_GOODS_RECEIVE_CONFIRM,FINISHED_L'
-      query_conditions = account.jingdong_query_conditions
+      query_conditions = trade_source.jingdong_query_conditions
       begin
         response = JingdongQuery.get({method: '360buy.order.search',
           order_state: order_states,
