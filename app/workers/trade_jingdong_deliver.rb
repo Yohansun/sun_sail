@@ -9,7 +9,8 @@ class TradeJingdongDeliver
 
     tid = trade.tid
     account = trade.fetch_account
-    query_conditions = account.jingdong_query_conditions
+    trade_source = account.jingdong_sources.first
+    query_conditions = trade_source.jingdong_query_conditions
 
     errors = []
 
