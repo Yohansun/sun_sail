@@ -38,10 +38,11 @@ class JingdongOrder < Order
   end
 
   def jingdong_sku
+    scoped = JingdongSku.where(account_id: account_id)
     if sku_id.present?
-      JingdongSku.find_by_sku_id(sku_id)
+      scoped.find_by_sku_id(sku_id)
     else
-      JingdongSku.find_by_ware_id(ware_id)
+      scoped.find_by_ware_id(ware_id)
     end
   end
 

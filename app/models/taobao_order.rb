@@ -60,10 +60,11 @@ class TaobaoOrder < Order
   end
 
   def taobao_sku
+    scoped = TaobaoSku.where(account_id: account_id)
     if sku_id.present?
-      TaobaoSku.find_by_sku_id(sku_id)
+      scoped.find_by_sku_id(sku_id)
     else
-      TaobaoSku.find_by_num_iid(num_iid)
+      scoped.find_by_num_iid(num_iid)
     end
   end
 
