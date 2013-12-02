@@ -40,7 +40,7 @@ class YihaodianTradePuller
       end
 
       order_states = 'ORDER_WAIT_PAY,ORDER_PAYED,ORDER_WAIT_SEND,ORDER_ON_SENDING,ORDER_RECEIVED,ORDER_FINISH,ORDER_GRT,ORDER_CANCEL'
-      query_conditions = account.yihaodian_query_conditions
+      query_conditions = trade_source.yihaodian_query_conditions
       begin
         #获取订单编号列表
         response = YihaodianQuery.post({method: 'yhd.orders.get',

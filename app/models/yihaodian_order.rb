@@ -43,10 +43,6 @@ class YihaodianOrder < Order
     yihaodian_trades
   end
 
-  def account_id
-    trade.account_id
-  end
-
   # def product
   #   super(outer_sku_id)
   # end

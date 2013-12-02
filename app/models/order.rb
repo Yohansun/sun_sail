@@ -30,6 +30,10 @@ class Order
     #OVERWRITTEN BY SUBCLASS
   end
 
+  def account_id
+    trade.account_id
+  end
+
   def skus
     #OVERWRITTEN BY SUBCLASS
   end
