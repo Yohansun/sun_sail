@@ -35,7 +35,7 @@ class CustomTrade < Trade
   before_update :check_finish_status
 
   def custom_type_name
-    fetch_account.settings.trade_types[custom_type.to_s] || "无"
+    (fetch_account.settings.trade_types ||= { handmade_trade: "人工订单",gift_trade: "赠品订单" })[custom_type.to_s] || "无"
   end
 
   def created_larger_than_pay_time
