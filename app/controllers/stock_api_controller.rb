@@ -23,7 +23,7 @@ class StockApiController < ApplicationController
         render soap: "ORDER NOT FOUND"
         return
       end
-      stock_in_bill = StockInBill.where(tid: custmor_order_no, status: 'SYNCKED').first
+      stock_in_bill = StockInBill.where(tid: custmor_order_no, :status.in => ['SYNCKED',"CANCELD_FAILED"]).first
       unless stock_in_bill
         render soap: "ORDER STATUS UNCHANGEABLE"
         return
@@ -96,7 +96,7 @@ class StockApiController < ApplicationController
         render soap: "ORDER NOT FOUND"
         return
       end
-      stock_out_bill = StockOutBill.where(tid: tid, status: 'SYNCKED').first
+      stock_out_bill = StockOutBill.where(tid: tid, :status.in => ['SYNCKED',"CANCELD_FAILED"]).first
       unless stock_out_bill
         render soap: "ORDER STATUS UNCHANGEABLE"
         return
