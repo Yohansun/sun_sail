@@ -233,7 +233,7 @@ class ProductsController < ApplicationController
     end
     @number = 20
     @number = params[:number] if params[:number].present?
-    @products = @products.order("updated_at DESC").page(params[:page]).per(@number)
+    @products = @products.search(params[:search]).order("updated_at DESC").page(params[:page]).per(@number)
 
     respond_to do |format|
       format.xls
