@@ -9,6 +9,7 @@
 #  authentication_token :string(255)
 #  created_at           :datetime        not null
 #  updated_at           :datetime        not null
+#  is_default           :boolean(1)      default(FALSE)
 #
 
 class ThirdParty < ActiveRecord::Base

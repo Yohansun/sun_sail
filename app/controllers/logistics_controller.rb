@@ -146,12 +146,14 @@ class LogisticsController < ApplicationController
     method = source_type.to_s.dup << "_sources"
     trade_source = current_account.respond_to?(method) && current_account.send(method).first
     @logistics.each do |l|
-      tmp << {
-        id: l.id,
-        service_logistic_id: params[:trade_type] != "CustomTrade" ? (l.send("#{source_type}_logistic_id",trade_source.id) rescue nil) : l.id,
-        xml: "/logistics/#{l.id}/print_flash_settings/#{l.print_flash_setting.id}/print_infos.xml",
-        name: l.name
-      }
+      if l.print_flash_setting.present?
+        tmp << {
+          id: l.id,
+          service_logistic_id: params[:trade_type] != "CustomTrade" ? (l.send("#{source_type}_logistic_id",trade_source.id) rescue nil) : l.id,
+          xml: "/logistics/#{l.id}/print_flash_settings/#{l.print_flash_setting.id}/print_infos.xml",
+          name: l.name
+        }
+      end
     end
     render json: tmp.reject {|h| h[:service_logistic_id].blank?}
   end
@@ -160,11 +162,13 @@ class LogisticsController < ApplicationController
     tmp = []
     @logistics = Logistic.with_account(current_account.id)
     @logistics.each do |l|
-      tmp << {
-        id: l.id,
-        xml: l.xml.inspect,
-        name: l.name
-      }
+      if l.print_flash_setting.present?
+        tmp << {
+          id: l.id,
+          xml: "/logistics/#{l.id}/print_flash_settings/#{l.print_flash_setting.id}/print_infos.xml",
+          name: l.name
+        }
+      end
     end
 
     render json: tmp

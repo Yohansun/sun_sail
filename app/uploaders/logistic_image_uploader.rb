@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-class LogisticXmlUploader < CarrierWave::Uploader::Base
+class LogisticImageUploader < CarrierWave::Uploader::Base
 
   # Include RMagick or MiniMagick support:
   # include CarrierWave::RMagick

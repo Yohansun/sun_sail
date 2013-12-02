@@ -16,6 +16,8 @@
 #  parent_product_id :integer(8)
 #  created_at        :datetime        not null
 #  updated_at        :datetime        not null
+#  trade_source_id   :integer(4)
+#  shop_name         :string(255)
 #
 
 class YihaodianSku < ActiveRecord::Base

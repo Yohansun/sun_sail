@@ -3,20 +3,20 @@
 #
 # Table name: logistics
 #
-#  id         :integer(4)      not null, primary key
-#  name       :string(255)
-#  options    :string(255)
-#  created_at :datetime        not null
-#  updated_at :datetime        not null
-#  code       :string(255)     default("OTHER")
-#  xml        :string(255)
-#  account_id :integer(4)
+#  id          :integer(4)      not null, primary key
+#  name        :string(255)
+#  options     :string(255)
+#  created_at  :datetime        not null
+#  updated_at  :datetime        not null
+#  code        :string(255)     default("OTHER")
+#  print_image :string(255)
+#  account_id  :integer(4)
 #
 
 require 'hashie'
 class Logistic < ActiveRecord::Base
   include FinderCache
-  mount_uploader :xml, LogisticXmlUploader
+  mount_uploader :print_image, LogisticImageUploader
   belongs_to :account
   has_many :logistic_areas
   has_many :areas, through: :logistic_areas ,:dependent => :destroy
@@ -24,7 +24,7 @@ class Logistic < ActiveRecord::Base
   has_one :print_flash_setting, :dependent => :destroy
   accepts_nested_attributes_for :print_flash_setting
 
-  attr_accessible :name, :code, :xml
+  attr_accessible :name, :code, :print_image
   validates :name, presence: true, uniqueness: { scope: :account_id }
 
   validates_presence_of :code
@@ -112,5 +112,4 @@ class Logistic < ActiveRecord::Base
   def matched?(sname)
     sname =~ /^#{name.to(1)}/
   end
-
 end
