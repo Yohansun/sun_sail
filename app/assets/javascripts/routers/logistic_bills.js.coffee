@@ -83,7 +83,7 @@ class MagicOrders.Routers.LogisticBills extends Backbone.Router
       $(modalDivID + ' .datepicker').datetimepicker(format: 'yyyy-mm-dd',autoclose: true,minView: 2)
 
       if operation_key == 'print_logistic_bill'
-        $.get '/logistics/logistic_templates', {type: 'all'}, (t_data)->
+        $.get '/logistics/logistic_templates', {type: 'all', trade_type: model.get("trade_type")}, (t_data)->
           html_options = ''
           for item in t_data
             html_options += '<option lid="' + item.id + '" value="' + item.xml + '">' + item.name + '</option>'
@@ -96,19 +96,16 @@ class MagicOrders.Routers.LogisticBills extends Backbone.Router
           $(modalDivID).on 'hidden', ()->
             if $('.print_logistic_button').attr('data-click') == '1'
               $.get '/deliver_bills/batch-print-logistic', {ids: [model.get('id')], logistic: $("#logistic_select").find("option:selected").attr('lid')}
-
             $('.print_logistic_button').removeAttr('data-click')
 
           $.get ('/deliver_bills/' + model.get('id') + '/logistic_info'), {}, (data)->
             if data == " "
-              #ytong = $('#logistic_select').find('[lid="3"]')
               data = $("#logistic_select").find("option:first").val()
-              $('#logistic_select').find("option:first").attr('selected', 'selected')
             else
               $('#logistic_select').find('[value="' + data + '"]').attr('selected', 'selected')
-
             pageInit()
             bind_logistic_swf(model.get('id'), data)
+
         $(modalDivID).modal('show')
       else
         $(modalDivID).modal('show')

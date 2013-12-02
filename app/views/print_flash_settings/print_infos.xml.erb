@@ -13,19 +13,21 @@
     <%- if @setting.xml_hash['ipos'] != nil %>
       <% @setting.xml_hash['ipos'].each do |item| %>
         <item en_name="<%= item['key'] %>" cn_name="<%= item['text']%>">
-          <![CDATA[{"x":"<%= item['x'] %>",
-                    "y":"<%= item['y'] %>",
-                    "font":"<%= item['font'] %>",
-                    "color":"<%= item['color'] %>",
-                    "size":"<%= item['size'] %>",
-                    "align":"<%= item['align'] %>",
-                    "isbold":"<%= item['isbold'] %>",
-                    "underline":"<%= item['underline'] %>",
-                    "width":"<%= item['width'] %>",
-                    "height":"<%= item['height'] %>",
-                    "text":"<%= item['text'] %>",
-                    "type":"<%= item['type'] %>",
-                    "italic":"<%= item['italic'] %>"}]]>
+          <![CDATA[{
+            "x":         "<%= item['x'] %>",
+            "y":         "<%= item['y'] %>",
+            "font":      "<%= item['font'] %>",
+            "color":     "<%= item['color'] %>",
+            "size":      "<%= item['size'] %>",
+            "align":     "<%= item['align'] %>",
+            "isbold":    "<%= item['isbold'] %>",
+            "underline": "<%= item['underline'] %>",
+            "width":     "<%= item['width'] %>",
+            "height":    "<%= item['height'] %>",
+            "text":      "<%= item['text'] %>",
+            "type":      "<%= item['type'] %>",
+            "italic":    "<%= item['italic'] %>"
+          }]]>
         </item>
       <% end %>
     <%- end %>

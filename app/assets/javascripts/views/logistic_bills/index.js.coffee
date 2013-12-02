@@ -99,13 +99,13 @@ class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
     $('.trade_check').attr('checked', 'checked')
     $('#op-toolbar .dropdown-menu').parents('div.btn-group').css('display', 'none')
     $('#op-toolbar .batch_ops').show()
-  
+
   optAll: (e) ->
     if $('.header #checkbox_all')[0].checked
       @CheckAll()
     else
       @closeCheckAll()
-  
+
   optCopyAll: (e) ->
     if $('.header-copy #checkbox_all')[0].checked
       $('.header #checkbox_all')[0].checked = true
@@ -132,11 +132,16 @@ class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
       alert('请选择小于300个订单！')
       return
 
+    trade_types = $('.trade_check:checked').parents('tr').map ->
+      $(this).data('from')
+    if $.unique(trade_types).length > 1
+      alert('请选择来源一致的订单！')
+      return
+    trade_type = _(trade_types[0].toString()).capitalize()+"Trade"
+
     $('.trade_check:checked').parents('tr').each (index, el) ->
       input = $(el).find('.trade_check')
-      a = input[0]
-
-      if a.checked
+      if input[0].checked
         trade_id = $(el).attr('id').replace('trade_', '')
         tmp.push trade_id
 
@@ -156,7 +161,7 @@ class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
         html += '<td>' + trade.name + '</td>'
         html += '<td>' + trade.address + '</td></tr>'
 
-      $.get '/logistics/logistic_templates', {type: 'all'}, (t_data)->
+      $.get '/logistics/logistic_templates', {type: 'all', trade_type: trade_type}, (t_data)->
         html_options = ''
         for item in t_data
           html_options += '<option lid="' + item.id + '" value="' + item.xml + '">' + item.name + '</option>'
@@ -164,11 +169,13 @@ class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
         $('#logistic_select').html(html_options)
         $('#logistic_select').show()
         bind_swf(tmp, 'kdd', $('#logistic_select').val())
+        $('#logistic_select').change ()->
+          bind_swf(tmp, 'kdd', $(this).val())
         $('.deliver_count').html(data.length)
         $('#print_delivers_tbody').html(html)
         $('#print_delivers').on 'hidden', ()->
-          # if MagicOrders.hasPrint == true
-          #   $.get '/trades/batch-print-logistic', {ids: MagicOrders.idCarrier, logistic: $("#logistic_select").find("option:selected").attr('lid')}
+          if MagicOrders.hasPrint == true
+            $.get '/trades/batch-print-logistic', {ids: MagicOrders.idCarrier, logistic: $("#logistic_select").find("option:selected").attr('lid')}
           MagicOrders.hasPrint = false
 
         flag = true
@@ -213,7 +220,6 @@ class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
           return d.type
         )
         uniq_types = $.unique(trade_types)
-        console.log(uniq_types)
         if uniq_types.length == 1
           for trade in data.list
             html += '<tr>'

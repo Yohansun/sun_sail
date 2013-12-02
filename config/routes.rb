@@ -289,6 +289,7 @@ MagicOrders::Application.routes.draw do
       member do
         get :print_infos
         post :update_infos
+        put :update_xml_hash
       end
     end
   end

@@ -9,6 +9,12 @@
           <li class="active">编辑物流单模版</li>
         </ul><!-- breadcrumb -->
         <div id="setup_logistic_print"></div>
+        <%= simple_form_for @setting, url: update_xml_hash_logistic_print_flash_setting_path, method: :put, :remote => true, html: {:class =>'well form-horizontal'} do |f| %>
+          <%= f.input :xml_hash, as: :text, :label => "模版代码：", :input_html =>{ :class => "span10", rows: 20 } %>
+          <div class="form-actions">
+            <%= f.button :submit, :value => "保存", class: "btn btn-primary"%>
+          </div>
+        <% end %>
      </div>
     </div>
   </div>

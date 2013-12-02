@@ -14,10 +14,8 @@ class MagicOrders.Views.LogisticBillsRow extends Backbone.View
 
   render: ->
     $(@el).attr("id", "trade_#{@model.get('id')}")
+    $(@el).attr("data-from", "#{@model.get('trade_type')}")
     $(@el).html(@template(bill: @model))
-
-    if @model.get("has_unusual_state") is true
-      $(@el).attr("class", "error")
 
     #reset cols
     visible_cols = MagicOrders.trade_cols_visible_modes[MagicOrders.trade_mode]
