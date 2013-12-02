@@ -1,6 +1,8 @@
 require 'sidekiq/web'
 
 MagicOrders::Application.routes.draw do
+  
+  resources :trade_types
 
   resource :page do
     collection do

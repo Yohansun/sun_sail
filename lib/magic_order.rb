@@ -2,8 +2,9 @@
 module MagicOrder
   ActionDelega = {
     "detail" =>   ["index","home",'show','info','lastest','closed', 'children','fetch_group'],
-    "create" =>   ["new","create"],
-    "update" =>   ["edit","update", 'status_update'],
+    "create" =>   ["new","create","index"],
+    "update" =>   ["edit","update", 'status_update',"index"],
+    "destroy" =>  ["destroy","index"],
     "active" =>   ["active", "active_seller"],
     "shutdown" =>   ["shutdown", "shutdown_seller"],
     "destroy" =>  ["destroy","delete","deletes"],
@@ -307,7 +308,8 @@ MagicOrder::AccessControl.map do |map|
                                  "logistics#detail",
                                  "account_setups#edit_auto_settings",
                                  "logistics#logistic_user",
-                                 "categories#detail"]
+                                 "categories#detail"
+                               ]
     map.permission :operations, ["users#update",
                                  "users#delete",
                                  "users#batch_update",
@@ -326,7 +328,11 @@ MagicOrder::AccessControl.map do |map|
                                  "users#update_permissions",
                                  "categories#update",
                                  "categories#create",
-                                 "categories#destroy"]
+                                 "categories#destroy",
+                                 "trade_types#create",
+                                 "trade_types#update",
+                                 "trade_types#destroy"
+                               ]
   end
 
 #  map.project_module :logistics do |map|

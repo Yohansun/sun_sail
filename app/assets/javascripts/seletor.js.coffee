@@ -36,6 +36,9 @@ $ ->
       if action.match(/\?/) == null
         action = action.replace(/(\/*)$/,'/')
       method = $(this).attr("request")
+      if method == "put" || method == "delete"
+        form.append('<input type="hidden" name="_method" value="' + method + '" />')
+        method = "post"
       form.attr({action: action ,method: method })
       # Skip href #id
       if !href.match(/^#.+/)

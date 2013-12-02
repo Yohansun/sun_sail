@@ -1,0 +1,21 @@
+<%
+  breadcrumb << ["系统设置", users_path]
+  breadcrumb << ["基础数据管理", stocks_safe_stock_path]
+  breadcrumb << ["订单管理", trade_searches_path]
+  breadcrumb << ["人工订单设置"]
+%>
+<div class="row-fluid">
+  <div class="span10 w100">
+    <ul class="nav nav-tabs">
+      <li><a href="/trade_searches">自定义查询设置</a></li>
+      <li><a href="/trades/show_percent">订单分配设置</a></li>
+      <li><a href="/trades/invoice_setting">开票默认设置</a></li>
+      <li class="active"><a href="/trade_types">人工订单分类管理</a></li>
+    </ul><!-- nav-tabs -->
+    <div class="tab-content">
+      <%= form_tag trade_type_path("trade_type"), method: :put do %>
+        <%= render :partial => 'form',:locals => {:trade_types => @trade_types} %>
+      <% end %>
+    </div>
+  </div>
+</div>

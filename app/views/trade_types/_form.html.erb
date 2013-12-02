@@ -1,0 +1,29 @@
+<div class="control-group">
+  <%= label :key,"英文名" %>
+  <%= text_field_tag :key, params[:id] %>
+</div>
+<div class="control-group">
+  <%= label_tag :value,"中文名" %>
+  <%= text_field_tag :value,trade_types[params[:id]]%>
+</div>
+
+<div class="form-actions">
+  <%= submit_tag :submit, :value => "保存", class: "btn btn-primary edit"%>
+</div>
+
+<% content_for :tail do %>
+<script type="text/javascript" charset="utf-8">
+$(function(){
+  $("#trade_type").validate({
+    rules: {
+      "key": { required: true},
+      "value": { required: true},
+    },
+    messages: {
+      "key": { required: "英文名不能为空" },
+      "value": { required: "中文名不能为空" }
+    }
+  });
+})
+</script>
+<% end %>
