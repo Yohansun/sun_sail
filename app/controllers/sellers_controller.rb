@@ -261,7 +261,7 @@ class SellersController < ApplicationController
         @state = Area.find_by_name("北京")
       end
     end
-    @leaves = @state.leaves
+    @leaves = @state.leaves.page(params[:page]).per(20)
   end
 
 end
