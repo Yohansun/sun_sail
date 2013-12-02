@@ -19,11 +19,13 @@ module ECommerce
         }
       end
 
-      def initialize(var)
+      def initialize(*args)
         response
         raise "alias_columns must be Hash" unless alias_columns.is_a?(Hash)
         raise "Not initialized `identifier' for #{self.class.name}" if primary_key.blank?
         raise NameError,"uninitialized constant #{klass}" if !Object.const_defined?(klass.to_s)
+        @changed = []
+        @latest = []
       end
 
       def response

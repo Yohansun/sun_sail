@@ -35,7 +35,7 @@ class RefundProduct < ActiveRecord::Base
   belongs_to :account
   accepts_nested_attributes_for :refund_orders, :allow_destroy => true
   validates_associated :refund_orders
-  validates :account_id,:tid,:address,:buyer_name,:refund_time,:presence => true
+  validates :account_id,:tid,:buyer_name,:refund_time,:presence => true
   validates :refund_id,:uniqueness => {:scope => :ec_name}
   scope :can_edit, -> { where(:status => %w(created checked revocation)) }
 
