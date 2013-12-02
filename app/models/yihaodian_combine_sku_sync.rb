@@ -7,11 +7,11 @@ class YihaodianCombineSkuSync < ECommerce::Synchronization::Base
   
   def initialize(options={})
     options.symbolize_keys!
-    raise "The *account_id* option can't be blank" if options[:account_id].blank?
-    @account = Account.find(options[:account_id])
+    raise "The *trade_source_id* option can't be blank" if options[:trade_source_id].blank?
+    @trade_source = TradeSource.find(options[:trade_source_id])
     @product_ids = Array.wrap(options.delete(:product_ids) || [])
     @default_attributes = options
-    @query_conditions = @account.yihaodian_query_conditions
+    @query_conditions = @trade_source.yihaodian_query_conditions
     super
   end
   
@@ -19,7 +19,7 @@ class YihaodianCombineSkuSync < ECommerce::Synchronization::Base
     return [] if @product_id.blank?
     params = {method: api , productId: @product_id,product_ids: @product_ids}
     @response = YihaodianQuery.post(params,@query_condition)
-    datas = {api_results: @response,api_parameters: params,:account => @account}
+    datas = {api_results: @response,api_parameters: params,:trade_source => @trade_source}
     handle_exception(datas) do
       @response["response"]["comChildProdList"]["comChildProd"].each { |hash| hash.underscore_key! }
     end

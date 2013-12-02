@@ -164,7 +164,7 @@ class YihaodianTrade < Trade
   def shipment
     raise "只有待发货状态ORDER_TRUNED_TO_DO的订单才可以进行发货操作" if status_order_truned_to_do?
     api = 'yhd.logistics.order.shipments.update'
-    @response ||= YihaodianQuery.post({method: api,orderCode: tid, deliverySupplierId: service_logistic_id, expressNbr: logistic_waybill },account.yihaodian_query_conditions)
+    @response ||= YihaodianQuery.post({method: api,orderCode: tid, deliverySupplierId: service_logistic_id, expressNbr: logistic_waybill },trade_source.try(:yihaodian_query_conditions))
     @response["response"]["updateCount"].to_i == 1 || @response["response"]["errInfoList"]['errDetailInfo']
   end
 
