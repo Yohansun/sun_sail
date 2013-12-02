@@ -4,6 +4,7 @@ json.array!(@bills) do |json, bill|
   json.id bill.id
   json.trade_id bill.trade_id
   json.tid trade.tid
+  json.trade_type trade._type.gsub('Trade','').downcase
   json.bill_number bill.deliver_bill_number
   json.is_printed bill.deliver_printed_at.present?
   json.is_logistic_printed bill.logistic_printed_at.present?

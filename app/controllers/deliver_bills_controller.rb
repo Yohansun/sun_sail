@@ -124,15 +124,13 @@ class DeliverBillsController < ApplicationController
     trade = @bill.trade
     xml = nil
     if trade
-      logistic = Logistic.find_by_id(trade.try(:logistic_id))
-      logistic ||= Logistic.find_by_id(trade.matched_logistics.select{ |e| e[2].present? }.first.try(:at, 0))
+      logistic = current_account.logistics.find_by_id(trade.try(:logistic_id))
+      logistic ||= current_account.logistics.find_by_id(trade.matched_logistics.select{ |e| e[2].present? }.first.try(:at, 0))
       if logistic
         xml = "/logistics/#{logistic.id}/print_flash_settings/#{logistic.print_flash_setting.id}/print_infos.xml"
       else
         xml = nil
       end
-      # xml = Logistic.find_by_id(trade.try(:logistic_id)).try(:xml)
-      # xml ||= trade.matched_logistics.select{ |e| e[2].present? }.first.try(:at, 2)
     end
     render text: xml
   end

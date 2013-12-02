@@ -135,9 +135,6 @@ class LogisticsController < ApplicationController
   def logistic_templates
     tmp = []
     @logistics = current_account.logistics
-    unless params[:type] && params[:type] == 'all'
-      @logistics = @logistics.where("xml is not null")
-    end
     if params[:trade_type].present? && params[:trade_type] != "CustomTrade"
       source_type = params[:trade_type].underscore.gsub(/_trade$/,'')
     end
@@ -152,7 +149,7 @@ class LogisticsController < ApplicationController
       tmp << {
         id: l.id,
         service_logistic_id: params[:trade_type] != "CustomTrade" ? (l.send("#{source_type}_logistic_id",trade_source.id) rescue nil) : l.id,
-        xml: l.xml.inspect,
+        xml: "/logistics/#{l.id}/print_flash_settings/#{l.print_flash_setting.id}/print_infos.xml",
         name: l.name
       }
     end
