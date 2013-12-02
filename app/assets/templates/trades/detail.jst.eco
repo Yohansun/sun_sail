@@ -1,7 +1,9 @@
 <div class="modal-header">
-  <button type="button" class="close" data-dismiss="modal">×</button>
-  <h3 class="pr" style="margin-right:15px;">
-    <span big-toggle="bigtoggle"></span>订单详情<!--订单操作-->
+  <button type="button" class="close icon_win" data-dismiss="modal"><i class="icon-remove-sign"></i></button>
+  <button type="button" class="close icon_win js-big_window"><i class="icon-plus-sign"></i></button>
+  <button type="button" class="close icon_win js-small_window"><i class="icon-minus-sign"></i></button>
+  <h3 class="pr" style="margin-right:80px;">
+    <!-- <span big-toggle="bigtoggle"></span>订单操作 -->
     <small class="help-inline">订单编号 <strong><%= @trade.get("tid") %></strong></small>
     <small class="help-inline">订单状态 <strong><%= @trade.get("status_text") %></strong></small>
   </h3>

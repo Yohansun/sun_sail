@@ -5,7 +5,8 @@ class MagicOrders.Views.TradesDetail extends Backbone.View
   events:
     "click .button_print": 'print'
     # 'click button.js-save': 'save'
-    'click div.modal-header h3 span': 'zoomToggle'
+    'click button.js-big_window': 'zoomBig'
+    'click button.js-small_window': 'zoomSmall'
 
   initialize: ->
     @model.on("fetch", @render, this)
@@ -23,9 +24,11 @@ class MagicOrders.Views.TradesDetail extends Backbone.View
 
     $('#trade_detail').modal('hide')
 
-  zoomToggle: (e) ->
-    $(e.currentTarget).parents('.modal').toggleClass('bigtoggle_parents');
-    $(e.currentTarget).toggleClass('bigtoggle');
+  zoomBig: (e) ->
+    $(e.currentTarget).parents('.modal').addClass('bigtoggle_parents');
+    # $(e.currentTarget).toggleClass('bigtoggle');
+  zoomSmall: (e) ->
+    $(e.currentTarget).parents('.modal').removeClass('bigtoggle_parents');
 
   # save: (e)->
   #   blocktheui()
