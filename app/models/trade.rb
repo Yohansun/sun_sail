@@ -677,7 +677,7 @@ class Trade
     end
 
     bill.bill_products_mumber = bill.bill_products.sum(:number)
-    bill.bill_products_price = regular_orders.sum(:payment) - self.post_fee
+    bill.bill_products_price = regular_orders.is_a?(Array) ? regular_orders.sum(:payment) : regular_orders.sum(:payment) - self.post_fee
     bill.save!
     bill.decrease_activity #减去仓库的可用库存
   end
