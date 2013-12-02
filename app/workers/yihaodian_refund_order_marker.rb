@@ -6,7 +6,8 @@ class YihaodianRefundOrderMarker
   def perform(account_id)
     start_time = 1.week.ago.strftime("%Y-%m-%d %H:%M:%S")
     end_time = Time.now.strftime("%Y-%m-%d %H:%M:%S")
-    query_conditions = Account.find(account_id).yihaodian_query_conditions
+    trade_source = TradeSource.where(trade_type: "Yihaodian",account_id: account_id).first
+    query_conditions = trade_source.try(:yihaodian_query_conditions)
     response = YihaodianQuery.post({method: 'yhd.refund.get',
                                     startTime: start_time,
                                     endTime: end_time}, query_conditions).underscore_key
