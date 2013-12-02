@@ -1,0 +1,56 @@
+<%
+  breadcrumb << ["系统设置", users_path]
+  breadcrumb << ["基础数据管理", stocks_safe_stock_path]
+  breadcrumb << ["订单管理", trade_searches_path]
+  breadcrumb << ["人工订单设置"]
+%>
+<div class="row-fluid">
+  <div class="span10 w100">
+    <ul class="nav nav-tabs">
+      <li><a href="/trade_searches">自定义查询设置</a></li>
+      <li><a href="/trades/show_percent">订单分配设置</a></li>
+      <li><a href="/trades/invoice_setting">开票默认设置</a></li>
+      <li class="active"><a href="/trade_types">人工订单分类管理</a></li>
+    </ul><!-- nav-tabs -->
+    <div class="tab-content">
+      <div class="tab-pane active" id="users">
+        <%= form_tag "",:method => :post,:id => "edit_user",:class => "simple-operation" do %>
+          <div class="btn-toolbar">
+            <div class="btn-group">
+              <%= link_to "新增人工订单分类",new_trade_type_path,class: "btn btn-warning" %>
+            </div><!-- btn-group -->
+            <div class="btn-group">
+              <b class="btn btn-warning">操作</b>
+              <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown" onclick="return false">
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu">
+                <li><%= link_to "编辑","#", :target_url => edit_trade_type_path(":id") , :class => "magic_detail" %></li>
+                <li><%= link_to "删除","#", :target_url => trade_type_path("trade_type"),:request => :delete , :class => "magic_operation" %></li>
+              </ul>
+            </div><!-- btn-group -->
+          </div><!-- btn-groups end -->
+
+          <table class="table table-hover table-bordered table-striped table-condensed js-table">
+            <thead>
+              <tr>
+                <th><input type="checkbox"></th>
+                <th>英文名</th>
+                <th>中文名</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @trade_types.each do |key,value| %>
+                <tr>
+                  <td><input type="checkbox" value="<%= key %>" name="keys[]"></td>
+                  <td><%= key %></td>
+                  <td><%= value %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

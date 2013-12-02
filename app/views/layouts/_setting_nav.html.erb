@@ -38,7 +38,7 @@
 -->
         </ul>
     </li>
-    <% @basedata = ["stocks","logistics","category_properties","categories", "logistic_groups", "deliver_templates", "trade_searches", "areas", "orders", "notify", "trades","pages"] %>
+    <% @basedata = ["stocks","logistics","category_properties","categories", "logistic_groups", "deliver_templates", "trade_searches", "areas", "orders", "notify", "trades","pages","trade_types"] %>
     <li class="<%= display?(@basedata,"active") %>">
       <a href="#" class="" data-toggle="collapse" data-target="#base_data">
         <i class="icon-chevron-right"></i> 基础数据管理
@@ -78,13 +78,14 @@
           <li class="<%= display?("logistics","active") %>"><a href="/logistics"  data-toggle="collapse" data-target="#logistics_menu">
             物流公司管理</a>
           </li>
-          <li class="<%= display?(["trade_searches","trades"],"active")%>">
-            <a href="#"  data-toggle="collapse" data-target="#orders_menu"><i class="icon-plus <%= display_icon?(["trade_searches","trades"],"icon-minus") %>"></i>订单管理</a>
-            <ul id="orders_menu" class="collapse <%= display?(["trade_searches","trades"],"in") %> third_menu">
+          <li class="<%= display?(["trade_searches","trades",'trade_types'],"active")%>">
+            <a href="#"  data-toggle="collapse" data-target="#orders_menu"><i class="icon-plus <%= display_icon?(["trade_searches","trades","trade_types"],"icon-minus") %>"></i>订单管理</a>
+            <ul id="orders_menu" class="collapse <%= display?(["trade_searches","trades","trade_types"],"in") %> third_menu">
               <li class="<%= display?("trade_searches","active") %>"><a href="/trade_searches">自定义查询</a>
               </li>
               <li class="<%= display?("trades","active","show_percent") %>"><a href="/trades/show_percent">分配比设置</a></li>
               <li class="<%= display?("trades","active","invoice_setting") %>"><a href="/trades/invoice_setting">开票默认设置</a></li>
+              <li class="<%= display?("trade_types","active") %>"><a href="/trade_types">人工订单分类设置</a></li>
             </ul>
           </li>
 
