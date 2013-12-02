@@ -57,7 +57,7 @@ class CustomTradesController < ApplicationController
   private
 
   def fetch_data
-    @taobao_products = current_account.taobao_products
+    @products = current_account.products
     @area_ids = []
   end
 end

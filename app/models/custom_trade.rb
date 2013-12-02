@@ -4,7 +4,6 @@ class CustomTrade < Trade
   include StockProductsLockable
 
   field :custom_type, type: String                     # 用于分类之后的本地化订单
-
   # 赠品订单特有field
   field :main_trade_id, type: String
 
@@ -34,6 +33,10 @@ class CustomTrade < Trade
   embeds_many :taobao_orders
 
   before_update :check_finish_status
+
+  def custom_type_name
+    fetch_account.settings.trade_types[custom_type.to_s] || "无"
+  end
 
   def created_larger_than_pay_time
     if (pay_time.to_i - created.to_i) < 0
@@ -147,7 +150,7 @@ class CustomTrade < Trade
     custom_trade = new(trade)
     custom_trade.account_id = current_account.id
     #custom_trade.tid = (Time.now.to_i.to_s + current_user.id.to_s + rand(10..99).to_s + "H" )
-    custom_trade.custom_type = "handmade_trade"
+    custom_trade.custom_type = trade[:custom_type] || "handmade_trade"
     if current_account.settings.open_auto_mark_invoice == 1
       if trade[:seller_memo]
         invoice_name = trade[:seller_memo].scan(/\$.*\$/).present? ? trade[:seller_memo].scan(/\$.*\$/).first : nil

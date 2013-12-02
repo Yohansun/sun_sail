@@ -211,11 +211,7 @@ class TradeDecorator < Draper::Base
     when 'TaobaoTrade'
       '淘宝'
     when 'CustomTrade'
-      if trade.custom_type == 'gift_trade'
-        '赠品'
-      elsif trade.custom_type == 'handmade_trade'
-        '人工'
-      end
+      trade.custom_type_name
     when 'JingdongTrade'
       '京东'
     when 'YihaodianTrade'
