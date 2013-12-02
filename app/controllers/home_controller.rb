@@ -6,6 +6,7 @@ class HomeController < ApplicationController
     @logistics = current_account.logistics
     #FIX ME
     @users = current_account.users
+    @trade_sources = current_account.trade_sources
 
     # NEED TO MODIFIED
     @gift_products = current_account.products.where(good_type: 3)

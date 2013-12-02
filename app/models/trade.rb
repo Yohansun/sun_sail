@@ -1160,6 +1160,9 @@ class Trade
                 values = value.split("-")
                 search_tags_hash.update({"_type" => values[0], "custom_type" => values[1]})
                 conditions[key] << {"_type" => values[0], "custom_type" => values[1]}
+              elsif key == 'source'
+                search_tags_hash.update({"trade_source_id" => value})
+                conditions[key] << {"trade_source_id" => value}
               elsif key == 'merge_type'
                 if value == 'merged'
                   search_tags_hash.update({:merged_trade_ids=> {"$ne"=>nil}})

@@ -7,6 +7,8 @@
     MagicOrders.current_user_seller_id = "<%= current_user.seller_id.to_i %>"
     MagicOrders.logistics = new MagicOrders.Collections.Logistics();
     MagicOrders.logistics.reset(<%= raw @logistics.to_json %>);
+    MagicOrders.trade_sources = new MagicOrders.Collections.TradeSources();
+    MagicOrders.trade_sources.reset(<%= raw @trade_sources.to_json %>);
     MagicOrders.users = new MagicOrders.Collections.Users();
     MagicOrders.custom_trade_types = <%= raw(current_account.settings.trade_types.to_a.to_json) %>
     MagicOrders.users.reset(<%= raw @users.to_json %>);
