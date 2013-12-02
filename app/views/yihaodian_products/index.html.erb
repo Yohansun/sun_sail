@@ -5,7 +5,7 @@
 <div class="tab-pane active" id="stock_check">
   <form class="well well-small form-horizontal font12">
     <fieldset>
-      <div class="control-group">
+      <div class="control-group span4">
         <label class="pull-left"><code>精准：</code></label>
         <div class="controls pull-left">
           <select name="key" class="input-small pull-left select2 radius_no_rb">
@@ -13,6 +13,13 @@
             <option value="product_cname_eq" <%= 'selected' if params[:key] == "product_cname_eq" %>>商品名称</option>
           </select>
           <input type="text" class="input-medium radius_no_tl" name="value" value="<%= params[:value] %>" placeholder="输入关键字...">
+        </div>
+      </div>
+      <div class="control-group span4">
+        <label class="pull-left"><code>店铺：</code></label>
+        <div class="controls pull-left">
+          <%= select :search, :trade_source_id_eq, options_for_select(current_account.yihaodian_sources.collect {|t| [t.name,t.id]}, params[:search][:trade_source_id_eq]),{},:class => "select2" %>
+          </select>
         </div>
         <div class="pull-left">
           <button type="button pull-left" class="btn btn-small btn-primary">搜索</button>
