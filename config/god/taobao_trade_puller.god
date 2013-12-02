@@ -49,7 +49,7 @@ God.watch do |w|
 
   w.start_if do |start|
     start.condition(:process_running) do |c|
-      c.interval = 20.minutes
+      c.interval = 10.minutes
       c.running = false
       c.notify = {:contacts => ['errors'], :priority => 1, :category => 'TAOBAOTRADEPULLER'}
     end
