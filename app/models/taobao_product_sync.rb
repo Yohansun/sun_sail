@@ -33,9 +33,10 @@ class TaobaoProductSync < ECommerce::Synchronization::Base
     skus = TaobaoQuery.get({method: 'taobao.item.get',  fields: 'sku', num_iid: num_iid}, @trade_source.id)
     skus_attributes = {}
     handle_exception(skus.merge(@default_attributes)) {
-      skus['item_get_response']['item']['skus'] = {"sku" => [{num_iid: num_iid}.merge(default_sku_attibutes)]} if skus['item_get_response']['item'].blank?
+      skus['item_get_response']['item']['skus'] = {"sku" => [{num_iid: num_iid}]} if skus['item_get_response']['item'].blank?
       skus['item_get_response']['item']['skus']['sku'].each_with_index do |sku,index|
-        sku_dup = sku.dup.slice(*TaobaoSku.columns_hash.keys)
+        sku.merge!(default_sku_attibutes)
+        sku_dup = sku.dup.stringify_keys.slice(*TaobaoSku.columns_hash.keys)
         sku.clear
         taobao_sku_id  = TaobaoSku.includes(:taobao_product).where(taobao_products: {num_iid: num_iid},taobao_skus: {sku_id: sku_dup["sku_id"]}).first.try(:id)
         skus_attributes[index+1] = {"id" => taobao_sku_id}.reject{|k,v| v.nil?}.merge(sku_dup)
