@@ -50,7 +50,7 @@ code{color: #08C;}
 /*all orders*/
 .affix .nav-tabs,.nav-tabs.subnav{background:#e1e1e1;z-index:999;padding-top:3px;padding-left:25px;}
 .nav-tabs.affix + .tab-content{margin-top:40px;}
-.nav-tabs > li > a{padding:5px 12px;}
+.nav-tabs > li > a{padding:5px;}
 /*.affix{width:100%;top:41px;left:0;right:0;}*/
 /*#all_orders{margin-top:185px;}*/
 /*.search-expand #all_orders{margin-top:550px;}*/
