@@ -11,7 +11,7 @@ class MagicOrders.Views.TradesLogisticSplit extends Backbone.View
   render: ->
     $(@el).html(@template(trade: @model))
 
-    $.get '/logistics/logistic_templates', {type: 'all'}, (t_data)->
+    $.get '/logistics/logistic_templates', {type: 'all', trade_type: @model.get('trade_type')}, (t_data)->
       html_options = ''
       for item in t_data
         html_options += '<option value="' + item.id + '">' + item.name + '</option>'
