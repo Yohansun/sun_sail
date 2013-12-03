@@ -131,17 +131,31 @@
 
     <fieldset>
       <div class="control-group">
-        <label class="pull-left" ><code>来源：</code></label>
+        <label class="pull-left" ><code>类型：</code></label>
         <div class="controls pull-left">
           <select class="input-small pull-left select2">
-            <option value="TaobaoTrade" selected="selected">淘宝</option>
-            <option value="JingdongTrade">京东</option>
-            <option value="YihaodianTrade">一号店</option>
+            <option value="TaobaoTrade" selected="selected">淘宝订单</option>
+            <option value="JingdongTrade">京东订单</option>
+            <option value="YihaodianTrade">一号店订单</option>
             <!-- <option value="TaobaoPurchaseOrder">分销平台</option> -->
             <% for ary in MagicOrders.custom_trade_types : %>
             <option value="CustomTrade-<%= ary[0] %>"><%= ary[1] %></option>
             <% end %>
             <option value="Trade">合并订单</option>
+          </select>
+        </div>
+        <a class="add_type_search_tag" href="#" title="添加搜索"><i class="icon-plus"></i>添加搜索</a>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <div class="control-group">
+        <label class="pull-left" ><code>店铺：</code></label>
+        <div class="controls pull-left">
+          <select class="input-small pull-left select2">
+            <% for trade_source in MagicOrders.trade_sources.models: %>
+            <option value="<%= trade_source.get('id') %>"><%= trade_source.get('name') %></option>
+            <% end %>
           </select>
         </div>
         <a class="add_source_search_tag" href="#" title="添加搜索"><i class="icon-plus"></i>添加搜索</a>

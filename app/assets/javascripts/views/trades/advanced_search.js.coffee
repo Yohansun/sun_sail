@@ -7,6 +7,7 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
     'click .add_money_search_tag': 'addMoneySearchTag'
     'click .add_status_search_tag': 'addStatusSearchTag'
     'click .add_memo_search_tag' : 'addMemoSearchTag'
+    'click .add_type_search_tag': 'addTypeSearchTag'
     'click .add_source_search_tag': 'addSourceSearchTag'
     'click .add_area_search_tag': 'addAreaSearchTag'
     'click .add_merge_type_search_tag': 'addMergeTypeSearchTag'
@@ -204,10 +205,10 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
                                    "<input type='hidden' name="+has_memo+" value='"+value+"'>"+
                                    "<button class='remove_search_tag' value=''> x </button></span>")
 
-  addSourceSearchTag: (e) ->
+  addTypeSearchTag: (e) ->
     e.preventDefault()
-    type = @getSearchValue('.add_source_search_tag','select')
-    type_text = @getText('.add_source_search_tag','select')
+    type = @getSearchValue('.add_type_search_tag','select')
+    type_text = @getText('.add_type_search_tag','select')
 
     tag = $(".search_tags_group input[name=_type]")
     value = type
@@ -219,6 +220,23 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
                                      "<label class='help-inline'>"+type_text+"</label>"+
                                      "<input type='hidden' name='_type' value='"+type+"'>"+
                                      "<button class='remove_search_tag' value=''> x </button></span>")
+
+  addSourceSearchTag: (e) ->
+    e.preventDefault()
+    source_id = @getSearchValue('.add_source_search_tag','select')
+    source_text = @getText('.add_source_search_tag','select')
+
+    tag = $(".search_tags_group input[name=source]")
+    value = source_id
+    if @check_tag_exist tag,value
+      alert("该搜索条件已经添加过")
+      return false
+
+    $('.search_tags_group').append("<span class='search_tag pull-left'>"+
+                                     "<label class='help-inline'>"+source_text+"</label>"+
+                                     "<input type='hidden' name='source' value='"+source_id+"'>"+
+                                     "<button class='remove_search_tag' value=''> x </button></span>")
+
 
   addMergeTypeSearchTag:(e)->
     e.preventDefault()
@@ -381,7 +399,7 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
           trade_mode = criteria.get("trade_mode") || "trades"
           trade_type = criteria.get("trade_type") || "all"
           $("#select-dropdown-menu").append("<li><a href='#' data-trade-mode='"+trade_mode+"' data-trade-status='"+trade_type+"' data-search-id='"+criteria.get("_id")+"'>"+criteria.get("name")+"<em></em></a></li>")
-          
+
           switch trade_mode
             when "trades"
               coll = new MagicOrders.Collections.Trades()
@@ -408,4 +426,3 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
     $(".js-fixed_header").fixedHeader({
       topOffset: 68
     })
-    
