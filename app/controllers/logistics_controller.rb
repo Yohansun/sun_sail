@@ -136,7 +136,7 @@ class LogisticsController < ApplicationController
     tmp = []
     @logistics = current_account.logistics
     if params[:trade_type].present? && params[:trade_type] != "CustomTrade"
-      source_type = params[:trade_type].underscore.gsub(/_trade$/,'')
+      source_type = params[:trade_type].underscore.gsub(/(_)?trade$/,'')
     end
     # TODO
     # 默认使用统一平台下的第一个店铺的物流商信息
@@ -146,29 +146,29 @@ class LogisticsController < ApplicationController
     method = source_type.to_s.dup << "_sources"
     trade_source = current_account.respond_to?(method) && current_account.send(method).first
     @logistics.each do |l|
-      if l.print_flash_setting.present?
-        tmp << {
-          id: l.id,
-          service_logistic_id: params[:trade_type] != "CustomTrade" ? (l.send("#{source_type}_logistic_id",trade_source.id) rescue nil) : l.id,
-          xml: "/logistics/#{l.id}/print_flash_settings/#{l.print_flash_setting.id}/print_infos.xml",
-          name: l.name
-        }
-      end
+      tmp << {
+        id: l.id,
+        service_logistic_id: (l.send("#{source_type}_logistic_id",trade_source.id) rescue ""),
+        xml: "/logistics/#{l.id}/print_flash_settings/#{l.print_flash_setting.id}/print_infos.xml",
+        name: l.name
+      }
     end
-    render json: tmp.reject {|h| h[:service_logistic_id].blank?}
+    if trade_source.present?
+      render json: tmp.reject {|h| h[:service_logistic_id].blank?}
+    else
+      render json: tmp
+    end
   end
 
   def all_logistics
     tmp = []
     @logistics = Logistic.with_account(current_account.id)
     @logistics.each do |l|
-      if l.print_flash_setting.present?
-        tmp << {
-          id: l.id,
-          xml: "/logistics/#{l.id}/print_flash_settings/#{l.print_flash_setting.id}/print_infos.xml",
-          name: l.name
-        }
-      end
+      tmp << {
+        id: l.id,
+        xml: "/logistics/#{l.id}/print_flash_settings/#{l.print_flash_setting.id}/print_infos.xml",
+        name: l.name
+      }
     end
 
     render json: tmp
