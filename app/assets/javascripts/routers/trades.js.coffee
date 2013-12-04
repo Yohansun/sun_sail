@@ -134,8 +134,6 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     if tmp.length != 0
       @collection.fetch data: {ids: tmp, batch_option: true}, success: (collection, response) =>
         view = new MagicOrders.Views[viewClassName](collection: collection)
-        $(modalDivID).html(view.render().el)
-        $(modalDivID).modal('show')
 
         switch operation_key
           when 'batch_add_gift'
@@ -143,6 +141,17 @@ class MagicOrders.Routers.Trades extends Backbone.Router
               $('#select_category').select2 data: c_data
             $("#select_product").select2 data: []
             $('#select_sku').select2 data: []
+          when 'batch_setup_logistic'
+            trade_types = []
+            for trade in collection.models
+              trade_types.push(trade.attributes.trade_type)
+            if $.unique(trade_types).length > 1
+              alert('请选择同一来源的订单。')
+              Backbone.history.navigate("#{MagicOrders.trade_mode}/" + "#{MagicOrders.trade_mode}-#{MagicOrders.trade_type}", false)
+              return
+
+        $(modalDivID).html(view.render().el)
+        $(modalDivID).modal('show')
 
   operation: (id, operation_key) ->
     viewClassName = "Trades" + _.classify(operation_key)

@@ -2,6 +2,7 @@ json.array!(@trades) do |json, trade|
   json.trades_count @trades_count
   json.id trade._id
   json.tid trade.tid
+  json.trade_type trade._type
   json.shop_name trade.shop_name
   json.tc_order_id trade.tc_order_id if trade._type == "TaobaoPurchaseOrder"
   json.distributor_usercode trade.distributor_usercode if trade._type == "TaobaoPurchaseOrder"

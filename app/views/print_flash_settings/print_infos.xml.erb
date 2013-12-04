@@ -7,7 +7,7 @@
   <offsetx><%= @setting.xml_hash["offsetx"] %></offsetx>
   <offsety><%= @setting.xml_hash["offsety"] %></offsety>
   <bgsrc>/print_files/bg.png</bgsrc>
-  <orderc><%= @logistic.xml %></orderc>
+  <orderc><%= @logistic.print_image %></orderc>
   <saveurl>/logistics/<%= @logistic.id %>/print_flash_settings/<%= @setting.id %>/update_infos.xml</saveurl>
   <ipos>
     <%- if @setting.xml_hash['ipos'] != nil %>

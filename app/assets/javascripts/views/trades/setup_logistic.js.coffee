@@ -31,7 +31,7 @@ class MagicOrders.Views.TradesSetupLogistic extends Backbone.View
     service_logistic_id = $('#set_service_logistic_id').val()
 
     waybill = $('.waybill').val()
-    if service_logistic_id == '' || service_logistic_id == 'null'
+    if (service_logistic_id == '' || service_logistic_id == 'null') && (@model.get('trade_type') != "CustomTrade" && @model.get('trade_type') != "Trade")
       alert '物流商ID不能为空'
       return
 

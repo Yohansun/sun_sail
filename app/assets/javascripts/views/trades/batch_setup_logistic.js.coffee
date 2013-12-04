@@ -17,7 +17,7 @@ class MagicOrders.Views.TradesBatchSetupLogistic extends Backbone.View
     html_options = ''
     html_options += '此次共设置' + @count + '单物流信息'
     $(@el).find('#trade_count').html(html_options)
-    $.get '/logistics/logistic_templates', {type: 'all'}, (t_data)->
+    $.get '/logistics/logistic_templates', {type: 'all', trade_type: @trades[0].attributes.trade_type}, (t_data)->
       html_options = ''
       for item in t_data
         html_options += '<option lid="' + item.id + '" service_logistic_id="' + item.service_logistic_id + '" value="' + item.xml + '">' + item.name + '</option>'

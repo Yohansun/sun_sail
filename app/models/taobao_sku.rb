@@ -10,6 +10,8 @@
 #  properties_name   :string(255)
 #  quantity          :integer(4)
 #  account_id        :integer(4)
+#  trade_source_id   :integer(4)
+#  shop_name         :string(255)
 #
 
 class TaobaoSku < ActiveRecord::Base

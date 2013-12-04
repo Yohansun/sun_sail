@@ -22,6 +22,8 @@
 #  account_id           :integer(4)
 #  created_at           :datetime        not null
 #  updated_at           :datetime        not null
+#  trade_source_id      :integer(4)
+#  shop_name            :string(255)
 #
 
 class YihaodianProduct < ActiveRecord::Base

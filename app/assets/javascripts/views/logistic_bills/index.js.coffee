@@ -135,7 +135,7 @@ class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
     trade_types = $('.trade_check:checked').parents('tr').map ->
       $(this).data('from')
     if $.unique(trade_types).length > 1
-      alert('请选择来源一致的订单！')
+      alert("请选择同一来源的物流单。")
       return
     trade_type = _(trade_types[0].toString()).capitalize()+"Trade"
 
