@@ -4,8 +4,8 @@
 </td> -->
 
 <td data-col='tid'>
-  <% if @trade.get('trade_source') == "赠品" || @trade.get('trade_source') == "人工" : %>
-    <span class="label label-important label_source"><%= @trade.get('trade_source') %></span>
+  <% if /^合并/.test(@trade.get('trade_source')) == true : %>
+    <span class="label label-darkorchid label_source"><%= @trade.get('trade_source') %></span>
   <% else if @trade.get('trade_source') == "淘宝" : %>
     <span class="label label-warning label_source"><%= @trade.get('trade_source') %></span>
     <span class="label label-warning label_source"><%= @trade.get("shop_name") %></span>
@@ -16,7 +16,7 @@
     <span class="label label-lightblue label_source"><%= @trade.get('trade_source') %></span>
     <span class="label label-lightblue label_source"><%= @trade.get("shop_name") %></span>
   <% else : %>
-    <span class="label label-darkorchid label_source"><%= @trade.get('trade_source') %></span>
+    <span class="label label-important label_source"><%= @trade.get('trade_source') %></span>
   <% end %>
   <% if @trade.get('trade_source') == "分销平台" : %>
     <br><span class="label label-info">店铺代码:<%= @trade.get('distributor_usercode') %></span>
