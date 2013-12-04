@@ -14,7 +14,7 @@
     <%= label_tag "sku_property_name",category_property.name,:class => "control-label" %>
     <% category_property.values.each do |value| %>
     <label class="checkbox inline">
-      <%= radio_button_tag "sku_property[#{category_property.id}][category_property_value_id]",value.id %><%= value.value %>
+      <%= check_box_tag "sku_property[#{category_property.id}][category_property_value_id][]",value.id %><%= value.value %>
     </label>
     <% end %>
   </div>
