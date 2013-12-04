@@ -37,12 +37,18 @@
         <li>
           <%= link_to_authorize "审核", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_out_bills/check",:remote => true,:request => "post",:class => "bill_operation"  %>
         </li>
-        <%- if current_account.settings.enable_module_third_party_stock == 1 %>
+        <li>
+          <%= link_to_authorize "同步", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_out_bills/sync",:remote => true,:remote => true,:request => "post",:class => "bill_operation"  %>
+        </li>
+        <li>
+          <%= link_to_authorize "撤销", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_out_bills/rollback",:remote => true,:remote => true,:request => "post",:class => "bill_operation"  %>
+        </li>
+        <% if current_account.settings.enable_module_third_party_stock != 1 %>
           <li>
-            <%= link_to_authorize "同步", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_out_bills/sync",:remote => true,:remote => true,:request => "post",:class => "bill_operation"  %>
+            <%= link_to_authorize "确认同步", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_out_bills/confirm_sync",:remote => true,:request => "put",:class => "bill_operation"  %>
           </li>
           <li>
-            <%= link_to_authorize "撤销", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_out_bills/rollback",:remote => true,:remote => true,:request => "post",:class => "bill_operation"  %>
+            <%= link_to_authorize "确认出库", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_out_bills/confirm_stock",:remote => true,:request => "put",:class => "bill_operation"  %>
           </li>
         <%- end %>
       </ul>

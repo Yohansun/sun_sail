@@ -112,7 +112,7 @@ class StockBill
 
     #出/入库
     event :do_stock do
-      transition all - [:closed] => :stocked
+      transition all - [:closed,:stocked] => :stocked
     end
 
     #关闭

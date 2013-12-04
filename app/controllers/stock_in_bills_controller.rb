@@ -2,7 +2,7 @@
 class StockInBillsController < ApplicationController
   before_filter :set_warehouse
   before_filter :authorize #,:except => :fetch_bils
-  before_filter :find_column_settings, :only => [:sync, :check, :rollback, :lock, :unlock]
+  before_filter :find_column_settings, :only => [:sync, :check, :rollback, :lock, :unlock,:confirm_stock,:confirm_sync]
   before_filter :validate_optional_status, :only => [:edit,:sync, :rollback, :update]
 
   def index
@@ -72,6 +72,28 @@ class StockInBillsController < ApplicationController
       #TODO 错误提示重复
       flash[:error] = (@bill.errors.full_messages.uniq + @bill.bill_products_errors).to_sentence
       render :edit
+    end
+  end
+  
+  def confirm_sync
+    @bills = default_scope.any_in(_id: params[:bill_ids])
+    @bills.each do |bill|
+      bill.confirm_sync
+    end
+
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  def confirm_stock
+    @bills = default_scope.any_in(_id: params[:bill_ids])
+    @bills.each do |bill|
+      bill.confirm_stock
+    end
+
+    respond_to do |format|
+      format.js
     end
   end
 

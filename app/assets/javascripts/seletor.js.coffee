@@ -93,7 +93,7 @@ $ ->
             canSubmit = false
             error_message = "只能锁定状态为1.已审核，待同步. 2.待审核. 3.撤销同步成功"
             break
-      else if $.inArray(operation_name, ["审核", "同步", "撤销"]) > -1
+      else if $.inArray(operation_name, ["审核", "同步", "撤销","确认同步","确认入库","确认出库"]) > -1
         for item in checked_inputs()
           bill_id = $(item).val()
           bill_status = $("#bill_status_"+bill_id).html()
@@ -112,6 +112,14 @@ $ ->
           if operation_name=="撤销" && bill_status!="SYNCKED"
             canSubmit = false
             error_message = "只有已同步待出/入库的库单允许撤销"
+            break
+          if operation_name=="确认同步" && bill_status!="SYNCKING"
+            canSubmit = false
+            error_message = "只能确认同步的状态为 '同步中'"
+            break
+          if (operation_name=="确认入库" || operation_name=="确认出库") && bill_status!="SYNCKED"
+            canSubmit = false
+            error_message = "只能操作确认入库的状态为 '已同步待出/入库'"
             break
       if canSubmit
         if confirm("确定要"+operation_name+"吗？")
