@@ -1,7 +1,7 @@
 <td><input class='trade_check' type="checkbox" value="option1"></td>
 <td data-col='tid'>
-  <% if @bill.get('trade_source') == "赠品" || @bill.get('trade_source') == "人工" : %>
-    <span class="label label-important label_source"><%= @bill.get('trade_source') %></span>
+  <% if /^合并/.test(@bill.get('trade_source')) == true : %>
+    <span class="label label-darkorchid label_source"><%= @bill.get('trade_source') %></span>
   <% else if @bill.get('trade_source') == "淘宝" : %>
     <span class="label label-warning label_source"><%= @bill.get('trade_source') %></span>
   <% else if @bill.get('trade_source') == "京东" : %>
@@ -9,7 +9,7 @@
   <% else if @bill.get('trade_source') == "一号店" : %>
     <span class="label label-lightblue label_source"><%= @bill.get('trade_source') %></span>
   <% else : %>
-    <span class="label label-darkorchid label_source"><%= @bill.get('trade_source') %></span>
+    <span class="label label-important label_source"><%= @bill.get('trade_source') %></span>
   <% end %>
   <%= @bill.get('tid') %>
 </td>
