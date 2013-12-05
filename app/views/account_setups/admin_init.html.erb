@@ -59,7 +59,7 @@
                 <%- if @user.present? && @user.errors[:username].present? %>
                   <%= @user.errors[:username].first %>
                 <%- else -%>
-                  填写4-9位数字或者字母
+                  填写3-12个字符
                 <%- end -%>
                </small>
             </div>

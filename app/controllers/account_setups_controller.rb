@@ -59,10 +59,13 @@ class AccountSetupsController < ApplicationController
       #current_account.settings.auto_settings["autocheck"] = params[:autocheck]
       current_account.settings.auto_settings["auto_dispatch"] = (params[:auto_dispatch] == "on" ? 1 : nil )
     when :user_init
-      create_users(params[:cs], :cs)
-      create_users(params[:stock_admin], :stock_admin)
-      create_users(params[:interface], :interface)
-      binding_account_account_to_admin
+      @cs = create_role_user(params[:cs], :cs)
+      @stock_admin = create_role_user(params[:stock_admin], :stock_admin)
+      if @cs.is_a?(User) || @stock_admin.is_a?(User)
+        render("user_init") and return
+      else
+        binding_account_account_to_admin
+      end
     end
     current_account.settings[:wizard_step] = next_step_name
     render_wizard current_account
@@ -162,19 +165,20 @@ class AccountSetupsController < ApplicationController
   end
 
   private
-  def create_users(params, role)
-    return if params.blank?
-    params.split(',').each do |item|
-      next unless item.match(User::EMAIL_FORMAT) && item.match(User::EMAIL_FORMAT)
-      user = User.new(password: SecureRandom.hex(3))
-      if item.match(User::EMAIL_FORMAT)
-        user.email = item
-      elsif item.match(User::PHONE_FORMAT)
-        user.phone = item
-      end
-      user.save
+  def create_role_user(params_user, role)
+    return nil if params_user.select{|k, v| v.present?}.blank?
+    user = User.new(password: SecureRandom.hex(3), username: params_user[:username])
+    if params_user[:contact].to_s.match(User::EMAIL_FORMAT)
+      user.email = params_user[:contact]
+    else
+      user.phone = params_user[:contact]
+    end
+    if user.save
       user.add_role(role)
       InitUserNotifier.perform_async(current_account.id, user.email, user.password, user.phone)
+      nil
+    else
+      user
     end
   end
 

@@ -25,8 +25,11 @@
                 <div class="thumbnail">
                   <img src="/images/account_setups/start_key4_1.jpg" alt="">
                   <h5 class="" style="background:#e6b831;">客服账号设置</h5>
-                  <div>
-                    <input class="pagination-centered input-xlarge" name='cs' type="text" placeholder="请输入客服登录账号的邮箱或手机">
+                  <div style="magin-bottom: 10px" class="clearfix control-group <%= 'error' if @cs.present? && @cs.errors[:username].present? %>">
+                    <%= text_field_tag "cs[username]", params[:cs].is_a?(Hash) ? params[:cs][:username] : "", class: "pagination-centered input-xlarge", placeholder: "请输入3-12个字符的账号名" %>
+                  </div>
+                  <div style="magin-bottom: 10px" class="clearfix control-group <%= 'error' if @cs.present? && (@cs.errors[:phone].present? || @cs.errors[:email].present?) %>">
+                    <%= text_field_tag "cs[contact]", params[:cs].is_a?(Hash) ? params[:cs][:contact] : "", class: "pagination-centered input-xlarge", placeholder: "请输入客服登录账号的邮箱或手机" %>
                   </div>
                 </div>
               </li>
@@ -34,8 +37,11 @@
                 <div class="thumbnail">
                   <img src="/images/account_setups/start_key4_2.jpg" alt="">
                   <h5 class="">仓库管理员账号设置</h5>
-                  <div>
-                    <input name='stock_admin' class="pagination-centered input-xlarge" type="text" placeholder="请输入仓库管理账号的邮箱或手机">
+                  <div style="magin-bottom: 10px" class="clearfix control-group <%= 'error' if @stock_admin.present? && @stock_admin.errors[:username].present? %>">
+                    <%= text_field_tag "stock_admin[username]", params[:stock_admin].is_a?(Hash) ? params[:stock_admin][:username] : "", class: "pagination-centered input-xlarge", placeholder: "请输入3-12个字符的账号名" %>
+                  </div>
+                  <div style="magin-bottom: 10px" class="clearfix control-group <%= 'error' if @stock_admin.present? && (@stock_admin.errors[:phone].present? || @stock_admin.errors[:email].present?) %>">
+                    <%= text_field_tag "stock_admin[contact]", params[:stock_admin].is_a?(Hash) ? params[:stock_admin][:contact] : "", class: "pagination-centered input-xlarge", placeholder: "请输入仓库管理账号的邮箱或手机" %>
                   </div>
                 </div>
               </li>

@@ -71,8 +71,8 @@ class User < ActiveRecord::Base
   validates_presence_of :password, on: :create
   validates :username ,
             uniqueness: {message: "该用户名已有人使用"},
-            presence: true
-#            format: { with: /\A[A-Za-z0-9]{4,9}\z/, message: "填写4-9位数字或者字母"}
+            presence: true,
+            length: {in: 3..12, message: "填写3-12个字符"}
 
   validate :has_phone_or_email?
 
