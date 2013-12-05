@@ -3,30 +3,15 @@ class JingdongAppTokensController < ApplicationController
   #skip_before_filter :authenticate_user!
   #目前只考虑到已经创建了Account的帐户
   def index
-    auth_json = JSON.parse(auth_hash.to_json)
-    trade_source = TradeSource.where(trade_type: "Jingdong", account_id: current_account.id).first ||
-    TradeSource.create({
-      trade_type: "Jingdong",
-      app_key: TradeSetting.jingdong_app_key,
-      secret_key: TradeSetting.jingdong_app_secret,
-      account_id: current_account.id,
-      name: "京东"+current_account.name
-      })
+    info = auth_hash.info
+    parameters = {access_token: info.token,refresh_token: info.refresh_token,jingdong_user_id: info.uid,account_id: current_account.id}
 
-    token = JingdongAppToken.where(trade_source_id: trade_source.id).first
-    if token.present?
-      token.update_attributes(access_token: auth_json['credentials']['token'],
-                              refresh_token: auth_json["credentials"]["refresh_token"])
-      render text: '已重新生成京东Token'
-    else
-      JingdongAppToken.create(jingdong_user_id: auth_json['uid'],
-                              access_token: auth_json['credentials']['token'],
-                              refresh_token: auth_json["credentials"]["refresh_token"],
-                              account_id: current_account.id,
-                              trade_source_id: trade_source.id)
-      JingdongInitialFetcher.perform_async(current_account.id)
-      render text: "京东Token已添加,正在抓取订单数据"
-    end
+    trade_source = current_account.jingdong_sources.where(name: info.user_nick).first_or_create
+
+    (trade_source.jingdong_app_token || trade_source.build_jingdong_app_token).update_attributes!(parameters)
+
+    JingdongInitialFetcher.perform_async(trade_source.id)
+    redirect_to root_path(notice: "#{info.user_nick}添加成功,正在抓取订单数据")
   end
 
   protected

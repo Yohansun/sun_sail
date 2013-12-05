@@ -2,11 +2,17 @@
 class YihaodianTradePuller
   class << self
     def create(start_time = nil, end_time = nil, account_id)
+      Account.find(account_id).yihaodian_source_ids.each do |trade_source_id|
+        create_with_source(trade_source_id)
+      end
+    end
+    
+    def create_with_source(trade_source_id)
       total_pages = nil
       page_no = 1
 
-      account = Account.find(account_id)
-      trade_source = TradeSource.where(account_id: account_id, trade_type: "Yihaodian").first
+      trade_source = TradeSource.find(trade_source_id)
+      account = trade_source.account
       trade_source_id = trade_source.id
 
       # 给客服分配订单需要的查询
@@ -52,7 +58,7 @@ class YihaodianTradePuller
 
 
         unless response['response']['error_count'] == 0
-          Notifier.puller_errors(response, account_id).deliver
+          Notifier.puller_errors(response, account.id).deliver
           return
         end
 
@@ -82,7 +88,7 @@ class YihaodianTradePuller
             end
 
             trade.trade_source_id = trade_source_id
-            trade.account_id = account_id
+            trade.account_id = account.id
             trade.seller_nick = trade_source.name
             trade.operation_logs.build(operated_at: Time.now, operation: '从一号店抓取订单')
 
@@ -107,8 +113,7 @@ class YihaodianTradePuller
       #同步本地顾客管理下面的"副本订单" : 注意 一号店没有顾客相关信息无法做顾客管理
       #CustomerFetch.perform_async(trade_source.id,'YihaodianTrade')
       #抓取订单退货信息
-      YihaodianRefundOrderMarker.perform_async(account_id)
+      YihaodianRefundOrderMarker.perform_async(trade_source_id)
     end
-
   end
 end

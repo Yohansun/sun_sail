@@ -15,10 +15,8 @@ module OmniAuth
         :parse          => :json
       }
 
-      extra do
-        {
-          :raw_info => raw_info
-        }
+      info do
+        raw_info.merge(credentials)
       end
 
       def raw_info

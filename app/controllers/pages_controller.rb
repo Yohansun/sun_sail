@@ -6,6 +6,7 @@ class PagesController < ApplicationController
   include PagesHelper
 
   def index
+    flash[:notice],flash[:error] = params[:notice], params[:error]
     redirect_to action: :"#{@default_login_template}"
   end
 
