@@ -1,6 +1,6 @@
 # encoding: utf-8
 class UsersController < ApplicationController
-  layout "management"
+  layout  "management"
   before_filter :authorize #,:except => [:autologin,:search,:edit_with_role]
 
   def autologin
@@ -233,5 +233,10 @@ class UsersController < ApplicationController
       User.where(:id => @users.map(&:id)).delete_all
       redirect_to users_path
     end
+  end
+
+  def sale_areas
+    @leaves = Area.includes(:sellers_areas).where(:sellers_areas => {:seller_id => current_user.seller_id}).leaves.page(params[:page]).per(20)
+    render("sale_areas", layout: "application")
   end
 end
