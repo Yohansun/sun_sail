@@ -83,7 +83,7 @@ class JingdongProductsController < ApplicationController
     current_account.jingdong_sources.each do |trade_source|
       @sync_products << sync_product = JingdongProductSync.new(trade_source.id)
       sync_product.parsing
-      @sync_skus += sync_sku = JingdongSkuSync.new({ware_ids: @sync_products.ware_ids, account_id: @sync_products.account_id})
+      @sync_skus += sync_sku = JingdongSkuSync.new({ware_ids: sync_product.ware_ids, account_id: sync_product.account_id})
       sync_sku.parsing
     end
   end
