@@ -129,26 +129,47 @@ class ProductsController < ApplicationController
       format.js
     end
   end
+   
+  ##多数组取第一个元素组成一个新的数组
+  def get_values_array array
+    return array[0] if array.size == 1
+    first = array.shift
+    return first.product( get_values_array(array) ).map {|x| x.flatten.join(" ")}
+  end
 
   def add_sku
     begin
-      sku = OpenStruct.new({:id =>Time.now.strftime("%Y%m%d%k%M%S%L") }.merge!(params[:tmp_sku] || {}))
       values = []
       params[:sku_property].each do |k,v|
-        sku.sku_properties ||= []
-        sku.sku_properties << OpenStruct.new(v.merge(:id => k))
-        values << CategoryPropertyValue.find(v["category_property_value_id"]).value
+        a_values = []
+        v["category_property_value_id"].each do |_v|
+          value = CategoryPropertyValue.find(_v).value
+          a_values << value
+        end
+        values << a_values
       end
-      sku.value = values * " | "
-      sku.attributes = {"sku_properties_attributes" => params[:sku_property]}.merge!(params[:tmp_sku] || {})
+      values = get_values_array(values)
+      values.each do|value|
+        sku = OpenStruct.new({:id =>Time.now.strftime("%Y%m%d%k%M%S%L") }.merge!(params[:tmp_sku] || {}))
+        sku.value = value.split(" ") * "|"
+        sku.sku_properties ||= []
+        hash_value = {}
+        value.split(" ").each do |v|
+          category_property_id = CategoryPropertyValue.find_by_value(v).category_property_id
+          category_property_value_id = CategoryPropertyValue.find_by_value(v).id
+          sku.sku_properties << OpenStruct.new({"category_property_value_id" => category_property_value_id}.merge(:id => category_property_id))
+          hash_value.merge!(category_property_id => {"category_property_value_id"=>category_property_value_id})
+        end
+        sku.attributes = {"sku_properties_attributes" => hash_value}.merge!(params[:tmp_sku] || {})
+        
+        @product = current_account.products.find_by_id params[:id]
 
-      @product = current_account.products.find_by_id params[:id]
-
-      if @product.blank?
-        @skus = current_user.settings.tmp_skus += Array.wrap(sku)
-      else
-        Sku.create(:sku_id=>params[:tmp_sku][:sku_id],:account_id => current_account.id,:product_id => params[:id],:sku_properties_attributes => params[:sku_property])
-        @skus = @product.skus
+        if @product.blank?
+          @skus = current_user.settings.tmp_skus += Array.wrap(sku)
+        else
+          Sku.create(:sku_id=>params[:tmp_sku][:sku_id],:account_id => current_account.id,:product_id => params[:id],:sku_properties_attributes => hash_value)
+          @skus = @product.skus
+        end
       end
     rescue Exception => e
       @error_message = e.message
