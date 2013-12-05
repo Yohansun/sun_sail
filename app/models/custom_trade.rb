@@ -35,7 +35,7 @@ class CustomTrade < Trade
   before_update :check_finish_status
 
   def custom_type_name
-    (fetch_account.settings.trade_types ||= { handmade_trade: "人工订单",gift_trade: "赠品订单" })[custom_type.to_s] || "无"
+    (fetch_account.settings.trade_types ||= { handmade_trade: "人工订单",gift_trade: "赠品订单" })[custom_type.to_s] || "其他订单"
   end
 
   def created_larger_than_pay_time
@@ -144,12 +144,11 @@ class CustomTrade < Trade
   # end
 
   def self.make_new_trade(trade, current_account, current_user)
-    trade[:receiver_state] = Area.find(trade[:receiver_state]).try(:name) rescue nil
-    trade[:receiver_city]  = Area.find(trade[:receiver_city]).try(:name) rescue nil
+    trade[:receiver_state]    = Area.find(trade[:receiver_state]).try(:name) rescue nil
+    trade[:receiver_city]     = Area.find(trade[:receiver_city]).try(:name) rescue nil
     trade[:receiver_district] = Area.find(trade[:receiver_district]).try(:name) rescue nil
     custom_trade = new(trade)
     custom_trade.account_id = current_account.id
-    #custom_trade.tid = (Time.now.to_i.to_s + current_user.id.to_s + rand(10..99).to_s + "H" )
     custom_trade.custom_type = trade[:custom_type] || "handmade_trade"
     if current_account.settings.open_auto_mark_invoice == 1
       if trade[:seller_memo]

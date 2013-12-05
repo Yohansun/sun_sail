@@ -15,4 +15,6 @@ class TradeGift
   validates_uniqueness_of :gift_tid
 
   embedded_in :trades
+  embeds_many :ref_orders
+
 end
