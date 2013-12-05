@@ -14,7 +14,7 @@
     </ul><!-- nav-tabs -->
     <div class="tab-content">
       <%= form_tag trade_types_path,id: "trade_type" do %>
-        <%= render :partial => 'form',:locals => {:trade_types => {}} %>
+        <%= render :partial => 'form',:locals => {:trade_types => {@trade_types}} %>
       <% end %>
     </div>
   </div>
