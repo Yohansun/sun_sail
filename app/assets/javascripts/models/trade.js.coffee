@@ -38,7 +38,7 @@ class MagicOrders.Models.Trade extends Backbone.Model
         if this.attributes.merged_trade_ids && this.attributes.merged_trade_ids.length > 0
           enabled_items.push('split_merged_trades')
 
-        if this.attributes.trade_source == "人工" && not this.attributes.seller_id
+        if this.attributes.trade_type == "CustomTrade" && not this.attributes.seller_id
           enabled_items.push('edit_handmade_trade') #编辑人工订单
 
         if this.attributes.seller_id
