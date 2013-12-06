@@ -1,0 +1,66 @@
+<style type = "text/css">
+.panel {
+  margin-bottom: 20px;
+  background-color: #fff;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  box-shadow: 0 1px 1px rgba(0,0,0,0.05);
+}
+.panel-danger {
+  border-color: #ebccd1;
+}
+.panel-danger>.panel-heading {
+  color: #a94442;
+  background-color: #f2dede;
+  border-color: #ebccd1;
+}
+.panel-heading {
+  padding: 10px 15px;
+  border-bottom: 1px solid transparent;
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+}
+.panel-title {
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 16px;
+  color: inherit;
+}
+.panel-body {
+  padding: 15px;
+}
+body {
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 14px;
+  line-height: 1.428571429;
+  color: #333;
+}
+
+html {
+  font-size: 62.5%;
+  font-family: sans-serif;
+}
+</style>
+
+<div class="panel panel-danger">
+  <div class="panel-heading">
+    <% if @message.blank? %>
+    <h3 class="panel-title">A <strong><%= @exception.class %></strong> occurred in background at <%= Time.current %> :</h3>
+    <% else %>
+    <h3 class="panel-title" title="<%= Time.current %>"><strong><%= @message %></strong> </h3>
+    <% end %>
+  </div>
+  <div class="panel-body">
+    <%= @exception.message %>
+    <%= @backtrace.first %>
+  </div>
+</div>
+
+  <%  sections = @sections.map do |section|
+        summary = render(section).strip
+        unless summary.blank?
+          title = render("title", :title => section).strip
+          "#{title}\n\n#{summary.gsub(/^/, "  ")}\n\n"
+        end
+      end %>
+  <%= raw sections.join %>
