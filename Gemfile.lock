@@ -50,7 +50,7 @@ GEM
       audited (= 3.0.0)
     awesome_nested_set (2.1.5)
       activerecord (>= 3.0.0)
-    awesome_print (1.1.0)
+    awesome_print (1.2.0)
     backbone-on-rails (0.9.9.0)
       eco
       ejs
@@ -535,7 +535,7 @@ DEPENDENCIES
   annotate (~> 2.4.1.beta1)
   audited-activerecord (~> 3.0)
   awesome_nested_set
-  awesome_print
+  awesome_print (~> 1.2.0)
   backbone-on-rails
   bond
   capistrano (~> 2.15.4)

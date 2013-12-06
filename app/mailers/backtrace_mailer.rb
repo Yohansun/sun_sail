@@ -22,10 +22,6 @@ class BacktraceMailer < ExceptionNotifier::Notifier
       %("Exception Notifier" <exception.notifier@networking.io>)
     end
 
-    def default_exception_recipients
-      %w(zhoubin@networking.io wang@networking.io hui@networking.io xiaoliang@networking.io zhanghong@networking.io)
-    end
-
     def default_sections
       ["backtrace"]
     end
@@ -33,6 +29,8 @@ class BacktraceMailer < ExceptionNotifier::Notifier
 
   def background_exception_notification(exception, options={})
     self.append_view_path "#{Rails.root}/app/views"
+    options.symbolize_keys!
+    @message = options.delete(:message)
 
     @options   = self.class.default_options
     @exception = exception
@@ -43,10 +41,10 @@ class BacktraceMailer < ExceptionNotifier::Notifier
     @data.each do |name, value|
       instance_variable_set("@#{name}", value)
     end
-    subject  = compose_subject(exception)
+    subject  = @message.nil? ? compose_subject(exception) : "#{@options[:email_prefix]} #{@message}"
 
     mail(:to => @options[:exception_recipients], :from => @options[:sender_address], :subject => subject) do |format|
-      format.text { render "#{mailer_name}/background_exception_notification" }
+      format.html { render "#{mailer_name}/background_exception_notification" }
     end.deliver
   end
 

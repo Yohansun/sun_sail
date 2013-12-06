@@ -46,7 +46,7 @@ group :test, :development do
   gem 'bond'
   gem 'puma'
   gem 'wirble'
-  gem 'awesome_print'
+  gem 'awesome_print',"~> 1.2.0"
   gem 'map_by_method'
   gem 'hirb'
   gem 'rvm-capistrano'
