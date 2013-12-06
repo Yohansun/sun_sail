@@ -186,7 +186,6 @@ describe TradeObserver do
        "http://img04.taobaocdn.com/bao/uploaded/i4/17005036511252284/T1stXqFe8aXXXXXXXX_!!0-item_pic.jpg"}],
    "tid"=>"HB1374144552295",
    "total_fee"=>1315.0,
-   "trade_gifts"=>[],
    "unusual_states"=>[],
    "updated_at"=>"2013-07-19 06:26:51 UTC",
    "yfx_fee"=>0.0}
@@ -326,7 +325,6 @@ describe TradeObserver do
        "http://img04.taobaocdn.com/bao/uploaded/i4/17005036504680223/T1E2XpFfXbXXXXXXXX_!!0-item_pic.jpg"}],
    "tid"=>"137414455229501",
    "total_fee"=>1315.0,
-   "trade_gifts"=>[],
    "unusual_states"=>[],
    "updated_at"=>"2013-07-19 06:26:51 UTC",
    "yfx_fee"=>0.0}
@@ -445,7 +443,6 @@ describe TradeObserver do
        "http://img04.taobaocdn.com/bao/uploaded/i4/17005036511252284/T1stXqFe8aXXXXXXXX_!!0-item_pic.jpg"}],
    "tid"=>"137414455229502",
    "total_fee"=>1315.0,
-   "trade_gifts"=>[],
    "unusual_states"=>[],
    "updated_at"=>"2013-07-19 06:26:51 UTC",
    "yfx_fee"=>0.0}

@@ -11,7 +11,7 @@ class Trade
 
   field :account_id, type: Integer
   field :seller_id, type: Integer
-  field :forecast_seller_id, type: Integer                 #预测发货经销商
+  field :forecast_seller_id, type: Integer                # 预测发货经销商
   field :seller_alipay_no, type: String
   field :seller_mobile, type: String
   field :seller_phone, type: String
@@ -232,6 +232,7 @@ class Trade
   index mergeable_id: 1
   index operator_id: 1
   index logistic_id: 1
+  index main_trade_id: 1
 
 
   # 状态搜索index
@@ -260,15 +261,12 @@ class Trade
   index "unusual_states.key" => 1
   index "unusual_states.reason" => 1
   index "unusual_states.note" => 1
-  index "trade_gifts.gift_title" => 1
-  index "trade_gifts.gift_memo" => 1
   index "taobao_orders.title" => 1
 
   embeds_many :unusual_states
   embeds_many :operation_logs
   embeds_many :ref_batches
   embeds_many :manual_sms_or_emails
-  embeds_many :trade_gifts
   embeds_many :taobao_orders
   embeds_many :promotion_details
 
@@ -364,54 +362,6 @@ class Trade
     when "YihaodianTrade" then logistic && logistic.yihaodian_logistic_id(trade_source_id)
     else nil
     end
-  end
-
-  def fields_for_gift_trade
-    fields = {}
-    fields["seller_nick"] = seller_nick
-    fields["buyer_nick"] = buyer_nick
-    fields["account_id"] = account_id
-    fields["trade_source_id"] = trade_source_id
-    fields["receiver_name"] = receiver_name
-    fields["receiver_mobile"] = receiver_mobile
-    fields["receiver_phone"] = receiver_phone
-    fields["receiver_address"] = receiver_address
-    fields["receiver_zip"] = receiver_zip
-    fields["receiver_state"] = receiver_state
-    fields["receiver_city"] = receiver_city
-    fields["receiver_district"] = receiver_district
-    fields["status"] = 'WAIT_SELLER_SEND_GOODS'
-    fields["created"] = Time.now
-    fields["pay_time"] = Time.now
-    fields["custom_type"] = "gift_trade"
-
-    return fields
-  end
-
-  def add_gift_order(value)
-    local_sku_id = (value['sku_id'].to_i == 0 ? nil : value['sku_id'].to_i)
-    sku = Sku.find_by_id(local_sku_id)
-    gift_product = Product.find_by_id(value['product_id'].to_i)
-    self.taobao_orders.create!(
-      _type:          "TaobaoOrder",
-      status:         "WAIT_SELLER_SEND_GOODS",
-      refund_status:  "NO_REFUND",
-      oid:            value['gift_tid'],
-      title:          value['gift_title'].try(:gsub, '标准款', ''),
-      num:            value['num'].to_i,
-      order_gift_tid: value['gift_tid'],
-      price:          0,
-      total_fee:      0,
-      payment:        0,
-      discount_fee:   0,
-      adjust_fee:     0,
-      sku_id:         sku.try(:sku_id),  # this should be skus.sku_id not skus.id, and its' type is string not integer.
-      local_sku_id:   local_sku_id, # this should be skus.id, and its' type is integer.
-      pic_path:       gift_product.pic_url,
-      cid:            gift_product.cid,
-      outer_iid:      gift_product.outer_id,
-      num_iid:        gift_product.num_iid
-    )
   end
 
   ['add_ref', 'return_ref', 'refund_ref'].each do |ref_method|
@@ -1310,10 +1260,10 @@ class Trade
 
 
               elsif key == "has_gift_memo"
-                search_tags_hash.update({"$or" => [{"trade_gifts" => {"$elemMatch" => {"gift_title" => not_void}}},{"gift_memo" => not_void}]})
-                search_tags_hash.update({"$or" => [{"trade_gifts" => {"$elemMatch" => {"gift_title" => words}}},{"gift_memo" => words}]}) if words
-                and_cond << {"$or" => [{"trade_gifts" => {"$elemMatch" => {"gift_title" => not_void}}},{"gift_memo" => not_void}]}
-                and_cond << {"$or" => [{"trade_gifts" => {"$elemMatch" => {"gift_title" => words}}},{"gift_memo" => words}]} if words
+                search_tags_hash.update({"$or" => [{"taobao_orders" => {"$elemMatch" => {"title" => not_void}}},{"gift_memo" => not_void}]})
+                search_tags_hash.update({"$or" => [{"taobao_orders" => {"$elemMatch" => {"title" => words}}},{"gift_memo" => words}]}) if words
+                and_cond << {"$or" => [{"taobao_orders" => {"$elemMatch" => {"title" => not_void, "order_gift_tid" => {"$ne" => nil}}}},{"gift_memo" => not_void}]}
+                and_cond << {"$or" => [{"taobao_orders" => {"$elemMatch" => {"title" => words, "order_gift_tid" => {"$ne" => nil}}}},{"gift_memo" => words}]} if words
 
                 conditions[key] << {"$and"=>and_cond}
 
@@ -1345,12 +1295,12 @@ class Trade
                 search_tags_hash.update({"$and" => [{"invoice_name" => void},{"invoice_type" => void},{"invoice_content" => void}]})
                 conditions[key] << {"$and" => [{"invoice_name" => void},{"invoice_type" => void},{"invoice_content" => void}]}
               elsif key == "has_product_info"
-                search_tags_hash.update({"taobao_orders" => {"$elemMatch" => {"title" => void}}})
+                search_tags_hash.update({"taobao_orders" => {"$elemMatch" => {"title" => void, "order_gift_tid" => {"$ne" => nil}}}})
                 conditions[key] << {"taobao_orders" => {"$elemMatch" => {"title" => void}}}
               elsif key == "has_gift_memo"
-                search_tags_hash.update({"trade_gifts" => {"$elemMatch" => {"gift_title" => void}}})
+                search_tags_hash.update({"taobao_orders" => {"$elemMatch" => {"title" => void, "order_gift_tid" => {"$ne" => nil}}}})
                 search_tags_hash.update({"gift_memo" => void})
-                conditions[key] << {"trade_gifts" => {"$elemMatch" => {"gift_title" => void}}}
+                conditions[key] << {"taobao_orders" => {"$elemMatch" => {"gift_title" => void, "order_gift_tid" => {"$ne" => nil}}}}
               elsif key == "has_logistic_info"
                 search_tags_hash.update({"$or" => [{"logistic_id" => void},{"logistic_waybill" => void}]})
                 conditions[key] << {"$or" => [{"logistic_id" => void},{"logistic_waybill" => void}]}

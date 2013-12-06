@@ -330,7 +330,6 @@ describe "Trades" do
      "http://img04.taobaocdn.com/bao/uploaded/i4/17005036511252284/T1stXqFe8aXXXXXXXX_!!0-item_pic.jpg"}],
  "tid"=>"HB1374144552295",
  "total_fee"=>1315.0,
- "trade_gifts"=>[],
  "unusual_states"=>[],
  "updated_at"=>"2013-07-19 06:26:51 UTC",
  "yfx_fee"=>0.0}

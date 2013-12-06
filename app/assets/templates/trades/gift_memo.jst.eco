@@ -22,34 +22,28 @@
     <table class="table table-bordered">
       <thead>
         <tr>
-          <th width="15%">赠品编号</th>
-          <th width="40%">赠品名称</th>
-          <th width="15%">关联订单</th>
+          <th width="50%">赠品名称</th>
           <th width="10%">数量</th>
+          <th width="20%">关联订单</th>
           <th width="10%">是否拆分</th>
           <th width="10%">操作</th>
         </tr>
       </thead>
       <tbody id="gift_list">
-        <% for tg in @trade.get('trade_gifts'): %>
-        <tr id="<%= tg.sku_id %>" class="product_<%= tg.product_id %>">
-          <td><%= tg.gift_tid %></td>
-          <td><%= tg.gift_title %></td>
+        <% for gift_order in @trade.get('gift_orders'): %>
+        <tr data-order_id="<%= gift_order.order_id %>">
+          <td><%= gift_order.gift_title %></td>
+          <td><%= gift_order.num %></td>
+          <td><%= gift_order.gift_tid %></td>
           <td>
-            <% if tg.trade_id != '' : %>
-              <%= tg.gift_tid.slice(0,-3) %>
-            <% end %>
-          </td>
-          <td><%= tg.num %></td>
-          <td>
-            <% if tg.trade_id != '' : %>
-            拆分
+            <% if gift_order.is_split : %>
+              拆分
             <% else : %>
-            不拆分
+              不拆分
             <% end %>
           </td>
           <td>
-            <% if tg.delivered_at == null : %>
+            <% if gift_order.delivered_at == null : %>
             <button class="btn delete_a_gift">删除</button>
             <% else : %>
             已发货

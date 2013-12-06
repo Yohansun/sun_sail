@@ -40,31 +40,25 @@ class MagicOrders.Views.TradesBatchAddGift extends Backbone.View
         $('#select_sku').select2 data: s_data
 
   add_gift: ->
-    if $('#gift_list').find('tr:last td:first').text() == ''
-      gift_num = 0
-    else
-      gift_num = parseInt($('#gift_list').find('tr:last td:first').text().slice(-1))
-    category_id = $("#select_category").val()
-    product_id = $("#select_product").val()
-    sku_id = $("#select_sku").val()
-    num = $('#gift_num').val()
 
-    if category_id == ""
+    if $("#select_category").val() == ""
       alert("请选择分类")
       return
 
+    product_id = $("#select_product").val()
     if product_id == ""
       alert("请选择商品")
       return
 
+    sku_id = $("#select_sku").val()
     if (sku_id == "" and @has_sku == true)
       alert("请选择SKU")
       return
 
+    num = $('#gift_num').val()
     if num == ''
       alert("数量不能为空。")
       return
-
     if /^[1-9]{1}[0-9]*$/.test(num) != true
       alert("数量格式不正确。")
       return
@@ -76,17 +70,7 @@ class MagicOrders.Views.TradesBatchAddGift extends Backbone.View
       alert("已添加过赠品")
       return
 
-    product_name = $("#select_product").select2('data').text
-    if $("#select_sku").select2('data') != null
-      sku_name = $("#select_sku").select2('data').text
-    else
-      sku_name = ""
-    gift_title = product_name + sku_name
-
-    if $('#add_gift_tid').is(':checked')
-      split_text = "拆分"
-    else
-      split_text = "不拆分"
+    gift_title = $("#select_product").select2('data').text + $("#select_sku").select2('data').text
 
     $.get '/trades/verify_add_gift', {ids: @trade_ids, sku_id: sku_id}, (data) ->
       if data['has_jingdong_trade'] == true
@@ -96,11 +80,12 @@ class MagicOrders.Views.TradesBatchAddGift extends Backbone.View
         alert("赠品订单不能添加赠品！")
         return
       else
-        $('#gift_list').append("<tr id='"+product_id+"' class='product_"+sku_id+" new_add_gift'>"+
-                               "  <td>"+gift_title+"</td>"+
-                               "  <td>"+num+"</td>"+
-                               "  <td>"+split_text+"</td>"+
-                               "</tr>")
+        $('#gift_list').append(
+          "<tr data-sku_id='"+sku_id+"' data-product_id='"+product_id+"' class='new_add_gift'>"+
+          "  <td>"+gift_title+"</td>"+
+          "  <td>"+num+"</td>"+
+          "</tr>"
+        )
 
     $.get '/trades/verify_add_gift', {ids: @trade_ids, sku_id: sku_id}, (data) ->
       if data['tids'] != ""
@@ -109,16 +94,18 @@ class MagicOrders.Views.TradesBatchAddGift extends Backbone.View
   save: ->
     blocktheui()
     @add_gifts = {}
+    @add_gifts['gift_orders'] = {}
     length = $('#gift_list').find('tr').length
     if length != 0
+      @add_gifts['is_split'] = $('#add_gift_tid').is(':checked')
       for i in [0..(length-1)]
         $gift_info = $('#gift_list').find("tr:eq("+i+")")
-        product_id = $gift_info.attr('id')
-        sku_id = $gift_info.attr('class').slice(8, -13)
-        gift_title = $gift_info.children("td:eq(0)").text()
-        num = $gift_info.children("td:eq(1)").text()
-        has_main_trade = ($gift_info.children("td:eq(2)").text() == "拆分" ? true : false)
-        @add_gifts[i] = {"sku_id": sku_id, "gift_title": gift_title, "product_id": product_id, "num": num, "has_main_trade": has_main_trade}
+        if $gift_info.attr('class') == "new_add_gift"
+          sku_id      = $gift_info.data('sku_id')
+          product_id  = $gift_info.data('product_id')
+          gift_title  = $gift_info.children("td:eq(0)").text()
+          num         = $gift_info.children("td:eq(1)").text()
+          @add_gifts['gift_orders'][i] = {"sku_id": sku_id, "gift_title": gift_title, "product_id": product_id, "num": num}
 
     operation = "批量添加赠品"
     gift_memo = $("#gift_memo_text").val()

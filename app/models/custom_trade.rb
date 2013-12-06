@@ -56,22 +56,10 @@ class CustomTrade < Trade
   end
 
   def deliver!
-    main_trade = Trade.where(_id: main_trade_id).first
-    # 如果是赠品订单，更新主订单赠品发货时间
-    if main_trade
-      gift_tid = tid.dup
-      main_trade.trade_gifts.where(gift_tid: gift_tid).first.update_attributes(delivered_at: Time.now)
-    end
     TradeDeliver.perform_async(self.id)
   end
 
   def auto_deliver!
-    main_trade = Trade.where(_id: main_trade_id).first
-    # 如果是赠品订单，更新主订单赠品发货时间
-    if main_trade
-      gift_tid = tid.dup
-      main_trade.trade_gifts.where(gift_tid: gift_tid).first.update_attributes(delivered_at: Time.now)
-    end
     result = self.fetch_account.can_auto_deliver_right_now
     TradeAutoDeliver.perform_in((result == true ? self.fetch_account.settings.auto_settings['deliver_silent_gap'].to_i.hours : result), self.id)
     self.is_auto_deliver = true

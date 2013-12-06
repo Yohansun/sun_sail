@@ -1,5 +1,6 @@
 # -*- encoding:utf-8 -*-
 module TradesHelper
+  include MagicGift
 
   def can_change_logistic(trade)
     trade.status == 'WAIT_SELLER_SEND_GOODS'

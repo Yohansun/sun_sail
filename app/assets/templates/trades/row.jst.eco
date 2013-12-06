@@ -115,11 +115,11 @@
   <% if @trade.get('has_cs_memo') == true : %>
   <a href="javascript:void(0)" rel="popover" data-content="<%= @trade.get 'cs_memo' %><br/><br/><% for order in @trade.get('orders'): %><% if order.cs_memo: %><b><%= order.title %>:</b> <span style= 'color:#08C' ><%= order.cs_memo %></span><br/><% end %><% end %>" data-original-title="<b>客服备注</b>"><i class="icon-comm_serv"></i></a>
   <% end %>
-  <% if @trade.get('gift_memo') || @trade.get('trade_gifts').length != 0 || @trade.get('main_trade_id') : %>
+  <% if @trade.get('gift_memo') || @trade.get('gift_orders').length != 0 || @trade.get('main_trade_id') : %>
     <% if @trade.get('main_trade_id') : %>
     <a href="#" data-toggle='modal' data-type="detail" class="gift_trade_pop">主订单号:</br><%= @trade.get('tid').slice(0,-2) %></a>
     <% else : %>
-    <a href="javascript:void(0)" rel="popover" data-content="<% for gift in @trade.get('trade_gifts'): %><%= gift.gift_title %>:<% if gift.trade_id == '' : %><%= gift.gift_tid %><% else : %><a href class='gift_trade_pop'><%= gift.gift_tid %></a><% end %></span><br/><% end %><%= @trade.get 'gift_memo' %><br/>" data-original-title="<b>赠品属性</b>"><i class="icon-gift_memo"></i></a>
+    <a href="javascript:void(0)" rel="popover" data-content="<% for gift in @trade.get('gift_orders'): %><%= gift.gift_title %>:<% if gift.is_split : %><a href class='gift_trade_pop'><%= gift.gift_tid %></a><% else : %><%= gift.gift_tid %><% end %></span><br/><% end %><%= @trade.get 'gift_memo' %><br/>" data-original-title="<b>赠品属性</b>"><i class="icon-gift_memo"></i></a>
     <% end %>
   <% end %>
   <% if @trade.get('invoice_type') && @trade.get('invoice_type') != "无需开票" && @trade.get('invoice_type') != "不需要": %>

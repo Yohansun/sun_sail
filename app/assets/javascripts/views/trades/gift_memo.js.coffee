@@ -3,11 +3,11 @@ class MagicOrders.Views.TradesGiftMemo extends Backbone.View
   template: JST['trades/gift_memo']
 
   events:
-    'click .save': 'save'
-    'click #add_gift_to_list' : 'add_gift'
-    'click .delete_a_gift' : 'delete_gift'
-    'change #select_category': 'change_product'
-    'change #select_product' : 'change_sku'
+    'click .save':              'save'
+    'click #add_gift_to_list':  'add_gift'
+    'click .delete_a_gift':     'delete_gift'
+    'change #select_category':  'change_product'
+    'change #select_product':   'change_sku'
 
   initialize: ->
     @model.on("fetch", @render, this)
@@ -70,8 +70,8 @@ class MagicOrders.Views.TradesGiftMemo extends Backbone.View
       "<tr data-sku_id='"+sku_id+"' data-product_id='"+product_id+"' class='new_add_gift'>"+
       "  <td>"+gift_title+"</td>"+
       "  <td>"+num+"</td>"+
-      "  <td>待定</td>"+
-      "  <td>待定</td>"+
+      "  <td></td>"+
+      "  <td></td>"+
       "  <td><button class='btn delete_a_gift'>删除</button></td>"+
       "</tr>"
     )
@@ -86,13 +86,15 @@ class MagicOrders.Views.TradesGiftMemo extends Backbone.View
   save: ->
     blocktheui()
     @add_gifts = {}
+    @add_gifts['gift_orders'] = {}
     @delete_gifts = []
     length = $('#gift_list').find('tr').length
     if length != 0
+      @add_gifts['is_split'] = $('#add_gift_tid').is(':checked')
       for i in [0..(length-1)]
         $gift_info = $('#gift_list').find("tr:eq("+i+")")
         if $gift_info.attr('style') == "display: none;"
-          order_id = $gift_info.data("order")
+          order_id = $gift_info.data("order_id")
           @delete_gifts.push(order_id)
         else
           if $gift_info.attr('class') == "new_add_gift"
@@ -100,9 +102,7 @@ class MagicOrders.Views.TradesGiftMemo extends Backbone.View
             product_id  = $gift_info.data('product_id')
             gift_title  = $gift_info.children("td:eq(0)").text()
             num         = $gift_info.children("td:eq(1)").text()
-
-            @add_gifts[i] = {"sku_id": sku_id, "gift_title": gift_title, "product_id": product_id, "num": num}
-            @add_gifts['should_split'] = $('#add_gift_tid').is(':checked')
+            @add_gifts['gift_orders'][i] = {"sku_id": sku_id, "gift_title": gift_title, "product_id": product_id, "num": num}
 
     new_model = new MagicOrders.Models.Trade(id: @model.id)
     new_model.save {operation: "赠品修改", delete_gifts: @delete_gifts, add_gifts: @add_gifts, gift_memo: $("#gift_memo_text").val()},
