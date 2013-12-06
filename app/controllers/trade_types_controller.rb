@@ -2,13 +2,13 @@
 class TradeTypesController < ApplicationController
   layout "management"
   before_filter :authorize
+  before_filter :trade_types
+  before_filter :validate_key,only: [:create,:update]
 
-  def index
-    @trade_types = trade_type
-  end
+
+  def index;end
   
-  def new
-  end
+  def new;end
 
   def create
     settings.merge!("trade_types",{params[:key] => params[:value]})
@@ -16,13 +16,10 @@ class TradeTypesController < ApplicationController
     redirect_to action: :index
   end
 
-  def edit
-    @trade_types = trade_type
-  end
+  def edit;end
 
   def update
-    key = params[:id] == params[:key] ? params[:id] : params[:key]
-    settings.merge!("trade_types",{ key => params[:value] })
+    settings.trade_types =  trade_type.except(params[:id]).merge(params[:key] => params[:value])
     flash[:notice] = "更新成功"
     redirect_to action: :index
   end
@@ -38,7 +35,15 @@ class TradeTypesController < ApplicationController
     current_account.settings
   end
 
-  def trade_type
-    @trade_type = (settings.trade_types ||= {})
+  def trade_types
+    @trade_types = (settings.trade_types ||= {})
+  end
+
+  def validate_key
+    if params[:id] != params[:key] && trade_types.key?(params[:key])
+      flash[:error] = "英文名已存在,请选择其他英文名!"
+      render(action: :edit,id: params[:id]) and return if params[:id]
+      render(action: :new) and return
+    end
   end
 end

@@ -13,7 +13,8 @@
       <li class="active"><a href="/trade_types">人工订单分类管理</a></li>
     </ul><!-- nav-tabs -->
     <div class="tab-content">
-      <%= form_tag trade_type_path("trade_type"), method: :put do %>
+      <%= form_tag trade_type_path(params[:id]), method: :put,id: "trade_type" do %>
+      <h3><%= @trade_types[params[:id]] %></h3>
         <%= render :partial => 'form',:locals => {:trade_types => @trade_types} %>
       <% end %>
     </div>
