@@ -22,6 +22,10 @@ class BacktraceMailer < ExceptionNotifier::Notifier
       %("Exception Notifier" <exception.notifier@networking.io>)
     end
 
+    def default_background_sections
+      %w(data backtrace)
+    end
+
     def default_sections
       ["backtrace"]
     end
