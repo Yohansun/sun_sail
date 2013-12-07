@@ -11,7 +11,7 @@ class JingdongRefundOrderMarker
     #没有加query_fields,需要加
     data = {parameters: {method: '360buy.after.search',select_fields: 'receive_state,return_item_list',page: 100,page_size: 10}}
     response = JingdongQuery.get(data[:parameters], query_conditions)
-    cache_exception!("退货信息抓取异常",data.merge({response: response,trade_source_id: trade_source_id})) do
+    cache_exception!("京东退货信息抓取异常(#{trade.shop_name})",data.merge({response: response,trade_source_id: trade_source_id})) do
       return_orders = response['after_search_response']['after']["return_infos"]['return_item_list'].each do |order|
         trade = JingdongTrade.where(tid: order['order_id']).first
         return_order = trade.orders.where(sku_id: order['order_id']).first
