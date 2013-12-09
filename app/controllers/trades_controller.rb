@@ -8,6 +8,8 @@ class TradesController < ApplicationController
   before_filter :authorize,:only => [:index,:print_deliver_bill]
 
   include StockProductsLockable
+  include MagicGift
+
   #include Dulux::Splitter
 
   def index
@@ -149,36 +151,9 @@ class TradesController < ApplicationController
       end
     end
 
-    #PENDING 京东订单赠品订单应该是custom_order,用本地sku的id,用本地商品的名称
     # 赠品更新
-    @trade.gift_memo = params[:gift_memo].strip if params[:gift_memo]
-    if params[:delete_gifts]
-      params[:delete_gifts].each do |gift_tid|
-        trade_gift = @trade.trade_gifts.where(gift_tid: gift_tid).first
-        if trade_gift
-          if trade_gift.delivered_at == nil && trade_gift.trade_id.present?
-            Trade.where(tid: gift_tid).first.delete
-          else
-            @trade.taobao_orders.where(order_gift_tid: gift_tid).first.delete
-          end
-          @trade.trade_gifts.where(gift_tid: gift_tid).first.delete
-        end
-      end
-    end
-    if params[:add_gifts]
-      params[:add_gifts].each do |key, value|
-        if value['trade_id'].present? #NEED ADAPTION?
-          fields = @trade.fields_for_gift_trade
-          fields["tid"] = value['gift_tid']
-          fields["main_trade_id"] = value['trade_id']
-          gift_trade = CustomTrade.create(fields)
-          gift_trade.add_gift_order(value)
-        else
-          @trade.add_gift_order(value)
-        end
-        @trade.trade_gifts.create!(value)
-      end
-    end
+    delete_gift_orders(@trade, params[:delete_gifts]) if params[:delete_gifts]
+    add_gift_orders(@trade, params[:add_gifts]) if params[:add_gifts]
 
     # 异常标注及解决
     unless params[:reason].blank?
@@ -219,6 +194,8 @@ class TradesController < ApplicationController
      :invoice_content,
      :invoice_date,
      :invoice_number,
+
+     :gift_memo
     ].each{|key|
       if params[key]
         if params[key].respond_to?(:strip)
@@ -312,7 +289,7 @@ class TradesController < ApplicationController
       end
     end
 
-    if @trade.save
+    if @trade.save!
       @trade = TradeDecorator.decorate(@trade)
       if notifer_seller_flag && @trade.is_paid_not_delivered && @trade.seller
         TradeDispatchEmail.perform_async(@trade.id, @trade.seller_id, 'second')
@@ -359,46 +336,24 @@ class TradesController < ApplicationController
   def verify_add_gift
     trades = Trade.where(:_id.in => params[:ids])
     types = trades.map(&:_type).uniq
-    if types.include?("JingdongTrade") || types.include?("YihaodianTrade")
+    if (types - ['TaobaoTrade', 'CustomTrade', 'Trade']).count > 0
       has_jingdong_trade = true
     end
     if trades.where(:main_trade_id.ne => nil).count > 0
       has_gift_trade = true
     end
-    trades_added_gift = trades.where(:trade_gifts.elem_match => {sku_id: (params[:sku_id] == "" ? nil : params[:sku_id].to_i)})
+    trades_added_gift = trades.where(:taobao_orders.elem_match => {local_sku_id: (params[:sku_id] == "" ? nil : params[:sku_id].to_i)})
     tids = trades_added_gift.all.map(&:tid).join(",") rescue nil
     render json: {tids: tids, has_jingdong_trade: has_jingdong_trade, has_gift_trade: has_gift_trade}
   end
 
   def batch_add_gift
     trades = Trade.where(:_id.in => params[:ids])
-    if params[:add_gifts]
-      params[:add_gifts].each do |key, value|
-        trades.each do |trade|
-          gift_tid_num = trade.trade_gifts.last.gift_tid.scan(/G[0-9]*/).first.delete("G").to_i rescue nil
-          if gift_tid_num.present?
-            value['gift_tid'] = trade.tid+"G"+(gift_tid_num + 1).to_s
-          else
-            value['gift_tid'] = trade.tid+"G1"
-          end
-          if value['has_main_trade'] == "true"
-            value['trade_id'] = trade._id
-            trade.gift_memo = params[:gift_memo]
-            fields = trade.fields_for_gift_trade
-            fields["tid"] = value['gift_tid']
-            fields["main_trade_id"] = value['trade_id']
-            gift_trade = CustomTrade.create(fields)
-            gift_trade.add_gift_order(value)
-          else
-            value['trade_id'] = ""
-            trade.add_gift_order(value)
-          end
-          trade.trade_gifts.create!(value)
-          trade.operation_logs.create(operated_at: Time.now, operation: params[:operation], operator_id: current_user.id, operator: current_user.name)
-        end
-      end
+    trades.each do |trade|
+      trade.gift_memo = params[:gift_memo]
+      add_gift_orders(trade, params[:add_gifts]) if params[:add_gifts]
+      trade.operation_logs.create(operated_at: Time.now, operation: params[:operation], operator_id: current_user.id, operator: current_user.name)
     end
-
     render json: {isSuccess: true}
   end
 

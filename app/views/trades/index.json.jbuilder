@@ -84,15 +84,13 @@ json.array!(@trades) do |json, trade|
     json.color_name order.color_name
   end
 
-  json.trade_gifts trade.trade_gifts do |json, gift|
-    json.id gift._id
-    json.gift_tid gift.gift_tid
-    json.trade_id gift.trade_id
-    json.gift_title gift.gift_title
-    json.num_iid gift.num_iid
-    json.sku_id gift.sku_id
-    json.num gift.num
-    json.delivered_at gift.delivered_at
+  json.gift_orders gift_orders(trade) do |json, gift_order|
+    json.order_id     gift_order._id
+    json.gift_tid     gift_order.trade.tid
+    json.is_split     gift_order.trade.main_trade_id.present?
+    json.gift_title   gift_order.title
+    json.num          gift_order.num
+    json.delivered_at gift_order.trade.delivered_at
   end
 
   #for gift_trade only!

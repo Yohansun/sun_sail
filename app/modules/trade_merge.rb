@@ -64,7 +64,6 @@
         new_trade.promotion_details = []
         new_trade.unusual_states = []
         new_trade.ref_batches = []
-        new_trade.trade_gifts = []
         new_trade.merged_trade_ids = []
 
         # merge other attributes like products, price
@@ -90,7 +89,7 @@
           trade.promotion_details.each{|p| new_trade.promotion_details << p}
           trade.unusual_states.each{|p| new_trade.unusual_states << p}
           trade.ref_batches.each{|p| new_trade.ref_batches << p}
-          trade.trade_gifts.each{|p| new_trade.trade_gifts << p}
+          Trade.where(main_trade_id: trade.id.to_s).update_all(main_trade_id: new_trade.id)
 
           # merge values
           new_trade.seller_memo += trade.seller_memo.to_s+"\n" if trade.seller_memo
@@ -116,7 +115,6 @@
            promotion_details
            unusual_states
            ref_batches
-           trade_gifts
            merged_trade_ids
         }.each{|f|
           new_trade[f] = nil if new_trade[f].blank?
@@ -299,11 +297,7 @@
         t.restore
         t.update_attributes(merged_by_trade_id: nil)
       }
-      self.trade_gifts.each{|gift|
-        if gift.trade_id.present? && gift.trade_id == self.id
-          Trade.where(tid: gift.gift_tid).each{|t| t.delete!}
-        end
-      }
+      Trade.where(main_trade_id: self.id.to_s).delete_all
 
       # reset all
       first_trade = Trade.where(id: self.merged_trade_ids[0]).first

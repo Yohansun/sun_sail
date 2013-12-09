@@ -23,9 +23,8 @@
     <table class="table table-bordered">
       <thead>
         <tr>
-          <th width="50%">赠品名称</th>
-          <th width="25%">数量</th>
-          <th width="25%">是否拆分</th>
+          <th width="70%">赠品名称</th>
+          <th width="30%">数量</th>
         </tr>
       </thead>
       <tbody id="gift_list">
