@@ -1,23 +1,15 @@
-<%
-  breadcrumb << ["自动化设置", "/account_setups/edit_preprocess_settings"]
-  breadcrumb << ["订单预处理"]
-%>
+<%= render 'crumbs' %>
+
 <div class="row-fluid">
   <div class="span10 w100">
-    <ul class="nav nav-tabs" style="margin-top: 5px;">
-      <li class="active"><a href="/account_setups/edit_preprocess_settings">订单预处理</a></li>
-      <li><a href="/account_setups/edit_dispatch_settings">订单分派</a></li>
-      <li><a href="/account_setups/edit_deliver_settings">订单发货</a></li>
-      <li><a href="/account_setups/edit_automerge_settings">自动合并订单</a></li>
-      <!--<li><a href="#default_logistics" data-toggle="tab">选择默认物流商</a></li>
-      <li><a href="#autobusiness_set" data-toggle="tab">自动化业务设置</a></li>
-      <li><a href="#login_user_set" data-toggle="tab">设置系统登录用户</a></li> -->
-    </ul><!-- nav-tabs -->
+
+    <%= render 'nav_tabs' %>
+
     <div class="tab-content">
       <div class="tab-pane active" id="users">
         <%= form_tag('/account_setups/update_preprocess_settings', class: 'form-horizontal', method: 'put') do -%>
-            <fieldset class="mar_l80"><!-- 订单预处理 beginning -->
-              <h4>订单预处理设置：</h4>
+            <fieldset class="mar_l80"><!-- 订单自动预处理 beginning -->
+              <h4>订单自动预处理设置：</h4>
               <div>
                 <p class="clear">
                   <label class="input-large pull-left">请选择自动预处理时间范围：</label>
@@ -27,17 +19,6 @@
                   <span class="muted">(不选择默认为全天开启)</span>
                 </p>
               </div>
-              <div>
-                <p class="clear">
-                  <label class="input-large pull-left">请选择自动预处理静默时间：</label>
-                  <select name="auto_settings[preprocess_silent_gap]" class="input-mini">
-                  <% [0,1,2,6,12,24,48,72].each do |i| %>
-                  <option value= "<%= i %>" <%= 'selected' if @setting['preprocess_silent_gap'] == i.to_s %>><%= i %></option>
-                  <% end %>
-                  </select>小时
-                </p>
-              </div>
-
               <div>
                 <label class="input-large pull-left">自动同步备注：</label>
                 <div class="controls ml210">
@@ -53,6 +34,16 @@
                     </div>
                   </div>
                 </div>
+              </div>
+              <div>
+                <p class="clear">
+                  <label class="input-large pull-left">请选择自动标注异常静默时间：</label>
+                  <select name="auto_settings[preprocess_silent_gap]" class="input-mini">
+                  <% [24,48,72].each do |i| %>
+                  <option value= "<%= i %>" <%= 'selected' if @setting['preprocess_silent_gap'] == i.to_s %>><%= i %></option>
+                  <% end %>
+                  </select>小时
+                </p>
               </div>
               <div>
                 <label class="input-large pull-left">自动标注异常订单(默认一天标注一次)：</label>

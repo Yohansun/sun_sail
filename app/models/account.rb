@@ -30,6 +30,7 @@
 class Account < ActiveRecord::Base
   include FinderCache
   include RailsSettings
+  include MagicAutoSettings
 
   attr_accessible :key, :name, :seller_name, :address, :deliver_bill_info, :phone, :website, :point_out
 
@@ -399,7 +400,7 @@ class Account < ActiveRecord::Base
   private
 
   def initialize_auto_settings
-    self.settings["auto_settings"] = {'split_conditions' => {},'dispatch_conditions'=>{},'unusual_conditions'=>{}}
+    self.settings["auto_settings"] = check_auto_settings()
   end
 
   def create_default_seller

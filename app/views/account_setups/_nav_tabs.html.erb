@@ -1,0 +1,9 @@
+<ul class="nav nav-tabs">
+  <%- auto_block_with_text.each do |block, block_text| %>
+    <%- if params[:action] =~ /#{block}/ %>
+      <li class="active"><a href="/account_setups/edit_<%= block %>_settings"><%= block_text %></a></li>
+    <%- else %>
+      <li><a href="/account_setups/edit_<%= block %>_settings"><%= block_text %></a></li>
+    <% end %>
+  <% end %>
+</ul><!-- nav-tabs -->

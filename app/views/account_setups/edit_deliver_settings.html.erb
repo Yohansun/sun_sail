@@ -1,18 +1,9 @@
-<%
-  breadcrumb << ["自动化设置", "/account_setups/edit_preprocess_settings"]
-  breadcrumb << ["订单发货"]
-%>
+<%= render 'crumbs' %>
+
 <div class="row-fluid">
   <div class="span10 w100">
-    <ul class="nav nav-tabs">
-      <li><a href="/account_setups/edit_preprocess_settings">订单预处理</a></li>
-      <li><a href="/account_setups/edit_dispatch_settings">订单分派</a></li>
-      <li class="active"><a href="/account_setups/edit_deliver_settings">订单发货</a></li>
-      <li><a href="/account_setups/edit_automerge_settings">自动合并订单</a></li>
-      <!--<li><a href="#default_logistics" data-toggle="tab">选择默认物流商</a></li>
-      <li><a href="#autobusiness_set" data-toggle="tab">自动化业务设置</a></li>
-      <li><a href="#login_user_set" data-toggle="tab">设置系统登录用户</a></li> -->
-    </ul><!-- nav-tabs -->
+
+    <%= render 'nav_tabs' %>
 
     <div class="tab-content">
       <div class="tab-pane active" id="deliver_settings">
@@ -34,22 +25,6 @@
                   <input type="text" class="input-mini timepickers radius_no_rb" name="auto_settings[end_deliver_at]" value="<%= @setting['end_deliver_at']%>">
                   <span class="muted">(不选择默认为全天开启)</span>
                 </p>
-                <!--
-                  <p class="clear">
-                    <label class="input-large pull-left">请输入每次发货数量：</label>
-                    <div class="mar_l80">
-                      <input type="text" class="input-small" name="auto_settings[one_deliver_num]" value="<%= @setting['one_deliver_num']%>">单
-                      <span class="muted">（数量不限制）</span>
-                    </div>
-                  </p>
-                  <p class="clear">
-                    <label class="input-large pull-left">请输入每次发货间隔时间：</label>
-                    <div class="mar_l80">
-                      <input type="text" class="input-small" name="auto_settings[deliver_frequency]" value="<%= @setting['deliver_frequency']%>">分钟
-                      <span class="muted">（时间是实时）</span>
-                    </div>
-                  </p>
-                -->
               </div>
               <div>
                 <p class="clear">
@@ -67,11 +42,6 @@
               <div class="controls ml210">
                 <div class="control-group">
                   <select name="auto_settings[deliver_condition]" class="input-large">
-                    <!--
-                      <option value= "dispatched_trade" <%#= 'selected' if @setting['deliver_condition'] == 'dispatched_trade' %>>订单分派时自动发货</option>
-                      <option value= "deliver_bill_printed_trade" <%#= 'selected' if @setting['deliver_condition'] == 'deliver_bill_printed_trade' %>>打印发货单时自动发货</option>
-                      <option value= "logistic_bill_printed_trade" <%#= 'selected' if @setting['deliver_condition'] == 'logistic_bill_printed_trade' %>>打印物流单时自动发货</option>
-                    -->
                     <option value= "has_logistic_waybill_trade" <%= 'selected' if @setting['deliver_condition'] == 'has_logistic_waybill_trade' %>>返回物流单号时自动发货</option>
                   </select>
                 </div>
