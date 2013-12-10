@@ -601,11 +601,7 @@ class Trade
       bill.tid = tid
     end
 
-    if self._type == "TaobaoTrade"
-      regular_orders = orders.where(:refund_status.ne => 'SUCCESS')
-    else
-      regular_orders = orders.where(refund_status: 'NO_REFUND')
-    end
+    
 
     regular_orders.each do |order|
       order.skus_info_with_offline_refund.each do |sku_info|
@@ -627,9 +623,21 @@ class Trade
     end
 
     bill.bill_products_mumber = bill.bill_products.sum(:number)
-    bill.bill_products_price = regular_orders.count > 1 ? regular_orders.sum(:payment) : regular_orders.sum(:payment) - self.post_fee
+    bill.bill_products_price = invoice_price
     bill.save!
     bill.decrease_activity #减去仓库的可用库存
+  end
+
+  def regular_orders
+    if self._type == "TaobaoTrade"
+      orders.where(:refund_status.ne => 'SUCCESS')
+    else
+      orders.where(refund_status: 'NO_REFUND')
+    end
+  end
+
+  def invoice_price
+    regular_orders.count > 1 ? (regular_orders.sum(:payment) - discount_without_invoice) : (regular_orders.sum(:payment) - post_fee)
   end
 
   # SKU属性不全
@@ -1397,6 +1405,10 @@ class Trade
 
   def other_discount
     (total_fee + post_fee - payment - promotion_fee).to_f.round(2)
+  end
+
+  def discount_without_invoice
+    promotion_details.where(promotion_id: /^(shopbonus|shopvip)/i).sum(:discount_fee)
   end
 
   #判断订单状态
