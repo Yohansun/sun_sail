@@ -67,6 +67,16 @@ class StockOutBill < StockBill
     "出库单"
   end
 
+  def confirm_sync
+    so_to_wms_worker
+  end
+
+  def confirm_stock
+    if can_do_stock?
+      do_stock && decrease_actual && operation_logs.create(operated_at: Time.now, operation: '确认出库成功')
+    end
+  end
+
   def outer_is_cash_sale
     is_cash_sale || (self.account.settings.open_auto_mark_invoice==1 ? "需要开票" : "无需开票" rescue "无需开票")
   end
@@ -155,13 +165,11 @@ class StockOutBill < StockBill
   end
 
   def sync
-    do_syncking
-    so_to_wms
+    do_syncking && so_to_wms if can_do_syncking?
   end
 
   def rollback
-    do_canceling
-    cancel_order_rx
+    do_canceling && cancel_order_rx if can_do_canceling?
   end
 
   def lock!(user)
@@ -223,6 +231,8 @@ class StockOutBill < StockBill
         result_xml = Bml.so_to_wms(account, xml)
       elsif account.settings.third_party_wms == "gqs"
         result_xml = Gqs.order_add(account, gqs_xml)
+      elsif account.settings.enable_module_third_party_stock != 1
+        return do_syncked && operation_logs.create(operated_at: Time.now, operation: '同步成功')
       end
       result = Hash.from_xml(result_xml).as_json
 
@@ -258,6 +268,8 @@ class StockOutBill < StockBill
       result_xml = Bml.cancel_order_rx(account, tid)
     elsif account.settings.third_party_wms == "gqs"
       result_xml = Gqs.cancel_order(account, orderid: tid,notes: '客户取消订单',opttype: 'OrderCance',opttime: Time.now.to_s(:db),method: 'OrderCance',_prefix: "order")
+    elsif account.settings.enable_module_third_party_stock != 1
+      return do_cancel_ok && operation_logs.create(operated_at: Time.now, operation: '取消成功') 
     end
     result = Hash.from_xml(result_xml).as_json
 

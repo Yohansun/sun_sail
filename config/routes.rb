@@ -52,6 +52,8 @@ MagicOrders::Application.routes.draw do
         post :rollback
         post :lock
         post :unlock
+        put :confirm_sync
+        put :confirm_stock
       end
     end
 
@@ -62,6 +64,8 @@ MagicOrders::Application.routes.draw do
         post :rollback
         post :lock
         post :unlock
+        put :confirm_sync
+        put :confirm_stock
       end
     end
 

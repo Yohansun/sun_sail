@@ -44,6 +44,13 @@
           <li>
           <%= link_to_authorize "撤销", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_in_bills/rollback",:remote => true,:request => "post",:class => "bill_operation"  %>
           </li>
+        <% else %>
+          <li>
+            <%= link_to_authorize "确认同步", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_in_bills/confirm_sync",:remote => true,:request => "put",:class => "bill_operation"  %>
+          </li>
+          <li>
+            <%= link_to_authorize "确认入库", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_in_bills/confirm_stock",:remote => true,:request => "put",:class => "bill_operation"  %>
+          </li>
         <%- end %>
       </ul>
     </div><!-- btn-group -->

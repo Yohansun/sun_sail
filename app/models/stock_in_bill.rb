@@ -62,6 +62,7 @@ class StockInBill < StockBill
   end
 
   def check
+    return false if not can_do_check?
     do_check
     sync_stock if account && account.settings.enable_module_third_party_stock != 1
     initial_stock if stock_type == "IINITIAL"
@@ -69,6 +70,16 @@ class StockInBill < StockBill
 
   def type_name
     "入库单"
+  end
+  
+  def confirm_sync
+    ans_to_wms_worker
+  end
+  
+  def confirm_stock
+    if can_do_stock?
+      do_stock && sync_stock && operation_logs.create(operated_at: Time.now, operation: '确认入库成功')
+    end
   end
 
   def lock!(user)
@@ -93,13 +104,14 @@ class StockInBill < StockBill
   end
 
   def sync
-    do_syncking
-    ans_to_wms
+    if can_do_syncking?
+      do_syncking
+      ans_to_wms if account.settings.enable_module_third_party_stock == 1
+    end
   end
 
   def rollback
-    do_canceling
-    cancel_asn_rx
+    do_canceling && cancel_asn_rx if can_do_canceling?
   end
 
   def ans_to_wms
@@ -116,6 +128,8 @@ class StockInBill < StockBill
       result_xml = Bml.ans_to_wms(account, xml)
     elsif account.settings.third_party_wms == "gqs"
       result_xml = Gqs.receipt_add(account, gqs_xml)
+    elsif account.settings.enable_module_third_party_stock != 1
+      return do_syncked && operation_logs.create(operated_at: Time.now, operation: '同步成功')
     end
     result = Hash.from_xml(result_xml).as_json
 
@@ -151,6 +165,8 @@ class StockInBill < StockBill
       result_xml = Bml.cancel_asn_rx(account, tid)
     elsif account.settings.third_party_wms == "gqs"
       result_xml = Gqs.cancel_order(account, orderid: tid,notes: '客户取消订单',opttype: 'OrderCance',opttime: Time.now.to_s(:db),method: 'OrderCance',_prefix: "receipt")
+    elsif account.settings.enable_module_third_party_stock != 1
+      return do_cancel_ok && operation_logs.create(operated_at: Time.now, operation: '取消成功')
     end
     result = Hash.from_xml(result_xml).as_json
 
