@@ -3,10 +3,10 @@ class JingdongRefundOrderMarker
   include Sidekiq::Worker
   sidekiq_options :queue => :jingdong_refund_order_marker, unique: true, unique_job_expiration: 120
 
-  def perform(account_id)
+  def perform(trade_source_id)
     start_time = 1.week.ago.strftime("%Y-%m-%d %H:%M:%S")
     end_time = Time.now.strftime("%Y-%m-%d %H:%M:%S")
-    trade_source = TradeSource.where(trade_type: "Jingdong",account_id: account_id).first
+    trade_source = TradeSource.find(trade_source_id)
     query_conditions = trade_source.jingdong_query_conditions
     #没有加query_fields,需要加
     data = {parameters: {method: '360buy.after.search',select_fields: 'receive_state,return_item_list',page: 100,page_size: 10}}

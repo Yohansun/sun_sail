@@ -3,11 +3,17 @@ class JingdongTradePuller
   PAGE_SIZE = 100
   class << self
     def create(start_time = nil, end_time = nil, account_id)
+      Account.find(account_id).jingdong_source_ids.each do |trade_source_id|
+        create_with_source(trade_source_id)
+      end
+    end
+
+    def create_with_source(trade_source_id)
       total_pages = nil
       page_no = 1
-
-      account = Account.find(account_id)
+      
       trade_source = account.jingdong_sources.first
+      account = Account.find(trade_source.account_id)
       trade_source_id = trade_source.id
 
       # 给客服分配订单需要的查询
@@ -52,7 +58,7 @@ class JingdongTradePuller
 
 
         unless response['order_search_response']
-          Notifier.puller_errors(response, account_id).deliver
+          Notifier.puller_errors(response, account.id).deliver
           return
         end
 
@@ -95,7 +101,7 @@ class JingdongTradePuller
             end
 
             trade.trade_source_id = trade_source_id
-            trade.account_id = account_id
+            trade.account_id = account.id
             trade.seller_nick = trade_source.name
             trade.operation_logs.build(operated_at: Time.now, operation: '从京东抓取订单')
 
@@ -126,10 +132,9 @@ class JingdongTradePuller
       end until(page_no > total_pages || total_pages == 0)
 
       #同步本地顾客管理下面的"副本订单"
-      CustomerFetch.perform_async(trade_source.id,'JingdongTrade')
+      CustomerFetch.perform_async(trade_source_id,'JingdongTrade')
       #抓取订单退货信息
-      JingdongRefundOrderMarker.perform_async(account_id)
+      JingdongRefundOrderMarker.perform_async(trade_source_id)
     end
-
   end
 end
