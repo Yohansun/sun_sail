@@ -6,12 +6,14 @@
     MagicOrders.user = "<%= current_user.name || current_user.username %>"
     MagicOrders.current_user_seller_id = "<%= current_user.seller_id.to_i %>"
     MagicOrders.logistics = new MagicOrders.Collections.Logistics();
-    MagicOrders.logistics.reset(<%= raw @logistics.to_json %>);
+    MagicOrders.logistics.reset(<%= raw current_account.logistics.to_json %>);
     MagicOrders.trade_sources = new MagicOrders.Collections.TradeSources();
-    MagicOrders.trade_sources.reset(<%= raw @trade_sources.to_json %>);
+    MagicOrders.trade_sources.reset(<%= raw current_account.trade_sources.to_json %>);
     MagicOrders.users = new MagicOrders.Collections.Users();
+    MagicOrders.users.reset(<%= raw current_account.users.to_json %>);
+    MagicOrders.categories = new MagicOrders.Collections.Categories();
+    MagicOrders.categories.reset(<%= raw current_account.categories.to_json %>);
     MagicOrders.custom_trade_types = <%= raw(current_account.settings.trade_types.to_a.to_json) %>
-    MagicOrders.users.reset(<%= raw @users.to_json %>);
     MagicOrders.deliver_bill_notice_info = "<%= current_account.settings.deliver_bill_notice_info %>"
     MagicOrders.enable_module_print_deliver_bill = <%= current_account.settings.enable_module_print_deliver_bill %>
     MagicOrders.enable_trade_deliver_bill_spliting = <%= current_account.settings.enable_trade_deliver_bill_spliting == true %>
@@ -103,6 +105,7 @@
 <div id="trade_batch_export" class="trade modal fade hide" tabindex="-1"></div>
 <div id="trade_batch_check_goods" class="trade modal fade hide" tabindex="-1" style="width: 890px;margin-left: -445px;"></div>
 <div id="trade_batch_add_gift" class="trade modal fade hide modal_w7" tabindex="-1"></div>
+<div id="trade_batch_sort_product" class="trade modal fade hide" tabindex="-1" style="width: 890px;margin-left: -445px;"></div>
 
 <!-- deliver_bill modal -->
 <div id="deliver_bill_print_deliver_bill" class="delvier modal fade hide" tabindex="-1" style="width: 890px; margin-left: -445px;"></div>

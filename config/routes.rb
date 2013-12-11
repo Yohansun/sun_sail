@@ -427,6 +427,7 @@ MagicOrders::Application.routes.draw do
       collection do
         get :notifer
         get :export
+        get :sort_product_search
       end
     end
 

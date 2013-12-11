@@ -63,6 +63,7 @@ class Order
         outer_id:           sku.product.outer_id,
         product_id:         sku.product.id,
         product_price:      sku.product.price,
+        category_name:      sku.product.category.name,
         number:             self.num * (sku_bindings.present? && sku_bindings.find_by_sku_id(sku.id).try(:number) || 1),
         stock_product_ids:  sku.stock_product_ids,
         sku_id:             sku.id,

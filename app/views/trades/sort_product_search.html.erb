@@ -1,0 +1,23 @@
+<table class="table" id="print_picked_product">
+  <thead>
+    <tr>
+      <th>商品名称</th>
+      <th>商品编码</th>
+      <th>商品分类</th>
+      <th>商品属性</th>
+      <th>商品数量</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @print_skus.each do |sku| %>
+      <tr>
+        <td><%= sku[:title] %></td>
+        <td><%= sku[:num_iid] %></td>
+        <td><%= sku[:category] %></td>
+        <td><%= sku[:sku_properties] %></td>
+        <td><%= sku[:num] %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
