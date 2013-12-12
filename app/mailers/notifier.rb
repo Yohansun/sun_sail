@@ -23,7 +23,7 @@ class Notifier < ActionMailer::Base
   def unusual_trade_notify(mails, notify_content, account_id)
     account = Account.find(account_id)
     mail(:to => mails,
-         :subject => "Magic系统异常订单提醒",
+         :subject => "Magic系统订单处理提醒",
          :body => notify_content,
          :from => account.settings.email_notifier_from
         )

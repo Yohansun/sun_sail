@@ -1,7 +1,9 @@
 # -*- encoding : utf-8 -*-
 class UnusualTradesNotifier
   include Sidekiq::Worker
-  sidekiq_options :queue => :unusual_trades_notifier, unique: true, unique_job_expiration: 120,  unique_unlock_order: :before_yield
+
+  # 自动发送异常订单提醒短信或邮件
+  sidekiq_options :queue => :unusual_trades_notifier, unique: true, unique_job_expiration: 120
 
   def perform()
     Account.find_each do |account|
@@ -153,6 +155,5 @@ class UnusualTradesNotifier
         end
       end
     end
-    UnusualTradesNotifier.perform_in(3.hour)
   end
 end
