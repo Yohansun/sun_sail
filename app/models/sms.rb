@@ -7,7 +7,7 @@ class Sms
 
   def initialize(account, content, mobiles)
     @account = account
-    @content = content
+    @content = content+'【Magic系统提醒】'
     @mobiles = mobiles
   end
 

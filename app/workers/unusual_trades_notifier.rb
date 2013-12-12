@@ -22,7 +22,7 @@ class UnusualTradesNotifier
           )
           if trades.present?
             tids = trades.map(&:tid)
-            message = "您好，您的订单#{tids}在#{check_time}小时内没有分派【Magic系统提醒】"
+            message = "您好，您的订单#{tids}在#{check_time}小时内没有分派"
             if conditions['send_sms']
               Sms.new(account, message, notify_users.map(&:phone).join(",")).transmit
             end
@@ -46,7 +46,7 @@ class UnusualTradesNotifier
           )
           if trades.present?
             tids = trades.map(&:tid)
-            message = "您好，您的订单#{tids}在#{check_time}小时内没有发货【Magic系统提醒】"
+            message = "您好，您的订单#{tids}在#{check_time}小时内没有发货"
             if conditions['send_sms']
               Sms.new(account, message, notify_users.map(&:phone).join(",")).transmit
             end
@@ -69,7 +69,7 @@ class UnusualTradesNotifier
           )
           if trades.present?
             tids = trades.map(&:tid)
-            message = "您好，您的异常订单#{tids}在订单预处理时间再延后#{check_time}小时后买家没有确认收货【Magic系统提醒】"
+            message = "您好，您的异常订单#{tids}在订单预处理时间再延后#{check_time}小时后买家没有确认收货"
             if conditions['send_sms']
               Sms.new(account, message, notify_users.map(&:phone).join(",")).transmit
             end
@@ -91,7 +91,7 @@ class UnusualTradesNotifier
           )
           if trades.present?
             tids = trades.map(&:tid)
-            message = "您好，您延迟发货的异常订单#{tids}预处理时间即将到期【Magic系统提醒】"
+            message = "您好，您延迟发货的异常订单#{tids}预处理时间即将到期"
             if conditions['send_sms']
               Sms.new(account, message, notify_users.map(&:phone).join(",")).transmit
             end
@@ -116,7 +116,7 @@ class UnusualTradesNotifier
             tids = trades.collect{|trade| (SellerMatcher.match_trade_seller(trade.id, trade.default_area) || trade.default_seller).present? ? trade.tid : nil}.compact
           end
           if tids.present?
-            message = "您好，您的订单#{tids}由于地域没有绑定经销商导致不能自动分派【Magic系统提醒】"
+            message = "您好，您的订单#{tids}由于地域没有绑定经销商导致不能自动分派"
             if conditions['send_sms']
               Sms.new(account, message, notify_users.map(&:phone).join(",")).transmit
             end
@@ -140,7 +140,7 @@ class UnusualTradesNotifier
               end
             end
             if tids.present?
-              message = "您好，您的订单#{tids}包含有特殊分类的商品【Magic系统提醒】"
+              message = "您好，您的订单#{tids}包含有特殊分类的商品"
               if conditions['send_sms']
                 Sms.new(account, message, notify_users.map(&:phone).join(",")).transmit
               end
