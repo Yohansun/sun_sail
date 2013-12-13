@@ -64,7 +64,6 @@ class StockInBill < StockBill
   def check
     return false if not can_do_check?
     do_check
-    sync_stock if account && account.settings.enable_module_third_party_stock != 1
     initial_stock if stock_type == "IINITIAL"
   end
 
