@@ -109,9 +109,9 @@ $ ->
             canSubmit = false
             error_message = "只有已审核的库单允许同步"
             break
-          if operation_name=="撤销" && bill_status!="SYNCKED"
+          if operation_name=="撤销" && !(bill_status in ["SYNCKED","CANCELD_FAILED"])
             canSubmit = false
-            error_message = "只有已同步待出/入库的库单允许撤销"
+            error_message = "只有撤销失败或已同步待出/入库的库单允许撤销"
             break
           if operation_name=="确认同步" && bill_status!="SYNCKING"
             canSubmit = false
