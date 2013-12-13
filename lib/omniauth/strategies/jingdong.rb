@@ -1,4 +1,5 @@
 require 'omniauth-oauth2'
+require 'omniauth/encode_handle'
 
 module OmniAuth
   module Strategies
@@ -8,7 +9,13 @@ module OmniAuth
       option :client_options, {
         :site           => "http://auth.360buy.com/oauth/authorize",
         :authorize_url  => "/oauth/authorize",
-        :token_url      => "/oauth/token"
+        :token_url      => "/oauth/token",
+        :raise_errors   => false,
+        :connection_build => lambda {|k|
+          k.response :encode_handle
+          k.request :url_encoded
+          k.adapter Faraday.default_adapter
+        }
       }
 
       option :token_params, {
