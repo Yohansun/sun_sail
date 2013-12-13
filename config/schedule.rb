@@ -66,6 +66,7 @@ every :day, :at => '2:00pm' do
   runner "Notifier.system_sms_out_of_usage_notifications.deliver"
 end
 
+# TODO：可以优化为将队列执行请求直接插入redis数据库，以节省内存
 every 5.minutes do
   runner "MergeableTradeMarker.new.perform()"
 end
