@@ -1,7 +1,7 @@
 require 'sidekiq/web'
 
 MagicOrders::Application.routes.draw do
-  
+
   resources :trade_types
 
   resource :page do
@@ -344,14 +344,10 @@ MagicOrders::Application.routes.draw do
 
   resources :account_setups do
     collection do
-      get  :edit_preprocess_settings
-      get  :edit_dispatch_settings
-      get  :edit_deliver_settings
-      put  :update_preprocess_settings
-      put  :update_dispatch_settings
-      put  :update_deliver_settings
-      get  :edit_automerge_settings
-      put  :update_automerge_settings
+      AutoSettingsHelper::AutoBlocks.each do |block|
+        get "edit_#{block}_settings".to_sym
+        put "update_#{block}_settings".to_sym
+      end
     end
     member do
       post :data_fetch_start

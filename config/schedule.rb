@@ -65,6 +65,14 @@ end
 every :day, :at => '2:00pm' do
   runner "Notifier.system_sms_out_of_usage_notifications.deliver"
 end
+
+every 5.minutes do
+  runner "MergeableTradeMarker.new.perform()"
+end
+
+every 3.hours do
+  runner "UnusualTradesNotifier.new.perform()"
+end
 #
 # every 2.hours do
 #   command "/usr/bin/some_great_command"

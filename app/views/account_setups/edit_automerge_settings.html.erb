@@ -1,23 +1,14 @@
-<%
-  breadcrumb << ["自动化设置", "/account_setups/edit_preprocess_settings"]
-  breadcrumb << ["自动合并订单"]
-%>
+<%= render 'crumbs' %>
+
 <div class="row-fluid">
   <div class="span10 w100">
-    <ul class="nav nav-tabs">
-      <li><a href="/account_setups/edit_preprocess_settings">订单预处理</a></li>
-      <li><a href="/account_setups/edit_dispatch_settings">订单分派</a></li>
-      <li><a href="/account_setups/edit_deliver_settings">订单发货</a></li>
-      <li class="active"><a href="/account_setups/edit_automerge_settings">自动合并订单</a></li>
-      <!--<li><a href="#default_logistics" data-toggle="tab">选择默认物流商</a></li>
-      <li><a href="#autobusiness_set" data-toggle="tab">自动化业务设置</a></li>
-      <li><a href="#login_user_set" data-toggle="tab">设置系统登录用户</a></li> -->
-    </ul><!-- nav-tabs -->
+
+    <%= render 'nav_tabs' %>
 
     <div class="tab-content">
       <div class="tab-pane active" id="automerge_settings">
         <%= form_tag('/account_setups/update_automerge_settings', class: 'form-horizontal', method: 'put') do -%>
-          <fieldset class="mar_l80"><!-- 订单自动发货 beginning -->
+          <fieldset class="mar_l80"><!-- 订单自动合并 beginning -->
             <h4>订单自动合并设置：</h4>
             <div class="mar_l80">
               <div class="control-group">
@@ -25,7 +16,7 @@
                   <input type="radio" name="auto_settings[auto_merge]" <%='checked' if @setting['auto_merge'] == 1 %>>开启
                 </label>
                 <label class="radio">
-                  <input type="radio" value="off" name="auto_settings[auto_merge]" <%='checked' if @setting['auto_merge'].present? == false %>>关闭
+                  <input type="radio" value="off" name="auto_settings[auto_merge]" <%='checked' if @setting['auto_merge'].blank? %>>关闭
                 </label>
                 <p class="clear">
                   <label class="input-large pull-left">请输入自动合并时间范围：</label>

@@ -74,6 +74,9 @@ class Trade
   field :status, type:String
   field :seller_memo, type:String
 
+  #是否发送过提醒邮件
+  field :is_notified, type: Boolean, default: false
+
   field :has_color_info, type: Boolean, default: false
   field :has_cs_memo, type: Boolean, default: false
   field :has_unusual_state, type: Boolean, default: false
@@ -601,7 +604,7 @@ class Trade
       bill.tid = tid
     end
 
-    
+
 
     regular_orders.each do |order|
       order.skus_info_with_offline_refund.each do |sku_info|

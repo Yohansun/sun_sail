@@ -30,6 +30,7 @@
 class Account < ActiveRecord::Base
   include FinderCache
   include RailsSettings
+  include MagicAutoSettings
 
   attr_accessible :key, :name, :seller_name, :address, :deliver_bill_info, :phone, :website, :point_out
 
@@ -106,12 +107,10 @@ class Account < ActiveRecord::Base
     end
   end
 
-  def can_auto_preprocess_right_now
-    return in_time_gap(self.settings.auto_settings["start_preprocess_at"], self.settings.auto_settings["end_preprocess_at"])
-  end
-
-  def can_auto_dispatch_right_now
-    return in_time_gap(self.settings.auto_settings["start_dispatch_at"], self.settings.auto_settings["end_dispatch_at"])
+  ['preprocess', 'dispatch', 'deliver', 'notify'].each do |option|
+    define_method "can_auto_#{option}_right_now" do
+      return in_time_gap(self.settings.auto_settings["start_#{option}_at"], self.settings.auto_settings["end_#{option}_at"])
+    end
   end
 
   def auto_dispatch_left_seconds
@@ -121,10 +120,6 @@ class Account < ActiveRecord::Base
     else
       result
     end
-  end
-
-  def can_auto_deliver_right_now
-    return in_time_gap(self.settings.auto_settings["start_deliver_at"], self.settings.auto_settings["end_deliver_at"])
   end
 
   # 用户无权更改的setting默认值
@@ -399,7 +394,7 @@ class Account < ActiveRecord::Base
   private
 
   def initialize_auto_settings
-    self.settings["auto_settings"] = {'split_conditions' => {},'dispatch_conditions'=>{},'unusual_conditions'=>{}}
+    self.settings["auto_settings"] = check_auto_settings()
   end
 
   def create_default_seller

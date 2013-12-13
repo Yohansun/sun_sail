@@ -1,7 +1,9 @@
 # -*- encoding : utf-8 -*-
 class MergeableTradeMarker
   include Sidekiq::Worker
-  sidekiq_options :queue => :auto_process, unique: true, unique_job_expiration: 120, unique_unlock_order: :before_yield  #自动标注可合并订单和订单自动合并队列
+
+  # 自动标注可合并订单和订单自动合并队列
+  sidekiq_options :queue => :auto_process, unique: true, unique_job_expiration: 120
 
   def perform()
     #account = Account.find(id)
@@ -26,8 +28,6 @@ class MergeableTradeMarker
         end
       end
     end
-
-    MergeableTradeMarker.perform_in(5.minutes)
     true
   end
 end

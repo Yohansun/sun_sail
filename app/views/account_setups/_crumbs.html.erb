@@ -1,12 +1,4 @@
-<ul class="breadcrumb" style="position:relative;">
-	<li><a href="/">Magic</a><span class="divider">/</span></li>
-	<li><a href="/users">系统设置</a><span class="divider">/</span></li>
-	<li><a href="/account_setups/edit_preprocess_settings">自动化设置</a><span class="divider">/</span></li>
-	<% if params[:controller] == "account_setups" && params[:action] =~ /edit_preprocess_settings/ %>
-	  <li class='active'>订单预处理</li>
-	<% elsif params[:controller] == "account_setups" && params[:action] =~ /edit_dispatch_settings/ %>
-	  <li class='active'>自动分派</li>
-	<% elsif params[:controller] == "account_setups" && params[:action] =~ /edit_deliver_settings/ %>
-	  <li class='active'>自动发货</li>
-	<% end %>
-</ul><!-- breadcrumb -->
+<%
+  breadcrumb << ["自动化设置", "/account_setups/edit_preprocess_settings}"]
+  breadcrumb << [current_auto_block_text(params[:action])]
+%>

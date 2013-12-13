@@ -20,18 +20,27 @@ class Notifier < ActionMailer::Base
         )
   end
 
+  def unusual_trade_notify(mails, notify_content, account_id)
+    account = Account.find(account_id)
+    mail(:to => mails,
+         :subject => "Magic系统订单处理提醒",
+         :body => notify_content,
+         :from => account.settings.email_notifier_from
+        )
+  end
+
   def init_user_notifications(email, pwd, account_id)
     account = Account.find(account_id)
-    content = <<-BODY 
-              尊敬的用户： 
-              
-
-              感谢您使用Magic ERP系统。 
+    content = <<-BODY
+              尊敬的用户：
 
 
-              系统地址：magic-solo.networking.io  
+              感谢您使用Magic ERP系统。
 
-              您的登录用户名为：#{email}  密码：#{pwd} 
+
+              系统地址：magic-solo.networking.io
+
+              您的登录用户名为：#{email}  密码：#{pwd}
 
               有任何问题，欢迎致电021-54042990或发送邮件mkt@doorder.com进行咨询。
               -----------------------------------------
