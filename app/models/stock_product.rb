@@ -120,7 +120,7 @@ class StockProduct < ActiveRecord::Base
       number:       self.actual,
       sku_id:       self.sku_id,
       price:        product.price,
-      total_price:  product.price * self.actual
+      total_price:  product.price * (options[:number] || 1).to_i
     }.merge(options)
   end
 

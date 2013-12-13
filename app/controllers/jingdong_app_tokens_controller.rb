@@ -4,6 +4,7 @@ class JingdongAppTokensController < ApplicationController
   #目前只考虑到已经创建了Account的帐户
   def index
     info = auth_hash.info
+    render(text: info[:error_description]) and return if info[:access_token].nil?
     parameters = {access_token: info.token,refresh_token: info.refresh_token,jingdong_user_id: info.uid,account_id: current_account.id}
 
     trade_source = current_account.jingdong_sources.where(name: info.user_nick).first_or_create
