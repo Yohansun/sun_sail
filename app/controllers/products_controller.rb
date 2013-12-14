@@ -71,11 +71,15 @@ class ProductsController < ApplicationController
   def create
     @product = current_account.products.new params[:product]
     @skus.each do |sku|
-      @product.skus.build({:account_id => current_account.id}.merge(sku.attributes))
+      @product.skus.build({:sku_id => sku.sku_id, :account_id => current_account.id}.merge(sku.attributes))
     end
     if @product.save
       sku_value = []
-      @product.skus.each {|sku| sku_value << sku.value unless sku.value == ""}
+      @product.skus.each do |sku|
+        unless sku.value == ""
+          sku_value << sku.value 
+        end
+      end
       @product.skus.create(account_id: current_account.id, product_id: @product.id, num_iid: @product.num_iid) if sku_value.size == 0
       current_user.settings.tmp_skus = []
       redirect_to products_path
@@ -181,15 +185,33 @@ class ProductsController < ApplicationController
   end
 
   def remove_sku
-    sku_ids = params[:sku_ids]
-    @skus.delete_if {|sku| sku_ids.include?(sku.id) }
     @product = current_account.products.find_by_id params[:id]
-
-    if @product.blank?
-      current_user.settings.tmp_skus = @skus
+    update_sku_ids = params[:update_sku_ids]
+    sku_ids = params[:sku_ids]
+    if params[:commit]
+      if @product.blank?
+        skus = []
+        @current_user.settings.tmp_skus.each_with_index do |sku, index|
+          sku.sku_id = update_sku_ids[index]
+          skus << sku
+        end
+        current_user.settings.destroy :tmp_skus
+        current_user.settings.tmp_skus = skus
+        @skus = current_user.settings.tmp_skus
+      else
+        @product.skus.each_with_index do |sku, index|
+          sku.update_attributes(sku_id: update_sku_ids[index])
+        end
+        @skus = @product.skus
+      end
     else
-      @product.skus.where(:id => sku_ids).delete_all
-      @skus = @product.skus
+      @skus.delete_if {|sku| sku_ids.include?(sku.id) }
+      if @product.blank?
+        current_user.settings.tmp_skus = @skus
+      else
+        @product.skus.where(:id => sku_ids).delete_all
+        @skus = @product.skus
+      end
     end
 
     respond_to do |format|
