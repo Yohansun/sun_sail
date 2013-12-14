@@ -37,11 +37,11 @@ class TradeSource < ActiveRecord::Base
   enum_attr :trade_type,[%w(淘宝 Taobao),%w(京东 Jingdong), %w(一号店 Yihaodian)],not_valid: true
 
   def jingdong_query_conditions
-    {"access_token" => jingdong_app_token.access_token,"app_key" => TradeSetting.jingdong_app_key}
+    {"access_token" => jingdong_app_token.access_token,"app_key" => TradeSetting.jingdong_app_key,"secret_key" => TradeSetting.jingdong_app_secret}
   end
 
   def yihaodian_query_conditions
-    {"access_token" => yihaodian_app_token.access_token,"app_key" => TradeSetting.yihaodian_app_key}
+    {"access_token" => yihaodian_app_token.access_token,"app_key" => TradeSetting.yihaodian_app_key,"secret_key" => TradeSetting.yihaodian_app_secret}
   end
 
   validates :name, presence: true, uniqueness: true
