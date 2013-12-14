@@ -19,7 +19,8 @@ class BacktraceMailer < ExceptionNotifier::Notifier
 
   class << self
     def default_sender_address
-      %("Exception Notifier" <exception.notifier@networking.io>)
+      # %("Exception Notifier" <exception.pro@networking.io>)
+      %("Exception Notifier" <exception.#{MagicOrders.env}@networking.io>)
     end
 
     def default_background_sections
@@ -28,6 +29,14 @@ class BacktraceMailer < ExceptionNotifier::Notifier
 
     def default_sections
       ["backtrace"]
+    end
+
+    def default_email_prefix
+      "#{MagicOrders.env} | [MAGIC_ORDER EXCEPTIONS] "
+    end
+
+    def default_exception_recipients
+      "errors@networking.io"
     end
   end
 
