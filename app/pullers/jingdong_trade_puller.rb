@@ -4,15 +4,15 @@ class JingdongTradePuller
   class << self
     def create(start_time = nil, end_time = nil, account_id)
       Account.find(account_id).jingdong_source_ids.each do |trade_source_id|
-        create_with_source(trade_source_id)
+        create_with_source(trade_source_id,start_time,end_time)
       end
     end
 
-    def create_with_source(trade_source_id)
+    def create_with_source(trade_source_id,start_time=nil,end_time=nil)
       total_pages = nil
       page_no = 1
-      
-      trade_source = account.jingdong_sources.first
+
+      trade_source = TradeSource.where(trade_type: "Jingdong",id: trade_source_id).first
       account = Account.find(trade_source.account_id)
       trade_source_id = trade_source.id
 
