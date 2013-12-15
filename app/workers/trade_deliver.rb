@@ -50,6 +50,6 @@ class TradeDeliver
   def handle_response(trade)
     data = {parameters: {method: 'taobao.logistics.offline.send',tid: trade.tid,out_sid: trade.logistic_waybill,company_code: trade.logistic_code}}
     response = TaobaoQuery.get(data[:parameters],trade.trade_source_id)
-    throw :deliver_error, trade if cache_exception(message: "淘宝订单发货异常(#{trade.shop_name})",data: data.merge(response: response,trade_source_id: trade.trade_source_id)) { response["delivery_offline_send_response"]["shipping"]["is_success"] }
+    throw :deliver_error, trade if cache_exception(message: "淘宝订单发货异常(#{trade.shop_name})",data: data.merge(response: response,trade_source_id: trade.trade_source_id)) { response["logistics_offline_send_response"]["shipping"]["is_success"] }
   end
 end
