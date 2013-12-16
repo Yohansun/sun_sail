@@ -27,6 +27,16 @@ class MagicOrders.Views.TradesBatchSetupLogistic extends Backbone.View
   save: ->
     service_logistic_id = $('#set_logistic_select').find("option:selected").attr("service_logistic_id")
     lid = $('#set_logistic_select').find("option:selected").attr('lid')
+    waybills = new Array()
+    for trade in @trades
+      waybill = $('.waybill' + trade.get('tid')).val()
+      waybills.push waybill
+    nary = waybills.sort()
+    length = nary.length - 1
+    for i in [0..length]
+      if i < length && nary[i] == nary[i+1]
+        alert("运单号不能重复"); 
+        return
     for trade in @trades
       waybill = $('.waybill' + trade.get('tid')).val()
       if waybill == ''
