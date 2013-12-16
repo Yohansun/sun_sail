@@ -640,7 +640,8 @@ class Trade
   end
 
   def invoice_price
-    regular_orders.count > 1 ? (regular_orders.sum(:payment) - discount_without_invoice) : (regular_orders.sum(:payment) - post_fee)
+    price = -post_fee + (regular_orders.count > 1 ? (regular_orders.sum(:payment) - discount_without_invoice) : regular_orders.sum(:payment))
+    price < 0 ? 0 : price
   end
 
   # SKU属性不全
