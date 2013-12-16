@@ -274,7 +274,7 @@ class Trade
   embeds_many :promotion_details
 
   has_many :deliver_bills
-  has_many :stock_out_bills
+  has_many :stock_out_bills,:primary_key => "tid",foreign_key: "tid"
 
   belongs_to :customer, :class_name => "Customer", :foreign_key => "buyer_nick",:primary_key => "name"
 
@@ -597,14 +597,6 @@ class Trade
       created_at:   Time.now,
       seller_id:    seller_id
     )
-
-    if splitted
-      bill.tid = splitted_tid
-    else
-      bill.tid = tid
-    end
-
-
 
     regular_orders.each do |order|
       order.skus_info_with_offline_refund.each do |sku_info|
