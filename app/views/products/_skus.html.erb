@@ -2,7 +2,7 @@
   <table class="table table-hover table-bordered table-striped table-condensed js-table">
     <thead>
           <th width="5%"><input type="checkbox" onclick="$(this).parents().find(':checkbox').prop('checked',$(this).prop('checked'))"></th>
-      <th>编号</th>
+      <th>SKU编码</th>
       <th>属性</th>
     </thead>
     <tbody>
@@ -10,7 +10,7 @@
         <% unless sku.value == "默认" %>
           <tr>
             <td><input type="checkbox" name="sku_ids[]" value="<%= sku.id %>"></td>
-            <td class="sku_id"><%= sku.sku_id %></td>
+            <td class="sku_id"><input  name="update_sku_ids[]" value="<%= sku.sku_id %>"></td>
             <th class="sku_value"><%= sku.value  %></th>
           </tr>
         <% end %>
