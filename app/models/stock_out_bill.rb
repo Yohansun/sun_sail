@@ -2,7 +2,6 @@
 class StockOutBill < StockBill
   include Mongoid::Document
   include MagicEnum
-  belongs_to :trade
   embeds_many :bml_output_backs
 
   PUBLIC_STOCK_TYPE  = PUBLIC_OUT_STOCK_TYPE
