@@ -52,29 +52,26 @@ class User < ActiveRecord::Base
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :username, :active, :can_assign_trade, :percent
   attr_protected :cs, :cs_read, :seller, :interface, :stock_admin, :admin
-  attr_accessor :current_account_id
+  attr_accessor :current_account_id, :is_admin
   # attr_accessible :title, :body
 
   EMAIL_FORMAT = /\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}\z/
   validates :email,
             format: { with: EMAIL_FORMAT, message: "填写格式不正确"},
             uniqueness: {message: "该邮箱已有人使用"},
-            presence: {message: "输入信息不能为空"},
-            allow_blank: true
+            presence: {message: "输入信息不能为空"}
 
   PHONE_FORMAT = /^(\w){11}$/
   validates :phone,
             format: { with: PHONE_FORMAT, message: "请输入有效的手机号码"},
             uniqueness: {message: "该手机号码已有人使用"},
-            allow_blank: true
+            :if => Proc.new { |user| user.is_admin == true || user.phone.present?}
 
   validates_presence_of :password, on: :create
   validates :username ,
             uniqueness: {message: "该用户名已有人使用"},
             presence: true,
             length: {in: 3..12, message: "填写3-12个字符"}
-
-  validate :has_phone_or_email?
 
   before_save :set_pseudo_username
 
@@ -186,14 +183,6 @@ class User < ActiveRecord::Base
   def has_multiple_account?
     self.accounts.size > 1
   end
-
-  def has_phone_or_email?
-    if email.blank? && phone.blank?
-      errors.add(:email, "至少输入手机号或者邮箱") if errors[:email].blank?
-      errors.add(:phone, "至少输入手机号或者邮箱") if errors[:phone].blank?
-    end
-  end
-
 
   # override rolify , because right now , roles depend on accounts, not a uniq name
   def add_role(role_name, resource = nil)

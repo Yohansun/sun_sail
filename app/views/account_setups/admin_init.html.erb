@@ -21,7 +21,7 @@
       <%= form_for @user||User.new, url: account_setup_path, method: :put, html: { class: 'form-horizontal start_form1'} do |f| %>
         <div class="clearfix">
           <div class="well span8 offset2">
-            <div class="clearfix <%= 'control-group error' if @user.present? && @user.errors[:email].present? %>">
+            <div class="clearfix control-group <%= 'error' if @user.present? && @user.errors[:email].present? %>">
               <label class="offset1 form-inline pull-left" for="Email">
                 <i class="icon-envelope_key icon-keystart pull-left"></i>
                 <%= f.text_field :email, class: "input-xlarge", placeholder: "邮箱，如example@doorder.com"%>
@@ -35,7 +35,7 @@
                 <%- end -%>
               </small>
             </div>
-            <div class="clearfix <%= 'control-group error' if @user.present? && @user.errors[:phone].present? %>">
+            <div class="clearfix control-group <%= 'error' if @user.present? && @user.errors[:phone].present? %>">
               <label class="offset1 form-inline pull-left" for="phone">
                 <i class="icon-phone_key icon-keystart pull-left"></i>
                 <%= f.text_field :phone, class: "input-xlarge", placeholder: "11位有效手机号码"%>
@@ -49,7 +49,7 @@
                 <%- end -%>
               </small>
             </div>
-            <div class="clearfix <%= 'control-group error' if @user.present? && @user.errors[:username].present? %>">
+            <div class="clearfix control-group <%= 'error' if @user.present? && @user.errors[:username].present? %>">
               <label class="offset1 form-inline pull-left" for="name">
                 <i class="icon-user_key icon-keystart pull-left"></i>
                 <%= f.text_field :username, class: "input-xlarge", placeholder: "用户名就是你的登录名哦."%>

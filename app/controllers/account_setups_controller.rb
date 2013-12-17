@@ -18,7 +18,7 @@ class AccountSetupsController < ApplicationController
     next_step_name = next_step
     case step
     when :admin_init
-      @user = User.new(params[:user])
+      @user = User.new(params[:user].merge({is_admin: true}))
       @user.accounts << current_account
       @user.password = SecureRandom.hex(3)
       (render_wizard; return) if !@user.save
@@ -43,11 +43,16 @@ class AccountSetupsController < ApplicationController
       #current_account.settings.auto_settings["autocheck"] = params[:autocheck]
       current_account.settings.auto_settings["auto_dispatch"] = (params[:auto_dispatch] == "on" ? 1 : nil )
     when :user_init
-      @cs = create_role_user(params[:cs], :cs)
-      @stock_admin = create_role_user(params[:stock_admin], :stock_admin)
-      if @cs.is_a?(User) || @stock_admin.is_a?(User)
+      @cs = init_role_user(params[:cs])
+      is_cs_invalid = (@cs.is_a?(User) && @cs.invalid?)
+      @stock_admin = init_role_user(params[:stock_admin])
+      is_stock_invalid = (@stock_admin.is_a?(User) && @stock_admin.invalid?)
+
+      if is_cs_invalid || is_stock_invalid
         render("user_init") and return
       else
+        save_role_user(@cs, :cs) if @cs.is_a?(User)
+        save_role_user(@stock_admin, :stock_admin) if @stock_admin.is_a?(User)
         binding_account_account_to_admin
       end
     end
@@ -91,20 +96,15 @@ class AccountSetupsController < ApplicationController
   end
 
   private
-  def create_role_user(params_user, role)
+  def init_role_user(params_user)
     return nil if params_user.select{|k, v| v.present?}.blank?
-    user = User.new(password: SecureRandom.hex(3), username: params_user[:username])
-    if params_user[:contact].to_s.match(User::EMAIL_FORMAT)
-      user.email = params_user[:contact]
-    else
-      user.phone = params_user[:contact]
-    end
+    User.new(params_user.merge({password: SecureRandom.hex(3)}))
+  end
+
+  def save_role_user(user, role)
     if user.save
       user.add_role(role)
       InitUserNotifier.perform_async(current_account.id, user.email, user.password, user.phone)
-      nil
-    else
-      user
     end
   end
 
