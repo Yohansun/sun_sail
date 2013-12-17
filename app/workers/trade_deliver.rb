@@ -6,13 +6,8 @@ class TradeDeliver
   def perform(id)
     trade = Trade.find(id)
 
-    
-
     trade.stock_out_bill.decrease_actual if trade.fetch_account.settings.enable_module_third_party_stock != 1
-    
-    deliver_failed(catch(:deliver_error) {
-      return deliver(trade) && send_sms(trade) if trade._type != "CustomTrade"
-      })
+    deliver(trade)
   end
 
   def deliver_failed(trade)
@@ -22,7 +17,13 @@ class TradeDeliver
   end
 
   def deliver(trade)
-    trade.is_merged? ? merged_deliver(trade) : trade_deliver(trade)
+    return if trade._type == "CustomTrade"
+
+    deliver_failed(catch(:deliver_error) {
+      trade.is_merged? ? merged_deliver(trade) : trade_deliver(trade)
+      send_sms(trade)
+      return
+      })
   end
 
   def merged_deliver(trade)
@@ -50,6 +51,9 @@ class TradeDeliver
   def handle_response(trade)
     data = {parameters: {method: 'taobao.logistics.offline.send',tid: trade.tid,out_sid: trade.logistic_waybill,company_code: trade.logistic_code}}
     response = TaobaoQuery.get(data[:parameters],trade.trade_source_id)
-    throw :deliver_error, trade if cache_exception(message: "淘宝订单发货异常(#{trade.shop_name})",data: data.merge(response: response,trade_source_id: trade.trade_source_id)) { response["logistics_offline_send_response"]["shipping"]["is_success"] }
+    data.merge!({response: response,trade_source_id: trade.trade_source_id})
+    throw :deliver_error, trade if cache_exception(message: "淘宝订单发货异常(#{trade.shop_name})",data: data) {
+      fail if response["logistics_offline_send_response"]["shipping"]["is_success"] != true
+    }
   end
 end
