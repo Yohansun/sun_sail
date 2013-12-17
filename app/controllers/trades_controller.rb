@@ -483,7 +483,7 @@ class TradesController < ApplicationController
   def assign_percent
     users = User.where("id in (?)", params[:user_ids]).order(:created_at)
     percent = params[:percent].each
-    users.each {|u| p u.trade_percent = (percent.next.to_i rescue nil);u.save}
+    users.each {|u| u.trade_percent = (percent.next.to_i rescue nil);u.save}
     redirect_to trades_show_percent_path
   end
 
@@ -514,4 +514,47 @@ class TradesController < ApplicationController
 
     render :text=>"ok"
   end
+
+  def sort_product_search
+    params[:search] ||= {}
+
+    if params[:ids].present?
+      picked_skus = []
+      current_account.trades.where(:id.in => params[:ids]).each_with_index do |trade, index|
+        trade.regular_orders.each do |order|
+          order.skus_info_with_offline_refund.each do |sku_info|
+            if index != 0
+              has_no_num = true
+              picked_skus.each do |n|
+                if n[:title] == sku_info[:sku_title]
+                  n[:num] += sku_info[:number]
+                  has_no_num = false
+                end
+              end
+              picked_skus << {title: sku_info[:name],num_iid: order.num_iid || "", num: sku_info[:number], category: sku_info[:category_name], sku_properties: sku_info[:sku_title].gsub(sku_info[:name], "")} if has_no_num
+            else
+              picked_skus << {title: sku_info[:name],num_iid: order.num_iid || "", num: sku_info[:number], category: sku_info[:category_name], sku_properties: sku_info[:sku_title].gsub(sku_info[:name], "")}
+            end
+          end
+        end
+      end
+
+      picked_skus = picked_skus.dup.keep_if {|picked_sku|
+        params[:search].all? {|k,v| v.present? ? picked_sku[k.to_sym].delete(" ") == v.delete(" ") : true }
+        } if params[:search].present?
+
+      display_skus = Kaminari.paginate_array(picked_skus).page(params[:page]).per(20)
+      total_page = display_skus.total_pages
+      total_page += 1 if picked_skus.count == 0
+
+      respond_to do |format|
+        format.json { render json: {skus: display_skus, total_page: total_page}}
+        format.html {
+          @print_skus = picked_skus
+          render 'sort_product_search',layout: "blank_print"
+        }
+      end
+    end
+  end
+
 end

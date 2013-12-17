@@ -1,0 +1,44 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal">&times;</button>
+  <h3>分捡单</h3>
+</div><!-- modal-header -->
+
+<div class="modal-body">
+  <form class="well well-small form-horizontal font12" id="sort_product_search_form">
+    <div class="control-group clearfix form-inline">
+      <label class="" for=""><code>精准：</code></label>
+      <select class="input-small select2" name="column_key">
+        <option value="title">商品名称</option>
+        <option value="num_iid">商品数字编码</option>
+      </select>
+      <input type="text" class="input-large" name="column_value">
+      <input type="hidden" name="ids[]" value="<%= MagicOrders.idCarrier %>">
+      <label class="" for=""><code>商品分类：</code></label>
+      <select class="input-large" name="category">
+        <option value="" >请选择</option>
+        <% for category in MagicOrders.categories.models: %>
+        <option value="<%= category.get('name') %>" ><%= category.get('name') %></option>
+        <% end %>
+      </select>
+      <button type="button pull-left" class="btn btn-info sort_product_search" id="sort_product_button">筛选</button>
+    </div>
+  </form>
+  <table class="table table-bordered" id="sort_product">
+    <thead>
+      <tr>
+        <th>商品名称</th>
+        <th>商品编码</th>
+        <th>商品分类</th>
+        <th>商品属性</th>
+        <th>商品数量</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+  <div id="paginate_skus"></div>
+</div><!-- modal-body -->
+<div class="modal-footer">
+  <a href="#" class="btn btn-primary print_sorted_product">打印</a>
+  <a href="#" class="btn" data-dismiss="modal">取消</a>
+</div>

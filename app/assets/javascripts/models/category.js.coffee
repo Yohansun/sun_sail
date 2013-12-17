@@ -1,0 +1,1 @@
+class MagicOrders.Models.Category extends Backbone.Model

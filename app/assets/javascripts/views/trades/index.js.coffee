@@ -7,9 +7,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     'click .batch_export': 'batchExport'
     'click [data-trade-status]': 'selectSameStatusTrade'
     'click .batch_deliver': 'batchDeliver'
-    'click .sort_product': 'sort_product'
     'click .confirm_batch_deliver': 'confirmBatchDeliver'
-    'click .confirm_sort_product': 'confirmSortProduct'
     'click .index_batch_pops li a[data-batch_type]': 'show_batch_type'
     'click .index_pops li a[data-type]': 'show_type'
     'click [data-search-criteria]': 'switchSearchCriteria'
@@ -94,7 +92,7 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     @loadStatusCount()
     $("#content").removeClass("search-expand")
     this
-  
+
   closeCheckAll: (e) ->
     $('.trade_check').removeAttr('checked')
     $('#op-toolbar .dropdown-menu').parents('div.btn-group').removeAttr('style')
@@ -103,13 +101,13 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     $('.trade_check').attr('checked', 'checked')
     $('#op-toolbar .dropdown-menu').parents('div.btn-group').css('display', 'none')
     $('#op-toolbar .batch_ops').show()
-  
+
   optAll: (e) ->
     if $('.header #checkbox_all')[0].checked
       @CheckAll()
     else
       @closeCheckAll()
-  
+
   optCopyAll: (e) ->
     if $('.header-copy #checkbox_all')[0].checked
       $('.header #checkbox_all')[0].checked = true
@@ -146,40 +144,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
 
     batch_type = $(e.target).data('batch_type')
     Backbone.history.navigate('trades/batch/'+batch_type, true)
-
-  sort_product: ->
-    tmp = []
-    length = $('.trade_check:checked').parents('tr').length
-
-    if length < 1
-      alert('未选择订单！')
-      return
-
-    if length > 300
-      alert('请选择小于300个订单！')
-      return
-
-    $('.trade_check:checked').parents('tr').each (index, el) ->
-      input = $(el).find('.trade_check')
-      a = input[0]
-
-      if a.checked
-        trade_id = $(el).attr('id').replace('trade_', '')
-        tmp.push trade_id
-
-    MagicOrders.idCarrier = tmp
-    $.get '/home/index', {ids: tmp}, (data) ->
-      html = ''
-      for trade in data
-        html += '<tr>'
-        html += '<td>' + trade.title + '</td>'
-        html += '<td>' + trade.category + '</td>'
-        html += '<td>' + trade.num + '</td>'
-      $('#sort_product tbody').html(html)
-      $('#sort_product .confirm_sort_product').show()
-
-      $('#sort_product').modal('show')
-
 
   show_type: (e) ->
     type = $(e.target).data('type')
@@ -408,9 +372,6 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
         $('#batch_deliver').modal('hide')
       else
         alert('失败')
-
-  confirmSortProduct: ->
-      Backbone.history.navigate('trades/index', true)
 
   # gotoDeliverBills: ->
   #   Backbone.history.navigate('deliver_bills', true)

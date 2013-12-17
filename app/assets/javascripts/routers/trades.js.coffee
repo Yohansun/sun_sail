@@ -120,8 +120,9 @@ class MagicOrders.Routers.Trades extends Backbone.Router
 
     tmp = []
     length = $('.trade_check:checked').parents('tr').length
-    if length > 300
-      alert('请选择小于300个订单！')
+    if length > 120
+      alert('订单数量过多，请选择120个以内的订单。')
+      Backbone.history.navigate("#{MagicOrders.trade_mode}/" + "#{MagicOrders.trade_mode}-#{MagicOrders.trade_type}", false)
       return
 
     $('.trade_check:checked').parents('tr').each (index, el) ->
@@ -149,9 +150,33 @@ class MagicOrders.Routers.Trades extends Backbone.Router
               alert('请选择同一来源的订单。')
               Backbone.history.navigate("#{MagicOrders.trade_mode}/" + "#{MagicOrders.trade_mode}-#{MagicOrders.trade_type}", false)
               return
+          when 'batch_sort_product'
+            MagicOrders.idCarrier = tmp
+            $.get '/api/trades/sort_product_search', {ids: tmp}, (data) ->
+              options =
+                currentPage: 1
+                totalPages: data.total_page
+              $("#paginate_skus").bootstrapPaginator(options)
+              $('#sort_product tbody').html(picking_orders(data.skus))
+              $('#sort_product .print_sorted_product').show()
+              $('.print_sorted_product').printPage()
+              print_href = '/api/trades/sort_product_search.html?'+$.param({ids: tmp})
+              $('.print_sorted_product').attr('href', print_href)
 
         $(modalDivID).html(view.render().el)
         $(modalDivID).modal('show')
+
+  picking_orders = (skus) ->
+    html = ''
+    for sku in skus
+      html += '<tr>'
+      html += '<td>' + sku.title + '</td>'
+      html += '<td>' + sku.num_iid + '</td>'
+      html += '<td>' + sku.category + '</td>'
+      html += '<td>' + sku.sku_properties + '</td>'
+      html += '<td>' + sku.num + '</td>'
+      html += '</tr>'
+    return html
 
   operation: (id, operation_key) ->
     viewClassName = "Trades" + _.classify(operation_key)
