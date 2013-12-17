@@ -105,7 +105,7 @@ $ ->
             canSubmit = false
             error_message = "只有待审核的库单允许审核"
             break
-          if operation_name=="同步" && bill_status!="CHECKED" && bill_status!="SYNCK_FAILED"
+          if operation_name=="同步" && !(bill_status in ["CHECKED","SYNCK_FAILED","CANCELD_OK"])
             canSubmit = false
             error_message = "只有已审核的库单允许同步"
             break
