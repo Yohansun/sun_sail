@@ -9,7 +9,7 @@ module MagicOrders
       else
         request.env['warden'].stub :authenticate! => current_user
         controller.stub :current_user => current_user
-      end      
+      end
     end
 
 

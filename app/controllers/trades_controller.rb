@@ -523,18 +523,14 @@ class TradesController < ApplicationController
       current_account.trades.where(:id.in => params[:ids]).each_with_index do |trade, index|
         trade.regular_orders.each do |order|
           order.skus_info_with_offline_refund.each do |sku_info|
-            if index != 0
-              has_no_num = true
-              picked_skus.each do |n|
-                if n[:title] == sku_info[:sku_title]
-                  n[:num] += sku_info[:number]
-                  has_no_num = false
-                end
+            has_no_num = true
+            picked_skus.each do |n|
+              if n[:title] == sku_info[:sku_title]
+                n[:num] += sku_info[:number]
+                has_no_num = false
               end
-              picked_skus << {title: sku_info[:name],num_iid: order.num_iid || "", num: sku_info[:number], category: sku_info[:category_name], sku_properties: sku_info[:sku_title].gsub(sku_info[:name], "")} if has_no_num
-            else
-              picked_skus << {title: sku_info[:name],num_iid: order.num_iid || "", num: sku_info[:number], category: sku_info[:category_name], sku_properties: sku_info[:sku_title].gsub(sku_info[:name], "")}
             end
+            picked_skus << {title: sku_info[:name],num_iid: order.num_iid || "", num: sku_info[:number], category: sku_info[:category_name], sku_properties: sku_info[:sku_title].gsub(sku_info[:name], "")} if has_no_num
           end
         end
       end

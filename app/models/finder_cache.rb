@@ -10,7 +10,7 @@ module FinderCache
           super
         end
 
-        alias_method_chain :find,:cache 
+        alias_method_chain :find,:cache
       end
     end
   end
@@ -18,6 +18,7 @@ module FinderCache
   module ClassMethods
 
     def find_with_cache(*args)
+      args = args.flatten
       args.length == 1 ? fetch_cache(args.first) : find_without_cache(args)
     end
 
@@ -29,11 +30,11 @@ module FinderCache
       finder_cache.write(cache_path(primary_value),find_without_cache(primary_value),expires_in: FinderCache::EXPIRES_TIME,namespace: FinderCache::NAMESPACE)
       read_cache(primary_value)
     end
-    
+
     def prefix
       name
     end
-    
+
     def cache_path(name)
       [prefix,name].join('/')
     end
