@@ -10,7 +10,7 @@ describe "AccountSetups" do
       expect(response).to redirect_to(root_path)
       follow_redirect!
       response.status.should be(200)
-    end 
+    end
   end
 
   describe "PUT /account_setups#update" do
@@ -91,7 +91,7 @@ describe "AccountSetups" do
     #Please don't use redirect_to :back
     it "works! (now write some real specs)" do
         put update_preprocess_settings_account_setups_path(:auto_settings => {:off => true}),{},{"HTTP_REFERER"=>'http://test.com/sessions/new'}
-      
+
       response.status.should be(302)
     end
   end
@@ -119,7 +119,7 @@ describe "AccountSetups" do
     it "works! (now write some real specs)" do
         @request.env['HTTP_REFERER'] = 'http://test.com/sessions/new'
         put update_automerge_settings_account_setups_path(:auto_settings => {:off => true}),{},{"HTTP_REFERER"=>'http://test.com/sessions/new'}
-      
+
       response.status.should be(302)
     end
   end
