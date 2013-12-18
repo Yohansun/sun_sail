@@ -1,5 +1,4 @@
 # -*- encoding:utf-8 -*-
-require "csv"
 
 desc "导出优衣库订单数据"
 task :export_youyiku => :environment do
