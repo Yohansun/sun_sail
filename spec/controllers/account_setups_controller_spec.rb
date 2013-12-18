@@ -58,67 +58,19 @@ describe AccountSetupsController do
     end
   end
 
-  describe "GET edit_preprocess_settings" do
-    it "success" do
-      get :edit_preprocess_settings
-      response.code.should eq("200")
+  AutoSettingsHelper::AutoBlocks.each do |block|
+    describe "GET edit_#{block}_settings" do
+      it "success" do
+        get "edit_#{block}_settings".to_sym
+        response.code.should eq("200")
+      end
+    end
+    describe "GET update_#{block}_settings" do
+      it "success" do
+        request.env["HTTP_REFERER"] = "http://test.host/"
+        get "update_#{block}_settings".to_sym, auto_settings: {}
+        response.code.should eq("302")
+      end
     end
   end
-
-  describe "GET edit_dispatch_settings" do
-    it "success" do
-      get :edit_dispatch_settings
-      response.code.should eq("200")
-    end
-  end
-
-  describe "GET edit_deliver_settings" do
-    it "success" do
-      get :edit_deliver_settings
-      response.code.should eq("200")
-    end
-  end
-
-  describe "GET edit_automerge_settings" do
-    it "success" do
-      get :edit_automerge_settings
-      response.code.should eq("200")
-    end
-  end
-
-  describe "GET edit_automerge_settings" do
-    it "success" do
-      get :edit_automerge_settings
-      response.code.should eq("200")
-    end
-  end
-
-  describe "GET edit_automerge_settings" do
-    it "success" do
-      get :edit_automerge_settings
-      response.code.should eq("200")
-    end
-  end
-
-  describe "GET edit_automerge_settings" do
-    it "success" do
-      get :edit_automerge_settings
-      response.code.should eq("200")
-    end
-  end
-
-  describe "GET edit_automerge_settings" do
-    it "success" do
-      get :edit_automerge_settings
-      response.code.should eq("200")
-    end
-  end
-
-  describe "GET edit_automerge_settings" do
-    it "success" do
-      get :edit_automerge_settings
-      response.code.should eq("200")
-    end
-  end
-
 end
