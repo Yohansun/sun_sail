@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data>
+  <pic name="滑槽" url="/temp/bg.png"/>
+  <pic name="向上" url="/temp/up.png"/>
+  <pic name="向下" url="/temp/down.png"/>
+  <pic name="滑块" url="/temp/bar.png"/>
+</data>
