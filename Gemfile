@@ -55,6 +55,7 @@ group :test, :development do
   gem "thin"
   gem "letter_opener"
   gem "simplecov", :require => false
+  gem 'fabrication'
 end
 
 gem 'strong_parameters'
