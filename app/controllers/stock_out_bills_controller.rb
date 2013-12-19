@@ -7,8 +7,8 @@ class StockOutBillsController < ApplicationController
 
   def index
     parse_params
-    @bills = default_scope.search(params[:search]).desc(:created_at)
-    @bills = @bills.page(params[:page]).per(params[:number])
+    @search = default_scope.search(params[:search]).desc(:created_at)
+    @bills = @search.page(params[:page]).per(params[:number])
     @count = @bills.count
 
     respond_to do |format|
