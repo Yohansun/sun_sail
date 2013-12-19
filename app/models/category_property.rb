@@ -25,7 +25,7 @@ class CategoryProperty < ActiveRecord::Base
 
   include MagicEnum
 
-  # only support sintle select for now
+  # only support mutiple select for now
   enum_attr :value_type,[["多选",VALUE_TYPE_MULTIPLE]]#,["单选",VALUE_TYPE_SINGLE],["输入",VALUE_TYPE_INPUT]]
   enum_attr :status,[["启用",STATUS_ENABLED],["禁用",STATUS_DISABLED]]
 

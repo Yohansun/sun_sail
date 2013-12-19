@@ -5,8 +5,8 @@ describe CategoryPropertiesController do
 
   login_admin
 
-  let(:category_property) { create(:category_property) }
-  before(:each) { 
+  let(:category_property) { create(:category_property, account_id: current_account.id) }
+  before(:each) {
     category_property
   }
 
@@ -39,7 +39,7 @@ describe CategoryPropertiesController do
 
   describe "POST #create" do
     it "shoud success" do
-      post :create, {category_property:{name:"油烟机",value_type:1}}
+      post :create, {category_property:{name:"油烟机",value_type:2}}
     end
   end
 
@@ -52,7 +52,7 @@ describe CategoryPropertiesController do
 
   describe "PUT #update" do
     it "shoud success" do
-      put :update, {id:category_property.id,category_property:{name:"油烟机", value_type:1}}
+      put :update, {id:category_property.id,category_property:{name:"油烟机", value_type:2}}
       response.code.should eq("302")
     end
   end
