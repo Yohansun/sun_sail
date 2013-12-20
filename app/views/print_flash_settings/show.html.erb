@@ -1,14 +1,15 @@
-<div class="container-fluid">
+<%
+  breadcrumb << ["系统设置", users_path]
+  breadcrumb << ["物流公司管理", stocks_safe_stock_path]
+  breadcrumb << [@logistic.name, "/logistics/#{@logistic.id}/edit"]
+  breadcrumb << ["编辑物流单模版"]
+%>
   <div class="row-fluid">
-    <%= render partial: "layouts/setting_nav" %>
-    <div class="span10">
+    <div class="span10 w100">
      <div class="row-fluid">
-        <ul class="breadcrumb" style="position:relative;">
-          <li><a href="/">Magic</a><span class="divider">/</span></li>
-          <li><a href="/logistics/<%= @logistic.id %>/edit"><%= @logistic.name %></a><span class="divider">/</span></li>
-          <li class="active">编辑物流单模版</li>
-        </ul><!-- breadcrumb -->
-        <div id="setup_logistic_print"></div>
+        <div style="height:500px">
+          <div id="setup_logistic_print"></div>
+        </div>
         <%- if current_user.is_super_admin %>
           <%= simple_form_for @setting, url: update_xml_hash_logistic_print_flash_setting_path, method: :put, :remote => true, html: {:class =>'well form-horizontal'} do |f| %>
             <%= f.input :xml_hash, as: :text, :label => "模版代码：", :input_html =>{ :class => "span10", rows: 20 } %>
@@ -20,13 +21,12 @@
      </div>
     </div>
   </div>
-</div>
 <% content_for :tail do %>
 <script type="text/javascript">
 function bind_adapt_swf() {
   var flashvars = {
-    'ppHeight': '349',
-    'ppWidth': '648',
+    'ppHeight': '600',
+    'ppWidth': '100%',
     'template': 'default',
     'config': "/logistics/<%= @setting.logistic_id %>/print_flash_settings/<%= @setting.id %>/print_infos.xml",
     'items': '/print_flash_settings/info_list.xml',
@@ -35,13 +35,23 @@ function bind_adapt_swf() {
     'needfeedbacksize': 'false',
   }
 
+  var params = {
+    'bgcolor': "#ffffff"
+  }
+
+  var flash_height = "500"
+  if($(window).height() > flash_height){
+    flash_height = "100%"
+  }
+
   // flashvars.templateUrl = data
-  swfobject.embedSWF("/swf/adapt_deliver_bill.swf", "setup_logistic_print", "960", "600", "10", "/swf/expressInstall.swf", flashvars);
+  swfobject.embedSWF("/swf/adapt_deliver_bill.swf", "setup_logistic_print", "100%", flash_height, "10", "/swf/expressInstall.swf", flashvars, params);
 }
 bind_adapt_swf();
 
 function saveok(str){
   if(str == 1){
+    alert("保存成功！")
     window.location.href = "/logistics/<%= @setting.logistic_id %>/edit"
   } else {
   }

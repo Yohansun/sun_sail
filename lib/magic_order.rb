@@ -326,6 +326,7 @@ MagicOrder::AccessControl.map do |map|
                                  "logistics#logistic_user_list",
                                  "logistics#remove_logistic_user",
                                  "logistics#logistic_user",
+                                 "print_flash_settings#show",
                                  "account_setups#update_auto_settings",
                                  "users#update_permissions",
                                  "categories#update",
