@@ -1,6 +1,9 @@
 # -*- encoding : utf-8 -*-
 class PrintFlashSettingsController < ApplicationController
+  layout "management"
+
   skip_before_filter :verify_authenticity_token
+  before_filter :authorize
   before_filter :authenticate_user!
   before_filter :fetch_setting, only: [:show, :print_infos, :update_infos, :update_xml_hash]
 
@@ -39,8 +42,5 @@ class PrintFlashSettingsController < ApplicationController
   def fetch_setting
     @setting = PrintFlashSetting.find(params[:id])
     @logistic = Logistic.find(params[:logistic_id])
-    # unless @setting.present?
-    #   PrintFlashSetting.create(logistic_id: params[:logistic_id])
-    # end
   end
 end
