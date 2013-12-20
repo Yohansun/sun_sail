@@ -632,8 +632,10 @@ class Trade
   end
 
   def invoice_price
-    price = -post_fee + (regular_orders.count > 1 ? (regular_orders.sum(:payment) - discount_without_invoice) : regular_orders.sum(:payment))
-    price < 0 ? 0 : price
+    # 淘宝开票金额
+    #   退款金额 = 所有子订单应付金额 - 所有子订单实付金额
+    #   订单实付金额 - 退款金额 - 邮费
+    payment - (orders.sum(:total_fee) - orders.sum(:payment)) - post_fee
   end
 
   # SKU属性不全
