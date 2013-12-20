@@ -1,6 +1,6 @@
 <%
   breadcrumb << ["系统设置", users_path]
-  breadcrumb << ["基础数据管理", stocks_safe_stock_path]
+  breadcrumb << ["基础数据管理", "#"]
   breadcrumb << ["商品设置", categories_path]
   breadcrumb << ["商品属性管理", category_properties_path]
   breadcrumb << ["查看商品属性"]
@@ -16,7 +16,7 @@
       <div class="page-header">
         <h1><%=t '.title', :default => model_class.model_name.human %></h1>
       </div>
-      
+
       <dl class="dl-horizontal">
         <dt><strong><%= model_class.human_attribute_name(:category_id) %>:</strong></dt>
         <dd><%= @category_property.category_id %></dd>
@@ -29,7 +29,7 @@
         <dt><strong><%= model_class.human_attribute_name(:status) %>:</strong></dt>
         <dd><%= @category_property.status %></dd>
       </dl>
-      
+
       <div class="form-actions">
         <%= link_to t('.back', :default => t("helpers.links.back")),
                     category_properties_path, :class => 'btn'  %>

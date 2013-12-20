@@ -1,6 +1,6 @@
 <%
   breadcrumb << ["系统设置", users_path]
-  breadcrumb << ["基础数据管理", stocks_safe_stock_path]
+  breadcrumb << ["基础数据管理", "#"]
   breadcrumb << ["商品设置", categories_path]
   breadcrumb << ["商品属性管理"]
 %>
@@ -65,7 +65,7 @@
       $(this).closest("tr").addClass("selected");
     }else{
       $(this).closest("tr").removeClass("selected");
-    } 
+    }
   })
 
   // general top menu event deal process, could be reused
