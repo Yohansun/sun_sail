@@ -4,9 +4,9 @@
   <mobname><%= @setting.xml_hash["mobname"] %></mobname>
   <mobwidth><%= @setting.xml_hash["mobwidth"] %></mobwidth>
   <mobheight><%= @setting.xml_hash["mobheight"] %></mobheight>
-  <offsetx><%= @setting.xml_hash["offsetx"] %></offsetx>
-  <offsety><%= @setting.xml_hash["offsety"] %></offsety>
-  <bgsrc>/print_files/bg.png</bgsrc>
+  <mobleft><%= @setting.xml_hash["offsetx"] %></mobleft>
+  <mobtop><%= @setting.xml_hash["offsety"] %></mobtop>
+  <bgsrc>/temp/bg.png</bgsrc>
   <orderc><%= @logistic.print_image %></orderc>
   <saveurl>/logistics/<%= @logistic.id %>/print_flash_settings/<%= @setting.id %>/update_infos.xml</saveurl>
   <ipos>
@@ -26,7 +26,8 @@
             "height":    "<%= item['height'] %>",
             "text":      "<%= item['text'] %>",
             "type":      "<%= item['type'] %>",
-            "italic":    "<%= item['italic'] %>"
+            "italic":    "<%= item['italic'] %>",
+            "position":  "<%= item['position'].present? ? item['position'] : 'absolute'%>"
           }]]>
         </item>
       <% end %>

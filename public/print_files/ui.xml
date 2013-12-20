@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
- <data>
-     <pic name="滑槽" url="/print_files/ui_bg.png"/>
-     <pic name="向上" url="/print_files/up.png"/>
-     <pic name="向下" url="/print_files/down.png"/>
-     <pic name="滑块" url="/print_files/bar.png"/>
- </data>
