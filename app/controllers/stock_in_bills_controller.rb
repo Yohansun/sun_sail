@@ -2,7 +2,8 @@
 class StockInBillsController < ApplicationController
   before_filter :authorize
   before_filter :set_warehouse
-  before_filter :find_column_settings, :only => [:sync, :check, :rollback, :lock, :unlock,:confirm_stock,:confirm_sync]
+  before_filter :authorize #,:except => :fetch_bils
+  before_filter :find_column_settings, :only => [:sync, :check, :rollback, :lock, :unlock,:confirm_stock,:confirm_sync,:confirm_cancle,:refuse_cancle]
   before_filter :validate_optional_status, :only => [:edit,:sync, :rollback, :update]
 
   def index
@@ -91,6 +92,26 @@ class StockInBillsController < ApplicationController
     @bills.each do |bill|
       bill.confirm_stock
     end
+
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  # 确认撤销
+  def confirm_cancle
+    @bills = default_scope.any_in(_id: params[:bill_ids])
+    @errors = @bills.reject { |bill| bill.confirm_cancle }.map(&:tid)
+
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  # 拒绝撤销
+  def refuse_cancle
+    @bills = default_scope.any_in(_id: params[:bill_ids])
+    @errors = @bills.reject { |bill| bill.refuse_cancle }.map(&:tid)
 
     respond_to do |format|
       format.js

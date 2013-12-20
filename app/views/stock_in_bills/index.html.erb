@@ -50,6 +50,12 @@
         <li>
           <%= link_to_authorize "确认入库", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_in_bills/confirm_stock",:remote => true,:request => "put",:class => "bill_operation"  %>
         </li>
+        <li>
+          <%= link_to_authorize "确认撤销", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_in_bills/confirm_cancle",:remote => true,:request => "put",:class => "bill_operation"  %>
+        </li>
+        <li>
+          <%= link_to_authorize "拒绝撤销", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_in_bills/refuse_cancle",:remote => true,:request => "put",:class => "bill_operation"  %>
+        </li>
         <%- end %>
       </ul>
     </div><!-- btn-group -->

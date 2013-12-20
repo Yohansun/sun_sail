@@ -81,6 +81,16 @@ class StockInBill < StockBill
     end
   end
 
+  # 确认撤销
+  def confirm_cancle
+    !!(do_cancel_ok && operation_logs.create(operated_at: Time.now, operation: '取消成功') )
+  end
+
+  # 拒绝撤销
+  def refuse_cancle
+    !!(do_cancel_fail && operation_logs.create(operated_at: Time.now, operation: '取消失败') )
+  end
+
   def lock!(user)
     return "不能再次锁定!" if self.operation_locked?
     notice = "同步至仓库出库单需要先撤销同步后才能锁定"
@@ -105,12 +115,13 @@ class StockInBill < StockBill
   def sync
     if can_do_syncking?
       do_syncking
-      ans_to_wms if account.settings.enable_module_third_party_stock == 1
+      ans_to_wms if enabled_third_party_stock?
     end
   end
 
   def rollback
-    do_canceling && cancel_asn_rx if can_do_canceling?
+    do_canceling  if can_do_canceling?
+    cancel_asn_rx if enabled_third_party_stock?
   end
 
   def ans_to_wms

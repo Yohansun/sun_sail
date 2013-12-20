@@ -1,0 +1,7 @@
+<%- @bills.each do |bill|%>
+$("#status_<%= bill.id %>").replaceWith("<%= j render('status', bill: bill) %>")
+$("#operation_<%= bill.id %>").replaceWith("<%= j render('operation', bill: bill) %>")
+<%- end %>
+<% if @errors.present? %>
+  alert(<%= @errors.join(',') %>)
+<% end %>
