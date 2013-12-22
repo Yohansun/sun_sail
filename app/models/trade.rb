@@ -635,7 +635,9 @@ class Trade
     # 淘宝开票金额
     #   退款金额 = 所有子订单应付金额 - 所有子订单实付金额
     #   订单实付金额 - 退款金额 - 邮费
-    payment - (orders.sum(:total_fee) - orders.sum(:payment)) - post_fee
+    #   只有一个子订单的情况下子订单的 `payment = total_fee + post_fee`
+    orders_payment = orders.sum(:payment) - (orders.count > 1 ? 0 : post_fee)
+    payment - (orders.sum(:total_fee) - orders_payment) - post_fee
   end
 
   # SKU属性不全
