@@ -3,11 +3,11 @@ class YihaodianTradePuller
   class << self
     def create(start_time = nil, end_time = nil, account_id)
       Account.find(account_id).yihaodian_source_ids.each do |trade_source_id|
-        create_with_source(trade_source_id)
+        create_with_source(trade_source_id,start_time,end_time)
       end
     end
     
-    def create_with_source(trade_source_id)
+    def create_with_source(trade_source_id,start_time=nil,end_time=nil)
       total_pages = nil
       page_no = 1
 
