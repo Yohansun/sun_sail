@@ -1,6 +1,6 @@
 <%
   breadcrumb << ["系统设置", users_path]
-  breadcrumb << ["基础数据管理", stocks_safe_stock_path]
+  breadcrumb << ["基础数据管理", "#"]
   breadcrumb << ["区域管理", areas_path]
   breadcrumb << ["地区经销商"]
 %>
@@ -31,7 +31,7 @@
           </div>
         </fieldset>
       <% end %>
-    
+
       <div class="btn-toolbar">
         <div class="btn-group">
           <button class="btn btn-warning" id="seller_operations">操作</button>
@@ -44,7 +44,7 @@
           </ul>
         </div><!-- btn-group -->
       </div><!-- btn-groups end -->
-    
+
       <table class="table table-striped table-bordered table-condensed td_colors mar_t" id="area_table">
         <thead>
           <tr>
@@ -55,7 +55,7 @@
             <th>经销商</th>
           </tr>
         </thead>
-    
+
         <tbody id="seller_rows">
           <% @leaves.each do |leave| %>
             <tr id="area_<%= leave.id %>">
@@ -73,7 +73,7 @@
             </tr>
           <% end %>
         </tbody>
-      </table>  
+      </table>
     </div>
   </div>
 </div>
