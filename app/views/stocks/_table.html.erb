@@ -77,9 +77,9 @@
         <tr id="<%=dom_id(stock_product)%>">
           <td><input type="checkbox" name="stock_product_ids[]" value="<%= stock_product.id %>"></td>
           <%- @all_cols.each do |col_name, view_name| -%>
-          <td  class="<%= 'sku_title' if col_name=="product_name" %>" data-col="<%= col_name %>" style="<%= 'display:none' unless @visible_cols.include?(col_name) %>">
+          <td class="<%= 'sku_title' if col_name=="product_name" %>" data-col="<%= col_name %>" style="<%= get_col_style(@visible_cols, col_name, stock_product) %>">
             <% case col_name
-             when "sku_sku_id" %>
+               when "sku_sku_id" %>
             <%= stock_product.sku.try(:sku_id) %>
             <% when "product_name" %>
               <%= stock_product.sku.try(:title) %>

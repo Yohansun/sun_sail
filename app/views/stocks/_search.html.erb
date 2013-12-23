@@ -20,6 +20,12 @@
     <%= f.text_field :product_outer_id_eq,{:class => "input-large pull-left"}  %>
   </div>
 </div>
+<div class="control-group">
+  <%= label_tag "storage_status",raw("<code>库存状态</code>"),:class => "pull-left"  %>
+  <div class="controls pull-left">
+    <%= select_tag "storage_status",options_for_select(StockProduct::STORAGE_STATUS.keys,params["storage_status"]),{:include_blank => true,:class => "input-small pull-left select2 all"} %>
+  </div>
+</div>
 <% content_for :tail do %>
 <script type="text/javascript" charset="utf-8">
 $(function() {
