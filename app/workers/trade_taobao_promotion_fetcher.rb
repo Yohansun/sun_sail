@@ -3,8 +3,9 @@ class TradeTaobaoPromotionFetcher
 	include Sidekiq::Worker
   sidekiq_options :queue => :taobao_promotion_fetcher, unique: true, unique_job_expiration: 120
 
-  def perform(tid)
-    trade = TaobaoTrade.where(tid: tid).first
+  def perform(tid=nil,options={})
+    conditions = {tid: tid}.merge(options).reject {|k,v| v.nil?}
+    trade = TaobaoTrade.where(conditions).first
     return unless trade
     account = trade.fetch_account
     source_id = trade.trade_source_id

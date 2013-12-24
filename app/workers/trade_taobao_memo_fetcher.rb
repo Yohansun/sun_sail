@@ -2,7 +2,8 @@
 class TradeTaobaoMemoFetcher
 	include Sidekiq::Worker
   sidekiq_options :queue => :taobao_memo_fetcher, unique: true, unique_job_expiration: 120
-  def perform(tid)
+  def perform(tid=nil,options={})
+    conditions = {tid: tid}.merge(options).reject {|k,v| v.nil?}
     trade = TaobaoTrade.where(tid: tid).first
     return unless trade && trade._type != "CustomTrade"
     source_id = trade.trade_source_id
