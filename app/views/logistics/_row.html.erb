@@ -24,11 +24,14 @@
             <%= link_to "编辑", edit_logistic_path(:id => logistics.id), :"data-action-url"=>"edit", :class=>"edit_seller"%>
           </li>
           <li>
+            <%= link_to "设置物流费用", logistic_logistic_areas_path(:logistic_id => logistics.id), :"data-action-url"=>"logistic_areas", :class=>"edit_seller"%>
+          </li>
+          <li>
             <%= link_to "删除", delete_logistic_path(:id => logistics.id), :class=>"close_seller" %>
           </li>
           <li><a data-action='manage-area' data-toggle="modal" href="#dealer_area" data-type="seller_area" data-id="<%=logistics.id%>" class="logistic_area">管辖地区</a></li>
           <li><a data-action='manage-login' data-toggle="modal" href="#dealer_login" data-id="<%= logistics.id%>" class="logistic_login_acount">登录账号</a></li>
-   
+
         </ul>
       </div>
     </td>

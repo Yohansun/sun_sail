@@ -24,7 +24,13 @@ class Logistic < ActiveRecord::Base
   has_one :print_flash_setting, :dependent => :destroy
   accepts_nested_attributes_for :print_flash_setting
 
-  attr_accessible :name, :code, :print_image
+  attr_accessible :name,
+                  :code,
+                  :print_image,
+                  :basic_post_weight,
+                  :basic_post_fee,
+                  :extra_post_weight,
+                  :extra_post_fee
   validates :name, presence: true, uniqueness: { scope: :account_id }
 
   validates_presence_of :code

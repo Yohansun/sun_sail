@@ -299,6 +299,11 @@ MagicOrders::Application.routes.draw do
         put :update_xml_hash
       end
     end
+    resources :logistic_areas do
+      collection do
+        post :update_post_info
+      end
+    end
   end
 
   resources :onsite_services do
