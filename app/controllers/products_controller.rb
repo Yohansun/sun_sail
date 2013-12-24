@@ -199,7 +199,7 @@ class ProductsController < ApplicationController
         current_user.settings.tmp_skus = skus
         @skus = current_user.settings.tmp_skus
       else
-        @product.skus.each_with_index do |sku, index|
+        @product.skus.reject{|sku| sku.value == "默认"}.each_with_index do |sku, index|
           sku.update_attributes(sku_id: update_sku_ids[index])
         end
         @skus = @product.skus
