@@ -530,7 +530,7 @@ class TradesController < ApplicationController
                 has_no_num = false
               end
             end
-            picked_skus << {title: sku_info[:name],num_iid: order.num_iid || "", num: sku_info[:number], category: sku_info[:category_name], sku_properties: sku_info[:sku_title].gsub(sku_info[:name], "")} if has_no_num
+            picked_skus << {title: sku_info[:name],num_iid: sku_info[:outer_id] || "", num: sku_info[:number], category: sku_info[:category_name], sku_properties: sku_info[:sku_title].gsub(sku_info[:name], "")} if has_no_num
           end
         end
       end
