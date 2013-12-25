@@ -4,7 +4,7 @@ class TradeTaobaoMemoFetcher
   sidekiq_options :queue => :taobao_memo_fetcher, unique: true, unique_job_expiration: 120
   def perform(tid=nil,options={})
     conditions = {tid: tid}.merge(options).reject {|k,v| v.nil?}
-    trade = TaobaoTrade.where(tid: tid).first
+    trade = TaobaoTrade.where(conditions).first
     return unless trade && trade._type != "CustomTrade"
     source_id = trade.trade_source_id
     account = trade.fetch_account
