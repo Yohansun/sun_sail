@@ -43,15 +43,16 @@ class CustomTradesController < ApplicationController
     end
   end
 
-  def change_taobao_products
-    taobao_skus = TaobaoSku.where(num_iid: params[:num_iid].to_i) rescue false
+  def change_products
+    product_id = current_account.products.find_by_outer_id(params[:outer_id]).id
+    native_skus = Sku.where(product_id: product_id) rescue false
     skus = []
-    if taobao_skus.present?
-      taobao_skus.each do |sku|
-        skus << {sku_id: sku.sku_id, name: sku.name}
+    if native_skus.present?
+      native_skus.each do |sku|
+        skus << {sku_id: sku.id, name: sku.name}
       end
     end
-    render json: {taobao_skus: skus}
+    render json: {skus: skus}
   end
 
   private

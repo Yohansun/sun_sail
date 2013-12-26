@@ -377,7 +377,7 @@ MagicOrders::Application.routes.draw do
 
   resources :custom_trades do
     collection do
-      get :change_taobao_products
+      get :change_products
     end
   end
 
