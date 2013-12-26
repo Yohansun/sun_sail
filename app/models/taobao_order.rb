@@ -51,6 +51,19 @@ class TaobaoOrder < Order
     outer_iid
   end
 
+  def fetch_refund_price
+    if refund_status == "SUCCESS"
+      data = {trade: trade.attributes, parameters: {method: 'taobao.refund.get',fields: "refund_fee",refund_id: refund_id},trade_source_id: trade.trade_source_id}
+      response = TaobaoQuery.get(data[:parameters],trade.trade_source_id)
+      result = cache_exception(message: "淘宝退款金额抓取异常(#{trade.shop_name})",data: data.merge(response: response)) do
+        response["refund_get_response"]["refund"]["refund_fee"].to_f
+      end
+      result.is_a?(Exception) ? 0 : result
+    else
+      0
+    end
+  end
+
   def sku_properties
     sku_properties_name
   end
