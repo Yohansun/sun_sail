@@ -56,8 +56,25 @@
                 <label class="control-label">选择对应SKU：</label>
                 <select id="skus_options" class="input-xlarge"></select>
                 <input class="input-small" type="text" id="taobao_order_num" placeholder="数量">
+              </div>
+              <div class="control-group">
+                <label class="control-label">商品实付金额：</label>
+                <select id="payment_input_options" class="input-xlarge">
+                  <option value='manual_input'>手动输入</option>
+                  <option value='region_input'>按地域及物流商计算</option>
+                </select>
                 <input class="input-small" type="text" id="taobao_order_payment" placeholder="实付金额">
-                <a class="btn btn-small btn-warning" type="button" id="add_taobao_product">添加</a>
+              </div>
+              <div class="control-group region_input">
+                <label class="control-label">物流商：</label>
+                <select id="logistics" class="input-small"></select>
+                <input class="input-small" type="text" id="product_weight" placeholder="商品重量">
+                <input class="input-medium" type="text" id="product_discount" placeholder="优惠比例(默认100%)">
+                <input class="input-small" type="text" id="product_balance_fee" placeholder="其他费用">
+                <a class="btn btn-small btn-warning" type="button" id="calculate_payment">计算实付金额</a>
+              </div>
+              <div class="control-group">
+                <a class="btn btn-small btn-warning" type="button" id="add_product">添加</a>
               </div>
             </fieldset><!-- form area -->
           </form>
@@ -101,6 +118,7 @@
 <script type="text/javascript">
 
   // Initialize
+  $('.region_input').hide()
   pick_skus()
 
 
@@ -161,6 +179,75 @@
     }
   });
 
+  $('#payment_input_options').on('change', function(event){
+    if(this.value == "region_input"){
+      if(check_area_inputs() == true){
+        $('.region_input').show()
+        $("#taobao_order_payment").prop('disabled', true);
+        $.get("/logistics/logistic_templates", {type: 'all', trade_type: "CustomTrade"}).done(function(data){
+          var html_options = ''
+          for (var i in data){
+            html_options += '<option value="' + data[i].id + '">' + data[i].name + '</option>'
+          }
+          $('#logistics').html(html_options)
+        });
+      } else {
+        this.value = "manual_input"
+      }
+    } else {
+      $('.region_input').hide()
+      $("#taobao_order_payment").prop('disabled', false);
+    }
+  });
+
+  // 点击计算实付金额
+  $('#calculate_payment').on('click', function(event){
+    event.preventDefault()
+
+    var outer_id    = $('.product_list option:selected').val()
+    var discount    = $('#product_discount').val()
+    var weight      = $('#product_weight').val()
+    var num         = $('#taobao_order_num').val()
+    var balance_fee = $('#product_balance_fee').val()
+    var logistic_id = $('#logistics').val()
+    var area_id     = $('.trade_level_3').val()
+
+    check_area_inputs()
+    if(num == ''){
+      alert("数量不能为空。")
+      return
+    } else if(weight == ''){
+      alert("重量不能为空。")
+      return
+    } else if(/^[1-9]{1}[0-9]*$/.test(num) != true){
+      alert("数量格式不正确。")
+      return
+    } else if(/^[1-9]{1}[0-9]*$/.test(weight) != true){
+      alert("重量格式不正确。")
+      return
+    } else if(/^(-?)[0-9]*(\.[0-9]*)?$/.test(balance_fee) != true){
+      alert("其他费用格式不正确。")
+      return
+    } else if(/^[0-9]*(\.[0-9]*)?$/.test(discount) != true || discount >100 ){
+      alert("优惠比例格式不正确。")
+      return
+    }
+
+    data = {}
+    data['outer_id']    = outer_id
+    data['discount']    = discount
+    data['weight']      = weight
+    data['num']         = num
+    data['balance_fee'] = balance_fee
+    data['logistic_id'] = logistic_id
+    data['area_id']     = area_id
+
+    $.get("/custom_trades/calculate_payment", {data: data}).done(function(data){
+      $('#taobao_order_payment').val(data.payment)
+    });
+
+  });
+
 
   $(document).on('click', '.delete_taobao_order', function(event){
     event.preventDefault()
@@ -178,12 +265,12 @@
   function check_area_inputs () {
     if($('.trade_level_1 option:selected').val() == "" || $('.trade_level_2 option:selected').val() == ""){
       event.preventDefault();
-      alert("无匹配此地域经销商");
+      alert("地域不完整");
       return false
     }
     if($('.trade_level_2 option:selected').val() != "" && $('.trade_level_3 option:selected').val() == "" && $('.trade_level_3 option:last').text() != "请选择"){
       event.preventDefault();
-      alert("无匹配此地域经销商");
+      alert("地域不完整");
       return false
     }
     return true

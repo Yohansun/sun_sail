@@ -4,13 +4,13 @@ module MagicCalculation
     def post_fee(obj, product_weight)
       extra_weight = product_weight - obj.basic_post_weight
       if extra_weight <= 0
-        return product_weight * obj.basic_post_fee
+        return obj.basic_post_fee
       else
         begin
-          return obj.basic_post_weight * obj.basic_post_weight + extra_weight / obj.extra_post_weight * obj.extra_post_fee
+          return obj.basic_post_fee + extra_weight / obj.extra_post_weight * obj.extra_post_fee
         rescue ZeroDivisionError
           # 如果额外重量为0，则所有重量都按基本费用计算
-          return obj.basic_post_weight * obj.basic_post_weight
+          return obj.basic_post_fee
         end
       end
     end
