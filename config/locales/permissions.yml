@@ -180,6 +180,8 @@ zh-CN:
   permissions_tag_logistics#logistic_user_list: "物流公司添加登录账号"
   permissions_tag_logistics#remove_logistic_user: "物流公司删除登录账号"
   permissions_tag_logistics#logistic_user: "查看物流公司登录账号"
+  permissions_tag_logistic_areas#index: "查看物流公司管辖区域"
+  permissions_tag_logistic_areas#update_post_info: "物流公司设置物流费用"
   permissions_tag_account_setups#update_auto_settings: "更新自动化设置"
   permissions_tag_categories#detail: "查看分类"
   permissions_tag_categories#create: "创建分类"

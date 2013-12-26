@@ -1,7 +1,9 @@
 # -*- encoding : utf-8 -*-
 class CustomTradesController < ApplicationController
+  include MagicCalculation::PostFeeCalculation
   before_filter :authenticate_user!
   before_filter :fetch_data
+
 
   def new
     @custom_trade = CustomTrade.new
@@ -43,15 +45,31 @@ class CustomTradesController < ApplicationController
     end
   end
 
-  def change_taobao_products
-    taobao_skus = TaobaoSku.where(num_iid: params[:num_iid].to_i) rescue false
+  def change_products
+    product_id = current_account.products.find_by_outer_id(params[:outer_id]).id
+    native_skus = current_account.skus.where(product_id: product_id) rescue false
     skus = []
-    if taobao_skus.present?
-      taobao_skus.each do |sku|
-        skus << {sku_id: sku.sku_id, name: sku.name}
+    if native_skus.present?
+      native_skus.each do |sku|
+        skus << {sku_id: sku.id, name: sku.name}
       end
     end
-    render json: {taobao_skus: skus}
+    render json: {skus: skus}
+  end
+
+  def calculate_payment
+    product  = current_account.products.find_by_outer_id(params['data']['outer_id'])
+    area     = Area.find_by_id(params['data']['area_id'])
+    logistic = current_account.logistics.find_by_id(params['data']['logistic_id'])
+    raise    "#{current_account.name} 没有设置任何经销商!" if logistic.blank?
+    post_fee = area_post_fee(area, logistic, params['data']['weight'].to_i)
+    payment  = product.price *
+               params['data']['num'].to_f *
+               (params['data']['discount'].to_f.zero? ? 100 : params['data']['discount'].to_f) / 100 +
+               params['data']['balance_fee'].to_f +
+               post_fee
+
+    render json: {payment: payment}
   end
 
   private

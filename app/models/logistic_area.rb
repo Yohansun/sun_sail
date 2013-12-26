@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 # == Schema Information
 #
 # Table name: logistic_areas
@@ -10,7 +11,6 @@
 #  account_id  :integer(4)
 #
 
-# -*- encoding : utf-8 -*-
 class LogisticArea < ActiveRecord::Base
   attr_accessible :logistic_id,
                   :area_id,
@@ -23,7 +23,7 @@ class LogisticArea < ActiveRecord::Base
   belongs_to :logistic
   belongs_to :area
 
-  def has_full_post_info
+  def has_full_post_fee_info
     basic_post_weight.present? &&
     basic_post_fee.present?    &&
     extra_post_weight.present? &&

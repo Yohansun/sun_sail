@@ -178,12 +178,12 @@ class CustomTrade < Trade
       new_order.status = status
       new_order.refund_status = "NO_REFUND"
       new_order.seller_type = "B"
-      new_order.num_iid = order_array[0].to_i
-      new_order.sku_id = (order_array[1] == "0" ? nil : order_array[1])
+      new_order.outer_iid = order_array[0]
+      new_order.local_sku_id = (order_array[1] == "0" ? nil : order_array[1])
       new_order.num = order_array[2]
       new_order.payment = order_array[3]
       new_order.title = order_array[4]
-      order_product = TaobaoProduct.find_by_num_iid(order_array[0])
+      order_product = Product.find_by_outer_id(order_array[0]) || TaobaoProduct.find_by_num_iid(order_array[0])
       new_order.price = order_product.price
       new_order.cid =  order_product.cid
       new_order.pic_path = order_product.pic_url
