@@ -1,0 +1,80 @@
+<%
+  breadcrumb << ["系统设置", users_path]
+  breadcrumb << ["基础数据管理", "#"]
+  breadcrumb << ["物流公司管理", logistics_path]
+  breadcrumb << ["设置物流费用"]
+%>
+<div class="row-fluid">
+  <div class="span10 w100">
+    <ul class="nav nav-tabs">
+      <li class="active"><a href="/logistics">设置物流费用</a></li>
+    </ul><!-- nav-tabs -->
+    <div class="tab-content">
+      <%= form_tag("/logistics/#{@logistic.id}/logistic_areas/update_post_info", class: 'form-horizontal') do -%>
+        <div class="btn-toolbar top_actions">
+          <button class="btn btn-warning" type="submit">保存</button>
+        </div>
+        默认运费，
+        <%= text_field_tag "default_post_info[basic_post_weight]", @logistic.basic_post_weight, class: "input-mini" %> 千克内，
+        <%= text_field_tag "default_post_info[basic_post_fee]"   , @logistic.basic_post_fee   , class: "input-mini" %> 元，每增加
+        <%= text_field_tag "default_post_info[extra_post_weight]", @logistic.extra_post_weight, class: "input-mini" %> 千克，增加运费
+        <%= text_field_tag "default_post_info[extra_post_fee]"   , @logistic.extra_post_fee   , class: "input-mini" %> 元
+        <br/><br/>
+        <table class="table table-striped table-bordered table-condensed vertical_mid logistic_post_fee">
+          <thead>
+            <tr>
+              <th>市</th>
+              <th>区</th>
+              <th>首重(千克)</th>
+              <th>首费(元)</th>
+              <th>续重(千克)</th>
+              <th>续费(元)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <%  @logistic_areas.each do |logi_area|  %>
+            <tr class="<%= logi_area.area.parent.pinyin %>">
+              <td><%= logi_area.area.parent.name %></td>
+              <td><%= logi_area.area.name %></td>
+              <td><%= text_field_tag "logistic_areas[#{logi_area.id}][basic_post_weight]", logi_area.basic_post_weight, class: "input-mini basic_post_weight_input" %></td>
+              <td><%= text_field_tag "logistic_areas[#{logi_area.id}][basic_post_fee]"   , logi_area.basic_post_fee   , class: "input-mini basic_post_fee_input" %></td>
+              <td><%= text_field_tag "logistic_areas[#{logi_area.id}][extra_post_weight]", logi_area.extra_post_weight, class: "input-mini extra_post_weight_input" %></td>
+              <td><%= text_field_tag "logistic_areas[#{logi_area.id}][extra_post_fee]"   , logi_area.extra_post_fee   , class: "input-mini extra_post_fee_input" %></td>
+            </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% end %>
+      <%= paginate @logistic_areas %>
+    </div>
+  </div>
+</div>
+
+<% content_for :tail do -%>
+  <script type="text/javascript">
+
+    // 改变所有相同市的运费参数
+    function InputChange(klass){
+      this.name = klass
+      this.init($('table '+klass))
+    }
+
+    InputChange.prototype = {
+      init : function(inputs){
+        var that = this
+        that.table = inputs.parents('table')
+
+        inputs.change(function(){
+          var trclass = $(this).parents('tr')[0].className
+          that.table.find('.' + trclass).find(that.name).val(this.value)
+        })
+      }
+    }
+
+    new InputChange('input.basic_post_weight_input')
+    new InputChange('input.basic_post_fee_input')
+    new InputChange('input.extra_post_weight_input')
+    new InputChange('input.extra_post_fee_input')
+
+  </script>
+<% end %>

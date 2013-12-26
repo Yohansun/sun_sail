@@ -12,8 +12,21 @@
 
 # -*- encoding : utf-8 -*-
 class LogisticArea < ActiveRecord::Base
-  attr_accessible :logistic_id, :area_id, :account_id
+  attr_accessible :logistic_id,
+                  :area_id,
+                  :account_id,
+                  :basic_post_weight,
+                  :basic_post_fee,
+                  :extra_post_weight,
+                  :extra_post_fee
   belongs_to :account
   belongs_to :logistic
   belongs_to :area
+
+  def has_full_post_info
+    basic_post_weight.present? &&
+    basic_post_fee.present?    &&
+    extra_post_weight.present? &&
+    extra_post_fee.present?
+  end
 end
