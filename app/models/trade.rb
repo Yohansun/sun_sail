@@ -191,6 +191,9 @@ class Trade
   #人工订单锁定
   field :is_locked, type: Boolean, default: false
 
+  #分拣单批次号
+  field :batch_sort_num, type: Integer
+
   # ADD INDEXES TO SPEED UP
   # 简单搜索index
   index tid: -1
@@ -201,6 +204,7 @@ class Trade
   index logistic_name: 1
   index logistic_waybill: -1
   index logistic_code: 1
+  index batch_sort_num: 1
 
   index news: -1
 
@@ -1154,6 +1158,9 @@ class Trade
                   search_tags_hash.update(:seller_id => {"$ne" =>nil})
                   conditions[key] << {:seller_id => {"$ne" =>nil}}
                 end
+              elsif key == "batch_sort_num"
+                search_tags_hash.update(Hash[key.to_sym, value.strip.to_i])
+                conditions[key] << Hash[key.to_sym, value.strip.to_i]
               else
                 search_tags_hash.update(Hash[key.to_sym, regexp_value])
                 conditions[key] << Hash[key.to_sym, regexp_value]

@@ -520,7 +520,8 @@ class TradesController < ApplicationController
 
     if params[:ids].present?
       picked_skus = []
-      current_account.trades.where(:id.in => params[:ids]).each_with_index do |trade, index|
+      trades = current_account.trades.where(:id.in => params[:ids])
+      trades.each_with_index do |trade, index|
         trade.regular_orders.each do |order|
           order.skus_info_with_offline_refund.each do |sku_info|
             has_no_num = true
@@ -542,6 +543,9 @@ class TradesController < ApplicationController
       display_skus = Kaminari.paginate_array(picked_skus).page(params[:page]).per(20)
       total_page = display_skus.total_pages
       total_page += 1 if picked_skus.count == 0
+
+      @batch_sort_num = Time.now.to_s(:number).to_i - 2*10**13
+      trades.update_all(batch_sort_num: @batch_sort_num)
 
       respond_to do |format|
         format.json { render json: {skus: display_skus, total_page: total_page}}

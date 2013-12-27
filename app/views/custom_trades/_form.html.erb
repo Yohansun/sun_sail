@@ -105,7 +105,7 @@
             <input class="input-medium" type="text" id="product_discount" placeholder="优惠比例(默认100%)">
             <input class="input-small" type="text" id="product_balance_fee" placeholder="其他费用">
             <a class="btn btn-small btn-warning" type="button" id="calculate_payment">计算订单实付金额</a>
-            <input class="input-xlarge" name="calculate_payment" type="text" id="custom_trade_payment" placeholder="订单实付金额(默认为子订单实付金额之和)" value="<%= @custom_trade.payment %>" readonly>
+            <input class="input-xlarge" name="calculate_payment" type="text" id="custom_trade_payment" placeholder="订单实付金额(默认为子订单实付金额之和)" value="<%= @custom_trade.payment.zero? ? nil : @custom_trade.payment %>" readonly>
           </div>
 
           <div class="btn-toolbar">
