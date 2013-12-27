@@ -165,7 +165,7 @@ class CustomTrade < Trade
     end
   end
 
-  def change_orders(orders, status, action_name)
+  def change_orders(orders, status, calculate_payment, action_name)
     taobao_orders.delete_all
     orders.each do |order|
       order_array = order.split(";")
@@ -188,7 +188,11 @@ class CustomTrade < Trade
       new_order.cid =  order_product.cid
       new_order.pic_path = order_product.pic_url
     end
-    self.payment = taobao_orders.inject(0){|sum, order| sum += order.payment }
+    if calculate_payment.present?
+      self.payment = calculate_payment
+    else
+      self.payment = taobao_orders.inject(0){|sum, order| sum += order.payment }
+    end
     self.total_fee = taobao_orders.inject(0){|sum, order| sum += (order.price * order.num) }
   end
 

@@ -33,7 +33,7 @@ class CustomTradesController < ApplicationController
     @custom_trade = CustomTrade.find(params[:id])
     @custom_trade.change_params(params[:custom_trade])
     if params[:taobao_orders]
-      @custom_trade.change_orders(params[:taobao_orders], params[:custom_trade][:status], action_name)
+      @custom_trade.change_orders(params[:taobao_orders], params[:custom_trade][:status], params[:calculate_payment], action_name)
       if @custom_trade.save
         SetForecastSellerWorker.perform_async(@custom_trade.id)
         redirect_to "/app#trades"
@@ -57,14 +57,18 @@ class CustomTradesController < ApplicationController
     render json: {skus: skus}
   end
 
+  def calculate_price
+    product = current_account.products.find_by_outer_id(params['outer_id'])
+    price   = product.price * params['num'].to_f
+    render json: {price: price}
+  end
+
   def calculate_payment
-    product  = current_account.products.find_by_outer_id(params['data']['outer_id'])
     area     = Area.find_by_id(params['data']['area_id'])
     logistic = current_account.logistics.find_by_id(params['data']['logistic_id'])
     raise    "#{current_account.name} 没有设置任何经销商!" if logistic.blank?
     post_fee = area_post_fee(area, logistic, params['data']['weight'].to_i)
-    payment  = product.price *
-               params['data']['num'].to_f *
+    payment  = params['data']['price'].to_f *
                (params['data']['discount'].to_f.zero? ? 100 : params['data']['discount'].to_f) / 100 +
                params['data']['balance_fee'].to_f +
                post_fee

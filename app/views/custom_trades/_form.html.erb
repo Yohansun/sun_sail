@@ -29,7 +29,7 @@
         <%= f.input :receiver_zip, label: '收货人邮编：', :input_html =>{ :class => "input-large" } %>
         <%= f.input :pay_time, label: '付款时间：', :input_html =>{ :class => "input-large js-datetimepicker", :value => "#{@custom_trade.pay_time.try(:strftime, '%Y-%m-%d %H:%M:%S')}"}, readonly: true %>
         <%= f.input :status, label: '订单状态：', collection: [["已付款，待分派","WAIT_SELLER_SEND_GOODS"]], :input_html =>{ :class => "input-large select2" }, selected: ["已付款，待分派","WAIT_SELLER_SEND_GOODS"] %>
-        <%= f.input :custom_type, label: '订单类型：', collection: current_account.settings.trade_types.map(&:reverse), :input_html =>{ :class => "input-large select2" } %>
+        <%= f.input :custom_type, label: '订单类型：', collection: current_account.settings.trade_types.to_a.map(&:reverse), :input_html =>{ :class => "input-large select2" } %>
         <%#= f.input :has_invoice_info, label: '是否开发票：', collection: [["是","true"],["否","false"]], :input_html =>{ :class => "input-mini select2" }, selected: ["#{@custom_trade.invoice_name == nil ? '否' : '是'}","#{@custom_trade.invoice_name == nil ? 'false' : 'true'}"] %>
       </fieldset><!-- form right area -->
     </div>
@@ -61,20 +61,14 @@
                 <label class="control-label">商品实付金额：</label>
                 <select id="payment_input_options" class="input-xlarge">
                   <option value='manual_input'>手动输入</option>
-                  <option value='region_input'>按地域及物流商计算</option>
+                  <option value='price_input'>按商品价格计算</option>
                 </select>
                 <input class="input-small" type="text" id="taobao_order_payment" placeholder="实付金额">
-              </div>
-              <div class="control-group region_input">
-                <label class="control-label">物流商：</label>
-                <select id="logistics" class="input-small"></select>
-                <input class="input-small" type="text" id="product_weight" placeholder="商品重量">
-                <input class="input-medium" type="text" id="product_discount" placeholder="优惠比例(默认100%)">
-                <input class="input-small" type="text" id="product_balance_fee" placeholder="其他费用">
-                <a class="btn btn-small btn-warning" type="button" id="calculate_payment">计算实付金额</a>
-              </div>
-              <div class="control-group">
                 <a class="btn btn-small btn-warning" type="button" id="add_product">添加</a>
+              </div>
+
+              <div class="control-group">
+
               </div>
             </fieldset><!-- form area -->
           </form>
@@ -86,7 +80,7 @@
                 <th width="15%">商品SKU</th><!--sku_id-->
                 <th width="10%">商品数量</th><!--num-->
                 <th width="10%">商品实付金额</th><!--payment-->
-                <th width="10%"></th>
+                <th width="10%"></th><!--payment-->
               </tr>
             </thead>
             <tbody id="taobao_orders_table">
@@ -104,6 +98,16 @@
             </tbody>
           </table>
 
+          <div class="control-group">
+            <label class="control-label">物流商：</label>
+            <select id="logistics" class="input-small"></select>
+            <input class="input-small" type="text" id="product_weight" placeholder="商品重量">
+            <input class="input-medium" type="text" id="product_discount" placeholder="优惠比例(默认100%)">
+            <input class="input-small" type="text" id="product_balance_fee" placeholder="其他费用">
+            <a class="btn btn-small btn-warning" type="button" id="calculate_payment">计算订单实付金额</a>
+            <input class="input-xlarge" name="calculate_payment" type="text" id="custom_trade_payment" placeholder="订单实付金额(默认为子订单实付金额之和)" value="<%= @custom_trade.payment %>" readonly>
+          </div>
+
           <div class="btn-toolbar">
             <%= f.button :submit, "保存", :class => "btn btn-warning btn-small save_orders" %>
             <a href="/app#trades" class="btn btn-warning btn-small">取消</a>
@@ -118,8 +122,15 @@
 <script type="text/javascript">
 
   // Initialize
-  $('.region_input').hide()
+  // $('.price_input').hide()
   pick_skus()
+  $.get("/logistics/logistic_templates", {type: 'all', trade_type: "CustomTrade"}).done(function(data){
+    var html_options = ''
+    for (var i in data){
+      html_options += '<option value="' + data[i].id + '">' + data[i].name + '</option>'
+    }
+    $('#logistics').html(html_options)
+  });
 
 
   $('.product_list').on('change',function(event){
@@ -155,74 +166,76 @@
     var num      = $('#taobao_order_num').val()
     var payment  = $('#taobao_order_payment').val()
 
-    if(num == '' || payment == ''){
-      alert("数量,实付金额不能为空。")
+    if(num == ''){
+      alert("数量不能为空。")
+      return
+    } else if(payment == '' && $('#payment_input_options').val() != "price_input"){
+      alert("实付金额不能为空。")
+      return
     } else if(/^[1-9]{1}[0-9]*$/.test(num) != true){
       alert("数量格式不正确。")
-    } else if(/^[0-9]+(\.[0-9]*)?$/.test(payment) != true){
+      return
+    } else if(/^[0-9]*(\.[0-9]*)?$/.test(payment) != true){
       alert("实付金额格式不正确。")
+      return
     } else {
       var product_outer_ids = $('#taobao_orders_table tr').map(function(){return $(this).find('td:first').text()}).get();
       if($.inArray(outer_id, product_outer_ids) != -1){
         alert("已添加过商品")
-      } else {
-        var new_taobao_order = ""
-        new_taobao_order += '<tr><td>' + outer_id + '</td>'
-        new_taobao_order += '<td>' + name + '</td>'
-        new_taobao_order += '<td>' + sku_name + '</td>'
-        new_taobao_order += '<td>' + num + '</td>'
-        new_taobao_order += '<td>' + payment + '</td>'
-        new_taobao_order += '<td><a class="btn btn-small btn-info delete_taobao_order">删除</a></td>'
-        new_taobao_order += "<input type='hidden' name='taobao_orders[]' value='"+outer_id+";"+sku_id+";"+num+";"+payment+";"+name+"'></input></tr>"
-        $('#taobao_orders_table').append(new_taobao_order)
+        return
       }
     }
+
+    if ($('#payment_input_options').val() == "price_input"){
+      $.get("/custom_trades/calculate_price", {num: num, outer_id: outer_id}).done(function(data){
+        $('#taobao_order_payment').val(data.price)
+        payment = data.price
+        add_new_order(outer_id, name, sku_name, num, payment, sku_id)
+      });
+    } else {
+      add_new_order(outer_id, name, sku_name, num, payment, sku_id)
+    }
   });
+
+  function add_new_order (outer_id, name, sku_name, num, payment, sku_id) {
+    var new_taobao_order = ""
+    new_taobao_order += '<tr><td>' + outer_id + '</td>'
+    new_taobao_order += '<td>' + name + '</td>'
+    new_taobao_order += '<td>' + sku_name + '</td>'
+    new_taobao_order += '<td>' + num + '</td>'
+    new_taobao_order += '<td>' + payment + '</td>'
+    new_taobao_order += '<td><a class="btn btn-small btn-info delete_taobao_order">删除</a></td>'
+    new_taobao_order += "<input type='hidden' name='taobao_orders[]' value='"+outer_id+";"+sku_id+";"+num+";"+payment+";"+name+"'></input></tr>"
+    $('#taobao_orders_table').append(new_taobao_order)
+  }
 
   $('#payment_input_options').on('change', function(event){
-    if(this.value == "region_input"){
-      if(check_area_inputs() == true){
-        $('.region_input').show()
-        $("#taobao_order_payment").prop('disabled', true);
-        $.get("/logistics/logistic_templates", {type: 'all', trade_type: "CustomTrade"}).done(function(data){
-          var html_options = ''
-          for (var i in data){
-            html_options += '<option value="' + data[i].id + '">' + data[i].name + '</option>'
-          }
-          $('#logistics').html(html_options)
-        });
-      } else {
-        this.value = "manual_input"
-      }
+    if(this.value == "price_input"){
+      $("#taobao_order_payment").prop('disabled', true);
     } else {
-      $('.region_input').hide()
       $("#taobao_order_payment").prop('disabled', false);
+      $("#taobao_order_payment").val("")
     }
   });
 
-  // 点击计算实付金额
+  // 点击计算订单实付金额
   $('#calculate_payment').on('click', function(event){
     event.preventDefault()
 
-    var outer_id    = $('.product_list option:selected').val()
     var discount    = $('#product_discount').val()
     var weight      = $('#product_weight').val()
-    var num         = $('#taobao_order_num').val()
     var balance_fee = $('#product_balance_fee').val()
     var logistic_id = $('#logistics').val()
     var area_id     = $('.trade_level_3').val()
+    var price       = 0.0
+    $('#taobao_orders_table tr').map(function(){ price += parseFloat($(this).find('td:eq(4)').text())});
+
 
     check_area_inputs()
-    if(num == ''){
-      alert("数量不能为空。")
-      return
-    } else if(weight == ''){
+    if(weight == ''){
       alert("重量不能为空。")
       return
-    } else if(/^[1-9]{1}[0-9]*$/.test(num) != true){
-      alert("数量格式不正确。")
-      return
-    } else if(/^[1-9]{1}[0-9]*$/.test(weight) != true){
+    } else if(/^[0-9]{1}[0-9]*$/.test(weight) != true){
       alert("重量格式不正确。")
       return
     } else if(/^(-?)[0-9]*(\.[0-9]*)?$/.test(balance_fee) != true){
@@ -234,16 +247,15 @@
     }
 
     data = {}
-    data['outer_id']    = outer_id
+    data['price']       = price
     data['discount']    = discount
     data['weight']      = weight
-    data['num']         = num
     data['balance_fee'] = balance_fee
     data['logistic_id'] = logistic_id
     data['area_id']     = area_id
 
     $.get("/custom_trades/calculate_payment", {data: data}).done(function(data){
-      $('#taobao_order_payment').val(data.payment)
+      $('#custom_trade_payment').val(data.payment)
     });
 
   });
