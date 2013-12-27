@@ -35,8 +35,8 @@ class CustomTrade < Trade
   before_update :check_finish_status
 
   def custom_type_name
-    (fetch_account.settings.trade_types ||= { handmade_trade: "人工订单",gift_trade: "赠品订单" })
-    .symbolize_keys[custom_type.to_sym] || "其他订单"
+    trade_types = fetch_account.settings.trade_types
+    trade_types.symbolize_keys[custom_type.to_sym] || "其他订单"
   end
 
   def created_larger_than_pay_time
