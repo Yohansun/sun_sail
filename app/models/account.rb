@@ -389,6 +389,11 @@ class Account < ActiveRecord::Base
     setting_values.each{|key,value|
       self.settings[key] = value
     }
+    add_trade_type_setting
+  end
+
+  def add_trade_type_setting
+    self.settings.trade_types ||= { handmade_trade: "人工订单",gift_trade: "赠品订单" }
   end
 
   private
