@@ -2,6 +2,7 @@
 class LogisticsController < ApplicationController
   layout "management"
   before_filter :authorize
+  before_filter :fetch_setting, only: [:edit]
 
   def index
     @logistics = current_account.logistics.page(params[:page])
@@ -172,6 +173,16 @@ class LogisticsController < ApplicationController
     end
 
     render json: tmp
+  end
+
+  private
+
+  def fetch_setting
+    @logistic = current_account.logistics.find params[:id]
+    unless @logistic.print_flash_setting
+      @logistic.build_print_flash_setting
+      @logistic.save
+    end
   end
 
 end
