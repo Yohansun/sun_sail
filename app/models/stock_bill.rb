@@ -194,6 +194,10 @@ class StockBill
   def account
     Account.find(account_id)
   end
+  
+  def enabled_third_party_stock?
+    account.settings.enable_module_third_party_stock == 1
+  end
 
   ## 改前必读 ##
   # Q: 如果新建一个入库单或者更改bill_products的时候必须要调用这个, 为什么不用callback?

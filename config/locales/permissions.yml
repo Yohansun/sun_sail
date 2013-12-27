@@ -131,12 +131,7 @@ zh-CN:
   permissions_tag_logistic_bill: 物流单
   permissions_tag_audit: 审核
   permissions_tag_sync: 同步/撤销
-  permissions_tag_new_single_storage: 新增入库单
-  permissions_tag_new_storehouse: 新增出库单
-  permissions_tag_increase_in_commodity: 增加商品
-  permissions_tag_determine_the_library: 确定出库
   #permissions_tag_edit_depot: 编辑仓库
-  permissions_tag_determine_the_storage: 确定入库
   permissions_tag_user_activities#detail: "人员查看"
   permissions_tag_user_activities#all: "查看所有人员"
   permissions_tag_trade_reports#detail: "报表查看"
@@ -212,11 +207,15 @@ zh-CN:
   permissions_tag_stock_in_bills#create: "创建入库单"
   permissions_tag_stock_out_bills#create: "创建出库单"
   permissions_tag_stock_in_bills#sync: "入库单同步"
-  permissions_tag_stock_in_bills#confirm_sync: "入库单确认同步(对第三方仓库无效)"
-  permissions_tag_stock_in_bills#confirm_stock: "入库单确认入库(对第三方仓库无效)"
+  permissions_tag_stock_in_bills#confirm_sync: "入库单确认同步(不支持第三方仓库)"
+  permissions_tag_stock_in_bills#confirm_stock: "入库单确认入库(不支持第三方仓库)"
+  permissions_tag_stock_in_bills#confirm_cancle: "入库单确认撤销(不支持第三方仓库)"
+  permissions_tag_stock_in_bills#refuse_cancle: "入库单拒绝撤销(不支持第三方仓库)"
   permissions_tag_stock_out_bills#sync: "出库单同步"
-  permissions_tag_stock_out_bills#confirm_sync: "出库单确认同步(对第三方仓库无效)"
-  permissions_tag_stock_out_bills#confirm_stock: "出库单确认入库(对第三方仓库无效)"
+  permissions_tag_stock_out_bills#confirm_sync: "出库单确认同步(不支持第三方仓库)"
+  permissions_tag_stock_out_bills#confirm_stock: "出库单确认入库(不支持第三方仓库)"
+  permissions_tag_stock_out_bills#confirm_cancle: "出库单确认撤销(不支持第三方仓库)"
+  permissions_tag_stock_out_bills#refuse_cancle: "出库单拒绝撤销(不支持第三方仓库)"
   permissions_tag_stock_in_bills#check: "入库单审核"
   permissions_tag_stock_out_bills#check: "出库单审核"
   permissions_tag_stock_in_bills#rollback: "入库单撤销"

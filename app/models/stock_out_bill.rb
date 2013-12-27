@@ -76,6 +76,16 @@ class StockOutBill < StockBill
     end
   end
 
+  # 确认撤销
+  def confirm_cancle
+    !!(do_cancel_ok && operation_logs.create(operated_at: Time.now, operation: '取消成功') )
+  end
+
+  # 拒绝撤销
+  def refuse_cancle
+    !!(do_cancel_fail && operation_logs.create(operated_at: Time.now, operation: '取消失败') )
+  end
+
   def outer_is_cash_sale
     is_cash_sale || (self.account.settings.open_auto_mark_invoice==1 ? "需要开票" : "无需开票" rescue "无需开票")
   end
@@ -150,6 +160,7 @@ class StockOutBill < StockBill
     StockProduct.transaction do
       error_activity = decrease_activity
       error_records = error_activity == true ? [] : error_activity
+      # 如果账号没有第三方仓库或者出库类型为盘点出库
       if account && account.settings.enable_module_third_party_stock != 1 || self.stock_type_oinventory?
         error_actual = decrease_actual
         error_records << error_actual if error_actual != true
@@ -168,7 +179,8 @@ class StockOutBill < StockBill
   end
 
   def rollback
-    do_canceling && cancel_order_rx if can_do_canceling?
+    do_canceling    if can_do_canceling?
+    cancel_order_rx if enabled_third_party_stock?
   end
 
   def lock!(user)
@@ -267,8 +279,6 @@ class StockOutBill < StockBill
       result_xml = Bml.cancel_order_rx(account, tid)
     elsif account.settings.third_party_wms == "gqs"
       result_xml = Gqs.cancel_order(account, orderid: tid,notes: '客户取消订单',opttype: 'OrderCance',opttime: Time.now.to_s(:db),method: 'OrderCance',_prefix: "order")
-    elsif account.settings.enable_module_third_party_stock != 1
-      return do_cancel_ok && operation_logs.create(operated_at: Time.now, operation: '取消成功') 
     end
     result = Hash.from_xml(result_xml).as_json
 
