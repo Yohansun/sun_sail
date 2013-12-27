@@ -12,7 +12,7 @@ class CustomTradesController < ApplicationController
   def create
     @custom_trade = CustomTrade.make_new_trade(params[:custom_trade], current_account, current_user)
     if params[:taobao_orders]
-      @custom_trade.change_orders(params[:taobao_orders], params[:custom_trade][:status], action_name)
+      @custom_trade.change_orders(params[:taobao_orders], params[:custom_trade][:status], params[:calculate_payment], action_name)
       if @custom_trade.save
         SetForecastSellerWorker.perform_async(@custom_trade.id)
         redirect_to "/app#trades"
