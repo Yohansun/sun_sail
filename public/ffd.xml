@@ -54,7 +54,7 @@
     <![CDATA[{"x":"130","y":"100","font":"\u5fae\u8f6f\u96c5\u9ed1","color":"000000","size":"9","wrap":"true","align":"left","isbold":"false","underline":"false","width":"100","height":"20","text":"\u5546\u54c1\u540d\u79f0","italic":"false","position":"absolute","type":"text"}]]>
     </item>
     <item en_name="diy" cn_name="产品规格">
-    <![CDATA[{"x":"400","y":"100","font":"\u5fae\u8f6f\u96c5\u9ed1","color":"000000","size":"9","wrap":"true","align":"left","isbold":"false","underline":"false","width":"100","height":"20","text":"\u4ea7\u54c1\u89c4\u683c","italic":"false","position":"absolute","type":"text"}]]>
+    <![CDATA[{"x":"380","y":"100","font":"\u5fae\u8f6f\u96c5\u9ed1","color":"000000","size":"9","wrap":"true","align":"left","isbold":"false","underline":"false","width":"100","height":"20","text":"\u4ea7\u54c1\u89c4\u683c","italic":"false","position":"absolute","type":"text"}]]>
     </item>
     <item en_name="diy" cn_name="产品数量">
     <![CDATA[{"x":"480","y":"100","font":"\u5fae\u8f6f\u96c5\u9ed1","color":"000000","wrap":"true","size":"9","align":"left","isbold":"false","underline":"false","width":"100","height":"20","text":"\u4ea7\u54c1\u6570\u91cf","italic":"false","position":"absolute","type":"text"}]]>
@@ -82,7 +82,7 @@
       <![CDATA[{"x":"80","y":"0","font":"\u5fae\u8f6f\u96c5\u9ed1","color":"000000","wrap":"true","size":"9","align":"left","isbold":"false","underline":"false","width":"300","height":"20","text":"\u94a2\u7b14","italic":"false","type":"data"}]]>
       </item>
       <item en_name="sku_name" cn_name="商品规格">
-      <![CDATA[{"x":"400","y":"0","font":"\u5fae\u8f6f\u96c5\u9ed1","color":"000000","wrap":"true","size":"9","align":"left","isbold":"false","underline":"false","width":"250","height":"20","text":"\u94a2\u7b14","italic":"false","type":"data"}]]>
+      <![CDATA[{"x":"380","y":"0","font":"\u5fae\u8f6f\u96c5\u9ed1","color":"000000","wrap":"true","size":"9","align":"left","isbold":"false","underline":"false","width":"250","height":"20","text":"\u94a2\u7b14","italic":"false","type":"data"}]]>
       </item>
       <item en_name="num" cn_name="商品数量 ">
       <![CDATA[{"x":"490","y":"0","font":"\u5fae\u8f6f\u96c5\u9ed1","color":"000000","wrap":"true","size":"9","align":"left","isbold":"false","underline":"false","width":"200","height":"20","text":"\u94a2\u7b14","italic":"false","type":"data"}]]>
