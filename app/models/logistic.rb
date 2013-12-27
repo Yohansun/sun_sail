@@ -37,6 +37,13 @@ class Logistic < ActiveRecord::Base
 
   scope :with_account, ->(account_id) { where(:account_id => account_id)}
 
+  alias default_print_flash_setting print_flash_setting
+
+  def print_flash_setting
+    self.default_print_flash_setting || (self.build_print_flash_setting && self.save)
+    self.default_print_flash_setting
+  end
+
   def self.three_mostly_used
 
     map = %Q{
