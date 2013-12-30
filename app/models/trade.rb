@@ -1365,7 +1365,7 @@ class Trade
           update_attributes(operator_id: operator.id, operator_name: operator.username)
           return
         else
-          count += operator.trade_percent
+          count += percent
         end
       end
     end
