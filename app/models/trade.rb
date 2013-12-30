@@ -1360,7 +1360,7 @@ class Trade
       rand_number = rand(1..operation_percent)
       count = 0
       operators.each do |operator|
-        percent = operator.trade_percent || 0
+        percent = operator.trade_percent.to_i
         if rand_number <= percent + count
           update_attributes(operator_id: operator.id, operator_name: operator.username)
           return
