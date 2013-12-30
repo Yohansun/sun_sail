@@ -17,6 +17,12 @@ zh-CN:
   role_stock_admin: 仓库管理员
   role_logistic: 物流公司
 
+  time:
+    formats:
+      default: '%Y/%m/%d %H:%M'
+      short: "%Y/%m/%d"
+      long: '%Y/%m/%d %H:%M:%S'
+
   grape:
     errors:
       messages:

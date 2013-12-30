@@ -80,9 +80,9 @@
       <th class="td2" width="100">已付款订单总额</th>
     </tr>
     <tr>
-      <td class="td2"><span class="font-blueb"><%= @taobao_trades %></span></td>
-      <td class="td3"><span class="font-gray"></span> <span class="font-blueb"><%= @taobao_paid_trades %></span></td>
-      <td class="td3"><span class="font-gray">¥</span> <span class="font-blueb"><%= @taobao_paid %></span></td>
+      <td class="td2"><span class="font-blueb"><%= @taobao_trades.count %></span></td>
+      <td class="td3"><span class="font-gray"></span> <span class="font-blueb"><%= @taobao_paid_trades.count %></span></td>
+      <td class="td3"><span class="font-gray">¥</span> <span class="font-blueb"><%= number_to_currency(@taobao_paid_trades.sum(:received_payment)) %></span></td>
     </tr>
   </table>
 </div>
@@ -98,9 +98,9 @@
       <th class="td2" width="100">已付款订单总额</th>
     </tr>
     <tr>
-      <td class="td2"><span class="font-blueb"><%= @taobao_purchase_orders %></span></td>
+      <td class="td2"><span class="font-blueb"><%= @taobao_purchase_orders.count %></span></td>
       <td class="td3"><span class="font-gray"></span> <span class="font-blueb"><%= @taobao_purchase_paid_orders.count %></span></td>
-      <td class="td3"><span class="font-gray">¥</span> <span class="font-blueb"><%= @taobao_purchase_paid %></span></td>
+      <td class="td3"><span class="font-gray">¥</span> <span class="font-blueb"><%= number_to_currency(@taobao_purchase_paid_price) %></span></td>
     </tr>
   </table>
 </div>
