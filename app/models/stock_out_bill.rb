@@ -175,7 +175,8 @@ class StockOutBill < StockBill
   end
 
   def sync
-    do_syncking && so_to_wms if can_do_syncking?
+    do_syncking if can_do_syncking?
+    so_to_wms if enabled_third_party_stock?
   end
 
   def rollback
