@@ -304,7 +304,7 @@ MagicOrder::AccessControl.map do |map|
                                  "logistic_areas#index",
                                  "logistic_areas#update_post_info",
                                  "print_flash_settings#show",
-                                 "print_flash_settings#update_infos"
+                                 "print_flash_settings#update_infos",
                                  "account_setups#update_auto_settings",
                                  "users#update_permissions",
                                  "categories#update",
