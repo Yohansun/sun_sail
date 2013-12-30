@@ -1,7 +1,7 @@
 #encoding: utf-8
 module MagicOrder
   # 一个action控制多个action, 比如一个编辑的权限应该有edit,和update权限,  那么可以自定义个key(下面hash中的key), 然后value(数组)中的是对应访问的权限action
-  #   
+  #
   ActionDelega = {
     "detail" =>   ["index","home",'show','info','lastest','closed', 'children','fetch_group'],
     "create" =>   ["new","create","index"],
@@ -42,6 +42,8 @@ module MagicOrder
                    "abandon_product",
                    "fetch_category_properties",
                    "search_native_skus"]
+    "print_flash_settings" => ["print_infos",
+                               "info_list"]
   }.freeze
 
   class AccessControl
@@ -222,7 +224,7 @@ MagicOrder::AccessControl.map do |map|
                                  "batch_update_safety_stock",
                                  "batch_update_actual_stock",
                                  "stock_in_bills#create",
-                                 "stock_in_bills#sync",                                 
+                                 "stock_in_bills#sync",
                                  "stock_in_bills#update",
                                  "stock_in_bills#check",
                                  "stock_in_bills#rollback",
@@ -302,6 +304,7 @@ MagicOrder::AccessControl.map do |map|
                                  "logistic_areas#index",
                                  "logistic_areas#update_post_info",
                                  "print_flash_settings#show",
+                                 "print_flash_settings#update_infos"
                                  "account_setups#update_auto_settings",
                                  "users#update_permissions",
                                  "categories#update",
