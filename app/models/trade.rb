@@ -622,8 +622,9 @@ class Trade
     end
 
     bill.bill_products_mumber = bill.bill_products.sum(:number)
-    bill.bill_products_price = invoice_price
+    bill.bill_products_price = payment - post_fee
     bill.save!
+    async_invoice_price
     bill.decrease_activity #减去仓库的可用库存
   end
 
@@ -635,8 +636,9 @@ class Trade
     end
   end
 
-  def invoice_price
-    payment - post_fee
+  # 更新子订单退款金额, 如果有出库单,更新出库单开票金额
+  def async_invoice_price
+    FetchRefundFee.perform_async(id) if orders.where(refund_status: "SUCCESS").count > 0
   end
 
   # SKU属性不全

@@ -273,6 +273,16 @@ class StockOutBill < StockBill
     end
   end
 
+  def update_invoice_price(price)
+    # 如果只有一个子订单而且全额退款可能为负数. 邮费部分.  正常情况下这样是不会安排发货的, 还是先避免下
+    price = 0 if price < 0
+    # 出入库单如果在状态不是为 已审核, 同步失败, 取消成功 发送预警邮件
+    if bill_products_price.to_f != price.to_f && !%w(SYNCK_FAILED CHECKED CANCELD_OK).include?(status)
+      cache_exception(message: "(#{trade.shop_name})出库单在非 '已审核, 同步失败, 取消成功' 状态下 更新开票金额为#{price.to_f}",data: attributes) { raise "开票金额更新预警" }
+    end
+    update_attribute(bill_products_price: price)
+  end
+
   #发送订单取消信息至仓库
   def cancel_order_rx_worker
     if account.settings.third_party_wms == "biaogan"

@@ -20,6 +20,7 @@ class Order
   field :color_hexcode, type: Array, default: []
   field :color_name, type: Array, default: []
   field :barcode, type: Array, default: []        # 条形码
+  field :refund_fee,type: Float,default: 0.0
 
   #赠品子订单专用field
   field :order_gift_tid, type: String
@@ -28,6 +29,11 @@ class Order
 
   def trade
     #OVERWRITTEN BY SUBCLASS
+  end
+
+  # 抓取当前对象所属平台下的订单退款金额
+  # 请到相应的 model 中去实现此功能, 参见 TaobaoOrder#fetch_refund_price
+  def fetch_refund_price
   end
 
   def account_id
