@@ -121,9 +121,9 @@ $ ->
             canSubmit = false
             error_message = "只能确认同步的状态为 '同步中'"
             break
-          if (operation_name=="确认入库" || operation_name=="确认出库") && bill_status!="SYNCKED"
+          if (operation_name=="确认入库" || operation_name=="确认出库") && !(bill_status in ["SYNCKED","CANCELD_FAILED"])
             canSubmit = false
-            error_message = "只能操作确认入库的状态为 '已同步待出/入库'"
+            error_message = "只能操作确认入库的状态为 '撤销同步失败、已同步待出/入库'"
             break
       if canSubmit
         if confirm("确定要"+operation_name+"吗？")
