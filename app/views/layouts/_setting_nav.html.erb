@@ -39,23 +39,29 @@
 -->
         </ul>
     </li>
-    <% @basedata = ["stocks","logistics","print_flash_settings","category_properties","categories", "logistic_groups", "deliver_templates", "trade_searches", "areas", "orders", "notify", "trades","pages","trade_types"] %>
+    <% @basedata = 
+    %w(
+    stocks
+    logistics
+    category_properties
+    categories
+    logistic_groups
+    deliver_templates
+    trade_searches
+    areas
+    orders
+    notify
+    trades
+    pages
+    trade_types
+    jushita_data
+    print_flash_settings
+    ) %>
     <li class="<%= display?(@basedata,"active") %>">
       <a href="#" class="" data-toggle="collapse" data-target="#base_data">
         <i class="icon-chevron-right"></i> 基础数据管理
       </a>
         <ul id="base_data" class="collapse <%= display?(@basedata,"in") %>">
-          <!-- <li class="<%#= display?("stocks","active")%>">
-            <a href="#"  data-toggle="collapse" data-target="#stocks_menu">仓库设置</a>
-            <ul id="stocks_menu" class="collapse <%#= display?("stocks","in",["safe_stock","change_product_type","edit_depot","update_depot"]) %> third_menu">
-              <li class="<%#= display?("stocks","active",["safe_stock","change_product_type"]) %>">
-                <a href="/stocks/safe_stock">安全库存管理</a>
-              </li>
-              <li class="<%#= display?("stocks","active",["edit_depot","update_depot"]) %>">
-                <a href="/stocks/edit_depot">仓库编辑</a>
-              </li>
-            </ul>
-          </li> -->
           <li class="<%= display?(["logistic_groups","deliver_templates"],"active") %>"><a href="#"  data-toggle="collapse" data-target="#shipments_menu"><i class="icon-plus <%= display_icon?(["logistic_groups","deliver_templates"],"icon-minus") %>"></i>发货管理</a>
             <ul id="shipments_menu" class="collapse <%= display?(["logistic_groups","deliver_templates"],"in") %> third_menu">
               <li class="<%= display?("logistic_groups","active") %>">
@@ -104,34 +110,8 @@
             </ul>
           </li>
           <li class="<%= "active" if params[:controller] == "pages" %>"><a href="/page"  data-toggle="collapse" data-target="#areas_menu">默认首页设置</a></li>
+          <li class="<%= "active" if params[:controller] == "jushita_data" %>"><a href="/jushita_data"  data-toggle="collapse" data-target="#areas_menu">聚石塔数据同步设置</a></li>
         </ul>
     </li>
-
-    <!--
-    <li class="<%= "active" if params[:controller] == "accounts" %>">
-      <a href="#" class="" data-toggle="collapse" data-target="#basic_settings">
-        <i class="icon-chevron-right"></i> 基础设置
-      </a>
-        <ul id="basic_settings" class="collapse in">
-          <li class="<%= "active" if params[:controller] == "accounts" && params[:action] =~ // %>"><a href="/accounts">店铺基础设置</a></li>
-        </ul>
-    </li>
-
-    <% if current_account.settings.enable_module_onsite_service == 1 %>
-      <li class="<%= "active" if params[:controller] == "onsite_services" %>">
-        <a href="/onsite_services">
-          <i class="<%= "icon-chevron-right" if params[:controller] == "onsite_services" %>"></i>上门服务
-        </a>
-      </li>
-    <%- end %>
-
-    <% if current_account.settings.enable_module_logistic_group == 1 %>
-      <li class="<%= "active" if params[:controller] == "logistic_groups" %>">
-        <a href="/logistic_groups">
-          <i class="<%= "icon-chevron-right" if params[:controller] == "logistic_groups" %>"></i>发货拆分管理
-        </a>
-      </li>
-    <%- end %>
-      -->
   </ul>
 </div>

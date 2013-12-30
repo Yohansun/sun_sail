@@ -2,6 +2,13 @@ require 'sidekiq/web'
 
 MagicOrders::Application.routes.draw do
 
+  resources :jushita_data do
+    collection do
+      put :lock
+      put :enable
+    end
+  end
+
   resources :trade_types
 
   resource :page do
