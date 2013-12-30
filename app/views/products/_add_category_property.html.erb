@@ -4,21 +4,20 @@
     <%= label_tag "sku_iid","SKU编码",:class => "control-label", :style => "display:none" %>
     <label class="checkbox inline">
         <input id="tmp_sku_sku_id" name="tmp_sku[sku_id]" type="text" style="display:none">
-        <%#=text_field_tag "tmp_sku[sku_id]", :disabled => true %>
     </label>
   </div>
 <%end%>
-<% category_properties.each do |category_property| %>
-<% value_type = category_property.value_type %>
 
+<!--NEED ADAPTION-->
+<% category_properties.each do |category_property| %>
+  <% value_type = category_property.value_type %>
   <div class="control-group">
-    <%= label_tag "sku_property_name",category_property.name,:class => "control-label" %>
+    <%= label_tag "sku_property_name", category_property.name, :class => "control-label" %>
     <% category_property.values.each do |value| %>
     <label class="checkbox inline">
       <%= check_box_tag "sku_property[#{category_property.id}][category_property_value_id][]",value.id %><%= value.value %>
     </label>
     <% end %>
   </div>
-
 <% end if category_properties.present? %>
   <fieldset>

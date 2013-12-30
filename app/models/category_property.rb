@@ -25,8 +25,7 @@ class CategoryProperty < ActiveRecord::Base
 
   include MagicEnum
 
-  # only support mutiple select for now
-  enum_attr :value_type,[["多选",VALUE_TYPE_MULTIPLE]]#,["单选",VALUE_TYPE_SINGLE],["输入",VALUE_TYPE_INPUT]]
+  enum_attr :value_type,[["多选",VALUE_TYPE_MULTIPLE],["单选",VALUE_TYPE_SINGLE],["文本",VALUE_TYPE_INPUT]]
   enum_attr :status,[["启用",STATUS_ENABLED],["禁用",STATUS_DISABLED]]
 
   attr_accessor :value_text
@@ -49,32 +48,38 @@ class CategoryProperty < ActiveRecord::Base
   end
 
 
+  # 保存属性值(CategoryPropertyValue)列表
+  # 如果是文本属性值，默认values添加一条文本
   def init_values
-    old_values = []
-    old_values_map = {}
-    values.each{|v| old_values << v.value; old_values_map[v.value] = v.id;}
+    if value_type == 3
+      self.attributes = {:values_attributes=>[{value: "文本"}]}
+    else
+      old_values = []
+      old_values_map = {}
+      values.each{|v| old_values << v.value; old_values_map[v.value] = v.id;}
 
-    # build params hash
-    lines = self.value_text.split("\n")
-    values_attributes = []
-    lines.each{|line|
-      line.strip!
-      next if line.blank?
-      # set values which not changed
-      if old_values.include?(line)
-        values_attributes << {value: line,:id=>old_values_map[line]}
-        # delete no change values
-        old_values.delete(line)
-      else
-      # set new values
-        values_attributes << {value: line}
-      end
-    }
-    # set removed values
-    old_values.each{|value|
-      values_attributes << {id:old_values_map[value],_destroy:true}
-    }
-    self.attributes = {:values_attributes=>values_attributes}
+      # build params hash
+      lines = self.value_text.split("\n")
+      values_attributes = []
+      lines.each{|line|
+        line.strip!
+        next if line.blank?
+        # set values which not changed
+        if old_values.include?(line)
+          values_attributes << {value: line,:id=>old_values_map[line]}
+          # delete no change values
+          old_values.delete(line)
+        else
+        # set new values
+          values_attributes << {value: line}
+        end
+      }
+      # set removed values
+      old_values.each{|value|
+        values_attributes << {id:old_values_map[value],_destroy:true}
+      }
+      self.attributes = {:values_attributes=>values_attributes}
+    end
   end
 
 end

@@ -1,15 +1,11 @@
 <%= simple_form_for @product, html: {class: 'well form-horizontal re_padding50'} do |f| %>
 <fieldset class="group">
   <div class="w_48 pull-left">
-    <%#= f.input :product_id, label: '淘宝ID：', :input_html =>{ :class => "input-xlarge" } %>
-    <%#= f.input :num_iid, label: '商品数字ID：', :input_html =>{ :class => "input-xlarge" } %>
     <%= f.input :name, label: '商品名称：', :input_html =>{ :class => "input-xlarge" } %>
     <%= f.input :outer_id, label: '商品编码：', :input_html =>{ :class => "input-xlarge" } %>
     <%= f.input :storage_num, label: '仓库编号：', :input_html =>{ :class => "input-xlarge" } %>
     <%= f.input :price, label: '价格：', as: :string, :input_html =>{ :class => "input-xlarge" } %>
-    <%#= f.association :quantity, collection: current_account.quantities, label: '规格：', :input_html =>{ :class => "width_auto" } %>
     <%= f.input :logistic_group_id, collection: current_account.logistic_groups, label: '发货拆分编码' %>
-    <%#= f.association :features, collection: current_account.features, as: :check_boxes, label: '系列：'%>
     <%= f.association :category, collection: nested_user_categories_options(), label: '分类：', :input_html =>{ :class => "width_auto",:id => "category" } %>
     <% if current_account.settings.enable_module_colors == 1 %>
       <fieldset class="form-inline">
@@ -24,7 +20,7 @@
   </div>
 
   <% if @product.pic_url.present? %>
-     <div class="w_48 pull-left">
+    <div class="w_48 pull-left">
       <div class="control-group">
         <label class="control-label tl" for="">商品图片：</label>
         <div class="controls">
@@ -33,8 +29,8 @@
           </ul>
         </div>
       </div>
-     </div>
-    <% end %>
+    </div>
+  <% end %>
 </fieldset>
 
 <div class="form-actions">
@@ -47,13 +43,12 @@
   <li class="active"><a href="#good_info" data-toggle="tab">SKU信息</a></li>
 </ul>
 <%= form_tag add_sku_products_path,:remote => true ,:class => "well well-small form-horizontal font12" do %>
-<div class="btn-toolbar">
-  <%= button_tag "添加",:class => "btn btn-warning btn-small" %>
-</div>
 <%= hidden_field_tag "id", @product.id %>
 <div id="add_properties">
   <%= render :partial => "add_category_property",:locals => {:category_properties => @category_properties} %>
-
+</div>
+<div class="btn-toolbar">
+  <%= button_tag "添加",:class => "btn btn-warning btn-small" %>
 </div>
 <% end %>
 
@@ -79,15 +74,16 @@
     $('#check_color').find(':checkbox').prop('checked',$last_tr_checkbox.prop('checked'))
   });
 
+  // 获取当前选中分类的属性
   $(function(){
 
-    if( $("#category").val() != ''){ zAb() };
+    if( $("#category").val() != ''){ fetch_category_properties() };
 
     $("#category").change(function(){
-      zAb();
+      fetch_category_properties();
     });
 
-    function zAb(){
+    function fetch_category_properties(){
       var category_id = $("#category").val();
       $.ajax({
         url: "<%= fetch_category_properties_products_path %>",

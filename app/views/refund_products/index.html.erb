@@ -45,7 +45,7 @@
       </div>
       <div class="btn btn-warning"><%= link_to "退货同步", refund_fetch_warehouse_refund_products_path(@warehouse) %></div>
     </div>
-    
+
     <table class="table table-hover table-bordered table-striped table-condensed js-table" id="refund_products_table">
       <thead>
         <tr>
@@ -66,7 +66,7 @@
             <td><%= refund_product.refund_id %></td>
             <td><%= refund_product.tid %></td>
             <td id="status_<%= refund_product.id %>"><%= refund_product.status_name %></td>
-            <%= render "operation", refund_product: refund_product%>
+            <%= render "operation", refund_product: refund_product %>
             <td><%= refund_product.try(:refund_fee) %></td>
           </tr>
         <%- end %>
