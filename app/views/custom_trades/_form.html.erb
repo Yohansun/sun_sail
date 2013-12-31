@@ -92,7 +92,7 @@
                 <td><%= order.num %></td>
                 <td><%= order.payment %></td>
                 <td><a class="btn btn-small btn-info delete_taobao_order">删除</a></td>
-                <input type='hidden' name='taobao_orders[]' value="<%= order.outer_iid || order.num_iid %>;<%= order.sku_id %>;<%= order.num %>;<%= order.payment%>;<%= order.title %>;"></input>
+                <input type='hidden' name='taobao_orders[]' value="<%= order.outer_iid || order.num_iid %>;<%= order.sku_id || order.local_sku_id %>;<%= order.num %>;<%= order.payment %>;<%= order.title %>;"></input>
               </tr>
               <% end %>
             </tbody>
