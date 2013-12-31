@@ -41,7 +41,7 @@ module MagicOrder
                    "pick_product",
                    "abandon_product",
                    "fetch_category_properties",
-                   "search_native_skus"]
+                   "search_native_skus"],
     "print_flash_settings" => ["print_infos",
                                "info_list"]
   }.freeze
