@@ -147,7 +147,7 @@
           skus_option += "<option value="+data.skus[0].sku_id+">"+data.skus[0].name+"</option>"
         }
         if (data.skus.length == 1 && (data.skus[0].name == null || data.skus[0].name == "")){
-          $('#skus_options').html("<option value='0'>标准款</option>")
+          $('#skus_options').html("<option value='"+data.skus[0].sku_id+"'>标准款</option>")
         } else {
           $('#skus_options').html(skus_option)
         }
