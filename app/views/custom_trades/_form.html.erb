@@ -234,7 +234,7 @@
     if(weight == ''){
       alert("重量不能为空。")
       return
-    } else if(/^[0-9]{1}[0-9]*$/.test(weight) != true){
+    } else if(/^[0-9]*(\.[0-9]*)?$/.test(weight) != true){
       alert("重量格式不正确。")
       return
     } else if(/^(-?)[0-9]*(\.[0-9]*)?$/.test(balance_fee) != true){
