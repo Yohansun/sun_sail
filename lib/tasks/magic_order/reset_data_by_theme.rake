@@ -1,7 +1,7 @@
 #encoding: utf-8
 desc "达利的店铺从1月1日开始正式上线，现在还需要系统做一些准备"
 namespace :magic_order do
-  task :reset_data_by_theme do
+  task :reset_data_by_theme => :environment do
     account_id = 26
 
     scope = Trade.where(account_id: account_id,created: {"$lte" => "2014-01-01 00:00:00 +0800".to_time(:local)})

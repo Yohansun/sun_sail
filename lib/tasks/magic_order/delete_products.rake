@@ -1,7 +1,7 @@
 #encoding: utf-8
 desc "删除本地达利账户下的无用商品"
 namespace :magic_order do
-  task :delete_products do
+  task :delete_products => :environment do
     Product.where("account_id = 26 and outer_id not in (?)",frozen_product_outer_ids).map(&:destroy)
   end
 end
