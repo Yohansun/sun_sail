@@ -9,11 +9,16 @@ class ReconcileStatementsController < ApplicationController
     @rs_set = current_account.reconcile_statements.where(seller_id: nil).recently_data
     status = {unprocessed: false, processed: true, unaudited: false, audited: true}
     if params[:status]
-      status.each.find do |key, value|
-        if params[:status] == key
-          status_key = key.gsub("un", "")
-          @rs_set = @rs_set.where(status_key: value)
-        end
+      if params[:status] == "unprocessed"
+        @rs_set = @rs_set.where(processed: false)
+      elsif params[:status] == "processed"
+        @rs_set = @rs_set.where(processed: true, audited: false)
+      elsif params[:status] == "unaudited"
+        @rs_set = @rs_set.where(audited: false)
+      elsif params[:status] == "audited"
+        @rs_set = @rs_set.where(audited: true)
+      else
+        @rs_set = @rs_set
       end
     end
     if params[:date].present?
