@@ -76,9 +76,7 @@ every 3.hours do
 end
 
 every :month, :at => '00:00am' do
-  start_time = Time.now - 1.months
-  end_time = Time.now
-  AlipayRevenuePuller.create(start_time, end_time, 201)
+  runner "start_time = Time.now - 1.months;end_time = Time.now; AlipayRevenuePuller.create(start_time,end_time,201)"
 end
 #
 # every 2.hours do
