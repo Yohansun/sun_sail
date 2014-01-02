@@ -52,15 +52,15 @@ footer.page_footer{position:fixed;}
             <a class="indexStart6" href="/customers"><span>顾客管理</span></a>
           </div>
         <% end %>
-          <!--
-        <#% if current_user.allowed_to?("reconcile_statements","index") -%>
-          <#% if current_account.settings.enable_module_reconcile_statements == true %>
+          
+        <% if current_user.allowed_to?("reconcile_statements","index") -%>
+          <% if current_account.settings.enable_module_reconcile_statements == true %>
             <div>
               <a class="indexStart9" href="/reconcile_statements"><span>财务管理</span></a>
             </div>
-          <#% end %>
-        <#% end %>
-      -->
+          <% end %>
+        <% end %>
+      
         <% if current_account.settings.enable_module_wangwang == true %>
           <div>
             <a class="indexStart2" href="/callcenter/contrastive_performance"><span>客服管理</span></a>

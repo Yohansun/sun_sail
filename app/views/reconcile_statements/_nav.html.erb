@@ -1,0 +1,15 @@
+<ul class="nav nav-tabs">
+  <% ReconcileStatementsController::AllActions.each do |action,name| %>
+    <% unless action.to_s == "seller_index" %>
+      <li class="<%= params[:action].eql?(action.to_s) ? "active" : "" %>">
+        <a href="/reconcile_statements/<%= action.to_s.gsub(/index/,'') %>"><%= name %></a>
+      </li>
+    <% else %>
+      <% unless current_user.has_role?(:super_admin) %>
+        <li class="<%= params[:action].eql?(action.to_s) ? "active" : "" %>">
+          <a href="/reconcile_statements/<%= action.to_s %>"><%= name %></a>
+        </li>
+      <% end %>
+    <% end %>
+  <% end %>
+</ul>
