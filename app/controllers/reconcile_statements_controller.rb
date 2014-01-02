@@ -70,7 +70,7 @@ class ReconcileStatementsController < ApplicationController
     end
     @all_audited = true
     @all_audited = @rs_set.all_audited? if @rs_set.respond_to?(:all_audited?)
-    render reconcile_statements_seller_index_path
+    render seller_index_reconcile_statements_path
   end
 
   def audit
