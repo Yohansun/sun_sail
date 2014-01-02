@@ -2,9 +2,9 @@ __filename = "对账数据.xls"
 sheet1 = xls.create_worksheet
 sheet1[0, 0] = "对账数据"
 
-sheet1.row(1).concat ["导出数据ID","支付宝收入", "运费收入", "交易成功后退款", "销售回款", "基础服务费", "店铺服务奖励", "店员奖励", "淘宝费用", "结算成本", "代收运费", "结算金额", "调整金额"]
+sheet1.row(1).concat ["导出数据ID","支付宝收入", "运费收入", "基准价", "特供商品支付宝收入", "特供商品结算金额", "结算金额", "调整金额", "最终结算金额", "账户提留", "推广费预留", "平台扣点"]
 @rs_data.each_with_index do |rsd, i|
-  sheet1.update_row i+2, rsd.reconcile_statement_id, rsd.alipay_revenue, rsd.postfee_revenue, rsd.trade_success_refund, rsd.sell_refund, rsd.base_service_fee, rsd.store_service_award, rsd.staff_award, rsd.taobao_cost, rsd.audit_cost, rsd.collecting_postfee, rsd.audit_amount, rsd.adjust_amount
+  sheet1.update_row i+2, rsd.reconcile_statement_id, rsd.alipay_revenue, rsd.postfee_revenue, rsd.base_fee, rsd.special_products_alipay_revenue, rsd.special_products_audit_amount, rsd.audit_amount, rsd.adjust_amount, rsd.last_audit_amount, rsd.account_profit, rsd.advertise_reserved, rsd.platform_deduction
 end
 
 title_format = Spreadsheet::Format.new(:color => :blue, :weight => :bold, :size => 14)

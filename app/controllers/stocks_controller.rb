@@ -108,7 +108,7 @@ class StocksController < ApplicationController
   end
 
   def update_depot
-    # @depot = Seller.where(default_search).find params[:id]
+    # @depot = current_account.sellers.where(default_search).find params[:id]
 
     # if @depot.update_attributes(params[:seller])
     #   redirect_to :action => "edit_depot"

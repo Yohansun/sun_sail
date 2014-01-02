@@ -1,71 +1,71 @@
-<table class='table table-bordered table-hover'>
-  <thead>
-    <tr>
-      <th>项目</th>
-      <th>金额</th>
-      <th>操作</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>支付宝收入</td>
-      <td><%= detail.alipay_revenue %></td>
-      <td><%=link_to "查看明细", reconcile_statement_reconcile_statement_detail_path(detail.reconcile_statement, detail, money_type: 'alipay_revenue') %></td>
-    </tr>
-    <tr>
-      <td>运费收入</td>
-      <td><%= detail.postfee_revenue %></td>
-      <td><%=link_to "查看明细", reconcile_statement_reconcile_statement_detail_path(detail.reconcile_statement, detail, money_type: 'postfee_revenue') %></td>
-    </tr>
-    <!-- <tr>
-      <td>交易成功后退款</td>
-      <td><%= detail.trade_success_refund %></td>
-      <td><%=link_to "查看明细", reconcile_statement_reconcile_statement_detail_path(detail.reconcile_statement, detail, money_type: 'trade_success_refund') %></td>
-    </tr> -->
-    <tr>
-      <td>销售回款</td>
-      <td><%= detail.sell_refund %></td>
-      <td><!-- <a href='javascript:;'>查看明细</a> --></td>
-    </tr>
-    <tr>
-      <td><a href='#'>基础服务费</a></td>
-      <td><%= detail.base_service_fee %></td>
-      <td><%=link_to "查看明细", reconcile_statement_reconcile_statement_detail_path(detail.reconcile_statement, detail, money_type: 'base_service_fee') %></td>
-    </tr>
-    <tr>
-      <td><a href='#'>店铺服务奖励</a></td>
-      <td><%= detail.store_service_award %></td>
-      <td><%=link_to "查看明细", reconcile_statement_reconcile_statement_detail_path(detail.reconcile_statement, detail, money_type: 'store_service_award') %></td>
-    </tr>
-    <tr>
-      <td><a href='#'>店员奖励</a></td>
-      <td><%= detail.staff_award %></td>
-      <td><%=link_to "查看明细", reconcile_statement_reconcile_statement_detail_path(detail.reconcile_statement, detail, money_type: 'staff_award') %></td>
-    </tr>
-    <tr>
-      <td><a href='#'>淘宝费用</a></td>
-      <td><%= detail.taobao_cost %></td>
-      <td><%=link_to "查看明细", reconcile_statement_reconcile_statement_detail_path(detail.reconcile_statement, detail, money_type: 'taobao_cost') %></td>
-    </tr>
-    <tr>
-      <td>结算成本</td>
-      <td><%= detail.audit_cost %></td>
-      <td><!-- <a href='#success_detail'>查看明细</a> --></td>
-    </tr>
-    <tr>
-      <td>代收运费</td>
-      <td><%= detail.collecting_postfee %></td>
-      <td><%=link_to "查看明细", reconcile_statement_reconcile_statement_detail_path(detail.reconcile_statement, detail, money_type: 'collecting_postfee') %></td>
-    </tr>
-    <tr>
-      <td>调整金额</td>
-      <td><%= detail.adjust_amount %></td>
-      <td><%=link_to "查看明细", reconcile_statement_reconcile_statement_detail_path(detail.reconcile_statement, detail, money_type: 'adjust_amount') %></td>
-    </tr>
-    <tr>
-      <td>结算金额</td>
-      <td><%= detail.audit_amount %></td>
-      <td><!-- <a href='#success_detail'>查看明细</a> --></td>
-    </tr>
-  </tbody>
-</table>
+<form action="/reconcile_statements/<%= detail.reconcile_statement.id %>/reconcile_statement_details/<%= detail.id %>/change_detail" data-row='<%= detail.reconcile_statement.id %>' class="well form-search">
+  <table class='table table-bordered table-hover'>
+    <thead>
+      <tr>
+        <th>项目</th>
+        <th>计算公式</th>
+        <th>金额</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>支付宝收入</td>
+        <td>店铺支付宝总收入-特供商品收入</td>
+        <td><%= detail.alipay_revenue %></td>
+      </tr>
+      <tr>
+        <td>运费收入</td>
+        <td>所有订单的运费</td>
+        <td><%= detail.postfee_revenue %></td>
+      </tr>
+      <tr>
+        <td>基准价</td>
+        <td>（支付宝收入-运费）*<input <% if current_user.has_role?(:super_admin)%>readonly<% end %> type ='text' class="input-large" name="reconcile_statement_detail[base_fee_percent]" value="<%= detail.base_fee_percent %>"</input>%</td></td>
+        <td><%= detail.base_fee %></td>
+      </tr>
+      <tr>
+        <td>特供商品支付宝收入</td>
+        <td>所有特供商品订单收入</td>
+        <td><%= detail.special_products_alipay_revenue %></td>
+      </tr>
+      <tr>
+        <td>特供商品结算金额</td>
+        <td>特供商品支付宝收入*<input <% if current_user.has_role?(:super_admin)%>readonly<% end %> type ='text' class="input-large" name="reconcile_statement_detail[special_products_audit_amount_percent]" value="<%= detail.special_products_audit_amount_percent %>"</input>%</td>
+        <td><%= detail.special_products_audit_amount %></td>
+      </tr>
+      <tr>
+        <td>结算金额</td>
+        <td>支付宝收入*<input <% if current_user.has_role?(:super_admin)%>readonly<% end %> type ='text' class="input-large" name="reconcile_statement_detail[audit_amount_percent]" value="<%= detail.audit_amount_percent %>"</input>%+特供商品结算金额+<input <% if current_user.has_role?(:super_admin)%>readonly<% end %> type ='text' class="input-large" name="reconcile_statement_detail[achievement]" value="<%= detail.achievement %>"</input></td>
+        <td><%= detail.audit_amount %></td>
+      </tr>
+      <tr>
+        <td>调整金额</td>
+        <td>调整金额</td>
+        <td><%= detail.adjust_amount %></td>
+      </tr>
+      <tr>
+        <td>最终结算金额</td>
+        <td>调整金额 + 结算金额</td>
+        <td><%= detail.last_audit_amount %></td>
+      </tr>
+      <tr>
+        <td>账户提留</td>
+        <td>基准价*<input <% if current_user.has_role?(:super_admin)%>readonly<% end %> type ='text' class="input-large" name="reconcile_statement_detail[account_profit_percent_a]" value="<%= detail.account_profit_percent_a %>"</input>%+运费*<input <% if current_user.has_role?(:super_admin)%>readonly<% end %> type ='text' class="input-large" name="reconcile_statement_detail[account_profit_percent_b]" value="<%= detail.account_profit_percent_b %>"</input>%+特供商品支付宝收入*<input <% if current_user.has_role?(:super_admin)%>readonly<% end %> type ='text' class="input-large" name="reconcile_statement_detail[account_profit_percent_c]" value="<%= detail.account_profit_percent_c %>"</input>%</td>
+        <td><%= detail.account_profit%></td>
+      </tr>
+      <tr>
+        <td>推广费预留</td>
+        <td>支付宝收入*<input <% if current_user.has_role?(:super_admin)%>readonly<% end %> type ='text' class="input-large" name="reconcile_statement_detail[advertise_reserved_percent_a]" value="<%= detail.advertise_reserved_percent_a %>"</input>%+特供商品支付宝收入*<input <% if current_user.has_role?(:super_admin)%>readonly<% end %> type ='text' class="input-large" name="reconcile_statement_detail[advertise_reserved_percent_b]" value="<%= detail.advertise_reserved_percent_b %>"</input>%</td>
+        <td><%= detail.advertise_reserved %></td>
+      </tr>
+      <tr>
+        <td>平台扣点</td>
+        <td>支付宝收入*<input <% if current_user.has_role?(:super_admin)%>readonly<% end %> type ='text' class="input-large" name="reconcile_statement_detail[platform_deduction_percent_a]" value="<%= detail.platform_deduction_percent_a %>"</input>%+特供商品支付宝收入*<input <% if current_user.has_role?(:super_admin)%>readonly<% end %> type ='text' class="input-large" name="reconcile_statement_detail[platform_deduction_percent_b]" value="<%= detail.platform_deduction_percent_b %>"</input>%</td>
+        <td><%= detail.platform_deduction %></td>
+      </tr>
+    </tbody>
+  </table>
+  <%- if current_user.has_role?(:admin) %>
+    <button type="submit" class="btn btn-info">确定</button>
+  <%- end %>
+</form>

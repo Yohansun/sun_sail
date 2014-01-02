@@ -1,0 +1,120 @@
+<% content_for :sub_nav do %>
+  <%= render partial: "nav" %>
+<% end %>
+
+<%= form_tag reconcile_statements_seller_index_path, :class=>"well form-search", :method => :get do %>
+  <fieldset class="form-inline">
+    <div class="controls">
+      <label class="control-label mar_l10">店铺选择</label>
+      <select id="" class="input-medium">
+        <% @trade_sources.each do |ts|%>
+        <option><%= ts.name %></option>
+        <% end %>
+      </select>
+      <label class="control-label mar_l10">状态：</label>
+      <% if current_user.has_role?(:admin) %>
+        <%= select_tag(:status, options_for_select([["请选择","null"],["未生成","unprocessed"],["已生成，未结算","processed"],["已结算","audited"]], selected: params[:status]))%>
+      <% elsif current_user.has_role?(:seller) %>
+        <%= select_tag(:status, options_for_select([["请选择","null"],["未结算","unaudited"],["已结算","audited"]], selected: params[:status]))%>
+      <% end %>
+      <label class="control-label mar_l10">经销商：</label>
+      <%=text_field_tag :seller_name, params[:seller_name], class: "input-medium"%>
+      <label class="control-label mar_l10">选择时间：</label>
+      <div class="input-append">
+        <%=text_field_tag :date, params[:date], "data-date-format"=>"mm-yyyy", :class=>"input-small date  monthpicker"%>
+        <button type="button pull-left" class="btn btn-info search" id="simple_search_button">筛选</button>
+      </div>
+    </div>
+  </fieldset>
+<% end %>
+
+<div class="btns">
+  <p id="rs_process_info" style="display: none;">正在生成数据...</p>
+  <a href="javascript:;" class="btn btn-warning confirm_export">导出数据</a>
+  <% if current_user.has_role?(:seller) %>
+    <% if @all_audited %>
+      <a href="javascript:;" class="btn btn-warning disabled">确认结算</a>
+    <% else %>
+      <a data-toggle="modal" href="#confirm_account1" class="btn btn-warning confirm_settlement_all">确认结算</a>
+    <% end %>
+  <% elsif current_user.has_role?(:admin) %>
+    <% if @all_audited %>
+      <a href="javascript:;" class="btn btn-warning disabled">确认生成</a>
+    <% else %>
+      <a data-toggle="modal" href="#confirm_account1" class="btn btn-warning confirm_settlement_all">确认生成</a>
+    <% end %>
+    <a data-toggle="modal" href="#generate_new" class="btn btn-warning">生成对账数据</a>
+  <% end %>
+</div>
+<table class="table table-striped table-bordered td_colors table-hover mar_t">
+  <thead>
+    <tr>
+      <th></th>
+      <th>月份</th>
+      <th>店铺</th>
+      <th>来源</th>
+      <th>经销商</th>
+      <th>结算状态</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if @rs_set.present? %>
+      <% @rs_set.each do |rs| %>
+      <tr class="rs_row" id="rs_<%= rs.id %>" data-row="<%= rs.id %>">
+        <td>
+          <input type="checkbox" class="audited_checkbox" id="audited_<%=rs.id%>" name="audited[]" value="<%=rs.id%>">
+        </td>
+        <td><%= rs.audit_time.strftime("%Y-%m") %></td>
+        <td><%= rs.trade_store_name %></td>
+        <td><%= rs.trade_store_source %></td>
+        <td><%= current_account.sellers.find(rs.seller_id).name %></td>
+        <%- if rs.processed != true && current_user.has_role?(:admin) %>
+        <td><a data-toggle="modal" data-id="<%= rs.id %>" href="#confirm_account" class="confirm_settlement">未生成</a></td>
+        <%- elsif rs.processed == true %>
+          <%- if current_user.has_role?(:admin) %>
+            <%- if rs.audited %>
+               <td>已结算</td>
+            <% else %>
+               <td>已生成,未结算</td>
+            <% end %>
+          <%- elsif current_user.has_role?(:seller) %>
+            <%- if rs.audited %>
+            <td>已结算</td>
+            <%- else %>
+            <td><a data-toggle="modal" data-id="<%= rs.id %>" href="#confirm_account" class="confirm_settlement">未结算</a></td>
+            <%- end %>
+          <%- end -%>
+        <% end %>
+        <td>
+          <div class="btn-group">
+            <button data-toggle="dropdown" class="btn btn-info dropdown-toggle"><i class="icon-wrench"></i> <span class="caret"></span></button>
+            <ul class="dropdown-menu" style="left:-115px;">
+              <li><a href="javascript:;" class="export_reconcile_detail">导出明细</a></li>
+              <%- if current_user.has_role?(:seller) && rs.audited != true %>
+              <li><a data-toggle="modal" data-id="<%= rs.id %>" href="#confirm_account" class="confirm_settlement">确认结算</a></li>
+              <%- elsif current_user.has_role?(:admin) && rs.processed != true %>
+              <li><a data-toggle="modal" data-id="<%= rs.id %>" href="#confirm_account" class="confirm_settlement">确认生成</a></li>
+              <%- elsif current_user.has_role?(:admin) && rs.processed == true %>
+              <li><a data-toggle="modal" data-id="<%= rs.id %>" href="#regret_account" class="regret_settlement">改回未生成</a></li>
+              <%- end %>
+            </ul>
+          </div>
+        </td>
+      </tr>
+      <% end %>
+    <% else %>
+      <tr class="rs_row">
+        <td colspan="8">
+          <span style="color: red;"><center><%=flash[:notice]%></center></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>  
+
+<% if current_user.has_role?(:seller) %>
+<%= render 'seller_index_for_seller' %>
+<% elsif current_user.has_role?(:admin) %>
+<%= render 'seller_index_for_admin' %>
+<% end %>

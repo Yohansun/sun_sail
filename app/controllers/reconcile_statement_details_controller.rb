@@ -22,7 +22,14 @@ class ReconcileStatementDetailsController < ApplicationController
     end
   end
 
-	private
+  def change_detail
+    detail = ReconcileStatementDetail.find(params[:id])
+    detail.update_attributes(params[:reconcile_statement_detail])
+    detail.calculate_fees
+    redirect_to reconcile_statements_path
+  end
+
+  private
 
   def fetch_rsd
     @rsd = ReconcileStatementDetail.find(params[:id])

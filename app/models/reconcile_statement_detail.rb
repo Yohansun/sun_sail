@@ -2,26 +2,77 @@
 #
 # Table name: reconcile_statement_details
 #
-#  id                     :integer(4)      not null, primary key
-#  reconcile_statement_id :integer(4)
-#  alipay_revenue         :integer(4)
-#  postfee_revenue        :integer(4)
-#  trade_success_refund   :integer(4)
-#  sell_refund            :integer(4)
-#  base_service_fee       :integer(4)
-#  store_service_award    :integer(4)
-#  staff_award            :integer(4)
-#  taobao_cost            :integer(4)
-#  audit_cost             :integer(4)
-#  collecting_postfee     :integer(4)
-#  audit_amount           :integer(4)
-#  adjust_amount          :integer(4)
-#  created_at             :datetime        not null
-#  updated_at             :datetime        not null
+#  id                                    :integer(4)      not null, primary key
+#  reconcile_statement_id                :integer(4)
+#  alipay_revenue                        :integer(4)      default(0)
+#  postfee_revenue                       :integer(4)      default(0)
+#  trade_success_refund                  :integer(4)      default(0)
+#  sell_refund                           :integer(4)      default(0)
+#  base_service_fee                      :integer(4)      default(0)
+#  store_service_award                   :integer(4)      default(0)
+#  staff_award                           :integer(4)      default(0)
+#  taobao_cost                           :integer(4)      default(0)
+#  audit_cost                            :integer(4)      default(0)
+#  collecting_postfee                    :integer(4)      default(0)
+#  audit_amount                          :integer(4)      default(0)
+#  adjust_amount                         :integer(4)      default(0)
+#  created_at                            :datetime        not null
+#  updated_at                            :datetime        not null
+#  special_products_alipay_revenue       :integer(4)      default(0)
+#  special_products_audit_amount         :integer(4)      default(0)
+#  base_fee                              :integer(4)      default(0)
+#  last_audit_amount                     :integer(4)      default(0)
+#  account_profit                        :integer(4)      default(0)
+#  advertise_reserved                    :integer(4)      default(0)
+#  platform_deduction                    :integer(4)      default(0)
+#  base_fee_percent                      :integer(4)      default(5)
+#  special_products_audit_amount_percent :integer(4)      default(5)
+#  audit_amount_percent                  :integer(4)      default(5)
+#  account_profit_percent_a              :integer(4)      default(5)
+#  account_profit_percent_b              :integer(4)      default(5)
+#  account_profit_percent_c              :integer(4)      default(5)
+#  advertise_reserved_percent_a          :integer(4)      default(5)
+#  advertise_reserved_percent_b          :integer(4)      default(5)
+#  platform_deduction_percent_a          :integer(4)      default(5)
+#  platform_deduction_percent_b          :integer(4)      default(5)
+#  user_id                               :integer(4)
+#  achievement                           :integer(4)
 #
 
 class ReconcileStatementDetail < ActiveRecord::Base
-  attr_accessible :reconcile_statement_id, :alipay_revenue, :postfee_revenue, :trade_success_refund, :sell_refund, :base_service_fee, :store_service_award, :staff_award, :taobao_cost, :audit_cost, :collecting_postfee, :audit_amount, :adjust_amount
+  attr_accessible :reconcile_statement_id, 
+                  :alipay_revenue,
+                  :postfee_revenue,
+                  :base_fee,
+                  :last_audit_amount,
+                  :account_profit,
+                  :advertise_reserved,
+                  :platform_deduction,
+                  :special_products_alipay_revenue,
+                  :special_products_audit_amount,
+                  :audit_amount,
+                  :adjust_amount,
+                  :trade_success_refund,
+                  :sell_refund,
+                  :base_service_fee,
+                  :store_service_award,
+                  :staff_award,
+                  :taobao_cost,
+                  :audit_cost,
+                  :collecting_postfee,
+                  :other_money,
+                  :base_fee_percent, 
+                  :special_products_audit_amount_percent,
+                  :audit_amount_percent,
+                  :account_profit_percent_a,
+                  :account_profit_percent_b,
+                  :account_profit_percent_c,
+                  :advertise_reserved_percent_a,
+                  :advertise_reserved_percent_b,
+                  :platform_deduction_percent_a,
+                  :platform_deduction_percent_b,
+                  :user_id,
+                  :achievement
   belongs_to :reconcile_statement
 
   validates :reconcile_statement_id, uniqueness: true
@@ -32,6 +83,28 @@ class ReconcileStatementDetail < ActiveRecord::Base
   	trade_tids = AlipayTradeOrder.where(reconcile_statement_id: self.reconcile_statement_id).map(&:trade_sn)
   	page == "default" ? trades = Trade.in(tid: trade_tids) : trades = Trade.in(tid: trade_tids).page(page)
   	trades
+  end
+
+  def calculate_fees
+    #基准价=（支付宝收入-运费）*自定义比例
+    self.base_fee = (self.alipay_revenue - self.postfee_revenue) * self.base_fee_percent / 100
+    #特供商品结算金额=特供商品支付宝收入*自定义比例
+    self.special_products_audit_amount = self.special_products_alipay_revenue * self.special_products_audit_amount_percent / 100
+    #结算金额=基准价*自定义比例+特供商品结算金额+业绩
+    self.audit_amount = self.alipay_revenue * self.audit_amount_percent / 100 + self.special_products_audit_amount + self.achievement
+    #最终结算金额=结算金额+调整金额
+    self.last_audit_amount = self.adjust_amount + self.audit_amount
+    #账户提留=基准价*自定义比例+运费*自定义比例+特供商品支付宝收入*自定义比例
+    self.account_profit = self.base_fee * self.account_profit_percent_a / 100 + self.postfee_revenue * self.account_profit_percent_b / 100 + self.special_products_alipay_revenue * self.account_profit_percent_c / 100
+    #推广费预留=支付宝收入*自定义比例+特供商品支付宝收入*自定义比例
+    self.advertise_reserved = self.alipay_revenue * self.advertise_reserved_percent_a / 100  + self.special_products_alipay_revenue * self.advertise_reserved_percent_b
+    #平台扣点=支付宝收入*自定义比例+特供商品支付宝收入*自定义比例
+    self.platform_deduction = self.alipay_revenue * self.platform_deduction_percent_a / 100 + self.special_products_alipay_revenue * self.platform_deduction_percent_b
+    self.save
+
+    rs = self.reconcile_statement
+    rs.balance_amount = self.audit_amount
+    rs.save
   end
   
 end

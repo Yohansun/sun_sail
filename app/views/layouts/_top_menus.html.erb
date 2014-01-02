@@ -117,6 +117,13 @@
                     <a href="/callcenter/contrastive_performance"><i class='icon-plane'> </i>客服管理</a>
                   </li>
                 <% end %>
+                <% if current_user.allowed_to?("reconcile_statements","index") -%>
+                  <% if current_account.settings.enable_module_reconcile_statements == true %>
+                    <li>
+                      <a href="/reconcile_statements"><i class="icon-plane"> </i>财务管理</span></a>
+                    </li>
+                  <% end %>
+                <% end %>
                 <% if current_user.allowed_to?("users","index") %>
                   <li class= "divider"></li>
                   <li>

@@ -1,0 +1,121 @@
+<div id="confirm_account" class="modal hide fade" tabindex="-1">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h3>确定结算</h3>
+  </div><!-- modal-header -->
+  <div class="modal-body sure_id">
+    <p>确认结算对账?</p>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary confirm_button" type="submit">确定</button>
+  </div>
+</div><!-- confirm_account -->
+
+<div id="confirm_account1" class="modal hide fade" tabindex="-1">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h3>确定结算</h3>
+  </div><!-- modal-header -->
+  <div class="modal-body sure_id1">
+    <p>确认结算对账?</p>
+  </div>
+  <div class="modal-footer">
+    <%= form_tag audits_reconcile_statements_path, :method => :PUT, :onsubmit => 'return can_submit();' do %>
+    <input type="hidden" name="rs_ids" id="rs_ids">
+    <button class="btn btn-primary confirm_button1" type="submit">确定</button>
+    <% end %>
+  </div>
+</div><!-- confirm_account1 -->
+
+<%- content_for :tail do %>
+<script type = "text/javascript">
+  var rs_id = null;
+  $('.confirm_settlement').click(function(argument) {
+    rs_id = $(this).data('id');
+    var rs_month = $("#rs_"+rs_id+" td:eq(1)").html();
+    $('.sure_id').text("确认结算"+ rs_month +"月份对账？");
+  })
+  $('.confirm_button').click(function(argument) {
+    $.ajax({
+      type: "PUT",
+      url: "/reconcile_statements/"+rs_id+"/audit"
+    }).done(function(result){
+      $('#confirm_account').modal('hide');
+      $("#rs_"+rs_id+" td:eq(5)").html("已结算");
+      $('#audited_'+ rs_id +'').attr("disabled","disabled");
+    })
+  })
+
+  $('.rs_row').click(function(event) {
+    if($(event.currentTarget).next().attr("id") == "target_detail"){
+      rs_row = $(this).data('row');
+      $("#reconcile_table").parents('tr').remove()
+    } else {
+        rs_row = $(this).data('row');
+        $("#reconcile_table").parents('tr').remove()
+        $("#rs_"+rs_row).after("<tr id='target_detail'><td colspan='7'><div id='reconcile_table'></div></td></tr>")
+        $.get("/reconcile_statements/"+rs_row+"/seller_show.js", function(result){
+         });
+    }
+  })
+
+  $('.confirm_settlement_all').click(function(argument) {
+    if($("input[name='audited[]']:checked").length > 0){
+      var chk_value =[];
+      $("input[name='audited[]']:checked").each(function(){
+        chk_value.push($(this).val());
+      });
+      $("#rs_ids").val(chk_value);
+      $('#confirm_account1 .sure_id1').children().text('确定结算对账？')
+      $('.confirm_button1').show()
+
+    }else{
+      $('#confirm_account1 h3').text('提示信息');
+      $('#confirm_account1 .sure_id1').children().text('请选择要结算的店铺')
+      $('.confirm_button1').hide()
+
+    }
+  })
+
+  $('.confirm_export').click(function(argument) {
+    var chk_value =[];
+    $("input[name='audited[]']:checked").each(function(){
+      chk_value.push($(this).val());
+    });
+    window.location = "<%=seller_exports_reconcile_statements_path%>.xls?selected_rs="+chk_value;
+  })
+
+  $('.export_reconcile_detail').click(function(event) {
+    var chk_value = null;
+    chk_value = $(event.currentTarget).parents('tr').data('row');
+    window.location = "<%=product_detail_exports_reconcile_statements_path%>.xls?selected_rs="+chk_value;
+  })
+
+  $("#checkbox").click(function() {
+     $("INPUT[type='checkbox']").attr('checked', $("#checkbox").is(':checked'));
+  });
+
+  $('.audited_checkbox').click(function(e){
+    e.stopPropagation()
+  });
+
+  function can_submit () {
+    if ($('#rs_ids').val() == ''){
+      alert('请选择要结算的店铺!');
+      return false;
+    }else{
+      return true;
+    }
+  }
+
+  $(function(){
+    $('.monthpicker').datetimepicker({
+      format: 'yyyy-mm',
+      autoclose: true,
+      startView: 3,
+      minView: 3,
+      viewSelect: 3
+    });
+  })
+</script>
+<%- end %>

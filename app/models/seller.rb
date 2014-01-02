@@ -98,6 +98,31 @@ class Seller < ActiveRecord::Base
     StockProduct.find_by_id(id).try(:product).try(:name)
   end
 
+  def self.has_available_rs
+    self.find_each do |seller|
+      return true if seller.next_month_rs_date.present?
+    end
+    false
+  end
+
+  def next_month_rs_date
+    return nil if (active == false || parent_id == nil)
+    return nil if (latest_rs && latest_rs.audited == false)
+    if latest_rs == nil
+      date = 1.month.ago.beginning_of_month
+    else
+      date = (latest_rs.audit_time + 1.month) if (calculate_month(latest_rs.audit_time) > 1)
+    end
+  end
+
+  def calculate_month(an_ordinary_day)
+    if an_ordinary_day.year < Time.now.year
+      return ((Time.now.year - an_ordinary_day.year)*12 + Time.now.month) - an_ordinary_day.month
+    elsif an_ordinary_day.year == Time.now.year
+      return Time.now.month - an_ordinary_day.month
+    end
+  end
+
   def area_name(id)
     area = Area.find_by_id(id)
     area.self_and_ancestors.map(&:name).join('-') if area
