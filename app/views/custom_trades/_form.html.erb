@@ -121,9 +121,7 @@
 <% content_for :tail do %>
 <script type="text/javascript">
 
-  // Initialize
-  // $('.price_input').hide()
-  pick_skus()
+  // 获取物流商
   $.get("/logistics/logistic_templates", {type: 'all', trade_type: "CustomTrade"}).done(function(data){
     var html_options = ''
     for (var i in data){
@@ -132,11 +130,11 @@
     $('#logistics').html(html_options)
   });
 
-
+  // 按商品显示对应sku
+  pick_skus()
   $('.product_list').on('change',function(event){
     pick_skus()
   })
-
   function pick_skus () {
     var outer_id = $('.product_list option:selected').val()
     $.get("/custom_trades/change_products", {outer_id: outer_id}).done(function(data){
@@ -144,7 +142,7 @@
         var data_array = []
         var skus_option = ""
         for(var i in data.skus){
-          skus_option += "<option value="+data.skus[0].sku_id+">"+data.skus[0].name+"</option>"
+          skus_option += "<option value="+data.skus[i].sku_id+">"+data.skus[i].name+"</option>"
         }
         if (data.skus.length == 1 && (data.skus[0].name == null || data.skus[0].name == "")){
           $('#skus_options').html("<option value='"+data.skus[0].sku_id+"'>标准款</option>")
@@ -157,6 +155,7 @@
     })
   }
 
+  // 添加新的子订单
   $('#add_product').on('click', function(event){
     event.preventDefault()
     var outer_id = $('.product_list option:selected').val()
@@ -196,7 +195,6 @@
       add_new_order(outer_id, name, sku_name, num, payment, sku_id)
     }
   });
-
   function add_new_order (outer_id, name, sku_name, num, payment, sku_id) {
     var new_taobao_order = ""
     new_taobao_order += '<tr><td>' + outer_id + '</td>'
@@ -209,6 +207,7 @@
     $('#taobao_orders_table').append(new_taobao_order)
   }
 
+  // 按实付金额计算时禁用实付金额输入框
   $('#payment_input_options').on('change', function(event){
     if(this.value == "price_input"){
       $("#taobao_order_payment").prop('disabled', true);
@@ -257,15 +256,15 @@
     $.get("/custom_trades/calculate_payment", {data: data}).done(function(data){
       $('#custom_trade_payment').val(data.payment)
     });
-
   });
 
-
+  // 删除子订单
   $(document).on('click', '.delete_taobao_order', function(event){
     event.preventDefault()
     $(event.target).parents('tr').remove()
   });
 
+  // 保存订单前的验证
   $('.save_orders').on('click', function(event){
     if($('#taobao_orders_table tr:visible').length == 0){
       event.preventDefault();
@@ -274,6 +273,7 @@
     check_area_inputs();
   });
 
+  // 检查地域是否填写完整
   function check_area_inputs () {
     if($('.trade_level_1 option:selected').val() == "" || $('.trade_level_2 option:selected').val() == ""){
       event.preventDefault();
