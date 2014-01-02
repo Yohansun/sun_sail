@@ -1,12 +1,31 @@
 <%= simple_form_for @category_property, :html => { :class => 'form-horizontal' } do |f| %>
   <%= f.input :name, :label=>"属性名称",:placeholder=>"例:颜色,尺码,套餐"%>
   <%= f.input :value_type, :label=>"属性值类型", include_blank: false, :collection=>CategoryProperty::VALUE_TYPE %>
-  <%#= f.input :taobao_id, :label=>"淘宝 prop ID" %>
   <%= f.input :status, :as=>:boolean, :label=>"启用",inline_label:"是"%>
-  <%= f.input :value_text,  :as=>:text, :label=>"属性值列表",:placeholder=>"每行一个属性值",input_html:{:cols=>20,:rows=>10}%>
+  <div class="value_type_text">
+    <%= f.input :value_text,  :as=>:text, :label=>"属性值列表",:placeholder=>"每行一个属性值",input_html:{:cols=>20,:rows=>10} %>
+  </div>
   <div class="form-actions">
     <%= f.button :submit, @category_property.new_record? ? "新增" : "更新",:class => 'btn-primary' %>
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
                 category_properties_path, :class => 'btn' %>
   </div>
+<% end %>
+
+<%content_for :tail do%>
+  <script type="text/javascript">
+    if ($('#category_property_value_type').val() == "3"){
+      $('.value_type_text').hide()
+    } else {
+      $('.value_type_text').show()
+    }
+
+    $('#category_property_value_type').on('change', function(event){
+      if ($('#category_property_value_type').val() == "3"){
+        $('.value_type_text').hide()
+      } else {
+        $('.value_type_text').show()
+      }
+    });
+  </script>
 <% end %>

@@ -35,13 +35,13 @@ class StockProduct < ActiveRecord::Base
   belongs_to :product
   belongs_to :sku
   belongs_to :seller
-  has_one :category , :through => :product,:source => :category
+  has_one :category, :through => :product, :source => :category
   has_and_belongs_to_many :colors
   scope :with_account, ->(account_id) { where(:account_id => account_id) }
 
   STORAGE_STATUS = {
-    "预警" => "stock_products.activity < stock_products.safe_value",
-    "满仓" => "stock_products.actual = stock_products.max",
+    "预警" => "stock_products.activity <  stock_products.safe_value",
+    "满仓" => "stock_products.actual   =  stock_products.max",
     "正常" => "stock_products.activity >= stock_products.safe_value and stock_products.actual != stock_products.max"
   }
 

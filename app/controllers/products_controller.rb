@@ -43,27 +43,6 @@ class ProductsController < ApplicationController
     @product = current_account.products.find params[:id]
   end
 
-  def confirm_import_csv
-    if params[:csv] && File.exists?(params[:csv])
-      Product.confirm_import_from_csv(current_account, params[:csv])
-    end
-    redirect_to products_path
-  end
-
-  def import_csv
-    if params[:file] && params[:file].tempfile
-      @csv = "#{Rails.root}/public/#{Time.now.to_i}.csv"
-      FileUtils.mv params[:file].tempfile, @csv
-      begin
-        @products = Product.import_from_csv(current_account, @csv)
-      rescue Exception => e
-        Rails.logger.info e.inspect
-        flash[:notice] = "上传文件有误请重新上传,只接受csv文件,可以先导出商品,按照格式修改后导入" + e.inspect
-        redirect_to :back
-      end
-    end
-  end
-
   def new
     @product = current_account.products.new
   end
@@ -77,7 +56,7 @@ class ProductsController < ApplicationController
       sku_value = []
       @product.skus.each do |sku|
         unless sku.value == ""
-          sku_value << sku.value 
+          sku_value << sku.value
         end
       end
       @product.skus.create(account_id: current_account.id, product_id: @product.id, num_iid: @product.num_iid) if sku_value.size == 0
@@ -109,6 +88,27 @@ class ProductsController < ApplicationController
     redirect_to products_path
   end
 
+  def confirm_import_csv
+    if params[:csv] && File.exists?(params[:csv])
+      Product.confirm_import_from_csv(current_account, params[:csv])
+    end
+    redirect_to products_path
+  end
+
+  def import_csv
+    if params[:file] && params[:file].tempfile
+      @csv = "#{Rails.root}/public/#{Time.now.to_i}.csv"
+      FileUtils.mv params[:file].tempfile, @csv
+      begin
+        @products = Product.import_from_csv(current_account, @csv)
+      rescue Exception => e
+        Rails.logger.info e.inspect
+        flash[:notice] = "上传文件有误请重新上传,只接受csv文件,可以先导出商品,按照格式修改后导入" + e.inspect
+        redirect_to :back
+      end
+    end
+  end
+
   def sync_taobao_products
   end
 
@@ -127,18 +127,11 @@ class ProductsController < ApplicationController
 
   def fetch_category_properties
     @category = current_account.categories.find(params[:category_id])
-    @category_properties = @category.category_properties
+    @category_properties = @category.category_properties.where(value_type: 2)
 
     respond_to do |format|
       format.js
     end
-  end
-   
-  ##多数组取第一个元素组成一个新的数组
-  def get_values_array array
-    return array[0] if array.size == 1
-    first = array.shift
-    return first.product( get_values_array(array) ).map {|x| x.flatten.join(" ")}
   end
 
   def add_sku
@@ -153,7 +146,7 @@ class ProductsController < ApplicationController
         values << a_values
       end
       values = get_values_array(values)
-      values.each do|value|
+      values.each do |value|
         sku = OpenStruct.new({:id =>Time.now.strftime("%Y%m%d%k%M%S%L") }.merge!(params[:tmp_sku] || {}))
         sku.value = value.split(" ") * "|"
         sku.sku_properties ||= []
@@ -165,7 +158,7 @@ class ProductsController < ApplicationController
           hash_value.merge!(category_property_id => {"category_property_value_id"=>category_property_value_id})
         end
         sku.attributes = {"sku_properties_attributes" => hash_value}.merge!(params[:tmp_sku] || {})
-        
+
         @product = current_account.products.find_by_id params[:id]
 
         if @product.blank?
@@ -226,6 +219,7 @@ class ProductsController < ApplicationController
     end
   end
 
+  # 获取勾选商品的id
   def pick_product
     picked_product = (current_account.settings.picked_product == nil ? [] : current_account.settings.picked_product)
     if params[:product_id]
@@ -238,6 +232,7 @@ class ProductsController < ApplicationController
     render :nothing => true, status: 200
   end
 
+  # 移除去掉勾选商品的id
   def abandon_product
     picked_product = current_account.settings.picked_product
     if params[:product_id]
@@ -374,5 +369,13 @@ class ProductsController < ApplicationController
 
   def tmp_skus
     @skus = (current_user.settings.tmp_skus ||= [])
+  end
+
+  # 多数组取第一个元素组成一个新的数组
+  # 用于排列组合新添加的sku
+  def get_values_array array
+    return array[0] if array.size == 1
+    first = array.shift
+    return first.product( get_values_array(array) ).map {|x| x.flatten.join(" ") }
   end
 end
