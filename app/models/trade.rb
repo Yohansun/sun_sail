@@ -279,6 +279,7 @@ class Trade
 
   has_many :deliver_bills
   has_many :stock_out_bills,:primary_key => "tid",foreign_key: "tid"
+  has_many :trade_property_memos
 
   belongs_to :customer, :class_name => "Customer", :foreign_key => "buyer_nick",:primary_key => "name"
 

@@ -64,11 +64,11 @@ class Account < ActiveRecord::Base
   has_many :roles, :dependent => :destroy
   has_many :skus
   has_many :taobao_skus
-  has_one :deliver_template
+  has_one  :deliver_template
   has_many :trade_sources
-  has_many  :taobao_sources, class_name: "TradeSource", conditions: {trade_type: 'Taobao'}
-  has_many  :jingdong_sources, class_name: "TradeSource", conditions: {trade_type: 'Jingdong'}
-  has_many  :yihaodian_sources, class_name: "TradeSource", conditions: {trade_type: 'Yihaodian'}
+  has_many :taobao_sources, class_name: "TradeSource", conditions: {trade_type: 'Taobao'}
+  has_many :jingdong_sources, class_name: "TradeSource", conditions: {trade_type: 'Jingdong'}
+  has_many :yihaodian_sources, class_name: "TradeSource", conditions: {trade_type: 'Yihaodian'}
 
   validates :name, presence: true
   validates :key, presence: true, uniqueness: true

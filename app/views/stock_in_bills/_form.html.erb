@@ -48,8 +48,8 @@
   <div class="btn-toolbar">
     <%= f.add_nested_fields_link :bill_products,'添加',:class => "btn btn-warning btn-small"%>
   </div>
-  <%= f.nested_fields_for :bill_products do |product|  %>
-  <div class="well clearfix">
+  <%= f.nested_fields_for :bill_products do |product| %>
+  <div class="well clearfix bill_products">
     <fieldset class="span6">
       <% @current_user_skus = current_account.skus %>
       <div class="control-group">
@@ -71,12 +71,13 @@
     </fieldset>
   </div>
   <% end %>
+  <div class="well clearfix" id="bill_property_memo"></div>
 <% end %>
 <% content_for :tail do %>
 <script type="text/javascript" charset="utf-8">
 $(function(){
   var options = {
-    data  : linkage_data
+    data : linkage_data
   }
   var sel = new LinkageSelect(options);
   sel.bind('.level_1','<%= @bill.op_state %>');
@@ -101,6 +102,80 @@ $(function(){
     }
   });
   $(":input.checkdata").each(function(){ $(this).rules("add",{required: true,number: true,messages: {required: "不能为空",number: "必须是数字"}}) })
+
+
+  // -**-成品入库逻辑-**-
+
+  // 成品入库属性备注显示
+  if( $("#stock_in_bill_stock_type").val() == 'ICP'){
+    while($('.nested_stock_in_bill_bill_products').length > 1){
+      $('.nested_stock_in_bill_bill_products').last().remove()
+    }
+    $('#bill_property_memo').show()
+    $('a.remove_nested_fields_link').hide()
+    $('#stock_in_bill_bill_products_attributes_0_number').attr("disabled", true).val("1")
+    $('#stock_in_bill_bill_products_attributes_0_total_price').attr("disabled", true)
+    if (<%= @bill.tid.present? %>){
+      $('#stock_in_bill_bill_products_attributes_0_real_number').attr("disabled", true).val("1")
+    }
+  } else {
+    $('#bill_property_memo').hide()
+    $('a.remove_nested_fields_link').show()
+    $('#stock_in_bill_bill_products_attributes_0_number').attr("disabled", false)
+    $('#stock_in_bill_bill_products_attributes_0_total_price').attr("disabled", false)
+    $('#stock_in_bill_bill_products_attributes_0_real_number').attr("disabled", false)
+  }
+
+  $("#stock_in_bill_stock_type").change(function(){
+    if ($('#stock_in_bill_stock_type').val() == "ICP"){
+      while($('.nested_stock_in_bill_bill_products').length > 1){
+        $('.nested_stock_in_bill_bill_products').last().remove()
+      }
+      $('#bill_property_memo').show()
+      $('a.remove_nested_fields_link').hide()
+      $('#stock_in_bill_bill_products_attributes_0_number').attr("disabled", true).val("1")
+      $('#stock_in_bill_bill_products_attributes_0_total_price').attr("disabled", true)
+      if (<%= @bill.tid.present? %>){
+        $('#stock_in_bill_bill_products_attributes_0_real_number').attr("disabled", true).val("1")
+      }
+    } else {
+      $('#bill_property_memo').hide()
+      $('a.remove_nested_fields_link').show()
+      $('#stock_in_bill_bill_products_attributes_0_number').attr("disabled", false)
+      $('#stock_in_bill_bill_products_attributes_0_total_price').attr("disabled", false)
+      $('#stock_in_bill_bill_products_attributes_0_real_number').attr("disabled", false)
+    }
+  });
+
+  // 成品入库属性备注切换
+  fetch_category_properties()
+
+  $(".product").change(function(){
+    fetch_category_properties()
+  });
+
+  function fetch_category_properties(){
+    var sku_id = $(".product").select2('data').id
+    $.ajax({
+      url: "<%= fetch_category_properties_warehouse_stock_in_bill_path(id: @bill.id) %>",
+      data: { sku_id: sku_id }
+    })
+  };
+
+  // 成品入库只允许添加一种商品
+  $('.add_nested_fields_link').on('click', function(event){
+    if ($('#stock_in_bill_stock_type').val() == "ICP"){
+      setTimeout(function() {
+        if ($('.nested_stock_in_bill_bill_products').length >= 2){
+          while($('.nested_stock_in_bill_bill_products').length >= 2){
+            $('.nested_stock_in_bill_bill_products').last().remove()
+          }
+          alert("成品入库一次只能入库一种商品。")
+        }
+      }, 10);
+    }
+  });
+
 })
 </script>
 <% end %>

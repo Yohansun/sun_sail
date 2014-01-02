@@ -1,4 +1,5 @@
 # -*- encoding : utf-8 -*-
+
 class StockInBillsController < ApplicationController
   before_filter :authorize
   before_filter :set_warehouse
@@ -28,10 +29,25 @@ class StockInBillsController < ApplicationController
   end
 
   def create
-    @bill = default_scope.new(params[:stock_in_bill])
-    @bill.status = "CREATED"
-    update_areas!(@bill)
-    @bill.update_bill_products
+    if params[:stock_in_bill][:stock_type] == "ICP"
+      product = params[:stock_in_bill][:bill_products_attributes]["0"]
+      number = product["real_number"].to_i
+      product['number'] = 1
+      product['real_number'] = 1
+      number.times do
+        @bill = default_scope.new(params[:stock_in_bill])
+        @bill.status = "CREATED"
+        update_areas!(@bill)
+        @bill.update_bill_products
+        @bill.update_property_memo(params[:property], product["sku_id"], current_account)
+        @bill.save
+      end
+    else
+      @bill = default_scope.new(params[:stock_in_bill])
+      @bill.status = "CREATED"
+      update_areas!(@bill)
+      @bill.update_bill_products
+    end
     if @bill.save
       flash[:notice] = "入库单#{@bill.tid}创建成功"
       redirect_to  warehouse_stock_in_bill_path(@warehouse.id,@bill.id)
@@ -65,6 +81,10 @@ class StockInBillsController < ApplicationController
     @bill.attributes = params[:stock_in_bill]
     update_areas!(@bill)
     @bill.update_bill_products
+    if params[:stock_in_bill][:stock_type] == "ICP"
+      product = params[:stock_in_bill][:bill_products_attributes]["0"]
+      @bill.update_property_memo(params[:property], product["sku_id"], current_account)
+    end
     if @bill.save
       flash[:notice] = "入库单#{@bill.tid}更新成功!"
       redirect_to warehouse_stock_in_bill_path(@warehouse.id,@bill.id)
@@ -74,7 +94,7 @@ class StockInBillsController < ApplicationController
       render :edit
     end
   end
-  
+
   def confirm_sync
     @bills = default_scope.any_in(_id: params[:bill_ids])
     @bills.each do |bill|
@@ -166,6 +186,11 @@ class StockInBillsController < ApplicationController
     failed = @bills.collect {|bill| bill.build_log(current_user,'激活') && [bill.tid,bill.unlock!(current_user)]}.reject {|t,m| m == true}
     error_message = failed.collect {|a| a.join(":")}.join(';')
     @message = failed.blank? ? "入库单#{@bills.map(&:tid).join(',')}激活成功." : "入库单#{error_message}."
+  end
+
+  def fetch_category_properties
+    @category_properties = current_account.skus.find_by_id(params[:sku_id]).try(:product).try(:category).try(:category_properties)
+    @property_values = default_scope.find(params[:id]).bill_property_memo.property_values rescue nil
     respond_to do |format|
       format.js
     end
