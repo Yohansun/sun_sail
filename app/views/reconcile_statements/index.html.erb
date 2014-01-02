@@ -12,7 +12,7 @@
           <% end %>
         </select>
         <label class="control-label">状态：</label>
-          <%= select_tag(:status, options_for_select([["请选择","null"],["未结算","unaudited"],["品牌已确认", "processed"],["等待运营商确认结算","unprocessed"],["已结算","audited"]], selected: params[:status]))%>
+          <%= select_tag(:status, options_for_select([["请选择","null"],["运营商未结算","unaudited"],["品牌商已结算", "processed"],["品牌商未结算","unprocessed"],["运营商已结算","audited"]], selected: params[:status]))%>
         <label class="control-label">选择时间：</label>
         <div class="input-append">
           <%=text_field_tag :date, params[:date], "data-date-format"=>"mm-yyyy", :class=>"input-small date  monthpicker"%>
@@ -25,15 +25,15 @@
 
 <div class="btns">
   <a href="javascript:;" class="btn btn-warning confirm_export">导出数据</a>
-  <% if @all_audited %>
+  <% if @all_processed %>
     <a href="javascript:;" class="btn btn-warning disabled">品牌确认结算</a>
   <% else %>
-    <a data-toggle="modal" href="#confirm_account1" class="btn btn-warning confirm_settlement_all">品牌确认结算</a>
+    <a data-toggle="modal" href="#confirm_account" class="btn btn-warning confirm_settlement_all">品牌确认结算</a>
   <% end %>
-  <% if @all_processed %>
+  <% if @all_audited %>
     <a href="javascript:;" class="btn btn-warning disabled">运营商确认结算</a>
   <% else %>
-    <a data-toggle="modal" href="#confirm_account1" class="btn btn-warning confirm_settlement_all">运营商确认结算</a>
+    <a data-toggle="modal" href="#confirm_account" class="btn btn-warning confirm_settlement_all">运营商确认结算</a>
   <% end %>
 </div>
 <table class="table table-striped table-bordered td_colors table-hover mar_t">
@@ -42,10 +42,8 @@
       <th><input type="checkbox" id="checkbox" name="checkbox"></th>
       <th>月份</th>
       <th>店铺</th>
-      <th></th>
       <th>结算金额</th>
       <th>结算状态</th>
-      <th>操作</th>
     </tr>
   </thead>
   <tbody>
@@ -57,26 +55,14 @@
         </td>
         <td><%= rs.audit_time.strftime("%Y-%m") %></td>
         <td><%= rs.trade_store_name %></td>
-        <td><%= rs.trade_store_source %></td>
         <td><%= rs.balance_amount %></td>
         <%- if rs.audited && rs.processed %>
         <td>已结算</td>
         <%- elsif !rs.processed %>
           <td><a data-toggle="modal" data-id="<%= rs.id %>" href="#confirm_account" class="confirm_settlement">品牌商未确认结算</a></td>
         <% else %>
-          <td><a data-toggle="modal" data-id="<%= rs.id %>" href="#confirm_account" class="confirm_settlement">未结算</a></td>
+          <td><a data-toggle="modal" data-id="<%= rs.id %>" href="#confirm_account" class="confirm_settlement">运营商未结算</a></td>
         <%- end %>
-        <td>
-          <div class="btn-group">
-            <button data-toggle="dropdown" class="btn btn-info dropdown-toggle"><i class="icon-wrench"></i> <span class="caret"></span></button>
-            <ul class="dropdown-menu" style="left:-115px;">
-              <li><a href="javascript:;">导出</a></li>
-              <%- unless rs.audited %>
-              <li><a data-toggle="modal" data-id="<%= rs.id %>" href="#confirm_account" class="confirm_settlement">确认结算</a></li>
-              <%- end %>
-            </ul>
-          </div>
-        </td>
       </tr>
       <% end %>
     <% else %>
@@ -114,8 +100,8 @@
   </div>
   <div class="modal-footer">
     <%= form_tag audits_reconcile_statements_path, :method => :PUT, :onsubmit => 'return can_submit();' do %>
-    <input type="hidden" name="rs_ids" id="rs_ids">
-    <button class="btn btn-primary confirm_button1" type="submit">确定</button>
+      <input type="hidden" name="id" id="rs_ids">
+      <button class="btn btn-primary confirm_button1" type="submit">确定</button>
     <% end %>
   </div>
 </div><!-- confirm_account1 -->
@@ -129,6 +115,7 @@
     $('.sure_id').text("确认结算"+ rs_month +"月份对账？");
   })
   $('.confirm_button').click(function(argument) {
+    rs_id = $('.confirm_settlement').data('id');
     $.ajax({
       type: "PUT",
       url: "/reconcile_statements/"+rs_id+"/audit"
@@ -156,7 +143,7 @@
   })
 
   $('.confirm_settlement_all').click(function(argument) {
-    if($("input[name='audited[]']:checked").length > 0){
+    if($("input[name='audited[]']:checked").length == 1){
       var chk_value =[];
       $("input[name='audited[]']:checked").each(function(){
         chk_value.push($(this).val());
@@ -167,7 +154,7 @@
 
     }else{
       $('#confirm_account1 h3').text('提示信息');
-      $('#confirm_account1 .sure_id1').children().text('请选择要结算的店铺')
+      $('#confirm_account1 .sure_id1').children().text('您必须只能选择一个店铺')
       $('.confirm_button1').hide()
 
     }

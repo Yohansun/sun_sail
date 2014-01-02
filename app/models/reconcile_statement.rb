@@ -30,8 +30,8 @@ class ReconcileStatement < ActiveRecord::Base
   serialize :exported, Hash
 
   #结算状态的过程:未结算时 => 品牌商确认结算 => 运营商确认结算 => 已结算
-  #audited false: 未结算,true: 已结算
-  #processed: true:品牌已确认结算, false: 等待运营商确认结算
+  #audited false: 未结算,true: 运营商确认结算
+  #processed: true:品牌已确认结算, false: 品牌未结算
   def self.all_audited?
     self.exists?(audited: false) ? false : true #audited = false 未结算,
   end
