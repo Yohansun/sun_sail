@@ -17,7 +17,7 @@
 #
 
 class ReconcileStatement < ActiveRecord::Base
-  attr_accessible :trade_store_source, :trade_store_name, :audited, :trade_store_name, :audit_time, :balance_amount, :exported, :processed, :seller_id
+  attr_accessible :trade_store_source, :trade_store_name, :audited, :trade_store_name, :audit_time, :balance_amount, :exported, :processed, :seller_id, :account_id
   include ActiveModel::ForbiddenAttributesProtection
   has_one :detail, class_name: "ReconcileStatementDetail"
   belongs_to :account

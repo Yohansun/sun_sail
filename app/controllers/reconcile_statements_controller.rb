@@ -5,7 +5,7 @@ class ReconcileStatementsController < ApplicationController
   AllActions = {:index => "运营商对账",:seller_index => "经销商对账"}
 
   def index
-    @trade_sources = TradeSource.all
+    @trade_sources = current_account.trade_sources
     @rs_set = current_account.reconcile_statements.where(seller_id: nil).recently_data
     status = {unprocessed: false, processed: true, unaudited: false, audited: true}
     if params[:status]

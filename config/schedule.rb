@@ -75,8 +75,12 @@ every 3.hours do
   runner "UnusualTradesNotifier.new.perform()"
 end
 
-every :month, :at => '00:00am' do
-  runner "start_time = Time.now - 1.months;end_time = Time.now; AlipayRevenuePuller.create(start_time,end_time,201)"
+every :day, :at => '00:00am' do
+  runner "start_time = Time.now.yesterday.beginning_of_day;end_time = Time.now.yesterday.end_of_day; AlipayRevenuePuller.create(start_time,end_time,201)"
+end
+
+every :month, :at => '02:00am' do
+  runner "trade_source_id = 201; FinanceCalculate.new.perform(trade_source_id)"
 end
 #
 # every 2.hours do
