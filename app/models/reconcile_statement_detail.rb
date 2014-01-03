@@ -90,7 +90,7 @@ class ReconcileStatementDetail < ActiveRecord::Base
     self.base_fee = (self.alipay_revenue - self.postfee_revenue) * self.base_fee_percent / 100
     #特供商品结算金额=特供商品支付宝收入*自定义比例
     self.special_products_audit_amount = self.special_products_alipay_revenue * self.special_products_audit_amount_percent / 100
-    #结算金额=基准价*自定义比例+特供商品结算金额+业绩
+    #结算金额=支付宝收入*自定义比例+特供商品结算金额+业绩
     self.audit_amount = self.alipay_revenue * self.audit_amount_percent / 100 + self.special_products_audit_amount + self.achievement
     #最终结算金额=结算金额+调整金额
     self.last_audit_amount = self.adjust_amount + self.audit_amount
