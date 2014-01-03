@@ -27,7 +27,8 @@
             "text":      "<%= item['text'] %>",
             "type":      "<%= item['type'] %>",
             "italic":    "<%= item['italic'] %>",
-            "position":  "<%= item['position'].present? ? item['position'] : 'absolute'%>"
+            "position":  "<%= item['position'].present? ? item['position'] : 'absolute' %>",
+            "wrap":      "<%= item['wrap'].present? ? item['wrap'] : 'true' %>"
           }]]>
         </item>
       <% end %>
