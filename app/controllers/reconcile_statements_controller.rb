@@ -8,18 +8,8 @@ class ReconcileStatementsController < ApplicationController
     @trade_sources = current_account.trade_sources
     @rs_set = current_account.reconcile_statements.where(seller_id: nil).recently_data
     status = {unprocessed: false, processed: true, unaudited: false, audited: true}
-    if params[:status]
-      if params[:status] == "unprocessed"
-        @rs_set = @rs_set.where(processed: false)
-      elsif params[:status] == "processed"
-        @rs_set = @rs_set.where(processed: true, audited: false)
-      elsif params[:status] == "unaudited"
-        @rs_set = @rs_set.where(audited: false)
-      elsif params[:status] == "audited"
-        @rs_set = @rs_set.where(audited: true)
-      else
-        @rs_set = @rs_set
-      end
+    if params[:status].blank?
+      @rs_set = @rs_set.select_status(params[:status])
     end
     if params[:date].present?
       @rs_set = @rs_set.where(seller_id: nil).by_date(params[:date])
@@ -47,18 +37,8 @@ class ReconcileStatementsController < ApplicationController
     elsif current_user.has_role?(:admin)
       @rs_set = current_account.reconcile_statements.where("seller_id > 0")
     end
-    if params[:status]
-      if params[:status] == "unprocessed"
-        @rs_set = @rs_set.where(processed: false)
-      elsif params[:status] == "processed"
-        @rs_set = @rs_set.where(processed: true, audited: false)
-      elsif params[:status] == "unaudited"
-        @rs_set = @rs_set.where(audited: false)
-      elsif params[:status] == "audited"
-        @rs_set = @rs_set.where(audited: true)
-      else
-        @rs_set = @rs_set
-      end
+    if params[:status].blank?
+      @rs_set = @rs_set.select_status(params[:status])
     end
     if params[:date].present?
       @rs_set = @rs_set.by_date(params[:date]) rescue nil

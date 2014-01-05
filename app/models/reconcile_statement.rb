@@ -40,4 +40,17 @@ class ReconcileStatement < ActiveRecord::Base
     self.exists?(processed: false) ? false : true
   end
 
+  def self.select_status(status)
+    case status
+    when "unprocessed"
+      self.where(processed: false)
+    when "processed"
+      self.where(processed: true)
+    when "audited"
+      self.where(audited: true)
+    when "unaudited"
+      self.where(audited: false)
+    end
+  end
+
 end
