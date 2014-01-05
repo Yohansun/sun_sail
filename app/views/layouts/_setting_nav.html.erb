@@ -39,7 +39,7 @@
 -->
         </ul>
     </li>
-    <% @basedata = ["stocks","logistics","category_properties","categories", "logistic_groups", "deliver_templates", "trade_searches", "areas", "orders", "notify", "trades","pages","trade_types"] %>
+    <% @basedata = ["stocks","logistics","print_flash_settings","category_properties","categories", "logistic_groups", "deliver_templates", "trade_searches", "areas", "orders", "notify", "trades","pages","trade_types"] %>
     <li class="<%= display?(@basedata,"active") %>">
       <a href="#" class="" data-toggle="collapse" data-target="#base_data">
         <i class="icon-chevron-right"></i> 基础数据管理
@@ -76,7 +76,7 @@
               </li>
             </ul>
           </li>
-          <li class="<%= display?("logistics","active") %>"><a href="/logistics"  data-toggle="collapse" data-target="#logistics_menu">
+          <li class="<%= display?(["logistics","print_flash_settings"],"active") %>"><a href="/logistics"  data-toggle="collapse" data-target="#logistics_menu">
             物流公司管理</a>
           </li>
           <li class="<%= display?(["trade_searches","trades",'trade_types'],"active")%>">
