@@ -95,7 +95,7 @@
     <button type="button" class="close" data-dismiss="modal">&times;</button>
     <h3>确定结算</h3>
   </div><!-- modal-header -->
-  <div class="modal-body sure_id">
+  <div class="modal-body sure_id1">
     <p>确认结算对账?</p>
   </div>
   <div class="modal-footer">
@@ -108,28 +108,28 @@
   var rs_id = null;
   $('.confirm_button').click(function(argument) {
     confirm_calculate("trade_confirm");
-  })
+  });
   $('.confirm_button1').click(function(argument) {
     confirm_calculate("seller_confirm");
-  })
-  $('.rs_row').click(function(argument) {
-    rs_row = $(this).data('row');
-    displayed_row = $("#reconcile_table form").data('row')
-    if(displayed_row == 'undefined'){
-      $.get("/reconcile_statements/"+rs_row+".js", function(result){
-       });
-      }
-      else {
-        if(displayed_row == rs_row){
-          $("#reconcile_table").html("");
-        } else {
-          $.get("/reconcile_statements/"+rs_row+".js", function(result){
-        });
-      }
-    }
-  })
-
+  });
   $('.confirm_settlement_all').click(function(argument) {
+    if($("input[name='audited[]']:checked").length == 1){
+      var chk_value =[];
+      $("input[name='audited[]']:checked").each(function(){
+        chk_value.push($(this).val());
+      });
+      $("#rs_ids").val(chk_value);
+      $('#confirm_account .sure_id').children().text('确定结算对账？')
+      $('.confirm_button').show()
+
+    }else{
+      $('#confirm_account h3').text('提示信息');
+      $('#confirm_account .sure_id').children().text('您必须只能选择一个店铺')
+      $('.confirm_button').hide()
+
+    }
+  });
+  $('.confirm_settlement_all1').click(function(argument) {
     if($("input[name='audited[]']:checked").length == 1){
       var chk_value =[];
       $("input[name='audited[]']:checked").each(function(){
@@ -144,6 +144,22 @@
       $('#confirm_account1 .sure_id1').children().text('您必须只能选择一个店铺')
       $('.confirm_button1').hide()
 
+    }
+  });
+  $('.rs_row').click(function(argument) {
+    rs_row = $(this).data('row');
+    displayed_row = $("#reconcile_table form").data('row')
+    if(displayed_row == 'undefined'){
+      $.get("/reconcile_statements/"+rs_row+".js", function(result){
+       });
+      }
+      else {
+        if(displayed_row == rs_row){
+          $("#reconcile_table").html("");
+        } else {
+          $.get("/reconcile_statements/"+rs_row+".js", function(result){
+        });
+      }
     }
   })
 
@@ -169,7 +185,7 @@
     }
   }
   function confirm_calculate(value){
-    rs_id = $('.confirm_settlement').data('id');
+    rs_id = $("input[name='audited[]']:checked").val();
     $.ajax({
       type: "PUT",
       url: "/reconcile_statements/"+rs_id+"/audit"
