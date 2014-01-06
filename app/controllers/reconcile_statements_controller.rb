@@ -8,7 +8,7 @@ class ReconcileStatementsController < ApplicationController
     @trade_sources = current_account.trade_sources
     @rs_set = current_account.reconcile_statements.where(seller_id: nil).recently_data
     status = {unprocessed: false, processed: true, unaudited: false, audited: true}
-    if params[:status].blank?
+    if params[:status].present?
       @rs_set = @rs_set.select_status(params[:status])
     end
     if params[:date].present?
@@ -37,7 +37,7 @@ class ReconcileStatementsController < ApplicationController
     elsif current_user.has_role?(:admin)
       @rs_set = current_account.reconcile_statements.where("seller_id > 0")
     end
-    if params[:status].blank?
+    if params[:status].present?
       @rs_set = @rs_set.select_status(params[:status])
     end
     if params[:date].present?
