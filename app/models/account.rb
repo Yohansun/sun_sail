@@ -65,7 +65,7 @@ class Account < ActiveRecord::Base
   has_many :skus
   has_many :taobao_skus
   has_one  :deliver_template
-  has_many :trade_sources
+  has_many :trade_sources,:inverse_of => :account
   has_many :taobao_sources, class_name: "TradeSource", conditions: {trade_type: 'Taobao'}
   has_many :jingdong_sources, class_name: "TradeSource", conditions: {trade_type: 'Jingdong'}
   has_many :yihaodian_sources, class_name: "TradeSource", conditions: {trade_type: 'Yihaodian'}

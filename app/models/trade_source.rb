@@ -29,7 +29,7 @@ class TradeSource < ActiveRecord::Base
   include RailsSettings
   include MagicEnum
   attr_accessible :account_id, :app_key, :name, :secret_key, :session, :sid, :cid, :bulletin, :title, :description, :created, :modified, :trade_type
-  belongs_to :account
+  belongs_to :account,:inverse_of => :trade_sources
   has_one :taobao_app_token
   has_one :jingdong_app_token
   has_one :yihaodian_app_token
@@ -39,10 +39,12 @@ class TradeSource < ActiveRecord::Base
   validates :name, presence: true, uniqueness: true
 
   def jingdong_query_conditions
+    return if jingdong_app_token.nil?
     {"access_token" => jingdong_app_token.access_token,"app_key" => TradeSetting.jingdong_app_key,"secret_key" => TradeSetting.jingdong_app_secret}
   end
 
   def yihaodian_query_conditions
+    return if yihaodian_app_token.nil?
     {"access_token" => yihaodian_app_token.access_token,"app_key" => TradeSetting.yihaodian_app_key,"secret_key" => TradeSetting.yihaodian_app_secret}
   end
 

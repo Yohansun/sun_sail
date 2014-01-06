@@ -36,9 +36,9 @@ wynn@doorder.com
 michelle@doorder.com
 clover@doorder.com
 pumpkin@doorder.com
-zhoubin@networking.io
-wang@networking.io
-xiaoliang@networking.io
+steven@doorder.com
+ophelia@doorder.com
+mark@doorder.com
 )
 
 every :day, :at => '10:00am' do
@@ -55,11 +55,11 @@ def end_time
 end
 
 every :day, :at => '9:00am' do
-  runner "TradeChecker.new(:brands,start_time: #{start_time},end_time: #{end_time},:to => #{STORY_1204},:from => \"#{DEFAULT_FROM}\").invoke"
+  runner "TradeChecker.new(start_time: #{start_time},end_time: #{end_time},:to => #{STORY_1204},:from => \"#{DEFAULT_FROM}\").deliver"
 end
 
 every :day, :at => '9:00pm' do
-  runner "TradeChecker.new(:brands,start_time: #{start_time},end_time: #{end_time},:to => #{STORY_1204},:from => \"#{DEFAULT_FROM}\").invoke"
+  runner "TradeChecker.new(start_time: #{start_time},end_time: #{end_time},:to => #{STORY_1204},:from => \"#{DEFAULT_FROM}\").deliver"
 end
 
 every :day, :at => '2:00pm' do
