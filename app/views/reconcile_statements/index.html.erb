@@ -12,7 +12,7 @@
           <% end %>
         </select>
         <label class="control-label">状态：</label>
-          <%= select_tag(:status, options_for_select([["请选择","null"],["运营商未结算","unaudited"],["品牌商已结算", "processed"],["品牌商未结算","unprocessed"],["运营商已结算","audited"]], selected: params[:status]))%>
+          <%= select_tag(:status, options_for_select([["请选择",""],["运营商未结算","unaudited"],["品牌商未结算","unprocessed"],["运营商已结算","audited"]], selected: params[:status]))%>
         <label class="control-label">选择时间：</label>
         <div class="input-append">
           <%=text_field_tag :date, params[:date], "data-date-format"=>"mm-yyyy", :class=>"input-small date  monthpicker"%>
