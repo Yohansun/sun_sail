@@ -71,8 +71,8 @@
               <li><a href="#" data-toggle="modal" data-type="seller_confirm_invoice">确认开票</a></li>
               <li><a href="#" data-toggle="modal" data-type="splited">订单拆分</a></li>
               <li><a href="#" data-toggle="modal" data-type="recover">订单合并</a></li>
-              <!-- <li><a href="#" data-toggle="modal">取消审核</a></li> -->
               <li><a href="#" data-toggle="modal" data-type="mark_unusual_state">标注异常</a></li>
+              <li><a href="#" data-toggle="modal" data-type="property_memo">属性备注</a></li>
             </ul>
           </div>
 

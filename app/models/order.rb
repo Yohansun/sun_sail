@@ -20,10 +20,12 @@ class Order
   field :color_hexcode, type: Array, default: []
   field :color_name, type: Array, default: []
   field :barcode, type: Array, default: []        # 条形码
-  field :refund_fee,type: Float,default: 0.0
+  field :refund_fee, type: Float, default: 0.0
 
   #赠品子订单专用field
   field :order_gift_tid, type: String
+
+  has_one :trade_property_memo
 
   validates_uniqueness_of :order_gift_tid, allow_blank: true
 
@@ -105,5 +107,25 @@ class Order
       end
     end
     info = info.flatten
+  end
+
+  def property_memo
+    properties = {}
+    category_properties = trade.fetch_account.products.find_by_outer_id(outer_iid).category.category_properties
+    category_properties.each do |category_property|
+      properties[category_property.name] = {type: "#{category_property.value_type_name}"}
+      category_property.values.each do |category_property_value|
+        properties[category_property.name][category_property_value.id] = {}
+        matched_property_value = trade_property_memo.property_values.where(category_property_value_id: category_property_value.id).first
+        if matched_property_value.present?
+          properties[category_property.name][category_property_value.id]["marked"] = true
+          properties[category_property.name][category_property_value.id]['value'] = matched_property_value.value
+        else
+          properties[category_property.name][category_property_value.id]["marked"] = false
+          properties[category_property.name][category_property_value.id]['value'] = category_property_value.value
+        end
+      end
+    end
+    properties
   end
 end

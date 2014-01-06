@@ -78,6 +78,9 @@ else
   end
 end
 
+json.property_memos @trade.trade_property_memos
+
+
 json.dispatched_at @trade.dispatched_at.strftime("%m-%d %H:%M") if @trade.dispatched_at
 
 json.orders OrderDecorator.decorate(@trade.orders) do |json, order|
@@ -88,6 +91,7 @@ json.orders OrderDecorator.decorate(@trade.orders) do |json, order|
 
   json.item_id order.item_id
   json.sku_properties order.sku_properties
+  json.property_memo order.property_memo
   json.item_outer_id order.item_outer_id
   json.cs_memo order.cs_memo
   json.color_num order.color_num

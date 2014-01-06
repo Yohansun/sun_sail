@@ -8,7 +8,6 @@ class MagicOrders.Routers.Trades extends Backbone.Router
     'color/:trade_mode-:trade_type': 'index'
     'return/:trade_mode-:trade_type': 'index'
     'trades/:id/splited': 'splited'
-    'trades/print_deliver_bills': 'printDeliverBills'
     'trades/:id/recover': 'recover'
     'trades/batch/:batch_operation' : 'batch_operation'
     'trades/:id/:operation': 'operation'
@@ -252,6 +251,3 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       view = new MagicOrders.Views.TradesSplited(model: model)
       $('#trade_splited').html(view.render().el)
       $('#trade_splited').modal('show')
-
-  printDeliverBills: ->
-    $('[checked="checked"].trade_check')
