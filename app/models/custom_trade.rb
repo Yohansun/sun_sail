@@ -25,7 +25,6 @@ class CustomTrade < Trade
                   }x
   validates :receiver_mobile, format: { with: MOBILE_FORMAT, message: "手机号格式不正确"}, allow_blank: true
   validates_length_of :receiver_phone, maximum: 20, message: "内容过长", allow_blank: true
-  validates :receiver_phone, format: { with: /^[0-9-]+$/, message: "座机号格式不正确"}, allow_blank: true
   validates :receiver_zip, format: { with: /^[0-9]{6}$/, message: "邮编格式不正确"}, allow_blank: true
   validate :created_larger_than_pay_time, :message => "下单时间不能晚于付款时间"
   validate :have_either_telephone_or_cell, :message => "手机号和座机号必须填写一个"
