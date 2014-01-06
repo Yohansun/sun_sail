@@ -81,7 +81,7 @@ class StockInBillsController < ApplicationController
     @bill.attributes = params[:stock_in_bill]
     update_areas!(@bill)
     @bill.update_bill_products
-    if params[:stock_in_bill][:stock_type] == "ICP"
+    if @bill.stock_type_icp?
       product = params[:stock_in_bill][:bill_products_attributes]["0"]
       @bill.update_property_memo(params[:property], product["sku_id"], current_account)
     end
