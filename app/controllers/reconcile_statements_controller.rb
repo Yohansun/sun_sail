@@ -1,6 +1,6 @@
 # encoding: utf-8
 class ReconcileStatementsController < ApplicationController
-  before_filter :fetch_rs, only: [:show, :audit]
+  before_filter :fetch_rs, only: [:show, :audit, :seller_show]
   before_filter :check_module
   AllActions = {:index => "运营商对账",:seller_index => "经销商对账"}
 
@@ -30,13 +30,17 @@ class ReconcileStatementsController < ApplicationController
     end
   end
 
-  def seller_index
-    @trade_sources = TradeSource.all
-    if current_user.has_role?(:seller)
-      @rs_set = current_account.reconcile_statements.where(processed: true, seller_id: current_user.seller_id)
-    elsif current_user.has_role?(:admin)
-      @rs_set = current_account.reconcile_statements.where("seller_id > 0")
+  def seller_show
+    if @rs
+      @details = @rs.seller_detail
+      respond_to do |f|
+        f.js
+      end
     end
+  end
+
+  def seller_index
+    @rs_set = current_account.reconcile_statements.where("seller_id > 0")
     if params[:status].present?
       @rs_set = @rs_set.select_status(params[:status])
     end
@@ -53,30 +57,31 @@ class ReconcileStatementsController < ApplicationController
     else
       @rs_set = @rs_set
     end
-    @all_audited = true
-    @all_audited = @rs_set.all_audited? if @rs_set.respond_to?(:all_audited?)
+    @all_audited = @rs_set.all_audited?
     render seller_index_reconcile_statements_path
   end
-
+  
   def audit
     unless @rs.processed
-      if @rs.update_attribute(:processed, true)
-        render :nothing => true, status: 200
-      else
-        render :nothing => true, status: 304
-      end
+      update_status({:processed => true}, @rs)
     else
-      if @rs.update_attribute(:audited, true)
-        render :nothing => true, status: 200
-      else
-        render :nothing => true, status: 304
-      end
+      update_status({:audited => true}, @rs)
     end
   end
 
-  def audits
-    current_account.reconcile_statements.update_all({:audited => true}, ["id in (?)", params[:rs_ids].split(',')]) if params[:rs_ids].present?
-    redirect_to reconcile_statements_url
+  def seller_exports
+    if params[:selected_rs].blank?
+      flash[:error] = "不正确的参数，数据导出失败"
+    else
+      ids = params[:selected_rs].to_a
+      @rs_data = ReconcileSellerDetail.by_ids(ids)
+      flash[:notice] = "数据导出成功"
+    end
+
+    respond_to do |format|
+      format.xls  { redirect_to :back unless @rs_data.present? }
+      format.html { redirect_to :back }
+    end
   end
 
   def exports
@@ -94,15 +99,18 @@ class ReconcileStatementsController < ApplicationController
     end
   end
 
-  def process_all
-    current_account.reconcile_statements.update_all({:processed => true}, ["id in (?)", params[:rs_ids].split(',')]) if params[:rs_ids].present?
-    redirect_to :back
-  end
-
   private
 
   def fetch_rs
     @rs = current_account.reconcile_statements.find(params[:id])
+  end
+
+  def update_status(option={}, statement)
+    if statement.update_attributes(option)
+      render :nothing => true, status: 200
+    else
+      render :nothing => true, status: 304
+    end
   end
 
   def check_module

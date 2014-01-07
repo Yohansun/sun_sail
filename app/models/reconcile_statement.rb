@@ -20,6 +20,7 @@ class ReconcileStatement < ActiveRecord::Base
   attr_accessible :trade_store_source, :trade_store_name, :audited, :trade_store_name, :audit_time, :balance_amount, :exported, :processed, :seller_id, :account_id
   include ActiveModel::ForbiddenAttributesProtection
   has_one :detail, class_name: "ReconcileStatementDetail"
+  has_many :seller_detail, class_name: "ReconcileSellerDetail"
   belongs_to :account
   scope :by_date, lambda { |date| where(["DATE_FORMAT(audit_time, '%Y%m') = ? ", date.sub(/-/,'')]) }
 

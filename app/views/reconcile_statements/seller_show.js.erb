@@ -1,0 +1,3 @@
+<%- if @details.present? %>
+$("#reconcile_table").html("<%= escape_javascript(render partial: 'seller_detail', locals: {details: @details} ) %>");
+<% end %>
