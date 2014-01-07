@@ -36,6 +36,8 @@ class TradeSource < ActiveRecord::Base
 
   enum_attr :trade_type,[%w(淘宝 Taobao),%w(京东 Jingdong), %w(一号店 Yihaodian)],not_valid: true
 
+  validates :name, presence: true, uniqueness: true
+
   def jingdong_query_conditions
     {"access_token" => jingdong_app_token.access_token,"app_key" => TradeSetting.jingdong_app_key,"secret_key" => TradeSetting.jingdong_app_secret}
   end
@@ -44,5 +46,13 @@ class TradeSource < ActiveRecord::Base
     {"access_token" => yihaodian_app_token.access_token,"app_key" => TradeSetting.yihaodian_app_key,"secret_key" => TradeSetting.yihaodian_app_secret}
   end
 
-  validates :name, presence: true, uniqueness: true
+  # 激活聚石塔数据同步 (前提条件是聚石塔已激活此用户)
+  def enable_jsync
+    update_attribute(:jushita_sync, true)
+  end
+
+  # 关闭聚石塔数据同步
+  def lock_jsync
+    update_attribute(:jushita_sync, false)
+  end
 end

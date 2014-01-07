@@ -1,0 +1,54 @@
+<%
+  breadcrumb << ["系统设置", users_path]
+  breadcrumb << ["基础数据管理", "#"]
+  breadcrumb << ["聚石塔数据同步"]
+%>
+<div class="row-fluid">
+  <div class="span10 w100">
+    <div class="tab-content">
+      <div class="tab-pane active" id="users">
+        <%= form_tag "",:method => :post,:id => "edit_user",:class => "simple-operation" do %>
+            <div class="btn-toolbar">
+              <div class="btn-group">
+                <b class="btn btn-warning">操作</b>
+                <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown" onclick="return false"><span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                  <li><%= link_to "激活","#", :target_url => enable_jushita_data_path, :class => "magic_operation",request: :put %></li>
+                  <li><%= link_to "锁定","#", :target_url => lock_jushita_data_path,:message => "如果锁定此用户,将会删除聚石塔上此用户的数据. 确认锁定吗?",:request => :put , :class => "magic_operation" %></li>
+                </ul>
+              </div><!-- btn-group -->
+            </div><!-- btn-groups end -->
+            <table><tr><td><span class="label">&nbsp;&nbsp;&nbsp;&nbsp;</span>已锁定</td><td><span class="label label-success">&nbsp;&nbsp;&nbsp;&nbsp;</span>已激活</td></table>
+          <table class="table table-hover table-bordered table-striped table-condensed js-table simple-operation">
+            <thead>
+              <tr>
+                <th><input type="checkbox"></th>
+                <th>账户</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @trade_sources.group_by {|source| source.account.try(:name)}.each do |account,trade_sources| %>
+                <tr>
+                  <td></td>
+                  <td><%= account %></td>
+                  <td>
+                    <table>
+                      <% trade_sources.each do |trade_source| %>
+                      <tr>
+                        <td><input type="checkbox" value="<%= trade_source.id %>" name="trade_source_ids[]">
+                        <span class="label <%= trade_source.jushita_sync? ? 'label-success' : '' %>"><%= trade_source.name %></span></td>
+                      </tr>
+                      <% end %>
+                    </table>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+          <%= paginate @trade_sources %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
