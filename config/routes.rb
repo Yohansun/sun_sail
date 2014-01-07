@@ -53,6 +53,9 @@ MagicOrders::Application.routes.draw do
     end
 
     resources :stock_in_bills do
+      member do
+        get :fetch_category_properties
+      end
       collection do
         post :sync
         post :check

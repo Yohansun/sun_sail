@@ -1,39 +1,40 @@
 # -*- encoding:utf-8 -*-
 class StockInBill < StockBill
-	include Mongoid::Document
+  include Mongoid::Document
   include MagicEnum
-	embeds_many :bml_input_backs
+  embeds_many :bml_input_backs
+  has_one :bill_property_memo
 
   PUBLIC_STOCK_TYPE = PUBLIC_IN_STOCK_TYPE
   PRIVATE_STOCK_TYPE = PRIVATE_IN_STOCK_TYPE
   enum_attr :stock_type,IN_STOCK_TYPE
   validates_inclusion_of :stock_type, :in => STOCK_TYPE_VALUES
 
-	def xml
-		stock = ::Builder::XmlMarkup.new
-		stock.RequestPurchaseInfo do
-			stock.warehouseid "BML_KSWH"
-			stock.type stock_typs
-			stock.orderCode tid
-			stock.customerId account.settings.biaogan_customer_id
-			stock.ZDRQ created_at.try(:strftime, "%Y-%m-%d %H:%M")
-			stock.DHRQ stocked_at.try(:strftime, "%Y-%m-%d %H:%M")
-			stock.ZDR op_name
-			stock.BZ  remark
-			stock.products do
-				bill_products.each do |product|
-					stock.productInfo do
-						stock.spuCode product.outer_id.try(:strip)
-						stock.itemName product.title.try(:strip)
-						stock.itemCount product.number
-						stock.itemValue product.total_price
-						stock.remark ""
-					end
-				end
-			end
-		end
-		stock.target!
-	end
+  def xml
+    stock = ::Builder::XmlMarkup.new
+    stock.RequestPurchaseInfo do
+      stock.warehouseid "BML_KSWH"
+      stock.type stock_typs
+      stock.orderCode tid
+      stock.customerId account.settings.biaogan_customer_id
+      stock.ZDRQ created_at.try(:strftime, "%Y-%m-%d %H:%M")
+      stock.DHRQ stocked_at.try(:strftime, "%Y-%m-%d %H:%M")
+      stock.ZDR op_name
+      stock.BZ  remark
+      stock.products do
+        bill_products.each do |product|
+          stock.productInfo do
+            stock.spuCode product.outer_id.try(:strip)
+            stock.itemName product.title.try(:strip)
+            stock.itemCount product.number
+            stock.itemValue product.total_price
+            stock.remark ""
+          end
+        end
+      end
+    end
+    stock.target!
+  end
 
   def gqs_xml
     stock = ::Builder::XmlMarkup.new
@@ -70,11 +71,11 @@ class StockInBill < StockBill
   def type_name
     "入库单"
   end
-  
+
   def confirm_sync
     ans_to_wms_worker
   end
-  
+
   def confirm_stock
     if can_do_stock?
       do_stock && sync_stock && operation_logs.create(operated_at: Time.now, operation: '确认入库成功')
@@ -132,7 +133,7 @@ class StockInBill < StockBill
     BiaoganPusher.perform_async(self._id, "cancel_asn_rx_worker")
   end
 
-	#推送入库通知单至仓库
+  #推送入库通知单至仓库
   def ans_to_wms_worker
     if account.settings.third_party_wms == "biaogan"
       result_xml = Bml.ans_to_wms(account, xml)
@@ -223,5 +224,23 @@ class StockInBill < StockBill
     sync_stock if account && account.settings.enable_module_third_party_stock == 1
     do_stock
     StockCsvFile.find_by_stock_in_bill_id(self.id.to_s).update_attributes(used: true)
+  end
+
+  def update_property_memo(memo_params, sku_id, current_account)
+    self.bill_property_memo.delete
+    property_memo = self.create_bill_property_memo(
+      account_id: current_account.id,
+      outer_id:   current_account.skus.find_by_id(sku_id).try(:product).try(:outer_id)
+    )
+    memo_params.each do |name, values|
+      if values.is_a?(String)
+        values = values.split(";")
+        property_memo.property_values.create(name: name, category_property_value_id: values[0], value: values[1])
+      else
+        values.each do |value|
+          property_memo.property_values.create(name: name, category_property_value_id: value[0], value: value[1]) if value[1].present?
+        end
+      end
+    end
   end
 end

@@ -27,8 +27,7 @@ class Sku < ActiveRecord::Base
 
   has_one :category, through: :product
 
-
-  after_save  :migrate_taobao_sku_props
+  after_save :migrate_taobao_sku_props
 
   def title
     "#{product.try(:name)}#{name}"

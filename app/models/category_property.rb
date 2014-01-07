@@ -25,15 +25,14 @@ class CategoryProperty < ActiveRecord::Base
 
   include MagicEnum
 
-  enum_attr :value_type,[["多选",VALUE_TYPE_MULTIPLE],["单选",VALUE_TYPE_SINGLE],["文本",VALUE_TYPE_INPUT]]
-  enum_attr :status,[["启用",STATUS_ENABLED],["禁用",STATUS_DISABLED]]
+  enum_attr :value_type, [["多选",VALUE_TYPE_MULTIPLE],["单选",VALUE_TYPE_SINGLE],["文本",VALUE_TYPE_INPUT]]
+  enum_attr :status,     [["启用",STATUS_ENABLED],["禁用",STATUS_DISABLED]]
 
   attr_accessor :value_text
   attr_accessible :name, :status, :value_type, :value_text, :values_attributes
 
-  has_many    :values,    :class_name=>"CategoryPropertyValue", :dependent=>:destroy
+  has_many :values, :class_name=>"CategoryPropertyValue", :dependent=>:destroy
   accepts_nested_attributes_for :values, :allow_destroy => true
-
 
   before_save :init_values
 
@@ -46,7 +45,6 @@ class CategoryProperty < ActiveRecord::Base
   def values_name
     @value_text ||= values.map(&:value)
   end
-
 
   # 保存属性值(CategoryPropertyValue)列表
   # 如果是文本属性值，默认values添加一条文本

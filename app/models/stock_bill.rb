@@ -60,7 +60,7 @@ class StockBill
   belongs_to :trade, :class_name => "Trade", :foreign_key => "tid",:primary_key => "tid"
 
   # 可选的入库类型
-  PUBLIC_IN_STOCK_TYPE   = [["调拨入库", "IIR"], ["正常入库", "IFG"], ["拆分入库", "ICF"], ["加工入库", "IOT"], ["退货入库", "IRR"], ["特殊入库(免费)", "IMF"]]
+  PUBLIC_IN_STOCK_TYPE   = [["调拨入库", "IIR"], ["正常入库", "IFG"], ["拆分入库", "ICF"], ["加工入库", "IOT"], ["退货入库", "IRR"], ["特殊入库(免费)", "IMF"], ["成品入库", "ICP"]]
   # 可选的出库类型
   PUBLIC_OUT_STOCK_TYPE  = [["拆分出库", "ORS"], ["调拨出库", "ODB"], ["加工出库", "OKT"], ["退货出库", "OTT"], ["销售出库", "OCM"], ["报废出库", "OOT"], ["补货出库", "OWR"], ["特殊出库(免费)", "OMF"], ["退大货出库", "OTD"]]
   # 不可选的入库类型
@@ -194,7 +194,7 @@ class StockBill
   def account
     Account.find(account_id)
   end
-  
+
   def enabled_third_party_stock?
     account.settings.enable_module_third_party_stock == 1
   end

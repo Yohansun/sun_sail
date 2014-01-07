@@ -1,0 +1,34 @@
+<fieldset class="span6 pull-left">
+<%#- if !category_properties.blank? %>
+  <!-- <div class="control-group">
+    <%#= label_tag "sku_iid","SKU编码",:class => "control-label", :style => "display:none" %>
+    <label class="checkbox inline">
+      <input id="tmp_sku_sku_id" name="tmp_sku[sku_id]" type="text" style="display:none">
+    </label>
+  </div> -->
+<%#- end %>
+<% category_properties.each do |category_property| %>
+  <div class="control-group">
+    <%= label_tag "property_name", category_property.name + "：", :class => "control-label" %>
+    <%- if category_property.value_type_name == "多选" %>
+      <% category_property.values.each do |value| %>
+        <label class="checkbox inline">
+          <%= check_box_tag "property[#{category_property.name}][#{value.id}]", value.value, (true if property_values && property_values.where(category_property_value_id: value.id).present? ) %><%= value.value %>
+        </label>
+      <% end %>
+    <%- elsif category_property.value_type_name == "单选" %>
+      <% category_property.values.each do |value| %>
+        <label class="radio inline">
+          <%= radio_button_tag "property[#{category_property.name}]", value.id.to_s+";"+value.value, (true if property_values && property_values.where(category_property_value_id: value.id).present? ) %><%= value.value %>
+        </label>
+      <% end %>
+    <%- elsif category_property.value_type_name == "文本" %>
+      <% category_property.values.each do |value| %>
+        <label class="input inline">
+          <%= text_field_tag "property[#{category_property.name}][#{value.id}]", (property_values && property_values.where(category_property_value_id: value.id).try(:first).try(:value)) %>
+        </label>
+      <% end %>
+    <%- end %>
+  </div>
+<% end if category_properties.present? %>
+</fieldset>
