@@ -6,7 +6,7 @@
     id='<%= bill.id %>'
     batch_number = '<%= bill.print_batches.last.try(:batch_num) %>'
     tid="<%= trade.tid %>"
-    company="<%= current_account.name %>"
+    company="<%= trade.shop_name %>"
     phone="<%= trade.receiver_mobile %>"
     address="<%= "#{trade.receiver_state} #{trade.receiver_city} #{trade.receiver_district} #{trade.receiver_address}" %>"
     memo="<%= trade.cs_memo %>"
