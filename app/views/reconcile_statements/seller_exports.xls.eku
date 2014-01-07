@@ -1,0 +1,13 @@
+__filename = "经销商对账数据.xls"
+sheet1 = xls.create_worksheet
+sheet1[0, 0] = "对账数据"
+
+sheet1.row(1).concat ["来源","店铺", "支付宝收入", "运费", "基准价", "结算金额", "调整金额", "最终结算金额"]
+@rs_data.each_with_index do |rsd, i|
+  sheet1.update_row i+2, rsd.source, rsd.trade_source_name, rsd.alipay_revenue, rsd.postfee_revenue, rsd.base_fee, rsd.audit_amount, rsd.adjust_amount, rsd.last_audit_amount
+end
+
+title_format = Spreadsheet::Format.new(:color => :blue, :weight => :bold, :size => 14)
+sheet1.row(0).set_format(0, title_format)
+bold = Spreadsheet::Format.new(:pattern_fg_color => :yellow, :weight => :bold)
+sheet1.row(1).default_format = bold

@@ -13,12 +13,14 @@ class FinanceCalculate
     records = TradeRecord.between(create_time: (Time.now - 1.month).beginning_of_day .. (Time.now - 1.month).end_of_month).where(trade_source_id: trade_source_id )
     #店铺支付宝总收入
     trade_revenue = 0
+    postfee_revenue = 0 #运费
+    Trade.between(create_time: (Time.now - 1.month).beginning_of_day .. (Time.now - 1.month).end_of_month).where(trade_source_id: trade_source_id, status: "TRADE_FINISHED").each{|trade| postfee_revenue += trade.post_fee}
     records.each{|r| trade_revenue += r.get_surplus}
 
     if r_statement = ReconcileStatement.create(audit_time: Time.now, account_id: account_id, trade_store_source: trade_store_source, trade_store_name: trade_store_name)
       reconcile_statement_id = r_statement.id
       special_products_alipay_revenue = 0 #特供商品支付宝收入
-      postfee_revenue = 0 #运费
+      # postfee_revenue = 0 #运费
       adjust_amount = 0 #调整金额
       base_fee_percent = 5 #基准价比例
       audit_amount_percent = 5 #特供商品结算金额比例

@@ -1,0 +1,33 @@
+<form action="/reconcile_statements/<%= details.first.reconcile_statement.id %>/reconcile_seller_details/<%= details.first.id %>/change_detail" data-row='<%= details.first.reconcile_statement.id %>' class="well form-search">
+  <table class='table table-bordered table-hover'>
+    <thead>
+      <tr>
+        <th>来源</th>
+        <th>店铺</th>
+        <th>支付宝收入</th>
+        <th>运费</th>
+        <th>基准价</th>
+        <th>结算金额</th>
+        <th>调整金额</th>
+        <th>最终结算金额</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% details.each do |seller_detail| %>
+        <tr>
+          <td><%= seller_detail.source %></td>
+          <td><%= seller_detail.trade_source_name %></td>
+          <td><%= seller_detail.alipay_revenue %></td>
+          <td><%= seller_detail.postfee_revenue %></td>
+          <td>（支付宝收入-运费）*<input type ='text' class="input-small" name="base_fee_rate[]" value="<%= seller_detail.base_fee_rate %>"</input>%=<%= seller_detail.base_fee %></td>
+          <td>(基准价+运费)*<input type ='text' class="input-small" name="audit_amount_rate[]" value="<%= seller_detail.audit_amount_rate %>"</input>%+特供商品支付宝收入*<input type ='text' class="input-small" name="special_products_alipay_revenue_rate[]" value="<%= seller_detail.special_products_alipay_revenue_rate %>"</input>%=<%= seller_detail.audit_amount %></td>
+          <td><input type ='text' class="input-small" name="adjust_amount[]" value="<%= seller_detail.adjust_amount %>"</input></td>
+          <td><%= seller_detail.last_audit_amount %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%- if current_user.has_role?(:admin) %>
+    <button type="submit" class="btn btn-info">确定</button>
+  <%- end %>
+</form>

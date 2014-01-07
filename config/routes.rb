@@ -146,6 +146,7 @@ MagicOrders::Application.routes.draw do
     member do
       put :audit
       put :update_processed
+      get :seller_show
     end
     collection do
       get :exports
@@ -157,6 +158,12 @@ MagicOrders::Application.routes.draw do
       put :generate_new
     end
     resources :reconcile_statement_details, only: [:show] do
+      member do
+        get :export_detail
+        get :change_detail
+      end
+    end
+    resources :reconcile_seller_details, only: [:show] do
       member do
         get :export_detail
         get :change_detail
