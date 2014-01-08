@@ -91,6 +91,8 @@ module MagicGift
   end
 
   def generate_gift_oid(trade)
+    oid = trade.orders.map(&:order_gift_tid).compact.sort.last
+    return oid.succ if oid
     trade.tid + "O" + (trade.orders.count+1).to_s
   end
 end
