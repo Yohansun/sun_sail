@@ -240,6 +240,8 @@ class MagicOrders.Routers.Trades extends Backbone.Router
             alert('此订单已出库或同步，无法分流重置')
             Backbone.history.navigate("#{MagicOrders.trade_mode}/" + "#{MagicOrders.trade_mode}-#{MagicOrders.trade_type}", false)
             return
+        when 'property_memo'
+          $("select.select2").select2()
 
       $(modalDivID).modal('show')
 

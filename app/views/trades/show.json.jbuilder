@@ -78,6 +78,9 @@ else
   end
 end
 
+json.property_memos @trade.trade_property_memos
+
+
 json.dispatched_at @trade.dispatched_at.strftime("%m-%d %H:%M") if @trade.dispatched_at
 
 json.orders OrderDecorator.decorate(@trade.orders) do |json, order|
@@ -85,9 +88,11 @@ json.orders OrderDecorator.decorate(@trade.orders) do |json, order|
   json.title order.title
   json.num order.num
   json.price order.price
+  json.outer_iid order.outer_iid
 
   json.item_id order.item_id
   json.sku_properties order.sku_properties
+  json.product_properties order.product_properties
   json.item_outer_id order.item_outer_id
   json.cs_memo order.cs_memo
   json.color_num order.color_num
@@ -98,6 +103,7 @@ json.orders OrderDecorator.decorate(@trade.orders) do |json, order|
   json.order_gift_tid order.order_gift_tid
   json.sku_bindings order.sku_bindings
   json.local_sku_id order.local_sku_id
+  json.stock_in_bill_tids order.trade_property_memo.try(:stock_in_bill_tids)
 
   if @trade._type == 'TaobaoTrade'
     json.refund_status order.refund_status

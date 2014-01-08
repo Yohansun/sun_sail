@@ -463,6 +463,7 @@ MagicOrders::Application.routes.draw do
         get :notifer
         get :export
         get :sort_product_search
+        get :match_icp_bills
       end
     end
 
