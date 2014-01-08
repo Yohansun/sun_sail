@@ -57,7 +57,7 @@ class ReconcileStatementsController < ApplicationController
     else
       @rs_set = @rs_set
     end
-    @all_audited = @rs_set.all_audited?
+    @all_processed = @rs_set.all_processed?
     render seller_index_reconcile_statements_path
   end
   

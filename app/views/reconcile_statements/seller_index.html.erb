@@ -8,11 +8,7 @@
       <label class="control-label mar_l10">经销商：</label>
       <%=text_field_tag :seller_name, params[:seller_name], class: "input-medium"%>
       <label class="control-label mar_l10">状态：</label>
-      <% if current_user.has_role?(:admin) %>
-        <%= select_tag(:status, options_for_select([["请选择","null"],["未生成","unprocessed"],["已生成，未结算","processed"],["已结算","audited"]], selected: params[:status]))%>
-      <% elsif current_user.has_role?(:seller) %>
-        <%= select_tag(:status, options_for_select([["请选择","null"],["未结算","unaudited"],["已结算","audited"]], selected: params[:status]))%>
-      <% end %>
+        <%= select_tag(:status, options_for_select([["请选择",nil],["未结算","unprocessed"],["已结算","processed"]], selected: params[:status]))%>
       <label class="control-label mar_l10">选择时间：</label>
       <div class="input-append">
         <%=text_field_tag :date, params[:date], "data-date-format"=>"mm-yyyy", :class=>"input-small date  monthpicker"%>
