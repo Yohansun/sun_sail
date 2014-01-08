@@ -139,8 +139,7 @@ MagicOrder::AccessControl.map do |map|
                                  "merge_trades_manually",
                                  "split_merged_trades",
                                  "invoice",
-                                 "split_invoice",
-                                 "property_memo"]
+                                 "split_invoice"]
   end
 
   #商品管理
@@ -274,7 +273,7 @@ MagicOrder::AccessControl.map do |map|
     map.permission :operations, ["trade_reports#download",
                                  "customers#customers_detail",
                                  "customers#send_customers_messages"
-                                ]
+                               ]
   end
   #系统设置
   map.project_module :system_settings do |map|

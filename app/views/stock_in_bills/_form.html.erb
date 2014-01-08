@@ -113,7 +113,6 @@ $(function(){
     }
     $('#bill_property_memo').show()
     $('a.remove_nested_fields_link').hide()
-    $('.nested_stock_in_bill_bill_products').show()
     $('#stock_in_bill_bill_products_attributes_0_number').attr("disabled", true).val("1")
     $('#stock_in_bill_bill_products_attributes_0_total_price').attr("disabled", true)
     if (<%= @bill.tid.present? %>){
@@ -134,7 +133,6 @@ $(function(){
       }
       $('#bill_property_memo').show()
       $('a.remove_nested_fields_link').hide()
-      $('.nested_stock_in_bill_bill_products').show()
       $('#stock_in_bill_bill_products_attributes_0_number').attr("disabled", true).val("1")
       $('#stock_in_bill_bill_products_attributes_0_total_price').attr("disabled", true)
       if (<%= @bill.tid.present? %>){

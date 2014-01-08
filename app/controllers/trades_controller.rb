@@ -557,8 +557,4 @@ class TradesController < ApplicationController
     end
   end
 
-  def save_property_memos
-  end
-
-
 end

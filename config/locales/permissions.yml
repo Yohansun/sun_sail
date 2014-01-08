@@ -73,7 +73,6 @@ zh-CN:
   permissions_tag_cs_memo: 客服备注
   permissions_tag_gift_memo: 赠品管理
   permissions_tag_mark_unusual_state: 标注异常
-  permissions_tag_property_memo: 属性备注
   permissions_tag_seller: 设置分派
   permissions_tag_barcode: 输入唯一码
   permissions_tag_deliver: 订单发货
