@@ -1,0 +1,75 @@
+<% content_for :sub_nav do %>
+  <%= render partial: "nav" %>
+<% end %>
+
+<%= form_tag distributor_index_reconcile_statements_path, :class=>"well form-search", :method => :get do %>
+  <fieldset class="form-inline">
+    <div class="controls">
+      <label class="control-label mar_l10">来源：</label>
+      <%=text_field_tag :trade_store_source, params[:trade_store_source], class: "input-medium"%>
+      <label>店铺选择</label>
+      <select id="" class="input-medium" name="trade_source">
+        <% @trade_sources.each do |ts|%>
+        <option><%= ts.name %></option>
+        <% end %>
+      </select>
+      <label class="control-label mar_l10">状态：</label>
+        <%= select_tag(:status, options_for_select([["请选择",nil],["未结算","unprocessed"],["已结算","processed"]], selected: params[:status]))%>
+      <label class="control-label mar_l10">选择时间：</label>
+      <div class="input-append">
+        <%=text_field_tag :date, params[:date], "data-date-format"=>"mm-yyyy", :class=>"input-small date  monthpicker"%>
+        <button type="button pull-left" class="btn btn-info search" id="simple_search_button">筛选</button>
+      </div>
+    </div>
+  </fieldset>
+<% end %>
+
+<div class="btns">
+  <p id="rs_process_info" style="display: none;">正在生成数据...</p>
+  <a href="javascript:;" class="btn btn-warning confirm_export">导出数据</a>
+  <% if @all_processd %>
+    <a href="javascript:;" class="btn btn-warning disabled">确认结算</a>
+  <% else %>
+    <a data-toggle="modal" href="#confirm_account" class="btn btn-warning confirm_settlement_all">确认结算</a>
+  <% end %>
+</div>
+<table class="table table-striped table-bordered td_colors table-hover mar_t">
+  <thead>
+    <tr>
+      <th><input type="checkbox" id="checkbox" name="checkbox"></th>
+      <th>月份</th>
+      <th>来源</th>
+      <th>店铺</th>
+      <th>最终结算金额</th>
+      <th>结算状态</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if @rs_set.present? %>
+      <% @rs_set.each do |rs| %>
+      <tr class="rs_row" id="rs_<%= rs.id %>" data-row="<%= rs.id %>">
+        <td>
+          <input type="checkbox" class="audited_checkbox" id="audited_<%=rs.id%>" name="audited[]" value="<%=rs.id%>">
+        </td>
+        <td><%= rs.audit_time.strftime("%Y-%m") %></td>
+        <td><%= rs.trade_store_source %></td>
+        <td><%= rs.trade_store_name %></td>
+        <td><%= rs.balance_amount %></td>
+        <%- if rs.audited %>
+        <td>已结算</td>
+        <% else %>
+          <td><a data-toggle="modal" data-id="<%= rs.id %>" href="#confirm_account" class="confirm_settlement">未结算</a></td>
+        <%- end %>
+      </tr>
+      <% end %>
+    <% else %>
+      <tr class="rs_row">
+        <td colspan="8">
+          <span style="color: red;"><center><%=flash[:notice]%></center></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>  
+<div id="reconcile_table"></div>
+<%= render 'distributor_index_confirm_form' %>

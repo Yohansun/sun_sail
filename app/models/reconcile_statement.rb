@@ -23,7 +23,7 @@ class ReconcileStatement < ActiveRecord::Base
   has_many :seller_detail, class_name: "ReconcileSellerDetail"
   belongs_to :account
   scope :by_date, lambda { |date| where(["DATE_FORMAT(audit_time, '%Y%m') = ? ", date.sub(/-/,'')]) }
-
+  scope :by_seller_ids, lambda{ |id| where("seller_id in (?)", id)}
   scope :recently_data, order("audit_time DESC")
 
   validates :audit_time, uniqueness: true

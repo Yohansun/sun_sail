@@ -289,7 +289,14 @@ module ApplicationHelper
       end
     when "reconcile_statements"
       items << href_li_item("财务管理", "reconcile_statements")
-      items << active_li_item("运营商对账")
+      items << case act_name
+        when "index"
+          active_li_item("运营商对账")
+        when "seller_index"
+          active_li_item("经销商对账")
+        else
+          active_li_item("分销商对账")
+        end
     when "custom_trades"
       items << href_li_item("订单管理", "app#trades")
       case act_name

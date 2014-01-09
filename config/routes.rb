@@ -150,11 +150,14 @@ MagicOrders::Application.routes.draw do
       put :audit
       put :update_processed
       get :seller_show
+      get :distributor_show
     end
     collection do
       get :exports
       get :seller_exports
+      get :distributor_exports
       get :seller_index
+      get :distributor_index
       get :product_detail_exports
       put :audits
       put :process_all
