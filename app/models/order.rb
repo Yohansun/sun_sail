@@ -117,7 +117,7 @@ class Order
       properties[i]['property_values'] = []
       category_property.values.each_with_index do |category_property_value, j|
         properties[i]['property_values'][j] = {}
-        matched_property_value = trade_property_memo.property_values.where(category_property_value_id: category_property_value.id).first
+        matched_property_value = trade_property_memo.property_values.where(category_property_value_id: category_property_value.id).first rescue nil
         properties[i]['property_values'][j]["id"] = category_property_value.id
         if matched_property_value.present?
           properties[i]['property_values'][j]["marked"] = true

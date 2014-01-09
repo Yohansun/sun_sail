@@ -1,0 +1,29 @@
+<style type="text/css">
+  /*工艺单打印样式*/
+  .text-center{text-align:center;}
+  .craft .nobg{background: #fff;}
+  .craft .span4{width:30.514893617021278%;}
+  @media (max-width: 767px){
+    .craft .span4{float:left;margin-left:5px;}
+  }
+</style>
+
+<h2 class="text-center">生产工艺单</h2>
+<div class="craft clearfix">
+  <% @process_sheets.each do |sheet| %>
+    <div class="span4">
+      <div class="well nobg">
+        <p>客户id：<%= sheet[:buyer_nick] %></p>
+        <p>商品编码：<%= sheet[:outer_id] %></p>
+        <% sheet[:property_values].each do |value| %>
+          <p><%= value[:name] %>：<%= value[:value] %></p>
+        <% end %>
+        <p>客服备注：<%= sheet[:cs_memo] %></p>
+      </div>
+    </div>
+  <% end %>
+</div>
+<div class="craft">
+<div class="control-group">
+  <label>工艺单批次号：<%= @print_num %></label>
+</div>

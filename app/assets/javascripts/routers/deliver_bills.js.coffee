@@ -1,10 +1,11 @@
 class MagicOrders.Routers.DeliverBills extends Backbone.Router
   routes:
-    'deliver_bills': 'index'
+    'deliver_bills':                                              'index'
     'deliver_bills/:trade_mode-:trade_type?sid=:trade_search_id': 'index'
-    'deliver_bills/:trade_mode-:trade_type': 'index'
-    'deliver_bills/:id/split_invoice': "split_invoice"
-    'deliver_bills/:id/:operation': 'operation'
+    'deliver_bills/:trade_mode-:trade_type':                      'index'
+    'deliver_bills/:id/split_invoice':                            'split_invoice'
+    'deliver_bills/batch/:batch_operation':                       'batch_operation'
+    'deliver_bills/:id/:operation':                               'operation'
 
   initialize: ->
     @trade_type = null
@@ -12,7 +13,7 @@ class MagicOrders.Routers.DeliverBills extends Backbone.Router
     @collection = new MagicOrders.Collections.DeliverBills()
 
     MagicOrders.original_path = window.location.hash
-    $('.delvier.modal').on 'hidden', (event) ->
+    $('.deliver.modal').on 'hidden', (event) ->
       refresh = ($('#content').html() == '')
       if _.str.include(MagicOrders.original_path,'-')
         Backbone.history.navigate("#{MagicOrders.original_path}", refresh)
@@ -93,6 +94,38 @@ class MagicOrders.Routers.DeliverBills extends Backbone.Router
             MagicOrders.hasPrint = false
 
       $(modalDivID).modal('show')
+
+
+  batch_operation: (operation_key)->
+    viewClassName = "DeliverBills" + _.classify(operation_key)
+    modalDivID = "#deliver_bill_" + operation_key
+
+    tmp = []
+    length = $('.trade_check:checked').parents('tr').length
+    if length > 120
+      alert('发货单数量过多，请选择120个以内的发货单。')
+      Backbone.history.navigate("/deliver_bills/deliver_bills-all", false)
+      return
+
+    $('.trade_check:checked').parents('tr').each (index, el) ->
+      input = $(el).find('.trade_check')
+      a = input[0]
+      if a.checked
+        bill_id = $(el).attr('id').replace('trade_', '')
+        tmp.push bill_id
+
+    if tmp.length != 0
+      @collection.fetch data: {ids: tmp, batch_option: true}, success: (collection, response) =>
+        view = new MagicOrders.Views[viewClassName](collection: collection)
+
+        switch operation_key
+          when 'print_process_sheets'
+            $.get '/api/trades/sort_product_search', {ids: tmp}, (data) ->
+              $('.print_process_sheets').printPage()
+              print_href = '/api/deliver_bills/print_process_sheets.html?'+$.param({ids: tmp})
+              $('.print_process_sheets').attr('href', print_href)
+        $(modalDivID).html(view.render().el)
+        $(modalDivID).modal('show')
 
   split_invoice: (id) ->
     @model = new MagicOrders.Models.DeliverBill({id: id})

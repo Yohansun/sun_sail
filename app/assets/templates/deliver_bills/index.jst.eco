@@ -42,8 +42,9 @@
             <button href="#" data-toggle="dropdown" class="btn dropdown-toggle btn-warning btn_left4">
               <span class="caret"></span>
             </button>
-            <ul class="dropdown-menu">
-              <li><a data-toggle="modal" class='print_delivers' href='#'>批量打印发货单</a></li>
+            <ul class="dropdown-menu index_batch_pops">
+              <li><a href='#' data-toggle="modal" class='print_delivers'>打印发货单</a></li>
+              <li><a href='#' data-toggle="modal" data-batch_type='print_process_sheets'>打印工艺单</a></li>
             </ul>
           </div>
 
@@ -73,7 +74,7 @@
               <th data-col='tid'>订单编号</th>
               <th data-col='order_goods' style="min-width:90px">商品详细</th>
               <th data-col='receiver_info' style="min-width:90px">客户信息</th>
-              <th data-col='deliver_bill_info'>发货单信息</th>
+              <th data-col='deliver_bill_info'>打印信息</th>
             </tr>
           </thead>
           <tbody id="trade_rows">

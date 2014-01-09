@@ -4,59 +4,59 @@ class DeliverBillsController < ApplicationController
   respond_to :json
 
   def index
-    offset = params[:offset] || 0
-    limit = params[:limit] || 20
-
-    if params[:trade_type]
-      case params[:trade_type]
-      when 'unprinted'
-        @bills = @bills.where(:deliver_printed_at.exists => false)
-      when 'printed'
-        @bills = @bills.where(:deliver_printed_at.exists => true)
-      when 'waybill_void'
-        @bills = @bills.where(:deliver_bill_number.exists => false)
-      when 'waybill_exist'
-        @bills = @bills.where(:deliver_bill_number.exists => true)
-      end
-    end
-
-    if params[:search_id].present?
-      trade_search = TradeSearch.find(params["search_id"]) rescue trade_search = nil
-      if trade_search.present? && trade_search.search_hash.present?
-        params[:search] = trade_search.search_hash
-      end
-    end
-
-    if params[:search]
-      @trades = Trade.filter(current_account, current_user, params).where(:dispatched_at.ne => nil)
-      trade_ids = @trades.map(&:_id)
-      @bills = DeliverBill.where(:trade_id.in => trade_ids)
+    if params[:batch_option] == "true"
+      @bills = DeliverBill.where(:_id.in => params[:ids])
     else
       @bills = DeliverBill.where(account_id: current_account.id)
-    end
+      offset = params[:offset] || 0
+      limit = params[:limit] || 20
 
-    if params[:deliver_bill_search]
-      batch_nums = params[:deliver_bill_search][:batch].split(";")
-      if batch_nums[0].size == 14
-        batch_nums[0] = batch_nums[0] + "0000"
+      if params[:trade_type]
+        case params[:trade_type]
+        when 'unprinted'
+          @bills = @bills.where(:deliver_printed_at.exists => false)
+        when 'printed'
+          @bills = @bills.where(:deliver_printed_at.exists => true)
+        when 'waybill_void'
+          @bills = @bills.where(:deliver_bill_number.exists => false)
+        when 'waybill_exist'
+          @bills = @bills.where(:deliver_bill_number.exists => true)
+        end
       end
-      if batch_nums[1].size == 14
-        batch_nums[1] = batch_nums[1] + "9999"
+
+      if params[:search_id].present?
+        trade_search = TradeSearch.find(params["search_id"]) rescue trade_search = nil
+        if trade_search.present? && trade_search.search_hash.present?
+          params[:search] = trade_search.search_hash
+        end
       end
-      min = batch_nums[0].to_i
-      max = batch_nums[1].to_i
-      @bills = @bills.where(:print_batches.elem_match => {"$and" => [{batch_num: {"$gte" => min}}, {batch_num: {"$lte" => max}}]})
+
+      if params[:search]
+        @trades = Trade.filter(current_account, current_user, params).where(:dispatched_at.ne => nil)
+        trade_ids = @trades.map(&:_id)
+        @bills = DeliverBill.where(:trade_id.in => trade_ids)
+      end
+
+      if params[:deliver_bill_search]
+        batch_nums = params[:deliver_bill_search][:batch].split(";")
+        if batch_nums[0].size <= 14
+          batch_nums[0] = batch_nums[0] + "0000"
+        end
+        if batch_nums[1].size <= 14
+          batch_nums[1] = batch_nums[1] + "9999"
+        end
+        min = batch_nums[0].to_i
+        max = batch_nums[1].to_i
+        @bills = @bills.where(:print_batches.elem_match => {"$and" => [{serial_num: {"$gte" => min}}, {serial_num: {"$lte" => max}}]})
+      end
+
+      if current_user.seller.present?
+        ids = []
+        seller = current_user.seller
+        ids = seller.self_and_descendants.map(&:id) if seller
+        @bills = @bills.any_in(seller_id: ids)
+      end
     end
-
-    if current_user.seller.present?
-      ids = []
-
-      seller = current_user.seller
-      ids = seller.self_and_descendants.map(&:id) if seller
-
-      @bills = @bills.any_in(seller_id: ids)
-    end
-
     @bills_count = @bills.count
     @bills = @bills.limit(limit).skip(offset).order_by(:created.desc)
 
@@ -271,5 +271,43 @@ class DeliverBillsController < ApplicationController
     end
 
     render json: {isSuccess: success}
+  end
+
+  def print_process_sheets
+    if params[:ids].present?
+      @process_sheets = []
+      bills = DeliverBill.any_in(id: params[:ids])
+      bills.each do |bill|
+        bill.trade.orders.each do |order|
+          property_memo = order.trade_property_memo
+          next if property_memo.blank?
+          number = bill.bill_products.where(outer_id: property_memo.outer_id).first.number - property_memo.stock_in_bill_tids.try(:count).to_i
+          next if number == 0
+          sheet                   = {}
+          sheet[:buyer_nick]      = bill.trade.buyer_nick
+          sheet[:outer_id]        = order.outer_iid
+          sheet[:cs_memo]         = order.cs_memo
+          sheet[:property_values] = []
+          order.trade_property_memo.property_values.each do |value|
+            dup_value = sheet[:property_values].each.find{|v| v[:name] == value.name}
+            if dup_value.present?
+              dup_value[:value] += (","+value.value)
+            else
+              sheet[:property_values] << {name: value.name, value: value.value}
+            end
+          end
+          number.times{ @process_sheets << sheet }
+        end
+      end
+      respond_to do |format|
+        format.json { render json: {success: true}}
+        format.html {
+          @print_num = Time.now.to_s(:number).to_i - 2*10**13
+          bills.each_with_index{|b, index| b.print_batches.create(batch_num: @print_num, serial_num: (@print_num*10000+index+1))}
+          bills.update_all(process_sheet_printed_at: Time.now)
+          render 'print_process_sheets', layout: "blank_print"
+        }
+      end
+    end
   end
 end

@@ -11,7 +11,8 @@
   <% else : %>
     <span class="label label-important label_source"><%= @bill.get('trade_source') %></span>
   <% end %>
-  <%= @bill.get('tid') %>
+  <br/>
+  <span class="label label-info label_source"><%= @bill.get('tid') %></span>
 </td>
 <td data-col='order_goods'>
   <% for product in @bill.get('orders') : %>
@@ -39,12 +40,6 @@
   <% end %>
 </td>
 <td data-col='deliver_bill_info'>
-  <%= @bill.get('bill_number') %>
-  <span class="label label-warning">
-    <% if @bill.get('is_printed') : %>
-    已打印
-    <% else : %>
-    未打印
-    <% end %>
-  </span>
+  <span class="label label-info"><%= @bill.get('is_printed') %></span>
+  <span class="label label-info"><%= @bill.get('is_process_sheet_printed') %></span>
 </td>

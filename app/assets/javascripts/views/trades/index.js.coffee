@@ -138,8 +138,8 @@ class MagicOrders.Views.TradesIndex extends Backbone.View
     if length < 1
       alert('未选择订单！')
       return
-    if length > 300
-      alert('请选择小于300个订单！')
+    if length > 120
+      alert('请选择小于120个订单！')
       return
 
     batch_type = $(e.target).data('batch_type')

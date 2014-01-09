@@ -6,8 +6,9 @@ json.array!(@bills) do |json, bill|
   json.tid trade.tid
   json.trade_type trade._type.gsub('Trade','').downcase
   json.bill_number bill.deliver_bill_number
-  json.is_printed bill.deliver_printed_at.present?
+  json.is_printed bill.deliver_printed_at.present? ? "发货单已打印" : "发货单未打印"
   json.is_logistic_printed bill.logistic_printed_at.present?
+  json.is_process_sheet_printed bill.process_sheet_printed_at.present? ?  "工艺单已打印" : "工艺单未打印"
   json.receiver_name trade.receiver_name
   json.buyer_nick trade.buyer_nick
   json.receiver_mobile trade.receiver_mobile

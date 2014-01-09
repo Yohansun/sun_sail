@@ -1,16 +1,16 @@
 class MagicOrders.Routers.Trades extends Backbone.Router
   routes:
-    '': 'main'
-    'trades': 'index'
-    'trades/:trade_mode-:trade_type?sid=:trade_search_id': 'index'
-    'trades/:trade_mode-:trade_type': 'index'
-    'send/:trade_mode-:trade_type': 'index'
-    'color/:trade_mode-:trade_type': 'index'
-    'return/:trade_mode-:trade_type': 'index'
-    'trades/:id/splited': 'splited'
-    'trades/:id/recover': 'recover'
-    'trades/batch/:batch_operation' : 'batch_operation'
-    'trades/:id/:operation': 'operation'
+    '':                                                     'main'
+    'trades':                                               'index'
+    'trades/:trade_mode-:trade_type?sid=:trade_search_id':  'index'
+    'trades/:trade_mode-:trade_type':                       'index'
+    'send/:trade_mode-:trade_type':                         'index'
+    'color/:trade_mode-:trade_type':                        'index'
+    'return/:trade_mode-:trade_type':                       'index'
+    'trades/:id/splited':                                   'splited'
+    'trades/:id/recover':                                   'recover'
+    'trades/batch/:batch_operation':                        'batch_operation'
+    'trades/:id/:operation':                                'operation'
 
   initialize: ->
     @trade_type = null
