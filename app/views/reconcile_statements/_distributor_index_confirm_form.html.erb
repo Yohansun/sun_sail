@@ -47,14 +47,14 @@
     rs_row = $(this).data('row');
     displayed_row = $("#reconcile_table form").data('row')
     if(displayed_row == 'undefined'){
-      $.get("/reconcile_statements/"+rs_row+"/seller_show.js", function(result){
+      $.get("/reconcile_statements/"+rs_row+"/distributor_show.js", function(result){
        });
       }
       else {
         if(displayed_row == rs_row){
           $("#reconcile_table").html("");
         } else {
-          $.get("/reconcile_statements/"+rs_row+"/seller_show.js", function(result){
+          $.get("/reconcile_statements/"+rs_row+"/distributor_show.js", function(result){
         });
       }
     }

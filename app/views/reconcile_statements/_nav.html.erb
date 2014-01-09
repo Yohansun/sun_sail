@@ -1,6 +1,6 @@
 <ul class="nav nav-tabs">
   <% ReconcileStatementsController::AllActions.each do |action,name| %>
-    <% unless action.to_s == "seller_index" %>
+    <% unless action.to_s =~ %r(distributor_index|seller_index) %>
       <li class="<%= params[:action].eql?(action.to_s) ? "active" : "" %>">
         <a href="/reconcile_statements/<%= action.to_s.gsub(/index/,'') %>"><%= name %></a>
       </li>

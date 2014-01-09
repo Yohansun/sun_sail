@@ -1,0 +1,69 @@
+<form action="/reconcile_statements/<%= detail.reconcile_statement.id %>/reconcile_statement_details/<%= detail.id %>/change_detail" data-row='<%= detail.reconcile_statement.id %>' class="well form-search">
+  <table class='table table-bordered table-hover'>
+    <thead>
+      <tr>
+        <th>项目</th>
+        <th>计算公式</th>
+        <th>金额</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>支付宝收入</td>
+        <td>店铺支付宝总收入-特供商品收入</td>
+        <td><%= detail.alipay_revenue %></td>
+      </tr>
+      <tr>
+        <td>运费收入</td>
+        <td>所有订单的运费</td>
+        <td><%= detail.postfee_revenue %></td>
+      </tr>
+      <tr>
+        <td>基准价</td>
+        <td>（支付宝收入-运费）*<input type ='text' class="input-small" name="reconcile_statement_detail[base_fee_percent]" value="<%= detail.base_fee_percent %>"</input>%</td></td>
+        <td><%= detail.base_fee %></td>
+      </tr>
+      <tr>
+        <td>特供商品支付宝收入</td>
+        <td>所有特供商品订单收入</td>
+        <td><%= detail.special_products_alipay_revenue %></td>
+      </tr>
+      <tr>
+        <td>特供商品结算金额</td>
+        <td>特供商品支付宝收入*<input type ='text' class="input-small" name="reconcile_statement_detail[special_products_audit_amount_percent]" value="<%= detail.special_products_audit_amount_percent %>"</input>%</td>
+        <td><%= detail.special_products_audit_amount %></td>
+      </tr>
+      <tr>
+        <td>结算金额</td>
+        <td>支付宝收入*<input type ='text' class="input-small" name="reconcile_statement_detail[audit_amount_percent]" value="<%= detail.audit_amount_percent %>"</input>%+特供商品结算金额+<input type ='text' class="input-small" name="reconcile_statement_detail[achievement]" value="<%= detail.achievement %>"</input></td>
+        <td><%= detail.audit_amount %></td>
+      </tr>
+      <tr>
+        <td>调整金额</td>
+        <td>调整金额</td>
+        <td><input type ='text' class="input-small" name="reconcile_statement_detail[adjust_amount]" value="<%= detail.adjust_amount %>"</input></td>
+      </tr>
+      <tr>
+        <td>最终结算金额</td>
+        <td>调整金额 + 结算金额</td>
+        <td><%= detail.last_audit_amount %></td>
+      </tr>
+      <tr>
+        <td>账户提留</td>
+        <td>基准价*<input type ='text' class="input-small" name="reconcile_statement_detail[account_profit_percent_a]" value="<%= detail.account_profit_percent_a %>"</input>%+运费*<input type ='text' class="input-small" name="reconcile_statement_detail[account_profit_percent_b]" value="<%= detail.account_profit_percent_b %>"</input>%+特供商品支付宝收入*<input type ='text' class="input-small" name="reconcile_statement_detail[account_profit_percent_c]" value="<%= detail.account_profit_percent_c %>"</input>%</td>
+        <td><%= detail.account_profit%></td>
+      </tr>
+      <tr>
+        <td>推广费预留</td>
+        <td>支付宝收入*<input type ='text' class="input-small" name="reconcile_statement_detail[advertise_reserved_percent_a]" value="<%= detail.advertise_reserved_percent_a %>"</input>%+特供商品支付宝收入*<input type ='text' class="input-small" name="reconcile_statement_detail[advertise_reserved_percent_b]" value="<%= detail.advertise_reserved_percent_b %>"</input>%</td>
+        <td><%= detail.advertise_reserved %></td>
+      </tr>
+      <tr>
+        <td>平台扣点</td>
+        <td>支付宝收入*<input type ='text' class="input-small" name="reconcile_statement_detail[platform_deduction_percent_a]" value="<%= detail.platform_deduction_percent_a %>"</input>%+特供商品支付宝收入*<input type ='text' class="input-small" name="reconcile_statement_detail[platform_deduction_percent_b]" value="<%= detail.platform_deduction_percent_b %>"</input>%</td>
+        <td><%= detail.platform_deduction %></td>
+      </tr>
+    </tbody>
+  </table>
+  <button type="submit" class="btn btn-info">确定</button>
+</form>
