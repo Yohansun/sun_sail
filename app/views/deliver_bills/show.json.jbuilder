@@ -1,4 +1,6 @@
 json.shopname @trade.seller_nick
+json.bill_number @bill.deliver_bill_number
+json.is_process_sheet_printed @bill.process_sheet_printed_at.present? ?  "工艺单已打印" : "工艺单未打印"
 json.tid @trade.tid
 json.status @trade.status_text
 json.buyer_nick @trade.buyer_nick

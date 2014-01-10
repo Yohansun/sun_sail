@@ -93,6 +93,12 @@ class MagicOrders.Routers.DeliverBills extends Backbone.Router
 
             MagicOrders.hasPrint = false
 
+        when 'print_process_sheet'
+          $.get '/api/deliver_bills/print_process_sheets', {ids: [model.get('id')]}, (data) ->
+            $('.print_process_sheet').printPage()
+            print_href = '/api/deliver_bills/print_process_sheets.html?'+$.param({ids: [model.get('id')]})
+            $('.print_process_sheet').attr('href', print_href)
+
       $(modalDivID).modal('show')
 
 
@@ -120,7 +126,7 @@ class MagicOrders.Routers.DeliverBills extends Backbone.Router
 
         switch operation_key
           when 'print_process_sheets'
-            $.get '/api/trades/sort_product_search', {ids: tmp}, (data) ->
+            $.get '/api/deliver_bills/print_process_sheets', {ids: tmp}, (data) ->
               $('.print_process_sheets').printPage()
               print_href = '/api/deliver_bills/print_process_sheets.html?'+$.param({ids: tmp})
               $('.print_process_sheets').attr('href', print_href)

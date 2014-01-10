@@ -140,7 +140,8 @@ MagicOrder::AccessControl.map do |map|
                                  "split_merged_trades",
                                  "invoice",
                                  "split_invoice",
-                                 "property_memo"]
+                                 "property_memo",
+                                 "print_process_sheet"]
   end
 
   #商品管理
