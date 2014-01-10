@@ -36,9 +36,9 @@ wynn@doorder.com
 michelle@doorder.com
 clover@doorder.com
 pumpkin@doorder.com
-zhoubin@networking.io
-wang@networking.io
-xiaoliang@networking.io
+steven@doorder.com
+ophelia@doorder.com
+mark@doorder.com
 )
 
 every :day, :at => '10:00am' do
