@@ -390,10 +390,15 @@ class Account < ActiveRecord::Base
       self.settings[key] = value
     }
     add_trade_type_setting
+    init_module_sku_properties
   end
 
   def add_trade_type_setting
     self.settings.trade_types ||= { handmade_trade: "人工订单",gift_trade: "赠品订单" }
+  end
+
+  def init_module_sku_properties
+    self.settings.enable_module_sku_properties = 1
   end
 
   private

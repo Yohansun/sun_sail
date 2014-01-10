@@ -75,7 +75,8 @@ class Order
         number:             self.num * (sku_bindings.present? && sku_bindings.find_by_sku_id(sku.id).try(:number) || 1),
         stock_product_ids:  sku.stock_product_ids,
         sku_id:             sku.id,
-        sku_title:          sku.title
+        sku_title:          sku.title,
+        sku_properties:     sku.name
       }
     end
   end

@@ -88,8 +88,6 @@ json.orders OrderDecorator.decorate(@trade.orders) do |json, order|
   json.title order.title
   json.num order.num
   json.price order.price
-  json.outer_iid order.outer_iid
-
   json.item_id order.item_id
   json.sku_properties order.sku_properties
   json.item_outer_id order.item_outer_id

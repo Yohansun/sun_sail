@@ -39,7 +39,7 @@
                 <td colspan="2"><%= order.title %></td>
               <% end %>
               <td><%= order.num %></td>
-              <td></td>
+              <td><%= order.item_outer_id %></td>
               <% if MagicOrders.enable_module_colors == 1 : %>
                 <td class='js-color-label-<%= order.id %>'>
                   <% for color, array of info['colors'] : %>
@@ -60,12 +60,18 @@
               <% for info in order.skus_info : %>
                 <tr>
                   <td><span class="label label-warning">绑定本地</span></td>
-                  <td><%= info['sku_title'] %></td>
+                  <td><%= info['name'] %></td>
                   <td><%= info['number'] %></td>
                   <td><%= info['outer_id'] %></td>
+                  <% if MagicOrders.enable_module_sku_properties == 1 : %>
+                    <td><%= info['sku_properties'] %></td>
+                  <% end %>
                   <td>---</td>
                   <td>---</td>
                   <td>---</td>
+                  <% if MagicOrders.enable_module_colors == 1 : %>
+                    <td>---</td>
+                  <% end %>
                 </tr>
               <% end %>
             <% end %>

@@ -20,7 +20,7 @@
               <td>
                 <div class="control-group">
                   <label class="inline pull-left mar_r10">商品编码：</label>
-                  <label class="inline order_outer_iid"><%= order.outer_iid %></label>
+                  <label class="inline order_outer_iid"><%= order.item_outer_id %></label>
                 </div>
                 <% for property in product_property_info['properties'] : %>
                   <div class="control-group property_memos">
