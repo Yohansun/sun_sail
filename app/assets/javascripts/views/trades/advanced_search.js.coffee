@@ -332,7 +332,7 @@ class MagicOrders.Views.TradesAdvancedSearch extends Backbone.View
     from = $('#from_batch_num').val()
     to = $('#to_batch_num').val()
     tag = $(".search_tags_group input[name=batch]")
-    if tag == undefined
+    if tag == undefined || tag.length == 0
       if from != '' && to != ''
         value = from+";"+to
         if @check_tag_exist tag,value

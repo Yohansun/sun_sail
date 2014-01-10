@@ -235,7 +235,7 @@ class TradesController < ApplicationController
     end
 
     #客服备注，调色信息，唯一码等子订单信息修改
-    unless params[:orders].blank?
+    if params[:orders].present?
       params[:orders].each do |item|
         order = @trade.orders.where(_id: item[:id]).first
         if order
@@ -286,6 +286,37 @@ class TradesController < ApplicationController
       end
       if params[syms['status']]
         @trade.send(ref_type.to_sym).change_status(current_user, params[syms['status']], params[syms['memo']])
+      end
+    end
+
+    # 添加属性备注
+    if params[:property_memos].present?
+
+      # 还原入库单信息，删除备注
+      BillPropertyMemo.where(:stock_in_bill_tid.in => @trade.trade_property_memos.map(&:stock_in_bill_tids).flatten).update_all(used: false)
+      @trade.trade_property_memos.delete_all
+
+      # 重新添加备注
+      params[:property_memos].each do |order_id, info|
+        order = @trade.orders.where(_id: order_id).first
+        if order
+          property_memo = order.create_trade_property_memo(
+            trade_id: @trade.id,
+            outer_id: info['outer_id'],
+            account_id: current_account.id,
+            stock_in_bill_tids: info['stock_in_bill_tids']
+          )
+          BillPropertyMemo.where(:stock_in_bill_tid.in => info['stock_in_bill_tids']).update_all(used: true)
+          values = info['values'].reject{|value| value.blank? || value['id'].blank? || value['value'].blank? }
+          values.each do |value|
+            name = CategoryPropertyValue.find(value['id']).category_property.name
+            property_memo.property_values.create(
+              category_property_value_id: value['id'],
+              value: value['value'],
+              name: name
+            )
+          end
+        end
       end
     end
 
@@ -531,7 +562,7 @@ class TradesController < ApplicationController
                 has_no_num = false
               end
             end
-            picked_skus << {title: sku_info[:name],num_iid: sku_info[:outer_id] || "", num: sku_info[:number], category: sku_info[:category_name], sku_properties: sku_info[:sku_title].gsub(sku_info[:name], "")} if has_no_num
+            picked_skus << {title: sku_info[:name], num_iid: sku_info[:outer_id] || "", num: sku_info[:number], category: sku_info[:category_name], sku_properties: sku_info[:sku_title].gsub(sku_info[:name], "")} if has_no_num
           end
         end
       end
@@ -555,6 +586,17 @@ class TradesController < ApplicationController
         }
       end
     end
+  end
+
+  def match_icp_bills
+    conditions = [{outer_id: params[:property_memo][:outer_id], account_id: current_account.id, used: false}]
+    values = params[:property_memo][:values].reject{|key, value| value['id'].blank? || value['value'].blank? }
+    values.each do |key, value|
+      conditions << {"property_values.category_property_value_id" => value['id'], "property_values.value" => value['value'] }
+    end
+    conditions << { "property_values"=>{ "$size"=>values.count }}
+    bills = BillPropertyMemo.where("$and" => conditions.flatten).collect{ |memo| {id: memo.stock_in_bill.tid, text: memo.stock_in_bill.tid} if memo.stock_in_bill.status == "STOCKED" }
+    render json: {bills: bills}
   end
 
 end

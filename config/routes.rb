@@ -445,9 +445,6 @@ MagicOrders::Application.routes.draw do
   get "/deliver_bills/batch-print-logistic", to: 'deliver_bills#batch_print_logistic'
   get "/deliver_bills/setup_logistics", to: 'deliver_bills#setup_logistics'
 
-
-  # get "/deliver_bills/setup_logistics", to: 'deliver_bills#setup_logistics'
-
   get "/logistic_rates", to: 'logistic_rates#index'
   get "/change_stock_product", to: 'stock_products#change_stock_product'
 
@@ -466,11 +463,16 @@ MagicOrders::Application.routes.draw do
         get :notifer
         get :export
         get :sort_product_search
+        get :match_icp_bills
       end
     end
 
     resources :products
-    resources :deliver_bills
+    resources :deliver_bills do
+      collection do
+        get :print_process_sheets
+      end
+    end
     resources :trade_searches
   end
 

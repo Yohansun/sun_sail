@@ -10,13 +10,12 @@
 <ul id='global-menus' class="nav nav-tabs nomargin js-affix" data-spy="affix" data-offset-top="41">
   <li><a href="#" data-trade-mode="trades" data-trade-status="my_trade">我的订单<em></em></a></li>
   <li><a href="#all" data-trade-mode="trades" data-trade-status="all" data-toggle="tab">所有订单<em></em></a></li>
-  <!-- <li><a href="#" data-trade-mode="trades" data-trade-status="default">待审核<em></em></a></li> -->
   <li><a href="#" data-trade-mode="trades" data-trade-status="undispatched">待分派<em></em></a></li>
   <li><a href="#" data-trade-mode='trades' data-trade-status='undelivered'>待发货<em></em></a></li>
   <li><a href="#" data-trade-mode='trades' data-trade-status='delivered'>已发货<em></em></a></li>
   <li><a href="#" data-trade-mode='trades' data-trade-status='unusual_all'>问题订单<em></em></a></li>
   <li><a href="#" data-trade-mode='trades' data-trade-status='locked'>锁定订单<em></em></a></li>
-  <li><a href="#" data-trade-mode="deliver_bills" data-trade-status="all">发货单<em></em></a></li>
+  <li><a href="#" data-trade-mode="deliver_bills"  data-trade-status="all">发货单<em></em></a></li>
   <li><a href="#" data-trade-mode="logistic_bills" data-trade-status="all">物流单<em></em></a></li>
   <!-- <li class=''><a href="#after_order" data-toggle="tab">售后订单</a></li> -->
 </ul>
@@ -119,7 +118,7 @@
               <li><a href="#" data-toggle="modal" class="batch_export">导出勾选订单</a></li>
               <li><a href="#" data-toggle="modal" data-batch_type="batch_add_gift">批量添加赠品</a></li>
               <% if MagicOrders.trade_mode == "trades" and MagicOrders.trade_type == "undelivered" : %>
-              <li><a href='#' data-toggle="modal" class="batch_deliver" data-batch_type='batch_deliver' >批量发货</a></li>
+              <li><a href='#' data-toggle="modal" class="batch_deliver" data-batch_type='batch_deliver'>批量发货</a></li>
               <li><a href='#' data-toggle="modal" data-batch_type='batch_check_goods'>批量验货</a></li>
               <li><a href='#' data-toggle="modal" data-batch_type='batch_setup_logistic'>批量设置物流信息</a></li>
               <% end %>

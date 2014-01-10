@@ -7,6 +7,7 @@ class DeliverBill
   field :seller_name, type: String
   field :deliver_printed_at, type: DateTime
   field :logistic_printed_at, type: DateTime
+  field :process_sheet_printed_at, type: DateTime
 
   belongs_to :trade, counter_cache: true
   embeds_many :bill_products,:inverse_of => :deliver_bill

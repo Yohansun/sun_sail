@@ -8,6 +8,7 @@ class MagicOrders.Views.DeliverBillsIndex extends Backbone.View
     'click [data-trade-status]': 'selectSameStatusTrade'
     'click .print_delivers': 'printDelivers'
     'click .index_pops li a[data-type]': 'show_type'
+    'click .index_batch_pops li a[data-batch_type]': 'show_batch_type'
 
     # 加载更多订单相关
     'click [data-type=loadMoreTrades]': 'forceLoadMoreTrades'
@@ -166,6 +167,20 @@ class MagicOrders.Views.DeliverBillsIndex extends Backbone.View
         Backbone.history.navigate('deliver_bills/' + trade_id + "/#{type}", true)
       else
         alert("请勾选要操作的订单。")
+
+  show_batch_type: (e) ->
+    e.preventDefault()
+
+    length = $('.trade_check:checked').parents('tr').length
+    if length < 1
+      alert('未选择订单！')
+      return
+    if length > 120
+      alert('请选择小于120个订单！')
+      return
+
+    batch_type = $(e.target).data('batch_type')
+    Backbone.history.navigate('deliver_bills/batch/'+batch_type, true)
 
   # 加载更多订单
   forceLoadMoreTrades: (e) =>

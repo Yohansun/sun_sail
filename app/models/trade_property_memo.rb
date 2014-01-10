@@ -2,8 +2,11 @@
 
 class TradePropertyMemo < PropertyMemo
 
-  field :oid,               type: String
+  field :stock_in_bill_tids
 
-  belongs_to  :trade
+  belongs_to :trade
+  belongs_to :order
 
+  index trade_id: 1
+  index order_id: 1
 end
