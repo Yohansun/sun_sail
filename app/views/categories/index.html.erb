@@ -20,8 +20,9 @@
             <span class="caret"></span>
           </a>
           <ul class="dropdown-menu">
-            <li><a tabindex="-1" href="#"  data-action='edit'>编辑</a></li>
-            <li><a tabindex="-1" href="#"  data-action='sub-category'>管理下级</a></li>
+            <li><a tabindex="-1" href="#" data-action='edit'>编辑</a></li>
+            <li><a tabindex="-1" href="#" data-action='sub-category'>管理下级</a></li>
+            <li><a tabindex="-1" href="<%= categories_path(:parent_level => (@categories.first.try(:parent).try(:depth) || current_account.categories.find_by_id(params[:parent_id]).try(:depth) || 0)) %>">返回上级</a></li>
             <li><a tabindex="-1" href="#" data-action-url="/categories/deletes" data-action='deletes' data-action-confirm='确定要删除吗?' data-action-url="" data-multi-rows="true">删除</a></li>
           </ul>
         </div>
@@ -52,9 +53,7 @@
                 </button>
                 <ul class="dropdown-menu trade_pops" style="left:-115px;">
                   <li><%= link_to '编辑', edit_category_path(category), :"data-action-url"=>"edit" %></li>
-                  <%#- if category.descendants.count > 0 %>
-                    <li><%= link_to "管理下级", categories_path(:parent_id => category.id), :class=>"browse_children", :"data-action-url"=>"sub-category"%></li>
-                  <%#- end %>
+                  <li><%= link_to "管理下级", categories_path(:parent_id => category.id),                   :class=>"browse_children", :"data-action-url"=>"sub-category"%></li>
                   <li><%= link_to '删除', category_path(category), method: :delete, confirm: '确认删除?' %></li>
                 </ul>
               </div>
