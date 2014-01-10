@@ -9,16 +9,15 @@
         <th>订单编号</th>
         <th>工艺单打印状态</th>
       </tr>
-      <% for bill in @bills.models : %>
       <tr>
-        <td><%= bill.get('tid') %></td>
-        <td><%= bill.get('is_process_sheet_printed') %></td>
+        <% console.log(@bill)%>
+        <td><%= @bill.get('tid') %></td>
+        <td><%= @bill.get('is_process_sheet_printed') %></td>
       </tr>
-      <% end %>
     </thead>
   </table>
 </div><!-- modal-body -->
 <div class="modal-footer">
   <a class="btn" data-dismiss="modal">取消</a>
-  <a class="btn btn-primary print_process_sheets">打印</a>
+  <a class="btn btn-primary print_process_sheet">打印</a>
 </div><!-- modal-footer -->
