@@ -3,12 +3,16 @@
 #
 # Table name: logistic_areas
 #
-#  id          :integer(4)      not null, primary key
-#  logistic_id :integer(4)
-#  area_id     :integer(4)
-#  created_at  :datetime        not null
-#  updated_at  :datetime        not null
-#  account_id  :integer(4)
+#  id                :integer(4)      not null, primary key
+#  logistic_id       :integer(4)
+#  area_id           :integer(4)
+#  created_at        :datetime        not null
+#  updated_at        :datetime        not null
+#  account_id        :integer(4)
+#  basic_post_weight :float
+#  extra_post_weight :float
+#  basic_post_fee    :float
+#  extra_post_fee    :float
 #
 
 class LogisticArea < ActiveRecord::Base
