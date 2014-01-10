@@ -241,13 +241,20 @@ class StockOutBill < StockBill
   end
 
   def so_to_wms_worker
-    if sendable?
+    if account.settings.enable_module_third_party_stock != 1
+      if can_do_syncked?
+        do_syncked && operation_logs.create(operated_at: Time.now, operation: '确认同步成功')
+      else
+        operation_logs.create(operated_at: Time.now, operation: '确认同步失败')
+      end
+      return
+    end
+
+    if sendable? && can_do_syncked?
       if account.settings.third_party_wms == "biaogan"
         result_xml = Bml.so_to_wms(account, xml)
       elsif account.settings.third_party_wms == "gqs"
         result_xml = Gqs.order_add(account, gqs_xml)
-      elsif account.settings.enable_module_third_party_stock != 1
-        return do_syncked && operation_logs.create(operated_at: Time.now, operation: '同步成功')
       end
       result = Hash.from_xml(result_xml).as_json
 
