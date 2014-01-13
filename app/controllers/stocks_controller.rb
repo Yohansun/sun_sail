@@ -19,9 +19,7 @@ class StocksController < ApplicationController
 
     conditions = conditions.merge!(params[:search]) if params[:search].present?
     @search = condition_relation.search(conditions)
-    @number = 20
-    @number = params[:number] if params[:number].present?
-    @stock_products = @search.page(params[:page]).per(@number)
+    @stock_products = @search.page(params[:page]).per(20)
     @count = @search.count
 
     respond_to do |format|
