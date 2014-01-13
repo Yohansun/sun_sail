@@ -7,24 +7,18 @@
 class TradeChecker
   class DateTypeError < Exception; end
   class TaobaoBase < TaobaoTrade
-    scope :bad_deliver_status_of_orders, ->(account_id,start_time,end_time) do
-      time_range_with_account(account_id,start_time,end_time).only(:tid, :status, :track_goods_status).
-      where({"$or" => [{"status" => "WAIT_SELLER_SEND_GOODS", "delivered_at" => {"$ne" => nil}, "_type" => "TaobaoTrade"}, {"_type" => "TaobaoTrade", "unusual_states" => {"$elemMatch" => {"reason" => /发货异常/, "repaired_at" => nil}}}]})
-    end
-
-    scope :hidden_orders,     ->(account_id,start_time,end_time) do
+    scope :incomplete_data,     ->(account_id,start_time,end_time) do
       time_range_with_account(account_id,start_time,end_time).only(:tid, :has_buyer_message, :buyer_message).
       where(has_buyer_message: true, buyer_message: nil,:_type => "TaobaoTrade")
     end
   end
 
-  attr_writer :lost_orders,:wrong_orders
-  attr_reader :account_key,:account,:trade_source,:start_time,:end_time,:options,:lost_orders,:wrong_orders,:bad_deliver_status_of_orders,:hidden_orders,:biaogan_diff,:exceptions
-
+  attr_reader :accounts
+  attr_accessor :options
   # === Example
-  #    TradeChecker.new(:brands,time: Time.now, ago: -1.day).invoke                                 # 一天后到现在
-  #    TradeChecker.new(:brands,time: Time.now, ago: 1.day).invoke                                  # 一天前到现在
-  #    TradeChecker.new(:brands,start_time: Time.now.yesterday, end_time: Time.now).invoke          # 昨天凌晨1点到现在
+  #    TradeChecker.new(time: Time.now, ago: -1.day).invoke                                 # 一天后到现在
+  #    TradeChecker.new(time: Time.now, ago: 1.day).invoke                                  # 一天前到现在
+  #    TradeChecker.new(start_time: Time.now.yesterday, end_time: Time.now).invoke          # 昨天凌晨1点到现在
   # === Options
   # [:start_time]
   #   查询的开始时间
@@ -36,7 +30,7 @@ class TradeChecker
   #   *  2 2天前
   #   * -2 2天后
   # === SendMail Options
-  #    TradeChecker.new(:brands,time: Time.now, ago: -1,:to => 'zhoubin@networking.io',:from => "exception@networking.io").invoke
+  #    TradeChecker.new(time: Time.now, ago: -1,:to => 'zhoubin@networking.io',:from => "exception@networking.io").deliver
   # [:tag]
   #   summary of subject
   #   Default is '异常核查报告'
@@ -49,118 +43,35 @@ class TradeChecker
   # [:cc]
   #   same as send mail option +:cc+
   def initialize(*args)
-    @options = args.extract_options!
-    @options.symbolize_keys!
-    @account_key = args.shift
-    raise ArgumentError,"account_key can't be blank!" if  account_key.blank?
-    @options[:time] ||= Time.now
-    @account = Account.find_by_key(account_key) or raise("没有找到account key为#{account_key}的账户")
-    @trade_source = @account.trade_sources.where(trade_type: "Taobao").first
-    # 抓取昨天 的订单, 检查本地状态和淘宝状态是否匹配
-    @options[:ago] ||= 1.day
-    @start_time , @end_time = process_time(@options[:time],@options[:ago])
-    @start_time = @options[:start_time] if @options[:start_time]
-    @end_time   = @options[:end_time] if @options[:end_time]
-    raise DateTypeError,"Time type is incorrect" if [@start_time,@end_time].any? {|x| !(x.is_a?(Time) || x.is_a?(DateTime))}
-    @lost_orders,@wrong_orders,@bad_deliver_status_of_orders,@hidden_orders,@biaogan_diff,@exceptions =  Array.new(6) { [] }
-    @mail = options.slice(:to,:from,:bcc,:cc).reject{|k,v| v.blank?}
+    @options = default_options.merge(args.extract_options!.symbolize_keys)
+    @accounts = []
+    start_time , end_time = process_time(options[:time],@options[:ago])
+    options[:start_time]  = start_time  if options[:start_time].nil?
+    options[:end_time]    = end_time    if options[:end_time].nil?
+
+    validate_options!
   end
 
-  def invoke
-    DailyOrdersNotifier.check_status_result(taobao_trade_status,@mail).deliver!
+  def default_options
+    {time: Time.now, ago: 1.day}
   end
 
-  def taobao_trade_status
-    # 淘宝与本地状态不同步订单 & 漏掉订单
-    checking_trades_with_taobao
-    # 本地发货状态异常订单
-    @bad_deliver_status_of_orders = TaobaoBase.bad_deliver_status_of_orders(account.id,start_time,end_time).distinct(:tid)
-    # 标记有留言但是留言还没有抓取到的订单
-    @hidden_orders     = processing_hidden_orders_with_taobao
-    # 标杆已反馈信息但系统没更新的订单：
-    checking_trades_with_biaogan
-    TaobaoTrade.rescue_buyer_message(hidden_orders)
-    return self
+  def validate_options!
+    raise DateTypeError,"Time type is incorrect" if [options[:start_time],options[:end_time]].any? {|x| !(x.is_a?(Time) || x.is_a?(DateTime))}
   end
 
-  def processing_hidden_orders_with_taobao
-    tids = TaobaoBase.hidden_orders(account.id,start_time,end_time).distinct(:tid)
-    return tids.collect { |tid| TradeTaobaoMemoFetcher.perform_async(tid); tid.to_s << "(正在处理中...)" } if tids.present?
-    []
+  def deliver
+    check
+    DailyOrdersNotifier.check_status_result(self,options.slice(:to,:from,:bcc,:cc).reject{|k,v| v.blank?}).deliver!
   end
 
-  def checking_trades_with_taobao
-    has_next = true
-    page_no = 1
-    while has_next
-      response = fetch_taobao_trades(page_no)
-      page_no += 1
-      has_next = catch_exception("淘宝API调用异常 #{response["error_response"].inspect}") { response['trades_sold_get_response']['has_next'] }
-      break if has_next == false
-
-      trades = Array.wrap(response['trades_sold_get_response']['trades']['trade']) rescue []
-      next if trades.blank?
-      trades.each {|trade| abnormal_collections_with_taobao(trade) }
+  def check
+    return self if @check == true
+    TradeSource.where(enabled_checker: true).joins(:account).group(:account_id).each do |source|
+      @accounts << Account.new(source.account,options)
     end
-  end
-
-  def checking_trades_with_biaogan
-    #标杆仓库只能查询近一个星期之内的数据
-    start_date,end_date = start_time.to_date,end_time.to_date
-    if start_time < Time.now.beginning_of_day.ago(7.days)
-      @exceptions << ExceptionNotifier.new("标杆仓库只能查询最近一个星期内的数据")
-      return
-    end
-
-    (start_date..end_date).each do |date|
-      response = catch_exception("标杆仓库API异常(:shipment_info_query_by_date)") { Bml.shipment_info_query_by_date(account,date) }
-      response.blank? && next
-      hash = catch_exception("标杆仓库 / [#{start_date}] 没有记录") { Hash.from_xml(response)["outputBacks"]["outputBack"] }
-      hash.blank? && next
-      hash.each { |stock| abnormal_collections_with_stock(stock["orderNo"],stock["shipNo"]) }
-    end
-  end
-
-  private
-  def abnormal_collections_with_taobao(taobao_trade)
-    tid = taobao_trade["tid"].to_s
-    taobao_trades = Trade.where(tid: tid).only(:status,:trade_source_id,:tid,:account_id)
-    if local_trade = taobao_trades.first
-      # ERROR: 淘宝与本地状态不同步订单
-      if local_trade.status != taobao_trade['status']
-        if (local_trade.splitted && taobao_trades.distinct(:status).length == 1) || !local_trade.splitted
-          pass = catch_exception("自动更新淘宝与本地状态不同的订单 trade:#{local_trade.inspect}") { TaobaoTradePuller.update_by_tid(local_trade); true }
-          tid = tid << (pass ? "(已处理)" : "(未处理)")
-          @wrong_orders << tid
-        end
-      end
-    else
-      # ERROR: 漏掉订单,考虑合并删除的订单
-      if !Trade.unscoped.where(tid: tid).exists?
-        pass = catch_exception("自动创建本地漏抓淘宝订单") { TaobaoTradePuller.create_trade(taobao_trade,account,trade_source.id); true }
-        tid = tid << (pass ? "(已处理)" : "(未处理)")
-        @lost_orders << tid
-      end
-    end
-  end
-
-  def abnormal_collections_with_stock(tid,logistic_waybill)
-    trade = catch_exception("标杆仓库 tid为#{tid} 在本地没有找到此订单"){ Trade.unscoped.desc(:created_at).find_by(:tid => tid) }
-    return if trade.blank?
-    if trade.logistic_waybill.blank?
-      status_text = StockBill.where(tid: tid).desc(:created_at).first.try(:status_text)
-      @biaogan_diff << ("#{tid}(%s)" % status_text.to_s)
-    end
-  end
-
-  def fetch_taobao_trades(page_no)
-    TaobaoQuery.get({
-      method: 'taobao.trades.sold.get',
-      type: 'fixed,auction,guarantee_trade,step,independent_simple_trade,independent_shop_trade,auto_delivery,ec,cod,game_equipment,shopex_trade,netcn_trade,external_trade,instant_trade,b2c_cod,hotel_trade,super_market_trade,super_market_cod_trade,taohua,waimai,nopaid,eticket,tmall_i18n',
-      fields: 'has_buyer_message, total_fee, created, tid, status, post_fee, receiver_name, pay_time, receiver_state, receiver_city, receiver_district, receiver_address, receiver_zip, receiver_mobile, receiver_phone, buyer_nick, tile, type, point_fee, is_lgtype, is_brand_sale, is_force_wlb, modified, alipay_id, alipay_no, alipay_url, shipping_type, buyer_obtain_point_fee, cod_fee, cod_status, commission_fee, seller_nick, consign_time, received_payment, payment, timeout_action_time, has_buyer_message, real_point_fee, orders',
-      start_created: start_time.strftime("%Y-%m-%d %H:%M:%S"), end_created: end_time.strftime("%Y-%m-%d %H:%M:%S"),
-      page_no: page_no, page_size: 100,use_has_next: true}, trade_source.id
-      )
+    @accounts.map(&:check)
+    @check ||= true
   end
 
   def process_time(time,ago)
@@ -172,19 +83,200 @@ class TradeChecker
     end
   end
 
-  def catch_exception(message,&block)
-    yield
-  rescue Exception => e
-    prefix_message = [message,e.message]
-    @exceptions << ExceptionNotifier.new(message,e.backtrace.unshift(*prefix_message))
-    return false
-  end
-  class ExceptionNotifier
-    attr_reader :text,:exception
-    def initialize(text,exception=[])
-      @text = text
-      @exception = exception.to(30)
+  class Account
+    attr_accessor :account,:options,:trade_sources
+    delegate :name,to: :account
+    def initialize(account,options)
+      @account = account
+      @options = options
+      @trade_sources = []
+    end
+
+    def check
+      account.trade_sources.where(enabled_checker: true).each {|source| @trade_sources << TradeSource.new(source,options)}
+      @trade_sources.map(&:check)
+    end
+
+    class TradeSource
+      attr_accessor :account
+      # 漏抓订单
+      attr_accessor :losts
+      # 本地发货状态异常订单
+      attr_accessor :error_status
+      # 标记有留言但是留言还没有抓取到的订单
+      attr_accessor :incomplete_data
+      attr_accessor :biaogan_diff
+      attr_accessor :warns
+      attr_accessor :trade_source,:options
+
+      delegate :name, to: :trade_source
+
+      def initialize(trade_source,options)
+        @account = trade_source.account
+        @trade_source = trade_source
+        @options = options
+        @losts,@error_status,@incomplete_data,@biaogan_diff,@warns =  Array.new(5) { [] }
+      end
+
+      def check
+        %w(taobao jingdong yihaodian).each do |ec_name|
+          send(:"checking_with_#{ec_name}") if trade_source.send(:"trade_type_#{ec_name}?") # => checking_with_taobao if trade_source.trade_type_taobao?
+        end
+
+        if trade_source.trade_type_taobao?
+          # 标记有留言但是留言还没有抓取到的订单
+          @incomplete_data     = processing_incomplete_data_with_taobao
+          TaobaoTrade.rescue_buyer_message(incomplete_data)
+        end
+
+        # 标杆已反馈信息但系统没更新的订单：
+        checking_trades_with_biaogan if trade_source.account.settings.third_party_wms == "biaogan"
+      end
+
+      def processing_incomplete_data_with_taobao
+        tids = TradeChecker::TaobaoBase.incomplete_data(account.id,options[:start_time],options[:end_time]).distinct(:tid)
+        return tids.collect { |tid| ::TradeTaobaoMemoFetcher.perform_async(tid); tid.to_s << "(正在处理中...)" } if tids.present?
+        []
+      end
+
+      def checking_with_taobao
+        has_next = true
+        page_no = 1
+        while has_next
+          fetch_taobao_trades(page_no) do |response|
+            page_no += 1
+            break if !(has_next = response['trades_sold_get_response']['has_next'])
+            trades = response['trades_sold_get_response']['trades']['trade']
+            trades.each {|trade| abnormal_collections_with_taobao(trade) }
+          end
+        end
+      end
+
+      # 检查一号店订单
+      def checking_with_yihaodian
+        opts = options.merge(error_message: "[异常邮件检查] 一号店订单抓取异常(#{trade_source.name})",query_conditions: query_conditions)
+        YihaodianTradePuller.each_page(opts) do |response|
+          response["response"]["order_info_list"]["order_info"].each do |struct|
+            tid = struct["order_detail"]["order_code"]
+            trade = YihaodianTrade.unscoped.where(tid: tid).first
+            if trade
+              next if trade.deleted?
+              if trade.status != struct["order_detail"]["order_status"]
+                YihaodianTradePuller.create_or_update(struct)
+                error_status << "#{tid}(已处理)"
+              end
+            else
+              struct["order_detail"].merge!(account_id: account.id,trade_source_id: trade_source.id,seller_nick: trade_source.name)
+              YihaodianTradePuller.create_or_update(struct)
+              losts << "#{tid}(已处理)"
+            end
+          end
+        end
+      end
+
+      # 检查京东订单
+      def checking_with_jingdong
+        opts = options.merge(error_message: "[异常邮件检查] 京东订单抓取异常(#{trade_source.name})",query_conditions: query_conditions)
+        JingdongTradePuller.each_page(opts) do |response|
+          response['order_search_response']['order_search']['order_info_list'].each do |struct|
+            tid = struct["order_id"]
+            trade = JingdongTrade.unscoped.where(tid: tid).first
+            if trade
+              next if trade.deleted?
+              if trade.status != struct["order_state"]
+                JingdongTradePuller.create_or_update(struct)
+                error_status << "#{tid}(已处理)"
+              end
+            else
+              struct.merge!({trade_source_id: trade_source.id,account_id: account.id,seller_nick: trade_source.name,operation_logs: [{operated_at: Time.now, operation: '从京东抓取订单'}]})
+              trade = JingdongTradePuller.create_or_update(struct)
+              losts << "#{tid}(已处理)"
+            end
+          end
+        end
+      end
+
+      # cache query
+      def query_conditions
+        @query_conditions ||= (trade_source.yihaodian_query_conditions || trade_source.jingdong_query_conditions)
+      end
+
+      def checking_trades_with_biaogan
+        #标杆仓库只能查询近一个星期之内的数据
+        start_date,end_date = options[:start_time].to_date,options[:end_time].to_date
+        min_time = Time.now.beginning_of_day.ago(7.days)
+        if options[:start_time] < min_time
+          start_date = min_time.to_date
+          end_date = min_time.to_date if options[:end_time] < min_time
+          end_date = Time.now.to_date if options[:end_time] > Time.now
+          @warns << "标杆仓库只能查询最近一个星期内的数据"
+        end
+
+        (start_date..end_date).each do |date|
+          parameters = {account: account,date: date}
+          response = Bml.shipment_info_query_by_date(account,date)
+          cache_exception(message: "[异常邮件检查] 对接标杆仓库异常(:shipment_info_query_by_date)(#{trade_source.name})",data: {parameters: parameters,response: response}) do
+            datas =  Hash.from_xml(response)["outputBacks"]["outputBack"]
+            if datas.is_a?(Array)
+              datas.each {|stock| abnormal_collections_with_stock(stock)}
+            else
+              abnormal_collections_with_stock(datas)
+            end
+          end
+        end
+      end
+
+      private
+      def abnormal_collections_with_taobao(taobao_trade)
+        tid = taobao_trade["tid"].to_s
+        taobao_trades = Trade.where(tid: tid).only(:status,:trade_source_id,:tid,:account_id)
+        if local_trade = taobao_trades.first
+          # ERROR: 淘宝与本地状态不同步订单
+          if local_trade.status != taobao_trade['status']
+            if (local_trade.splitted && taobao_trades.distinct(:status).length == 1) || !local_trade.splitted
+              @error_status << (tid << (TaobaoTradePuller.update_by_tid(local_trade) ? "(已处理)" : "(未处理)"))
+            end
+          end
+        else
+          # ERROR: 漏掉订单,考虑合并删除的订单
+          if !Trade.unscoped.where(tid: tid).exists?
+            @losts << (tid << (TaobaoTradePuller.create_trade(taobao_trade,account,trade_source.id) ? "(已处理)" : "(未处理)"))
+          end
+        end
+      end
+
+      def abnormal_collections_with_stock(stock)
+        tid,logistic_waybill = stock["orderNo"],stock["shipNo"]
+        trade = Trade.unscoped.desc(:created_at).where(:tid => tid).first
+        (@warns << "本地没有找到标杆仓库订单号为#{tid}") and return if trade.nil?
+        if trade.logistic_waybill.blank?
+          logistic = Logistic.find_by_code(stock['carrierID'])
+          status_text = StockBill.where(tid: tid).desc(:created_at).first.try(:status_text)
+          @biaogan_diff << ("#{tid}(%s)" % status_text.to_s)
+
+          trade.update_attributes(
+            logistic_waybill: stock['shipNo'],
+            logistic_name: stock['carrierName'],
+            logistic_code: stock['carrierID'],
+            logistic_id: logistic.try(:id),
+            service_logistic_id: trade.get_third_party_logistic_id(logistic.try(:id))
+          )
+        end
+      end
+
+      def fetch_taobao_trades(page_no)
+        data = {
+          parameters: {
+            method: 'taobao.trades.sold.get',
+            type: 'fixed,auction,guarantee_trade,step,independent_simple_trade,independent_shop_trade,auto_delivery,ec,cod,game_equipment,shopex_trade,netcn_trade,external_trade,instant_trade,b2c_cod,hotel_trade,super_market_trade,super_market_cod_trade,taohua,waimai,nopaid,eticket,tmall_i18n',
+            fields: 'has_buyer_message, total_fee, created, tid, status, post_fee, receiver_name, pay_time, receiver_state, receiver_city, receiver_district, receiver_address, receiver_zip, receiver_mobile, receiver_phone, buyer_nick, tile, type, point_fee, is_lgtype, is_brand_sale, is_force_wlb, modified, alipay_id, alipay_no, alipay_url, shipping_type, buyer_obtain_point_fee, cod_fee, cod_status, commission_fee, seller_nick, consign_time, received_payment, payment, timeout_action_time, has_buyer_message, real_point_fee, orders',
+            start_created: options[:start_time].strftime("%Y-%m-%d %H:%M:%S"), end_created: options[:end_time].strftime("%Y-%m-%d %H:%M:%S"),
+            page_no: page_no, page_size: 100,use_has_next: true
+          }
+        }
+        response = TaobaoQuery.get(data[:parameters], trade_source.id)
+        cache_exception(message: "[异常邮件检查] 淘宝订单抓取异常(#{trade_source.name})",data: data.merge(response: response)) { yield response}
+        end
+      end
     end
   end
-
-end

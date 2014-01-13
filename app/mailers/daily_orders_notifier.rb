@@ -1,24 +1,18 @@
 # -*- encoding : utf-8 -*-
 class DailyOrdersNotifier < ActionMailer::Base
-  # trade_checker = TradeChecker.new(:brands).taobao_trade_status
+  # trade_checker = TradeChecker.new
+  # trade_checker.check
   # DailyOrdersNotifier.check_status_result(trade_checker,:to => '...',:bcc => '...').deliver!
    def check_status_result(*args)
      options = args.extract_options!
      options[:tag] ||= '异常核查报告'
-     trade_checker = args.shift
+     @trade_checker = args.shift
 
-    @trade_checkers = [trade_checker]
+    options[:from] ||= "exception-checker@networking.io"
 
-    #默认发送今天凌晨1点到现在前30分钟的数据
-    if trade_checker.end_time.to_date != Date.today
-      @trade_checkers << TradeChecker.new(trade_checker.account_key,start_time: Time.now.beginning_of_day,end_time: Time.now - 30.minutes).taobao_trade_status
-    end
-    account = trade_checker.account
-    options[:from] ||= account.settings.email_notifier_from
+    options[:subject] = subject(nil,options[:tag],Time.now.strftime("%Y-%m-%d %H:%M:%S"))
 
-    options[:subject] = subject(account.name,options[:tag],Time.now.strftime("%Y-%m-%d %H:%M:%S"))
-
-    options[:to] ||= account.settings.check_status_result_reciever
+    options[:to] ||= "errors@networking.io"
 
     hash = options.slice(:to,:bcc,:cc,:subject,:from).keep_if {|k,v| !v.nil?}
 

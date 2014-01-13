@@ -1,61 +1,23 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head><meta charset="utf-8"></head>
-<body>
-  <table class="table">
-    <thead>
-      <tr>
-        <th>核查时间</th>
-        <th>漏抓订单</th>
-        <th title='淘宝与本地状态不同步订单'>状态异常</th>
-        <th title='本地发货状态异常订单'>发货异常</th>
-        <th title='标记有留言但是留言还没有抓取到的订单'>留言更新异常</th>
-        <th title='标杆已反馈信息但系统没更新的订单'>标杆反馈异常</th>
-        <th title='本次处理发生的异常'>程序异常</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @trade_checkers.each do |trade_checker| %>
-      <tr>
-        <td><%= trade_checker.start_time.localtime.to_formatted_s(:db) %></br> &nbsp; 至</br> <%= trade_checker.end_time.localtime.to_formatted_s(:db) %></td>
-        <td><%= raw trade_checker.lost_orders.join("</br>") %></td>
-        <td><%= raw trade_checker.wrong_orders.join("</br>") %></td>
-        <td><%= raw trade_checker.bad_deliver_status_of_orders.join("</br>") %></td>
-        <td><%= raw trade_checker.hidden_orders.join("</br>") %></td>
-        <td><%= raw trade_checker.biaogan_diff.join("</br>") %></td>
-        <td>
-          <ul>
-            <% trade_checker.exceptions.each do |exception| %>
-            <li title="<%= exception.exception.join("\n") %>">
-              <%= truncate exception.text,length: 40 %>
-            </li>
-            <% end %>
-          </ul>
-        </td>
-      </tr>
-      <% end %>
-    </tbody>
-  </table>
-  <style type="text/css" media="screen">
-  /*!
-  * Bootstrap v2.3.2
-  *
-  * Copyright 2012 Twitter, Inc
-  * Licensed under the Apache License v2.0
-  * http://www.apache.org/licenses/LICENSE-2.0
-  *
-  * Designed and built with all the love in the world @twitter by @mdo and @fat.
-  */
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <style>
   table {
     max-width: 100%;
-    background-color: transparent;
+    background-color: #fff;
     border-collapse: collapse;
     border-spacing: 0;
   }
+
   .table {
     width: 100%;
     margin-bottom: 20px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
   }
+
   .table th,
   .table td {
     padding: 8px;
@@ -64,12 +26,15 @@
     vertical-align: top;
     border-top: 1px solid #dddddd;
   }
+
   .table th {
     font-weight: bold;
   }
+
   .table thead th {
     vertical-align: bottom;
   }
+
   .table caption + thead tr:first-child th,
   .table caption + thead tr:first-child td,
   .table colgroup + thead tr:first-child th,
@@ -78,16 +43,20 @@
   .table thead:first-child tr:first-child td {
     border-top: 0;
   }
+
   .table tbody + tbody {
     border-top: 2px solid #dddddd;
   }
   .table .table {
     background-color: #ffffff;
+    width:100%;
   }
+
   .table-condensed th,
   .table-condensed td {
     padding: 4px 5px;
   }
+
   .table-bordered {
     border: 1px solid #dddddd;
     border-collapse: separate;
@@ -97,191 +66,48 @@
     -moz-border-radius: 4px;
     border-radius: 4px;
   }
+
   .table-bordered th,
   .table-bordered td {
     border-left: 1px solid #dddddd;
   }
-  .table-bordered caption + thead tr:first-child th,
-  .table-bordered caption + tbody tr:first-child th,
-  .table-bordered caption + tbody tr:first-child td,
-  .table-bordered colgroup + thead tr:first-child th,
-  .table-bordered colgroup + tbody tr:first-child th,
-  .table-bordered colgroup + tbody tr:first-child td,
-  .table-bordered thead:first-child tr:first-child th,
-  .table-bordered tbody:first-child tr:first-child th,
-  .table-bordered tbody:first-child tr:first-child td {
-    border-top: 0;
-  }
-  .table-bordered thead:first-child tr:first-child > th:first-child,
-  .table-bordered tbody:first-child tr:first-child > td:first-child,
-  .table-bordered tbody:first-child tr:first-child > th:first-child {
-    -webkit-border-top-left-radius: 4px;
-    -moz-border-radius-topleft: 4px;
-    border-top-left-radius: 4px;
-  }
-  .table-bordered thead:first-child tr:first-child > th:last-child,
-  .table-bordered tbody:first-child tr:first-child > td:last-child,
-  .table-bordered tbody:first-child tr:first-child > th:last-child {
-    -webkit-border-top-right-radius: 4px;
-    -moz-border-radius-topright: 4px;
-    border-top-right-radius: 4px;
-  }
-  .table-bordered thead:last-child tr:last-child > th:first-child,
-  .table-bordered tbody:last-child tr:last-child > td:first-child,
-  .table-bordered tbody:last-child tr:last-child > th:first-child,
-  .table-bordered tfoot:last-child tr:last-child > td:first-child,
-  .table-bordered tfoot:last-child tr:last-child > th:first-child {
-    -webkit-border-bottom-left-radius: 4px;
-    -moz-border-radius-bottomleft: 4px;
-    border-bottom-left-radius: 4px;
-  }
-  .table-bordered thead:last-child tr:last-child > th:last-child,
-  .table-bordered tbody:last-child tr:last-child > td:last-child,
-  .table-bordered tbody:last-child tr:last-child > th:last-child,
-  .table-bordered tfoot:last-child tr:last-child > td:last-child,
-  .table-bordered tfoot:last-child tr:last-child > th:last-child {
-    -webkit-border-bottom-right-radius: 4px;
-    -moz-border-radius-bottomright: 4px;
-    border-bottom-right-radius: 4px;
-  }
-  .table-bordered tfoot + tbody:last-child tr:last-child td:first-child {
-    -webkit-border-bottom-left-radius: 0;
-    -moz-border-radius-bottomleft: 0;
-    border-bottom-left-radius: 0;
-  }
-  .table-bordered tfoot + tbody:last-child tr:last-child td:last-child {
-    -webkit-border-bottom-right-radius: 0;
-    -moz-border-radius-bottomright: 0;
-    border-bottom-right-radius: 0;
-  }
-  .table-bordered caption + thead tr:first-child th:first-child,
-  .table-bordered caption + tbody tr:first-child td:first-child,
-  .table-bordered colgroup + thead tr:first-child th:first-child,
-  .table-bordered colgroup + tbody tr:first-child td:first-child {
-    -webkit-border-top-left-radius: 4px;
-    -moz-border-radius-topleft: 4px;
-    border-top-left-radius: 4px;
-  }
-  .table-bordered caption + thead tr:first-child th:last-child,
-  .table-bordered caption + tbody tr:first-child td:last-child,
-  .table-bordered colgroup + thead tr:first-child th:last-child,
-  .table-bordered colgroup + tbody tr:first-child td:last-child {
-    -webkit-border-top-right-radius: 4px;
-    -moz-border-radius-topright: 4px;
-    border-top-right-radius: 4px;
-  }
-  .table-striped tbody > tr:nth-child(odd) > td,
-  .table-striped tbody > tr:nth-child(odd) > th {
-    background-color: #f9f9f9;
-  }
-  .table-hover tbody tr:hover > td,
-  .table-hover tbody tr:hover > th {
-    background-color: #f5f5f5;
-  }
-  table td[class*="span"],
-  table th[class*="span"],
-  .row-fluid table td[class*="span"],
-  .row-fluid table th[class*="span"] {
-    display: table-cell;
-    float: none;
-    margin-left: 0;
-  }
-  .table td.span1,
-  .table th.span1 {
-    float: none;
-    width: 44px;
-    margin-left: 0;
-  }
-  .table td.span2,
-  .table th.span2 {
-    float: none;
-    width: 124px;
-    margin-left: 0;
-  }
-  .table td.span3,
-  .table th.span3 {
-    float: none;
-    width: 204px;
-    margin-left: 0;
-  }
-  .table td.span4,
-  .table th.span4 {
-    float: none;
-    width: 284px;
-    margin-left: 0;
-  }
-  .table td.span5,
-  .table th.span5 {
-    float: none;
-    width: 364px;
-    margin-left: 0;
-  }
-  .table td.span6,
-  .table th.span6 {
-    float: none;
-    width: 444px;
-    margin-left: 0;
-  }
-  .table td.span7,
-  .table th.span7 {
-    float: none;
-    width: 524px;
-    margin-left: 0;
-  }
-  .table td.span8,
-  .table th.span8 {
-    float: none;
-    width: 604px;
-    margin-left: 0;
-  }
-  .table td.span9,
-  .table th.span9 {
-    float: none;
-    width: 684px;
-    margin-left: 0;
-  }
-  .table td.span10,
-  .table th.span10 {
-    float: none;
-    width: 764px;
-    margin-left: 0;
-  }
-  .table td.span11,
-  .table th.span11 {
-    float: none;
-    width: 844px;
-    margin-left: 0;
-  }
-  .table td.span12,
-  .table th.span12 {
-    float: none;
-    width: 924px;
-    margin-left: 0;
-  }
-  .table tbody tr.success > td {
-    background-color: #dff0d8;
-  }
-  .table tbody tr.error > td {
-    background-color: #f2dede;
-  }
-  .table tbody tr.warning > td {
-    background-color: #fcf8e3;
-  }
-  .table tbody tr.info > td {
-    background-color: #d9edf7;
-  }
-  .table-hover tbody tr.success:hover > td {
-    background-color: #d0e9c6;
-  }
-  .table-hover tbody tr.error:hover > td {
-    background-color: #ebcccc;
-  }
-  .table-hover tbody tr.warning:hover > td {
-    background-color: #faf2cc;
-  }
-  .table-hover tbody tr.info:hover > td {
-    background-color: #c4e3f3;
-  }
+  .table th.center, .table td.center{text-align: center;}
+  .table th.middle, .table td.middle{vertical-align: middle;}
   </style>
+</head>
+<body>
+  <table class="table table-hover table-bordered">
+    <thead>
+      <tr>
+        <th colspan="7" class="middle center"><%= l @trade_checker.options[:start_time] %> ~ <%= l @trade_checker.options[:end_time] %></th>
+      </tr>
+      <tr>
+        <th>账户</th>
+        <th>店铺</th>
+        <th>漏抓订单</th>
+        <th>状态异常</th>
+        <th>留言更新异常</th>
+        <th>标杆反馈异常</th>
+        <th>程序异常</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @trade_checker.accounts.each_with_index do |account,aindex| %>
+        <% account.trade_sources.each_with_index do |trade_source,tindex| %>
+        <tr>
+          <% if aindex == 0 && tindex == 0 %>
+            <th class="center middle" rowspan="<%= account.trade_sources.count %>"><%= account.name %></th>
+          <% end %>
+          <th class="center middle" rowspan=""><%= trade_source.name %></th>
+          <td><%=raw trade_source.losts.join("</br>") %></td>
+          <td><%=raw trade_source.error_status.join("</br>") %></td>
+          <td><%=raw trade_source.incomplete_data.join("</br>") %></td>
+          <td><%=raw trade_source.biaogan_diff.join("</br>") %></td>
+          <td><%=raw trade_source.warns.join("</br>") %></td>
+        </tr>
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>
 </body>
 </html>
