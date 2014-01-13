@@ -271,7 +271,14 @@ class ProductsController < ApplicationController
     end
     @number = 20
     @number = params[:number] if params[:number].present?
-    @products = @products.search(params[:search]).order("updated_at DESC").page(params[:page]).per(@number)
+    taobao_product_id = TaobaoSku.no_binding.with_account(current_account.id).map{|sku| sku.taobao_product_id}  if params[:has_bindings] == "未绑定 || 部分绑定"
+    taobao_product_id = TaobaoSku.is_binding.with_account(current_account.id).map{|sku| sku.taobao_product_id}  if params[:has_bindings] == "已绑定"
+    if params[:has_bindings].blank? || params[:has_bindings] == "全部"
+      @products = @products.search(params[:search])
+    else
+      @products = @products.where("id in (?)",taobao_product_id).search(params[:search])
+    end
+    @products = @products.page(params[:page]).per(@number)
 
     respond_to do |format|
       format.xls

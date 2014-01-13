@@ -22,6 +22,13 @@
           <%= select :search, :trade_source_id_eq, options_for_select(current_account.taobao_sources.collect {|t| [t.name,t.id]}, params[:search][:trade_source_id_eq]),{},:class => "select2" %>
           </select>
         </div>
+      </div>
+      <div class="control-group span4">
+        <label class="pull-left"><code>绑定状态：</code></label>
+        <div class="controls pull-left">
+          <%= select_tag(:has_bindings, options_for_select(["全部","已绑定","未绑定 || 部分绑定"], selected: params[:has_bindings]))%>
+          </select>
+        </div>
         <div class="pull-left">
           <button type="button pull-left" class="btn btn-small btn-primary">搜索</button>
         </div>

@@ -30,4 +30,6 @@ class YihaodianSku < ActiveRecord::Base
   enum_attr :can_sale,YihaodianProduct::CAN_SALE
   enum_attr :is_dup_audit, YihaodianProduct::IS_DUP_AUDIT,:not_valid => true
   scope :with_account, ->(account_id){ where(account_id: account_id) }
+  scope :is_binding, includes(:sku_bindings).where("sku_bindings.id is not null")
+  scope :no_binding, includes(:sku_bindings).where("sku_bindings.id is null")
 end

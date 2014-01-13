@@ -8,7 +8,7 @@
       <label class="control-label mar_l10">经销商：</label>
       <%=text_field_tag :seller_name, params[:seller_name], class: "input-medium"%>
       <label class="control-label mar_l10">状态：</label>
-        <%= select_tag(:status, options_for_select([["请选择",nil],["未结算","unprocessed"],["已结算","processed"]], selected: params[:status]))%>
+        <%= select_tag(:status, options_for_select([["请选择",""],["经销商未结算","unaudited"],["品牌商未结算","unprocessed"],["经销商已结算","audited"]], selected: params[:status]))%>
       <label class="control-label mar_l10">选择时间：</label>
       <div class="input-append">
         <%=text_field_tag :date, params[:date], "data-date-format"=>"mm-yyyy", :class=>"input-small date  monthpicker"%>
@@ -19,12 +19,16 @@
 <% end %>
 
 <div class="btns">
-  <p id="rs_process_info" style="display: none;">正在生成数据...</p>
   <a href="javascript:;" class="btn btn-warning confirm_export">导出数据</a>
-  <% if @all_processd %>
-    <a href="javascript:;" class="btn btn-warning disabled">确认结算</a>
+  <% if @all_processed %>
+    <a href="javascript:;" class="btn btn-warning disabled">品牌确认结算</a>
   <% else %>
-    <a data-toggle="modal" href="#confirm_account" class="btn btn-warning confirm_settlement_all">确认结算</a>
+    <a data-toggle="modal" href="#confirm_account" class="btn btn-warning confirm_settlement_all">品牌确认结算</a>
+  <% end %>
+  <% if @all_audited %>
+    <a href="javascript:;" class="btn btn-warning disabled">经销商确认结算</a>
+  <% else %>
+    <a data-toggle="modal" href="#confirm_account1" class="btn btn-warning confirm_settlement_all1">经销商确认结算</a>
   <% end %>
 </div>
 <table class="table table-striped table-bordered td_colors table-hover mar_t">
@@ -47,10 +51,12 @@
         <td><%= rs.audit_time.strftime("%Y-%m") %></td>
         <td><%= current_account.sellers.find(rs.seller_id).name %></td>
         <td><%= rs.balance_amount %></td>
-        <%- if rs.audited %>
-        <td>已结算</td>
+        <%- if rs.audited && rs.processed %>
+          <td>已结算</td>
+        <%- elsif !rs.processed %>
+          <td><a data-toggle="modal" data-id="<%= rs.id %>" href="#confirm_account" class="confirm_settlement">品牌商未确认结算</a></td>
         <% else %>
-          <td><a data-toggle="modal" data-id="<%= rs.id %>" href="#confirm_account" class="confirm_settlement">未结算</a></td>
+          <td><a data-toggle="modal" data-id="<%= rs.id %>" href="#confirm_account" class="confirm_settlement">运营商未结算</a></td>
         <%- end %>
       </tr>
       <% end %>
