@@ -87,14 +87,6 @@
       <div class="pull-right" style="margin-left: 5px;margin-top: -2px;">
         <%= paginate @jingdong_products %>
       </div>
-      <!-- <p></p> -->
-      <%= form_tag("/jingdong_products", :method => "get", :class => 'pagination trade_count_info form-inline pull-right') do %>
-      <input style="visibility:hidden;" name="page" value="<%= params[:page]%>"/>
-      <label style="color:#005580;">当前每页显示：</label>
-      <%=select_tag :number, options_for_select([["加载20项","20"],
-              ["加载50项","50"],
-              ["加载100项", "100"]], params[:number]),  :class => 'nomargin input-medium', :onchange => "this.form.submit();" %>
-      <%- end -%>
     </div>
   </div><!-- all_goods end -->
 </div>

@@ -102,6 +102,11 @@
     <button class="btn btn-primary confirm_button1" type="submit">确定</button>
   </div>
 </div><!-- confirm_account -->
+<div class='clearfix'>
+  <div class="pull-right" style="margin-left: 5px;margin-top: -2px;">
+    <%= paginate @rs_set %>
+  </div>
+</div>
 
 <%- content_for :tail do %>
 <script type = "text/javascript">

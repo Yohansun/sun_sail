@@ -18,6 +18,7 @@ class ReconcileStatementsController < ApplicationController
       @rs_set = @rs_set.where(trade_store_name: params[:trade_source]) rescue nil
       flash[:notice] = "当月还未生成" unless @rs_set.present?
     end
+    @rs_set = @rs_set.page(params[:page]).per(20)
     @all_audited = @rs_set.all_audited?
     @all_processed = @rs_set.all_processed?
   end
@@ -63,6 +64,7 @@ class ReconcileStatementsController < ApplicationController
       @rs_set = @rs_set.by_seller_ids(seller_ids) rescue nil
       flash[:notice] = "当月还未生成" unless @rs_set.present?
     end
+    @rs_set = @rs_set.page(params[:page]).per(20)
     @all_processed = @rs_set.all_processed?
     render seller_index_reconcile_statements_path
   end
@@ -134,6 +136,7 @@ class ReconcileStatementsController < ApplicationController
       @rs_set = @rs_set.where("trade_store_source like ?", "%#{params[:trade_store_source].strip}%") rescue nil
       flash[:notice] = "当月还未生成" unless @rs_set.present?
     end
+    @rs_set = @rs_set.page(params[:page]).per(20)
     @all_processed = @rs_set.all_processed?
     render distributor_index_reconcile_statements_path
   end
