@@ -20,7 +20,9 @@ class TaobaoSku < ActiveRecord::Base
   has_many :skus,:include => :product, through: :sku_bindings
   belongs_to :taobao_product
   belongs_to :account
-
+  scope :is_binding, includes(:sku_bindings).where("sku_bindings.id is not null")
+  scope :no_binding, includes(:sku_bindings).where("sku_bindings.id is null")
+  scope :with_account, ->(account_id){ where(account_id: account_id) }
   def title
     "#{taobao_product.try(:name)}#{name}"
   end

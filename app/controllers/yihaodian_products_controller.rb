@@ -1,3 +1,4 @@
+#encoding: utf-8
 class YihaodianProductsController < ApplicationController
   before_filter :authorize
   before_filter :products_with_account
@@ -7,7 +8,13 @@ class YihaodianProductsController < ApplicationController
   def index
     params[:search] ||= {}
     params[:search][params[:key].to_sym] = params[:value] if params[:key].present? && params[:value].present?
-    @search = @products.search(params[:search])
+    product_id = YihaodianSku.no_binding.with_account(current_account.id).map{|sku| sku.product_id}  if params[:has_bindings] == "未绑定 || 部分绑定"
+    product_id = YihaodianSku.is_binding.with_account(current_account.id).map{|sku| sku.product_id}  if params[:has_bindings] == "已绑定"
+    if params[:has_bindings].blank? || params[:has_bindings] == "全部"
+      @search = @products.search(params[:search])
+    else
+      @search = @products.with_account(current_account.id).where("product_id in (?)",product_id).search(params[:search])
+    end
     pernumber = params[:number].to_i || 20
     @products = @search.page(params[:page]).per(pernumber)
   end

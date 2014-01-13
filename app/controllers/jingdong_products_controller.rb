@@ -6,7 +6,13 @@ class JingdongProductsController < ApplicationController
   def index
     params[:search] ||= {}
     params[:search][params[:key].to_sym] = params[:value] if params[:key].present? && params[:value].present?
-    @search = JingdongProduct.with_account(current_account.id).search(params[:search])
+    ware_id = JingdongSku.no_binding.with_account(current_account.id).map{|sku| sku.ware_id} if params[:has_bindings] == "未绑定 || 部分绑定"
+    ware_id = JingdongSku.is_binding.with_account(current_account.id).map{|sku| sku.ware_id} if params[:has_bindings] == "已绑定"
+    if params[:has_bindings].blank? || params[:has_bindings] == "全部"
+      @search = JingdongProduct.with_account(current_account.id).search(params[:search])
+    else
+      @search = JingdongProduct.with_account(10).where("ware_id in (?)",ware_id).search(params[:search])
+    end
     pernumber = params[:number].to_i || 20
     @jingdong_products = @search.page(params[:page]).per(pernumber)
   end

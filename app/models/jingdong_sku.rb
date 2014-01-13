@@ -33,7 +33,10 @@ class JingdongSku < ActiveRecord::Base
   belongs_to :jingdong_product, :class_name => "JingdongProduct", :foreign_key => "ware_id",:primary_key => "ware_id"
   belongs_to :account
   enum_attr :status ,[["有效","VALID"],["无效","INVALID"],["删除","DELETE"]]
-
+  scope :is_binding, includes(:sku_bindings).where("sku_bindings.id is not null")
+  scope :no_binding, includes(:sku_bindings).where("sku_bindings.id is null")
+  scope :with_account, ->(account_id){ where(account_id: account_id) }
+  
   def title
     "#{jingdong_product.try(:title)} #{name}"
   end
