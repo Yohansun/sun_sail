@@ -1,28 +1,36 @@
 <div id="confirm_account" class="modal hide fade" tabindex="-1">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal">&times;</button>
-    <h3>确定生成</h3>
+    <h3>确定结算</h3>
   </div><!-- modal-header -->
   <div class="modal-body sure_id">
-    <p>确认生成对账?</p>
+    <p>确认结算对账?</p>
   </div>
   <div class="modal-footer">
     <button class="btn btn-primary confirm_button" type="submit">确定</button>
+  </div>
+</div><!-- confirm_account -->
+
+<div id="confirm_account1" class="modal hide fade" tabindex="-1">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h3>确定结算</h3>
+  </div><!-- modal-header -->
+  <div class="modal-body sure_id1">
+    <p>确认结算对账?</p>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary confirm_button1" type="submit">确定</button>
   </div>
 </div><!-- confirm_account -->
 <%- content_for :tail do %>
 <script type = "text/javascript">
   var rs_id = null;
   $('.confirm_button').click(function(argument) {
-    rs_id = $("input[name='audited[]']:checked").val();
-    $.ajax({
-      type: "PUT",
-      url: "/reconcile_statements/"+rs_id+"/audit"
-    }).done(function(result){
-      $('#confirm_account').modal('hide');
-      $("#rs_"+rs_id+" td:eq(4)").html("已结算");
-      $('.confirm_settlement_all').attr("disabled","disabled");
-    })
+    confirm_calculate("trade_confirm");
+  });
+  $('.confirm_button1').click(function(argument) {
+    confirm_calculate("seller_confirm");
   });
 
   $('.confirm_settlement_all').click(function(argument) {
@@ -39,6 +47,24 @@
       $('#confirm_account h3').text('提示信息');
       $('#confirm_account .sure_id').children().text('您必须只能选择一个店铺')
       $('.confirm_button').hide()
+
+    }
+  });
+
+  $('.confirm_settlement_all1').click(function(argument) {
+    if($("input[name='audited[]']:checked").length == 1){
+      var chk_value =[];
+      $("input[name='audited[]']:checked").each(function(){
+        chk_value.push($(this).val());
+      });
+      $("#rs_ids").val(chk_value);
+      $('#confirm_account1 .sure_id1').children().text('确定结算对账？')
+      $('.confirm_button1').show()
+
+    }else{
+      $('#confirm_account1 h3').text('提示信息');
+      $('#confirm_account1 .sure_id1').children().text('您必须只能选择一个店铺')
+      $('.confirm_button1').hide()
 
     }
   });
@@ -67,6 +93,24 @@
     }else{
       return true;
     }
+  }
+
+  function confirm_calculate(value){
+    rs_id = $("input[name='audited[]']:checked").val();
+    $.ajax({
+      type: "PUT",
+      url: "/reconcile_statements/"+rs_id+"/audit"
+    }).done(function(result){
+      if(value == 'trade_confirm'){
+        $('#confirm_account').modal('hide');
+        $("#rs_"+rs_id+" td:eq(4)").html("品牌确认结算");
+        $('.confirm_settlement_all').attr("disabled","disabled");
+      }else{
+        $('#confirm_account1').modal('hide');
+        $("#rs_"+rs_id+" td:eq(4)").html("已结算");
+        $('.confirm_settlement_all1').attr("disabled","disabled");
+      }
+    })
   }
 
   $('.confirm_export').click(function(argument) {
