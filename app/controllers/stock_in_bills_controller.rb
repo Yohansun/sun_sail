@@ -31,16 +31,22 @@ class StockInBillsController < ApplicationController
   def create
     if params[:stock_in_bill][:stock_type] == "ICP"
       product = params[:stock_in_bill][:bill_products_attributes]["0"]
-      number = product["real_number"].to_i
-      product['number'] = 1
-      product['real_number'] = 1
-      number.times do
+      if product["real_number"].to_i.zero?
         @bill = default_scope.new(params[:stock_in_bill])
-        @bill.status = "CREATED"
-        update_areas!(@bill)
-        @bill.update_bill_products
-        @bill.update_property_memo(params[:property], product["sku_id"], current_account)
-        @bill.save
+        flash.now[:error] = "成品入库实际入库不能为0"
+        render :new and return false
+      else
+        number = product["real_number"].to_i
+        product['number'] = 1
+        product['real_number'] = 1
+        number.times do
+          @bill = default_scope.new(params[:stock_in_bill])
+          @bill.status = "CREATED"
+          update_areas!(@bill)
+          @bill.update_bill_products
+          @bill.update_property_memo(params[:property], product["sku_id"], current_account)
+          @bill.save
+        end
       end
     else
       @bill = default_scope.new(params[:stock_in_bill])

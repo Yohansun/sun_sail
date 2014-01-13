@@ -49,7 +49,7 @@ class CategoryProperty < ActiveRecord::Base
   # 保存属性值(CategoryPropertyValue)列表
   # 如果是文本属性值，默认values添加一条文本
   def init_values
-    if value_type == 3
+    if value_type == 3 && self.values.count == 0
       self.attributes = {:values_attributes=>[{value: "文本"}]}
     else
       old_values = []
