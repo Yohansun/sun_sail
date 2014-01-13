@@ -17,7 +17,7 @@ class CategoryPropertiesController < ApplicationController
       flash[:success] = "保存成功"
       redirect_to :category_properties
     else
-      render  :action=>:new
+      render :action => :new
     end
   end
 
@@ -34,7 +34,6 @@ class CategoryPropertiesController < ApplicationController
       render :action=>:edit
     end
   end
-
 
   def destroy
     @category_property = current_account.category_properties.find(params[:id])

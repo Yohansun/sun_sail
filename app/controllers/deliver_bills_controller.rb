@@ -284,6 +284,7 @@ class DeliverBillsController < ApplicationController
           number = bill.bill_products.where(outer_id: property_memo.outer_id).first.number - property_memo.stock_in_bill_tids.try(:count).to_i
           next if number == 0
           sheet                   = {}
+          sheet[:receiver_name]   = bill.trade.receiver_name
           sheet[:buyer_nick]      = bill.trade.buyer_nick
           sheet[:outer_id]        = order.outer_iid
           sheet[:cs_memo]         = order.cs_memo

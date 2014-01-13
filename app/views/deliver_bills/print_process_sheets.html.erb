@@ -13,7 +13,7 @@
   <% @process_sheets.each do |sheet| %>
     <div class="span4">
       <div class="well nobg">
-        <p>客户id：<%= sheet[:buyer_nick] %></p>
+        <p>客户id：<%= sheet[:buyer_nick] %>(<%= sheet[:receiver_name] %>)</p>
         <p>商品编码：<%= sheet[:outer_id] %></p>
         <% sheet[:property_values].each do |value| %>
           <p><%= value[:name] %>：<%= value[:value] %></p>
