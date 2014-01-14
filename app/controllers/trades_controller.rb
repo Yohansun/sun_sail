@@ -293,28 +293,31 @@ class TradesController < ApplicationController
     if params[:property_memos].present?
 
       # 还原入库单信息，删除备注
-      BillPropertyMemo.where(:stock_in_bill_tid.in => @trade.trade_property_memos.map(&:stock_in_bill_tids).flatten).update_all(used: false)
+      BillPropertyMemo.where(:stock_in_bill_tid.in => @trade.trade_property_memos.map(&:stock_in_bill_tid)).update_all(used: false)
       @trade.trade_property_memos.delete_all
 
       # 重新添加备注
-      params[:property_memos].each do |order_id, info|
+      params[:property_memos].each do |order_id, infos|
         order = @trade.orders.where(_id: order_id).first
         if order
-          property_memo = order.create_trade_property_memo(
-            trade_id: @trade.id,
-            outer_id: info['outer_id'],
-            account_id: current_account.id,
-            stock_in_bill_tids: info['stock_in_bill_tids']
-          )
-          BillPropertyMemo.where(:stock_in_bill_tid.in => info['stock_in_bill_tids']).update_all(used: true)
-          values = info['values'].reject{|value| value.blank? || value['id'].blank? || value['value'].blank? }
-          values.each do |value|
-            name = CategoryPropertyValue.find(value['id']).category_property.name
-            property_memo.property_values.create(
-              category_property_value_id: value['id'],
-              value: value['value'],
-              name: name
+          infos.each do |key, info|
+            property_memo = order.trade_property_memos.create(
+              trade_id: @trade.id,
+              outer_id: info['outer_id'],
+              account_id: current_account.id,
+              stock_in_bill_tid: info['stock_in_bill_tid']
             )
+            used_memo = BillPropertyMemo.where(stock_in_bill_tid: info['stock_in_bill_tid']).first
+            used_memo.update_attributes(used: true) if used_memo.present?
+            values = info['values'].reject{|value| value.blank? || value['id'].blank? || value['value'].blank? }
+            values.each do |value|
+              name = CategoryPropertyValue.find(value['id']).category_property.name
+              property_memo.property_values.create(
+                category_property_value_id: value['id'],
+                value: value['value'],
+                name: name
+              )
+            end
           end
         end
       end

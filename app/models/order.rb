@@ -25,7 +25,7 @@ class Order
   #赠品子订单专用field
   field :order_gift_tid, type: String
 
-  has_one :trade_property_memo
+  has_many :trade_property_memos
 
   validates_uniqueness_of :order_gift_tid, allow_blank: true
 
@@ -109,7 +109,7 @@ class Order
     info = info.flatten
   end
 
-  def product_properties
+  def multi_product_properties
     #OVERWRITTEN BY SUBCLASS
     []
   end

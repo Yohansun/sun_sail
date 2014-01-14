@@ -2,7 +2,7 @@
 
 class TradePropertyMemo < PropertyMemo
 
-  field :stock_in_bill_tids
+  field :stock_in_bill_tid
 
   belongs_to :trade
   belongs_to :order
