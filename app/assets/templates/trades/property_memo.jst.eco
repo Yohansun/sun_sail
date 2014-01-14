@@ -9,8 +9,8 @@
         <tr>
           <th width="30%">商品</th>
           <th width="10%">数量</th>
-          <th width="40%">定制要求</th>
-          <th width="20%">匹配成品入库单</th>
+          <th width="35%">定制要求</th>
+          <th width="25%">匹配成品入库单</th>
         </tr>
         <% for order in @trade.get('orders'): %>
           <tr id="<%= order.id %>">
@@ -51,7 +51,7 @@
               </div>
               <div class="control-group">
                 <label>请选择已匹配单号：</label>
-                <select multiple class="input-medium select2" id="matched_icp_bills">
+                <select multiple class="input-large select2" id="matched_icp_bills">
                   <% if order.stock_in_bill_tids : %>
                     <% for bill_tid in order.stock_in_bill_tids : %>
                       <option value="<%= bill_tid %>" selected><%= bill_tid %></option>

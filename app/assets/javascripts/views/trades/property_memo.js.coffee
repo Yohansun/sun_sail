@@ -30,7 +30,8 @@ class MagicOrders.Views.TradesPropertyMemo extends Backbone.View
 
     $.get "/api/trades/match_icp_bills", {property_memo: property_memo}, (data) =>
       for bill in data.bills
-        $('#matched_icp_bills').append("<option value="+bill.id+">"+bill.text+"</option>")
+        if bill != null
+          $('#matched_icp_bills').append("<option value="+bill.id+">"+bill.text+"</option>")
       $('.find_matched_bills').remove()
 
   save: ->
