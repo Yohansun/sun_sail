@@ -7,7 +7,7 @@ class TaobaoAppTokensController < ApplicationController
         TaobaoAppToken.transaction do
 
           info = auth_hash['info']
-          account = current_account || Account.where(name: info['taobao_user_nick'],key: info.taobao_user_nick).first_or_create!
+          account = current_account || Account.where(name: info['taobao_user_nick'],key: info.taobao_user_id).first_or_create!
           trade_source = TradeSource.where(account_id: account.id,name: info['taobao_user_nick'],trade_type: "Taobao").first_or_create!
           trade_source.taobao_app_token ||
           trade_source.create_taobao_app_token!({
