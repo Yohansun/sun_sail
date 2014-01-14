@@ -279,25 +279,21 @@ class DeliverBillsController < ApplicationController
       bills = DeliverBill.any_in(id: params[:ids])
       bills.each do |bill|
         bill.trade.orders.each do |order|
-          property_memo = order.trade_property_memo
-          next if property_memo.blank?
-          number = bill.bill_products.where(outer_id: property_memo.outer_id).first.number - property_memo.stock_in_bill_tids.try(:count).to_i
-          next if number == 0
-          sheet                   = {}
-          sheet[:receiver_name]   = bill.trade.receiver_name
-          sheet[:buyer_nick]      = bill.trade.buyer_nick
-          sheet[:outer_id]        = order.outer_iid
-          sheet[:cs_memo]         = order.cs_memo
-          sheet[:property_values] = []
-          order.trade_property_memo.property_values.each do |value|
-            dup_value = sheet[:property_values].each.find{|v| v[:name] == value.name}
-            if dup_value.present?
-              dup_value[:value] += (","+value.value)
-            else
-              sheet[:property_values] << {name: value.name, value: value.value}
+          next if order.trade_property_memos.blank?
+          order.trade_property_memos.each do |property_memo|
+            next if property_memo.stock_in_bill_tid.present?
+            sheet                   = {}
+            sheet[:receiver_name]   = bill.trade.receiver_name
+            sheet[:buyer_nick]      = bill.trade.buyer_nick
+            sheet[:outer_id]        = order.outer_iid
+            sheet[:cs_memo]         = order.cs_memo
+            sheet[:property_values] = []
+            order.trade_property_memos.where(id: property_memo.id).property_values.each do |value|
+              dup_value = sheet[:property_values].each.find{|v| v[:name] == value.name}
+              dup_value.present? ? dup_value[:value] += (","+value.value) : sheet[:property_values] << {name: value.name, value: value.value}
+              @process_sheets << sheet
             end
           end
-          number.times{ @process_sheets << sheet }
         end
       end
       respond_to do |format|

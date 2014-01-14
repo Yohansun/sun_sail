@@ -13,54 +13,54 @@
           <th width="25%">匹配成品入库单</th>
         </tr>
         <% for order in @trade.get('orders'): %>
-          <tr id="<%= order.id %>">
-            <td><%= order.title %></td>
-            <td><%= order.num %></td>
-            <td>
-              <div class="control-group">
-                <label class="inline pull-left mar_r10">商品编码：</label>
-                <label class="inline order_outer_iid"><%= order.outer_iid %></label>
-              </div>
-              <% for property in order.product_properties : %>
-                <div class="control-group property_memos">
-                  <label class="inline pull-left mar_r10"><%= property['name']+":" %></label>
-                  <% if property['type'] == "多选" : %>
-                    <select multiple data-type="multiple_select" class="input-medium select2">
-                      <% for value in property['property_values'] : %>
-                        <option value="<%= value['id'] %>" <% if value['marked'] == true : %> selected <% end %>><%= value['value'] %></option>
-                      <% end %>
-                    </select>
-                  <% else if property['type'] == "单选" : %>
-                    <select data-type="single_select" class="input-medium select2">
-                      <option value=""></option>
-                      <% for value in property['property_values'] : %>
-                        <option value="<%= value['id'] %>" <% if value['marked'] == true : %> selected <% end %>><%= value['value'] %></option>
-                      <% end %>
-                    </select>
-                  <% else if property['type'] == "文本" : %>
-                    <% for value in property['property_values'] : %>
-                      <input data-type="input_text" type="text" class="input-medium" data-value-id="<%= value['id'] %>" <% if value['marked'] == true : %> value= "<%= value['value'] %>" <% end %>></input>
-                    <% end %>
-                  <% end %>
+          <% for product_property_info in order.multi_product_properties : %>
+            <tr class="<%= order.id %>">
+              <td><%= order.title %></td>
+              <td>1</td>
+              <td>
+                <div class="control-group">
+                  <label class="inline pull-left mar_r10">商品编码：</label>
+                  <label class="inline order_outer_iid"><%= order.outer_iid %></label>
                 </div>
-              <% end %>
-            </td>
-            <td>
-              <div class="control-group">
-                <button class="btn btn-primary btn-small find_matched_bills">匹配入库单</button>
-              </div>
-              <div class="control-group">
-                <label>请选择已匹配单号：</label>
-                <select multiple class="input-large select2" id="matched_icp_bills">
-                  <% if order.stock_in_bill_tids : %>
-                    <% for bill_tid in order.stock_in_bill_tids : %>
-                      <option value="<%= bill_tid %>" selected><%= bill_tid %></option>
+                <% for property in product_property_info['properties'] : %>
+                  <div class="control-group property_memos">
+                    <label class="inline pull-left mar_r10"><%= property['name']+":" %></label>
+                    <% if property['type'] == "多选" : %>
+                      <select multiple data-type="multiple_select" class="input-medium select2">
+                        <% for value in property['property_values'] : %>
+                          <option value="<%= value['id'] %>" <% if value['marked'] == true : %> selected <% end %>><%= value['value'] %></option>
+                        <% end %>
+                      </select>
+                    <% else if property['type'] == "单选" : %>
+                      <select data-type="single_select" class="input-medium select2">
+                        <option value=""></option>
+                        <% for value in property['property_values'] : %>
+                          <option value="<%= value['id'] %>" <% if value['marked'] == true : %> selected <% end %>><%= value['value'] %></option>
+                        <% end %>
+                      </select>
+                    <% else if property['type'] == "文本" : %>
+                      <% for value in property['property_values'] : %>
+                        <input data-type="input_text" type="text" class="input-medium" data-value-id="<%= value['id'] %>" <% if value['marked'] == true : %> value= "<%= value['value'] %>" <% end %>></input>
+                      <% end %>
                     <% end %>
-                  <% end %>
-                </select>
-              </div>
-            </td>
-          </tr>
+                  </div>
+                <% end %>
+              </td>
+              <td>
+                <div class="control-group">
+                  <button class="btn btn-primary btn-small find_matched_bills">匹配入库单</button>
+                </div>
+                <div class="control-group">
+                  <label>请选择已匹配单号：</label>
+                  <select class="input-large select2" id="matched_icp_bills">
+                    <% if product_property_info['stock_in_bill_tid'] != undefined : %>
+                      <option value="<%= product_property_info['stock_in_bill_tid'] %>" selected><%= product_property_info['stock_in_bill_tid'] %></option>
+                    <% end %>
+                  </select>
+                </div>
+              </td>
+            </tr>
+          <% end %>
         <% end %>
       </tbody>
     </table>

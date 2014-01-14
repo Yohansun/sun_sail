@@ -15,11 +15,10 @@ class MagicOrders.Views.TradesPropertyMemo extends Backbone.View
 
   match_icp_bills: (e) ->
     outer_id = $(e.currentTarget).parents('td').prev('td').find('.order_outer_iid').text()
-    order_id = $(e.currentTarget).parents('tr').attr('id')
-    property_memo = {outer_id: outer_id, order_id: order_id}
+    property_memo = {outer_id: outer_id}
     property_memo['values'] = []
 
-    for memo in $('#'+order_id+' .property_memos').children(':input')
+    for memo in $(e.currentTarget).parents('tr').find('.property_memos').children(':input')
       if $(memo).data('type') == 'multiple_select'
         for value in $(memo).select2('data')
           property_memo['values'].push {id: value.id, value: value.text}
@@ -32,29 +31,32 @@ class MagicOrders.Views.TradesPropertyMemo extends Backbone.View
       for bill in data.bills
         if bill != null
           $('#matched_icp_bills').append("<option value="+bill.id+">"+bill.text+"</option>")
-      $('.find_matched_bills').remove()
+      $(e.currentTarget).closest('.find_matched_bills').remove()
 
   save: ->
     blocktheui()
 
     property_memos = {}
     for order in @model.get('orders')
-      outer_id = $('#'+order.id).children('td:eq(2)').find('.order_outer_iid').text()
-      property_memos[order.id] = {outer_id: outer_id}
-      property_memos[order.id]['values'] = []
-      property_memos[order.id]['stock_in_bill_tids'] = []
+      if $('tr.'+order.id).length > 0
+        outer_id = $('.'+order.id).first().children('td:eq(2)').find('.order_outer_iid').text()
+        property_memos[order.id] = {}
+        for i in [0..($('tr.'+order.id).length - 1)]
+          property_memos[order.id][i] = {}
+          property_memos[order.id][i]['values'] = []
+          property_memos[order.id][i]['outer_id'] = outer_id
 
-      for bill in $('#'+order.id).children('td:last').find('#matched_icp_bills').select2('data')
-        property_memos[order.id]['stock_in_bill_tids'].push bill.id
+          for bill in $('tr.'+order.id+':eq('+i+')').children('td:last').find('#matched_icp_bills').select2('data')
+            property_memos[order.id][i]['stock_in_bill_tid'] = bill.id
 
-      for memo in $('#'+order.id+' .property_memos').children(':input')
-        if $(memo).data('type') == 'multiple_select'
-          for value in $(memo).select2('data')
-            property_memos[order.id]['values'].push {id: value.id, value: value.text}
-        else if $(memo).data('type') == 'single_select'
-          property_memos[order.id]['values'].push {id: $(memo).select2('data').id, value: $(memo).select2('data').text}
-        else if $(memo).data('type') == 'input_text'
-          property_memos[order.id]['values'].push {id: $(memo).data('value-id'), value: $(memo).val()}
+          for memo in $('tr.'+order.id+':eq('+i+')').find('.property_memos').children(':input')
+            if $(memo).data('type') == 'multiple_select'
+              for value in $(memo).select2('data')
+                property_memos[order.id][i]['values'].push {id: value.id, value: value.text}
+            else if $(memo).data('type') == 'single_select'
+              property_memos[order.id][i]['values'].push {id: $(memo).select2('data').id, value: $(memo).select2('data').text}
+            else if $(memo).data('type') == 'input_text'
+              property_memos[order.id][i]['values'].push {id: $(memo).data('value-id'), value: $(memo).val()}
 
     new_model = new MagicOrders.Models.Trade(id: @model.id)
     new_model.save {operation: "属性备注", property_memos: property_memos}, success: (model, response) =>
