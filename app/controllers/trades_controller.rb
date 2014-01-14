@@ -589,13 +589,22 @@ class TradesController < ApplicationController
   end
 
   def match_icp_bills
-    conditions = [{outer_id: params[:property_memo][:outer_id], account_id: current_account.id, used: false}]
     values = params[:property_memo][:values].reject{|key, value| value['id'].blank? || value['value'].blank? }
+    bill_memos = BillPropertyMemo.where(
+      outer_id:   params[:property_memo][:outer_id],
+      account_id: current_account.id,
+      used:       false,
+      :property_values.with_size => values.count
+    )
+    memo_ids = bill_memos.map(&:id)
     values.each do |key, value|
-      conditions << {"property_values.category_property_value_id" => value['id'], "property_values.value" => value['value'] }
+      current_ids = bill_memos.where(
+        "property_values.category_property_value_id" => value['id'].to_i,
+        "property_values.value"                      => value['value']
+      ).map(&:id)
+      memo_ids &= current_ids
     end
-    conditions << { "property_values"=>{ "$size"=>values.count }}
-    bills = BillPropertyMemo.where("$and" => conditions.flatten).collect{ |memo| {id: memo.stock_in_bill.tid, text: memo.stock_in_bill.tid} if memo.stock_in_bill.status == "STOCKED" }
+    bills = BillPropertyMemo.where(:_id.in => memo_ids).collect{ |memo| {id: memo.stock_in_bill.tid, text: memo.stock_in_bill.tid} if memo.stock_in_bill.status == "STOCKED" }
     render json: {bills: bills}
   end
 
