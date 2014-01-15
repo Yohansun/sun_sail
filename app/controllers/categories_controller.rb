@@ -104,4 +104,17 @@ class CategoriesController < ApplicationController
     end
   end
 
+  def same_level_categories
+    if params[:category_id].present?
+      parent_category   = current_account.categories.find(params[:category_id])
+      categories        = parent_category.children
+      level             = categories.try(:first).try(:depth) || parent_category.depth
+      categories        = categories.collect {|c| { id: c.id, text: c.name}}
+    else
+      categories  = []
+      level       = 0
+    end
+    render json: {categories: categories, level: level}
+  end
+
 end

@@ -5,8 +5,29 @@
     <%= f.input :outer_id, label: '商品编码：', :input_html =>{ :class => "input-xlarge" } %>
     <%= f.input :storage_num, label: '仓库编号：', :input_html =>{ :class => "input-xlarge" } %>
     <%= f.input :price, label: '价格：', as: :string, :input_html =>{ :class => "input-xlarge" } %>
-    <%= f.input :logistic_group_id, collection: current_account.logistic_groups, label: '发货拆分编码' %>
-    <%= f.association :category, collection: nested_user_categories_options(), label: '分类：', :input_html =>{ :class => "width_auto",:id => "category" } %>
+    <%= f.input :logistic_group_id, collection: current_account.logistic_groups, label: '发货拆分编码：' %>
+    <div class="control-group">
+      <label class="control-label">分类：</label>
+      <div class="controls category_levels">
+        <% if @category_id.present? %>
+          <% current_account.categories.find(@category_id).self_and_ancestors.each_with_index do |ancestor_category, index| %>
+            <select class="input-small pull-left radius_no_rb category_level" name="level_<%= index %>_id">
+              <option value=''>请选择</option>
+              <% current_account.categories.where(depth: ancestor_category.depth).each do |category| %>
+                <option value="<%= category.id %>" <%- if ancestor_category.id == category.id %>selected <%- end %>><%= category.name %></option>
+              <% end %>
+            </select>
+          <% end %>
+        <% else %>
+          <select class="input-small pull-left radius_no_rb category_level" name="level_0_id">
+            <option value=''>请选择</option>
+            <% current_account.categories.roots.each do |category| %>
+              <option value="<%= category.id %>"><%= category.name %></option>
+            <% end %>
+          </select>
+        <% end %>
+      </div>
+    </div>
     <% if current_account.settings.enable_module_colors == 1 %>
       <fieldset class="form-inline">
         <%= f.association :colors, label: '可选颜色：', as: :check_boxes, include_blank: false, wrapper_html: { id: 'check_color' }%>
@@ -74,17 +95,27 @@
     $('#check_color').find(':checkbox').prop('checked',$last_tr_checkbox.prop('checked'))
   });
 
-  // 获取当前选中分类的属性
   $(function(){
-
-    if( $("#category").val() != ''){ fetch_category_properties() };
-
-    $("#category").change(function(){
-      fetch_category_properties();
+    // 分类选择 + 获取分类属性
+    $('.category_level').live('change', function(event){
+      var category_id = $(this).val()
+      fetch_category_properties(category_id)
+      $(this).nextAll().remove()
+      $.get("/categories/same_level_categories", {category_id: $(this).val()}).done(function(data){
+        if (data.categories.length > 0){
+          var html = "<select class='input-small pull-left radius_no_rb category_level' name='level_"+data.level+"_id'><option value=''>请选择</option></select>"
+          $('.category_levels').append(html)
+          for(i in data.categories){
+            $('.category_level').last().append(new Option(data.categories[i].text, data.categories[i].id))
+          }
+        }
+      });
     });
 
-    function fetch_category_properties(){
-      var category_id = $("#category").val();
+    // 获取当前选中分类的属性
+    if( $(".category_level").last().val() != ''){ fetch_category_properties($(".category_level").last().val()) };
+
+    function fetch_category_properties(category_id){
       $.ajax({
         url: "<%= fetch_category_properties_products_path %>",
         data: { category_id: category_id }

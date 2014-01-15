@@ -14,8 +14,9 @@ class ProductsController < ApplicationController
         @products = @products.where("#{params[:info_type]} like ? or #{params[:info_type]} = ?", "%#{params[:info].strip}%", params[:info].strip)
       end
     end
-    if params[:category_id].present? && params[:category_id] != '0'
-      @products = @products.where("category_id = ?", params[:category_id])
+
+    if params[:level_0_id].present? && params[:level_0_id] != '0'
+      @products = @products.where("category_id = ?", update_category(params))
     end
 
     if params[:on_sale].present?
@@ -48,6 +49,7 @@ class ProductsController < ApplicationController
   end
 
   def create
+    params[:product][:category_id] = update_category(params)
     @product = current_account.products.new params[:product]
     @skus.each do |sku|
       @product.skus.build({:sku_id => sku.sku_id, :account_id => current_account.id}.merge(sku.attributes))
@@ -69,10 +71,12 @@ class ProductsController < ApplicationController
 
   def edit
     @product = current_account.products.find params[:id]
+    @category_id = @product.category.try(:id)
     @skus = @product.skus
   end
 
   def update
+    params[:product][:category_id] = update_category(params)
     @product = current_account.products.find params[:id]
     if @product.update_attributes(params[:product])
       redirect_to products_path
@@ -126,8 +130,10 @@ class ProductsController < ApplicationController
   end
 
   def fetch_category_properties
-    @category = current_account.categories.find(params[:category_id])
-    @category_properties = @category.category_properties.where(value_type: 2)
+    if params[:category_id].present?
+      @category = current_account.categories.find(params[:category_id])
+      @category_properties = @category.category_properties.where(value_type: 2)
+    end
 
     respond_to do |format|
       format.js
@@ -384,5 +390,16 @@ class ProductsController < ApplicationController
     return array[0] if array.size == 1
     first = array.shift
     return first.product( get_values_array(array) ).map {|x| x.flatten.join(" ") }
+  end
+
+  def update_category(params)
+    if params[:level_0_id].present? && params[:level_0_id] != '0'
+      i = 0; @category_id = nil
+      while params["level_#{i}_id"].present? do
+        @category_id = params["level_#{i}_id"]
+        i += 1
+      end
+    end
+    @category_id
   end
 end
