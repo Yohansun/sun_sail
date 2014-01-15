@@ -52,7 +52,7 @@
                 </div>
                 <div class="control-group">
                   <label>请选择已匹配单号：</label>
-                  <select class="input-large select2" id="matched_icp_bills">
+                  <select class="input-large select2 matched_icp_bills">
                     <% if product_property_info['stock_in_bill_tid'] != undefined : %>
                       <option value="<%= product_property_info['stock_in_bill_tid'] %>" selected><%= product_property_info['stock_in_bill_tid'] %></option>
                     <% end %>
