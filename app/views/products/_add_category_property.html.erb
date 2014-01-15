@@ -13,11 +13,16 @@
   <% value_type = category_property.value_type %>
   <div class="control-group">
     <%= label_tag "sku_property_name", category_property.name, :class => "control-label" %>
-    <% category_property.values.each do |value| %>
-    <label class="checkbox inline">
-      <%= check_box_tag "sku_property[#{category_property.id}][category_property_value_id][]",value.id %><%= value.value %>
-    </label>
-    <% end %>
+    <div class="controls add_sku_labels">
+      <label class="checkbox inline">
+        <input type="checkbox" class="select_skus_checkbox" value="<%= category_property.id %>"/>全选
+      </label>
+      <% category_property.values.each do |value| %>
+      <label class="checkbox inline">
+        <%= check_box_tag "sku_property[#{category_property.id}][category_property_value_id][]",value.id %><%= value.value %>
+      </label>
+      <% end %>
+    </div>
   </div>
 <% end if category_properties.present? %>
-  <fieldset>
+<fieldset>

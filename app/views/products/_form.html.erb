@@ -56,7 +56,7 @@
 
 <div class="form-actions">
   <%= f.button :submit, "保存", :class => "btn btn-primary" %>
-  <a href="/products" class="btn">取消</a>
+  <a href="/products" class="btn btn-small">取消</a>
 </div>
 <% end %>
 
@@ -94,6 +94,9 @@
   $last_tr_checkbox.click(function(){
     $('#check_color').find(':checkbox').prop('checked',$last_tr_checkbox.prop('checked'))
   });
+  $("#add_properties").on('click','.select_skus_checkbox',function() {
+      $(this).parents('.add_sku_labels').find("input").attr('checked', $(this).is(':checked'));
+    });
 
   $(function(){
     // 分类选择 + 获取分类属性
