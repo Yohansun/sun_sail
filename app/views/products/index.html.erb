@@ -178,11 +178,7 @@
 
   // 导出操作
   $('#export_products').on('click', function(){
-    if($('#product_table input:checked').length == 0){
-      alert("请选择商品。")
-    } else {
-      window.location.href = "/products/export_products.xls"
-    }
+    window.location.href = "/products/export_products.xls"
   })
 
   // 上下架操作

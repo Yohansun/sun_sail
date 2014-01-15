@@ -251,7 +251,8 @@ class ProductsController < ApplicationController
   end
 
   def export_products
-    @products = current_account.products.where("id in (?)", current_account.settings.picked_product)
+    @products = current_account.products
+    @products = @products.where("id in (?)", current_account.settings.picked_product) if current_account.settings.picked_product.present?
     current_account.settings.picked_product = []
     respond_to do |format|
       format.xls
