@@ -46,7 +46,7 @@
                   </div>
                 <% end %>
               </td>
-              <td>
+              <td class="stock_in_bill_tid">
                 <div class="control-group">
                   <button class="btn btn-primary btn-small find_matched_bills">匹配入库单</button>
                 </div>
