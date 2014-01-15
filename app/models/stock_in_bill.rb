@@ -68,6 +68,8 @@ class StockInBill < StockBill
     do_check
     if stock_type == "IINITIAL" || stock_type == "ICP"
       initial_stock
+    else
+      sync_stock
     end
   end
 
