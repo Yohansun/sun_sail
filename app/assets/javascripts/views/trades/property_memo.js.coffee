@@ -36,6 +36,13 @@ class MagicOrders.Views.TradesPropertyMemo extends Backbone.View
   save: ->
     blocktheui()
 
+    stock_in_bill_tids = $('.stock_in_bill_tid').map ->
+      $(this).find('.matched_icp_bills').select2('data').id
+    if stock_in_bill_tids.length != $.unique(stock_in_bill_tids).length
+      $.unblockUI()
+      alert("同一个成品入库单号不能使用两次！")
+      return
+
     property_memos = {}
     for order in @model.get('orders')
       if $('tr.'+order.id).length > 0
@@ -45,9 +52,7 @@ class MagicOrders.Views.TradesPropertyMemo extends Backbone.View
           property_memos[order.id][i] = {}
           property_memos[order.id][i]['values'] = []
           property_memos[order.id][i]['outer_id'] = outer_id
-
-          for bill in $('tr.'+order.id+':eq('+i+')').children('td:last').find('#matched_icp_bills').select2('data')
-            property_memos[order.id][i]['stock_in_bill_tid'] = bill.id
+          property_memos[order.id][i]['stock_in_bill_tid'] = $('tr.'+order.id+':eq('+i+')').children('td:last').find('.matched_icp_bills').select2('data').id
 
           for memo in $('tr.'+order.id+':eq('+i+')').find('.property_memos').children(':input')
             if $(memo).data('type') == 'multiple_select'
