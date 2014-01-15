@@ -66,7 +66,9 @@ class StockInBill < StockBill
   def check
     return false if not can_do_check?
     do_check
-    initial_stock if stock_type == "IINITIAL" || stock_type == "ICP"
+    if stock_type == "IINITIAL" || stock_type == "ICP"
+      initial_stock
+    end
   end
 
   def type_name
@@ -223,9 +225,11 @@ class StockInBill < StockBill
   end
 
   def initial_stock
-    sync_stock if account && account.settings.enable_module_third_party_stock == 1
+    sync_stock
     do_stock
-    StockCsvFile.find_by_stock_in_bill_id(self.id.to_s).update_attributes(used: true) if stock_type == "IINITIAL"
+    if stock_type == "IINITIAL"
+      StockCsvFile.find_by_stock_in_bill_id(self.id.to_s).update_attributes(used: true)
+    end
   end
 
   def update_property_memo(memo_params, sku_id, current_account)
