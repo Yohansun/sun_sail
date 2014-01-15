@@ -11,6 +11,8 @@ class CategoriesController < ApplicationController
     if params[:parent_id].present?
       @parents = current_account.categories.find(params[:parent_id]).self_and_ancestors
       @categories = @categories.where(parent_id: params[:parent_id])
+    elsif params[:parent_level].present?
+      @categories = current_account.categories.where(depth: params[:parent_level].to_i)
     else
       @categories = @categories.roots
     end

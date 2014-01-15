@@ -1,4 +1,5 @@
-#encoding: utf-8
+# -*- encoding : utf-8 -*-
+
 class Distributor < ActiveRecord::Base
   include MagicEnum
   acts_as_nested_set :counter_cache => :children_count

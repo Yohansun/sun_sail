@@ -30,9 +30,9 @@ class OrderDecorator < Draper::Base
     when 'TaobaoOrder'
       order.outer_iid
     when 'JingdongOrder'
-      order.outer_sku_id
+      order.num_iid
     when 'YihaodianOrder'
-      order.outer_id
+      order.num_iid
     end
   end
 
