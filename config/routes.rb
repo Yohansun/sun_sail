@@ -214,6 +214,7 @@ MagicOrders::Application.routes.draw do
       get :category_templates
       get :product_templates
       get :sku_templates
+      get :same_level_categories
     end
   end
   resources :category_properties do

@@ -16,9 +16,25 @@
       </div>
       <div class="control-group">
         <label class="pull-left"><code>分类：</code></label>
-        <div class="controls pull-left">
-          <%= f.select :category_id, nested_user_categories_options([["全部", 0]]), {:selected => params[:category_id]}, :id => "category_id", :name => "category_id", :class => "input-small pull-left select2" %>
-        </div>
+        <div class="controls pull-left category_levels">
+          <% if @category_id.present? %>
+            <% current_account.categories.find(@category_id).self_and_ancestors.each_with_index do |ancestor_category, index| %>
+              <select class="input-small pull-left radius_no_rb category_level" name="level_<%= index %>_id">
+                <option value=''>请选择</option>
+                <% current_account.categories.where(depth: ancestor_category.depth).each do |category| %>
+                  <option value="<%= category.id %>" <%- if ancestor_category.id == category.id %>selected <%- end %>><%= category.name %></option>
+                <% end %>
+              </select>
+            <% end %>
+          <% else %>
+            <select class="input-small pull-left radius_no_rb category_level" name="level_0_id">
+              <option value=''>请选择</option>
+              <% current_account.categories.roots.each do |category| %>
+                <option value="<%= category.id %>"><%= category.name %></option>
+              <% end %>
+            </select>
+          <% end %>
+          </div>
       </div>
       <div class="control-group">
         <label class="pull-left"><code>状态：</code></label>
@@ -209,6 +225,20 @@
       $('#edit_product').show();
     }
   }
+
+  // 分类选择
+  $('.category_level').live('change', function(event){
+    $(this).nextAll().remove()
+    $.get("/categories/same_level_categories", {category_id: $(this).val()}).done(function(data){
+      if (data.categories.length > 0){
+        var html = "<select class='input-small pull-left radius_no_rb category_level' name='level_"+data.level+"_id'><option value=''>请选择</option></select>"
+        $('.category_levels').append(html)
+        for(i in data.categories){
+          $('.category_level').last().append(new Option(data.categories[i].text, data.categories[i].id))
+        }
+      }
+    });
+  });
 
   $(function() {
     visibleTableColumns("#dropdown_check", "#visible_columns", "#product_table");
