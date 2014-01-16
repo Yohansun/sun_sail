@@ -46,6 +46,10 @@ class Order
     #OVERWRITTEN BY SUBCLASS
   end
 
+  def sku_properties
+    nil
+  end
+
   def sku_bindings
     #OVERWRITTEN BY SUBCLASS
   end

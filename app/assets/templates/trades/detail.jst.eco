@@ -86,6 +86,7 @@
             <% end %>
           <% else : %>
             <td colspan="7">
+          <% end %>
               <b class="mar_r10">订单金额：￥<%= @trade.get('sum_fee') %></b>
 
               <% unless @trade.get('trade_type') == 'TaobaoPurchaseOrder' : %>
