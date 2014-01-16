@@ -288,7 +288,7 @@ class DeliverBillsController < ApplicationController
             sheet[:outer_id]        = order.outer_iid
             sheet[:cs_memo]         = order.cs_memo
             sheet[:property_values] = []
-            order.trade_property_memos.where(id: property_memo.id).property_values.each do |value|
+            order.trade_property_memos.where(id: property_memo.id).first.property_values.each do |value|
               dup_value = sheet[:property_values].each.find{|v| v[:name] == value.name}
               dup_value.present? ? dup_value[:value] += (","+value.value) : sheet[:property_values] << {name: value.name, value: value.value}
               @process_sheets << sheet
