@@ -53,34 +53,36 @@
         new_trade = Trade.new
         clone_attributes.each{|a| new_trade[a] = first_trade[a]}
         # init attributes default value
-        new_trade.seller_memo = ""
-        new_trade.cs_memo = ""
-        new_trade.gift_memo = ""
-        new_trade.buyer_message = ""
-        new_trade.total_fee = 0
-        new_trade.payment = 0
-        new_trade.promotion_fee = 0
-        new_trade.taobao_orders = []
+        new_trade.seller_memo       = ""
+        new_trade.cs_memo           = ""
+        new_trade.gift_memo         = ""
+        new_trade.buyer_message     = ""
+        new_trade.total_fee         = 0
+        new_trade.payment           = 0
+        new_trade.promotion_fee     = 0
+        new_trade.taobao_orders     = []
         new_trade.promotion_details = []
-        new_trade.unusual_states = []
-        new_trade.ref_batches = []
-        new_trade.merged_trade_ids = []
+        new_trade.unusual_states    = []
+        new_trade.ref_batches       = []
+        new_trade.merged_trade_ids  = []
 
         # merge other attributes like products, price
         trades.each{|trade|
           # merge array attributes
           trade.taobao_orders.each{|order|
             same_order = new_trade.taobao_orders.to_a.find{|o|
-              o.sku_id == order.sku_id && o.outer_iid == order.outer_iid && o.num_iid == order.num_iid
+              o.sku_id == order.sku_id &&
+              o.outer_iid == order.outer_iid &&
+              o.num_iid == order.num_iid
             }
             if same_order
-              same_order.num += order.num
-              same_order.payment = same_order.order_payment
-              same_order.payment += order.order_payment
-              same_order.total_fee += order.total_fee
+              same_order.num          += order.num
+              same_order.payment      = same_order.order_payment
+              same_order.payment      += order.order_payment
+              same_order.total_fee    += order.total_fee
               same_order.discount_fee += order.discount_fee
-              same_order.cs_memo ||= ""
-              same_order.cs_memo += order.cs_memo.to_s + "\n" if order.cs_memo
+              same_order.cs_memo      ||= ""
+              same_order.cs_memo      += order.cs_memo.to_s + "\n" if order.cs_memo
             else
               order.payment = order.order_payment
               new_trade.taobao_orders << order
@@ -92,13 +94,16 @@
           Trade.where(main_trade_id: trade.id.to_s).update_all(main_trade_id: new_trade.id)
 
           # merge values
-          new_trade.seller_memo += trade.seller_memo.to_s+"\n" if trade.seller_memo
-          new_trade.cs_memo += trade.cs_memo.to_s+"\n" if trade.seller_memo
-          new_trade.gift_memo += trade.gift_memo.to_s+"\n" if trade.gift_memo
-          new_trade.buyer_message += trade.buyer_message.to_s+"\n" if trade.buyer_message
-          new_trade.promotion_fee += trade.promotion_fee if trade.promotion_fee
-          new_trade.total_fee += trade.total_fee if trade.total_fee
-          new_trade.payment += trade.payment if trade.payment
+          new_trade.seller_memo     += trade.seller_memo.to_s+"\n"   if trade.seller_memo
+          new_trade.cs_memo         += trade.cs_memo.to_s+"\n"       if trade.seller_memo
+          new_trade.gift_memo       += trade.gift_memo.to_s+"\n"     if trade.gift_memo
+          new_trade.buyer_message   += trade.buyer_message.to_s+"\n" if trade.buyer_message
+          new_trade.promotion_fee   += trade.promotion_fee           if trade.promotion_fee
+          new_trade.total_fee       += trade.total_fee               if trade.total_fee
+          new_trade.payment         += trade.payment                 if trade.payment
+          new_trade.post_fee        += trade.post_fee                if trade.post_fee
+          new_trade.discount_fee    += trade.discount_fee            if trade.discount_fee
+          new_trade.point_fee       += trade.point_fee               if trade.point_fee
 
           new_trade.merged_trade_ids << trade.id
         }
