@@ -301,6 +301,8 @@ class TradesController < ApplicationController
         order = @trade.orders.where(_id: order_id).first
         if order
           infos.each do |key, info|
+            values = info['values'].reject{|value| value.blank? || value['id'].blank? || value['value'].blank? }
+            next if values.count == 0
             property_memo = order.trade_property_memos.create(
               trade_id: @trade.id,
               outer_id: info['outer_id'],
@@ -309,7 +311,6 @@ class TradesController < ApplicationController
             )
             used_memo = BillPropertyMemo.where(stock_in_bill_tid: info['stock_in_bill_tid']).first
             used_memo.update_attributes(used: true) if used_memo.present?
-            values = info['values'].reject{|value| value.blank? || value['id'].blank? || value['value'].blank? }
             values.each do |value|
               name = CategoryPropertyValue.find(value['id']).category_property.name
               property_memo.property_values.create(
