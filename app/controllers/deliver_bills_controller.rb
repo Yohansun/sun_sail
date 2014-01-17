@@ -291,8 +291,8 @@ class DeliverBillsController < ApplicationController
             order.trade_property_memos.where(id: property_memo.id).first.property_values.each do |value|
               dup_value = sheet[:property_values].each.find{|v| v[:name] == value.name}
               dup_value.present? ? dup_value[:value] += (","+value.value) : sheet[:property_values] << {name: value.name, value: value.value}
-              @process_sheets << sheet
             end
+            @process_sheets << sheet
           end
         end
       end

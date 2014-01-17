@@ -11,6 +11,9 @@ class MagicOrders.Views.TradesPropertyMemo extends Backbone.View
 
   render: ->
     $(@el).html(@template(trade: @model))
+    $(@el).find("select.select2").select2(
+      allowClear: true
+    )
     this
 
   match_icp_bills: (e) ->
