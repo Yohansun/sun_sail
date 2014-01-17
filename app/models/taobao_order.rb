@@ -82,7 +82,7 @@ class TaobaoOrder < Order
   end
 
   def skus
-    (taobao_sku && taobao_sku.skus) || local_skus || []
+    (taobao_sku && taobao_sku.skus.present? && taobao_sku.skus) || local_skus || []
   end
 
   def sku_products
