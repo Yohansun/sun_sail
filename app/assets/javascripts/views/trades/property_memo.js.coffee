@@ -23,9 +23,9 @@ class MagicOrders.Views.TradesPropertyMemo extends Backbone.View
 
     for memo in $(e.currentTarget).parents('tr').find('.property_memos').children(':input')
       if $(memo).data('type') == 'multiple_select'
-        for value in $(memo).select2('data')
+        for value in $(memo).select2('data') && $(memo).select2('data') != null
           property_memo['values'].push {id: value.id, value: value.text}
-      else if $(memo).data('type') == 'single_select'
+      else if $(memo).data('type') == 'single_select' && $(memo).select2('data') != null
         property_memo['values'].push {id: $(memo).select2('data').id, value: $(memo).select2('data').text}
       else if $(memo).data('type') == 'input_text'
         property_memo['values'].push {id: $(memo).data('value-id'), value: $(memo).val()}
@@ -58,10 +58,10 @@ class MagicOrders.Views.TradesPropertyMemo extends Backbone.View
           property_memos[order.id][i]['stock_in_bill_tid'] = $('tr.'+order.id+':eq('+i+')').children('td:last').find('.matched_icp_bills').select2('data').id
 
           for memo in $('tr.'+order.id+':eq('+i+')').find('.property_memos').children(':input')
-            if $(memo).data('type') == 'multiple_select'
+            if $(memo).data('type') == 'multiple_select' && $(memo).select2('data') != null
               for value in $(memo).select2('data')
                 property_memos[order.id][i]['values'].push {id: value.id, value: value.text}
-            else if $(memo).data('type') == 'single_select'
+            else if $(memo).data('type') == 'single_select' && $(memo).select2('data') != null
               property_memos[order.id][i]['values'].push {id: $(memo).select2('data').id, value: $(memo).select2('data').text}
             else if $(memo).data('type') == 'input_text'
               property_memos[order.id][i]['values'].push {id: $(memo).data('value-id'), value: $(memo).val()}
