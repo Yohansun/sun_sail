@@ -95,7 +95,7 @@
       <% @trade_checker.accounts.each_with_index do |account,aindex| %>
         <% account.trade_sources.each_with_index do |trade_source,tindex| %>
         <tr>
-          <% if aindex == 0 && tindex == 0 %>
+          <% if tindex == 0 %>
             <th class="center middle" rowspan="<%= account.trade_sources.count %>"><%= account.name %></th>
           <% end %>
           <th class="center middle" rowspan=""><%= trade_source.name %></th>
