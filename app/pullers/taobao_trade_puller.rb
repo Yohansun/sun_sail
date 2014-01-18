@@ -134,6 +134,7 @@ class TaobaoTradePuller
           result = account.can_auto_dispatch_right_now
           DelayAutoDispatch.perform_in((result == true ?  account.settings.auto_settings['dispatch_silent_gap'].to_i.hours : result), trade.id)
         end
+        true
       end
     end
 
