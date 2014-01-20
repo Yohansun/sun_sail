@@ -140,7 +140,7 @@
         </select> -->
         <input type="hidden" class="input-xlarge native_skus_list" />
         <input class="input-small" type="text" id="native_sku_num" placeholder="数量" />
-        <a class="btn btn-small btn-info" type="button" id="add_sku_binding">添加</a>
+        <a class="btn btn-small btn-info" type="button" id="add_sku_binding">绑定</a>
       </fieldset>
     </span>
     <!-- <span class="span5">
@@ -155,10 +155,11 @@
     <table class="table table-bordered table-condensed">
       <thead>
         <tr>
-          <th width="25%">SKU ID</th>
-          <th width="40%">SKU名称</th>
-          <th width="20%">数量</th>
-          <th width="15%">操作</th>
+          <th width="15%">SKU ID</th>
+          <th width="35%">SKU名称</th>
+          <th width="15%">数量</th>
+          <th width="15%">绑定状态</th>
+          <th width="20%">操作</th>
         </tr>
       </thead>
       <tbody id="sku_bindings_table"></tbody>
@@ -208,10 +209,16 @@
           if(data.sku_bindings.length != 0){
             var sku_bindings_list = ""
             for(var i in data.sku_bindings){
+              if(data.sku_bindings[i]){
+                var has_bindings = "已绑定"
+              }else{
+                var has_bindings = "未绑定"
+              }
               sku_bindings_list += '<tr><td>' + data.sku_bindings[i].sku_id + '</td>'
               sku_bindings_list += '<td>' + data.sku_bindings[i].name + '</td>'
               sku_bindings_list += '<td>' + data.sku_bindings[i].num + '</td>'
-              sku_bindings_list += '<td><a class="btn btn-small btn-info delete_sku_binding">删除</a></td></tr>'
+              sku_bindings_list += '<td>' + has_bindings + '</td>'
+              sku_bindings_list += '<td><a class="btn btn-small btn-info delete_sku_binding">解除绑定</a></td></tr>'
             }
           }
           $('#sku_bindings_table').html(sku_bindings_list)
@@ -229,10 +236,16 @@
       if(data.sku_bindings.length != 0){
         var sku_bindings_list = ""
         for(var i in data.sku_bindings){
+          if(data.sku_bindings[i]){
+            var has_bindings = "已绑定"
+          }else{
+            var has_bindings = "未绑定"
+          }
           sku_bindings_list += '<tr><td>' + data.sku_bindings[i].sku_id + '</td>'
           sku_bindings_list += '<td>' + data.sku_bindings[i].name + '</td>'
           sku_bindings_list += '<td>' + data.sku_bindings[i].num + '</td>'
-          sku_bindings_list += '<td><a class="btn btn-small btn-info delete_sku_binding">删除</a></td></tr>'
+          sku_bindings_list += '<td>' + has_bindings + '</td>'
+          sku_bindings_list += '<td><a class="btn btn-small btn-info delete_sku_binding">解除绑定</a></td></tr>'
         }
         $('#sku_bindings_table').html(sku_bindings_list)
       } else {
@@ -281,7 +294,8 @@
         new_sku_binding += '<tr class="new_add"><td>' + sku_id + '</td>'
         new_sku_binding += '<td>' + name + '</td>'
         new_sku_binding += '<td>' + num + '</td>'
-        new_sku_binding += '<td><a class="btn btn-small btn-info delete_sku_binding">删除</a></td></tr>'
+        new_sku_binding += '<td>' + '已绑定' + '</td>'
+        new_sku_binding += '<td><a class="btn btn-small btn-info delete_sku_binding">解除绑定</a></td></tr>'
         $('#sku_bindings_table').append(new_sku_binding)
       }
     }
