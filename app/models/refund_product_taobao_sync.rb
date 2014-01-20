@@ -19,7 +19,7 @@ class RefundProductTaobaoSync < ECommerce::Synchronization::Base
   def response
     params = {method: api,fields: 'refund_id,oid, tid, title,buyer_nick, seller_nick, total_fee, status, created, refund_fee,address,reason,num', status: "WAIT_BUYER_RETURN_GOODS",page_no: page_no, page_size: get_size}
     @response = TaobaoQuery.get(params,@trade_source.id)
-    handle_exception(params.merge(response: @response)) { parse_data }
+    handle_exception(params.merge(response: @response)) { parse_data } if !@response['refunds_receive_get_response']['total_results'].zero?
   end
 
   def parse_data
