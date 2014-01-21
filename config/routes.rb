@@ -107,6 +107,7 @@ MagicOrders::Application.routes.draw do
 
   match "/stock_out_bills/get_bills",to: "stock_out_bills#get_bills"
   match "/stock_out_bills/get_products",to: "stock_out_bills#get_products"
+  match "/stock_bills/get_products",to: "stock_bills#get_products"
   match "/stocks/safe_stock", to: 'stocks#safe_stock'
   post "/stocks/edit_safe_stock", to: 'stocks#edit_safe_stock'
   post "/stock_bills/update_status", to: 'stock_bills#update_status'

@@ -31,6 +31,13 @@ class StockBillsController < ApplicationController
     params[:search][:_id_in] = params[:export_ids].split(',') if params[:export_ids].present?
   end
 
+  def get_products
+    @products = current_account.skus.includes(:product).where("products.name like ?", "%#{params[:tid].strip}%")
+    respond_to do |format|
+      format.json { render partial: "partials/products.json"}
+    end
+  end
+
   def update_status
     if params[:xml].present?
       response = Hash.from_xml(params[:xml]).as_json
