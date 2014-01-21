@@ -125,10 +125,8 @@
   <% if @trade.get('invoice_type') && @trade.get('invoice_type') != "无需开票" && @trade.get('invoice_type') != "不需要": %>
     <a href="javascript:void(0)" rel="popover" data-content="<%= @trade.get 'invoice_type' %><br/><%= @trade.get 'invoice_name' %><br/>" data-original-title="<b>发票信息</b>"><i class="icon-invoice"></i></a>
   <% end %>
-  <% if MagicOrders.enable_module_colors == 1 : %>
-    <% if @trade.get('has_color_info') == true : %>
-      <a href="#"><i class="icon-color" data-type="color_info"></i></a>
-    <% end %>
+  <% if @trade.get('has_property_memos') == true : %>
+    <a href="#" class="pop_detail"><i class="icon-color" data-type="property_memo"></i></a>
   <% end %>
 </td>
 

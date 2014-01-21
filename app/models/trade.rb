@@ -77,9 +77,11 @@ class Trade
   #是否发送过提醒邮件
   field :is_notified, type: Boolean, default: false
 
+  # 二元状态值
   field :has_color_info, type: Boolean, default: false
   field :has_cs_memo, type: Boolean, default: false
   field :has_unusual_state, type: Boolean, default: false
+  field :has_property_memos, type: Boolean, default: false
   field :has_onsite_service, type: Boolean, default: false
   field :has_refund_orders, type: Boolean, default: false
   field :has_invoice_info, type: Boolean, default: false
@@ -288,10 +290,12 @@ class Trade
   validate :color_num_do_not_exist, :on => :update, :if => :color_num_changed?
   validates_uniqueness_of :tid, scope: :_type, message: "操作频率过大，请重试"
 
+
+
+  # 更新二元状态值
+  before_update :set_boolean_status_fields
   before_update :set_has_color_info
-  before_update :set_has_cs_memo
-  before_update :set_has_unusual_state
-  before_update :set_has_refund_orders
+
   after_destroy :check_associate_deliver_bills
   delegate :name,to: :trade_source,allow_nil: true,prefix: true
 
@@ -1449,6 +1453,7 @@ class Trade
       DeliverBill.where(trade_id: self._id).delete_all if self.deleted_at != nil
     end
 
+    # MAYBE DEPRECATED LATER
     def set_has_color_info
       self.orders.each do |order|
         colors = order.color_num.blank? ? [] : order.color_num
@@ -1461,40 +1466,22 @@ class Trade
       true
     end
 
-    def set_has_cs_memo
-      unless self.cs_memo.blank?
-        self.has_cs_memo = true
-        return
+    # 是否上门服务 MAYBE DEPRECATED LATER
+    def set_has_onsite_service
+      return unless fetch_account.settings.enable_module_onsite_service == 1
+      self.area_id = default_area.try(:id)
+      if OnsiteServiceArea.where(area_id: default_area.id, account_id: account_id).present?
+        self.has_onsite_service = true
       else
-        self.orders.each do |order|
-          unless order.cs_memo.blank?
-            self.has_cs_memo = true
-            return
-          end
-        end
-        self.has_cs_memo = false
+        self.has_onsite_service = false
       end
-      true
     end
 
-    def set_has_refund_orders
-      self.orders.each do |order|
-        if order.refund_status != 'NO_REFUND'
-          self.has_refund_orders = true
-          return
-        end
-      end
-      self.has_refund_orders = false
+    def set_boolean_status_fields
+      self.has_cs_memo        = (self.cs_memo.present? || orders.where(:cs_memo.ne => nil).present?)
+      self.has_refund_orders  = orders.where(:refund_status => 'NO_REFUND').present?
+      self.has_unusual_state  = unusual_states.where(:repaired_at => nil).present?
+      self.has_property_memos = self.trade_property_memos.present?
       true
-    end
-
-    def set_has_unusual_state
-      if unusual_states.where(:repaired_at => nil).exists?
-        self.has_unusual_state = true
-        return
-      else
-        self.has_unusual_state = false
-        true
-      end
     end
 end

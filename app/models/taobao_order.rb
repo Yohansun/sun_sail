@@ -217,34 +217,36 @@ class TaobaoOrder < Order
 
   def multi_product_properties
     mutiple_properties = []
-    category_properties = trade.fetch_account.products.find_by_outer_id(outer_iid).try(:category).try(:category_properties)
-    return [] if category_properties.blank?
-    self.num.times do |t|
-      property_infos = {
-        stock_in_bill_tid: trade_property_memos[t].try(:stock_in_bill_tid),
-        "properties" => []
-      }
-      category_properties.each_with_index do |category_property, i|
-        property_infos["properties"][i] = {
-          name: category_property.name,
-          type: "#{category_property.value_type_name}"
+    self.sku_products.each do |sku_product|
+      category_properties = sku_product[:product].try(:category).try(:category_properties)
+      next if category_properties.blank?
+      (sku_product[:number]*self.num).times do |t|
+        property_infos = {
+          stock_in_bill_tid: trade_property_memos[t].try(:stock_in_bill_tid),
+          "properties" => []
         }
-        property_infos["properties"][i]['property_values'] = []
-        category_property.values.each_with_index do |category_property_value, j|
-          property_infos["properties"][i]['property_values'][j] = {}
-          matched_property_value = trade_property_memos[t].property_values.where(category_property_value_id: category_property_value.id).first rescue nil
-          property_infos["properties"][i]['property_values'][j]["id"] = category_property_value.id
-          if matched_property_value.present?
-            property_infos["properties"][i]['property_values'][j]["marked"] = true
-            property_infos["properties"][i]['property_values'][j]['value'] = matched_property_value.value
-          else
-            property_infos["properties"][i]['property_values'][j]["marked"] = false
-            property_infos["properties"][i]['property_values'][j]['value'] = category_property_value.value
+        category_properties.each_with_index do |category_property, i|
+          property_infos["properties"][i] = {
+            name: category_property.name,
+            type: "#{category_property.value_type_name}"
+          }
+          property_infos["properties"][i]['property_values'] = []
+          category_property.values.each_with_index do |category_property_value, j|
+            property_infos["properties"][i]['property_values'][j] = {}
+            matched_property_value = trade_property_memos[t].property_values.where(category_property_value_id: category_property_value.id).first rescue nil
+            property_infos["properties"][i]['property_values'][j]["id"] = category_property_value.id
+            if matched_property_value.present?
+              property_infos["properties"][i]['property_values'][j]["marked"] = true
+              property_infos["properties"][i]['property_values'][j]['value'] = matched_property_value.value
+            else
+              property_infos["properties"][i]['property_values'][j]["marked"] = false
+              property_infos["properties"][i]['property_values'][j]['value'] = category_property_value.value
+            end
           end
         end
+        mutiple_properties << property_infos
       end
-      mutiple_properties << property_infos
-    end
+    end if self.sku_products.present?
     mutiple_properties
   end
 end
