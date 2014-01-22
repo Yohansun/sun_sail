@@ -179,18 +179,21 @@
           if(data.sku_bindings.length != 0){
             var sku_bindings_list = ""
             for(var i in data.sku_bindings){
-              if(data.sku_bindings[i]){
-                var has_bindings = "已绑定"
+              if(data.sku_bindings[i].sku_id == false) {
+                sku_bindings_list += '<tr><td>' + data.sku_bindings[i].taobao_name + '</td>'
+                sku_bindings_list += '<td></td>'
+                sku_bindings_list += '<td></td>'
+                sku_bindings_list += '<td>' + "未绑定" + '</td>'
+                sku_bindings_list += '<td></td></tr>'
               }else{
-                var has_bindings = "未绑定"
+                sku_bindings_list += '<tr><td style="display:none">' + data.sku_bindings[i].sku_id + '</td>'
+                sku_bindings_list += '<td style="display:none">' + data.sku_bindings[i].taobao_sku_id + '</td>'
+                sku_bindings_list += '<td>' + data.sku_bindings[i].taobao_name + '</td>'
+                sku_bindings_list += '<td>' + data.sku_bindings[i].name + '</td>'
+                sku_bindings_list += '<td>' + data.sku_bindings[i].num + '</td>'
+                sku_bindings_list += '<td>' + "已绑定" + '</td>'
+                sku_bindings_list += '<td><a class="btn btn-small btn-info delete_sku_binding">解除绑定</a></td></tr>'
               }
-              sku_bindings_list += '<tr><td style="display:none">' + data.sku_bindings[i].sku_id + '</td>'
-              sku_bindings_list += '<td style="display:none">' + data.sku_bindings[i].taobao_sku_id + '</td>'
-              sku_bindings_list += '<td>' + data.sku_bindings[i].taobao_name + '</td>'
-              sku_bindings_list += '<td>' + data.sku_bindings[i].name + '</td>'
-              sku_bindings_list += '<td>' + data.sku_bindings[i].num + '</td>'
-              sku_bindings_list += '<td>' + has_bindings + '</td>'
-              sku_bindings_list += '<td><a class="btn btn-small btn-info delete_sku_binding">解除绑定</a></td></tr>'
             }
           }
           $('#sku_bindings_table').html(sku_bindings_list)
@@ -226,7 +229,6 @@
     event.preventDefault()
 
     var sku_id = $('input.native_skus_list').select2('data').id
-    console.log(sku_id)
     var name = $('input.native_skus_list').select2('data').text
     var num = $('#native_sku_num').val()
     var taobao_name = $('.change_taobao_skus option:selected').text()

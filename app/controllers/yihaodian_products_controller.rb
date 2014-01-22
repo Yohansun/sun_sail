@@ -52,6 +52,8 @@ class YihaodianProductsController < ApplicationController
               all_sku_bindings << {sku_id: binding.sku_id, name: binding.sku.title, num: binding.number, yihaodian_name: YihaodianSku.find(binding.resource_id).title, yihaodian_sku_id: binding.resource_id }
             end
           end
+        else
+          all_sku_bindings << {sku_id: false, yihaodian_name: sku.title}
         end
       end
       render json: {has_skus: true, product: @product, skus: yihaodian_skus, sku_bindings: all_sku_bindings}
