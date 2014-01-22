@@ -42,16 +42,18 @@ class JingdongProductsController < ApplicationController
       @product.jingdong_skus.each do |sku|
         jingdong_skus << {id: sku.id, name: sku.title}
       end
-      first_bindings = @product.jingdong_skus.first.sku_bindings rescue false
-      first_sku_bindings = []
-      if first_bindings.present?
-        first_bindings.each do |binding|
-          if binding.sku.present?
-            first_sku_bindings << {sku_id: binding.sku_id, name: binding.sku.title, num: binding.number}
+      all_sku_bindings = []
+      @product.jingdong_skus.each do |sku|
+        sku_bindings = sku.sku_bindings rescue false
+        if sku_bindings.present?
+          sku_bindings.each do |binding|
+            if binding.sku.present?
+              all_sku_bindings << {sku_id: binding.sku_id, name: binding.sku.title, num: binding.number, jingdong_name: JingdongSku.find(binding.resource_id).title, jingdong_sku_id: binding.resource_id }
+            end
           end
         end
       end
-      render json: {has_skus: true, product: @product, skus: jingdong_skus, sku_bindings: first_sku_bindings}
+      render json: {has_skus: true, product: @product, skus: jingdong_skus, sku_bindings: all_sku_bindings}
     end
   end
 
