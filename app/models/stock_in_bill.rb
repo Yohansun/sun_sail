@@ -69,7 +69,7 @@ class StockInBill < StockBill
     if stock_type == "IINITIAL" || stock_type == "ICP"
       initial_stock
     else
-      sync_stock
+      sync_stock if account && account.settings.enable_module_third_party_stock == 1
     end
   end
 
@@ -212,7 +212,8 @@ class StockInBill < StockBill
     end
   end
 
-  def sync_stock #确认入库
+  # 确认入库
+  def sync_stock
     bill_products.each do |stock_in|
       stock_product = StockProduct.find_by_id(stock_in.stock_product_id)
       if stock_product
