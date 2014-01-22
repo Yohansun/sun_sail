@@ -251,7 +251,7 @@ GEM
       less (~> 2.2.0)
     letter_opener (1.0.0)
       launchy (>= 2.0.4)
-    libv8 (3.11.8.13)
+    libv8 (3.16.14.3)
     libwebsocket (0.1.7.1)
       addressable
       websocket
@@ -381,7 +381,7 @@ GEM
       redis-store (~> 1.1.4)
     redis-store (1.1.4)
       redis (>= 2.2)
-    ref (1.0.2)
+    ref (1.0.5)
     responders (0.9.3)
       railties (~> 3.1)
     rest-client (1.6.7)
@@ -469,8 +469,8 @@ GEM
     taobao_fu_reload (1.1.2)
       crack (>= 0.1.7)
     temple (0.5.5)
-    therubyracer (0.11.2)
-      libv8 (~> 3.11.8.12)
+    therubyracer (0.12.0)
+      libv8 (~> 3.16.14.0)
       ref
     thin (1.5.0)
       daemons (>= 1.0.9)
@@ -620,7 +620,7 @@ DEPENDENCIES
   state_machine (~> 1.2.0)
   strong_parameters
   taobao_fu_reload (~> 1.1.2)
-  therubyracer
+  therubyracer (~> 0.12.0)
   thin
   tinder
   twitter-bootstrap-rails (>= 2.1.9)

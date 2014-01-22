@@ -29,11 +29,7 @@ class TradesController < ApplicationController
     @trades_count = @trades.count
     @trades = TradeDecorator.decorate(@trades.limit(limit).skip(offset).order_by(:created.desc))
 
-    if @trades_count > 0
-      respond_with @trades
-    else
-      render json: []
-    end
+    respond_with @trades
   end
 
   def export

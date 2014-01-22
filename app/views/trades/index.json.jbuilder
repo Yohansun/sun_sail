@@ -1,4 +1,4 @@
-json.array!(@trades) do |json, trade|
+json.list(@trades) do |json, trade|
 
   ## 订单参数
 
@@ -108,3 +108,5 @@ json.array!(@trades) do |json, trade|
   json.stock_status           stock_out_bill.status if stock_out_bill
   json.can_do_close           !!stock_out_bill && stock_out_bill.can_do_close?
 end
+
+json.counter_cache(counter_caches(current_account.id))

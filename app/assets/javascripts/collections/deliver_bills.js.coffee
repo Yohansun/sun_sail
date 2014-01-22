@@ -1,3 +1,3 @@
-class MagicOrders.Collections.DeliverBills extends Backbone.Collection
+class MagicOrders.Collections.DeliverBills extends MagicOrders.Collections.BaseCollection
   url: '/api/deliver_bills'
   model: MagicOrders.Models.DeliverBill
