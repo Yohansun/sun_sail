@@ -318,6 +318,8 @@ class ProductsController < ApplicationController
               all_sku_bindings << {sku_id: binding.sku_id, name: binding.sku.title, num: binding.number, taobao_name: TaobaoSku.find(binding.resource_id).title, taobao_sku_id: binding.resource_id }
             end
           end
+        else
+          all_sku_bindings << {sku_id: false, taobao_name: sku.title}
         end
       end
       render json: {has_skus: true, product: @product, skus: taobao_skus, sku_bindings: all_sku_bindings}

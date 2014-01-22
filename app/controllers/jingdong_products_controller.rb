@@ -51,6 +51,8 @@ class JingdongProductsController < ApplicationController
               all_sku_bindings << {sku_id: binding.sku_id, name: binding.sku.title, num: binding.number, jingdong_name: JingdongSku.find(binding.resource_id).title, jingdong_sku_id: binding.resource_id }
             end
           end
+        else
+          all_sku_bindings << {sku_id: false, jingdong_name: sku.title}
         end
       end
       render json: {has_skus: true, product: @product, skus: jingdong_skus, sku_bindings: all_sku_bindings}
