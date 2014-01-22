@@ -140,7 +140,7 @@
 </td>
 <% end %>
 <td data-col='deliver_info' nowrap>
-  <% if @trade.get('seller_name') == true : %>
+  <% if @trade.get('seller_name') : %>
   <label class="label label-info">
     经销商：<br />
     <%= @trade.get('seller_name') %><br />
