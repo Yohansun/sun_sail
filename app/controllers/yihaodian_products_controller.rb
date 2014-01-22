@@ -41,18 +41,20 @@ class YihaodianProductsController < ApplicationController
     else
       yihaodian_skus = []
       @product.yihaodian_skus.each do |sku|
-        yihaodian_skus << {id: sku.id, name: sku.product_cname}
+        yihaodian_skus << {id: sku.id, name: sku.title}
       end
-      first_bindings = @product.yihaodian_skus.first.sku_bindings rescue false
-      first_sku_bindings = []
-      if first_bindings.present?
-        first_bindings.each do |binding|
-          if binding.sku.present?
-            first_sku_bindings << {sku_id: binding.sku_id, name: binding.sku.title, num: binding.number}
+      all_sku_bindings = []
+      @product.yihaodian_skus.each do |sku|
+        sku_bindings = sku.sku_bindings rescue false
+        if sku_bindings.present?
+          sku_bindings.each do |binding|
+            if binding.sku.present?
+              all_sku_bindings << {sku_id: binding.sku_id, name: binding.sku.title, num: binding.number, yihaodian_name: YihaodianSku.find(binding.resource_id).title, yihaodian_sku_id: binding.resource_id }
+            end
           end
         end
       end
-      render json: {has_skus: true, product: @product, skus: yihaodian_skus, sku_bindings: first_sku_bindings}
+      render json: {has_skus: true, product: @product, skus: yihaodian_skus, sku_bindings: all_sku_bindings}
     end
   end
 

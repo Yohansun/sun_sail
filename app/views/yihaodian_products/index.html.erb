@@ -138,8 +138,8 @@
           <option value="<%#= sku.id %>"><%#= sku.title %></option>
           <%# end %>
         </select> -->
-        <input type="hidden" class="input-xlarge native_skus_list" />
-        <input class="input-small" type="text" id="native_sku_num" placeholder="数量" />
+        <input type="hidden" class="input-xxlarge native_skus_list"/>
+        <input class="span1" type="text" id="native_sku_num" placeholder="数量" />
         <a class="btn btn-small btn-info" type="button" id="add_sku_binding">绑定</a>
       </fieldset>
     </span>
@@ -155,8 +155,8 @@
     <table class="table table-bordered table-condensed">
       <thead>
         <tr>
-          <th width="15%">SKU ID</th>
-          <th width="35%">SKU名称</th>
+          <th width="25%">一号店SKU</th>
+          <th width="25%">本地SKU</th>
           <th width="15%">数量</th>
           <th width="15%">绑定状态</th>
           <th width="20%">操作</th>
@@ -167,7 +167,6 @@
   </div>
   <div class="modal-footer">
     <button class="btn btn-small" data-dismiss="modal" aria-hidden="true">关闭</button>
-    <button class="btn btn-small btn-primary" id="save_sku_bindings">保存</button>
   </div>
 </form><!-- binding -->
 
@@ -214,7 +213,9 @@
               }else{
                 var has_bindings = "未绑定"
               }
-              sku_bindings_list += '<tr><td>' + data.sku_bindings[i].sku_id + '</td>'
+              sku_bindings_list += '<tr><td style="display:none">' + data.sku_bindings[i].sku_id + '</td>'
+              sku_bindings_list += '<td style="display:none">' + data.sku_bindings[i].yihaodian_sku_id + '</td>'
+              sku_bindings_list += '<td>' + data.sku_bindings[i].yihaodian_name + '</td>'
               sku_bindings_list += '<td>' + data.sku_bindings[i].name + '</td>'
               sku_bindings_list += '<td>' + data.sku_bindings[i].num + '</td>'
               sku_bindings_list += '<td>' + has_bindings + '</td>'
@@ -228,30 +229,6 @@
     } else {
       alert("请选择一件商品。")
     }
-  })
-
-  $('.change_yihaodian_skus').on('change',function(event){
-    var yihaodian_sku_id = $('.change_yihaodian_skus option:selected').val()
-    $.get("/yihaodian_products/change_yihaodian_skus", {yihaodian_sku_id: yihaodian_sku_id}).done(function(data){
-      if(data.sku_bindings.length != 0){
-        var sku_bindings_list = ""
-        for(var i in data.sku_bindings){
-          if(data.sku_bindings[i]){
-            var has_bindings = "已绑定"
-          }else{
-            var has_bindings = "未绑定"
-          }
-          sku_bindings_list += '<tr><td>' + data.sku_bindings[i].sku_id + '</td>'
-          sku_bindings_list += '<td>' + data.sku_bindings[i].name + '</td>'
-          sku_bindings_list += '<td>' + data.sku_bindings[i].num + '</td>'
-          sku_bindings_list += '<td>' + has_bindings + '</td>'
-          sku_bindings_list += '<td><a class="btn btn-small btn-info delete_sku_binding">解除绑定</a></td></tr>'
-        }
-        $('#sku_bindings_table').html(sku_bindings_list)
-      } else {
-        $('#sku_bindings_table').html("")
-      }
-    })
   })
 
   $(document).ready(function() {
@@ -277,6 +254,8 @@
     var sku_id = $('input.native_skus_list').select2('data').id
     var name = $('input.native_skus_list').select2('data').text
     var num = $('#native_sku_num').val()
+    var yihaodian_name = $('.change_yihaodian_skus option:selected').text()
+    var yihaodian_sku_id = $('.change_yihaodian_skus option:selected').val()
     if(num == ''){
       alert("数量不能为空。")
     } else if(/^[1-9]{1}[0-9]*$/.test(num) != true){
@@ -291,18 +270,31 @@
         alert("已添加过SKU")
       } else {
         var new_sku_binding = ""
-        new_sku_binding += '<tr class="new_add"><td>' + sku_id + '</td>'
+        new_sku_binding += '<tr class="new_add"><td style="display:none">' + sku_id + '</td>'
+        new_sku_binding += '<td style="display:none">' + yihaodian_sku_id + '</td>'
+        new_sku_binding += '<td>' + yihaodian_name + '</td>'
         new_sku_binding += '<td>' + name + '</td>'
         new_sku_binding += '<td>' + num + '</td>'
         new_sku_binding += '<td>' + '已绑定' + '</td>'
         new_sku_binding += '<td><a class="btn btn-small btn-info delete_sku_binding">解除绑定</a></td></tr>'
         $('#sku_bindings_table').append(new_sku_binding)
+        var infos = []
+        var info = "new_add,"+sku_id+","+num
+        infos.push(info)
+        $.post("/yihaodian_products/tie_to_native_skus", {yihaodian_sku_id: yihaodian_sku_id, infos: infos}, function(result){});
       }
     }
   })
 
   $(document).on('click', '.delete_sku_binding', function(event){
     event.preventDefault()
+    var yihaodian_sku_id = $(this).parents('tr').find("td").eq(1).text()
+    var sku_id = $(this).parents('tr').find("td").eq(0).text()
+    var num = $(this).parents('tr').find("td").eq(4).text()
+    var infos = []
+    var info = "need_delete,"+sku_id+","+num
+    infos.push(info)
+    $.post("/yihaodian_products/tie_to_native_skus", {yihaodian_sku_id: yihaodian_sku_id, infos: infos}, function(result){});
     if($(event.target).parents('tr').attr('class') == "new_add"){
       $(event.target).parents('tr').remove()
     } else {
@@ -311,18 +303,5 @@
     }
   })
 
-  $('#save_sku_bindings').on('click', function(event){
-    event.preventDefault()
-    var yihaodian_sku_id = $('.change_yihaodian_skus option:selected').val()
-    var table_length = $('#sku_bindings_table').children('tr').length
-    var infos = []
-    for(var i = 0; i < table_length; i++){
-      var $tr = $('#sku_bindings_table tr:eq('+i+')')
-      var info = $tr.attr('class')+","+$tr.find('td:eq(0)').text()+","+$tr.find('td:eq(2)').text()
-      infos.push(info)
-    }
-    $.post("/yihaodian_products/tie_to_native_skus", {yihaodian_sku_id: yihaodian_sku_id, infos: infos}, function(result){});
-    $('#sku_binding').modal('hide');
-  })
 </script>
 <% end %>

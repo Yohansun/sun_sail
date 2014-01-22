@@ -32,4 +32,9 @@ class YihaodianSku < ActiveRecord::Base
   scope :with_account, ->(account_id){ where(account_id: account_id) }
   scope :is_binding, includes(:sku_bindings).where("sku_bindings.id is not null")
   scope :no_binding, includes(:sku_bindings).where("sku_bindings.id is null")
+
+  def title
+    "#{yihaodian_product.try(:product_cname)}"
+  end
+
 end

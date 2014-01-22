@@ -309,16 +309,18 @@ class ProductsController < ApplicationController
       @product.taobao_skus.each do |sku|
         taobao_skus << {id: sku.id, name: sku.title}
       end
-      first_bindings = @product.taobao_skus.first.sku_bindings rescue false
-      first_sku_bindings = []
-      if first_bindings.present?
-        first_bindings.each do |binding|
-          if binding.sku.present?
-            first_sku_bindings << {sku_id: binding.sku_id, name: binding.sku.title, num: binding.number}
+      all_sku_bindings = []
+      @product.taobao_skus.each do |sku|
+        sku_bindings = sku.sku_bindings rescue false
+        if sku_bindings.present?
+          sku_bindings.each do |binding|
+            if binding.sku.present?
+              all_sku_bindings << {sku_id: binding.sku_id, name: binding.sku.title, num: binding.number, taobao_name: TaobaoSku.find(binding.resource_id).title, taobao_sku_id: binding.resource_id }
+            end
           end
         end
       end
-      render json: {has_skus: true, product: @product, skus: taobao_skus, sku_bindings: first_sku_bindings}
+      render json: {has_skus: true, product: @product, skus: taobao_skus, sku_bindings: all_sku_bindings}
     end
   end
 
@@ -339,7 +341,7 @@ class ProductsController < ApplicationController
     skus = current_account.products.where(outer_id: params[:q]).first.skus rescue []
     sku_info = []
     skus.each do |sku|
-      sku_info << {id: sku.id, text: sku.title}
+      sku_info << {id: sku.id.to_s, text: sku.title}
     end
     render json: {sku_info: sku_info}
   end
