@@ -24,7 +24,13 @@ body {
 .loginLogo p{ color:#fff; font-size:14px; text-align:right; padding-right:20px; line-height:50px;/* letter-spacing:2px;*/ font-family:"仿宋";}
 .loginPanel{background:#F5F5F5; border:1px solid #E5E5E5; border-top:0;}
 .navbar .brand{padding:0 20px;}
-.navbar-inverse .navbar-inner{background:#1b1b1b url(<%= asset_path "navbg.png"%>) no-repeat center 0;}
+/* relevant changes——about navtop & login's background-image*/
+.navbar-inverse .navbar-inner{background:#1b1b1b url(<%= asset_path "navbg.png"%>) no-repeat center 0;border-color:transparent;}
+.navbar-inverse .divider-vertical{border-color:transparent;}
+.navbar-inverse .nav li.dropdown.open > .dropdown-toggle,
+.navbar-inverse .nav .active > a,
+.navbar-inverse .nav .active > a:hover{background:#b50825;}
+/*ends*/
 .login .simple_form{ margin-bottom:0;}
 .login .simple_form .control-group{border-bottom:1px solid #E5E5E5;/*padding-bottom:10px;*/margin-bottom:10px;}
 .login .simple_form .controls {margin-left:85px;*margin-left:10px!important;*padding-left:0!important;}
