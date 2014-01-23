@@ -357,6 +357,34 @@ class Trade
                                        'TRADE_REFUNDING']
   }.freeze
 
+###########
+##### 订单与其他表单的关联属性
+
+  def orders
+    self.taobao_orders
+  end
+
+  def orders=(new_orders)
+    self.taobao_orders = new_orders
+  end
+
+  # always should be the only active one
+  def stock_out_bill
+    @stock_out_bill ||= stock_out_bills.where(:status.ne => "CLOSED").first
+  end
+
+  def regular_orders
+    if self._type == "TaobaoTrade"
+      orders.where(:refund_status.ne => 'SUCCESS')
+    else
+      orders.where(refund_status: 'NO_REFUND')
+    end
+  end
+
+  def last_unusual_state
+    unusual_states.where(repaired_at: nil).last.try(:reason)
+  end
+
   def fetch_account
     return Account.find(self.account_id) if self.account_id_change
     @account ||= Account.find(self.account_id)
@@ -366,15 +394,117 @@ class Trade
     @trade_source ||= TradeSource.find_by_id(trade_source_id)
   end
 
-  def get_third_party_logistic_id(logistic_id=self.logistic_id)
-    logistic = Logistic.find_by_id(logistic_id)
-    case self._type
-    when "TaobaoTrade"    then logistic && logistic.taobao_logistic_id(trade_source_id)
-    when "JingdongTrade"  then logistic && logistic.jingdong_logistic_id(trade_source_id)
-    when "YihaodianTrade" then logistic && logistic.yihaodian_logistic_id(trade_source_id)
-    else nil
+  def cc_emails
+    emails = []
+
+    if self.seller
+      cc = self.seller.ancestors.map { |e|
+        if e.cc_emails
+          e.cc_emails.split(",")
+        end
+      }
+      emails = cc.flatten.compact.map { |e| e.strip }
+      emails = emails | (fetch_account.settings.extra_cc || [])
+    end
+
+    emails
+  end
+
+###########
+##### 订单页面显示相关
+
+  def type_text
+    if self.custom_type.present?
+      self.custom_type_name
+    elsif self._type == "TaobaoTrade"
+      '淘宝'
+    elsif self._type == "JingdongTrade"
+      '京东'
+    elsif self._type == "YihaodianTrade"
+      '一号店'
     end
   end
+
+  def orders_total_price
+    self.orders.inject(0) { |sum, order| sum + order.price*order.num}
+  end
+
+  def out_iids
+    self.orders.map {|o| o.outer_iid}
+  end
+
+  def receiver_address_array
+    # 请按照 省市区 的顺序生成array
+    [self.receiver_state, self.receiver_city, self.receiver_district]
+  end
+
+  def taobao_status_memo
+    case status
+    when "TRADE_NO_CREATE_PAY"
+      "没有创建支付宝交易"
+    when "WAIT_BUYER_PAY"
+      "等待付款"
+    when "WAIT_SELLER_SEND_GOODS"
+      "已付款，待发货"
+    when "WAIT_BUYER_CONFIRM_GOODS"
+      "已付款，已发货"
+    when "TRADE_BUYER_SIGNED"
+      "买家已签收,货到付款专用"
+    when "TRADE_FINISHED"
+      "交易成功"
+    when "TRADE_CLOSED"
+      "交易已关闭"
+    when "TRADE_CLOSED_BY_TAOBAO"
+      "交易被淘宝关闭"
+    when "ALL_WAIT_PAY"
+      "包含：等待买家付款、没有创建支付宝交易"
+    when "ALL_CLOSED"
+      "包含：交易关闭、交易被淘宝关闭"
+    else
+      status
+    end
+  end
+
+  def custom_type
+    # overwrite this method
+  end
+
+  def main_trade_id
+    # overwrite this method
+  end
+
+  def unusual_color_class
+    class_name = ''
+    if has_unusual_state
+      class_name = 'cs_error'
+      if fetch_account.key == "nippon"
+        class_name = unusual_states.last.unusual_color_class  if unusual_states && unusual_states.last.present? && unusual_states.last.unusual_color_class.present?
+      end
+    end
+    class_name
+  end
+
+  def color_num_changed?
+    orders.all.map(&:color_num_changed?).include? (true)
+  end
+
+  # 物流公司名称
+  def logistic_company
+    logistic_name
+  end
+
+  # fetch all order cs_memo in a trade
+  def orders_cs_memo
+    orders.collect(&:cs_memo).compact.join(' ')
+  end
+
+  # fetch trade cs_memo with order cs_memo
+  def trade_with_orders_cs_memo
+    "#{cs_memo}  #{orders_cs_memo}"
+  end
+
+###########
+##### 多退少补，申请线下退款操作相关
 
   ['add_ref', 'return_ref', 'refund_ref'].each do |ref_method|
     define_method(ref_method.to_sym) do
@@ -409,20 +539,8 @@ class Trade
     )
   end
 
-  def unusual_color_class
-    class_name = ''
-    if has_unusual_state
-      class_name = 'cs_error'
-      if fetch_account.key == "nippon"
-        class_name = unusual_states.last.unusual_color_class  if unusual_states && unusual_states.last.present? && unusual_states.last.unusual_color_class.present?
-      end
-    end
-    class_name
-  end
-
-  def last_unusual_state
-    unusual_states.where(repaired_at: nil).last.try(:reason)
-  end
+###########
+##### 订单验证
 
   def color_num_do_not_exist
     orders.map(&:color_num).flatten.each do |color|
@@ -434,44 +552,8 @@ class Trade
     end
   end
 
-  def color_num_changed?
-    orders.all.map(&:color_num_changed?).include? (true)
-  end
-
-  # 物流公司名称
-  def logistic_company
-    logistic_name
-  end
-
-  def cc_emails
-    emails = []
-
-    if self.seller
-      cc = self.seller.ancestors.map { |e|
-        if e.cc_emails
-          e.cc_emails.split(",")
-        end
-      }
-      emails = cc.flatten.compact.map { |e| e.strip }
-      emails = emails | (fetch_account.settings.extra_cc || [])
-    end
-
-    emails
-  end
-
-  # fetch all order cs_memo in a trade
-  def orders_cs_memo
-    orders.collect(&:cs_memo).compact.join(' ')
-  end
-
-  # fetch trade cs_memo with order cs_memo
-  def trade_with_orders_cs_memo
-    "#{cs_memo}  #{orders_cs_memo}"
-  end
-
-  def stock_out_bill # always should be the only active one
-    @stock_out_bill ||= stock_out_bills.where(:status.ne => "CLOSED").first
-  end
+###########
+##### 订单分流相关
 
   def reset_seller
     return unless seller_id
@@ -506,69 +588,6 @@ class Trade
   def matched_seller(area = nil)
     area ||= default_area
     @matched_seller ||= SellerMatcher.match_trade_seller(self.id, area)
-  end
-
-  def matched_logistics
-    area = default_area
-    if area
-      @logistic_ids = fetch_account.logistic_areas.where(area_id: area.id).map{|l| l.logistic_id }.join(",")
-      @matched_logistics = fetch_account.logistics.where("id in (?)", @logistic_ids).map{|ml| [ml.id, ml.name, "/logistics/#{ml.id}/print_flash_settings/#{ml.print_flash_setting.id}/print_infos.xml"]}
-      @matched_logistics == [] ? [[1,"其他", '']] : @matched_logistics
-    else
-      [[1,"其他", '']]     #无匹配地区或匹配经销商时默认是其他
-    end
-  end
-
-  def can_deliver_in_logistic_group?
-    enable = fetch_account.settings.enable_module_logistic_group
-    return false unless enable == 1
-    items = []
-    taobao_orders.each do |order|
-      order.package_products.each do |p|
-        items << p.logistic_group_id
-      end
-    end
-    !items.include?(nil)
-  end
-
-  def logistic_group_products
-    items = []
-    taobao_orders.each do |order|
-      order.num.times{
-        order.package_products.each do |p|
-          item = {order_id: order.id, product_id: p.id, num: 1, logistic_group_id: p.logistic_group_id}
-          items << item
-        end
-      }
-    end
-    items
-  end
-
-  def logistic_groups
-    groups = {}
-    logistic_group_products.each do |product|
-      logistic_group_id = product.fetch(:logistic_group_id)
-      groups[logistic_group_id] ||= 0
-      groups[logistic_group_id] += product.fetch(:num)
-    end
-
-    splited_groups = {}
-    groups.each do |logistic_group_id, num|
-      logistic_group = LogisticGroup.find_by_id(logistic_group_id)
-      split_number = logistic_group.split_number
-      divmod = num.divmod(split_number)
-      splited_groups[logistic_group_id] = [divmod[0], divmod[1]]
-    end
-    splited_groups
-  end
-
-  def logistic_group(id)
-    products = []
-    logistic_group_products.each do |logistic_group_product|
-      logistic_group_id = logistic_group_product.fetch(:logistic_group_id)
-      products << logistic_group_product if logistic_group_id == id
-    end
-    products
   end
 
   def generate_stock_out_bill
@@ -631,19 +650,6 @@ class Trade
     bill.save!
     async_invoice_price
     bill.decrease_activity #减去仓库的可用库存
-  end
-
-  def regular_orders
-    if self._type == "TaobaoTrade"
-      orders.where(:refund_status.ne => 'SUCCESS')
-    else
-      orders.where(refund_status: 'NO_REFUND')
-    end
-  end
-
-  # 更新子订单退款金额, 如果有出库单,更新出库单开票金额
-  def async_invoice_price
-    FetchRefundFee.perform_async(id) if orders.where(refund_status: "SUCCESS").count > 0
   end
 
   # SKU属性不全
@@ -720,42 +726,6 @@ class Trade
     end
   end
 
-  def logistic_split
-    splited = []
-  end
-
-  def split_logistic(logistic_ids)
-    # 清空默认发货单
-    deliver_bills.delete_all
-
-    logistic_split.each do |item|
-      outer_id = item[:bill][:outer_id]
-      order = orders.select{|order| order.outer_iid == outer_id}.first
-      color_num = order.color_num
-      bill_number = item[:bill][:id]
-
-      deliver_bill = deliver_bills.create(
-        deliver_bill_number: bill_number,
-        seller_id: seller_id,
-        seller_name: seller_name
-        )
-
-      deliver_bill.bill_products.create(
-        outer_id: outer_id,
-        title: item[:bill][:title],
-        number: item[:bill][:number],
-        colors: color_num.pop(item[:bill][:number]),
-        memo: order.cs_memo
-        )
-
-      logistic_id = logistic_ids[bill_number]
-      logistic = Logistic.find logistic_id
-      deliver_bill.logistic = logistic
-    end
-
-    update_attributes has_split_deliver_bill: true
-  end
-
   def default_area
     address = self.receiver_address_array
     state = city = area = nil
@@ -764,30 +734,6 @@ class Trade
     area = city.children.where(name: address[2]).first if city
     area || city || state
   end
-
-  ## 发货相关
-
-  def deliverable?
-    trades = Trade.where(tid: tid).select do |trade|
-      trade.orders.where(:refund_status.in => ['NO_REFUND', 'CLOSED']).size != 0
-    end
-    (trades.map(&:status) - ["WAIT_BUYER_CONFIRM_GOODS"]).size == 0 && !trades.map(&:delivered_at).include?(nil)
-  end
-
-  def deliver!
-    return unless self.deliverable?
-    TradeDeliver.perform_async(self.id)
-  end
-
-  def auto_deliver!
-    result = self.fetch_account.can_auto_deliver_right_now
-    TradeAutoDeliver.perform_in((result == true ? self.fetch_account.settings.auto_settings['deliver_silent_gap'].to_i.hours : result), self.id)
-    self.is_auto_deliver = true
-    self.operation_logs.create(operated_at: Time.now, operation: "自动发货")
-    self.save
-  end
-
-  ## 分流相关
 
   def dispatchable?
     if is_locked
@@ -843,53 +789,152 @@ class Trade
     end
   end
 
-  ## model属性方法 ##
+###########
+##### 订单物流拆分相关
 
-  def out_iids
-    self.orders.map {|o| o.outer_iid}
+  def can_deliver_in_logistic_group?
+    enable = fetch_account.settings.enable_module_logistic_group
+    return false unless enable == 1
+    items = []
+    taobao_orders.each do |order|
+      order.package_products.each do |p|
+        items << p.logistic_group_id
+      end
+    end
+    !items.include?(nil)
   end
 
-  def receiver_address_array
-    # 请按照 省市区 的顺序生成array
-    [self.receiver_state, self.receiver_city, self.receiver_district]
+  def logistic_group_products
+    items = []
+    taobao_orders.each do |order|
+      order.num.times{
+        order.package_products.each do |p|
+          item = {order_id: order.id, product_id: p.id, num: 1, logistic_group_id: p.logistic_group_id}
+          items << item
+        end
+      }
+    end
+    items
   end
 
-  def taobao_status_memo
-    case status
-    when "TRADE_NO_CREATE_PAY"
-      "没有创建支付宝交易"
-    when "WAIT_BUYER_PAY"
-      "等待付款"
-    when "WAIT_SELLER_SEND_GOODS"
-      "已付款，待发货"
-    when "WAIT_BUYER_CONFIRM_GOODS"
-      "已付款，已发货"
-    when "TRADE_BUYER_SIGNED"
-      "买家已签收,货到付款专用"
-    when "TRADE_FINISHED"
-      "交易成功"
-    when "TRADE_CLOSED"
-      "交易已关闭"
-    when "TRADE_CLOSED_BY_TAOBAO"
-      "交易被淘宝关闭"
-    when "ALL_WAIT_PAY"
-      "包含：等待买家付款、没有创建支付宝交易"
-    when "ALL_CLOSED"
-      "包含：交易关闭、交易被淘宝关闭"
-    else
-      status
+  def logistic_groups
+    groups = {}
+    logistic_group_products.each do |product|
+      logistic_group_id = product.fetch(:logistic_group_id)
+      groups[logistic_group_id] ||= 0
+      groups[logistic_group_id] += product.fetch(:num)
+    end
+
+    splited_groups = {}
+    groups.each do |logistic_group_id, num|
+      logistic_group = LogisticGroup.find_by_id(logistic_group_id)
+      split_number = logistic_group.split_number
+      divmod = num.divmod(split_number)
+      splited_groups[logistic_group_id] = [divmod[0], divmod[1]]
+    end
+    splited_groups
+  end
+
+  def logistic_group(id)
+    products = []
+    logistic_group_products.each do |logistic_group_product|
+      logistic_group_id = logistic_group_product.fetch(:logistic_group_id)
+      products << logistic_group_product if logistic_group_id == id
+    end
+    products
+  end
+
+  def logistic_split
+    splited = []
+  end
+
+  def split_logistic(logistic_ids)
+    # 清空默认发货单
+    deliver_bills.delete_all
+
+    logistic_split.each do |item|
+      outer_id = item[:bill][:outer_id]
+      order = orders.select{|order| order.outer_iid == outer_id}.first
+      color_num = order.color_num
+      bill_number = item[:bill][:id]
+
+      deliver_bill = deliver_bills.create(
+        deliver_bill_number: bill_number,
+        seller_id: seller_id,
+        seller_name: seller_name
+        )
+
+      deliver_bill.bill_products.create(
+        outer_id: outer_id,
+        title: item[:bill][:title],
+        number: item[:bill][:number],
+        colors: color_num.pop(item[:bill][:number]),
+        memo: order.cs_memo
+        )
+
+      logistic_id = logistic_ids[bill_number]
+      logistic = Logistic.find logistic_id
+      deliver_bill.logistic = logistic
+    end
+
+    update_attributes has_split_deliver_bill: true
+  end
+
+###########
+##### 更新子订单退款金额, 如果有出库单,更新出库单开票金额
+
+  def async_invoice_price
+    FetchRefundFee.perform_async(id) if orders.where(refund_status: "SUCCESS").count > 0
+  end
+
+###########
+##### 发货相关
+
+  def deliverable?
+    trades = Trade.where(tid: tid).select do |trade|
+      trade.orders.where(:refund_status.in => ['NO_REFUND', 'CLOSED']).size != 0
+    end
+    (trades.map(&:status) - ["WAIT_BUYER_CONFIRM_GOODS"]).size == 0 && !trades.map(&:delivered_at).include?(nil)
+  end
+
+  def deliver!
+    return unless self.deliverable?
+    TradeDeliver.perform_async(self.id)
+  end
+
+  def auto_deliver!
+    result = self.fetch_account.can_auto_deliver_right_now
+    TradeAutoDeliver.perform_in((result == true ? self.fetch_account.settings.auto_settings['deliver_silent_gap'].to_i.hours : result), self.id)
+    self.is_auto_deliver = true
+    self.operation_logs.create(operated_at: Time.now, operation: "自动发货")
+    self.save
+  end
+
+  def get_third_party_logistic_id(logistic_id=self.logistic_id)
+    logistic = Logistic.find_by_id(logistic_id)
+    case self._type
+    when "TaobaoTrade"    then logistic && logistic.taobao_logistic_id(trade_source_id)
+    when "JingdongTrade"  then logistic && logistic.jingdong_logistic_id(trade_source_id)
+    when "YihaodianTrade" then logistic && logistic.yihaodian_logistic_id(trade_source_id)
+    else nil
     end
   end
 
-  def custom_type
-    # overwrite this method
+  def matched_logistics
+    area = default_area
+    if area
+      @logistic_ids = fetch_account.logistic_areas.where(area_id: area.id).map{|l| l.logistic_id }.join(",")
+      @matched_logistics = fetch_account.logistics.where("id in (?)", @logistic_ids).map{|ml| [ml.id, ml.name, "/logistics/#{ml.id}/print_flash_settings/#{ml.print_flash_setting.id}/print_infos.xml"]}
+      @matched_logistics == [] ? [[1,"其他", '']] : @matched_logistics
+    else
+      [[1,"其他", '']]     #无匹配地区或匹配经销商时默认是其他
+    end
   end
 
-  def main_trade_id
-    # overwrite this method
-  end
+###########
+##### redis 缓存相关
 
-  #清空对应trade类型的所有缓存tid
+  # 清空对应trade类型的所有redis缓存tid
   def self.clear_cached_tids!(type)
     case type
     when 'JingdongTrade'
@@ -915,7 +960,7 @@ class Trade
     end
   end
 
-  #清空缓存tid
+  # 清空缓存tid
   def self.clear_cached_tid(type, tid)
     case type
     when 'TaobaoPurchaseOrder'
@@ -927,7 +972,7 @@ class Trade
     end
   end
 
-  #缓存或者清空一定时间段内所有tid
+  # 缓存或者清空一定时间段内所有tid
   def self.cache_tids!(start_time = nil, end_time = nil, sadd_or_srem = nil)
 
     if start_time.blank?
@@ -963,7 +1008,9 @@ class Trade
     end
   end
 
-  # 订单筛选
+##########
+##### 订单筛选
+
   def self.filter(current_account, current_user, params, type="scoped")
 
     if type == "unscoped"
@@ -1342,15 +1389,8 @@ class Trade
     ###筛选结束###
   end
 
-  def set_has_onsite_service
-    return unless fetch_account.settings.enable_module_onsite_service == 1
-    self.area_id = default_area.try(:id)
-    if OnsiteServiceArea.where(area_id: default_area.id, account_id: account_id).present?
-      self.has_onsite_service = true
-    else
-      self.has_onsite_service = false
-    end
-  end
+##########
+##### 设置订单操作人
 
   def operators
     fetch_account.users.where(can_assign_trade: true).where(active: true).order(:created_at) rescue []
@@ -1376,29 +1416,8 @@ class Trade
     end
   end
 
-  def type_text
-    if self.custom_type.present?
-      self.custom_type_name
-    elsif self._type == "TaobaoTrade"
-      '淘宝'
-    elsif self._type == "JingdongTrade"
-      '京东'
-    elsif self._type == "YihaodianTrade"
-      '一号店'
-    end
-  end
-
-  def orders
-    self.taobao_orders
-  end
-
-  def orders=(new_orders)
-    self.taobao_orders = new_orders
-  end
-
-  def orders_total_price
-    self.orders.inject(0) { |sum, order| sum + order.price*order.num}
-  end
+##########
+##### 各种优惠金额
 
   def vip_discount
     promotion_details.where(promotion_id: /^shopvip/i).sum(&:discount_fee)
@@ -1420,7 +1439,9 @@ class Trade
     promotion_details.where(promotion_id: /^(shopbonus|shopvip)/i).sum(:discount_fee)
   end
 
-  #判断订单状态
+##########
+##### 判断订单状态
+
   def is_paid_not_delivered
     StatusHash['paid_not_deliver_array'].include?(status)
   end
@@ -1453,6 +1474,14 @@ class Trade
       DeliverBill.where(trade_id: self._id).delete_all if self.deleted_at != nil
     end
 
+    def set_boolean_status_fields
+      self.has_cs_memo        = (self.cs_memo.present? || orders.where(:cs_memo.ne => nil).present?)
+      self.has_refund_orders  = orders.where(:refund_status => 'NO_REFUND').present?
+      self.has_unusual_state  = unusual_states.where(:repaired_at => nil).present?
+      self.has_property_memos = self.trade_property_memos.present?
+      true
+    end
+
     # MAYBE DEPRECATED LATER
     def set_has_color_info
       self.orders.each do |order|
@@ -1475,13 +1504,5 @@ class Trade
       else
         self.has_onsite_service = false
       end
-    end
-
-    def set_boolean_status_fields
-      self.has_cs_memo        = (self.cs_memo.present? || orders.where(:cs_memo.ne => nil).present?)
-      self.has_refund_orders  = orders.where(:refund_status => 'NO_REFUND').present?
-      self.has_unusual_state  = unusual_states.where(:repaired_at => nil).present?
-      self.has_property_memos = self.trade_property_memos.present?
-      true
     end
 end
