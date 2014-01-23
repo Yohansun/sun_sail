@@ -30,6 +30,11 @@ class StockInBillsController < ApplicationController
 
   def create
     if params[:stock_in_bill][:stock_type] == "ICP"
+      if params[:property].blank?
+        @bill = default_scope.new(params[:stock_in_bill])
+        flash.now[:error] = "成品入库必须填写商品属性"
+        render :new and return false
+      end
       product = params[:stock_in_bill][:bill_products_attributes]["0"]
       if product["real_number"].to_i.zero?
         @bill = default_scope.new(params[:stock_in_bill])
@@ -84,13 +89,17 @@ class StockInBillsController < ApplicationController
 
   def update
     @bill = default_scope.find params[:id]
-    @bill.attributes = params[:stock_in_bill]
-    update_areas!(@bill)
-    @bill.update_bill_products
     if @bill.stock_type_icp?
+      if params[:property].blank?
+        flash.now[:error] = "成品入库必须填写商品属性"
+        render :edit and return false
+      end
       product = params[:stock_in_bill][:bill_products_attributes]["0"]
       @bill.update_property_memo(params[:property], product["sku_id"], current_account)
     end
+    @bill.attributes = params[:stock_in_bill]
+    update_areas!(@bill)
+    @bill.update_bill_products
     if @bill.save
       flash[:notice] = "入库单#{@bill.tid}更新成功!"
       redirect_to warehouse_stock_in_bill_path(@warehouse.id,@bill.id)
