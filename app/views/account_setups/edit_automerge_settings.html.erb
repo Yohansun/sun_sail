@@ -12,29 +12,11 @@
             <h4>订单自动合并设置：</h4>
             <div class="mar_l80">
               <div class="control-group">
-                <label class="radio pull-left input-small">
-                  <input type="radio" name="auto_settings[auto_merge]" <%='checked' if @setting['auto_merge'] == 1 %>>开启
-                </label>
-                <label class="radio">
-                  <input type="radio" value="off" name="auto_settings[auto_merge]" <%='checked' if @setting['auto_merge'].blank? %>>关闭
-                </label>
-                <p class="clear">
-                  <label class="input-large pull-left">请输入自动合并时间范围：</label>
-                  <input type="text" class="input-mini timepickers radius_no_rb" name="auto_settings[auto_merge_start_at]" value="<%= @setting['auto_merge_start_at']%>">
-                  <i class="icon-arrow-right"></i>
-                  <input type="text" class="input-mini timepickers radius_no_rb" name="auto_settings[auto_merge_end_at]" value="<%= @setting['auto_merge_end_at']%>">
-                  <span class="muted">(不选择默认为全天开启)</span>
-                </p>
+                <%= @setting.block_dual_radio('auto_merge') %>
+                <%= @setting.block_time_range(['auto_merge_start_at'], ['auto_merge_end_at'])%>
               </div>
               <div>
-                <p class="clear">
-                  <label class="input-large pull-left">付款间隔时间：</label>
-                  <select name="auto_settings[auto_merge_pay_time_interval]" style="width: 80px">
-                    <% [["15分钟", 15], ["30分钟", 30], ["1小时", 60], ["2小时", 120], ["3小时", 180], ["4小时", 240]].each do |name, sec| %>
-                      <option value= "<%= sec %>" <%= 'selected' if @setting['auto_merge_pay_time_interval'] == sec.to_s %>><%= name %></option>
-                    <%- end -%>
-                  </select>
-                </p>
+                <%= @setting.block_label_select([["15分钟", 15], ["30分钟", 30], ["1小时", 60], ["2小时", 120], ["3小时", 180], ["4小时", 240]], ["auto_merge_pay_time_interval"], "付款间隔时间：", "") %>
               </div>
             </div>
           </fieldset>

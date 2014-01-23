@@ -1,7 +1,8 @@
 # -*- encoding:utf-8 -*-
 class AccountSetupsController < ApplicationController
   include Wicked::Wizard
-  include MagicAutoSettings
+  include MagicAutoSettings::ModelHelper
+  include MagicAutoSettings::ViewHelper
   layout :set_action_layout
   before_filter :check_account_wizard_status, only:[:show]
   skip_before_filter :verify_authenticity_token, only: [:data_fetch_finish]
@@ -86,7 +87,7 @@ class AccountSetupsController < ApplicationController
 
   AutoSettingsHelper::AutoBlocks.each do |block|
     define_method "edit_#{block}_settings" do
-      @setting = check_auto_settings(current_account.settings.auto_settings || {})
+      @setting = AutoSetting.new(check_auto_settings(current_account.settings.auto_settings || {}))
     end
 
     define_method "update_#{block}_settings" do

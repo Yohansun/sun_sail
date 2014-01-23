@@ -30,7 +30,7 @@
 class Account < ActiveRecord::Base
   include FinderCache
   include RailsSettings
-  include MagicAutoSettings
+  include MagicAutoSettings::ModelHelper
 
   attr_accessible :key, :name, :seller_name, :address, :deliver_bill_info, :phone, :website, :point_out
 

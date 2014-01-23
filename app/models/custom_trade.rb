@@ -1,4 +1,5 @@
 # -*- encoding : utf-8 -*-
+#### CustomTrade 目前默认不能自动分派 ####
 
 class CustomTrade < Trade
   include StockProductsLockable
@@ -66,52 +67,6 @@ class CustomTrade < Trade
     self.operation_logs.create(operated_at: Time.now, operation: "自动发货")
     self.save
   end
-
-  #### CustomTrade 目前默认不能自动分派 ####
-  # def auto_dispatchable?
-  #   dispatch_conditions = self.fetch_account.settings.auto_settings["dispatch_conditions"]
-  #   if dispatch_conditions["void_buyer_message"] && dispatch_conditions["void_seller_memo"]
-  #     can_auto_dispatch = !has_buyer_message && self.seller_memo.blank?
-  #   elsif dispatch_conditions["void_buyer_message"] == 1 && dispatch_conditions["void_seller_memo"] == nil
-  #     can_auto_dispatch = !has_buyer_message
-  #   elsif dispatch_conditions["void_buyer_message"] == nil && dispatch_conditions["void_seller_memo"] == 1
-  #     can_auto_dispatch = self.seller_memo.blank?
-  #   else
-  #     can_auto_dispatch = true
-  #   end
-
-  #   can_auto_dispatch && has_special_seller_memo? && dispatchable?
-  # end
-
-  # def has_special_seller_memo?
-  #   special_seller_memo.blank?
-  # end
-
-  # def special_seller_memo
-  #   if self.fetch_account.key == 'dulux'
-  #     if seller_memo.present?
-  #       if seller_memo.strip == "@送货上门".strip
-  #         "@送货上门"
-  #       elsif seller_memo.strip == "@自提".strip
-  #         "@自提"
-  #       end
-  #     end
-  #   end
-  # end
-
-  # def auto_dispatch!
-  #   return unless auto_dispatchable?
-
-  #   dispatch!
-
-  #   operation_desc =  if seller_id
-  #                       '自动分派'
-  #                     else
-  #                       '自动分派,未匹配到经销商'
-  #                     end
-
-  #   self.operation_logs.create(operated_at: Time.now, operation: operation_desc)
-  # end
 
   def matched_seller(area = nil)
     area ||= default_area
