@@ -266,7 +266,6 @@ class TradesController < ApplicationController
       end
     end
 
-
     #手动发送邮件短信
     unless params[:notify_content].blank?
       notify = @trade.manual_sms_or_emails.create(
@@ -304,9 +303,9 @@ class TradesController < ApplicationController
             values = info['values'].reject{|value| value.blank? || value['id'].blank? || value['value'].blank? }
             next if values.count == 0
             property_memo = order.trade_property_memos.create(
-              trade_id: @trade.id,
-              outer_id: info['outer_id'],
-              account_id: current_account.id,
+              trade_id:          @trade.id,
+              outer_id:          info['outer_id'],
+              account_id:        current_account.id,
               stock_in_bill_tid: info['stock_in_bill_tid']
             )
             used_memo = BillPropertyMemo.where(stock_in_bill_tid: info['stock_in_bill_tid']).first
@@ -315,8 +314,8 @@ class TradesController < ApplicationController
               name = CategoryPropertyValue.find(value['id']).category_property.name
               property_memo.property_values.create(
                 category_property_value_id: value['id'],
-                value: value['value'],
-                name: name
+                value:                      value['value'],
+                name:                       name
               )
             end
           end

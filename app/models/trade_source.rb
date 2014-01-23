@@ -28,7 +28,20 @@ class TradeSource < ActiveRecord::Base
   include FinderCache
   include RailsSettings
   include MagicEnum
-  attr_accessible :account_id, :app_key, :name, :secret_key, :session, :sid, :cid, :bulletin, :title, :description, :created, :modified, :trade_type
+  attr_accessible :account_id,
+                  :app_key,
+                  :name,
+                  :secret_key,
+                  :session,
+                  :sid,
+                  :cid,
+                  :bulletin,
+                  :title,
+                  :description,
+                  :created,
+                  :modified,
+                  :trade_type,
+                  :enabled_checker
   belongs_to :account,:inverse_of => :trade_sources
   has_one :taobao_app_token
   has_one :jingdong_app_token

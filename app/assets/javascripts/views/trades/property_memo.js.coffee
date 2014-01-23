@@ -14,6 +14,8 @@ class MagicOrders.Views.TradesPropertyMemo extends Backbone.View
     $(@el).find("select.select2").select2(
       allowClear: true
     )
+    if @model.get('is_paid_not_delivered') == true && @model.get('dispatched_at')
+      $(@el).find('.btn.btn-primary').remove()
     this
 
   match_icp_bills: (e) ->
@@ -22,8 +24,8 @@ class MagicOrders.Views.TradesPropertyMemo extends Backbone.View
     property_memo['values'] = []
 
     for memo in $(e.currentTarget).parents('tr').find('.property_memos').children(':input')
-      if $(memo).data('type') == 'multiple_select'
-        for value in $(memo).select2('data') && $(memo).select2('data') != null
+      if $(memo).data('type') == 'multiple_select' && $(memo).select2('data') != null
+        for value in $(memo).select2('data')
           property_memo['values'].push {id: value.id, value: value.text}
       else if $(memo).data('type') == 'single_select' && $(memo).select2('data') != null
         property_memo['values'].push {id: $(memo).select2('data').id, value: $(memo).select2('data').text}
