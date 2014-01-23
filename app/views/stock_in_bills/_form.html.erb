@@ -81,8 +81,8 @@ $(function(){
   sel.bind('.level_1','<%= @bill.op_state %>');
   sel.bind('.level_2','<%= @bill.op_city %>');
   sel.bind('.level_3','<%= @bill.op_district %>');
-  
-   // 初始化
+
+  // 初始化
   remote_select(".select_trade");
   function BillFormatResult(bill) {
     var markup = "<table class='movie-result'><tr>";
@@ -95,7 +95,7 @@ $(function(){
       return bill.title_with_product_id;
   };
 
-  
+
   function remote_select(e){
     $(e).select2({
       placeholder: "选择商品",
@@ -111,7 +111,7 @@ $(function(){
           warehouse_id: "<%= params[:warehouse_id] %>",
         };
       },
-      results: function (data, page) { 
+      results: function (data, page) {
         return {results: data};
       }
     },
@@ -129,7 +129,7 @@ $(function(){
     },
     formatResult: BillFormatResult,
     formatSelection: BillFormatSelection,
-    dropdownCssClass: "bigdrop", 
+    dropdownCssClass: "bigdrop",
     escapeMarkup: function (m) { return m; }
   });
   $(".select_order").on("change",function(){
@@ -197,12 +197,12 @@ $(function(){
   // 成品入库属性备注切换
   fetch_category_properties()
 
-  $(".product").change(function(){
+  $(".product_bill").change(function(){
     fetch_category_properties()
   });
 
   function fetch_category_properties(){
-    var sku_id = $(".product").select2('data').id
+    var sku_id = $(".product_bill").select2('data').id
     $.ajax({
       url: "<%= fetch_category_properties_warehouse_stock_in_bill_path(id: @bill.id) %>",
       data: { sku_id: sku_id }
