@@ -367,4 +367,22 @@ module ApplicationHelper
     end
     items.join("")
   end
+
+  def counter_caches(account_id)
+    scope = Trade.where(account_id: account_id,"$or" => [{"has_buyer_message" => {"$ne" => true}},{"buyer_message" => {"$ne" => nil}}])
+    {
+      "trades/all"          => scope ,
+      "trades/undispatched" => scope.where({:status.in => Trade::StatusHash["paid_not_deliver_array"], seller_id: nil, has_unusual_state: false, :pay_time.ne => nil}) ,
+      "trades/undelivered"  => scope.where({:dispatched_at.ne => nil, :status.in => Trade::StatusHash["paid_not_deliver_array"], has_unusual_state: false}) ,
+      "trades/delivered"    => scope.where({:status.in => Trade::StatusHash["paid_and_delivered_array"], has_unusual_state: false}) ,
+      "trades/unusual_all"  => scope.where({:unusual_states.elem_match =>{:repaired_at => nil}}) ,
+      "trades/locked"       => scope.where({is_locked: true}) ,
+      "deliver_bills/all"   => count=DeliverBill.where(account_id: account_id) ,
+      "logistic_bills/all"  => count
+    }.tap do |h|
+      h.each do |k,v|
+        h[k] = Rails.cache.fetch(k,expires_in: 1.day,namespace: "counter_caches/#{account_id}") { v.count }
+      end
+    end.merge("trades/my_trade"     => scope.where({:operator_id => current_user.id}).count)
+  end
 end

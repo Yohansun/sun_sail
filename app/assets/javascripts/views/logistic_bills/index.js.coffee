@@ -1,4 +1,4 @@
-class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
+class MagicOrders.Views.LogisticBillsIndex extends MagicOrders.Views.BaseView
 
   template: JST['logistic_bills/index']
 
@@ -58,8 +58,8 @@ class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
     @collection.each(@appendTrade)
 
     $(@el).find(".get_offset").html(@offset)
-    @loadStatusCount()
     $("#content").removeClass("search-expand")
+    super
     this
 
   filterTradeColumns: (event) ->
@@ -468,26 +468,6 @@ class MagicOrders.Views.LogisticBillsIndex extends Backbone.View
         $(@el).find(".get_offset").html(@offset)
         $(@el).find(".complete_offset").html("0")
         $.unblockUI()
-
-  loadStatusCount:()->
-    $("[data-trade-status]",@el).each ->
-      self = this
-      coll = null
-      trade_mode = $(this).data("trade-mode")
-      trade_type = $(this).data("trade-status")
-      switch trade_mode
-        when "trades"
-          coll = new MagicOrders.Collections.Trades()
-        when "deliver_bills"
-          coll = new MagicOrders.Collections.DeliverBills()
-        when "logistic_bills"
-          coll = new MagicOrders.Collections.DeliverBills()
-
-      coll.fetch  data:{trade_type:trade_type,limit:1}, success: (collection, response)->
-        count = 0
-        if(collection.length > 0)
-          count = collection.models[0].get("trades_count") || collection.models[0].get("bills_count")
-        $("em",self).text("("+count+")")
 
   set_logistic_id: ->
     service_logistic_id = $(".logistic_select").find("option:selected").attr("service_logistic_id")

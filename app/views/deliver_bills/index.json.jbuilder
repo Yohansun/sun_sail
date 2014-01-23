@@ -1,4 +1,4 @@
-json.array!(@bills) do |json, bill|
+json.list(@bills) do |json, bill|
   trade = TradeDecorator.decorate(bill.trade)
   json.bills_count @bills_count
   json.id bill.id
@@ -27,3 +27,5 @@ json.array!(@bills) do |json, bill|
     json.color_info order.color_info
   end
 end
+
+json.counter_cache counter_caches(current_account.id)

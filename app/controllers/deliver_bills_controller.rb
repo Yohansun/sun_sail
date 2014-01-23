@@ -60,11 +60,8 @@ class DeliverBillsController < ApplicationController
     @bills_count = @bills.count
     @bills = @bills.limit(limit).skip(offset).order_by(:created.desc)
 
-    if @bills_count > 0
-      respond_with @bills
-    else
-      render json: []
-    end
+
+    respond_with @bills
   end
 
   def show

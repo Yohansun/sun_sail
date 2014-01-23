@@ -67,7 +67,7 @@ gem 'devise-encryptable'
 gem 'rails-settings', git: 'git://github.com/pomelolabs/rails-settings.git'
 gem 'twitter-bootstrap-rails', '>= 2.1.9'
 gem "less-rails"
-gem 'therubyracer'
+gem 'therubyracer',"~> 0.12.0"
 gem 'simple_form'
 gem "kiqstand"
 gem 'awesome_nested_set'
