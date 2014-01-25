@@ -305,6 +305,65 @@ function visibleTableColumns(dropdownSelector, formSelector, tableSelector){
   });
 }
 
+function BillFormatResult(bill) {
+  var markup = "<table class='movie-result'><tr>";
+  markup += "<td class='movie-info'><div class='movie-title'>" + bill.id + bill.title_with_product_id + "</div>";
+  markup += "</td></tr></table>"
+  return markup;
+};
+
+function BillFormatSelection(bill) {
+  return bill.title_with_product_id;
+};
+
+function remote_select(e){
+  $(e).select2({
+      placeholder: "选择商品",
+      minimumInputLength: 1,
+      id: function(e) { return e.id; },
+      ajax: {
+      url: "/stock_bills/get_products.json",
+      dataType: 'json',
+      data: function (term, page) {
+        return {
+          tid: term,
+          page_limit: 10,
+        };
+      },
+      results: function (data, page) {
+        return {results: data};
+      }
+    },
+    initSelection: function(element, callback) {
+      if($(".product:input").eq(0).val() != ""){
+        var id=$(".product:input").eq(0).val();
+        if (id!=="") {
+          $.ajax("/stock_bills/get_products.json", {
+            data: {
+              sku_id: id,
+            },
+            dataType: "json"
+          }).done(function(data) { callback(data[0]);});
+        }
+      }else{
+        var id=$(element).val();
+        if (id!=="") {
+          $.ajax("/stock_bills/get_products.json", {
+            data: {
+              tid: id,
+            },
+            dataType: "json"
+          }).done(function(data) { callback(data[0]);});
+        }
+      }
+    },
+    formatResult: BillFormatResult,
+    formatSelection: BillFormatSelection,
+    dropdownCssClass: "bigdrop",
+    escapeMarkup: function (m) { return m; }
+  });
+}
+
 // 三秒后关闭alert
 $(function(){
   setTimeout(function(){

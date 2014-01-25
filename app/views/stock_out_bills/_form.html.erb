@@ -60,7 +60,7 @@
     <div class="well clearfix">
       <fieldset class="span6">
         <div class="control-group">
-          <%= product.input :sku_id,:label => "商品名称",:input_html => {:class => "input-xlarge product_bill checkdata select_trade"} %>
+          <%= product.input :sku_id,:label => "商品名称",:input_html => {:class => "input-xlarge product_bill checkdata select_trade product"} %>
         </div>
         <div class="control-group">
           <label class="control pull-left">SKU编码：</label>
@@ -99,55 +99,6 @@ $(function(){
 
   // 初始化
   remote_select(".select_trade");
-  function BillFormatResult(bill) {
-    var markup = "<table class='movie-result'><tr>";
-    markup += "<td class='movie-info'><div class='movie-title'>" + bill.id + bill.title_with_product_id + "</div>";
-    markup += "</td></tr></table>"
-    return markup;
-  };
-
-  function BillFormatSelection(bill) {
-      return bill.title_with_product_id;
-  };
-
-  
-  function remote_select(e){
-    $(e).select2({
-      placeholder: "选择商品",
-      minimumInputLength: 1,
-      id: function(e) { return e.id; },
-      ajax: { 
-      url: "/stock_bills/get_products.json",
-      dataType: 'json',
-      data: function (term, page) {
-        return {
-          tid: term,
-          page_limit: 10,
-          warehouse_id: "<%= params[:warehouse_id] %>",
-        };
-      },
-      results: function (data, page) { 
-        return {results: data};
-      }
-    },
-    initSelection: function(element, callback) {
-      var id=$(element).val();
-      if (id!=="") {
-        $.ajax("/stock_bills/get_products.json", {
-          data: {
-            warehouse_id: "<%= params[:warehouse_id] %>",
-            tid: id,
-          },
-          dataType: "json"
-        }).done(function(data) { callback(data[0]);});
-      }
-    },
-    formatResult: BillFormatResult, 
-    formatSelection: BillFormatSelection,
-    dropdownCssClass: "bigdrop",
-    escapeMarkup: function (m) { return m; }
-  });
-}
 
   $("#stock_out_bill").validate({
     rules: {
