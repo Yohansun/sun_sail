@@ -5,6 +5,7 @@
       <div class="controls pull-left">
         <select class="input-medium pull-left select2 radius_no_rb search_option">
           <option value="tid">订单编号</option>
+          <option value="outer_iid">商品编码</option>
           <option value="buyer_nick">客户ID</option>
           <option value="receiver_name">客户姓名</option>
           <option value="receiver_mobile">联系电话</option>
@@ -14,6 +15,7 @@
           <option value="repair_man">异常指派人</option>
           <option value="operator_name">操作人</option>
           <option value="batch_sort_num">分拣单批次号</option>
+          <option value="batch_num">打印批次号</option>
         </select>
         <input type="text" class="search_value input-large radius_no_tl" id＝"simple_search_text" value="<%= @search_value %>">
         <select class="input-large radius_no_tl search_logistic">
@@ -107,9 +109,7 @@
             <option value="false">没有</option>
           </select>
           <select class="input-medium pull-left radius_no select2">
-            <% if MagicOrders.enable_module_colors is 1 : %>
-            <option value="has_color_info">调色信息</option>
-            <% end %>
+            <option value="has_property_memos">属性备注</option>
             <option value="has_invoice_info">发票信息</option>
             <option value="has_product_info">商品信息</option>
             <option value="has_logistic_info">物流信息</option>
