@@ -1,8 +1,8 @@
 # -*- encoding : utf-8 -*-
 class StockBillsController < ApplicationController
-  before_filter :set_warehouse, :except => :update_status
+  before_filter :set_warehouse, :except => [:update_status, :get_products]
   before_filter :authorize, :except => :update_status
-  before_filter :fetch_bills, :except => :update_status
+  before_filter :fetch_bills, :except => [:update_status, :get_products]
   skip_before_filter :authenticate_user!, :only => :update_status
   skip_before_filter :verify_authenticity_token, :only => :update_status
 
@@ -32,7 +32,8 @@ class StockBillsController < ApplicationController
   end
 
   def get_products
-    @products = current_account.skus.includes(:product).where("products.name like ?", "%#{params[:tid].strip}%")
+    @products = current_account.skus.includes(:product).where("products.name like ?", "%#{params[:tid].strip}%") if params[:tid]
+    @products = current_account.skus.where(id: params[:sku_id]) if params[:sku_id]
     respond_to do |format|
       format.json { render partial: "partials/products.json"}
     end
