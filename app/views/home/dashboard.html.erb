@@ -7,16 +7,15 @@ footer.page_footer{position:fixed;}
   <div class="indexWrap">
     <div class="centerDashboard hide">
       <% if user_signed_in? %>
-      <% if current_user.allow_read?(:trades) %>
-        <div><a class="indexStart1" href="/app#trades"><span>订单管理</span></a></div>
+        <% if current_user.allow_read?(:trades) %>
+          <div><a class="indexStart1" href="/app#trades"><span>订单管理</span></a></div>
         <% end %>
-
-          <% if current_user.allow_read?(:stocks) && current_account.key != 'nippon' %>
-           <div>
+        <% if current_user.allow_read?(:stocks) && current_account.key != 'nippon' %>
+          <div>
             <%= link_to stocks_path_adapter, class: 'indexStart4' do %>
               <span>仓库管理</span>
             <% end %>
-            </div>
+          </div>
         <% end %>
 
         <% if current_account.settings.enable_module_bbs %>
@@ -52,7 +51,7 @@ footer.page_footer{position:fixed;}
             <a class="indexStart6" href="/customers"><span>顾客管理</span></a>
           </div>
         <% end %>
-          
+
         <% if current_user.allowed_to?("reconcile_statements","index") -%>
           <% if current_account.settings.enable_module_reconcile_statements == true %>
             <div>
@@ -60,7 +59,7 @@ footer.page_footer{position:fixed;}
             </div>
           <% end %>
         <% end %>
-      
+
         <% if current_account.settings.enable_module_wangwang == true %>
           <div>
             <a class="indexStart2" href="/callcenter/contrastive_performance"><span>客服管理</span></a>
