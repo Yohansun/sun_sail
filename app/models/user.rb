@@ -42,6 +42,8 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many :accounts
   has_and_belongs_to_many :roles,:join_table =>  "users_roles"
 
+  include CacheMethod
+
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable
@@ -96,6 +98,8 @@ class User < ActiveRecord::Base
     roles.where(:account_id => condis).each {|x | @trade_pops.merge!(x.permissions) {|key,firth,lath| firth | lath} }
     @trade_pops
   end
+
+  cache_method :permissions,class: Role,hook: :after_commit,foreign_key: :user_ids
 
   def allow_read?(control,action="index")
     return true if self.superadmin?
@@ -198,5 +202,4 @@ class User < ActiveRecord::Base
 
     added_roles
   end
-
 end
