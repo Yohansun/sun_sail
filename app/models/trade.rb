@@ -1164,6 +1164,11 @@ class Trade
                 seller_ids = Seller.select(:id).where("name like ?", "%#{value.strip}%").map(&:id)
                 search_tags_hash.update({"seller_id" => {"$in" => seller_ids}})
                 conditions[key] << {"seller_id" => {"$in" => seller_ids}}
+              elsif key == 'outer_iid'
+                conditions[key] << {:taobao_orders => {"$elemMatch" => {:outer_iid => {"$in" => value_array}}}}
+              elsif key == "batch_num"
+                trade_ids = DeliverBill.where({"print_batches" => {"$elemMatch" => {"batch_num" => value.to_i}}}).distinct(:trade_id)
+                conditions[key] << {"_id" => {"$in" => trade_ids}}
               elsif key == 'repair_man'
                 search_tags_hash.update({"unusual_states" =>{"$elemMatch" => {"repair_man" => regexp_value}}})
                 conditions[key] << {"unusual_states" =>{"$elemMatch" => {"repair_man" => regexp_value}}}
@@ -1278,12 +1283,15 @@ class Trade
             words = (value_array[3] == "true" ? /#{value_array[2]}/ : /^[^#{value_array[2]}]+$/) if value_array[2].present?
             if value_array[1] == "true"
               not_void = {"$nin" => ['', nil]}
-              if key == "has_color_info"
-                search_tags_hash.update({"has_color_info" => true})
-                search_tags_hash.update({"taobao_orders" => {"$elemMatch" => {"$and" => [{"color_num" => words},{"color_hexcode" => words},{"color_name" => words}]}}}) if words
-                and_cond << {"has_color_info" => true}
-                #and_cond = [Hash[key.to_sym, true]]
-                and_cond << {"taobao_orders" => {"$elemMatch" => {"$and" => [{"color_num" => words},{"color_hexcode" => words},{"color_name" => words}]}}} if words
+              if key == "has_property_memos"
+                search_tags_hash.update({"has_property_memos" => true})
+                and_cond << {"has_property_memos" => true}
+                if words
+                  ids = TradePropertyMemo.where(account_id: current_account.id,property_values: {"$elemMatch" => {"value" => words}}).distinct("trade_id")
+                  query = {"_id" => {"$in" => ids}}
+                  search_tags_hash.update(query)
+                  and_cond << query
+                end
                 conditions[key] << {"$and"=>and_cond}
 
               elsif key == "has_cs_memo"
@@ -1349,7 +1357,7 @@ class Trade
               end
             elsif value_array[1] == "false"
               void = {"$in" => ['', nil]}
-              if key == "has_cs_memo" || key == "has_color_info" || key == "has_unusual_state"
+              if key == "has_cs_memo" || key == "has_property_memos" || key == "has_unusual_state"
                 search_tags_hash.update(Hash[key.to_sym, false])
                 conditions[key] << Hash[key.to_sym, false]
               elsif key == "has_seller_memo"
