@@ -369,7 +369,7 @@ module ApplicationHelper
   end
 
   def counter_caches(account_id)
-    scope = Trade.where(account_id: account_id,"$or" => [{"has_buyer_message" => {"$ne" => true}},{"buyer_message" => {"$ne" => nil}}])
+    scope = Trade.where(:news.lt => 3, account_id: account_id,"$or" => [{"has_buyer_message" => {"$ne" => true}},{"buyer_message" => {"$ne" => nil}}])
     {
       "trades/all"          => scope ,
       "trades/undispatched" => scope.where({:status.in => Trade::StatusHash["paid_not_deliver_array"], seller_id: nil, has_unusual_state: false, :pay_time.ne => nil}) ,
