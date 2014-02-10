@@ -16,8 +16,9 @@ class TradeTaobaoMemoFetcher
     return unless response && response["trade_get_response"]
     remote_trade = response["trade_get_response"]["trade"]
     return unless remote_trade
-    trade.update_attributes(buyer_message: remote_trade['buyer_message']) if remote_trade['buyer_message']
-    trade.update_attributes(seller_memo: remote_trade['seller_memo']) if remote_trade['seller_memo']
+    trade.buyer_message = remote_trade['buyer_message'] if remote_trade['buyer_message']
+    trade.seller_memo   = remote_trade['seller_memo']   if remote_trade['seller_memo']
+    trade.news          = 0                             if trade.news == 3
 
     # 自动从memo导入发票抬头
     if account.settings.open_auto_mark_invoice == 1 && trade.operation_logs.where(operation: "申请开票").count == 0
@@ -37,7 +38,6 @@ class TradeTaobaoMemoFetcher
       if trade.invoice_name != invoice_name
         trade.invoice_name = invoice_name
         trade.invoice_type = "需要开票"
-        trade.save
         trade.operation_logs.create(operated_at: Time.now,
                                     operation: "系统修改开票信息")
       end
@@ -63,5 +63,6 @@ class TradeTaobaoMemoFetcher
                                     created_at: Time.now)
       end
     end
+    trade.save if trade.changed?
   end
 end

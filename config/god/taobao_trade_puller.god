@@ -23,38 +23,38 @@
 # 222 测试店铺
 
 
-God::Contacts::Email.defaults do |d|
-  d.from_email = 'errors@networking.io'
-  d.from_name = 'Magic-Solo God Warnings'
-  d.delivery_method = :sendmail
-end
-
-God.contact(:email) do |c|
-  c.name = 'god'
-  c.group = 'errors'
-  c.to_email = 'errors@networking.io'
-end
-
-taobao_trade_source_ids = [201,206,207,211,215,219,222,223]
-God.watch do |w|
-  w.name = "taobao_puller"
-  w.group = 'magic_solo'
-  app_root = "/home/rails/server/magic-solo/current"
-  w.log = "#{app_root}/log/taobao_puller_god.log"
-
-  cmd_string = ""
-  taobao_trade_source_ids.each do |taobao_trade_source_id|
-    cmd_string += "TaobaoTradePuller.create(nil, nil, #{taobao_trade_source_id});TaobaoTradePuller.update(nil, nil, #{taobao_trade_source_id});"
-  end
-  w.interval = 600.seconds
-
-  w.start = "cd #{app_root}; #{app_root}/script/rails runner -e production '#{cmd_string}'"
-
-  w.start_if do |start|
-    start.condition(:process_running) do |c|
-      c.interval = 10.minutes
-      c.running = false
-      c.notify = {:contacts => ['errors'], :priority => 1, :category => 'TAOBAOTRADEPULLER'}
-    end
-  end
-end
+# God::Contacts::Email.defaults do |d|
+#   d.from_email = 'errors@networking.io'
+#   d.from_name = 'Magic-Solo God Warnings'
+#   d.delivery_method = :sendmail
+# end
+# 
+# God.contact(:email) do |c|
+#   c.name = 'god'
+#   c.group = 'errors'
+#   c.to_email = 'errors@networking.io'
+# end
+# 
+# taobao_trade_source_ids = [201,206,207,211,215,219,222,223]
+# God.watch do |w|
+#   w.name = "taobao_puller"
+#   w.group = 'magic_solo'
+#   app_root = "/home/rails/server/magic-solo/current"
+#   w.log = "#{app_root}/log/taobao_puller_god.log"
+# 
+#   cmd_string = ""
+#   taobao_trade_source_ids.each do |taobao_trade_source_id|
+#     cmd_string += "TaobaoTradePuller.create(nil, nil, #{taobao_trade_source_id});TaobaoTradePuller.update(nil, nil, #{taobao_trade_source_id});"
+#   end
+#   w.interval = 600.seconds
+# 
+#   w.start = "cd #{app_root}; #{app_root}/script/rails runner -e production '#{cmd_string}'"
+# 
+#   w.start_if do |start|
+#     start.condition(:process_running) do |c|
+#       c.interval = 10.minutes
+#       c.running = false
+#       c.notify = {:contacts => ['errors'], :priority => 1, :category => 'TAOBAOTRADEPULLER'}
+#     end
+#   end
+# end

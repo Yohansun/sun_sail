@@ -62,6 +62,10 @@ every 5.minutes do
   runner "MergeableTradeMarker.new.perform()"
 end
 
+every 5.minutes do
+  runner "TradeSource.where(trade_type: 'Taobao',jushita_sync: true).each {|u| TaobaoPullerBuilder.perform_async(u.id); TaobaoTradePuller.update(nil, nil, u.id)}"
+end
+
 every 3.hours do
   runner "UnusualTradesNotifier.new.perform()"
 end
