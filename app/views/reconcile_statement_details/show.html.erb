@@ -1,58 +1,37 @@
-<div class="container-fluid">
-  <header class="jumbotron subhead" id="overview">
-    <div class="subnav">
-      <ul class="nav nav-pills">
-        <li class="active"><a href="/reconcile_statements">运营商对账</a></li>
-        <!-- <li><a href="#">经销商对账</a></li>
-        <li><a href="#">财务对账</a></li> -->
-      </ul>
-    </div>
-  </header>
-  <div class="row-fluid">
-    <ul class="breadcrumb" style="position:relative;">
-      <li><a href="/">Magic</a><span class="divider">/</span></li>
-      <li><a href="/reconcile_statements">财务管理</a><span class="divider">/</span></li>
-      <li><a href="/reconcile_statements">运营商对账</a><span class="divider">/</span></li>
-      <li class="active" id="money_type" data-money_type ="<%= @money_type %>"><%= @rs.audit_time.strftime("%Y-%m") + " #{money_type_text(@money_type)}"%></li>
-    </ul><!-- breadcrumb -->
-
-    <div class="btns">
-      <%= link_to '导出数据', export_detail_reconcile_statement_reconcile_statement_detail_path(@rs, @rs.detail, money_type: @money_type), class: 'btn btn-warning' %>
-      <%= flash[:notice] %>
-    </div>
-
-    <table class="table table-bordered table-hover mar_t5">
-      <thead>
-        <tr>
-          <th>订单编号</th>
-          <th>订单来源</th>
-          <th>顾客姓名</th>
-          <th>送货地址</th>
-          <% judge_money_type_th(@money_type).each do |info| %>
-          <th><%= info %></th>
-          <% end %>
-          <th>到账日期</th>
-          <th>订单状态</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% TradeDecorator.decorate(@trade_details).each do |trade| %>
-        <tr>
-          <td><%= trade.tid %></td>
-          <td><%= trade.trade_source %></td>
-          <td><%= trade.receiver_name %></td>
-          <td><%= trade.receiver_address %></td>
-          <% judge_money_type_td(trade, @money_type).each do |info| %>
-          <td><%= info %></td>
-          <% end %>
-          <td><%= trade.pay_time.strftime("%Y-%m-%d") %></td>
-          <td><%= trade.status_text %></td>
-        </tr>
-        <% end %>
-      </tbody>
-    </table>
-
-    <%= paginate @trade_details %>
-  </div>
-  <hr>
+<div class="btn-toolbar">
+  <%= link_to '导出数据', export_detail_reconcile_statement_reconcile_statement_detail_path(@rs, @rs.detail, money_type: @money_type), class: 'btn btn-warning' %>
+    <%= flash[:notice] %>
 </div>
+
+<table class="table table-bordered table-hover mar_t5">
+  <thead>
+    <tr>
+      <th>订单编号</th>
+      <th>订单来源</th>
+      <th>顾客姓名</th>
+      <th>送货地址</th>
+      <% judge_money_type_th(@money_type).each do |info| %>
+      <th><%= info %></th>
+      <% end %>
+      <th>到账日期</th>
+      <th>订单状态</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% TradeDecorator.decorate(@trade_details).each do |trade| %>
+    <tr>
+      <td><%= trade.tid %></td>
+      <td><%= trade.trade_source %></td>
+      <td><%= trade.receiver_name %></td>
+      <td><%= trade.receiver_address %></td>
+      <% judge_money_type_td(trade, @money_type).each do |info| %>
+      <td><%= info %></td>
+      <% end %>
+      <td><%= trade.pay_time.strftime("%Y-%m-%d") %></td>
+      <td><%= trade.status_text %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= paginate @trade_details %>

@@ -21,39 +21,7 @@
 #
 
 class ReconcileStatementDetail < ActiveRecord::Base
-  attr_accessible :reconcile_statement_id, 
-                  :alipay_revenue,
-                  :postfee_revenue,
-                  :base_fee,
-                  :last_audit_amount,
-                  :account_profit,
-                  :advertise_reserved,
-                  :platform_deduction,
-                  :special_products_alipay_revenue,
-                  :special_products_audit_amount,
-                  :audit_amount,
-                  :adjust_amount,
-                  :trade_success_refund,
-                  :sell_refund,
-                  :base_service_fee,
-                  :store_service_award,
-                  :staff_award,
-                  :taobao_cost,
-                  :audit_cost,
-                  :collecting_postfee,
-                  :other_money,
-                  :base_fee_percent, 
-                  :special_products_audit_amount_percent,
-                  :audit_amount_percent,
-                  :account_profit_percent_a,
-                  :account_profit_percent_b,
-                  :account_profit_percent_c,
-                  :advertise_reserved_percent_a,
-                  :advertise_reserved_percent_b,
-                  :platform_deduction_percent_a,
-                  :platform_deduction_percent_b,
-                  :user_id,
-                  :achievement
+  attr_protected []
   belongs_to :reconcile_statement
 
   validates :reconcile_statement_id, uniqueness: true
