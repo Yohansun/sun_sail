@@ -41,6 +41,7 @@ class MagicOrders.Models.Trade extends Backbone.Model
 
         if this.attributes.trade_type == "CustomTrade" && not this.attributes.seller_id
           enabled_items.push('edit_handmade_trade') #编辑人工订单
+          enabled_items.push('trade_finished')
 
         if this.attributes.seller_id
           if MagicOrders.role_key == 'admin' || $.inArray('seller',trades) > -1

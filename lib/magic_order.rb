@@ -113,6 +113,7 @@ MagicOrder::AccessControl.map do |map|
                                  "refund_ref",
                                  "edit_handmade_trade",
                                  "create_handmade_trade",
+                                 "trade_finished",
                                  "lock_trade",
                                  "activate_trade",
                                  "export_orders",

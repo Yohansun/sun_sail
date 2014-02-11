@@ -436,6 +436,7 @@ MagicOrders::Application.routes.draw do
   get "/trades/activate_trade", to: "trades#activate_trade"
   post "/trades/merge", to: "trades#merge"
   get "/trades/split/:id", to: "trades#split"
+  get "/trades/:id/trade_finished", to: "trades#trade_finished"
   get "/deliver_bills/print_deliver_bill.:format", to: "deliver_bills#print_deliver_bill"
   get "/deliver_bills/:id/logistic_info", to: "deliver_bills#logistic_info"
   put "/deliver_bills/:id/split_invoice", to: "deliver_bills#split_invoice"
