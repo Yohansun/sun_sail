@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+  <mobid>1</mobid>
+  <mobname>yto</mobname>
+  <mobwidth>650</mobwidth>
+  <mobheight>400</mobheight>
+  <bgsrc>img/bg.png</bgsrc>
+  <orderc>temp/yto.jpg</orderc>
+  <saveurl>post.xml</saveurl>
+  <ipos>
+    <item en_name="company" cn_name="公司">
+    <![CDATA[{"x":"0","y":"8.25","font":"\u5fae\u8f6f\u96c5\u9ed1","color":"000000","size":"18","align":"center","isbold":"false","underline":"false","width":"541.5","height":"40","text":"\u591a\u4e50\u58eb\u65d7\u8230\u5e97","italic":"false","position":"absolute","type":"data"}]]>
+    </item>
+    <item en_name="kehu_receiver" cn_name="收货人名字">
+    <![CDATA[{"x":"59.25","y":"48","font":"\u5fae\u8f6f\u96c5\u9ed1","color":"000000","size":"9","align":"left","isbold":"false","underline":"false","width":"135.75","height":"20","text":"\u94a2\u7b14","italic":"false","position":"absolute","type":"data"}]]>
+    </item>
+    <item en_name="diy" cn_name="收 货 人：">
+    <![CDATA[{"x":"0","y":"48","font":"\u5fae\u8f6f\u96c5\u9ed1","color":"000000","size":"9","align":"left","isbold":"false","underline":"false","width":"66.95","height":"20","text":"\u6536\u8d27\u4eba\uff1a","italic":"false","position":"absolute","type":"text"}]]>
+    </item>
+    <item en_name="diy" cn_name="地址：">
+    <![CDATA[{"x":"0","y":"62","font":"\u5fae\u8f6f\u96c5\u9ed1","color":"000000","size":"9","align":"left","isbold":"false","underline":"false","width":"66.95","height":"20","text":"\u5730\u5740\uff1a","italic":"false","position":"absolute","type":"text"}]]>
+    </item>
+    <item en_name="address" cn_name="地址：">
+    <![CDATA[{"x":"59","y":"62","font":"\u5fae\u8f6f\u96c5\u9ed1","color":"000000","size":"9","wrap":"true","align":"left","isbold":"false","underline":"false","width":"500","height":"20","text":"\u6574\u5355\u5907\u6ce8\uff1a","italic":"false","position":"absolute","type":"text"}]]>
+    </item>
+    <item en_name="tid" cn_name="订单编号">
+    <![CDATA[{"x":"59.25","y":"33","font":"\u5fae\u8f6f\u96c5\u9ed1","color":"000000","size":"9","align":"left","isbold":"false","underline":"false","width":"191.5","height":"20","text":"\u8ba2\u5355\u7f16\u53f7","italic":"false","position":"absolute","type":"data"}]]>
+    </item>
+    <item en_name="diy" cn_name="编    号：">
+    <![CDATA[{"x":"0","y":"33","font":"\u5fae\u8f6f\u96c5\u9ed1","color":"000000","size":"9","align":"left","isbold":"false","underline":"false","width":"67","height":"20","text":"\u7f16\u53f7\uff1a","italic":"false","position":"absolute","type":"text"}]]>
+    </item>
+    <item en_name="diy" cn_name="电话：">
+    <![CDATA[{"x":"243","y":"48","font":"\u5fae\u8f6f\u96c5\u9ed1","color":"000000","size":"9","align":"left","isbold":"false","underline":"false","width":"66.95","height":"20","text":"\u7535\u8bdd\uff1a","italic":"false","position":"absolute","type":"text"}]]>
+    </item>
+    <item en_name="kehu_phone" cn_name="收货人电话">
+    <![CDATA[{"x":"287.25","y":"48","font":"\u5fae\u8f6f\u96c5\u9ed1","color":"000000","size":"9","align":"left","isbold":"false","underline":"false","width":"104.6","height":"20","text":"13937122375","italic":"false","type":"data"}]]>
+    </item>
+    <item en_name="organization" cn_name="备注：">
+    <![CDATA[{"x":"59.25","y":"78","font":"\u5fae\u8f6f\u96c5\u9ed1","color":"000000","size":"9","wrap":"true","align":"left","isbold":"false","underline":"false","width":"243.15","height":"20","text":"\u94a2\u7b14","italic":"false","position":"absolute","type":"data"}]]>
+    </item>
+    <item en_name="diy" cn_name="整单备注：">
+    <![CDATA[{"x":"0","y":"78","font":"\u5fae\u8f6f\u96c5\u9ed1","color":"000000","size":"9","wrap":"true","align":"left","isbold":"false","underline":"false","width":"60","height":"20","text":"\u6574\u5355\u5907\u6ce8\uff1a","italic":"false","position":"absolute","type":"text"}]]>
+    </item>
+
+    <!--表格分割横线-->
+    <item en_name="line" cn_name="line ">
+    <![CDATA[{"x":"0","y":"100","font":"\u5fae\u8f6f\u96c5\u9ed1","color":"000000","size":"9","align":"left","isbold":"false","underline":"false","width":"541.5","height":"20","text":"\u94a2\u7b14","italic":"false","position":"absolute","type":"line"}]]>
+    </item>
+
+    <item en_name="diy" cn_name="仓库编码">
+    <![CDATA[{"x":"0","y":"100","font":"\u5fae\u8f6f\u96c5\u9ed1","color":"000000","size":"9","wrap":"true","align":"left","isbold":"false","underline":"false","width":"100","height":"20","text":"\u4ed3\u5e93\u7f16\u7801","italic":"false","position":"absolute","type":"text"}]]>
+    </item>
+    <item en_name="diy" cn_name="商品名称">
+    <![CDATA[{"x":"130","y":"100","font":"\u5fae\u8f6f\u96c5\u9ed1","color":"000000","size":"9","wrap":"true","align":"left","isbold":"false","underline":"false","width":"100","height":"20","text":"\u5546\u54c1\u540d\u79f0","italic":"false","position":"absolute","type":"text"}]]>
+    </item>
+    <item en_name="diy" cn_name="属性备注信息">
+    <![CDATA[{"x":"380","y":"100","font":"\u5fae\u8f6f\u96c5\u9ed1","color":"000000","size":"9","wrap":"true","align":"left","isbold":"false","underline":"false","width":"100","height":"20","text":"\u5c5e\u6027\u5907\u6ce8\u4fe1\u606f","italic":"false","position":"absolute","type":"text"}]]>
+    </item>
+    <item en_name="diy" cn_name="产品数量">
+    <![CDATA[{"x":"480","y":"100","font":"\u5fae\u8f6f\u96c5\u9ed1","color":"000000","wrap":"true","size":"9","align":"left","isbold":"false","underline":"false","width":"100","height":"20","text":"\u4ea7\u54c1\u6570\u91cf","italic":"false","position":"absolute","type":"text"}]]>
+    </item>
+    <item en_name="diy" cn_name="打印时间:">
+    <![CDATA[{"x":"380","y":"0","font":"\u5fae\u8f6f\u96c5\u9ed1","color":"000000","wrap":"true","size":"9","align":"left","isbold":"false","underline":"false","width":"200","height":"20","text":"\u6253\u5370\u65f6\u95f4","italic":"false","position":"absolute","type":"data"}]]>
+    </item>
+    <item en_name="print_date" cn_name="打印时间">
+    <![CDATA[{"x":"420","y":"0","font":"\u5fae\u8f6f\u96c5\u9ed1","color":"000000","wrap":"true","size":"9","align":"left","isbold":"false","underline":"false","width":"200","height":"20","text":"13937122375","italic":"false","position":"absolute","type":"data"}]]>
+    </item>
+    <item en_name="diy" cn_name="打印批次:">
+    <![CDATA[{"x":"380","y":"16","font":"\u5fae\u8f6f\u96c5\u9ed1","color":"000000","wrap":"true","size":"9","align":"left","isbold":"false","underline":"false","width":"200","height":"20","text":"\u6253\u5370\u6279\u6b21","italic":"false","position":"absolute","type":"data"}]]>
+    </item>
+    <item en_name="batch_number" cn_name="打印批次">
+    <![CDATA[{"x":"420","y":"16","font":"\u5fae\u8f6f\u96c5\u9ed1","color":"000000","wrap":"true","size":"9","align":"left","isbold":"false","underline":"false","width":"200","height":"20","text":"\u6253\u5370\u6279\u6b21","italic":"false","position":"absolute","type":"data"}]]>
+    </item>
+    <item en_name = "list" cn_name="商品列表" id="item17">
+      <config>
+      <![CDATA[{"x":"0","y":"115","color":"000000","width":"28","height":"20","text":"13937122375","position":"absolute","type":"list"}]]>
+      </config>
+      <item en_name="storage_num" cn_name="仓库编号">
+      <![CDATA[{"x":"0","y":"0","font":"\u5fae\u8f6f\u96c5\u9ed1","color":"000000","wrap":"true","size":"9","align":"left","isbold":"false","underline":"false","width":"78","height":"20","text":"\u94a2\u7b14","italic":"false","type":"data"}]]>
+      </item>
+      <item en_name="local_name" cn_name="商品名称">
+      <![CDATA[{"x":"80","y":"0","font":"\u5fae\u8f6f\u96c5\u9ed1","color":"000000","wrap":"true","size":"9","align":"left","isbold":"false","underline":"false","width":"300","height":"20","text":"\u94a2\u7b14","italic":"false","type":"data"}]]>
+      </item>
+      <item en_name="color_info" cn_name="属性备注信息">
+      <![CDATA[{"x":"380","y":"0","font":"\u5fae\u8f6f\u96c5\u9ed1","color":"000000","wrap":"true","size":"9","align":"left","isbold":"false","underline":"false","width":"100","height":"80","text":"\u5c5e\u6027\u5907\u6ce8\u4fe1\u606f","italic":"false","type":"data"}]]>
+      </item>
+      <item en_name="num" cn_name="商品数量 ">
+      <![CDATA[{"x":"490","y":"0","font":"\u5fae\u8f6f\u96c5\u9ed1","color":"000000","wrap":"true","size":"9","align":"left","isbold":"false","underline":"false","width":"200","height":"20","text":"\u94a2\u7b14","italic":"false","type":"data"}]]>
+      </item>
+    </item>
+    <item en_name="diy" cn_name="商品数量：">
+    <![CDATA[{"x":"0","y":"0","font":"\u5fae\u8f6f\u96c5\u9ed1","rela_o":"item17","wrap":"true","color":"000000","size":"9","align":"left","isbold":"false","underline":"false","width":"78","height":"20","text":"\u5546\u54c1\u6570\u91cf\uff1a","italic":"false","position":"relative","type":"text"}]]>
+    </item>
+    <item en_name="product_total_num" cn_name="商品总数 ">
+    <![CDATA[{"x":"50","y":"0","font":"\u5fae\u8f6f\u96c5\u9ed1","rela_o":"item17","wrap":"true","color":"000000","size":"9","align":"left","isbold":"false","underline":"false","width":"50","height":"20","text":"13937122375","italic":"false","position":"relative","type":"data"}]]>
+    </item>
+
+    <!--表格分割横线-->
+    <item en_name="line" cn_name="line ">
+    <![CDATA[{"x":"0","y":"9","font":"\u5fae\u8f6f\u96c5\u9ed1","rela_o":"item17","color":"000000","size":"9","align":"left","isbold":"false","underline":"false","width":"541.5","height":"1","text":"\u94a2\u7b14","italic":"false","position":"relative","type":"line"}]]>
+    </item>
+
+    <item en_name="diy" cn_name="温馨提示">
+    <![CDATA[{"x":"0","y":"20","font":"\u5fae\u8f6f\u96c5\u9ed1","rela_o":"item17","wrap":"true","color":"000000","size":"9","align":"left","isbold":"false","underline":"false","width":"340","height":"50","text":"\u94a2\u7b14","italic":"false","type":"data","position":"relative","text":"\u5c0a\u656c\u7684\u987e\u5ba2\uff0c\u4e3a\u4e86\u4fdd\u8bc1\u60a8\u7684\u6743\u76ca\uff0c\u7b7e\u5b57\u524d\u8bf7\u786e\u8ba4\u5916\u5305\u88c5\u662f\u5426\u5b8c\u597d\u3002\u5982\u6709\u5f02\u8bae\uff0c\u8bf7\u5411\u5feb\u9012\u5458\u5f53\u9762\u63d0\u51fa\u540c\u65f6\u7acb\u5373\u81f4\u7535\u591a\u4e50\u58eb\u552e\u540e\u63d0\u51fa\u5f02\u8bae\u3002\u552e\u540e\u7535\u8bdd\uff1a\u0030\u0032\u0031\u002d\u0036\u0030\u0039\u0035\u0036\u0030\u0030\u0030\u0020\u5de5\u4f5c\u65f6\u95f4\uff1a\u5468\u4e00\u002d\u5468\u4e94\uff08\u0039\u003a\u0030\u0030\u002d\u0031\u0032\u003a\u0030\u0030\uff1b\u0031\u0033\u003a\u0030\u0030\u002d\u0031\u0038\u003a\u0030\u0030\uff09"}]]>
+    </item>
+    <item en_name="diy" cn_name="签收人：">
+    <![CDATA[{"x":"355","y":"20","font":"\u5fae\u8f6f\u96c5\u9ed1","rela_o":"item17","wrap":"true","color":"000000","size":"9","align":"left","isbold":"false","underline":"false","width":"78","height":"20","text":"\u7b7e\u6536\u4eba\uff1a","italic":"false","position":"relative","type":"text"}]]>
+    </item>
+    <item en_name="diy" cn_name="日  期：">
+    <![CDATA[{"x":"355","y":"40","font":"\u5fae\u8f6f\u96c5\u9ed1","rela_o":"item17","wrap":"true","color":"000000","size":"9","align":"left","isbold":"false","underline":"false","width":"70","height":"20","text":"\u65e5\u671f\uff1a","italic":"false","position":"relative","type":"text"}]]>
+    </item>
+
+    <!--表格分割横线-->
+    <item en_name="line" cn_name="line ">
+    <![CDATA[{"x":"0","y":"30","font":"\u5fae\u8f6f\u96c5\u9ed1","rela_o":"item17","color":"000000","size":"9","align":"left","isbold":"false","underline":"false","width":"541.5","height":"20","text":"\u94a2\u7b14","italic":"false","position":"relative","type":"line"}]]>
+    </item>
+
+    <item en_name="copyright" cn_name="系统版权">
+    <![CDATA[{"x":"0","y":"60","font":"\u5fae\u8f6f\u96c5\u9ed1","wrap":"true","rela_o":"item17","color":"000000","size":"9","align":"left","isbold":"false","underline":"false","width":"156","height":"20","text":"Magic","italic":"false","position":"relative","type":"data"}]]>
+    </item>
+  </ipos>
+</data>
