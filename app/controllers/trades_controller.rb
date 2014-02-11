@@ -296,6 +296,7 @@ class TradesController < ApplicationController
         order = @trade.orders.where(_id: order_id).first
         if order
           infos.each do |key, info|
+            next unless info['values']
             values = info['values'].reject{|value| value.blank? || value['id'].blank? || value['value'].blank? }
             next if values.count == 0
             property_memo = order.trade_property_memos.create(
