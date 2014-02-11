@@ -377,6 +377,13 @@ class TradesController < ApplicationController
     render json: {tids: tids, has_jingdong_trade: has_jingdong_trade, has_gift_trade: has_gift_trade}
   end
 
+  def trade_finished
+    @trade = Trade.find(params[:id])
+    @trade.update_attributes(:status => "TRADE_FINISHED")
+    @trade.operation_logs.create(operated_at: Time.now, operation: '设置交易完成', operator_id: current_user.id, operator: current_user.name)
+    render :text=>"ok" if @trade.save
+  end
+
   def batch_add_gift
     trades = Trade.where(:_id.in => params[:ids])
     trades.each do |trade|

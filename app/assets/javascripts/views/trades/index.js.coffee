@@ -156,6 +156,13 @@ class MagicOrders.Views.TradesIndex extends MagicOrders.Views.BaseView
           MagicOrders.cache_trade_number = parseInt($('.trade_check:checked').parents('tr').children('td:first').html())
           if type == 'edit_handmade_trade'
             $(location).attr('href', '/custom_trades/'+trade_id+'/edit')
+          else if type == 'trade_finished'
+            if confirm "交易完成设置成功，订单状态修改成：交易成功"
+              $.get '/trades/'+trade_id+'/trade_finished', success:(status,data,xhr) =>
+                console.debug(status,data,xhr)
+                setTimeout ->
+                  $(".search:visible").click() # query again
+                ,300
           else if $(e.target).data('modal-action')==true
             @do_modal_action e
           else if type == "invoice"
