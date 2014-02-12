@@ -29,10 +29,10 @@
               <div>
                 <p class="clear">
                   <label class="input-large pull-left">付款间隔时间：</label>
-                  <select name="auto_settings[auto_merge_pay_time_interval]" class="input-mini">
-                    <% [5,10,15,20,25,30,35,40,45,50,55,60].each do |i| %>
-                    <option value= "<%= i %>" <%= 'selected' if @setting['auto_merge_pay_time_interval'] == i.to_s %>><%= i %>分钟</option>
-                    <% end %>
+                  <select name="auto_settings[auto_merge_pay_time_interval]" style="width: 80px">
+                    <% [["15分钟", 15], ["30分钟", 30], ["1小时", 60], ["2小时", 120], ["3小时", 180], ["4小时", 240]].each do |name, sec| %>
+                      <option value= "<%= sec %>" <%= 'selected' if @setting['auto_merge_pay_time_interval'] == sec.to_s %>><%= name %></option>
+                    <%- end -%>
                   </select>
                 </p>
               </div>
