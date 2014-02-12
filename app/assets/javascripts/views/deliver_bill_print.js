@@ -38,7 +38,8 @@ function bind_swf(id, type, xml) {
     'displayprint':       'true',            //是否显示打印按钮
     'view':               'false',                   //是否需要打印预览
     'allowScriptAccess':  'always',
-    'needfeedbacksize':   'false'
+    'needfeedbacksize':   'false',
+    'templateUrl':        xml
   }
 
   if(type == 'kdd'){
@@ -59,8 +60,8 @@ function getElement(id){ //获取Flash 元素，尽量别用jquery ，以jquery�
   return document.getElementById(id);
 }
 
-function bind_deliver_swf (id) {
-  bind_swf(id, 'ffd')
+function bind_deliver_swf (id,templateUrl) {
+  bind_swf(id, 'ffd',templateUrl)
 }
 
 function bind_logistic_swf (id, xml) {

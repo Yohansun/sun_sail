@@ -85,7 +85,7 @@ class MagicOrders.Routers.DeliverBills extends Backbone.Router
 
       switch operation_key
         when 'print_deliver_bill'
-          bind_deliver_swf(model.get('id'))
+          bind_deliver_swf(model.get('id'),model.get('template_path'))
 
           $(modalDivID).on 'hidden', ()->
             if MagicOrders.hasPrint == true
