@@ -1,6 +1,6 @@
 __filename = "stocks_query#{Time.now.strftime("%Y/%m/%d-%H:%M:%S")}.xls"
 sheet1 = xls.create_worksheet
-sheet1[0, 0] = "库存查询数据"
+sheet1[0, 0] = "总库存数据"
 
 sheet1.row(1).concat ["ID","SKU编码", "商品SKU名称", "商品编码", "商品分类","预测库存", "可用库存", "实际库存","安全库存","库存状态"]
 i = 1

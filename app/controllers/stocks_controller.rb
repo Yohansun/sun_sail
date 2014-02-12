@@ -6,7 +6,7 @@ class StocksController < ApplicationController
 
   def index
     condition_relation = default_scoped.where(:"sellers.active" => true).includes(:seller,:product)
-    condition_relation = condition_relation.where(StockProduct::STORAGE_STATUS[params[:storage_status]]).scoped if params[:storage_status].present?
+    condition_relation = condition_relation.where(StockProduct::STORAGE_STATUS.slice(*params[:storage_status]).values.join(' and ')).scoped if params[:storage_status].present?
     conditions ||= {}
     conditions[:id_in] = params[:export_ids].split(',') if params[:export_ids].present?
 
@@ -18,6 +18,13 @@ class StocksController < ApplicationController
     end
 
     conditions = conditions.merge!(params[:search]) if params[:search].present?
+    conditions.delete("product_id_in") if conditions["product_id_in"] && conditions["product_id_in"].join.blank?
+    conditions.delete("seller_id_in") if conditions["seller_id_in"] && conditions["seller_id_in"].join.blank?
+    if outer_ids=conditions.delete("product_outer_id_in")
+      if !outer_ids.blank?
+        outer_ids = conditions["product_outer_id_in"] = outer_ids.split(',')
+      end
+    end
     @search = condition_relation.search(conditions)
     @stock_products = @search.page(params[:page]).per(20)
     @count = @search.count

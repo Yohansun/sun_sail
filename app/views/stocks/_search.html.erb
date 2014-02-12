@@ -5,25 +5,34 @@
 </style>
 
 <div class="control-group">
-  <%= f.label :product_id_eq,raw("<code>商品名称</code>"),:class => "pull-left"  %>
-  <div class="controls pull-left">
-    <%= f.select :product_id_eq,current_account.products.collect {|x| [x.name,x.id]},
-    {:include_blank => true},{:class => "input-small pull-left select2 product all"}  %>
+  <%= f.label :product_id_in,raw("<code>商品名称</code>"),:class => "pull-left",style: "width:58px;" %>
+  <div class="span10">
+    <%= f.select :product_id_in,current_account.products.collect {|x| [x.name,x.id]},
+    {:include_blank => true},{:class => "span10 nomargin populate select2-offscreen",multiple: '',id: "product_id"}  %>
   </div>
+</div>
+<div class="control-group">
+  <%= f.label :seller_id_in,raw("<code>经销商</code>"),:class => "pull-left",style: "width:58px;" %>
+  <div class="span6">
+    <%= f.select :seller_id_in,current_account.sellers.collect {|x| [x.name,x.id]},
+    {:include_blank => true},{:class => "span6 nomargin populate select2-offscreen",multiple: '',id: "seller_id"}  %>
+  </div>
+</div>
+<div class="control-group">
+  <%= f.label :product_outer_id_in,raw("<code>商品编码</code>"),:class => "pull-left",style: "width:58px;" %>
+  <div class="span6">
+    <%= f.text_field :product_outer_id_in,value: f.object.product_outer_id_in.try(:join,','),:class => "span6 nomargin",id: "product_outer_id"  %>
+  </div>
+</div>
+<div class="control-group">
+  <%= label_tag "storage_status",raw("<code>库存状态</code>"),:class => "pull-left",style: "width:58px;" %>
+  <div class="span6">
+    <%= select_tag "storage_status[]",options_for_select(StockProduct::STORAGE_STATUS.keys,params["storage_status"]),{:include_blank => true,:class => "span6 nomargin populate select2-offscreen",multiple: '',id: 'storage_status'} %>
+  </div>
+</div>
+<div class="control-group">
   <div class="pull-left">
     <button type="button pull-left" class="btn btn-info search" id="simple_search_button">筛选</button>
-  </div>
-</div>
-<div class="control-group">
-  <%= f.label :product_outer_id_eq,raw("<code>商品编码</code>"),:class => "pull-left"  %>
-  <div class="controls pull-left">
-    <%= f.text_field :product_outer_id_eq,{:class => "input-large pull-left"}  %>
-  </div>
-</div>
-<div class="control-group">
-  <%= label_tag "storage_status",raw("<code>库存状态</code>"),:class => "pull-left"  %>
-  <div class="controls pull-left">
-    <%= select_tag "storage_status",options_for_select(StockProduct::STORAGE_STATUS.keys,params["storage_status"]),{:include_blank => true,:class => "input-small pull-left select2 all"} %>
   </div>
 </div>
 <% content_for :tail do %>
@@ -38,12 +47,14 @@ $(function() {
   sel.bind('.level_2','<%= params[:op_city] %>');
   sel.bind('.level_3','<%= params[:op_district] %>');
 
-  $.each($('form').find("select.all"),function(){
-    $(this).select2({
-      placeholder: "全部",
-      allowClear: true
-    });
-  })
+  $("#product_outer_id").select2({
+      multiple: true,
+      tokenSeparators: [","],
+      tags: []
+  });
+  $("#storage_status").select2();
+  $("#product_id").select2();
+  $("#seller_id").select2();
 })
 </script>
 <% end %>

@@ -157,7 +157,7 @@ module ApplicationHelper
     case params[:controller]
     when "stocks"
       items << href_li_item("仓库管理")
-      items << active_li_item("库存查询")
+      items << active_li_item("总库存")
     when "warehouses"
       items << href_li_item("仓库管理", "stocks")
       items << active_li_item("所有仓库")
