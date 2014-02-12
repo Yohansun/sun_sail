@@ -37,6 +37,7 @@ require 'hz2py'
 require 'csv'
 
 class Seller < ActiveRecord::Base
+  include FinderCache
   include MagicEnum
   acts_as_nested_set :counter_cache => :children_count
   enum_attr :has_stock, [["启用",true],["禁用",false]]
