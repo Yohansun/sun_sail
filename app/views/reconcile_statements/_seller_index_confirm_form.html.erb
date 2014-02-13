@@ -23,6 +23,18 @@
     <button class="btn btn-primary confirm_button1" type="submit">确定</button>
   </div>
 </div><!-- confirm_account -->
+<div id="regret_account" class="modal hide fade" tabindex="-1">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h3>改回未结算</h3>
+  </div><!-- modal-header -->
+  <div class="modal-body sure_id">
+    <p>确认改回未结算?</p>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary regret_confirm_button" type="submit">确定</button>
+  </div>
+</div><!-- confirm_account -->
 <%- content_for :tail do %>
 <script type = "text/javascript">
   var rs_id = null;
@@ -84,6 +96,35 @@
         });
       }
     }
+  })
+
+  $('.export_reconcile_detail').click(function(event) {
+    if($("input[name='audited[]']:checked").length == 1){
+      var chk_value = null;
+      chk_value = $("input[name='audited[]']:checked").val();
+      window.location = "<%=product_detail_exports_reconcile_statements_path%>.xls?selected_rs="+chk_value;
+    }else{
+      alert("您必须只能选择一个店铺");
+    }
+  })
+
+  $('.regret_settlement').click(function(argument) {
+    if($("input[name='audited[]']:checked").length == 1){
+      $('#regret_account').modal('show');
+    }else{
+      alert("您必须只能选择一个店铺");
+    }
+  })
+  $('.regret_confirm_button').click(function(argument) {
+    rs_id = $("input[name='audited[]']:checked").val();
+    $.ajax({
+      type: "PUT",
+      url: "/reconcile_statements/"+rs_id+"/update_processed"
+    }).done(function(result){
+      $('#regret_account').modal('hide');
+      $("#rs_"+rs_id+" td:eq(4)").html("<a data-toggle='modal' data-id="+rs_id+" href='#confirm_account' class='confirm_settlement'>未结算</a>");
+      // $('#audited_'+ rs_id +'').attr("disabled","disabled");
+    })
   })
 
   function can_submit () {

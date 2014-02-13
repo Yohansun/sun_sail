@@ -1,6 +1,6 @@
 # encoding: utf-8
 class ReconcileStatementsController < ApplicationController
-  before_filter :fetch_rs, only: [:show, :audit, :seller_show]
+  before_filter :fetch_rs, only: [:show, :audit, :seller_show, :update_processed]
   before_filter :check_module
   AllActions = {:index => "运营商对账",:seller_index => "经销商对账",:distributor_index => "分销商对账"}
 
@@ -34,7 +34,11 @@ class ReconcileStatementsController < ApplicationController
 
   def seller_show
     if @rs
-      @details = @rs.seller_detail
+      if current_account.settings.enable_module_reconcile_statements_for_magicd == true
+        @details = @rs.product_details
+      else
+        @details = @rs.seller_detail
+      end
       respond_to do |f|
         f.js
       end
@@ -65,6 +69,7 @@ class ReconcileStatementsController < ApplicationController
       flash[:notice] = "当月还未生成" unless @rs_set.present?
     end
     @rs_set = @rs_set.page(params[:page]).per(20)
+    @all_audited = @rs_set.all_audited?
     @all_processed = @rs_set.all_processed?
     render seller_index_reconcile_statements_path
   end
@@ -88,6 +93,26 @@ class ReconcileStatementsController < ApplicationController
 
     respond_to do |format|
       format.xls  { redirect_to :back unless @rs_data.present? }
+      format.html { redirect_to :back }
+    end
+  end
+
+  def product_detail_exports
+    if params[:selected_rs].blank?
+      flash[:error] = "不正确的参数，数据导出失败"
+    else
+      id = params[:selected_rs].to_i
+      rs = ReconcileStatement.find(id)
+      seller_id = rs.seller_id
+      @trades = Trade.where(:end_time.gte => rs.audit_time.beginning_of_month,
+                            :end_time.lt => rs.audit_time.end_of_month,
+                            status: "TRADE_FINISHED",
+                            seller_id: seller_id)
+      flash[:notice] = "数据导出成功"
+    end
+
+    respond_to do |format|
+      format.xls  { redirect_to :back unless @trades.present? }
       format.html { redirect_to :back }
     end
   end
@@ -139,6 +164,14 @@ class ReconcileStatementsController < ApplicationController
     @rs_set = @rs_set.page(params[:page]).per(20)
     @all_processed = @rs_set.all_processed?
     render distributor_index_reconcile_statements_path
+  end
+
+  def update_processed
+    if @rs.processed == true || @rs.audited == true
+      @rs.update_attribute(:processed, false)
+      @rs.update_attribute(:audited, false)
+    end
+    render :nothing => true, status: 200
   end
 
   private

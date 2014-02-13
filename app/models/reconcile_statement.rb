@@ -19,6 +19,7 @@ class ReconcileStatement < ActiveRecord::Base
   include ActiveModel::ForbiddenAttributesProtection
   has_one :detail, class_name: "ReconcileStatementDetail"
   has_many :seller_detail, class_name: "ReconcileSellerDetail"
+  has_many :product_details, class_name: "ReconcileProductDetail"
   belongs_to :account
   scope :by_date, lambda { |date| where(["DATE_FORMAT(audit_time, '%Y%m') = ? ", date.sub(/-/,'')]) }
   scope :by_seller_ids, lambda{ |id| where("seller_id in (?)", id)}
