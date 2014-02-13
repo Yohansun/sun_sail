@@ -4,8 +4,8 @@
       <li class="<%= params[:action].eql?(action.to_s) ? "active" : "" %>">
         <a href="/reconcile_statements/<%= action.to_s.gsub(/index/,'') %>"><%= name %></a>
       </li>
-    <% else %>
-      <% unless current_user.has_role?(:super_admin) %>
+    <% else  %>
+      <% unless action.to_s =~ %r(distributor_index) && current_account.settings.enable_module_reconcile_statements_for_magicd == true %>
         <li class="<%= params[:action].eql?(action.to_s) ? "active" : "" %>">
           <a href="/reconcile_statements/<%= action.to_s %>"><%= name %></a>
         </li>
