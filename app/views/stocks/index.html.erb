@@ -1,7 +1,6 @@
 <% content_for :sub_nav do %>
   <%= render partial: "layouts/warehouse_menu" %>
 <% end %>
-
 <%= render "table" %>
 
 <% content_for :tail do %>
@@ -11,7 +10,45 @@ function processChecked(full_url){
   $(location).attr('href', full_url + '&export_ids=' + stock_product_ids);
 }
 
+function validGreaterThanZore(value){
+  var re = new RegExp("^[0-9]*[1-9][0-9]*$");
+  if(value.match(re)==null){
+    return '请输入大于 0 的整数';
+  }else{
+    return false;
+  }
+}
+
 $(function() {
+  var setActualStock = $("#set_actual_stock");
+  $('.stock_actual').editable({
+         url: setActualStock.attr("target_url"),
+         mode: "popup",
+         placement: "right",
+         type: 'text',
+         send: "always",
+         name: 'actual',
+         params: function(params){
+                params.stock_product_ids = [$(this).data("stock-product-id")];
+                return params;},
+         validate: function(value){return validGreaterThanZore(value)},
+         title: '批量设置实际库存'
+  });
+  var setSafetyStock = $("#set_safety_stock");
+  $('.stock_safe_value').editable({
+        url: setSafetyStock.attr("target_url"),
+        mode: "popup",
+        placement: "right",
+        type: 'text',
+        send: "always",
+        name: 'safe_value',
+        params: function(params){
+                params.stock_product_ids = [$(this).data("stock-product-id")];
+                return params;},
+        validate: function(value){return validGreaterThanZore(value)},
+        title: '设置安全库存'
+  });
+
   $(".set_stock").click(function(){
     var tag_name = $(this).attr("href")
     if ($(tag_name).attr("aria-hidden") == "true") {

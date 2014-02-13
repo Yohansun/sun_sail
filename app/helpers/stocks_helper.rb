@@ -9,4 +9,15 @@ module StocksHelper
       ''
     end
   end
+
+  def td_item_class(col_name)
+    case col_name
+    when "product_name"
+      "sku_title"
+    when "actual", "safe_value"
+      "xeditable"
+    else
+      ""
+    end
+  end
 end
