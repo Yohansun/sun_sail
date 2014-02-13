@@ -150,7 +150,7 @@ class StocksController < ApplicationController
   #POST /warehouses/batch_update_safety_stock
   def batch_update_safety_stock
     @stock_products = default_scoped.where(:id => params[:stock_product_ids])
-    safe_value = params[:safe_value].to_i
+    safe_value = params[:value].present? ? params[:value].to_i : params[:safe_value].to_i
     @stock_products.each {|stock| stock.update_attributes!(safe_value: safe_value,audit_comment: "批量更新安全库存") }
     redirect_to({:action => :index,:warehouse_id => params[:warehouse_id]}.reject {|k,v| v.blank?})
   end
@@ -165,7 +165,7 @@ class StocksController < ApplicationController
         @stock_products = default_scoped.where(:id => params[:stock_product_ids])
       end
 
-      actual = params[:actual].to_i
+      actual = params[:value].present? ? params[:value].to_i : params[:actual].to_i
       if actual >= 0 && @stock_products.present?
         success,fails = StockProduct.batch_update_actual_stock(@stock_products,actual)
         flash[:notice] = "ID为#{success.join(',')} 更新实际库存#{actual}成功" if success.present?
