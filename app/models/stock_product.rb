@@ -18,6 +18,7 @@
 #
 
 class StockProduct < ActiveRecord::Base
+  include CacheMethod
   audited
   # paginates_per 20
 
@@ -123,6 +124,21 @@ class StockProduct < ActiveRecord::Base
       total_price:  product.price * (options[:number] || 1).to_i
     }.merge(options)
   end
+
+  def count_safe_value
+    self.class.where(account_id: account_id).sum(:safe_value)
+  end
+  cache_method :count_safe_value,hook: :after_save,primary_key: :account_id
+
+  def count_activity
+    self.class.where(account_id: account_id).sum(:activity)
+  end
+  cache_method :count_activity,hook: :after_save,primary_key: :account_id
+
+  def count_actual
+    self.class.where(account_id: account_id).sum(:actual)
+  end
+  cache_method :count_actual,hook: :after_save,primary_key: :account_id
 
   private
   def create_stock_bill(stock_bill,number)

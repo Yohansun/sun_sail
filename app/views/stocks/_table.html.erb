@@ -74,6 +74,7 @@
     </thead>
     <tbody>
       <% @stock_products.each do |stock_product| %>
+      <% @stock_product = stock_product %>
         <tr id="<%=dom_id(stock_product)%>">
           <td><input type="checkbox" name="stock_product_ids[]" value="<%= stock_product.id %>"></td>
           <%- @all_cols.each do |col_name, view_name| -%>
@@ -81,6 +82,8 @@
             <% case col_name
                when "sku_sku_id" %>
             <%= stock_product.sku.try(:sku_id) %>
+            <% when "seller_name" %>
+              <%= stock_product.seller.try(:name) %>
             <% when "product_name" %>
               <%= stock_product.sku.try(:title) %>
             <% when "product_outer_id" %>
@@ -100,6 +103,7 @@
           <%- end -%>
         </tr>
       <% end %>
+      <tr><th>统计</th><th>可用库存: <%= @stock_product.count_activity %></th><th>实际库存: <%= @stock_product.count_actual %></th><th>安全库存: <%= @stock_product.count_safe_value %></th></tr>
     </tbody>
   </table>
 <%- end %>

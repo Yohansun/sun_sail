@@ -8,12 +8,12 @@ module WarehousesHelper
               "出库单"  => "/warehouses/#{warehouse}/stock_out_bills",
               "退货单"  => "/warehouses/#{warehouse}/refund_products",
               "所有进销" => "/warehouses/#{warehouse}/stock_bills",
-              "库存查询" => "/warehouses/#{warehouse}/stocks"
+              "总库存" => "/warehouses/#{warehouse}/stocks"
             }
           }
 
   def one_tabs
-    {"所有仓库"  => warehouses_path,"库存查询"  => "/stocks"}
+    {"所有仓库"  => warehouses_path,"总库存"  => "/stocks"}
   end
 
   def stocks_path_adapter
