@@ -151,6 +151,29 @@ json.gift_orders gift_orders(@trade) do |json, gift_order|
   json.delivered_at gift_order.trade.delivered_at
 end
 
+json.ref_orders @trade.except_ref_orders do |json, order|
+  json.id                       order._id
+  json.title                    order.title
+  json.num                      order.num
+  json.price                    order.price
+  json.sku_properties           order.sku_properties
+  json.item_outer_id            order.item_outer_id
+  json.cs_memo                  order.cs_memo
+  json.color_num                order.color_num
+  json.color_hexcode            order.color_hexcode
+  json.color_name               order.color_name
+  json.barcode                  order.barcode
+  json.refund_status_text       order.refund_status_text
+  json.order_gift_tid           order.order_gift_tid
+  json.sku_bindings             order.sku_bindings
+  json.local_sku_id             order.local_sku_id
+  json.multi_product_properties order.multi_product_properties
+  json.refund_status            order.refund_status if @trade._type == 'TaobaoTrade'
+  json.skus_info                order.skus_info
+  json.bill_info                order.bill_info
+  json.packaged                 false
+end
+
 ## DEPRECATED FOR NOW
 
 if @trade._type == "TaobaoPurchaseOrder"
