@@ -358,6 +358,26 @@ class Trade
   }.freeze
 
 ###########
+##### 退款订单
+  def return_money_batch_orders
+    if ref_batches && ref_batches.first.try(:status) == "confirm_refund_ref"
+      ref_batches.first.ref_orders
+    end
+  end
+
+  def except_ref_orders
+    adapted_orders = orders
+    if return_money_batch_orders
+      adapted_orders.each do |order|
+        order_num = order[:num]
+        ref_order = return_money_batch_orders.each.find{|o| o.sku_id.to_i == order[:local_sku_id] }
+        order_num -= ref_order[:num] if ref_order
+        order_num == 0 ? adapted_orders.delete(order) : order[:num] = order_num
+      end
+    end
+    adapted_orders
+  end
+
 ##### 订单与其他表单的关联属性
 
   def orders
