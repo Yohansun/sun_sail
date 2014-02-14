@@ -17,6 +17,19 @@ class DeliverBill
     update_attributes logistic_id: logistic.id, logistic_name: logistic.name
   end
 
+  def except_ref_bills
+    adapted_bill_products = bill_products
+    if trade.return_money_batch_orders
+      adapted_bill_products.each do |product|
+        product_num = product[:number]
+        ref_order = trade.return_money_batch_orders.each.find{|o| o.sku_id.to_i == product[:sku_id] }
+        product_num -= ref_order[:num] if ref_order
+        product_num == 0 ? adapted_orders.delete(product) : product[:num] = product_num
+      end
+    end
+    adapted_bill_products
+  end
+
   # bill = DeliverBill.find(params[:id])
   # params[:partition]
   # => {"1" => [1,2,3],"2" => [4,5,6],"3" => [7,8,9]}

@@ -27,7 +27,7 @@
         <th width="20%">优惠</th>
         <th width="10%">价格</th>
       </tr>
-      <% for order in @bill.get('orders') : %>
+      <% for order in @bill.get('ref_orders') : %>
         <tr>
           <td><%= order.created %></td>
           <td><%= order.title %></td>
@@ -52,7 +52,7 @@
           <td></td>
         <% end %>
         <td></td>
-        <td><%= @bill.get('product_num') %></td>
+        <td><%= @bill.get('real_product_num') %></td>
         <td></td>
         <td></td>
         <td><%= @bill.get('total_payment') %></td>
