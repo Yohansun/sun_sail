@@ -13,12 +13,6 @@ module AutoSettingsHelper
     }
   end
 
-  def current_auto_block(action_name)
-    auto_block_with_text.each do |block, block_text|
-      return block if action_name =~ /#{block}/
-    end
-  end
-
   def current_auto_block_text(action_name)
     auto_block_with_text.each do |block, block_text|
       return block_text if action_name =~ /#{block}/

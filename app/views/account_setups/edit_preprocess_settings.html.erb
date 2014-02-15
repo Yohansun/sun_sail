@@ -11,113 +11,31 @@
             <fieldset class="mar_l80"><!-- 订单自动预处理 beginning -->
               <h4>订单自动预处理设置：</h4>
               <div>
-                <p class="clear">
-                  <label class="input-large pull-left">请选择自动预处理时间范围：</label>
-                  <input type="text" class="input-mini timepickers radius_no_rb" name="auto_settings[start_preprocess_at]" value="<%= @setting['start_preprocess_at']%>">
-                  <i class="icon-arrow-right"></i>
-                  <input type="text" class="input-mini timepickers radius_no_rb" name="auto_settings[end_preprocess_at]" value="<%= @setting['end_preprocess_at']%>">
-                  <span class="muted">(不选择默认为全天开启)</span>
-                </p>
+                <%= @setting.block_time_range(['start_preprocess_at'], ['end_preprocess_at'])%>
               </div>
               <div>
-                <label class="input-large pull-left">自动同步备注：</label>
+                <label class="input-large pull-left">同步买家备注至客服备注：</label>
                 <div class="controls ml210">
                   <div class="control-group">
-                    <label class="radio pull-left input-small">
-                      <input type="radio" name="auto_settings[auto_sync_memo]" <%='checked' if @setting['auto_sync_memo'] == 1 %>>开启
-                    </label>
-                    <label class="radio pull-left input-small">
-                      <input type="radio" value="off" name="auto_settings[auto_sync_memo]" <%='checked' if @setting['auto_sync_memo'].present? == false %>>关闭
-                    </label>
-                    <div>
-                      <p class="mt2 muted">将淘宝的顾客备注，同步到系统中的客服备注</p>
-                    </div>
+                    <%= @setting.block_dual_radio('auto_sync_memo') %>
                   </div>
                 </div>
               </div>
               <div>
-                <p class="clear">
-                  <label class="input-large pull-left">请选择自动标注异常静默时间：</label>
-                  <select name="auto_settings[preprocess_silent_gap]" class="input-mini">
-                  <% [24,48,72].each do |i| %>
-                  <option value= "<%= i %>" <%= 'selected' if @setting['preprocess_silent_gap'] == i.to_s %>><%= i %></option>
-                  <% end %>
-                  </select>小时
-                </p>
+                <%= @setting.block_label_select([24,48,72].collect{|i| i.to_s }, ["preprocess_silent_gap"], "请选择自动标注异常静默时间：", "小时") %>
               </div>
               <div>
-                <label class="input-large pull-left">自动标注异常订单(默认一天标注一次)：</label>
+                <label class="input-large pull-left">自动标注异常订单：</label>
                 <div class="controls ml210">
                   <div class="control-group">
-                    <label class="radio pull-left input-small">
-                      <input type="radio" name="auto_settings[auto_mark_unusual_trade]" <%='checked' if @setting['auto_mark_unusual_trade'] == 1 %>>开启
-                    </label>
-                    <label class="radio pull-left input-small">
-                      <input type="radio" value="off" name="auto_settings[auto_mark_unusual_trade]" <%='checked' if @setting['auto_mark_unusual_trade'].present? == false %>>关闭
-                    </label>
-                    <div>
-                      <p class="mt2 muted">满足以下被勾选的条件的订单，将被自动标记为异常订单</p>
-                      <table class="table table-condensed noborder">
-                        <thead>
-                        <tr>
-                          <th>订单状态异常</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>
-                              <input type="checkbox" class="pull-left" style="margin-top:4px;" name="auto_settings[unusual_conditions][unusual_waitpay]" <%= 'checked' if @setting['unusual_conditions']['unusual_waitpay'] == 1 %>>当订单已下单，超过
-                              <select name="auto_settings[unusual_conditions][max_unpaid_days]" class="input-mini">
-                                <% (1..7).each do |i| %>
-                                  <option value= "<%= i %>" <%= 'selected' if @setting['unusual_conditions']["max_unpaid_days"] == i.to_s %>><%= i %></option>
-                                <% end %>
-                              </select>天未付款
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <input type="checkbox" class="pull-left" style="margin-top:4px;" name="auto_settings[unusual_conditions][unusual_dispatch]" <%= 'checked' if @setting['unusual_conditions']['unusual_dispatch'] == 1 %>>当订单已付款，超过
-                              <select name="auto_settings[unusual_conditions][max_undispatched_days]" class="input-mini">
-                                <% (1..7).each do |i| %>
-                                  <option value= "<%= i %>" <%= 'selected' if @setting['unusual_conditions']["max_undispatched_days"] == i.to_s %>><%= i %></option>
-                                <% end %>
-                              </select>天未分派
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <input type="checkbox" class="pull-left" style="margin-top:4px;" name="auto_settings[unusual_conditions][unusual_deliver]" <%= 'checked' if @setting['unusual_conditions']['unusual_deliver'] == 1 %>>当订单已分派，超过
-                              <select name="auto_settings[unusual_conditions][max_undelivered_days]" class="input-mini">
-                                <% (1..7).each do |i| %>
-                                  <option value= "<%= i %>" <%= 'selected' if @setting['unusual_conditions']["max_undelivered_days"] == i.to_s %>><%= i %></option>
-                                <% end %>
-                              </select>天未发货
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <input type="checkbox" class="pull-left" style="margin-top:4px;" name="auto_settings[unusual_conditions][unusual_receive]" <%= 'checked' if @setting['unusual_conditions']['unusual_receive'] == 1 %>>当订单已发货，超过
-                              <select name="auto_settings[unusual_conditions][max_unreceived_days]" class="input-mini">
-                                <% 7.downto(1) do |i| %>
-                                  <option value= "<%= i %>" <%= 'selected' if @setting['unusual_conditions']["max_unreceived_days"] == i.to_s %>><%= i %></option>
-                                <% end %>
-                              </select>天未实际收货
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <input type="checkbox" class="pull-left" style="margin-top:4px;" name="auto_settings[unusual_conditions][unusual_repair]" <%= 'checked' if @setting['unusual_conditions']['unusual_repair'] == 1 %>>当订单已标记，超过
-                              <select name="auto_settings[unusual_conditions][max_unrepaired_days]" class="input-mini">
-                                <% (1..7).each do |i| %>
-                                  <option value= "<%= i %>" <%= 'selected' if @setting['unusual_conditions']["max_unrepaired_days"] == i.to_s %>><%= i %></option>
-                                <% end %>
-                              </select>天未处理异常
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
+                    <%= @setting.block_dual_radio('auto_mark_unusual_trade') %>
                   </div>
+                  <p class="mt2 muted">满足以下被勾选的条件的订单，将被自动标记为异常订单(默认一天标注一次)</p>
+                  <%= @setting.block_check_select((1..7).collect{|i| i.to_s }, [['unusual_conditions', 'unusual_waitpay'],['unusual_conditions', 'max_unpaid_days']], "当订单已下单，超过", "天未付款")%>
+                  <%= @setting.block_check_select((1..7).collect{|i| i.to_s }, [['unusual_conditions', 'unusual_dispatch'],['unusual_conditions', 'max_undispatched_days']], "当订单已付款，超过", "天未分派")%>
+                  <%= @setting.block_check_select((1..7).collect{|i| i.to_s }, [['unusual_conditions', 'unusual_deliver'],['unusual_conditions', 'max_undelivered_days']], "当订单已分派，超过", "天未发货")%>
+                  <%= @setting.block_check_select(7.downto(1).collect{|i| i.to_s }, [['unusual_conditions', 'unusual_receive'],['unusual_conditions', 'max_unreceived_days']], "当订单已发货，超过", "天未实际收货")%>
+                  <%= @setting.block_check_select((1..7).collect{|i| i.to_s }, [['unusual_conditions', 'unusual_repair'],['unusual_conditions', 'max_unrepaired_days']], "当订单已标记，超过", "天未付款")%>
                 </div>
               </div>
             </fieldset>

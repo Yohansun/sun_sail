@@ -12,31 +12,16 @@
               <h4>订单自动提醒设置：</h4>
               <div class="mar_l80">
                 <div class="control-group">
-                  <label class="radio pull-left input-small">
-                    <input type="radio" name="auto_settings[auto_notify]" <%='checked' if @setting['auto_notify'] == 1 %>>开启
-                  </label>
-                  <label class="radio">
-                    <input type="radio" value="off" name="auto_settings[auto_notify]" <%='checked' if @setting['auto_notify'].present? == false %>>关闭
-                  </label>
-                  <p class="clear">
-                    <label class="input-large pull-left">请输入自动提醒时间范围：</label>
-                    <input type="text" class="input-mini timepickers radius_no_rb" name="auto_settings[start_notify_at]" value="<%= @setting['start_notify_at']%>">
-                    <i class="icon-arrow-right"></i>
-                    <input type="text" class="input-mini timepickers radius_no_rb" name="auto_settings[end_notify_at]" value="<%= @setting['end_notify_at']%>">
-                    <span class="muted">(不选择默认为全天开启)</span>
-                  </p>
+                  <%= @setting.block_dual_radio('auto_notify') %>
+                  <%= @setting.block_time_range(['start_notify_at'], ['end_notify_at'])%>
                 </div>
               </div>
               <div class="mar_l80">
                 <label class="input-large pull-left">提醒方式：</label>
                 <div class="controls ml210">
                   <div class="control-group">
-                    <label class="checkbox pull-left input-small">
-                      <input type="checkbox" name="auto_settings[notify_conditions][send_email]" <%='checked' if @setting['notify_conditions']['send_email'] == 1 %>>邮件
-                    </label>
-                    <label class="checkbox pull-left input-small">
-                      <input type="checkbox" name="auto_settings[notify_conditions][send_sms]" <%='checked' if @setting['notify_conditions']['send_sms'] == 1 %>>短信
-                    </label>
+                    <%= @setting.block_label_checkbox(["notify_conditions", "send_email"], "邮件")%>
+                    <%= @setting.block_label_checkbox(["notify_conditions", "send_sms"], "短信")%>
                   </div>
                 </div>
               </div>
@@ -44,78 +29,19 @@
                 <label class="input-large pull-left">提醒人：</label>
                 <div class="controls ml210">
                   <div class="control-group">
-                    <select multiple name="auto_settings[notify_conditions][notify_users][]" class="input-large select2">
-                      <% current_account.users.each do |user| %>
-                      <option value= "<%= user.id %>" <%= 'selected' if @setting['notify_conditions']['notify_users'].to_a.include?(user.id.to_s) %>><%= user.name %></option>
-                      <% end %>
-                    </select>
+                    <%= @setting.block_select(current_account.users.collect{|user| [user.name, user.id.to_s]}, ['notify_conditions', 'notify_users'], true)%>
                   </div>
                 </div>
               </div>
               <div class="mar_l80">
                 <label class="input-large pull-left">提醒条件：</label>
                 <div class="controls ml210">
-                  <div class="control-group">
-                    <table class="table table-condensed noborder">
-                      <tbody>
-                        <tr>
-                          <td>
-                            <input type="checkbox" class="pull-left" style="margin-top:4px;" name="auto_settings[notify_conditions][dispatch_delay]" <%= 'checked' if @setting['notify_conditions']['dispatch_delay'] == 1 %>>已付款订单
-                            <select name="auto_settings[notify_conditions][max_dispatch_delay_days]" class="input-mini">
-                              <% (1..3).collect{|i| i*24 }.each do |i| %>
-                                <option value= "<%= i %>" <%= 'selected' if @setting['notify_conditions']["max_dispatch_delay_days"] == i.to_s %>><%= i %></option>
-                              <% end %>
-                            </select>小时内没有分派
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <input type="checkbox" class="pull-left" style="margin-top:4px;" name="auto_settings[notify_conditions][deliver_delay]" <%= 'checked' if @setting['notify_conditions']['deliver_delay'] == 1 %>>已分派订单
-                            <select name="auto_settings[notify_conditions][max_deliver_delay_days]" class="input-mini">
-                              <% (1..3).collect{|i| i*24 }.each do |i| %>
-                                <option value= "<%= i %>" <%= 'selected' if @setting['notify_conditions']["max_deliver_delay_days"] == i.to_s %>><%= i %></option>
-                              <% end %>
-                            </select>小时内没有发货
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <input type="checkbox" class="pull-left" style="margin-top:4px;" name="auto_settings[notify_conditions][fixed_unreceived]" <%= 'checked' if @setting['notify_conditions']['fixed_unreceived'] == 1 %>>异常订单到预处理时间后再延后
-                            <select name="auto_settings[notify_conditions][max_fixed_unreceived_days]" class="input-mini">
-                              <% (1..3).collect{|i| i*24 }.each do |i| %>
-                                <option value= "<%= i %>" <%= 'selected' if @setting['notify_conditions']["max_fixed_unreceived_days"] == i.to_s %>><%= i %></option>
-                              <% end %>
-                            </select>小时后买家没有确认收货
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <input type="checkbox" class="pull-left" style="margin-top:4px;" name="auto_settings[notify_conditions][delay_again]" <%= 'checked' if @setting['notify_conditions']['delay_again'] == 1 %>>延迟发货的异常订单，在预处理时间到期前
-                            <select name="auto_settings[notify_conditions][max_delay_again_days]" class="input-mini">
-                              <% [1,3,7,15].each do |i| %>
-                                <option value= "<%= i %>" <%= 'selected' if @setting['notify_conditions']["max_delay_again_days"] == i.to_s %>><%= i %></option>
-                              <% end %>
-                            </select>天内通知
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <input type="checkbox" class="pull-left" style="margin-top:4px;" name="auto_settings[notify_conditions][dispatch_stuck]" <%= 'checked' if @setting['notify_conditions']['dispatch_stuck'] == 1 %>>订单由于地域没有绑定经销商导致不能自动分派
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <input type="checkbox" class="pull-left" style="margin-top:4px;" name="auto_settings[notify_conditions][special_category]" <%= 'checked' if @setting['notify_conditions']['special_category'] == 1 %>>订单商品分类为
-                            <select multiple name="auto_settings[notify_conditions][categories][]" class="input-medium select2">
-                              <% current_account.categories.each do |category| %>
-                                <option value= "<%= category.id %>" <%= 'selected' if @setting['notify_conditions']["categories"].to_a.include?(category.id.to_s) %>><%= category.name %></option>
-                              <% end %>
-                            </select>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
+                  <%= @setting.block_check_select((1..3).collect{|i| (i*24).to_s }, [['notify_conditions', 'dispatch_delay'],['notify_conditions', 'max_dispatch_delay_days']], "已付款订单", "小时内没有分派")%>
+                  <%= @setting.block_check_select((1..3).collect{|i| (i*24).to_s }, [['notify_conditions', 'deliver_delay'],['notify_conditions', 'max_deliver_delay_days']], "已分派订单", "小时内没有发货")%>
+                  <%= @setting.block_check_select((1..3).collect{|i| (i*24).to_s }, [['notify_conditions', 'fixed_unreceived'],['notify_conditions', 'max_fixed_unreceived_days']], "异常订单到预处理时间后再延后", "小时后买家没有确认收货")%>
+                  <%= @setting.block_check_select([1,3,7,15].collect{|i| i.to_s }, [['notify_conditions', 'delay_again'],['notify_conditions', 'max_delay_again_days']], "延迟发货的异常订单，在预处理时间到期前", "天内通知")%>
+                  <%= @setting.block_label_checkbox(["notify_conditions", "dispatch_stuck"], "订单由于地域没有绑定经销商导致不能自动分派")%>
+                  <%= @setting.block_check_select(current_account.categories.collect{|category| [category.name, category.id.to_s]}, [['notify_conditions', 'special_category'],['notify_conditions', 'categories']], "订单商品分类为", "", true)%>
                 </div>
               </div>
             </fieldset>

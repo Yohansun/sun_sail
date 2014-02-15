@@ -12,39 +12,12 @@
             <h4>订单自动发货设置：</h4>
             <div class="mar_l80">
               <div class="control-group">
-                <label class="radio pull-left input-small">
-                  <input type="radio" name="auto_settings[auto_deliver]" <%='checked' if @setting['auto_deliver'] == 1 %>>开启
-                </label>
-                <label class="radio">
-                  <input type="radio" value="off" name="auto_settings[auto_deliver]" <%='checked' if @setting['auto_deliver'].present? == false %>>关闭
-                </label>
-                <p class="clear">
-                  <label class="input-large pull-left">请输入自动发货时间范围：</label>
-                  <input type="text" class="input-mini timepickers radius_no_rb" name="auto_settings[start_deliver_at]" value="<%= @setting['start_deliver_at']%>">
-                  <i class="icon-arrow-right"></i>
-                  <input type="text" class="input-mini timepickers radius_no_rb" name="auto_settings[end_deliver_at]" value="<%= @setting['end_deliver_at']%>">
-                  <span class="muted">(不选择默认为全天开启)</span>
-                </p>
+                <%= @setting.block_dual_radio('auto_deliver') %>
+                <%= @setting.block_time_range(['start_deliver_at'], ['end_deliver_at'])%>
               </div>
               <div>
-                <p class="clear">
-                  <label class="input-large pull-left">请选择自动发货静默时间：</label>
-                  <select name="auto_settings[deliver_silent_gap]" class="input-mini">
-                    <% [0,1,2,6,12,24,48,72].each do |i| %>
-                    <option value= "<%= i %>" <%= 'selected' if @setting['deliver_silent_gap'] == i.to_s %>><%= i %></option>
-                    <% end %>
-                  </select>小时
-                </p>
-              </div>
-            </div>
-            <div class="mar_l80">
-              <label class="input-large pull-left">自动发货条件：</label>
-              <div class="controls ml210">
-                <div class="control-group">
-                  <select name="auto_settings[deliver_condition]" class="input-large">
-                    <option value= "has_logistic_waybill_trade" <%= 'selected' if @setting['deliver_condition'] == 'has_logistic_waybill_trade' %>>返回物流单号时自动发货</option>
-                  </select>
-                </div>
+                <%= @setting.block_label_select([0,1,2,6,12,24,48,72].collect{|i| i.to_s }, ["deliver_silent_gap"], "请选择自动发货静默时间：", "小时") %>
+                <%= @setting.block_label_select([["返回物流单号时自动发货", "has_logistic_waybill_trade"]], ["deliver_condition"], "自动发货条件：") %>
               </div>
             </div>
           </fieldset>

@@ -791,11 +791,20 @@ class Trade
       can_auto_dispatch = false
     else
       dispatch_conditions = self.fetch_account.settings.auto_settings["dispatch_conditions"]
-      void_buyer_message = (dispatch_conditions["void_buyer_message"].present? ? false : true) || !has_buyer_message
-      void_seller_memo = (dispatch_conditions["void_seller_memo"].present? ? false : true) || seller_memo.blank?
-      void_cs_memo = (dispatch_conditions["void_cs_memo"].present? ? false : true) || !has_cs_memo
-      void_money = (dispatch_conditions["void_money"].present? ? false : true) || !has_refund_orders
-      can_auto_dispatch = void_buyer_message && void_seller_memo && void_cs_memo && void_money
+
+      void_buyer_message = dispatch_conditions["void_buyer_message"].blank?  || !has_buyer_message
+      void_seller_memo   = dispatch_conditions["void_seller_memo"].blank?    || seller_memo.blank?
+      void_cs_memo       = dispatch_conditions["void_cs_memo"].blank?        || !has_cs_memo
+      void_money         = dispatch_conditions["void_money"].blank?          || !has_refund_orders
+      void_special_sku   = dispatch_conditions["special_sku"].blank?         ||
+                           dispatch_conditions['special_sku_content'].blank? ||
+                           orders.where(sku_properties_name: /#{dispatch_conditions['special_sku_content']}/).count == orders.count
+
+      can_auto_dispatch = void_buyer_message &&
+                          void_seller_memo   &&
+                          void_cs_memo       &&
+                          void_money         &&
+                          void_special_sku
     end
     can_auto_dispatch && dispatchable?
   end
