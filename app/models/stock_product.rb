@@ -125,20 +125,17 @@ class StockProduct < ActiveRecord::Base
     }.merge(options)
   end
 
-  def count_safe_value
-    self.class.where(account_id: account_id).sum(:safe_value)
+  def self.count_safe_value(account_id)
+    scoped.where(account_id: account_id).sum(:safe_value)
   end
-  cache_method :count_safe_value,hook: :after_save,primary_key: :account_id
 
-  def count_activity
-    self.class.where(account_id: account_id).sum(:activity)
+  def self.count_activity(account_id)
+    scoped.where(account_id: account_id).sum(:activity)
   end
-  cache_method :count_activity,hook: :after_save,primary_key: :account_id
 
-  def count_actual
-    self.class.where(account_id: account_id).sum(:actual)
+  def self.count_actual(account_id)
+    scoped.where(account_id: account_id).sum(:actual)
   end
-  cache_method :count_actual,hook: :after_save,primary_key: :account_id
 
   private
   def create_stock_bill(stock_bill,number)

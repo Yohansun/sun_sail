@@ -15,12 +15,6 @@
         <%= link_to "导出","#",:onclick => "processChecked('#{stocks_path(warehouse_id: params[:warehouse_id], :search => params[:search],:format => :xls,:on => '?')}')"%>
       </li>
       <li>
-        <%= link_to_authorize "批量设置安全库存","#batch_update_safety_stock",:target_url => batch_update_safety_stock_stocks_path(warehouse_id: params[:warehouse_id]),:class => "magic_operation set_stock", "data-toggle" => "modal",:request => :post,:id => "set_safety_stock" %>
-      </li>
-      <li>
-        <%= link_to_authorize "批量设置实际库存","#batch_update_actual_stock",:target_url => batch_update_actual_stock_stocks_path(warehouse_id: params[:warehouse_id]),:class => "magic_operation set_stock", "data-toggle" => "modal",:request => :post,:id => "set_actual_stock" %>
-      </li>
-      <li>
         <% stock_path = params[:warehouse_id].nil? ? stock_path(id: '') : warehouse_stock_path(warehouse_id: params[:warehouse_id],id: '') %>
         <%= link_to_authorize "查看","#",:target_url => stock_path,:class => "magic_detail",:request => :get %>
       </li>
@@ -107,7 +101,13 @@
           <%- end -%>
         </tr>
       <% end %>
-      <tr><th>统计</th><th>可用库存: <%= @stock_product.count_activity %></th><th>实际库存: <%= @stock_product.count_actual %></th><th>安全库存: <%= @stock_product.count_safe_value %></th></tr>
+      <tr>
+        <th>统计</th>
+        <% @count_activity = @stock_products.count_activity(current_account.id)  %>
+        <th>预测库存: <%= @count_activity - @hold_hash.values.sum %></th>
+        <th>可用库存: <%= @count_activity %></th>
+        <th>实际库存: <%= @stock_products.count_actual(current_account.id) %></th>
+        <th>安全库存: <%= @stock_products.count_safe_value(current_account.id) %></th></tr>
     </tbody>
   </table>
 <%- end %>
