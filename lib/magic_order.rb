@@ -224,8 +224,8 @@ MagicOrder::AccessControl.map do |map|
     map.permission :operations, [
                                  "audit",
                                  "sync",
-                                 "batch_update_safety_stock",
-                                 "batch_update_actual_stock",
+                                 # "batch_update_safety_stock",
+                                 # "batch_update_actual_stock",
                                  "stock_in_bills#create",
                                  "stock_in_bills#sync",
                                  "stock_in_bills#update",

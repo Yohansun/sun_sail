@@ -2,7 +2,6 @@
 class StocksController < ApplicationController
   before_filter :authorize
   before_filter :set_warehouse
-  before_filter :set_hold_hash, only: [:index]
 
   def index
     condition_relation = default_scoped.where(:"sellers.active" => true).includes(:seller,:product)
@@ -27,7 +26,7 @@ class StocksController < ApplicationController
     end
     @search = condition_relation.search(conditions)
     @stock_products = @search.page(params[:page]).per(20)
-    @count = @search.count
+    @hold_hash = set_hold_hash(@stock_products)
 
     respond_to do |format|
       format.html{
@@ -197,7 +196,7 @@ class StocksController < ApplicationController
   def set_warehouse
     @warehouse = Seller.find(params[:warehouse_id]) rescue false
   end
-  def set_hold_hash
+  def set_hold_hash(relation)
     hold_hash = {}
     trades = current_account.trades.where(status: 'WAIT_SELLER_SEND_GOODS', seller_id: nil, :forecast_seller_id.ne => nil)
     trades.each do |trade|
@@ -208,7 +207,7 @@ class StocksController < ApplicationController
           product = sku.try(:product)
           if product
             number = binding.number * order.num
-            stock_product_id = current_account.stock_products.where(product_id: product.id, sku_id: sku_id, seller_id: trade.forecast_seller_id).first.id.to_s rescue nil
+            stock_product_id = (relation || current_account.stock_products).where(product_id: product.id, sku_id: sku_id, seller_id: trade.forecast_seller_id).first.id.to_s rescue nil
             if stock_product_id
               hold_hash[stock_product_id] ||= 0
               hold_hash[stock_product_id] += number
@@ -217,7 +216,7 @@ class StocksController < ApplicationController
         end
       end
     end
-    @hold_hash = hold_hash
+    hold_hash
   end
   def default_search
     {account_id: current_account.id,seller_id: @warehouse && @warehouse.id}.reject {|k,v| v.blank?}
