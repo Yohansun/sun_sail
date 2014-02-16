@@ -33,4 +33,16 @@ class BillProduct
   def sku
     @sku ||= Sku.find_by_id(sku_id)
   end
+
+  def trade
+    deliver_bill.trade
+  end
+
+  def order
+    trade.orders.where("$or" => [{outer_id: outer_id},{num_iid: num_iid}]).first
+  end
+
+  def property_memos
+    order ? order.trade_property_memos.map(&:properties).flatten : []
+  end
 end

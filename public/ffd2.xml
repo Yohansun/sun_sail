@@ -81,7 +81,7 @@
       <item en_name="local_name" cn_name="商品名称">
       <![CDATA[{"x":"80","y":"0","font":"\u5fae\u8f6f\u96c5\u9ed1","color":"000000","wrap":"true","size":"9","align":"left","isbold":"false","underline":"false","width":"300","text":"\u94a2\u7b14","italic":"false","type":"data"}]]>
       </item>
-      <item en_name="color_info" cn_name="属性备注信息">
+      <item en_name="property_memos" cn_name="属性备注信息">
       <![CDATA[{"x":"380","y":"0","font":"\u5fae\u8f6f\u96c5\u9ed1","color":"000000","wrap":"true","size":"9","align":"left","isbold":"false","underline":"false","text":"\u5c5e\u6027\u5907\u6ce8\u4fe1\u606f","italic":"false","type":"data"}]]>
       </item>
       <item en_name="num" cn_name="商品数量 ">

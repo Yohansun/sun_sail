@@ -14,4 +14,8 @@ class PropertyMemo
   index "property_values.category_property_value_id" => 1
   index "property_values.value" => 1
 
+  def properties
+    property_values.map(&:property_text)
+  end
+
 end
