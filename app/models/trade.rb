@@ -1513,7 +1513,7 @@ class Trade
 
     def set_boolean_status_fields
       self.has_cs_memo        = (self.cs_memo.present? || orders.where(:cs_memo.ne => nil).present?)
-      self.has_refund_orders  = orders.where(:refund_status => 'NO_REFUND').present?
+      self.has_refund_orders  = orders.any? {|order| order.refund_status != "NO_REFUND"}
       self.has_unusual_state  = unusual_states.where(:repaired_at => nil).present?
       self.has_property_memos = self.trade_property_memos.all.present?
       true
