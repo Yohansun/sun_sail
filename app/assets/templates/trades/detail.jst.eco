@@ -56,7 +56,7 @@
               <td class='js-order-cs-memo-label-<%= order.id %>'><p style="overflow:hidden;white-space:normal;word-wrap:break-word;width:300px;"><%= order.cs_memo %></p></td>
               <td><%= order.refund_status_text %></td>
             </tr>
-            <% if order.skus_info != [] : %>
+            <% if order.skus_info.length : %>
               <% for info in order.skus_info : %>
                 <tr>
                   <td><span class="label label-warning">绑定本地</span></td>
