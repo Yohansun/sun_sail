@@ -31,7 +31,7 @@ json.orders @bill.bill_products do |json, order|
   json.created @trade.created.strftime("%Y-%m-%d")
 end
 json.product_num @bill.bill_products.sum(:number)
-json.real_product_num @bill.except_ref_bills.sum(:num)
+json.real_product_num @bill.except_ref_bills.sum(:number)
 json.total_payment ""
 json.post_fee ""
 json.total ""
@@ -48,7 +48,7 @@ json.ref_orders @bill.except_ref_bills do |json, order|
   json.outer_sku_id order.outer_sku_id
   json.sku_name order.sku_name
   json.title order.title
-  json.num order.num
+  json.num order.number
   json.color_info order.color_info
   json.promotion_desc ""
   json.price ""
