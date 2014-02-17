@@ -10,4 +10,8 @@ class PropertyValue
 
   embedded_in :property_memo
 
+  def property_text
+    "#{name}: #{value}"
+  end
+
 end

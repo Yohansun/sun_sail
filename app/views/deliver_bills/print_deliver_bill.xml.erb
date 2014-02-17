@@ -71,7 +71,7 @@
       num=      "<%= bill_product.number %>"
       name=     "<%= bill_product.title %>"
       local_name= "<%= bill_product.product.try(:name) %>"
-      color_info= "<%= bill_product.color_info %>"
+      property_memos= "<%= bill_product.property_memos.join("\r\n") %>"
       color=    "&lt;font size='10'&gt;<%= bill_product.color_info %>&lt;/font&gt;"
     ></item>
     <% end %>
