@@ -67,7 +67,7 @@
                 <tr id="tr_<%= dom_id(user)%>">
                   <td><input type="checkbox" value="<%= user.id %>" name="user_ids[]"></td>
                   <td class="username"><%= user.username %></td>
-                  <td><%= user.roles.map(&:name).try(:join,',') %></td>
+                  <td><%= user.roles.where(account_id: current_account.id).map(&:name).try(:join,',') %></td>
                   <td><%= user.phone %></td>
                   <td><%= user.email %></td>
                   <td><%= user.name %></td>
