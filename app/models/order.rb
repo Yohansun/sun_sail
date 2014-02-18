@@ -83,6 +83,7 @@ class Order
         sku_properties:     sku.name
       }
     end
+    tmp.compact
   end
 
   def skus_info_with_offline_refund
