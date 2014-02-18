@@ -596,7 +596,7 @@ class TradesController < ApplicationController
   end
 
   def match_icp_bills
-    values = params[:property_memo][:values].reject{|key, value| value['id'].blank? || value['value'].blank? }
+    values = params[:property_memo][:values].reject{|key, value| value['id'].blank? || value['value'].blank? } rescue []
     bill_memos = BillPropertyMemo.where(
       outer_id:   params[:property_memo][:outer_id],
       account_id: current_account.id,

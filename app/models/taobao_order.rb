@@ -223,6 +223,7 @@ class TaobaoOrder < Order
       (sku_product[:number]*self.num).times do |t|
         property_infos = {
           stock_in_bill_tid: trade_property_memos[t].try(:stock_in_bill_tid),
+          local_outer_id: sku_product[:product].outer_id,
           "properties" => []
         }
         category_properties.each_with_index do |category_property, i|

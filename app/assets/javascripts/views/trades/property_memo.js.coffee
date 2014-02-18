@@ -19,7 +19,7 @@ class MagicOrders.Views.TradesPropertyMemo extends Backbone.View
     this
 
   match_icp_bills: (e) ->
-    outer_id = $(e.currentTarget).parents('td').prev('td').find('.order_outer_iid').text()
+    outer_id = $(e.currentTarget).parents('td').prev('td').find('.local_outer_id').text()
     property_memo = {outer_id: outer_id}
     property_memo['values'] = []
 
