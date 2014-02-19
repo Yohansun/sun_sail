@@ -15,7 +15,10 @@ class UnusualState
   field :repaired_at,    type: DateTime
   field :created_at,     type: DateTime
 
-  embedded_in :trades
+  embedded_in :trade
+  after_save do
+     CounterCache.send(:new).expire_caches("trades/unusual_all",account_id: trade.try(:account_id)) if repaired_at_changed?
+  end
 
   def add_key
   	case self.reason

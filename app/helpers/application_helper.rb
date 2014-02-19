@@ -377,7 +377,7 @@ module ApplicationHelper
       "trades/undelivered"  => scope.where({:dispatched_at.ne => nil, :status.in => Trade::StatusHash["paid_not_deliver_array"], has_unusual_state: false}) ,
       "trades/delivered"    => scope.where({:status.in => Trade::StatusHash["paid_and_delivered_array"], has_unusual_state: false}) ,
       "trades/unusual_all"  => scope.where({:unusual_states.elem_match =>{:repaired_at => nil}}) ,
-      "trades/locked"       => scope.where({is_locked: true}) ,
+      "trades/locked"       => scope.where({:deleted_at.ne => nil, is_locked: true}) ,
       "deliver_bills/all"   => count=DeliverBill.where(account_id: account_id) ,
       "logistic_bills/all"  => count
     }.tap do |h|
