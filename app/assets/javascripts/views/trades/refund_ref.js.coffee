@@ -83,11 +83,6 @@ class MagicOrders.Views.TradesRefundRef extends Backbone.View
                 if parseInt(sku_info.sku_id) == parseInt(sku_id) && parseInt(sku_info.number) == parseInt(num)
                   current_order_array.push 1
 
-          if order_length == current_order_array.length
-            alert("全部退款订单请直接锁定。")
-            $.unblockUI()
-            return
-
         ref_batch['ref_payment'] = payment
         ref_batch['ref_type'] = 'refund_ref'
         ref_batch['status'] = 'request_refund_ref'
