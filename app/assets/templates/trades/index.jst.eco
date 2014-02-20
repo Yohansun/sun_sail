@@ -46,7 +46,7 @@
               <li><a href="#" data-toggle="modal" data-type="add_ref">补充不足货品</a></li>
               <li><a href="#" data-toggle="modal" data-type="return_ref">退除多余货品</a></li>
               <li><a href="#" data-toggle="modal" data-type="refund_ref">线下退款</a></li>
-              <li><a href="#" data-type="trade_finished">交易完成</a></li>
+              <li><a href="#" data-toggle="modal" data-type="trade_finished">交易完成</a></li>
               <li><a href="/custom_trades/new" data-type="create_handmade_trade">新增人工订单</a></li>
               <li><a href="#" data-type="edit_handmade_trade">编辑人工订单</a></li>
               <li><a href="#" data-type="lock_trade">锁定订单</a></li>

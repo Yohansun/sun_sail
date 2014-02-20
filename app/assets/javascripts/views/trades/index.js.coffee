@@ -87,7 +87,7 @@ class MagicOrders.Views.TradesIndex extends MagicOrders.Views.BaseView
       else
         if pop in MagicOrders.trade_pops[MagicOrders.role_key]
           $(@el).find(".index_pops li [data-type=#{pop}]").parent().show()
-
+    $(@el).find(".index_pops li [data-type='trade_finished']").parent().show()
     $.unblockUI()
     $("#content").removeClass("search-expand")
     super

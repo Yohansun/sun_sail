@@ -1,5 +1,5 @@
 <% if current_account.settings.enable_module_reconcile_statements_for_magicd == true %>
-  <form action="/reconcile_statements/<%= detail.reconcile_statement.id %>/reconcile_statement_details/<%= detail.id %>/change_detail" data-row='<%= detail.reconcile_statement.id %>' class="well form-search">
+  <form action="/reconcile_statements/<%= detail.reconcile_statement.id %>/reconcile_statement_details/<%= detail.id %>/change_detail?store='duoleshi'" data-row='<%= detail.reconcile_statement.id %>' class="well form-search">
     <table class='table table-bordered table-hover'>
       <thead>
         <tr>
@@ -82,14 +82,13 @@
           <td><%=link_to "查看明细", reconcile_statement_reconcile_statement_detail_path(detail.reconcile_statement, detail, money_type: 'collecting_postfee') %></td>
         </tr>
         <tr>
-          <td>线下订单金额</td>
+          <td>线下补货金额</td>
           <td><%= detail.handmade_trade_money.round(2) %></td>
           <td><%=link_to "查看明细", reconcile_statement_reconcile_statement_detail_path(detail.reconcile_statement, detail, money_type: 'handmade_trade_money') %></td>
         </tr>
         <tr>
           <td>调整金额</td>
           <td><%= detail.adjust_amount.round(2) %></td>
-          <td><%=link_to "查看明细", reconcile_statement_reconcile_statement_detail_path(detail.reconcile_statement, detail, money_type: 'adjust_amount') %></td>
         </tr>
         <tr>
           <td>最终结算金额</td>
@@ -102,9 +101,7 @@
         </tr>
       </tbody>
     </table>
-    <%- if current_user.has_role?(:admin) %>
-    <!-- <button type="submit" class="btn btn-info">确定</button> -->
-    <%- end %>
+    <button type="submit" class="btn btn-info">确定</button>
   </form>
 <% else %>
   <form action="/reconcile_statements/<%= detail.reconcile_statement.id %>/reconcile_statement_details/<%= detail.id %>/change_detail" data-row='<%= detail.reconcile_statement.id %>' class="well form-search">
