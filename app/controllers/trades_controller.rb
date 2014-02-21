@@ -26,7 +26,9 @@ class TradesController < ApplicationController
       end
       @trades = Trade.where(:news.lt => params[:news] || 3).filter(current_account, current_user, params)
     end
+    @cache_counter = Rails.cache.fetch("trades/#{params[:trade_type]}",namespace: "counter_caches/#{current_account.id}")
     @trades_count = @trades.count
+    Rails.cache.write("trades/#{params[:trade_type]}", @trades_count, expires_in: 1.hour, namespace: "counter_caches/#{current_account.id}") unless @cache_counter == @trades_count
     @trades = TradeDecorator.decorate(@trades.limit(limit).skip(offset).order_by(:created.desc))
 
     respond_with @trades
