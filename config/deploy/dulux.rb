@@ -79,5 +79,3 @@ namespace :magic_order do
     run "cd #{release_path} && RAILS_ENV=production rake magic_order:setup"
   end
 end
-
-after 'deploy:symlink_shared', 'magic_order:setup'
