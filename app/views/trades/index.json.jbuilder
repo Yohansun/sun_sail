@@ -64,7 +64,7 @@ json.list(@trades) do |json, trade|
   json.consign_time               (trade.consign_time || trade.delivered_at).try(:strftime, "%m-%d %H:%M")
   json.dispatched_at              trade.dispatched_at.strftime("%m-%d %H:%M") if trade.dispatched_at
   json.seller_id                  trade.seller_id
-  json.seller_name                trade.seller_name
+  json.seller_name                trade.seller_name if trade.seller_id
   json.main_trade_id              trade.main_trade_id if trade.main_trade_id
   json.add_ref                    trade.add_ref
   json.return_ref                 trade.return_ref
