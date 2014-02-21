@@ -154,5 +154,7 @@ class MagicOrders.Models.Trade extends Backbone.Model
         enabled_items.push('cs_memo') #客服备注
       if $.inArray('detail',trades) > -1
         enabled_items.push('detail') #订单详情
+      if this.attributes.trade_type == "CustomTrade" 
+         enabled_items.push('trade_finished')
 
     enabled_items
