@@ -32,7 +32,7 @@ class StockBillsController < ApplicationController
   end
 
   def get_products
-    @products = current_account.skus.includes(:product).where("products.name like ?", "%#{params[:tid].strip}%") if params[:tid]
+    @products = current_account.skus.includes(:product).where("products.name like ? or products.outer_id like ?", "%#{params[:tid].strip}%", "%#{params[:tid].strip}%") if params[:tid]
     @products = current_account.skus.where(id: params[:sku_id]) if params[:sku_id]
     respond_to do |format|
       format.json { render partial: "partials/products.json"}
