@@ -11,7 +11,7 @@ class TradeTaobaoMemoFetcher
     response = TaobaoQuery.get({
       method: 'taobao.trade.get',
       fields: 'buyer_message, seller_memo',
-      tid: tid}, source_id
+      tid: trade.tid}, source_id
     )
     return unless response && response["trade_get_response"]
     remote_trade = response["trade_get_response"]["trade"]
