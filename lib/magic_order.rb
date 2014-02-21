@@ -30,6 +30,7 @@ module MagicOrder
                     "all_logistics"],
     "categories" => ["autocomplete",
                     "category_templates",
+                    "same_level_categories",
                     "product_templates",
                     "sku_templates"],
     "sales" => ["add_node"],
