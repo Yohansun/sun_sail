@@ -371,3 +371,29 @@ $(function(){
     $(".alert").fadeOut()
   }, 3000);
 });
+
+
+// 异常提醒相关
+$(function(){
+  $('.js-todo-toggle').click(function(){
+    $(this).siblings('.todolist').slideToggle();
+    $(this).parent('li').addClass('active');
+    $(this).siblings('#todo_overlay').show();
+  });
+  $('#todo_overlay').click(function(){
+    $(this).hide().siblings('.todolist').hide().parent('li').removeClass('active');
+  })
+  $('.todolist').on('click','.js-more_todo',function(e){
+    e.stopPropagation()
+    var todo_height = $(this).parents('td').find('.table').height();
+    $(this).text('收起>>').attr('class','js-close_todo').parents('td').find('.list_wrap').animate({
+      height: todo_height + 2
+    });
+  });
+  $('.todolist').on('click','.js-close_todo',function(e){
+    e.stopPropagation()
+    $(this).text('更多>>').attr('class','js-more_todo').parents('td').find('.list_wrap').animate({
+      height: '146px'
+    });
+  });
+});

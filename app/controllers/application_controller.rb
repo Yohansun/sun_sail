@@ -3,7 +3,17 @@ class ApplicationController < ActionController::Base
   helper_method :current_account
   before_filter :authenticate_user!
   before_filter :alert_count
+  before_filter :get_trades
 
+  def get_trades
+    if current_user.allow_read?(:trades,:seller) && current_user.seller
+      @today_trades    = Trade.where(account_id: current_account.id, seller_id: current_user.seller.id, has_unusual_state: true, :unusual_states.elem_match => {created_at: {"$gte" => Time.now.beginning_of_day, "$lt" => Time.now.end_of_day}})
+      @tomorrow_trades = Trade.where(account_id: current_account.id, seller_id: current_user.seller.id, has_unusual_state: true, :unusual_states.elem_match => {plan_repair_at: {"$gte" => Time.now.tomorrow.beginning_of_day, "$lt" => Time.now.tomorrow.end_of_day}})
+    else
+      @today_trades    = Trade.where(account_id: current_account.id, has_unusual_state: true, :unusual_states.elem_match => {created_at: {"$gte" => Time.now.beginning_of_day, "$lt" => Time.now.end_of_day}})
+      @tomorrow_trades = Trade.where(account_id: current_account.id, has_unusual_state: true, :unusual_states.elem_match => {plan_repair_at: {"$gte" => Time.now.tomorrow.beginning_of_day, "$lt" => Time.now.tomorrow.end_of_day}})
+    end
+  end
 
   def authorize(ctrl = params[:controller], action = params[:action])
     current_user.current_account_id = session[:account_id]
