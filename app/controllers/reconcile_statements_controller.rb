@@ -1,8 +1,9 @@
 # encoding: utf-8
 class ReconcileStatementsController < ApplicationController
   before_filter :fetch_rs, only: [:show, :audit, :seller_show, :update_processed]
-  before_filter :check_module
+  before_filter :check_module, :fetch_store
   AllActions = {:index => "运营商对账",:seller_index => "经销商对账",:distributor_index => "分销商对账"}
+  include ReconcileStatementsHelper
 
   def index
     @trade_sources = current_account.trade_sources
@@ -178,6 +179,10 @@ class ReconcileStatementsController < ApplicationController
 
   def fetch_rs
     @rs = current_account.reconcile_statements.find(params[:id])
+  end
+
+  def fetch_store
+    get_account_content
   end
 
   def update_status(option={}, statement)

@@ -188,6 +188,22 @@ MagicOrder::AccessControl.map do |map|
 
   end
 
+  #财务管理
+  map.project_module :reconcile_statements do |map|
+    map.permission :reads,      ["detail"]
+    map.permission :operations, ["reconcile_statements#index",
+                                 "reconcile_statements#seller_index",
+                                 "reconcile_statements#audit",
+                                 "reconcile_statements#seller_exports",
+                                 "reconcile_statements#product_detail_exports",
+                                 "reconcile_statements#distributor_exports",
+                                 "reconcile_statements#exports",
+                                 "reconcile_statements#distributor_index",
+                                 "reconcile_statements#update_processed",
+                                 "reconcile_statement_details#show",
+                                 "reconcile_statement_details#export_detail"]
+  end
+
   #地区管理
   map.project_module :areas do |map|
     map.permission :reads,      ["detail",

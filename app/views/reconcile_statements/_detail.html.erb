@@ -1,5 +1,5 @@
 <% if current_account.settings.enable_module_reconcile_statements_for_magicd == true %>
-  <form action="/reconcile_statements/<%= detail.reconcile_statement.id %>/reconcile_statement_details/<%= detail.id %>/change_detail?store='duoleshi'" data-row='<%= detail.reconcile_statement.id %>' class="well form-search">
+  <form action="/reconcile_statements/<%= detail.reconcile_statement.id %>/reconcile_statement_details/<%= detail.id %>/change_detail" data-row='<%= detail.reconcile_statement.id %>' class="well form-search">
     <table class='table table-bordered table-hover'>
       <thead>
         <tr>
@@ -98,6 +98,7 @@
         <tr>
           <td>备注</td>
           <td colspan="2"><input <% if current_user.has_role?(:super_admin)%>readonly<% end %> type ='text' class="input-xxlarge" name="reconcile_statement_detail[memo]" value="<%= detail.memo %>"</input></td>
+          <input style="display:none" name="store_name" value="duoleshi"/>
         </tr>
       </tbody>
     </table>
@@ -171,8 +172,6 @@
         </tr>
       </tbody>
     </table>
-    <%- if current_user.has_role?(:admin) %>
       <button type="submit" class="btn btn-info">确定</button>
-    <%- end %>
   </form>
 <% end %>

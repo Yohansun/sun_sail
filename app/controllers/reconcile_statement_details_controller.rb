@@ -25,7 +25,7 @@ class ReconcileStatementDetailsController < ApplicationController
   def change_detail
     detail = ReconcileStatementDetail.find(params[:id])
     detail.update_attributes(params[:reconcile_statement_detail])
-    detail.calculate_fees
+    params[:store_name] ? detail.calculate_fees(params[:store_name]) : detail.calculate_fees
     redirect_to reconcile_statements_path
   end
 
