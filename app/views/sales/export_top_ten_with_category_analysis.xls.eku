@@ -1,0 +1,19 @@
+__filename = "热销商品表.xls"
+sheet1 = xls.create_worksheet
+sheet1[0, 0] = "热销商品表"
+
+sheet1.row(1).concat ["类目", "商品名称", "淘宝外部编码", "价格", "总销售数量", "总销售额"]
+@analysis_data.each_with_index do |info, i|
+  sheet1.update_row i+2,
+                    info['value']['cat_name'],
+                    info['value']['title'],
+                    info['value']['outer_iid'],
+                    info['value']['price'],
+                    info['value']['num'],
+                    info['value']['price'] * info['value']['num']
+end
+
+title_format = Spreadsheet::Format.new(:color => :blue, :weight => :bold, :size => 14)
+sheet1.row(0).set_format(0, title_format)
+bold = Spreadsheet::Format.new(:pattern_fg_color => :yellow, :weight => :bold)
+sheet1.row(1).default_format = bold

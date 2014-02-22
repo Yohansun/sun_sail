@@ -402,9 +402,13 @@ MagicOrders::Application.routes.draw do
       get :area_analysis
       get :time_analysis
       get :product_analysis
+      get :taobao_product_analysis
       get :price_analysis
       get :frequency_analysis
       get :univalent_analysis
+      ['export_top_ten_with_category_analysis', 'export_category_comparism_analysis', 'export_product_num_with_seller_analysis'].each do |analysis|
+        get analysis.to_sym
+      end
     end
   end
 

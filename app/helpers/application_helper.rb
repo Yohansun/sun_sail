@@ -313,13 +313,15 @@ module ApplicationHelper
       end
     when "sales"
       items << href_li_item("数据魔方", "sales/summary")
-      if ["summary", "product_analysis", "show", "edit"].include?(act_name)
+      if ["summary", "product_analysis", "taobao_product_analysis", "show", "edit"].include?(act_name)
         items << href_li_item("销售分析", "sales/summary")
         case act_name
         when "summary"
           items << active_li_item("概要")
         when "product_analysis"
           items << active_li_item("热销产品分析")
+        when "taobao_product_analysis"
+          items << active_li_item("淘宝产品分析")
         when "show"
           sale_name = if @sale.present?
                     @sale.name
