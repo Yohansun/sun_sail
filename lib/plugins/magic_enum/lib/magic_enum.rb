@@ -12,6 +12,7 @@ module MagicEnum
       options.merge!(args.pop) if args.last.is_a?(Hash)
       raise ArgumentError, "You have to supply at least two format like :attr_name,[['China',1],.....]" if args.empty?
 
+      options[:not_valid] = options[:valid] ? false : true if options.key?(:valid)
       _attr = args.shift
       const, summary = _attr.upcase, args.pop
 

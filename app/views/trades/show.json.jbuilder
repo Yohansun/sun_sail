@@ -46,6 +46,8 @@ json.seller_discount             @trade.seller_discount
 json.sum_fee                     @trade.sum_fee
 json.point_fee                   @trade.point_fee
 json.total_fee                   @trade.total_fee
+json.real_total_fee              @trade.real_total_fee
+json.payment                     @trade.payment
 json.created                     @trade.created.strftime("%m-%d %H:%M") if @trade.created
 json.pay_time                    @trade.pay_time.strftime("%m-%d %H:%M") if @trade.pay_time
 json.cs_memo                     @trade.cs_memo
@@ -96,11 +98,13 @@ json.is_paid_and_delivered       @trade.is_paid_and_delivered
 json.is_succeeded                @trade.is_succeeded
 json.is_closed                   @trade.is_closed
 json.end_time                    @trade.end_time.try(:strftime, "%m-%d %H:%M")
+json.promotion_fee               @trade.promotion_fee
 
 ## 订单子文档
 
 json.orders OrderDecorator.decorate(@trade.orders) do |json, order|
   json.id                       order._id
+  json.oid                      order.oid
   json.title                    order.title
   json.num                      order.num
   json.price                    order.price

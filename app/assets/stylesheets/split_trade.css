@@ -1,0 +1,48 @@
+#ord_split{
+  width: 890px;
+  margin-left: -445px;
+}
+#ord_split thead,
+#ord_split tbody{
+  background: transparent;
+}
+#ord_split .table th,
+#ord_split .table td{
+  text-align: center;
+}
+#ord_split .table th.text-left,
+#ord_split .table td.text-left{
+  text-align: left;
+}
+#ord_split .table td{
+  border-width: 0;
+}
+#ord_split .table th{
+  border-bottom: 1px solid #ddd;
+}
+#ord_split .table .bordered_top1{
+  border-top: 1px solid #ddd;
+}
+#ord_split .well{
+  margin-bottom: 10px;
+}
+#ord_split .well .table{
+  margin-bottom: 0;
+}
+#ord_split .split_editor_num{
+  width: 60px;
+  background-color: transparent;
+  border-radius: 0;
+  border-width: 0px 0 1px;
+  box-shadow: none;
+}
+
+.text-right{
+  text-align: right;
+}
+.mt10{
+  margin-top: 10px;
+}
+.mr10{
+  margin-right: 10px;
+}

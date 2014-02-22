@@ -153,6 +153,10 @@ class TradeDecorator < Draper::Base
     trade.payment
   end
 
+  def real_total_fee
+    trade.attributes["total_fee"]
+  end
+
   def point_fee
     case trade._type
     when 'TaobaoPurchaseOrder'

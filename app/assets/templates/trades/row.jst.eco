@@ -22,10 +22,10 @@
     <br><span class="label label-info">店铺代码:<%= @trade.get('distributor_usercode') %></span>
   <% end %>
   <a href="/api/trades/<%= @trade.get('id') %>/edit" target="_blank">
-    <% if @trade.get('splitted_tid'): %>
-      <span class="label label-info">拆分订单</span>
+    <% if @trade.get('parent_type') == "split_trade" : %>
+      <span class="label label-info"><%= @trade.get("parent_type_name") %></span>
       <br/>
-      <%= @trade.get('splitted_tid') %>
+      <%= @trade.get('tid') %>
     <% else: %>
       <%= @trade.get('tid') %>
     <% end %>

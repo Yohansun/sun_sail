@@ -6,6 +6,7 @@ class Trade
   include Mongoid::Timestamps
   include MagicEnum
   include TradeMerge
+  include TradeSplitter
 
   field :trade_source_id,                 type: Integer
   field :account_id,                      type: Integer
@@ -179,7 +180,12 @@ class Trade
   # 第三方抓取过来的订单在本地创建完成后,标记为新订单, 作用是自动创建相关的队列任务,  然后标记为 "0"
   # 第三方抓取过来的数据,更新本地订单之后标记为 "1",
   # 待其他操作(更新本地顾客)处理完毕后标记为   "2"
-  field :news,                            type: Integer , default: 0
+  field :news, type: Integer , default: 0
+  # 有关合并的东西, 记得加上 enum_attr :parent_type 后面的的参数
+  field :parent_id, type: String
+  field :parent_type, type: String
+
+  enum_attr :parent_type, [%w(拆分订单 split_trade)],valid: false
   enum_attr :news, [["无更新",0],["已更新",1],["已处理",2],["新订单",3]]
 
   #订单操作人
@@ -212,6 +218,8 @@ class Trade
   index batch_sort_num: 1
 
   index news: -1
+  index parent_id: -1
+  index parent_type: -1
 
   # 时间搜索index
   index created: -1
@@ -368,6 +376,10 @@ class Trade
       end
     end
     adapted_orders
+  end
+
+  def parent
+    self.class.unscoped.where(id: parent_id).first
   end
 
 ##### 订单与其他表单的关联属性
@@ -638,10 +650,14 @@ class Trade
     end
 
     bill.bill_products_mumber = bill.bill_products.sum(:number)
-    bill.bill_products_price = payment - post_fee
+    bill.bill_products_price = default_invoice_amount
     bill.save!
-    async_invoice_price
+    async_invoice_price if not parent_type_split_trade? # 同步退款金额,更新开票金额.   拆分订单不针对有退款的订单
     bill.check #减去仓库的可用库存
+  end
+
+  def default_invoice_amount
+    payment - post_fee - (parent_type_split_trade? ?  discount_fee : 0)
   end
 
   def generate_deliver_bill
@@ -866,6 +882,10 @@ class Trade
     self.orders.where(:refund_status.in => ['NO_REFUND', 'CLOSED']).size != 0 &&
     self.is_paid_and_delivered &&
     self.delivered_at.present?
+  end
+  
+  def delivered?
+    !delivered_at.nil?
   end
 
   def deliver!

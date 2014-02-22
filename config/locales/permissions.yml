@@ -99,8 +99,8 @@ zh-CN:
   permissions_tag_setup_logistic: 设置物流信息
   permissions_tag_color: 申请调色
   permissions_tag_confirm_color: 确认调色
-  permissions_tag_trade_split: 订单拆分
-  permissions_tag_recover: 订单合并
+  permissions_tag_split_trade: 订单拆分
+  permissions_tag_revoke_split_trade: 撤销订单拆分
   permissions_tag_modify_receiver_information: 订单用户信息修改
   permissions_tag_merge_trades_manually: 手动合并订单
   permissions_tag_split_merged_trades: 取消订单合并

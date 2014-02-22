@@ -17,6 +17,10 @@ class MagicOrders.Models.Trade extends Backbone.Model
     state = this.attributes.status
     type = this.attributes.trade_source
     trades = MagicOrders.trade_pops['trades']
+    if not this.attributes.seller_id && $.inArray('split_trade',trades) && this.attributes.orders.length > 1
+      enabled_items.push("split_trade")
+    if not this.attributes.seller_id && $.inArray('revoke_split_trade',trades) && this.attributes.parent_type == "split_trade"
+      enabled_items.push("revoke_split_trade")
 
     if this.attributes.is_locked is true
       enabled_items.push('activate_trade')

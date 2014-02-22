@@ -3,71 +3,77 @@
   <h3>订单拆分</h3>
 </div><!-- modal-header -->
 <div class="modal-body">
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th>订单编号</th>
-        <th>订单状态</th>
-        <th>客户联系方式</th>
-        <th>订单总价</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><%= @trade.get("tid") %></td>
-        <td><%= @trade.get("status_text") %></td>
-        <td>
-          <%= @trade.get("receiver_name") %><br/>
-          <%= @trade.get("receiver_mobile_phone") %><br/>
-          <%= @trade.get('receiver_state') + @trade.get('receiver_city') + @trade.get('receiver_district') + @trade.get('receiver_address') %>
-        </td>
-        <td><%= @trade.get("total_fee") %></td>
-      </tr>
-    </tbody>
-  </table>
-  <div class="clearfix splitted_orders">
-    <% for trade in @trade.get("splited"): %>      
-      <table class="table table-bordered">
-        <tbody>
-          <tr>
-            <th rowspan="<%= trade.orders.length + 1 %>">商品详细</th>
-            <th>商品名</th>
-            <% if MagicOrders.enable_module_colors == 1 : %>
-              <th>调色信息</th>
-            <% end %>
-            <% if MagicOrders.enable_module_sku_properties == 1 : %>
-              <th>商品属性</th>
-            <% end %>
-            <th>数量</th>
-          </tr>
-          <% for order in trade.orders: %>
-          <tr class="so">
-            <td class="so_iid"><%= order.title %></td>
-            <% if MagicOrders.enable_module_colors == 1 : %>
-              <td class="so_color"><%= order.color_num %></td>
-            <% end %>
-            <% if MagicOrders.enable_module_sku_properties == 1 : %>
-              <td class="so_color"><%= order.sku_properties %></td>
-            <% end %>
-            <td class="so_num"><%= order.num %></td>
-          </tr>
-          <% end %>
-          <tr>
-            <th>配送经销商</th>
-            <% if trade.error == false : %>
-            <td colspan="3" class="seller_id" data="<%= trade.seller_id%>"><%= trade.seller_name %></td>
-            <% else : %>
-            <td colspan="3" class="seller_id" data="<%= trade.seller_id%>" style='color:red;'><%= trade.seller_name %></td>
-            <% end %>
-          </tr>
-        </tbody>
-      </table>
-    <% end %>
+  <div class="well well-small">
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="text-left">商品名称</th>
+          <th>商品数量</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for order in @trade.get("orders") : %>
+        <tr>
+          <td class="text-left title" id="<%= order.oid %>"><%= order.title %></td>
+          <td class="item-number"><%= order.num %></td>
+          <td></td>
+        </tr>
+        <% end %>
+        <tr>
+          <td colspan="3" class="text-left bordered_top1">
+            <span class="mr10">订单金额：<span id="ord_total" data-num="<%= @trade.get("real_total_fee")%>"><%= @trade.get("real_total_fee") %></span></span>
+            <span class="mr10">活动优惠：<span id="ord_favourable" data-num="<%= @trade.get("promotion_fee") %>"><%= @trade.get("promotion_fee") %></span></span>
+            <span class="mr10">运费：<span id="ord_freight" data-num="<%= @trade.get("post_fee") %>"><%= @trade.get("post_fee") %></span></span>
+            <span class="mr10">订单实付金额：¥<span id="ord_actual"> <%= @trade.get("payment") %></span></span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <div class="text-right">
+    <a href="javascript:;" class="js-split_add"><i class="icon-plus"></i>添加拆分订单</a>
   </div>
 </div><!-- modal-body -->
 <div class="modal-footer">
-  <a href="#" class="btn" data-dismiss="modal" >取消</a>
-  <% if @trade.get("splited").length > 1 : %>
-    <a href="#" class="btn btn-primary split">确定</a>
-  <% end %>
+  <a href="#" class="btn btn-primary save">确认拆分</a>
+  <a href="#" class="btn" data-dismiss="modal">取消</a>
 </div><!-- modal-footer -->
+
+
+
+<div class="hide" id="split_templete">
+  <div class="well well-small ord_split">
+    <a href="javascript:;" class="close js-remove_split">&times;</a>
+    <fieldset class="form-inline">
+      <select name="" class="span4 item_options">
+        <% for order in @trade.get("orders") : %>
+        <option value="<%= order.oid %>"><%= order.title %></option>
+        <% end %>
+      </select>
+      <input type="number" min="1" max="" class="input-small js-split_itemnum" placeholder="拆分数量"> 
+      <button class="btn btn-primary btn-small js-add_split_item">添加拆分商品</button>
+    </fieldset>
+
+    <table class="table table-condensed mt10">
+      <thead>
+        <tr>
+          <th class="text-left">商品名称</th>
+          <th width="15%">商品数量</th>
+          <th width="10%">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td colspan="3" class="text-left bordered_top1">
+            <span class="mr10">订单金额：<input class="split_editor_num ord_total" type="text" value="0"></span>
+            <span class="mr10">活动优惠：<input class="split_editor_num ord_favourable" type="text" value="0"></span>
+            <span class="mr10">运费：<input class="split_editor_num ord_freight" type="text" value="0"></span>
+            <span class="mr10">订单实付金额：¥<span class="split_sum"></span></span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

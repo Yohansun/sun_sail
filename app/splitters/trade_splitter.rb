@@ -1,64 +1,93 @@
-class TradeSplitter
-  attr_accessor :trade
+#encoding: utf-8
+module TradeSplitter
 
-  def initialize(trade)
-    @trade = trade
+  def split_trades
+    self.class.where(parent_type: 'split_trade',parent_id: id)
   end
 
-  def split!
-    trade = TradeDecorator.decorate(@trade)
-    return false unless trade.pay_time.present? && trade.seller_id.blank?
-    splitted_orders_container = []
- 
-    splitted_orders_container = splitted_orders
-
-    return false if splitted_orders_container.size == 1
-
-    new_trade_ids = []
-
-    # 复制创建新 trade
-    splitted_trades = []
-    splitted_orders_container.each_with_index do |splitted_order, index|
-      new_trade = trade.clone
-      new_trade.orders = splitted_order[:orders]
-      new_trade.splitted_tid = "#{trade.tid}-#{index+1}"
-
-      # TODO 完善物流费用拆分逻辑
-      new_trade.post_fee = splitted_order[:post_fee]
-
-      if splitted_order[:total_fee].present?
-        new_trade.total_fee = splitted_order[:total_fee]
-      end
-
-      if splitted_order[:payment].present?
-        new_trade.payment = splitted_order[:payment]
-      end
-
-      if splitted_order[:promotion_fee].present?
-        new_trade.promotion_fee = splitted_order[:promotion_fee]
-      end
-
-      new_trade.splitted = true
-      new_trade.has_color_info = new_trade.orders.any?{|order| order.color_num.present?}
-
-      new_trade.save
-      new_trade_ids << new_trade.id
-    end
-
-    # 删除旧 trade
-    trade.delete
-
-    new_trade_ids
+  def can_split?
+    !pay_time.nil? && seller_id.nil? && orders.map(&:num).sum > 1 && orders.all?{|order| order.refund_status == 'NO_REFUND'}
   end
 
-  def splitted_orders
-    case @trade._type
-    when 'TaobaoPurchaseOrder'
-      TaobaoPurchaseOrderSplitter.split_orders(@trade)
-    when 'TaobaoTrade'
-      TaobaoTradeSplitter.split_orders(@trade)
+  def split_trade(args)
+    news_trades = create_split_trades(args)
+
+
+    self.errors.add(:base,validates_trades(news_trades))
+
+    return self if self.errors.present?
+
+    if news_trades.map(&:save).uniq != [true]
+      reset_split_trades(news_trades)
     else
-      [{orders: @trade.orders}]
+      self.destroy
     end
+
+    self
+  end
+
+  # 重置拆分
+  # 如果参数为空, 则重置父订单及相关的被拆分订单
+  # 如果指定了参数,则重置当前拆分的订单
+  def reset_split_trades(trades=nil)
+    Trade.unscoped.where(id: trades.nil? ? parent_id : id).update_all(deleted_at: nil)
+    trades = self.class.where(parent_id: parent_id,parent_type: 'split_trade') if trades.nil?
+    trades.select {|t| !t.new_record?}.map(&:delete!)
+  end
+
+  def can_reset_split?
+    seller_id.nil? && parent_id.present? && parent_type_split_trade?
+  end
+
+  private
+  def find_by_order(oid)
+    orders.to_a.find {|order| order.oid == oid}
+  end
+
+  # args:
+  #   [
+  #    {"orders"=>{"0"=>{"oid"=>"450569387947709", "num"=>"1"}}, "total_fee"=>"1", "promotion_fee"=>"1", "post_fee"=>"1", "payment"=>"3"},
+  #    {"orders"=>{"0"=>{"oid"=>"450569387967709", "num"=>"1"}, "1"=>{"oid"=>"450569387957709", "num"=>"1"}}, "total_fee"=>"299",
+  #     "promotion_fee"=>"19", "post_fee"=>"29", "payment"=>"347"}
+  #   ]
+  def create_split_trades(args)
+    news_trades = []
+    args.each_with_index do |arg,i|
+      trade = self.class.new
+      trade_attributes = self.attributes.except(*["versions","_id","_type","deleted_at"])
+      trade_attributes.merge!({"tid" =>  self.tid.dup << "-#{i+1}",
+      "promotion_fee" =>  arg["promotion_fee"].to_f, # 优惠
+      "total_fee"    =>   arg["total_fee"].to_f, # 订单金额
+      "post_fee"      =>  arg["post_fee"].to_f, #邮费
+      "payment"       =>  arg["payment"].to_f, # 订单实付金额
+      "taobao_orders" => [],
+      "parent_id"     => id,
+      "parent_type"   => 'split_trade',
+      "created_at"    => Time.now,
+      "orders"        => []}
+      )
+      trade.assign_attributes(trade_attributes)
+      if arg["orders"].nil?
+        self.errors.add(:base,"请选择商品") and return self
+      else
+        arg["orders"].values.each do |order|
+          torder = find_by_order(order["oid"])
+          trade.orders.build(torder.attributes.except(*["_id","_type"]).merge({num: order["num"]}))
+        end
+      end
+      news_trades << trade
+    end
+    news_trades
+  end
+
+  def validates_trades(news_trades)
+    errors = []
+    errors << "不满足拆分条件"    if not can_split?
+    errors << news_trades.collect{|t| t.errors.full_messages}.flatten.join(',') if news_trades.map(&:errors).any? {|t| !t.blank?}
+    errors << "活动优惠错误"      if promotion_fee != news_trades.map(&:promotion_fee).sum
+    errors << "订单总金额错误"    if total_fee != news_trades.map(&:total_fee).sum
+    errors << "邮费错误"         if post_fee != news_trades.map(&:post_fee).sum
+    errors << "订单实付金额错误"   if payment != news_trades.map(&:payment).sum
+    errors
   end
 end

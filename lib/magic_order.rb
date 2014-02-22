@@ -22,7 +22,8 @@ module MagicOrder
     "jingdong_bind" => ["change_jingdong_skus", "tie_to_native_skus", "jingdong_skus"],
     "yihaodian_bind" => ["change_yihaodian_skus", "tie_to_native_skus", "yihaodian_skus"],
     'refund_products_fetch' => %w(refund_fetch refund_save),
-    'warehouse_management' => %(show enable_third_party_stock)
+    'warehouse_management' => %(show enable_third_party_stock),
+    'splited' => %w(split)
 
   }.freeze
 
@@ -149,6 +150,8 @@ MagicOrder::AccessControl.map do |map|
                                  "split_merged_trades",
                                  "invoice",
                                  "split_invoice",
+                                 "split_trade",
+                                 "revoke_split_trade",
                                  "property_memo",
                                  "print_deliver_bill",
                                  "print_process_sheet"]
