@@ -236,3 +236,45 @@ code{color: #08C;}
   max-height: 200px;
   vertical-align: middle;
 }
+
+/*backlog*/
+.todolist{
+  position:fixed;
+  top:41px;
+  right:18px;
+  /*width:40%;*/
+  background:#fff;
+  z-index: 2;
+}
+.todolist .table-bordered,
+.todolist .table th,
+.todolist .table td,
+.todolist .table-bordered thead:first-child tr:first-child > th:last-child,
+.todolist .table-bordered tbody:first-child tr:first-child > td:last-child,
+.todolist .table-bordered thead:last-child tr:last-child > th:first-child,
+.todolist .table-bordered tbody:last-child tr:last-child > td:first-child,
+.todolist .table-bordered thead:first-child tr:first-child > th:first-child,
+.todolist .table-bordered tbody:first-child tr:first-child > td:first-child{
+  border-radius:0;
+}
+.thbg_gray{
+  background: #eee;
+}
+.todolist .valign-middle{
+  vertical-align: middle;
+}
+.todolist .list_wrap{
+  height: 146px;
+  overflow: hidden;
+}
+#todo_overlay{
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: #fff;
+  opacity: 0;
+  z-index: 1;
+}
