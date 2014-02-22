@@ -1,5 +1,5 @@
 <ul class="nav nav-tabs" id="overview">
-  <li class="dropdown <%= ["summary", "product_analysis", "show"].include?(params[:action]) ? "active" : "" %>">
+  <li class="dropdown <%= ["summary", "product_analysis", "taobao_product_analysis", "show"].include?(params[:action]) ? "active" : "" %>">
     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
       销售分析
       <b class="caret"></b>
@@ -7,9 +7,9 @@
     <ul class="dropdown-menu">
       <li><a href="/sales/summary">概要</a></li>
       <li><a href="/sales/product_analysis">热销产品分析</a></li>
+      <li><a href="/sales/taobao_product_analysis">淘宝产品分析</a></li>
       <li><a href="/sales/show">实时销售</a></li>
-      <!-- <li><a href="#">买家购买分析</a></li>
-      <li><a href="#">促销手段分析</a></li> -->
+      <!--<li><a href="#">促销手段分析</a></li> -->
     </ul>
   </li>
   <li class="dropdown <%= ["area_analysis", "time_analysis", "price_analysis", "frequency_analysis", "univalent_analysis"].include?(params[:action]) ? "active" : "" %>">

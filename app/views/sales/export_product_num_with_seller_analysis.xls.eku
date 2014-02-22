@@ -1,0 +1,13 @@
+__filename = "经销商出货汇总.xls"
+sheet1 = xls.create_worksheet
+sheet1[0, 0] = "经销商出货汇总"
+
+sheet1.row(1).concat ["类目", "商品名称", "淘宝外部编码", "总销售数量"] + current_account.sellers.map(&:name)
+@analysis_data.each_with_index do |values, i|
+  sheet1.row(i+2).concat values
+end
+
+title_format = Spreadsheet::Format.new(:color => :blue, :weight => :bold, :size => 14)
+sheet1.row(0).set_format(0, title_format)
+bold = Spreadsheet::Format.new(:pattern_fg_color => :yellow, :weight => :bold)
+sheet1.row(1).default_format = bold

@@ -1,7 +1,8 @@
 # -*- encoding : utf-8 -*-
 class SalesController < ApplicationController
-  before_filter :authorize #,:except => [:add_node, :edit, :update, :fetch_data]
+  before_filter :authorize
   include SalesHelper
+  include MagicReport
 
   def summary
     @start_time = (params[:start_time].to_time(:local) rescue nil) || 1.month.ago
@@ -75,39 +76,58 @@ class SalesController < ApplicationController
   # end
 
   def product_analysis
-    @start_time = (params[:start_time].to_time(:local) rescue nil) || 1.month.ago
-    @end_time = (params[:end_time].to_time(:local) rescue nil) || Time.now
+    @start_time   = (params[:start_time].to_time(:local) rescue nil) || 1.month.ago
+    @end_time     = (params[:end_time].to_time(:local) rescue nil) || Time.now
     @product_data = product_data(@start_time, @end_time) rescue []
+  end
+
+  def taobao_product_analysis
+    @start_time          = (params[:start_time].to_time(:local) rescue nil) || 1.month.ago
+    @end_time            = (params[:end_time].to_time(:local) rescue nil) || Time.now
+    @taobao_product_data = [top_ten_with_category_analysis(current_account, @start_time, @end_time)]
+    @taobao_product_data << category_comparism_analysis(current_account, @start_time, @end_time)
+    @taobao_product_data << product_num_with_seller_analysis(current_account, @start_time, @end_time)
   end
 
   def area_analysis
     @start_time = (params[:start_time].to_time(:local) rescue nil) || 1.month.ago
-    @end_time = (params[:end_time].to_time(:local) rescue nil) || Time.now
-    @area_data = area_data(@start_time, @end_time)
+    @end_time   = (params[:end_time].to_time(:local) rescue nil) || Time.now
+    @area_data  = area_data(@start_time, @end_time)
   end
 
   def price_analysis
     @start_time = (params[:start_time].to_time(:local) rescue nil) || 1.month.ago
-    @end_time = (params[:end_time].to_time(:local) rescue nil) || Time.now
+    @end_time   = (params[:end_time].to_time(:local) rescue nil) || Time.now
     @price_data = price_data(@start_time, @end_time)
   end
 
   def time_analysis
     @start_time = (params[:start_time].to_time(:local) rescue nil) || 1.month.ago
-    @end_time = (params[:end_time].to_time(:local) rescue nil) || Time.now
-    @time_data = time_data(@start_time, @end_time)
+    @end_time   = (params[:end_time].to_time(:local) rescue nil) || Time.now
+    @time_data  = time_data(@start_time, @end_time)
   end
 
   def frequency_analysis
-    @start_time = (params[:start_time].to_time(:local) rescue nil) || 1.month.ago
-    @end_time = (params[:end_time].to_time(:local) rescue nil) || Time.now
+    @start_time     = (params[:start_time].to_time(:local) rescue nil) || 1.month.ago
+    @end_time       = (params[:end_time].to_time(:local) rescue nil) || Time.now
     @frequency_data = frequency_data(@start_time, @end_time)
   end
 
   def univalent_analysis
-    @start_time = (params[:start_time].to_time(:local) rescue nil) || 1.month.ago
-    @end_time = (params[:end_time].to_time(:local) rescue nil) || Time.now
+    @start_time     = (params[:start_time].to_time(:local) rescue nil) || 1.month.ago
+    @end_time       = (params[:end_time].to_time(:local) rescue nil) || Time.now
     @univalent_data = univalent_data(@start_time, @end_time)
   end
 
+  ## 淘宝商品分析报表导出
+  ExportTaobaoProductAnalysis.each do |analysis|
+    define_method analysis do
+      start_time     = (params[:start_time].to_time(:local) rescue nil) || 1.month.ago
+      end_time       = (params[:end_time].to_time(:local) rescue nil) || Time.now
+      @analysis_data = send(analysis.gsub("export_", "").to_sym, current_account, start_time, end_time)
+      respond_to do |format|
+        format.xls
+      end
+    end
+  end
 end
