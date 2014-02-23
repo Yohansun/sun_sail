@@ -12,7 +12,7 @@
           <% end %>
         </select>
         <label class="control-label">状态：</label>
-          <%= select_tag(:status, options_for_select([["请选择",""],["运营商未结算","unaudited"],["品牌商未结算","unprocessed"],["运营商已结算","audited"]], selected: params[:status]))%>
+          <%= select_tag(:status, options_for_select(@statuses_select, selected: params[:status]))%>
         <label class="control-label">选择时间：</label>
         <div class="input-append">
           <%=text_field_tag :date, params[:date], "data-date-format"=>"mm-yyyy", :class=>"input-small date  monthpicker"%>
@@ -26,9 +26,9 @@
 <div class="btns">
   <a href="javascript:;" class="btn btn-warning confirm_export">导出数据</a>
   <% if @all_processed %>
-    <a href="javascript:;" class="btn btn-warning disabled">品牌确认结算</a>
+    <a href="javascript:;" class="btn btn-warning disabled"><%= @brand_name %></a>
   <% else %>
-    <a data-toggle="modal" href="#confirm_account" class="btn btn-warning confirm_settlement_all">品牌确认结算</a>
+    <a data-toggle="modal" href="#confirm_account" class="btn btn-warning confirm_settlement_all"><%= @brand_name %></a>
   <% end %>
   <% if @all_audited %>
     <a href="javascript:;" class="btn btn-warning disabled">运营商确认结算</a>
@@ -59,7 +59,7 @@
         <%- if rs.audited && rs.processed %>
         <td>已结算</td>
         <%- elsif !rs.processed %>
-          <td><a data-toggle="modal" data-id="<%= rs.id %>" href="#confirm_account" class="confirm_settlement">品牌商未确认结算</a></td>
+          <td><a data-toggle="modal" data-id="<%= rs.id %>" href="#confirm_account" class="confirm_settlement"><%= @status_name %></a></td>
         <% else %>
           <td><a data-toggle="modal" data-id="<%= rs.id %>" href="#confirm_account" class="confirm_settlement">运营商未结算</a></td>
         <%- end %>

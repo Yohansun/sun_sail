@@ -12,7 +12,14 @@ class ReconcileSellerDetail < ActiveRecord::Base
                   :special_products_alipay_revenue_rate,
                   :adjust_amount,
                   :last_audit_amount,
-                  :user_id
+                  :user_id,
+                  :buyer_payment,
+                  :preferential,
+                  :buyer_send_postage,
+                  :taobao_deduction,
+                  :credit_deduction,
+                  :rebate_integral,
+                  :actual_pey
   belongs_to :reconcile_statement
 
   scope :by_ids, lambda { |rs_ids| where(["reconcile_statement_id in (?)", rs_ids]) }
