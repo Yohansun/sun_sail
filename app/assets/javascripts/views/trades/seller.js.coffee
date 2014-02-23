@@ -11,8 +11,10 @@ class MagicOrders.Views.TradesSeller extends Backbone.View
 
   render: ->
     $(@el).html(@template(trade: @model))
-    @render_area_inputs() if @model.get('seller_id') == null && @model.get('trade_source') == '淘宝'
-    @estimate_dispatch() if @model.get('seller_id') == null && @model.get('trade_source') != '淘宝'
+    if @model.get('seller_id') == null && (@model.get('trade_source') == '淘宝' || @model.get('trade_source') == '合并(淘宝)')
+      @render_area_inputs()
+    else
+      @estimate_dispatch()
     this
 
   render_area_inputs: ->
