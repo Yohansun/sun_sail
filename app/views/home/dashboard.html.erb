@@ -55,7 +55,11 @@ footer.page_footer{position:fixed;}
         <% if current_user.allowed_to?("reconcile_statements","index") -%>
           <% if current_account.settings.enable_module_reconcile_statements == true %>
             <div>
-              <a class="indexStart9" href="/reconcile_statements"><span>财务管理</span></a>
+              <% if current_account.settings.enable_module_reconcile_statements_for_kele == true %>
+                <a class="indexStart9" href="/reconcile_statements/seller_index"><span>财务管理</span></a>
+              <% else %>
+                <a class="indexStart9" href="/reconcile_statements"><span>财务管理</span></a>
+              <% end %>
             </div>
           <% end %>
         <% end %>

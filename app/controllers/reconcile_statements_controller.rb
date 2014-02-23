@@ -84,17 +84,21 @@ class ReconcileStatementsController < ApplicationController
   end
 
   def seller_exports
-    if params[:selected_rs].blank?
-      flash[:error] = "不正确的参数，数据导出失败"
+    if current_account.settings.enable_module_reconcile_statements_for_kele == true
+      send_file "#{Rails.root}/lib/data_source/kele_virtual.xls"
     else
-      ids = params[:selected_rs].to_a
-      @rs_data = ReconcileSellerDetail.by_ids(ids)
-      flash[:notice] = "数据导出成功"
-    end
+      if params[:selected_rs].blank?
+        flash[:error] = "不正确的参数，数据导出失败"
+      else
+        ids = params[:selected_rs].to_a
+        @rs_data = ReconcileSellerDetail.by_ids(ids)
+        flash[:notice] = "数据导出成功"
+      end
 
-    respond_to do |format|
-      format.xls  { redirect_to :back unless @rs_data.present? }
-      format.html { redirect_to :back }
+      respond_to do |format|
+        format.xls  { redirect_to :back unless @rs_data.present? }
+        format.html { redirect_to :back }
+      end
     end
   end
 
