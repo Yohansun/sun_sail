@@ -136,17 +136,17 @@
 
     $('#export_analysis').on('click', function(){
       var actived_tab_id = $(".tab-pane.active").attr("id");
-      var params         = $.param({start_time: $('.start_time').val(), end_time: $('.end_time').val()})
+      var params         = $.param({start_time: $('.analysis_start_time').val(), end_time: $('.analysis_end_time').val()})
       window.location.href = "/sales/export_"+actived_tab_id+"_analysis.xls?"+params
     })
 
-    $('.table').DataTable({
+    $('.table.table-striped').DataTable({
       "bPaginate": false,
       "bLengthChange": false,
       "bFilter": false,
       "bSort": true,
       "bInfo": false,
-      "bAutoWidth": false,
+      "bAutoWidth": false
     });
   })
 </script>
