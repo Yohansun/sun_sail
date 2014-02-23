@@ -1,11 +1,13 @@
 <ul class="nav nav-tabs">
   <% ReconcileStatementsController::AllActions.each do |action,name| %>
     <% unless action.to_s =~ %r(distributor_index|seller_index) %>
-      <li class="<%= params[:action].eql?(action.to_s) ? "active" : "" %>">
-        <a href="/reconcile_statements/<%= action.to_s.gsub(/index/,'') %>"><%= name %></a>
-      </li>
+      <% unless current_account.settings.enable_module_reconcile_statements_for_kele == true %>
+        <li class="<%= params[:action].eql?(action.to_s) ? "active" : "" %>">
+          <a href="/reconcile_statements/<%= action.to_s.gsub(/index/,'') %>"><%= name %></a>
+        </li>
+      <% end %>
     <% else  %>
-      <% unless action.to_s =~ %r(distributor_index) && current_account.settings.enable_module_reconcile_statements_for_magicd == true %>
+      <% unless action.to_s =~ %r(distributor_index) && (current_account.settings.enable_module_reconcile_statements_for_magicd == true || current_account.settings.enable_module_reconcile_statements_for_kele == true) %>
         <li class="<%= params[:action].eql?(action.to_s) ? "active" : "" %>">
           <a href="/reconcile_statements/<%= action.to_s %>"><%= name %></a>
         </li>
