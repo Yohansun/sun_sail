@@ -92,7 +92,8 @@
           trade.unusual_states.each{|p| new_trade.unusual_states << p}
           trade.ref_batches.each{|p| new_trade.ref_batches << p}
           Trade.where(main_trade_id: trade.id.to_s).update_all(main_trade_id: new_trade.id)
-
+          new_trade.seller_id = trade.seller_id
+          new_trade.seller_name = trade.seller_name
           # merge values
           new_trade.seller_memo     += trade.seller_memo.to_s+"\n"   if trade.seller_memo
           new_trade.cs_memo         += trade.cs_memo.to_s+"\n"       if trade.seller_memo
