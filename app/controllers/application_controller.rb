@@ -33,11 +33,11 @@ class ApplicationController < ActionController::Base
   def get_trades
     if current_user
       if current_user.allow_read?(:trades,:seller) && current_user.seller
-        @today_trades    = Trade.where(account_id: current_account.id, seller_id: current_user.seller.id, has_unusual_state: true, :unusual_states.elem_match => {repaired_at: nil, created_at: {"$gte" => Time.now.beginning_of_day, "$lt" => Time.now.end_of_day}})
-        @tomorrow_trades = Trade.where(account_id: current_account.id, seller_id: current_user.seller.id, has_unusual_state: true, :unusual_states.elem_match => {repaired_at: nil, plan_repair_at: {"$gte" => Time.now.tomorrow.beginning_of_day, "$lt" => Time.now.tomorrow.end_of_day}})
+        @today_trades    = Trade.where(account_id: current_account.id, seller_id: current_user.seller.id, has_unusual_state: true, :unusual_states.elem_match => {created_at: {"$gte" => Time.now.beginning_of_day, "$lt" => Time.now.end_of_day}})
+        @tomorrow_trades = Trade.where(account_id: current_account.id, seller_id: current_user.seller.id, has_unusual_state: true, :unusual_states.elem_match => {plan_repair_at: {"$gte" => Time.now.tomorrow.beginning_of_day, "$lt" => Time.now.tomorrow.end_of_day}})
       else
-        @today_trades    = Trade.where(account_id: current_account.id, has_unusual_state: true, :unusual_states.elem_match => {repaired_at: nil, created_at: {"$gte" => Time.now.beginning_of_day, "$lt" => Time.now.end_of_day}})
-        @tomorrow_trades = Trade.where(account_id: current_account.id, has_unusual_state: true, :unusual_states.elem_match => {repaired_at: nil, plan_repair_at: {"$gte" => Time.now.tomorrow.beginning_of_day, "$lt" => Time.now.tomorrow.end_of_day}})
+        @today_trades    = Trade.where(account_id: current_account.id, has_unusual_state: true, :unusual_states.elem_match => {created_at: {"$gte" => Time.now.beginning_of_day, "$lt" => Time.now.end_of_day}})
+        @tomorrow_trades = Trade.where(account_id: current_account.id, has_unusual_state: true, :unusual_states.elem_match => {plan_repair_at: {"$gte" => Time.now.tomorrow.beginning_of_day, "$lt" => Time.now.tomorrow.end_of_day}})
       end
     end
   end
