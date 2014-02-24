@@ -150,6 +150,14 @@ module ApplicationHelper
     li_tag(title, {:class => "active"}.merge(attributes))
   end
 
+  def stock_nav
+    if current_account.settings.enable_module_muti_sellers != 1
+      "库存查询"
+    else
+      params[:warehouse_id] ? "库存查询" : '总库存'
+    end
+  end
+
   def page_brandcrumb
     items = []
 
@@ -157,7 +165,7 @@ module ApplicationHelper
     case params[:controller]
     when "stocks"
       items << href_li_item("仓库管理")
-      items << active_li_item("总库存")
+      items << active_li_item(stock_nav)
     when "warehouses"
       items << href_li_item("仓库管理", "stocks")
       items << active_li_item("所有仓库")

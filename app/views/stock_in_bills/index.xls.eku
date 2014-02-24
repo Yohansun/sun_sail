@@ -1,6 +1,6 @@
-__filename = "入库单查询数据#{Time.now.strftime("%Y/%m/%d-%H:%M:%S")}.xls"
+__filename = "库存查询数据#{Time.now.strftime("%Y/%m/%d-%H:%M:%S")}.xls"
 sheet1 = xls.create_worksheet
-sheet1[0, 0] = "总库存数据"
+sheet1[0, 0] = "库存查询数据"
 
 sheet1.row(1).concat ["入库单编号","创建时间", "入库时间", "当前状态", "入库类型", "商品数量", "商品总价", "最后操作人"]
 
