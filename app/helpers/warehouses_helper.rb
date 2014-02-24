@@ -8,7 +8,7 @@ module WarehousesHelper
               "出库单"  => "/warehouses/#{warehouse}/stock_out_bills",
               "退货单"  => "/warehouses/#{warehouse}/refund_products",
               "所有进销" => "/warehouses/#{warehouse}/stock_bills",
-              "总库存" => "/warehouses/#{warehouse}/stocks"
+              "库存查询" => "/warehouses/#{warehouse}/stocks"
             }
           }
 

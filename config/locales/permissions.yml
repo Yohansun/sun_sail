@@ -30,7 +30,7 @@ zh-CN:
   permissions_unusual: 异常模式
   permissions_color: 调色模式
 
-  permissions_tag_stock_products: 总库存
+  permissions_tag_stock_products: 库存查询
   permissions_tag_stock_history: 进销记录
 
   permissions_tag_user_manage: 登录绑定
