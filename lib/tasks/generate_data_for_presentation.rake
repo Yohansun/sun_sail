@@ -166,6 +166,20 @@ p "新建测试流程订单，报表相关订单"
     created_at: Time.now
   )
 
+  p "--确认退货订单"
+  trade = Fabricate(:taobao_trade, account_id: account.id)
+  trade.update_attributes(
+    receiver_state: "江苏省",
+    receiver_city: "苏州市",
+    receiver_district: "张家港市"
+  )
+  adapt_order.call(trade, "K-3831T-0")
+  trade.dispatch!
+  stock_out_bill = StockOutBill.where(account_id: account.id, tid: trade.tid).first
+  stock_out_bill.update_attributes(status: "STOCKED")
+  trade.taobao_orders.last.update_attributes(refund_status: "SUCCESS")
+  trade.update_attributes(delivered_at: Time.now, status: "WAIT_BUYER_CONFIRM_GOODS")
+
   p "--生成100个交易成功订单"
 
   outer_ids = ["K-3831T-0", "K-12050T-CP", "K-941T"]
