@@ -28,7 +28,7 @@ class JingdongProductsController < ApplicationController
 
   # PUT /jingdong_products/1/syncing
   def syncing
-    [@sync_skus,@sync_products].map(&:perform)
+    [@sync_skus,@sync_products].flatten.map(&:perform)
     redirect_to :action => :index
     flash[:notice] = "同步成功"
   end
@@ -91,10 +91,12 @@ class JingdongProductsController < ApplicationController
   def scan_sync
     @sync_products,@sync_skus = Array.new(2) {[]}
     current_account.jingdong_sources.each do |trade_source|
-      @sync_products << sync_product = JingdongProductSync.new(trade_source.id)
+      sync_product = JingdongProductSync.new(trade_source.id)
+      sync_sku = JingdongSkuSync.new({ware_ids: sync_product.ware_ids, trade_source_id: trade_source.id})
       sync_product.parsing
-      @sync_skus += sync_sku = JingdongSkuSync.new({ware_ids: sync_product.ware_ids, account_id: sync_product.account_id})
       sync_sku.parsing
+      @sync_products << sync_product
+      @sync_skus << sync_sku
     end
   end
 end

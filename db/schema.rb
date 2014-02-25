@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131225024518) do
+ActiveRecord::Schema.define(:version => 20140225063857) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -82,8 +82,6 @@ ActiveRecord::Schema.define(:version => 20131225024518) do
     t.integer  "sellers_count",  :default => 0
     t.integer  "area_type"
     t.string   "zip"
-    t.float    "longitude"
-    t.float    "latitude"
   end
 
   add_index "areas", ["lft"], :name => "index_areas_on_lft"
@@ -96,7 +94,7 @@ ActiveRecord::Schema.define(:version => 20131225024518) do
   create_table "audits", :force => true do |t|
     t.integer  "auditable_id"
     t.string   "auditable_type"
-    t.string   "associated_id"
+    t.integer  "associated_id"
     t.string   "associated_type"
     t.integer  "user_id"
     t.string   "user_type"
@@ -107,7 +105,6 @@ ActiveRecord::Schema.define(:version => 20131225024518) do
     t.string   "comment"
     t.string   "remote_address"
     t.datetime "created_at"
-    t.text     "audited_object"
   end
 
   add_index "audits", ["associated_id", "associated_type"], :name => "associated_index"
@@ -224,6 +221,15 @@ ActiveRecord::Schema.define(:version => 20131225024518) do
     t.datetime "updated_at", :null => false
   end
 
+  create_table "distributors", :force => true do |t|
+    t.integer  "trade_source_id"
+    t.string   "name"
+    t.string   "trade_type",      :default => "Taobao"
+    t.string   "string",          :default => "Taobao"
+    t.datetime "created_at",                            :null => false
+    t.datetime "updated_at",                            :null => false
+  end
+
   create_table "feature_product_relationships", :force => true do |t|
     t.integer  "product_id"
     t.integer  "feature_id"
@@ -262,7 +268,7 @@ ActiveRecord::Schema.define(:version => 20131225024518) do
     t.integer  "transport_id"
     t.string   "online_time"
     t.string   "offline_time"
-    t.string   "attribute_s"
+    t.text     "attribute_s"
     t.text     "desc"
     t.string   "producter"
     t.string   "wrap"
@@ -329,13 +335,13 @@ ActiveRecord::Schema.define(:version => 20131225024518) do
   create_table "logistic_areas", :force => true do |t|
     t.integer  "logistic_id"
     t.integer  "area_id"
-    t.datetime "created_at",                         :null => false
-    t.datetime "updated_at",                         :null => false
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
     t.integer  "account_id"
-    t.float    "basic_post_weight", :default => 0.0
-    t.float    "extra_post_weight", :default => 0.0
-    t.float    "basic_post_fee",    :default => 0.0
-    t.float    "extra_post_fee",    :default => 0.0
+    t.float    "basic_post_weight"
+    t.float    "extra_post_weight"
+    t.float    "basic_post_fee"
+    t.float    "extra_post_fee"
   end
 
   add_index "logistic_areas", ["account_id"], :name => "index_logistic_areas_on_account_id"
@@ -402,11 +408,11 @@ ActiveRecord::Schema.define(:version => 20131225024518) do
   add_index "packages", ["product_id"], :name => "index_packages_on_product_id"
 
   create_table "print_flash_settings", :force => true do |t|
-    t.text     "xml_hash"
+    t.text     "xml_hash",    :limit => 16777215
     t.integer  "account_id"
     t.integer  "logistic_id"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
   end
 
   create_table "products", :force => true do |t|
@@ -448,22 +454,91 @@ ActiveRecord::Schema.define(:version => 20131225024518) do
     t.integer  "account_id"
   end
 
+  create_table "reconcile_product_details", :force => true do |t|
+    t.string   "name"
+    t.string   "outer_id"
+    t.integer  "reconcile_statement_id"
+    t.integer  "initial_num"
+    t.integer  "subtraction"
+    t.integer  "total_num"
+    t.float    "last_month_num"
+    t.integer  "product_id"
+    t.integer  "offline_return"
+    t.integer  "hidden_num"
+    t.integer  "seller_id"
+    t.datetime "created_at",             :null => false
+    t.datetime "updated_at",             :null => false
+  end
+
+  add_index "reconcile_product_details", ["outer_id"], :name => "index_reconcile_product_details_on_outer_id"
+
+  create_table "reconcile_seller_details", :force => true do |t|
+    t.integer  "reconcile_statement_id"
+    t.string   "source"
+    t.integer  "trade_source_name"
+    t.integer  "alipay_revenue",                       :default => 0
+    t.integer  "postfee_revenue",                      :default => 0
+    t.integer  "base_fee",                             :default => 0
+    t.integer  "base_fee_rate",                        :default => 2
+    t.integer  "audit_amount",                         :default => 0
+    t.integer  "special_products_alipay_revenue",      :default => 0
+    t.integer  "special_products_alipay_revenue_rate", :default => 2
+    t.integer  "audit_amount_rate",                    :default => 2
+    t.integer  "adjust_amount",                        :default => 0
+    t.integer  "last_audit_amount",                    :default => 0
+    t.integer  "user_id"
+    t.datetime "created_at",                                          :null => false
+    t.datetime "updated_at",                                          :null => false
+    t.integer  "buyer_payment",                        :default => 0
+    t.integer  "preferential",                         :default => 0
+    t.integer  "buyer_send_postage",                   :default => 0
+    t.integer  "taobao_deduction",                     :default => 0
+    t.integer  "credit_deduction",                     :default => 0
+    t.integer  "rebate_integral",                      :default => 0
+    t.integer  "actual_pey",                           :default => 0
+  end
+
   create_table "reconcile_statement_details", :force => true do |t|
     t.integer  "reconcile_statement_id"
-    t.integer  "alipay_revenue",         :default => 0
-    t.integer  "postfee_revenue",        :default => 0
-    t.integer  "trade_success_refund",   :default => 0
-    t.integer  "sell_refund",            :default => 0
-    t.integer  "base_service_fee",       :default => 0
-    t.integer  "store_service_award",    :default => 0
-    t.integer  "staff_award",            :default => 0
-    t.integer  "taobao_cost",            :default => 0
-    t.integer  "audit_cost",             :default => 0
-    t.integer  "collecting_postfee",     :default => 0
-    t.integer  "audit_amount",           :default => 0
-    t.integer  "adjust_amount",          :default => 0
-    t.datetime "created_at",                            :null => false
-    t.datetime "updated_at",                            :null => false
+    t.integer  "alipay_revenue",                                       :default => 0
+    t.integer  "postfee_revenue",                                      :default => 0
+    t.integer  "trade_success_refund",                                 :default => 0
+    t.integer  "sell_refund",                                          :default => 0
+    t.integer  "base_service_fee",                                     :default => 0
+    t.integer  "store_service_award",                                  :default => 0
+    t.integer  "staff_award",                                          :default => 0
+    t.integer  "taobao_cost",                                          :default => 0
+    t.integer  "audit_cost",                                           :default => 0
+    t.integer  "collecting_postfee",                                   :default => 0
+    t.integer  "audit_amount",                                         :default => 0
+    t.integer  "adjust_amount",                                        :default => 0
+    t.datetime "created_at",                                                          :null => false
+    t.datetime "updated_at",                                                          :null => false
+    t.integer  "special_products_alipay_revenue",                      :default => 0
+    t.integer  "special_products_audit_amount",                        :default => 0
+    t.integer  "base_fee",                                             :default => 0
+    t.integer  "last_audit_amount",                                    :default => 0
+    t.integer  "account_profit",                                       :default => 0
+    t.integer  "advertise_reserved",                                   :default => 0
+    t.integer  "platform_deduction",                                   :default => 0
+    t.integer  "base_fee_percent",                                     :default => 5
+    t.integer  "special_products_audit_amount_percent",                :default => 5
+    t.integer  "audit_amount_percent",                                 :default => 5
+    t.integer  "account_profit_percent_a",                             :default => 5
+    t.integer  "account_profit_percent_b",                             :default => 5
+    t.integer  "account_profit_percent_c",                             :default => 5
+    t.integer  "advertise_reserved_percent_a",                         :default => 5
+    t.integer  "advertise_reserved_percent_b",                         :default => 5
+    t.integer  "platform_deduction_percent_a",                         :default => 5
+    t.integer  "platform_deduction_percent_b",                         :default => 5
+    t.integer  "user_id"
+    t.integer  "achievement",                                          :default => 0
+    t.integer  "credit_card_money",                                    :default => 0
+    t.integer  "sale_commission",                                      :default => 0
+    t.integer  "return_point_money",                                   :default => 0
+    t.integer  "other_point_money",                                    :default => 0
+    t.integer  "handmade_trade_money",                                 :default => 0
+    t.string   "memo",                                  :limit => 500
   end
 
   add_index "reconcile_statement_details", ["reconcile_statement_id"], :name => "index_reconcile_statement_details_on_reconcile_statement_id"
@@ -471,13 +546,16 @@ ActiveRecord::Schema.define(:version => 20131225024518) do
   create_table "reconcile_statements", :force => true do |t|
     t.string   "trade_store_source"
     t.string   "trade_store_name"
-    t.integer  "balance_amount"
+    t.float    "balance_amount",     :default => 0.0
     t.boolean  "audited",            :default => false
     t.datetime "created_at",                            :null => false
     t.datetime "updated_at",                            :null => false
     t.datetime "audit_time"
     t.text     "exported"
     t.integer  "account_id"
+    t.integer  "seller_id"
+    t.boolean  "processed",          :default => false
+    t.string   "trade_source_id"
   end
 
   add_index "reconcile_statements", ["created_at"], :name => "index_reconcile_statements_on_created_at"
@@ -806,6 +884,8 @@ ActiveRecord::Schema.define(:version => 20131225024518) do
     t.string   "bulletin"
     t.string   "title"
     t.string   "description"
+    t.boolean  "jushita_sync",        :default => false, :null => false
+    t.integer  "enabled_checker"
   end
 
   add_index "trade_sources", ["account_id"], :name => "index_trade_sources_on_account_id"
