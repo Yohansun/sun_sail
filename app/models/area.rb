@@ -59,29 +59,35 @@ class Area < ActiveRecord::Base
 #    p response
   end
 
-  def self.sync_from_taobao
+  def self.sync_from_taobao(trade_source_id)
     Area.skip_callback :save
     response = TaobaoQuery.get({
       method: "taobao.areas.get",
-      fields: 'id, type, name, parent_id, zip'},nil
+      fields: 'id, type, name, parent_id, zip'},trade_source_id
     )
 
     areas = response['areas_get_response']['areas']['area']
-    areas.each do |taobao_area|
-      taobao_area['parent_id'] = nil if taobao_area['parent_id'] == 0
-      area = Area.find(taobao_area['id'].to_i)
-      if area
-        area.area_type = taobao_area['type']
-        area.parent_id = taobao_area['parent_id']
-        area.zip = taobao_area['zip']
-        area.name = taobao_area['name']
-        area.save
-      else
-        area = Area.new(name: taobao_area['name'],
-          area_type: taobao_area['type'], parent_id: taobao_area['parent_id'],
-          zip: taobao_area['zip'])
-        area.id = taobao_area['id']
-        area.save
+    2.times do
+      areas.each do |taobao_area|
+        next if taobao_area['parent_id'] == 0
+        area = Area.find_by_id(taobao_area['id'].to_i) rescue nil
+        if area
+          next if Area.find_by_id(taobao_area['parent_id']).blank?
+          area.area_type = taobao_area['type']
+          area.parent_id = taobao_area['parent_id']
+          area.zip = taobao_area['zip']
+          area.name = taobao_area['name']
+          area.save
+        else
+          next if taobao_area['parent_id'] > 1 && taobao_area['parent_id'] < 100000
+          area = Area.new(
+            name: taobao_area['name'],
+            area_type: taobao_area['type'],
+            zip: taobao_area['zip']
+          )
+          area.id = taobao_area['id']
+          area.save
+        end
       end
     end
     Area.rebuild!
