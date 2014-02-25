@@ -198,9 +198,6 @@ MagicOrder::AccessControl.map do |map|
                                  "reconcile_statements#product_detail_exports",
                                  "reconcile_statements#distributor_exports",
                                  "reconcile_statements#exports",
-                                 "reconcile_statements#distributor_index",
-                                 "reconcile_statements#update_processed",
-                                 "reconcile_statement_details#show",
                                  "reconcile_statement_details#export_detail"]
   end
 
@@ -243,6 +240,7 @@ MagicOrder::AccessControl.map do |map|
                                  "sync",
                                  # "batch_update_safety_stock",
                                  # "batch_update_actual_stock",
+                                 "stock_bills#get_products",
                                  "stock_in_bills#create",
                                  "stock_in_bills#sync",
                                  "stock_in_bills#update",
