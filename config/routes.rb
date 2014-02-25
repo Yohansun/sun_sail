@@ -176,6 +176,11 @@ MagicOrders::Application.routes.draw do
         get :change_detail
       end
     end
+    resources :reconcile_product_details do
+      member do
+        get :change_product_details
+      end
+    end
   end
 
   resources :trade_reports do

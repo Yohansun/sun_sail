@@ -1,30 +1,38 @@
 <% if current_account.settings.enable_module_reconcile_statements_for_magicd == true %>
-  <form action="/reconcile_statements/change_product_details" class="well form-search" data-row='<%= details.first.reconcile_statement.id %>'  class="well form-search">
-    <table class='table table-bordered table-hover'>
+  <form action="/reconcile_statements/<%= details.first.reconcile_statement.id %>/reconcile_product_details/<%= details.first.id%>/change_product_details" class="well form-search" data-row='<%= details.first.reconcile_statement.id %>'  class="well form-search">
+    <table class='table table-bordered table-hover' id="datasort_table">
       <thead>
         <tr>
+          <th>商品编码</th>
           <th>产品</th>
           <th>上月结余</th>
           <th>售卖数量</th>
           <th>扣减数量</th>
           <th>线下退货</th>
           <th>结算数量</th>
+          <th>结算价</th>
+          <th>结算金额</th>
         </tr>
       </thead>
       <tbody>
         <% details.each do |detail| %>
         <tr class="seller_detail_row" data-id="<%= detail.id %>">
+          <td><%= detail.outer_id %></td>
           <td><%= detail.name %></td>
           <td><%= detail.redefine_last_month_num %></td>
           <td><%= detail.initial_num %></td>
           <%- if current_user.has_role?(:admin) %>
-          <td><input type ='text' class="input-medium" name="<%= detail.id %>[subtraction]" value="<%= detail.subtraction %>" <%- if @rs.processed == true %>readonly<%- end %>></input></td>
-          <td><input type ='text' class="input-medium" name="<%= detail.id %>[offline_return]" value="<%= detail.offline_return %>" <%- if @rs.processed == true %>readonly<%- end %>></input></td>
-          <td><%= detail.total_num %></td>
+            <td><input type ='text' class="input-medium" name="reconcile_product_detail[subtraction][]" value="<%= detail.subtraction %>" <%- if @rs.processed == true %>readonly<%- end %>></input></td>
+            <td><input type ='text' class="input-medium" name="reconcile_product_detail[offline_return][]" value="<%= detail.offline_return %>" <%- if @rs.processed == true %>readonly<%- end %>></input></td>
+            <td><%= detail.total_num %></td>
+            <td><input type ='text' class="input-medium" name="reconcile_product_detail[audit_price][]" value="<%= detail.audit_price %>"</td>
+            <td><%= detail.audit_num %></td>
           <%- elsif current_user.has_role?(:seller) %>
-          <td><%= detail.subtraction %></td>
-          <td><%= detail.offline_return %></td>
-          <td><%= detail.total_num %></td>
+            <td><%= detail.subtraction %></td>
+            <td><%= detail.offline_return %></td>
+            <td><%= detail.total_num %></td>
+            <td><input type ='text' class="input-medium" name="reconcile_product_detail[audit_price][]" value="<%= detail.audit_price %>"</td>
+            <td><%= detail.audit_num %></td>
           <%- end %>
         </tr>
         <% end %>
@@ -33,37 +41,6 @@
     <%- if current_user.has_role?(:admin) && @rs.processed != true %>
     <button type="submit" class="btn btn-info adapt_details">确定</button>
     <%- end %>
-  </form>
-  <form action="/reconcile_statements/<%= details.first.reconcile_statement.id %>/reconcile_seller_details/<%= details.first.id %>/change_detail" data-row='<%= details.first.reconcile_statement.id %>' class="well form-search">
-    <table class='table table-bordered table-hover'>
-      <thead>
-        <tr>
-          <th>来源</th>
-          <th>店铺</th>
-          <th>支付宝收入</th>
-          <th>运费</th>
-          <th>基准价</th>
-          <th>结算金额</th>
-          <th>调整金额</th>
-          <th>最终结算金额</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% details.each do |seller_detail| %>
-          <tr>
-            <td><%= seller_detail.source %></td>
-            <td><%= seller_detail.trade_source_name %></td>
-            <td><%= seller_detail.alipay_revenue %></td>
-            <td><%= seller_detail.postfee_revenue %></td>
-            <td>（支付宝收入-运费）*<input type ='text' class="input-small" name="base_fee_rate[]" value="<%= seller_detail.base_fee_rate %>"</input>%=<%= seller_detail.base_fee %></td>
-            <td>(基准价+运费)*<input type ='text' class="input-small" name="audit_amount_rate[]" value="<%= seller_detail.audit_amount_rate %>"</input>%+特供商品支付宝收入*<input type ='text' class="input-small" name="special_products_alipay_revenue_rate[]" value="<%= seller_detail.special_products_alipay_revenue_rate %>"</input>%=<%= seller_detail.audit_amount %></td>
-            <td><input type ='text' class="input-small" name="adjust_amount[]" value="<%= seller_detail.adjust_amount %>"</input></td>
-            <td><%= seller_detail.last_audit_amount %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-    <button type="submit" class="btn btn-info">确定</button>
   </form>
 <% elsif current_account.settings.enable_module_reconcile_statements_for_kele == true %>
   <form action="/reconcile_statements/<%= details.first.reconcile_statement.id %>/reconcile_seller_details/<%= details.first.id %>/change_detail" data-row='<%= details.first.reconcile_statement.id %>' class="well form-search">

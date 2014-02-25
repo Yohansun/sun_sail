@@ -1,3 +1,10 @@
 <%- if @details.present? %>
 $("#reconcile_table").html("<%= escape_javascript(render partial: 'seller_detail', locals: {details: @details} ) %>");
+$('#datasort_table').dataTable( {
+  "aaSorting": [[ 4, "desc" ]]
+} );
+$("#datasort_table_length").hide();
+$("#datasort_table_filter").hide();
+$("#datasort_table_info").hide();
+$("#datasort_table_paginate").hide();
 <% end %>
