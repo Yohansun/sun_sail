@@ -54,6 +54,7 @@
 #
 
 class JingdongProduct < ActiveRecord::Base
+  attr_protected []
   include MagicEnum
   # attr_accessible :title, :body
   has_many :jingdong_skus, :class_name => "JingdongSku", :foreign_key => "ware_id",:primary_key => "ware_id", dependent: :destroy

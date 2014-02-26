@@ -15,7 +15,7 @@ class JingdongSkuSync < ECommerce::Synchronization::Base
     raise "The *trade_source_id* option can't be blank" if options[:trade_source_id].blank?
     @ware_ids = options.delete(:ware_ids)
     @trade_source = TradeSource.find(options[:trade_source_id])
-    @default_attributes = {account_id: @trade_source.account_id,genre: 0,trade_source_id: trade_source_id,shop_name: @trade_source.name}.merge(options)
+    @default_attributes = {account_id: @trade_source.account_id,genre: 0,trade_source_id: options[:trade_source_id],shop_name: @trade_source.name}.merge(options)
     @query_condition = @trade_source.jingdong_query_conditions
     @split_ids = []
   end
