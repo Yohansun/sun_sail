@@ -98,9 +98,9 @@ class LogisticsController < ApplicationController
     users = current_account.users
 
     if params[:user_name].present?
-      @user = User.where(["users.logistic_id is null and users.name like ?", "%#{params[:user_name].strip}%"])
+      @user = users.where(["users.logistic_id is null and users.name like ?", "%#{params[:user_name].strip}%"])
     else
-      @user = User.where(:logistic_id => nil)
+      @user = users.where(:logistic_id => nil)
     end
     respond_to do |f|
       f.js
