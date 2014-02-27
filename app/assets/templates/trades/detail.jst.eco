@@ -22,6 +22,7 @@
           <% if MagicOrders.enable_module_sku_properties == 1 : %>
             <th width="28%">商品属性</th>
           <% end %>
+          <th width="15%">属性备注</th>
           <% unless @trade.get('total_fee') is undefined : %>
             <th width="">单价</th>
           <% end %>
@@ -50,6 +51,7 @@
               <% if MagicOrders.enable_module_sku_properties == 1 : %>
                 <td><%= order.sku_properties %></td>
               <% end %>
+              <td></td>
               <% if @trade.get('total_fee') isnt undefined and order['bill_info'].length < 2 : %>
                 <td>￥<%= order.price %></td>
               <% end %>
@@ -66,6 +68,13 @@
                   <% if MagicOrders.enable_module_sku_properties == 1 : %>
                     <td><%= info['sku_properties'] %></td>
                   <% end %>
+                  <td>
+                    <% for memo in order.trade_property_memos : %>
+                      <% for value in memo.property_values : %>
+                        <%= value['name'] %>: <%= value['value'] %></br>
+                      <% end %>
+                    <% end %>
+                  </td>
                   <td>---</td>
                   <td>---</td>
                   <td>---</td>

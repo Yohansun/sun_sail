@@ -119,6 +119,7 @@ json.orders OrderDecorator.decorate(@trade.orders) do |json, order|
   json.multi_product_properties order.multi_product_properties
   json.refund_status            order.refund_status if @trade._type == 'TaobaoTrade'
   json.skus_info                order.skus_info
+  json.trade_property_memos     order.trade_property_memos
   json.bill_info                order.bill_info
   json.packaged                 false
 end
