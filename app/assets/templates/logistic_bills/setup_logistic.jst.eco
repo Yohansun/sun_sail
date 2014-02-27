@@ -10,6 +10,10 @@
           <th>订单编号</th>
           <th>订单状态</th>
           <th>客户联系方式</th>
+          <% if current_account.settings.enable_module_reconcile_statements_for_magicd == true : %>
+            <th>商品重量</th>
+            <th>计费总量</th>
+          <% end %>
         </tr>
       </thead>
       <tbody>
@@ -24,6 +28,19 @@
             <%= @trade.get('receiver_district') %>
             <%= @trade.get('receiver_address') %>
           </td>
+          <% if current_account.settings.enable_module_reconcile_statements_for_magicd == true : %>
+            <td>
+              <% sum = 0 %>
+              <% for order in @trade.get('orders') : %>
+                <% if order.skus_info.length > 1 : %>
+                  <% for info in order.skus_info : %>
+                    sum += info['number'] * info['sku_properties'].gsub("重量 :", "").to_f
+                  <% end %>
+                <% end %>
+              <% end %>
+            </td>
+            <td><%= sum %></td>
+          <% end %>
         </tr>
       </tbody>
     </table>

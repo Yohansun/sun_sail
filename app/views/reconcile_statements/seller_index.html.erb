@@ -11,7 +11,7 @@
       <%= select_tag(:status, options_for_select(@seller_statuses_select, selected: params[:status]))%>
       <% if current_account.settings.enable_module_reconcile_statements_for_magicd == true  %>
         <label class="control-label mar_l10">来源 ：</label>
-        <%= select_tag(:status, options_for_select([["请选择",""],["天猫","tianmao"]], selected: params[:source]))%>
+        <%= select_tag(:source, options_for_select([["请选择",""],["天猫","tianmao"]], selected: params[:source]))%>
       <% end %>
       <label class="control-label mar_l10">选择时间：</label>
       <div class="input-append">
