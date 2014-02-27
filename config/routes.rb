@@ -20,6 +20,12 @@ MagicOrders::Application.routes.draw do
     end
   end
 
+  resource :wm,controller: :wm do
+    collection do
+      put :enable_third_party_stock
+    end
+  end
+
   resources :third_parties do
     post :reset_token, on: :collection
   end
@@ -49,6 +55,7 @@ MagicOrders::Application.routes.draw do
         post :enable
         get  :refund_fetch
         put  :refund_save
+        put :confirm_recognize
       end
     end
 

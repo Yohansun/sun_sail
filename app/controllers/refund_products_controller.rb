@@ -124,6 +124,18 @@ class RefundProductsController < ApplicationController
     redirect_to :action => :index
   end
 
+  # PUT /warehouses/1/refund_products/1/confirm_recognize
+  def confirm_recognize
+    @refund_products = default_scope.find(params[:refund_product_ids].to_a)
+    faileds  = @refund_products.collect {|refund_product| refund_product.tid if !refund_product.confirm}.compact
+
+    @message = faileds.blank? ? "退货单#{@refund_products.map(&:refund_id).join(',')}确认成功." : "退货单#{faileds.join(',')}确认失败."
+    respond_to do |format|
+      format.html
+      format.js
+    end
+  end
+
   private
   def default_conditions
     {seller_id: @warehouse.id}
