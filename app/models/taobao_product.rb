@@ -23,11 +23,13 @@
 class TaobaoProduct < ActiveRecord::Base
   belongs_to :account
   belongs_to :category
-  has_many :taobao_skus, dependent: :destroy
+  has_many :taobao_skus, foreign_key: "num_iid",primary_key: "num_iid", dependent: :destroy,inverse_of: :taobao_product
   accepts_nested_attributes_for :taobao_skus, :allow_destroy => true
 
   attr_protected []
   # add validation
+
+  has_paper_trail ignore: [:updated_at]
 
   def has_bindings
     status = "未绑定"

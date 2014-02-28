@@ -20,7 +20,10 @@ group :assets do
 end
 
 gem 'jquery-rails'
+# auditing or versioning
 gem "audited-activerecord", "~> 3.0"
+gem 'paper_trail', '~> 3.0.0'
+
 gem 'awesome_print',"~> 1.2.0"
 group :test, :development do
   gem "debugger"
@@ -120,6 +123,9 @@ gem 'csv-mapper', '~> 0.5.1'
 # API
 gem 'grape', "~> 0.5.0"
 gem "grape-entity"
+
+# third party data sync
+gem 'third_party_sync',git: "git@git.networking.io:ddl1st/third_party_sync.git",branch: "v0.0.3"
 
 group :production do
   gem "exception_notification", "~> 2.6.1"

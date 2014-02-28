@@ -17,7 +17,12 @@ module MagicOrders
 
     # Custom directories with classes and modules you want to be autoloadable.
     # config.autoload_paths += %W(#{config.root}/extras)
-    config.autoload_paths += %W(#{config.root}/lib #{config.root}/app/observers/mongoid #{config.root}/app/observers/activerecord)
+    config.autoload_paths += %W(
+    #{config.root}/lib
+    #{config.root}/app/sync
+    #{config.root}/app/observers/mongoid
+    #{config.root}/app/observers/activerecord
+    )
 
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.

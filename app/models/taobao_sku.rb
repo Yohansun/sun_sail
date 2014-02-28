@@ -18,8 +18,11 @@ class TaobaoSku < ActiveRecord::Base
   attr_protected []
   has_many :sku_bindings,:include => :sku, dependent: :destroy,:conditions => {:resource_type => "TaobaoSku"},:foreign_key => :resource_id
   has_many :skus,:include => :product, through: :sku_bindings
-  belongs_to :taobao_product
+  belongs_to :taobao_product, foreign_key: :num_iid,primary_key: :num_iid
   belongs_to :account
+
+  has_paper_trail
+
   scope :is_binding, includes(:sku_bindings).where("sku_bindings.id is not null")
   scope :no_binding, includes(:sku_bindings).where("sku_bindings.id is null")
   scope :with_account, ->(account_id){ where(account_id: account_id) }
