@@ -65,6 +65,9 @@
                   <td><%= info['name'] %></td>
                   <td><%= info['number'] %></td>
                   <td><%= info['outer_id'] %></td>
+                  <% if MagicOrders.enable_module_colors == 1 : %>
+                    <td>---</td>
+                  <% end %>
                   <% if MagicOrders.enable_module_sku_properties == 1 : %>
                     <td><%= info['sku_properties'] %></td>
                   <% end %>
@@ -78,9 +81,6 @@
                   <td>---</td>
                   <td>---</td>
                   <td>---</td>
-                  <% if MagicOrders.enable_module_colors == 1 : %>
-                    <td>---</td>
-                  <% end %>
                 </tr>
               <% end %>
             <% end %>
