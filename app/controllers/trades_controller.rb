@@ -102,10 +102,11 @@ class TradesController < ApplicationController
 
   def show
     @trade = TradeDecorator.decorate(Trade.where(_id: params[:id]).first || Trade.deleted.where(_id: params[:id]).first)
-    # if params[:splited]
-    #   @splited_orders = matched_seller_info(@trade)
-    # end
     respond_with @trade
+  end
+
+  def edit
+    @trade = TradeDecorator.decorate(Trade.where(_id: params[:id]).first || Trade.deleted.where(_id: params[:id]).first)
   end
 
   def update
@@ -154,14 +155,14 @@ class TradesController < ApplicationController
     add_gift_orders(@trade, params[:add_gifts]) if params[:add_gifts]
 
     # 异常标注及解决
-    unless params[:reason].blank?
+    if params[:reason].present?
       state = @trade.unusual_states.create!(reason: params[:reason], plan_repair_at: params[:plan_repair_at], note: params[:state_note], created_at: Time.now, reporter: current_user.name, repair_man: params[:repair_man])
       state.update_attributes(key: state.add_key)
       role_key = current_user.roles.first.name
       state.update_attributes!(reporter_role: role_key)
     end
 
-    unless params[:state_id].blank?
+    if params[:state_id].present?
       states = @trade.unusual_states.where(_id: params[:state_id], repaired_at: nil).all
       states.update_all(repair_man: current_user.name, repaired_at: Time.now)
     end
@@ -241,20 +242,6 @@ class TradesController < ApplicationController
           if order.changed.include? 'cs_memo'
             notifer_seller_flag = true
           end
-          if item[:color_num]
-            item[:color_num].each_with_index do |num, index|
-              if num.blank?
-                order.color_num[index] = nil
-                order.color_hexcode[index] = nil
-                order.color_name[index] = nil
-              else
-                order.color_num[index] = num
-                color = Color.find_by_num num
-                order.color_hexcode[index] = color.try(:hexcode)
-                order.color_name[index] = color.try(:name)
-              end
-            end
-          end
           if item[:barcode]
             item[:barcode].each_with_index do |code, index|
               order.barcode[index] = code
@@ -299,7 +286,7 @@ class TradesController < ApplicationController
         if order
           infos.each do |key, info|
             next unless info['values']
-            values = info['values'].reject{|value| value.blank? || value['id'].blank? || value['value'].blank? }
+            values = info['values'].reject{|value| value.blank? || value['id'].blank? || CategoryPropertyValue.find(value['id']).value.blank? }
             next if values.count == 0
             property_memo = order.trade_property_memos.create(
               trade_id:          @trade.id,
@@ -313,7 +300,7 @@ class TradesController < ApplicationController
               name = CategoryPropertyValue.find(value['id']).category_property.name
               property_memo.property_values.create(
                 category_property_value_id: value['id'],
-                value:                      value['value'],
+                value:                      value['value'] || CategoryPropertyValue.find(value['id']).value,
                 name:                       name
               )
             end
@@ -344,6 +331,7 @@ class TradesController < ApplicationController
 
       respond_with(@trade) do |format|
         format.json { render :show, status: :ok }
+        format.js   { render js: "alert('保存成功！')" }
       end
     else
       head :unprocessable_entity
@@ -470,20 +458,6 @@ class TradesController < ApplicationController
       format.json { render json: {seller_id: seller_id, dispatch_error: dispatch_error, dispatchable: dispatchable} }
     end
   end
-
-  # def split_trade
-  #   @trade = Trade.find params[:id]
-  #   new_trade_ids = if current_account.key == 'dulux'
-  #     split_orders(@trade)
-  #   else
-  #     TradeSplitter.new(@trade).split!
-  #   end
-
-  #   @trade.operation_logs.build(operated_at: Time.now, operation: '拆单', operator_id: current_user.id, operator: current_user.name)
-  #   respond_to do |format|
-  #     format.json { render json: {ids: new_trade_ids} }
-  #   end
-  # end
 
   def batch_deliver
     Trade.any_in(_id: params[:ids]).each do |trade|
@@ -615,6 +589,14 @@ class TradesController < ApplicationController
     end
     bills = BillPropertyMemo.where(:_id.in => memo_ids).collect{ |memo| {id: memo.stock_in_bill.tid, text: memo.stock_in_bill.tid} if memo.stock_in_bill.status == "STOCKED" }
     render json: {bills: bills}
+  end
+
+  def solve_unusual_state
+    trade = Trade.find(params[:trade_id])
+    states = trade.unusual_states.where(_id: params[:state_id], repaired_at: nil).all
+    states.update_all(repair_man: current_user.name, repaired_at: Time.now)
+    trade.operation_logs.create(operated_at: Time.now, operator: current_user.name, operator_id: current_user.id, operation: params[:operation])
+    render json: {success: true}
   end
 
 end

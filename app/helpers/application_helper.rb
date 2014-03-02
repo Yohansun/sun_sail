@@ -294,6 +294,9 @@ module ApplicationHelper
       case act_name
       when "my_alerts"
         items << active_li_item("我的异常订单")
+      when "edit"
+        items << href_li_item("所有订单", "app#trades/trades-all")
+        items << active_li_item("编辑订单#{Trade.find(params[:id]).tid}")
       end
     when "reconcile_statements"
       items << href_li_item("财务管理", "reconcile_statements")

@@ -397,3 +397,23 @@ $(function(){
     });
   });
 });
+
+// 订单编辑(预处理)页面样式
+$(function(){
+  var accordion_check = $('#accordion_check').find('.in').siblings().find('i');
+  accordion_check.attr('class','icon-minus pull-right');
+  $('#accordion_check').on('shown', function () {
+    $(this).find('.in').siblings().find('i').attr('class','icon-minus pull-right');
+  });
+  $('#accordion_check').on('hide', function () {
+    $(this).find('.in').siblings().find('i').attr('class','icon-plus pull-right');
+  });
+
+  //input点击编辑js
+  $(".reedit_text").editable(function(value, settings) {
+    return value;
+  }, {
+    submit  : "确定",
+    width   : "150"
+  });
+});

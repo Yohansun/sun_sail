@@ -1,0 +1,705 @@
+<% content_for :sub_nav do %>
+  <ul class="nav nav-tabs js-nav_tabs">
+    <li class="active"><a href="#detail" data-toggle="tab">订单详情</a></li>
+    <li><a href="#check" data-toggle="tab">审单</a></li>
+    <li><a href="#log" data-toggle="tab">日志</a></li>
+  </ul><!-- nav-tabs -->
+<% end %>
+  <div class="tab-pane active" id="detail">
+    <div class="well-bordered">
+      <table class="table table-bordered" id="">
+        <thead>
+          <tr>
+            <th colspan="2" class="thbg_gray" width="30%">商品名称</th>
+            <th class="thbg_gray" width="10%">数量</th>
+            <th class="thbg_gray" width="15%">商品编码</th>
+            <th class="thbg_gray" width="10%">商品属性</th>
+            <th class="thbg_gray" width="10%">单价</th>
+            <th class="thbg_gray" width="15%">备注</th>
+            <th class="thbg_gray" width="10%">退货状态</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @trade.orders.each do |order| %>
+            <tr>
+              <% if order.order_gift_tid.present? %>
+                <td colspan="2"><%= order.title %>  <span class="label label-important">赠品</span></td>
+              <% else %>
+                <td colspan="2"><%= order.title %></td>
+              <% end %>
+              <td><%= order.num %></td>
+              <td><%= order.outer_iid %></td>
+              <td><%= order.sku_properties %></td>
+              <td>¥<%= order.price %></td>
+              <td><%= order.cs_memo %></td>
+              <td><%= order.refund_status_text %></td>
+            </tr>
+            <% order.skus_info.each do |info| %>
+              <tr>
+                <td><span class="label label-warning">绑定本地</span></td>
+                <td><%= info[:name] %></td>
+                <td><%= info[:number] %></td>
+                <td><%= info[:outer_id] %></td>
+                <td><%= info[:sku_properties] %></td>
+                <td>
+                  <% order.trade_property_memos.each do |memo| %>
+                    <% memo.property_values.each do |value| %>
+                      <%= value.name %>: <%= value.value %></br>
+                    <% end %>
+                  <% end %>
+                </td>
+                <td>---</td>
+                <td>---</td>
+              </tr>
+            <% end %>
+          <% end %>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="8">
+              <strong>
+                订单金额：¥<%= @trade.sum_fee %>
+                积分：¥<%= @trade.point_fee || 0 %>
+                活动优惠：¥<%= @trade.seller_discount %>
+                物流费：¥<%= @trade.post_fee %>
+                订单实付金额：¥<%= @trade.total_fee %>
+              </strong>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+
+      <table class="table table-condensed lineb1">
+        <tbody>
+          <tr class="noborder">
+            <td><b>收货人信息</b></td>
+            <td><%= @trade.receiver_name %></td>
+            <td>手机:<%= @trade.receiver_mobile_phone %> 座机: <%= @trade.receiver_phone %></td>
+            <td>
+              <%= @trade.receiver_state %>
+              <%= @trade.receiver_city %>
+              <%= @trade.receiver_district %>
+              <%= @trade.receiver_address %>
+            </td>
+            <td><%= @trade.receiver_zip %></td>
+          </tr>
+          <% if @trade.seller_id.present? %>
+            <tr>
+              <td colspan="1"><b>配送商信息</b></td>
+              <td colspan="4" class="reedit_select"><%= @trade.seller_name %></td>
+            </tr>
+          <% end %>
+          <tr>
+            <td colspan="1"><b>客服备注</b></td>
+            <td colspan="4" class="reedit_text">
+              <p style="overflow:hidden;white-space:normal;word-wrap:break-word;width:600px;"> <%= @trade.trade_with_orders_cs_memo %> </p>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="1"><b>开票信息</b></td>
+            <td colspan="4" class="reedit_text js-invoice-label">
+              <% if @trade.invoice_type && @trade.invoice_type != "无需开票" %>
+                <%= @trade.invoice_type%> <%= @trade.invoice_name %> <%= @trade.invoice_content %> <%= @trade.invoice_date %>
+              <% end %>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="modal-footer">
+      <a href="#" class="btn btn-primary button_print">打印</a>
+    </div>
+  </div><!-- detail end -->
+
+
+  <div class="tab-pane" id="check">
+    <%= form_tag("/api/trades/#{@trade.id}", method: :put, remote: true) do %>
+      <div class="accordion" id="accordion_check">
+
+        <!-- 客服备注 -->
+        <div class="accordion-group well nopadding">
+          <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion_check" href="#collapseOne">
+              <i class="icon-plus pull-right"></i>
+              客服备注
+            </a>
+          </div>
+          <div id="collapseOne" class="accordion-body collapse row-fluid">
+            <div class="accordion-inner">
+              <table class="table table-bordered">
+                <tbody>
+                  <tr>
+                    <th class="thbg_gray" width="50%">商品</th>
+                    <th class="thbg_gray" width="50%">备注</th>
+                  </tr>
+                  <% @trade.orders.each do |order| %>
+                  <tr>
+                    <td><%= order.title %></td>
+                    <td>
+                      <input type='hidden' name="orders[][id]" value="<%= order.id %>" />
+                      <textarea name="orders[][cs_memo]" placeholder="备注..." rows="3" class="span12 nomargin"><%= order.cs_memo %></textarea>
+                    </td>
+                  </tr>
+                  <% end %>
+                </tbody>
+              </table>
+              <div class="form-inline control-group">
+                <label for="">物流公司：</label>
+                <select id="memo_logistic_select" class="input-medium"></select>
+              </div>
+              <div class="form-inline control-group">
+                <label for="">服务商物流ID：</label>
+                <input type="text" name="service_logistic_id" class="input-small" id="memo_service_logistic_id">
+              </div>
+              <div class="control-group">
+                <label for="">整单备注：</label>
+                <textarea name="cs_memo" placeholder="备注..." rows="5" class="span7 nomargin"><%= @trade.cs_memo %></textarea>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- 赠品备注 -->
+        <div class="accordion-group well nopadding">
+          <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion_check" href="#collapseTwo">
+              <i class="icon-plus pull-right"></i>
+              赠品备注
+            </a>
+          </div>
+          <div id="collapseTwo" class="accordion-body collapse row-fluid">
+            <div class="accordion-inner">
+              <label for="">新增赠品：</label>
+              <div class="control-group form-inline">
+                <input class="input-medium" id="select_category" placeholder="请选择商品分类"></input>
+                <input class="input-large"  id="select_product"  placeholder="请选择商品"></input>
+                <input class="input-medium" id="select_sku"      placeholder="请选择商品SKU"></input>
+                <input type="text" class="input-mini" id="gift_num" placeholder="数量"></input>
+                <label class="checkbox">
+                  <% if @trade.delivered_at.present? || @trade.consign_time.present? %>
+                    <input name="add_gifts[is_split]" type="checkbox" id="add_gift_tid" checked="checked" disabled>是否拆分
+                  <% else %>
+                    <input name="add_gifts[is_split]" type="checkbox" id="add_gift_tid">是否拆分
+                  <% end %>
+                </label>
+                <button class="btn" id="add_gift_to_list">添加</button>
+              </div>
+              <table class="table table-bordered">
+                <tbody id="gift_list">
+                  <tr>
+                    <th class="thbg_gray" width="40%">商品名称</th>
+                    <th class="thbg_gray" width="15%">数量</th>
+                    <th class="thbg_gray" width="20%">关联订单</th>
+                    <th class="thbg_gray" width="15%">是否拆分</th>
+                    <th class="thbg_gray" width="10%">操作</th>
+                  </tr>
+                  <% gift_orders(@trade).each do |gift_order| %>
+                  <tr data-order_id="<%= gift_order._id %>">
+                    <td><%= gift_order.title %></td>
+                    <td><%= gift_order.num %></td>
+                    <td><%= gift_order.trade.tid %></td>
+                    <td>
+                      <% if gift_order.trade.main_trade_id.present? %>
+                        拆分
+                      <% else %>
+                        不拆分
+                      <% end %>
+                    </td>
+                    <td>
+                      <% if gift_order.trade.delivered_at.blank? %>
+                        <button class="btn delete_a_gift">删除</button>
+                      <% else %>
+                        已发货
+                      <% end %>
+                    </td>
+                  </tr>
+                  <% end %>
+                </tbody>
+              </table>
+              <label for="">赠品备注：</label>
+              <textarea name="gift_memo" placeholder="备注..." rows="5" class="span7 nomargin"><%= @trade.gift_memo %></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- 开票设置 -->
+        <div class="accordion-group well nopadding">
+          <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion_check" href="#collapseThree">
+              <i class="icon-plus pull-right"></i>
+              开票设置
+            </a>
+          </div>
+          <div id="collapseThree" class="accordion-body collapse">
+            <div class="accordion-inner">
+              <div class="form-inline">
+                <label for="" class="radio">
+                  <input type="radio" name="invoice_type" value="无需开票" class="no_invoice" <% if @trade.invoice_type.blank? || @trade.invoice_type == "无需开票" %> checked="checked" <% end %>>无需开票
+                </label>
+                <label for="" class="radio">
+                  <input type="radio" name="invoice_type" value="需要开票" class="need_invoice" <% if @trade.invoice_type == "需要开票" %> checked="checked" <% end %>>需要开票
+                </label>
+                <label for="" class="radio">
+                  <input type="radio" name="invoice_type" value="需开专票" class="is_invoice" <% if @trade.invoice_type == "需开专票" %> checked="checked" <% end %>>需开专票
+                </label>
+                <input type="text" name="invoice_name" placeholder="输入文字..." class="input-xlarge" id="invoice_name_text" value="<%= @trade.invoice_name %>" >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 属性备注 -->
+        <% if @trade._type == "TaobaoTrade" && @trade.delivered_at.blank? && @trade.consign_time.blank? %>
+        <div class="accordion-group well nopadding">
+          <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion_check" href="#collapseFour">
+              <i class="icon-plus pull-right"></i>
+              属性备注
+            </a>
+          </div>
+          <div id="collapseFour" class="accordion-body collapse row-fluid">
+            <div class="accordion-inner">
+              <table class="table table-bordered property_memo_table">
+                <tbody>
+                  <tr>
+                    <th class="thbg_gray" width="30%">商品名称</th>
+                    <th class="thbg_gray" width="10%">数量</th>
+                    <th class="thbg_gray" width="20%">定制要求</th>
+                    <th class="thbg_gray" width="20%">匹配成品入库单</th>
+                  </tr>
+                  <% @trade.except_ref_orders.each do |order| %>
+                    <% order.multi_product_properties.each_with_index do |product_property_info, i| %>
+                      <tr>
+                        <td><%= order.skus_info[0][:name] %></td>
+                        <td>1</td>
+                        <td>
+                          <div class="control-group">
+                            <label class="inline pull-left mar_r10">商品编码：</label>
+                            <label class="inline order_outer_iid"><%= order.outer_iid %></label>
+                            <input type="hidden" name="property_memos[<%= order.id%>][<%= i %>][outer_id]" value="<%= order.outer_iid %>">
+                            <label class="local_outer_id none"><%= product_property_info[:local_outer_id] %></label>
+                          </div>
+                          <br/><br/>
+                          <% product_property_info['properties'].each do |property| %>
+                            <div class="control-group property_memos">
+                              <label class="inline pull-left mar_r10"><%= property[:name]+":" %></label>
+                              <% if property[:type] == "多选" %>
+                                <select name="property_memos[<%= order.id%>][<%= i %>][values][][id]" multiple data-type="multiple_select" class="input-medium select2">
+                                  <% property['property_values'].each do |value| %>
+                                    <option value="<%= value['id'] %>" <% if value['marked'] == true %> selected <% end %>><%= value['value'] %></option>
+                                  <% end %>
+                                </select>
+                              <% elsif property[:type] == "单选" %>
+                                <select name="property_memos[<%= order.id%>][<%= i %>][values][][id]" data-type="single_select" class="input-medium select2">
+                                  <option value=""></option>
+                                  <% property['property_values'].each do |value| %>
+                                    <option value="<%= value['id'] %>" <% if value['marked'] == true %> selected <% end %>><%= value['value'] %></option>
+                                  <% end %>
+                                </select>
+                              <% elsif property[:type] == "文本" %>
+                                <% property['property_values'].each do |value| %>
+                                  <input name="property_memos[<%= order.id%>][<%= i %>][values][][id]" type="text" class="input-medium" <% if value['marked'] == true %> value= "<%= value['value'] %>" <% end %>></input>
+                                <% end %>
+                              <% end %>
+                            </div>
+                          <% end %>
+                        </td>
+                        <td>
+                          <div class="control-group">
+                            <button class="btn btn-primary btn-small find_matched_bills">匹配入库单</button>
+                          </div>
+                          <div class="control-group">
+                            <label>请选择已匹配单号：</label>
+                            <select name="property_memos[<%= order.id %>][<%= i %>][stock_in_bill_tid]" class="input-large select2 matched_icp_bills">
+                              <option value=""></option>
+                              <% if product_property_info[:stock_in_bill_tid].present? %>
+                                <option value="<%= product_property_info[:stock_in_bill_tid] %>" selected><%= product_property_info[:stock_in_bill_tid] %></option>
+                              <% end %>
+                            </select>
+                          </div>
+                        </td>
+                      </tr>
+                    <% end %>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <% end %>
+
+        <!-- 标注异常 -->
+        <div class="accordion-group well nopadding">
+          <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion_check" href="#collapseFive">
+              <i class="icon-plus pull-right"></i>
+              标注异常
+            </a>
+          </div>
+          <div id="collapseFive" class="accordion-body collapse">
+            <div class="accordion-inner">
+              <table class="table table-bordered">
+                <tbody>
+                  <tr>
+                    <th class="thbg_gray" width="20%">异常原因</th>
+                    <th class="thbg_gray" width="10%">提交时间</th>
+                    <th class="thbg_gray" width="10%">提交人</th>
+                    <th class="thbg_gray" width="10%">预处理时间</th>
+                    <th class="thbg_gray" width="10%">处理时间</th>
+                    <th class="thbg_gray" width="10%">处理人</th>
+                    <th class="thbg_gray" width="20%">备注</th>
+                    <th class="thbg_gray" width="10%">操作</th>
+                  </tr>
+                  <% @trade.unusual_states.each do |state| %>
+                    <tr>
+                      <td><%= state.reason %></td>
+                      <td><%= state.created_at.try(:strftime, "%Y-%m-%d %H:%M:%S") %></td>
+                      <td><%= state.reporter %></td>
+                      <td><%= state.plan_repair_at.try(:strftime, "%Y-%m-%d %H:%M:%S") %></td>
+                      <td><%= state.repaired_at.try(:strftime, "%Y-%m-%d %H:%M:%S") %></td>
+                      <td><%= state.repair_man %></td>
+                      <td><%= state.note %></td>
+                      <td><% if state.repaired_at.blank? %><a class="small manage" data-id='<%= state.id %>'>处理</a><% end %></td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+              <label for="">异常原因：</label>
+              <div class="form-inline control-group">
+                <label for="" class="radio">
+                  <input type="radio" name="reason" value="买家延迟发货"> 买家延迟发货
+                </label>
+                <label for="" class="radio">
+                  <input type="radio" name="reason" value="卖家长时间未发货"> 卖家长时间未发货
+                </label>
+                <label for="" class="radio">
+                  <input type="radio" name="reason" value="经销商缺货"> 经销商缺货
+                </label>
+                <label for="" class="radio">
+                  <input type="radio" name="reason" value="买家要求退款"> 买家要求退款
+                </label>
+                <label for="" class="radio">
+                  <input type="radio" name="reason" value="买家要求退货"> 买家要求退货
+                </label>
+                <label for="" class="radio">
+                  <input type="radio" name="reason" value="其他" id="other_radio">
+                  <input type="text" placeholder="其他..." class="input-large" id="other_state">
+                </label>
+              </div>
+              <div class="form-inline control-group pull-left mar_r10">
+                <label for="">指派给：</label>
+                <select class="input-medium nomargin select2" id="repair_man">
+                  <% current_account.users.each do |user| %>
+                    <option name="repair_man" value="<%= user.name %>" ><%= user.name %></option>
+                  <% end %>
+                </select>
+              </div>
+              <div class="form-inline control-group pull-left mar_r10">
+                <label for="">预处理时间：</label>
+                <input type="text" name="plan_repair_at" class="input-medium js-datetimepicker" placeholder="请选择时间">
+              </div>
+              <div class="form-inline control-group">
+                <label for="">备注：</label>
+                <input type="text" name="state_note" class="input-xlarge" placeholder="请输入...">
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary save_memos" type="submit">保存</button>
+      </div>
+    <% end %>
+  </div><!-- check end -->
+
+
+  <div class="tab-pane" id="log">
+    <table class="table table-bordered">
+      <tbody>
+        <tr>
+          <th class="thbg_gray" width="40%">操作时间</th>
+          <th class="thbg_gray" width="30%">操作</th>
+          <th class="thbg_gray" width="30%">操作人</th>
+        </tr>
+        <tr>
+          <% @trade.operation_logs.each do |log| %>
+            <td><%= log.operated_at.try(:strftime, "%Y-%m-%d %H:%M:%S") %></td>
+            <td><%= log.operation %></td>
+            <td><%= log.operator %></td>
+          <% end %>
+        </tr>
+      </tbody>
+    </table>
+  </div><!-- log end -->
+
+<% content_for :tail do -%>
+  <script type="text/javascript">
+    $(function(){
+
+///////// 订单详情打印
+
+      $('.button_print').click(function(){
+        $("#detail").wrapInner('<div class="print_content"></div>')
+        $("#detail").children('.print_content').printArea()
+      })
+
+///////// 订单信息修改前验证
+
+      $('.save_memos').click(function(e){
+        if(validate_memos() == false){
+          e.preventDefault();
+        }
+      })
+
+      function validate_memos(){
+
+        // 发票验证
+        if ($("#invoice_name_text").val() === "" && $(".no_invoice").attr("checked") !== "checked") {
+          alert("请输入正确的发票抬头");
+          return false;
+        }
+
+        // 异常信息验证
+        var reason = $('input[name=reason]:checked').val();
+        if (reason === "其他" ){
+          if ($("#other_state").val() === ''){
+            alert("请填写异常原因");
+            return false;
+          } else {
+            $('input[name=reason]:checked').val($("#other_state").val())
+          }
+        }
+      }
+
+///////// 异常信息处理
+
+      $('.manage').click(function(e){
+        var id = $(e.target).data("id")
+        $.get('/api/trades/solve_unusual_state', {state_id: id, operation: "处理异常", trade_id: "<%= params[:id] %>"}, function(result){
+          alert("处理成功！");
+          $(e.target).parents('td').html("<p>已处理</p>")
+        });
+      });
+
+///////// 获取物流商信息
+
+      var logistic_name = "<%= @trade.logistic_name %>"
+      $.get('/logistics/logistic_templates', {
+        type: 'all',
+        trade_type: "<%= @trade._type %>"
+      }, function(t_data) {
+        var html_options, item, service_logistic_id, _i, _len;
+        html_options = '';
+        for (_i = 0, _len = t_data.length; _i < _len; _i++) {
+          item = t_data[_i];
+          if (logistic_name === item.name) {
+            html_options += '<option selected="selected" lid="' + item.id + '" service_logistic_id="' + item.service_logistic_id + '" value="' + item.xml + '">' + item.name + '</option>';
+          } else {
+            html_options += '<option lid="' + item.id + '" service_logistic_id="' + item.service_logistic_id + '" value="' + item.xml + '">' + item.name + '</option>';
+          }
+        }
+        $('#memo_logistic_select').html(html_options);
+        service_logistic_id = $("#memo_logistic_select").find("option:selected").attr("service_logistic_id");
+        return $("#memo_service_logistic_id").val(service_logistic_id);
+      });
+
+      $('#memo_logistic_select').change(function(e){
+        var service_logistic_id = $("#memo_logistic_select").find("option:selected").attr("service_logistic_id");
+        $("#memo_service_logistic_id").val(service_logistic_id);
+      });
+
+///////// 获取赠品商品
+
+      $.get('/categories/category_templates', {}, function(c_data) {
+        return $('#select_category').select2({
+          data: c_data
+        });
+      });
+      $("#select_product").select2({ data: [] });
+      $('#select_sku').select2({ data: [] });
+
+      $('#select_category').change(function(e){
+        var category_id = $('#select_category').val();
+
+        $('#select_product').select2('enable', false);
+
+        $('#select_sku').select2('enable', false);
+
+        $.get('/categories/product_templates', {
+          category_id: category_id
+        }, function(p_data) {
+          if (p_data.length === 0) {
+            alert("此分类下目前无商品");
+          }
+          $('#select_product').val("");
+          $('#select_sku').val("");
+          $("#select_product").select2({
+            data: p_data
+          });
+          $('#select_sku').select2({
+            data: []
+          });
+          $('#select_product').select2('enable', true);
+          return $('#select_sku').select2('enable', true);
+        });
+      });
+
+      $('#select_product').change(function(e){
+        var product_id = $('#select_product').val();
+
+        $('#select_sku').select2('enable', false);
+
+        $.get('/categories/sku_templates', {
+          product_id: product_id
+        }, (function(_this) {
+          return function(s_data) {
+            $('#select_sku').val("");
+            $('#select_sku').select2({
+              data: s_data
+            });
+            return $('#select_sku').select2('enable', true);
+          };
+        })(this));
+      });
+
+///////// 添加赠品商品
+
+      $('#add_gift_to_list').click(function(e){
+        e.preventDefault();
+        var gift_title, num, product_id, sku_id;
+
+        if ($("#select_category").val() === "") {
+          alert("请选择分类");
+          return;
+        }
+
+        product_id = $("#select_product").val();
+
+        if (product_id === "") {
+          alert("请选择商品");
+          return;
+        }
+
+        sku_id = $("#select_sku").val();
+
+        if (sku_id === "") {
+          alert("请选择SKU");
+          return;
+        }
+
+        num = $('#gift_num').val();
+
+        if (num === '') {
+          alert("数量不能为空。");
+          return;
+        }
+
+        if (/^[1-9]{1}[0-9]*$/.test(num) !== true) {
+          alert("数量格式不正确。");
+          return;
+        }
+
+        gift_title = $("#select_product").select2('data').text + $("#select_sku").select2('data').text;
+
+        $('#gift_list').append("<tr class='new_add_gift'>" +
+                               "  <td>" + gift_title + "</td>" +
+                               "  <td>" + num + "</td>" +
+                               "  <td></td>" +
+                               "  <td></td>" +
+                               "  <td><button class='btn delete_a_gift'>删除</button></td>" +
+                               "  <input type='hidden' name='add_gifts[gift_orders][][sku_id]' value='"+sku_id+"'>" +
+                               "  <input type='hidden' name='add_gifts[gift_orders][][product_id]' value='"+product_id+"'>" +
+                               "  <input type='hidden' name='add_gifts[gift_orders][][gift_title]' value='"+gift_title+"'>" +
+                               "  <input type='hidden' name='add_gifts[gift_orders][][num]' value='"+num+"'>" +
+                               "</tr>"
+        );
+      });
+
+///////// 删除赠品商品
+
+      $('.delete_a_gift').live('click', function(e){
+        e.preventDefault();
+        if ($(e.currentTarget).closest('tr').attr('class') === 'new_add_gift') {
+          $(e.currentTarget).closest('tr').remove();
+        } else {
+          var $parent_tr = $(e.currentTarget).closest('tr')
+          var order_id = $parent_tr.data("order_id")
+          $parent_tr.hide();
+          $parent_tr.append("<input type='hidden' name='delete_gifts[]' value='"+order_id+"'>")
+        }
+      });
+
+///////// select2初始化
+
+      $("select.select2").select2({
+        allowClear: true
+      })
+
+///////// 已分派订单不能匹配出库单
+
+      if(<%= @trade.is_paid_not_delivered && @trade.dispatched_at.present? %> === true){
+        $('.property_memo_table .btn.btn-primary').remove()
+      }
+
+///////// 属性备注匹配出库单
+
+      $('.find_matched_bills').click(function(e){
+        e.preventDefault();
+        var memo, outer_id, property_memo, value, _i, _j, _len, _len1, _ref, _ref1;
+
+        outer_id = $(e.currentTarget).parents('td').prev('td').find('.local_outer_id').text();
+
+        property_memo = {
+          outer_id: outer_id
+        };
+
+        property_memo['values'] = [];
+
+        _ref = $(e.currentTarget).parents('tr').find('.property_memos').children(':input');
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          memo = _ref[_i];
+          if ($(memo).data('type') === 'multiple_select' && $(memo).select2('data') !== null) {
+            _ref1 = $(memo).select2('data');
+            for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+              value = _ref1[_j];
+              property_memo['values'].push({
+                id: value.id,
+                value: value.text
+              });
+            }
+          } else if ($(memo).data('type') === 'single_select' && $(memo).select2('data') !== null) {
+            property_memo['values'].push({
+              id: $(memo).select2('data').id,
+              value: $(memo).select2('data').text
+            });
+          } else if ($(memo).data('type') === 'input_text') {
+            property_memo['values'].push({
+              id: $(memo).data('value-id'),
+              value: $(memo).val()
+            });
+          }
+        }
+
+        $.get("/api/trades/match_icp_bills", {
+          property_memo: property_memo
+        }, (function(_this) {
+          return function(data) {
+            var bill, _k, _len2, _ref2;
+            _ref2 = data.bills;
+            for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
+              bill = _ref2[_k];
+              if (bill !== null) {
+                $(e.currentTarget).parents('td').find('.matched_icp_bills').append("<option value=" + bill.id + ">" + bill.text + "</option>");
+              }
+            }
+            return $(e.currentTarget).closest('.find_matched_bills').remove();
+          };
+        })(this));
+      });
+
+    });
+  </script>
+<% end %>

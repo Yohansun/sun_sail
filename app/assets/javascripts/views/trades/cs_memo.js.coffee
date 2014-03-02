@@ -3,9 +3,9 @@ class MagicOrders.Views.TradesCsMemo extends Backbone.View
   template: JST['trades/cs_memo']
 
   events:
-    'click .save': 'save'
-    'blur #cs_memo_text': 'check_chars_num'
-    'blur .order_cs_memo': 'check_chars_num'
+    'click  .save':                 'save'
+    'blur   #cs_memo_text':         'check_chars_num'
+    'blur   .order_cs_memo':        'check_chars_num'
     "change #memo_logistic_select": 'set_logistic_id'
 
   initialize: ->

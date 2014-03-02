@@ -6,7 +6,7 @@
   <fieldset class="form-inline mar_b15">
     <p>新增赠品：</p>
     <input class="input-medium" id="select_category" placeholder="请选择商品分类"></input>
-    <input class="input-large" id="select_product" placeholder="请选择商品"></input>
+    <input class="input-large"  id="select_product" placeholder="请选择商品"></input>
     <input class="input-medium" id="select_sku" placeholder="请选择商品SKU"></input>
     <input type="text" class="input-mini" id="gift_num" placeholder="数量"></input>
     <label class="checkbox">
