@@ -75,7 +75,9 @@ zh-CN:
   permissions_tag_gift_memo: 赠品管理
   permissions_tag_mark_unusual_state: 标注异常
   permissions_tag_property_memo: 属性备注
-  permissions_tag_deliver_bills#print_process_sheet: 打印工艺单
+  permissions_tag_split_invoice: 手动拆分物流单
+  permissions_tag_print_deliver_bill: 打印发货单
+  permissions_tag_print_process_sheet: 打印工艺单
   permissions_tag_seller: 设置分派
   permissions_tag_barcode: 输入唯一码
   permissions_tag_deliver: 订单发货
@@ -158,7 +160,6 @@ zh-CN:
   permissions_tag_confirm_sync: 确认同步(淘宝商品)
   permissions_tag_remove_sku: 删除商品SKU
   permissions_tag_add_sku: 添加商品SKU
-  permissions_tag_split_invoice: 手动拆分物流单
   permissions_tag_account_setups#edit_auto_settings: "查看自动化设置"
   permissions_tag_users#update: "编辑用户"
   permissions_tag_users#delete: "删除用户"
