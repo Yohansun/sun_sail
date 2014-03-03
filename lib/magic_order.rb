@@ -20,7 +20,8 @@ module MagicOrder
     "taobao_bind" => ["change_taobao_skus", "tie_to_native_skus", "taobao_skus"],
     "jingdong_bind" => ["change_jingdong_skus", "tie_to_native_skus", "jingdong_skus"],
     "yihaodian_bind" => ["change_yihaodian_skus", "tie_to_native_skus", "yihaodian_skus"],
-    'refund_products_fetch' => %w(refund_fetch refund_save)
+    'refund_products_fetch' => %w(refund_fetch refund_save),
+    'warehouse_management' => %(show enable_third_party_stock)
 
   }.freeze
 
@@ -272,6 +273,7 @@ MagicOrder::AccessControl.map do |map|
                                  "refund_products#locking",
                                  "refund_products#enable",
                                  "refund_products#refund_products_fetch",
+                                 "refund_products#confirm_recognize"
                                ]
   end
   #数据模块
@@ -330,7 +332,8 @@ MagicOrder::AccessControl.map do |map|
                                  "categories#destroy",
                                  "trade_types#create",
                                  "trade_types#update",
-                                 "trade_types#destroy"
+                                 "trade_types#destroy",
+                                 "wm#warehouse_management"
                                ]
   end
 end

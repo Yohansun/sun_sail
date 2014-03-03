@@ -1,0 +1,32 @@
+<%
+  breadcrumb << ["系统设置", users_path]
+  breadcrumb << ["基础数据管理", "#"]
+  breadcrumb << ["默认首页设置"]
+%>
+<div class="row-fluid">
+  <div class="span10 w100">
+    <ul class="nav nav-tabs">
+      <li class="active"><a href="/page">仓库模式设置</a></li>
+    </ul><!-- nav-tabs -->
+    <div class="tab-content">
+      <%= form_tag enable_third_party_stock_wm_path, :method => :put, :class => "form-horizontal" do %>
+      <fieldset class="mar_l80"><!-- 默认首页设置 beginning -->
+         <h4>仓库模式设置:</h4>
+         <div class="mar_l80">
+           <div class="control-group">
+               <% {1 => "有第三方仓库",0 => "无第三方仓库"}.each do |key,name| %>
+                 <%= label_tag nil,class: "radio pull-left input-small" do %>
+                   <%= name %><%= radio_button_tag :enable,key,current_account.settings.enable_module_third_party_stock == key %>
+                 <% end %>
+               <% end %>
+           </div>
+         </div>
+       </fieldset>
+       <div class="pagination-centered mar_t30">
+         <button class="btn btn-primary" type="submit">保存</button>
+       </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+</div>

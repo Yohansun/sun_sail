@@ -239,6 +239,7 @@ zh-CN:
   permissions_tag_refund_products#locking: "退货单锁定"
   permissions_tag_refund_products#enable: "退货单激活"
   permissions_tag_refund_products#refund_products_fetch: "同步第三方退货单"
+  permissions_tag_refund_products#confirm_recognize: "退货单确认(不支持第三方仓库)"
   permissions_tag_trade_types#update: "更新人工订单分类"
   permissions_tag_trade_types#create: "创建人工订单分类"
   permissions_tag_trade_types#destroy: "删除人工订单分类"
@@ -249,6 +250,7 @@ zh-CN:
   permissions_tag_reconcile_statements#seller_exports: "经销商导出数据"
   permissions_tag_reconcile_statements#product_detail_exports: "导出明细"
   permissions_tag_reconcile_statements#distributor_exports": "分销商数据导出"
-  permissions_tag_reconcile_statements#exports: "运营商导出数据"  
-  permissions_tag_reconcile_statements#export_detail: "导出明细"  
+  permissions_tag_reconcile_statements#exports: "运营商导出数据"
+  permissions_tag_reconcile_statements#export_detail: "导出明细"
+  permissions_tag_wm#warehouse_management: "仓库设置"
   

@@ -56,6 +56,7 @@
     trade_types
     jushita_data
     print_flash_settings
+    wm
     ) %>
     <li class="<%= display?(@basedata,"active") %>">
       <a href="#" class="" data-toggle="collapse" data-target="#base_data">
@@ -111,6 +112,14 @@
           </li>
           <li class="<%= "active" if params[:controller] == "pages" %>"><a href="/page"  data-toggle="collapse" data-target="#areas_menu">默认首页设置</a></li>
           <li class="<%= "active" if params[:controller] == "jushita_data" %>"><a href="/jushita_data"  data-toggle="collapse" data-target="#areas_menu">聚石塔数据同步设置</a></li>
+          <li class="<%= display?("wm",'active')%>">
+            <a href="#"  data-toggle="collapse" data-target="#warehourse_management"><i class="icon-plus <%= display_icon?("wm","icon-minus",["index"]) %>"></i>仓库管理</a>
+            <ul id="warehourse_management" class="collapse <%= display?("wm","in",["show"]) %> third_menu">
+              <li class="<%= display?("wm","active",["show"]) %>">
+                <a href="/wm">仓库模式设置</a>
+              </li>
+            </ul>
+          </li>
         </ul>
     </li>
   </ul>

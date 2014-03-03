@@ -35,12 +35,19 @@
           <li>
             <%= link_to_authorize "审核", "#",:target_url => "/warehouses/#{@warehouse.id}/refund_products/check",:remote => true,:request => "post",:message => "确认审核吗?",:class => "magic_operation"  %>
           </li>
-          <li>
-            <%= link_to_authorize "同步", "#",:target_url => "/warehouses/#{@warehouse.id}/refund_products/sync",:remote => true,:remote => true,:request => "post",:message => "确认同步吗?" ,:class => "magic_operation"  %>
-          </li>
-          <li>
-            <%= link_to_authorize "撤销", "#",:target_url => "/warehouses/#{@warehouse.id}/refund_products/rollback",:remote => true,:remote => true,:request => "post",:message => "确认撤销吗?"  ,:class => "magic_operation"  %>
-          </li>
+
+          <%- if current_account.settings.enable_module_third_party_stock != 1 %>
+            <li>
+              <%= link_to_authorize "确认退货",'#',:target_url => "/warehouses/#{@warehouse.id}/refund_products/confirm_recognize",:remote => true,:request => "put",:message => "确认退货吗?" ,:class => "magic_operation"  %>
+            </li>
+          <% else %>
+            <li>
+              <%= link_to_authorize "同步", "#",:target_url => "/warehouses/#{@warehouse.id}/refund_products/sync",:remote => true,:request => "post",:message => "确认同步吗?" ,:class => "magic_operation"  %>
+            </li>
+            <li>
+              <%= link_to_authorize "撤销", "#",:target_url => "/warehouses/#{@warehouse.id}/refund_products/rollback",:remote => true,:request => "post",:message => "确认撤销吗?"  ,:class => "magic_operation"  %>
+            </li>
+          <% end %>
         </ul>
       </div>
       <div class="btn btn-warning"><%= link_to "退货同步", refund_fetch_warehouse_refund_products_path(@warehouse) %></div>

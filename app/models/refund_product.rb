@@ -65,6 +65,9 @@ class RefundProduct < ActiveRecord::Base
   state_machine :state, :initial => :created,:attribute => :status do
     after_transition :put_operation
     after_transition :on => :enable, :do => :restore_state
+    after_transition :on => :check, :do => :syncing
+    after_transition :on => :confirm, :do => :update_inventory
+    
     event :check do
       transition :created => :checked
     end
@@ -91,27 +94,46 @@ class RefundProduct < ActiveRecord::Base
 
     state :syncked do
       validate do
-        response = send_request(account.settings.third_party_wms,:syncked)
-        response = Hash.from_xml(response).as_json
-        response,stat,desc = parse_result(response)
-        errors.add(:base,"同步失败: #{response}") if stat.blank?
-        errors.add(:base,"同步失败: #{desc}")     if stat && !stat.match(/true|SUCC/)
+        if account.settings.enable_module_third_party_stock == 1
+          response = send_request(account.settings.third_party_wms,:syncked)
+          response = Hash.from_xml(response).as_json
+          response,stat,desc = parse_result(response)
+          errors.add(:base,"同步失败: #{response}") if stat.blank?
+          errors.add(:base,"同步失败: #{desc}")     if stat && !stat.match(/true|SUCC/)
+        end
       end
     end
 
     state :revocation do
       validate do
-        response = send_request(account.settings.third_party_wms,:revocation)
-        response = Hash.from_xml(response).as_json
-        response,stat,desc = parse_result(response)
-        errors.add(:base,"撤销同步失败: #{response}") if stat.blank?
-        errors.add(:base,"撤销同步失败: #{desc}")     if stat && !stat.match(/true|SUCC/)
+        if account.settings.enable_module_third_party_stock == 1
+          response = send_request(account.settings.third_party_wms,:revocation)
+          response = Hash.from_xml(response).as_json
+          response,stat,desc = parse_result(response)
+          errors.add(:base,"撤销同步失败: #{response}") if stat.blank?
+          errors.add(:base,"撤销同步失败: #{desc}")     if stat && !stat.match(/true|SUCC/)
+        end
       end
     end
   end
 
-  #第三方仓库调用的
-  private :confirm
+  def syncing
+    sync! if account.settings.enable_module_third_party_stock != 1
+  end
+
+  def update_inventory
+    refund_orders.each do |refund_order|
+      stock_product = StockProduct.find_by_id(refund_order.stock_product_id)
+      if stock_product
+        update_attrs = {:actual => stock_product.actual + refund_order.num, :activity => stock_product.activity + refund_order.num,audit_comment: "退货单ID:#{self.id}"}
+        stock_product.update_attributes(update_attrs)
+        true
+      else
+        # DO SOME ERROR NOTIFICATION
+        false
+      end
+    end
+  end
 
   def restore_state
 
