@@ -31,17 +31,8 @@ class TaobaoSku < ActiveRecord::Base
   end
 
   def name
-    sku_name = ''
-    if properties_name.present?
-      properties = properties_name.split(';')
-      properties.each do |property|
-        sku_values = property.split(':')
-        sku_key =  sku_values[2]
-        sku_value =  sku_values[3]
-        sku_name = sku_name + sku_key + ':' + sku_value + '  '
-      end
-    end
-    sku_name
+    aliastr = property_alias && Hash[property_alias.scan(/(\d+:\d+:)(.*?)(?:;|$)/)]
+    properties_name.gsub(/(\d+:\d+:)([\u4e00-\u9fa5|\w]+:)(.*?)(;|$)/) { |match|  $2 + (aliastr && aliastr[$1] || $3) + $4 }
   end
 
   def value
