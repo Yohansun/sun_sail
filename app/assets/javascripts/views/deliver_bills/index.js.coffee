@@ -55,6 +55,15 @@ class MagicOrders.Views.DeliverBillsIndex extends MagicOrders.Views.BaseView
 
     $(@el).find(".get_offset").html(@offset)
     $("#content").removeClass("search-expand")
+
+    $(@el).find(".index_pops li").hide()
+    for pop in MagicOrders.trade_pops['trades']
+      if MagicOrders.role_key == 'admin'
+        $(@el).find(".index_pops li [data-type=#{pop}]").parent().show()
+      else
+        if pop in MagicOrders.trade_pops[MagicOrders.role_key]
+          $(@el).find(".index_pops li [data-type=#{pop}]").parent().show()
+
     super
     this
 

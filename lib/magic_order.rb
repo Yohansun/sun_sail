@@ -144,7 +144,8 @@ MagicOrder::AccessControl.map do |map|
                                  "invoice",
                                  "split_invoice",
                                  "property_memo",
-                                 "deliver_bills#print_process_sheet"]
+                                 "print_deliver_bill",
+                                 "print_process_sheet"]
   end
 
   #商品管理
