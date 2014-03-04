@@ -6,8 +6,7 @@ class YihaodianTradeReporter
   sidekiq_options :queue => :reporter, unique: true, unique_job_expiration: 120
 
   def perform(id)
-    report = TradeReport.find(id)
-    return unless report
+    report = TradeReport.where(_id: id).first or return
     account = report.fetch_account
     if report.batch_export_ids
       trades = Trade.where(:_id.in => report.batch_export_ids.split(',')).order_by(:created.desc)

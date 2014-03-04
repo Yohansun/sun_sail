@@ -483,6 +483,7 @@ MagicOrders::Application.routes.draw do
         get :export
         get :sort_product_search
         get :match_icp_bills
+        get :solve_unusual_state
       end
     end
 

@@ -5,8 +5,7 @@ class TradeTaobaoPromotionFetcher
 
   def perform(tid=nil,options={})
     conditions = {tid: tid}.merge(options).reject {|k,v| v.nil?}
-    trade = TaobaoTrade.where(conditions).first
-    return unless trade
+    trade = TaobaoTrade.where(conditions).first or return
     account = trade.fetch_account
     source_id = trade.trade_source_id
     result = TaobaoQuery.get({

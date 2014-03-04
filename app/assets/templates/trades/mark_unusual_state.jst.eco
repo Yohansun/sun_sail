@@ -48,11 +48,6 @@
           <label class="radio">
             <input type="radio" value="经销商缺货" name="reason">经销商缺货
           </label>
-          <% if MagicOrders.enable_module_colors == 1 : %>
-            <label class="radio">
-              <input type="radio" value="经销商无法调色" name="reason">经销商无法调色
-            </label>
-          <% end %>
           <label class="radio">
             <input type="radio" value="买家要求退款" name="reason">买家要求退款
           </label>

@@ -5,8 +5,7 @@ class TaobaoLogisticsTracePush
 
   def perform(tid)
     code = false
-    trade = TaobaoTrade.where(tid: tid).first
-    return unless trade
+    trade = TaobaoTrade.where(tid: tid).first or return
     response = TaobaoQuery.get({
       method: 'taobao.logistics.ordertrace.push',
       mail_no: trade.tid,                         #快递单号

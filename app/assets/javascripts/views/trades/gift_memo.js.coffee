@@ -11,7 +11,6 @@ class MagicOrders.Views.TradesGiftMemo extends Backbone.View
 
   initialize: ->
     @model.on("fetch", @render, this)
-    @has_sku = true
 
   render: ->
     $(@el).html(@template(trade: @model))
@@ -52,7 +51,7 @@ class MagicOrders.Views.TradesGiftMemo extends Backbone.View
       return
 
     sku_id = $("#select_sku").val()
-    if (sku_id == "" and @has_sku == true)
+    if sku_id == ""
       alert("请选择SKU")
       return
 
@@ -86,7 +85,7 @@ class MagicOrders.Views.TradesGiftMemo extends Backbone.View
   save: ->
     blocktheui()
     @add_gifts = {}
-    @add_gifts['gift_orders'] = {}
+    @add_gifts['gift_orders'] = []
     @delete_gifts = []
     length = $('#gift_list').find('tr').length
     if length != 0
@@ -102,7 +101,7 @@ class MagicOrders.Views.TradesGiftMemo extends Backbone.View
             product_id  = $gift_info.data('product_id')
             gift_title  = $gift_info.children("td:eq(0)").text()
             num         = $gift_info.children("td:eq(1)").text()
-            @add_gifts['gift_orders'][i] = {"sku_id": sku_id, "gift_title": gift_title, "product_id": product_id, "num": num}
+            @add_gifts['gift_orders'].push({"sku_id": sku_id, "gift_title": gift_title, "product_id": product_id, "num": num})
 
     new_model = new MagicOrders.Models.Trade(id: @model.id)
     new_model.save {operation: "赠品修改", delete_gifts: @delete_gifts, add_gifts: @add_gifts, gift_memo: $("#gift_memo_text").val()},

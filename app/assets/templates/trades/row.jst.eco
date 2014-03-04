@@ -21,7 +21,7 @@
   <% if @trade.get('trade_source') == "分销平台" : %>
     <br><span class="label label-info">店铺代码:<%= @trade.get('distributor_usercode') %></span>
   <% end %>
-  <a href="#" data-toggle="modal" data-type="detail" class="pop_detail">
+  <a href="/api/trades/<%= @trade.get('id') %>/edit" target="_blank">
     <% if @trade.get('splitted_tid'): %>
       <span class="label label-info">拆分订单</span>
       <br/>

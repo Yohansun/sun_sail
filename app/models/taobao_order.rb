@@ -105,67 +105,6 @@ class TaobaoOrder < Order
     products
   end
 
-  # def color_map(color_num)
-  #   result = []
-  #   # if products.count > 0
-  #   #   result = package_color_map(color_num)
-  #   # else
-  #     tmp = {}
-  #     color_num.each do |nums|
-  #       next if nums.blank?
-  #       num = nums[0]
-  #       next if num.blank?
-
-  #       if tmp.has_key? num
-  #         tmp["#{num}"][0] += 1
-  #       else
-  #         tmp["#{num}"] = [1, Color.find_by_num(num).try(:name)]
-  #       end
-  #     end
-
-  #     result = [{
-  #       outer_id: outer_id,
-  #       number: 1,
-  #       storage_num: storage_num,
-  #       title: name,
-  #       colors: tmp
-  #     }]
-  #   # end
-
-  #   # result
-  # end
-
-  # def package_color_map(color_num)
-  #   tmp_hash = skus_info
-  #   color_num.each do |nums|
-  #     i = 0
-  #     next if nums.blank?
-  #     skus_info.each_with_index do |info, index|
-  #       colors = tmp_hash[index][:colors] || {}
-  #       info[:number].times do
-  #         color = nums[i]
-  #         i += 1
-  #         next if color.blank?
-  #         if colors.has_key? color
-  #           colors["#{color}"][0] += 1
-  #         else
-  #           colors["#{color}"] = [1, Color.find_by_num(color).try(:name)]
-  #         end
-  #         tmp_hash[index][:colors]  = colors
-  #       end
-  #     end
-  #   end
-  #   tmp_hash
-  # end
-
-  # 匹配套装内单品调色信息
-  #
-  # def map_products_by_colors
-  #   tmp_p = product
-  #   return {} unless tmp_p
-  #   tmp_p.map_packages_by_colors color_num
-  # end
-
   def bill_info
     [{
       outer_id: '',

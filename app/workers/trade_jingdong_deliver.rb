@@ -4,9 +4,7 @@ class TradeJingdongDeliver
   sidekiq_options :queue => :trade_jingdong_deliver, unique: true, unique_job_expiration: 120
 
   def perform(id)
-    trade = JingdongTrade.find(id)
-    return unless trade
-
+    trade = JingdongTrade.where(_id: id).first or return
     tid = trade.tid
     account = trade.fetch_account
     trade_source = account.jingdong_sources.first

@@ -3,8 +3,7 @@ class TradeYihaodianMemoFetcher
   include Sidekiq::Worker
   sidekiq_options :queue => :yihaodian_memo_fetcher, unique: true, unique_job_expiration: 120
   def perform(tid)
-    trade = YihaodianTrade.where(tid: tid).first
-    return unless trade
+    trade = YihaodianTrade.where(tid: tid).first or return
     account = trade.fetch_account
 
     #一号店有查询发票的接口，需要调用么？

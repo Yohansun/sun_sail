@@ -2,14 +2,16 @@
 module MagicGift
 
   def add_gift_orders(trade, params)
-    if params['is_split'] && params['is_split'] != "false"
-      gift_trade = CustomTrade.create!(fields_for_gift_trade(trade))
-    else
-      gift_trade = trade
-    end
+    if params['gift_orders'].present?
+      if params['is_split'] && params['is_split'] != "false"
+        gift_trade = CustomTrade.create!(fields_for_gift_trade(trade))
+      else
+        gift_trade = trade
+      end
 
-    params['gift_orders'].each do |key, value|
-      order = add_gift_order(gift_trade, value)
+      params['gift_orders'].each do |gift_order|
+        order = add_gift_order(gift_trade, gift_order)
+      end
     end
   end
 
