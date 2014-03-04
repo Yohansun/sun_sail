@@ -11,11 +11,12 @@
         <thead>
           <tr>
             <th colspan="2" class="thbg_gray" width="30%">商品名称</th>
-            <th class="thbg_gray" width="10%">数量</th>
-            <th class="thbg_gray" width="15%">商品编码</th>
-            <th class="thbg_gray" width="10%">商品属性</th>
+            <th class="thbg_gray" width="5%">数量</th>
+            <th class="thbg_gray" width="10%">商品编码</th>
+            <th class="thbg_gray" width="15%">商品属性</th>
+            <th class="thbg_gray" width="10%">属性备注</th>
             <th class="thbg_gray" width="10%">单价</th>
-            <th class="thbg_gray" width="15%">备注</th>
+            <th class="thbg_gray" width="10%">备注</th>
             <th class="thbg_gray" width="10%">退货状态</th>
           </tr>
         </thead>
@@ -30,6 +31,7 @@
               <td><%= order.num %></td>
               <td><%= order.outer_iid %></td>
               <td><%= order.sku_properties %></td>
+              <td></td>
               <td>¥<%= order.price %></td>
               <td><%= order.cs_memo %></td>
               <td><%= order.refund_status_text %></td>
@@ -50,13 +52,14 @@
                 </td>
                 <td>---</td>
                 <td>---</td>
+                <td>---</td>
               </tr>
             <% end %>
           <% end %>
         </tbody>
         <tfoot>
           <tr>
-            <td colspan="8">
+            <td colspan="9">
               <strong>
                 订单金额：¥<%= @trade.sum_fee %>
                 积分：¥<%= @trade.point_fee || 0 %>
@@ -115,6 +118,7 @@
 
   <div class="tab-pane" id="check">
     <%= form_tag("/api/trades/#{@trade.id}", method: :put, remote: true) do %>
+      <input type='hidden' name="operation" value="订单预处理" />
       <div class="accordion" id="accordion_check">
 
         <!-- 客服备注 -->
@@ -272,13 +276,13 @@
                   <% @trade.except_ref_orders.each do |order| %>
                     <% order.multi_product_properties.each_with_index do |product_property_info, i| %>
                       <tr>
-                        <td><%= order.skus_info[0][:name] %></td>
+                        <td><%= product_property_info[:name] %></td>
                         <td>1</td>
                         <td>
                           <div class="control-group">
                             <label class="inline pull-left mar_r10">商品编码：</label>
-                            <label class="inline order_outer_iid"><%= order.outer_iid %></label>
-                            <input type="hidden" name="property_memos[<%= order.id%>][<%= i %>][outer_id]" value="<%= order.outer_iid %>">
+                            <label class="inline order_outer_iid"><%= order.skus_info[0][:outer_id] %></label>
+                            <input type="hidden" name="property_memos[<%= order.id%>][<%= i %>][outer_id]" value="<%= product_property_info[:local_outer_id] %>">
                             <label class="local_outer_id none"><%= product_property_info[:local_outer_id] %></label>
                           </div>
                           <br/><br/>
@@ -300,7 +304,8 @@
                                 </select>
                               <% elsif property[:type] == "文本" %>
                                 <% property['property_values'].each do |value| %>
-                                  <input name="property_memos[<%= order.id%>][<%= i %>][values][][id]" type="text" class="input-medium" <% if value['marked'] == true %> value= "<%= value['value'] %>" <% end %>></input>
+                                  <input name="property_memos[<%= order.id%>][<%= i %>][values][][id]" type="hidden" value= "<%= value['id'] %>"></input>
+                                  <input name="property_memos[<%= order.id%>][<%= i %>][values][][value]" type="text" class="input-medium" <% if value['marked'] == true %> value= "<%= value['value'] %>" <% end %>></input>
                                 <% end %>
                               <% end %>
                             </div>
@@ -424,13 +429,13 @@
           <th class="thbg_gray" width="30%">操作</th>
           <th class="thbg_gray" width="30%">操作人</th>
         </tr>
+        <% @trade.operation_logs.each do |log| %>
         <tr>
-          <% @trade.operation_logs.each do |log| %>
-            <td><%= log.operated_at.try(:strftime, "%Y-%m-%d %H:%M:%S") %></td>
-            <td><%= log.operation %></td>
-            <td><%= log.operator %></td>
-          <% end %>
+          <td><%= log.operated_at.try(:strftime, "%Y-%m-%d %H:%M:%S") %></td>
+          <td><%= log.operation %></td>
+          <td><%= log.operator %></td>
         </tr>
+        <% end %>
       </tbody>
     </table>
   </div><!-- log end -->
