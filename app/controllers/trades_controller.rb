@@ -286,7 +286,7 @@ class TradesController < ApplicationController
         if order
           infos.each do |key, info|
             next unless info['values']
-            values = info['values'].reject{|value| value.blank? || value['id'].blank? || CategoryPropertyValue.find(value['id']).value.blank? }
+            values = info['values'].reject{|value| value.blank? || value['id'].blank? || (CategoryPropertyValue.find(value['id']).value == "文本" && value['value'].blank?) }
             next if values.count == 0
             property_memo = order.trade_property_memos.create(
               trade_id:          @trade.id,
