@@ -3,6 +3,8 @@ zh-CN:
   permissions_operations: "可操作权限"
   permissions_reads: 可查看权限
   permissions_modes: 可查看权限
+  permissions_reconcile_operators: 运营商对账
+  permissions_reconcile_sellers: 经销商对账
   permissions_cs_read: "客服（只读权限）"
   permissions_trades: "订单管理"
   permissions_products: "商品管理"
@@ -245,13 +247,16 @@ zh-CN:
   permissions_tag_trade_types#create: "创建人工订单分类"
   permissions_tag_trade_types#destroy: "删除人工订单分类"
   permissions_reconcile_statements: "财务管理"
-  permissions_tag_reconcile_statements#index: "运营商对账"
-  permissions_tag_reconcile_statements#seller_index: "经销商对账"
-  permissions_tag_reconcile_statements#audit: "结算"
-  permissions_tag_reconcile_statements#seller_exports: "经销商导出数据"
-  permissions_tag_reconcile_statements#product_detail_exports: "导出明细"
-  permissions_tag_reconcile_statements#distributor_exports": "分销商数据导出"
-  permissions_tag_reconcile_statements#exports: "运营商导出数据"
-  permissions_tag_reconcile_statements#export_detail: "导出明细"
+  permissions_tag_reconcile_statements#index: "查看"
+  permissions_tag_reconcile_statements#exports: "导出数据"
+  permissions_tag_reconcile_statements#confirm_audit: "运营商确认结算"
+  permissions_tag_reconcile_statements#confirm_process: "多乐士确认结算"
+  permissions_tag_reconcile_statements#change_detail: "账单编辑"
+  permissions_tag_reconcile_statements#seller_index: "查看"
+  permissions_tag_reconcile_statements#seller_exports: "导出数据"
+  permissions_tag_reconcile_statements#confirm_seller_audit: "经销商确认结算"
+  permissions_tag_reconcile_statements#update_processed: "改回未结算"
+  permissions_tag_reconcile_statements#product_detail_exports: "改回明细"
+  permissions_tag_reconcile_statements#change_product_details: "账单编辑"
   permissions_tag_wm#warehouse_management: "仓库设置"
   
