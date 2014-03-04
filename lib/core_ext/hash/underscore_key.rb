@@ -6,11 +6,11 @@ class Hash
   def underscore_key!
     keys.each do |key|
       if self[key].is_a?(Hash)
-        self[key.underscore] = delete(key).underscore_key!
+        self[key.to_s.underscore] = delete(key).underscore_key!
       elsif self[key].is_a?(Array)
-        self[key.underscore] = delete(key).collect{|sub| sub.underscore_key!}
+        self[key.to_s.underscore] = delete(key).collect{|sub| sub.underscore_key!}
       else
-        self[key.underscore] = delete(key)
+        self[key.to_s.underscore] = delete(key)
       end
     end
     self

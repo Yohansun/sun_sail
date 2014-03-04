@@ -1,7 +1,6 @@
 #encoding: utf-8
 class JingdongProductsController < ApplicationController
   before_filter :authorize
-  before_filter :scan_sync,:only => [:sync,:syncing]
   # GET /jingdong_products
   def index
     params[:search] ||= {}
@@ -22,15 +21,30 @@ class JingdongProductsController < ApplicationController
     @product = JingdongProduct.with_account(current_account.id).find params[:id]
   end
 
-  # GET /jingdong_products/sync
+  # PUT /jingdong_products/sync
   def sync
+    payload_hash = SidekiqUniqueJobs::PayloadHelper.get_payload('JingdongProductFetcher',:jingdong_product_fetcher, [current_account.id])
+
+    if Sidekiq.redis {|conn| conn.exists(payload_hash)}
+      flash[:notice] = "已有队列正在同步中, 请稍后再试!"
+      redirect_to action: :index
+    else
+      JingdongProductFetcher.perform_async(current_account.id)
+      flash[:notice] = "系统开始自动同步京东商品..."
+      redirect_to action: :index
+    end
   end
 
-  # PUT /jingdong_products/1/syncing
-  def syncing
-    [@sync_skus,@sync_products].flatten.map(&:perform)
-    redirect_to :action => :index
-    flash[:notice] = "同步成功"
+  # GET /jingdong_products/sync_history
+  def sync_history
+    if !%w(JingdongProduct JingdongSku).include?(params[:type].to_s)
+      flash[:error] = "类型错误"
+      redirect_to(action: :index)
+    end
+
+    tableize = params[:type].to_s.tableize
+    search = PaperTrail::Version.joins("JOIN #{tableize} on #{tableize}.id = versions.item_id and versions.item_type = '#{params[:type]}'").where("#{tableize}.account_id = #{current_account.id}").select("*,versions.created_at as created_at").order("versions.created_at desc")
+    @versions = search.page(params[:page]).per(20)
   end
 
   def jingdong_skus
@@ -85,18 +99,5 @@ class JingdongProductsController < ApplicationController
       end
     end
     render :nothing => true, status: 200
-  end
-
-  private
-  def scan_sync
-    @sync_products,@sync_skus = Array.new(2) {[]}
-    current_account.jingdong_sources.each do |trade_source|
-      sync_product = JingdongProductSync.new(trade_source.id)
-      sync_sku = JingdongSkuSync.new({ware_ids: sync_product.ware_ids, trade_source_id: trade_source.id})
-      sync_product.parsing
-      sync_sku.parsing
-      @sync_products << sync_product
-      @sync_skus << sync_sku
-    end
   end
 end

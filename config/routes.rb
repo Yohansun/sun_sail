@@ -268,8 +268,8 @@ MagicOrders::Application.routes.draw do
 
   resources :jingdong_products do
     collection do
-      get :sync
-      put :syncing
+      put :sync
+      get :sync_history
       get :jingdong_skus
       get :change_jingdong_skus
       post :tie_to_native_skus
