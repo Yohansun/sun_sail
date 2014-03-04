@@ -3,8 +3,7 @@ class TradeJingdongMemoFetcher
   include Sidekiq::Worker
   sidekiq_options :queue => :jingdong_memo_fetcher, unique: true, unique_job_expiration: 120
   def perform(tid)
-    trade = JingdongTrade.where(tid: tid).first
-    return unless trade
+    trade = JingdongTrade.where(tid: tid).first or return
     source_id = trade.trade_source_id
     account = trade.fetch_account
 

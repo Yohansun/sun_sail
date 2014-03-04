@@ -4,8 +4,7 @@ class TradeDispatchEmail
   sidekiq_options :queue => :email, unique: true, unique_job_expiration: 120
 
   def perform(id, seller_id, notify_kind)
-    trade = Trade.find id
-    return unless trade
+    trade = Trade.where(_id: id).first or return
     seller = Seller.find seller_id
     email_operation = "发送邮件"
 

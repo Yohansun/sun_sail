@@ -4,8 +4,7 @@ class SmsNotifier
   sidekiq_options :queue => :sms, unique: true, unique_job_expiration: 120
 
   def perform(content, mobile, tid, notify_kind)
-    trade = Trade.where(tid: tid).first
-    return unless trade
+    trade = Trade.where(tid: tid).first or return
     account = trade.fetch_account
     sms = Sms.new(account, content, mobile)
     success = false

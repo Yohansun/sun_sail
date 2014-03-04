@@ -4,8 +4,7 @@ class TradeDeliver
   sidekiq_options :queue => :trade_deliver, unique: true, unique_job_expiration: 120
 
   def perform(id)
-    trade = Trade.find(id)
-
+    trade = Trade.where(_id: id).first or return
     trade.stock_out_bill.decrease_actual if trade.fetch_account.settings.enable_module_third_party_stock != 1
     deliver(trade)
   end
