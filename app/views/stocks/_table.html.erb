@@ -1,6 +1,6 @@
 <div class="tab-pane active" id="stock_check">
   <%= form_for @search ,:url => stocks_path_adapter , :html => {:class => "well well-small form-horizontal font12",:id => "search"},:method => :get do |f| %>
-    <%= render :partial => "search",:locals => {:f => f} %>
+    <%= render :partial => (params[:warehouse_id].present? ? "detail_search_for_warehouse" : "search"),:locals => {:f => f} %>
   <% end %>
 </div>
 
@@ -91,9 +91,9 @@
               <%- forecast = stock_product.activity - hold %>
               <%= forecast %>
             <% when "actual" %>
-              <%= link_to stock_product.actual, "#", :class => "stock_actual", "data-stock-product-id" => stock_product.id %>
+              <%= link_to_if(params[:warehouse_id].present?, stock_product.actual, "#", :class => "stock_actual", "data-stock-product-id" => stock_product.id) %>
             <% when "safe_value" %>
-              <%= link_to stock_product.safe_value, "#", :class => "stock_safe_value", "data-stock-product-id" => stock_product.id %>
+              <%= link_to_if(params[:warehouse_id].present?, stock_product.safe_value, "#", :class => "stock_safe_value", "data-stock-product-id" => stock_product.id) %>
             <% else %>
               <%= stock_product.send(col_name) rescue "" %>
             <% end %>
@@ -101,13 +101,16 @@
           <%- end -%>
         </tr>
       <% end %>
-      <tr>
-        <th>统计</th>
-        <% @count_activity = @stock_products.count_activity(current_account.id)  %>
-        <th>预测库存: <%= @count_activity - @hold_hash.values.sum %></th>
-        <th>可用库存: <%= @count_activity %></th>
-        <th>实际库存: <%= @stock_products.count_actual(current_account.id) %></th>
-        <th>安全库存: <%= @stock_products.count_safe_value(current_account.id) %></th></tr>
+      <% if current_account.settings.enable_module_muti_sellers == 1 && params[:warehouse_id].nil? %>
+        <tr>
+          <th>统计</th>
+          <% @count_activity = @stock_products.count_activity(current_account.id)  %>
+          <th>预测库存: <%= @count_activity - @hold_hash.values.sum %></th>
+          <th>可用库存: <%= @count_activity %></th>
+          <th>实际库存: <%= @stock_products.count_actual(current_account.id) %></th>
+          <th colspan="<%= @all_cols.length %>">安全库存: <%= @stock_products.count_safe_value(current_account.id) %></th>
+        </tr>
+      <% end %>
     </tbody>
   </table>
 <%- end %>
