@@ -276,13 +276,13 @@
                   <% @trade.except_ref_orders.each do |order| %>
                     <% order.multi_product_properties.each_with_index do |product_property_info, i| %>
                       <tr>
-                        <td><%= order.skus_info[0][:name] %></td>
+                        <td><%= product_property_info[:name] %></td>
                         <td>1</td>
                         <td>
                           <div class="control-group">
                             <label class="inline pull-left mar_r10">商品编码：</label>
-                            <label class="inline order_outer_iid"><%= order.outer_iid %></label>
-                            <input type="hidden" name="property_memos[<%= order.id%>][<%= i %>][outer_id]" value="<%= order.outer_iid %>">
+                            <label class="inline order_outer_iid"><%= order.skus_info[0][:outer_id] %></label>
+                            <input type="hidden" name="property_memos[<%= order.id%>][<%= i %>][outer_id]" value="<%= product_property_info[:local_outer_id] %>">
                             <label class="local_outer_id none"><%= product_property_info[:local_outer_id] %></label>
                           </div>
                           <br/><br/>

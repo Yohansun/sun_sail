@@ -7,178 +7,179 @@ class Trade
   include MagicEnum
   include TradeMerge
 
-  field :trade_source_id, type: Integer
+  field :trade_source_id,                 type: Integer
+  field :account_id,                      type: Integer
+  field :seller_id,                       type: Integer
+  field :forecast_seller_id,              type: Integer                # 预测发货经销商
+  field :seller_alipay_no,                type: String
+  field :seller_mobile,                   type: String
+  field :seller_phone,                    type: String
+  field :seller_name,                     type: String
+  field :seller_email,                    type: String
 
-  field :account_id, type: Integer
-  field :seller_id, type: Integer
-  field :forecast_seller_id, type: Integer                # 预测发货经销商
-  field :seller_alipay_no, type: String
-  field :seller_mobile, type: String
-  field :seller_phone, type: String
-  field :seller_name, type: String
-  field :seller_email, type: String
+  field :dispatched_at,                   type: DateTime               # 分派时间
+  field :delivered_at,                    type: DateTime               # 发货时间
 
-  field :dispatched_at, type: DateTime                    # 分派时间
-  field :delivered_at, type: DateTime                     # 发货时间
-
-  field :cs_memo, type: String                            # 客服备注
-  field :logistic_memo, type: String                      # 物流公司备注
-  field :gift_memo, type: String                          # 赠品备注
+  field :cs_memo,                         type: String                 # 客服备注
+  field :logistic_memo,                   type: String                 # 物流公司备注
+  field :gift_memo,                       type: String                 # 赠品备注
 
   # 发票信息
-  field :invoice_type, type: String
-  field :invoice_name, type: String
-  field :invoice_content, type: String
-  field :invoice_date, type: DateTime
-  field :invoice_number, type: String
+  field :invoice_type,                    type: String
+  field :invoice_name,                    type: String
+  field :invoice_content,                 type: String
+  field :invoice_date,                    type: DateTime
+  field :invoice_number,                  type: String
 
-  field :logistic_code, type: String                      # 物流公司代码
-  field :logistic_waybill, type: String                   # 物流运单号
-  field :logistic_id, type: Integer
-  field :logistic_name, type: String
-  field :service_logistic_id, type:Integer                # 服务商物流ID(比如淘宝 京东 一号店等)
+  field :logistic_code,                   type: String                 # 物流公司代码
+  field :logistic_waybill,                type: String                 # 物流运单号
+  field :logistic_id,                     type: Integer
+  field :logistic_name,                   type: String
+  field :service_logistic_id,             type:Integer                 # 服务商物流ID(比如淘宝 京东 一号店等)
 
-  field :seller_confirm_deliver_at, type: DateTime        # 确认发货
-  field :seller_confirm_invoice_at, type: DateTime        # 确认开票
+  field :seller_confirm_deliver_at,       type: DateTime               # 确认发货
+  field :seller_confirm_invoice_at,       type: DateTime               # 确认开票
 
-  field :confirm_color_at, type: DateTime                 # 确认调色
-  field :confirm_check_goods_at, type: DateTime           # 确认验证
-  field :confirm_receive_at, type: DateTime               # 确认买家收货
+  field :confirm_color_at,                type: DateTime               # 确认调色
+  field :confirm_check_goods_at,          type: DateTime               # 确认验证
+  field :confirm_receive_at,              type: DateTime               # 确认买家收货
 
-  field :request_return_at, type: DateTime                # 退货相关
-  field :confirm_return_at, type: DateTime
-  field :confirm_refund_at, type: DateTime
-  field :promotion_fee, type: Float, default: 0.0         # trade.promotion_details中discount_fee的总和。
-  field :deliver_bills_count, type: Integer, default: 0
+  field :request_return_at,               type: DateTime               # 退货相关
+  field :confirm_return_at,               type: DateTime
+  field :confirm_refund_at,               type: DateTime
+  field :promotion_fee,                   type: Float,   default: 0.0  # trade.promotion_details中discount_fee的总和。
+  field :deliver_bills_count,             type: Integer, default: 0
 
   # 拆单相关
-  field :splitted, type: Boolean, default: false
-  field :splitted_tid, type: String
+  field :splitted,                        type: Boolean, default: false
+  field :splitted_tid,                    type: String
 
   #单据是否已打印
-  field :deliver_bill_printed_at, type: DateTime
-  field :logistic_printed_at, type: DateTime
+  field :deliver_bill_printed_at,         type: DateTime
+  field :logistic_printed_at,             type: DateTime
 
   # 单据是否拆分
-  field :has_split_deliver_bill, type: Boolean, default: false
+  field :has_split_deliver_bill,          type: Boolean, default: false
 
   # 金额调整
-  field :modify_payment, type: Float
-  field :modify_payment_no, type: String
-  field :modify_payment_at, type: DateTime
-  field :modify_payment_memo, type: String
+  field :modify_payment,                  type: Float
+  field :modify_payment_no,               type: String
+  field :modify_payment_at,               type: DateTime
+  field :modify_payment_memo,             type: String
 
   #创建新订单
-  field :tid, type:String
-  field :area_id, type: Integer
-  field :status, type:String
-  field :seller_memo, type:String
+  field :tid,                             type:String
+  field :area_id,                         type: Integer
+  field :status,                          type:String
+  field :seller_memo,                     type:String
 
   #是否发送过提醒邮件
-  field :is_notified, type: Boolean, default: false
+  field :is_notified,                     type: Boolean, default: false
 
   # 二元状态值
-  field :has_color_info, type: Boolean, default: false
-  field :has_cs_memo, type: Boolean, default: false
-  field :has_unusual_state, type: Boolean, default: false
-  field :has_property_memos, type: Boolean, default: false
-  field :has_onsite_service, type: Boolean, default: false
-  field :has_refund_orders, type: Boolean, default: false
-  field :has_invoice_info, type: Boolean, default: false
-  field :auto_merged_once, type: Boolean, default: false
+  field :has_color_info,                  type: Boolean, default: false
+  field :has_cs_memo,                     type: Boolean, default: false
+  field :has_unusual_state,               type: Boolean, default: false
+  field :has_property_memos,              type: Boolean, default: false
+  field :has_onsite_service,              type: Boolean, default: false
+  field :has_refund_orders,               type: Boolean, default: false
+  field :has_invoice_info,                type: Boolean, default: false
+  field :auto_merged_once,                type: Boolean, default: false
 
 
-  field :num, type: Integer
-  field :num_iid, type: String
-  field :title, type: String
-  field :type, type: String
+  field :num,                             type: Integer
+  field :num_iid,                         type: String
+  field :title,                           type: String
+  field :type,                            type: String
 
-  field :buyer_message, type: String
+  field :buyer_message,                   type: String
 
-  field :price, type: Float, default: 0.0
-  field :seller_cod_fee, type: Float, default: 0.0
-  field :discount_fee, type: Float, default: 0.0
-  field :point_fee, type: Float, default: 0.0
-  field :has_post_fee, type: Float, default: 0.0
-  field :total_fee, type: Float, default: 0.0
-  field :promotion_fee, type: Float, default: 0.0
-  field :modify_payment, type: Float, default: 0.0
+  field :price,                           type: Float,   default: 0.0
+  field :seller_cod_fee,                  type: Float,   default: 0.0
+  field :discount_fee,                    type: Float,   default: 0.0
+  field :point_fee,                       type: Float,   default: 0.0
+  field :has_post_fee,                    type: Float,   default: 0.0
+  field :total_fee,                       type: Float,   default: 0.0
+  field :promotion_fee,                   type: Float,   default: 0.0
+  field :modify_payment,                  type: Float,   default: 0.0
 
-  field :is_lgtype, type: Boolean
-  field :is_brand_sale, type: Boolean
-  field :is_force_wlb, type: Boolean
+  field :is_lgtype,                       type: Boolean
+  field :is_brand_sale,                   type: Boolean
+  field :is_force_wlb,                    type: Boolean
 
-  field :created, type: DateTime
-  field :pay_time, type: DateTime
-  field :modified, type: DateTime
-  field :end_time, type: DateTime
+  field :created,                         type: DateTime
+  field :pay_time,                        type: DateTime
+  field :modified,                        type: DateTime
+  field :end_time,                        type: DateTime
 
-  field :alipay_id, type: String
-  field :alipay_no, type: String
-  field :alipay_url, type: String
-  field :buyer_memo, type: String
-  field :buyer_flag, type: Integer
+  field :alipay_id,                       type: String
+  field :alipay_no,                       type: String
+  field :alipay_url,                      type: String
+  field :buyer_memo,                      type: String
+  field :buyer_flag,                      type: Integer
 
-  field :seller_flag, type: Integer
-  field :invoice_name, type: String
-  field :buyer_nick, type: String
-  field :buyer_area, type: String
-  field :buyer_email, type: String
+  field :seller_flag,                     type: Integer
+  field :invoice_name,                    type: String
+  field :buyer_nick,                      type: String
+  field :buyer_area,                      type: String
+  field :buyer_email,                     type: String
 
-  field :has_yfx, type: Boolean
-  field :yfx_fee, type: Float, default: 0.0
-  field :yfx_id, type: String
-  field :has_buyer_message, type: Boolean
-  field :area_id, type: Integer
-  field :credit_card_fee, type: Float, default: 0.0
-  field :nut_feature, type: String
-  field :shipping_type, type: String
-  field :buyer_cod_fee, type: Float, default: 0.0
-  field :express_agency_fee, type: Float, default: 0.0
-  field :adjust_fee, type: Float
-  field :buyer_obtain_point_fee, type: Float, default: 0.0
-  field :cod_fee, type: Float, default: 0.0
-  field :trade_from, type: String
-  field :alipay_warn_msg, type: String
-  field :cod_status, type: String
-  field :can_rate, type: Boolean
+  field :has_yfx,                         type: Boolean
+  field :yfx_fee,                         type: Float,   default: 0.0
+  field :yfx_id,                          type: String
+  field :has_buyer_message,               type: Boolean
+  field :area_id,                         type: Integer
+  field :credit_card_fee,                 type: Float,   default: 0.0
+  field :nut_feature,                     type: String
+  field :shipping_type,                   type: String
+  field :buyer_cod_fee,                   type: Float,   default: 0.0
+  field :express_agency_fee,              type: Float,   default: 0.0
+  field :adjust_fee,                      type: Float
+  field :buyer_obtain_point_fee,          type: Float,   default: 0.0
+  field :cod_fee,                         type: Float,   default: 0.0
+  field :trade_from,                      type: String
+  field :alipay_warn_msg,                 type: String
+  field :cod_status,                      type: String
+  field :can_rate,                        type: Boolean
   field :has_sent_send_logistic_rate_sms, type: Boolean
-  field :commission_fee, type: Float, default: 0.0
-  field :trade_memo, type: String
-  field :seller_nick, type: String
+  field :commission_fee,                  type: Float,   default: 0.0
+  field :trade_memo,                      type: String
+
+  field :seller_nick,                     type: String
   alias_method :shop_name,:seller_nick
-  field :pic_path, type: String
-  field :payment, type: Float, default: 0.0
-  field :snapshot_url, type: String
-  field :snapshot, type: String
-  field :seller_rate, type: Boolean
-  field :buyer_rate, type: Boolean
-  field :real_point_fee, type: Integer
-  field :post_fee, type: Float, default: 0.0
-  field :buyer_alipay_no, type: String
-  field :receiver_name, type: String
-  field :receiver_state, type: String
-  field :receiver_city, type: String
-  field :receiver_district, type: String
-  field :receiver_address, type: String
-  field :receiver_zip, type: String
-  field :receiver_mobile, type: String
-  field :receiver_phone, type: String
-  field :consign_time, type: DateTime
-  field :available_confirm_fee, type: Float, default: 0.0
-  field :received_payment, type: Float, default: 0.0
-  field :timeout_action_time, type: DateTime
-  field :is_3D, type: Boolean
-  field :promotion, type: String
-  field :got_promotion, type: Boolean, default: false  # 优惠信息是否抓到。
-  field :sku_properties_name, type: String
-  field :is_auto_dispatch, type: Boolean, default: false
-  field :is_auto_deliver, type: Boolean, default: false
+
+  field :pic_path,                        type: String
+  field :payment,                         type: Float,   default: 0.0
+  field :snapshot_url,                    type: String
+  field :snapshot,                        type: String
+  field :seller_rate,                     type: Boolean
+  field :buyer_rate,                      type: Boolean
+  field :real_point_fee,                  type: Integer
+  field :post_fee,                        type: Float,   default: 0.0
+  field :buyer_alipay_no,                 type: String
+  field :receiver_name,                   type: String
+  field :receiver_state,                  type: String
+  field :receiver_city,                   type: String
+  field :receiver_district,               type: String
+  field :receiver_address,                type: String
+  field :receiver_zip,                    type: String
+  field :receiver_mobile,                 type: String
+  field :receiver_phone,                  type: String
+  field :consign_time,                    type: DateTime
+  field :available_confirm_fee,           type: Float,   default: 0.0
+  field :received_payment,                type: Float,   default: 0.0
+  field :timeout_action_time,             type: DateTime
+  field :is_3D,                           type: Boolean
+  field :promotion,                       type: String
+  field :got_promotion,                   type: Boolean, default: false  # 优惠信息是否抓到。
+  field :sku_properties_name,             type: String
+  field :is_auto_dispatch,                type: Boolean, default: false
+  field :is_auto_deliver,                 type: Boolean, default: false
+
   # 第三方抓取过来的订单在本地创建完成后,标记为新订单, 作用是自动创建相关的队列任务,  然后标记为 "0"
   # 第三方抓取过来的数据,更新本地订单之后标记为 "1",
   # 待其他操作(更新本地顾客)处理完毕后标记为   "2"
-  field :news, type: Integer , default: 0
-
+  field :news,                            type: Integer , default: 0
   enum_attr :news, [["无更新",0],["已更新",1],["已处理",2],["新订单",3]]
 
   #订单操作人
@@ -186,15 +187,17 @@ class Trade
   field :operator_name
 
   #订单合并
-  field :merged_trade_ids, type: Array
-  field :merged_by_trade_id, type: String
-  field :mergeable_id, type: String
+  field :merged_trade_ids,                type: Array
+  field :merged_by_trade_id,              type: String
+  field :mergeable_id,                    type: String
 
   #人工订单锁定
-  field :is_locked, type: Boolean, default: false
+  field :is_locked,                       type: Boolean, default: false
 
   #分拣单批次号
-  field :batch_sort_num, type: Integer
+  field :batch_sort_num,                  type: Integer
+
+
 
   # ADD INDEXES TO SPEED UP
   # 简单搜索index
@@ -226,7 +229,6 @@ class Trade
   # index seller_confirm_invoice_at: -1
   # index confirm_check_goods_at: -1
   # index confirm_receive_at: -1
-  # index confirm_color_at: -1
   # index request_return_at: -1
   # index confirm_return_at: -1
   # index confirm_refund_at: -1
@@ -246,11 +248,8 @@ class Trade
 
   # 状态搜索index
   index status: 1
-  # index splitted: -1
-  # index splitted_tid: -1
 
   # 信息搜索index
-  # index has_color_info: 1
   # index has_cs_memo: 1
   # index has_unusual_state: 1
   # index has_onsite_service: 1
@@ -287,14 +286,10 @@ class Trade
 
   attr_accessor :matched_seller
 
-  validate :color_num_do_not_exist, :on => :update, :if => :color_num_changed?
   validates_uniqueness_of :tid, scope: :_type, message: "操作频率过大，请重试"
-
-
 
   # 更新二元状态值
   before_update :set_boolean_status_fields
-  before_update :set_has_color_info
 
   after_destroy :check_associate_deliver_bills
   delegate :name,to: :trade_source,allow_nil: true,prefix: true
@@ -560,27 +555,16 @@ class Trade
   end
 
 ###########
-##### 订单验证
-
-  def color_num_do_not_exist
-    orders.map(&:color_num).flatten.each do |color|
-      next if color.blank?
-      unless Color.exists?(num: color)
-        errors.add(:self, "色号不存在")
-        break
-      end
-    end
-  end
-
-###########
 ##### 订单分流相关
 
   def reset_seller
     return unless seller_id
-    if stock_out_bill.do_close #关闭之前的出库单
-      stock_out_bill.increase_activity #恢复仓库的可用库存
-    else
-      return #已出库或者已同步 不允许分流重置
+    if stock_out_bill
+      if stock_out_bill.do_close #关闭之前的出库单
+        stock_out_bill.increase_activity #恢复仓库的可用库存
+      else
+        return #已出库或者已同步 不允许分流重置
+      end
     end
     update_attributes(seller_id: nil, seller_name: nil, dispatched_at: nil)
     deliver_bills.delete_all
@@ -651,6 +635,18 @@ class Trade
         stock_product = fetch_account.stock_products.where(seller_id: seller_id, product_id: sku_info[:product_id], sku_id: sku_info[:sku_id]).first
         order_price = (order.price == 0 ? 0 : sku_info[:product_price])
         if stock_product
+
+          ## 2014-03-04添加
+          ## 伊佳仁窗帘客户的特殊需求，库存等于 属性备注中各个商品的"宽"相加的值
+          ## 通过 account.settings.stock_deduction_by_width 来控制逻辑是否执行
+          if self.fetch_account.settings.stock_deduction_by_width == true
+            width_property_memo = order.trade_property_memos.where(outer_id: sku_info[:outer_id])
+            width_property      = width_property_memo.present? && width_property_memo.map{ |m| m.property_values.where(name: "宽")}.flatten
+            stock_num           = width_property.present? ? width_property.inject(0){|sum, p_value| sum += p_value.value.to_i} : 0
+          else
+            stock_num           = sku_info[:number]
+          end
+
           bill.bill_products.build(
             stock_product_id: stock_product.id,
             title:            sku_info[:sku_title],
@@ -658,7 +654,7 @@ class Trade
             sku_id:           sku_info[:sku_id],
             price:            order_price,
             total_price:      order_price * sku_info[:number],
-            number:           sku_info[:number],
+            number:           stock_num,
             remark:           order.cs_memo
           )
         end
@@ -1516,19 +1512,6 @@ class Trade
       self.has_refund_orders  = orders.any? {|order| order.refund_status != "NO_REFUND"}
       self.has_unusual_state  = unusual_states.where(:repaired_at => nil).present?
       self.has_property_memos = self.trade_property_memos.all.present?
-      true
-    end
-
-    # MAYBE DEPRECATED LATER
-    def set_has_color_info
-      self.orders.each do |order|
-        colors = order.color_num.blank? ? [] : order.color_num
-        if colors.is_a?(Array) && colors.flatten.select{|elem| elem.present?}.any?
-          self.has_color_info = true
-          return
-        end
-      end
-      self.has_color_info = false
       true
     end
 

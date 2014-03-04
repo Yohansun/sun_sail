@@ -15,7 +15,7 @@
         <% for order in @trade.get('ref_orders'): %>
           <% for product_property_info in order.multi_product_properties : %>
             <tr class="<%= order.id %>">
-              <td><%= order.skus_info[0]['name'] %></td>
+              <td><%= product_property_info['name'] %></td>
               <td>1</td>
               <td>
                 <div class="control-group">
