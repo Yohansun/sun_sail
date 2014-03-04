@@ -1,5 +1,6 @@
 # encoding: utf-8
 class ReconcileStatementsController < ApplicationController
+  before_filter :authorize
   before_filter :fetch_rs, only: [:show, :audit, :seller_show, :update_processed]
   before_filter :check_module, :fetch_store
   AllActions = {:index => "运营商对账",:seller_index => "经销商对账",:distributor_index => "分销商对账"}
@@ -75,12 +76,16 @@ class ReconcileStatementsController < ApplicationController
     render seller_index_reconcile_statements_path
   end
   
-  def audit
-    unless @rs.processed
-      update_status({:processed => true}, @rs)
-    else
-      update_status({:audited => true}, @rs)
-    end
+  def confirm_process
+    update_status({:processed => true}, @rs)
+  end
+
+  def confirm_audit
+    update_status({:audited => true}, @rs)
+  end
+
+  def confirm_seller_audit
+    update_status({:audited => true}, @rs)
   end
 
   def seller_exports
@@ -199,6 +204,5 @@ class ReconcileStatementsController < ApplicationController
 
   def check_module
     redirect_to "/" and return if current_account.settings.enable_module_reconcile_statements != true
-    redirect_to "/" and return if !current_user.has_role?(:admin)
   end
 end

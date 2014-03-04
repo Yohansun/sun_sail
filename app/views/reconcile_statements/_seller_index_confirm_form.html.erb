@@ -137,10 +137,15 @@
   }
 
   function confirm_calculate(value){
+    if(value == 'trade_confirm'){
+      url_h = "/reconcile_statements/"+rs_id+"/confirm_seller_audit"
+    }else{
+      url_h = "/reconcile_statements/"+rs_id+"/confirm_process" 
+    }
     rs_id = $("input[name='audited[]']:checked").val();
     $.ajax({
       type: "PUT",
-      url: "/reconcile_statements/"+rs_id+"/audit"
+      url: url_h
     }).done(function(result){
       if(value == 'trade_confirm'){
         $('#confirm_account').modal('hide');

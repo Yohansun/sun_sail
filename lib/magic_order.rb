@@ -190,17 +190,20 @@ MagicOrder::AccessControl.map do |map|
 
   end
 
-  #财务管理
+  #运营商对账
   map.project_module :reconcile_statements do |map|
-    map.permission :reads,      ["detail"]
-    map.permission :operations, ["reconcile_statements#index",
-                                 "reconcile_statements#seller_index",
-                                 "reconcile_statements#audit",
-                                 "reconcile_statements#seller_exports",
-                                 "reconcile_statements#product_detail_exports",
-                                 "reconcile_statements#distributor_exports",
-                                 "reconcile_statements#exports",
-                                 "reconcile_statement_details#export_detail"]
+    map.permission :reconcile_operators,   ["reconcile_statements#index",
+                                            "reconcile_statements#exports",
+                                            "reconcile_statements#confirm_process",
+                                            "reconcile_statements#confirm_audit",
+                                            "reconcile_statements#change_detail"]
+    map.permission :reconcile_sellers,     ["reconcile_statements#seller_index",
+                                            "reconcile_statements#seller_exports",
+                                            "reconcile_statements#confirm_process",
+                                            "reconcile_statements#confirm_seller_audit",
+                                            "reconcile_statements#update_processed",
+                                            "reconcile_statements#product_detail_exports",
+                                            "reconcile_statements#change_product_details"]
   end
 
   #地区管理
