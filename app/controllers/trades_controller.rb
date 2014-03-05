@@ -28,7 +28,11 @@ class TradesController < ApplicationController
     end
     @cache_counter = Rails.cache.fetch("trades/#{params[:trade_type]}",namespace: "counter_caches/#{current_account.id}")
     @trades_count = @trades.count
-    Rails.cache.write("trades/#{params[:trade_type]}", @trades_count, expires_in: 1.hour, namespace: "counter_caches/#{current_account.id}") unless @cache_counter == @trades_count
+    params_keys = params.map{|key, value| key}.sort
+    cache_keys = ["trade_type", "action", "controller"].sort
+    if params_keys == cache_keys
+      Rails.cache.write("trades/#{params[:trade_type]}", @trades_count, expires_in: 1.hour, namespace: "counter_caches/#{current_account.id}") unless @cache_counter == @trades_count
+    end
     @trades = TradeDecorator.decorate(@trades.limit(limit).skip(offset).order_by(:created.desc))
 
     respond_with @trades
