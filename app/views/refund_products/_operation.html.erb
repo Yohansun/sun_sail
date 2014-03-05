@@ -2,9 +2,18 @@
   <%- if refund_product.status_operations.present? -%>
     <% refund_product.status_operations.each do |status| %>
       <% status.each do |key, value| %>
-        <span class='label label-success'>
-          <%= RefundProduct::STATUS.rassoc(key.to_s).to_a.first %>:<%= value.to_s(:db) %>
-        </span>
+        <% if current_account.settings.enable_module_third_party_stock != 1 %>
+        <% next if key.to_sym == :syncked %>
+          <span class='label label-success'>
+            <%= key.to_sym == :checked ? "已审核待确定" : RefundProduct::STATUS.rassoc(key.to_s).to_a.first %>:
+            <%= value.to_s(:db) %>
+          </span>
+        <% else %>
+          <span class='label label-success'>
+            <%= RefundProduct::STATUS.rassoc(key.to_s).to_a.first %>:
+            <%= value.to_s(:db) %>
+          </span>
+        <% end %>
       <% end %>
     <% end %>
   <% end %>

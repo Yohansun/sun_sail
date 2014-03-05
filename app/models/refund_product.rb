@@ -135,6 +135,16 @@ class RefundProduct < ActiveRecord::Base
     end
   end
 
+  def status_name_with_alias_name
+    if account.settings.enable_module_third_party_stock != 1 && status.to_s == "syncked"
+      "已审核,待确认"
+    else
+      status_name_without_alias_name
+    end
+  end
+
+  alias_method_chain :status_name,:alias_name
+
   def restore_state
 
     if !status_enabled?

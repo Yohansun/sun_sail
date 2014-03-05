@@ -31,27 +31,7 @@
       <fieldset class="form-inline">
         <fieldset class="form-inline">
           <label>历史状态：</label>
-          <%- if @refund_product.status_operations.present? -%>
-          <br/>
-            <% @refund_product.status_operations.each do |status| %>
-              <% status.each do |key, value| %>
-                <span class='label label-success'>
-                  <% if key.to_s == "created" %>
-                      待审核:<%= value.strftime('%Y-%m-%d %H:%M:%S') %>
-                  <% elsif key.to_s == "checked" %>
-                    已审核待同步:<%= value.strftime('%Y-%m-%d %H:%M:%S') %>
-                  <% elsif key.to_s == "syncked" %>
-                    已同步:<%= value.strftime('%Y-%m-%d %H:%M:%S') %>
-                  <% elsif key.to_s == "locked" %>
-                    已锁定:<%= value.strftime('%Y-%m-%d %H:%M:%S') %>
-                  <% else key.to_s == "enabled" %>
-                    已激活:<%= value.strftime('%Y-%m-%d %H:%M:%S') %>
-                  <% end %>
-                </span>
-              <% end %>
-            <% end %>
-          <br/>
-          <%- end -%>
+          <%= render "operation", refund_product: @refund_product %>
         </fieldset>
       </fieldset>
     </fieldset><!-- form left area -->
