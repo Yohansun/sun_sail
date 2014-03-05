@@ -165,7 +165,7 @@ MagicOrder::AccessControl.map do |map|
                                  "update_on_sale",
                                  "taobao_bind",
                                  "sync_taobao_products",
-                                 "confirm_sync",
+                                 "taobao_sync_versions",
                                  "remove_sku",
                                  "add_sku",
                                  "jingdong_products#syncing",

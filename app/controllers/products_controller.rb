@@ -1,8 +1,6 @@
 # -*- encoding : utf-8 -*-
 class ProductsController < ApplicationController
-
   before_filter :authorize
-  before_filter :get_products, :only => [:sync_taobao_products,:confirm_sync]
   before_filter :tmp_skus, :only => [:new,:create,:add_sku,:remove_sku]
 
   def index
@@ -114,19 +112,27 @@ class ProductsController < ApplicationController
   end
 
   def sync_taobao_products
+    payload_hash = SidekiqUniqueJobs::PayloadHelper.get_payload('TaobaoProductFetcher',:taobao_product_fetcher, [current_account.id])
+
+    if Sidekiq.redis {|conn| conn.exists(payload_hash)}
+      flash[:notice] = "已有队列正在同步中, 请稍后再试!"
+      redirect_to action: :taobao_products
+    else
+      TaobaoProductFetcher.perform_async(current_account.id)
+      flash[:notice] = "系统开始自动同步淘宝商品..."
+      redirect_to action: :taobao_products
+    end
   end
 
-  def confirm_sync
-    begin
-      TaobaoProduct.transaction do
-        TaobaoSku.transaction do
-          @products.map(&:perform)
-        end
-      end
-      redirect_to :action => :taobao_products
-    rescue Exception => e
-      render :text => e.message
+  def taobao_sync_versions
+    if !%w(TaobaoProduct TaobaoSku).include?(params[:type].to_s)
+      flash[:error] = "类型错误"
+      redirect_to(action: :taobao_products)
     end
+
+    tableize = params[:type].to_s.tableize
+    search = PaperTrail::Version.joins("JOIN #{tableize} on #{tableize}.id = versions.item_id and versions.item_type = '#{params[:type]}'").where("#{tableize}.account_id = #{current_account.id}").select("*,versions.created_at as created_at").order("versions.created_at desc")
+    @versions = search.page(params[:page]).per(20)
   end
 
   def fetch_category_properties
@@ -364,26 +370,6 @@ class ProductsController < ApplicationController
   end
 
   private
-
-  def get_products
-    begin
-      @news_products = []
-      @changes_products = []
-      @products = []
-      TradeSource.where(trade_type: "Taobao",account_id: current_account.id).each do |trade_source|
-        begin
-          @products << product = TaobaoProductSync.new(trade_source.id)
-          product.parsing
-          @news_products    += product.latest
-          @changes_products += product.changed
-        rescue Exception
-          next
-        end
-      end
-    rescue Exception => e
-      render(:text => e.message) and return
-    end
-  end
 
   def tmp_skus
     @skus = (current_user.settings.tmp_skus ||= [])

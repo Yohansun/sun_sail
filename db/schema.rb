@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140225063857) do
+ActiveRecord::Schema.define(:version => 20140303090851) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -466,8 +466,10 @@ ActiveRecord::Schema.define(:version => 20140225063857) do
     t.integer  "offline_return"
     t.integer  "hidden_num"
     t.integer  "seller_id"
-    t.datetime "created_at",             :null => false
-    t.datetime "updated_at",             :null => false
+    t.datetime "created_at",                            :null => false
+    t.datetime "updated_at",                            :null => false
+    t.integer  "audit_num",              :default => 0
+    t.integer  "audit_price",            :default => 0
   end
 
   add_index "reconcile_product_details", ["outer_id"], :name => "index_reconcile_product_details_on_outer_id"
@@ -820,15 +822,18 @@ ActiveRecord::Schema.define(:version => 20140225063857) do
   add_index "taobao_products", ["outer_id"], :name => "index_taobao_products_on_outer_id"
 
   create_table "taobao_skus", :force => true do |t|
-    t.integer "sku_id",            :limit => 8
-    t.integer "taobao_product_id", :limit => 8
-    t.integer "num_iid",           :limit => 8
-    t.string  "properties"
-    t.string  "properties_name"
-    t.integer "quantity"
-    t.integer "account_id"
-    t.integer "trade_source_id"
-    t.string  "shop_name"
+    t.integer  "sku_id",            :limit => 8
+    t.integer  "taobao_product_id", :limit => 8
+    t.integer  "num_iid",           :limit => 8
+    t.string   "properties"
+    t.string   "properties_name"
+    t.integer  "quantity"
+    t.integer  "account_id"
+    t.integer  "trade_source_id"
+    t.string   "shop_name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "property_alias"
   end
 
   add_index "taobao_skus", ["account_id"], :name => "index_taobao_skus_on_account_id"
@@ -937,6 +942,18 @@ ActiveRecord::Schema.define(:version => 20140225063857) do
   end
 
   add_index "users_roles", ["user_id", "role_id"], :name => "index_users_roles_on_user_id_and_role_id"
+
+  create_table "versions", :force => true do |t|
+    t.string   "item_type",      :null => false
+    t.integer  "item_id",        :null => false
+    t.string   "event",          :null => false
+    t.string   "whodunnit"
+    t.text     "object"
+    t.datetime "created_at"
+    t.text     "object_changes"
+  end
+
+  add_index "versions", ["item_type", "item_id"], :name => "index_versions_on_item_type_and_item_id"
 
   create_table "yihaodian_app_tokens", :force => true do |t|
     t.integer  "account_id"

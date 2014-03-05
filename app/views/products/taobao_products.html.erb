@@ -46,9 +46,10 @@
     <ul class="dropdown-menu">
       <li><a href="#" id="show_taobao_product">查看</a></li>
       <li><a href="#" id="tie_to_native_skus">绑定本地SKU</a></li>
+      <li><%= link_to "查看同步记录", taobao_sync_versions_products_path(type: "TaobaoProduct") %></li>
     </ul>
   </div><!-- btn-group -->
-  <div class="btn btn-warning"><%= link_to "同步淘宝数据", sync_taobao_products_products_path %></div>
+  <div class="btn btn-warning"><%= link_to "同步", sync_taobao_products_products_path %></div>
 
   <div class="btns btn-group pull-right js-field_set">
     <a href="#" class="btn btn-success btn_mar4">显示设置</a>
