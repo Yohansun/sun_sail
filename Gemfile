@@ -109,6 +109,8 @@ gem 'httparty'
 gem 'rchardet19'
 gem 'state_machine', "~> 1.2.0"
 
+gem 'mongoid-history'
+
 #test mail
 gem "mails_viewer"
 gem 'wicked'

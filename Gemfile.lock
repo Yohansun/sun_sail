@@ -148,6 +148,7 @@ GEM
     draper (0.18.0)
       actionpack (~> 3.2)
       activesupport (~> 3.2)
+    easy_diff (0.0.2)
     eco (1.0.0)
       coffee-script
       eco-source
@@ -288,6 +289,10 @@ GEM
       moped (~> 1.4.2)
       origin (~> 1.0)
       tzinfo (~> 0.3.22)
+    mongoid-history (0.4.1)
+      activesupport
+      easy_diff
+      mongoid (>= 3.0)
     moped (1.4.2)
     multi_json (1.6.1)
     multi_xml (0.5.2)
@@ -598,6 +603,7 @@ DEPENDENCIES
   meta_search
   mini_magick
   mongoid (= 3.1.0)
+  mongoid-history
   mysql2
   newrelic_rpm
   omniauth

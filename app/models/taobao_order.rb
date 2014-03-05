@@ -2,6 +2,8 @@
 
 class TaobaoOrder < Order
 
+  include Mongoid::History::Trackable
+
   field :oid, type: String
   field :status, type: String
 
@@ -42,6 +44,11 @@ class TaobaoOrder < Order
   embedded_in :taobao_trades
   embedded_in :custom_trades
   embedded_in :trades
+
+  track_history  :scope          => :taobao_trade,
+                 :version_field  => :version,
+                 :track_update   => true,
+                 :track_create   => true
 
   def trade
     taobao_trades || custom_trades || trades
