@@ -122,7 +122,7 @@ class DeliverBillsController < ApplicationController
     xml = nil
     if trade
       logistic = current_account.logistics.find_by_id(trade.try(:logistic_id))
-      logistic ||= current_account.logistics.find_by_id(trade.matched_logistics.select{ |e| e[2].present? }.first.try(:at, 0))
+      logistic ||= trade.matched_logistics.first
       if logistic
         xml = "/logistics/#{logistic.id}/print_flash_settings/#{logistic.print_flash_setting.id}/print_infos.xml"
       else

@@ -122,7 +122,7 @@
 <script type="text/javascript">
 
   // 获取物流商
-  $.get("/logistics/logistic_templates", {type: 'all', trade_type: "CustomTrade"}).done(function(data){
+  $.get("/logistics/all_logistics", {trade_type: "CustomTrade"}).done(function(data){
     var html_options = ''
     for (var i in data){
       html_options += '<option value="' + data[i].id + '">' + data[i].name + '</option>'

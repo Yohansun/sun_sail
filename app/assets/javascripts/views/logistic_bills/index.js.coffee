@@ -161,7 +161,7 @@ class MagicOrders.Views.LogisticBillsIndex extends MagicOrders.Views.BaseView
         html += '<td>' + trade.name + '</td>'
         html += '<td>' + trade.address + '</td></tr>'
 
-      $.get '/logistics/logistic_templates', {type: 'all', trade_type: trade_type}, (t_data)->
+      $.get '/logistics/all_logistics', {trade_type: trade_type}, (t_data)->
         html_options = ''
         for item in t_data
           html_options += '<option lid="' + item.id + '" value="' + item.xml + '">' + item.name + '</option>'
@@ -243,7 +243,7 @@ class MagicOrders.Views.LogisticBillsIndex extends MagicOrders.Views.BaseView
             notice += key + value + '单'
             flag = key if value == tmp.length
 
-          $.get '/logistics/logistic_templates', {type: 'all', trade_type: uniq_types[0]}, (t_data)->
+          $.get '/logistics/all_logistics', {trade_type: uniq_types[0]}, (t_data)->
             html_options = ''
             for item in t_data
               html_options += '<option lid="' + item.id + '" service_logistic_id="' + item.service_logistic_id + '" value="' + item.xml + '">' + item.name + '</option>'
