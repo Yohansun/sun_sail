@@ -3,6 +3,7 @@
 class TaobaoTrade < Trade
   include StockProductsLockable
   #include Dulux::Splitter
+  include Mongoid::History::Trackable
 
   #交易完成订单对应支付宝帐单的最后一次修改时间
   field :alipay_last_modified_time, type: DateTime
@@ -25,6 +26,15 @@ class TaobaoTrade < Trade
   accepts_nested_attributes_for :taobao_orders
 
   attr_accessor :search_fields
+
+  ## 用于跟踪订单被抓取到系统的字段的变化情况
+  ## 查询方法：trade.history_tracks
+  ## 注意目前只设置了淘宝订单的相关字段！
+  track_history :on => [:total_fee, :created, :tid, :status, :post_fee, :receiver_name, :pay_time, :end_time, :receiver_state, :receiver_city, :receiver_district, :receiver_address, :receiver_zip, :receiver_mobile, :receiver_phone, :buyer_nick, :tile, :type, :point_fee, :is_lgtype, :is_brand_sale, :is_force_wlb, :modified, :alipay_id, :alipay_no, :alipay_url, :shipping_type, :buyer_obtain_point_fee, :cod_fee, :cod_status, :commission_fee, :seller_nick, :consign_time, :received_payment, :payment, :timeout_action_time, :has_buyer_message, :real_point_fee],
+                :version_field  =>  :version,  # adds "field :version, :type => Integer" to track current version, default is :version
+                :track_create   =>  true,      # track document creation, default is false
+                :track_update   =>  true,      # track document updates, default is true
+                :track_destroy  =>  false      # track document destruction, default is false
 
   def matched_seller(area = nil)
     area ||= default_area
