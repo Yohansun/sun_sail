@@ -61,6 +61,7 @@ class LogisticsController < ApplicationController
   	logistic_area = LogisticArea.where(logistic_id: params[:logistic_id],area_id: params[:area_id])
     if !logistic_area.present?
       logistic_area = LogisticArea.new
+      logistic_area.account_id = current_account.id
       logistic_area.logistic_id = params[:logistic_id]
       logistic_area.area_id = params[:area_id]
       logistic_area.save
@@ -134,45 +135,14 @@ class LogisticsController < ApplicationController
   end
 
   def logistic_templates
-    tmp = []
-    @logistics = current_account.logistics
-    if params[:trade_type].present? && params[:trade_type] != "CustomTrade"
-      source_type = params[:trade_type].underscore.gsub(/(_)?trade$/,'')
-    end
-    # TODO
-    # 默认使用统一平台下的第一个店铺的物流商信息
-    # 鉴于这一块如果做好的话得取同一平台下所有店铺物流商的集, 逻辑有点不清晰,而且代码量比较多, 而且这么做下来未必就是最好的解决方案.
-    # 最好的就是本地物流信息绑定第三方物流商,如果第三方平台中的某个店铺更新了物流信息,在本地发货的时候没有找到, 或物流商信息变更了,
-    # 导致发货失败,提示更新第三方物流,并手动绑定后在发货.
-    method = source_type.to_s.dup << "_sources"
-    trade_source = current_account.respond_to?(method) && current_account.send(method).first
-    @logistics.each do |l|
-      tmp << {
-        id: l.id,
-        service_logistic_id: (l.send("#{source_type}_logistic_id",trade_source.id) rescue ""),
-        xml: "/logistics/#{l.id}/print_flash_settings/#{l.print_flash_setting.id}/print_infos.xml",
-        name: l.name
-      }
-    end
-    if trade_source.present?
-      render json: tmp.reject {|h| h[:service_logistic_id].blank?}
-    else
-      render json: tmp
-    end
+    trade = Trade.find(params[:trade_id])
+    logistics = trade.matched_logistics
+    render json: filter_logistic_by_source(trade._type, logistics)
   end
 
   def all_logistics
-    tmp = []
-    @logistics = Logistic.with_account(current_account.id)
-    @logistics.each do |l|
-      tmp << {
-        id: l.id,
-        xml: "/logistics/#{l.id}/print_flash_settings/#{l.print_flash_setting.id}/print_infos.xml",
-        name: l.name
-      }
-    end
-
-    render json: tmp
+    logistics = Logistic.with_account(current_account.id)
+    render json: filter_logistic_by_source(params[:trade_type], logistics)
   end
 
   private
@@ -183,6 +153,30 @@ class LogisticsController < ApplicationController
       @logistic.build_print_flash_setting
       @logistic.save
     end
+  end
+
+  def filter_logistic_by_source(trade_type, logistics)
+    # TODO
+    # 默认使用统一平台下的第一个店铺的物流商信息
+    # 鉴于这一块如果做好的话得取同一平台下所有店铺物流商的集, 逻辑有点不清晰,而且代码量比较多, 而且这么做下来未必就是最好的解决方案.
+    # 最好的就是本地物流信息绑定第三方物流商,如果第三方平台中的某个店铺更新了物流信息,在本地发货的时候没有找到, 或物流商信息变更了,
+    # 导致发货失败,提示更新第三方物流,并手动绑定后在发货.
+
+    tmp          = []
+    method       = trade_type.underscore.gsub(/(_)?trade$/,'').to_s.dup << "_sources"
+    trade_source = current_account.respond_to?(method) && current_account.send(method).first
+
+    logistics.each do |l|
+      tmp << {
+        id:                  l.id,
+        service_logistic_id: (l.send("#{source_type}_logistic_id",trade_source.id) rescue ""),
+        xml:                 "/logistics/#{l.id}/print_flash_settings/#{l.print_flash_setting.id}/print_infos.xml",
+        name:                l.name
+      }
+    end
+
+    return tmp.reject {|h| h[:service_logistic_id].blank?} if trade_source.present?
+    return tmp
   end
 
 end

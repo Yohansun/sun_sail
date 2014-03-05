@@ -493,8 +493,7 @@
 
       var logistic_name = "<%= @trade.logistic_name %>"
       $.get('/logistics/logistic_templates', {
-        type: 'all',
-        trade_type: "<%= @trade._type %>"
+        trade_id: "<%= @trade.id %>"
       }, function(t_data) {
         var html_options, item, service_logistic_id, _i, _len;
         html_options = '';

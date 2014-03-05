@@ -17,7 +17,7 @@ class MagicOrders.Views.TradesBatchSetupLogistic extends Backbone.View
     html_options = ''
     html_options += '此次共设置' + @count + '单物流信息'
     $(@el).find('#trade_count').html(html_options)
-    $.get '/logistics/logistic_templates', {type: 'all', trade_type: @trades[0].attributes.trade_type}, (t_data)->
+    $.get '/logistics/all_logistics', {trade_type: @trades[0].attributes.trade_type}, (t_data)->
       html_options = ''
       for item in t_data
         html_options += '<option lid="' + item.id + '" service_logistic_id="' + item.service_logistic_id + '" value="' + item.xml + '">' + item.name + '</option>'
@@ -35,7 +35,7 @@ class MagicOrders.Views.TradesBatchSetupLogistic extends Backbone.View
     length = nary.length - 1
     for i in [0..length]
       if i < length && nary[i] == nary[i+1]
-        alert("运单号不能重复"); 
+        alert("运单号不能重复");
         return
     for trade in @trades
       waybill = $('.waybill' + trade.get('tid')).val()

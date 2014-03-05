@@ -61,7 +61,6 @@ json.logistic_id                 @trade.logistic_id
 json.logistic_name               @trade.logistic_name
 json.logistic_company            @trade.logistic_company
 json.logistic_waybill            @trade.logistic_waybill
-json.matched_logistics           @trade.matched_logistics
 json.logistic_memo               @trade.logistic_memo
 json.invoice_type                @trade._type == "YihaodianTrade" ? @trade.invoice_type_name : @trade.invoice_type
 json.invoice_name                @trade.invoice_name
