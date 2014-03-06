@@ -243,9 +243,9 @@ class StockOutBill < StockBill
   def so_to_wms_worker
     if account.settings.enable_module_third_party_stock != 1
       if can_do_syncked?
-        do_syncked && operation_logs.create(operated_at: Time.now, operation: '确认同步成功')
+        do_syncked && operation_logs.create(operation: '确认同步成功')
       else
-        operation_logs.create(operated_at: Time.now, operation: '确认同步失败')
+        operation_logs.create(operation: '确认同步失败')
       end
       return
     end
@@ -262,11 +262,11 @@ class StockOutBill < StockBill
       if result['Response']
         if result['Response']['success'] == 'true'
           do_syncked
-          operation_logs.create(operated_at: Time.now, operation: '同步成功')
+          operation_logs.create(operation: '同步成功',text: result)
         else
           self.failed_desc = result['Response']['desc']
           do_synck_fail
-          operation_logs.create(operated_at: Time.now, operation: "同步失败,#{result['Response']['desc']}")
+          operation_logs.create(operation: "同步失败,#{result['Response']['desc']}",text: result)
         end
       end
 
@@ -274,11 +274,11 @@ class StockOutBill < StockBill
       if result['DATA']
         if result['DATA']['RET_CODE'] == 'SUCC'
           do_syncked
-          operation_logs.create(operated_at: Time.now, operation: '同步成功')
+          operation_logs.create(operation: '同步成功',text: result)
         else
           self.failed_desc = result['DATA']['RET_MESSAGE']
           do_synck_fail
-          operation_logs.create(operated_at: Time.now, operation: "同步失败,#{result['DATA']['RET_MESSAGE']}")
+          operation_logs.create(operation: "同步失败,#{result['DATA']['RET_MESSAGE']}",text: result)
         end
       end
     end
@@ -307,11 +307,11 @@ class StockOutBill < StockBill
     if result['Response']
       if result['Response']['success'] == 'true'
         do_cancel_ok
-        operation_logs.create(operated_at: Time.now, operation: '取消成功')
+        operation_logs.create(operation: '取消成功',text: result)
       else
         self.failed_desc = result['Response']['desc']
         do_cancel_fail
-        operation_logs.create(operated_at: Time.now, operation: "取消失败,#{result['Response']['desc']}")
+        operation_logs.create(operation: "取消失败,#{result['Response']['desc']}",text: result)
       end
     end
 
@@ -319,11 +319,11 @@ class StockOutBill < StockBill
     if result['DATA']
       if result['DATA']['RET_CODE'] == 'SUCC'
         do_cancel_ok
-        operation_logs.create(operated_at: Time.now, operation: '取消成功')
+        operation_logs.create(operation: '取消成功',text: result)
       else
         self.failed_desc = result['DATA']['RET_MESSAGE']
         do_cancel_fail
-        operation_logs.create(operated_at: Time.now, operation: "取消失败,#{result['DATA']['RET_MESSAGE']}")
+        operation_logs.create(operation: "取消失败,#{result['DATA']['RET_MESSAGE']}",text: result)
       end
     end
   end

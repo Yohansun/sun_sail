@@ -6,10 +6,14 @@ class OperationLog
   field :operated_at,    type: DateTime
   field :operator,       type: String
   field :operator_id,    type: Integer
+  field :text,           type: String
 
   embedded_in :trades
   embedded_in :stock_bill
   after_create :transfer_to_redis
+  after_initialize do
+    self.operated_at ||= Time.now
+  end
 
   def account_id
     trades.try(:account_id) || stock_bill.try(:account_id)
