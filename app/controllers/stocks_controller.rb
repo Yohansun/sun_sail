@@ -194,6 +194,9 @@ class StocksController < ApplicationController
 
   private
   def set_warehouse
+    if !current_user.superadmin? && current_user.seller_id.present? && current_user.seller_id.to_s != params[:warehouse_id].to_s
+      redirect_to(warehouse_stocks_path(current_user.seller_id)) and return
+    end
     @warehouse = Seller.find(params[:warehouse_id]) rescue false
   end
   def set_hold_hash(relation)

@@ -22,7 +22,7 @@ module WarehousesHelper
       if params[:warehouse_id]
          "/warehouses/#{params[:warehouse_id]}/stocks"
       else
-        stocks_path
+        current_user.seller_id.blank? ? stocks_path : warehouse_stocks_path(current_user.seller_id)
       end
     else
       warehouse = current_account.sellers.first
