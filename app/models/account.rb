@@ -389,6 +389,11 @@ class Account < ActiveRecord::Base
     ]
   end
 
+  # 第三方仓库为 'biaogan' 的 accounts ids
+  def self.biaoganer
+    RailsSettings::ScopedSettings.where(var: 'third_party_wms',thing_type: 'Account').search(:value_like => 'biaogan').collect {|s| s.thing_id}
+  end
+
   def init_settings
     setting_values.each{|key,value|
       self.settings[key] = value

@@ -63,11 +63,11 @@ class StockApiController < ApplicationController
           render soap: "SUCCESS"
         elsif stock_in_bill.sync_stock
           stock_in_bill.do_stock
-          stock_in_bill.operation_logs.create(operated_at: Time.now, operation: '确认入库成功')
+          recording(stock_in_bill.operation_logs,{operation: '确认入库成功',text: response})
           render soap: "SUCCESS"
         else
           stock_in_bill.update_attributes(confirm_failed_at: Time.now)
-          stock_in_bill.operation_logs.create(operated_at: Time.now, operation: '确认入库失败')
+          recording(stock_in_bill.operation_logs,{operation: '确认入库失败',text: response})
           render soap: "FAILED"
         end
       else
@@ -146,11 +146,11 @@ class StockApiController < ApplicationController
           render soap: "SUCCESS"
         elsif stock_out_bill.decrease_actual
           stock_out_bill.do_stock
-          stock_out_bill.operation_logs.create(operated_at: Time.now, operation: '确认出库成功')
+          recording(stock_out_bill.operation_logs,{operation: '确认出库成功',text: response})
           render soap: "SUCCESS"
         else
           stock_out_bill.update_attributes(confirm_failed_at: Time.now)
-          stock_out_bill.operation_logs.create(operated_at: Time.now, operation: '确认出库失败')
+          recording(stock_out_bill.operation_logs,{operation: '确认出库失败',text: response})
           render soap: "FAILED"
         end
       else
@@ -199,19 +199,19 @@ class StockApiController < ApplicationController
               end
             end
           elsif order['OPTTYPE'] == 'OrderSign'
-            stock_bill.operation_logs.create(operated_at: Time.now, operation: '签收')
+            recording(stock_bill.operation_logs,{operation: '签收',text: response})
           elsif order['OPTTYPE'] == 'OrderRefuse'
-            stock_bill.operation_logs.create(operated_at: Time.now, operation: '拒收')
+            recording(stock_bill.operation_logs,{operation: '拒收',text: response})
           end
         end
 
         if order['OPTTYPE'] == 'OrderShip'
           stock_bill.do_stock
-          stock_bill.operation_logs.create(operated_at: Time.now, operation: '确认成功')
+          recording(stock_bill.operation_logs,{operation: '确认成功',text: response})
         elsif order['OPTTYPE'] == 'OrderSign'
-          stock_bill.operation_logs.create(operated_at: Time.now, operation: '签收')
+          recording(stock_bill.operation_logs,{operation: '签收',text: response})
         elsif order['OPTTYPE'] == 'OrderRefuse'
-          stock_bill.operation_logs.create(operated_at: Time.now, operation: '拒收')
+          recording(stock_bill.operation_logs,{operation: '拒收',text: response})
         end
         render soap: "<DATA><RET_CODE>SUCC</RET_CODE><RET_MESSAGE>OK</RET_MESSAGE></DATA>"
       else
@@ -226,5 +226,10 @@ class StockApiController < ApplicationController
   before_filter :dump_parameters
   def dump_parameters
     Rails.logger.debug params.inspect
+  end
+
+  private
+  def recording(record,options)
+    record.create(options)
   end
 end

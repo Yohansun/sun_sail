@@ -122,7 +122,7 @@ class StockBill
 
     #撤销同步
     event :do_canceling do
-      transition [:syncked,:canceld_failed,:syncking] => :canceling, :if => lambda {|bill| !bill.operation_locked? }
+      transition [:syncked,:canceld_failed] => :canceling, :if => lambda {|bill| !bill.operation_locked? }
     end
 
     #撤销成功

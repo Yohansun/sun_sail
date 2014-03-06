@@ -26,8 +26,8 @@
             <%- if @bill.operation_logs.present? -%>
             <br/>
             <%- @bill.operation_logs.each do |log| %>
-            <label>
-              <%= "#{log.operated_at.strftime("%Y-%m-%d %H:%M:%S")}, #{log.operation}  #{log.operator}" %>
+            <label title="<%= log.text %>" rel="tooltip">
+              <%= [log.operated_at.strftime("%Y-%m-%d %H:%M:%S"), log.operation, log.operator].join(',') %>
             </label>
             <br/>
             <%- end %>
@@ -84,10 +84,15 @@
             <br><span class="label label-warning">发票抬头</span>:
             <br><span class="label label-warning">开票金额</span> 0.0
           <%- end%>
-
-
         </div>
       </div>
     </div>
   </div>
 </div>
+<% content_for :tail do %>
+<script type="text/javascript" charset="utf-8">
+$(function(){
+  $('[rel=tooltip]').tooltip()
+})
+</script>
+<% end %>
