@@ -1,4 +1,10 @@
-source 'http://rubygems.org/'
+source 'http://ruby.taobao.org/'
+
+# invalid byte sequence in US-ASCII (ArgumentError)
+if RUBY_VERSION =~ /1.9/ # assuming you're running Ruby ~1.9
+  Encoding.default_external = Encoding::UTF_8
+  Encoding.default_internal = Encoding::UTF_8
+end
 
 gem 'rails', '>= 3.2.11'
 
@@ -88,7 +94,6 @@ gem 'sidekiq-unique-jobs'
 gem 'slim'
 gem 'sinatra', :require => nil
 
-gem 'httparty'
 gem 'savon', '2.1.0'
 gem 'wash_out', '0.6.1'
 gem 'collections'
