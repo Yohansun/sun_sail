@@ -71,16 +71,17 @@ class Order
     tmp = skus.collect do |sku|
       next unless sku && sku.product
       {
-        name:               sku.product.name,
-        outer_id:           sku.product.outer_id,
-        product_id:         sku.product.id,
-        product_price:      sku.product.price,
-        category_name:      sku.product.category.try(:name),
-        number:             self.num * (sku_bindings.present? && sku_bindings.find_by_sku_id(sku.id).try(:number) || 1),
-        stock_product_ids:  sku.stock_product_ids,
-        sku_id:             sku.id,
-        sku_title:          sku.title,
-        sku_properties:     sku.name
+        name:                 sku.product.name,
+        outer_id:             sku.product.outer_id,
+        product_id:           sku.product.id,
+        product_price:        sku.product.price,
+        category_name:        sku.product.category.try(:name),
+        number:               self.num * (sku_bindings.present? && sku_bindings.find_by_sku_id(sku.id).try(:number) || 1),
+        stock_product_ids:    sku.stock_product_ids,
+        sku_id:               sku.id,
+        sku_title:            sku.title,
+        sku_properties:       sku.name,
+        property_memos_text:  property_memos_text(sku.product.outer_id)
       }
     end
     tmp.compact
@@ -119,4 +120,14 @@ class Order
     #OVERWRITTEN BY SUBCLASS
     []
   end
+
+  def property_memos_text(outer_id)
+    memos_text = []
+    trade_property_memos.where(outer_id: outer_id).each_with_index do |memo, index|
+      memos_text << "商品#{index+1}备注: " + memo.property_values.collect{ |value| "#{value.name}: #{value.value}"}.join(",")
+    end
+    memos_text
+  end
+
+
 end

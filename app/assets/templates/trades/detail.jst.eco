@@ -13,15 +13,15 @@
     <table class="table table-bordered table-condensed">
       <thead>
         <tr>
-          <th colspan="2" width="35%">商品名称</th>
-          <th width="">数量</th>
-          <th width="15%">商品编码</th>
-          <th width="28%">商品属性</th>
-          <th width="15%">属性备注</th>
+          <th colspan="2" width="20%">商品名称</th>
+          <th width="5%">数量</th>
+          <th width="10%">商品编码</th>
+          <th width="20%">商品属性</th>
+          <th width="20%">属性备注</th>
           <% unless @trade.get('total_fee') is undefined : %>
-            <th width="">单价</th>
+            <th width="5%">单价</th>
           <% end %>
-          <th>备注</th>
+          <th width="10%">备注</th>
           <th width="10%">退货状态</th>
         </tr>
       </thead>
@@ -53,10 +53,8 @@
                   <td><%= info['outer_id'] %></td>
                   <td><%= info['sku_properties'] %></td>
                   <td>
-                    <% for memo in order.trade_property_memos : %>
-                      <% for value in memo.property_values : %>
-                        <%= value['name'] %>: <%= value['value'] %></br>
-                      <% end %>
+                    <% for text in info['property_memos_text'] : %>
+                      <%= text %><br>
                     <% end %>
                   </td>
                   <td>---</td>

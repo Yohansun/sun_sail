@@ -47,6 +47,14 @@ class DeliverBill
     self.destroy
   end
 
+  def batch_num
+    print_batches.last.try(:batch_num)
+  end
+
+  def serial_num
+    print_batches.last.try(:serial_num)
+  end
+
   private
   def duplicate
     self.clone
