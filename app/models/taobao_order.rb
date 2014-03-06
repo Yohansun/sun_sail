@@ -133,34 +133,7 @@ class TaobaoOrder < Order
     end
   end
 
-  def order_price
-    order_payment / num
-  end
-
-  def order_payment
-    if taobao_trades
-      if taobao_trades.orders.count == 1
-        fee = payment - taobao_trades.post_fee
-      else
-        fee = payment
-      end
-    elsif custom_trades
-      fee = payment
-    elsif trades
-      fee = payment
-    end
-    fee
-  end
-
-  def promotion_discount_fee
-    if taobao_trades
-      if taobao_trades.promotion_details.present?
-        discount_fee = taobao_trades.promotion_details.where(oid: oid).sum(:discount_fee)
-      end
-    end
-    discount_fee ||  0
-  end
-
+  ## 子订单商品属性列表
   def multi_product_properties
     mutiple_properties = []
     self.sku_products.each do |sku_product|
@@ -196,5 +169,53 @@ class TaobaoOrder < Order
       end
     end if self.sku_products.present?
     mutiple_properties
+  end
+
+  ## 子订单买家评价信息
+  def rate_info
+    TaobaoTradeRate.where(oid: oid).first
+  end
+
+####################
+##### 各种金额
+
+  ## 淘宝商品实付金额
+  def order_price
+    (order_payment/num).to_f.round(2)
+  end
+
+  ## 淘宝商品优惠金额
+  def product_discount_fee
+    (discount_fee/num).to_f.round(2)
+  end
+
+  ## 子订单实付金额
+  def order_payment
+    if taobao_trades
+      if taobao_trades.orders.count == 1
+        fee = payment - taobao_trades.post_fee
+      else
+        fee = payment
+      end
+    elsif custom_trades
+      fee = payment
+    elsif trades
+      fee = payment
+    end
+    fee
+  end
+
+  ## 除“淘宝商品优惠金额”外的，子订单其他优惠的总和
+  def other_discount_fee
+    (price - order_price - product_discount_fee)*num
+  end
+
+  def promotion_discount_fee
+    if taobao_trades
+      if taobao_trades.promotion_details.present?
+        discount_fee = taobao_trades.promotion_details.where(oid: oid).sum(:discount_fee)
+      end
+    end
+    discount_fee ||  0
   end
 end

@@ -14,8 +14,8 @@
             <th class="thbg_gray" width="5%">数量</th>
             <th class="thbg_gray" width="10%">商品编码</th>
             <th class="thbg_gray" width="15%">商品属性</th>
-            <th class="thbg_gray" width="10%">属性备注</th>
-            <th class="thbg_gray" width="10%">单价</th>
+            <th class="thbg_gray" width="15%">属性备注</th>
+            <th class="thbg_gray" width="5%">单价</th>
             <th class="thbg_gray" width="10%">备注</th>
             <th class="thbg_gray" width="10%">退货状态</th>
           </tr>
@@ -44,10 +44,8 @@
                 <td><%= info[:outer_id] %></td>
                 <td><%= info[:sku_properties] %></td>
                 <td>
-                  <% order.trade_property_memos.each do |memo| %>
-                    <% memo.property_values.each do |value| %>
-                      <%= value.name %>: <%= value.value %></br>
-                    <% end %>
+                  <% info[:property_memos_text].each do |info| %>
+                    <%= info %></br>
                   <% end %>
                 </td>
                 <td>---</td>

@@ -85,5 +85,4 @@ class Sku < ActiveRecord::Base
     end
   end
 
-
 end
