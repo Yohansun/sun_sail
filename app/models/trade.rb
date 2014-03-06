@@ -1313,6 +1313,13 @@ class Trade
                 end
                 conditions[key] << {"$and"=>and_cond}
 
+              elsif key == "has_sku_properties"
+                search_tags_hash.update({"taobao_orders" => {"$elemMatch" => {"sku_properties_name" => not_void}}})
+                search_tags_hash.update({"taobao_orders" => {"$elemMatch" => {"sku_properties_name" => words}}}) if words
+                and_cond << {"taobao_orders" => {"$elemMatch" => {"sku_properties_name" => not_void}}}
+                and_cond << {"taobao_orders" => {"$elemMatch" => {"sku_properties_name" => words}}} if words
+                conditions[key] << {"$and"=>and_cond}
+
               elsif key == "has_cs_memo"
                 search_tags_hash.update({"has_cs_memo" => true})
                 search_tags_hash.update({"$or" => [{"cs_memo" => words},{"taobao_orders" => {"$elemMatch" => {"cs_memo" => words}}}]}) if words

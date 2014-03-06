@@ -109,6 +109,7 @@
             <option value="false">没有</option>
           </select>
           <select class="input-medium pull-left radius_no select2">
+            <option value="has_sku_properties">商品属性</option>
             <option value="has_property_memos">属性备注</option>
             <option value="has_invoice_info">发票信息</option>
             <option value="has_product_info">商品信息</option>
