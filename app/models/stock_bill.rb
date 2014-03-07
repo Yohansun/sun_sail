@@ -258,9 +258,9 @@ class StockBill
     when "SYNCKING" then "同步中"
     when "SYNCKED"
       if _type == "StockOutBill"
-        "已同步待出库"
+        enabled_third_party_stock? ? "已同步待出库" : "已审核，待出库"
       else
-        "已同步待入库"
+        enabled_third_party_stock? ? "已同步待入库" : "已审核，待入库"
       end
     when "SYNCK_FAILED" then "同步失败待同步"
     when "CLOSED" then "已关闭"

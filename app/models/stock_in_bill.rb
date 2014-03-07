@@ -66,6 +66,7 @@ class StockInBill < StockBill
   def check
     return false if not can_do_check?
     do_check
+    sync if !enabled_third_party_stock?
     initial_stock if stock_type == "IINITIAL" || stock_type == "ICP"
   end
 
@@ -84,14 +85,14 @@ class StockInBill < StockBill
   end
 
   # 确认撤销
-  def confirm_cancle
-    !!(do_cancel_ok && operation_logs.create(operated_at: Time.now, operation: '取消成功') )
-  end
+  # def confirm_cancle
+  #   !!(do_cancel_ok && operation_logs.create(operated_at: Time.now, operation: '取消成功') )
+  # end
 
   # 拒绝撤销
-  def refuse_cancle
-    !!(do_cancel_fail && operation_logs.create(operated_at: Time.now, operation: '取消失败') )
-  end
+  # def refuse_cancle
+  #   !!(do_cancel_fail && operation_logs.create(operated_at: Time.now, operation: '取消失败') )
+  # end
 
   def lock!(user)
     return "不能再次锁定!" if self.operation_locked?
@@ -118,7 +119,7 @@ class StockInBill < StockBill
   def sync
     if can_do_syncking?
       do_syncking
-      ans_to_wms if enabled_third_party_stock?
+      enabled_third_party_stock? ? ans_to_wms : confirm_sync
     end
   end
 
@@ -137,12 +138,17 @@ class StockInBill < StockBill
 
   #推送入库通知单至仓库
   def ans_to_wms_worker
-    if account.settings.third_party_wms == "biaogan"
+    if account.settings.enable_module_third_party_stock != 1
+      if do_syncked
+        operation_logs.create(operated_at: Time.now, operation: '确认审核')
+      else
+        operation_logs.create(operated_at: Time.now, operation: '审核失败',text: self.errors.full_messages)
+      end
+      return
+    elsif account.settings.third_party_wms == "biaogan"
       result_xml = Bml.ans_to_wms(account, xml)
     elsif account.settings.third_party_wms == "gqs"
       result_xml = Gqs.receipt_add(account, gqs_xml)
-    elsif account.settings.enable_module_third_party_stock != 1
-      return do_syncked && operation_logs.create(operated_at: Time.now, operation: '同步成功')
     end
     result = Hash.from_xml(result_xml).as_json
 
