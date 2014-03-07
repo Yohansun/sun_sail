@@ -10,7 +10,7 @@ class MagicOneHitFetcher
     # more settings here
     TaobaoTradePuller.create(Time.now - 3.month, Time.now, trade_source_id)
     TaobaoLogisticsOrdersPuller.create(Time.now - 3.month, Time.now, trade_source_id)
-    TaobaoProductsPuller.create_from_trades!(trade_source_id)
+    TaobaoProductSync.new(trade_source).sync if account.taobao_products.first.nil?
     TaobaoProductsPuller.sync_cat_name(trade_source_id)
     base_url = TradeSetting.base_url
     HTTParty.put("#{base_url}/account_setups/#{trade_source.account_id}/data_fetch_finish")
