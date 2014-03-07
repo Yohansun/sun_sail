@@ -36,7 +36,9 @@ class JingdongSku < ActiveRecord::Base
   scope :is_binding, includes(:sku_bindings).where("sku_bindings.id is not null")
   scope :no_binding, includes(:sku_bindings).where("sku_bindings.id is null")
   scope :with_account, ->(account_id){ where(account_id: account_id) }
-  
+
+  has_paper_trail
+
   def title
     "#{jingdong_product.try(:title)} #{name}"
   end

@@ -37,6 +37,8 @@ class YihaodianProduct < ActiveRecord::Base
   enum_attr :genre,[["普通商品",0],["套餐商品",1],["系列商品",2]]
   scope :with_account, ->(account_id){ where(account_id: account_id) }
 
+  has_paper_trail
+
   before_create :build_yihaodian_sku
 
   def has_bindings

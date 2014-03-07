@@ -1,0 +1,14 @@
+<% content_for :sub_nav do %>
+<ul class="nav nav-tabs js-nav_tabs">
+  <li class="<%= params[:type] == "JingdongProduct" ? 'active' : '' %>"><%= link_to "京东商品",sync_history_jingdong_products_path(type: 'JingdongProduct') %></li>
+  <li class="<%= params[:type] == "JingdongSku"     ? 'active' : '' %>"><%= link_to "京东商品SKU",sync_history_jingdong_products_path(type: 'JingdongSku') %></li>
+</ul><!-- nav-tabs -->
+<% end %>
+
+<div class="container-fluid">
+  <% if params[:type] == "JingdongProduct" %>
+    <%= render "products" %>
+  <% elsif params[:type] == 'JingdongSku' %>
+    <%= render "skus" %>
+  <% end %>
+</div>

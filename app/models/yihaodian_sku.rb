@@ -33,6 +33,8 @@ class YihaodianSku < ActiveRecord::Base
   scope :is_binding, includes(:sku_bindings).where("sku_bindings.id is not null")
   scope :no_binding, includes(:sku_bindings).where("sku_bindings.id is null")
 
+  has_paper_trail
+
   def title
     "#{yihaodian_product.try(:product_cname)}"
   end

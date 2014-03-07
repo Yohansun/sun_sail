@@ -45,9 +45,10 @@
     <ul class="dropdown-menu">
       <li><a href="#" id="show_yihaodian_product">查看</a></li>
       <li><a href="#" id="tie_to_native_skus">绑定本地SKU</a></li>
+      <li><%= link_to_authorize "查看同步记录", sync_history_yihaodian_products_path(type: "YihaodianProduct") %></li>
     </ul>
   </div><!-- btn-group -->
-  <div class="btn btn-warning"><%= link_to "同步一号店数据", sync_yihaodian_products_path %></div>
+  <div class="btn btn-warning"><%= link_to "同步一号店数据", sync_yihaodian_products_path,method: :put %></div>
 </div><!-- btn-groups end -->
 
 <div class="">

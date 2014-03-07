@@ -85,7 +85,7 @@ class TaobaoProductSync < BaseSync
 
   def processes_skus(items)
     sku_ids   = items.collect {|item| item["sku_id"] }.compact
-    num_iids  = items.select {|item| item["sku_id"].blank? }.collect {|item| item["num_iid"].compact }
+    num_iids  = items.select {|item| item["sku_id"].blank? }.collect {|item| item["num_iid"] }.compact
     # 减少查询次数
     conditions = {sku_id: sku_ids,num_iid: num_iids}.reject {|k,v| v.blank?}
     taobao_skus = TaobaoSku.where(default_attributes).where(conditions).to_a

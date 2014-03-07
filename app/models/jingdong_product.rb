@@ -65,6 +65,8 @@ class JingdongProduct < ActiveRecord::Base
   scope :with_account, ->(account_id){ where(account_id: account_id) }
   belongs_to :account
 
+  has_paper_trail
+
   def has_bindings
     status = "未绑定"
     jingdong_skus.each do |sku|

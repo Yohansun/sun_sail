@@ -4,6 +4,8 @@ class YihaodianAppTokensController < ApplicationController
   #目前只考虑到已经创建了Account的帐户
   def index
     info = auth_hash.info
+
+    trade_source = current_account.yihaodian_sources.where(name: info.nickName).first_or_create
     parameters = {
       account_id:           current_account.id,
       trade_source_id:      trade_source.id,
@@ -16,7 +18,6 @@ class YihaodianAppTokensController < ApplicationController
       user_type:            info.userType
     }
 
-    trade_source = current_account.yihaodian_sources.where(name: info.nick_name).first_or_create
     (trade_source.yihaodian_app_token || trade_source.build_yihaodian_app_token).update_attributes!(parameters)
 
     YihaodianInitialFetcher.perform_async(trade_source.id)
