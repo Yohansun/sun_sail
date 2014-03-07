@@ -253,7 +253,7 @@
         </div>
 
         <!-- 属性备注 -->
-        <% if @trade._type == "TaobaoTrade" && @trade.delivered_at.blank? && @trade.consign_time.blank? %>
+        <% if @trade.delivered_at.blank? && @trade.consign_time.blank? %>
         <div class="accordion-group well nopadding">
           <div class="accordion-heading">
             <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion_check" href="#collapseFour">
