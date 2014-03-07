@@ -278,8 +278,8 @@ MagicOrders::Application.routes.draw do
 
   resources :yihaodian_products do
     collection do
-      get :sync
-      put :syncing
+      put :sync
+      get :sync_history
       get :yihaodian_skus
       get :change_yihaodian_skus
       post :tie_to_native_skus

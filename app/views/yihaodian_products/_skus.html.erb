@@ -1,54 +1,32 @@
-<p><h4>新增SKU</h4></p>
-<table class="table table-hover">
-  <thead>
-    <tr>
-      <th>#</th>
-      <th>商品ID</th>
-      <th>上下架状态</th>
-      <th>是否可见</th>
-      <th>所属店铺</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @latest_skus.each_with_index do |sku,index| %>
-    <tr>
-      <td><%= index + 1 %></td>
-      <td><%= sku.product_id %></td>
-      <td><%= sku.can_sale_name %></td>
-      <td><%= sku.can_show? ? "是" : "否" %></td>
-      <td><%= sku.shop_name %></td>
-    </tr>
-    <% end %>
-  </tbody>
-</table>
-<p><h4>属性变更SKU</h4></p>
 <table class="table table-bordered">
   <thead>
     <tr>
-      <th>#</th>
-      <th>#</th>
       <th>商品ID</th>
       <th>上下架状态</th>
       <th>是否可见</th>
       <th>所属店铺</th>
-      <th></th>
+      <th>变更类型</th>
+      <th>变更属性</th>
+      <th>同步时间</th>
     </tr>
   </thead>
   <tbody>
-    <% @changed_skus.each_with_index do |sku,index| %>
+    <% @versions.each do |version| %>
     <tr>
-      <td><%= index + 1 %></td>
-      <td><%= sku.product_id %></td>
-      <td><%= sku.can_sale_name %></td>
-      <td><%= sku.can_show? ? "是" : "否" %></td>
-      <td><%= sku.shop_name %></td>
+      <td><%= version.product_id %></td>
+      <td><%= YihaodianProduct::CAN_SALE.rassoc(version.can_sale).first %></td>
+      <td><%= version.can_show? ? "是" : "否" %></td>
+      <td><%= version.shop_name %></td>
+      <td><%= version.event == "create" ? "创建" : "更新" %></td>
       <td>
-        <% sku.changes.each do |change| %>
-        <strong><%= column_humanize change.first %>:</strong><span class="label label-important">-<%= change.last[0] %></span>
-        <span class="label label-success">+<%= change.last[1] %></span></br>
+        <% version.changeset.each do |key,values| %>
+        <%= key %>: <span class="label label-important">-<%= values.first %></span>
+        <span class="label label-success">+<%= values.last %></span></br>
         <% end %>
       </td>
+      <td><%= l version.created_at %></td>
     </tr>
     <% end %>
   </tbody>
 </table>
+<%= paginate @versions %>
