@@ -1,8 +1,9 @@
 #encoding: utf-8
 module MagicOrder
+  ## 别名
   # 一个action控制多个action, 比如一个编辑的权限应该有edit,和update权限,  那么可以自定义个key(下面hash中的key), 然后value(数组)中的是对应访问的权限action
-  #
   ActionDelega = {
+    # TODO detail 放代表性的action, 不相关的放到其他的 别名中
     "detail" =>   ["index","home",'show','info','lastest','closed', 'children','fetch_group'],
     "create" =>   ["new","create","index"],
     "update" =>   ["edit","update", 'status_update',"index"],
@@ -98,6 +99,11 @@ end
 # oerations 不同角色显示的“操作”弹出项
 # "a#b"  a => 控制器,  "b" => action or ActionDelega(请看最上面) key
 MagicOrder::AccessControl.map do |map|
+
+  #通知中心
+  map.project_module :notifications do |map|
+    map.permission :reads, %w(detail)
+  end
 
   #订单管理
   map.project_module :trades do |map|

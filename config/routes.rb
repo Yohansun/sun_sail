@@ -2,6 +2,8 @@ require 'sidekiq/web'
 
 MagicOrders::Application.routes.draw do
 
+  get "notifications/index"
+
   resources :jushita_data do
     collection do
       put :lock

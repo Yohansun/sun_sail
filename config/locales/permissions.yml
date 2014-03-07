@@ -10,6 +10,7 @@ zh-CN:
   permissions_products: "商品管理"
   permissions_areas: "地区管理"
   permissions_sellers: "经销商管理"
+  permissions_notifications: "通知中心"
   permissions_system_settings: "系统设置"
   permissions_stocks: 仓库模块
   permissions_datas: 数据模块

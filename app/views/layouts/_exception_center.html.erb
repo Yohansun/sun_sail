@@ -1,4 +1,4 @@
-<% if current_user.allow_read?(:alerts) %>
+<% if current_user.allow_read?(:notifications) %>
   <ul class="nav pull-right">
     <li id="" class="backlog row-fluid">
       <a href="javascript:;" class="dropdown-toggle js-todo-toggle">待办事项 (<%= @today_trades.count+@tomorrow_trades.count %>)  <b class="caret"></b></a>
