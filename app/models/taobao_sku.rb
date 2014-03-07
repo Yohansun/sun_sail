@@ -32,7 +32,7 @@ class TaobaoSku < ActiveRecord::Base
 
   def name
     aliastr = property_alias && Hash[property_alias.scan(/(\d+:\d+:)(.*?)(?:;|$)/)]
-    properties_name.gsub(/(\d+:\d+:)([\u4e00-\u9fa5|\w]+:)(.*?)(;|$)/) { |match|  $2 + (aliastr && aliastr[$1] || $3) + $4 }
+    properties_name && properties_name.gsub(/(\d+:\d+:)([\u4e00-\u9fa5|\w]+:)(.*?)(;|$)/) { |match|  $2 + (aliastr && aliastr[$1] || $3) + $4 }
   end
 
   def value
