@@ -37,24 +37,25 @@
         <li>
         <%= link_to_authorize "审核", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_in_bills/check",:remote => true,:request => "post",:class => "bill_operation"  %>
         </li>
+        <%- if current_account.settings.enable_module_third_party_stock != 1 %>
+        <!-- <li>
+          <%#= link_to_authorize "确认同步", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_in_bills/confirm_sync",:remote => true,:request => "put",:class => "bill_operation"  %>
+        </li> -->
+        <li>
+          <%= link_to_authorize "确认入库", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_in_bills/confirm_stock",:remote => true,:request => "put",:class => "bill_operation"  %>
+        </li>
+        <!-- <li>
+          <%#= link_to_authorize "确认撤销", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_in_bills/confirm_cancle",:remote => true,:request => "put",:class => "bill_operation"  %>
+        </li>
+        <li>
+          <%#= link_to_authorize "拒绝撤销", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_in_bills/refuse_cancle",:remote => true,:request => "put",:class => "bill_operation"  %>
+        </li> -->
+        <% else %>
         <li>
           <%= link_to_authorize "同步", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_in_bills/sync",:remote => true,:request => "post",:class => "bill_operation"  %>
         </li>
         <li>
           <%= link_to_authorize "撤销", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_in_bills/rollback",:remote => true,:request => "post",:class => "bill_operation"  %>
-        </li>
-        <%- if current_account.settings.enable_module_third_party_stock != 1 %>
-        <li>
-          <%= link_to_authorize "确认同步", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_in_bills/confirm_sync",:remote => true,:request => "put",:class => "bill_operation"  %>
-        </li>
-        <li>
-          <%= link_to_authorize "确认入库", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_in_bills/confirm_stock",:remote => true,:request => "put",:class => "bill_operation"  %>
-        </li>
-        <li>
-          <%= link_to_authorize "确认撤销", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_in_bills/confirm_cancle",:remote => true,:request => "put",:class => "bill_operation"  %>
-        </li>
-        <li>
-          <%= link_to_authorize "拒绝撤销", "#",:target_url => "/warehouses/#{@warehouse.id}/stock_in_bills/refuse_cancle",:remote => true,:request => "put",:class => "bill_operation"  %>
         </li>
         <%- end %>
       </ul>

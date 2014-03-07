@@ -17,37 +17,37 @@
   </span>
   <br>
   <%- end -%>
-  <%- if bill.sync_at.present? -%>
+  <%- if bill.sync_at.present? && bill.enabled_third_party_stock? -%>
   <span class='label '>
     同步 <%= raw bill.sync_at.strftime("%m-%d %H:%M:%S") -%>
   </span>
   <br>
   <%- end -%>
-  <%- if bill.sync_failed_at.present? -%>
+  <%- if bill.sync_failed_at.present? && bill.enabled_third_party_stock? -%>
   <span class='label '>
     同步失败 <%= raw bill.sync_failed_at.strftime("%m-%d %H:%M:%S") -%>
   </span>
   <br>
   <%- end -%>
-  <%- if bill.sync_succeded_at.present? -%>
+  <%- if bill.sync_succeded_at.present? && bill.enabled_third_party_stock? -%>
   <span class='label '>
     同步成功 <%= raw bill.sync_succeded_at.strftime("%m-%d %H:%M:%S") -%>
   </span>
   <br>
   <%- end -%>
-  <%- if bill.canceled_at.present? -%>
+  <%- if bill.canceled_at.present? && bill.enabled_third_party_stock? -%>
   <span class='label '>
     取消 <%= raw bill.canceled_at.strftime("%m-%d %H:%M:%S") -%>
   </span>
   <br>
   <%- end -%>
-  <%- if bill.cancel_failed_at.present? -%>
+  <%- if bill.cancel_failed_at.present? && bill.enabled_third_party_stock? -%>
   <span class='label '>
     取消失败 <%= raw bill.cancel_failed_at.strftime("%m-%d %H:%M:%S") -%>
   </span>
   <br>
   <%- end -%>
-  <%- if bill.cancel_succeded_at.present? -%>
+  <%- if bill.cancel_succeded_at.present? && bill.enabled_third_party_stock? -%>
   <span class='label '>
     取消成功 <%= raw bill.cancel_succeded_at.strftime("%m-%d %H:%M:%S") -%>
   </span>

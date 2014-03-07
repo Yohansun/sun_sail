@@ -91,9 +91,9 @@
               <%- forecast = stock_product.activity - hold %>
               <%= forecast %>
             <% when "actual" %>
-              <%= link_to_if(params[:warehouse_id].present?, stock_product.actual, "#", :class => "stock_actual", "data-stock-product-id" => stock_product.id) %>
+              <%= link_to_authorize_if(params[:warehouse_id].present?, stock_product.actual, "#", :class => "stock_actual", "data-stock-product-id" => stock_product.id) %>
             <% when "safe_value" %>
-              <%= link_to_if(params[:warehouse_id].present?, stock_product.safe_value, "#", :class => "stock_safe_value", "data-stock-product-id" => stock_product.id) %>
+              <%= link_to_authorize_if(params[:warehouse_id].present?, stock_product.safe_value, "#", :class => "stock_safe_value", "data-stock-product-id" => stock_product.id) %>
             <% else %>
               <%= stock_product.send(col_name) rescue "" %>
             <% end %>
@@ -103,12 +103,24 @@
       <% end %>
       <% if current_account.settings.enable_module_muti_sellers == 1 && params[:warehouse_id].nil? %>
         <tr>
-          <th>统计</th>
-          <% @count_activity = @stock_products.count_activity(current_account.id)  %>
-          <th>预测库存: <%= @count_activity - @hold_hash.values.sum %></th>
-          <th>可用库存: <%= @count_activity %></th>
-          <th>实际库存: <%= @stock_products.count_actual(current_account.id) %></th>
-          <th colspan="<%= @all_cols.length %>">安全库存: <%= @stock_products.count_safe_value(current_account.id) %></th>
+          <td>统计</td>
+          <%- @all_cols.each do |col_name, view_name| -%>
+          <td data-col="<%= col_name %>" style="<%= get_col_style(@visible_cols, col_name, StockProduct.allocate) %>">
+          <% case col_name %>
+          <% when 'forecast' %>
+            <% @count_activity = @stock_products.count_activity(current_account.id)  %>
+            <%= @count_activity - @hold_hash.values.sum %>
+          <% when 'activity' %>
+            <%= @count_activity %>
+          <% when 'actual' %>
+            <%= @stock_products.count_actual(current_account.id) %>
+          <% when 'safe_value' %>
+            <%= @stock_products.count_safe_value(current_account.id) %>
+          <% else %>
+            &nbsp;
+          <% end %>
+          </td>
+          <% end %>
         </tr>
       <% end %>
     </tbody>

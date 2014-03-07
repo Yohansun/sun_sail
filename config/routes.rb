@@ -69,10 +69,10 @@ MagicOrders::Application.routes.draw do
         post :rollback
         post :lock
         post :unlock
-        put :confirm_sync
+        # put :confirm_sync
         put :confirm_stock
-        put :confirm_cancle
-        put :refuse_cancle
+        # put :confirm_cancle
+        # put :refuse_cancle
       end
     end
 
@@ -83,10 +83,10 @@ MagicOrders::Application.routes.draw do
         post :rollback
         post :lock
         post :unlock
-        put :confirm_sync
+        # put :confirm_sync
         put :confirm_stock
-        put :confirm_cancle
-        put :refuse_cancle
+        # put :confirm_cancle
+        # put :refuse_cancle
       end
     end
 

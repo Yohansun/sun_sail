@@ -110,16 +110,17 @@ class StockInBillsController < ApplicationController
     end
   end
 
-  def confirm_sync
-    @bills = default_scope.any_in(_id: params[:bill_ids])
-    @bills.each do |bill|
-      bill.confirm_sync
-    end
-
-    respond_to do |format|
-      format.js
-    end
-  end
+  # 确认同步
+  # def confirm_sync
+  #   @bills = default_scope.any_in(_id: params[:bill_ids])
+  #   @bills.each do |bill|
+  #     bill.confirm_sync
+  #   end
+  # 
+  #   respond_to do |format|
+  #     format.js
+  #   end
+  # end
 
   def confirm_stock
     @bills = default_scope.any_in(_id: params[:bill_ids])
@@ -133,24 +134,24 @@ class StockInBillsController < ApplicationController
   end
 
   # 确认撤销
-  def confirm_cancle
-    @bills = default_scope.any_in(_id: params[:bill_ids])
-    @errors = @bills.reject { |bill| bill.confirm_cancle }.map(&:tid)
-
-    respond_to do |format|
-      format.js
-    end
-  end
+  # def confirm_cancle
+  #   @bills = default_scope.any_in(_id: params[:bill_ids])
+  #   @errors = @bills.reject { |bill| bill.confirm_cancle }.map(&:tid)
+  # 
+  #   respond_to do |format|
+  #     format.js
+  #   end
+  # end
 
   # 拒绝撤销
-  def refuse_cancle
-    @bills = default_scope.any_in(_id: params[:bill_ids])
-    @errors = @bills.reject { |bill| bill.refuse_cancle }.map(&:tid)
-
-    respond_to do |format|
-      format.js
-    end
-  end
+  # def refuse_cancle
+  #   @bills = default_scope.any_in(_id: params[:bill_ids])
+  #   @errors = @bills.reject { |bill| bill.refuse_cancle }.map(&:tid)
+  # 
+  #   respond_to do |format|
+  #     format.js
+  #   end
+  # end
 
   def sync
     @operated_bills = default_scope.any_in(_id: params[:bill_ids])

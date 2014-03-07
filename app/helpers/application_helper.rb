@@ -114,6 +114,15 @@ module ApplicationHelper
     link_to(*args,&block) if current_user.allowed_to?(html_options[:controller],html_options[:action])
   end
 
+  # Same as link_to_if syntax
+  def link_to_authorize_if(*args,&block)
+    if args.shift
+      link_to_authorize(*args,&block)
+    else
+      args.shift
+    end
+  end
+
   def nested_user_categories_options(append_item = [], skip_item = nil)
     unless skip_item.nil? || skip_item.is_a?(Category)
       skip_item = Category.find_by_id(skip_item.to_i)

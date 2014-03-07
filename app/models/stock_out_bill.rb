@@ -77,14 +77,14 @@ class StockOutBill < StockBill
   end
 
   # 确认撤销
-  def confirm_cancle
-    !!(do_cancel_ok && operation_logs.create(operated_at: Time.now, operation: '取消成功') )
-  end
+  # def confirm_cancle
+  #   !!(do_cancel_ok && operation_logs.create(operated_at: Time.now, operation: '取消成功') )
+  # end
 
   # 拒绝撤销
-  def refuse_cancle
-    !!(do_cancel_fail && operation_logs.create(operated_at: Time.now, operation: '取消失败') )
-  end
+  # def refuse_cancle
+  #   !!(do_cancel_fail && operation_logs.create(operated_at: Time.now, operation: '取消失败') )
+  # end
 
   def outer_is_cash_sale
     is_cash_sale || (self.account.settings.open_auto_mark_invoice==1 ? "需要开票" : "无需开票" rescue "无需开票")
@@ -164,10 +164,10 @@ class StockOutBill < StockBill
       if account && account.settings.enable_module_third_party_stock != 1 || self.stock_type_oinventory?
         error_actual = decrease_actual
         error_records << error_actual if error_actual != true
-        self.confirm_stocked_at = self.stocked_at = Time.now
       end
       raise error_records.flatten.compact.collect{|x| '库存ID为' << x.id.to_s << ':' << x.errors.full_messages.join(',')}.join('\n') if error_records.present?
       do_check
+      sync if !enabled_third_party_stock?
       return true
     end
   rescue Exception => e
@@ -177,7 +177,7 @@ class StockOutBill < StockBill
   def sync
     if can_do_syncking?
       do_syncking
-      so_to_wms if enabled_third_party_stock?
+      enabled_third_party_stock? ? so_to_wms : confirm_sync
     end
   end
 
@@ -243,9 +243,9 @@ class StockOutBill < StockBill
   def so_to_wms_worker
     if account.settings.enable_module_third_party_stock != 1
       if can_do_syncked?
-        do_syncked && operation_logs.create(operation: '确认同步成功')
+        do_syncked && operation_logs.create(operation: '确认审核')
       else
-        operation_logs.create(operation: '确认同步失败')
+        operation_logs.create(operation: '确认审核失败',text: self.errors.full_messages)
       end
       return
     end
