@@ -36,8 +36,7 @@ module MagicGift
       local_sku_id:   local_sku_id, # this should be skus.id, and its' type is integer.
       pic_path:       gift_product.pic_url,
       cid:            gift_product.cid,
-      outer_iid:      gift_product.outer_id,
-      num_iid:        gift_product.num_iid
+      outer_iid:      gift_product.outer_id
     )
   end
 

@@ -138,12 +138,13 @@ class TaobaoOrder < Order
     mutiple_properties = []
     self.sku_products.each do |sku_product|
       category_properties = sku_product[:product].try(:category).try(:category_properties)
-      next if category_properties.blank?
+      outer_id = sku_product[:product].outer_id
+      next if category_properties.blank? || outer_id.blank?
       (sku_product[:number]*self.num).times do |t|
         property_infos = {
           name: sku_product[:product].name,
           stock_in_bill_tid: trade_property_memos[t].try(:stock_in_bill_tid),
-          local_outer_id: sku_product[:product].outer_id,
+          local_outer_id: outer_id,
           "properties" => []
         }
         category_properties.each_with_index do |category_property, i|
