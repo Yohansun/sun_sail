@@ -1,12 +1,14 @@
 # encoding: utf-8
 desc "更新绑定物流商20140225"
 task :update_logistics_area => :environment do
-  hd_logistic = Logistic.find_by_name "虹迪"
-  cd_seller = Seller.find_by_name "成都物流"
-  bj_seller = Seller.find_by_name "北京物流"
-  se_logistic = Logistic.find_by_name "速尔快递"
-  nd_logistic = Logistic.find_by_name "能达速递"
-  ys_logistic = Logistic.find_by_name "优速快递"
+  account = Account.find(1)
+
+  hd_logistic = account.logistics.find_by_name "虹迪"
+  cd_seller = account.sellers.find_by_name "成都物流"
+  bj_seller = account.sellers.find_by_name "北京物流"
+  se_logistic = account.logistics.find_by_name "速尔快递"
+  nd_logistic = account.logistics.find_by_name "能达速递"
+  ys_logistic = account.logistics.find_by_name "优速快递"
 
   #虹迪：管辖地区设置成和经销商“成都物流”的绑定地域完全一致
   cd_seller.areas.each do |area|

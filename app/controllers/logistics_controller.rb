@@ -135,7 +135,7 @@ class LogisticsController < ApplicationController
   end
 
   def logistic_templates
-    trade = Trade.find(params[:trade_id])
+    trade = Trade.where(_id: params[:trade_id]).first || DeliverBill.find(params[:trade_id]).trade
     logistics = trade.matched_logistics
     render json: filter_logistic_by_source(trade._type, logistics)
   end

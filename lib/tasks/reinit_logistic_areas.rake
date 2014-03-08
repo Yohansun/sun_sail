@@ -6,6 +6,9 @@ task :reinit_logistic_areas => :environment do
   ActiveRecord::Base.connection.execute('truncate logistic_areas;')
   p "删除所有物流商地域绑定数据"
   p "------------------------------------------------------------------------------"
+
+  account = Account.find(1)
+
   open("#{Rails.root}/lib/tasks/dulux/reinit_logistic_areas.csv").readlines.each do |line|
     row = line.split(",")
     state_name = row[0].try(:strip)
@@ -24,7 +27,7 @@ task :reinit_logistic_areas => :environment do
     if address.present?
       if logistic_company.present?
         logistic_company.each do |name|
-          logistic = Logistic.find_by_name(name)
+          logistic = account.logistics.find_by_name(name)
           next unless logistic
           logistic.areas = logistic.areas << address
           p name + " 绑定 " + address.name
