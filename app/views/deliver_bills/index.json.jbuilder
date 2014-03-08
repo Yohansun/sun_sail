@@ -1,5 +1,6 @@
 json.list(@bills) do |json, bill|
   trade = TradeDecorator.decorate(bill.trade)
+  json.template_path current_account.deliver_template.try(:xml_url) || "/ffd.xml"
   json.bills_count @bills_count
   json.id bill.id
   json.trade_id bill.trade_id

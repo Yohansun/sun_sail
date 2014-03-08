@@ -144,6 +144,8 @@ class MagicOrders.Views.DeliverBillsIndex extends MagicOrders.Views.BaseView
 
     MagicOrders.idCarrier = tmp
 
+    template_path = @collection.at(0).get("template_path")
+
     $.get '/deliver_bills/deliver_list', {ids: tmp}, (data) ->
       html = ''
       for trade in data
@@ -154,7 +156,7 @@ class MagicOrders.Views.DeliverBillsIndex extends MagicOrders.Views.BaseView
         html += '<td>' + trade.name + '</td>'
         html += '<td>' + trade.address + '</td></tr>'
 
-      bind_swf(tmp, 'ffd')
+      bind_swf(tmp, 'ffd', template_path)
       $('#logistic_select').hide()
       $('.deliver_count').html(data.length)
       $('#print_delivers_tbody').html(html)
