@@ -163,7 +163,8 @@ class LogisticsController < ApplicationController
     # 导致发货失败,提示更新第三方物流,并手动绑定后在发货.
 
     tmp          = []
-    method       = trade_type.underscore.gsub(/(_)?trade$/,'').to_s.dup << "_sources"
+    source_type  = trade_type.underscore.gsub(/(_)?trade$/,'')
+    method       = source_type.to_s.dup << "_sources"
     trade_source = current_account.respond_to?(method) && current_account.send(method).first
 
     logistics.each do |l|
