@@ -107,6 +107,10 @@ class Account < ActiveRecord::Base
     end
   end
 
+  def enabled_third_party_stock?
+    settings.enable_module_third_party_stock == 1
+  end
+
   ['preprocess', 'dispatch', 'deliver', 'notify'].each do |option|
     define_method "can_auto_#{option}_right_now" do
       return in_time_gap(self.settings.auto_settings["start_#{option}_at"], self.settings.auto_settings["end_#{option}_at"])
