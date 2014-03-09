@@ -7,6 +7,7 @@ task :export_unfinished_trade => :environment do
   unknown_trades = []
   unimported_color_info = []
   unimported_color_num = []
+  generate_stock_out_bill_failed = []
   CSV.foreach("#{Rails.root}/import_unfinished_dulux_trade.csv") do |row|
 
     ## 导出未完成订单
@@ -20,6 +21,16 @@ task :export_unfinished_trade => :environment do
       ## 导出找不到的trade
       if trade.present?
         trade.update_attributes(JSON.parse(row[2]))
+        if row[4].present?
+          trade.deliver_bills.create(JSON.parse(row[4]))
+          stock_out_bill = trade.generate_stock_out_bill rescue nil
+          generate_stock_out_bill_failed << tid if stock_out_bill.blank?
+          if trade.delivered_at.present?
+            if trade.stock_out_bill.present?
+              trade.stock_out_bill.confirm_stock
+            end
+          end
+        end
       else
         unknown_trades << tid
         next
@@ -31,7 +42,8 @@ task :export_unfinished_trade => :environment do
       if trade.present?
         trade.update_attributes(JSON.parse(row[2]))
       else
-        trade = account.trades.create(JSON.parse(row[2]))
+        trade = TaobaoTrade.create(JSON.parse(row[2]))
+        trade.update_attributes(account_id: account.id)
       end
     end
 
@@ -98,5 +110,10 @@ task :export_unfinished_trade => :environment do
   if unimported_color_info.present?
     p "----这些颜色没有被初始化-----"
     p unimported_color_num.uniq
+  end
+
+  if generate_stock_out_bill_failed.present?
+    p "----这些已发货的订单没有生成出库单-----"
+    p generate_stock_out_bill_failed.uniq
   end
 end
