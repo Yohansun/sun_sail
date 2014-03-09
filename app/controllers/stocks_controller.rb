@@ -151,7 +151,12 @@ class StocksController < ApplicationController
     @stock_products = default_scoped.where(:id => params[:stock_product_ids])
     safe_value = params[:value].present? ? params[:value].to_i : params[:safe_value].to_i
     @stock_products.each {|stock| stock.update_attributes!(safe_value: safe_value,audit_comment: "批量更新安全库存") }
-    redirect_to({:action => :index,:warehouse_id => params[:warehouse_id]}.reject {|k,v| v.blank?})
+    respond_to do |format|
+      format.html{
+        redirect_to({:action => :index,:warehouse_id => params[:warehouse_id]}.reject {|k,v| v.blank?})
+      }
+      format.js {render :js => ""}
+    end
   end
 
   #POST /warehouses/batch_update_actual_stock
@@ -173,7 +178,14 @@ class StocksController < ApplicationController
         flash[:error] =  "请输入大于 0 的整数"
       end
     end
-    redirect_to({:action => :index,:warehouse_id => params[:warehouse_id]}.reject {|k,v| v.blank?})
+    respond_to do |format|
+      format.html{
+        redirect_to({:action => :index,:warehouse_id => params[:warehouse_id]}.reject {|k,v| v.blank?})
+      }
+      format.js {
+        @hold_hash = set_hold_hash(@stock_products)
+      }
+    end
   end
 
   def inventory
