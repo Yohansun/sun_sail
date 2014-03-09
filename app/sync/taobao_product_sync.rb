@@ -87,8 +87,7 @@ class TaobaoProductSync < BaseSync
     sku_ids   = items.collect {|item| item["sku_id"] }.compact
     num_iids  = items.select {|item| item["sku_id"].blank? }.collect {|item| item["num_iid"] }.compact
     # 减少查询次数
-    conditions = {sku_id: sku_ids,num_iid: num_iids}.reject {|k,v| v.blank?}
-    taobao_skus = TaobaoSku.where(default_attributes).where(conditions).to_a
+    taobao_skus = TaobaoSku.where(default_attributes).where("sku_id in (?) or num_iid in (?)",sku_ids,num_iids).to_a
     items.each do |item|
       create_or_update_with_sku(item, find_sku(taobao_skus,item))
     end
