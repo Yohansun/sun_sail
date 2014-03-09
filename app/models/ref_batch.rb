@@ -60,11 +60,11 @@ class RefBatch
       '确认退款'
     when 'cancel_return_ref'
       '取消退货'
-    when 'request_refund_ref'
+    when 'request_refund_ref', 'request_return_money'
       '申请线下退款'
-    when 'confirm_refund_ref'
+    when 'confirm_refund_ref', 'confirm_return_money'
       '确认线下退款'
-    when 'cancel_refund_ref'
+    when 'cancel_refund_ref', 'cancel_return_money'
       '取消线下退款'
     end
   end
