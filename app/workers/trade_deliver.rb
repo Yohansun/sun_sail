@@ -5,7 +5,7 @@ class TradeDeliver
 
   def perform(id)
     trade = Trade.where(_id: id).first or return
-    trade.stock_out_bill.decrease_actual if trade.fetch_account.settings.enable_module_third_party_stock != 1
+    trade.stock_out_bill.confirm_stock if not trade.fetch_account.enabled_third_party_stock?
     deliver(trade)
   end
 
