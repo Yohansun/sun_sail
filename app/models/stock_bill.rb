@@ -196,7 +196,7 @@ class StockBill
   end
 
   def enabled_third_party_stock?
-    account.settings.enable_module_third_party_stock == 1
+    account.enabled_third_party_stock?
   end
 
   ## 改前必读 ##
