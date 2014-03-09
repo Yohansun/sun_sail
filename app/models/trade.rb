@@ -614,7 +614,7 @@ class Trade
       op_city:      receiver_city,
       op_district:  receiver_district,
       op_address:   receiver_address,
-      status:       fetch_account.enable_module_third_party_stock? ? 'CHECKED' : 'SYNCKED',
+      status:       fetch_account.enabled_third_party_stock? ? 'CHECKED' : 'SYNCKED',
       op_name:      receiver_name,
       op_mobile:    receiver_mobile,
       op_zip:       receiver_zip,
