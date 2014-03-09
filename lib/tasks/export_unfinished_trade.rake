@@ -3,11 +3,15 @@
 desc "导出交易还未成功订单数据"
 task :export_unfinished_trade => :environment do
   account = Account.find_by_name("多乐士官方旗舰店")
+  trade_source = account.taobao_sources.first
 
   unknown_trades = []
   unimported_color_info = []
   unimported_color_num = []
   generate_stock_out_bill_failed = []
+  void_seller = []
+  void_logistic = []
+
   CSV.foreach("#{Rails.root}/import_unfinished_dulux_trade.csv") do |row|
 
     ## 导出未完成订单
@@ -18,9 +22,25 @@ task :export_unfinished_trade => :environment do
       p "导出未完成订单#{tid}"
       trade = account.trades.where(tid: tid).first
 
-      ## 导出找不到的trade
+
       if trade.present?
         trade.update_attributes(JSON.parse(row[2]))
+
+        seller = account.sellers.find_by_name(trade.seller_name)
+        if seller.present?
+          trade.update_atttibutes(seller_id: seller.id)
+        else
+          void_seller << trade.seller_name
+        end
+
+        logistic_name = ['中铁', '虹迪'].include?(trade.logistic_name) ? trade.logistic_name + "物流" : trade.logistic_name
+        logistic = account.sellers.find_by_name(logistic_name)
+        if logistic.present?
+          trade.update_atttibutes(logsitic_name: logistic_name, logistic_id: logistic.id, service_logistic_id: logistic.taobao_logistic_id(trade_source.id))
+        else
+          void_logistic << logistic_name
+        end
+
         if row[4].present?
           trade.deliver_bills.create(JSON.parse(row[4]))
           stock_out_bill = trade.generate_stock_out_bill rescue nil
@@ -32,6 +52,8 @@ task :export_unfinished_trade => :environment do
           end
         end
       else
+
+        ## 导出找不到的trade
         unknown_trades << tid
         next
       end
@@ -116,4 +138,15 @@ task :export_unfinished_trade => :environment do
     p "----这些已发货的订单没有生成出库单-----"
     p generate_stock_out_bill_failed.uniq
   end
+
+  if void_seller.present?
+    p "----这些经销商在新系统内没有对应的经销商-----"
+    p void_seller.uniq
+  end
+
+  if void_logistic.present?
+    p "----这些物流商在新系统内没有对应的物流商-----"
+    p void_logistic.uniq
+  end
+
 end
