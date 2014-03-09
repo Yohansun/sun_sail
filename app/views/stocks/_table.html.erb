@@ -91,9 +91,9 @@
               <%- forecast = stock_product.activity - hold %>
               <%= forecast %>
             <% when "actual" %>
-              <%= link_to_authorize_if(params[:warehouse_id].present?, stock_product.actual, "#", :class => "stock_actual", "data-stock-product-id" => stock_product.id) %>
+              <%= link_to_if(params[:warehouse_id].present? && current_user.allow_read?(params[:controller],params[:action]), stock_product.actual, "#", :class => "stock_actual", "data-stock-product-id" => stock_product.id) %>
             <% when "safe_value" %>
-              <%= link_to_authorize_if(params[:warehouse_id].present?, stock_product.safe_value, "#", :class => "stock_safe_value", "data-stock-product-id" => stock_product.id) %>
+              <%= link_to_if(params[:warehouse_id].present? && current_user.allow_read?(params[:controller],params[:action]), stock_product.safe_value, "#", :class => "stock_safe_value", "data-stock-product-id" => stock_product.id) %>
             <% else %>
               <%= stock_product.send(col_name) rescue "" %>
             <% end %>
