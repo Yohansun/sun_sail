@@ -16,7 +16,7 @@ class TradeYihaodianDeliver
 
     if trade.shipment == true
       SmsNotifier.perform_async(content, mobile, trade.tid ,notify_kind)  if mobile.present?
-      trade.stock_out_bill.decrease_actual                                if account.settings.enable_module_third_party_stock != 1
+      trade.stock_out_bill.confirm_stock                                  if not account.enabled_third_party_stock?
       trade.status = 'ORDER_CAN_OUT_OF_WH'
     else
       trade.unusual_states.build(reason: "发货异常",

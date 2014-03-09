@@ -43,9 +43,7 @@ class TradeJingdongDeliver
         SmsNotifier.perform_async(content, mobile, tid ,notify_kind)
       end
 
-      unless account.settings.enable_module_third_party_stock == 1
-        trade.stock_out_bill.decrease_actual
-      end
+      trade.stock_out_bill.confirm_stock if not account.enabled_third_party_stock?
     else
       Notifier.deliver_errors(id, errors, trade.account_id).deliver
       errors.each do |error_reason|
