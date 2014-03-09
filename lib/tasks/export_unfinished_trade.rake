@@ -28,21 +28,23 @@ task :export_unfinished_trade => :environment do
 
         seller = account.sellers.find_by_name(trade.seller_name)
         if seller.present?
-          trade.update_atttibutes(seller_id: seller.id)
+          trade.update_attributes(seller_id: seller.id)
         else
           void_seller << trade.seller_name
         end
 
         logistic_name = ['中铁', '虹迪'].include?(trade.logistic_name) ? trade.logistic_name + "物流" : trade.logistic_name
-        logistic = account.sellers.find_by_name(logistic_name)
+        logistic = account.logistics.find_by_name(logistic_name)
         if logistic.present?
-          trade.update_atttibutes(logsitic_name: logistic_name, logistic_id: logistic.id, service_logistic_id: logistic.taobao_logistic_id(trade_source.id))
+          trade.update_attributes(logsitic_name: logistic_name, logistic_id: logistic.id, service_logistic_id: logistic.taobao_logistic_id(trade_source.id))
         else
           void_logistic << logistic_name
         end
 
         if row[4].present?
+          trade.deliver_bills.delete_all
           trade.deliver_bills.create(JSON.parse(row[4]))
+          trade.stock_out_bills.delete_all
           stock_out_bill = trade.generate_stock_out_bill rescue nil
           generate_stock_out_bill_failed << tid if stock_out_bill.blank?
           if trade.delivered_at.present?
@@ -64,10 +66,12 @@ task :export_unfinished_trade => :environment do
       if trade.present?
         trade.update_attributes(JSON.parse(row[2]))
       else
-        trade = TaobaoTrade.create(JSON.parse(row[2]))
-        trade.update_attributes(account_id: account.id)
+        trade = TaobaoTrade.create(account_id: account.id, tid: Time.now.to_i.to_s+"TEMP")
+        trade.update_attributes(JSON.parse(row[2]))
       end
     end
+
+    trade.update_attributes(trade_source_id: trade_source.id)
 
     ## 调色信息转属性备注
     if row[3].present?
