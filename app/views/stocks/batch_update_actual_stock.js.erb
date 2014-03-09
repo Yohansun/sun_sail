@@ -1,0 +1,5 @@
+<%- @stock_products.each do |stock_product| -%>
+  <%- hold = @hold_hash.fetch(stock_product.id.to_s) rescue 0 %>
+  $("#sp_<%= stock_product.id %>_forecast").html("<%= stock_product.activity - hold %>")
+  $("#sp_<%= stock_product.id %>_activity").html("<%= stock_product.activity %>")
+<%- end -%>

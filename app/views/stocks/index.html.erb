@@ -4,6 +4,7 @@
 <%= render "table" %>
 
 <% content_for :tail do %>
+<%= javascript_include_tag "bootstrap-xeditable/bootstrap-editable.min" %>
 <script>
 function processChecked(full_url){
   var stock_product_ids = $('input[name=\"stock_product_ids[]\"]:checked').map(function(){ return $(this).val()}).get().join(',');
@@ -20,9 +21,9 @@ function validGreaterThanZore(value){
 }
 
 $(function() {
-  var setActualStock = $("#set_actual_stock");
+  var warehouseId = "<%= params[:warehouse_id]%>";
   $('.stock_actual').editable({
-         url: setActualStock.attr("target_url"),
+         url: "/stocks/batch_update_actual_stock.js?warehouse_id="+warehouseId,
          mode: "popup",
          placement: "right",
          type: 'text',
@@ -34,9 +35,8 @@ $(function() {
          validate: function(value){return validGreaterThanZore(value)},
          title: '批量设置实际库存'
   });
-  var setSafetyStock = $("#set_safety_stock");
   $('.stock_safe_value').editable({
-        url: setSafetyStock.attr("target_url"),
+        url: "/stocks/batch_update_safety_stock.js?warehouse_id="+warehouseId,
         mode: "popup",
         placement: "right",
         type: 'text',
