@@ -139,11 +139,12 @@ class TaobaoOrder < Order
     self.sku_products.each do |sku_product|
       category_properties = sku_product[:product].try(:category).try(:category_properties)
       outer_id = sku_product[:product].outer_id
+      product_property_memos = trade_property_memos.where(outer_id: outer_id)
       next if category_properties.blank? || outer_id.blank?
       (sku_product[:number]*self.num).times do |t|
         property_infos = {
           name: sku_product[:product].name,
-          stock_in_bill_tid: trade_property_memos[t].try(:stock_in_bill_tid),
+          stock_in_bill_tid: product_property_memos[t].try(:stock_in_bill_tid),
           local_outer_id: outer_id,
           "properties" => []
         }
@@ -155,7 +156,7 @@ class TaobaoOrder < Order
           property_infos["properties"][i]['property_values'] = []
           category_property.values.each_with_index do |category_property_value, j|
             property_infos["properties"][i]['property_values'][j] = {}
-            matched_property_value = trade_property_memos[t].property_values.where(category_property_value_id: category_property_value.id).first rescue nil
+            matched_property_value = product_property_memos[t].property_values.where(category_property_value_id: category_property_value.id).first rescue nil
             property_infos["properties"][i]['property_values'][j]["id"] = category_property_value.id
             if matched_property_value.present?
               property_infos["properties"][i]['property_values'][j]["marked"] = true
