@@ -554,13 +554,14 @@ class Trade
     )
   end
 
+  alias_method :account, :fetch_account
+
 ###########
 ##### 订单分流相关
 
   def reset_seller
     return unless seller_id
     if stock_out_bill
-      
       if stock_out_bill.do_close #关闭之前的出库单
         stock_out_bill.increase_activity #恢复仓库的可用库存
       else
@@ -704,7 +705,8 @@ class Trade
             memo:             order.cs_memo,
             total_price:      order_price * sku_info[:number],
             number:           stock_num,
-            remark:           order.cs_memo
+            remark:           order.cs_memo,
+            num_iid:          order.num_iid
           )
         end
       end
