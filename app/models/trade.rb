@@ -560,6 +560,7 @@ class Trade
   def reset_seller
     return unless seller_id
     if stock_out_bill
+      
       if stock_out_bill.do_close #关闭之前的出库单
         stock_out_bill.increase_activity #恢复仓库的可用库存
       else
@@ -673,71 +674,39 @@ class Trade
     return if _type == 'JingdongTrade'
     #分派时生成默认发货单, 不支持京东订单
     deliver_bills.delete_all
-    if can_deliver_in_logistic_group?
-      logistic_groups.each do |logistic_group_id, divmod|
-        logistic_group = LogisticGroup.find_by_id(logistic_group_id)
-        split_number = logistic_group.split_number
-        all_items = logistic_group(logistic_group_id)
-        div = divmod[0]
-        mod = divmod[1]
-        count = 0
-        div.times{
-          items = all_items.pop(split_number)
-          bill = deliver_bills.create(deliver_bill_number: "#{tid}#{logistic_group_id}#{count}", seller_id: seller_id, seller_name: seller_name, account_id: account_id)
-          items.each do |item|
-            product_id = item.fetch(:product_id)
-            product = Product.find_by_id(product_id)
-            order_id = item.fetch(:order_id)
-            order = taobao_orders.where(id: order_id).first
-            num_iid = order.num_iid
-            outer_iid = product.outer_id
-            sku = order.sku
-            sku_id = sku.try(:id)
-            sku_name = sku.try(:name)
-            title = sku.try(:title)
-            num_iid = order.num_iid.to_s
-            bill_product = bill.bill_products.where(outer_id: outer_iid, num_iid: num_iid).first
-            if bill_product
-              bill_product.number += 1
-              bill_product.save
-            else
-              bill.bill_products.create(title: title ,outer_id: outer_iid, stock_product_id: stock_product.id, num_iid: num_iid, sku_id: sku_id, sku_name: sku_name, colors: order.color_num,number: 1, memo: order.cs_memo)
-            end
+    bill = deliver_bills.create(deliver_bill_number: "#{tid}01", seller_id: seller_id, seller_name: seller_name, account_id: account_id)
+
+    regular_orders.each do |order|
+      order.skus_info_with_offline_refund.each do |sku_info|
+        stock_product = fetch_account.stock_products.where(seller_id: seller_id, product_id: sku_info[:product_id], sku_id: sku_info[:sku_id]).first
+        order_price = (order.price == 0 ? 0 : sku_info[:product_price])
+        if stock_product
+
+          ## 2014-03-04添加
+          ## 伊佳仁窗帘客户的特殊需求，库存等于 属性备注中各个商品的"宽"相加的值
+          ## 通过 account.settings.stock_deduction_by_width 来控制逻辑是否执行
+          if self.fetch_account.settings.stock_deduction_by_width == true
+            width_property_memo = order.trade_property_memos.where(outer_id: sku_info[:outer_id])
+            width_property      = width_property_memo.present? && width_property_memo.map{ |m| m.property_values.where(name: "宽")}.flatten
+            stock_num           = width_property.present? ? width_property.inject(0){|sum, p_value| sum += p_value.value.to_i} : 0
+          else
+            stock_num           = sku_info[:number]
           end
-          count += 1
-        }
-        if mod > 0
-          count = div.times.to_a.count
-          bill = deliver_bills.create(deliver_bill_number: "#{tid}#{logistic_group_id}#{count}", seller_id: seller_id, seller_name: seller_name, account_id: account_id)
-          all_items.each do |item|
-            product_id = item.fetch(:product_id)
-            product = Product.find_by_id(product_id)
-            order_id = item.fetch(:order_id)
-            order = taobao_orders.where(id: order_id).first
-            num_iid = product.num_iid
-            outer_iid = product.outer_id
-            sku = order.sku
-            sku_id = sku.try(:id)
-            sku_name = sku.try(:name)
-            title = sku.try(:title)
-            num_iid = order.num_iid.to_s
-            bill_product = bill.bill_products.where(outer_id: outer_iid, num_iid: num_iid).first
-            if bill_product
-              bill_product.number += 1
-              bill_product.save
-            else
-              bill.bill_products.create(title: title, outer_id: outer_iid, num_iid: num_iid, sku_id: sku_id, sku_name: sku_name, colors: order.color_num,number: 1, memo: order.cs_memo)
-            end
-          end
+
+          bill.bill_products.create!(
+            stock_product_id: stock_product.id,
+            title:            sku_info[:sku_title],
+            outer_id:         sku_info[:outer_id],
+            sku_id:           sku_info[:sku_id],
+            price:            order_price,
+            sku_name:         order.sku_properties,
+            colors:           order.color_num,
+            memo:             order.cs_memo,
+            total_price:      order_price * sku_info[:number],
+            number:           stock_num,
+            remark:           order.cs_memo
+          )
         end
-      end
-    else
-      bill = deliver_bills.create(deliver_bill_number: "#{tid}01", seller_id: seller_id, seller_name: seller_name, account_id: account_id)
-      orders.each do |order|
-        taobao_sku = order.taobao_sku || order.local_skus.first
-        sku_id = taobao_sku.try(:id)
-        sku_name = order.sku_properties || taobao_sku.try(:name)
-        bill.bill_products.create(title: order.title, outer_id: order.outer_iid, num_iid: order.num_iid, sku_id: sku_id, sku_name: sku_name, colors: order.color_num, number: order.num, memo: order.cs_memo)
       end
     end
   end

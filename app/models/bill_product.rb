@@ -8,7 +8,7 @@ class BillProduct
   field :num_iid,          type: String
   field :stock_product_id, type: Integer
   field :sku_id,           type: Integer
-  field :colors,           type: Array
+  field :colors,           type: Array   ,default: []
   field :number,           type: Integer ,default: 0
   field :real_number,      type: Integer ,default: 0
   field :memo,             type: String
