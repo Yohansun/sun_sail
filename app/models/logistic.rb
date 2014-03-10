@@ -111,7 +111,7 @@ class Logistic < ActiveRecord::Base
   def taobao_logistic_id(trade_source_id)
     taobao_logistics = taobao_logistics(trade_source_id)
     m = Hashie::Mash.new taobao_logistics.find {|u| matched?(u["name"])}
-    m.id
+    m.id || '-1'
   end
   #获取当前物流对应京东物流商的ID
   def jingdong_logistic_id(trade_source_id)
