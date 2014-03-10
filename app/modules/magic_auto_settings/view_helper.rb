@@ -56,7 +56,7 @@ module MagicAutoSettings
       content = options.collect { |value|
         content_tag('option', value.to_a[0],
           value:    value.to_a[1] || value.to_a[0],
-          selected: (multiple ? setting(array).include?(value.to_a[1] || value.to_a[0]) : setting(array).to_s == value)
+          selected: (multiple ? (setting(array).is_a?(Array) ? setting(array).include?(value.to_a[1] || value.to_a[0]) : false) : setting(array).to_s == value)
         )
       }.join("\n").html_safe
       content_tag('select', content,
