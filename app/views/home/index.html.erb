@@ -22,6 +22,7 @@
     MagicOrders.enable_module_sku_properties = <%= current_account.settings.enable_module_sku_properties %>
     MagicOrders.enable_module_interface = <%= current_account.settings.enable_module_interface %>
     MagicOrders.enable_module_onsite_service = <%= current_account.settings.enable_module_onsite_service %>
+    MagicOrders.enable_module_reconcile_statements_for_magicd = <%= current_account.settings.enable_module_reconcile_statements_for_magicd %>;
 
     MagicOrders.current_rolenames = <%= raw current_user.roles.map(&:name).to_json %>
     MagicOrders.trade_pops = <%= raw current_user.permissions.to_json %>

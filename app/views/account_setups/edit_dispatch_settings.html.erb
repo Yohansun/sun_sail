@@ -13,7 +13,7 @@
               <div class="mar_l80">
                 <div class="control-group">
                   <%= @setting.block_dual_radio('auto_dispatch') %>
-                  <%= @setting.block_time_range(['start_dispatch_at'], ['start_dispatch_at'])%>
+                  <%= @setting.block_time_range(['start_dispatch_at'], ['end_dispatch_at'])%>
                 </div>
                 <div>
                   <%= @setting.block_label_select([0,1,2,6,12,24,48,72].collect{|i| i.to_s }, ["dispatch_silent_gap"], "请选择自动分派静默时间：", "小时") %>

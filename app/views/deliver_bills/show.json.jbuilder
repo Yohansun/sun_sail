@@ -21,6 +21,7 @@ json.orders @bill.bill_products do |json, order|
   json.id order.id
   json.outer_id order.outer_id
   json.outer_sku_id order.outer_sku_id
+  json.skus_info order.order.skus_info
   json.sku_name order.sku_name
   json.title order.title
   json.num order.number
@@ -46,6 +47,7 @@ json.ref_orders @bill.except_ref_bills do |json, order|
   json.id order.id
   json.outer_id order.outer_id
   json.outer_sku_id order.outer_sku_id
+  json.skus_info order.order.skus_info
   json.sku_name order.sku_name
   json.title order.title
   json.num order.number
