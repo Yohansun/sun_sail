@@ -7,7 +7,6 @@ module StockProductsLockable
     trade.orders.each do |order|
       order.skus_info_with_offline_refund.each do |info|
         title = info.fetch(:sku_title)
-        color_num = order.color_num
         sku_id = info.fetch(:sku_id)
         sku = Sku.find_by_sku_id(sku_id)
         stock_product = seller.stock_products.where(id: info.fetch(:stock_product_ids)).first
@@ -16,20 +15,6 @@ module StockProductsLockable
           has_not_enough_activity = stock_product.activity < info.fetch(:number)
           if has_not_enough_activity
             error_messages << "#{title}: 库存不足"
-          end
-          need_colors = []
-          if color_num.present?
-            color_num.each do |colors|
-              next if colors.blank?
-              colors = colors.shift(pp[:number]).flatten.compact.uniq
-              colors.delete('')
-              need_colors += colors
-            end
-            avaliable_colors = sku.product.product.colors.map(&:num)
-            not_exit_colors = need_colors - avaliable_colors
-            if not_exit_colors.present?
-              error_messages << "#{title}: 无法调色"
-            end
           end
         else
           error_messages << "#{title}: 商品不存在"
