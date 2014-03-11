@@ -44,7 +44,7 @@ class MagicOrders.Views.LogisticBillsSetupLogistic extends Backbone.View
         alert('输入物流单号不符合规则')
         return
 
-    new_model = new MagicOrders.Models.Trade(id: @model.id)
+    new_model = new MagicOrders.Models.DeliverBill(id: @model.id)
     new_model.save {operation: "设置物流信息", logistic_id: lid, logistic_waybill: waybill, setup_logistic: true, service_logistic_id: service_logistic_id}, success: (model, response) =>
       $('#logistic_bill_setup_logistic').modal('hide')
 
