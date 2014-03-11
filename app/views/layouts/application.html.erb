@@ -56,6 +56,13 @@
     <footer class="page_footer" style="margin-top: 0px;">
       <p>&copy; Doorder/NIO team 2012</p>
     </footer>
+
+    <% if user_signed_in? -%>
+      <div id="notice-modal" class="span3" style="display:none">
+        <h4><a href="javascript:;" class="pull-right js-notice_modal">x</a>系统公告</h4>
+        <p>Magic系统客服QQ:1951318911，工作时间为每周一至周五10点~18点，其他时间如有紧急问题可以写邮件至magic_sh@doorder.com，我们会尽快与您联系，谢谢！</p>
+        </div>
+    <% end -%>
     <%= javascript_include_tag "application" %>
     <%= javascript_include_tag "/areas.js" %>
     <%= yield :tail -%>

@@ -417,3 +417,20 @@ $(function(){
     width   : "150"
   });
 });
+
+// 2014-03-05系统停用公告js
+$(function () {
+  if($.cookie('bulletin_shown') == 'false'){
+    $('#notice-modal').remove()
+  } else {
+    $('#notice-modal').show()
+  }
+  $('#destroy_user').click(function(e){
+    $.cookie('bulletin_shown', true);
+  })
+  $('.js-notice_modal').click(function(e){
+    e.preventDefault()
+    $(this).parents('#notice-modal').hide();
+    $.cookie('bulletin_shown', false);
+  });
+});
