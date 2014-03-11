@@ -291,7 +291,7 @@ class StockOutBill < StockBill
     if bill_products_price.to_f != price.to_f && !%w(SYNCK_FAILED CHECKED CANCELD_OK).include?(status)
       cache_exception(message: "(#{trade.shop_name})出库单在非 '已审核, 同步失败, 取消成功' 状态下 更新开票金额为#{price.to_f}",data: attributes) { raise "开票金额更新预警" }
     end
-    update_attribute(bill_products_price: price)
+    update_attributes(bill_products_price: price)
   end
 
   #发送订单取消信息至仓库
