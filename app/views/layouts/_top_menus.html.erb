@@ -44,7 +44,7 @@
           <ul class="dropdown-menu">
             <li><%= link_to raw("<i class='icon-user'></i>个人设置"), edit_user_registration_path %></li>
             <li><%= link_to raw("<i class='icon-edit'></i>我的异常订单"), my_alerts_path %></li>
-            <li><%= link_to raw("<i class='icon-off'></i>注销"), destroy_user_session_path, method: :delete %></li>
+            <li><%= link_to raw("<i class='icon-off'></i>注销"), destroy_user_session_path, method: :delete,id: "destroy_user" %></li>
           </ul>
         </div>
 
