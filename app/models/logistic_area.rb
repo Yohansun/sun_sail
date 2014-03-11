@@ -27,10 +27,20 @@ class LogisticArea < ActiveRecord::Base
   belongs_to :logistic
   belongs_to :area
 
+  after_create :set_account_id
+
   def has_full_post_fee_info
     basic_post_weight.present? &&
     basic_post_fee.present?    &&
     extra_post_weight.present? &&
     extra_post_fee.present?
   end
+
+
+  private
+
+  def set_account_id
+    self.update_attributes(account_id: logistic.try(:account_id))
+  end
+
 end

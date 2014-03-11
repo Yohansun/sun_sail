@@ -51,9 +51,9 @@ class MagicOrders.Views.TradesPropertyMemo extends Backbone.View
     property_memos = {}
     for order in @model.get('orders')
       if $('tr.'+order.id).length > 0
-        outer_id = $('.'+order.id).first().children('td:eq(2)').find('.local_outer_id').text()
         property_memos[order.id] = {}
         for i in [0..($('tr.'+order.id).length - 1)]
+          outer_id = $('.'+order.id+':eq('+i+')').children('td:eq(2)').find('.local_outer_id').text()
           property_memos[order.id][i] = {}
           property_memos[order.id][i]['values'] = []
           property_memos[order.id][i]['outer_id'] = outer_id
