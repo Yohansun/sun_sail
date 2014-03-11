@@ -101,7 +101,16 @@
     </item>
 
     <item en_name="diy" cn_name="温馨提示">
-    <![CDATA[{"x":"0","y":"20","font":"\u5fae\u8f6f\u96c5\u9ed1","rela_o":"item17","wrap":"true","color":"000000","size":"9","align":"left","isbold":"false","underline":"false","width":"340","height":"50","text":"\u94a2\u7b14","italic":"false","type":"data","position":"relative","text":"\u5c0a\u656c\u7684\u987e\u5ba2\uff0c\u4e3a\u4e86\u4fdd\u8bc1\u60a8\u7684\u6743\u76ca\uff0c\u7b7e\u5b57\u524d\u8bf7\u786e\u8ba4\u5916\u5305\u88c5\u662f\u5426\u5b8c\u597d\u3002\u5982\u6709\u5f02\u8bae\uff0c\u8bf7\u5411\u5feb\u9012\u5458\u5f53\u9762\u63d0\u51fa\u540c\u65f6\u7acb\u5373\u81f4\u7535\u591a\u4e50\u58eb\u552e\u540e\u63d0\u51fa\u5f02\u8bae\u3002\u552e\u540e\u7535\u8bdd\uff1a\u0030\u0032\u0031\u002d\u0036\u0030\u0039\u0035\u0036\u0030\u0030\u0030\u0020\u5de5\u4f5c\u65f6\u95f4\uff1a\u5468\u4e00\u002d\u5468\u4e94\uff08\u0039\u003a\u0030\u0030\u002d\u0031\u0032\u003a\u0030\u0030\uff1b\u0031\u0033\u003a\u0030\u0030\u002d\u0031\u0038\u003a\u0030\u0030\uff09"}]]>
+    <![CDATA[{"x":"0","y":"20","font":"\u5fae\u8f6f\u96c5\u9ed1","rela_o":"item17","wrap":"true","color":"000000","size":"9","align":"left","isbold":"false","underline":"false","width":"340","height":"50","text":"\u94a2\u7b14","italic":"false","type":"data","position":"relative","text":"\u0020\u611f\u8c22\u4eb2\u5149\u987e\u672c\u5e97\uff0c\u5982\u9700\u9000\u6362\u8d27\uff0c\u8bf7\u5c06\u539f\u5355\u8fd4\u56de\uff0c\u5e76\u586b\u5199\u4ee5\u4e0b\u5185\u5bb9\uff1b\u8fd9\u6837\u6211\u4eec\u4f1a\u66f4\u6709\u6548\u7387\u5904\u7406\u60a8\u7684\u9000\u6362\u8d27\u54e6\uff0c\u8c22\u8c22\u4eb2\u7684\u914d\u5408\u007e"}]]>
+    </item>
+    <item en_name="diy" cn_name="退货原因">
+    <![CDATA[{"x":"0","y":"45","font":"\u5fae\u8f6f\u96c5\u9ed1","rela_o":"item17","wrap":"true","color":"000000","size":"9","align":"left","isbold":"false","underline":"false","width":"340","height":"50","text":"\u94a2\u7b14","italic":"false","type":"data","position":"relative","text":"\u9000\u8d27\u539f\u56e0"}]]>
+    </item>
+    <item en_name="diy" cn_name="换货说明">
+    <![CDATA[{"x":"0","y":"80","font":"\u5fae\u8f6f\u96c5\u9ed1","rela_o":"item17","wrap":"true","color":"000000","size":"9","align":"left","isbold":"false","underline":"false","width":"340","height":"50","text":"\u94a2\u7b14","italic":"false","type":"data","position":"relative","text":"\u6362\u8d27\u8bf4\u660e"}]]>
+    </item>
+    <item en_name="diy" cn_name="tip">
+    <![CDATA[{"x":"0","y":"110","font":"\u5fae\u8f6f\u96c5\u9ed1","rela_o":"item17","wrap":"true","color":"000000","size":"9","align":"left","isbold":"false","underline":"false","width":"340","height":"50","text":"\u94a2\u7b14","italic":"false","type":"data","position":"relative","text":"\u4eb2\uff0c\u6211\u4eec\u6536\u5230\u5546\u54c1\u540e\u4f1a\u5728\u0032\u0034\u5c0f\u65f6\u5185\u5904\u7406\uff0c\u611f\u8c22\u60a8\u7684\u652f\u6301\uff01\u795d\u60a8\u8d2d\u7269\u6109\u5feb\uff01"}]]>
     </item>
     <item en_name="diy" cn_name="签收人：">
     <![CDATA[{"x":"355","y":"20","font":"\u5fae\u8f6f\u96c5\u9ed1","rela_o":"item17","wrap":"true","color":"000000","size":"9","align":"left","isbold":"false","underline":"false","width":"78","height":"20","text":"\u7b7e\u6536\u4eba\uff1a","italic":"false","position":"relative","type":"text"}]]>
@@ -112,11 +121,11 @@
 
     <!--表格分割横线-->
     <item en_name="line" cn_name="line ">
-    <![CDATA[{"x":"0","y":"30","font":"\u5fae\u8f6f\u96c5\u9ed1","rela_o":"item17","color":"000000","size":"9","align":"left","isbold":"false","underline":"false","width":"541.5","height":"20","text":"\u94a2\u7b14","italic":"false","position":"relative","type":"line"}]]>
+    <![CDATA[{"x":"0","y":"62","font":"\u5fae\u8f6f\u96c5\u9ed1","rela_o":"item17","color":"000000","size":"9","align":"left","isbold":"false","underline":"false","width":"541.5","height":"20","text":"\u94a2\u7b14","italic":"false","position":"relative","type":"line"}]]>
     </item>
 
     <item en_name="copyright" cn_name="系统版权">
-    <![CDATA[{"x":"0","y":"60","font":"\u5fae\u8f6f\u96c5\u9ed1","wrap":"true","rela_o":"item17","color":"000000","size":"9","align":"left","isbold":"false","underline":"false","width":"156","height":"20","text":"Magic","italic":"false","position":"relative","type":"data"}]]>
+    <![CDATA[{"x":"0","y":"122","font":"\u5fae\u8f6f\u96c5\u9ed1","wrap":"true","rela_o":"item17","color":"000000","size":"9","align":"left","isbold":"false","underline":"false","width":"156","height":"20","text":"Magic","italic":"false","position":"relative","type":"data"}]]>
     </item>
   </ipos>
 </data>
