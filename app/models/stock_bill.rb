@@ -117,7 +117,7 @@ class StockBill
 
     #关闭
     event :do_close do
-      transition [:checked, :synck_failed, :canceld_ok] => :closed
+      transition [:checked, :synck_failed, :canceld_ok,:syncked] => :closed
     end
 
     #撤销同步
@@ -135,8 +135,14 @@ class StockBill
       transition :canceling => :canceld_failed
     end
 
-    [:created, :checked, :syncking, :syncked, :synck_failed, :stocked, :closed, :canceling, :canceld_ok, :canceld_failed].each do |s_name|
+    [:created, :checked, :syncking, :syncked, :synck_failed, :stocked, :canceling, :canceld_ok, :canceld_failed].each do |s_name|
       state s_name, :value => s_name.to_s.upcase
+    end
+
+    state :closed, value: "CLOSED" do
+      validate do
+        errors.add(:base,"只有未开启第三方仓库才能关闭状态为已同步的出/入库单!") if account.enabled_third_party_stock? && changes["status"] == ["SYNCKED", "CLOSED"]
+      end
     end
 
     after_transition :save_change_status_timestrap
