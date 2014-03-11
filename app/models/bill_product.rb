@@ -6,6 +6,7 @@ class BillProduct
   field :outer_id,         type: String
   field :outer_sku_id,     type: String
   field :num_iid,          type: String
+  field :oid,              type: String
   field :stock_product_id, type: Integer
   field :sku_id,           type: Integer
   field :colors,           type: Array   ,default: []
@@ -14,6 +15,7 @@ class BillProduct
   field :memo,             type: String
   field :price,            type: Float   ,default: 0.0
   field :total_price,      type: Float   ,default: 0.0
+
 
   embedded_in :deliver_bill, :inverse_of => :bill_product
   embedded_in :stock_bill
@@ -39,7 +41,7 @@ class BillProduct
   end
 
   def order
-    trade.orders.where("$or" => [{outer_id: outer_id},{num_iid: num_iid}]).first
+    trade.orders.where(oid: oid).first
   end
 
   def property_memos
