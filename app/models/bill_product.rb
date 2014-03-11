@@ -43,6 +43,6 @@ class BillProduct
   end
 
   def property_memos
-    order ? order.trade_property_memos.map(&:properties).flatten : []
+    order ? order.trade_property_memos.where(outer_id: outer_id).map(&:properties).flatten : []
   end
 end

@@ -65,14 +65,14 @@
   >
     <% bill.bill_products.each do |bill_product| %>
     <item
-      code=     "<%= bill_product.outer_id %>"
-      storage_num= "<%= bill_product.product.try(:storage_num) %>"
-      sku_name= "<%= bill_product.sku_name %>"
-      num=      "<%= bill_product.number %>"
-      name=     "<%= bill_product.title %>"
-      local_name= "<%= bill_product.product.try(:name) %>"
-      property_memos= "<%= bill_product.property_memos.join("\r\n") %>"
-      color=    "&lt;font size='10'&gt;<%= bill_product.color_info %>&lt;/font&gt;"
+      code=            "<%= bill_product.outer_id %>"
+      storage_num=     "<%= bill_product.product.try(:storage_num) %>"
+      sku_name=        "<%= bill_product.sku_name %>"
+      num=             "<%= bill_product.number %>"
+      name=            "<%= bill_product.title %>"
+      local_name=      "<%= bill_product.product.try(:name) %>"
+      property_memos=  "<%= bill_product.property_memos.join("\r\n") %>"
+      color=           "&lt;font size='10'&gt;<%= bill_product.color_info %>&lt;/font&gt;"
     ></item>
     <% end %>
   </trade>
