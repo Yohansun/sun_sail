@@ -175,7 +175,7 @@ class StocksController < ApplicationController
         flash[:notice] = "ID为#{success.join(',')} 更新实际库存#{actual}成功" if success.present?
         flash[:error] = "ID为#{fails.join(',')} 更新实际库存#{actual}失败" if fails.present?
       else
-        flash[:error] =  "请输入大于 0 的整数"
+        flash[:error] =  "请输入大于或等于 0 的整数"
       end
     end
     respond_to do |format|
