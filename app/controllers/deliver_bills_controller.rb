@@ -142,7 +142,7 @@ class DeliverBillsController < ApplicationController
       trade.logistic_name = logistic.try(:name)
       trade.logistic_code = logistic.try(:code)
       trade.service_logistic_id = params[:service_logistic_id]
-      trade.logistic_waybill = params[:logistic_waybill].present? ? params[:logistic_waybill] : @trade.tid
+      trade.logistic_waybill = params[:logistic_waybill].present? ? params[:logistic_waybill] : trade.tid
     end
     trade.save!
 

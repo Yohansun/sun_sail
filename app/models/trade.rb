@@ -657,7 +657,8 @@ class Trade
             price:            order_price,
             total_price:      order_price * sku_info[:number],
             number:           stock_num,
-            remark:           order.cs_memo
+            remark:           order.cs_memo,
+            oid:              order.oid
           )
         end
       end
@@ -706,7 +707,8 @@ class Trade
             total_price:      order_price * sku_info[:number],
             number:           stock_num,
             remark:           order.cs_memo,
-            num_iid:          order.num_iid
+            num_iid:          order.num_iid,
+            oid:              order.oid
           )
         end
       end
