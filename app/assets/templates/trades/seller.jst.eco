@@ -37,7 +37,7 @@
         <% if @trade.get('seller_id') != null: %>
           <%= @trade.get('seller_name') %>
         <% else: %>
-          <% if @trade.get('trade_source') != '淘宝' && @trade.get('trade_source') != '合并(淘宝)' : %>
+          <% if @trade.get('trade_source') == '京东' || @trade.get('trade_source') == '一号店' : %>
             点击"分派"按钮分派给: 默认<%= @trade.get('trade_source') %>经销商
             <div class="dispatch_error"></div>
           <% else: %>
