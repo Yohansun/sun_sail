@@ -41,7 +41,7 @@ class BillProduct
   end
 
   def order
-    trade.orders.where(oid: oid).first
+    trade.orders.where(oid: oid).first || trade.orders.where(outer_id: outer_id).first || trade.orders.where(num_iid: num_iid).first
   end
 
   def property_memos
