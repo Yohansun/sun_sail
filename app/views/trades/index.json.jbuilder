@@ -78,6 +78,7 @@ json.list(@trades) do |json, trade|
   json.is_succeeded               trade.is_succeeded
   json.is_closed                  trade.is_closed
   json.auto_dispatch_left_seconds trade.auto_dispatch_left_seconds(current_account)
+  json.end_time                   trade.end_time.try(:strftime, "%m-%d %H:%M")
 
   ## 订单子文档
 

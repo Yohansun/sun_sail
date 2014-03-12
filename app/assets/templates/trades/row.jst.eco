@@ -85,6 +85,9 @@
   <% if @trade.get('operator'): %>
   <span class="label label-info">指派：<%= @trade.get('operator') %></span>
   <% end %>
+  <% if @trade.get('status_text') == "交易成功" && @trade.get("trade_type") == "CustomTrade" : %>
+    <span class="label label-success">交易成功 <%= @trade.get('end_time') %></span>
+  <% end %>
 </td>
 <!-- <td data-col='operator'>
   <span class="label label-info">指派：<%#= @trade.get('operator') %></span>
