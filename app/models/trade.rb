@@ -734,6 +734,7 @@ class Trade
     end
   end
 
+  # TODO 一般使用 "!" 如果判断或验证不通过是需要抛异常的
   def dispatch!(seller = nil)
     return false unless dispatchable?
 
@@ -780,7 +781,7 @@ class Trade
 
   def auto_dispatch!
     return false unless auto_dispatchable?
-    dispatch!
+    return false if not dispatch!
     self.is_auto_dispatch = true
     if self.save
       self.operation_logs.create(operated_at: Time.now, operation: "自动分派")
