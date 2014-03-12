@@ -9,9 +9,10 @@ class TradeDeliver
     deliver(trade)
   end
 
-  def deliver_failed(trade)
+  def deliver_failed(ary)
+    trade,reason= Array.wrap(ary)
     trade.status =  'WAIT_SELLER_SEND_GOODS'
-    trade.unusual_states.build(reason: "发货异常", key: 'other_unusual_state', created_at: Time.now)
+    trade.unusual_states.build(reason: "发货异常:#{reason}", key: 'other_unusual_state', created_at: Time.now)
     trade.save
   end
 
@@ -51,7 +52,7 @@ class TradeDeliver
     data = {parameters: {method: 'taobao.logistics.offline.send',tid: trade.tid,out_sid: trade.logistic_waybill,company_code: trade.logistic_code}}
     response = TaobaoQuery.get(data[:parameters],trade.trade_source_id)
     data.merge!({response: response,trade_source_id: trade.trade_source_id})
-    throw :deliver_error, trade if cache_exception(message: "淘宝订单发货异常(#{trade.shop_name})",data: data) {
+    throw :deliver_error, [trade,response["error_response"]["sub_msg"]] if cache_exception(message: "淘宝订单发货异常(#{trade.shop_name})",data: data) {
       fail if response["logistics_offline_send_response"]["shipping"]["is_success"] != true
     }
   end
