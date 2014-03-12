@@ -80,7 +80,7 @@ class MagicOrders.Views.TradesRow extends Backbone.View
     $(e.target).parents('tr').siblings().find('.popover').removeClass('in')
 
   closePopover: (e) ->
-    $(e.currentTarget).parents('.popover').removeClass('in')
+    $("a[rel=popover]").popover("hide")
 
   reloadOperationMenu: ->
     $("#trade_"+ @model.get('id') + " :checkbox").attr("checked", "checked")
