@@ -95,6 +95,7 @@ json.is_paid_not_delivered       @trade.is_paid_not_delivered
 json.is_paid_and_delivered       @trade.is_paid_and_delivered
 json.is_succeeded                @trade.is_succeeded
 json.is_closed                   @trade.is_closed
+json.end_time                    @trade.end_time.strftime("%m-%d %H:%M")
 
 ## 订单子文档
 

@@ -374,7 +374,7 @@ class TradesController < ApplicationController
 
   def trade_finished
     @trade = Trade.find(params[:id])
-    @trade.update_attributes(:status => "TRADE_FINISHED")
+    @trade.update_attributes(status: "TRADE_FINISHED", end_time: Time.now)
     @trade.operation_logs.create(operated_at: Time.now, operation: '设置交易完成', operator_id: current_user.id, operator: current_user.name)
     render :text=>"ok" if @trade.save
   end
