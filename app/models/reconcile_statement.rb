@@ -45,7 +45,7 @@ class ReconcileStatement < ActiveRecord::Base
     when "unprocessed"
       self.where(processed: false)
     when "processed"
-      self.where(processed: true)
+      self.where(processed: true, audited: false)
     when "audited"
       self.where(audited: true)
     when "unaudited"
