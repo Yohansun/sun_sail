@@ -111,6 +111,10 @@ class Account < ActiveRecord::Base
     settings.enable_module_third_party_stock == 1
   end
 
+  def enabled_sms?
+    settings.sms_http_gateway && settings.sms_http_uid && settings.sms_http_pwd
+  end
+
   ['preprocess', 'dispatch', 'deliver', 'notify'].each do |option|
     define_method "can_auto_#{option}_right_now" do
       return in_time_gap(self.settings.auto_settings["start_#{option}_at"], self.settings.auto_settings["end_#{option}_at"])
