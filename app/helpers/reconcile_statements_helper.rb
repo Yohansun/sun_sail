@@ -5,8 +5,8 @@ module ReconcileStatementsHelper
     if current_account.settings.enable_module_reconcile_statements_for_magicd == true 
       @brand_name = "多乐士确认结算"
       @status_name = "多乐士未结算"
-      @statuses_select = [["请选择",""],["未结算","unprocessed"],["多乐士已结算","processed"],["等待运营商结算","unaudited"],["已结算","audited"]]
-      @seller_statuses_select = [["请选择",""],["未结算","unprocessed"],["多乐士已结算","processed"],["等待经销商结算","unaudited"],["已结算","audited"]]
+      @statuses_select = [["请选择",""],["未结算","unprocessed"],["多乐士已结算，等待运营商结算","processed"],["已结算","audited"]]
+      @seller_statuses_select = [["请选择",""],["未结算","unprocessed"],["多乐士已结算,等待经销商结算","processed"],["已结算","audited"]]
     else 
       @brand_name = "品牌确认结算"
       @status_name ="品牌未确认结算"
