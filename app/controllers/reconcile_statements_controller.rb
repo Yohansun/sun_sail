@@ -1,7 +1,7 @@
 # encoding: utf-8
 class ReconcileStatementsController < ApplicationController
   before_filter :authorize
-  before_filter :fetch_rs, only: [:show, :audit, :seller_show, :update_processed]
+  before_filter :fetch_rs, only: [:show, :audit, :seller_show, :update_processed, :confirm_process, :confirm_audit, :confirm_seller_audit]
   before_filter :check_module, :fetch_store
   AllActions = {:index => "运营商对账",:seller_index => "经销商对账",:distributor_index => "分销商对账"}
   include ReconcileStatementsHelper

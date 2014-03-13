@@ -23,19 +23,41 @@
   <% end %>
 </div>
 
-<div class="btns">
-  <a href="javascript:;" class="btn btn-warning confirm_export">导出数据</a>
-  <% if @all_processed %>
-    <a href="javascript:;" class="btn btn-warning disabled"><%= @brand_name %></a>
-  <% else %>
-    <a data-toggle="modal" href="#confirm_account" class="btn btn-warning confirm_settlement_all"><%= @brand_name %></a>
-  <% end %>
-  <% if @all_audited %>
-    <a href="javascript:;" class="btn btn-warning disabled">运营商确认结算</a>
-  <% else %>
-    <a data-toggle="modal" href="#confirm_account1" class="btn btn-warning confirm_settlement_all1">运营商确认结算</a>
-  <% end %>
-</div>
+<% unless current_account.settings.enable_module_reconcile_statements_for_magicd == true %>
+  <div class="btns">
+    <a href="javascript:;" class="btn btn-warning confirm_export">导出数据</a>
+    <% if @all_processed %>
+      <a href="javascript:;" class="btn btn-warning disabled"><%= @brand_name %></a>
+    <% else %>
+      <a data-toggle="modal" href="#confirm_account" class="btn btn-warning confirm_settlement_all"><%= @brand_name %></a>
+    <% end %>
+    <% if @all_audited %>
+      <a href="javascript:;" class="btn btn-warning disabled">运营商确认结算</a>
+    <% else %>
+      <a data-toggle="modal" href="#confirm_account1" class="btn btn-warning confirm_settlement_all1">运营商确认结算</a>
+    <% end %>
+  </div>
+<% else %>
+  <div class="btn-group">
+    <button class="btn btn-warning" id="product_operations">操作</button>
+    <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+      <li><a href="javascript:;" class="confirm_export">导出数据</a></li>
+      <% if @all_processed %>
+        <li><a href="javascript:;" class="disabled"><%= @brand_name %></a></li>
+      <% else %>
+        <li><a data-toggle="modal" href="#confirm_account" class="confirm_settlement_all"><%= @brand_name %></a></li>
+      <% end %>
+      <% if @all_audited %>
+        <li><a href="javascript:;" class=" disabled">运营商确认结算</a></li>
+      <% else %>
+        <li><a data-toggle="modal" href="#confirm_account1" class=" confirm_settlement_all1">运营商确认结算</a></li>
+      <% end %>
+    </ul>
+  </div><!-- btn-group -->
+<% end %>
 <table class="table table-striped table-bordered td_colors table-hover mar_t">
   <thead>
     <tr>
@@ -190,10 +212,11 @@
     }
   }
   function confirm_calculate(value){
+    rs_id = $("input[name='audited[]']:checked").val();
     if(value == 'trade_confirm'){
-      url_h = "/reconcile_statements/"+rs_id+"/confirm_audit"
+      url_h = "/reconcile_statements/"+rs_id+"/confirm_process"
     }else{
-      url_h = "/reconcile_statements/"+rs_id+"/confirm_process" 
+      url_h = "/reconcile_statements/"+rs_id+"/confirm_audit" 
     }
     rs_id = $("input[name='audited[]']:checked").val();
     $.ajax({

@@ -137,10 +137,11 @@
   }
 
   function confirm_calculate(value){
+    rs_id = $("input[name='audited[]']:checked").val();
     if(value == 'trade_confirm'){
-      url_h = "/reconcile_statements/"+rs_id+"/confirm_seller_audit"
+      url_h = "/reconcile_statements/"+rs_id+"/confirm_process"
     }else{
-      url_h = "/reconcile_statements/"+rs_id+"/confirm_process" 
+      url_h = "/reconcile_statements/"+rs_id+"/confirm_seller_audit" 
     }
     rs_id = $("input[name='audited[]']:checked").val();
     $.ajax({
