@@ -413,7 +413,7 @@ class MagicOrders.Views.TradesIndex extends MagicOrders.Views.BaseView
     blocktheui()
 
     MagicOrders.trade_reload_limit = parseInt $('#load_count').val()
-    @collection.fetch data: {trade_type: @trade_type, limit: MagicOrders.trade_reload_limit, offset: @offset, search: @search_hash}, success: (collection) =>
+    @collection.fetch data: {trade_type: @trade_type, limit: MagicOrders.trade_reload_limit, offset: @offset, search: @search_hash,search_id: MagicOrders.search_id}, success: (collection) =>
       if collection.length >= 0
         @offset = @offset + MagicOrders.trade_reload_limit
         @renderUpdate()
