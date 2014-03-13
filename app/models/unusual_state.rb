@@ -7,6 +7,7 @@ class UnusualState
   field :reason,         type: String
   field :key,            type: String
   field :note,           type: String
+  field :text,           type: String
 
   field :reporter,       type: String
   field :reporter_role,  type: String
