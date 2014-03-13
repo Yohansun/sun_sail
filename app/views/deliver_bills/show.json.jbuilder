@@ -32,7 +32,6 @@ json.orders @bill.bill_products do |json, order|
   json.created @trade.created.strftime("%Y-%m-%d")
 end
 json.product_num @bill.bill_products.sum(:number)
-json.real_product_num @bill.except_ref_bills.sum(:number)
 json.total_payment ""
 json.post_fee ""
 json.total ""
@@ -43,17 +42,3 @@ json.print_date Time.now.strftime("%Y-%m-%d")
 json.bill_products_count @bill.bill_products.try(:count).to_i
 json.trade_type @trade._type
 json.template_path current_account.deliver_template.try(:xml_url) || "/ffd.xml"
-json.ref_orders @bill.except_ref_bills do |json, order|
-  json.id order.id
-  json.outer_id order.outer_id
-  json.outer_sku_id order.outer_sku_id
-  json.skus_info order.order.skus_info
-  json.sku_name order.sku_name
-  json.title order.title
-  json.num order.number
-  json.color_info order.color_info
-  json.promotion_desc ""
-  json.price ""
-  json.payment ""
-  json.created @trade.created.strftime("%Y-%m-%d")
-end
