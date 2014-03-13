@@ -3,8 +3,8 @@ class PrintFlashSettingsController < ApplicationController
   layout "management"
 
   skip_before_filter :verify_authenticity_token
-  before_filter :authorize
   before_filter :authenticate_user!
+  before_filter :authorize
   before_filter :fetch_setting, only: [:show, :print_infos, :update_infos, :update_xml_hash]
 
   def show
