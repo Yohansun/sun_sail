@@ -122,7 +122,7 @@
           <%- elsif !rs.processed %>
             <td><a data-toggle="modal" data-id="<%= rs.id %>" href="#confirm_account" class="confirm_settlement"><%= @status_name %></a></td>
           <% else %>
-            <td><a data-toggle="modal" data-id="<%= rs.id %>" href="#confirm_account" class="confirm_settlement">运营商未结算</a></td>
+            <td><a data-toggle="modal" data-id="<%= rs.id %>" href="#confirm_account" class="confirm_settlement">经销商未结算</a></td>
           <%- end %>
           <td><%= rs.trade_store_source %></td>
         </tr>

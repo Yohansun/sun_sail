@@ -158,6 +158,9 @@ MagicOrders::Application.routes.draw do
   resources :reconcile_statements, only: [:index, :show] do
     member do
       put :audit
+      put :confirm_process
+      put :confirm_audit
+      put :confirm_seller_audit
       put :update_processed
       get :seller_show
       get :distributor_show
