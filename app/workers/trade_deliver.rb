@@ -12,7 +12,8 @@ class TradeDeliver
   def deliver_failed(ary)
     trade,reason= Array.wrap(ary)
     trade.status =  'WAIT_SELLER_SEND_GOODS'
-    trade.unusual_states.build(reason: "发货异常:#{reason}", key: 'other_unusual_state', created_at: Time.now)
+    response = TaobaoTradePuller.fetch_trade(trade.tid,trade.trade_source_id).to_yaml rescue $!
+    trade.unusual_states.build(reason: "发货异常:#{reason}", key: 'other_unusual_state', created_at: Time.now,text: response)
     trade.save
   end
 

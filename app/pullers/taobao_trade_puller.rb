@@ -211,13 +211,17 @@ class TaobaoTradePuller
       tid = trade.tid
       account = trade.fetch_account
       account_id = account.id
+      response = fetch_trade(tid,trade_source_id)
+      trade = response['trade_fullinfo_get_response']['trade']
+      update_trade(trade, account, trade_source_id)
+    end
+
+    def fetch_trade(tid,trade_source_id)
       response = TaobaoQuery.get({
         method: 'taobao.trade.fullinfo.get',
         fields: 'total_fee, tid, status, adjust_fee, post_fee, receiver_name, pay_time, end_time, receiver_state, receiver_city, receiver_district, receiver_address, receiver_zip, receiver_mobile, receiver_phone, buyer_nick, title, type, point_fee, modified, alipay_id, alipay_no, alipay_url, shipping_type, buyer_obtain_point_fee, cod_fee, cod_status, commission_fee, consign_time, received_payment, payment, timeout_action_time, has_buyer_message, real_point_fee, orders',
         tid: tid}, trade_source_id
       )
-      trade = response['trade_fullinfo_get_response']['trade']
-      update_trade(trade, account, trade_source_id)
     end
 
     def updatable?(local_trade, remote_status, has_refund_status)
