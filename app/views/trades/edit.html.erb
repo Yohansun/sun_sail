@@ -412,9 +412,11 @@
         </div>
 
       </div>
-      <div class="modal-footer">
-        <button class="btn btn-primary save_memos" type="submit">保存</button>
-      </div>
+      <% unless @trade.is_locked %>
+        <div class="modal-footer">
+          <button class="btn btn-primary save_memos" type="submit">保存</button>
+        </div>
+      <% end %>
     <% end %>
   </div><!-- check end -->
 
