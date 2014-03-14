@@ -245,7 +245,6 @@ class Trade
   index logistic_id: 1
   index main_trade_id: 1
 
-
   # 状态搜索index
   index status: 1
 
@@ -770,11 +769,11 @@ class Trade
                            dispatch_conditions['special_sku_content'].blank? ||
                            orders.where(sku_properties_name: /#{dispatch_conditions['special_sku_content']}/).count == orders.count
 
-      can_auto_dispatch = void_buyer_message &&
-                          void_seller_memo   &&
-                          void_cs_memo       &&
-                          void_money         &&
-                          void_special_sku
+      can_auto_dispatch  = void_buyer_message &&
+                           void_seller_memo   &&
+                           void_cs_memo       &&
+                           void_money         &&
+                           void_special_sku
     end
     can_auto_dispatch && dispatchable?
   end
@@ -1092,16 +1091,6 @@ class Trade
       when 'deliver_unconfirmed'
         trade_type_hash = {seller_confirm_deliver_at: nil, :status.in => StatusHash["paid_and_delivered_array"]}
 
-      # # 发票
-      # when 'invoice_all'
-      #   trade_type_hash = {:invoice_name.ne => nil}
-      # when 'invoice_unfilled'
-      #   trade_type_hash = {seller_confirm_invoice_at: nil}
-      # when 'invoice_filled'
-      #   trade_type_hash = {:seller_confirm_invoice_at.ne => nil}
-      # when 'invoice_sent'
-      #   trade_type_hash = {:status.in => StatusHash["paid_and_delivered_array"], :seller_confirm_invoice_at.ne => nil}
-
       # 退货
       when 'request_return'
         trade_type_hash = {:request_return_at.ne => nil, confirm_return_at: nil}
@@ -1388,12 +1377,11 @@ class Trade
       end
     end
 
-    # 集中筛选
-    #search_hash = {"$and" => [search_tags_hash,area_search_hash].compact}
+    # 集中筛选，最后要过滤有留言但还在抓取的订单
     search_hash = {"$and"=> conditions.values.map{|value| {"$or"=>value.flatten}}}
     search_hash == {"$and"=>[]} ? search_hash = nil : search_hash
-    ## 过滤有留言但还在抓取 + 总筛选
     trades.where(search_hash).and(trade_type_hash, {"$or" => [{"has_buyer_message" => {"$ne" => true}},{"buyer_message" => {"$ne" => nil}}]})
+
     ###筛选结束###
   end
 
