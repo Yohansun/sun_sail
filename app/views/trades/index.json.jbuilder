@@ -107,7 +107,7 @@ json.list(@trades) do |json, trade|
   stock_out_bill = trade.stock_out_bill if trade.stock_out_bill
   json.stock_out_bill_present stock_out_bill.present?
   json.stock_status           stock_out_bill.status if stock_out_bill
-  json.can_do_close           !!stock_out_bill && stock_out_bill.can_do_close?
+  json.can_close              stock_out_bill && stock_out_bill.can_close?
 end
 
 json.counter_cache(counter_caches(current_account.id))

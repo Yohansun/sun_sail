@@ -1,12 +1,12 @@
 # -*- encoding : utf-8 -*-
-class StockOutBillsController < ApplicationController
-  before_filter :authorize
-  before_filter :set_warehouse
+class StockOutBillsController < StockBillsController
+  skip_before_filter :fetch_bills
   before_filter :find_column_settings, :only => [:sync, :check, :rollback, :lock, :unlock,:confirm_stock,:confirm_sync,:confirm_cancle,:refuse_cancle]
   before_filter :validate_optional_status, only: [:edit, :sync, :rollback,:update]
 
   def index
     parse_params
+    params[:search][:operation_logs_operation_eq] = '入库' if params[:search] && (params[:search][:operation_logs_operated_at_lte].present? || params[:search][:operation_logs_operated_at_gte].present?)
     @search = default_scope.search(params[:search]).desc(:created_at)
     @bills = @search.page(params[:page]).per(params[:number])
     @count = @bills.count
@@ -74,110 +74,6 @@ class StockOutBillsController < ApplicationController
       #TODO 错误提示重复
       flash[:error] = (@bill.errors.full_messages.uniq + @bill.bill_products_errors).to_sentence
       render :edit
-    end
-  end
-
-  # 确认同步
-  # def confirm_sync
-  #   @bills = default_scope.any_in(_id: params[:bill_ids])
-  #   @bills.each do |bill|
-  #     bill.confirm_sync
-  #   end
-  # 
-  #   respond_to do |format|
-  #     format.js
-  #   end
-  # end
-
-  def confirm_stock
-    @bills = default_scope.any_in(_id: params[:bill_ids])
-    @bills.each do |bill|
-      bill.confirm_stock
-    end
-
-    respond_to do |format|
-      format.js
-    end
-  end
-
-  # 确认撤销
-  # def confirm_cancle
-  #   @bills = default_scope.any_in(_id: params[:bill_ids])
-  #   @errors = @bills.reject { |bill| bill.confirm_cancle }.map(&:tid)
-  # 
-  #   respond_to do |format|
-  #     format.js
-  #   end
-  # end
-
-  # 拒绝撤销
-  # def refuse_cancle
-  #   @bills = default_scope.any_in(_id: params[:bill_ids])
-  #   @errors = @bills.reject { |bill| bill.refuse_cancle }.map(&:tid)
-  # 
-  #   respond_to do |format|
-  #     format.js
-  #   end
-  # end
-
-  def sync
-    @operated_bills = default_scope.any_in(_id: params[:bill_ids])
-    @operated_bills.each do |bill|
-      #PUT INTO QUEUE LATER
-      bill.build_log(current_user,'同步')
-      bill.sync
-    end
-    respond_to do |f|
-      f.js
-    end
-  end
-
-  def check
-    @error_records = []
-    @operated_bills = default_scope.any_in(_id: params[:bill_ids])
-    render(:js => "alert('不能操作状态为已出库的出库单')") and return if @operated_bills.where(status: "STOCKED").exists?
-    @operated_bills.each do |bill|
-      #PUT INTO QUEUE LATER
-      assert = bill.check
-      if assert != true
-        @error_records << bill.tid
-        logger.error "[DATA-EXCEPTION #{Time.now.to_s(:db)}] 用户ID(#{current_user.id})审核出库单#{bill.tid}失败: #{assert}"
-      end
-    end
-    respond_to do |f|
-      f.js
-    end
-  end
-
-  def rollback
-    @operated_bills = default_scope.any_in(_id: params[:bill_ids])
-    @operated_bills.each do |bill|
-      #PUT INTO QUEUE LATER
-      bill.build_log(current_user,'取消')
-      bill.rollback
-    end
-    respond_to do |f|
-      f.js
-    end
-  end
-
-  def lock
-    @bills = default_scope.any_in(_id: params[:bill_ids])
-    failed = @bills.collect {|bill| [bill.tid,bill.lock!(current_user)]}.reject {|t,m| m == true}
-    error_message = failed.collect {|a| a.join(":")}.join(";")
-    @message = failed.blank? ? "出库单#{@bills.map(&:tid).join(',')}锁定成功." : "出库单#{error_message}."
-    respond_to do |format|
-      format.js
-    end
-  end
-
-  def unlock
-    @bills = default_scope.any_in(_id: params[:bill_ids])
-    failed = @bills.collect {|bill| [bill.tid,bill.unlock!(current_user)]}.reject {|t,m| m == true}
-    error_message = failed.collect {|a| a.join(":")}.join(';')
-    @message = failed.blank? ? "出库单#{@bills.map(&:tid).join(',')}激活成功." : "出库单#{error_message}."
-    respond_to do |format|
-      format.js
     end
   end
 
@@ -257,4 +153,6 @@ class StockOutBillsController < ApplicationController
       return
     end
   end
+
+  def stock_type; "出库单" end
 end

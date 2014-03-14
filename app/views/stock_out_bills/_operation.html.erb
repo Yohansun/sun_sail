@@ -1,62 +1,8 @@
 <td id="operation_<%= bill.id %>"  data-col="operation" style="<%= 'display:none' unless @visible_cols.include?("operation") %>">
-  <%- if bill.created_at.present? -%>
-  <span class='label'>
-    创建<%= bill.created_at.try(:to_s,:db) %>
-  </span>
-  <br>
-  <%- end %>
-  <%- if bill.stocked_at.present? -%>
-  <span class='label label-success'>
-    出库<%= bill.stocked_at.try(:to_s,:db) %>
-  </span>
-  <br>
-  <%- end %>
-  <%- if bill.checked_at.present? -%>
-  <span class='label '>
-    审核 <%= raw bill.checked_at.strftime("%m-%d %H:%M:%S") -%>
-  </span>
-  <br>
-  <%- end -%>
-  <%- if bill.sync_at.present? && bill.enabled_third_party_stock? -%>
-  <span class='label '>
-    同步 <%= raw bill.sync_at.strftime("%m-%d %H:%M:%S") -%>
-  </span>
-  <br>
-  <%- end -%>
-  <%- if bill.sync_failed_at.present? && bill.enabled_third_party_stock? -%>
-  <span class='label '>
-    同步失败 <%= raw bill.sync_failed_at.strftime("%m-%d %H:%M:%S") -%>
-  </span>
-  <br>
-  <%- end -%>
-  <%- if bill.sync_succeded_at.present? && bill.enabled_third_party_stock? -%>
-  <span class='label '>
-    同步成功 <%= raw bill.sync_succeded_at.strftime("%m-%d %H:%M:%S") -%>
-  </span>
-  <br>
-  <%- end -%>
-  <%- if bill.canceled_at.present? && bill.enabled_third_party_stock? -%>
-  <span class='label '>
-    取消 <%= raw bill.canceled_at.strftime("%m-%d %H:%M:%S") -%>
-  </span>
-  <br>
-  <%- end -%>
-  <%- if bill.cancel_failed_at.present? && bill.enabled_third_party_stock? -%>
-  <span class='label '>
-    取消失败 <%= raw bill.cancel_failed_at.strftime("%m-%d %H:%M:%S") -%>
-  </span>
-  <br>
-  <%- end -%>
-  <%- if bill.cancel_succeded_at.present? && bill.enabled_third_party_stock? -%>
-  <span class='label '>
-    取消成功 <%= raw bill.cancel_succeded_at.strftime("%m-%d %H:%M:%S") -%>
-  </span>
-  <br>
-  <%- end -%>
-  <%- if bill.confirm_stocked_at.present? -%>
-  <span class='label '>
-    确认出库 <%= raw bill.confirm_stocked_at.strftime("%m-%d %H:%M:%S") -%>
-  </span>
-  <br>
-  <%- end -%>
+  <% bill.operation_logs.each do |log| %>
+    <span class=label>
+      <%= "#{log.operation} #{l(log.operated_at)}" %>
+    </span>
+    </br>
+  <% end %>
 </td>

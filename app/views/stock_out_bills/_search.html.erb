@@ -42,9 +42,9 @@
     <%= label_tag "search[stocked_at_gte]", raw("<code>出库时间</code>"),:class => "pull-left width" %>
   <div class="controls pull-left">
 
-    <%= text_field_tag "search[stocked_at_gte]",params["search"]["stocked_at_gte"],:class => "input-medium datetimepicker_full" %>~
+    <%= text_field_tag "search[operation_logs_operated_at_gte]",params["search"]["operation_logs_operated_at_gte"],:class => "input-medium datetimepicker_full" %>~
 
-    <%= text_field_tag "search[stocked_at_lte]",params["search"]["stocked_at_lte"],:class => "input-medium datetimepicker_full" %>
+    <%= text_field_tag "search[operation_logs_operated_at_lte]",params["search"]["operation_logs_operated_at_lte"],:class => "input-medium datetimepicker_full" %>
   </div>
 </div>
 <div class="control-group">

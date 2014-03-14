@@ -9,6 +9,79 @@ class StockOutBill < StockBill
   enum_attr :stock_type, OUT_STOCK_TYPE
   validates_inclusion_of :stock_type, :in => STOCK_TYPE_VALUES
 
+  def outer_website
+    website || (self.account.settings.open_auto_mark_invoice==1 ? "个人" : "" rescue "")
+  end
+
+  def outer_is_cash_sale
+    is_cash_sale || (self.account.settings.open_auto_mark_invoice==1 ? "需要开票" : "无需开票" rescue "无需开票")
+  end
+
+  def gqs_outer_is_cash_sale
+    ((is_cash_sale == "无需开票"|| is_cash_sale.nil?) ? "0" : "1")|| (self.account.settings.open_auto_mark_invoice==1 ? "1" : "0" rescue "0")
+  end
+
+  # 更新库存
+  def update_inventory(transition)
+    case transition.event
+    when :check         then decrease_activity(transition)
+    when :stock         then decrease_actual(transition)
+    when :special_stock then decrease_stock(transition)
+    end
+  end
+
+  # 减可用,实际库存
+  def decrease_stock(transition)
+    transaction(transition) { decrease_activity(transition) && decrease_actual(transition) or fail}
+  end
+
+  # 还原库存
+  def revert_inventory(transition)
+    case transition.event
+    when :lock,:close then increase_activity(transition)
+    when :enable      then decrease_activity(transition)
+    end if state_name != :created
+  end
+
+  def push_sync_by_remote
+    result_xml = case account.settings.third_party_wms
+    when "biaogan" then Bml.so_to_wms(account, xml)
+    when "gqs"     then Gqs.order_add(account, gqs_xml)
+    end
+
+    self.log = result = Hash.from_xml(result_xml).as_json
+
+    if    result.key?('Response') && result['Response']['success'] == 'true' then confirm_sync
+    elsif result.key?('DATA')     && result['DATA']['RET_CODE']    == 'SUCC' then confirm_sync
+    else  refusal_sync
+    end
+  end
+
+  def update_invoice_price(price)
+    # 如果只有一个子订单而且全额退款可能为负数. 邮费部分.  正常情况下这样是不会安排发货的, 还是先避免下
+    price = 0 if price < 0
+    # 出入库单如果在状态不是为 已审核, 同步失败, 取消成功 发送预警邮件
+    if bill_products_price.to_f != price.to_f && !%w(SYNCK_FAILED CHECKED CANCELD_OK).include?(status)
+      cache_exception(message: "(#{trade.shop_name})出库单在非 '已审核, 同步失败, 取消成功' 状态下 更新开票金额为#{price.to_f}",data: attributes) { raise "开票金额更新预警" }
+    end
+    update_attributes(bill_products_price: price)
+  end
+
+  #发送订单取消信息至仓库
+  def push_rollback_by_remote
+    result_xml = case account.settings.third_party_wms
+    when "biaogan" then Bml.cancel_order_rx(account, tid)
+    when "gqs"     then Gqs.cancel_order(account, orderid: tid,notes: '客户取消订单',opttype: 'OrderCance',opttime: Time.now.to_s(:db),method: 'OrderCance',_prefix: "order")
+    end
+
+    self.log = result = Hash.from_xml(result_xml).as_json
+
+    if    result.key?('Response') && result['Response']['success'] == 'true' then confirm_rollback
+    elsif result.key?('DATA')     && result['DATA']['RET_CODE']    == 'SUCC' then confirm_rollback
+    else  refusal_rollback
+    end
+  end
+
   def xml
     decorated_trade = TradeDecorator.decorate(trade)
     stock = ::Builder::XmlMarkup.new
@@ -56,42 +129,6 @@ class StockOutBill < StockBill
       end
     end
     stock.target!
-  end
-
-  def outer_website
-    website || (self.account.settings.open_auto_mark_invoice==1 ? "个人" : "" rescue "")
-  end
-
-  def type_name
-    "出库单"
-  end
-
-  def confirm_sync
-    so_to_wms_worker
-  end
-
-  def confirm_stock
-    if can_do_stock?
-      do_stock && decrease_actual && operation_logs.create(operated_at: Time.now, operation: '确认出库成功')
-    end
-  end
-
-  # 确认撤销
-  # def confirm_cancle
-  #   !!(do_cancel_ok && operation_logs.create(operated_at: Time.now, operation: '取消成功') )
-  # end
-
-  # 拒绝撤销
-  # def refuse_cancle
-  #   !!(do_cancel_fail && operation_logs.create(operated_at: Time.now, operation: '取消失败') )
-  # end
-
-  def outer_is_cash_sale
-    is_cash_sale || (self.account.settings.open_auto_mark_invoice==1 ? "需要开票" : "无需开票" rescue "无需开票")
-  end
-
-  def gqs_outer_is_cash_sale
-    ((is_cash_sale == "无需开票"|| is_cash_sale.nil?) ? "0" : "1")|| (self.account.settings.open_auto_mark_invoice==1 ? "1" : "0" rescue "0")
   end
 
   def gqs_xml
@@ -155,240 +192,4 @@ class StockOutBill < StockBill
     end
     stock.target!
   end
-
-  def check
-    StockProduct.transaction do
-      error_activity = decrease_activity
-      error_records = error_activity == true ? [] : error_activity
-      # 如果账号没有第三方仓库或者出库类型为盘点出库
-      if account && account.settings.enable_module_third_party_stock != 1 || self.stock_type_oinventory?
-        error_actual = decrease_actual
-        error_records << error_actual if error_actual != true
-      end
-      raise error_records.flatten.compact.collect{|x| '库存ID为' << x.id.to_s << ':' << x.errors.full_messages.join(',')}.join('\n') if error_records.present?
-      do_check
-      sync if !enabled_third_party_stock?
-      return true
-    end
-  rescue Exception => e
-    e.message
-  end
-
-  def sync
-    if can_do_syncking?
-      do_syncking
-      enabled_third_party_stock? ? so_to_wms : confirm_sync
-    end
-  end
-
-  def rollback
-    do_canceling    if can_do_canceling?
-    cancel_order_rx if enabled_third_party_stock?
-  end
-
-  def lock!(user)
-    return "不能再次锁定!" if self.operation_locked?
-    notice = "同步至仓库出库单需要先撤销同步后才能锁定"
-    return notice if self.status == "SYNCKED"
-    #"只能操作状态为: 1.已审核，待同步. 2.待审核. 3.撤销同步成功. 4. 同步失败待同步"
-    return "已经同步出库单不能锁定，请先撤销同步" if !["CHECKED","CREATED","CANCELD_OK","SYNCK_FAILED"].include?(self.status)
-    self.operation = "locked"
-    self.operation_time = Time.now
-    build_log(user,"锁定")
-
-    if self.status != "CREATED"
-      self.increase_activity { self.save(validate: false) }
-    else
-      self.save(validate: false)
-    end
-  end
-
-  def unlock!(user)
-    return "只能操作的状态为: 已锁定." if !self.operation_locked?
-    self.operation = "activated"
-    self.operation_time = Time.now
-    build_log(user,"激活")
-
-    if self.status != "CREATED"
-      self.decrease_activity { self.save(validate: false) }
-    else
-      self.save(validate: false)
-    end
-  end
-
-  #推送出库单至仓库
-  def so_to_wms
-    BiaoganPusher.perform_async(self._id, "so_to_wms_worker")
-  end
-
-  def cancel_order_rx
-    BiaoganPusher.perform_async(self._id, "cancel_order_rx_worker")
-  end
-
-  def sendable?
-    if trade
-      case trade._type
-      when 'TaobaoTrade','CustomTrade','Trade','TaobaoPurchaseOrder'
-        trade.status == "WAIT_SELLER_SEND_GOODS"
-      when 'YihaodianTrade'
-        trade.status == "ORDER_TRUNED_TO_DO"
-      when 'JingdongTrade'
-        trade.status == "WAIT_SELLER_STOCK_OUT"
-      end
-    else
-      true
-    end
-  end
-
-  def so_to_wms_worker
-    if account.settings.enable_module_third_party_stock != 1
-      if can_do_syncked?
-        do_syncked && operation_logs.create(operation: '确认审核')
-      else
-        operation_logs.create(operation: '确认审核失败',text: self.errors.full_messages)
-      end
-      return
-    end
-
-    if sendable? && can_do_syncked?
-      if account.settings.third_party_wms == "biaogan"
-        result_xml = Bml.so_to_wms(account, xml)
-      elsif account.settings.third_party_wms == "gqs"
-        result_xml = Gqs.order_add(account, gqs_xml)
-      end
-      result = Hash.from_xml(result_xml).as_json
-
-      #BML
-      if result['Response']
-        if result['Response']['success'] == 'true'
-          do_syncked
-          operation_logs.create(operation: '同步成功',text: result)
-        else
-          self.failed_desc = result['Response']['desc']
-          do_synck_fail
-          operation_logs.create(operation: "同步失败,#{result['Response']['desc']}",text: result)
-        end
-      end
-
-      #GQS
-      if result['DATA']
-        if result['DATA']['RET_CODE'] == 'SUCC'
-          do_syncked
-          operation_logs.create(operation: '同步成功',text: result)
-        else
-          self.failed_desc = result['DATA']['RET_MESSAGE']
-          do_synck_fail
-          operation_logs.create(operation: "同步失败,#{result['DATA']['RET_MESSAGE']}",text: result)
-        end
-      end
-    end
-  end
-
-  def update_invoice_price(price)
-    # 如果只有一个子订单而且全额退款可能为负数. 邮费部分.  正常情况下这样是不会安排发货的, 还是先避免下
-    price = 0 if price < 0
-    # 出入库单如果在状态不是为 已审核, 同步失败, 取消成功 发送预警邮件
-    if bill_products_price.to_f != price.to_f && !%w(SYNCK_FAILED CHECKED CANCELD_OK).include?(status)
-      cache_exception(message: "(#{trade.shop_name})出库单在非 '已审核, 同步失败, 取消成功' 状态下 更新开票金额为#{price.to_f}",data: attributes) { raise "开票金额更新预警" }
-    end
-    update_attributes(bill_products_price: price)
-  end
-
-  #发送订单取消信息至仓库
-  def cancel_order_rx_worker
-    if account.settings.third_party_wms == "biaogan"
-      result_xml = Bml.cancel_order_rx(account, tid)
-    elsif account.settings.third_party_wms == "gqs"
-      result_xml = Gqs.cancel_order(account, orderid: tid,notes: '客户取消订单',opttype: 'OrderCance',opttime: Time.now.to_s(:db),method: 'OrderCance',_prefix: "order")
-    end
-    result = Hash.from_xml(result_xml).as_json
-
-    #BML
-    if result['Response']
-      if result['Response']['success'] == 'true'
-        do_cancel_ok
-        operation_logs.create(operation: '取消成功',text: result)
-      else
-        self.failed_desc = result['Response']['desc']
-        do_cancel_fail
-        operation_logs.create(operation: "取消失败,#{result['Response']['desc']}",text: result)
-      end
-    end
-
-    #GQS
-    if result['DATA']
-      if result['DATA']['RET_CODE'] == 'SUCC'
-        do_cancel_ok
-        operation_logs.create(operation: '取消成功',text: result)
-      else
-        self.failed_desc = result['DATA']['RET_MESSAGE']
-        do_cancel_fail
-        operation_logs.create(operation: "取消失败,#{result['DATA']['RET_MESSAGE']}",text: result)
-      end
-    end
-  end
-
-  def increase_activity(&block) #订单重新分流，或者出库单关闭，恢复仓库的可用库存
-    error_records = []
-    StockProduct.transaction do
-      bill_products.each do |stock_out|
-        stock_product = StockProduct.find_by_id(stock_out.stock_product_id)
-        if stock_product
-          if !stock_product.update_attributes(activity: stock_product.activity + stock_out.number,audit_comment: "出库单ID:#{self.id}")
-            error_records << stock_product.errors.full_messages
-          end
-        else
-          # DO SOME ERROR NOTIFICATION
-          false
-        end
-      end
-      raise if error_records.present? || !(block_given? ? yield : true)
-      return true
-    end
-  rescue Exception
-    error_records
-  end
-
-  def decrease_activity(&block) #减去仓库的可用库存
-    error_records = []
-    StockProduct.transaction do
-      bill_products.each do |stock_out|
-        stock_product = StockProduct.find_by_id(stock_out.stock_product_id)
-        if stock_product
-          if !stock_product.update_attributes(activity: stock_product.activity - stock_out.number,audit_comment: "出库单ID:#{self.id}")
-            error_records << stock_product.errors.full_messages
-          end
-        else
-          # DO SOME ERROR NOTIFICATION
-          false
-        end
-      end
-      raise if error_records.present? || !(block_given? ? yield : true)
-      return true
-    end
-  rescue Exception
-    error_records
-  end
-
-  def decrease_actual(&block) #减去仓库的实际库存
-    error_records = []
-    StockProduct.transaction do
-      bill_products.each do |stock_out|
-        stock_product = StockProduct.find_by_id(stock_out.stock_product_id)
-        if stock_product
-          if !stock_product.update_attributes(actual: stock_product.actual - stock_out.number,audit_comment: "出库单ID:#{self.id}")
-            error_records << stock_product.errors.full_messages
-          end
-        else
-          # DO SOME ERROR NOTIFICATION
-          false
-        end
-      end
-      raise if error_records.present? || !(block_given? ? yield : true)
-      return true
-    end
-  rescue Exception
-    error_records
-  end
-
 end

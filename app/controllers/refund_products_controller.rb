@@ -54,8 +54,8 @@ class RefundProductsController < ApplicationController
   end
 
   def sync
-    @operated_bills = default_scope.find params[:refund_product_ids].to_a
-    @operated_bills.each do |bill|
+    @refund_products = default_scope.find params[:refund_product_ids].to_a
+    @refund_products.each do |bill|
       #PUT INTO QUEUE LATER
       bill.sync
     end
@@ -65,8 +65,8 @@ class RefundProductsController < ApplicationController
   end
 
   def check
-    @operated_bills = default_scope.find params[:refund_product_ids].to_a
-    @operated_bills.each do |bill|
+    @refund_products = default_scope.find params[:refund_product_ids].to_a
+    @refund_products.each do |bill|
       #PUT INTO QUEUE LATER
       bill.check
     end
@@ -76,8 +76,8 @@ class RefundProductsController < ApplicationController
   end
 
   def rollback
-    @operated_bills = default_scope.find params[:refund_product_ids].to_a
-    @operated_bills.each do |bill|
+    @refund_products = default_scope.find params[:refund_product_ids].to_a
+    @refund_products.each do |bill|
       #PUT INTO QUEUE LATER
       bill.rollback
     end

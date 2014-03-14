@@ -1,13 +1,15 @@
 # -*- encoding : utf-8 -*-
 class StockBillsController < ApplicationController
   before_filter :set_warehouse, :except => [:update_status, :get_products]
+  before_filter :messages # 存储操作 错误/成功 信息
   before_filter :authorize, :except => :update_status
-  before_filter :fetch_bills, :except => [:update_status, :get_products]
   skip_before_filter :authenticate_user!, :only => :update_status
   skip_before_filter :verify_authenticity_token, :only => :update_status
 
   def index
     parse_params
+    @bills = StockBill.where(account_id: current_account.id,:seller_id => @warehouse.id, :status => "STOCKED")
+    params[:search][:operation_logs_operation_eq] = '入库' if params[:search] && (params[:search][:operation_logs_operated_at_lte].present? || params[:search][:operation_logs_operated_at_gte].present?)
     @search = @bills.search(params[:search]).desc(:created_at)
     @count = @search.map(&:bill_products).count
     @bills = @search.page(params[:page]).per(params[:number])
@@ -16,19 +18,6 @@ class StockBillsController < ApplicationController
 
     cur_page = params[:page].to_i
     @start_no = cur_page > 0 ? (cur_page - 1) * (params[:number] || @bills.default_per_page).to_i + 1 : 1
-  end
-
-  def fetch_bills
-    if current_account.settings.enable_module_third_party_stock == 1
-      @bills = StockBill.where(account_id: current_account.id,:seller_id => @warehouse.id, :confirm_stocked_at.ne => nil)
-    else
-      @bills = StockBill.where(account_id: current_account.id,:seller_id => @warehouse.id, :stocked_at.ne => nil)
-    end
-  end
-
-  def parse_params
-    search = params[:search] ||= {}
-    params[:search][:_id_in] = params[:export_ids].split(',') if params[:export_ids].present?
   end
 
   def get_products
@@ -71,21 +60,20 @@ class StockBillsController < ApplicationController
                 end
               end
             elsif order['OPTTYPE'] == 'OrderSign'
-              stock_bill.operation_logs.create(operated_at: Time.now, operation: '签收')
+              stock_bill.operation_logs.create(operated_at: Time.now, operation: '签收',text: response)
             elsif order['OPTTYPE'] == 'OrderRefuse'
-              stock_bill.operation_logs.create(operated_at: Time.now, operation: '拒收')
+              stock_bill.operation_logs.create(operated_at: Time.now, operation: '拒收',text: response)
             end
           end
 
           if order['OPTTYPE'] == 'OrderShip'
-            if (stock_bill._type == "StockInBill" && stock_bill.sync_stock ) || (stock_bill._type == "StockOutBill" && stock_bill.decrease_actual)
-              stock_bill.do_stock
-              stock_bill.operation_logs.create(operated_at: Time.now, operation: '确认成功')
+            if (stock_bill._type == "StockInBill" && stock_bill.sync_stock ) || (stock_bill._type == "StockOutBill")
+              stock_bill.stock
             end
           elsif order['OPTTYPE'] == 'OrderSign'
-            stock_bill.operation_logs.create(operated_at: Time.now, operation: '签收')
+            stock_bill.operation_logs.create(operated_at: Time.now, operation: '签收',text: response)
           elsif order['OPTTYPE'] == 'OrderRefuse'
-            stock_bill.operation_logs.create(operated_at: Time.now, operation: '拒收')
+            stock_bill.operation_logs.create(operated_at: Time.now, operation: '拒收',text: response)
           end
           render :text => "<DATA><RET_CODE>SUCC</RET_CODE><RET_MESSAGE>OK</RET_MESSAGE></DATA>"
         else
@@ -99,8 +87,98 @@ class StockBillsController < ApplicationController
     end
   end
 
+  def confirm_stock
+    @stock_bills = default_scope.any_in(_id: params[:bill_ids])
+    @stock_bills.each do |bill|
+      bill.user = current_user
+      bill.stock
+      add_message([stock_type,bill.tid,bill.last_message].join(','))
+    end
+
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  def sync
+    @stock_bills = default_scope.any_in(_id: params[:bill_ids])
+    @stock_bills.each do |bill|
+      bill.user = current_user
+      bill.sync
+      add_message([stock_type,bill.tid,bill.last_message].join(','))
+    end
+    respond_to do |f|
+      f.js
+    end
+  end
+
+  def check
+    @stock_bills = default_scope.any_in(_id: params[:bill_ids])
+    render(:js => "alert('不能操作状态为已出/入库的#{stock_type}')") and return if @stock_bills.where(status: "STOCKED").exists?
+    @stock_bills.each do |bill|
+      bill.user = current_user
+      bill.check
+      add_message([stock_type,bill.tid,bill.last_message].join(','))
+    end
+    respond_to do |f|
+      f.js
+    end
+  end
+
+  def rollback
+    @stock_bills = default_scope.any_in(_id: params[:bill_ids])
+    @stock_bills.each do |bill|
+      bill.user = current_user
+      bill.rollback
+      add_message([stock_type,bill.tid,bill.last_message].join(','))
+    end
+    respond_to do |f|
+      f.js
+    end
+  end
+
+  def lock
+    @stock_bills = default_scope.any_in(_id: params[:bill_ids])
+    @stock_bills.each do |bill|
+      bill.user = current_user
+      bill.lock
+      add_message([stock_type,bill.tid,bill.last_message].join(','))
+    end
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  def unlock
+    @stock_bills = default_scope.any_in(_id: params[:bill_ids])
+    @stock_bills.each do |bill|
+      bill.user = current_user
+      bill.enable
+      add_message([stock_type,bill.tid,bill.last_message].join(','))
+    end
+
+    respond_to do |format|
+      format.js
+    end
+  end
+
   private
   def set_warehouse
     @warehouse = Seller.find(params[:warehouse_id])
+  end
+
+  def stock_type;end
+
+  def messages
+    @messages = []
+  end
+
+  def add_message(msg)
+    messages << msg
+  end
+
+  def parse_params
+    search = params[:search] ||= {}
+    params[:search][:_id_in] = params[:export_ids].split(',') if params[:export_ids].present?
   end
 end

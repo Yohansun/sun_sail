@@ -2,7 +2,7 @@
 
 stock_out_bill = @trade.stock_out_bill if @trade.stock_out_bill
 json.stock_out_bill_present      stock_out_bill.present?
-json.can_do_close                !!stock_out_bill && stock_out_bill.can_do_close?
+json.can_close                !!stock_out_bill && stock_out_bill.can_close?
 json.stock_status                stock_out_bill.status if stock_out_bill
 
 ## 系统设置

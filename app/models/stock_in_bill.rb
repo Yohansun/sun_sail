@@ -11,6 +11,80 @@ class StockInBill < StockBill
   enum_attr :stock_type,IN_STOCK_TYPE
   validates_inclusion_of :stock_type, :in => STOCK_TYPE_VALUES
 
+  def normal_check?
+    !(stock_type_iinitial? || stock_type_icp?)
+  end
+
+  def update_inventory(transition)
+    case transition.event
+    when :check         then increase_activity(transition)
+    when :stock         then increase_actual(transition)
+    when :special_stock then increase_stock(transition)
+    end
+  end
+
+  # 添加可用,实际库存
+  def increase_stock(transition)
+    transaction(transition) { increase_activity(transition) && increase_actual(transition) or fail}
+  end
+
+  # 还原库存
+  def revert_inventory(transition)
+    case transition.event
+    when :lock,:close    then decrease_activity(transition)
+    when :enable         then increase_activity(transition)
+    end if state_name != :created
+  end
+
+  #推送入库通知单至仓库
+  def push_sync_by_remote
+    result_xml = case account.settings.third_party_wms
+    when "biaogan" then Bml.ans_to_wms(account, xml)
+    when "gqs"     then Gqs.receipt_add(account, gqs_xml)
+    end
+
+    self.log = result = Hash.from_xml(result_xml).as_json
+
+    if    result.key?('Response') && result['Response']['success'] == 'true' then confirm_sync
+    elsif result.key?('DATA')     && result['DATA']['RET_CODE']    == 'SUCC' then confirm_sync
+    else  refusal_sync
+    end
+  end
+
+  #发送入库单取消信息至仓库
+  def push_rollback_by_remote
+    result_xml = case account.settings.third_party_wms
+    when "biaogan" then Bml.cancel_asn_rx(account, tid)
+    when "gqs"     then Gqs.cancel_order(account, orderid: tid,notes: '客户取消订单',opttype: 'OrderCance',opttime: Time.now.to_s(:db),method: 'OrderCance',_prefix: "receipt")
+    end
+
+    self.log = result = Hash.from_xml(result_xml).as_json
+
+    if    result.key?('Response') && result['Response']['success'] == 'true' then confirm_rollback
+    elsif result.key?('DATA')     && result['DATA']['RET_CODE']    == 'SUCC' then confirm_rollback
+    else  refusal_rollback
+    end
+  end
+
+  def update_property_memo(memo_params, sku_id, current_account)
+    self.bill_property_memo.try(:delete)
+    property_memo = self.create_bill_property_memo(
+    account_id: current_account.id,
+    outer_id:   current_account.skus.find_by_id(sku_id).try(:product).try(:outer_id)
+    )
+    memo_params.each do |name, values|
+      if values.is_a?(String)
+        values = values.split(";")
+        property_memo.property_values.create(name: name, category_property_value_id: values[0], value: values[1])
+      else
+        values.each do |value|
+          property_memo.property_values.create(name: name, category_property_value_id: value[0], value: value[1]) if value[1].present?
+        end
+      end
+    end
+  end
+  
+
   def xml
     stock = ::Builder::XmlMarkup.new
     stock.RequestPurchaseInfo do
@@ -61,197 +135,5 @@ class StockInBill < StockBill
       end
     end
     stock.target!
-  end
-
-  def check
-    return false if not can_do_check?
-    do_check
-    sync if !enabled_third_party_stock?
-    initial_stock if stock_type == "IINITIAL" || stock_type == "ICP"
-  end
-
-  def type_name
-    "入库单"
-  end
-
-  def confirm_sync
-    ans_to_wms_worker
-  end
-
-  def confirm_stock
-    if can_do_stock?
-      do_stock && sync_stock && operation_logs.create(operated_at: Time.now, operation: '确认入库成功')
-    end
-  end
-
-  # 确认撤销
-  # def confirm_cancle
-  #   !!(do_cancel_ok && operation_logs.create(operated_at: Time.now, operation: '取消成功') )
-  # end
-
-  # 拒绝撤销
-  # def refuse_cancle
-  #   !!(do_cancel_fail && operation_logs.create(operated_at: Time.now, operation: '取消失败') )
-  # end
-
-  def lock!(user)
-    return "不能再次锁定!" if self.operation_locked?
-    notice = "同步至仓库入库单需要先撤销同步后才能锁定"
-    return notice if self.status == "SYNCKED"
-    #"只能操作状态为: 1.已审核，待同步. 2.待审核. 3.撤销同步成功". 4. 同步失败待同步
-    return "已经同步入库单不能锁定，请先撤销同步" if !["CHECKED","CREATED","CANCELD_OK","SYNCK_FAILED"].include?(self.status)
-    self.operation = "locked"
-    self.operation_time = Time.now
-    build_log(user,"锁定")
-
-    self.save(validate: false)
-  end
-
-  def unlock!(user)
-    return "只能操作的状态为: 已锁定." if !self.operation_locked?
-    self.operation = "activated"
-    self.operation_time = Time.now
-    build_log(user,"激活")
-
-    self.save(validate: false)
-  end
-
-  def sync
-    if can_do_syncking?
-      do_syncking
-      enabled_third_party_stock? ? ans_to_wms : confirm_sync
-    end
-  end
-
-  def rollback
-    do_canceling  if can_do_canceling?
-    cancel_asn_rx if enabled_third_party_stock?
-  end
-
-  def ans_to_wms
-    BiaoganPusher.perform_async(self._id, "ans_to_wms_worker")
-  end
-
-  def cancel_asn_rx
-    BiaoganPusher.perform_async(self._id, "cancel_asn_rx_worker")
-  end
-
-  #推送入库通知单至仓库
-  def ans_to_wms_worker
-    if account.settings.enable_module_third_party_stock != 1
-      if do_syncked
-        operation_logs.create(operated_at: Time.now, operation: '确认审核')
-      else
-        operation_logs.create(operated_at: Time.now, operation: '审核失败',text: self.errors.full_messages)
-      end
-      return
-    elsif account.settings.third_party_wms == "biaogan"
-      result_xml = Bml.ans_to_wms(account, xml)
-    elsif account.settings.third_party_wms == "gqs"
-      result_xml = Gqs.receipt_add(account, gqs_xml)
-    end
-    result = Hash.from_xml(result_xml).as_json
-
-    #BML
-    if result['Response']
-      if result['Response']['success'] == 'true'
-        do_syncked
-        operation_logs.create(operated_at: Time.now, operation: '同步成功')
-      else
-        self.failed_desc = result['Response']['desc']
-        do_synck_fail
-        operation_logs.create(operated_at: Time.now, operation: "同步失败,#{result['Response']['desc']}")
-      end
-    end
-
-    #GQS
-    if result['DATA']
-      if result['DATA']['RET_CODE'] == 'SUCC'
-        do_syncked
-        operation_logs.create(operated_at: Time.now, operation: '同步成功')
-      else
-        self.failed_desc = result['DATA']['RET_MESSAGE']
-        do_synck_fail
-        operation_logs.create(operated_at: Time.now, operation: "同步失败,#{result['DATA']['RET_MESSAGE']}")
-      end
-    end
-
-  end
-
-  #发送入库单取消信息至仓库
-  def cancel_asn_rx_worker
-    if account.settings.third_party_wms == "biaogan"
-      result_xml = Bml.cancel_asn_rx(account, tid)
-    elsif account.settings.third_party_wms == "gqs"
-      result_xml = Gqs.cancel_order(account, orderid: tid,notes: '客户取消订单',opttype: 'OrderCance',opttime: Time.now.to_s(:db),method: 'OrderCance',_prefix: "receipt")
-    elsif account.settings.enable_module_third_party_stock != 1
-      return do_cancel_ok && operation_logs.create(operated_at: Time.now, operation: '取消成功')
-    end
-    result = Hash.from_xml(result_xml).as_json
-
-    #BML
-    if result['Response']
-      if result['Response']['success'] == 'true'
-        do_cancel_ok
-        operation_logs.create(operated_at: Time.now, operation: '取消成功')
-      else
-        self.failed_desc = result['Response']['desc']
-        do_cancel_fail
-        operation_logs.create(operated_at: Time.now, operation: "取消失败,#{result['Response']['desc']}")
-      end
-    end
-
-    #GQS
-    if result['DATA']
-      if result['DATA']['RET_CODE'] == 'SUCC'
-        do_cancel_ok
-        operation_logs.create(operated_at: Time.now, operation: '取消成功')
-      else
-        self.failed_desc = result['DATA']['RET_MESSAGE']
-        do_cancel_fail
-        operation_logs.create(operated_at: Time.now, operation: "取消失败,#{result['DATA']['RET_MESSAGE']}")
-      end
-    end
-  end
-
-  # 确认入库
-  def sync_stock
-    bill_products.each do |stock_in|
-      stock_product = StockProduct.find_by_id(stock_in.stock_product_id)
-      if stock_product
-        update_attrs = {:actual => stock_product.actual + stock_in.number, :activity => stock_product.activity + stock_in.number,audit_comment: "入库单ID:#{self.id}"}
-        stock_product.update_attributes(update_attrs)
-        true
-      else
-        # DO SOME ERROR NOTIFICATION
-        false
-      end
-    end
-  end
-
-  def initial_stock
-    sync_stock
-    do_stock
-    if stock_type == "IINITIAL"
-      StockCsvFile.find_by_stock_in_bill_id(self.id.to_s).update_attributes(used: true)
-    end
-  end
-
-  def update_property_memo(memo_params, sku_id, current_account)
-    self.bill_property_memo.try(:delete)
-    property_memo = self.create_bill_property_memo(
-      account_id: current_account.id,
-      outer_id:   current_account.skus.find_by_id(sku_id).try(:product).try(:outer_id)
-    )
-    memo_params.each do |name, values|
-      if values.is_a?(String)
-        values = values.split(";")
-        property_memo.property_values.create(name: name, category_property_value_id: values[0], value: values[1])
-      else
-        values.each do |value|
-          property_memo.property_values.create(name: name, category_property_value_id: value[0], value: value[1]) if value[1].present?
-        end
-      end
-    end
   end
 end

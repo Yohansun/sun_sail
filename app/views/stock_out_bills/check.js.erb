@@ -1,9 +1,0 @@
-<%- @operated_bills.each do |bill|%>
-$("#status_<%= bill.id %>").replaceWith("<%= j render('status', bill: bill) %>")
-$("#operation_<%= bill.id %>").replaceWith("<%= j render('operation', bill: bill) %>")
-<%- end %>
-<% if @error_records.present? %>
-  alert("出库单号:<%= @error_records.join(';') %>审核失败,请检查库存数据(出库数量不能大于库存数量)")
-<% else %>
-  alert("审核成功")
-<% end %>

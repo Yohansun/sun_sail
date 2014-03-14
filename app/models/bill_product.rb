@@ -47,4 +47,8 @@ class BillProduct
   def property_memos
     order ? order.trade_property_memos.where(outer_id: outer_id).map(&:properties).flatten : []
   end
+
+  def stock_product
+    @stock_product ||= StockProduct.find_by_id(stock_product_id)
+  end
 end
