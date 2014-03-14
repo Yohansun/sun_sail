@@ -305,7 +305,7 @@ module ApplicationHelper
         items << active_li_item("我的异常订单")
       when "edit"
         items << href_li_item("所有订单", "app#trades/trades-all")
-        items << active_li_item("订单预处理#{Trade.find(params[:id]).tid}")
+        items << active_li_item("订单预处理#{Trade.unscoped.where(_id: params[:id]).first.try(:id)}")
       end
     when "reconcile_statements"
       items << href_li_item("财务管理", "reconcile_statements")

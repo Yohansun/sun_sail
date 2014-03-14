@@ -110,7 +110,7 @@ class TradesController < ApplicationController
   end
 
   def edit
-    @trade = TradeDecorator.decorate(Trade.where(_id: params[:id]).first || Trade.deleted.where(_id: params[:id]).first)
+    @trade = TradeDecorator.decorate(Trade.unscoped.where(_id: params[:id]).first)
   end
 
   def update
