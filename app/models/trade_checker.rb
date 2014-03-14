@@ -143,11 +143,14 @@ class TradeChecker
         has_next = true
         page_no = 1
         while has_next
-          fetch_taobao_trades(page_no) do |response|
-            page_no += 1
-            trades = response['trades_sold_get_response']['trades']['trade']
-            trades.each {|trade| abnormal_collections_with_taobao(trade) }
-            break if !(has_next = response['trades_sold_get_response']['has_next'] rescue false)
+          fetch_taobao_trades(page_no) do |response|g
+            begin
+              page_no += 1
+              trades = response['trades_sold_get_response']['trades']['trade']
+              trades.each {|trade| abnormal_collections_with_taobao(trade) }
+            ensure
+              has_next = response['trades_sold_get_response']['has_next'] rescue false
+            end
           end
         end
       end
