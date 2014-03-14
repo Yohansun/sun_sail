@@ -7,19 +7,8 @@ class DelayAutoDispatch
     trade = Trade.where(_id: id).first or return
 
     #异常订单不自动分派
-    return if trade.has_unusual_state
-
-    #隐藏拆分逻辑
-    # account = trade.fetch_account
-    # if account.settings.auto_settings["auto_split"]
-    #   if account.can_auto_preprocess_right_now?
-    #     can_split = TradeSplitter.new(trade).split!
-    #   end
-    # else
-    #   can_split = false
-    # end
+    return if trade.has_unusual_states
 
     trade.auto_dispatch!
-
   end
 end
