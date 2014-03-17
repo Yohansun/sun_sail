@@ -64,7 +64,6 @@ class TradeObserver < Mongoid::Observer
   protected
 
   def dispatch_notify(id, seller_id)
-    if notify_conditions
     TradeDispatchEmail.perform_async(id, seller_id, 'new')
     TradeDispatchSms.perform_async(id, seller_id, 'new')
   end
