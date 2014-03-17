@@ -21,7 +21,7 @@
         </tr>
         <tr>
           <td>交易成功后退款</td>
-          <td><input <% if current_user.has_role?(:super_admin)%>readonly<% end %> type ='text' class="input-large" name="reconcile_statement_detail[trade_success_refund]" value="<%= detail.trade_success_refund %>"</input></td>
+          <td><input <% if current_user.has_role?(:super_admin)%>readonly<% end %> type ='number' min="0" max class="input-large" name="reconcile_statement_detail[trade_success_refund]" value="<%= detail.trade_success_refund %>"></td>
           <!-- <td>输入框<%#= detail.trade_success_refund %></td> -->
           <td></td>
           <!-- <td><%#=link_to "查看明细", reconcile_statement_reconcile_statement_detail_path(detail.reconcile_statement, detail, money_type: 'trade_success_refund') %></td> -->
@@ -38,12 +38,12 @@
         </tr>
         <tr>
           <td>店铺服务奖励</td>
-          <td><input <% if current_user.has_role?(:super_admin)%>readonly<% end %> type ='text' class="input-large" name="reconcile_statement_detail[store_service_award]" value="<%= detail.store_service_award %>"</input></td>
+          <td><input <% if current_user.has_role?(:super_admin)%>readonly<% end %> type ='number' min="0" max class="input-large" name="reconcile_statement_detail[store_service_award]" value="<%= detail.store_service_award %>"></td>
           <td><%#=link_to "查看明细", reconcile_statement_reconcile_statement_detail_path(detail.reconcile_statement, detail, money_type: 'store_service_award') %></td>
         </tr>
         <tr>
           <td>店员奖励</td>
-          <td><input <% if current_user.has_role?(:super_admin)%>readonly<% end %> type ='text' class="input-large" name="reconcile_statement_detail[staff_award]" value="<%= detail.staff_award %>"</input></td>
+          <td><input <% if current_user.has_role?(:super_admin)%>readonly<% end %> type ='number' min="0" max class="input-large" name="reconcile_statement_detail[staff_award]" value="<%= detail.staff_award %>"></td>
           <td><%#=link_to "查看明细", reconcile_statement_reconcile_statement_detail_path(detail.reconcile_statement, detail, money_type: 'staff_award') %></td>
         </tr>
         <tr>
@@ -68,7 +68,7 @@
         </tr>
         <tr>
           <td>其他扣点金额</td>
-          <td><input <% if current_user.has_role?(:super_admin)%>readonly<% end %> type ='text' class="input-large" name="reconcile_statement_detail[other_point_money]" value="<%= detail.other_point_money %>"</input></td>
+          <td><input <% if current_user.has_role?(:super_admin)%>readonly<% end %> type ='text' class="input-large" name="reconcile_statement_detail[other_point_money]" value="<%= detail.other_point_money %>"></td>
           <td></td>
         </tr>
         <tr>
@@ -97,12 +97,14 @@
         </tr>
         <tr>
           <td>备注</td>
-          <td colspan="2"><input <% if current_user.has_role?(:super_admin)%>readonly<% end %> type ='text' class="input-xxlarge" name="reconcile_statement_detail[memo]" value="<%= detail.memo %>"</input></td>
+          <td colspan="2"><input <% if current_user.has_role?(:super_admin)%>readonly<% end %> type ='text' class="input-xxlarge" name="reconcile_statement_detail[memo]" value="<%= detail.memo %>"></td>
           <input style="display:none" name="store_name" value="duoleshi"/>
         </tr>
       </tbody>
     </table>
-    <button type="submit" class="btn btn-info">确定</button>
+    <% if @rs.processed == true && @rs.audited == true %>
+      <button type="submit" class="btn btn-info">确定</button>
+    <% end %>
   </form>
 <% else %>
   <form action="/reconcile_statements/<%= detail.reconcile_statement.id %>/reconcile_statement_details/<%= detail.id %>/change_detail" data-row='<%= detail.reconcile_statement.id %>' class="well form-search">
