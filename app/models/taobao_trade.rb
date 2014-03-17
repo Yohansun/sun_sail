@@ -2,7 +2,6 @@
 
 class TaobaoTrade < Trade
   include StockProductsLockable
-  #include Dulux::Splitter
   include Mongoid::History::Trackable
 
   #交易完成订单对应支付宝帐单的最后一次修改时间

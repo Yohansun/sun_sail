@@ -10,8 +10,6 @@ class TradesController < ApplicationController
   include StockProductsLockable
   include MagicGift
 
-  #include Dulux::Splitter
-
   def index
     if params[:batch_option] == "true"
       @trades = Trade.where(:_id.in => params[:ids])
