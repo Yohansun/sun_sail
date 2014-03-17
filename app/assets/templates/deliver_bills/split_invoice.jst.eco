@@ -112,23 +112,7 @@
               <% end %>
             </td>
           </tr>
-          <% if MagicOrders.company == "dulux" : %>
-            <% if (MagicOrders.role_key == 'admin' or MagicOrders.role_key == 'cs') : %>
-              <tr>
-                <td colspan="1"><b>赠品信息</b></td>
-                <td colspan="4" class="reedit_text js-gift-memo-label"><%= @bill.get('gift_memo') %></td>
-              </tr>
-              <tr>
-                <td colspan="1"><b>金额调整</b></td>
-                <td colspan="4" class="reedit_text js-gift-memo-label">
-                  <% if @bill.get('modify_payment') :%>
-                    ¥
-                  <% end %>
-                  <%= @bill.get('modify_payment') %>
-                </td>
-              </tr>
-            <% end %>
-          <% else : %>
+          <% if MagicOrders.role_key != 'seller' : %>
             <tr>
               <td colspan="1"><b>赠品信息</b></td>
               <td colspan="4" class="reedit_text js-gift-memo-label"><%= @bill.get('gift_memo') %></td>

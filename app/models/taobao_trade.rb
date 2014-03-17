@@ -67,27 +67,6 @@ class TaobaoTrade < Trade
   #   self.orders.inject(0) { |sum, order| sum + order.bill_info.count }
   # end
 
-  ## 分派相关 ##
-  # def has_special_seller_memo?
-  #   special_seller_memo.blank?
-  # end
-
-  # def special_seller_memo
-  #   if self.fetch_account.key == 'dulux'
-  #     if seller_memo.present?
-  #       if seller_memo.strip == "@送货上门".strip
-  #         "@送货上门"
-  #       elsif seller_memo.strip == "@自提".strip
-  #         "@自提"
-  #       end
-  #     end
-  #   end
-  # end
-
-  # def splitable?
-  #   match_seller_with_conditions(self).size > 1
-  # end
-
   def set_alipay_data
     if status == "TRADE_FINISHED"
       start_time = consign_time || delivered_at || end_time
