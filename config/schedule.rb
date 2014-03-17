@@ -81,6 +81,10 @@ end
 every :month, :at => '02:00am' do
   runner "trade_source_id = 201; FinanceCalculate.new.perform(trade_source_id)"
 end
+
+every :month, :at => '02:00am' do
+  runner "SellerReconcileStatement.new.perform"
+end
 #
 # every 2.hours do
 #   command "/usr/bin/some_great_command"

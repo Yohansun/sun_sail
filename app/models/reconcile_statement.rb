@@ -40,6 +40,13 @@ class ReconcileStatement < ActiveRecord::Base
     self.exists?(processed: false) ? false : true
   end
 
+  def last_month_rs
+    last_month_audit_time = self.audit_time - 1.month
+    seller_id = self.seller_id
+    last_m_rs = ReconcileStatement.where(audit_time: last_month_audit_time).where(seller_id: seller_id).first
+    last_m_rs
+  end
+
   def self.select_status(status)
     case status
     when "unprocessed"
