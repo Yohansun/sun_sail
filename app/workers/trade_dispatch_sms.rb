@@ -5,8 +5,8 @@ class TradeDispatchSms
 
   def perform(id, seller_id, notify_kind)
     content = nil
-    account = object.fetch_account
     object  = Trade.where(_id: id).first or return
+    account = object.fetch_account
     trade   = TradeDecorator.decorate(object)
     seller  = Seller.find seller_id
 

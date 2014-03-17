@@ -36,6 +36,9 @@
               <div class="mar_l80">
                 <label class="input-large pull-left">提醒条件：</label>
                 <div class="controls ml210">
+                  <%= @setting.block_label_checkbox(["notify_conditions", "paid_notify"], "订单付款时提醒买家")%>
+                  <%= @setting.block_label_checkbox(["notify_conditions", "dispatch_notify"], "订单分派时提醒经销商")%>
+                  <%= @setting.block_label_checkbox(["notify_conditions", "deliver_notify"], "订单发货时提醒买家")%>
                   <%= @setting.block_check_select((1..3).collect{|i| (i*24).to_s }, [['notify_conditions', 'dispatch_delay'],['notify_conditions', 'max_dispatch_delay_days']], "已付款订单", "小时内没有分派")%>
                   <%= @setting.block_check_select((1..3).collect{|i| (i*24).to_s }, [['notify_conditions', 'deliver_delay'],['notify_conditions', 'max_deliver_delay_days']], "已分派订单", "小时内没有发货")%>
                   <%= @setting.block_check_select((1..3).collect{|i| (i*24).to_s }, [['notify_conditions', 'fixed_unreceived'],['notify_conditions', 'max_fixed_unreceived_days']], "异常订单到预处理时间后再延后", "小时后买家没有确认收货")%>

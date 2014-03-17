@@ -20,6 +20,12 @@ class Sms
     Sms.http_receive(account_id)
   end
 
+  # 企信通平台短信设置基本参数
+  # settings.sms_http_gateway = "http://42.96.160.99/cosms/getinfo.aspx?"
+  # settings.sms_http_uid = 59
+  # settings.sms_http_pwd = 33726254
+  # settings.sms_http_receive_gateway = "http://42.96.160.99/cosms/yuchen_mo.aspx?"
+
   def http_transmit
     client = @account.settings.sms_http_gateway
     mobiles = self.mobiles

@@ -62,7 +62,7 @@ class CustomTrade < Trade
 
   def auto_deliver!
     result = self.fetch_account.can_auto_deliver_right_now
-    TradeAutoDeliver.perform_in((result == true ? self.fetch_account.settings.auto_settings['deliver_silent_gap'].to_i.hours : result), self.id)
+    TradeAutoDeliver.perform_in(result, self.id)
     self.is_auto_deliver = true
     self.operation_logs.create(operated_at: Time.now, operation: "自动发货")
     self.save

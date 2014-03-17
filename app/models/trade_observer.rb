@@ -7,20 +7,20 @@ class TradeObserver < Mongoid::Observer
 
     yield
 
+    # 订单付款提醒
     if object.status_changed? && object.is_paid_not_delivered && object.pay_time_changed? && object.pay_time.present?
-      # 订单付款提醒
       send_sms_to_buyer(object)
     end
 
+    # 订单发货操作
     if object.delivered_at_changed? && object.delivered_at.present? && object.logistic_waybill.present?
-      # 发货操作
       object.deliver!
       return
     end
 
+    # 订单分派提醒
     if object.seller_id_changed? && object.seller_id.present? && object.dispatched_at_changed? && object.dispatched_at.present?
-      # 分派操作
-      dispatch_notify(object.id, object.seller_id)
+      dispatch_notify(object)
     end
 
     ### MAYBE DEPRECATED START ###
@@ -63,22 +63,31 @@ class TradeObserver < Mongoid::Observer
 
   protected
 
-  def dispatch_notify(id, seller_id)
-    TradeDispatchEmail.perform_async(id, seller_id, 'new')
-    TradeDispatchSms.perform_async(id, seller_id, 'new')
+  def dispatch_notify(trade)
+    account = trade.fetch_account
+    result  = account.can_auto_notify_right_now
+    if account.can_send_sms('dispatch_notify')
+      TradeDispatchSms.perform_in(result, trade.id, trade.seller_id, 'new')
+    end
+    if account.can_send_email('dispatch_notify')
+      TradeDispatchEmail.perform_in(result, trade.id, trade.seller_id, 'new')
+    end
   end
 
   def send_sms_to_buyer(trade)
-    trade = TradeDecorator.decorate(trade)
-    mobile = trade.receiver_mobile_phone
-    trade_tid = trade.tid
-    shopname = trade.seller_nick
+    account = trade.fetch_account
+    if account.can_send_sms('paid_notify')
+      result      = account.can_auto_notify_right_now
+      trade       = TradeDecorator.decorate(trade)
+      mobile      = trade.receiver_mobile_phone
+      trade_tid   = trade.tid
+      shopname    = trade.seller_nick
+      content     = "亲您好，感谢您的购买，您的订单号为#{trade_tid}，我们会尽快为您安排发货。【#{shopname}】"
+      notify_kind = "before_send_goods"
 
-    content = "亲您好，感谢您的购买，您的订单号为#{trade_tid}，我们会尽快为您安排发货。【#{shopname}】"
-
-    notify_kind = "before_send_goods"
-    if content && mobile
-      SmsNotifier.perform_async(content, mobile, trade_tid ,notify_kind)
+      if content && mobile
+        SmsNotifier.perform_in(result, content, mobile, trade_tid ,notify_kind)
+      end
     end
   end
 

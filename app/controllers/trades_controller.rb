@@ -314,8 +314,13 @@ class TradesController < ApplicationController
     if @trade.save!
       @trade = TradeDecorator.decorate(@trade)
       if notifer_seller_flag && @trade.is_paid_not_delivered && @trade.seller
-        TradeDispatchEmail.perform_async(@trade.id, @trade.seller_id, 'second')
-        TradeDispatchSms.perform_async(@trade.id, @trade.seller_id, 'second')
+        result = current_account.can_auto_notify_right_now
+        if current_account.can_send_sms('dispatch_notify')
+           TradeDispatchSms.perform_in(result, @trade.id, @trade.seller_id, 'second')
+        end
+        if current_account.can_send_email('dispatch_notify')
+          TradeDispatchEmail.perform_in(result, @trade.id, @trade.seller_id, 'new')
+        end
       end
 
       #写入操作日志

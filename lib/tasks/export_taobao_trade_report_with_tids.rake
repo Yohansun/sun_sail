@@ -75,7 +75,7 @@ task :export_taobao_trade_report_with_tids => :environment do
   sheet1.row(1).concat(header)
    trades.each_with_index do |trade, trade_index|
     trade_source = trade.type_text
-    tid = trade.splitted? ? trade.splitted_tid : trade.tid
+    tid = trade.tid
     taobao_status_memo = trade.taobao_status_memo
     created = trade.created.try(:strftime,"%Y-%m-%d %H:%M:%S")
     pay_time = trade.pay_time.try(:strftime,"%Y-%m-%d %H:%M:%S")

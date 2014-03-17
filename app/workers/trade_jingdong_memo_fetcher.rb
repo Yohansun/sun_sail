@@ -30,11 +30,7 @@ class TradeJingdongMemoFetcher
     # 自动将买家备注同步到客服备注
     if account.settings.auto_settings['auto_sync_memo'] && trade.cs_memo.blank?
       result = account.can_auto_preprocess_right_now
-      if result == true
-        TradeSyncMemo.perform_in(account.settings.auto_settings['preprocess_silent_gap'].to_i.hours, trade.tid)
-      else
-        TradeSyncMemo.perform_in(result, trade.tid)
-      end
+      TradeSyncMemo.perform_in(result, trade.tid)
     end
   end
 end
