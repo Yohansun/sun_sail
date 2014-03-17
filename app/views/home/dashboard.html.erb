@@ -10,7 +10,7 @@ footer.page_footer{position:fixed;}
         <% if current_user.allow_read?(:trades) %>
           <div><a class="indexStart1" href="/app#trades"><span>订单管理</span></a></div>
         <% end %>
-        <% if current_user.allow_read?(:stocks) && current_account.key != 'nippon' %>
+        <% if current_user.allow_read?(:stocks) %>
           <div>
             <%= link_to stocks_path_adapter, class: 'indexStart4' do %>
               <span>仓库管理</span>
@@ -19,15 +19,9 @@ footer.page_footer{position:fixed;}
         <% end %>
 
         <% if current_account.settings.enable_module_bbs %>
-              <% if current_user.allowed_to?("go","npsellers") && current_account.key == 'nippon' -%>
-                <div>
-                  <a class="indexStart7" href="/go/npsellers" target="_blank"><span>互动中心</span></a>
-                </div>
-            <%- else -%>
-              <div>
-                <a class="indexStart7" href="/bbs_topics"><span>互动中心</span></a>
-              </div>
-            <%- end -%>
+          <div>
+            <a class="indexStart7" href="/bbs_topics"><span>互动中心</span></a>
+          </div>
         <% end %>
 
         <div>

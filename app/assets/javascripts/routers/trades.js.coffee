@@ -93,16 +93,6 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $('.js-open_advance').find('i').toggleClass( className ? 'icon-arrow-up' : 'icon-arrow-down')
       $('.js-open_advance').find('i').removeClass('icon-arrow-down').addClass('icon-arrow-up')
 
-    # # 新订单提醒相关
-    # if collection.models.length > 0
-    #   @latest_trade_timestamp = collection.models[0].get('created_timestamp')
-    # else
-    #   @latest_trade_timestamp = -1
-
-    # clearInterval @newTradesNotiferInterval if @newTradesNotiferInterval
-    # @newTradesNotiferInterval = setInterval @newTradesNotifer, 300000
-
-
   newTradesNotifer: =>
     $.get "/api/trades/notifer", {trade_type: @trade_type, timestamp: @latest_trade_timestamp}, (response) =>
       if response > 0
@@ -191,24 +181,12 @@ class MagicOrders.Routers.Trades extends Backbone.Router
       $(modalDivID + ' .datepickers').datetimepicker(format: 'yyyy-mm-dd', autoclose: true, minView: 2)
 
       switch operation_key
-        when 'detail'
-          $('.color_typeahead').typeahead({
-            source: (query, process)->
-              $.get '/colors/autocomplete', {num: query}, (data)->
-                process(data)
-          })
         when 'deliver'
           unless model.get('logistic_waybill')
             $(modalDivID).find('.error').html('该订单没有设置物流公司和物流单号，请设置物流信息')
           else
             $(modalDivID).find('.error').html()
           $('.deliver').show()
-        when 'color'
-          $('.color_typeahead').typeahead({
-            source: (query, process)->
-              $.get '/colors/autocomplete', {num: query}, (data)->
-                process(data)
-          })
         when 'barcode'
           $(modalDivID).on 'shown', ->
             $("#input_barcode input:eq(0)").focus()

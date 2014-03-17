@@ -7,7 +7,7 @@ class DelayAutoDispatch
     trade = Trade.where(_id: id).first or return
 
     #异常订单不自动分派
-    return if trade.has_unusual_states
+    return if trade.has_unusual_state
 
     trade.auto_dispatch!
   end
