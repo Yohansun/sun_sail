@@ -5,10 +5,10 @@ class TradeDispatchSms
 
   def perform(id, seller_id, notify_kind)
     content = nil
-    object = Trade.where(_id: id).first or return
-    trade = TradeDecorator.decorate(object)
-    seller = Seller.find seller_id
     account = object.fetch_account
+    object  = Trade.where(_id: id).first or return
+    trade   = TradeDecorator.decorate(object)
+    seller  = Seller.find seller_id
 
     if seller
       tid = trade.tid
@@ -43,8 +43,7 @@ class TradeDispatchSms
 
       sms = Sms.new(account, content, mobiles)
       success = false
-      success = true if account.key == "dulux" && sms.transmit.parsed_response == "0"
-      success = true if account.key == "nippon" && sms.transmit.fetch(:description) == "成功"
+      success = true if sms.transmit.parsed_response == "0"
       sms_operation = "发送短信"
       if success
         if mobiles.present?

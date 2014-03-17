@@ -31,17 +31,11 @@ class DailyOrdersNotifier < ActionMailer::Base
     @taobao_trades = TaobaoTrade.where(paid_con)
     @taobao_paid_trades = TaobaoTrade.where(created_con)
 
-    if @account.key == "nippon"
-      @taobao_purchase_orders =  TaobaoPurchaseOrder.where(created_con)
-      @taobao_purchase_paid_orders =  TaobaoPurchaseOrder.where(paid_con)
-      @taobao_purchase_paid_price = TradeDecorator.decorate(@taobao_purchase_paid_orders).inject(0.0) { |sum, trade| sum + trade.total_fee.to_f }
-    end
-
     mail({
-      :from     => @account.settings.email_notifier_from, 
-      :to       => @account.settings.email_dailyorders_yesterday_reciever, 
-      :cc       => @account.settings.email_dailyorders_yesterday_cc, 
-      :bcc      => @account.settings.email_dailyorders_yesterday_bcc, 
+      :from     => @account.settings.email_notifier_from,
+      :to       => @account.settings.email_dailyorders_yesterday_reciever,
+      :cc       => @account.settings.email_dailyorders_yesterday_cc,
+      :bcc      => @account.settings.email_dailyorders_yesterday_bcc,
       :subject  => "#{I18n.l(yesterday,format: :short)} #{@account.settings.site_title_basic} 电商数据"
     })
   end

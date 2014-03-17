@@ -488,13 +488,7 @@ class Trade
   end
 
   def unusual_color_class
-    class_name = ''
-    if has_unusual_state
-      class_name = 'cs_error'
-      if fetch_account.key == "nippon"
-        class_name = unusual_states.last.unusual_color_class  if unusual_states && unusual_states.last.present? && unusual_states.last.unusual_color_class.present?
-      end
-    end
+    class_name = (has_unusual_state ?  'cs_error' : '')
     class_name
   end
 

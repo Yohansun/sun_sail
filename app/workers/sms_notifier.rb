@@ -8,16 +8,7 @@ class SmsNotifier
     account = trade.fetch_account
     sms = Sms.new(account, content, mobile)
     success = false
-    success = true
-    if account.key == "nippon"
-      if sms.transmit.fetch(:description) == "成功"
-        success = true
-      end
-    else
-      if  sms.transmit.parsed_response == "0"
-        success = true
-      end
-    end
+    success = true if sms.transmit.parsed_response == "0"
 
     if success
       operation = case notify_kind

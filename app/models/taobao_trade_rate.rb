@@ -42,11 +42,9 @@ class TaobaoTradeRate < ActiveRecord::Base
     end
     account = Trade.where(tid: trade_rates.first.tid).first.fetch_account if trade_rates.any?
     CSV.open("data/taobao_rates.csv", 'wb') do |csv|
-      if account.try(:key) == "nippon"
-        csv << ['订单号','下单时间','送货经销商','销售部','买家地址-省','买家地址-市', '商品名','买家评价结果','评价内容','买家评价时间','旺旺号']
-      else
-        csv << ['订单号','下单时间','送货经销商','买家地址-省','买家地址-市', '商品名','买家评价结果','评价内容','买家评价时间','旺旺号']
-      end
+
+      csv << ['订单号','下单时间','送货经销商','买家地址-省','买家地址-市', '商品名','买家评价结果','评价内容','买家评价时间','旺旺号']
+
       trade_rates.each do |rate|
         tid = rate.tid
         order = TaobaoTrade.where(tid: tid).first

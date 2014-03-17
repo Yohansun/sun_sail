@@ -15,9 +15,6 @@
             <% if current_user.allow_read?(:trades) %>
             <li class="active trades" style="display:none"><a href="/app#trades">订单管理</a></li>
             <% end %>
-            <% if current_account.key == 'nippon' %>
-            <li class="trades" style="display:none"><a href="http://shop.nipponpaint.com.cn/admin/orders">官网订单</a></li>
-            <% end %>
             <% if ['sales', 'user_activities', 'trade_reports'].include?(controller_name)  %>
             <%- if false %><!--注释人员-->
             <li class="<%= 'active' if controller_name == 'user_activities'%>">
