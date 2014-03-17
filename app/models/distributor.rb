@@ -1,4 +1,16 @@
 # -*- encoding : utf-8 -*-
+# == Schema Information
+#
+# Table name: distributors
+#
+#  id              :integer(4)      not null, primary key
+#  trade_source_id :integer(4)
+#  name            :string(255)
+#  trade_type      :string(255)     default("Taobao")
+#  string          :string(255)     default("Taobao")
+#  created_at      :datetime        not null
+#  updated_at      :datetime        not null
+#
 
 class Distributor < ActiveRecord::Base
   include MagicEnum

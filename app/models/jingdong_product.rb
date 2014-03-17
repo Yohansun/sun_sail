@@ -16,7 +16,7 @@
 #  transport_id         :integer(4)
 #  online_time          :string(255)
 #  offline_time         :string(255)
-#  attribute_s          :string(255)
+#  attribute_s          :text
 #  desc                 :text
 #  producter            :string(255)
 #  wrap                 :string(255)

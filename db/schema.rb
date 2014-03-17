@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140303090851) do
+ActiveRecord::Schema.define(:version => 20140316124144) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -408,18 +408,18 @@ ActiveRecord::Schema.define(:version => 20140303090851) do
   add_index "packages", ["product_id"], :name => "index_packages_on_product_id"
 
   create_table "print_flash_settings", :force => true do |t|
-    t.text     "xml_hash",    :limit => 16777215
+    t.text     "xml_hash"
     t.integer  "account_id"
     t.integer  "logistic_id"
-    t.datetime "created_at",                      :null => false
-    t.datetime "updated_at",                      :null => false
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
   end
 
   create_table "products", :force => true do |t|
     t.string   "name",              :limit => 100,                               :default => "",   :null => false
-    t.string   "outer_id",          :limit => 20,                                :default => ""
-    t.string   "product_id",        :limit => 20,                                :default => ""
-    t.string   "storage_num",       :limit => 20,                                :default => ""
+    t.string   "outer_id",          :limit => 20,                                :default => "",   :null => false
+    t.string   "product_id",        :limit => 20,                                :default => "",   :null => false
+    t.string   "storage_num",       :limit => 20,                                :default => "",   :null => false
     t.decimal  "price",                            :precision => 8, :scale => 2, :default => 0.0,  :null => false
     t.integer  "quantity_id"
     t.integer  "category_id"
@@ -433,10 +433,10 @@ ActiveRecord::Schema.define(:version => 20140303090851) do
     t.datetime "created_at"
     t.string   "cat_name"
     t.string   "pic_url"
+    t.integer  "account_id"
     t.string   "detail_url"
     t.string   "cid"
     t.integer  "num_iid",           :limit => 8
-    t.integer  "account_id"
     t.integer  "logistic_group_id"
     t.boolean  "on_sale",                                                        :default => true
   end
@@ -458,13 +458,13 @@ ActiveRecord::Schema.define(:version => 20140303090851) do
     t.string   "name"
     t.string   "outer_id"
     t.integer  "reconcile_statement_id"
-    t.integer  "initial_num"
-    t.integer  "subtraction"
-    t.integer  "total_num"
+    t.integer  "initial_num",            :default => 0
+    t.integer  "subtraction",            :default => 0
+    t.integer  "total_num",              :default => 0
     t.float    "last_month_num"
     t.integer  "product_id"
-    t.integer  "offline_return"
-    t.integer  "hidden_num"
+    t.integer  "offline_return",         :default => 0
+    t.integer  "hidden_num",             :default => 0
     t.integer  "seller_id"
     t.datetime "created_at",                            :null => false
     t.datetime "updated_at",                            :null => false
@@ -811,10 +811,10 @@ ActiveRecord::Schema.define(:version => 20140303090851) do
     t.string   "pic_url"
     t.string   "cid"
     t.string   "name"
-    t.datetime "created_at",                                                  :null => false
-    t.datetime "updated_at",                                                  :null => false
     t.integer  "trade_source_id"
     t.string   "shop_name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "taobao_products", ["account_id"], :name => "index_taobao_products_on_account_id"
@@ -825,8 +825,8 @@ ActiveRecord::Schema.define(:version => 20140303090851) do
     t.integer  "sku_id",            :limit => 8
     t.integer  "taobao_product_id", :limit => 8
     t.integer  "num_iid",           :limit => 8
-    t.string   "properties"
-    t.string   "properties_name"
+    t.string   "properties",                     :default => ""
+    t.string   "properties_name",                :default => ""
     t.integer  "quantity"
     t.integer  "account_id"
     t.integer  "trade_source_id"
@@ -889,8 +889,8 @@ ActiveRecord::Schema.define(:version => 20140303090851) do
     t.string   "bulletin"
     t.string   "title"
     t.string   "description"
-    t.boolean  "jushita_sync",        :default => false, :null => false
-    t.integer  "enabled_checker"
+    t.boolean  "jushita_sync",        :default => false
+    t.boolean  "enabled_checker",     :default => false
   end
 
   add_index "trade_sources", ["account_id"], :name => "index_trade_sources_on_account_id"
@@ -902,6 +902,7 @@ ActiveRecord::Schema.define(:version => 20140303090851) do
     t.string   "file_content_type"
     t.integer  "file_file_size"
     t.datetime "file_updated_at"
+    t.integer  "bbs_topic_id"
   end
 
   create_table "users", :force => true do |t|
