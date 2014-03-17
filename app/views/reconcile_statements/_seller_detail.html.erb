@@ -22,8 +22,8 @@
           <td><%= detail.redefine_last_month_num %></td>
           <td><%= detail.initial_num %></td>
           <%- if current_user.has_role?(:admin) %>
-            <td><input type ='text' class="input-medium" name="reconcile_product_detail[subtraction][]" value="<%= detail.subtraction %>" <%- if @rs.processed == true %>readonly<%- end %>></input></td>
-            <td><input type ='text' class="input-medium" name="reconcile_product_detail[offline_return][]" value="<%= detail.offline_return %>" <%- if @rs.processed == true %>readonly<%- end %>></input></td>
+            <td><input type ='text' class="input-medium" name="reconcile_product_detail[subtraction][]" value="<%= detail.subtraction %>" <%- if @rs.processed == true %>readonly<%- end %>></td>
+            <td><input type ='text' class="input-medium" name="reconcile_product_detail[offline_return][]" value="<%= detail.offline_return %>" <%- if @rs.processed == true %>readonly<%- end %>></td>
             <td><%= detail.total_num %></td>
             <td><input type ='text' class="input-medium" name="reconcile_product_detail[audit_price][]" value="<%= detail.audit_price %>"</td>
             <td><%= detail.audit_num %></td>
@@ -38,7 +38,7 @@
         <% end %>
       </tbody>
     </table>
-    <%- if current_user.has_role?(:admin) && @rs.processed != true %>
+    <%- unless @rs.processed == true && @rs.audited == true %>
     <button type="submit" class="btn btn-info adapt_details">确定</button>
     <%- end %>
   </form>

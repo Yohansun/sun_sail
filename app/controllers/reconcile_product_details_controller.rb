@@ -11,7 +11,7 @@ class ReconcileProductDetailsController < ApplicationController
       detail.update_attributes(subtraction: @subtraction, offline_return: @offline_return, audit_price: @audit_price)
       detail.calculate_fees
     end
-    redirect_to reconcile_statements_path
+    redirect_to seller_index_reconcile_statements_path
   end
 
   private

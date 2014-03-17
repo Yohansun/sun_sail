@@ -120,9 +120,9 @@
           <%- if rs.audited && rs.processed %>
           <td>已结算</td>
           <%- elsif !rs.processed %>
-            <td><a data-toggle="modal" data-id="<%= rs.id %>" href="#confirm_account" class="confirm_settlement"><%= @status_name %></a></td>
+            <td><span data-toggle="modal" data-id="<%= rs.id %>" class="confirm_settlement"><%= @status_name %></span></td>
           <% else %>
-            <td><a data-toggle="modal" data-id="<%= rs.id %>" href="#confirm_account" class="confirm_settlement">经销商未结算</a></td>
+            <td><span data-toggle="modal" data-id="<%= rs.id %>" class="confirm_settlement">经销商未结算</span></td>
           <%- end %>
           <td><%= rs.trade_store_source %></td>
         </tr>
