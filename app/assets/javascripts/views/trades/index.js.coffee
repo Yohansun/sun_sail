@@ -3,30 +3,32 @@ class MagicOrders.Views.TradesIndex extends MagicOrders.Views.BaseView
   template: JST['trades/index']
 
   events:
-    'click .export_orders': 'exportOrders'
-    'click .batch_export': 'batchExport'
-    'click [data-trade-status]': 'selectSameStatusTrade'
-    'click .batch_deliver': 'batchDeliver'
-    'click .confirm_batch_deliver': 'confirmBatchDeliver'
-    'click .index_batch_pops li a[data-batch_type]': 'show_batch_type'
-    'click .index_pops li a[data-type]': 'show_type'
-    'click [data-search-criteria]': 'switchSearchCriteria'
 
-    # 加载更多订单相关
-    'click [data-type=loadMoreTrades]': 'forceLoadMoreTrades'
+    # 弹出操作框
+    'click .index_batch_pops li a[data-batch_type]':  'show_batch_type'
+    'click .index_pops li a[data-type]':              'show_type'
 
-    # 搜索相关
-    'click .search': 'search'
+    # 加载更多订单
+    'click [data-type=loadMoreTrades]':               'forceLoadMoreTrades'
 
-    # index显示相关
-    'click .header #checkbox_all': 'optAll'
-    'click .header-copy #checkbox_all': 'optCopyAll'
-    'click #cols_filter input,label': 'keepColsFilterDropdownOpen'
-    'click .dropdown': 'dropdownTurnGray'
-    'click .btn-group': 'addBorderToTr'
-    'change #cols_filter input[type=checkbox]': 'filterTradeColumns'
+    # 批量操作
+    'click .export_orders':                           'exportOrders'
+    'click .batch_export':                            'batchExport'
+    'click .batch_deliver':                           'batchDeliver'
+    'click .confirm_batch_deliver':                   'confirmBatchDeliver'
 
-    # 'click .deliver_bills li' : 'gotoDeliverBills'
+    # 搜索
+    'click [data-trade-status]':                      'selectSameStatusTrade'
+    'click .search':                                  'search'
+    'click [data-search-criteria]':                   'switchSearchCriteria'
+
+    # 页面动态效果
+    'click .header #checkbox_all':                    'optAll'
+    'click .header-copy #checkbox_all':               'optCopyAll'
+    'click #cols_filter input,label':                 'keepColsFilterDropdownOpen'
+    'click .dropdown':                                'dropdownTurnGray'
+    'click .btn-group':                               'addBorderToTr'
+    'change #cols_filter input[type=checkbox]':       'filterTradeColumns'
 
   initialize: ->
     @trade_type = MagicOrders.trade_type
@@ -221,10 +223,6 @@ class MagicOrders.Views.TradesIndex extends MagicOrders.Views.BaseView
         , "html"
     null
 
-
-
-
-
   split_merged_trades:(e)->
     self = this
     trades = $('.trade_check:checked').map ->
@@ -241,9 +239,6 @@ class MagicOrders.Views.TradesIndex extends MagicOrders.Views.BaseView
             ,300
     else
       alert "请选择一个订单进行拆分操作"
-
-
-
 
   fetchMoreTrades: (event, direction) =>
     if direction == 'down'
@@ -380,32 +375,10 @@ class MagicOrders.Views.TradesIndex extends MagicOrders.Views.BaseView
       else
         alert('失败')
 
-  # gotoDeliverBills: ->
-  #   Backbone.history.navigate('deliver_bills', true)
-
   addBorderToTr: (e)->
     e.preventDefault();
     $('tr').removeClass('notice_tr')
     $(e.target).parents('tr').addClass('notice_tr')
-
-  # 新订单提醒
-  renderNew: =>
-    @collection.each(@prependTrade)
-
-    $.unblockUI()
-
-  fetch_new_trades: =>
-    @collection.fetch add: true, data: {trade_type: @trade_type, offset: 0, limit: $("#newTradesNotifer span").text()}, success: (collection) =>
-      @renderNew()
-      $("#newTradesNotifer").hide()
-
-  prependTrade: (trade) =>
-    if $("#trade_#{trade.get('id')}").length == 0
-      MagicOrders.cache_trade_number = 0
-      @trade_number += 1
-      view = new MagicOrders.Views.TradesRow(model: trade)
-      $(@el).find("#trade_rows").prepend(view.render().el)
-      $(@el).find("#trade_#{trade.get('id')} td:first").html("#{@trade_number}")
 
   # 加载更多订单
   forceLoadMoreTrades: (e) =>
@@ -430,8 +403,6 @@ class MagicOrders.Views.TradesIndex extends MagicOrders.Views.BaseView
         $(".get_offset").html(@offset)
       else
         $(".get_offset").html($(".complete_offset").html())
-
-
 
     $.unblockUI()
 

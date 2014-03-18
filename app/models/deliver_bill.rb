@@ -48,11 +48,11 @@ class DeliverBill
   end
 
   def batch_num
-    print_batches.last.try(:batch_num)
+    print_batches.last.try(:batch_num).to_s
   end
 
   def serial_num
-    print_batches.last.try(:serial_num)
+    print_batches.last.try(:serial_num).to_s
   end
 
   private

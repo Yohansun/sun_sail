@@ -21,7 +21,7 @@ row_number = 1
   gift_memo = trade.gift_memo
   more_refund = -trade.return_ref.try(:ref_payment).to_f
   less_patch = trade.add_ref.try(:ref_payment)
-  other_discount = trade.other_discount                                   
+  other_discount = trade.other_discount
   post_fee = trade.post_fee
   shop_discount = trade.shop_discount
   shop_bonus = trade.shop_bonus
@@ -75,7 +75,7 @@ row_number = 1
       order_cs_memo = order.cs_memo
       cs_memo = "#{trade_cs_memo} #{order_cs_memo}"
       num = info[:number] * order.num
-      
+
       row_number += 1
       sheet1.update_row row_number, type, tid, status, pay_time, end_time, dispatched_at, delivered_at, end_time, seller_name, receiver_state, receiver_city, receiver_district, receiver_address, receiver_name,
       buyer_nick, receiver_mobile, receiver_phone, title, item_outer_id,sku_properties, num, native_name, native_outer_id, native_number, native_property_memos_text, logistic_name, logistic_waybill, order_price, payment, vip_discount, shop_bonus, shop_discount, other_discount, post_fee, total_fee, payment, more_refund, less_patch, buyer_message, cs_memo, gift_memo, invoice_name, refund_status_text, batch_num, serial_num
@@ -86,6 +86,7 @@ row_number = 1
       end
     end
   end
+
 end
 sheet_name.each_with_index do |value, index|
   sheet1.column(index).hidden = true unless current_user.roles.first.permissions[:export_form].include?(value)

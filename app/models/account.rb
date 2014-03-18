@@ -117,16 +117,18 @@ class Account < ActiveRecord::Base
 
   ['preprocess', 'dispatch', 'deliver', 'notify'].each do |option|
     define_method "can_auto_#{option}_right_now" do
-      return in_time_gap(self.settings.auto_settings["start_#{option}_at"], self.settings.auto_settings["end_#{option}_at"])
+      result = in_time_gap(self.settings.auto_settings["start_#{option}_at"], self.settings.auto_settings["end_#{option}_at"])
+      return self.settings.auto_settings["#{option}_silent_gap"].to_i.hours if result == true
+      return result if result != true
     end
   end
 
-  def auto_dispatch_left_seconds
-    result = in_time_gap(self.settings.auto_settings["start_dispatch_at"], self.settings.auto_settings["end_dispatch_at"])
-    if result == true
-      settings.auto_settings['dispatch_silent_gap'].to_i.hours
-    else
-      result
+  ['sms', 'email'].each do |option|
+    define_method "can_send_#{option}" do |notify_kind|
+      self.settings.auto_settings['auto_notify'] &&
+      self.settings.auto_settings['notify_conditions'] &&
+      self.settings.auto_settings['notify_conditions']["send_#{option}"] &&
+      self.settings.auto_settings['notify_conditions'][notify_kind]
     end
   end
 

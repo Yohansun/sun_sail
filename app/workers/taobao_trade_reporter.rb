@@ -111,7 +111,7 @@ class TaobaoTradeReporter
 
       body = [
         trade.type_text,                                         # 订单来源
-        (trade.splitted? ? trade.splitted_tid : trade.tid),      # 订单编号
+        trade.tid,                                               # 订单编号
         trade.taobao_status_memo,                                # 当前状态
         trade.created.try(:strftime,"%Y-%m-%d %H:%M:%S"),        # 下单时间
         trade.pay_time.try(:strftime,"%Y-%m-%d %H:%M:%S"),       # 付款时间

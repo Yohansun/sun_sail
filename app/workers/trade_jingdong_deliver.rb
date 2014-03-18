@@ -29,18 +29,14 @@ class TradeJingdongDeliver
       sop_stock_out_time = response['order_sop_outstorage_response']['modified']
       trade.update_attributes(sop_stock_out_time: sop_stock_out_time.to_time(:local))
 
-      trade = TradeDecorator.decorate(trade)
-      mobile = trade.receiver_mobile_phone
-      shopname = trade.seller_nick
-      if trade.splitted?
-        content = "亲您好，您的订单#{tid}已经发货，该订单将由地区发送，请注意查收。【#{shopname}】"
-      else
-        content = "亲您好，您的订单#{tid}已经发货，我们将尽快为您送达，请注意查收。【#{shopname}】"
-      end
-
-      notify_kind = "after_send_goods"
-      if content && mobile
-        SmsNotifier.perform_async(content, mobile, tid ,notify_kind)
+      if account.can_send_sms('deliver_notify')
+        result      = account.can_auto_notify_right_now
+        trade       = TradeDecorator.decorate(trade)
+        mobile      = trade.receiver_mobile_phone
+        shopname    = trade.seller_nick
+        content     = "亲您好，您的订单#{tid}已经发货，我们将尽快为您送达，请注意查收。【#{shopname}】"
+        notify_kind = "after_send_goods"
+        SmsNotifier.perform_in(result, content, mobile, tid ,notify_kind) if (content && mobile)
       end
 
       trade.stock_out_bill.confirm_stock if not account.enabled_third_party_stock?

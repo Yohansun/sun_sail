@@ -2,22 +2,47 @@
 #
 # Table name: reconcile_statement_details
 #
-#  id                     :integer(4)      not null, primary key
-#  reconcile_statement_id :integer(4)
-#  alipay_revenue         :integer(4)      default(0)
-#  postfee_revenue        :integer(4)      default(0)
-#  trade_success_refund   :integer(4)      default(0)
-#  sell_refund            :integer(4)      default(0)
-#  base_service_fee       :integer(4)      default(0)
-#  store_service_award    :integer(4)      default(0)
-#  staff_award            :integer(4)      default(0)
-#  taobao_cost            :integer(4)      default(0)
-#  audit_cost             :integer(4)      default(0)
-#  collecting_postfee     :integer(4)      default(0)
-#  audit_amount           :integer(4)      default(0)
-#  adjust_amount          :integer(4)      default(0)
-#  created_at             :datetime        not null
-#  updated_at             :datetime        not null
+#  id                                    :integer(4)      not null, primary key
+#  reconcile_statement_id                :integer(4)
+#  alipay_revenue                        :integer(4)      default(0)
+#  postfee_revenue                       :integer(4)      default(0)
+#  trade_success_refund                  :integer(4)      default(0)
+#  sell_refund                           :integer(4)      default(0)
+#  base_service_fee                      :integer(4)      default(0)
+#  store_service_award                   :integer(4)      default(0)
+#  staff_award                           :integer(4)      default(0)
+#  taobao_cost                           :integer(4)      default(0)
+#  audit_cost                            :integer(4)      default(0)
+#  collecting_postfee                    :integer(4)      default(0)
+#  audit_amount                          :integer(4)      default(0)
+#  adjust_amount                         :integer(4)      default(0)
+#  created_at                            :datetime        not null
+#  updated_at                            :datetime        not null
+#  special_products_alipay_revenue       :integer(4)      default(0)
+#  special_products_audit_amount         :integer(4)      default(0)
+#  base_fee                              :integer(4)      default(0)
+#  last_audit_amount                     :integer(4)      default(0)
+#  account_profit                        :integer(4)      default(0)
+#  advertise_reserved                    :integer(4)      default(0)
+#  platform_deduction                    :integer(4)      default(0)
+#  base_fee_percent                      :integer(4)      default(5)
+#  special_products_audit_amount_percent :integer(4)      default(5)
+#  audit_amount_percent                  :integer(4)      default(5)
+#  account_profit_percent_a              :integer(4)      default(5)
+#  account_profit_percent_b              :integer(4)      default(5)
+#  account_profit_percent_c              :integer(4)      default(5)
+#  advertise_reserved_percent_a          :integer(4)      default(5)
+#  advertise_reserved_percent_b          :integer(4)      default(5)
+#  platform_deduction_percent_a          :integer(4)      default(5)
+#  platform_deduction_percent_b          :integer(4)      default(5)
+#  user_id                               :integer(4)
+#  achievement                           :integer(4)      default(0)
+#  credit_card_money                     :integer(4)      default(0)
+#  sale_commission                       :integer(4)      default(0)
+#  return_point_money                    :integer(4)      default(0)
+#  other_point_money                     :integer(4)      default(0)
+#  handmade_trade_money                  :integer(4)      default(0)
+#  memo                                  :string(500)
 #
 
 class ReconcileStatementDetail < ActiveRecord::Base

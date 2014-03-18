@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 class TradeDispatchEmail
   include Sidekiq::Worker
-  sidekiq_options :queue => :email, unique: true, unique_job_expiration: 120
+  sidekiq_options :queue => :dispatch_email, unique: true, unique_job_expiration: 120
 
   def perform(id, seller_id, notify_kind)
     trade = Trade.where(_id: id).first or return

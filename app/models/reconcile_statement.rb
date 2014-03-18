@@ -5,13 +5,16 @@
 #  id                 :integer(4)      not null, primary key
 #  trade_store_source :string(255)
 #  trade_store_name   :string(255)
-#  balance_amount     :integer(4)
+#  balance_amount     :float           default(0.0)
 #  audited            :boolean(1)      default(FALSE)
 #  created_at         :datetime        not null
 #  updated_at         :datetime        not null
 #  audit_time         :datetime
 #  exported           :text
 #  account_id         :integer(4)
+#  seller_id          :integer(4)
+#  processed          :boolean(1)      default(FALSE)
+#  trade_source_id    :string(255)
 #
 
 class ReconcileStatement < ActiveRecord::Base

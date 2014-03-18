@@ -22,6 +22,8 @@
 #  bulletin            :string(255)
 #  title               :string(255)
 #  description         :string(255)
+#  jushita_sync        :boolean(1)      default(FALSE)
+#  enabled_checker     :boolean(1)      default(FALSE)
 #
 
 class TradeSource < ActiveRecord::Base

@@ -4,15 +4,14 @@ require 'spec_helper'
 describe CustomTradesController do
   login_admin
 
-  let(:taobao_product){create(:taobao_product, account_id: current_account.id)}
-  let(:taobao_sku){create(:taobao_sku, taobao_product: taobao_product, account_id: current_account.id)}
+  let(:product){create(:product, account_id: current_account.id)}
+  let(:sku){create(:sku, product: product, account_id: current_account.id)}
   let(:custom_trade){create(:custom_trade, account_id: current_account.id)}
 
   before(:each) {
     custom_trade
-    taobao_product
-    taobao_sku
-    @taobao_products = current_account.taobao_products
+    product
+    sku
     @area_ids = []
     area_sample = [["110000", "北京"],["110100","北京市"],["110102","朝阳区"]]
     area_sample.each_with_index do |data, index|
@@ -51,7 +50,7 @@ describe CustomTradesController do
             pay_time: Time.now,
             status: "WAIT_SELLER_SEND_GOODS"
           },
-          "taobao_orders" => ["1234567;0;1;234;测试商品"]# ["淘宝商品编码;Sku编码;数量;价格;名称"]
+          "taobao_orders" => ["#{product.outer_id};0;1;234;测试商品"]# ["淘宝商品编码;Sku编码;数量;价格;名称"]
         }
         expect {
           post :create, {:custom_trade => valid_params['custom_trade'], :taobao_orders=>valid_params['taobao_orders']}
@@ -73,7 +72,7 @@ describe CustomTradesController do
             pay_time: Time.now,
             status: "WAIT_SELLER_SEND_GOODS"
           },
-          "taobao_orders" => ["1234567;0;1;234;测试商品"]# ["淘宝商品编码;Sku编码;数量;价格;名称"]
+          "taobao_orders" => ["#{product.outer_id};0;1;234;测试商品"]# ["淘宝商品编码;Sku编码;数量;价格;名称"]
         }
         expect {
           post :create, {:custom_trade => invalid_params['custom_trade'], :taobao_orders=> invalid_params['taobao_orders']}
@@ -120,11 +119,11 @@ describe CustomTradesController do
     end
   end
 
-  describe "GET change_taobao_products" do
-    it "render changed taobao_product" do
-      get :change_taobao_products, {num_iid: "1234567"}, valid_session
+  describe "GET change_products" do
+    it "render change_products" do
+      get :change_products, {outer_id: product.outer_id}, valid_session
       parsed_body = JSON.parse(response.body)
-      parsed_body['taobao_skus'][0]['sku_id'].should eq(123)
+      parsed_body['skus'][0]['sku_id'].should eq(sku.id)
       should respond_with 200
     end
   end

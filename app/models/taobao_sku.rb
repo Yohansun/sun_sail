@@ -6,12 +6,15 @@
 #  sku_id            :integer(8)
 #  taobao_product_id :integer(8)
 #  num_iid           :integer(8)
-#  properties        :string(255)
-#  properties_name   :string(255)
+#  properties        :string(255)     default("")
+#  properties_name   :string(255)     default("")
 #  quantity          :integer(4)
 #  account_id        :integer(4)
 #  trade_source_id   :integer(4)
 #  shop_name         :string(255)
+#  created_at        :datetime
+#  updated_at        :datetime
+#  property_alias    :string(255)
 #
 
 class TaobaoSku < ActiveRecord::Base
