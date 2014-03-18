@@ -306,4 +306,6 @@ zh-CN:
   permissions_tag_refund_status_text: "退款状态"
   permissions_tag_batch_num: "打印批次号" 
   permissions_tag_serial_num: "打印流水号"
-  
+  permissions_tag_order_rate_info_result: "子订单买家评价结果"
+  permissions_tag_order_rate_info_content: "子订单买家评价内容"
+  permissions_tag_order_rate_info_create: "子订单买家评价时间"
