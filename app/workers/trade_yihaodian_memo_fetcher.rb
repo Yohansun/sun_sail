@@ -10,8 +10,8 @@ class TradeYihaodianMemoFetcher
 
     # 自动将买家备注同步到客服备注
     if account.settings.auto_settings['auto_sync_memo'] && trade.cs_memo.blank?
-      result = account.can_auto_preprocess_right_now
-      TradeSyncMemo.perform_in(result, trade.tid)
+      # result = account.can_auto_preprocess_right_now
+      TradeSyncMemo.perform_async(trade.tid)
     end
   end
 end
