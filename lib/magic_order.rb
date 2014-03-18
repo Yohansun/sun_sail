@@ -258,7 +258,10 @@ MagicOrder::AccessControl.map do |map|
                                     "invoice_name",
                                     "refund_status_text", 
                                     "batch_num",
-                                    "serial_num"]
+                                    "serial_num",
+                                    "order_rate_info_result", 
+                                    "order_rate_info_content", 
+                                    "order_rate_info_create"]
   end
 
   #地区管理

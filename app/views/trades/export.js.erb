@@ -7,6 +7,6 @@
 	<%- else -%>
 		alert("订单报表已开始生成，请稍后在“数据魔方”下载");
 	<%- end -%>
-	<%- @report.export_report %>
+	<%- @report.export_report(current_user) %>
 <%- end %>
 $('.export_orders_disabled').addClass('export_orders').removeClass('export_orders_disabled disabled')

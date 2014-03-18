@@ -5,7 +5,7 @@ class TaobaoTradeReporter
   include Sidekiq::Worker
   sidekiq_options :queue => :reporter, unique: true, unique_job_expiration: 120
 
-  def perform(id)
+  def perform(id, user = nil)
 
 ##### 根据报表信息筛选订单
 
@@ -42,6 +42,7 @@ class TaobaoTradeReporter
 
     header = [
     ## 订单信息
+    
       "订单来源",
       "订单编号",
       "当前状态",
@@ -195,10 +196,29 @@ class TaobaoTradeReporter
       end
     end
 
+######报表表头对应字段
+    sheet_name = ['type', 'tid', 'status', 'created_time', 'pay_time', 'dispatched_at', 
+                  'delivered_at', 'end_time', 'receiver_state', 'receiver_city', 'receiver_district', 
+                  'receiver_address', 'seller_name', 'receiver_name', 'buyer_nick', 'receiver_mobile', 'receiver_phone',
+                  'total_fee', 'vip_discount', 'shop_discount', 'shop_bonus', 'other_discount', 'post_fee',
+                  'payment', 'more_refund', 'less_patch', 'buyer_message', 'cs_memo', 'gift_memo', 
+                  'invoice_name', 'logistic_name', 'logistic_waybill', 'batch_num', 'serial_num',
+                  'title', 'item_outer_id', 'taobao_price', 'taobao_real_price', 'taobao_discount', 'num',
+                  'order_discount', 'order_real_price', 'property_memos_text', 'sku_properties',
+                  'order_refund_status_text', 'order_rate_info_result', 'order_rate_info_content', 'order_rate_info_create',
+                  'native_name', 'native_outer_id', 'native_sku_properties', 'native_number', 'native_property_memos_text']
+    sheet_name.each_with_index do |value, index|
+      if user 
+        sheet1.column(index).hidden = true unless user.roles.first.permissions[:export_form].include?(value)
+      end
+    end
+
 ##### 导出报表
 
     file = "#{Rails.root}/data/#{id}.xls"
     book.write file
     report.update_attributes!(performed_at: Time.now)
+
   end
 end
+
