@@ -212,6 +212,55 @@ MagicOrder::AccessControl.map do |map|
                                             "reconcile_statements#change_product_details"]
   end
 
+  #
+  map.project_module :export_form do |map|
+    map.permission :operations,    ["type",
+                                    "tid", 
+                                    "status", 
+                                    "pay_time", 
+                                    "end_time", 
+                                    "dispatched_at", 
+                                    "delivered_at", 
+                                    "end_time", 
+                                    "seller_name", 
+                                    "receiver_state", 
+                                    "receiver_city", 
+                                    "receiver_district", 
+                                    "receiver_address", 
+                                    "receiver_name", 
+                                    "buyer_nick", 
+                                    "receiver_mobile", 
+                                    "receiver_phone", 
+                                    "title", 
+                                    "item_outer_id",
+                                    "sku_properties", 
+                                    "num", 
+                                    "native_name", 
+                                    "native_outer_id", 
+                                    "native_number",
+                                    "native_property_memos_text", 
+                                    "logistic_name", 
+                                    "logistic_waybill", 
+                                    "order_price", 
+                                    "payment", 
+                                    "vip_discount", 
+                                    "shop_bonus", 
+                                    "shop_discount", 
+                                    "other_discount", 
+                                    "post_fee", 
+                                    "total_fee", 
+                                    "payment", 
+                                    "more_refund", 
+                                    "less_patch", 
+                                    "buyer_message", 
+                                    "cs_memo", 
+                                    "gift_memo", 
+                                    "invoice_name",
+                                    "refund_status_text", 
+                                    "batch_num",
+                                    "serial_num"]
+  end
+
   #地区管理
   map.project_module :areas do |map|
     map.permission :reads,      ["detail",
