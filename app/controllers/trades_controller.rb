@@ -36,72 +36,6 @@ class TradesController < ApplicationController
     respond_with @trades
   end
 
-  def export
-    @report = TradeReport.new
-    @report.account_id = current_account.id
-    @report.request_at = Time.now
-    @report.user_id = current_user.id
-
-    if params[:search]
-      params['search'] =  params['search'].select {|k,v| v != "undefined"  }
-      params['search'].each do |k,v|
-        array_flag = false
-        v = v.join("&") and array_flag = true if v.is_a?(Array)
-        guess_encoding = CharDet.detect(v, :silent => true).encoding
-        if guess_encoding != "utf-8"
-          v.force_encoding(guess_encoding)
-          v.encode!("utf-8")
-        else
-          v.force_encoding("utf-8")
-        end
-        v = v.split("&") if array_flag == true
-        params['search'][k] = v
-      end
-    end
-
-    @report.conditions = params.select {|k,v| !['limit','offset', 'action', 'controller'].include?(k)}
-    @report.save
-    respond_to do |format|
-      format.js
-    end
-  end
-
-  def notifer
-    trade_type = params[:trade_type]
-    timestamp = Time.at(params[:timestamp].to_i)
-
-    @trades = Trade
-
-    if current_user.seller.present?
-      unless current_user.seller == nil
-        @trades = @trades.where seller_id: current_user.seller.try(:id)
-      else
-        render json: []
-        return
-      end
-    end
-
-    case params[:trade_type]
-    when 'taobao'
-      trade_type = 'TaobaoTrade'
-    when 'taobao_fenxiao'
-      trade_type = 'TaobaoPurchaseOrder'
-    when 'jingdong'
-      trade_type = 'JingdongTrade'
-    when 'shop'
-      trade_type = 'ShopTrade'
-    else
-      trade_type = nil
-    end
-
-    if trade_type
-      @trades = @trades.where(_type: trade_type)
-    end
-
-    @new_trades_count = @trades.where(:created.gt => timestamp).count
-    render json: @new_trades_count
-  end
-
   def show
     @trade = TradeDecorator.decorate(Trade.where(_id: params[:id]).first || Trade.deleted.where(_id: params[:id]).first)
     respond_with @trade
@@ -345,6 +279,72 @@ class TradesController < ApplicationController
     end
   end
 
+  def export
+    @report = TradeReport.new
+    @report.account_id = current_account.id
+    @report.request_at = Time.now
+    @report.user_id = current_user.id
+
+    if params[:search]
+      params['search'] =  params['search'].select {|k,v| v != "undefined"  }
+      params['search'].each do |k,v|
+        array_flag = false
+        v = v.join("&") and array_flag = true if v.is_a?(Array)
+        guess_encoding = CharDet.detect(v, :silent => true).encoding
+        if guess_encoding != "utf-8"
+          v.force_encoding(guess_encoding)
+          v.encode!("utf-8")
+        else
+          v.force_encoding("utf-8")
+        end
+        v = v.split("&") if array_flag == true
+        params['search'][k] = v
+      end
+    end
+
+    @report.conditions = params.select {|k,v| !['limit','offset', 'action', 'controller'].include?(k)}
+    @report.save
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  def notifer
+    trade_type = params[:trade_type]
+    timestamp = Time.at(params[:timestamp].to_i)
+
+    @trades = Trade
+
+    if current_user.seller.present?
+      unless current_user.seller == nil
+        @trades = @trades.where seller_id: current_user.seller.try(:id)
+      else
+        render json: []
+        return
+      end
+    end
+
+    case params[:trade_type]
+    when 'taobao'
+      trade_type = 'TaobaoTrade'
+    when 'taobao_fenxiao'
+      trade_type = 'TaobaoPurchaseOrder'
+    when 'jingdong'
+      trade_type = 'JingdongTrade'
+    when 'shop'
+      trade_type = 'ShopTrade'
+    else
+      trade_type = nil
+    end
+
+    if trade_type
+      @trades = @trades.where(_type: trade_type)
+    end
+
+    @new_trades_count = @trades.where(:created.gt => timestamp).count
+    render json: @new_trades_count
+  end
+
   def batch_check_goods
     Trade.where(:_id.in => params[:ids]).update_all(confirm_check_goods_at: Time.now)
     render json: {isSuccess: true}
@@ -358,6 +358,16 @@ class TradesController < ApplicationController
     @report.batch_export_ids = params[:ids].join(',')
     @report.save
     @report.export_report(current_user.id)
+    render json: {isSuccess: true}
+  end
+
+  def batch_add_gift
+    trades = Trade.where(:_id.in => params[:ids])
+    trades.each do |trade|
+      trade.gift_memo = params[:gift_memo]
+      add_gift_orders(trade, params[:add_gifts]) if params[:add_gifts]
+      trade.operation_logs.create(operated_at: Time.now, operation: params[:operation], operator_id: current_user.id, operator: current_user.name)
+    end
     render json: {isSuccess: true}
   end
 
@@ -380,16 +390,6 @@ class TradesController < ApplicationController
     @trade.update_attributes(status: "TRADE_FINISHED", end_time: Time.now)
     @trade.operation_logs.create(operated_at: Time.now, operation: '设置交易完成', operator_id: current_user.id, operator: current_user.name)
     render :text=>"ok" if @trade.save
-  end
-
-  def batch_add_gift
-    trades = Trade.where(:_id.in => params[:ids])
-    trades.each do |trade|
-      trade.gift_memo = params[:gift_memo]
-      add_gift_orders(trade, params[:add_gifts]) if params[:add_gifts]
-      trade.operation_logs.create(operated_at: Time.now, operation: params[:operation], operator_id: current_user.id, operator: current_user.name)
-    end
-    render json: {isSuccess: true}
   end
 
   def lock_trade
@@ -435,14 +435,6 @@ class TradesController < ApplicationController
 
     respond_to do |format|
       format.json { render json: {seller_id: seller_id, seller_name: seller_name, dispatchable: dispatchable} }
-    end
-  end
-
-  def sellers_info
-    trade = Trade.find params[:id]
-    logger.debug matched_seller_info(trade).inspect
-    respond_to do |format|
-      format.json { render json: matched_seller_info(trade) }
     end
   end
 

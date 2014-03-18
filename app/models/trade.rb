@@ -289,10 +289,8 @@ class Trade
 
   # 更新二元状态值
   before_update :set_boolean_status_fields
-
   after_destroy :check_associate_deliver_bills
   delegate :name,to: :trade_source,allow_nil: true,prefix: true
-
 
   scope  :paid_undispatched, ->{where({status:"WAIT_SELLER_SEND_GOODS", dispatched_at:nil})}
   # scope  :unmerged, ->{where(merged_by_trade_id:nil)}
@@ -664,7 +662,6 @@ class Trade
     bill.decrease_activity #减去仓库的可用库存
   end
 
-  # SKU属性不全
   def generate_deliver_bill
     return if _type == 'JingdongTrade'
     #分派时生成默认发货单, 不支持京东订单
@@ -883,10 +880,9 @@ class Trade
 ##### 发货相关
 
   def deliverable?
-    trades = Trade.where(tid: tid).select do |trade|
-      trade.orders.where(:refund_status.in => ['NO_REFUND', 'CLOSED']).size != 0
-    end
-    (trades.map(&:status) - ["WAIT_BUYER_CONFIRM_GOODS"]).size == 0 && !trades.map(&:delivered_at).include?(nil)
+    self.orders.where(:refund_status.in => ['NO_REFUND', 'CLOSED']).size != 0 &&
+    self.is_paid_and_delivered &&
+    self.delivered_at.present?
   end
 
   def deliver!

@@ -4,7 +4,6 @@ class CustomTradesController < ApplicationController
   before_filter :authenticate_user!
   before_filter :fetch_data
 
-
   def new
     @custom_trade = CustomTrade.new
   end
