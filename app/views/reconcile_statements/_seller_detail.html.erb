@@ -11,6 +11,7 @@
           <th>线下退货</th>
           <th>结算数量</th>
           <th>结算价</th>
+          <th>售卖金额</th>
           <th>结算金额</th>
         </tr>
       </thead>
@@ -32,6 +33,7 @@
             <td><%= detail.offline_return %></td>
             <td><%= detail.total_num %></td>
             <td><input type ='text' class="input-medium" name="reconcile_product_detail[audit_price][]" value="<%= detail.audit_price %>"</td>
+            <td><%= detail.sell_price %></td>
             <td><%= detail.audit_num %></td>
           <%- end %>
         </tr>
