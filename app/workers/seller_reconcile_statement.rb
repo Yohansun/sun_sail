@@ -84,6 +84,8 @@ class SellerReconcileStatement
             else
               last_month_num = 0
             end
+            r_statement = ReconcileStatement.where(seller_id: seller.id, outer_id: current_product.outer_id)
+            r_statement.length > 0 ? audit_price = r_statement.last.audit_price : audit_price = 0
             ReconcileProductDetail.create(reconcile_statement_id: rs.id,
                                           name: current_product.try(:name),
                                           product_id: current_product.id,
@@ -91,6 +93,9 @@ class SellerReconcileStatement
                                           initial_num: iid['value']['num'],
                                           last_month_num: last_month_num,
                                           subtraction: 0,
+                                          audit_price: audit_price,
+                                          seller_id: seller.id,
+                                          sell_price: initial_num * total_num,
                                           total_num: iid['value']['num'].to_i)
           end
         end
@@ -106,13 +111,18 @@ class SellerReconcileStatement
           else
             last_month_num = 0
           end
+          r_statement = ReconcileStatement.where(seller_id: seller.id, outer_id: product.outer_id)
+          r_statement.length > 0 ? audit_price = r_statement.last.audit_price : audit_price = 0
           ReconcileProductDetail.create(reconcile_statement_id: rs.id,
                                         name: product.try(:name),
                                         product_id: product.id,
-                                        outer_id: outer_id,
+                                        outer_id: product.outer_id,
                                         initial_num: 0,
                                         last_month_num: last_month_num,
                                         subtraction: 0,
+                                        audit_price: audit_price,
+                                        seller_id: seller.id,
+                                        sell_price: initial_num * total_num,
                                         total_num: 0)
         end
       end
