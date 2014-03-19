@@ -88,7 +88,7 @@ class MagicOrders.Models.Trade extends Backbone.Model
           if this.attributes.confirm_color_at is undefined && this.attributes.has_color_info is true
             enabled_items.push('confirm_color') #确认调色
 
-      if this.attributes.is_paid_and_delivered
+      if this.attributes.is_paid_and_delivered || this.attributes.is_succeeded
         if this.attributes.add_ref && this.attributes.add_ref['status'] == 'request_add_ref' && $.inArray('confirm_add_ref',trades) > -1
           enabled_items.push('add_ref') #确认补货
         if (this.attributes.add_ref == null) && $.inArray('request_add_ref',trades) > -1
