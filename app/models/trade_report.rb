@@ -22,14 +22,14 @@ class TradeReport
     User.find_by_id(user_id)
   end
 
-  def export_report(current_user = nil )
+  def export_report(user_id = nil )
     if self.conditions
       if self.conditions['search']['_type'] == "JingdongTrade"
         JingdongTradeReporter.perform_async(id)
       elsif self.conditions['search']['_type'] == "YihaodianTrade"
         YihaodianTradeReporter.perform_async(id)
       else
-        TaobaoTradeReporter.perform_async(id, current_user)
+        TaobaoTradeReporter.perform_async(id, user_id)
       end
     else
       ids = self.batch_export_ids.split(",")
@@ -39,7 +39,7 @@ class TradeReport
       elsif trade_type == "YihaodianTrade"
         YihaodianTradeReporter.perform_async(id)
       else
-        TaobaoTradeReporter.perform_async(id, current_user)
+        TaobaoTradeReporter.perform_async(id, user_id)
       end
     end
   end
