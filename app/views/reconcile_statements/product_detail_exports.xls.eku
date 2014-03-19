@@ -1,10 +1,10 @@
 __filename = "经销商对账订单数据.xls"
 sheet1 = xls.create_worksheet
 sheet1[0, 0] = "对账数据"
-sheet_name = ['type', 'tid', 'status', 'pay_time', 'end_time', 'dispatched_at', 'delivered_at', 'end_time', 'seller_name', 'receiver_state', 'receiver_city', 'receiver_district', 'receiver_address', 'receiver_name',
-              'buyer_nick', 'receiver_mobile', 'receiver_phone', 'title', 'item_outer_id','sku_properties', 'num', 'native_name', 'native_outer_id', 'native_number', 'native_property_memos_text', 'logistic_name', 'logistic_waybill', 'order_price', 'payment', 'vip_discount', 'shop_bonus', 'shop_discount', 'other_discount', 'post_fee', 'total_fee', 'payment', 'more_refund', 'less_patch', 'buyer_message', 'cs_memo', 'gift_memo', 'invoice_name', 'refund_status_text', 'order_rate_info_result', 'order_rate_info_content', 'order_rate_info_create', 'batch_num', 'serial_num']
+sheet_name = ['type', 'tid', 'status', 'created_time', 'pay_time', 'dispatched_at', 'delivered_at', 'end_time', 'seller_name', 'receiver_state', 'receiver_city', 'receiver_district', 'receiver_address', 'receiver_name',
+              'buyer_nick', 'receiver_mobile', 'receiver_phone', 'title', 'item_outer_id','sku_properties', 'num', 'native_name', 'native_outer_id', 'native_number',  'native_sku_properties',  'native_property_memos_text', 'logistic_name', 'logistic_waybill', 'order_price', 'payment', 'vip_discount', 'shop_bonus', 'shop_discount', 'other_discount', 'post_fee', 'total_fee', 'payment', 'more_refund', 'less_patch', 'buyer_message', 'cs_memo', 'gift_memo', 'invoice_name', 'refund_status_text', 'order_rate_info_result', 'order_rate_info_content', 'order_rate_info_create', 'batch_num', 'serial_num']
 
-sheet1.row(1).concat ["订单来源", "订单编号", "当前状态", "下单时间", "付款时间", "分派时间", "发货时间", "支付宝到帐时间", "发货仓库", "买家地址-省", "买家地址-市", "买家地址-区", "买家地址", "买家姓名", "买家旺旺", "买家手机", "买家座机", "淘宝商品名称", "商品编码", "淘宝商品属性", "淘宝商品数量", "本地商品名称", "本地商品编码", "本地商品数量", "属性备注", "物流商", "物流单号", "商品单价", "商品实付价", "vip优惠", "店铺优惠券", "店铺折扣", "优惠金额", "运费", "订单总金额", "订单实付金额", "多退金额", "少补金额", "买家留言", "客服备注", "赠品备注", "发票信息", "退款状态", "子订单买家评价结果", "子订单买家评价内容", "子订单买家评价时间", "打印批次号", "打印流水号"]
+sheet1.row(1).concat ["订单来源", "订单编号", "当前状态", "下单时间", "付款时间", "分派时间", "发货时间", "支付宝到帐时间", "发货仓库", "买家地址-省", "买家地址-市", "买家地址-区", "买家地址", "买家姓名", "买家旺旺", "买家手机", "买家座机", "淘宝商品名称", "商品编码", "淘宝商品属性", "淘宝商品数量", "本地商品名称", "本地商品编码", "本地商品数量", "本地商品SKU", "属性备注", "物流商", "物流单号", "商品单价", "商品实付价", "vip优惠", "店铺优惠券", "店铺折扣", "优惠金额", "运费", "订单总金额", "订单实付金额", "多退金额", "少补金额", "买家留言", "客服备注", "赠品备注", "发票信息", "退款状态", "子订单买家评价结果", "子订单买家评价内容", "子订单买家评价时间", "打印批次号", "打印流水号"]
 yellow_format = Spreadsheet::Format.new :pattern_bg_color => "yellow", :color => "black", :pattern_fg_color => "yellow", :pattern => 1
 blue_format = Spreadsheet::Format.new :pattern_bg_color => "blue", :color => "white", :pattern_fg_color => "blue", :pattern => 1
 title_format = Spreadsheet::Format.new :color => "blue", :weight => :bold, :size => 18
@@ -30,7 +30,7 @@ row_number = 1
   type = trade.type_text
   status = trade.taobao_status_memo
   delivered_at = trade.delivered_at.try(:strftime,"%Y-%m-%d %H:%M:%S")
-  created = trade.created.try(:strftime,"%Y-%m-%d %H:%M:%S")
+  created_time = trade.created.try(:strftime,"%Y-%m-%d %H:%M:%S")
   seller_name = trade.seller_id ? Seller.find(trade.seller_id).name : ""
   pay_time = trade.pay_time.try(:strftime,"%Y-%m-%d %H:%M:%S")
   dispatched_at = trade.dispatched_at.try(:strftime,"%Y-%m-%d %H:%M:%S")
@@ -66,12 +66,14 @@ row_number = 1
     native_outer_id = ""
     native_sku_properties = ""
     native_property_memos_text = ""
-    order.skus_info.each_with_index do |info, index|
-      native_name = info['name']
-      native_number = info['number']
-      native_outer_id = info['outer_id']
-      native_sku_properties = info['sku_properties']
-      native_property_memos_text = info['property_memos_text']
+    if order.skus_info_with_offline_refund.count > 0
+      order.skus_info_with_offline_refund.each_with_index do |sku_info, sku_info_index|
+        native_name = sku_info[:name]
+        native_outer_id = sku_info[:outer_id] 
+        native_sku_properties = sku_info[:sku_properties]
+        native_number = sku_info[:number]
+        native_property_memos_text = sku_info[:property_memos_text].join("\n")              
+      end
     end
     order.bill_info.each_with_index do |info, order_index|
       title = info[:title]
@@ -80,8 +82,8 @@ row_number = 1
       num = info[:number] * order.num
 
       row_number += 1
-      sheet1.update_row row_number, type, tid, status, pay_time, end_time, dispatched_at, delivered_at, end_time, seller_name, receiver_state, receiver_city, receiver_district, receiver_address, receiver_name,
-      buyer_nick, receiver_mobile, receiver_phone, title, item_outer_id,sku_properties, num, native_name, native_outer_id, native_number, native_property_memos_text, logistic_name, logistic_waybill, order_price, payment, vip_discount, shop_bonus, shop_discount, other_discount, post_fee, total_fee, payment, more_refund, less_patch, buyer_message, cs_memo, gift_memo, invoice_name, refund_status_text, batch_num, serial_num
+      sheet1.update_row row_number, type, tid, status, created_time, pay_time, dispatched_at, delivered_at, end_time, seller_name, receiver_state, receiver_city, receiver_district, receiver_address, receiver_name,
+      buyer_nick, receiver_mobile, receiver_phone, title, item_outer_id,sku_properties, num, native_name, native_outer_id, native_number, native_sku_properties, native_property_memos_text, logistic_name, logistic_waybill, order_price, payment, vip_discount, shop_bonus, shop_discount, other_discount, post_fee, total_fee, payment, more_refund, less_patch, buyer_message, cs_memo, gift_memo, invoice_name, refund_status_text, batch_num, serial_num
       if trade_index.even?
         sheet1.row(row_number).default_format = yellow_format
       else

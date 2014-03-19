@@ -5,10 +5,9 @@ class TaobaoTradeReporter
   include Sidekiq::Worker
   sidekiq_options :queue => :reporter, unique: true, unique_job_expiration: 120
 
-  def perform(id, user = nil)
+  def perform(id, user_id = nil)
 
 ##### 根据报表信息筛选订单
-
     report = TradeReport.where(_id: id).first or return
     if report.batch_export_ids
       trades = Trade.where(:_id.in => report.batch_export_ids.split(',')).order_by(:created.desc)
@@ -208,8 +207,8 @@ class TaobaoTradeReporter
                   'order_refund_status_text', 'order_rate_info_result', 'order_rate_info_content', 'order_rate_info_create',
                   'native_name', 'native_outer_id', 'native_sku_properties', 'native_number', 'native_property_memos_text']
     sheet_name.each_with_index do |value, index|
-      if user 
-        sheet1.column(index).hidden = true unless user.roles.first.permissions[:export_form].include?(value)
+      if user_id 
+        sheet1.column(index).hidden = true unless User.find(user_id).roles.first.permissions[:export_form].include?(value)
       end
     end
 

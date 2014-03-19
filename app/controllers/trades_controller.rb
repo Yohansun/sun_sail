@@ -357,7 +357,7 @@ class TradesController < ApplicationController
     @report.user_id = current_user.id
     @report.batch_export_ids = params[:ids].join(',')
     @report.save
-    @report.export_report(current_user)
+    @report.export_report(current_user.id)
     render json: {isSuccess: true}
   end
 
