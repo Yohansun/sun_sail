@@ -65,11 +65,11 @@
     <item en_name="print_date" cn_name="打印时间">
     <![CDATA[{"x":"420","y":"0","font":"\u5fae\u8f6f\u96c5\u9ed1","color":"000000","wrap":"true","size":"9","align":"left","isbold":"false","underline":"false","width":"200","height":"20","text":"13937122375","italic":"false","position":"absolute","type":"data"}]]>
     </item>
-    <item en_name="diy" cn_name="打印批次:">
-    <![CDATA[{"x":"380","y":"16","font":"\u5fae\u8f6f\u96c5\u9ed1","color":"000000","wrap":"true","size":"9","align":"left","isbold":"false","underline":"false","width":"200","height":"20","text":"\u6253\u5370\u6279\u6b21","italic":"false","position":"absolute","type":"data"}]]>
+    <item en_name="diy" cn_name="打印流水:">
+    <![CDATA[{"x":"380","y":"16","font":"\u5fae\u8f6f\u96c5\u9ed1","color":"000000","wrap":"true","size":"9","align":"left","isbold":"false","underline":"false","width":"200","height":"20","text":"\u6253\u5370\u6d41\u6c34","italic":"false","position":"absolute","type":"data"}]]>
     </item>
-    <item en_name="batch_number" cn_name="打印批次">
-    <![CDATA[{"x":"420","y":"16","font":"\u5fae\u8f6f\u96c5\u9ed1","color":"000000","wrap":"true","size":"9","align":"left","isbold":"false","underline":"false","width":"200","height":"20","text":"\u6253\u5370\u6279\u6b21","italic":"false","position":"absolute","type":"data"}]]>
+    <item en_name="serial_number" cn_name="打印流水">
+    <![CDATA[{"x":"420","y":"16","font":"\u5fae\u8f6f\u96c5\u9ed1","color":"000000","wrap":"true","size":"9","align":"left","isbold":"false","underline":"false","width":"200","height":"20","text":"\u6253\u5370\u6d41\u6c34","italic":"false","position":"absolute","type":"data"}]]>
     </item>
     <item en_name = "list" cn_name="商品列表" id="item17">
       <config>
