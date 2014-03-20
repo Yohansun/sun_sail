@@ -40,31 +40,11 @@ class TaobaoTrade < Trade
     SellerMatcher.match_trade_seller(self.id, area)
   end
 
-  def deliverable?
-    trades = TaobaoTrade.where(tid: tid).select do |trade|
-      trade.orders.where(:refund_status.in => ['NO_REFUND', 'CLOSED']).size != 0
-    end
-    (trades.map(&:status) - ["WAIT_BUYER_CONFIRM_GOODS"]).size == 0 && !trades.map(&:delivered_at).include?(nil)
-  end
-
   def self.rescue_buyer_message(args)
     args.each do |tid|
       TradeTaobaoMemoFetcher.perform_async(tid)
     end
   end
-
-  ##DEPRECATED
-
-  ## model属性方法 ##
-
-  # def calculate_fee
-  #   goods_fee = self.orders.inject(0) { |sum, order| sum + order.total_fee.to_f}
-  #   goods_fee.to_f + self.post_fee.to_f
-  # end
-
-  # def bill_infos_count
-  #   self.orders.inject(0) { |sum, order| sum + order.bill_info.count }
-  # end
 
   def set_alipay_data
     if status == "TRADE_FINISHED"

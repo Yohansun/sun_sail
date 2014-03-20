@@ -123,13 +123,6 @@ describe "Trades" do
     end
   end
 
-  describe "get seller info" do
-    pending "should success" do
-      xhr :get, "/trades/#{trade.id}/sellers_info.json"
-      response.status.should eq(200)
-    end
-  end
-
   describe "split and merge" do
     it "should success" do
       xhr :get, "trades/split/#{trade.id}"

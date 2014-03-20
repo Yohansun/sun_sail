@@ -27,6 +27,7 @@ describe CustomTradesController do
     {}
   end
 
+##### 新建人工订单 #####
   describe "GET new" do
     it "assigns a new custom_trade as @custom_trade" do
       get :new
@@ -105,6 +106,7 @@ describe CustomTradesController do
     end
   end
 
+##### 编辑人工订单 #####
   describe "GET edit" do
     it "assigns the requested custom_trade as @custom_trade" do
       get :edit, {id: custom_trade.id}, valid_session
@@ -112,6 +114,7 @@ describe CustomTradesController do
     end
   end
 
+##### 更新人工订单 #####
   describe "PUT update" do
     it "updates the requested custom_trade" do
       put :update, {id: custom_trade.id, custom_trade: {}}, valid_session
@@ -119,6 +122,7 @@ describe CustomTradesController do
     end
   end
 
+##### 获取商品列表 #####
   describe "GET change_products" do
     it "render change_products" do
       get :change_products, {outer_id: product.outer_id}, valid_session
@@ -128,4 +132,11 @@ describe CustomTradesController do
     end
   end
 
+##### 获取商品价格 #####
+  describe "GET calculate_price" do
+  end
+
+##### 计算实付金额 #####
+  describe "GET calculate_payment" do
+  end
 end
