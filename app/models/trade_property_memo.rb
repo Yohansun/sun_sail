@@ -9,4 +9,8 @@ class TradePropertyMemo < PropertyMemo
 
   index trade_id: 1
   index order_id: 1
+
+  after_save do
+    self.trade.update
+  end
 end

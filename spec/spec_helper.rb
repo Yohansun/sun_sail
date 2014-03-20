@@ -53,6 +53,10 @@ Spork.prefork do
     config.extend ControllerMacros    , type: :controller
     config.extend RequestMacros       , type: :request
 
+    config.before(:all) do
+      Rails.cache.reconnect if Rails.cache.respond_to? :reconnect
+    end
+
     config.before(:suite) do
       DatabaseCleaner.clean_with(:truncation)
     end

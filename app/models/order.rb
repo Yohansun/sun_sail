@@ -29,6 +29,10 @@ class Order
 
   validates_uniqueness_of :order_gift_tid, allow_blank: true
 
+  after_save do
+    self.trade.update
+  end
+
   def trade
     #OVERWRITTEN BY SUBCLASS
   end
