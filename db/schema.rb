@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140316124144) do
+ActiveRecord::Schema.define(:version => 20140320094824) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -470,6 +470,7 @@ ActiveRecord::Schema.define(:version => 20140316124144) do
     t.datetime "updated_at",                            :null => false
     t.integer  "audit_num",              :default => 0
     t.integer  "audit_price",            :default => 0
+    t.integer  "sell_price",             :default => 0
   end
 
   add_index "reconcile_product_details", ["outer_id"], :name => "index_reconcile_product_details_on_outer_id"
@@ -685,10 +686,12 @@ ActiveRecord::Schema.define(:version => 20140316124144) do
   add_index "settings", ["thing_type", "thing_id", "var"], :name => "index_settings_on_thing_type_and_thing_id_and_var", :unique => true
 
   create_table "sku_bindings", :force => true do |t|
-    t.integer "sku_id",        :limit => 8
-    t.integer "number",        :limit => 8
-    t.integer "resource_id"
-    t.string  "resource_type"
+    t.integer  "sku_id",        :limit => 8
+    t.integer  "number",        :limit => 8
+    t.integer  "resource_id"
+    t.string   "resource_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "sku_bindings", ["sku_id"], :name => "index_stock_sku_bindings_on_sku_id_and_taobao_sku_id"
