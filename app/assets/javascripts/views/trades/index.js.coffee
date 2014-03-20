@@ -445,7 +445,7 @@ class MagicOrders.Views.TradesIndex extends MagicOrders.Views.BaseView
       MagicOrders.trade_type = "undispatched"
       @trade_type = "undispatched"
 
-    @collection.fetch data: {trade_type: @trade_type, search: @search_hash}, success: (collection) =>
+    @collection.fetch data: {trade_type: @trade_type, search: @search_hash,search_id: MagicOrders.search_id}, success: (collection) =>
       if collection.length > 0
         @offset = @offset + 20
         @trade_number = 0

@@ -25,9 +25,10 @@ class DeliverBillsController < ApplicationController
       end
 
       if params[:search_id].present?
-        trade_search = TradeSearch.find(params["search_id"]) rescue trade_search = nil
+        params[:search] ||= {}
+        trade_search = TradeSearch.find(params[:search_id]) rescue trade_search = nil
         if trade_search.present? && trade_search.search_hash.present?
-          params[:search] = trade_search.search_hash
+          params[:search].merge! trade_search.search_hash
         end
       end
 

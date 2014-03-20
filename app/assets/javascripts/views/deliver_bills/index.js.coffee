@@ -264,7 +264,7 @@ class MagicOrders.Views.DeliverBillsIndex extends MagicOrders.Views.BaseView
     blocktheui()
     $("#trade_rows").html('')
 
-    @collection.fetch data: {search: search_hash, deliver_bill_search: deliver_bill_search_hash}, success: (collection) =>
+    @collection.fetch data: {search: search_hash, deliver_bill_search: deliver_bill_search_hash,search_id: MagicOrders.search_id}, success: (collection) =>
       if collection.length > 0
         @offset = @offset + 20
         @trade_number = 0
