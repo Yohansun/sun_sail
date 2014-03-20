@@ -116,12 +116,12 @@ class CustomTrade < Trade
     area_ids
   end
 
-  private
-
   def custom_type_name
     trade_types = fetch_account.settings.trade_types
     trade_types.symbolize_keys[custom_type.to_sym] || "其他订单"
   end
+
+  private
 
   def created_larger_than_pay_time
     if (pay_time.to_i - created.to_i) < 0
