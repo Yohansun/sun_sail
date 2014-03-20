@@ -33,7 +33,8 @@ class ReconcileProductDetail < ActiveRecord::Base
                   :offline_return,
                   :hidden_num,
                   :audit_num,
-                  :audit_price
+                  :audit_price,
+                  :sell_price
   belongs_to :reconcile_statement
   scope :by_ids, lambda { |rs_ids| where(["reconcile_statement_id in (?)", rs_ids]) }
 
@@ -42,7 +43,9 @@ class ReconcileProductDetail < ActiveRecord::Base
   end
 
   def calculate_fees
-    self.audit_num = self.total_num.to_i * self.audit_price.to_i
+    self.total_num = self.initial_num + self.redefine_last_month_num - self.subtraction - self.offline_return
+    self.sell_price = self.initial_num * audit_price
+    self.audit_num = self.total_num < 0 ? 0 : self.total_num.to_i * self.audit_price.to_i
     self.save
   end
 end

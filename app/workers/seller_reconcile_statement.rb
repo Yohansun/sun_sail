@@ -95,7 +95,7 @@ class SellerReconcileStatement
                                           subtraction: 0,
                                           audit_price: audit_price,
                                           seller_id: seller.id,
-                                          sell_price: initial_num * total_num,
+                                          sell_price: initial_num * audit_price,
                                           total_num: iid['value']['num'].to_i)
           end
         end
@@ -122,7 +122,7 @@ class SellerReconcileStatement
                                         subtraction: 0,
                                         audit_price: audit_price,
                                         seller_id: seller.id,
-                                        sell_price: initial_num * total_num,
+                                        sell_price: initial_num * audit_price,
                                         total_num: 0)
         end
       end
