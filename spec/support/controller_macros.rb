@@ -11,7 +11,6 @@ module ControllerMacros
       @request.env["devise.mapping"] = Devise.mappings[:admin]
       sign_in current_user
     end
-
   end
 
   def taobao_authed

@@ -91,35 +91,27 @@ def test_bill_status(class_name, state_name)
 end
 
 def change_stock_bill_status_success(class_name, opt_name, sta_name, method_name, timestrap_name)
-  #find stock_bill
-  stock_bill = FactoryGirl.create("#{opt_name}_#{sta_name}_#{class_name}")
-  #验证stock_bill当前state
-  stock_bill.state_name.should eql(sta_name)
-  #验证stock_bill当前state时间戳
-  if timestrap_name.present?
+  stock_bill = FactoryGirl.create("#{opt_name}_#{sta_name}_#{class_name}")  # find stock_bill
+  stock_bill.state_name.should eql(sta_name)                                # 验证stock_bill当前state
+  if timestrap_name.present?                                                # 验证stock_bill当前state时间戳
     stock_bill.send(timestrap_name).is_a?(NilClass).should be_true
   end
-  #执行state_machine方法
-  stock_bill.send(method_name).should be_true
-  #验证stock_bill当前state时间戳(是时间类型)
-  if timestrap_name.present?
+
+  stock_bill.send(method_name).should be_true                               # 执行state_machine方法
+  if timestrap_name.present?                                                # 验证stock_bill当前state时间戳(是时间类型)
     stock_bill.send(timestrap_name).is_a?(DateTime).should be_true
   end
 end
 
 def change_stock_bill_status_fail(class_name, opt_name, sta_name, method_name, timestrap_name)
-  #find stock_bill
-  stock_bill = FactoryGirl.create("#{opt_name}_#{sta_name}_#{class_name}")
-  #验证stock_bill当前state
-  stock_bill.state_name.should eql(sta_name)
-  #验证stock_bill当前state时间戳
-  if timestrap_name.present?
+  stock_bill = FactoryGirl.create("#{opt_name}_#{sta_name}_#{class_name}")  # find stock_bill
+  stock_bill.state_name.should eql(sta_name)                                # 验证stock_bill当前state
+  if timestrap_name.present?                                                # 验证stock_bill当前state时间戳
     stock_bill.send(timestrap_name).is_a?(NilClass).should be_true
   end
-  #执行state_machine方法
-  stock_bill.send(method_name).should_not be_true
-  # #验证stock_bill当前state时间戳(nil)
-  if timestrap_name.present?
+
+  stock_bill.send(method_name).should_not be_true                           # 执行state_machine方法
+  if timestrap_name.present?                                                # 验证stock_bill当前state时间戳(nil)
     stock_bill.send(timestrap_name).is_a?(NilClass).should be_true
   end
 end
