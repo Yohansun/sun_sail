@@ -407,19 +407,11 @@ class Trade
   end
 
   def cc_emails
-    emails = []
-
     if self.seller
-      cc = self.seller.ancestors.map { |e|
-        if e.cc_emails
-          e.cc_emails.split(",")
-        end
-      }
-      emails = cc.flatten.compact.map { |e| e.strip }
-      emails = emails | (fetch_account.settings.extra_cc || [])
+      cc = self.seller.ancestors.map { |e| e.cc_emails.split(",") if e.cc_emails}
+      emails = cc.flatten.compact.map { |e| e.strip } | (fetch_account.settings.extra_cc || [])
     end
-
-    emails
+    emails || []
   end
 
 ###########

@@ -46,10 +46,29 @@ describe Trade do
 
 ##### 操作人设置测试 #####
   context "#set_operator" do
+
+    it "should set one random user to trade if users are avaliable" do
+      3.times{create(:user, accounts: [current_account], can_assign_trade: true)}
+      taobao_trade.set_operator
+      User.find_by_id(taobao_trade.operator_id).should_not be_nil
+    end
+
+    it "should set no user to trade if users are unavaliable" do
+      taobao_trade.set_operator
+      User.find_by_id(taobao_trade.operator_id).should be_nil
+    end
   end
 
 ##### 匹配经销商测试 #####
   context "#matched_seller_with_default" do
+
+    it "match the perfect seller" do
+
+    end
+
+    it "match the first seller of its area" do
+
+    end
   end
 
 ##### 发货单生成测试 #####
