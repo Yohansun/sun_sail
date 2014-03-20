@@ -1456,26 +1456,26 @@ class Trade
 
   private
 
-    def check_associate_deliver_bills
-      DeliverBill.where(trade_id: self._id).delete_all if self.deleted_at != nil
-    end
+  def check_associate_deliver_bills
+    DeliverBill.where(trade_id: self._id).delete_all
+  end
 
-    def set_boolean_status_fields
-      self.has_cs_memo        = (self.cs_memo.present? || orders.where(:cs_memo.ne => nil).present?)
-      self.has_refund_orders  = orders.any? {|order| order.refund_status != "NO_REFUND"}
-      self.has_unusual_state  = unusual_states.where(:repaired_at => nil).present?
-      self.has_property_memos = self.trade_property_memos.all.present?
-      true
-    end
+  def set_boolean_status_fields
+    self.has_cs_memo        = (self.cs_memo.present? || orders.where(:cs_memo.ne => nil).present?)
+    self.has_refund_orders  = orders.any? {|order| order.refund_status != "NO_REFUND"}
+    self.has_unusual_state  = unusual_states.where(:repaired_at => nil).present?
+    self.has_property_memos = self.trade_property_memos.all.present?
+    true
+  end
 
-    # 是否上门服务 MAYBE DEPRECATED LATER
-    def set_has_onsite_service
-      return unless fetch_account.settings.enable_module_onsite_service == 1
-      self.area_id = default_area.try(:id)
-      if OnsiteServiceArea.where(area_id: default_area.id, account_id: account_id).present?
-        self.has_onsite_service = true
-      else
-        self.has_onsite_service = false
-      end
+  # 是否上门服务 MAYBE DEPRECATED LATER
+  def set_has_onsite_service
+    return unless fetch_account.settings.enable_module_onsite_service == 1
+    self.area_id = default_area.try(:id)
+    if OnsiteServiceArea.where(area_id: default_area.id, account_id: account_id).present?
+      self.has_onsite_service = true
+    else
+      self.has_onsite_service = false
     end
+  end
 end
