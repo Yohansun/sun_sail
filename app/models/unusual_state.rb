@@ -18,6 +18,7 @@ class UnusualState
 
   embedded_in :trade
   after_save do
+     self.trade.update
      CounterCache.send(:new).expire_caches("trades/unusual_all",account_id: trade.try(:account_id)) if repaired_at_changed?
   end
 

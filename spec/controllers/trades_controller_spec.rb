@@ -15,7 +15,7 @@ describe TradesController do
   end
 
 ##### 更新订单 #####
-  describe "POST #update" do
+  describe "PUT #update" do
   end
 
 ##### 导出报表 #####
@@ -54,7 +54,7 @@ describe TradesController do
   describe "GET #activate_trade" do
   end
 
-##### 淘宝匹配经销商 #####
+##### 淘宝订单匹配经销商 #####
   describe "GET #seller_for_area" do
   end
 
