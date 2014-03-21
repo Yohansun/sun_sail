@@ -134,7 +134,7 @@
 
   <div class="modal-footer">
     <a href="#" class="btn" data-dismiss="modal">取消</a>
-    <a class="btn btn-primary confirm_return">确认</a>
+    <a class="btn btn-primary confirm_return" data-disable-with="请稍候...">确认</a>
   </div>
 </div>
 

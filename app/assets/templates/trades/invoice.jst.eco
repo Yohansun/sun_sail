@@ -39,5 +39,5 @@
 </div>
 
 <div class="modal-footer">
-  <a class="btn btn-primary save">开票申请</a>
+  <a class="btn btn-primary save" data-disable-with="请稍候...">开票申请</a>
 </div><!-- modal-footer -->
