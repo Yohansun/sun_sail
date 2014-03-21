@@ -707,22 +707,20 @@ class Trade
   end
 
   def dispatchable?
-    if is_locked
-      false
-    elsif has_unusual_state
-      false
-    else
-      (seller_id.blank? && is_paid_not_delivered)
-    end
+    return false if is_locked
+    return false if has_unusual_state
+    seller = matched_seller
+    return false if seller.blank?
+    return false if can_lock_products?(self._id, seller.id).join(',').present?
+    seller_id.blank? && is_paid_not_delivered
   end
 
   # TODO 一般使用 "!" 如果判断或验证不通过是需要抛异常的
   def dispatch!(seller = nil)
+
     return false unless dispatchable?
 
     seller ||= matched_seller
-
-    return false if seller.blank?
 
     # 更新订单状态为已分派
     update_attributes!(seller_id: seller.id, seller_name: seller.name, dispatched_at: Time.now)
@@ -763,7 +761,10 @@ class Trade
 
   def auto_dispatch!
     return false unless auto_dispatchable?
-    return false if not dispatch!
+    unless dispatch!
+      self.operation_logs.create(operated_at: Time.now, operation: "订单不满足分派条件，取消自动分派")
+      return false
+    end
     self.is_auto_dispatch = true
     if self.save
       self.operation_logs.create(operated_at: Time.now, operation: "自动分派")
