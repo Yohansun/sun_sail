@@ -34,7 +34,7 @@
 </div>
 <div class="modal-footer">
   <a class="btn" data-dismiss="modal">取消</a>
-  <a class="btn btn-primary request_add_ref">申请补货</a>
+  <a class="btn btn-primary request_add_ref" data-disable-with="请稍候...">申请补货</a>
 </div>
 <% else if @trade.get('add_ref')['status'] == "request_add_ref" : %>
 <div class="modal-body">
@@ -66,6 +66,6 @@
 </div>
 <div class="modal-footer">
   <a class="btn" data-dismiss="modal">取消</a>
-  <a class="btn btn-primary confirm_add_ref">确定补货</a>
+  <a class="btn btn-primary confirm_add_ref" data-disable-with="请稍候...">确定补货</a>
 </div>
 <% end %>

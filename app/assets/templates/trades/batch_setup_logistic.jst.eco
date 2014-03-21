@@ -47,5 +47,5 @@
 </div>
 <div class="modal-footer">
   <a href="#" class="btn" data-dismiss="modal" >取消</a>
-  <a class="btn btn-primary save">保存设置</a>
+  <a class="btn btn-primary save" data-disable-with="请稍候...">保存设置</a>
 </div><!-- modal-footer -->

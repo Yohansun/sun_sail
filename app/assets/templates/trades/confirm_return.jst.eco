@@ -16,14 +16,14 @@
         </tr>
         <% for order in @trade.get('orders'): %>
           <tr>
-            <td><%= order.title %> x <%= order.num %></td>          
+            <td><%= order.title %> x <%= order.num %></td>
             <td>
               <% if order.refund_status == 'WAIT_BUYER_RETURN_GOODS' : %>
               需要
               <% else : %>
               不需要
               <% end %>
-            </td>          
+            </td>
           </tr>
         <% end %>
       </tbody>
@@ -33,5 +33,5 @@
 
 <div class="modal-footer">
   <a class="btn" data-dismiss="modal">取消</a>
-  <a class="btn btn-primary save">确认退货</a>
+  <a class="btn btn-primary save" data-disable-with="请稍候...">确认退货</a>
 </div><!-- modal-footer -->

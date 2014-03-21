@@ -55,5 +55,5 @@
 
 <div class="modal-footer">
   <a class="btn" data-dismiss="modal">取消</a>
-  <a class="btn btn-primary save">确认发货</a>
+  <a class="btn btn-primary save" data-disable-with="请稍候...">确认发货</a>
 </div><!-- modal-footer -->

@@ -63,7 +63,7 @@
 </div>
 <div class="modal-footer">
   <a class="btn" data-dismiss="modal">取消</a>
-  <a class="btn btn-primary request_refund_ref">申请线下退款</a>
+  <a class="btn btn-primary request_refund_ref" data-disable-with="请稍候...">申请线下退款</a>
 </div>
 <% else if @trade.get('refund_ref')['status'] != 'cancel_refund_ref' : %>
 <div class="modal-body">
@@ -123,10 +123,10 @@
 <div class="modal-footer">
   <% if @trade.get('refund_ref')['status'] != 'confirm_refund_ref'  : %>
   <a class="btn" data-dismiss="modal">取消</a>
-  <a class="btn btn-primary confirm_refund_ref">确认线下退款</a>
+  <a class="btn btn-primary confirm_refund_ref" data-disable-with="请稍候...">确认线下退款</a>
   <% else : %>
   <a class="btn" data-dismiss="modal">取消</a>
-  <a class="btn btn-primary cancel_refund_ref">取消线下退款</a>
+  <a class="btn btn-primary cancel_refund_ref" data-disable-with="请稍候...">取消线下退款</a>
   <% end %>
 </div>
 <% end %>

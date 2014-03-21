@@ -90,6 +90,6 @@
 
 <div class="modal-footer">
   <a class="btn" data-dismiss="modal">取消</a>
-  <a class="btn btn-primary save">添加</a>
+  <a class="btn btn-primary save" data-disable-with="请稍候...">添加</a>
 </div>
 

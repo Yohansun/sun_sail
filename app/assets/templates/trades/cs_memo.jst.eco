@@ -52,7 +52,7 @@
 <div class="modal-footer">
   <% unless MagicOrders.role_key == 'seller' : %>
   <a class="btn" data-dismiss="modal">取消</a>
-  <a class="btn btn-primary save">保存备注</a>
+  <a class="btn btn-primary save" data-disable-with="请稍候...">保存备注</a>
   <% else : %>
   <a class="btn" data-dismiss="modal">关闭</a>
   <% end %>

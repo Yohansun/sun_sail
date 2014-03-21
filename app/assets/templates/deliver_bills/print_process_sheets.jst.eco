@@ -20,5 +20,5 @@
 </div><!-- modal-body -->
 <div class="modal-footer">
   <a class="btn" data-dismiss="modal">取消</a>
-  <a class="btn btn-primary print_process_sheets">打印</a>
+  <a class="btn btn-primary print_process_sheets" data-disable-with="请稍候...">打印</a>
 </div><!-- modal-footer -->

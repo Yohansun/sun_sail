@@ -74,5 +74,5 @@
 
 <div class="modal-footer">
   <a class="btn" data-dismiss="modal">取消</a>
-  <a class="btn btn-primary deliver">提交发货</a>
+  <a class="btn btn-primary deliver" data-disable-with="请稍候...">提交发货</a>
 </div><!-- modal-footer -->
