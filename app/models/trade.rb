@@ -709,9 +709,6 @@ class Trade
   def dispatchable?
     return false if is_locked
     return false if has_unusual_state
-    seller = matched_seller
-    return false if seller.blank?
-    return false if can_lock_products?(self._id, seller.id).join(',').present?
     seller_id.blank? && is_paid_not_delivered
   end
 
@@ -719,8 +716,8 @@ class Trade
   def dispatch!(seller = nil)
 
     return false unless dispatchable?
-
     seller ||= matched_seller
+    return false if seller.blank?
 
     # 更新订单状态为已分派
     update_attributes!(seller_id: seller.id, seller_name: seller.name, dispatched_at: Time.now)
@@ -756,6 +753,9 @@ class Trade
                            void_money         &&
                            void_special_sku
     end
+    seller = matched_seller
+    return false if seller.blank?
+    return false if can_lock_products?(self._id, seller.id).join(',').present?
     can_auto_dispatch && dispatchable?
   end
 
