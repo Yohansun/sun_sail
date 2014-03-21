@@ -162,12 +162,7 @@ class StocksController < ApplicationController
   #POST /warehouses/batch_update_actual_stock
   def batch_update_actual_stock
     if params[:stock_product_ids].is_a?(Array) && params[:stock_product_ids].present?
-      if params[:stock_product_ids].size == 1
-        stock_product = default_scoped.find(params[:stock_product_ids].first)
-        @stock_products = default_scoped.where(:product_id => stock_product.product_id) rescue @stock_products = []
-      else
-        @stock_products = default_scoped.where(:id => params[:stock_product_ids])
-      end
+      @stock_products = default_scoped.where(:id => params[:stock_product_ids])
 
       actual = params[:value].present? ? params[:value].to_i : params[:actual].to_i
       if actual >= 0 && @stock_products.present?
