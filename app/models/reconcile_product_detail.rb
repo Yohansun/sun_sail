@@ -43,7 +43,7 @@ class ReconcileProductDetail < ActiveRecord::Base
   end
 
   def calculate_fees
-    self.total_num = self.initial_num + self.redefine_last_month_num - self.subtraction - self.offline_return
+    self.total_num = self.initial_num - self.redefine_last_month_num - self.subtraction - self.offline_return
     self.sell_price = self.initial_num * audit_price
     self.audit_num = self.total_num < 0 ? 0 : self.total_num.to_i * self.audit_price.to_i
     self.save
