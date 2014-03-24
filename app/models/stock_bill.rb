@@ -46,6 +46,13 @@ class StockBill
   field :bill_products_real_mumber, type: Integer
   field :bill_products_price, type: Float
 
+  index seller_id: 1
+  index account_id: 1
+  index status: 1
+  index created_at: -1
+  index _type: 1
+  index tid: 1
+
   validate :uniqueness_of_active_tid_exists
 
   validates :op_name,:length => { :maximum => 50 }, :allow_blank => true

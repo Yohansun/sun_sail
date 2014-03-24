@@ -9,7 +9,7 @@ class StockBillsController < ApplicationController
   def index
     parse_params
     @search = @bills.search(params[:search]).desc(:created_at)
-    @count = @search.map(&:bill_products).count
+    @count = @search.distinct("bill_products._id").count
     @bills = @search.page(params[:page]).per(params[:number])
     @all_cols = current_account.settings.stock_bill_cols
     @visible_cols = current_account.settings.stock_bill_visible_cols
