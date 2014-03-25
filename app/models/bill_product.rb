@@ -45,6 +45,25 @@ class BillProduct
   end
 
   def property_memos
-    order ? order.trade_property_memos.where(outer_id: outer_id).map(&:properties).flatten : []
+    order ?  property_memos_visibility.flatten : []
+  end
+
+  # [
+  #     [0] [
+  #         [0] "26x 颜色: 82YY 85/038",
+  #         [1] "    规格: 6L"
+  #     ]
+  # ]
+  def property_memos_visibility
+    group_by_property.collect do |ary, count|
+      first = ary.shift
+      ary = ary.collect {|x| x.to_s.insert(0,"  #{' ' * count.to_s.length}")}
+      ary.unshift("#{count}x #{first}")
+    end
+  end
+
+  # {["颜色: 82YY 85/038", "规格: 6L"]=>26}
+  def group_by_property
+    order.trade_property_memos.where(outer_id: outer_id).map(&:properties).inject(Hash.new(0)){|h,k| h[k] += 1; h}
   end
 end
