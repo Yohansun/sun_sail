@@ -41,7 +41,7 @@ class TaobaoTradeReporter
 
     header = [
     ## 订单信息
-    
+
       "订单来源",
       "订单编号",
       "当前状态",
@@ -180,11 +180,11 @@ class TaobaoTradeReporter
             ## 子订单对应本地商品的SKU信息
 
             body += [
-              sku_info[:name],                                       # 本地商品名称
-              sku_info[:outer_id],                                   # 本地商品编码
-              sku_info[:sku_properties],                             # 本地商品SKU
-              sku_info[:number],                                     # 本地商品数量
-              sku_info[:property_memos_text].join("\n")              # 本地商品属性备注
+              sku_info[:name],                                   # 本地商品名称
+              sku_info[:outer_id],                               # 本地商品编码
+              sku_info[:sku_properties],                         # 本地商品SKU
+              sku_info[:number],                                 # 本地商品数量
+              sku_info[:property_memos_text].join("\n")          # 本地商品属性备注
             ]
 
             insert_row.call(trade_index, sheet1, body)
@@ -195,20 +195,66 @@ class TaobaoTradeReporter
       end
     end
 
-######报表表头对应字段
-    sheet_name = ['type', 'tid', 'status', 'created_time', 'pay_time', 'dispatched_at', 
-                  'delivered_at', 'end_time', 'receiver_state', 'receiver_city', 'receiver_district', 
-                  'receiver_address', 'seller_name', 'receiver_name', 'buyer_nick', 'receiver_mobile', 'receiver_phone',
-                  'total_fee', 'vip_discount', 'shop_discount', 'shop_bonus', 'other_discount', 'post_fee',
-                  'payment', 'more_refund', 'less_patch', 'buyer_message', 'cs_memo', 'gift_memo', 
-                  'invoice_name', 'logistic_name', 'logistic_waybill', 'batch_num', 'serial_num',
-                  'title', 'item_outer_id', 'taobao_price', 'taobao_real_price', 'taobao_discount', 'num',
-                  'order_discount', 'order_real_price', 'property_memos_text', 'sku_properties',
-                  'order_refund_status_text', 'order_rate_info_result', 'order_rate_info_content', 'order_rate_info_create',
-                  'native_name', 'native_outer_id', 'native_sku_properties', 'native_number', 'native_property_memos_text']
+###### 报表导出字段权限控制
+
+    sheet_name = ['type',                                        # 订单来源
+                  'tid',                                         # 订单编号
+                  'status',                                      # 当前状态
+                  'created_time',                                # 下单时间
+                  'pay_time',                                    # 付款时间
+                  'dispatched_at',                               # 分派时间
+                  'delivered_at',                                # 发货时间
+                  'end_time',                                    # 支付宝到帐时间
+                  'receiver_state',                              # 买家地址
+                  'receiver_city',                               # 买家地址
+                  'receiver_district',                           # 买家地址
+                  'receiver_address',                            # 买家地址
+                  'seller_name',                                 # 发货仓库
+                  'receiver_name',                               # 买家姓名
+                  'buyer_nick',                                  # 买家旺旺
+                  'receiver_mobile',                             # 买家手机
+                  'receiver_phone',                              # 买家座机
+                  'total_fee',                                   # 订单总金额
+                  'vip_discount',                                # vip优惠
+                  'shop_discount',                               # 店铺优惠券
+                  'shop_bonus',                                  # 店铺折扣
+                  'other_discount',                              # 其他优惠金额
+                  'post_fee',                                    # 运费
+                  'payment',                                     # 订单实付金额
+                  'more_refund',                                 # 多退金额
+                  'less_patch',                                  # 少补金额
+                  'buyer_message',                               # 买家留言
+                  'cs_memo',                                     # 客服备注
+                  'gift_memo',                                   # 赠品备注
+                  'invoice_name',                                # 发票信息
+                  'logistic_name',                               # 物流商
+                  'logistic_waybill',                            # 物流单号
+                  'batch_num',                                   # 打印批次号
+                  'serial_num',                                  # 打印流水号
+                  'title',                                       # 淘宝商品名
+                  'item_outer_id',                               # 淘宝商品编码
+                  'taobao_price',                                # 淘宝商品单价
+                  'taobao_real_price',                           # 淘宝商品实付金额
+                  'taobao_discount',                             # 淘宝商品优惠金额
+                  'num',                                         # 淘宝商品数量
+                  'order_discount',                              # 子订单优惠金额
+                  'order_real_price',                            # 子订单实付金额
+                  'property_memos_text',                         # 淘宝商品客服备注
+                  'sku_properties',                              # 淘宝商品属性（淘宝SKU）
+                  'order_refund_status_text',                    # 子订单退款状态
+                  'order_rate_info_result',                      # 子订单买家评价结果
+                  'order_rate_info_content',                     # 子订单买家评价内容
+                  'order_rate_info_create',                      # 子订单买家评价时间
+                  'native_name',                                 # 本地商品名称
+                  'native_outer_id',                             # 本地商品编码
+                  'native_sku_properties',                       # 本地商品SKU
+                  'native_number',                               # 本地商品数量
+                  'native_property_memos_text'                   # 本地商品属性备注
+                 ]
+
     sheet_name.each_with_index do |value, index|
-      if user_id 
-        sheet1.column(index).hidden = true unless User.find(user_id).roles.first.permissions[:export_form].include?(value)
+      if user_id
+        sheet1.column(index).hidden = true unless User.find(user_id).allowed_to?(:export_form,value)
       end
     end
 
