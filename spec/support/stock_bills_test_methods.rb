@@ -3,57 +3,57 @@ def test_bill_status(class_name, state_name)
   state_items = [
                   {
                     :state_name => :checked,
-                    :method_name => :do_check,
+                    :method_name => :check,
                     :allow_status => [:created],
                     :unlocked => true,
                     :timestrap_name => "checked_at"
                   },
                   {
                     :state_name => :syncking,
-                    :method_name => :do_syncking,
+                    :method_name => :sync,
                     :allow_status => [:synck_failed, :checked, :canceld_ok],
                     :unlocked => true,
                     :timestrap_name => "sync_at"
                   },
                   {
                     :state_name => :syncked,
-                    :method_name => :do_syncked,
+                    :method_name => :confirm_sync,
                     :allow_status => [:syncking],
                     :timestrap_name => "sync_succeded_at"
                   },
                   {
                     :state_name => :synck_failed,
-                    :method_name => :do_synck_fail,
+                    :method_name => :refusal_sync,
                     :allow_status => [:syncking],
                     :timestrap_name => "sync_failed_at"
                   },
                   {
                     :state_name => :stocked,
-                    :method_name => :do_stock,
+                    :method_name => :stock,
                     :allow_status => [:created, :checked, :syncking, :syncked, :synck_failed, :stocked, :canceling, :canceld_ok, :canceld_failed],
                     :timestrap_name => "confirm_stocked_at"
                   },
                   {
                     :state_name => :closed,
-                    :method_name => :do_close,
+                    :method_name => :close,
                     :allow_status => [:created, :checked, :synck_failed, :canceld_ok]
                   },
                   {
                     :state_name => :canceling,
-                    :method_name => :do_canceling,
+                    :method_name => :cancel,
                     :allow_status => [:syncked],
                     :unlocked => true,
                     :timestrap_name => "canceled_at"
                   },
                   {
                     :state_name => :canceld_ok,
-                    :method_name => :do_cancel_ok,
+                    :method_name => :confirm_cancel,
                     :allow_status => [:canceling],
                     :timestrap_name => "cancel_succeded_at"
                   },
                   {
                     :state_name => :canceld_failed,
-                    :method_name => :do_cancel_fail,
+                    :method_name => :refusal_cancle,
                     :allow_status => [:canceling],
                     :timestrap_name => "cancel_failed_at"
                   }

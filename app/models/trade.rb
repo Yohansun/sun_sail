@@ -544,13 +544,8 @@ class Trade
 
   def reset_seller
     return unless seller_id
-    if stock_out_bill
-      if stock_out_bill.do_close #关闭之前的出库单
-        stock_out_bill.increase_activity #恢复仓库的可用库存
-      else
-        return #已出库或者已同步 不允许分流重置
-      end
-    end
+    #已出库或者已同步 不允许分流重置
+    return if stock_out_bill && !stock_out_bill.close #关闭之前的出库单
     update_attributes(seller_id: nil, seller_name: nil, dispatched_at: nil)
     deliver_bills.delete_all
   end
@@ -581,11 +576,7 @@ class Trade
 
   def generate_stock_out_bill
     stock_out_bills.where(:status.ne => "CLOSED").each do |bill|
-      if bill.do_close #关闭之前的出库单
-        bill.increase_activity #恢复仓库的可用库存
-      else
-        return #已出库或者已同步 不允许生成新的出库单
-      end
+      return if !bill.close #关闭之前的出库单
     end
 
     if _type == "TaobaoTrade"
@@ -599,7 +590,6 @@ class Trade
       op_city:      receiver_city,
       op_district:  receiver_district,
       op_address:   receiver_address,
-      status:       fetch_account.enabled_third_party_stock? ? 'CHECKED' : 'SYNCKED',
       op_name:      receiver_name,
       op_mobile:    receiver_mobile,
       op_zip:       receiver_zip,
@@ -651,7 +641,7 @@ class Trade
     bill.bill_products_price = payment - post_fee
     bill.save!
     async_invoice_price
-    bill.decrease_activity #减去仓库的可用库存
+    bill.check #减去仓库的可用库存
   end
 
   def generate_deliver_bill

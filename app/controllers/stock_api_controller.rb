@@ -28,7 +28,7 @@ class StockApiController < ApplicationController
         render soap: "ORDER STATUS UNCHANGEABLE"
         return
       end
-
+      stock_in_bill.log = response
       account = stock_in_bill.account
 
       if params[:login] == account.settings.stock_login && params[:passwd] ==  account.settings.stock_passwd
@@ -61,14 +61,10 @@ class StockApiController < ApplicationController
         end
         if stock_in_bill.status == "STOCKED"
           render soap: "SUCCESS"
-        elsif stock_in_bill.sync_stock
-          stock_in_bill.do_stock
-          recording(stock_in_bill.operation_logs,{operation: '确认入库成功',text: response})
-          render soap: "SUCCESS"
-        else
-          stock_in_bill.update_attributes(confirm_failed_at: Time.now)
-          recording(stock_in_bill.operation_logs,{operation: '确认入库失败',text: response})
-          render soap: "FAILED"
+        elsif stock_in_bill.stock
+          msg = stock.last_message.match(/失败$/) ? "FAILED" : 'SUCCESS'
+          stock_in_bill.stock
+          render soap: msg
         end
       else
         render :soap => "AUTHENTICATION_FAILED"
@@ -101,6 +97,7 @@ class StockApiController < ApplicationController
         render soap: "ORDER STATUS UNCHANGEABLE"
         return
       end
+      stock_out_bill.log = response
       account = stock_out_bill.account
       if params[:login] ==  account.settings.stock_login && params[:passwd] ==  account.settings.stock_passwd
         record = stock_out_bill.bml_output_backs.create(
@@ -144,14 +141,9 @@ class StockApiController < ApplicationController
         end
         if stock_out_bill.status == "STOCKED"
           render soap: "SUCCESS"
-        elsif stock_out_bill.decrease_actual
-          stock_out_bill.do_stock
-          recording(stock_out_bill.operation_logs,{operation: '确认出库成功',text: response})
-          render soap: "SUCCESS"
-        else
-          stock_out_bill.update_attributes(confirm_failed_at: Time.now)
-          recording(stock_out_bill.operation_logs,{operation: '确认出库失败',text: response})
-          render soap: "FAILED"
+        elsif stock_out_bill.stock
+          msg = stock.last_message.match(/失败$/) ? "FAILED" : "SUCCESS"
+          render soap: msg
         end
       else
         render soap: "AUTHENTICATION_FAILED"
@@ -183,6 +175,7 @@ class StockApiController < ApplicationController
         render soap: "<DATA><RET_CODE>FAIL</RET_CODE><RET_MESSAGE>ORDER_STATUS_UNCHANGEABLE</RET_MESSAGE></DATA>"
         return
       end
+      stock_bill.log = response
       account = stock_bill.account
       if params[:login] ==  account.settings.stock_login && params[:passwd] ==  account.settings.stock_passwd
         trade = stock_bill.trade
@@ -206,8 +199,7 @@ class StockApiController < ApplicationController
         end
 
         if order['OPTTYPE'] == 'OrderShip'
-          stock_bill.do_stock
-          recording(stock_bill.operation_logs,{operation: '确认成功',text: response})
+          stock_bill.stock
         elsif order['OPTTYPE'] == 'OrderSign'
           recording(stock_bill.operation_logs,{operation: '签收',text: response})
         elsif order['OPTTYPE'] == 'OrderRefuse'

@@ -1,6 +1,57 @@
 # -*- encoding : utf-8 -*-
 
 zh-CN:
+  mongoid:
+    state_machines:
+      stock_bill:
+        available:
+          states:
+            nohe: 初始化
+            locked: 已锁定
+            activated: 已经激活
+          events:
+            enable: 激活
+            lock: 锁定
+        state:
+          states:
+            created: 待审核
+            checked: 已审核待同步
+            synck_failed: 同步失败待同步
+            canceld_ok: 撤销同步成功
+            syncking: 正在同步
+            closed: 已关闭
+            canceld_failed: 撤销同步失败
+            canceling: 撤销同步中
+          events:
+            check: 审核
+            sync: 同步
+            confirm_sync: 确认同步
+            refusal_sync: 拒绝同步
+            close: 关闭
+            rollback: 撤销
+            confirm_rollback: 确认撤销
+            refusal_rollback: 拒绝撤销
+      stock_in_bill:
+        states:
+          syncked: 已审核待出库
+          stocked: 已入库
+        events:
+          stock: 入库
+          special_stock: 入库
+      stock_out_bill:
+        states:
+          syncked: 已同步待出库
+          stocked: 已出库
+        events:
+          stock: 出库
+          special_stock: 出库
+
+    errors:
+      models:
+        stateful_model:
+          attributes:
+            state:
+              invalid_transition: "Can't change state from %{value} via %{event}"
   views:
     pagination:
       first: "首页"

@@ -1,7 +1,7 @@
-<%- @operated_bills.each do |refund_product|%>
+<%- @refund_products.each do |refund_product|%>
 $("#status_<%= refund_product.id %>").replaceWith("<%= j render('status', refund_product: refund_product) %>")
 $("#operation_<%= refund_product.id %>").replaceWith("<%= j render('operation', refund_product: refund_product) %>")
 <%- end %>
-<% if @operated_bills.any? {|x| x.errors.present?} %>
-  alert("<%= @operated_bills.collect {|x| x.errors.full_messages}.flatten.join("\n") %>")
+<% if @refund_products.any? {|x| x.errors.present?} %>
+  alert("<%= @refund_products.collect {|x| x.errors.full_messages}.flatten.join("\n") %>")
 <% end %>

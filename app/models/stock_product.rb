@@ -56,16 +56,10 @@ class StockProduct < ActiveRecord::Base
   end
 
   def update_actual_stock(actual)
-    transaction do
-      self.actual = actual
-      self.changes[:actual].tap do |ary|
-        poor = ary.first - ary.last
-        self.activity -= poor
-        stock_bill,comment = poor > 0 ? [StockOutBill.new,"出库单ID:"] : [StockInBill.new,"入库单ID:"]
-        self.audit_comment = "#{comment}#{stock_bill.id}"
-        return true if self.save! && create_stock_bill(stock_bill,poor.abs)
-      end if self.actual_changed?
-    end rescue false
+    poor = self.actual - actual
+    return if poor.zero?
+    stock_bill,comment = poor > 0 ? [StockOutBill.new,"出库单ID:"] : [StockInBill.new,"入库单ID:"]
+    return true if create_stock_bill(stock_bill,poor.abs)
   end
 
   def storage_status
@@ -139,8 +133,8 @@ class StockProduct < ActiveRecord::Base
 
   private
   def create_stock_bill(stock_bill,number)
-    stock_bill.attributes = {stock_typs: "VIRTUAL", status: "STOCKED",stocked_at: Time.now, confirm_stocked_at: Time.now, seller_id: self.seller_id ,account_id: self.account_id,bill_products_attributes: {"0" => generate_out_bill_attributes(number: number)}}
+    stock_bill.attributes = {stock_typs: "VIRTUAL", seller_id: self.seller_id ,account_id: self.account_id,bill_products_attributes: {"0" => generate_out_bill_attributes(number: number)}}
     stock_bill.update_bill_products
-    stock_bill.save!
+    stock_bill.special_stock
   end
 end

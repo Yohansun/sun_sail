@@ -1,1 +1,7 @@
-$("#bills_table").html("<%=escape_javascript(render('table', :locals => {:@bills => @bills}))%>");
+<%- @stock_bills.each do |bill|%>
+$("#status_<%= bill.id %>").replaceWith("<%= j render('status', bill: bill) %>")
+$("#operation_<%= bill.id %>").replaceWith("<%= j render('operation', bill: bill) %>")
+<%- end %>
+<% if @messages.present? %>
+  alert("<%= @messages.join(';') %>")
+<% end %>

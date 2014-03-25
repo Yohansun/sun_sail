@@ -40,7 +40,7 @@
         <%- if @bill.operation_logs.present? -%>
         <br/>
         <%- @bill.operation_logs.each do |log| %>
-        <label>
+        <label title="<%= log.text %>" rel="tooltip">
           <%= "#{log.operated_at.strftime("%Y-%m-%d %H:%M:%S")}, #{log.operation}  #{log.operator}" %>
         </label>
         <br/>
@@ -108,3 +108,10 @@
     </div>
   </div>
 </div>
+<% content_for :tail do %>
+<script type="text/javascript" charset="utf-8">
+$(function(){
+  $('[rel=tooltip]').tooltip()
+})
+</script>
+<% end %>
