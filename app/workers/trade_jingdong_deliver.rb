@@ -5,20 +5,18 @@ class TradeJingdongDeliver
 
   def perform(id)
     trade = JingdongTrade.where(_id: id).first or return
-    tid = trade.tid
+    tid = trade.tid.split('-')[0]
     account = trade.fetch_account
     trade_source = account.jingdong_sources.first
     query_conditions = trade_source.jingdong_query_conditions
 
     errors = []
 
-    response = JingdongQuery.get({method: '360buy.order.sop.outstorage',
-                                  order_id: tid,
-                                  logistics_id: trade.service_logistic_id,
-                                  waybill: trade.logistic_waybill,
-                                  trade_no: tid
-                                  }, query_conditions
-                                )
+    response = if trade.parent_type_split_trade? && trade.parent.try(:sop_stock_out_time).present?
+      {"order_sop_outstorage_response" => {"modified" => Time.now.to_s}}
+    else
+      JingdongQuery.get({method: '360buy.order.sop.outstorage',order_id: tid,logistics_id: trade.service_logistic_id,waybill: trade.logistic_waybill,trade_no: tid}, query_conditions)
+    end
 
     if response['error_response'] && response['error_response']['zh_desc']
       errors << response['error_response']['zh_desc']
@@ -28,6 +26,10 @@ class TradeJingdongDeliver
     if errors.blank?
       sop_stock_out_time = response['order_sop_outstorage_response']['modified']
       trade.update_attributes(sop_stock_out_time: sop_stock_out_time.to_time(:local))
+
+      if trade.parent_type_split_trade? && trade.parent.try(:sop_stock_out_time).present?
+        Trade.unscoped.where(id: trade.parent_id).update_all(sop_stock_out_time: trade.sop_stock_out_time)
+      end
 
       if account.can_send_sms('deliver_notify')
         result      = account.can_auto_notify_right_now

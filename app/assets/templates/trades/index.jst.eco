@@ -54,6 +54,8 @@
               <li><a href="#" data-toggle="modal" data-modal-action='true' data-type="modify_receiver_information">订单用户信息修改</a></li>
               <li><a href="#" data-batch-operation='true' data-toggle="modal" data-modal-action='true' data-type="merge_trades_manually">手动合并订单</a></li>
               <li><a href="#" data-toggle="modal" data-modal-action='true' data-type="split_merged_trades">取消订单合并</a></li>
+              <li><a href="#" data-toggle="modal" data-type="split_trade">拆分订单</a></li>
+              <li><a href="#" data-toggle="modal" data-type="revoke_split_trade">撤销拆分订单</a></li>
             </ul>
           </div>
 

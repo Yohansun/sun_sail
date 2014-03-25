@@ -5,7 +5,7 @@ class TradesController < ApplicationController
   layout false, :only => :print_deliver_bill
   layout 'management', only: [:show_percent, :invoice_setting]
   respond_to :json, :xls
-  before_filter :authorize,:only => [:index,:print_deliver_bill]
+  before_filter :authorize,:only => [:index,:print_deliver_bill,:split_trade,:revoke_split_trade]
 
   include StockProductsLockable
   include MagicGift
@@ -456,6 +456,30 @@ class TradesController < ApplicationController
 
     respond_to do |format|
       format.json { render json: {seller_id: seller_id, dispatch_error: dispatch_error, dispatchable: dispatchable} }
+    end
+  end
+
+  # PUT /api/trades/1/split_trade
+  # PUT /trades/1/split_trade
+  def split_trade
+    @trade = Trade.find params[:id]
+    @trade.split_trade(params[:splits].values)
+    respond_to do |format|
+      format.json { render json: {success: @trade.errors.blank?,message: @trade.errors.full_messages} }
+    end
+  end
+
+  # PUT /api/trades/1/revoke_split_trade
+  def revoke_split_trade
+    @trade = Trade.find params[:id]
+    if @trade.can_reset_split?
+      @trade.reset_split_trades
+    else
+      @trade.errors.add(:base,"只能拆分类型为'拆分订单' 且未分派的订单")
+    end
+
+    respond_to do |format|
+      format.json { render json: {success: @trade.errors.blank?, message: @trade.errors.full_messages} }
     end
   end
 

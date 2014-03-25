@@ -479,7 +479,8 @@ MagicOrders::Application.routes.draw do
       member do
         get :seller_for_area
         get :estimate_dispatch
-        get :split_trade
+        put :split_trade
+        put :revoke_split_trade
         get :recover
       end
 

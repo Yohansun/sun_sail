@@ -49,6 +49,7 @@ json.list(@trades) do |json, trade|
   json.invoice_value              trade.total_fee
   json.point_fee                  trade.point_fee
   json.total_fee                  trade.total_fee
+  json.payment                    trade.payment
   json.operator                   trade.operator_name
   json.logistic_id                trade.logistic_id
   json.logistic_name              trade.logistic_name
@@ -79,6 +80,9 @@ json.list(@trades) do |json, trade|
   json.is_closed                  trade.is_closed
   json.auto_dispatch_left_seconds trade.auto_dispatch_left_seconds(current_account)
   json.end_time                   trade.end_time.try(:strftime, "%m-%d %H:%M")
+  json.parent_id                  trade.parent_id
+  json.parent_type                trade.parent_type
+  json.parent_type_name           trade.parent_type_name
 
   ## 订单子文档
 
