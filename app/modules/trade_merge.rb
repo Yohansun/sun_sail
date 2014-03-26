@@ -83,8 +83,10 @@
               same_order.discount_fee += order.discount_fee
               same_order.cs_memo      ||= ""
               same_order.cs_memo      += order.cs_memo.to_s + "\n" if order.cs_memo
+              order.trade_property_memos.update_all(order_id: same_order.id, trade_id: new_trade.id)
             else
               order.payment = order.order_payment
+              order.trade_property_memos.update_all(trade_id: new_trade.id)
               new_trade.taobao_orders << order
             end
           }
@@ -307,6 +309,7 @@
 
       # reset all
       first_trade = Trade.where(id: self.merged_trade_ids[0]).first
+      self.trade_property_memos.delete_all
       self.delete!
       first_trade.mark_mergable_trades
 
