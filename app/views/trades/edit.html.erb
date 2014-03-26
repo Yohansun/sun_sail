@@ -573,7 +573,7 @@
 
       $('#add_gift_to_list').click(function(e){
         e.preventDefault();
-        var gift_title, num, product_id, sku_id;
+        var gift_title, num, product_id, sku_id,is_splited;
 
         if ($("#select_category").val() === "") {
           alert("请选择分类");
@@ -599,7 +599,9 @@
         if (num === '') {
           alert("数量不能为空。");
           return;
-        }
+        };
+        
+        is_splited = $("#add_gift_tid").is(":checked") ? "是" : "否" ;
 
         if (/^[1-9]{1}[0-9]*$/.test(num) !== true) {
           alert("数量格式不正确。");
@@ -612,7 +614,7 @@
                                "  <td>" + gift_title + "</td>" +
                                "  <td>" + num + "</td>" +
                                "  <td></td>" +
-                               "  <td></td>" +
+                               "  <td>" + is_splited + "</td>" +
                                "  <td><button class='btn delete_a_gift'>删除</button></td>" +
                                "  <input type='hidden' name='add_gifts[gift_orders][][sku_id]' value='"+sku_id+"'>" +
                                "  <input type='hidden' name='add_gifts[gift_orders][][product_id]' value='"+product_id+"'>" +
