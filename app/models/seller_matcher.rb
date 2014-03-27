@@ -15,7 +15,7 @@ class SellerMatcher
   end
 
   def self.match_trade_seller(trade_id, area)
-    trade = Trade.find(trade_id)
+    trade = Trade.unscoped.where(id: trade_id).first or return
     matched_sellers = nil
     trade.orders.each do |order|
       next if order.skus_info_with_offline_refund.blank?
