@@ -225,6 +225,10 @@ class MagicOrders.Routers.Trades extends Backbone.Router
   splited: (id) ->
     @model = new MagicOrders.Models.Trade(id: id)
     @model.fetch success: (model, response) =>
+      actual = @model.get("real_total_fee") - @model.get("promotion_fee") + @model.get("post_fee")
+      if @model.get("payment") != actual
+        alert("当前订单实付金额不等于 订单总金额 - 优惠金额 + 邮费, 无法拆分")
+        return
       $.unblockUI()
 
       view = new MagicOrders.Views.TradesSplited(model: model)

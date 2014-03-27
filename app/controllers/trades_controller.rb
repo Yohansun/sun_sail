@@ -475,7 +475,7 @@ class TradesController < ApplicationController
     if @trade.can_reset_split?
       @trade.reset_split_trades
     else
-      @trade.errors.add(:base,"只能拆分类型为'拆分订单' 且未分派的订单")
+      @trade.errors.add(:base,"只能拆分类型为'拆分订单' 且拆分的所有订单必须是未分派")
     end
 
     respond_to do |format|
