@@ -139,10 +139,10 @@ $(function(){
 
   $('#ord_actual').live('numChange', function(){
     var ord_actual = $('#ord_actual');
-    var ord_total = $('#ord_total');
-    var ord_favourable = $('#ord_favourable');
-    var ord_freight = $('#ord_freight');
-    ord_actual.text( parseInt(ord_total.text()) + parseInt(ord_favourable.text()) + parseInt(ord_freight.text()) )
+    var ord_total = $('#ord_total').text();
+    var ord_favourable = $('#ord_favourable').text();
+    var ord_freight = $('#ord_freight').text();
+    ord_actual.text( parseInt(ord_total) - parseInt(ord_favourable) + parseInt(ord_freight) )
   })
 
 

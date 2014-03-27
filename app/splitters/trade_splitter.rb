@@ -36,7 +36,7 @@ module TradeSplitter
   end
 
   def can_reset_split?
-    seller_id.nil? && parent_id.present? && parent_type_split_trade?
+    parent_id.present? && parent_type_split_trade? && self.class.where(parent_type: 'split_trade',parent_id: parent_id).distinct(:seller_id).compact.blank?
   end
 
   private
