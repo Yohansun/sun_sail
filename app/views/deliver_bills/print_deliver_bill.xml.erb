@@ -18,7 +18,7 @@
     studiocamera       = "152252658"
     kehu_receiver      = "<%= trade.receiver_name %>"
     city               = "<%= trade.receiver_city %>"
-    organization       = "<%= current_account.key %>"
+    organization       = "<%= trade.try(:cs_memo) %>"
     kehu_phone         = "<%= trade.receiver_mobile || trade.receiver_phone %>"
     jijian_name        = ""
     point              = ""
