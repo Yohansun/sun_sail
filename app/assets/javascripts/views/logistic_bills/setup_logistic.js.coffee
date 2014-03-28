@@ -4,7 +4,7 @@ class MagicOrders.Views.LogisticBillsSetupLogistic extends Backbone.View
 
   events:
     "click .save": 'save'
-    "change #logistic_select": 'set_logistic_id'
+    "change #single_logistic_select": 'set_logistic_id'
 
   initialize: ->
     @model.on("fetch", @render, this)
@@ -19,14 +19,14 @@ class MagicOrders.Views.LogisticBillsSetupLogistic extends Backbone.View
           html_options += '<option selected="selected" lid="' + item.id + '" service_logistic_id="' + item.service_logistic_id + '" value="' + item.xml + '">' + item.name + '</option>'
         else
           html_options += '<option lid="' + item.id + '" service_logistic_id="' + item.service_logistic_id + '" value="' + item.xml + '">' + item.name + '</option>'
-      $('.set_logistic_waybill #logistic_select').html(html_options)
-      service_logistic_id = $("#logistic_select").find("option:selected").attr("service_logistic_id")
+      $('.set_logistic_waybill #single_logistic_select').html(html_options)
+      service_logistic_id = $("#single_logistic_select").find("option:selected").attr("service_logistic_id")
       $("#service_logistic_id").val(service_logistic_id)
     this
 
   save: ->
-    flag = $("#logistic_select").find("option:selected").html() in ['其他', '虹迪', '雄瑞']
-    lid = $('#logistic_select').find("option:selected").attr('lid')
+    flag = $("#single_logistic_select").find("option:selected").html() in ['其他', '虹迪', '雄瑞']
+    lid = $('#single_logistic_select').find("option:selected").attr('lid')
     service_logistic_id = $('#service_logistic_id').val()
 
     waybill = $('.waybill').val()
@@ -49,6 +49,6 @@ class MagicOrders.Views.LogisticBillsSetupLogistic extends Backbone.View
       $('#logistic_bill_setup_logistic').modal('hide')
 
   set_logistic_id: ->
-    service_logistic_id = $("#logistic_select").find("option:selected").attr("service_logistic_id")
+    service_logistic_id = $("#single_logistic_select").find("option:selected").attr("service_logistic_id")
     $("#service_logistic_id").val(service_logistic_id)
 
