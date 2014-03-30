@@ -31,11 +31,8 @@ module MagicSearch
       match = {"count" => conditions.delete("count")}
       aggregate = []
       aggregate << {"$match" => conditions} if conditions.present?
-      aggregate << {"$group" => {
-        "_id" => convert_keys(args),
-        count: {"$sum" => 1}
-      }
-    }
-    aggregate << {"$match" => match}
+      aggregate << {"$group" => {"_id" => convert_keys(args),count: {"$sum" => 1}}}
+      aggregate << {"$match" => match}
+    end
   end
 end
