@@ -33,7 +33,7 @@ gem 'paper_trail', '~> 3.0.0'
 
 gem 'awesome_print',"~> 1.2.0"
 group :test, :development do
-  gem "debugger"
+  # gem "debugger"
   gem "guard"
   gem "guard-bundler"
   gem "guard-rspec"
@@ -49,7 +49,7 @@ group :test, :development do
   gem "shoulda-matchers"
   gem 'webrat'
   gem "capybara"
-  gem 'capybara-webkit'
+  # gem 'capybara-webkit'
   gem "cucumber"
   gem 'capistrano', '~> 2.15.4'
   gem "capistrano-ext"
@@ -133,9 +133,10 @@ gem 'grape', "~> 0.5.0"
 gem "grape-entity"
 
 # third party data sync
-gem 'third_party_sync',git: "git@git.networking.io:ddl1st/third_party_sync.git",branch: "v0.0.3"
+# gem 'third_party_sync',git: "git@git.networking.io:ddl1st/third_party_sync.git",branch: "v0.0.3"
 
 group :production do
   gem "exception_notification", "~> 2.6.1"
   gem 'newrelic_rpm'
 end
+gem "iconv"

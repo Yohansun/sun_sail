@@ -84,9 +84,6 @@ GEM
       rack-test (>= 0.5.4)
       selenium-webdriver (~> 2.0)
       xpath (~> 1.0.0)
-    capybara-webkit (0.14.0)
-      capybara (~> 2.0, >= 2.0.2)
-      json
     carrierwave (0.8.0)
       activemodel (>= 3.2.0)
       activesupport (>= 3.2.0)
@@ -116,7 +113,6 @@ GEM
       execjs
     coffee-script-source (1.4.0)
     collections (0.1.4)
-    columnize (0.3.6)
     commonjs (0.2.6)
     connection_pool (1.0.0)
     crack (0.3.2)
@@ -129,13 +125,6 @@ GEM
       json (>= 1.4.6)
     daemons (1.1.9)
     database_cleaner (0.9.1)
-    debugger (1.2.4)
-      columnize (>= 0.3.1)
-      debugger-linecache (~> 1.1.1)
-      debugger-ruby_core_source (~> 1.1.7)
-    debugger-linecache (1.1.2)
-      debugger-ruby_core_source (>= 1.1.1)
-    debugger-ruby_core_source (1.1.7)
     descendants_tracker (0.0.3)
     devise (2.2.1)
       bcrypt-ruby (~> 3.0)
@@ -560,7 +549,6 @@ DEPENDENCIES
   capistrano (~> 2.15.4)
   capistrano-ext
   capybara
-  capybara-webkit
   carrierwave
   certified
   client_side_validations
@@ -572,7 +560,6 @@ DEPENDENCIES
   csv-mapper (~> 0.5.1)
   cucumber
   database_cleaner
-  debugger
   devise
   devise-encryptable
   draper
